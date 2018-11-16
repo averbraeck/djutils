@@ -4,7 +4,7 @@
 
   <groupId>org.djutils</groupId>
   <artifactId>djutils</artifactId>
-  <version>1.0</version>
+  <version>1.00.00</version>
 
   <name>DJUTILS - Delft Java Utilities</name>
   <description>DJUTILS - Delft Java Utilities for DSOL, OTS, DJUNITS, SIM0MQ projects</description>
@@ -15,7 +15,7 @@
     <url>https://www.tudelft.nl</url>
   </organization>
 
-  <inceptionYear>2015</inceptionYear>
+  <inceptionYear>2018</inceptionYear>
 
   <properties>
     <jdk.version>1.8</jdk.version>
