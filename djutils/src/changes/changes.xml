@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.00.00" date="2018-XX-XX" description="Initial release">
+    <release version="1.00.00" date="2018-11-17" description="Initial release">
       <action dev="averbraeck" type="add">
         Several classes from other projects that are heavily shared between the projects, but not 
         specific for one of the projects have been transferred to the djutils project. 
