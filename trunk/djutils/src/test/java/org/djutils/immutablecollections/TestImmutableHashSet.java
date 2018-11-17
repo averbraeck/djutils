@@ -1,21 +1,21 @@
 package org.djutils.immutablecollections;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * TestImmutable.java. <br>
- * <br>
- * Copyright (c) 2003-2018 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights
- * reserved. See for project information <a href="https://simulation.tudelft.nl/" target="_blank">
- * www.simulation.tudelft.nl</a>. The source code and binary code of this software is proprietary information of Delft
- * University of Technology.
+ * TestImmutableHashSet.java. 
+ * <p>
+ * Copyright (c) 2002-2018 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
+ * distributed under a three-clause BSD-style license, which can be found at
+ * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
+ * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  */
 public class TestImmutableHashSet
