@@ -1,7 +1,5 @@
 package org.djutils.exceptions;
 
-import static org.junit.Assert.fail;
-
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -642,7 +640,7 @@ public final class Try
     // Test fail/succeed (JUNIT)
 
     /**
-     * Executes a JUNIT fail if the assignment succeeds.
+     * Fails if the assignment succeeds.
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
      * @param <V> value type
      * @return V; value to assign
@@ -653,7 +651,7 @@ public final class Try
     }
 
     /**
-     * Executes a JUNIT fail if the assignment succeeds.
+     * Fails if the assignment succeeds.
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
      * @param message String; fail message
      * @param <V> value type
@@ -665,7 +663,7 @@ public final class Try
     }
 
     /**
-     * Executes a JUNIT fail if the assignment succeeds.
+     * Fails if the assignment succeeds.
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
      * @param throwableClass Class&lt;T&gt;; throwable class to catch
      * @param <V> value type
@@ -678,7 +676,7 @@ public final class Try
     }
 
     /**
-     * Executes a JUNIT fail if the assignment succeeds.
+     * Fails if the assignment succeeds.
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
      * @param message String; fail message
      * @param throwableClass Class&lt;T&gt;; throwable class to catch
@@ -693,7 +691,7 @@ public final class Try
         try
         {
             value = assignment.assign();
-            fail(message);
+            throw new AssertionError(message);
         }
         catch (Throwable cause)
         {
@@ -709,7 +707,7 @@ public final class Try
     }
 
     /**
-     * Executes a JUNIT fail if the assignment does not succeed.
+     * Fails if the assignment does not succeed.
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
      * @param <V> value type
      * @return V; value to assign
@@ -720,7 +718,7 @@ public final class Try
     }
 
     /**
-     * Executes a JUNIT fail if the assignment does not succeed.
+     * Fails if the assignment does not succeed.
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
      * @param message String; fail message
      * @param <V> value type
@@ -732,7 +730,7 @@ public final class Try
     }
 
     /**
-     * Executes a JUNIT fail if the assignment does not succeed.
+     * Fails if the assignment does not succeed.
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
      * @param throwableClass Class&lt;T&gt;; throwable class to catch
      * @param <V> value type
@@ -745,7 +743,7 @@ public final class Try
     }
 
     /**
-     * Executes a JUNIT fail if the assignment does not succeed.
+     * Fails if the assignment does not succeed.
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
      * @param message String; fail message
      * @param throwableClass Class&lt;T&gt;; throwable class to catch
@@ -765,7 +763,6 @@ public final class Try
         {
             if (throwableClass.isAssignableFrom(cause.getClass()))
             {
-                fail(message);
                 value = null;
             }
             else
@@ -778,7 +775,7 @@ public final class Try
     }
 
     /**
-     * Executes a JUNIT fail if the execution succeeds.
+     * Fails if the execution succeeds.
      * @param execution Execution; functional interface to execute
      */
     public static void testFail(final Execution execution)
@@ -787,7 +784,7 @@ public final class Try
     }
 
     /**
-     * Executes a JUNIT fail if the execution succeeds.
+     * Fails if the execution succeeds.
      * @param execution Execution; functional interface to execute
      * @param message String; fail message
      */
@@ -797,7 +794,7 @@ public final class Try
     }
 
     /**
-     * Executes a JUNIT fail if the execution succeeds.
+     * Fails if the execution succeeds.
      * @param execution Execution; functional interface to execute
      * @param throwableClass Class&lt;T&gt;; throwable class to catch
      * @param <T> throwable type
@@ -808,7 +805,7 @@ public final class Try
     }
 
     /**
-     * Executes a JUNIT fail if the execution succeeds.
+     * Fails if the execution succeeds.
      * @param execution Execution; functional interface to execute
      * @param message String; fail message
      * @param throwableClass Class&lt;T&gt;; throwable class to catch
@@ -831,11 +828,11 @@ public final class Try
             // expected to fail
             return;
         }
-        fail(message);
+        throw new AssertionError(message);
     }
 
     /**
-     * Executes a JUNIT fail if the execution does not succeed.
+     * Fails if the execution does not succeed.
      * @param execution Execution; functional interface to execute
      */
     public static void testSucceed(final Execution execution)
@@ -844,7 +841,7 @@ public final class Try
     }
 
     /**
-     * Executes a JUNIT fail if the execution does not succeed.
+     * Fails if the execution does not succeed.
      * @param execution Execution; functional interface to execute
      * @param message String; fail message
      */
@@ -854,7 +851,7 @@ public final class Try
     }
 
     /**
-     * Executes a JUNIT fail if the execution does not succeed.
+     * Fails if the execution does not succeed.
      * @param execution Execution; functional interface to execute
      * @param throwableClass Class&lt;T&gt;; throwable class to catch
      * @param <T> throwable type
@@ -865,7 +862,7 @@ public final class Try
     }
 
     /**
-     * Executes a JUNIT fail if the execution does not succeed.
+     * Fails if the execution does not succeed.
      * @param execution Execution; functional interface to execute
      * @param message String; fail message
      * @param throwableClass Class&lt;T&gt;; throwable class to catch
@@ -882,7 +879,7 @@ public final class Try
         {
             if (throwableClass.isAssignableFrom(cause.getClass()))
             {
-                fail(message);
+                throw new AssertionError(message);
             }
             else
             {
