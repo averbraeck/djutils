@@ -5,7 +5,7 @@ import java.util.Random;
 /**
  * LogCategory for the CategoryLogger.
  * <p>
- * Copyright (c) 2018 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2018-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
@@ -69,6 +69,13 @@ public class LogCategory
         if (this.hashCode != other.hashCode)
             return false;
         return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "LogCategory." + this.name;
     }
 
 }

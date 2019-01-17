@@ -20,6 +20,8 @@ DJUTILS - Delft Java Utilities
 
     * DJUTILS has exception handling classes for testing preconditions and blocks, such as the Throw and the Try class.
 
+    * DJUTILS has methods for creating hexadecimal dumps of data.
+
     []
 
 ==========
