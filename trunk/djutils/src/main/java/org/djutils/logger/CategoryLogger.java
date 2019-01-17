@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BooleanSupplier;
 
 import org.pmw.tinylog.Configurator;
 import org.pmw.tinylog.Level;
@@ -13,29 +14,29 @@ import org.pmw.tinylog.writers.ConsoleWriter;
 import org.pmw.tinylog.writers.Writer;
 
 /**
- * The CategoryLogger can log for specific Categories. The way to call the logger for messages that always need to be
- * logged, such as an error with an exception is:
+ * The CategoryLogger can log for specific Categories. The way to call the logger for messages that always need to be logged,
+ * such as an error with an exception is:
  * 
  * <pre>
  * CategoryLogger.always().error(exception, "Parameter {} did not initialize correctly", param1.toString());
  * </pre>
  * 
- * It is also possible to indicate the category / categories for the message, which will only be logged if at least one
- * of the indicated categories is turned on with addLogCategory() or setLogCategories(), or if one of the added or set
- * LogCategories is LogCategory.ALL:
+ * It is also possible to indicate the category / categories for the message, which will only be logged if at least one of the
+ * indicated categories is turned on with addLogCategory() or setLogCategories(), or if one of the added or set LogCategories is
+ * LogCategory.ALL:
  * 
  * <pre>
  * CategoryLogger.filter(Cat.BASE).debug("Parameter {} initialized correctly", param1.toString());
  * </pre>
  * <p>
- * Copyright (c) 2018 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
- * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
+ * Copyright (c) 2018-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See for
+ * project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  */
-@SuppressWarnings({"checkstyle:visibilitymodifier", "checkstyle:finalclass", "checkstyle:needbraces"})
+@SuppressWarnings({ "checkstyle:visibilitymodifier", "checkstyle:finalclass", "checkstyle:needbraces" })
 public class CategoryLogger
 {
     /** The default message format. */
@@ -62,6 +63,12 @@ public class CategoryLogger
     /** The console writer, replacing the default one. */
     private static Writer consoleWriter;
 
+    /** The conditional logger works on the basis of a true condition. */
+    protected static ConditionalLogger conditionalLogger = new ConditionalLogger(true);
+
+    /** The conditional logger works on the basis of a condition, failing the condition. */
+    protected static ConditionalLogger conditionalNoLogger = new ConditionalLogger(false);
+
     /** The delegate logger instance that does the actual logging work, after a positive filter outcome. */
     protected static DelegateLogger delegateLogger = new DelegateLogger(true);
 
@@ -80,9 +87,9 @@ public class CategoryLogger
     }
 
     /**
-     * Create a new logger for the system console. Note that this REPLACES current writers. Note that the initial
-     * LogCategory is LogCategory.ALL, so all categories will be logged. This category has to be explicitly removed (or
-     * new categories have to be set) to log a limited set of categories.
+     * Create a new logger for the system console. Note that this REPLACES current writers. Note that the initial LogCategory is
+     * LogCategory.ALL, so all categories will be logged. This category has to be explicitly removed (or new categories have to
+     * be set) to log a limited set of categories.
      */
     protected static void create()
     {
@@ -210,8 +217,8 @@ public class CategoryLogger
     }
 
     /**
-     * Check whether the provided category needs to be logged. Note that when LogCategory.ALL is contained in the
-     * categories, filter will return true.
+     * Check whether the provided category needs to be logged. Note that when LogCategory.ALL is contained in the categories,
+     * filter will return true.
      * @param logCategory LogCategory; the category to check for.
      * @return the logger that either tries to log (delegateLogger), or returns without logging (noLogger)
      */
@@ -261,12 +268,112 @@ public class CategoryLogger
     }
 
     /**
+     * The conditional filter that will result in the usage of a ConditionalLogger.
+     * @param condition boolean; the condition that should be evaluated
+     * @return the logger that further processes logging (ConditionalLogger)
+     */
+    public static ConditionalLogger when(final boolean condition)
+    {
+        if (condition)
+            return conditionalLogger;
+        return conditionalNoLogger;
+    }
+
+    /**
+     * The conditional filter that will result in the usage of a ConditionalLogger.
+     * @param supplier BooleanSupplier; the function evaluating the condition
+     * @return the logger that further processes logging (ConditionalLogger)
+     */
+    public static ConditionalLogger when(final BooleanSupplier supplier)
+    {
+        if (supplier.getAsBoolean())
+            return conditionalLogger;
+        return conditionalNoLogger;
+    }
+
+    /* *********************************** CONDITIONAL LOGGER *************************************/
+
+    /**
+     * ConditionalLogger class that takes care of filtering based on a condition. <br>
+     * <br>
+     * Copyright (c) 2003-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved.
+     * See for project information <a href="https://www.simulation.tudelft.nl/" target="_blank"> www.simulation.tudelft.nl</a>.
+     * The source code and binary code of this software is proprietary information of Delft University of Technology.
+     * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
+     */
+    public static class ConditionalLogger
+    {
+        /** Should we try to log or not? */
+        private final boolean log;
+
+        /**
+         * @param log boolean; indicate whether we should log or not.
+         */
+        public ConditionalLogger(final boolean log)
+        {
+            super();
+            this.log = log;
+        }
+
+        /**
+         * The "pass" filter that will result in always trying to log.
+         * @return the logger that tries to execute logging (delegateLogger)
+         */
+        public DelegateLogger always()
+        {
+            if (this.log)
+                return delegateLogger;
+            return noLogger;
+        }
+
+        /**
+         * Check whether the provided category needs to be logged. Note that when LogCategory.ALL is contained in the
+         * categories, filter will return true.
+         * @param logCategory LogCategory; the category to check for.
+         * @return the logger that either tries to log (delegateLogger), or returns without logging (noLogger)
+         */
+        public DelegateLogger filter(final LogCategory logCategory)
+        {
+            if (this.log)
+            {
+                if (categories.contains(LogCategory.ALL))
+                    return delegateLogger;
+                if (categories.contains(logCategory))
+                    return delegateLogger;
+            }
+            return noLogger;
+        }
+
+        /**
+         * Check whether the provided categories contain one or more categories that need to be logged. Note that when
+         * LogCategory.ALL is contained in the categories, filter will return true.
+         * @param logCategories LogCategory...; elements or array with the categories to check for
+         * @return the logger that either tries to log (delegateLogger), or returns without logging (noLogger)
+         */
+        public DelegateLogger filter(final LogCategory... logCategories)
+        {
+            if (this.log)
+            {
+                if (categories.contains(LogCategory.ALL))
+                    return delegateLogger;
+                for (LogCategory logCategory : logCategories)
+                {
+                    if (categories.contains(logCategory))
+                        return delegateLogger;
+                }
+            }
+            return noLogger;
+        }
+    }
+
+    /* ************************************ DELEGATE LOGGER ***************************************/
+
+    /**
      * DelegateLogger class that takes care of actually logging the message and/or exception. <br>
      * <br>
-     * Copyright (c) 2003-2018 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights
-     * reserved. See for project information <a href="https://www.simulation.tudelft.nl/" target="_blank">
-     * www.simulation.tudelft.nl</a>. The source code and binary code of this software is proprietary information of
-     * Delft University of Technology.
+     * Copyright (c) 2003-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved.
+     * See for project information <a href="https://www.simulation.tudelft.nl/" target="_blank"> www.simulation.tudelft.nl</a>.
+     * The source code and binary code of this software is proprietary information of Delft University of Technology.
      * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
      */
     public static class DelegateLogger
