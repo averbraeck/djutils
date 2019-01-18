@@ -2,6 +2,13 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.00.03" date="2018-12-18" description="DecoderDumper package">
+      <action dev="pknoppers" type="add">
+        The 'decoderdumper' package has been added to the djutils project, extending
+        and replacing HexDump. 
+      </action>
+    </release>
+
     <release version="1.00.02" date="2019-01-17" description="ConditionalLogger, HexDump">
       <action dev="averbraeck" type="add">
         The CategoryLogger has been extended with a 'when(condition)' static method. 
