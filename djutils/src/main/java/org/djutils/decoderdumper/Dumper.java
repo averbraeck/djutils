@@ -166,7 +166,7 @@ public class Dumper<T>
         this.address++;
         if (needFlush)
         {
-            flush();
+            return flush();
         }
         return false;
     }
