@@ -2,6 +2,14 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.00.05" date="2019-02-26" description="ImmutableCollections class added">
+      <action dev="averbraeck" type="remove">
+        The ImmutableCollections class has been added, which takes care of those functions of the
+        Collections class that do not update the (immutable) collections that the methods receive
+        as arguments.
+      </action>
+    </release>
+
     <release version="1.00.04" date="2019-01-29" description="Removed logger Cat class">
       <action dev="averbraeck" type="remove">
         Cat class in the logger package belongs in dsol, not in djutils, so removed it.
