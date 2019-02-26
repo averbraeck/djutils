@@ -5,6 +5,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import org.junit.Test;
@@ -22,6 +26,9 @@ import org.junit.Test;
  */
 public class TestImmutableList
 {
+    /** Accumulator for forEach test. */
+    int sum;
+    
     /**
      * Test the immutable list class.
      */
@@ -117,9 +124,126 @@ public class TestImmutableList
         assertFalse("list is not empty", il.isEmpty());
         assertTrue("emty list reports it is empty",
                 new ImmutableArrayList<Integer>(Arrays.asList(new Integer[] {})).isEmpty());
+        assertTrue("equal to itself", il.equals(il));
+        assertFalse("not equal to null", il.equals(null));
+        assertFalse("not equal to some string", il.equals("abc"));
+        assertFalse("not equal to a (shorter) sub list of itself", il.equals(il2));
+        il2 = new ImmutableArrayList<Integer>(Arrays.asList(values));
+        assertTrue("equal to another one that has the exact same contents", il.equals(il2));
+        assertEquals("hashcodes should match", il.hashCode(), il2.hashCode());
+        
         // Testing the spliterator and parallelstream will have to wait until I understand how to write a unit test for that
     }
 
-    /** Accumulator for forEach test. */
-    int sum;
+    /**
+     * Test the ImmutableHashMap class.
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testImmutableHashSet()
+    {
+        Integer[] values = new Integer[] { 2, 5, 1, 12, 4, 9 }; // all different
+        ImmutableSet<Integer> is = new ImmutableHashSet<>(Arrays.asList(values));
+        assertTrue("default is to copy", is.isCopy());
+        assertFalse("default is not to wrap", is.isWrap());
+        ImmutableSet<Integer> is2 = new ImmutableHashSet<>(new HashSet<Integer>(Arrays.asList(values)), Immutable.COPY);
+        assertTrue("COPY means copy", is2.isCopy());
+        is2 = new ImmutableHashSet<>(new HashSet<Integer>(Arrays.asList(values)), Immutable.WRAP);
+        assertTrue("COPY means copy", is2.isWrap());
+        is2 = new ImmutableHashSet<Integer>((ImmutableAbstractCollection<Integer>)is);
+        assertTrue("default is to copy", is2.isCopy());
+        assertEquals("has same size", is.size(), is2.size());
+        is2 = new ImmutableHashSet<Integer>((ImmutableAbstractSet<Integer>)is);
+        assertTrue("default is to copy", is2.isCopy());
+        assertEquals("has same size", is.size(), is2.size());
+        is2 = new ImmutableHashSet<Integer>((ImmutableAbstractSet<Integer>)is, Immutable.COPY);
+        assertTrue("COPY means copy", is2.isCopy());
+        assertEquals("has same size", is.size(), is2.size());
+        is2 = new ImmutableHashSet<Integer>((ImmutableAbstractSet<Integer>)is, Immutable.WRAP);
+        assertTrue("WRAP means wrap", is2.isWrap());
+        assertEquals("has same size", is.size(), is2.size());
+        assertTrue("contains 1", is.contains(new Integer(1)));
+        assertFalse("does not contain 123", is.contains(new Integer(123)));
+        Object[] outObject = is.toArray();
+        assertEquals("length of toArray matches size of what went in", values.length, outObject.length);
+        Set<Integer> verify = new HashSet<>(Arrays.asList(values));
+        for (int index = 0; index < outObject.length; index++)
+        {
+            assertTrue("Each object matches an object that went in", verify.remove(outObject[index]));
+        }
+        assertTrue("All objects were matched", verify.isEmpty());
+        Integer[] outInteger = is.toArray(new Integer[0]);
+        assertEquals("length of toArray matches size of what went in", values.length, outInteger.length);
+        verify = new HashSet<>(Arrays.asList(values));
+        for (int index = 0; index < outInteger.length; index++)
+        {
+            assertTrue("Each object matches an object that went in", verify.remove(outInteger[index]));
+        }
+        assertTrue("All objects were matched", verify.isEmpty());
+        verify = new HashSet<>(Arrays.asList(values));
+        ImmutableIterator<Integer> ii = is.iterator();
+        for (int index = 0; index < values.length; index++)
+        {
+            assertTrue(ii.hasNext());
+            Integer got = ii.next();
+            assertTrue("Each object matches an object that went in", verify.remove(got));
+        }
+        assertFalse("iterator has run out", ii.hasNext());
+        assertTrue("All objects were matched", verify.isEmpty());
+        this.sum = 0;
+        is.forEach(new Consumer<Integer>()
+        {
+
+            @Override
+            public void accept(Integer t)
+            {
+                TestImmutableList.this.sum += t;
+            }
+        });
+        // compute the result the old fashioned way
+        int expectedSum = 0;
+        for (int index = 0; index < values.length; index++)
+        {
+            expectedSum += values[index];
+        }
+        assertEquals("sum matches", expectedSum, this.sum);
+        assertTrue("contains all", is.containsAll(Arrays.asList(values)));
+        assertFalse("not contains all", is.containsAll(Arrays.asList(new Integer[] { 1, 2, 3 })));
+        assertTrue("contains all", is.containsAll(new ImmutableArrayList<Integer>(Arrays.asList(values))));
+        assertFalse("not contains all",
+                is.containsAll(new ImmutableArrayList<Integer>(Arrays.asList(new Integer[] { 1, 2, 3 }))));
+        outObject = is.stream().toArray();
+        assertEquals("length of toArray matches size of what went in", values.length, outObject.length);
+        verify = new HashSet<>(Arrays.asList(values));
+        for (int index = 0; index < outObject.length; index++)
+        {
+            assertTrue("Each object matches an object that went in", verify.remove(outObject[index]));
+        }
+        assertTrue("All objects were matched", verify.isEmpty());
+        assertTrue("toString returns something descriptive", is.toString().startsWith("ImmutableHashSet ["));
+        assertEquals("size returns correct value", values.length, is.size());
+        assertFalse("list is not empty", is.isEmpty());
+        assertTrue("emty list reports it is empty",
+                new ImmutableArrayList<Integer>(Arrays.asList(new Integer[] {})).isEmpty());
+        assertTrue("equal to itself", is.equals(is));
+        assertFalse("not equal to null", is.equals(null));
+        assertFalse("not equal to some string", is.equals("abc"));
+        is2 = new ImmutableHashSet<Integer>(Arrays.asList(Arrays.copyOfRange(values, 2, 4)));
+        assertFalse("not equal to a (smaller) sub set of itself", is.equals(is2));
+        is2 = new ImmutableHashSet<Integer>(new HashSet<>(Arrays.asList(values)));
+        assertTrue("equal to another one that has the exact same contents", is.equals(is2));
+        assertEquals("hashcodes should match", is.hashCode(), is2.hashCode());
+        Collection<Integer> collection = is.toCollection();
+        assertEquals("to collection result has correct number of values", is.size(), collection.size());
+        verify = new HashSet<>(Arrays.asList(values));
+        Iterator<Integer> i = collection.iterator();
+        while(i.hasNext())
+        {
+            assertTrue("Each object matches an object that went in", verify.remove(i.next()));
+        }
+        assertTrue("All objects were matched", verify.isEmpty());
+
+        // Testing the spliterator and parallelstream will have to wait until I understand how to write a unit test for that
+    }
+
 }
