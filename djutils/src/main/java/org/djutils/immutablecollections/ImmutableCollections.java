@@ -30,6 +30,7 @@ public class ImmutableCollections
     /**
      * Return an immutable empty set.
      * @return ImmutableSet&lt;T&gt;; an immutable empty set
+     * @param <T> the data type of the ImmutableSet
      */
     public static <T extends Object> ImmutableSet<T> emptyImmutableSet()
     {
@@ -39,6 +40,8 @@ public class ImmutableCollections
     /**
      * Return an immutable empty map.
      * @return ImmutableMap&lt;T, V&gt;; an immutable empty map
+     * @param <T> the key type of the ImmutableMap
+     * @param <V> the value type of the ImmutableMap
      */
     public static <T extends Object, V extends Object> ImmutableMap<T, V> emptyImmutableMap()
     {
@@ -48,6 +51,7 @@ public class ImmutableCollections
     /**
      * Return an immutable empty list.
      * @return ImmutableList&lt;T&gt;; an immutable empty list
+     * @param <T> the data type of the ImmutableList
      */
     public static <T extends Object> ImmutableList<T> emptyImmutableList()
     {
@@ -62,6 +66,7 @@ public class ImmutableCollections
      * @return int; if <code>key</code> is present in the list, the index of <code>key</code>, or, when <code>key</code> is not
      *         present in the list <code>(-(<i>insertion point</i>) - 1)</code> where <code>insertion point</code> is the index
      *         of <code>key</code> if it were contained in the list.
+     * @param <T> the data type of the ImmutableList
      */
     public static <T> int binarySearch(ImmutableList<? extends Comparable<? super T>> il, T key)
     {
@@ -199,8 +204,8 @@ public class ImmutableCollections
 
     /**
      * Returns the maximum element of an immutable collection according to the <i>natural ordering</i> of its elements.
-     * @param ic ImmutableCollection&ltT extends Object &amp; Comparable&lt;? super T&gt;&gt;; the immutable collection
-     * @return T &ltT extends Object &amp; Comparable&lt;? super T&gt;&gt;; the maximum element in the immutable collection
+     * @param ic ImmutableCollection&lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt;; the immutable collection
+     * @return T &lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt;; the maximum element in the immutable collection
      * @throws NoSuchElementException if the immutable collection is empty.
      */
     public static <T extends Object & Comparable<? super T>> T max(ImmutableCollection<? extends T> ic)
@@ -210,9 +215,9 @@ public class ImmutableCollections
 
     /**
      * Returns the maximum element of an immutable collection according to the <i>natural ordering</i> of its elements.
-     * @param ic ImmutableCollection&ltT extends Object &amp; Comparable&lt;? super T&gt;&gt;; the immutable collection
+     * @param ic ImmutableCollection&lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt;; the immutable collection
      * @param comparator Comparator&lt;? super T&gt;; a comparator for <code>T</code>
-     * @return T &ltT extends Object &amp; Comparable&lt;? super T&gt;&gt;; the maximum element in the immutable collection
+     * @return T &lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt;; the maximum element in the immutable collection
      * @throws NoSuchElementException if the immutable collection is empty.
      */
     public static <T extends Object> T max(ImmutableCollection<? extends T> ic, Comparator<? super T> comparator)
@@ -222,8 +227,8 @@ public class ImmutableCollections
 
     /**
      * Returns the minimum element of an immutable collection according to the <i>natural ordering</i> of its elements.
-     * @param ic ImmutableCollection&ltT extends Object &amp; Comparable&lt;? super T&gt;&gt;; the immutable collection
-     * @return T &ltT extends Object &amp; Comparable&lt;? super T&gt;&gt;; the minimum element in the immutable collection
+     * @param ic ImmutableCollection&lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt;; the immutable collection
+     * @return T &lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt;; the minimum element in the immutable collection
      * @throws NoSuchElementException if the immutable collection is empty.
      */
     public static <T extends Object & Comparable<? super T>> T min(ImmutableCollection<? extends T> ic)
@@ -233,9 +238,9 @@ public class ImmutableCollections
 
     /**
      * Returns the minimum element of an immutable collection according to the <i>natural ordering</i> of its elements.
-     * @param ic ImmutableCollection&ltT extends Object &amp; Comparable&lt;? super T&gt;&gt;; the immutable collection
+     * @param ic ImmutableCollection&lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt;; the immutable collection
      * @param comparator Comparator&lt;? super T&gt;; a comparator for <code>T</code>
-     * @return T &ltT extends Object &amp; Comparable&lt;? super T&gt;&gt;; the minimum element in the immutable collection
+     * @return T &lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt;; the minimum element in the immutable collection
      * @throws NoSuchElementException if the immutable collection is empty.
      */
     public static <T extends Object> T min(ImmutableCollection<? extends T> ic, Comparator<? super T> comparator)
