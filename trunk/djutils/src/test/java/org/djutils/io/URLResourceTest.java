@@ -50,7 +50,7 @@ public class URLResourceTest
     /**
      * Test whether URLResource retrieves files.
      * @throws IOException on I/O error
-     * @throws URISyntaxException
+     * @throws URISyntaxException on error
      */
     @Test
     public final void jarTest() throws IOException, URISyntaxException

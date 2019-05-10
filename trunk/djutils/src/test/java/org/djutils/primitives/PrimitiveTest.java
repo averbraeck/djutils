@@ -25,7 +25,7 @@ public class PrimitiveTest extends TestCase
 
     /**
      * constructs a new PrimitiveTest.
-     * @param arg0
+     * @param arg0 arg
      */
     public PrimitiveTest(String arg0)
     {

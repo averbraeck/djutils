@@ -2,8 +2,17 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.00.06" date="2019-05-10" description="EntrySets added; caching of keySet, values in Map">
+      <action dev="averbraeck" type="add">
+        EntrySets have been added to the ImmutableMap classes.
+      </action>
+      <action dev="averbraeck" type="update">
+        The keySet(), values() and entrySet() methods cache the results as these are often called.
+      </action>
+    </release>
+
     <release version="1.00.05" date="2019-02-26" description="ImmutableCollections class added">
-      <action dev="averbraeck" type="remove">
+      <action dev="averbraeck" type="add">
         The ImmutableCollections class has been added, which takes care of those functions of the
         Collections class that do not update the (immutable) collections that the methods receive
         as arguments.

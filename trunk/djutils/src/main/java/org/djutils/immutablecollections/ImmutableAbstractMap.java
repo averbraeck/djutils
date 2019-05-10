@@ -1,6 +1,8 @@
 package org.djutils.immutablecollections;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.djutils.exceptions.Throw;
 
@@ -28,10 +30,13 @@ public abstract class ImmutableAbstractMap<K, V> implements ImmutableMap<K, V>
 
     /** COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection. */
     protected final Immutable copyOrWrap;
+    
+    /** the cached values. */
+    protected ImmutableCollection<V> cachedValues = null;
 
     /**
-     * Construct an abstract immutable map. Make sure that the argument is a safe copy of the map of the right type!
-     * Copying does not take place in the Abstract class!
+     * Construct an abstract immutable map. Make sure that the argument is a safe copy of the map of the right type! Copying
+     * does not take place in the Abstract class!
      * @param map Map&lt;K,V&gt;; a safe copy of the map to use for the immutable map
      * @param copyOrWrap Immutable; indicate whether the immutable is a copy or a wrap
      */
@@ -99,9 +104,14 @@ public abstract class ImmutableAbstractMap<K, V> implements ImmutableMap<K, V>
 
     /** {@inheritDoc} */
     @Override
-    public final ImmutableCollection<V> values()
+    public ImmutableCollection<V> values()
     {
-        return new ImmutableHashSet<>(this.map.values());
+        if (this.cachedValues == null)
+        {
+            Set<V> immutableValues = new HashSet<>(getMap().values());
+            this.cachedValues = new ImmutableHashSet<>(immutableValues, Immutable.WRAP);
+        }
+        return this.cachedValues;
     }
 
     /** {@inheritDoc} */

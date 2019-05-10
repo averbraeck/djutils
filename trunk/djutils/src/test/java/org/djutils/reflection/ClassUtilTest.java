@@ -25,7 +25,7 @@ public class ClassUtilTest extends TestCase
 
     /**
      * constructs a new ClassUtilTest.
-     * @param arg0
+     * @param arg0 arg
      */
     public ClassUtilTest(String arg0)
     {

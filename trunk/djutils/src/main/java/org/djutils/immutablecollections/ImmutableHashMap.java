@@ -1,7 +1,10 @@
 package org.djutils.immutablecollections;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * An immutable wrapper for a HashMap.
@@ -22,6 +25,12 @@ public class ImmutableHashMap<K, V> extends ImmutableAbstractMap<K, V>
     /** */
     private static final long serialVersionUID = 20160507L;
 
+    /** the cached keySet. */
+    private ImmutableSet<K> cachedKeySet = null;
+
+    /** the cached entrySet. */
+    private ImmutableSet<ImmutableEntry<K, V>> cachedEntrySet = null;
+    
     /**
      * @param map Map&lt;K,V&gt;; the map to use for the immutable map.
      */
@@ -77,7 +86,28 @@ public class ImmutableHashMap<K, V> extends ImmutableAbstractMap<K, V>
     @Override
     public final ImmutableSet<K> keySet()
     {
-        return new ImmutableHashSet<K>(getMap().keySet());
+        if (this.cachedKeySet == null)
+        {
+            Set<K> immutableKeySet = new HashSet<>(getMap().keySet());
+            this.cachedKeySet = new ImmutableHashSet<>(immutableKeySet, Immutable.WRAP);
+        }
+        return this.cachedKeySet;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public ImmutableSet<ImmutableEntry<K, V>> entrySet()
+    {
+        if (this.cachedEntrySet == null)
+        {
+            Set<ImmutableEntry<K,V>> immutableEntrySet = new HashSet<>();
+            for (Entry<K, V> entry : getMap().entrySet())
+            {
+                immutableEntrySet.add(new ImmutableEntry<>(entry));
+            }
+            this.cachedEntrySet = new ImmutableHashSet<>(immutableEntrySet, Immutable.WRAP);
+        }
+        return this.cachedEntrySet;
     }
 
     /** {@inheritDoc} */
