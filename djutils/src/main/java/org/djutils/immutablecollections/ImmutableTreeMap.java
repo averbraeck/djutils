@@ -2,8 +2,11 @@ package org.djutils.immutablecollections;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NavigableMap;
+import java.util.NavigableSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * An immutable wrapper for a TreeMap.
@@ -24,6 +27,12 @@ public class ImmutableTreeMap<K, V> extends ImmutableAbstractMap<K, V> implement
     /** */
     private static final long serialVersionUID = 20160507L;
 
+    /** the cached keySet. */
+    private ImmutableSortedSet<K> cachedKeySet = null;
+
+    /** the cached entrySet. */
+    private ImmutableSortedSet<ImmutableEntry<K, V>> cachedEntrySet = null;
+
     /**
      * @param sortedMap Map&lt;K,V&gt;; the map to use for the immutable map.
      */
@@ -34,8 +43,7 @@ public class ImmutableTreeMap<K, V> extends ImmutableAbstractMap<K, V> implement
 
     /**
      * @param map NavigableMap&lt;K,V&gt;; the map to use for the immutable map.
-     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original
-     *            collection
+     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection
      */
     public ImmutableTreeMap(final NavigableMap<K, V> map, final Immutable copyOrWrap)
     {
@@ -52,8 +60,7 @@ public class ImmutableTreeMap<K, V> extends ImmutableAbstractMap<K, V> implement
 
     /**
      * @param immutableTreeMap ImmutableTreeMap&lt;K,V&gt;; the map to use for the immutable map.
-     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original
-     *            collection
+     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection
      */
     public ImmutableTreeMap(final ImmutableTreeMap<K, V> immutableTreeMap, final Immutable copyOrWrap)
     {
@@ -79,7 +86,51 @@ public class ImmutableTreeMap<K, V> extends ImmutableAbstractMap<K, V> implement
     @Override
     public final ImmutableSortedSet<K> keySet()
     {
-        return new ImmutableTreeSet<K>(getMap().keySet());
+        if (this.cachedKeySet == null)
+        {
+            NavigableSet<K> immutableKeySet = new TreeSet<>(getMap().comparator());
+            immutableKeySet.addAll(getMap().keySet());
+            this.cachedKeySet = new ImmutableTreeSet<>(immutableKeySet, Immutable.WRAP);
+        }
+        return this.cachedKeySet;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public ImmutableSortedSet<ImmutableEntry<K, V>> entrySet()
+    {
+        if (this.cachedEntrySet == null)
+        {
+            NavigableSet<ImmutableEntry<K, V>> immutableEntrySet = new TreeSet<>(new Comparator<ImmutableEntry<K, V>>()
+            {
+                /** {@inheritDoc} */
+                @SuppressWarnings("unchecked")
+                @Override
+                public int compare(ImmutableEntry<K, V> o1, ImmutableEntry<K, V> o2)
+                {
+                    return ((Comparable<K>) o1.getKey()).compareTo(o2.getKey());
+                }
+                 
+            });
+            for (Entry<K, V> entry : getMap().entrySet())
+            {
+                immutableEntrySet.add(new ImmutableEntry<>(entry));
+            }
+            this.cachedEntrySet = new ImmutableTreeSet<>(immutableEntrySet, Immutable.WRAP);
+        }
+        return this.cachedEntrySet;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public ImmutableSortedSet<V> values()
+    {
+        if (this.cachedValues == null)
+        {
+            NavigableSet<V> immutableValues = new TreeSet<>(getMap().values());
+            this.cachedValues = new ImmutableTreeSet<>(immutableValues, Immutable.WRAP);
+        }
+        return (ImmutableNavigableSet<V>) this.cachedValues;
     }
 
     /** {@inheritDoc} */

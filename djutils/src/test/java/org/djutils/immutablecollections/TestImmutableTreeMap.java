@@ -1,9 +1,13 @@
 package org.djutils.immutablecollections;
 
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NavigableMap;
+import java.util.Set;
 import java.util.TreeMap;
 
+import org.djutils.immutablecollections.ImmutableMap.ImmutableEntry;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -55,6 +59,14 @@ public class TestImmutableTreeMap
         Assert.assertTrue(imMap.keySet().first() == 1);
         Assert.assertTrue(imMap.keySet().last() == 10);
         Assert.assertTrue(imMap.values().contains(200));
+        
+        Assert.assertArrayEquals(map.keySet().toArray(), imMap.keySet().toSet().toArray());
+        Assert.assertArrayEquals(map.values().toArray(), imMap.values().toSet().toArray());
+        Assert.assertArrayEquals(map.keySet().toArray(), imMap.keySet().toSet().toArray()); // cached
+        Assert.assertArrayEquals(map.values().toArray(), imMap.values().toSet().toArray());
+        
+        Assert.assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet()));
+        Assert.assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet())); // cached
 
         if (copyOrWrap == Immutable.COPY)
         {
@@ -78,5 +90,21 @@ public class TestImmutableTreeMap
             Assert.assertTrue(imMap.size() == 10);
         else
             Assert.assertTrue(imMap.size() == 11);
+    }
+    
+    private boolean checkEntrySets(Set<Entry<Integer, Integer>> es, Set<ImmutableEntry<Integer, Integer>> ies)
+    {
+        if (es.size() != ies.size())
+            return false;
+        Iterator<Entry<Integer, Integer>> entryIt = es.iterator();
+        Iterator<ImmutableEntry<Integer, Integer>> immEntryIt = ies.iterator();
+        while (entryIt.hasNext())
+        {
+            Entry<Integer, Integer> e1 = entryIt.next();
+            ImmutableEntry<Integer, Integer> e2 = immEntryIt.next();
+            if (!e1.getKey().equals(e2.getKey()) || !e1.getValue().equals(e2.getValue()))
+                return false;
+        }
+        return true;
     }
 }

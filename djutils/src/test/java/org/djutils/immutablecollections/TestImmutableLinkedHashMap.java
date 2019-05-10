@@ -1,7 +1,7 @@
 package org.djutils.immutablecollections;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -11,7 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * TestImmutableHashMap.java.
+ * TestImmutableLinkedHashMap.java.
  * <p>
  * Copyright (c) 2002-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -20,24 +20,24 @@ import org.junit.Test;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  */
-public class TestImmutableHashMap
+public class TestImmutableLinkedHashMap
 {
 
     @Test
-    public final void testHashMap()
+    public final void testImmutableLinkedHashMap()
     {
-        Map<Integer, Integer> isMap = new HashMap<>();
+        Map<Integer, Integer> isMap = new LinkedHashMap<>();
         for (int i = 1; i <= 10; i++)
             isMap.put(i, 100 * i);
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>(isMap);
-        testIntMap(map, new ImmutableHashMap<Integer, Integer>(map, Immutable.WRAP), Immutable.WRAP);
-        map = new HashMap<Integer, Integer>(isMap);
-        testIntMap(map, new ImmutableHashMap<Integer, Integer>(map, Immutable.COPY), Immutable.COPY);
-        map = new HashMap<Integer, Integer>(isMap);
-        testIntMap(map, new ImmutableHashMap<Integer, Integer>(map), Immutable.COPY);
-        map = new HashMap<Integer, Integer>(isMap);
-        ImmutableHashMap<Integer, Integer> ihs = new ImmutableHashMap<Integer, Integer>(map);
-        testIntMap(map, new ImmutableHashMap<Integer, Integer>(ihs), Immutable.COPY);
+        Map<Integer, Integer> map = new LinkedHashMap<Integer, Integer>(isMap);
+        testIntMap(map, new ImmutableLinkedHashMap<Integer, Integer>(map, Immutable.WRAP), Immutable.WRAP);
+        map = new LinkedHashMap<Integer, Integer>(isMap);
+        testIntMap(map, new ImmutableLinkedHashMap<Integer, Integer>(map, Immutable.COPY), Immutable.COPY);
+        map = new LinkedHashMap<Integer, Integer>(isMap);
+        testIntMap(map, new ImmutableLinkedHashMap<Integer, Integer>(map), Immutable.COPY);
+        map = new LinkedHashMap<Integer, Integer>(isMap);
+        ImmutableLinkedHashMap<Integer, Integer> ihs = new ImmutableLinkedHashMap<Integer, Integer>(map);
+        testIntMap(map, new ImmutableLinkedHashMap<Integer, Integer>(ihs), Immutable.COPY);
     }
 
     private void testIntMap(final Map<Integer, Integer> map, final ImmutableMap<Integer, Integer> imMap,

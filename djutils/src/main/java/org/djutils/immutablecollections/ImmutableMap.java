@@ -1,15 +1,18 @@
 package org.djutils.immutablecollections;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
+import org.djutils.immutablecollections.ImmutableMap.ImmutableEntry;
+
 /**
- * A Map interface without the methods that can change it. The constructor of the ImmutableMap needs to be given an
- * initial Map.
+ * A Map interface without the methods that can change it. The constructor of the ImmutableMap needs to be given an initial Map.
  * <p>
  * Copyright (c) 2016-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -38,9 +41,9 @@ public interface ImmutableMap<K, V> extends Serializable
     boolean isEmpty();
 
     /**
-     * Returns <tt>true</tt> if this map contains a mapping for the specified key. More formally, returns <tt>true</tt>
-     * if and only if this map contains a mapping for a key <tt>k</tt> such that
-     * <tt>(key==null ? k==null : key.equals(k))</tt>. (There can be at most one such mapping.)
+     * Returns <tt>true</tt> if this map contains a mapping for the specified key. More formally, returns <tt>true</tt> if and
+     * only if this map contains a mapping for a key <tt>k</tt> such that <tt>(key==null ? k==null : key.equals(k))</tt>. (There
+     * can be at most one such mapping.)
      * @param key Object; key whose presence in this map is to be tested
      * @return <tt>true</tt> if this map contains a mapping for the specified key
      * @throws ClassCastException if the key is of an inappropriate type for this map
@@ -49,10 +52,10 @@ public interface ImmutableMap<K, V> extends Serializable
     boolean containsKey(Object key);
 
     /**
-     * Returns <tt>true</tt> if this map maps one or more keys to the specified value. More formally, returns
-     * <tt>true</tt> if and only if this map contains at least one mapping to a value <tt>v</tt> such that
-     * <tt>(value==null ? v==null : value.equals(v))</tt>. This operation will probably require time linear in the map
-     * size for most implementations of the <tt>Map</tt> interface.
+     * Returns <tt>true</tt> if this map maps one or more keys to the specified value. More formally, returns <tt>true</tt> if
+     * and only if this map contains at least one mapping to a value <tt>v</tt> such that
+     * <tt>(value==null ? v==null : value.equals(v))</tt>. This operation will probably require time linear in the map size for
+     * most implementations of the <tt>Map</tt> interface.
      * @param value Object; value whose presence in this map is to be tested
      * @return <tt>true</tt> if this map maps one or more keys to the specified value
      * @throws ClassCastException if the value is of an inappropriate type for this map
@@ -61,19 +64,17 @@ public interface ImmutableMap<K, V> extends Serializable
     boolean containsValue(Object value);
 
     /**
-     * Returns the value to which the specified key is mapped, or {@code null} if this map contains no mapping for the
-     * key.
+     * Returns the value to which the specified key is mapped, or {@code null} if this map contains no mapping for the key.
      * <p>
      * More formally, if this map contains a mapping from a key {@code k} to a value {@code v} such that
-     * {@code (key==null ? k==null : key.equals(k))}, then this method returns {@code v}; otherwise it returns
-     * {@code null}. (There can be at most one such mapping.)
+     * {@code (key==null ? k==null : key.equals(k))}, then this method returns {@code v}; otherwise it returns {@code null}.
+     * (There can be at most one such mapping.)
      * <p>
-     * If this map permits null values, then a return value of {@code null} does not <i>necessarily</i> indicate that
-     * the map contains no mapping for the key; it's also possible that the map explicitly maps the key to {@code null}.
-     * The {@link #containsKey containsKey} operation may be used to distinguish these two cases.
+     * If this map permits null values, then a return value of {@code null} does not <i>necessarily</i> indicate that the map
+     * contains no mapping for the key; it's also possible that the map explicitly maps the key to {@code null}. The
+     * {@link #containsKey containsKey} operation may be used to distinguish these two cases.
      * @param key Object; the key whose associated value is to be returned
-     * @return the value to which the specified key is mapped, or {@code null} if this map contains no mapping for the
-     *         key
+     * @return the value to which the specified key is mapped, or {@code null} if this map contains no mapping for the key
      * @throws ClassCastException if the key is of an inappropriate type for this map
      * @throws NullPointerException if the specified key is null and this map does not permit null keys
      */
@@ -86,20 +87,25 @@ public interface ImmutableMap<K, V> extends Serializable
     ImmutableSet<K> keySet();
 
     /**
+     * Returns a {@link Set} view of the entries contained in this map.
+     * @return an immutable set of the entries contained in this map
+     */
+    ImmutableSet<ImmutableEntry<K, V>> entrySet();
+
+    /**
      * Returns a {@link ImmutableCollection} view of the values contained in this map.
      * @return an immutable collection view of the values contained in this map
      */
     ImmutableCollection<V> values();
 
     /**
-     * Returns the value to which the specified key is mapped, or {@code defaultValue} if this map contains no mapping
-     * for the key. The default implementation makes no guarantees about synchronization or atomicity properties of this
-     * method. Any implementation providing atomicity guarantees must override this method and document its concurrency
-     * properties.
+     * Returns the value to which the specified key is mapped, or {@code defaultValue} if this map contains no mapping for the
+     * key. The default implementation makes no guarantees about synchronization or atomicity properties of this method. Any
+     * implementation providing atomicity guarantees must override this method and document its concurrency properties.
      * @param key Object; the key whose associated value is to be returned
      * @param defaultValue V; the default mapping of the key
-     * @return the value to which the specified key is mapped, or {@code defaultValue} if this map contains no mapping
-     *         for the key
+     * @return the value to which the specified key is mapped, or {@code defaultValue} if this map contains no mapping for the
+     *         key
      * @throws ClassCastException if the key is of an inappropriate type for this map
      * @throws NullPointerException if the specified key is null and this map does not permit null keys
      */
@@ -110,11 +116,11 @@ public interface ImmutableMap<K, V> extends Serializable
     }
 
     /**
-     * Performs the given action for each entry in this map until all entries have been processed or the action throws
-     * an exception. Unless otherwise specified by the implementing class, actions are performed in the order of entry
-     * set iteration (if an iteration order is specified.) Exceptions thrown by the action are relayed to the caller.
-     * The default implementation makes no guarantees about synchronization or atomicity properties of this method. Any
-     * implementation providing atomicity guarantees must override this method and document its concurrency properties.
+     * Performs the given action for each entry in this map until all entries have been processed or the action throws an
+     * exception. Unless otherwise specified by the implementing class, actions are performed in the order of entry set
+     * iteration (if an iteration order is specified.) Exceptions thrown by the action are relayed to the caller. The default
+     * implementation makes no guarantees about synchronization or atomicity properties of this method. Any implementation
+     * providing atomicity guarantees must override this method and document its concurrency properties.
      * @param action BiConsumer&lt;? super K,? super V&gt;; The action to be performed for each entry
      * @throws NullPointerException if the specified action is null
      * @throws ConcurrentModificationException if an entry is found to be removed during iteration
@@ -122,7 +128,7 @@ public interface ImmutableMap<K, V> extends Serializable
     default void forEach(BiConsumer<? super K, ? super V> action)
     {
         Objects.requireNonNull(action);
-        for (Map.Entry<K, V> entry : toMap().entrySet())
+        for (ImmutableEntry<K, V> entry : entrySet())
         {
             K k;
             V v;
@@ -162,22 +168,171 @@ public interface ImmutableMap<K, V> extends Serializable
     int hashCode();
 
     /**
-     * Return whether the internal storage is a wrapped pointer to the original map. If true, this means that anyone
-     * holding a pointer to this data structure can still change it. The users of the ImmutableMap itself can, however,
-     * not make any changes.
+     * Return whether the internal storage is a wrapped pointer to the original map. If true, this means that anyone holding a
+     * pointer to this data structure can still change it. The users of the ImmutableMap itself can, however, not make any
+     * changes.
      * @return boolean; whether the internal storage is a wrapped pointer to the original map
      */
     boolean isWrap();
 
     /**
-     * Return whether the internal storage is a (shallow) copy of the original map. If true, this means that anyone
-     * holding a pointer to the original of the data structure can not change it anymore. Nor can the users of the
-     * ImmutableMap itself make any changes.
+     * Return whether the internal storage is a (shallow) copy of the original map. If true, this means that anyone holding a
+     * pointer to the original of the data structure can not change it anymore. Nor can the users of the ImmutableMap itself
+     * make any changes.
      * @return boolean; whether the internal storage is a safe copy of the original map
      */
     default boolean isCopy()
     {
         return !isWrap();
+    }
+
+    /**
+     * A map entry (key-value pair). The <tt>Map.entrySet</tt> method returns a collection-view of the map, whose elements are
+     * of this class. The <i>only</i> way to obtain a reference to a map entry is from the iterator of this collection-view.
+     * These <tt>ImmutableMap.ImmutableEntry</tt> objects are valid <i>only</i> for the duration of the iteration; more
+     * formally, the behavior of a map entry is undefined if the backing map has been modified after the entry was returned by
+     * the iterator, except through the <tt>setValue</tt> operation on the map entry.
+     * @param <K> key
+     * @param <V> value
+     */
+    class ImmutableEntry<K, V>
+    {
+        /** the wrapped entry. */
+        private final Entry<K, V> wrappedEntry;
+        
+        /**
+         * @param wrappedEntry the wrapped entry
+         */
+        public ImmutableEntry(final Entry<K, V> wrappedEntry)
+        {
+            this.wrappedEntry = wrappedEntry;
+        }
+
+        /**
+         * Returns the key corresponding to this entry.
+         * @return the key corresponding to this entry
+         * @throws IllegalStateException implementations may, but are not required to, throw this exception if the entry has
+         *             been removed from the backing map.
+         */
+        public K getKey()
+        {
+            return this.wrappedEntry.getKey();
+        }
+
+        /**
+         * Returns the value corresponding to this entry. If the mapping has been removed from the backing map (by the
+         * iterator's <tt>remove</tt> operation), the results of this call are undefined.
+         * @return the value corresponding to this entry
+         * @throws IllegalStateException implementations may, but are not required to, throw this exception if the entry has
+         *             been removed from the backing map.
+         */
+        public V getValue()
+        {
+            return this.wrappedEntry.getValue();
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public int hashCode()
+        {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((this.wrappedEntry == null) ? 0 : this.wrappedEntry.hashCode());
+            return result;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public boolean equals(Object obj)
+        {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            ImmutableEntry<?, ?> other = (ImmutableEntry<?, ?>) obj;
+            if (this.wrappedEntry == null)
+            {
+                if (other.wrappedEntry != null)
+                    return false;
+            }
+            else if (!this.wrappedEntry.equals(other.wrappedEntry))
+                return false;
+            return true;
+        }
+
+        /**
+         * Returns a comparator that compares {@link ImmutableMap.ImmutableEntry} in natural order on key.
+         * <p>
+         * The returned comparator is serializable and throws {@link NullPointerException} when comparing an entry with a null
+         * key.
+         * @param <K> the {@link Comparable} type of then map keys
+         * @param <V> the type of the map values
+         * @return a comparator that compares {@link ImmutableMap.ImmutableEntry} in natural order on key.
+         * @see Comparable
+         * @since 1.8
+         */
+        @SuppressWarnings("unchecked")
+        public static <K extends Comparable<? super K>, V> Comparator<ImmutableMap.ImmutableEntry<K, V>> comparingByKey()
+        {
+            return (Comparator<ImmutableMap.ImmutableEntry<K, V>> & Serializable) (c1, c2) -> c1.getKey()
+                    .compareTo(c2.getKey());
+        }
+
+        /**
+         * Returns a comparator that compares {@link ImmutableMap.ImmutableEntry} in natural order on value.
+         * <p>
+         * The returned comparator is serializable and throws {@link NullPointerException} when comparing an entry with null
+         * values.
+         * @param <K> the type of the map keys
+         * @param <V> the {@link Comparable} type of the map values
+         * @return a comparator that compares {@link ImmutableMap.ImmutableEntry} in natural order on value.
+         * @see Comparable
+         * @since 1.8
+         */
+        @SuppressWarnings("unchecked")
+        public static <K, V extends Comparable<? super V>> Comparator<ImmutableMap.ImmutableEntry<K, V>> comparingByValue()
+        {
+            return (Comparator<ImmutableMap.ImmutableEntry<K, V>> & Serializable) (c1, c2) -> c1.getValue()
+                    .compareTo(c2.getValue());
+        }
+
+        /**
+         * Returns a comparator that compares {@link ImmutableMap.ImmutableEntry} by key using the given {@link Comparator}.
+         * <p>
+         * The returned comparator is serializable if the specified comparator is also serializable.
+         * @param <K> the type of the map keys
+         * @param <V> the type of the map values
+         * @param cmp the key {@link Comparator}
+         * @return a comparator that compares {@link ImmutableMap.ImmutableEntry} by the key.
+         * @since 1.8
+         */
+        @SuppressWarnings("unchecked")
+        public static <K, V> Comparator<ImmutableMap.ImmutableEntry<K, V>> comparingByKey(Comparator<? super K> cmp)
+        {
+            Objects.requireNonNull(cmp);
+            return (Comparator<ImmutableMap.ImmutableEntry<K, V>> & Serializable) (c1, c2) -> cmp.compare(c1.getKey(),
+                    c2.getKey());
+        }
+
+        /**
+         * Returns a comparator that compares {@link ImmutableMap.ImmutableEntry} by value using the given {@link Comparator}.
+         * <p>
+         * The returned comparator is serializable if the specified comparator is also serializable.
+         * @param <K> the type of the map keys
+         * @param <V> the type of the map values
+         * @param cmp the value {@link Comparator}
+         * @return a comparator that compares {@link ImmutableMap.ImmutableEntry} by the value.
+         * @since 1.8
+         */
+        @SuppressWarnings("unchecked")
+        public static <K, V> Comparator<ImmutableMap.ImmutableEntry<K, V>> comparingByValue(Comparator<? super V> cmp)
+        {
+            Objects.requireNonNull(cmp);
+            return (Comparator<ImmutableMap.ImmutableEntry<K, V>> & Serializable) (c1, c2) -> cmp.compare(c1.getValue(),
+                    c2.getValue());
+        }
     }
 
 }
