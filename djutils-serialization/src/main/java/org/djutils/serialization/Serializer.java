@@ -15,84 +15,20 @@ package org.djutils.serialization;
 public interface Serializer<T extends Object>
 {
     /**
-     * Container for an offset.
-     */
-    static class Pointer
-    {
-        /** Current value of the offset. */
-        private int offset;
-
-        /**
-         * Construct a new Pointer with specified initial offset.
-         * @param initialOffset int; the initial offset
-         */
-        Pointer(final int initialOffset)
-        {
-            this.offset = initialOffset;
-        }
-
-        /**
-         * Construct a new Pointer with offset 0.
-         */
-        Pointer()
-        {
-            this(0);
-        }
-
-        /**
-         * Retrieve the offset.
-         * @return int; the offset
-         */
-        int get()
-        {
-            return this.offset;
-        }
-
-        /**
-         * Retrieve the current value of offset and increment it. The returned value is the value <b>before</b> applying the
-         * increment.
-         * @param increment int; the amount by which the offset must be incremented
-         * @return int; the offset (before the increment was added)
-         */
-        int getAndIncrement(int increment)
-        {
-            int result = this.offset;
-            this.offset += increment;
-            return result;
-        }
-
-        /**
-         * Increment the offset.
-         * @param increment int; the amount by which the offset must be incremented
-         */
-        public void inc(final int increment)
-        {
-            this.offset += increment;
-        }
-
-        @Override
-        public String toString()
-        {
-            return "Pointer [offset=" + offset + "]";
-        }
-        
-    }
-
-    /**
      * Compute the number of bytes needed to serialize an object of type T (excluding the byte(s) that indicate that an object
      * of type T is next in the data stream).
-     * @param object Instance of the object
+     * @param object Object; Instance of the object (should be of type T)
      * @return int; the number of bytes needed to serialize an object of type T
      */
-    int size(T object);
+    int size(Object object);
 
     /**
      * Compute the number of bytes needed to serialize an object of type T (including the byte(s) that indicate that an object
      * of type T is next in the data stream).
-     * @param object Instance of the object
+     * @param object Instance of the object (should be instance of T)
      * @return int; the number of bytes needed to serialize an object of type T
      */
-    int sizeWithPrefix(T object);
+    int sizeWithPrefix(Object object);
 
     /**
      * Return the byte representation of the field type.
@@ -102,19 +38,21 @@ public interface Serializer<T extends Object>
 
     /**
      * Serialize an object of type T.
-     * @param object T; the object to serialize
+     * @param object Object; the object to serialize (should be of type T)
      * @param buffer byte[]; buffer for the serialized T
      * @param pointer Pointer; position in buffer where the first byte of the serialized T will be stored
+     * @throws SerializationException when a matrix has size zero or is jagged
      */
-    void serialize(T object, byte[] buffer, Pointer pointer);
+    void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException;
 
     /**
      * Serialize an object of type T.
-     * @param object T; the object to serialize
+     * @param object Object; the object to serialize (should be of type T)
      * @param buffer byte[]; buffer for the serialized T
      * @param pointer Pointer; position in buffer where the first byte of the serialized T will be stored
+     * @throws SerializationException when a matrix has size zero or is jagged
      */
-    void serializeWithPrefix(T object, byte[] buffer, Pointer pointer);
+    void serializeWithPrefix(Object object, byte[] buffer, Pointer pointer) throws SerializationException;
 
     /**
      * Deserialize an object of type T.
