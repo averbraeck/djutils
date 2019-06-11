@@ -1,51 +1,27 @@
 package org.djutils.serialization;
 
 /**
- * Serializer for simple (fixed size) classes.
+ * Basics of the serializer
  * @param <T> class
  */
 public abstract class BasicSerializer<T extends Object> implements Serializer<T>
 {
-    /** The field type that is usually prefixes the serialized data. */
+    /** The field type that usually prefixes the serialized data. */
     private final byte type;
-    
-    /** Size of the encoded data. */
-    private final int dataSize;
     
     /**
      * Construct the BasicSerializer.
-     * @param fieldType byte; the field type (returned by the <code>fieldType</code> method)
-     * @param serializedDataSize int; number of bytes required for serialized T
+     * @param type byte; the field type (returned by the <code>fieldType</code> method)
      */
-    public BasicSerializer(final byte fieldType, final int serializedDataSize)
+    public BasicSerializer(final byte type)
     {
-        this.type = fieldType;
-        this.dataSize = serializedDataSize;
+        this.type = type;
     }
     
     @Override
-    public int size(T object)
-    {
-        return this.dataSize;
-    }
-
-    @Override
-    public int sizeWithPrefix(T object)
-    {
-        return 1 + size(object);
-    }
-
-    @Override
-    public byte fieldType()
+    public final byte fieldType()
     {
         return this.type;
-    }
-
-    @Override
-    public void serializeWithPrefix(T object, byte[] buffer, Pointer pointer)
-    {
-        buffer[pointer.getAndIncrement(1)] = fieldType();
-        serialize(object, buffer, pointer);
     }
 
 }

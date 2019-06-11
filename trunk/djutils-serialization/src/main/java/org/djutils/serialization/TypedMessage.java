@@ -6,6 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.djunits.unit.AreaUnit;
+import org.djunits.unit.DurationUnit;
+import org.djunits.unit.EnergyUnit;
+import org.djunits.unit.LengthUnit;
+import org.djunits.unit.MassUnit;
 import org.djunits.unit.MoneyPerAreaUnit;
 import org.djunits.unit.MoneyPerDurationUnit;
 import org.djunits.unit.MoneyPerEnergyUnit;
@@ -14,6 +19,7 @@ import org.djunits.unit.MoneyPerMassUnit;
 import org.djunits.unit.MoneyPerVolumeUnit;
 import org.djunits.unit.MoneyUnit;
 import org.djunits.unit.Unit;
+import org.djunits.unit.VolumeUnit;
 import org.djunits.value.StorageType;
 import org.djunits.value.ValueException;
 import org.djunits.value.vdouble.matrix.AbstractDoubleMatrix;
@@ -43,7 +49,6 @@ import org.djunits.value.vfloat.scalar.FloatScalarUtil;
 import org.djunits.value.vfloat.vector.AbstractFloatVector;
 import org.djunits.value.vfloat.vector.FloatVectorUtil;
 import org.djutils.exceptions.Throw;
-import org.sim0mq.message.util.EndianUtil;
 
 /**
  * Message conversions. These take into account the endianness for coding the different values. Java is by default big-endian.
@@ -59,199 +64,166 @@ import org.sim0mq.message.util.EndianUtil;
 public final class TypedMessage
 {
     /** All the converters. */
-    static final private Map<Class, Serializer> converters = new HashMap<>();
+    static final private Map<Class<?>, Serializer<?>> converters = new HashMap<>();
 
     /** Converter for Byte. */
-    static final private Serializer<Byte> convertByte = new BasicSerializer<Byte>(FieldTypes.BYTE_8, 1)
+    static final private Serializer<Byte> convertByte = new FixedSizeSerializer<Byte>(FieldTypes.BYTE_8, 1)
     {
         @Override
-        public void serialize(Byte object, byte[] buffer, Pointer pointer)
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
         {
-            buffer[pointer.getAndIncrement(1)] = object;
+            buffer[pointer.getAndIncrement(1)] = (Byte) object;
         }
 
         @Override
-        public Byte deSerialize(byte[] buffer, Pointer pointer)
+        public Byte deSerialize(final byte[] buffer, final Pointer pointer)
         {
             return buffer[pointer.getAndIncrement(1)];
         }
     };
 
     /** Converter for Short. */
-    static final private Serializer<Short> convertShort = new BasicSerializer<Short>(FieldTypes.SHORT_16, 2)
+    static final private Serializer<Short> convertShort = new FixedSizeSerializer<Short>(FieldTypes.SHORT_16, 2)
     {
         @Override
-        public void serialize(Short object, byte[] buffer, Pointer pointer)
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
         {
-            EndianUtil.encodeShort(object, buffer, pointer.getAndIncrement(2));
+            EndianUtil.encodeShort((Short) object, buffer, pointer.getAndIncrement(2));
         }
 
         @Override
-        public Short deSerialize(byte[] buffer, Pointer pointer)
+        public Short deSerialize(final byte[] buffer, final Pointer pointer)
         {
             return EndianUtil.decodeShort(buffer, pointer.getAndIncrement(2));
         }
     };
 
     /** Converter for Integer. */
-    static final private Serializer<Integer> convertInteger = new BasicSerializer<Integer>(FieldTypes.INT_32, 4)
+    static final private Serializer<Integer> convertInteger = new FixedSizeSerializer<Integer>(FieldTypes.INT_32, 4)
     {
         @Override
-        public void serialize(Integer object, byte[] buffer, Pointer pointer)
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
         {
-            EndianUtil.encodeInt(object, buffer, pointer.getAndIncrement(4));
+            EndianUtil.encodeInt((Integer) object, buffer, pointer.getAndIncrement(4));
         }
 
         @Override
-        public Integer deSerialize(byte[] buffer, Pointer pointer)
+        public Integer deSerialize(final byte[] buffer, final Pointer pointer)
         {
             return EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         }
     };
 
     /** Converter for Integer. */
-    static final private Serializer<Long> convertLong = new BasicSerializer<Long>(FieldTypes.LONG_64, 8)
+    static final private Serializer<Long> convertLong = new FixedSizeSerializer<Long>(FieldTypes.LONG_64, 8)
     {
         @Override
-        public void serialize(Long object, byte[] buffer, Pointer pointer)
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
         {
-            EndianUtil.encodeLong(object, buffer, pointer.getAndIncrement(8));
+            EndianUtil.encodeLong((Long) object, buffer, pointer.getAndIncrement(8));
         }
 
         @Override
-        public Long deSerialize(byte[] buffer, Pointer pointer)
+        public Long deSerialize(final byte[] buffer, final Pointer pointer)
         {
             return EndianUtil.decodeLong(buffer, pointer.getAndIncrement(8));
         }
     };
 
     /** Converter for Float. */
-    static final private Serializer<Float> convertFloat = new BasicSerializer<Float>(FieldTypes.FLOAT_32, 4)
+    static final private Serializer<Float> convertFloat = new FixedSizeSerializer<Float>(FieldTypes.FLOAT_32, 4)
     {
         @Override
-        public void serialize(Float object, byte[] buffer, Pointer pointer)
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
         {
-            EndianUtil.encodeFloat(object, buffer, pointer.getAndIncrement(4));
+            EndianUtil.encodeFloat((Float) object, buffer, pointer.getAndIncrement(4));
         }
 
         @Override
-        public Float deSerialize(byte[] buffer, Pointer pointer)
+        public Float deSerialize(final byte[] buffer, final Pointer pointer)
         {
             return EndianUtil.decodeFloat(buffer, pointer.getAndIncrement(4));
         }
     };
 
     /** Converter for Double. */
-    static final private Serializer<Double> convertDouble = new BasicSerializer<Double>(FieldTypes.DOUBLE_64, 8)
+    static final private Serializer<Double> convertDouble = new FixedSizeSerializer<Double>(FieldTypes.DOUBLE_64, 8)
     {
         @Override
-        public void serialize(Double object, byte[] buffer, Pointer pointer)
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
         {
-            EndianUtil.encodeDouble(object, buffer, pointer.getAndIncrement(8));
+            EndianUtil.encodeDouble((Double) object, buffer, pointer.getAndIncrement(8));
         }
 
         @Override
-        public Double deSerialize(byte[] buffer, Pointer pointer)
+        public Double deSerialize(final byte[] buffer, final Pointer pointer)
         {
             return EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
         }
     };
 
     /** Converter for Boolean. */
-    static final private Serializer<Boolean> convertBoolean = new BasicSerializer<Boolean>(FieldTypes.BOOLEAN_8, 1)
+    static final private Serializer<Boolean> convertBoolean = new FixedSizeSerializer<Boolean>(FieldTypes.BOOLEAN_8, 1)
     {
         @Override
-        public void serialize(Boolean object, byte[] buffer, Pointer pointer)
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
         {
-            buffer[pointer.getAndIncrement(1)] = (byte) (object ? 1 : 0);
+            buffer[pointer.getAndIncrement(1)] = (byte) (((Boolean) object) ? 1 : 0);
         }
 
         @Override
-        public Boolean deSerialize(byte[] buffer, Pointer pointer)
+        public Boolean deSerialize(final byte[] buffer, final Pointer pointer)
         {
             return buffer[pointer.getAndIncrement(1)] == 0 ? false : true;
         }
     };
 
     /** Converter for Character. */
-    static final private Serializer<Character> convertCharacter = new BasicSerializer<Character>(FieldTypes.CHAR_16, 2)
+    static final private Serializer<Character> convertCharacter16 = new FixedSizeSerializer<Character>(FieldTypes.CHAR_16, 2)
     {
-        public int size(Character object, boolean utf8)
+        @Override
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
         {
-            return utf8 ? 1 : size(object);
+            EndianUtil.encodeChar((Character) object, buffer, pointer.getAndIncrement(size(object)));
         }
 
         @Override
-        public void serialize(Character object, byte[] buffer, Pointer pointer)
-        {
-            EndianUtil.encodeChar(object, buffer, pointer.getAndIncrement(size(object)));
-        }
-
-        @Override
-        public Character deSerialize(byte[] buffer, Pointer pointer)
+        public Character deSerialize(final byte[] buffer, final Pointer pointer)
         {
             return EndianUtil.decodeChar(buffer, pointer.getAndIncrement(2));
         }
+    };
 
-        public Character deSerialize(byte[] buffer, Pointer pointer, final boolean utf8)
+    /** Converter for Character. */
+    static final private Serializer<Character> convertCharacter8 = new FixedSizeSerializer<Character>(FieldTypes.CHAR_8, 1)
+    {
+        @Override
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
         {
-            return utf8 ? EndianUtil.decodeChar(buffer, pointer.getAndIncrement(1)) : deSerialize(buffer, pointer);
+            EndianUtil.encodeChar((Character) object, buffer, pointer.getAndIncrement(size(object)));
         }
 
-        public int sizeWithPrefix(final Character object, final boolean utf8)
+        @Override
+        public Character deSerialize(final byte[] buffer, final Pointer pointer)
         {
-            return utf8 ? 2 : 3;
-        }
-
-        public byte fieldType(final boolean utf8)
-        {
-            return utf8 ? FieldTypes.CHAR_8 : fieldType();
-        }
-
-        public void serializeWithPrefix(Character object, byte[] buffer, Pointer pointer, final boolean utf8)
-        {
-            if (utf8)
-            {
-                buffer[pointer.getAndIncrement(1)] = FieldTypes.CHAR_8;
-                buffer[pointer.getAndIncrement(1)] = (byte) (object & 0xff);
-            }
-            else
-            {
-                serializeWithPrefix(object, buffer, pointer);
-            }
+            return new Character((char) buffer[pointer.getAndIncrement(1)]);
         }
     };
 
     /** Converter for String. */
-    static final private Serializer<String> convertString = new BasicSerializer<String>(FieldTypes.STRING_16, 5)
+    static final private Serializer<String> convertString16 = new BasicPlainTypeSerializer<String>(FieldTypes.STRING_16)
     {
         @Override
-        public int size(String object)
+        public int size(final Object object)
         {
-            return 4 + object.length() * 2;
-        }
-
-        public int size(String object, boolean utf8)
-        {
-            return utf8 ? 4 + object.length() : size(object);
-        }
-
-        public int sizeWithPrefix(String object, boolean utf8)
-        {
-            return 1 + size(object, utf8);
+            return 4 + ((String) object).getBytes(UTF16).length * 2;
         }
 
         @Override
-        public void serialize(String object, byte[] buffer, Pointer pointer)
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
         {
-            serialize(object, buffer, pointer, false);
-        }
-
-        public void serialize(String object, byte[] buffer, Pointer pointer, boolean utf8)
-        {
-            int len = ((String) object).length();
-            EndianUtil.encodeInt(len, buffer, pointer.getAndIncrement(4));
-            byte[] s = utf8 ? ((String) object).getBytes(UTF8) : ((String) object).getBytes(UTF16);
+            byte[] s = ((String) object).getBytes(UTF16);
+            EndianUtil.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
             for (byte b : s)
             {
                 buffer[pointer.getAndIncrement(1)] = b;
@@ -259,31 +231,280 @@ public final class TypedMessage
         }
 
         @Override
-        public void serializeWithPrefix(String object, byte[] buffer, Pointer pointer)
+        public String deSerialize(final byte[] buffer, final Pointer pointer)
         {
-            serializeWithPrefix(object, buffer, pointer, false);
-        }
-
-        public void serializeWithPrefix(String object, byte[] buffer, Pointer pointer, boolean utf8)
-        {
-            buffer[pointer.getAndIncrement(1)] = utf8 ? FieldTypes.STRING_8 : FieldTypes.STRING_16;
-            serialize(object, buffer, pointer, utf8);
-        }
-
-        @Override
-        public String deSerialize(byte[] buffer, Pointer pointer)
-        {
-            return deSerialize(buffer, pointer, false);
-        }
-
-        public String deSerialize(byte[] buffer, Pointer pointer, boolean utf8)
-        {
-            String s = utf8 ? EndianUtil.decodeUTF8String(buffer, pointer.get())
-                    : EndianUtil.decodeUTF16String(buffer, pointer.get());
-            pointer.getAndIncrement(4 + s.length() * (utf8 ? 1 : 2));
+            String s = EndianUtil.decodeUTF16String(buffer, pointer.get());
+            pointer.getAndIncrement(4 + s.length() * 2);
             return s;
         }
     };
+
+    /** Converter for String. */
+    static final private Serializer<String> convertString8 = new BasicPlainTypeSerializer<String>(FieldTypes.STRING_8)
+    {
+        @Override
+        public int size(final Object object)
+        {
+            return 4 + ((String) object).getBytes(UTF16).length;
+        }
+
+        @Override
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+        {
+            byte[] s = ((String) object).getBytes(UTF8);
+            EndianUtil.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
+            for (byte b : s)
+            {
+                buffer[pointer.getAndIncrement(1)] = b;
+            }
+        }
+
+        @Override
+        public String deSerialize(final byte[] buffer, final Pointer pointer)
+        {
+            String s = EndianUtil.decodeUTF8String(buffer, pointer.get());
+            pointer.getAndIncrement(4 + s.length() * 1);
+            return s;
+        }
+    };
+
+    /** Converter for Byte array. */
+    static final private Serializer<Byte[]> convertByteArray =
+            new BasicFixedSizeArraySerializer<Byte>(FieldTypes.BYTE_8_ARRAY, 1, new Byte[0])
+            {
+                @Override
+                public void serializeElement(final Byte object, final byte[] buffer, final int offset)
+                {
+                    buffer[offset] = object;
+                }
+
+                @Override
+                public Byte deSerializeElement(final byte[] buffer, final int offset)
+                {
+                    return buffer[offset];
+                }
+            };
+
+    /** Converter for Short array. */
+    static final private Serializer<Short[]> convertShortArray =
+            new BasicFixedSizeArraySerializer<Short>(FieldTypes.SHORT_16_ARRAY, 2, new Short[0])
+            {
+                @Override
+                public void serializeElement(final Short object, final byte[] buffer, final int offset)
+                {
+                    EndianUtil.encodeShort(object, buffer, offset);
+                }
+
+                @Override
+                public Short deSerializeElement(final byte[] buffer, final int offset)
+                {
+                    return EndianUtil.decodeShort(buffer, offset);
+                }
+            };
+
+    /** Converter for Integer array. */
+    static final private Serializer<Integer[]> convertIntegerArray =
+            new BasicFixedSizeArraySerializer<Integer>(FieldTypes.INT_32_ARRAY, 4, new Integer[0])
+            {
+                @Override
+                public void serializeElement(final Integer object, final byte[] buffer, final int offset)
+                {
+                    EndianUtil.encodeInt(object, buffer, offset);
+                }
+
+                @Override
+                public Integer deSerializeElement(final byte[] buffer, final int offset)
+                {
+                    return EndianUtil.decodeInt(buffer, offset);
+                }
+            };
+
+    /** Converter for Long array. */
+    static final private Serializer<Long[]> convertLongArray =
+            new BasicFixedSizeArraySerializer<Long>(FieldTypes.LONG_64_ARRAY, 8, new Long[0])
+            {
+                @Override
+                public void serializeElement(final Long object, final byte[] buffer, final int offset)
+                {
+                    EndianUtil.encodeLong(object, buffer, offset);
+                }
+
+                @Override
+                public Long deSerializeElement(final byte[] buffer, final int offset)
+                {
+                    return EndianUtil.decodeLong(buffer, offset);
+                }
+            };
+
+    /** Converter for Float array. */
+    static final private Serializer<Float[]> convertFloatArray =
+            new BasicFixedSizeArraySerializer<Float>(FieldTypes.FLOAT_32_ARRAY, 4, new Float[0])
+            {
+                @Override
+                public void serializeElement(final Float object, final byte[] buffer, final int offset)
+                {
+                    EndianUtil.encodeFloat(object, buffer, offset);
+                }
+
+                @Override
+                public Float deSerializeElement(final byte[] buffer, final int offset)
+                {
+                    return EndianUtil.decodeFloat(buffer, offset);
+                }
+            };
+
+    /** Converter for Float array. */
+    static final private Serializer<Double[]> convertDoubleArray =
+            new BasicFixedSizeArraySerializer<Double>(FieldTypes.DOUBLE_64_ARRAY, 8, new Double[0])
+            {
+                @Override
+                public void serializeElement(final Double object, final byte[] buffer, final int offset)
+                {
+                    EndianUtil.encodeDouble(object, buffer, offset);
+                }
+
+                @Override
+                public Double deSerializeElement(final byte[] buffer, final int offset)
+                {
+                    return EndianUtil.decodeDouble(buffer, offset);
+                }
+            };
+
+    /** Converter for Boolean array. */
+    static final private Serializer<Boolean[]> convertBooleanArray =
+            new BasicFixedSizeArraySerializer<Boolean>(FieldTypes.BOOLEAN_8_ARRAY, 1, new Boolean[0])
+            {
+                @Override
+                public void serializeElement(final Boolean object, final byte[] buffer, final int offset)
+                {
+                    buffer[offset] = (byte) (object ? 1 : 0);
+                }
+
+                @Override
+                public Boolean deSerializeElement(final byte[] buffer, final int offset)
+                {
+                    return buffer[offset] == 0 ? false : true;
+                }
+            };
+
+    /** Converter for Byte array. */
+    static final private Serializer<Byte[][]> convertByteMatrix =
+            new BasicFixedSizeMatrixSerializer<Byte>(FieldTypes.BYTE_8_MATRIX, 1, new Byte[0][0])
+            {
+                @Override
+                public void serializeElement(final Byte object, final byte[] buffer, final int offset)
+                {
+                    buffer[offset] = object;
+                }
+
+                @Override
+                public Byte deSerializeElement(final byte[] buffer, final int offset)
+                {
+                    return buffer[offset];
+                }
+            };
+
+    /** Converter for Short array. */
+    static final private Serializer<Short[][]> convertShortMatrix =
+            new BasicFixedSizeMatrixSerializer<Short>(FieldTypes.SHORT_16_MATRIX, 2, new Short[0][0])
+            {
+                @Override
+                public void serializeElement(final Short object, final byte[] buffer, final int offset)
+                {
+                    EndianUtil.encodeShort(object, buffer, offset);
+                }
+
+                @Override
+                public Short deSerializeElement(final byte[] buffer, final int offset)
+                {
+                    return EndianUtil.decodeShort(buffer, offset);
+                }
+            };
+
+    /** Converter for Integer array. */
+    static final private Serializer<Integer[][]> convertIntegerMatrix =
+            new BasicFixedSizeMatrixSerializer<Integer>(FieldTypes.INT_32_MATRIX, 4, new Integer[0][0])
+            {
+                @Override
+                public void serializeElement(final Integer object, final byte[] buffer, final int offset)
+                {
+                    EndianUtil.encodeInt(object, buffer, offset);
+                }
+
+                @Override
+                public Integer deSerializeElement(final byte[] buffer, final int offset)
+                {
+                    return EndianUtil.decodeInt(buffer, offset);
+                }
+            };
+
+    /** Converter for Long array. */
+    static final private Serializer<Long[][]> convertLongMatrix =
+            new BasicFixedSizeMatrixSerializer<Long>(FieldTypes.LONG_64_MATRIX, 8, new Long[0][0])
+            {
+                @Override
+                public void serializeElement(final Long object, final byte[] buffer, final int offset)
+                {
+                    EndianUtil.encodeLong(object, buffer, offset);
+                }
+
+                @Override
+                public Long deSerializeElement(final byte[] buffer, final int offset)
+                {
+                    return EndianUtil.decodeLong(buffer, offset);
+                }
+            };
+
+    /** Converter for Float array. */
+    static final private Serializer<Float[][]> convertFloatMatrix =
+            new BasicFixedSizeMatrixSerializer<Float>(FieldTypes.FLOAT_32_MATRIX, 4, new Float[0][0])
+            {
+                @Override
+                public void serializeElement(final Float object, final byte[] buffer, final int offset)
+                {
+                    EndianUtil.encodeFloat(object, buffer, offset);
+                }
+
+                @Override
+                public Float deSerializeElement(final byte[] buffer, final int offset)
+                {
+                    return EndianUtil.decodeFloat(buffer, offset);
+                }
+            };
+
+    /** Converter for Float array. */
+    static final private Serializer<Double[][]> convertDoubleMatrix =
+            new BasicFixedSizeMatrixSerializer<Double>(FieldTypes.DOUBLE_64_MATRIX, 8, new Double[0][0])
+            {
+                @Override
+                public void serializeElement(final Double object, final byte[] buffer, final int offset)
+                {
+                    EndianUtil.encodeDouble(object, buffer, offset);
+                }
+
+                @Override
+                public Double deSerializeElement(final byte[] buffer, final int offset)
+                {
+                    return EndianUtil.decodeDouble(buffer, offset);
+                }
+            };
+
+    /** Converter for Boolean array. */
+    static final private Serializer<Boolean[][]> convertBooleanMatrix =
+            new BasicFixedSizeMatrixSerializer<Boolean>(FieldTypes.BOOLEAN_8_MATRIX, 1, new Boolean[0][0])
+            {
+                @Override
+                public void serializeElement(final Boolean object, final byte[] buffer, final int offset)
+                {
+                    buffer[offset] = (byte) (object ? 1 : 0);
+                }
+
+                @Override
+                public Boolean deSerializeElement(final byte[] buffer, final int offset)
+                {
+                    return buffer[offset] == 0 ? false : true;
+                }
+            };
 
     static
     {
@@ -301,55 +522,35 @@ public final class TypedMessage
         converters.put(double.class, convertDouble);
         converters.put(Boolean.class, convertBoolean);
         converters.put(boolean.class, convertBoolean);
-        converters.put(Character.class, convertCharacter);
-        converters.put(char.class, convertCharacter);
-        converters.put(String.class, convertString);
+        converters.put(Byte[].class, convertByteArray);
+        converters.put(byte[].class, convertByteArray);
+        converters.put(Short[].class, convertShortArray);
+        converters.put(short[].class, convertShortArray);
+        converters.put(Integer[].class, convertIntegerArray);
+        converters.put(int[].class, convertIntegerArray);
+        converters.put(Long[].class, convertLongArray);
+        converters.put(long[].class, convertLongArray);
+        converters.put(Float[].class, convertFloatArray);
+        converters.put(float[].class, convertFloatArray);
+        converters.put(Double[].class, convertDoubleArray);
+        converters.put(double[].class, convertDoubleArray);
+        converters.put(Boolean[].class, convertBooleanArray);
+        converters.put(boolean[].class, convertBooleanArray);
+        converters.put(Byte[][].class, convertByteMatrix);
+        converters.put(byte[][].class, convertByteMatrix);
+        converters.put(Short[][].class, convertShortMatrix);
+        converters.put(short[][].class, convertShortMatrix);
+        converters.put(Integer[][].class, convertIntegerMatrix);
+        converters.put(int[][].class, convertIntegerMatrix);
+        converters.put(Long[][].class, convertLongMatrix);
+        converters.put(long[][].class, convertLongMatrix);
+        converters.put(Float[][].class, convertFloatMatrix);
+        converters.put(float[][].class, convertFloatMatrix);
+        converters.put(Double[][].class, convertDoubleMatrix);
+        converters.put(double[][].class, convertDoubleMatrix);
+        converters.put(Boolean[][].class, convertBooleanMatrix);
+        converters.put(boolean[][].class, convertBooleanMatrix);
     }
-
-    /** hashcode of String class. */
-    protected static final int STRING_HC = String.class.hashCode();
-
-    /** hashcode of byte[] class. */
-    protected static final int BYTE_ARRAY_HC = byte[].class.hashCode();
-
-    /** hashcode of short[] class. */
-    protected static final int SHORT_ARRAY_HC = short[].class.hashCode();
-
-    /** hashcode of int[] class. */
-    protected static final int INT_ARRAY_HC = int[].class.hashCode();
-
-    /** hashcode of long[] class. */
-    protected static final int LONG_ARRAY_HC = long[].class.hashCode();
-
-    /** hashcode of float[] class. */
-    protected static final int FLOAT_ARRAY_HC = float[].class.hashCode();
-
-    /** hashcode of double[] class. */
-    protected static final int DOUBLE_ARRAY_HC = double[].class.hashCode();
-
-    /** hashcode of boolean[] class. */
-    protected static final int BOOLEAN_ARRAY_HC = boolean[].class.hashCode();
-
-    /** hashcode of byte[][] class. */
-    protected static final int BYTE_MATRIX_HC = byte[][].class.hashCode();
-
-    /** hashcode of short[][] class. */
-    protected static final int SHORT_MATRIX_HC = short[][].class.hashCode();
-
-    /** hashcode of int[][] class. */
-    protected static final int INT_MATRIX_HC = int[][].class.hashCode();
-
-    /** hashcode of long[][] class. */
-    protected static final int LONG_MATRIX_HC = long[][].class.hashCode();
-
-    /** hashcode of float[][] class. */
-    protected static final int FLOAT_MATRIX_HC = float[][].class.hashCode();
-
-    /** hashcode of double[][] class. */
-    protected static final int DOUBLE_MATRIX_HC = double[][].class.hashCode();
-
-    /** hashcode of boolean[][] class. */
-    protected static final int BOOLEAN_MATRIX_HC = boolean[][].class.hashCode();
 
     /** the UTF-8 charset. */
     protected static final Charset UTF8 = Charset.forName("UTF-8");
@@ -369,9 +570,9 @@ public final class TypedMessage
      * Encode the object array into a byte[] message. Use UTF8 for the characters and for the String.
      * @param content the objects to encode
      * @return the zeroMQ message to send as a byte array
-     * @throws Sim0MQException on unknown data type
+     * @throws SerializationException on unknown data type
      */
-    public static byte[] encodeUTF8(final Object... content) throws Sim0MQException
+    public static byte[] encodeUTF8(final Object... content) throws SerializationException
     {
         return encode(true, false, content);
     }
@@ -380,25 +581,11 @@ public final class TypedMessage
      * Encode the object array into a byte[] message. Use UTF16 for the characters and for the String.
      * @param content the objects to encode
      * @return the zeroMQ message to send as a byte array
-     * @throws Sim0MQException on unknown data type
+     * @throws SerializationException on unknown data type
      */
-    public static byte[] encodeUTF16(final Object... content) throws Sim0MQException
+    public static byte[] encodeUTF16(final Object... content) throws SerializationException
     {
         return encode(false, false, content);
-    }
-
-    /**
-     * Encode the object array into a byte[] message. Use UTF8 for the characters and for the String. Make sure the first field
-     * is a String and always encoded as UTF8 (for the "SIM##" magic number at the start).
-     * @param content the objects to encode
-     * @return the zeroMQ message to send as a byte array
-     * @throws Sim0MQException on unknown data type
-     */
-    public static byte[] encode0MQMessageUTF8(final Object... content) throws Sim0MQException
-    {
-        Throw.when(content.length == 0, Sim0MQException.class, "empty array to encode");
-        Throw.when(!(content[1] instanceof String), Sim0MQException.class, "first field in array is not a String");
-        return encode(true, false, content);
     }
 
     /**
@@ -406,12 +593,12 @@ public final class TypedMessage
      * is a String and always encoded as UTF8 (for the "SIM##" magic number at the start).
      * @param content the objects to encode
      * @return the zeroMQ message to send as a byte array
-     * @throws Sim0MQException on unknown data type
+     * @throws SerializationException on unknown data type
      */
-    public static byte[] encode0MQMessageUTF16(final Object... content) throws Sim0MQException
+    public static byte[] encode0MQMessageUTF16(final Object... content) throws SerializationException
     {
-        Throw.when(content.length == 0, Sim0MQException.class, "empty array to encode");
-        Throw.when(!(content[1] instanceof String), Sim0MQException.class, "first field in array is not a String");
+        Throw.when(content.length == 0, SerializationException.class, "empty array to encode");
+        Throw.when(!(content[1] instanceof String), SerializationException.class, "first field in array is not a String");
         return encode(false, false, content);
     }
 
@@ -421,610 +608,307 @@ public final class TypedMessage
      * @param firstUtf8 whether to encode the first String field in utf8 or not
      * @param content the objects to encode
      * @return the zeroMQ message to send as a byte array
-     * @throws Sim0MQException on unknown data type
+     * @throws SerializationException on unknown data type
      */
     @SuppressWarnings({ "checkstyle:methodlength", "checkstyle:needbraces" })
-    private static byte[] encode(final boolean utf8, final boolean firstUtf8, final Object... content) throws Sim0MQException
+    private static byte[] encode(final boolean utf8, final boolean firstUtf8, final Object... content)
+            throws SerializationException
     {
+        // Pass one: compute total size
         int size = 0;
         for (int i = 0; i < content.length; i++)
         {
-            size++; // for the field type
-            int hc = content[i].getClass().hashCode();
-            if (hc == BYTE_HC)
-                size += 1;
-            else if (hc == SHORT_HC)
-                size += 2;
-            else if (hc == INTEGER_HC)
-                size += 4;
-            else if (hc == LONG_HC)
-                size += 8;
-            else if (hc == FLOAT_HC)
-                size += 4;
-            else if (hc == DOUBLE_HC)
-                size += 8;
-            else if (hc == BOOLEAN_HC)
-                size += 1;
-            else if (hc == CHAR_HC && utf8)
-                size += 1;
-            else if (hc == CHAR_HC && !utf8)
-                size += 2;
-            else if (hc == STRING_HC)
+            Object object = content[i];
+            Serializer<?> serializer = converters.get(object.getClass());
+            if (serializer != null)
             {
-                if (utf8 || (i == 0 && firstUtf8))
-                    size += ((String) content[i]).length() + 4;
-                else
-                    size += 2 * ((String) content[i]).length() + 4;
+                size += serializer.sizeWithPrefix(object);
             }
-            else if (hc == BYTE_ARRAY_HC)
-                size += ((byte[]) content[i]).length + 4;
-            else if (hc == SHORT_ARRAY_HC)
-                size += 2 * ((short[]) content[i]).length + 4;
-            else if (hc == INT_ARRAY_HC)
-                size += 4 * ((int[]) content[i]).length + 4;
-            else if (hc == LONG_ARRAY_HC)
-                size += 8 * ((long[]) content[i]).length + 4;
-            else if (hc == FLOAT_ARRAY_HC)
-                size += 4 * ((float[]) content[i]).length + 4;
-            else if (hc == DOUBLE_ARRAY_HC)
-                size += 8 * ((double[]) content[i]).length + 4;
-            else if (hc == BOOLEAN_ARRAY_HC)
-                size += ((boolean[]) content[i]).length + 4;
-            else if (hc == BYTE_MATRIX_HC)
-                size += ((byte[][]) content[i]).length * ((byte[][]) content[i])[0].length + 8;
-            else if (hc == SHORT_MATRIX_HC)
-                size += 2 * ((short[][]) content[i]).length * ((short[][]) content[i])[0].length + 8;
-            else if (hc == INT_MATRIX_HC)
-                size += 4 * ((int[][]) content[i]).length * ((int[][]) content[i])[0].length + 8;
-            else if (hc == LONG_MATRIX_HC)
-                size += 8 * ((long[][]) content[i]).length * ((long[][]) content[i])[0].length + 8;
-            else if (hc == FLOAT_MATRIX_HC)
-                size += 4 * ((float[][]) content[i]).length * ((float[][]) content[i])[0].length + 8;
-            else if (hc == DOUBLE_MATRIX_HC)
-                size += 8 * ((double[][]) content[i]).length * ((double[][]) content[i])[0].length + 8;
-            else if (hc == BOOLEAN_MATRIX_HC)
-                size += ((boolean[][]) content[i]).length * ((boolean[][]) content[i])[0].length + 8;
-            else if (content[i] instanceof AbstractFloatScalar)
-                size += 6 + extraBytesMoney(content[i]);
-            else if (content[i] instanceof AbstractDoubleScalar)
-                size += 10 + extraBytesMoney(content[i]);
-            else if (content[i] instanceof AbstractFloatVector)
+            else if (object instanceof Character)
             {
-                AbstractFloatVector<?, ?> afv = (AbstractFloatVector<?, ?>) content[i];
-                try
-                {
-                    size += 4 + 2 + extraBytesMoney(afv.get(0)) + 4 * afv.size();
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
+                size += utf8 ? convertCharacter8.size(object) : convertCharacter16.size(object);
             }
-            else if (content[i] instanceof AbstractDoubleVector)
+            else if (object instanceof String)
             {
-                AbstractDoubleVector<?, ?> adv = (AbstractDoubleVector<?, ?>) content[i];
-                try
-                {
-                    size += 4 + 2 + extraBytesMoney(adv.get(0)) + 8 * adv.size();
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
-            }
-            else if (content[i] instanceof AbstractFloatMatrix)
-            {
-                AbstractFloatMatrix<?, ?> afm = (AbstractFloatMatrix<?, ?>) content[i];
-                try
-                {
-                    size += 4 + 4 + 2 + extraBytesMoney(afm.get(0, 0)) + 4 * afm.rows() * afm.columns();
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
-            }
-            else if (content[i] instanceof AbstractDoubleMatrix)
-            {
-                AbstractDoubleMatrix<?, ?> adm = (AbstractDoubleMatrix<?, ?>) content[i];
-                try
-                {
-                    size += 4 + 4 + 2 + extraBytesMoney(adm.get(0, 0)) + 8 * adm.rows() * adm.columns();
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
-            }
-            else if (content[i] instanceof AbstractFloatVector[])
-            {
-                AbstractFloatVector<?, ?>[] afvArray = (AbstractFloatVector<?, ?>[]) content[i];
-                try
-                {
-                    size += 4 + 4; // rows, cols
-                    for (int j = 0; j < afvArray.length; j++)
-                    {
-                        size += 2 + extraBytesMoney(afvArray[j].get(0)) + 4 * afvArray[j].size();
-                    }
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
-            }
-            else if (content[i] instanceof AbstractDoubleVector[])
-            {
-                AbstractDoubleVector<?, ?>[] afvArray = (AbstractDoubleVector<?, ?>[]) content[i];
-                try
-                {
-                    size += 4 + 4; // rows, cols
-                    for (int j = 0; j < afvArray.length; j++)
-                    {
-                        size += 2 + extraBytesMoney(afvArray[j].get(0)) + 8 * afvArray[j].size();
-                    }
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
+                size += utf8 ? convertString8.size(object) : convertString16.size(object);
             }
             else
-                throw new Sim0MQException("Unknown data type " + content[i].getClass() + " for encoding the ZeroMQ message");
+            {
+                if (object instanceof AbstractFloatScalar)
+                    size += 6 + extraBytesMoney(content[i]);
+                else if (object instanceof AbstractDoubleScalar)
+                    size += 10 + extraBytesMoney(content[i]);
+                else if (object instanceof AbstractFloatVector)
+                {
+                    AbstractFloatVector<?, ?> afv = (AbstractFloatVector<?, ?>) object;
+                    try
+                    {
+                        size += 4 + 2 + extraBytesMoney(afv.get(0)) + 4 * afv.size();
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
+                    }
+                }
+                else if (object instanceof AbstractDoubleVector)
+                {
+                    AbstractDoubleVector<?, ?> adv = (AbstractDoubleVector<?, ?>) object;
+                    try
+                    {
+                        size += 4 + 2 + extraBytesMoney(adv.get(0)) + 8 * adv.size();
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
+                    }
+                }
+                else if (object instanceof AbstractFloatMatrix)
+                {
+                    AbstractFloatMatrix<?, ?> afm = (AbstractFloatMatrix<?, ?>) object;
+                    try
+                    {
+                        size += 4 + 4 + 2 + extraBytesMoney(afm.get(0, 0)) + 4 * afm.rows() * afm.columns();
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
+                    }
+                }
+                else if (object instanceof AbstractDoubleMatrix)
+                {
+                    AbstractDoubleMatrix<?, ?> adm = (AbstractDoubleMatrix<?, ?>) object;
+                    try
+                    {
+                        size += 4 + 4 + 2 + extraBytesMoney(adm.get(0, 0)) + 8 * adm.rows() * adm.columns();
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
+                    }
+                }
+                else if (object instanceof AbstractFloatVector[])
+                {
+                    AbstractFloatVector<?, ?>[] afvArray = (AbstractFloatVector<?, ?>[]) object;
+                    try
+                    {
+                        size += 4 + 4; // rows, cols
+                        for (int j = 0; j < afvArray.length; j++)
+                        {
+                            size += 2 + extraBytesMoney(afvArray[j].get(0)) + 4 * afvArray[j].size();
+                        }
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
+                    }
+                }
+                else if (object instanceof AbstractDoubleVector[])
+                {
+                    AbstractDoubleVector<?, ?>[] afvArray = (AbstractDoubleVector<?, ?>[]) object;
+                    try
+                    {
+                        size += 4 + 4; // rows, cols
+                        for (int j = 0; j < afvArray.length; j++)
+                        {
+                            size += 2 + extraBytesMoney(afvArray[j].get(0)) + 8 * afvArray[j].size();
+                        }
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
+                    }
+                }
+                else
+                    throw new SerializationException(
+                            "Unknown data type " + object.getClass() + " for encoding the ZeroMQ message");
+            }
         }
-
+        // Allocate buffer
         byte[] message = new byte[size];
-        int pointer = 0;
+        // Pass 2 fill buffer
+        Pointer pointer = new Pointer();
 
         for (int i = 0; i < content.length; i++)
         {
-            Object field = content[i];
-            int hc = field.getClass().hashCode();
-
-            if (hc == BYTE_HC)
+            Object object = content[i];
+            Serializer<?> serializer = converters.get(object.getClass());
+            if (serializer != null)
             {
-                message[pointer++] = Sim0MQTypes.BYTE_8;
-                message[pointer++] = (byte) field;
+                serializer.serialize(object, message, pointer);
             }
-
-            else if (hc == SHORT_HC)
-            {
-                message[pointer++] = Sim0MQTypes.SHORT_16;
-                short v = (short) field;
-                pointer = EndianUtil.encodeShort(v, message, pointer);
-            }
-
-            else if (hc == INTEGER_HC)
-            {
-                message[pointer++] = Sim0MQTypes.INT_32;
-                int v = (int) field;
-                pointer = EndianUtil.encodeInt(v, message, pointer);
-            }
-
-            else if (hc == LONG_HC)
-            {
-                message[pointer++] = Sim0MQTypes.LONG_64;
-                long v = (long) field;
-                pointer = EndianUtil.encodeLong(v, message, pointer);
-            }
-
-            else if (hc == FLOAT_HC)
-            {
-                message[pointer++] = Sim0MQTypes.FLOAT_32;
-                float v = (float) field;
-                pointer = EndianUtil.encodeFloat(v, message, pointer);
-            }
-
-            else if (hc == DOUBLE_HC)
-            {
-                message[pointer++] = Sim0MQTypes.DOUBLE_64;
-                double v = (double) field;
-                pointer = EndianUtil.encodeDouble(v, message, pointer);
-            }
-
-            else if (hc == BOOLEAN_HC)
-            {
-                message[pointer++] = Sim0MQTypes.BOOLEAN_8;
-                message[pointer++] = (byte) ((boolean) field ? 1 : 0);
-            }
-
-            else if (hc == CHAR_HC && utf8)
-            {
-                message[pointer++] = Sim0MQTypes.CHAR_8;
-                char v = (char) field;
-                message[pointer++] = (byte) (v & 0xFF);
-            }
-
-            else if (hc == CHAR_HC && !utf8)
-            {
-                message[pointer++] = Sim0MQTypes.CHAR_16;
-                char v = (char) field;
-                pointer = EndianUtil.encodeChar(v, message, pointer);
-            }
-
-            else if (hc == STRING_HC && utf8)
-            {
-                message[pointer++] = Sim0MQTypes.STRING_8;
-                int len = ((String) field).length();
-                pointer = EndianUtil.encodeInt(len, message, pointer);
-                byte[] s = ((String) field).getBytes(UTF8);
-                for (byte b : s)
-                {
-                    message[pointer++] = b;
-                }
-            }
-
-            else if (hc == STRING_HC && !utf8)
-            {
-                message[pointer++] = Sim0MQTypes.STRING_16;
-                int len = ((String) field).length();
-                pointer = EndianUtil.encodeInt(len, message, pointer);
-                byte[] s = ((String) field).getBytes(UTF16);
-                for (byte b : s)
-                {
-                    message[pointer++] = b;
-                }
-            }
-
-            else if (hc == BYTE_ARRAY_HC)
-            {
-                message[pointer++] = Sim0MQTypes.BYTE_8_ARRAY;
-                int len = ((byte[]) field).length;
-                pointer = EndianUtil.encodeInt(len, message, pointer);
-                for (byte v : (byte[]) field)
-                {
-                    message[pointer++] = v;
-                }
-            }
-
-            else if (hc == SHORT_ARRAY_HC)
-            {
-                message[pointer++] = Sim0MQTypes.SHORT_16_ARRAY;
-                int len = ((short[]) field).length;
-                pointer = EndianUtil.encodeInt(len, message, pointer);
-                for (short v : (short[]) field)
-                {
-                    pointer = EndianUtil.encodeShort(v, message, pointer);
-                }
-            }
-
-            else if (hc == INT_ARRAY_HC)
-            {
-                message[pointer++] = Sim0MQTypes.INT_32_ARRAY;
-                int len = ((int[]) field).length;
-                pointer = EndianUtil.encodeInt(len, message, pointer);
-                for (int v : (int[]) field)
-                {
-                    pointer = EndianUtil.encodeInt(v, message, pointer);
-                }
-            }
-
-            else if (hc == LONG_ARRAY_HC)
-            {
-                message[pointer++] = Sim0MQTypes.LONG_64_ARRAY;
-                int len = ((long[]) field).length;
-                pointer = EndianUtil.encodeInt(len, message, pointer);
-                for (long v : (long[]) field)
-                {
-                    pointer = EndianUtil.encodeLong(v, message, pointer);
-                }
-            }
-
-            else if (hc == FLOAT_ARRAY_HC)
-            {
-                message[pointer++] = Sim0MQTypes.FLOAT_32_ARRAY;
-                int len = ((float[]) field).length;
-                pointer = EndianUtil.encodeInt(len, message, pointer);
-                for (float v : (float[]) field)
-                {
-                    pointer = EndianUtil.encodeFloat(v, message, pointer);
-                }
-            }
-
-            else if (hc == DOUBLE_ARRAY_HC)
-            {
-                message[pointer++] = Sim0MQTypes.DOUBLE_64_ARRAY;
-                int len = ((double[]) field).length;
-                pointer = EndianUtil.encodeInt(len, message, pointer);
-                for (double v : (double[]) field)
-                {
-                    pointer = EndianUtil.encodeDouble(v, message, pointer);
-                }
-            }
-
-            else if (hc == BOOLEAN_ARRAY_HC)
-            {
-                message[pointer++] = Sim0MQTypes.BOOLEAN_8_ARRAY;
-                int len = ((boolean[]) field).length;
-                pointer = EndianUtil.encodeInt(len, message, pointer);
-                for (boolean v : (boolean[]) field)
-                {
-                    message[pointer++] = (byte) (v ? 1 : 0);
-                }
-            }
-
-            else if (hc == BYTE_MATRIX_HC)
-            {
-                message[pointer++] = Sim0MQTypes.BYTE_8_MATRIX;
-                byte[][] matrix = (byte[][]) field;
-                int rows = matrix.length;
-                pointer = EndianUtil.encodeInt(rows, message, pointer);
-                int cols = matrix[0].length;
-                pointer = EndianUtil.encodeInt(cols, message, pointer);
-                for (int row = 0; row < rows; row++)
-                {
-                    byte[] vRow = matrix[row];
-                    for (byte v : vRow)
-                    {
-                        message[pointer++] = v;
-                    }
-                }
-            }
-
-            else if (hc == SHORT_MATRIX_HC)
-            {
-                message[pointer++] = Sim0MQTypes.SHORT_16_MATRIX;
-                short[][] matrix = (short[][]) field;
-                int rows = matrix.length;
-                pointer = EndianUtil.encodeInt(rows, message, pointer);
-                int cols = matrix[0].length;
-                pointer = EndianUtil.encodeInt(cols, message, pointer);
-                for (int row = 0; row < rows; row++)
-                {
-                    short[] vRow = matrix[row];
-                    for (short v : vRow)
-                    {
-                        pointer = EndianUtil.encodeShort(v, message, pointer);
-                    }
-                }
-            }
-
-            else if (hc == INT_MATRIX_HC)
-            {
-                message[pointer++] = Sim0MQTypes.INT_32_MATRIX;
-                int[][] matrix = (int[][]) field;
-                int rows = matrix.length;
-                pointer = EndianUtil.encodeInt(rows, message, pointer);
-                int cols = matrix[0].length;
-                pointer = EndianUtil.encodeInt(cols, message, pointer);
-                for (int row = 0; row < rows; row++)
-                {
-                    int[] vRow = matrix[row];
-                    for (int v : vRow)
-                    {
-                        pointer = EndianUtil.encodeInt(v, message, pointer);
-                    }
-                }
-            }
-
-            else if (hc == LONG_MATRIX_HC)
-            {
-                message[pointer++] = Sim0MQTypes.LONG_64_MATRIX;
-                long[][] matrix = (long[][]) field;
-                int rows = matrix.length;
-                pointer = EndianUtil.encodeInt(rows, message, pointer);
-                int cols = matrix[0].length;
-                pointer = EndianUtil.encodeInt(cols, message, pointer);
-                for (int row = 0; row < rows; row++)
-                {
-                    long[] vRow = matrix[row];
-                    for (long v : vRow)
-                    {
-                        pointer = EndianUtil.encodeLong(v, message, pointer);
-                    }
-                }
-            }
-
-            else if (hc == FLOAT_MATRIX_HC)
-            {
-                message[pointer++] = Sim0MQTypes.FLOAT_32_MATRIX;
-                float[][] matrix = (float[][]) field;
-                int rows = matrix.length;
-                pointer = EndianUtil.encodeInt(rows, message, pointer);
-                int cols = matrix[0].length;
-                pointer = EndianUtil.encodeInt(cols, message, pointer);
-                for (int row = 0; row < rows; row++)
-                {
-                    float[] vRow = matrix[row];
-                    for (float v : vRow)
-                    {
-                        pointer = EndianUtil.encodeFloat(v, message, pointer);
-                    }
-                }
-            }
-
-            else if (hc == DOUBLE_MATRIX_HC)
-            {
-                message[pointer++] = Sim0MQTypes.DOUBLE_64_MATRIX;
-                double[][] matrix = (double[][]) field;
-                int rows = matrix.length;
-                pointer = EndianUtil.encodeInt(rows, message, pointer);
-                int cols = matrix[0].length;
-                pointer = EndianUtil.encodeInt(cols, message, pointer);
-                for (int row = 0; row < rows; row++)
-                {
-                    double[] vRow = matrix[row];
-                    for (double v : vRow)
-                    {
-                        pointer = EndianUtil.encodeDouble(v, message, pointer);
-                    }
-                }
-            }
-
-            else if (hc == BOOLEAN_MATRIX_HC)
-            {
-                message[pointer++] = Sim0MQTypes.BOOLEAN_8_MATRIX;
-                boolean[][] matrix = (boolean[][]) field;
-                int rows = matrix.length;
-                pointer = EndianUtil.encodeInt(rows, message, pointer);
-                int cols = matrix[0].length;
-                pointer = EndianUtil.encodeInt(cols, message, pointer);
-                for (int row = 0; row < rows; row++)
-                {
-                    boolean[] vRow = matrix[row];
-                    for (boolean v : vRow)
-                    {
-                        message[pointer++] = (byte) (v ? 1 : 0);
-                    }
-                }
-            }
-
-            else if (field instanceof AbstractFloatScalar)
-            {
-                message[pointer++] = Sim0MQTypes.FLOAT_32_UNIT;
-                pointer = encodeUnit(((AbstractFloatScalar<?, ?>) field).getUnit(), message, pointer);
-                float v = ((AbstractFloatScalar<?, ?>) field).si;
-                pointer = EndianUtil.encodeFloat(v, message, pointer);
-            }
-
-            else if (content[i] instanceof AbstractDoubleScalar)
-            {
-                message[pointer++] = Sim0MQTypes.DOUBLE_64_UNIT;
-                pointer = encodeUnit(((AbstractDoubleScalar<?, ?>) field).getUnit(), message, pointer);
-                double v = ((AbstractDoubleScalar<?, ?>) field).si;
-                pointer = EndianUtil.encodeDouble(v, message, pointer);
-            }
-
-            else if (content[i] instanceof AbstractFloatVector)
-            {
-                message[pointer++] = Sim0MQTypes.FLOAT_32_UNIT_ARRAY;
-                AbstractFloatVector<?, ?> afv = (AbstractFloatVector<?, ?>) content[i];
-                pointer = EndianUtil.encodeInt(afv.size(), message, pointer);
-                pointer = encodeUnit(afv.getUnit(), message, pointer);
-                try
-                {
-                    for (int j = 0; j < afv.size(); j++)
-                    {
-                        pointer = EndianUtil.encodeFloat(afv.getSI(j), message, pointer);
-                    }
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
-            }
-
-            else if (content[i] instanceof AbstractDoubleVector)
-            {
-                message[pointer++] = Sim0MQTypes.DOUBLE_64_UNIT_ARRAY;
-                AbstractDoubleVector<?, ?> adv = (AbstractDoubleVector<?, ?>) content[i];
-                pointer = EndianUtil.encodeInt(adv.size(), message, pointer);
-                pointer = encodeUnit(adv.getUnit(), message, pointer);
-                try
-                {
-                    for (int j = 0; j < adv.size(); j++)
-                    {
-                        pointer = EndianUtil.encodeDouble(adv.getSI(j), message, pointer);
-                    }
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
-            }
-
-            else if (content[i] instanceof AbstractFloatMatrix)
-            {
-                message[pointer++] = Sim0MQTypes.FLOAT_32_UNIT_MATRIX;
-                AbstractFloatMatrix<?, ?> afm = (AbstractFloatMatrix<?, ?>) content[i];
-                pointer = EndianUtil.encodeInt(afm.rows(), message, pointer);
-                pointer = EndianUtil.encodeInt(afm.columns(), message, pointer);
-                pointer = encodeUnit(afm.getUnit(), message, pointer);
-                try
-                {
-                    for (int row = 0; row < afm.rows(); row++)
-                    {
-                        for (int col = 0; col < afm.columns(); col++)
-                        {
-                            pointer = EndianUtil.encodeFloat(afm.getSI(row, col), message, pointer);
-                        }
-                    }
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
-            }
-
-            else if (content[i] instanceof AbstractDoubleMatrix)
-            {
-                message[pointer++] = Sim0MQTypes.DOUBLE_64_UNIT_MATRIX;
-                AbstractDoubleMatrix<?, ?> adm = (AbstractDoubleMatrix<?, ?>) content[i];
-                pointer = EndianUtil.encodeInt(adm.rows(), message, pointer);
-                pointer = EndianUtil.encodeInt(adm.columns(), message, pointer);
-                pointer = encodeUnit(adm.getUnit(), message, pointer);
-                try
-                {
-                    for (int row = 0; row < adm.rows(); row++)
-                    {
-                        for (int col = 0; col < adm.columns(); col++)
-                        {
-                            pointer = EndianUtil.encodeDouble(adm.getSI(row, col), message, pointer);
-                        }
-                    }
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
-            }
-
-            else if (content[i] instanceof AbstractFloatVector[])
-            {
-                message[pointer++] = Sim0MQTypes.FLOAT_32_UNIT_COLUMN_ARRAY;
-                AbstractFloatVector<?, ?>[] afvArray = (AbstractFloatVector<?, ?>[]) content[i];
-                pointer = EndianUtil.encodeInt(afvArray[0].size(), message, pointer); // rows
-                pointer = EndianUtil.encodeInt(afvArray.length, message, pointer); // cols
-                for (int col = 0; col < afvArray.length; col++)
-                {
-                    pointer = encodeUnit(afvArray[col].getUnit(), message, pointer);
-                }
-                try
-                {
-                    for (int row = 0; row < afvArray[0].size(); row++)
-                    {
-                        for (int col = 0; col < afvArray.length; col++)
-                        {
-                            pointer = EndianUtil.encodeFloat(afvArray[col].getSI(row), message, pointer);
-                        }
-                    }
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
-            }
-
-            else if (content[i] instanceof AbstractDoubleVector[])
-            {
-                message[pointer++] = Sim0MQTypes.DOUBLE_64_UNIT_COLUMN_ARRAY;
-                AbstractDoubleVector<?, ?>[] advArray = (AbstractDoubleVector<?, ?>[]) content[i];
-                pointer = EndianUtil.encodeInt(advArray[0].size(), message, pointer); // rows
-                pointer = EndianUtil.encodeInt(advArray.length, message, pointer); // cols
-                for (int col = 0; col < advArray.length; col++)
-                {
-                    pointer = encodeUnit(advArray[col].getUnit(), message, pointer);
-                }
-                try
-                {
-                    for (int row = 0; row < advArray[0].size(); row++)
-                    {
-                        for (int col = 0; col < advArray.length; col++)
-                        {
-                            pointer = EndianUtil.encodeDouble(advArray[col].getSI(row), message, pointer);
-                        }
-                    }
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
-            }
-
             else
-                throw new Sim0MQException("Unknown data type " + content[i].getClass() + " for encoding the ZeroMQ message");
-
+            {
+                if (object instanceof Character)
+                {
+                    if (utf8)
+                    {
+                        convertCharacter8.serialize(object, message, pointer);
+                    }
+                    else
+                    {
+                        convertCharacter16.serialize(object, message, pointer);
+                    }
+                }
+                else if (object instanceof String)
+                {
+                    if (utf8)
+                    {
+                        convertString8.serialize(object, message, pointer);
+                    }
+                    else
+                    {
+                        convertString16.serialize(object, message, pointer);
+                    }
+                }
+                else if (object instanceof AbstractFloatScalar)
+                {
+                    message[pointer.getAndIncrement(1)] = FieldTypes.FLOAT_32_UNIT;
+                    encodeUnit(((AbstractFloatScalar<?, ?>) object).getUnit(), message, pointer);
+                    float v = ((AbstractFloatScalar<?, ?>) object).si;
+                    EndianUtil.encodeFloat(v, message, pointer.getAndIncrement(4));
+                }
+                else if (content[i] instanceof AbstractDoubleScalar)
+                {
+                    message[pointer.getAndIncrement(1)] = FieldTypes.DOUBLE_64_UNIT;
+                    encodeUnit(((AbstractDoubleScalar<?, ?>) object).getUnit(), message, pointer);
+                    double v = ((AbstractDoubleScalar<?, ?>) object).si;
+                    EndianUtil.encodeDouble(v, message, pointer.getAndIncrement(8));
+                }
+                else if (content[i] instanceof AbstractFloatVector)
+                {
+                    message[pointer.getAndIncrement(1)] = FieldTypes.FLOAT_32_UNIT_ARRAY;
+                    AbstractFloatVector<?, ?> afv = (AbstractFloatVector<?, ?>) content[i];
+                    EndianUtil.encodeInt(afv.size(), message, pointer.getAndIncrement(4));
+                    encodeUnit(afv.getUnit(), message, pointer);
+                    try
+                    {
+                        for (int j = 0; j < afv.size(); j++)
+                        {
+                            EndianUtil.encodeFloat(afv.getSI(j), message, pointer.getAndIncrement(4));
+                        }
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
+                    }
+                }
+                else if (content[i] instanceof AbstractDoubleVector)
+                {
+                    message[pointer.getAndIncrement(1)] = FieldTypes.DOUBLE_64_UNIT_ARRAY;
+                    AbstractDoubleVector<?, ?> adv = (AbstractDoubleVector<?, ?>) content[i];
+                    EndianUtil.encodeInt(adv.size(), message, pointer.getAndIncrement(1));
+                    encodeUnit(adv.getUnit(), message, pointer);
+                    try
+                    {
+                        for (int j = 0; j < adv.size(); j++)
+                        {
+                            EndianUtil.encodeDouble(adv.getSI(j), message, pointer.getAndIncrement(8));
+                        }
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
+                    }
+                }
+                else if (content[i] instanceof AbstractFloatMatrix)
+                {
+                    message[pointer.getAndIncrement(1)] = FieldTypes.FLOAT_32_UNIT_MATRIX;
+                    AbstractFloatMatrix<?, ?> afm = (AbstractFloatMatrix<?, ?>) content[i];
+                    EndianUtil.encodeInt(afm.rows(), message, pointer.getAndIncrement(4));
+                    EndianUtil.encodeInt(afm.columns(), message, pointer.getAndIncrement(4));
+                    encodeUnit(afm.getUnit(), message, pointer);
+                    try
+                    {
+                        for (int row = 0; row < afm.rows(); row++)
+                        {
+                            for (int col = 0; col < afm.columns(); col++)
+                            {
+                                EndianUtil.encodeFloat(afm.getSI(row, col), message, pointer.getAndIncrement(4));
+                            }
+                        }
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
+                    }
+                }
+                else if (content[i] instanceof AbstractDoubleMatrix)
+                {
+                    message[pointer.getAndIncrement(1)] = FieldTypes.DOUBLE_64_UNIT_MATRIX;
+                    AbstractDoubleMatrix<?, ?> adm = (AbstractDoubleMatrix<?, ?>) content[i];
+                    EndianUtil.encodeInt(adm.rows(), message, pointer.getAndIncrement(4));
+                    EndianUtil.encodeInt(adm.columns(), message, pointer.getAndIncrement(4));
+                    encodeUnit(adm.getUnit(), message, pointer);
+                    try
+                    {
+                        for (int row = 0; row < adm.rows(); row++)
+                        {
+                            for (int col = 0; col < adm.columns(); col++)
+                            {
+                                EndianUtil.encodeDouble(adm.getSI(row, col), message, pointer.getAndIncrement(8));
+                            }
+                        }
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
+                    }
+                }
+                else if (content[i] instanceof AbstractFloatVector[])
+                {
+                    message[pointer.getAndIncrement(1)] = FieldTypes.FLOAT_32_UNIT_COLUMN_ARRAY;
+                    AbstractFloatVector<?, ?>[] afvArray = (AbstractFloatVector<?, ?>[]) content[i];
+                    EndianUtil.encodeInt(afvArray[0].size(), message, pointer.getAndIncrement(4)); // rows
+                    EndianUtil.encodeInt(afvArray.length, message, pointer.getAndIncrement(4)); // cols
+                    for (int col = 0; col < afvArray.length; col++)
+                    {
+                        encodeUnit(afvArray[col].getUnit(), message, pointer);
+                    }
+                    try
+                    {
+                        for (int row = 0; row < afvArray[0].size(); row++)
+                        {
+                            for (int col = 0; col < afvArray.length; col++)
+                            {
+                                EndianUtil.encodeFloat(afvArray[col].getSI(row), message, pointer.getAndIncrement(4));
+                            }
+                        }
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
+                    }
+                }
+                else if (content[i] instanceof AbstractDoubleVector[])
+                {
+                    message[pointer.getAndIncrement(1)] = FieldTypes.DOUBLE_64_UNIT_COLUMN_ARRAY;
+                    AbstractDoubleVector<?, ?>[] advArray = (AbstractDoubleVector<?, ?>[]) content[i];
+                    EndianUtil.encodeInt(advArray[0].size(), message, pointer.getAndIncrement(4)); // rows
+                    EndianUtil.encodeInt(advArray.length, message, pointer.getAndIncrement(4)); // cols
+                    for (int col = 0; col < advArray.length; col++)
+                    {
+                        encodeUnit(advArray[col].getUnit(), message, pointer);
+                    }
+                    try
+                    {
+                        for (int row = 0; row < advArray[0].size(); row++)
+                        {
+                            for (int col = 0; col < advArray.length; col++)
+                            {
+                                EndianUtil.encodeDouble(advArray[col].getSI(row), message, pointer.getAndIncrement(8));
+                            }
+                        }
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
+                    }
+                }
+                else
+                    throw new SerializationException(
+                            "Unknown data type " + content[i].getClass() + " for encoding the ZeroMQ message");
+            }
         }
-
         return message;
     }
 
@@ -1033,452 +917,422 @@ public final class TypedMessage
      * @param unit the unit to code in the byte array
      * @param message the byte array
      * @param pointer the start pointer in the byte array
-     * @return the new pointer in the byte array
      */
     @SuppressWarnings("rawtypes")
-    private static int encodeUnit(final Unit unit, final byte[] message, final int pointer)
+    private static void encodeUnit(final Unit unit, final byte[] message, final Pointer pointer)
     {
-        int p = pointer;
         @SuppressWarnings("unchecked") // TODO see how this can be solved with type <U extends Unit<U>>
-        Sim0MQUnitType unitType = Sim0MQUnitType.getUnitType(unit);
-        message[p++] = unitType.getCode();
+        SerializationUnits unitType = SerializationUnits.getUnitType(unit);
+        message[pointer.getAndIncrement(1)] = unitType.getCode();
         if (unit instanceof MoneyUnit)
         {
             @SuppressWarnings("unchecked")
-            Sim0MQDisplayType displayType = Sim0MQDisplayType.getDisplayType(unit);
-            p = EndianUtil.encodeShort((short) displayType.getIntCode(), message, p);
+            DisplayType displayType = DisplayType.getDisplayType(unit);
+            EndianUtil.encodeShort((short) displayType.getIntCode(), message, pointer.getAndIncrement(2));
         }
         else if (unit instanceof MoneyPerAreaUnit)
         {
-            Sim0MQDisplayType moneyType = Sim0MQDisplayType.getDisplayType(((MoneyPerAreaUnit) unit).getMoneyUnit());
-            p = EndianUtil.encodeShort((short) moneyType.getIntCode(), message, p);
-            Sim0MQDisplayType perType = Sim0MQDisplayType.getDisplayType(((MoneyPerAreaUnit) unit).getAreaUnit());
-            message[p++] = perType.getByteCode();
+            DisplayType moneyType = DisplayType.getDisplayType(((MoneyPerAreaUnit) unit).getMoneyUnit());
+            EndianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
+            DisplayType perType = DisplayType.getDisplayType(((MoneyPerAreaUnit) unit).getAreaUnit());
+            message[pointer.getAndIncrement(1)] = perType.getByteCode();
         }
         else if (unit instanceof MoneyPerEnergyUnit)
         {
-            Sim0MQDisplayType moneyType = Sim0MQDisplayType.getDisplayType(((MoneyPerEnergyUnit) unit).getMoneyUnit());
-            p = EndianUtil.encodeShort((short) moneyType.getIntCode(), message, p);
-            Sim0MQDisplayType perType = Sim0MQDisplayType.getDisplayType(((MoneyPerEnergyUnit) unit).getEnergyUnit());
-            message[p++] = perType.getByteCode();
+            DisplayType moneyType = DisplayType.getDisplayType(((MoneyPerEnergyUnit) unit).getMoneyUnit());
+            EndianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
+            DisplayType perType = DisplayType.getDisplayType(((MoneyPerEnergyUnit) unit).getEnergyUnit());
+            message[pointer.getAndIncrement(1)] = perType.getByteCode();
         }
         else if (unit instanceof MoneyPerLengthUnit)
         {
-            Sim0MQDisplayType moneyType = Sim0MQDisplayType.getDisplayType(((MoneyPerLengthUnit) unit).getMoneyUnit());
-            p = EndianUtil.encodeShort((short) moneyType.getIntCode(), message, p);
-            Sim0MQDisplayType perType = Sim0MQDisplayType.getDisplayType(((MoneyPerLengthUnit) unit).getLengthUnit());
-            message[p++] = perType.getByteCode();
+            DisplayType moneyType = DisplayType.getDisplayType(((MoneyPerLengthUnit) unit).getMoneyUnit());
+            EndianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
+            DisplayType perType = DisplayType.getDisplayType(((MoneyPerLengthUnit) unit).getLengthUnit());
+            message[pointer.getAndIncrement(1)] = perType.getByteCode();
         }
         else if (unit instanceof MoneyPerMassUnit)
         {
-            Sim0MQDisplayType moneyType = Sim0MQDisplayType.getDisplayType(((MoneyPerMassUnit) unit).getMoneyUnit());
-            p = EndianUtil.encodeShort((short) moneyType.getIntCode(), message, p);
-            Sim0MQDisplayType perType = Sim0MQDisplayType.getDisplayType(((MoneyPerMassUnit) unit).getMassUnit());
-            message[p++] = perType.getByteCode();
+            DisplayType moneyType = DisplayType.getDisplayType(((MoneyPerMassUnit) unit).getMoneyUnit());
+            EndianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
+            DisplayType perType = DisplayType.getDisplayType(((MoneyPerMassUnit) unit).getMassUnit());
+            message[pointer.getAndIncrement(1)] = perType.getByteCode();
         }
         else if (unit instanceof MoneyPerDurationUnit)
         {
-            Sim0MQDisplayType moneyType = Sim0MQDisplayType.getDisplayType(((MoneyPerDurationUnit) unit).getMoneyUnit());
-            p = EndianUtil.encodeShort((short) moneyType.getIntCode(), message, p);
-            Sim0MQDisplayType perType = Sim0MQDisplayType.getDisplayType(((MoneyPerDurationUnit) unit).getDurationUnit());
-            message[p++] = perType.getByteCode();
+            DisplayType moneyType = DisplayType.getDisplayType(((MoneyPerDurationUnit) unit).getMoneyUnit());
+            EndianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
+            DisplayType perType = DisplayType.getDisplayType(((MoneyPerDurationUnit) unit).getDurationUnit());
+            message[pointer.getAndIncrement(1)] = perType.getByteCode();
         }
         else if (unit instanceof MoneyPerVolumeUnit)
         {
-            Sim0MQDisplayType moneyType = Sim0MQDisplayType.getDisplayType(((MoneyPerVolumeUnit) unit).getMoneyUnit());
-            p = EndianUtil.encodeShort((short) moneyType.getIntCode(), message, p);
-            Sim0MQDisplayType perType = Sim0MQDisplayType.getDisplayType(((MoneyPerVolumeUnit) unit).getVolumeUnit());
-            message[p++] = perType.getByteCode();
+            DisplayType moneyType = DisplayType.getDisplayType(((MoneyPerVolumeUnit) unit).getMoneyUnit());
+            EndianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
+            DisplayType perType = DisplayType.getDisplayType(((MoneyPerVolumeUnit) unit).getVolumeUnit());
+            message[pointer.getAndIncrement(1)] = perType.getByteCode();
         }
         else
         {
             @SuppressWarnings("unchecked")
-            Sim0MQDisplayType displayType = Sim0MQDisplayType.getDisplayType(unit);
-            message[p++] = displayType.getByteCode();
+            DisplayType displayType = DisplayType.getDisplayType(unit);
+            message[pointer.getAndIncrement(1)] = displayType.getByteCode();
         }
-        return p;
     }
 
     /**
-     * Decode the message into an object array.
-     * @param message the ZeroMQ byte array to decode
-     * @return an array of objects of the right type
-     * @throws Sim0MQException on unknown data type
+     * Decode the 2-byte Money unit in the message (code 100).
+     * @param moneyCode Short; the money code
+     * @return Unit; decoded money unit
      */
-    @SuppressWarnings({ "checkstyle:methodlength", "checkstyle:needbraces" })
-    public static Object[] decodeSim0MQMessage(final byte[] message) throws Sim0MQException
+    private static Unit<? extends Unit<?>> decodeMoneyUnit(final Integer moneyCode)
     {
-        Throw.when(message.length < 10, Sim0MQException.class, "Message length < 10");
-        Object[] array = decode(message);
+        DisplayType displayType = DisplayType.getDisplayType(UnitType.MONEY, moneyCode);
+        return displayType.getDjunitsType();
+    }
 
-        // check the magic number
-        byte char0 = message[0];
-        Throw.when(char0 != 9, Sim0MQException.class, "Message does not start with an UTF8 string");
-        int magicLen = EndianUtil.decodeInt(message, 1);
-        Throw.when(magicLen < 0, Sim0MQException.class, "Length of magic number < 0");
-        Throw.when(Double.isNaN(magicLen), Sim0MQException.class, "Length of magic number = NaN");
-        Throw.when(Double.isInfinite(magicLen), Sim0MQException.class, "Length of magic number = Infinite");
-        Throw.when(magicLen > 10, Sim0MQException.class, "Length of magic number > 10");
-        String magicNumber = EndianUtil.decodeUTF8String(message, 1);
-        Throw.when(!magicNumber.startsWith("SIM"), Sim0MQException.class,
-                "Magic number does not start with SIM but with " + magicNumber);
-        Throw.when(!magicNumber.equals(VERSION), Sim0MQException.class,
-                "Message version " + magicNumber + " not compatible with this software version " + VERSION);
+    /**
+     * Decode the 2-byte MoneyPerUnit unit in the message (code 101 - 106).
+     * @param unitType the unit type (e.g., MoneyPerArea)
+     * @param moneyCode Short; the 16-bit money code
+     * @param perCode
+     * @return decoded MoneyPerUnit unit
+     */
+    @SuppressWarnings("checkstyle:needbraces")
+    private static Unit<? extends Unit<?>> decodeMoneyPerUnit(final UnitType unitType, final Integer moneyCode,
+            final Integer perCode)
+    {
+        DisplayType moneyDisplayType = DisplayType.getDisplayType(UnitType.MONEY, moneyCode);
+        DisplayType perDisplayType;
+        if (unitType.getCode() == 101)
+            perDisplayType = DisplayType.getDisplayType(UnitType.AREA, perCode);
+        else if (unitType.getCode() == 102)
+            perDisplayType = DisplayType.getDisplayType(UnitType.ENERGY, perCode);
+        else if (unitType.getCode() == 103)
+            perDisplayType = DisplayType.getDisplayType(UnitType.LENGTH, perCode);
+        else if (unitType.getCode() == 104)
+            perDisplayType = DisplayType.getDisplayType(UnitType.MASS, perCode);
+        else if (unitType.getCode() == 105)
+            perDisplayType = DisplayType.getDisplayType(UnitType.DURATION, perCode);
+        else if (unitType.getCode() == 106)
+            perDisplayType = DisplayType.getDisplayType(UnitType.VOLUME, perCode);
+        else
+            throw new RuntimeException(new SerializationException("Unknown MoneyPerUnit type with code " + unitType.getCode()));
+        return moneyPerUnitType(moneyDisplayType, perDisplayType);
+    }
 
-        return array;
+    /** The MoneyPerUnit cache stores the instantiated types so they are not created again and again. */
+    private static Map<MoneyUnit, Map<Unit<?>, Unit<?>>> moneyPerUnitCache = new HashMap<>();
+
+    /**
+     * Return the cached or created moneyPerUnitType.
+     * @param moneyDisplayType the money type to use, e.g. USD
+     * @param perDisplayType the per-unit to use, e.g. SQUARE_METER
+     * @return the cached or created moneyPerUnitType
+     */
+    public static Unit<?> moneyPerUnitType(final DisplayType moneyDisplayType, final DisplayType perDisplayType)
+    {
+        Map<Unit<?>, Unit<?>> moneyMap = moneyPerUnitCache.get(moneyDisplayType.getDjunitsType());
+        if (moneyMap == null)
+        {
+            moneyMap = new HashMap<>();
+            moneyPerUnitCache.put((MoneyUnit) moneyDisplayType.getDjunitsType(), moneyMap);
+        }
+        Unit<?> moneyPerUnitType = moneyMap.get(perDisplayType.getDjunitsType());
+        if (moneyPerUnitType != null)
+        {
+            return moneyPerUnitType;
+        }
+        String name = moneyDisplayType.getName() + "/" + perDisplayType.getName();
+        String abbreviation = moneyDisplayType.getAbbreviation() + "/" + perDisplayType.getAbbreviation();
+        if (perDisplayType.getUnitType().equals(UnitType.AREA))
+        {
+            moneyPerUnitType = new MoneyPerAreaUnit((MoneyUnit) moneyDisplayType.getDjunitsType(),
+                    (AreaUnit) perDisplayType.getDjunitsType(), name, abbreviation);
+        }
+        else if (perDisplayType.getUnitType().equals(UnitType.ENERGY))
+        {
+            moneyPerUnitType = new MoneyPerEnergyUnit((MoneyUnit) moneyDisplayType.getDjunitsType(),
+                    (EnergyUnit) perDisplayType.getDjunitsType(), name, abbreviation);
+        }
+        else if (perDisplayType.getUnitType().equals(UnitType.LENGTH))
+        {
+            moneyPerUnitType = new MoneyPerLengthUnit((MoneyUnit) moneyDisplayType.getDjunitsType(),
+                    (LengthUnit) perDisplayType.getDjunitsType(), name, abbreviation);
+        }
+        else if (perDisplayType.getUnitType().equals(UnitType.MASS))
+        {
+            moneyPerUnitType = new MoneyPerMassUnit((MoneyUnit) moneyDisplayType.getDjunitsType(),
+                    (MassUnit) perDisplayType.getDjunitsType(), name, abbreviation);
+        }
+        else if (perDisplayType.getUnitType().equals(UnitType.DURATION))
+        {
+            moneyPerUnitType = new MoneyPerDurationUnit((MoneyUnit) moneyDisplayType.getDjunitsType(),
+                    (DurationUnit) perDisplayType.getDjunitsType(), name, abbreviation);
+        }
+        else if (perDisplayType.getUnitType().equals(UnitType.VOLUME))
+        {
+            moneyPerUnitType = new MoneyPerVolumeUnit((MoneyUnit) moneyDisplayType.getDjunitsType(),
+                    (VolumeUnit) perDisplayType.getDjunitsType(), name, abbreviation);
+        }
+        else
+        {
+            throw new RuntimeException(new SerializationException("Unknown moneyPerUnit type: " + name));
+        }
+        moneyMap.put(perDisplayType.getDjunitsType(), moneyPerUnitType);
+        return moneyPerUnitType;
+    }
+
+    /**
+     * Retrieve and decode a DJUNITS unit.
+     * @param buffer byte[]; the encoded data
+     * @param pointer Pointer; position in the encoded data where the unit is to be decoded from
+     * @return Unit
+     */
+    static private Unit<? extends Unit<?>> getUnit(final byte[] buffer, final Pointer pointer)
+    {
+        UnitType unitType = UnitType.getUnitType(buffer[pointer.getAndIncrement(1)]);
+        int moneyCode = EndianUtil.decodeShort(buffer, pointer.getAndIncrement(2));
+        if (unitType.getCode() == 100) // money
+        {
+            return decodeMoneyUnit(moneyCode);
+        }
+        else if (unitType.getCode() >= 101 && unitType.getCode() <= 106)
+        {
+            return decodeMoneyPerUnit(unitType, moneyCode, 0 + buffer[pointer.getAndIncrement(1)]);
+        }
+        else
+        {
+            DisplayType displayType = DisplayType.getDisplayType(unitType, 0 + buffer[pointer.getAndIncrement(1)]);
+            return displayType.getDjunitsType();
+        }
     }
 
     /**
      * Decode the message into an object array.
-     * @param message the ZeroMQ byte array to decode
+     * @param buffer the ZeroMQ byte array to decode
      * @return an array of objects of the right type
-     * @throws Sim0MQException on unknown data type
+     * @throws SerializationException on unknown data type
      */
     @SuppressWarnings({ "checkstyle:methodlength", "checkstyle:needbraces" })
-    public static Object[] decode(final byte[] message) throws Sim0MQException
+    public static Object[] decode(final byte[] buffer) throws SerializationException
     {
         List<Object> list = new ArrayList<>();
-        MessageBuffer mb = new MessageBuffer(message);
-        while (mb.hasMore())
+        Pointer pointer = new Pointer();
+        while (pointer.get() < buffer.length)
         {
-            byte type = mb.getByte();
-
-            if (type == Sim0MQTypes.BYTE_8)
+            int fieldType = buffer[pointer.getAndIncrement(1)];
+            switch(fieldType)
             {
-                list.add(mb.getByte());
-            }
-
-            else if (type == Sim0MQTypes.SHORT_16)
-            {
-                list.add(mb.getShort());
-            }
-
-            else if (type == Sim0MQTypes.INT_32)
-            {
-                list.add(mb.getInt());
-            }
-
-            else if (type == Sim0MQTypes.LONG_64)
-            {
-                list.add(mb.getLong());
-            }
-
-            else if (type == Sim0MQTypes.FLOAT_32)
-            {
-                list.add(mb.getFloat());
-            }
-
-            else if (type == Sim0MQTypes.DOUBLE_64)
-            {
-                list.add(mb.getDouble());
-            }
-
-            else if (type == Sim0MQTypes.BOOLEAN_8)
-            {
-                list.add(mb.getBoolean());
-            }
-
-            else if (type == Sim0MQTypes.CHAR_8)
-            {
-                list.add(mb.getCharUTF8());
-            }
-
-            else if (type == Sim0MQTypes.CHAR_16)
-            {
-                list.add(mb.getCharUTF16());
-            }
-
-            else if (type == Sim0MQTypes.STRING_8)
-            {
-                list.add(mb.getStringUTF8());
-            }
-
-            else if (type == Sim0MQTypes.STRING_16)
-            {
-                list.add(mb.getStringUTF16());
-            }
-
-            else if (type == Sim0MQTypes.BYTE_8_ARRAY)
-            {
-                int size = mb.getInt();
-                byte[] value = new byte[size];
-                for (int i = 0; i < size; i++)
-                    value[i] = mb.getByte();
-                list.add(value);
-            }
-
-            else if (type == Sim0MQTypes.SHORT_16_ARRAY)
-            {
-                int size = mb.getInt();
-                short[] value = new short[size];
-                for (int i = 0; i < size; i++)
-                    value[i] = mb.getShort();
-                list.add(value);
-            }
-
-            else if (type == Sim0MQTypes.INT_32_ARRAY)
-            {
-                int size = mb.getInt();
-                int[] value = new int[size];
-                for (int i = 0; i < size; i++)
-                    value[i] = mb.getInt();
-                list.add(value);
-            }
-
-            else if (type == Sim0MQTypes.LONG_64_ARRAY)
-            {
-                int size = mb.getInt();
-                long[] value = new long[size];
-                for (int i = 0; i < size; i++)
-                    value[i] = mb.getLong();
-                list.add(value);
-            }
-
-            else if (type == Sim0MQTypes.FLOAT_32_ARRAY)
-            {
-                int size = mb.getInt();
-                float[] value = new float[size];
-                for (int i = 0; i < size; i++)
-                    value[i] = mb.getFloat();
-                list.add(value);
-            }
-
-            else if (type == Sim0MQTypes.DOUBLE_64_ARRAY)
-            {
-                int size = mb.getInt();
-                double[] value = new double[size];
-                for (int i = 0; i < size; i++)
-                    value[i] = mb.getDouble();
-                list.add(value);
-            }
-
-            else if (type == Sim0MQTypes.BOOLEAN_8_ARRAY)
-            {
-                int size = mb.getInt();
-                boolean[] value = new boolean[size];
-                for (int i = 0; i < size; i++)
-                    value[i] = mb.getBoolean();
-                list.add(value);
-            }
-
-            else if (type == Sim0MQTypes.BYTE_8_MATRIX)
-            {
-                int rows = mb.getInt();
-                int cols = mb.getInt();
-                byte[][] value = new byte[rows][];
-                for (int row = 0; row < rows; row++)
+                case FieldTypes.BYTE_8:
+                    list.add(convertByte.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.SHORT_16:
+                    list.add(convertShort.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.INT_32:
+                    list.add(convertInteger.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.LONG_64:
+                    list.add(convertLong.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.FLOAT_32:
+                    list.add(convertFloat.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.DOUBLE_64:
+                    list.add(convertDouble.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.BOOLEAN_8:
+                    list.add(convertBoolean.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.CHAR_8:
+                    list.add(convertCharacter8.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.CHAR_16:
+                    list.add(convertCharacter16.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.STRING_8:
+                    list.add(convertString8.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.STRING_16:
+                    list.add(convertString16.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.BYTE_8_ARRAY:
+                    list.add(convertByteArray.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.SHORT_16_ARRAY:
+                    list.add(convertShortArray.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.INT_32_ARRAY:
+                    list.add(convertIntegerArray.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.LONG_64_ARRAY:
+                    list.add(convertLongArray.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.FLOAT_32_ARRAY:
+                    list.add(convertFloatArray.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.DOUBLE_64_ARRAY:
+                    list.add(convertDoubleArray.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.BOOLEAN_8_ARRAY:
+                    list.add(convertBooleanArray.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.BYTE_8_MATRIX:
+                    list.add(convertByteMatrix.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.SHORT_16_MATRIX:
+                    list.add(convertShortMatrix.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.INT_32_MATRIX:
+                    list.add(convertIntegerMatrix.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.LONG_64_MATRIX:
+                    list.add(convertLongMatrix.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.FLOAT_32_MATRIX:
+                    list.add(convertFloatMatrix.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.DOUBLE_64_MATRIX:
+                    list.add(convertDoubleMatrix.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.BOOLEAN_8_MATRIX:
+                    list.add(convertBooleanMatrix.deSerialize(buffer, pointer));
+                    break;
+                    
+                case FieldTypes.FLOAT_32_UNIT:
                 {
-                    for (int col = 0; col < cols; col++)
+                    Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
+                    list.add(FloatScalarUtil.instantiateAnonymousSI(EndianUtil.decodeFloat(buffer, pointer.getAndIncrement(4)), unit));
+                }
+                break;
+                
+                case FieldTypes.DOUBLE_64_UNIT:
+                {
+                    Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
+                    list.add(DoubleScalarUtil.instantiateAnonymousSI(EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(8)), unit));
+                }
+                break;
+                
+                case FieldTypes.FLOAT_32_UNIT_ARRAY:
+                {
+                    int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
+                    float[] array = new float[size];
+                    for (int i = 0; i < size; i++)
                     {
-                        if (col == 0)
-                            value[row] = new byte[cols];
-                        value[row][col] = mb.getByte();
+                        array[i] = EndianUtil.decodeFloat(buffer, pointer.getAndIncrement(4));
+                    }
+                    try
+                    {
+                        list.add(FloatVectorUtil.instantiateAnonymousSI(array, unit, StorageType.DENSE));
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
                     }
                 }
-                list.add(value);
-            }
-
-            else if (type == Sim0MQTypes.SHORT_16_MATRIX)
-            {
-                int rows = mb.getInt();
-                int cols = mb.getInt();
-                short[][] value = new short[rows][];
-                for (int row = 0; row < rows; row++)
+                break;
+             
+                case FieldTypes.DOUBLE_64_UNIT_ARRAY:
                 {
-                    for (int col = 0; col < cols; col++)
+                    int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
+                    double[] array = new double[size];
+                    for (int i = 0; i < size; i++)
                     {
-                        if (col == 0)
-                            value[row] = new short[cols];
-                        value[row][col] = mb.getShort();
+                        array[i] = EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
+                    }
+                    try
+                    {
+                        list.add(DoubleVectorUtil.instantiateAnonymousSI(array, unit, StorageType.DENSE));
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
                     }
                 }
-                list.add(value);
-            }
-
-            else if (type == Sim0MQTypes.INT_32_MATRIX)
-            {
-                int rows = mb.getInt();
-                int cols = mb.getInt();
-                int[][] value = new int[rows][];
-                for (int row = 0; row < rows; row++)
+                break;
+                
+                case FieldTypes.FLOAT_32_UNIT_MATRIX:
                 {
-                    for (int col = 0; col < cols; col++)
+                    int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
+                    float[][] matrix = new float[height][width];
+                    for (int i = 0; i < height; i++)
                     {
-                        if (col == 0)
-                            value[row] = new int[cols];
-                        value[row][col] = mb.getInt();
+                        for (int j = 0; j < width; j++)
+                        {
+                            matrix[i][j] = EndianUtil.decodeFloat(buffer, pointer.getAndIncrement(4));
+                        }
+                    }
+                    try
+                    {
+                        list.add(FloatMatrixUtil.instantiateAnonymousSI(matrix, unit, StorageType.DENSE));
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
                     }
                 }
-                list.add(value);
-            }
-
-            else if (type == Sim0MQTypes.LONG_64_MATRIX)
-            {
-                int rows = mb.getInt();
-                int cols = mb.getInt();
-                long[][] value = new long[rows][];
-                for (int row = 0; row < rows; row++)
+                break;
+                
+                case FieldTypes.DOUBLE_64_UNIT_MATRIX:
                 {
-                    for (int col = 0; col < cols; col++)
+                    int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
+                    double[][] matrix = new double[height][width];
+                    for (int i = 0; i < height; i++)
                     {
-                        if (col == 0)
-                            value[row] = new long[cols];
-                        value[row][col] = mb.getLong();
+                        for (int j = 0; j < width; j++)
+                        {
+                            matrix[i][j] = EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
+                        }
+                    }
+                    try
+                    {
+                        list.add(DoubleMatrixUtil.instantiateAnonymousSI(matrix, unit, StorageType.DENSE));
+                    }
+                    catch (ValueException exception)
+                    {
+                        throw new SerializationException(exception);
                     }
                 }
-                list.add(value);
+                break;
+                
+                default:
+                    throw new SerializationException("Bad FieldType: " + fieldType);
             }
+            
 
-            else if (type == Sim0MQTypes.FLOAT_32_MATRIX)
-            {
-                int rows = mb.getInt();
-                int cols = mb.getInt();
-                float[][] value = new float[rows][];
-                for (int row = 0; row < rows; row++)
-                {
-                    for (int col = 0; col < cols; col++)
-                    {
-                        if (col == 0)
-                            value[row] = new float[cols];
-                        value[row][col] = mb.getFloat();
-                    }
-                }
-                list.add(value);
-            }
-
-            else if (type == Sim0MQTypes.DOUBLE_64_MATRIX)
-            {
-                int rows = mb.getInt();
-                int cols = mb.getInt();
-                double[][] value = new double[rows][];
-                for (int row = 0; row < rows; row++)
-                {
-                    for (int col = 0; col < cols; col++)
-                    {
-                        if (col == 0)
-                            value[row] = new double[cols];
-                        value[row][col] = mb.getDouble();
-                    }
-                }
-                list.add(value);
-            }
-
-            else if (type == Sim0MQTypes.BOOLEAN_8_MATRIX)
-            {
-                int rows = mb.getInt();
-                int cols = mb.getInt();
-                boolean[][] value = new boolean[rows][];
-                for (int row = 0; row < rows; row++)
-                {
-                    for (int col = 0; col < cols; col++)
-                    {
-                        if (col == 0)
-                            value[row] = new boolean[cols];
-                        value[row][col] = mb.getBoolean();
-                    }
-                }
-                list.add(value);
-            }
-
-            else if (type == Sim0MQTypes.FLOAT_32_UNIT)
-            {
-                Unit<? extends Unit<?>> unit = mb.getUnit();
-                float si = mb.getFloat();
-                list.add(FloatScalarUtil.instantiateAnonymousSI(si, unit));
-            }
-
-            else if (type == Sim0MQTypes.DOUBLE_64_UNIT)
-            {
-                Unit<? extends Unit<?>> unit = mb.getUnit();
-                double si = mb.getDouble();
-                list.add(DoubleScalarUtil.instantiateAnonymousSI(si, unit));
-            }
-
-            else if (type == Sim0MQTypes.FLOAT_32_UNIT_ARRAY)
-            {
-                int size = mb.getInt();
-                Unit<? extends Unit<?>> unit = mb.getUnit();
-                float[] array = new float[size];
-                for (int i = 0; i < size; i++)
-                    array[i] = mb.getFloat();
-                try
-                {
-                    list.add(FloatVectorUtil.instantiateAnonymousSI(array, unit, StorageType.DENSE));
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
-            }
-
-            else if (type == Sim0MQTypes.DOUBLE_64_UNIT_ARRAY)
-            {
-                int size = mb.getInt();
-                Unit<? extends Unit<?>> unit = mb.getUnit();
-                double[] array = new double[size];
-                for (int i = 0; i < size; i++)
-                    array[i] = mb.getDouble();
-                try
-                {
-                    list.add(DoubleVectorUtil.instantiateAnonymousSI(array, unit, StorageType.DENSE));
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
-            }
-
-            else if (type == Sim0MQTypes.FLOAT_32_UNIT_MATRIX)
-            {
-                int rows = mb.getInt();
-                int cols = mb.getInt();
-                Unit<? extends Unit<?>> unit = mb.getUnit();
-                float[][] matrix = new float[rows][cols];
-                for (int row = 0; row < rows; row++)
-                {
-                    for (int col = 0; col < cols; col++)
-                    {
-                        if (col == 0)
-                            matrix[row] = new float[cols];
-                        matrix[row][col] = mb.getFloat();
-                    }
-                }
-                try
-                {
-                    list.add(FloatMatrixUtil.instantiateAnonymousSI(matrix, unit, StorageType.DENSE));
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
-            }
-
-            else if (type == Sim0MQTypes.DOUBLE_64_UNIT_MATRIX)
-            {
-                int rows = mb.getInt();
-                int cols = mb.getInt();
-                Unit<? extends Unit<?>> unit = mb.getUnit();
-                double[][] matrix = new double[rows][cols];
-                for (int row = 0; row < rows; row++)
-                {
-                    for (int col = 0; col < cols; col++)
-                    {
-                        if (col == 0)
-                            matrix[row] = new double[cols];
-                        matrix[row][col] = mb.getDouble();
-                    }
-                }
-                try
-                {
-                    list.add(DoubleMatrixUtil.instantiateAnonymousSI(matrix, unit, StorageType.DENSE));
-                }
-                catch (ValueException exception)
-                {
-                    throw new Sim0MQException(exception);
-                }
-            }
-
-            else if (type == Sim0MQTypes.FLOAT_32_UNIT_COLUMN_ARRAY)
+            /*- Confusing rows and colums. This can't possibly be correct.
+            else if (type == FieldTypes.FLOAT_32_UNIT_COLUMN_ARRAY)
             {
                 int rows = mb.getInt();
                 int cols = mb.getInt();
@@ -1509,11 +1363,11 @@ public final class TypedMessage
                 }
                 catch (ValueException exception)
                 {
-                    throw new Sim0MQException(exception);
+                    throw new SerializationException(exception);
                 }
             }
 
-            else if (type == Sim0MQTypes.DOUBLE_64_UNIT_COLUMN_ARRAY)
+            else if (type == FieldTypes.DOUBLE_64_UNIT_COLUMN_ARRAY)
             {
                 int rows = mb.getInt();
                 int cols = mb.getInt();
@@ -1544,18 +1398,18 @@ public final class TypedMessage
                 }
                 catch (ValueException exception)
                 {
-                    throw new Sim0MQException(exception);
+                    throw new SerializationException(exception);
                 }
             }
 
             else
             {
-                throw new Sim0MQException("Unknown data type " + type + " in the ZeroMQ message while decoding");
+                throw new SerializationException("Unknown data type " + type + " in the ZeroMQ message while decoding");
             }
+            */
         }
 
-        Object[] array = list.toArray();
-        return array;
+        return list.toArray();
     }
 
     /**
