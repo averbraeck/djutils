@@ -59,7 +59,14 @@ public interface Serializer<T extends Object>
      * @param buffer byte[]; the bytes with serialized data that must be reconstructed into a T
      * @param pointer Pointer; position in the buffer where the first byte of the serialized T is located
      * @return T; a T object constructed from the data in the buffer
+     * @throws SerializationException when the input data cannot be deserialized
      */
-    T deSerialize(byte[] buffer, Pointer pointer);
+    T deSerialize(byte[] buffer, Pointer pointer) throws SerializationException;
+
+    /**
+     * Return a description of the type of data that this serializer handles.
+     * @return String; description of the type of data that this serializer handles
+     */
+    abstract String dataClassName();
 
 }

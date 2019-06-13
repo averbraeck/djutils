@@ -1,7 +1,7 @@
 package org.djutils.serialization;
 
 /**
- * Basics of the serializer
+ * Serializer for simple classes.
  * <p>
  * Copyright (c) 2019-2019 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="http://opentrafficsim.org/node/13">OpenTrafficSim License</a>.
@@ -12,35 +12,29 @@ package org.djutils.serialization;
  * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <T> class
  */
-public abstract class BasicSerializer<T extends Object> implements Serializer<T>
+public abstract class ObjectSerializer<T extends Object> extends BasicSerializer<T>
 {
-    /** The field type that usually prefixes the serialized data. */
-    private final byte type;
-    
-    /** String returned by the dataClassName method. */
-    private final String dataClassName;
-
     /**
-     * Construct the BasicSerializer.
+     * Construct a new ObjectSerializer.
      * @param type byte; the field type (returned by the <code>fieldType</code> method)
      * @param dataClassName String; returned by the dataClassName method
      */
-    public BasicSerializer(final byte type, final String dataClassName)
+    public ObjectSerializer(byte type, final String dataClassName)
     {
-        this.type = type;
-        this.dataClassName = dataClassName;
-    }
-    
-    @Override
-    public final byte fieldType()
-    {
-        return this.type;
+        super(type, dataClassName);
     }
 
     @Override
-    public final String dataClassName()
+    public final int sizeWithPrefix(final Object object)
     {
-        return this.dataClassName;
+        return 1 + size(object);
+    }
+
+    @Override
+    public final void serializeWithPrefix(final Object object, final byte[] buffer, final Pointer pointer) throws SerializationException
+    {
+        buffer[pointer.getAndIncrement(1)] = fieldType();
+        serialize(object, buffer, pointer);
     }
 
 }
