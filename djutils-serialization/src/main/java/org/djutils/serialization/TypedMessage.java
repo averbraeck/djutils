@@ -67,7 +67,7 @@ public final class TypedMessage
     static final private Map<Class<?>, Serializer<?>> converters = new HashMap<>();
 
     /** Converter for Byte. */
-    static final private Serializer<Byte> convertByte = new FixedSizeSerializer<Byte>(FieldTypes.BYTE_8, 1)
+    static final private Serializer<Byte> convertByte = new FixedSizeObjectSerializer<Byte>(FieldTypes.BYTE_8, 1, "Byte_8")
     {
         @Override
         public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
@@ -83,7 +83,7 @@ public final class TypedMessage
     };
 
     /** Converter for Short. */
-    static final private Serializer<Short> convertShort = new FixedSizeSerializer<Short>(FieldTypes.SHORT_16, 2)
+    static final private Serializer<Short> convertShort = new FixedSizeObjectSerializer<Short>(FieldTypes.SHORT_16, 2, "Short_16")
     {
         @Override
         public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
@@ -99,7 +99,7 @@ public final class TypedMessage
     };
 
     /** Converter for Integer. */
-    static final private Serializer<Integer> convertInteger = new FixedSizeSerializer<Integer>(FieldTypes.INT_32, 4)
+    static final private Serializer<Integer> convertInteger = new FixedSizeObjectSerializer<Integer>(FieldTypes.INT_32, 4, "Int_32")
     {
         @Override
         public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
@@ -115,7 +115,7 @@ public final class TypedMessage
     };
 
     /** Converter for Integer. */
-    static final private Serializer<Long> convertLong = new FixedSizeSerializer<Long>(FieldTypes.LONG_64, 8)
+    static final private Serializer<Long> convertLong = new FixedSizeObjectSerializer<Long>(FieldTypes.LONG_64, 8, "Long_64")
     {
         @Override
         public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
@@ -131,7 +131,7 @@ public final class TypedMessage
     };
 
     /** Converter for Float. */
-    static final private Serializer<Float> convertFloat = new FixedSizeSerializer<Float>(FieldTypes.FLOAT_32, 4)
+    static final private Serializer<Float> convertFloat = new FixedSizeObjectSerializer<Float>(FieldTypes.FLOAT_32, 4, "Float_32")
     {
         @Override
         public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
@@ -147,130 +147,137 @@ public final class TypedMessage
     };
 
     /** Converter for Double. */
-    static final private Serializer<Double> convertDouble = new FixedSizeSerializer<Double>(FieldTypes.DOUBLE_64, 8)
-    {
-        @Override
-        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
-        {
-            EndianUtil.encodeDouble((Double) object, buffer, pointer.getAndIncrement(8));
-        }
+    static final private Serializer<Double> convertDouble =
+            new FixedSizeObjectSerializer<Double>(FieldTypes.DOUBLE_64, 8, "Double_64")
+            {
+                @Override
+                public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+                {
+                    EndianUtil.encodeDouble((Double) object, buffer, pointer.getAndIncrement(8));
+                }
 
-        @Override
-        public Double deSerialize(final byte[] buffer, final Pointer pointer)
-        {
-            return EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
-        }
-    };
+                @Override
+                public Double deSerialize(final byte[] buffer, final Pointer pointer)
+                {
+                    return EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
+                }
+            };
 
     /** Converter for Boolean. */
-    static final private Serializer<Boolean> convertBoolean = new FixedSizeSerializer<Boolean>(FieldTypes.BOOLEAN_8, 1)
-    {
-        @Override
-        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
-        {
-            buffer[pointer.getAndIncrement(1)] = (byte) (((Boolean) object) ? 1 : 0);
-        }
+    static final private Serializer<Boolean> convertBoolean =
+            new FixedSizeObjectSerializer<Boolean>(FieldTypes.BOOLEAN_8, 1, "Boolean_8")
+            {
+                @Override
+                public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+                {
+                    buffer[pointer.getAndIncrement(1)] = (byte) (((Boolean) object) ? 1 : 0);
+                }
 
-        @Override
-        public Boolean deSerialize(final byte[] buffer, final Pointer pointer)
-        {
-            return buffer[pointer.getAndIncrement(1)] == 0 ? false : true;
-        }
-    };
+                @Override
+                public Boolean deSerialize(final byte[] buffer, final Pointer pointer)
+                {
+                    return buffer[pointer.getAndIncrement(1)] == 0 ? false : true;
+                }
+            };
 
     /** Converter for Character. */
-    static final private Serializer<Character> convertCharacter16 = new FixedSizeSerializer<Character>(FieldTypes.CHAR_16, 2)
-    {
-        @Override
-        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
-        {
-            EndianUtil.encodeChar((Character) object, buffer, pointer.getAndIncrement(size(object)));
-        }
+    static final private Serializer<Character> convertCharacter16 =
+            new FixedSizeObjectSerializer<Character>(FieldTypes.CHAR_16, 2, "Char_16")
+            {
+                @Override
+                public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+                {
+                    EndianUtil.encodeChar((Character) object, buffer, pointer.getAndIncrement(size(object)));
+                }
 
-        @Override
-        public Character deSerialize(final byte[] buffer, final Pointer pointer)
-        {
-            return EndianUtil.decodeChar(buffer, pointer.getAndIncrement(2));
-        }
-    };
+                @Override
+                public Character deSerialize(final byte[] buffer, final Pointer pointer)
+                {
+                    return EndianUtil.decodeChar(buffer, pointer.getAndIncrement(2));
+                }
+            };
 
     /** Converter for Character. */
-    static final private Serializer<Character> convertCharacter8 = new FixedSizeSerializer<Character>(FieldTypes.CHAR_8, 1)
-    {
-        @Override
-        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
-        {
-            EndianUtil.encodeChar((Character) object, buffer, pointer.getAndIncrement(size(object)));
-        }
+    static final private Serializer<Character> convertCharacter8 =
+            new FixedSizeObjectSerializer<Character>(FieldTypes.CHAR_8, 1, "Char_8")
+            {
+                @Override
+                public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+                {
+                    buffer[pointer.getAndIncrement(size(object))] = (byte) (((Character) object) & 0xFF);
+                }
 
-        @Override
-        public Character deSerialize(final byte[] buffer, final Pointer pointer)
-        {
-            return new Character((char) buffer[pointer.getAndIncrement(1)]);
-        }
-    };
+                @Override
+                public Character deSerialize(final byte[] buffer, final Pointer pointer)
+                {
+                    return new Character((char) buffer[pointer.getAndIncrement(1)]);
+                }
+            };
 
     /** Converter for String. */
-    static final private Serializer<String> convertString16 = new BasicPlainTypeSerializer<String>(FieldTypes.STRING_16)
-    {
-        @Override
-        public int size(final Object object)
-        {
-            return 4 + ((String) object).getBytes(UTF16).length * 2;
-        }
-
-        @Override
-        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
-        {
-            byte[] s = ((String) object).getBytes(UTF16);
-            EndianUtil.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
-            for (byte b : s)
+    static final private Serializer<String> convertString16 =
+            new ObjectSerializer<String>(FieldTypes.STRING_16, "String_16")
             {
-                buffer[pointer.getAndIncrement(1)] = b;
-            }
-        }
+                @Override
+                public int size(final Object object)
+                {
+                    return 4 + ((String) object).getBytes(UTF16).length;
+                }
 
-        @Override
-        public String deSerialize(final byte[] buffer, final Pointer pointer)
-        {
-            String s = EndianUtil.decodeUTF16String(buffer, pointer.get());
-            pointer.getAndIncrement(4 + s.length() * 2);
-            return s;
-        }
-    };
+                @Override
+                public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+                {
+                    byte[] s = ((String) object).getBytes(UTF16);
+                    EndianUtil.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
+                    for (byte b : s)
+                    {
+                        buffer[pointer.getAndIncrement(1)] = b;
+                    }
+                }
+
+                @Override
+                public String deSerialize(final byte[] buffer, final Pointer pointer)
+                {
+                    String s = EndianUtil.decodeUTF16String(buffer, pointer.get());
+                    pointer.getAndIncrement(4 + s.length() * 2);
+                    return s;
+                }
+            };
 
     /** Converter for String. */
-    static final private Serializer<String> convertString8 = new BasicPlainTypeSerializer<String>(FieldTypes.STRING_8)
-    {
-        @Override
-        public int size(final Object object)
-        {
-            return 4 + ((String) object).getBytes(UTF16).length;
-        }
-
-        @Override
-        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
-        {
-            byte[] s = ((String) object).getBytes(UTF8);
-            EndianUtil.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
-            for (byte b : s)
+    static final private Serializer<String> convertString8 =
+            new ObjectSerializer<String>(FieldTypes.STRING_8, "String_8")
             {
-                buffer[pointer.getAndIncrement(1)] = b;
-            }
-        }
+                @Override
+                public int size(final Object object)
+                {
+                    return 4 + ((String) object).getBytes(UTF8).length;
+                }
 
-        @Override
-        public String deSerialize(final byte[] buffer, final Pointer pointer)
-        {
-            String s = EndianUtil.decodeUTF8String(buffer, pointer.get());
-            pointer.getAndIncrement(4 + s.length() * 1);
-            return s;
-        }
-    };
+                @Override
+                public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+                {
+                    byte[] s = ((String) object).getBytes(UTF8);
+                    EndianUtil.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
+                    for (byte b : s)
+                    {
+                        buffer[pointer.getAndIncrement(1)] = b;
+                    }
+                }
+
+                @Override
+                public String deSerialize(final byte[] buffer, final Pointer pointer) throws SerializationException
+                {
+                    int bytesUsed = EndianUtil.decodeInt(buffer, pointer.get());
+                    String s = EndianUtil.decodeUTF8String(buffer, pointer.get());
+                    pointer.getAndIncrement(4 + bytesUsed);
+                    return s;
+                }
+            };
 
     /** Converter for Byte array. */
     static final private Serializer<Byte[]> convertByteArray =
-            new BasicFixedSizeArraySerializer<Byte>(FieldTypes.BYTE_8_ARRAY, 1, new Byte[0])
+            new ObjectArraySerializer<Byte>(FieldTypes.BYTE_8_ARRAY, 1, new Byte[0], "Byte_8_array")
             {
                 @Override
                 public void serializeElement(final Byte object, final byte[] buffer, final int offset)
@@ -287,7 +294,7 @@ public final class TypedMessage
 
     /** Converter for Short array. */
     static final private Serializer<Short[]> convertShortArray =
-            new BasicFixedSizeArraySerializer<Short>(FieldTypes.SHORT_16_ARRAY, 2, new Short[0])
+            new ObjectArraySerializer<Short>(FieldTypes.SHORT_16_ARRAY, 2, new Short[0], "Short_16_array")
             {
                 @Override
                 public void serializeElement(final Short object, final byte[] buffer, final int offset)
@@ -302,9 +309,9 @@ public final class TypedMessage
                 }
             };
 
-    /** Converter for Integer array. */
-    static final private Serializer<Integer[]> convertIntegerArray =
-            new BasicFixedSizeArraySerializer<Integer>(FieldTypes.INT_32_ARRAY, 4, new Integer[0])
+    /** Converter for Int array. */
+    static final private Serializer<Integer[]> convertIntArray =
+            new ObjectArraySerializer<Integer>(FieldTypes.INT_32_ARRAY, 4, new Integer[0], "int_32_array")
             {
                 @Override
                 public void serializeElement(final Integer object, final byte[] buffer, final int offset)
@@ -319,9 +326,26 @@ public final class TypedMessage
                 }
             };
 
+            /** Converter for Integer array. */
+            static final private Serializer<Integer[]> convertIntegerArray =
+                    new ObjectArraySerializer<Integer>(FieldTypes.INT_32_ARRAY, 4, new Integer[0], "Integer_32_array")
+                    {
+                        @Override
+                        public void serializeElement(final Integer object, final byte[] buffer, final int offset)
+                        {
+                            EndianUtil.encodeInt(object, buffer, offset);
+                        }
+
+                        @Override
+                        public Integer deSerializeElement(final byte[] buffer, final int offset)
+                        {
+                            return EndianUtil.decodeInt(buffer, offset);
+                        }
+                    };
+
     /** Converter for Long array. */
     static final private Serializer<Long[]> convertLongArray =
-            new BasicFixedSizeArraySerializer<Long>(FieldTypes.LONG_64_ARRAY, 8, new Long[0])
+            new ObjectArraySerializer<Long>(FieldTypes.LONG_64_ARRAY, 8, new Long[0], "Long_64_array")
             {
                 @Override
                 public void serializeElement(final Long object, final byte[] buffer, final int offset)
@@ -338,7 +362,7 @@ public final class TypedMessage
 
     /** Converter for Float array. */
     static final private Serializer<Float[]> convertFloatArray =
-            new BasicFixedSizeArraySerializer<Float>(FieldTypes.FLOAT_32_ARRAY, 4, new Float[0])
+            new ObjectArraySerializer<Float>(FieldTypes.FLOAT_32_ARRAY, 4, new Float[0], "Float_32_array")
             {
                 @Override
                 public void serializeElement(final Float object, final byte[] buffer, final int offset)
@@ -355,7 +379,7 @@ public final class TypedMessage
 
     /** Converter for Float array. */
     static final private Serializer<Double[]> convertDoubleArray =
-            new BasicFixedSizeArraySerializer<Double>(FieldTypes.DOUBLE_64_ARRAY, 8, new Double[0])
+            new ObjectArraySerializer<Double>(FieldTypes.DOUBLE_64_ARRAY, 8, new Double[0], "Double_64_array")
             {
                 @Override
                 public void serializeElement(final Double object, final byte[] buffer, final int offset)
@@ -372,7 +396,7 @@ public final class TypedMessage
 
     /** Converter for Boolean array. */
     static final private Serializer<Boolean[]> convertBooleanArray =
-            new BasicFixedSizeArraySerializer<Boolean>(FieldTypes.BOOLEAN_8_ARRAY, 1, new Boolean[0])
+            new ObjectArraySerializer<Boolean>(FieldTypes.BOOLEAN_8_ARRAY, 1, new Boolean[0], "Boolean_8_array")
             {
                 @Override
                 public void serializeElement(final Boolean object, final byte[] buffer, final int offset)
@@ -389,7 +413,7 @@ public final class TypedMessage
 
     /** Converter for Byte array. */
     static final private Serializer<Byte[][]> convertByteMatrix =
-            new BasicFixedSizeMatrixSerializer<Byte>(FieldTypes.BYTE_8_MATRIX, 1, new Byte[0][0])
+            new ObjectMatrixSerializer<Byte>(FieldTypes.BYTE_8_MATRIX, 1, new Byte[0][0], "Byte_8_matrix")
             {
                 @Override
                 public void serializeElement(final Byte object, final byte[] buffer, final int offset)
@@ -406,7 +430,7 @@ public final class TypedMessage
 
     /** Converter for Short array. */
     static final private Serializer<Short[][]> convertShortMatrix =
-            new BasicFixedSizeMatrixSerializer<Short>(FieldTypes.SHORT_16_MATRIX, 2, new Short[0][0])
+            new ObjectMatrixSerializer<Short>(FieldTypes.SHORT_16_MATRIX, 2, new Short[0][0], "Short_16_matrix")
             {
                 @Override
                 public void serializeElement(final Short object, final byte[] buffer, final int offset)
@@ -423,7 +447,7 @@ public final class TypedMessage
 
     /** Converter for Integer array. */
     static final private Serializer<Integer[][]> convertIntegerMatrix =
-            new BasicFixedSizeMatrixSerializer<Integer>(FieldTypes.INT_32_MATRIX, 4, new Integer[0][0])
+            new ObjectMatrixSerializer<Integer>(FieldTypes.INT_32_MATRIX, 4, new Integer[0][0], "Int_32_matrix")
             {
                 @Override
                 public void serializeElement(final Integer object, final byte[] buffer, final int offset)
@@ -440,7 +464,7 @@ public final class TypedMessage
 
     /** Converter for Long array. */
     static final private Serializer<Long[][]> convertLongMatrix =
-            new BasicFixedSizeMatrixSerializer<Long>(FieldTypes.LONG_64_MATRIX, 8, new Long[0][0])
+            new ObjectMatrixSerializer<Long>(FieldTypes.LONG_64_MATRIX, 8, new Long[0][0], "Long_64_matrix")
             {
                 @Override
                 public void serializeElement(final Long object, final byte[] buffer, final int offset)
@@ -457,7 +481,7 @@ public final class TypedMessage
 
     /** Converter for Float array. */
     static final private Serializer<Float[][]> convertFloatMatrix =
-            new BasicFixedSizeMatrixSerializer<Float>(FieldTypes.FLOAT_32_MATRIX, 4, new Float[0][0])
+            new ObjectMatrixSerializer<Float>(FieldTypes.FLOAT_32_MATRIX, 4, new Float[0][0], "Float_32_matrix")
             {
                 @Override
                 public void serializeElement(final Float object, final byte[] buffer, final int offset)
@@ -474,7 +498,7 @@ public final class TypedMessage
 
     /** Converter for Float array. */
     static final private Serializer<Double[][]> convertDoubleMatrix =
-            new BasicFixedSizeMatrixSerializer<Double>(FieldTypes.DOUBLE_64_MATRIX, 8, new Double[0][0])
+            new ObjectMatrixSerializer<Double>(FieldTypes.DOUBLE_64_MATRIX, 8, new Double[0][0], "Double_64_matrix")
             {
                 @Override
                 public void serializeElement(final Double object, final byte[] buffer, final int offset)
@@ -491,7 +515,7 @@ public final class TypedMessage
 
     /** Converter for Boolean array. */
     static final private Serializer<Boolean[][]> convertBooleanMatrix =
-            new BasicFixedSizeMatrixSerializer<Boolean>(FieldTypes.BOOLEAN_8_MATRIX, 1, new Boolean[0][0])
+            new ObjectMatrixSerializer<Boolean>(FieldTypes.BOOLEAN_8_MATRIX, 1, new Boolean[0][0], "Boolean_8_matrix")
             {
                 @Override
                 public void serializeElement(final Boolean object, final byte[] buffer, final int offset)
@@ -527,7 +551,7 @@ public final class TypedMessage
         converters.put(Short[].class, convertShortArray);
         converters.put(short[].class, convertShortArray);
         converters.put(Integer[].class, convertIntegerArray);
-        converters.put(int[].class, convertIntegerArray);
+        converters.put(int[].class, convertIntArray);
         converters.put(Long[].class, convertLongArray);
         converters.put(long[].class, convertLongArray);
         converters.put(Float[].class, convertFloatArray);
@@ -626,11 +650,11 @@ public final class TypedMessage
             }
             else if (object instanceof Character)
             {
-                size += utf8 ? convertCharacter8.size(object) : convertCharacter16.size(object);
+                size += utf8 ? convertCharacter8.sizeWithPrefix(object) : convertCharacter16.sizeWithPrefix(object);
             }
             else if (object instanceof String)
             {
-                size += utf8 ? convertString8.size(object) : convertString16.size(object);
+                size += utf8 ? convertString8.sizeWithPrefix(object) : convertString16.sizeWithPrefix(object);
             }
             else
             {
@@ -734,7 +758,7 @@ public final class TypedMessage
             Serializer<?> serializer = converters.get(object.getClass());
             if (serializer != null)
             {
-                serializer.serialize(object, message, pointer);
+                serializer.serializeWithPrefix(object, message, pointer);
             }
             else
             {
@@ -742,22 +766,22 @@ public final class TypedMessage
                 {
                     if (utf8)
                     {
-                        convertCharacter8.serialize(object, message, pointer);
+                        convertCharacter8.serializeWithPrefix(object, message, pointer);
                     }
                     else
                     {
-                        convertCharacter16.serialize(object, message, pointer);
+                        convertCharacter16.serializeWithPrefix(object, message, pointer);
                     }
                 }
                 else if (object instanceof String)
                 {
                     if (utf8)
                     {
-                        convertString8.serialize(object, message, pointer);
+                        convertString8.serializeWithPrefix(object, message, pointer);
                     }
                     else
                     {
-                        convertString16.serialize(object, message, pointer);
+                        convertString16.serializeWithPrefix(object, message, pointer);
                     }
                 }
                 else if (object instanceof AbstractFloatScalar)
@@ -1122,122 +1146,124 @@ public final class TypedMessage
         while (pointer.get() < buffer.length)
         {
             int fieldType = buffer[pointer.getAndIncrement(1)];
-            switch(fieldType)
+            switch (fieldType)
             {
                 case FieldTypes.BYTE_8:
                     list.add(convertByte.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.SHORT_16:
                     list.add(convertShort.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.INT_32:
                     list.add(convertInteger.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.LONG_64:
                     list.add(convertLong.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.FLOAT_32:
                     list.add(convertFloat.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.DOUBLE_64:
                     list.add(convertDouble.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.BOOLEAN_8:
                     list.add(convertBoolean.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.CHAR_8:
                     list.add(convertCharacter8.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.CHAR_16:
                     list.add(convertCharacter16.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.STRING_8:
                     list.add(convertString8.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.STRING_16:
                     list.add(convertString16.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.BYTE_8_ARRAY:
                     list.add(convertByteArray.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.SHORT_16_ARRAY:
                     list.add(convertShortArray.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.INT_32_ARRAY:
                     list.add(convertIntegerArray.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.LONG_64_ARRAY:
                     list.add(convertLongArray.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.FLOAT_32_ARRAY:
                     list.add(convertFloatArray.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.DOUBLE_64_ARRAY:
                     list.add(convertDoubleArray.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.BOOLEAN_8_ARRAY:
                     list.add(convertBooleanArray.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.BYTE_8_MATRIX:
                     list.add(convertByteMatrix.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.SHORT_16_MATRIX:
                     list.add(convertShortMatrix.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.INT_32_MATRIX:
                     list.add(convertIntegerMatrix.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.LONG_64_MATRIX:
                     list.add(convertLongMatrix.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.FLOAT_32_MATRIX:
                     list.add(convertFloatMatrix.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.DOUBLE_64_MATRIX:
                     list.add(convertDoubleMatrix.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.BOOLEAN_8_MATRIX:
                     list.add(convertBooleanMatrix.deSerialize(buffer, pointer));
                     break;
-                    
+
                 case FieldTypes.FLOAT_32_UNIT:
                 {
                     Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
-                    list.add(FloatScalarUtil.instantiateAnonymousSI(EndianUtil.decodeFloat(buffer, pointer.getAndIncrement(4)), unit));
+                    list.add(FloatScalarUtil.instantiateAnonymousSI(EndianUtil.decodeFloat(buffer, pointer.getAndIncrement(4)),
+                            unit));
                 }
-                break;
-                
+                    break;
+
                 case FieldTypes.DOUBLE_64_UNIT:
                 {
                     Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
-                    list.add(DoubleScalarUtil.instantiateAnonymousSI(EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(8)), unit));
+                    list.add(DoubleScalarUtil
+                            .instantiateAnonymousSI(EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(8)), unit));
                 }
-                break;
-                
+                    break;
+
                 case FieldTypes.FLOAT_32_UNIT_ARRAY:
                 {
                     int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
@@ -1256,8 +1282,8 @@ public final class TypedMessage
                         throw new SerializationException(exception);
                     }
                 }
-                break;
-             
+                    break;
+
                 case FieldTypes.DOUBLE_64_UNIT_ARRAY:
                 {
                     int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
@@ -1276,8 +1302,8 @@ public final class TypedMessage
                         throw new SerializationException(exception);
                     }
                 }
-                break;
-                
+                    break;
+
                 case FieldTypes.FLOAT_32_UNIT_MATRIX:
                 {
                     int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
@@ -1300,8 +1326,8 @@ public final class TypedMessage
                         throw new SerializationException(exception);
                     }
                 }
-                break;
-                
+                    break;
+
                 case FieldTypes.DOUBLE_64_UNIT_MATRIX:
                 {
                     int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
@@ -1324,12 +1350,11 @@ public final class TypedMessage
                         throw new SerializationException(exception);
                     }
                 }
-                break;
-                
+                    break;
+
                 default:
                     throw new SerializationException("Bad FieldType: " + fieldType);
             }
-            
 
             /*- Confusing rows and colums. This can't possibly be correct.
             else if (type == FieldTypes.FLOAT_32_UNIT_COLUMN_ARRAY)
@@ -1366,7 +1391,7 @@ public final class TypedMessage
                     throw new SerializationException(exception);
                 }
             }
-
+            
             else if (type == FieldTypes.DOUBLE_64_UNIT_COLUMN_ARRAY)
             {
                 int rows = mb.getInt();
@@ -1401,7 +1426,7 @@ public final class TypedMessage
                     throw new SerializationException(exception);
                 }
             }
-
+            
             else
             {
                 throw new SerializationException("Unknown data type " + type + " in the ZeroMQ message while decoding");

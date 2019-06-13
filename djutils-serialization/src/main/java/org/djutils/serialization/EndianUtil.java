@@ -1,5 +1,6 @@
 package org.djutils.serialization;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteOrder;
 
 /**
@@ -131,16 +132,24 @@ public final class EndianUtil
      * @param message the message byte array
      * @param pointer the start position in the array
      * @return the Java String at position pointer
+     * @throws SerializationException when the bytes cannot be parsed as UTF8
      */
-    public static String decodeUTF8String(final byte[] message, final int pointer)
+    public static String decodeUTF8String(final byte[] message, final int pointer) throws SerializationException
     {
         int len = decodeInt(message, pointer);
-        char[] c = new char[len];
+        byte[] c = new byte[len];
         for (int i = 0; i < len; i++)
         {
-            c[i] = (char) message[pointer + i + 4];
+            c[i] = (byte) message[pointer + i + 4];
         }
-        return String.copyValueOf(c);
+        try
+        {
+            return new String(c, "UTF-8");
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            throw new SerializationException(e);
+        }
     }
 
     /**
@@ -152,10 +161,10 @@ public final class EndianUtil
     public static String decodeUTF16String(final byte[] message, final int pointer)
     {
         int len = decodeInt(message, pointer);
-        char[] c = new char[len];
-        for (int i = 0; i < len; i++)
+        char[] c = new char[len / 2];
+        for (int i = 0; i < len; i += 2)
         {
-            c[i] = decodeChar(message, pointer + 2 * i + 4);
+            c[i / 2] = decodeChar(message, pointer + i + 4);
         }
         return String.copyValueOf(c);
     }
