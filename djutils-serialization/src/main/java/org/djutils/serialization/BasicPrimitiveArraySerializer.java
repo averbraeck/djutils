@@ -1,10 +1,7 @@
 package org.djutils.serialization;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-
 /**
- * Serializer for simple array classes. *
+ * Serializer for primitive data array classes. *
  * <p>
  * Copyright (c) 2019-2019 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="http://opentrafficsim.org/node/13">OpenTrafficSim License</a>.
@@ -15,35 +12,21 @@ import java.util.Arrays;
  * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <T> class
  */
-public abstract class BasicPrimitiveArraySerializer<T extends Object> extends BasicSerializer<T[]>
+public abstract class BasicPrimitiveArraySerializer<T extends Object> extends BasicSerializer<T>
 {
     /** Size of one element of the encoded data. */
     private final int dataSize;
-
-    /** Sample object with required type info (zero length array suffices). */
-    private final T[] sample;
 
     /**
      * Construct a new BasicNonClassArraySerializer.
      * @param type byte; the field type (returned by the <code>fieldType</code> method)
      * @param dataSize int; the number of bytes needed to encode one additional array element
-     * @param sample T[]; sample object (can be zero length array).
      * @param dataClassName String; returned by the dataClassName method
      */
-    public BasicPrimitiveArraySerializer(final byte type, final int dataSize, final T[] sample, final String dataClassName)
+    public BasicPrimitiveArraySerializer(final byte type, final int dataSize, final String dataClassName)
     {
         super(type, dataClassName);
         this.dataSize = dataSize;
-        this.sample = sample;
-    }
-
-    @Override
-    public final int size(final Object object)
-    {
-        System.out.println(object.getClass());
-        @SuppressWarnings("unchecked")
-        T[] array = (T[]) object;
-        return 4 + this.dataSize * array.length;
     }
 
     @Override
@@ -53,58 +36,25 @@ public abstract class BasicPrimitiveArraySerializer<T extends Object> extends Ba
     }
 
     @Override
-    public final void serializeWithPrefix(final Object object, final byte[] buffer, final Pointer pointer)
+    public final void serializeWithPrefix(final Object object, final byte[] buffer, final Pointer pointer) throws SerializationException
     {
         buffer[pointer.getAndIncrement(1)] = fieldType();
         serialize(object, buffer, pointer);
     }
 
     @Override
-    public final void serialize(Object object, byte[] buffer, Pointer pointer)
+    public String toString()
     {
-        @SuppressWarnings("unchecked")
-        T[] array = (T[]) object;
-        EndianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
-        for (int i = 0; i < array.length; i++)
-        {
-            serializeElement(array[i], buffer, pointer.getAndIncrement(this.dataSize));
-        }
-    }
-
-    @Override
-    public final T[] deSerialize(byte[] buffer, Pointer pointer)
-    {
-        int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-        @SuppressWarnings("unchecked")
-        T[] result = (T[]) Array.newInstance(sample.getClass(), size);
-        for (int i = 0; i < size; i++)
-        {
-            result[i] = deSerializeElement(buffer, pointer.getAndIncrement(this.dataSize));
-        }
-        return result;
+        return "BasicFixedSizeArraySerializer [dataSize=" + dataSize + ", dataType=" + dataClassName() + "]";
     }
     
     /**
-     * Serializer for one element (without type prefix) must be implemented in implementing sub classes.
-     * @param object T; the object to serialize
-     * @param buffer byte[]; the byte buffer for the serialized object
-     * @param offset int; index in byte buffer where first serialized byte must be stored
+     * Retrieve the number of bytes needed to encode one additional array element.
+     * @return int; the number of bytes needed to encode one additional array element
      */
-    abstract void serializeElement(T object, byte[] buffer, int offset);
-
-    @Override
-    public String toString()
+    public final int dataSize()
     {
-        return "BasicFixedSizeArraySerializer [dataSize=" + dataSize + ", sample=" + Arrays.toString(sample) + ", dataType="
-                + dataClassName() + "]";
+        return this.dataSize;
     }
-
-    /**
-     * Deserializer for one element (without type prefix) must be implemented in implementing sub classes.
-     * @param buffer byte[]; the byte buffer from which the object is to be deserialized
-     * @param offset int; index in byte buffer where first byte of the object is stored
-     * @return T; the deserialized object
-     */
-    abstract T deSerializeElement(byte[] buffer, int offset);
 
 }
