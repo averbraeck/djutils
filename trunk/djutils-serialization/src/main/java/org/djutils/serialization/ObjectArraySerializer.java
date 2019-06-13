@@ -1,7 +1,6 @@
 package org.djutils.serialization;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
 
 /**
  * Serializer for Object array classes. *
@@ -21,7 +20,7 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
     private final int dataSize;
 
     /** Sample object with required type info (zero length array suffices). */
-    private final T[] sample;
+    private final T sample;
 
     /**
      * Construct a new ObjectArraySerializer.
@@ -30,7 +29,7 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
      * @param sample T[]; sample object (can be zero length array).
      * @param dataClassName String; returned by the dataClassName method
      */
-    public ObjectArraySerializer(final byte type, final int dataSize, final T[] sample, final String dataClassName)
+    public ObjectArraySerializer(final byte type, final int dataSize, final T sample, final String dataClassName)
     {
         super(type, dataClassName);
         this.dataSize = dataSize;
@@ -82,7 +81,7 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
         }
         return result;
     }
-    
+
     /**
      * Serializer for one element (without type prefix) must be implemented in implementing sub classes.
      * @param object T; the object to serialize
@@ -94,7 +93,7 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
     @Override
     public String toString()
     {
-        return "BasicFixedSizeArraySerializer [dataSize=" + dataSize + ", sample=" + Arrays.toString(sample) + ", dataType="
+        return "BasicFixedSizeArraySerializer [dataSize=" + dataSize + ", sampleClass=" + sample.getClass() + ", dataType="
                 + dataClassName() + "]";
     }
 
