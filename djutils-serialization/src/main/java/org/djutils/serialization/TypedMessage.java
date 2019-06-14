@@ -643,7 +643,53 @@ public final class TypedMessage
                 }
             };
 
-    /** Converter for Byte array. */
+    /** Converter for byte matrix. */
+    static final private Serializer<byte[][]> convertBtMatrix =
+            new BasicPrimitiveArraySerializer<byte[][]>(FieldTypes.BYTE_8_MATRIX, 1, "byte_8_matrix")
+            {
+                @Override
+                public final int size(final Object object)
+                {
+                    byte[][] array = (byte[][]) object;
+                    return 8 + dataSize() * array.length * array[0].length;
+                }
+
+                @Override
+                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                {
+                    byte[][] matrix = (byte[][]) object;
+                    int height = matrix.length;
+                    int width = matrix[0].length;
+                    EndianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
+                    EndianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+                    for (int i = 0; i < height; i++)
+                    {
+                        Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
+                        for (int j = 0; j < width; j++)
+                        {
+                            matrix[i][j] = buffer[pointer.getAndIncrement(dataSize())];
+                        }
+                    }
+                }
+
+                @Override
+                public byte[][] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                {
+                    int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    byte[][] result = new byte[height][width];
+                    for (int i = 0; i < height; i++)
+                    {
+                        for (int j = 0; j < width; j++)
+                        {
+                            result[i][j] = buffer[pointer.getAndIncrement(dataSize())];
+                        }
+                    }
+                    return result;
+                }
+            };
+
+    /** Converter for Byte matrix. */
     static final private Serializer<Byte[][]> convertByteMatrix =
             new ObjectMatrixSerializer<Byte>(FieldTypes.BYTE_8_MATRIX, 1, new Byte[0][0], "Byte_8_matrix")
             {
@@ -662,7 +708,7 @@ public final class TypedMessage
 
     /** Converter for short matrix. */
     static final private Serializer<short[][]> convertShrtMatrix =
-            new BasicPrimitiveArraySerializer<short[][]>(FieldTypes.SHORT_16_MATRIX, 2, "short_32_matrix")
+            new BasicPrimitiveArraySerializer<short[][]>(FieldTypes.SHORT_16_MATRIX, 2, "short_16_matrix")
             {
                 @Override
                 public final int size(final Object object)
@@ -786,7 +832,53 @@ public final class TypedMessage
                 }
             };
 
-    /** Converter for Long array. */
+    /** Converter for long matrix. */
+    static final private Serializer<long[][]> convertLngMatrix =
+            new BasicPrimitiveArraySerializer<long[][]>(FieldTypes.LONG_64_MATRIX, 8, "long_64_matrix")
+            {
+                @Override
+                public final int size(final Object object)
+                {
+                    long[][] array = (long[][]) object;
+                    return 8 + dataSize() * array.length * array[0].length;
+                }
+
+                @Override
+                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                {
+                    long[][] matrix = (long[][]) object;
+                    int height = matrix.length;
+                    int width = matrix[0].length;
+                    EndianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
+                    EndianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+                    for (int i = 0; i < height; i++)
+                    {
+                        Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
+                        for (int j = 0; j < width; j++)
+                        {
+                            EndianUtil.encodeLong(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
+                        }
+                    }
+                }
+
+                @Override
+                public long[][] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                {
+                    int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    long[][] result = new long[height][width];
+                    for (int i = 0; i < height; i++)
+                    {
+                        for (int j = 0; j < width; j++)
+                        {
+                            result[i][j] = EndianUtil.decodeLong(buffer, pointer.getAndIncrement(dataSize()));
+                        }
+                    }
+                    return result;
+                }
+            };
+
+    /** Converter for Long matrix. */
     static final private Serializer<Long[][]> convertLongMatrix =
             new ObjectMatrixSerializer<Long>(FieldTypes.LONG_64_MATRIX, 8, new Long[0][0], "Long_64_matrix")
             {
@@ -803,7 +895,53 @@ public final class TypedMessage
                 }
             };
 
-    /** Converter for Float array. */
+    /** Converter for float matrix. */
+    static final private Serializer<float[][]> convertFltMatrix =
+            new BasicPrimitiveArraySerializer<float[][]>(FieldTypes.FLOAT_32_MATRIX, 4, "float_32_matrix")
+            {
+                @Override
+                public final int size(final Object object)
+                {
+                    float[][] array = (float[][]) object;
+                    return 8 + dataSize() * array.length * array[0].length;
+                }
+
+                @Override
+                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                {
+                    float[][] matrix = (float[][]) object;
+                    int height = matrix.length;
+                    int width = matrix[0].length;
+                    EndianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
+                    EndianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+                    for (int i = 0; i < height; i++)
+                    {
+                        Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
+                        for (int j = 0; j < width; j++)
+                        {
+                            EndianUtil.encodeFloat(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
+                        }
+                    }
+                }
+
+                @Override
+                public float[][] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                {
+                    int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    float[][] result = new float[height][width];
+                    for (int i = 0; i < height; i++)
+                    {
+                        for (int j = 0; j < width; j++)
+                        {
+                            result[i][j] = EndianUtil.decodeFloat(buffer, pointer.getAndIncrement(dataSize()));
+                        }
+                    }
+                    return result;
+                }
+            };
+
+    /** Converter for Float matrix. */
     static final private Serializer<Float[][]> convertFloatMatrix =
             new ObjectMatrixSerializer<Float>(FieldTypes.FLOAT_32_MATRIX, 4, new Float[0][0], "Float_32_matrix")
             {
@@ -820,7 +958,53 @@ public final class TypedMessage
                 }
             };
 
-    /** Converter for Float array. */
+    /** Converter for double matrix. */
+    static final private Serializer<double[][]> convertDblMatrix =
+            new BasicPrimitiveArraySerializer<double[][]>(FieldTypes.DOUBLE_64_MATRIX, 8, "double_64_matrix")
+            {
+                @Override
+                public final int size(final Object object)
+                {
+                    double[][] array = (double[][]) object;
+                    return 8 + dataSize() * array.length * array[0].length;
+                }
+
+                @Override
+                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                {
+                    double[][] matrix = (double[][]) object;
+                    int height = matrix.length;
+                    int width = matrix[0].length;
+                    EndianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
+                    EndianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+                    for (int i = 0; i < height; i++)
+                    {
+                        Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
+                        for (int j = 0; j < width; j++)
+                        {
+                            EndianUtil.encodeDouble(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
+                        }
+                    }
+                }
+
+                @Override
+                public double[][] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                {
+                    int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    double[][] result = new double[height][width];
+                    for (int i = 0; i < height; i++)
+                    {
+                        for (int j = 0; j < width; j++)
+                        {
+                            result[i][j] = EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(dataSize()));
+                        }
+                    }
+                    return result;
+                }
+            };
+
+    /** Converter for Double matrix. */
     static final private Serializer<Double[][]> convertDoubleMatrix =
             new ObjectMatrixSerializer<Double>(FieldTypes.DOUBLE_64_MATRIX, 8, new Double[0][0], "Double_64_matrix")
             {
@@ -837,7 +1021,53 @@ public final class TypedMessage
                 }
             };
 
-    /** Converter for Boolean array. */
+    /** Converter for boolean matrix. */
+    static final private Serializer<boolean[][]> convertBoolMatrix =
+            new BasicPrimitiveArraySerializer<boolean[][]>(FieldTypes.BOOLEAN_8_MATRIX, 1, "boolean_8_matrix")
+            {
+                @Override
+                public final int size(final Object object)
+                {
+                    boolean[][] array = (boolean[][]) object;
+                    return 8 + dataSize() * array.length * array[0].length;
+                }
+
+                @Override
+                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                {
+                    boolean[][] matrix = (boolean[][]) object;
+                    int height = matrix.length;
+                    int width = matrix[0].length;
+                    EndianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
+                    EndianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+                    for (int i = 0; i < height; i++)
+                    {
+                        Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
+                        for (int j = 0; j < width; j++)
+                        {
+                            buffer[pointer.getAndIncrement(dataSize())] = (byte) (matrix[i][j] ? 1 : 0);
+                        }
+                    }
+                }
+
+                @Override
+                public boolean[][] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                {
+                    int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    boolean[][] result = new boolean[height][width];
+                    for (int i = 0; i < height; i++)
+                    {
+                        for (int j = 0; j < width; j++)
+                        {
+                            result[i][j] = buffer[pointer.getAndIncrement(dataSize())] == 0 ? false : true;
+                        }
+                    }
+                    return result;
+                }
+            };
+
+    /** Converter for Boolean matrix. */
     static final private Serializer<Boolean[][]> convertBooleanMatrix =
             new ObjectMatrixSerializer<Boolean>(FieldTypes.BOOLEAN_8_MATRIX, 1, new Boolean[0][0], "Boolean_8_matrix")
             {
@@ -885,19 +1115,19 @@ public final class TypedMessage
         encoders.put(Boolean[].class, convertBooleanArray);
         encoders.put(boolean[].class, convertBoolArray);
         encoders.put(Byte[][].class, convertByteMatrix);
-        encoders.put(byte[][].class, convertByteMatrix);
+        encoders.put(byte[][].class, convertBtMatrix);
         encoders.put(Short[][].class, convertShortMatrix);
         encoders.put(short[][].class, convertShrtMatrix);
         encoders.put(Integer[][].class, convertIntegerMatrix);
         encoders.put(int[][].class, convertIntMatrix);
         encoders.put(Long[][].class, convertLongMatrix);
-        encoders.put(long[][].class, convertLongMatrix);
+        encoders.put(long[][].class, convertLngMatrix);
         encoders.put(Float[][].class, convertFloatMatrix);
-        encoders.put(float[][].class, convertFloatMatrix);
+        encoders.put(float[][].class, convertFltMatrix);
         encoders.put(Double[][].class, convertDoubleMatrix);
-        encoders.put(double[][].class, convertDoubleMatrix);
+        encoders.put(double[][].class, convertDblMatrix);
         encoders.put(Boolean[][].class, convertBooleanMatrix);
-        encoders.put(boolean[][].class, convertBooleanMatrix);
+        encoders.put(boolean[][].class, convertBoolMatrix);
 
         decoders.put(convertByte.fieldType(), convertByte);
         decoders.put(convertCharacter8.fieldType(), convertCharacter8);
@@ -917,13 +1147,13 @@ public final class TypedMessage
         decoders.put(convertFltArray.fieldType(), convertFltArray);
         decoders.put(convertDblArray.fieldType(), convertDblArray);
         decoders.put(convertBoolArray.fieldType(), convertBoolArray);
-        decoders.put(convertByteMatrix.fieldType(), convertByteMatrix);
+        decoders.put(convertBtMatrix.fieldType(), convertBtMatrix);
         decoders.put(convertShrtMatrix.fieldType(), convertShrtMatrix);
         decoders.put(convertIntMatrix.fieldType(), convertIntMatrix);
-        decoders.put(convertLongMatrix.fieldType(), convertLongMatrix);
-        decoders.put(convertFloatMatrix.fieldType(), convertFloatMatrix);
-        decoders.put(convertDoubleMatrix.fieldType(), convertDoubleMatrix);
-        decoders.put(convertBooleanMatrix.fieldType(), convertBooleanMatrix);
+        decoders.put(convertLngMatrix.fieldType(), convertLngMatrix);
+        decoders.put(convertFltMatrix.fieldType(), convertFltMatrix);
+        decoders.put(convertDblMatrix.fieldType(), convertDblMatrix);
+        decoders.put(convertBoolMatrix.fieldType(), convertBoolMatrix);
     }
 
     /** the UTF-8 charset. */
@@ -996,6 +1226,7 @@ public final class TypedMessage
             Serializer<?> serializer = encoders.get(object.getClass());
             if (serializer != null)
             {
+                System.out.println("Computing length using " + serializer.dataClassName());
                 size += serializer.sizeWithPrefix(object);
             }
             else if (object instanceof Character)
