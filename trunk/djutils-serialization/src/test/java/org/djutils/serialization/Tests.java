@@ -86,8 +86,8 @@ public class Tests
             assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
             for (int i = 0; i < objects.length; i++)
             {
-                Object reference = makePrimitiveArray(objects[i]);
-                Object decoded = makePrimitiveArray(decodedObjects[i]);
+                Object reference = makePrimitive(objects[i]);
+                Object decoded = makePrimitive(decodedObjects[i]);
                 if (!deepEquals0(reference, decoded))
                 {
                     System.out.println("oops");
@@ -109,23 +109,18 @@ public class Tests
         Integer[][] integerValues2 = new Integer[][] { { -1, -2, -3 }, { -4, -5, -6 } };
         short[][] shortValues = new short[][] { { 10, 20, 30 }, { 40, 50, 60 } };
         Short[][] shortValues2 = new Short[][] { { -10, -20, -30 }, { -40, -50, -60 } };
-        /*-
-        long[] longValues = new long[] { 1000, 2000, 3000 };
-        Long[] longValues2 = new Long[] { -1000l, -2000l, -3000l };
-        byte[] byteValues = new byte[] { 12, 13, 14 };
-        Byte[] byteValues2 = new Byte[] { -12, -13, -14 };
-        boolean[] boolValues = new boolean[] { false, true, true };
-        Boolean[] boolValues2 = new Boolean[] { true, true, false };
-        float[] floatValues = new float[] { 12.3f, 23.4f, 34.5f };
-        Float[] floatValues2 = new Float[] { -12.3f, -23.4f, -34.5f };
-        double[] doubleValues = new double[] { 23.45, 34.56, 45.67 };
-        Double[] doubleValues2 = new Double[] { -23.45, -34.56, -45.67 };
-        */
-        Object[] objects = new Object[] { integer, integerValues2, shortValues,
-                shortValues2 /*
-                              * , longValues, longValues2, byteValues, byteValues2, floatValues, floatValues2, doubleValues,
-                              * doubleValues2, boolValues, boolValues2
-                              */ };
+        long[][] longValues = new long[][] { { 1000, 2000, 3000 }, { 3000, 4000, 5000 } };
+        Long[][] longValues2 = new Long[][] { { -1000l, -2000l, -3000l }, { -3000l, -4000l, -5000l } };
+        byte[][] byteValues = new byte[][] { { 12, 13, 14 }, { 15, 16, 17 } };
+        Byte[][] byteValues2 = new Byte[][] { { -12, -13, -14 }, { -15, -16, -17 } };
+        boolean[][] boolValues = new boolean[][] { { false, true, true }, { false, false, false } };
+        Boolean[][] boolValues2 = new Boolean[][] { { true, true, false }, { true, true, true } };
+        float[][] floatValues = new float[][] { { 12.3f, 23.4f, 34.5f }, { 44.4f, 55.5f, 66.6f } };
+        Float[][] floatValues2 = new Float[][] { { -12.3f, -23.4f, -34.5f }, { -11.1f, -22.2f, -33.3f } };
+        double[][] doubleValues = new double[][] { { 23.45, 34.56, 45.67 }, { 55.5, 66.6, 77.7 } };
+        Double[][] doubleValues2 = new Double[][] { { -23.45, -34.56, -45.67 }, { -22.2, -33.3, -44.4 } };
+        Object[] objects = new Object[] { integer, integerValues2, shortValues, shortValues2, longValues, longValues2,
+                byteValues, byteValues2, floatValues, floatValues2, doubleValues, doubleValues2, boolValues, boolValues2 };
         for (boolean encodeUTF8 : new boolean[] { false, true })
         {
             byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(objects) : TypedMessage.encodeUTF16(objects);
@@ -134,8 +129,8 @@ public class Tests
             assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
             for (int i = 0; i < objects.length; i++)
             {
-                Object reference = makePrimitiveMatrix(objects[i]);
-                Object decoded = makePrimitiveArray(decodedObjects[i]);
+                Object reference = makePrimitive(objects[i]);
+                Object decoded = makePrimitive(decodedObjects[i]);
                 if (!deepEquals0(reference, decoded))
                 {
                     System.out.println("oops");
@@ -147,11 +142,11 @@ public class Tests
     }
 
     /**
-     * Convert an array of Byte, Short, Integer, etc. to an array of byte, short, int, etc.
+     * Convert an array, or matrix of Byte, Short, Integer, etc. to an array/matrix of byte, short, int, etc.
      * @param in Object; the array to convert
      * @return Object; the converted input (if conversion was possible), or the unconverted input.
      */
-    static Object makePrimitiveArray(final Object in)
+    static Object makePrimitive(final Object in)
     {
         if (in instanceof Byte[])
         {
@@ -223,16 +218,6 @@ public class Tests
             }
             return result;
         }
-        return in;
-    }
-
-    /**
-     * Convert a 2D array of Byte, Short, Integer, etc. to a 2D array of byte, short, int, etc.
-     * @param in Object; the array to convert
-     * @return Object; the converted input (if conversion was possible), or the unconverted input.
-     */
-    static Object makePrimitiveMatrix(final Object in)
-    {
         if (in instanceof Byte[][])
         {
             Byte[][] byteIn = (Byte[][]) in;
@@ -272,44 +257,55 @@ public class Tests
             }
             return result;
         }
-        // TODO make 2D
-        if (in instanceof Long[])
+        if (in instanceof Long[][])
         {
-            Long[] longIn = (Long[]) in;
-            long[] result = new long[longIn.length];
+            Long[][] longIn = (Long[][]) in;
+            long[][] result = new long[longIn.length][longIn[0].length];
             for (int i = 0; i < result.length; i++)
             {
-                result[i] = longIn[i];
+                for (int j = 0; j < result[0].length; j++)
+                {
+                    result[i][j] = longIn[i][j];
+                }
             }
             return result;
         }
-        if (in instanceof Float[])
+        if (in instanceof Float[][])
         {
-            Float[] floatIn = (Float[]) in;
-            float[] result = new float[floatIn.length];
+            Float[][] floatIn = (Float[][]) in;
+            float[][] result = new float[floatIn.length][floatIn[0].length];
             for (int i = 0; i < result.length; i++)
             {
-                result[i] = floatIn[i];
+                for (int j = 0; j < result[0].length; j++)
+                {
+                    result[i][j] = floatIn[i][j];
+                }
             }
             return result;
         }
-        if (in instanceof Double[])
+        if (in instanceof Double[][])
         {
-            Double[] doubleIn = (Double[]) in;
-            double[] result = new double[doubleIn.length];
+            Double[][] doubleIn = (Double[][]) in;
+            double[][] result = new double[doubleIn.length][doubleIn[0].length];
             for (int i = 0; i < result.length; i++)
             {
-                result[i] = doubleIn[i];
+                for (int j = 0; j < result[0].length; j++)
+                {
+                    result[i][j] = doubleIn[i][j];
+                }
             }
             return result;
         }
-        if (in instanceof Boolean[])
+        if (in instanceof Boolean[][])
         {
-            Boolean[] booleanIn = (Boolean[]) in;
-            boolean[] result = new boolean[booleanIn.length];
+            Boolean[][] booleanIn = (Boolean[][]) in;
+            boolean[][] result = new boolean[booleanIn.length][booleanIn[0].length];
             for (int i = 0; i < result.length; i++)
             {
-                result[i] = booleanIn[i];
+                for (int j = 0; j < result[0].length; j++)
+                {
+                    result[i][j] = booleanIn[i][j];
+                }
             }
             return result;
         }
