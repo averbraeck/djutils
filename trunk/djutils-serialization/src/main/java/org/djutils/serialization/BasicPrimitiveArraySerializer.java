@@ -30,7 +30,7 @@ public abstract class BasicPrimitiveArraySerializer<T extends Object> extends Ba
     }
 
     @Override
-    public final int sizeWithPrefix(final Object object)
+    public final int sizeWithPrefix(final Object object) throws SerializationException
     {
         return 1 + size(object);
     }

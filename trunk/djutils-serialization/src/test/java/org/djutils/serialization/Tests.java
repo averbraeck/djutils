@@ -2,14 +2,54 @@ package org.djutils.serialization;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.util.Arrays;
 
+import org.djunits.unit.AreaUnit;
+import org.djunits.unit.DimensionlessUnit;
+import org.djunits.unit.ElectricalCurrentUnit;
+import org.djunits.unit.ElectricalResistanceUnit;
+import org.djunits.unit.LengthUnit;
+import org.djunits.unit.MoneyPerAreaUnit;
+import org.djunits.unit.MoneyPerDurationUnit;
+import org.djunits.unit.MoneyPerEnergyUnit;
+import org.djunits.unit.MoneyPerLengthUnit;
+import org.djunits.unit.MoneyPerMassUnit;
+import org.djunits.unit.MoneyPerVolumeUnit;
+import org.djunits.unit.MoneyUnit;
+import org.djunits.value.StorageType;
+import org.djunits.value.ValueException;
+import org.djunits.value.vdouble.matrix.ElectricalCurrentMatrix;
+import org.djunits.value.vdouble.scalar.Dimensionless;
+import org.djunits.value.vdouble.scalar.Length;
+import org.djunits.value.vdouble.scalar.Money;
+import org.djunits.value.vdouble.scalar.MoneyPerArea;
+import org.djunits.value.vdouble.scalar.MoneyPerDuration;
+import org.djunits.value.vdouble.scalar.MoneyPerEnergy;
+import org.djunits.value.vdouble.scalar.MoneyPerLength;
+import org.djunits.value.vdouble.scalar.MoneyPerMass;
+import org.djunits.value.vdouble.scalar.MoneyPerVolume;
+import org.djunits.value.vdouble.vector.ElectricalCurrentVector;
+import org.djunits.value.vfloat.matrix.FloatElectricalResistanceMatrix;
+import org.djunits.value.vfloat.scalar.FloatArea;
+import org.djunits.value.vfloat.scalar.FloatMoney;
+import org.djunits.value.vfloat.scalar.FloatMoneyPerVolume;
+import org.djunits.value.vfloat.vector.FloatElectricalResistanceVector;
 import org.djutils.decoderdumper.HexDumper;
 import org.junit.Test;
 
 /**
- * @author pknoppers
+ * Test message conversions.
+ * <p>
+ * Copyright (c) 2019-2019 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * BSD-style license. See <a href="http://sim0mq.org/docs/current/license.html">OpenTrafficSim License</a>.
+ * </p>
+ * $LastChangedDate: 2015-07-24 02:58:59 +0200 (Fri, 24 Jul 2015) $, @version $Revision: 1147 $, by $Author: averbraeck $,
+ * initial version Jun 10, 2019 <br>
+ * @author <a href="http://www.tbm.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+ * @author <a href="http://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
 public class Tests
 {
@@ -45,12 +85,16 @@ public class Tests
         {
             byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(objects) : TypedMessage.encodeUTF16(objects);
             System.out.print(HexDumper.hexDumper(serialized));
-            Object[] decodedObjects = TypedMessage.decode(serialized);
-            assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
-            for (int i = 0; i < objects.length; i++)
+            for (boolean primitive : new boolean[] { false, true })
             {
-                assertEquals("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
-                        objects[i], decodedObjects[i]);
+                Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
+                        : TypedMessage.decodeToObjectDataTypes(serialized);
+                assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                for (int i = 0; i < objects.length; i++)
+                {
+                    assertEquals("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
+                            objects[i], decodedObjects[i]);
+                }
             }
         }
     }
@@ -82,18 +126,16 @@ public class Tests
         {
             byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(objects) : TypedMessage.encodeUTF16(objects);
             System.out.print(HexDumper.hexDumper(serialized));
-            Object[] decodedObjects = TypedMessage.decode(serialized);
-            assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
-            for (int i = 0; i < objects.length; i++)
+            for (boolean primitive : new boolean[] { false, true })
             {
-                Object reference = makePrimitive(objects[i]);
-                Object decoded = makePrimitive(decodedObjects[i]);
-                if (!deepEquals0(reference, decoded))
+                Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
+                        : TypedMessage.decodeToObjectDataTypes(serialized);
+                assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                for (int i = 0; i < objects.length; i++)
                 {
-                    System.out.println("oops");
+                    assertTrue("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
+                            deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
                 }
-                assertTrue("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
-                        deepEquals0(reference, decoded));
             }
         }
     }
@@ -125,20 +167,157 @@ public class Tests
         {
             byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(objects) : TypedMessage.encodeUTF16(objects);
             System.out.print(HexDumper.hexDumper(serialized));
-            Object[] decodedObjects = TypedMessage.decode(serialized);
+            for (boolean primitive : new boolean[] { false, true })
+            {
+                Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
+                        : TypedMessage.decodeToObjectDataTypes(serialized);
+                assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                for (int i = 0; i < objects.length; i++)
+                {
+                    assertTrue("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
+                            deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                }
+            }
+        }
+    }
+
+    /**
+     * Test encoding and decoding of strongly typed quantities (DJUNITS).
+     * @throws SerializationException when that happens uncaught, this test has failed
+     * @throws ValueException
+     */
+    @Test
+    public void testDJunits() throws SerializationException, ValueException
+    {
+        Length length = new Length(123.4, LengthUnit.FOOT);
+        Dimensionless value = new Dimensionless(345.6, DimensionlessUnit.SI);
+        Money money = new Money(456, MoneyUnit.EUR);
+        FloatMoney floatMoney = new FloatMoney(123.45f, MoneyUnit.AED);
+        MoneyPerArea mpa = new MoneyPerArea(0.33, MoneyPerAreaUnit.USD_PER_ACRE);
+        MoneyPerLength mpl = new MoneyPerLength(0.22, MoneyPerLengthUnit.USD_PER_MILE);
+        MoneyPerEnergy mpe = new MoneyPerEnergy(0.33, MoneyPerEnergyUnit.EUR_PER_KILOWATTHOUR);
+        MoneyPerMass mpm = new MoneyPerMass(0.33, MoneyPerMassUnit.USD_PER_POUND);
+        MoneyPerDuration mpt = new MoneyPerDuration(0.33, MoneyPerDurationUnit.EUR_PER_DAY);
+        MoneyPerVolume mpv = new MoneyPerVolume(0.33, MoneyPerVolumeUnit.USD_PER_OUNCE_US_FLUID);
+        FloatMoneyPerVolume mpvw = new FloatMoneyPerVolume(0.99, MoneyPerVolumeUnit.USD_PER_OUNCE_US_FLUID);
+        FloatArea area = new FloatArea(12345.678f, AreaUnit.ACRE);
+        ElectricalCurrentVector currents = new ElectricalCurrentVector(new double[] { 1.2, 2.3, 3.4 },
+                ElectricalCurrentUnit.MILLIAMPERE, StorageType.DENSE);
+        FloatElectricalResistanceVector resistors = new FloatElectricalResistanceVector(new float[] { 1.2f, 4.7f, 6.8f },
+                ElectricalResistanceUnit.KILOOHM, StorageType.DENSE);
+        ElectricalCurrentMatrix currentMatrix = new ElectricalCurrentMatrix(
+                new double[][] { { 1.2, 2.3, 3.4 }, { 5.5, 6.6, 7.7 } }, ElectricalCurrentUnit.MILLIAMPERE, StorageType.DENSE);
+        FloatElectricalResistanceMatrix resistorMatrix =
+                new FloatElectricalResistanceMatrix(new float[][] { { 1.2f, 4.7f, 6.8f }, { 2.2f, 3.3f, 4.4f } },
+                        ElectricalResistanceUnit.KILOOHM, StorageType.DENSE);
+
+        Object[] objects = new Object[] { length, value, money, floatMoney, mpa, mpl, mpe, mpm, mpt, mpv, mpvw, area, currents,
+                resistors, currentMatrix, resistorMatrix };
+        byte[] serialized = TypedMessage.encodeUTF16(objects);
+        System.out.print(HexDumper.hexDumper(serialized));
+        for (boolean primitive : new boolean[] { false, true })
+        {
+            Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
+                    : TypedMessage.decodeToObjectDataTypes(serialized);
             assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
             for (int i = 0; i < objects.length; i++)
             {
-                Object reference = makePrimitive(objects[i]);
-                Object decoded = makePrimitive(decodedObjects[i]);
-                if (!deepEquals0(reference, decoded))
-                {
-                    System.out.println("oops");
-                }
                 assertTrue("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
-                        deepEquals0(reference, decoded));
+                        deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
             }
         }
+    }
+
+    /**
+     * Test that jagged matrices are detected and cause a SerializationException.
+     */
+    @Test
+    public void testJaggedMatrices()
+    {
+        int[][] integer = new int[][] { { 1, 2, 3 }, { 5, 6 } };
+        Integer[][] integerValues2 = new Integer[][] { { -1, -2 }, { -4, -5, -6 } };
+        short[][] shortValues = new short[][] { { 10, 20 }, { 40, 50, 60 } };
+        Short[][] shortValues2 = new Short[][] { { -10, -20, -30 }, { -40, -50 } };
+        long[][] longValues = new long[][] { { 1000, 2000, 3000 }, { 3000, 4000 } };
+        Long[][] longValues2 = new Long[][] { { -1000l, -2000l }, { -3000l, -4000l, -5000l } };
+        byte[][] byteValues = new byte[][] { { 12, 13 }, { 15, 16, 17 } };
+        Byte[][] byteValues2 = new Byte[][] { { -12, -13, -14 }, { -15, -16 } };
+        boolean[][] boolValues = new boolean[][] { { false, true, true }, { false, false } };
+        Boolean[][] boolValues2 = new Boolean[][] { { true, true }, { true, true, true } };
+        float[][] floatValues = new float[][] { { 12.3f, 23.4f }, { 44.4f, 55.5f, 66.6f } };
+        Float[][] floatValues2 = new Float[][] { { -12.3f, -23.4f, -34.5f }, { -11.1f, -22.2f } };
+        double[][] doubleValues = new double[][] { { 23.45, 34.56, 45.67 }, { 55.5, 66.6 } };
+        Double[][] doubleValues2 = new Double[][] { { -23.45, -34.56 }, { -22.2, -33.3, -44.4 } };
+        Object[] objects = new Object[] { integer, integerValues2, shortValues, shortValues2, longValues, longValues2,
+                byteValues, byteValues2, floatValues, floatValues2, doubleValues, doubleValues2, boolValues, boolValues2 };
+        for (Object object : objects)
+        {
+            Object[] singleObjectArray = new Object[] { object };
+            try
+            {
+                TypedMessage.encodeUTF16(singleObjectArray);
+                fail("Jagged array should have thrown a SerializationException");
+            }
+            catch (SerializationException se)
+            {
+                // Ignore expected exception
+            }
+            try
+            {
+                TypedMessage.encodeUTF8(singleObjectArray);
+                fail("Jagged array should have thrown a SerializationException");
+            }
+            catch (SerializationException se)
+            {
+                // Ignore expected exception
+            }
+        }
+    }
+
+    /**
+     * Test that the encoder throws a SerializationException when given something that it does not know how to serialize.
+     */
+    @Test
+    public void TestUnhandledObject()
+    {
+        File file = new File("whatever");
+        Object[] objects = new Object[] { file };
+        try
+        {
+            TypedMessage.encodeUTF16(objects);
+            fail("Non serializable object should have thrown a SerializationException");
+        }
+        catch (SerializationException se)
+        {
+            // Ignore expected exception
+        }
+        
+        Integer[][] badMatrix = new Integer[0][0];
+        objects = new Object[] { badMatrix };
+        try
+        {
+            TypedMessage.encodeUTF16(objects);
+            fail("Zero sized matrix should have thrown a SerializationException");
+        }
+        catch (SerializationException se)
+        {
+            // Ignore expected exception
+        }
+    }
+    
+    /**
+     * Test the Pointer class.
+     */
+    @Test
+    public void PointerTest()
+    {
+        Pointer pointer = new Pointer();
+        assertEquals("initial offset is 0", 0, pointer.get());
+        assertEquals("initial offset is 0", 0, pointer.getAndIncrement(10));
+        assertEquals("offset is now 10", 10, pointer.get());
+        pointer.inc(20);
+        assertEquals("offset is now 30", 30, pointer.get());
+        assertTrue("ToString method returns something descriptive", pointer.toString().startsWith("Pointer"));
     }
 
     /**

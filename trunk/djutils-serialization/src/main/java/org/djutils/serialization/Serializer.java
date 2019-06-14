@@ -19,16 +19,18 @@ public interface Serializer<T extends Object>
      * of type T is next in the data stream).
      * @param object Object; Instance of the object (should be of type T)
      * @return int; the number of bytes needed to serialize an object of type T
+     * @throws SerializationException when the <code>object</code> cannot be serialized
      */
-    int size(Object object);
+    int size(Object object) throws SerializationException;
 
     /**
      * Compute the number of bytes needed to serialize an object of type T (including the byte(s) that indicate that an object
      * of type T is next in the data stream).
      * @param object Instance of the object (should be instance of T)
      * @return int; the number of bytes needed to serialize an object of type T
+     * @throws SerializationException when the <code>object</code> cannot be serialized
      */
-    int sizeWithPrefix(Object object);
+    int sizeWithPrefix(Object object) throws SerializationException;
 
     /**
      * Return the byte representation of the field type.
