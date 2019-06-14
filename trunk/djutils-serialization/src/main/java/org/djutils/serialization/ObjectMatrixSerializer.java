@@ -100,7 +100,7 @@ public abstract class ObjectMatrixSerializer<T extends Object> extends BasicSeri
     }
 
     /**
-     * Serializer for one element (without type prefix) must be implemented in implementing sub classes.
+     * Serializer for one matrix element (without type prefix) must be implemented in implementing sub classes.
      * @param object T; the object to serialize
      * @param buffer byte[]; the byte buffer for the serialized object
      * @param offset int; index in byte buffer where first serialized byte must be stored
@@ -108,7 +108,7 @@ public abstract class ObjectMatrixSerializer<T extends Object> extends BasicSeri
     abstract void serializeElement(T object, byte[] buffer, int offset);
 
     /**
-     * Deserializer for one element (without type prefix) must be implemented in implementing sub classes.
+     * Deserializer for one matrix element (without type prefix) must be implemented in implementing sub classes.
      * @param buffer byte[]; the byte buffer from which the object is to be deserialized
      * @param offset int; index in byte buffer where first byte of the object is stored
      * @return T; the deserialized object

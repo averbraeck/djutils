@@ -83,7 +83,7 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
     }
 
     /**
-     * Serializer for one element (without type prefix) must be implemented in implementing sub classes.
+     * Serializer for one array element (without type prefix) must be implemented in implementing sub classes.
      * @param object T; the object to serialize
      * @param buffer byte[]; the byte buffer for the serialized object
      * @param offset int; index in byte buffer where first serialized byte must be stored
@@ -98,7 +98,7 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
     }
 
     /**
-     * Deserializer for one element (without type prefix) must be implemented in implementing sub classes.
+     * Deserializer for one array element (without type prefix) must be implemented in implementing sub classes.
      * @param buffer byte[]; the byte buffer from which the object is to be deserialized
      * @param offset int; index in byte buffer where first byte of the object is stored
      * @return T; the deserialized object
