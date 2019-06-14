@@ -53,7 +53,7 @@ import org.djutils.exceptions.Throw;
 /**
  * Message conversions. These take into account the endianness for coding the different values. Java is by default big-endian.
  * <p>
- * Copyright (c) 2016-2017 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2016-2019 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="http://sim0mq.org/docs/current/license.html">OpenTrafficSim License</a>.
  * </p>
  * $LastChangedDate: 2015-07-24 02:58:59 +0200 (Fri, 24 Jul 2015) $, @version $Revision: 1147 $, by $Author: averbraeck $,
@@ -66,8 +66,11 @@ public final class TypedMessage
     /** All the converters keyed by Class. */
     static final private Map<Class<?>, Serializer<?>> encoders = new HashMap<>();
 
-    /** All the converters keyed by prefix. */
-    static final private Map<Byte, Serializer<?>> decoders = new HashMap<>();
+    /** All the converters that decode into primitive data when possible keyed by prefix. */
+    static final private Map<Byte, Serializer<?>> primitiveDataDecoders = new HashMap<>();
+
+    /** All the converters that decode into arrays and matrices with Objects keyed by prefix. */
+    static final private Map<Byte, Serializer<?>> objectDecoders = new HashMap<>();
 
     /** Converter for Byte. */
     static final private Serializer<Byte> convertByte = new FixedSizeObjectSerializer<Byte>(FieldTypes.BYTE_8, 1, "Byte_8")
@@ -280,7 +283,7 @@ public final class TypedMessage
     };
 
     /** Converter for byte array. */
-    static final private Serializer<byte[]> convertBytArray =
+    static final private Serializer<byte[]> convertBtArray =
             new BasicPrimitiveArraySerializer<byte[]>(FieldTypes.BYTE_8_ARRAY, 1, "byte_8_array")
             {
                 @Override
@@ -691,7 +694,7 @@ public final class TypedMessage
 
     /** Converter for Byte matrix. */
     static final private Serializer<Byte[][]> convertByteMatrix =
-            new ObjectMatrixSerializer<Byte>(FieldTypes.BYTE_8_MATRIX, 1, new Byte[0][0], "Byte_8_matrix")
+            new ObjectMatrixSerializer<Byte>(FieldTypes.BYTE_8_MATRIX, 1, new Byte((byte) 0), "Byte_8_matrix")
             {
                 @Override
                 public void serializeElement(final Byte object, final byte[] buffer, final int offset)
@@ -754,7 +757,7 @@ public final class TypedMessage
 
     /** Converter for Short matrix. */
     static final private Serializer<Short[][]> convertShortMatrix =
-            new ObjectMatrixSerializer<Short>(FieldTypes.SHORT_16_MATRIX, 2, new Short[0][0], "Short_16_matrix")
+            new ObjectMatrixSerializer<Short>(FieldTypes.SHORT_16_MATRIX, 2, new Short((short) 0), "Short_16_matrix")
             {
                 @Override
                 public void serializeElement(final Short object, final byte[] buffer, final int offset)
@@ -817,7 +820,7 @@ public final class TypedMessage
 
     /** Converter for Integer matrix. */
     static final private Serializer<Integer[][]> convertIntegerMatrix =
-            new ObjectMatrixSerializer<Integer>(FieldTypes.INT_32_MATRIX, 4, new Integer[0][0], "Int_32_matrix")
+            new ObjectMatrixSerializer<Integer>(FieldTypes.INT_32_MATRIX, 4, new Integer(0), "Int_32_matrix")
             {
                 @Override
                 public void serializeElement(final Integer object, final byte[] buffer, final int offset)
@@ -880,7 +883,7 @@ public final class TypedMessage
 
     /** Converter for Long matrix. */
     static final private Serializer<Long[][]> convertLongMatrix =
-            new ObjectMatrixSerializer<Long>(FieldTypes.LONG_64_MATRIX, 8, new Long[0][0], "Long_64_matrix")
+            new ObjectMatrixSerializer<Long>(FieldTypes.LONG_64_MATRIX, 8, new Long(0), "Long_64_matrix")
             {
                 @Override
                 public void serializeElement(final Long object, final byte[] buffer, final int offset)
@@ -943,7 +946,7 @@ public final class TypedMessage
 
     /** Converter for Float matrix. */
     static final private Serializer<Float[][]> convertFloatMatrix =
-            new ObjectMatrixSerializer<Float>(FieldTypes.FLOAT_32_MATRIX, 4, new Float[0][0], "Float_32_matrix")
+            new ObjectMatrixSerializer<Float>(FieldTypes.FLOAT_32_MATRIX, 4, new Float(0), "Float_32_matrix")
             {
                 @Override
                 public void serializeElement(final Float object, final byte[] buffer, final int offset)
@@ -1006,7 +1009,7 @@ public final class TypedMessage
 
     /** Converter for Double matrix. */
     static final private Serializer<Double[][]> convertDoubleMatrix =
-            new ObjectMatrixSerializer<Double>(FieldTypes.DOUBLE_64_MATRIX, 8, new Double[0][0], "Double_64_matrix")
+            new ObjectMatrixSerializer<Double>(FieldTypes.DOUBLE_64_MATRIX, 8, new Double(0), "Double_64_matrix")
             {
                 @Override
                 public void serializeElement(final Double object, final byte[] buffer, final int offset)
@@ -1069,7 +1072,7 @@ public final class TypedMessage
 
     /** Converter for Boolean matrix. */
     static final private Serializer<Boolean[][]> convertBooleanMatrix =
-            new ObjectMatrixSerializer<Boolean>(FieldTypes.BOOLEAN_8_MATRIX, 1, new Boolean[0][0], "Boolean_8_matrix")
+            new ObjectMatrixSerializer<Boolean>(FieldTypes.BOOLEAN_8_MATRIX, 1, new Boolean(false), "Boolean_8_matrix")
             {
                 @Override
                 public void serializeElement(final Boolean object, final byte[] buffer, final int offset)
@@ -1101,7 +1104,7 @@ public final class TypedMessage
         encoders.put(Boolean.class, convertBoolean);
         encoders.put(boolean.class, convertBoolean);
         encoders.put(Byte[].class, convertByteArray);
-        encoders.put(byte[].class, convertBytArray);
+        encoders.put(byte[].class, convertBtArray);
         encoders.put(Short[].class, convertShortArray);
         encoders.put(short[].class, convertShrtArray);
         encoders.put(Integer[].class, convertIntegerArray);
@@ -1129,31 +1132,58 @@ public final class TypedMessage
         encoders.put(Boolean[][].class, convertBooleanMatrix);
         encoders.put(boolean[][].class, convertBoolMatrix);
 
-        decoders.put(convertByte.fieldType(), convertByte);
-        decoders.put(convertCharacter8.fieldType(), convertCharacter8);
-        decoders.put(convertCharacter16.fieldType(), convertCharacter16);
-        decoders.put(convertShort.fieldType(), convertShort);
-        decoders.put(convertInteger.fieldType(), convertInteger);
-        decoders.put(convertLong.fieldType(), convertLong);
-        decoders.put(convertFloat.fieldType(), convertFloat);
-        decoders.put(convertDouble.fieldType(), convertDouble);
-        decoders.put(convertBoolean.fieldType(), convertBoolean);
-        decoders.put(convertString8.fieldType(), convertString8);
-        decoders.put(convertString16.fieldType(), convertString16);
-        decoders.put(convertBytArray.fieldType(), convertBytArray);
-        decoders.put(convertShrtArray.fieldType(), convertShrtArray);
-        decoders.put(convertIntArray.fieldType(), convertIntArray);
-        decoders.put(convertLngArray.fieldType(), convertLngArray);
-        decoders.put(convertFltArray.fieldType(), convertFltArray);
-        decoders.put(convertDblArray.fieldType(), convertDblArray);
-        decoders.put(convertBoolArray.fieldType(), convertBoolArray);
-        decoders.put(convertBtMatrix.fieldType(), convertBtMatrix);
-        decoders.put(convertShrtMatrix.fieldType(), convertShrtMatrix);
-        decoders.put(convertIntMatrix.fieldType(), convertIntMatrix);
-        decoders.put(convertLngMatrix.fieldType(), convertLngMatrix);
-        decoders.put(convertFltMatrix.fieldType(), convertFltMatrix);
-        decoders.put(convertDblMatrix.fieldType(), convertDblMatrix);
-        decoders.put(convertBoolMatrix.fieldType(), convertBoolMatrix);
+        primitiveDataDecoders.put(convertByte.fieldType(), convertByte);
+        primitiveDataDecoders.put(convertCharacter8.fieldType(), convertCharacter8);
+        primitiveDataDecoders.put(convertCharacter16.fieldType(), convertCharacter16);
+        primitiveDataDecoders.put(convertShort.fieldType(), convertShort);
+        primitiveDataDecoders.put(convertInteger.fieldType(), convertInteger);
+        primitiveDataDecoders.put(convertLong.fieldType(), convertLong);
+        primitiveDataDecoders.put(convertFloat.fieldType(), convertFloat);
+        primitiveDataDecoders.put(convertDouble.fieldType(), convertDouble);
+        primitiveDataDecoders.put(convertBoolean.fieldType(), convertBoolean);
+        primitiveDataDecoders.put(convertString8.fieldType(), convertString8);
+        primitiveDataDecoders.put(convertString16.fieldType(), convertString16);
+        primitiveDataDecoders.put(convertBtArray.fieldType(), convertBtArray);
+        primitiveDataDecoders.put(convertShrtArray.fieldType(), convertShrtArray);
+        primitiveDataDecoders.put(convertIntArray.fieldType(), convertIntArray);
+        primitiveDataDecoders.put(convertLngArray.fieldType(), convertLngArray);
+        primitiveDataDecoders.put(convertFltArray.fieldType(), convertFltArray);
+        primitiveDataDecoders.put(convertDblArray.fieldType(), convertDblArray);
+        primitiveDataDecoders.put(convertBoolArray.fieldType(), convertBoolArray);
+        primitiveDataDecoders.put(convertBtMatrix.fieldType(), convertBtMatrix);
+        primitiveDataDecoders.put(convertShrtMatrix.fieldType(), convertShrtMatrix);
+        primitiveDataDecoders.put(convertIntMatrix.fieldType(), convertIntMatrix);
+        primitiveDataDecoders.put(convertLngMatrix.fieldType(), convertLngMatrix);
+        primitiveDataDecoders.put(convertFltMatrix.fieldType(), convertFltMatrix);
+        primitiveDataDecoders.put(convertDblMatrix.fieldType(), convertDblMatrix);
+        primitiveDataDecoders.put(convertBoolMatrix.fieldType(), convertBoolMatrix);
+
+        objectDecoders.put(convertByte.fieldType(), convertByte);
+        objectDecoders.put(convertCharacter8.fieldType(), convertCharacter8);
+        objectDecoders.put(convertCharacter16.fieldType(), convertCharacter16);
+        objectDecoders.put(convertShort.fieldType(), convertShort);
+        objectDecoders.put(convertInteger.fieldType(), convertInteger);
+        objectDecoders.put(convertLong.fieldType(), convertLong);
+        objectDecoders.put(convertFloat.fieldType(), convertFloat);
+        objectDecoders.put(convertDouble.fieldType(), convertDouble);
+        objectDecoders.put(convertBoolean.fieldType(), convertBoolean);
+        objectDecoders.put(convertString8.fieldType(), convertString8);
+        objectDecoders.put(convertString16.fieldType(), convertString16);
+        objectDecoders.put(convertByteArray.fieldType(), convertByteArray);
+        objectDecoders.put(convertShortArray.fieldType(), convertShortArray);
+        objectDecoders.put(convertIntegerArray.fieldType(), convertIntegerArray);
+        objectDecoders.put(convertLongArray.fieldType(), convertLongArray);
+        objectDecoders.put(convertFloatArray.fieldType(), convertFloatArray);
+        objectDecoders.put(convertDoubleArray.fieldType(), convertDoubleArray);
+        objectDecoders.put(convertBooleanArray.fieldType(), convertBooleanArray);
+        objectDecoders.put(convertByteMatrix.fieldType(), convertByteMatrix);
+        objectDecoders.put(convertShortMatrix.fieldType(), convertShortMatrix);
+        objectDecoders.put(convertIntegerMatrix.fieldType(), convertIntegerMatrix);
+        objectDecoders.put(convertLongMatrix.fieldType(), convertLongMatrix);
+        objectDecoders.put(convertFloatMatrix.fieldType(), convertFloatMatrix);
+        objectDecoders.put(convertDoubleMatrix.fieldType(), convertDoubleMatrix);
+        objectDecoders.put(convertBooleanMatrix.fieldType(), convertBooleanMatrix);
+
     }
 
     /** the UTF-8 charset. */
@@ -1193,20 +1223,6 @@ public final class TypedMessage
     }
 
     /**
-     * Encode the object array into a byte[] message. Use UTF16 for the characters and for the String. Make sure the first field
-     * is a String and always encoded as UTF8 (for the "SIM##" magic number at the start).
-     * @param content the objects to encode
-     * @return the zeroMQ message to send as a byte array
-     * @throws SerializationException on unknown data type
-     */
-    public static byte[] encode0MQMessageUTF16(final Object... content) throws SerializationException
-    {
-        Throw.when(content.length == 0, SerializationException.class, "empty array to encode");
-        Throw.when(!(content[1] instanceof String), SerializationException.class, "first field in array is not a String");
-        return encode(false, false, content);
-    }
-
-    /**
      * Encode the object array into a Big Endian message.
      * @param utf8 whether to encode String fields and characters in utf8 or not
      * @param firstUtf8 whether to encode the first String field in utf8 or not
@@ -1240,15 +1256,15 @@ public final class TypedMessage
             else
             {
                 if (object instanceof AbstractFloatScalar)
-                    size += 6 + extraBytesMoney(content[i]);
+                    size += 7 + extraBytesMoney(object);
                 else if (object instanceof AbstractDoubleScalar)
-                    size += 10 + extraBytesMoney(content[i]);
+                    size += 11 + extraBytesMoney(object);
                 else if (object instanceof AbstractFloatVector)
                 {
                     AbstractFloatVector<?, ?> afv = (AbstractFloatVector<?, ?>) object;
                     try
                     {
-                        size += 4 + 2 + extraBytesMoney(afv.get(0)) + 4 * afv.size();
+                        size += 4 + 3 + extraBytesMoney(afv.get(0)) + 4 * afv.size();
                     }
                     catch (ValueException exception)
                     {
@@ -1260,7 +1276,7 @@ public final class TypedMessage
                     AbstractDoubleVector<?, ?> adv = (AbstractDoubleVector<?, ?>) object;
                     try
                     {
-                        size += 4 + 2 + extraBytesMoney(adv.get(0)) + 8 * adv.size();
+                        size += 4 + 3 + extraBytesMoney(adv.get(0)) + 8 * adv.size();
                     }
                     catch (ValueException exception)
                     {
@@ -1272,7 +1288,7 @@ public final class TypedMessage
                     AbstractFloatMatrix<?, ?> afm = (AbstractFloatMatrix<?, ?>) object;
                     try
                     {
-                        size += 4 + 4 + 2 + extraBytesMoney(afm.get(0, 0)) + 4 * afm.rows() * afm.columns();
+                        size += 4 + 4 + 3 + extraBytesMoney(afm.get(0, 0)) + 4 * afm.rows() * afm.columns();
                     }
                     catch (ValueException exception)
                     {
@@ -1284,39 +1300,7 @@ public final class TypedMessage
                     AbstractDoubleMatrix<?, ?> adm = (AbstractDoubleMatrix<?, ?>) object;
                     try
                     {
-                        size += 4 + 4 + 2 + extraBytesMoney(adm.get(0, 0)) + 8 * adm.rows() * adm.columns();
-                    }
-                    catch (ValueException exception)
-                    {
-                        throw new SerializationException(exception);
-                    }
-                }
-                else if (object instanceof AbstractFloatVector[])
-                {
-                    AbstractFloatVector<?, ?>[] afvArray = (AbstractFloatVector<?, ?>[]) object;
-                    try
-                    {
-                        size += 4 + 4; // rows, cols
-                        for (int j = 0; j < afvArray.length; j++)
-                        {
-                            size += 2 + extraBytesMoney(afvArray[j].get(0)) + 4 * afvArray[j].size();
-                        }
-                    }
-                    catch (ValueException exception)
-                    {
-                        throw new SerializationException(exception);
-                    }
-                }
-                else if (object instanceof AbstractDoubleVector[])
-                {
-                    AbstractDoubleVector<?, ?>[] afvArray = (AbstractDoubleVector<?, ?>[]) object;
-                    try
-                    {
-                        size += 4 + 4; // rows, cols
-                        for (int j = 0; j < afvArray.length; j++)
-                        {
-                            size += 2 + extraBytesMoney(afvArray[j].get(0)) + 8 * afvArray[j].size();
-                        }
+                        size += 4 + 4 + 3 + extraBytesMoney(adm.get(0, 0)) + 8 * adm.rows() * adm.columns();
                     }
                     catch (ValueException exception)
                     {
@@ -1324,8 +1308,7 @@ public final class TypedMessage
                     }
                 }
                 else
-                    throw new SerializationException(
-                            "Unknown data type " + object.getClass() + " for encoding the ZeroMQ message");
+                    throw new SerializationException("Unhandled data type " + object.getClass());
             }
         }
         // Allocate buffer
@@ -1373,17 +1356,17 @@ public final class TypedMessage
                     float v = ((AbstractFloatScalar<?, ?>) object).si;
                     EndianUtil.encodeFloat(v, message, pointer.getAndIncrement(4));
                 }
-                else if (content[i] instanceof AbstractDoubleScalar)
+                else if (object instanceof AbstractDoubleScalar)
                 {
                     message[pointer.getAndIncrement(1)] = FieldTypes.DOUBLE_64_UNIT;
                     encodeUnit(((AbstractDoubleScalar<?, ?>) object).getUnit(), message, pointer);
                     double v = ((AbstractDoubleScalar<?, ?>) object).si;
                     EndianUtil.encodeDouble(v, message, pointer.getAndIncrement(8));
                 }
-                else if (content[i] instanceof AbstractFloatVector)
+                else if (object instanceof AbstractFloatVector)
                 {
                     message[pointer.getAndIncrement(1)] = FieldTypes.FLOAT_32_UNIT_ARRAY;
-                    AbstractFloatVector<?, ?> afv = (AbstractFloatVector<?, ?>) content[i];
+                    AbstractFloatVector<?, ?> afv = (AbstractFloatVector<?, ?>) object;
                     EndianUtil.encodeInt(afv.size(), message, pointer.getAndIncrement(4));
                     encodeUnit(afv.getUnit(), message, pointer);
                     try
@@ -1398,11 +1381,11 @@ public final class TypedMessage
                         throw new SerializationException(exception);
                     }
                 }
-                else if (content[i] instanceof AbstractDoubleVector)
+                else if (object instanceof AbstractDoubleVector)
                 {
                     message[pointer.getAndIncrement(1)] = FieldTypes.DOUBLE_64_UNIT_ARRAY;
-                    AbstractDoubleVector<?, ?> adv = (AbstractDoubleVector<?, ?>) content[i];
-                    EndianUtil.encodeInt(adv.size(), message, pointer.getAndIncrement(1));
+                    AbstractDoubleVector<?, ?> adv = (AbstractDoubleVector<?, ?>) object;
+                    EndianUtil.encodeInt(adv.size(), message, pointer.getAndIncrement(4));
                     encodeUnit(adv.getUnit(), message, pointer);
                     try
                     {
@@ -1416,10 +1399,10 @@ public final class TypedMessage
                         throw new SerializationException(exception);
                     }
                 }
-                else if (content[i] instanceof AbstractFloatMatrix)
+                else if (object instanceof AbstractFloatMatrix)
                 {
                     message[pointer.getAndIncrement(1)] = FieldTypes.FLOAT_32_UNIT_MATRIX;
-                    AbstractFloatMatrix<?, ?> afm = (AbstractFloatMatrix<?, ?>) content[i];
+                    AbstractFloatMatrix<?, ?> afm = (AbstractFloatMatrix<?, ?>) object;
                     EndianUtil.encodeInt(afm.rows(), message, pointer.getAndIncrement(4));
                     EndianUtil.encodeInt(afm.columns(), message, pointer.getAndIncrement(4));
                     encodeUnit(afm.getUnit(), message, pointer);
@@ -1438,10 +1421,10 @@ public final class TypedMessage
                         throw new SerializationException(exception);
                     }
                 }
-                else if (content[i] instanceof AbstractDoubleMatrix)
+                else if (object instanceof AbstractDoubleMatrix)
                 {
                     message[pointer.getAndIncrement(1)] = FieldTypes.DOUBLE_64_UNIT_MATRIX;
-                    AbstractDoubleMatrix<?, ?> adm = (AbstractDoubleMatrix<?, ?>) content[i];
+                    AbstractDoubleMatrix<?, ?> adm = (AbstractDoubleMatrix<?, ?>) object;
                     EndianUtil.encodeInt(adm.rows(), message, pointer.getAndIncrement(4));
                     EndianUtil.encodeInt(adm.columns(), message, pointer.getAndIncrement(4));
                     encodeUnit(adm.getUnit(), message, pointer);
@@ -1460,59 +1443,11 @@ public final class TypedMessage
                         throw new SerializationException(exception);
                     }
                 }
-                else if (content[i] instanceof AbstractFloatVector[])
-                {
-                    message[pointer.getAndIncrement(1)] = FieldTypes.FLOAT_32_UNIT_COLUMN_ARRAY;
-                    AbstractFloatVector<?, ?>[] afvArray = (AbstractFloatVector<?, ?>[]) content[i];
-                    EndianUtil.encodeInt(afvArray[0].size(), message, pointer.getAndIncrement(4)); // rows
-                    EndianUtil.encodeInt(afvArray.length, message, pointer.getAndIncrement(4)); // cols
-                    for (int col = 0; col < afvArray.length; col++)
-                    {
-                        encodeUnit(afvArray[col].getUnit(), message, pointer);
-                    }
-                    try
-                    {
-                        for (int row = 0; row < afvArray[0].size(); row++)
-                        {
-                            for (int col = 0; col < afvArray.length; col++)
-                            {
-                                EndianUtil.encodeFloat(afvArray[col].getSI(row), message, pointer.getAndIncrement(4));
-                            }
-                        }
-                    }
-                    catch (ValueException exception)
-                    {
-                        throw new SerializationException(exception);
-                    }
-                }
-                else if (content[i] instanceof AbstractDoubleVector[])
-                {
-                    message[pointer.getAndIncrement(1)] = FieldTypes.DOUBLE_64_UNIT_COLUMN_ARRAY;
-                    AbstractDoubleVector<?, ?>[] advArray = (AbstractDoubleVector<?, ?>[]) content[i];
-                    EndianUtil.encodeInt(advArray[0].size(), message, pointer.getAndIncrement(4)); // rows
-                    EndianUtil.encodeInt(advArray.length, message, pointer.getAndIncrement(4)); // cols
-                    for (int col = 0; col < advArray.length; col++)
-                    {
-                        encodeUnit(advArray[col].getUnit(), message, pointer);
-                    }
-                    try
-                    {
-                        for (int row = 0; row < advArray[0].size(); row++)
-                        {
-                            for (int col = 0; col < advArray.length; col++)
-                            {
-                                EndianUtil.encodeDouble(advArray[col].getSI(row), message, pointer.getAndIncrement(8));
-                            }
-                        }
-                    }
-                    catch (ValueException exception)
-                    {
-                        throw new SerializationException(exception);
-                    }
-                }
                 else
-                    throw new SerializationException(
-                            "Unknown data type " + content[i].getClass() + " for encoding the ZeroMQ message");
+                {
+                    // Cannot happen; would have been caught in pass 1
+                    throw new SerializationException("Unhandled data type " + object.getClass());
+                }
             }
         }
         return message;
@@ -1698,13 +1633,14 @@ public final class TypedMessage
     static private Unit<? extends Unit<?>> getUnit(final byte[] buffer, final Pointer pointer)
     {
         UnitType unitType = UnitType.getUnitType(buffer[pointer.getAndIncrement(1)]);
-        int moneyCode = EndianUtil.decodeShort(buffer, pointer.getAndIncrement(2));
         if (unitType.getCode() == 100) // money
         {
+            int moneyCode = EndianUtil.decodeShort(buffer, pointer.getAndIncrement(2));
             return decodeMoneyUnit(moneyCode);
         }
         else if (unitType.getCode() >= 101 && unitType.getCode() <= 106)
         {
+            int moneyCode = EndianUtil.decodeShort(buffer, pointer.getAndIncrement(2));
             return decodeMoneyPerUnit(unitType, moneyCode, 0 + buffer[pointer.getAndIncrement(1)]);
         }
         else
@@ -1715,20 +1651,43 @@ public final class TypedMessage
     }
 
     /**
+     * Decode the message into an object array, constructing Java Primitive data arrays and matrices where possible.
+     * @param buffer the byte array to decode
+     * @return an array of objects of the right type
+     * @throws SerializationException on unknown data type
+     */
+    public static Object[] decodeToPrimitiveDataTypes(final byte[] buffer) throws SerializationException
+    {
+        return decode(buffer, primitiveDataDecoders);
+    }
+
+    /**
+     * Decode the message into an object array, constructing Java Object arrays and matrices where possible.
+     * @param buffer the byte array to decode
+     * @return an array of objects of the right type
+     * @throws SerializationException on unknown data type
+     */
+    public static Object[] decodeToObjectDataTypes(final byte[] buffer) throws SerializationException
+    {
+        return decode(buffer, objectDecoders);
+    }
+
+    /**
      * Decode the message into an object array.
-     * @param buffer the ZeroMQ byte array to decode
+     * @param buffer the byte array to decode
+     * @param decoderMap Map&lt;Byte, Serializer&lt;?&gt;&gt;; the map with decoders to use
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
     @SuppressWarnings({ "checkstyle:methodlength", "checkstyle:needbraces" })
-    public static Object[] decode(final byte[] buffer) throws SerializationException
+    public static Object[] decode(final byte[] buffer, final Map<Byte, Serializer<?>> decoderMap) throws SerializationException
     {
         List<Object> list = new ArrayList<>();
         Pointer pointer = new Pointer();
         while (pointer.get() < buffer.length)
         {
             Byte fieldType = buffer[pointer.getAndIncrement(1)];
-            Serializer<?> serializer = decoders.get(fieldType);
+            Serializer<?> serializer = decoderMap.get(fieldType);
             if (null != serializer)
             {
                 System.out.println("Applying deserializer for " + serializer.dataClassName());
@@ -1743,16 +1702,16 @@ public final class TypedMessage
                         Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
                         list.add(FloatScalarUtil
                                 .instantiateAnonymousSI(EndianUtil.decodeFloat(buffer, pointer.getAndIncrement(4)), unit));
-                    }
                         break;
+                    }
 
                     case FieldTypes.DOUBLE_64_UNIT:
                     {
                         Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
                         list.add(DoubleScalarUtil
                                 .instantiateAnonymousSI(EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(8)), unit));
-                    }
                         break;
+                    }
 
                     case FieldTypes.FLOAT_32_UNIT_ARRAY:
                     {
@@ -1771,8 +1730,8 @@ public final class TypedMessage
                         {
                             throw new SerializationException(exception);
                         }
-                    }
                         break;
+                    }
 
                     case FieldTypes.DOUBLE_64_UNIT_ARRAY:
                     {
@@ -1791,8 +1750,8 @@ public final class TypedMessage
                         {
                             throw new SerializationException(exception);
                         }
-                    }
                         break;
+                    }
 
                     case FieldTypes.FLOAT_32_UNIT_MATRIX:
                     {
@@ -1815,8 +1774,8 @@ public final class TypedMessage
                         {
                             throw new SerializationException(exception);
                         }
-                    }
                         break;
+                    }
 
                     case FieldTypes.DOUBLE_64_UNIT_MATRIX:
                     {
@@ -1839,93 +1798,14 @@ public final class TypedMessage
                         {
                             throw new SerializationException(exception);
                         }
-                    }
                         break;
+                    }
 
                     default:
                         throw new SerializationException("Bad FieldType: " + fieldType + " at position " + (pointer.get() - 1));
                 }
-
-                /*- Confusing rows and colums. This can't possibly be correct.
-                else if (type == FieldTypes.FLOAT_32_UNIT_COLUMN_ARRAY)
-                {
-                    int rows = mb.getInt();
-                    int cols = mb.getInt();
-                    Unit<? extends Unit<?>>[] units = new Unit<?>[cols];
-                    AbstractFloatVector<?, ?>[] vArray = new AbstractFloatVector[cols];
-                    for (int col = 0; col < cols; col++)
-                    {
-                        units[col] = mb.getUnit();
-                    }
-                    // here we use a column-first matrix (!) for storage
-                    float[][] matrix = new float[cols][rows];
-                    for (int row = 0; row < rows; row++)
-                    {
-                        for (int col = 0; col < cols; col++)
-                        {
-                            if (col == 0)
-                                matrix[row] = new float[cols];
-                            matrix[col][row] = mb.getFloat();
-                        }
-                    }
-                    try
-                    {
-                        for (int col = 0; col < cols; col++)
-                        {
-                            vArray[col] = FloatVectorUtil.instantiateAnonymousSI(matrix[col], units[col], StorageType.DENSE);
-                        }
-                        list.add(vArray);
-                    }
-                    catch (ValueException exception)
-                    {
-                        throw new SerializationException(exception);
-                    }
-                }
-                
-                else if (type == FieldTypes.DOUBLE_64_UNIT_COLUMN_ARRAY)
-                {
-                    int rows = mb.getInt();
-                    int cols = mb.getInt();
-                    Unit<? extends Unit<?>>[] units = new Unit<?>[cols];
-                    AbstractDoubleVector<?, ?>[] vArray = new AbstractDoubleVector[cols];
-                    for (int col = 0; col < cols; col++)
-                    {
-                        units[col] = mb.getUnit();
-                    }
-                    // here we use a column-first matrix (!) for storage
-                    double[][] matrix = new double[cols][rows];
-                    for (int row = 0; row < rows; row++)
-                    {
-                        for (int col = 0; col < cols; col++)
-                        {
-                            if (col == 0)
-                                matrix[row] = new double[cols];
-                            matrix[col][row] = mb.getDouble();
-                        }
-                    }
-                    try
-                    {
-                        for (int col = 0; col < cols; col++)
-                        {
-                            vArray[col] = DoubleVectorUtil.instantiateAnonymousSI(matrix[col], units[col], StorageType.DENSE);
-                        }
-                        list.add(vArray);
-                    }
-                    catch (ValueException exception)
-                    {
-                        throw new SerializationException(exception);
-                    }
-                }
-                
-                else
-                {
-                    throw new SerializationException("Unknown data type " + type + " in the ZeroMQ message while decoding");
-                }
-                */
             }
-
         }
-
         return list.toArray();
     }
 
@@ -1955,33 +1835,6 @@ public final class TypedMessage
             return 2;
         }
         return 0;
-    }
-
-    /**
-     * Return a readable string with the bytes in a byte[] message.
-     * @param bytes byte[]; the byte array to display
-     * @return String; a readable string with the bytes in a byte[] message
-     */
-    public static String printBytes(final byte[] bytes)
-    {
-        StringBuffer s = new StringBuffer();
-        s.append("|");
-        for (int b : bytes)
-        {
-            if (b < 0)
-            {
-                b += 128;
-            }
-            if (b >= 32 && b <= 127)
-            {
-                s.append("#" + Integer.toString(b, 16).toUpperCase() + "(" + (char) (byte) b + ")|");
-            }
-            else
-            {
-                s.append("#" + Integer.toString(b, 16).toUpperCase() + "|");
-            }
-        }
-        return s.toString();
     }
 
 }

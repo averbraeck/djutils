@@ -25,7 +25,7 @@ public abstract class ObjectSerializer<T extends Object> extends BasicSerializer
     }
 
     @Override
-    public final int sizeWithPrefix(final Object object)
+    public final int sizeWithPrefix(final Object object) throws SerializationException
     {
         return 1 + size(object);
     }

@@ -22,7 +22,7 @@ public abstract class ObjectMatrixSerializer<T extends Object> extends BasicSeri
     private final int dataSize;
 
     /** Sample object with required type info (zero length array suffices). */
-    private final T[][] sample;
+    private final T sample;
 
     /**
      * Construct a new ObjectMatrixSerializer.
@@ -31,7 +31,7 @@ public abstract class ObjectMatrixSerializer<T extends Object> extends BasicSeri
      * @param dataClassName String; returned by the dataClassName method
      * @param sample T[]; sample object (can be zero length array).
      */
-    public ObjectMatrixSerializer(final byte type, final int dataSize, final T[][] sample, final String dataClassName)
+    public ObjectMatrixSerializer(final byte type, final int dataSize, final T sample, final String dataClassName)
     {
         super(type, dataClassName);
         this.dataSize = dataSize;
@@ -39,15 +39,16 @@ public abstract class ObjectMatrixSerializer<T extends Object> extends BasicSeri
     }
 
     @Override
-    public final int size(final Object object)
+    public final int size(final Object object) throws SerializationException
     {
         @SuppressWarnings("unchecked")
         T[][] matrix = (T[][]) object;
+        Throw.when(matrix.length == 0 || matrix[0].length == 0, SerializationException.class, "Zero sized matrix not allowed");
         return 4 + 4 + this.dataSize * matrix.length * matrix[0].length;
     }
 
     @Override
-    public final int sizeWithPrefix(final Object object)
+    public final int sizeWithPrefix(final Object object) throws SerializationException
     {
         return 1 + size(object);
     }
@@ -90,7 +91,7 @@ public abstract class ObjectMatrixSerializer<T extends Object> extends BasicSeri
         T[][] result = (T[][]) Array.newInstance(sample.getClass(), height, width);
         for (int i = 0; i < height; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < width; j++)
             {
                 result[i][j] = deSerializeElement(buffer, pointer.getAndIncrement(this.dataSize));
             }
