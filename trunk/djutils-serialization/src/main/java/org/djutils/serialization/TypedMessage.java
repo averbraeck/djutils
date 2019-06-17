@@ -1528,7 +1528,7 @@ public final class TypedMessage
      */
     private static Unit<? extends Unit<?>> decodeMoneyUnit(final Integer moneyCode)
     {
-        DisplayType displayType = DisplayType.getDisplayType(UnitType.MONEY, moneyCode);
+        DisplayType displayType = DisplayType.getDisplayType(SerializationUnits.MONEY, moneyCode);
         return displayType.getDjunitsType();
     }
 
@@ -1540,23 +1540,23 @@ public final class TypedMessage
      * @return decoded MoneyPerUnit unit
      */
     @SuppressWarnings("checkstyle:needbraces")
-    private static Unit<? extends Unit<?>> decodeMoneyPerUnit(final UnitType unitType, final Integer moneyCode,
+    private static Unit<? extends Unit<?>> decodeMoneyPerUnit(final SerializationUnits unitType, final Integer moneyCode,
             final Integer perCode)
     {
-        DisplayType moneyDisplayType = DisplayType.getDisplayType(UnitType.MONEY, moneyCode);
+        DisplayType moneyDisplayType = DisplayType.getDisplayType(SerializationUnits.MONEY, moneyCode);
         DisplayType perDisplayType;
         if (unitType.getCode() == 101)
-            perDisplayType = DisplayType.getDisplayType(UnitType.AREA, perCode);
+            perDisplayType = DisplayType.getDisplayType(SerializationUnits.AREA, perCode);
         else if (unitType.getCode() == 102)
-            perDisplayType = DisplayType.getDisplayType(UnitType.ENERGY, perCode);
+            perDisplayType = DisplayType.getDisplayType(SerializationUnits.ENERGY, perCode);
         else if (unitType.getCode() == 103)
-            perDisplayType = DisplayType.getDisplayType(UnitType.LENGTH, perCode);
+            perDisplayType = DisplayType.getDisplayType(SerializationUnits.LENGTH, perCode);
         else if (unitType.getCode() == 104)
-            perDisplayType = DisplayType.getDisplayType(UnitType.MASS, perCode);
+            perDisplayType = DisplayType.getDisplayType(SerializationUnits.MASS, perCode);
         else if (unitType.getCode() == 105)
-            perDisplayType = DisplayType.getDisplayType(UnitType.DURATION, perCode);
+            perDisplayType = DisplayType.getDisplayType(SerializationUnits.DURATION, perCode);
         else if (unitType.getCode() == 106)
-            perDisplayType = DisplayType.getDisplayType(UnitType.VOLUME, perCode);
+            perDisplayType = DisplayType.getDisplayType(SerializationUnits.VOLUME, perCode);
         else
             throw new RuntimeException(new SerializationException("Unknown MoneyPerUnit type with code " + unitType.getCode()));
         return moneyPerUnitType(moneyDisplayType, perDisplayType);
@@ -1586,32 +1586,32 @@ public final class TypedMessage
         }
         String name = moneyDisplayType.getName() + "/" + perDisplayType.getName();
         String abbreviation = moneyDisplayType.getAbbreviation() + "/" + perDisplayType.getAbbreviation();
-        if (perDisplayType.getUnitType().equals(UnitType.AREA))
+        if (perDisplayType.getUnitType().equals(SerializationUnits.AREA))
         {
             moneyPerUnitType = new MoneyPerAreaUnit((MoneyUnit) moneyDisplayType.getDjunitsType(),
                     (AreaUnit) perDisplayType.getDjunitsType(), name, abbreviation);
         }
-        else if (perDisplayType.getUnitType().equals(UnitType.ENERGY))
+        else if (perDisplayType.getUnitType().equals(SerializationUnits.ENERGY))
         {
             moneyPerUnitType = new MoneyPerEnergyUnit((MoneyUnit) moneyDisplayType.getDjunitsType(),
                     (EnergyUnit) perDisplayType.getDjunitsType(), name, abbreviation);
         }
-        else if (perDisplayType.getUnitType().equals(UnitType.LENGTH))
+        else if (perDisplayType.getUnitType().equals(SerializationUnits.LENGTH))
         {
             moneyPerUnitType = new MoneyPerLengthUnit((MoneyUnit) moneyDisplayType.getDjunitsType(),
                     (LengthUnit) perDisplayType.getDjunitsType(), name, abbreviation);
         }
-        else if (perDisplayType.getUnitType().equals(UnitType.MASS))
+        else if (perDisplayType.getUnitType().equals(SerializationUnits.MASS))
         {
             moneyPerUnitType = new MoneyPerMassUnit((MoneyUnit) moneyDisplayType.getDjunitsType(),
                     (MassUnit) perDisplayType.getDjunitsType(), name, abbreviation);
         }
-        else if (perDisplayType.getUnitType().equals(UnitType.DURATION))
+        else if (perDisplayType.getUnitType().equals(SerializationUnits.DURATION))
         {
             moneyPerUnitType = new MoneyPerDurationUnit((MoneyUnit) moneyDisplayType.getDjunitsType(),
                     (DurationUnit) perDisplayType.getDjunitsType(), name, abbreviation);
         }
-        else if (perDisplayType.getUnitType().equals(UnitType.VOLUME))
+        else if (perDisplayType.getUnitType().equals(SerializationUnits.VOLUME))
         {
             moneyPerUnitType = new MoneyPerVolumeUnit((MoneyUnit) moneyDisplayType.getDjunitsType(),
                     (VolumeUnit) perDisplayType.getDjunitsType(), name, abbreviation);
@@ -1632,7 +1632,7 @@ public final class TypedMessage
      */
     static private Unit<? extends Unit<?>> getUnit(final byte[] buffer, final Pointer pointer)
     {
-        UnitType unitType = UnitType.getUnitType(buffer[pointer.getAndIncrement(1)]);
+        SerializationUnits unitType = SerializationUnits.getUnitType(buffer[pointer.getAndIncrement(1)]);
         if (unitType.getCode() == 100) // money
         {
             int moneyCode = EndianUtil.decodeShort(buffer, pointer.getAndIncrement(2));

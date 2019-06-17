@@ -1,12 +1,14 @@
 package org.djutils.serialization;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.Arrays;
 
+import org.djunits.unit.AccelerationUnit;
 import org.djunits.unit.AreaUnit;
 import org.djunits.unit.DimensionlessUnit;
 import org.djunits.unit.ElectricalCurrentUnit;
@@ -19,6 +21,7 @@ import org.djunits.unit.MoneyPerLengthUnit;
 import org.djunits.unit.MoneyPerMassUnit;
 import org.djunits.unit.MoneyPerVolumeUnit;
 import org.djunits.unit.MoneyUnit;
+import org.djunits.unit.SpeedUnit;
 import org.djunits.value.StorageType;
 import org.djunits.value.ValueException;
 import org.djunits.value.vdouble.matrix.ElectricalCurrentMatrix;
@@ -291,7 +294,7 @@ public class Tests
         {
             // Ignore expected exception
         }
-        
+
         Integer[][] badMatrix = new Integer[0][0];
         objects = new Object[] { badMatrix };
         try
@@ -304,7 +307,7 @@ public class Tests
             // Ignore expected exception
         }
     }
-    
+
     /**
      * Test the Pointer class.
      */
@@ -537,6 +540,98 @@ public class Tests
             return Arrays.equals((boolean[]) e1, (boolean[]) e2);
         }
         return e1.equals(e2);
+    }
+
+    /**
+     * Test the UnitType class.
+     */
+    @Test
+    public void TestUnitType()
+    {
+        byte code = 127;
+        Class<AccelerationUnit> unitClass = AccelerationUnit.class;
+        String name = "AccelerationName";
+        String description = "AccelerationDescription";
+        String siUnit = "[m/s^2]";
+        SerializationUnits testAccelerationUnitType = new SerializationUnits(code, unitClass, name, description, siUnit);
+        assertEquals("code is returned", code, testAccelerationUnitType.getCode());
+        assertEquals("unit class is returned", unitClass, testAccelerationUnitType.getDjunitsType());
+        assertEquals("name is returned", name, testAccelerationUnitType.getName());
+        assertEquals("description is returned", description, testAccelerationUnitType.getDescription());
+        assertEquals("SI unit is returned", siUnit, testAccelerationUnitType.getSiUnit());
+        assertTrue("toString returns something descriptive", testAccelerationUnitType.toString().startsWith("UnitType"));
+
+        byte undefined = 126;
+        assertEquals("new unit is in the byte type map", testAccelerationUnitType, SerializationUnits.getUnitType(code));
+        assertNull("undefined byte returns null", SerializationUnits.getUnitType(undefined));
+        assertEquals("djunits type is returned", unitClass, SerializationUnits.getUnitClass(code));
+        assertNull("undefined byte returns null", SerializationUnits.getUnitClass(undefined));
+        assertEquals("speed type can be found by byte code", SerializationUnits.SPEED, SerializationUnits.getUnitType((byte) 22));
+        assertEquals("speed type can be found by unit type", SerializationUnits.SPEED, SerializationUnits.getUnitType(SpeedUnit.SI));
+        assertEquals("speed type can be found by non SI unit type", SerializationUnits.SPEED,
+                SerializationUnits.getUnitType(SpeedUnit.FOOT_PER_SECOND));
+        assertEquals("speed unit code can be found by unit type", 22, SerializationUnits.getUnitCode(SpeedUnit.SI));
+    }
+
+    /**
+     * Test all constructors for SerializationException.
+     */
+    @Test
+    public final void SerializationExceptionTest()
+    {
+        String message = "MessageString";
+        Exception e = new SerializationException(message);
+        assertEquals("message should be our message", message, e.getMessage());
+        assertEquals("cause should be null", null, e.getCause());
+        e = new SerializationException();
+        assertEquals("cause should be null", null, e.getCause());
+        String causeString = "CauseString";
+        Throwable cause = new Throwable(causeString);
+        e = new SerializationException(cause);
+        assertEquals("cause should not be our cause", cause, e.getCause());
+        assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+        e = new SerializationException(message, cause);
+        assertEquals("message should be our message", message, e.getMessage());
+        assertEquals("cause should not be our cause", cause, e.getCause());
+        assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+        for (boolean enableSuppression : new boolean[] {true, false})
+        {
+            for (boolean writableStackTrace : new boolean[] {true, false})
+            {
+                e = new SerializationException(message, cause, enableSuppression, writableStackTrace);
+                assertTrue("Exception should not be null", null != e);
+                assertEquals("message should be our message", message, e.getMessage());
+                assertEquals("cause should not be our cause", cause, e.getCause());
+                assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+                // Don't know how to check if suppression is enabled/disabled
+                StackTraceElement[] stackTrace = new StackTraceElement[1];
+                stackTrace[0] = new StackTraceElement("a", "b", "c", 1234);
+                try
+                {
+                    e.setStackTrace(stackTrace);
+                }
+                catch (Exception e1)
+                {
+                    assertTrue("Stack trace should be writable", writableStackTrace);
+                    continue;
+                }
+                // You wouldn't believe it, but a call to setStackTrace if non-writable is silently ignored
+                StackTraceElement[] retrievedStackTrace = e.getStackTrace();
+                if (retrievedStackTrace.length > 0)
+                {
+                    assertTrue("stack trace should be writable", writableStackTrace);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Test the SerializationUnits class.
+     */
+    @Test
+    public void TestSerializationUnits()
+    {
+        
     }
 
 }
