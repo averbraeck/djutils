@@ -76,8 +76,7 @@ public class SerializationUnits implements Serializable
             new SerializationUnits(2, AngleSolidUnit.class, "AngleSolid", "Solid angle ", "[steradian]");
 
     /** Angle unit type with code 3. */
-    public static final SerializationUnits ANGLE =
-            new SerializationUnits(3, AngleUnit.class, "Angle", "Angle (relative)", "[rad]");
+    public static final SerializationUnits ANGLE = new SerializationUnits(3, AngleUnit.class, "Angle", "Angle (relative)", "[rad]");
 
     /** Direction unit type with code 4. */
     public static final SerializationUnits DIRECTION =
@@ -119,16 +118,14 @@ public class SerializationUnits implements Serializable
             new SerializationUnits(13, FlowVolumeUnit.class, "FlowVolume", "Volume flow rate", "[m^3/s]");
 
     /** Force unit type with code 14. */
-    public static final SerializationUnits FORCE =
-            new SerializationUnits(14, ForceUnit.class, "Force", "Force (Newton)", "[kgm/s^2]");
+    public static final SerializationUnits FORCE = new SerializationUnits(14, ForceUnit.class, "Force", "Force (Newton)", "[kgm/s^2]");
 
     /** Frequency unit type with code 15. */
     public static final SerializationUnits FREQUENCY =
             new SerializationUnits(15, FrequencyUnit.class, "Frequency", "Frequency (Hz)", "[1/s]");
 
     /** Length unit type with code 16. */
-    public static final SerializationUnits LENGTH =
-            new SerializationUnits(16, LengthUnit.class, "Length", "Length (relative)", "[m]");
+    public static final SerializationUnits LENGTH = new SerializationUnits(16, LengthUnit.class, "Length", "Length (relative)", "[m]");
 
     /** Position unit type with code 17. */
     public static final SerializationUnits POSITION =
@@ -142,8 +139,7 @@ public class SerializationUnits implements Serializable
     public static final SerializationUnits MASS = new SerializationUnits(19, MassUnit.class, "Mass", "Mass", "[kg]");
 
     /** Power unit type with code 20. */
-    public static final SerializationUnits POWER =
-            new SerializationUnits(20, PowerUnit.class, "Power", "Power (Watt)", "[kgm^2/s^3]");
+    public static final SerializationUnits POWER = new SerializationUnits(20, PowerUnit.class, "Power", "Power (Watt)", "[kgm^2/s^3]");
 
     /** Pressure unit type with code 21. */
     public static final SerializationUnits PRESSURE =
@@ -161,8 +157,7 @@ public class SerializationUnits implements Serializable
             new SerializationUnits(24, AbsoluteTemperatureUnit.class, "AbsoluteTemperature", "Temperature (absolute)", "[K]");
 
     /** Duration unit type with code 25. */
-    public static final SerializationUnits DURATION =
-            new SerializationUnits(25, DurationUnit.class, "Duration", "Time (relative)", "[s]");
+    public static final SerializationUnits DURATION = new SerializationUnits(25, DurationUnit.class, "Duration", "Time (relative)", "[s]");
 
     /** Time unit type with code 26. */
     public static final SerializationUnits TIME = new SerializationUnits(26, TimeUnit.class, "Time", "Time (absolute)", "[s]");
@@ -202,33 +197,33 @@ public class SerializationUnits implements Serializable
     public static final SerializationUnits MONEYPERVOLUME =
             new SerializationUnits(106, MoneyPerVolumeUnit.class, "MoneyPerVolume", "Money/Volume (cost/m^3)", "[$/m^3]");
 
-    /** the code of the unit as a byte. */
+    /** The code of the unit as a byte. */
     private final byte code;
 
-    /** the djunits data type. */
+    /** The djunits data type. */
     private final Class<? extends Unit<?>> djunitsType;
 
-    /** the unit name. */
+    /** The unit name. */
     private final String name;
 
-    /** the unit description. */
+    /** The unit description. */
     private final String description;
 
-    /** the SI or default unit in SI-elements. */
+    /** The SI or default unit in SI-elements. */
     private final String siUnit;
 
     /**
-     * @param code the byte code of the unit provided as an int
-     * @param djunitsType the djunits data type
-     * @param name the unit name
-     * @param description the unit description
-     * @param siUnit the SI or default unit in SI-elements
+     * Construct a new UnitType and put it in the maps.
+     * @param code int; the byte code of the unit provided as an int
+     * @param djunitsType Class&lt;U&gt;; the djunits data type
+     * @param name String; the unit name
+     * @param description String; the unit description
+     * @param siUnit String; the SI or default unit in SI-elements
      * @param <U> the Unit
      */
     public <U extends Unit<U>> SerializationUnits(final int code, final Class<U> djunitsType, final String name,
             final String description, final String siUnit)
     {
-        super();
         this.code = (byte) code;
         this.djunitsType = djunitsType;
         this.name = name;
@@ -241,8 +236,8 @@ public class SerializationUnits implements Serializable
 
     /**
      * Return the unit type belonging to the byte code.
-     * @param code the code to search for.
-     * @return the unit type, or null if not found.
+     * @param code byte; the code to search for.
+     * @return UnitType; the unit type, or null if not found.
      */
     public static SerializationUnits getUnitType(final byte code)
     {
@@ -251,8 +246,8 @@ public class SerializationUnits implements Serializable
 
     /**
      * Return the unit class belonging to the byte code.
-     * @param code the code to search for.
-     * @return the unit class, or null if not found.
+     * @param code byte; the code to search for.
+     * @return Class; the unit class, or null if not found.
      */
     public static Class<? extends Unit<?>> getUnitClass(final byte code)
     {
@@ -262,8 +257,8 @@ public class SerializationUnits implements Serializable
 
     /**
      * Return the unit type belonging to the unit class.
-     * @param unit the unit to search for.
-     * @return the unit type, or null if not found.
+     * @param unit U; the unit to search for.
+     * @return UnitType; the unit type, or null if not found.
      * @param <U> the Unit
      */
     public static <U extends Unit<U>> SerializationUnits getUnitType(final U unit)
@@ -273,8 +268,8 @@ public class SerializationUnits implements Serializable
 
     /**
      * Return the byte code belonging to the unit class.
-     * @param unit the unit to search for.
-     * @return the unit type, or null if not found.
+     * @param unit U; the unit to search for.
+     * @return byte; the unit type code, or null if not found.
      * @param <U> the Unit
      */
     public static <U extends Unit<U>> byte getUnitCode(final U unit)
@@ -284,7 +279,8 @@ public class SerializationUnits implements Serializable
     }
 
     /**
-     * @return code
+     * Retrieve the byte code of this UnitType.
+     * @return byte; the byte code of this UnitType
      */
     public final byte getCode()
     {
@@ -292,7 +288,8 @@ public class SerializationUnits implements Serializable
     }
 
     /**
-     * @return djunitsType
+     * Retrieve the DJUNITS type of this UnitType.
+     * @return Class; the DJUNITS type of this UnitType
      */
     public final Class<? extends Unit<?>> getDjunitsType()
     {
@@ -300,7 +297,8 @@ public class SerializationUnits implements Serializable
     }
 
     /**
-     * @return name
+     * Retrieve the name of the UnitType.
+     * @return String; the name of this UnitType
      */
     public final String getName()
     {
@@ -308,7 +306,8 @@ public class SerializationUnits implements Serializable
     }
 
     /**
-     * @return description
+     * Retrieve the description of this UnitType.
+     * @return String; the description of this UnitType
      */
     public final String getDescription()
     {
@@ -316,7 +315,8 @@ public class SerializationUnits implements Serializable
     }
 
     /**
-     * @return siUnit
+     * Retrieve the SI unit of this UnitType.
+     * @return String the SI unit of this UnitType
      */
     public final String getSiUnit()
     {
@@ -388,7 +388,7 @@ public class SerializationUnits implements Serializable
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()
     {
-        return "Sim0MQUnitType [code=" + this.code + ", name=" + this.name + ", description=" + this.description + ", siUnit="
+        return "UnitType [code=" + this.code + ", name=" + this.name + ", description=" + this.description + ", siUnit="
                 + this.siUnit + "]";
     }
 
