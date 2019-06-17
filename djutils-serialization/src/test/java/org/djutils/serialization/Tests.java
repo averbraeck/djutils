@@ -1,11 +1,13 @@
 package org.djutils.serialization;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 
 import org.djunits.unit.AccelerationUnit;
@@ -40,7 +42,6 @@ import org.djunits.value.vfloat.scalar.FloatArea;
 import org.djunits.value.vfloat.scalar.FloatMoney;
 import org.djunits.value.vfloat.scalar.FloatMoneyPerVolume;
 import org.djunits.value.vfloat.vector.FloatElectricalResistanceVector;
-import org.djutils.decoderdumper.HexDumper;
 import org.junit.Test;
 
 /**
@@ -84,19 +85,25 @@ public class Tests
         Object[] objects = new Object[] { intValue, integerValue, shortValue, shortValue2, longValue, longValue2, byteValue,
                 byteValue2, floatValue, floatValue2, doubleValue, doubleValue2, boolValue, boolValue2, charValue, charValue2,
                 stringValue };
-        for (boolean encodeUTF8 : new boolean[] { false, true })
+        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
         {
-            byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(objects) : TypedMessage.encodeUTF16(objects);
-            System.out.print(HexDumper.hexDumper(serialized));
-            for (boolean primitive : new boolean[] { false, true })
+            for (boolean encodeUTF8 : new boolean[] { false, true })
             {
-                Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
-                        : TypedMessage.decodeToObjectDataTypes(serialized);
-                assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
-                for (int i = 0; i < objects.length; i++)
+                // System.out.println("" + endianUtil + ", UTF8=" + encodeUTF8);
+                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
+                        : TypedMessage.encodeUTF16(endianUtil, objects);
+                // System.out.print(HexDumper.hexDumper(serialized));
+                for (boolean primitive : new boolean[] { false, true })
                 {
-                    assertEquals("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
-                            objects[i], decodedObjects[i]);
+                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
+                            : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
+                    assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                    for (int i = 0; i < objects.length; i++)
+                    {
+                        assertEquals(
+                                "decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
+                                objects[i], decodedObjects[i]);
+                    }
                 }
             }
         }
@@ -125,19 +132,23 @@ public class Tests
         Double[] doubleValues2 = new Double[] { -23.45, -34.56, -45.67 };
         Object[] objects = new Object[] { integer, integerValues2, shortValues, shortValues2, longValues, longValues2,
                 byteValues, byteValues2, floatValues, floatValues2, doubleValues, doubleValues2, boolValues, boolValues2 };
-        for (boolean encodeUTF8 : new boolean[] { false, true })
+        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
         {
-            byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(objects) : TypedMessage.encodeUTF16(objects);
-            System.out.print(HexDumper.hexDumper(serialized));
-            for (boolean primitive : new boolean[] { false, true })
+            for (boolean encodeUTF8 : new boolean[] { false, true })
             {
-                Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
-                        : TypedMessage.decodeToObjectDataTypes(serialized);
-                assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
-                for (int i = 0; i < objects.length; i++)
+                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
+                        : TypedMessage.encodeUTF16(endianUtil, objects);
+                // System.out.print(HexDumper.hexDumper(serialized));
+                for (boolean primitive : new boolean[] { false, true })
                 {
-                    assertTrue("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
-                            deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
+                            : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
+                    assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                    for (int i = 0; i < objects.length; i++)
+                    {
+                        assertTrue("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
+                                deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                    }
                 }
             }
         }
@@ -166,19 +177,23 @@ public class Tests
         Double[][] doubleValues2 = new Double[][] { { -23.45, -34.56, -45.67 }, { -22.2, -33.3, -44.4 } };
         Object[] objects = new Object[] { integer, integerValues2, shortValues, shortValues2, longValues, longValues2,
                 byteValues, byteValues2, floatValues, floatValues2, doubleValues, doubleValues2, boolValues, boolValues2 };
-        for (boolean encodeUTF8 : new boolean[] { false, true })
+        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
         {
-            byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(objects) : TypedMessage.encodeUTF16(objects);
-            System.out.print(HexDumper.hexDumper(serialized));
-            for (boolean primitive : new boolean[] { false, true })
+            for (boolean encodeUTF8 : new boolean[] { false, true })
             {
-                Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
-                        : TypedMessage.decodeToObjectDataTypes(serialized);
-                assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
-                for (int i = 0; i < objects.length; i++)
+                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
+                        : TypedMessage.encodeUTF16(endianUtil, objects);
+                // System.out.print(HexDumper.hexDumper(serialized));
+                for (boolean primitive : new boolean[] { false, true })
                 {
-                    assertTrue("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
-                            deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
+                            : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
+                    assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                    for (int i = 0; i < objects.length; i++)
+                    {
+                        assertTrue("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
+                                deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                    }
                 }
             }
         }
@@ -216,17 +231,20 @@ public class Tests
 
         Object[] objects = new Object[] { length, value, money, floatMoney, mpa, mpl, mpe, mpm, mpt, mpv, mpvw, area, currents,
                 resistors, currentMatrix, resistorMatrix };
-        byte[] serialized = TypedMessage.encodeUTF16(objects);
-        System.out.print(HexDumper.hexDumper(serialized));
-        for (boolean primitive : new boolean[] { false, true })
+        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
         {
-            Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
-                    : TypedMessage.decodeToObjectDataTypes(serialized);
-            assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
-            for (int i = 0; i < objects.length; i++)
+            byte[] serialized = TypedMessage.encodeUTF16(endianUtil, objects);
+            // System.out.print(HexDumper.hexDumper(serialized));
+            for (boolean primitive : new boolean[] { false, true })
             {
-                assertTrue("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
-                        deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
+                        : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
+                assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                for (int i = 0; i < objects.length; i++)
+                {
+                    assertTrue("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
+                            deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                }
             }
         }
     }
@@ -253,26 +271,29 @@ public class Tests
         Double[][] doubleValues2 = new Double[][] { { -23.45, -34.56 }, { -22.2, -33.3, -44.4 } };
         Object[] objects = new Object[] { integer, integerValues2, shortValues, shortValues2, longValues, longValues2,
                 byteValues, byteValues2, floatValues, floatValues2, doubleValues, doubleValues2, boolValues, boolValues2 };
-        for (Object object : objects)
+        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
         {
-            Object[] singleObjectArray = new Object[] { object };
-            try
+            for (Object object : objects)
             {
-                TypedMessage.encodeUTF16(singleObjectArray);
-                fail("Jagged array should have thrown a SerializationException");
-            }
-            catch (SerializationException se)
-            {
-                // Ignore expected exception
-            }
-            try
-            {
-                TypedMessage.encodeUTF8(singleObjectArray);
-                fail("Jagged array should have thrown a SerializationException");
-            }
-            catch (SerializationException se)
-            {
-                // Ignore expected exception
+                Object[] singleObjectArray = new Object[] { object };
+                try
+                {
+                    TypedMessage.encodeUTF16(endianUtil, singleObjectArray);
+                    fail("Jagged array should have thrown a SerializationException");
+                }
+                catch (SerializationException se)
+                {
+                    // Ignore expected exception
+                }
+                try
+                {
+                    TypedMessage.encodeUTF8(endianUtil, singleObjectArray);
+                    fail("Jagged array should have thrown a SerializationException");
+                }
+                catch (SerializationException se)
+                {
+                    // Ignore expected exception
+                }
             }
         }
     }
@@ -285,26 +306,29 @@ public class Tests
     {
         File file = new File("whatever");
         Object[] objects = new Object[] { file };
-        try
+        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
         {
-            TypedMessage.encodeUTF16(objects);
-            fail("Non serializable object should have thrown a SerializationException");
-        }
-        catch (SerializationException se)
-        {
-            // Ignore expected exception
-        }
+            try
+            {
+                TypedMessage.encodeUTF16(endianUtil, objects);
+                fail("Non serializable object should have thrown a SerializationException");
+            }
+            catch (SerializationException se)
+            {
+                // Ignore expected exception
+            }
 
-        Integer[][] badMatrix = new Integer[0][0];
-        objects = new Object[] { badMatrix };
-        try
-        {
-            TypedMessage.encodeUTF16(objects);
-            fail("Zero sized matrix should have thrown a SerializationException");
-        }
-        catch (SerializationException se)
-        {
-            // Ignore expected exception
+            Integer[][] badMatrix = new Integer[0][0];
+            objects = new Object[] { badMatrix };
+            try
+            {
+                TypedMessage.encodeUTF16(endianUtil, objects);
+                fail("Zero sized matrix should have thrown a SerializationException");
+            }
+            catch (SerializationException se)
+            {
+                // Ignore expected exception
+            }
         }
     }
 
@@ -566,8 +590,10 @@ public class Tests
         assertNull("undefined byte returns null", SerializationUnits.getUnitType(undefined));
         assertEquals("djunits type is returned", unitClass, SerializationUnits.getUnitClass(code));
         assertNull("undefined byte returns null", SerializationUnits.getUnitClass(undefined));
-        assertEquals("speed type can be found by byte code", SerializationUnits.SPEED, SerializationUnits.getUnitType((byte) 22));
-        assertEquals("speed type can be found by unit type", SerializationUnits.SPEED, SerializationUnits.getUnitType(SpeedUnit.SI));
+        assertEquals("speed type can be found by byte code", SerializationUnits.SPEED,
+                SerializationUnits.getUnitType((byte) 22));
+        assertEquals("speed type can be found by unit type", SerializationUnits.SPEED,
+                SerializationUnits.getUnitType(SpeedUnit.SI));
         assertEquals("speed type can be found by non SI unit type", SerializationUnits.SPEED,
                 SerializationUnits.getUnitType(SpeedUnit.FOOT_PER_SECOND));
         assertEquals("speed unit code can be found by unit type", 22, SerializationUnits.getUnitCode(SpeedUnit.SI));
@@ -594,9 +620,9 @@ public class Tests
         assertEquals("message should be our message", message, e.getMessage());
         assertEquals("cause should not be our cause", cause, e.getCause());
         assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
-        for (boolean enableSuppression : new boolean[] {true, false})
+        for (boolean enableSuppression : new boolean[] { true, false })
         {
-            for (boolean writableStackTrace : new boolean[] {true, false})
+            for (boolean writableStackTrace : new boolean[] { true, false })
             {
                 e = new SerializationException(message, cause, enableSuppression, writableStackTrace);
                 assertTrue("Exception should not be null", null != e);
@@ -624,14 +650,20 @@ public class Tests
             }
         }
     }
-    
+
     /**
-     * Test the SerializationUnits class.
+     * Test the remainder of the EndianUtil class.
      */
     @Test
-    public void TestSerializationUnits()
+    public void TestEndianUtil()
     {
-        
+        assertTrue("EndianUtil.BIG_ENDIAN is big endian", EndianUtil.BIG_ENDIAN.isBigEndian());
+        assertFalse("EndianUtil.LITTLE_ENDIAN is not big endian", EndianUtil.LITTLE_ENDIAN.isBigEndian());
+        assertEquals("Platform endianness matches what EndianUtil says", ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN),
+                EndianUtil.isPlatformBigEndian());
+        assertTrue("EndianUtil.BIG_ENDIAN is big endian", EndianUtil.bigEndian().isBigEndian());
+        assertFalse("EndianUtil.LITTLE_ENDIAN is not big endian", EndianUtil.littleEndian().isBigEndian());
+        assertTrue("EndianUtil has descriptive toString method", EndianUtil.BIG_ENDIAN.toString().startsWith("EndianUtil"));
     }
 
 }

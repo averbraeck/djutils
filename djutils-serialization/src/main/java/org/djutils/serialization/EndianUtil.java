@@ -16,18 +16,61 @@ import java.nio.ByteOrder;
  */
 public final class EndianUtil
 {
-    /** do we want to send the messages in big endian? */
-    private static boolean defaultBigEndian = true;
+    /** Does this EndianUtil encode and decode messages in bigEndian? */
+    private final boolean bigEndian;
 
-    /** is the platform big endian? */
+    /** Is this platform bigEndian? */
     private static final boolean PLATFORM_BIG_ENDIAN = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
 
     /**
-     * Utility class - do not instantiate.
+     * Report whether this platform is bigEndian, or littleEndian.
+     * @return boolean; true if this platform is bigEndian; false if this platform is littleEndian
      */
-    private EndianUtil()
+    public static boolean isPlatformBigEndian()
     {
-        //
+        return PLATFORM_BIG_ENDIAN;
+    }
+
+    /** Directly usable bigEndian EndianUtil. */
+    public static final EndianUtil BIG_ENDIAN = new EndianUtil(true);
+
+    /** Directly usable littleEndian EndianUtil. */
+    public static final EndianUtil LITTLE_ENDIAN = new EndianUtil(false);
+
+    /**
+     * Construct an EndianUtil object with user specified endianness.
+     * @param bigEndian
+     */
+    private EndianUtil(boolean bigEndian)
+    {
+        this.bigEndian = bigEndian;
+    }
+
+    /**
+     * Construct an EndianUtil object that uses bigEndian encoding.
+     * @return EndianUtil that uses bigEndian encoding
+     */
+    public static EndianUtil bigEndian()
+    {
+        return BIG_ENDIAN;
+    }
+
+    /**
+     * Construct an EndianUtil object that uses littleEndian encoding.
+     * @return EndianUtil that uses littleEndian encoding
+     */
+    public static EndianUtil littleEndian()
+    {
+        return LITTLE_ENDIAN;
+    }
+
+    /**
+     * Report if this EndianUtil is bigEndian.
+     * @return bigEndian boolean; true if this EndianUtil is bigEndian; false if this EndianUtil is littleEndian
+     */
+    public boolean isBigEndian()
+    {
+        return bigEndian;
     }
 
     /**
@@ -36,9 +79,9 @@ public final class EndianUtil
      * @param pointer the first byte to consider
      * @return the short value
      */
-    public static short decodeShort(final byte[] message, final int pointer)
+    public short decodeShort(final byte[] message, final int pointer)
     {
-        if (defaultBigEndian)
+        if (bigEndian)
         {
             return (short) (((message[pointer] & 0xff) << 8) | ((message[pointer + 1] & 0xff)));
         }
@@ -54,9 +97,9 @@ public final class EndianUtil
      * @param pointer the first byte to consider
      * @return the integer value
      */
-    public static int decodeInt(final byte[] message, final int pointer)
+    public int decodeInt(final byte[] message, final int pointer)
     {
-        if (defaultBigEndian)
+        if (bigEndian)
         {
             return (((message[pointer] & 0xff) << 24) | ((message[pointer + 1] & 0xff) << 16)
                     | ((message[pointer + 2] & 0xff) << 8) | ((message[pointer + 3] & 0xff)));
@@ -74,9 +117,9 @@ public final class EndianUtil
      * @param pointer the first byte to consider
      * @return the long value
      */
-    public static long decodeLong(final byte[] message, final int pointer)
+    public long decodeLong(final byte[] message, final int pointer)
     {
-        if (defaultBigEndian)
+        if (bigEndian)
         {
             return ((((long) message[pointer]) << 56) | (((long) message[pointer + 1] & 0xff) << 48)
                     | (((long) message[pointer + 2] & 0xff) << 40) | (((long) message[pointer + 3] & 0xff) << 32)
@@ -98,7 +141,7 @@ public final class EndianUtil
      * @param pointer the first byte to consider
      * @return the float value
      */
-    public static float decodeFloat(final byte[] message, final int pointer)
+    public float decodeFloat(final byte[] message, final int pointer)
     {
         int bits = decodeInt(message, pointer);
         return Float.intBitsToFloat(bits);
@@ -110,7 +153,7 @@ public final class EndianUtil
      * @param pointer the first byte to consider
      * @return the double value
      */
-    public static double decodeDouble(final byte[] message, final int pointer)
+    public double decodeDouble(final byte[] message, final int pointer)
     {
         long bits = decodeLong(message, pointer);
         return Double.longBitsToDouble(bits);
@@ -122,7 +165,7 @@ public final class EndianUtil
      * @param pointer the first byte to consider
      * @return the short value
      */
-    public static char decodeChar(final byte[] message, final int pointer)
+    public char decodeChar(final byte[] message, final int pointer)
     {
         return (char) decodeShort(message, pointer);
     }
@@ -134,7 +177,7 @@ public final class EndianUtil
      * @return the Java String at position pointer
      * @throws SerializationException when the bytes cannot be parsed as UTF8
      */
-    public static String decodeUTF8String(final byte[] message, final int pointer) throws SerializationException
+    public String decodeUTF8String(final byte[] message, final int pointer) throws SerializationException
     {
         int len = decodeInt(message, pointer);
         byte[] c = new byte[len];
@@ -158,7 +201,7 @@ public final class EndianUtil
      * @param pointer the start position in the array
      * @return the Java String at position pointer
      */
-    public static String decodeUTF16String(final byte[] message, final int pointer)
+    public String decodeUTF16String(final byte[] message, final int pointer)
     {
         int len = decodeInt(message, pointer);
         char[] c = new char[len / 2];
@@ -176,10 +219,10 @@ public final class EndianUtil
      * @param pointer the pointer to start writing
      * @return the new pointer after writing
      */
-    public static int encodeShort(final short v, final byte[] message, final int pointer)
+    public int encodeShort(final short v, final byte[] message, final int pointer)
     {
         int p = pointer;
-        if (defaultBigEndian)
+        if (bigEndian)
         {
             message[p++] = (byte) (v >> 8);
             message[p++] = (byte) (v);
@@ -199,7 +242,7 @@ public final class EndianUtil
      * @param pointer the pointer to start writing
      * @return the new pointer after writing
      */
-    public static int encodeChar(final char v, final byte[] message, final int pointer)
+    public int encodeChar(final char v, final byte[] message, final int pointer)
     {
         return encodeShort((short) v, message, pointer);
     }
@@ -210,10 +253,10 @@ public final class EndianUtil
      * @param message the message buffer to encode the variable into
      * @param pointer the pointer to start writing
      */
-    public static void encodeInt(final int v, final byte[] message, final int pointer)
+    public void encodeInt(final int v, final byte[] message, final int pointer)
     {
         int p = pointer;
-        if (defaultBigEndian)
+        if (bigEndian)
         {
             message[p++] = (byte) ((v >> 24) & 0xFF);
             message[p++] = (byte) ((v >> 16) & 0xFF);
@@ -236,10 +279,10 @@ public final class EndianUtil
      * @param pointer the pointer to start writing
      * @return the new pointer after writing
      */
-    public static int encodeLong(final long v, final byte[] message, final int pointer)
+    public int encodeLong(final long v, final byte[] message, final int pointer)
     {
         int p = pointer;
-        if (defaultBigEndian)
+        if (bigEndian)
         {
             message[p++] = (byte) ((v >> 56) & 0xFF);
             message[p++] = (byte) ((v >> 48) & 0xFF);
@@ -270,7 +313,7 @@ public final class EndianUtil
      * @param message the message buffer to encode the variable into
      * @param pointer the pointer to start writing
      */
-    public static void encodeFloat(final float v, final byte[] message, final int pointer)
+    public void encodeFloat(final float v, final byte[] message, final int pointer)
     {
         int vint = Float.floatToIntBits(v);
         encodeInt(vint, message, pointer);
@@ -283,86 +326,16 @@ public final class EndianUtil
      * @param pointer the pointer to start writing
      * @return the new pointer after writing
      */
-    public static int encodeDouble(final double v, final byte[] message, final int pointer)
+    public int encodeDouble(final double v, final byte[] message, final int pointer)
     {
         long vlong = Double.doubleToLongBits(v);
         return encodeLong(vlong, message, pointer);
     }
 
-    /**
-     * Return a long encoded as a byte array.
-     * @param v the long variable to encode
-     * @return the byte array.
-     */
-    public static byte[] longToByteArray(final long v)
+    @Override
+    public String toString()
     {
-        byte[] message = new byte[8];
-        int pointer = 0;
-        encodeLong(v, message, pointer);
-        return message;
-    }
-
-    /**
-     * Return an int encoded as a byte array.
-     * @param v the int variable to encode
-     * @return the byte array.
-     */
-    public static byte[] intToByteArray(final int v)
-    {
-        byte[] message = new byte[4];
-        int pointer = 0;
-        encodeInt(v, message, pointer);
-        return message;
-    }
-
-    /**
-     * Return a double encoded as a byte array.
-     * @param v the double variable to encode
-     * @return the byte array.
-     */
-    public static byte[] doubleToByteArray(final double v)
-    {
-        byte[] message = new byte[8];
-        int pointer = 0;
-        encodeDouble(v, message, pointer);
-        return message;
-    }
-
-    /**
-     * Return a float encoded as a byte array.
-     * @param v the float variable to encode
-     * @return the byte array.
-     */
-    public static byte[] floatToByteArray(final float v)
-    {
-        byte[] message = new byte[4];
-        int pointer = 0;
-        encodeFloat(v, message, pointer);
-        return message;
-    }
-
-    /**
-     * @return defaultBigEndian
-     */
-    public static boolean isDefaultBigEndian()
-    {
-        return defaultBigEndian;
-    }
-
-    /**
-     * @param defaultBigEndian set defaultBigEndian
-     */
-    public static void setDefaultBigEndian(final boolean defaultBigEndian)
-    {
-        EndianUtil.defaultBigEndian = defaultBigEndian;
-    }
-
-    /**
-     * @return platformbigendian
-     */
-    public static boolean isPlatformBigEndian()
-    {
-        return PLATFORM_BIG_ENDIAN;
+        return "EndianUtil [bigEndian=" + bigEndian + "]";
     }
 
 }

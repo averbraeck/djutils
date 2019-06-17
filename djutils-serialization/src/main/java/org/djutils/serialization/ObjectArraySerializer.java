@@ -51,33 +51,34 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
     }
 
     @Override
-    public final void serializeWithPrefix(final Object object, final byte[] buffer, final Pointer pointer)
+    public final void serializeWithPrefix(final Object object, final byte[] buffer, final Pointer pointer,
+            final EndianUtil endianUtil)
     {
         buffer[pointer.getAndIncrement(1)] = fieldType();
-        serialize(object, buffer, pointer);
+        serialize(object, buffer, pointer, endianUtil);
     }
 
     @Override
-    public final void serialize(Object object, byte[] buffer, Pointer pointer)
+    public final void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
     {
         @SuppressWarnings("unchecked")
         T[] array = (T[]) object;
-        EndianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
+        endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
         for (int i = 0; i < array.length; i++)
         {
-            serializeElement(array[i], buffer, pointer.getAndIncrement(this.dataSize));
+            serializeElement(array[i], buffer, pointer.getAndIncrement(this.dataSize), endianUtil);
         }
     }
 
     @Override
-    public final T[] deSerialize(byte[] buffer, Pointer pointer)
+    public final T[] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
     {
-        int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+        int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         @SuppressWarnings("unchecked")
         T[] result = (T[]) Array.newInstance(sample.getClass(), size);
         for (int i = 0; i < size; i++)
         {
-            result[i] = deSerializeElement(buffer, pointer.getAndIncrement(this.dataSize));
+            result[i] = deSerializeElement(buffer, pointer.getAndIncrement(this.dataSize), endianUtil);
         }
         return result;
     }
@@ -87,15 +88,17 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
      * @param object T; the object to serialize
      * @param buffer byte[]; the byte buffer for the serialized object
      * @param offset int; index in byte buffer where first serialized byte must be stored
+     * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
      */
-    abstract void serializeElement(T object, byte[] buffer, int offset);
+    abstract void serializeElement(T object, byte[] buffer, int offset, final EndianUtil endianUtil);
 
     /**
      * Deserializer for one array element (without type prefix) must be implemented in implementing sub classes.
      * @param buffer byte[]; the byte buffer from which the object is to be deserialized
      * @param offset int; index in byte buffer where first byte of the object is stored
+     * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
      * @return T; the deserialized object
      */
-    abstract T deSerializeElement(byte[] buffer, int offset);
+    abstract T deSerializeElement(byte[] buffer, int offset, final EndianUtil endianUtil);
 
 }
