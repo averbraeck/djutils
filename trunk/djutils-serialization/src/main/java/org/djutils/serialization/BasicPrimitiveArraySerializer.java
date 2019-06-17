@@ -36,10 +36,11 @@ public abstract class BasicPrimitiveArraySerializer<T extends Object> extends Ba
     }
 
     @Override
-    public final void serializeWithPrefix(final Object object, final byte[] buffer, final Pointer pointer) throws SerializationException
+    public final void serializeWithPrefix(final Object object, final byte[] buffer, final Pointer pointer,
+            final EndianUtil endianUtil) throws SerializationException
     {
         buffer[pointer.getAndIncrement(1)] = fieldType();
-        serialize(object, buffer, pointer);
+        serialize(object, buffer, pointer, endianUtil);
     }
 
     /**

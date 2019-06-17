@@ -43,27 +43,30 @@ public interface Serializer<T extends Object>
      * @param object Object; the object to serialize (should be of type T)
      * @param buffer byte[]; buffer for the serialized T
      * @param pointer Pointer; position in buffer where the first byte of the serialized T will be stored
+     * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
      * @throws SerializationException when a matrix has size zero or is jagged
      */
-    void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException;
+    void serialize(Object object, byte[] buffer, Pointer pointer, EndianUtil endianUtil) throws SerializationException;
 
     /**
      * Serialize an object of type T.
      * @param object Object; the object to serialize (should be of type T)
      * @param buffer byte[]; buffer for the serialized T
      * @param pointer Pointer; position in buffer where the first byte of the serialized T will be stored
+     * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
      * @throws SerializationException when a matrix has size zero or is jagged
      */
-    void serializeWithPrefix(Object object, byte[] buffer, Pointer pointer) throws SerializationException;
+    void serializeWithPrefix(Object object, byte[] buffer, Pointer pointer, EndianUtil endianUtil) throws SerializationException;
 
     /**
      * Deserialize an object of type T.
      * @param buffer byte[]; the bytes with serialized data that must be reconstructed into a T
      * @param pointer Pointer; position in the buffer where the first byte of the serialized T is located
      * @return T; a T object constructed from the data in the buffer
+     * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
      * @throws SerializationException when the input data cannot be deserialized
      */
-    T deSerialize(byte[] buffer, Pointer pointer) throws SerializationException;
+    T deSerialize(byte[] buffer, Pointer pointer, EndianUtil endianUtil) throws SerializationException;
 
     /**
      * Return a description of the type of data that this serializer handles.

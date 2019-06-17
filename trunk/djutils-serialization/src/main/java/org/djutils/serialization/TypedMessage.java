@@ -76,13 +76,13 @@ public final class TypedMessage
     static final private Serializer<Byte> convertByte = new FixedSizeObjectSerializer<Byte>(FieldTypes.BYTE_8, 1, "Byte_8")
     {
         @Override
-        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
         {
             buffer[pointer.getAndIncrement(1)] = (Byte) object;
         }
 
         @Override
-        public Byte deSerialize(final byte[] buffer, final Pointer pointer)
+        public Byte deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
         {
             return buffer[pointer.getAndIncrement(1)];
         }
@@ -93,15 +93,16 @@ public final class TypedMessage
             new FixedSizeObjectSerializer<Short>(FieldTypes.SHORT_16, 2, "Short_16")
             {
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeShort((Short) object, buffer, pointer.getAndIncrement(2));
+                    endianUtil.encodeShort((Short) object, buffer, pointer.getAndIncrement(2));
                 }
 
                 @Override
-                public Short deSerialize(final byte[] buffer, final Pointer pointer)
+                public Short deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeShort(buffer, pointer.getAndIncrement(2));
+                    return endianUtil.decodeShort(buffer, pointer.getAndIncrement(2));
                 }
             };
 
@@ -110,15 +111,16 @@ public final class TypedMessage
             new FixedSizeObjectSerializer<Integer>(FieldTypes.INT_32, 4, "Int_32")
             {
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeInt((Integer) object, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt((Integer) object, buffer, pointer.getAndIncrement(4));
                 }
 
                 @Override
-                public Integer deSerialize(final byte[] buffer, final Pointer pointer)
+                public Integer deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    return endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                 }
             };
 
@@ -126,15 +128,15 @@ public final class TypedMessage
     static final private Serializer<Long> convertLong = new FixedSizeObjectSerializer<Long>(FieldTypes.LONG_64, 8, "Long_64")
     {
         @Override
-        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
         {
-            EndianUtil.encodeLong((Long) object, buffer, pointer.getAndIncrement(8));
+            endianUtil.encodeLong((Long) object, buffer, pointer.getAndIncrement(8));
         }
 
         @Override
-        public Long deSerialize(final byte[] buffer, final Pointer pointer)
+        public Long deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
         {
-            return EndianUtil.decodeLong(buffer, pointer.getAndIncrement(8));
+            return endianUtil.decodeLong(buffer, pointer.getAndIncrement(8));
         }
     };
 
@@ -143,15 +145,16 @@ public final class TypedMessage
             new FixedSizeObjectSerializer<Float>(FieldTypes.FLOAT_32, 4, "Float_32")
             {
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeFloat((Float) object, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeFloat((Float) object, buffer, pointer.getAndIncrement(4));
                 }
 
                 @Override
-                public Float deSerialize(final byte[] buffer, final Pointer pointer)
+                public Float deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeFloat(buffer, pointer.getAndIncrement(4));
+                    return endianUtil.decodeFloat(buffer, pointer.getAndIncrement(4));
                 }
             };
 
@@ -160,15 +163,16 @@ public final class TypedMessage
             new FixedSizeObjectSerializer<Double>(FieldTypes.DOUBLE_64, 8, "Double_64")
             {
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeDouble((Double) object, buffer, pointer.getAndIncrement(8));
+                    endianUtil.encodeDouble((Double) object, buffer, pointer.getAndIncrement(8));
                 }
 
                 @Override
-                public Double deSerialize(final byte[] buffer, final Pointer pointer)
+                public Double deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
+                    return endianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
                 }
             };
 
@@ -177,13 +181,14 @@ public final class TypedMessage
             new FixedSizeObjectSerializer<Boolean>(FieldTypes.BOOLEAN_8, 1, "Boolean_8")
             {
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                        final EndianUtil endianUtil)
                 {
                     buffer[pointer.getAndIncrement(1)] = (byte) (((Boolean) object) ? 1 : 0);
                 }
 
                 @Override
-                public Boolean deSerialize(final byte[] buffer, final Pointer pointer)
+                public Boolean deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
                 {
                     return buffer[pointer.getAndIncrement(1)] == 0 ? false : true;
                 }
@@ -194,15 +199,16 @@ public final class TypedMessage
             new FixedSizeObjectSerializer<Character>(FieldTypes.CHAR_16, 2, "Char_16")
             {
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeChar((Character) object, buffer, pointer.getAndIncrement(size(object)));
+                    endianUtil.encodeChar((Character) object, buffer, pointer.getAndIncrement(size(object)));
                 }
 
                 @Override
-                public Character deSerialize(final byte[] buffer, final Pointer pointer)
+                public Character deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeChar(buffer, pointer.getAndIncrement(2));
+                    return endianUtil.decodeChar(buffer, pointer.getAndIncrement(2));
                 }
             };
 
@@ -211,13 +217,14 @@ public final class TypedMessage
             new FixedSizeObjectSerializer<Character>(FieldTypes.CHAR_8, 1, "Char_8")
             {
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                        final EndianUtil endianUtil)
                 {
                     buffer[pointer.getAndIncrement(size(object))] = (byte) (((Character) object) & 0xFF);
                 }
 
                 @Override
-                public Character deSerialize(final byte[] buffer, final Pointer pointer)
+                public Character deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
                 {
                     return new Character((char) buffer[pointer.getAndIncrement(1)]);
                 }
@@ -233,20 +240,41 @@ public final class TypedMessage
         }
 
         @Override
-        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
         {
-            byte[] s = ((String) object).getBytes(UTF16);
-            EndianUtil.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
-            for (byte b : s)
+            String string = ((String) object);
+            // System.out.println("Encoding string \"" + string + "\"");
+            if (endianUtil == EndianUtil.BIG_ENDIAN)
             {
-                buffer[pointer.getAndIncrement(1)] = b;
+                byte[] s = string.getBytes(UTF16);
+                // System.out.print(HexDumper.hexDumper(s));
+                endianUtil.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
+                for (byte b : s)
+                {
+                    buffer[pointer.getAndIncrement(1)] = b;
+                }
+            }
+            else
+            {
+                char[] chars = new char[string.length()];
+                string.getChars(0, chars.length, chars, 0);
+                endianUtil.encodeInt(chars.length * 2, buffer, pointer.getAndIncrement(4));
+                // int originalPos = pointer.get();
+                for (char c : chars)
+                {
+                    endianUtil.encodeChar(c, buffer, pointer.getAndIncrement(2));
+                }
+                // System.out.println("encoded string starts at " + originalPos);
+                // System.out.print(HexDumper.hexDumper(buffer));
             }
         }
 
         @Override
-        public String deSerialize(final byte[] buffer, final Pointer pointer)
+        public String deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
         {
-            String s = EndianUtil.decodeUTF16String(buffer, pointer.get());
+            // System.out.println("Input bytes");
+            // System.out.print(HexDumper.hexDumper(buffer));
+            String s = endianUtil.decodeUTF16String(buffer, pointer.get());
             pointer.getAndIncrement(4 + s.length() * 2);
             return s;
         }
@@ -262,10 +290,10 @@ public final class TypedMessage
         }
 
         @Override
-        public void serialize(final Object object, final byte[] buffer, final Pointer pointer)
+        public void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
         {
             byte[] s = ((String) object).getBytes(UTF8);
-            EndianUtil.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
+            endianUtil.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
             for (byte b : s)
             {
                 buffer[pointer.getAndIncrement(1)] = b;
@@ -273,10 +301,11 @@ public final class TypedMessage
         }
 
         @Override
-        public String deSerialize(final byte[] buffer, final Pointer pointer) throws SerializationException
+        public String deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+                throws SerializationException
         {
-            int bytesUsed = EndianUtil.decodeInt(buffer, pointer.get());
-            String s = EndianUtil.decodeUTF8String(buffer, pointer.get());
+            int bytesUsed = endianUtil.decodeInt(buffer, pointer.get());
+            String s = endianUtil.decodeUTF8String(buffer, pointer.get());
             pointer.getAndIncrement(4 + bytesUsed);
             return s;
         }
@@ -294,10 +323,11 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                public void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
                     byte[] array = (byte[]) object;
-                    EndianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
                         array[i] = buffer[pointer.getAndIncrement(dataSize())];
@@ -305,9 +335,10 @@ public final class TypedMessage
                 }
 
                 @Override
-                public byte[] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                public byte[] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
-                    int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     byte[] result = new byte[size];
                     for (int i = 0; i < size; i++)
                     {
@@ -322,13 +353,14 @@ public final class TypedMessage
             new ObjectArraySerializer<Byte>(FieldTypes.BYTE_8_ARRAY, 1, new Byte((byte) 0), "Byte_8_array")
             {
                 @Override
-                public void serializeElement(final Byte object, final byte[] buffer, final int offset)
+                public void serializeElement(final Byte object, final byte[] buffer, final int offset,
+                        final EndianUtil endianUtil)
                 {
                     buffer[offset] = object;
                 }
 
                 @Override
-                public Byte deSerializeElement(final byte[] buffer, final int offset)
+                public Byte deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
                     return buffer[offset];
                 }
@@ -346,24 +378,26 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                public void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
                     short[] array = (short[]) object;
-                    EndianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
-                        EndianUtil.encodeShort(array[i], buffer, pointer.getAndIncrement(dataSize()));
+                        endianUtil.encodeShort(array[i], buffer, pointer.getAndIncrement(dataSize()));
                     }
                 }
 
                 @Override
-                public short[] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                public short[] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
-                    int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     short[] result = new short[size];
                     for (int i = 0; i < size; i++)
                     {
-                        result[i] = EndianUtil.decodeShort(buffer, pointer.getAndIncrement(dataSize()));
+                        result[i] = endianUtil.decodeShort(buffer, pointer.getAndIncrement(dataSize()));
                     }
                     return result;
                 }
@@ -374,15 +408,16 @@ public final class TypedMessage
             new ObjectArraySerializer<Short>(FieldTypes.SHORT_16_ARRAY, 2, new Short((short) 0), "Short_16_array")
             {
                 @Override
-                public void serializeElement(final Short object, final byte[] buffer, final int offset)
+                public void serializeElement(final Short object, final byte[] buffer, final int offset,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeShort(object, buffer, offset);
+                    endianUtil.encodeShort(object, buffer, offset);
                 }
 
                 @Override
-                public Short deSerializeElement(final byte[] buffer, final int offset)
+                public Short deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeShort(buffer, offset);
+                    return endianUtil.decodeShort(buffer, offset);
                 }
             };
 
@@ -398,24 +433,26 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                public void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
                     int[] array = (int[]) object;
-                    EndianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
-                        EndianUtil.encodeInt(array[i], buffer, pointer.getAndIncrement(dataSize()));
+                        endianUtil.encodeInt(array[i], buffer, pointer.getAndIncrement(dataSize()));
                     }
                 }
 
                 @Override
-                public int[] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                public int[] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
-                    int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     int[] result = new int[size];
                     for (int i = 0; i < size; i++)
                     {
-                        result[i] = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(dataSize()));
+                        result[i] = endianUtil.decodeInt(buffer, pointer.getAndIncrement(dataSize()));
                     }
                     return result;
                 }
@@ -426,15 +463,16 @@ public final class TypedMessage
             new ObjectArraySerializer<Integer>(FieldTypes.INT_32_ARRAY, 4, new Integer(0), "Integer_32_array")
             {
                 @Override
-                public void serializeElement(final Integer object, final byte[] buffer, final int offset)
+                public void serializeElement(final Integer object, final byte[] buffer, final int offset,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeInt(object, buffer, offset);
+                    endianUtil.encodeInt(object, buffer, offset);
                 }
 
                 @Override
-                public Integer deSerializeElement(final byte[] buffer, final int offset)
+                public Integer deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeInt(buffer, offset);
+                    return endianUtil.decodeInt(buffer, offset);
                 }
             };
 
@@ -450,24 +488,26 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                public void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
                     long[] array = (long[]) object;
-                    EndianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
-                        EndianUtil.encodeLong(array[i], buffer, pointer.getAndIncrement(dataSize()));
+                        endianUtil.encodeLong(array[i], buffer, pointer.getAndIncrement(dataSize()));
                     }
                 }
 
                 @Override
-                public long[] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                public long[] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
-                    int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     long[] result = new long[size];
                     for (int i = 0; i < size; i++)
                     {
-                        result[i] = EndianUtil.decodeLong(buffer, pointer.getAndIncrement(dataSize()));
+                        result[i] = endianUtil.decodeLong(buffer, pointer.getAndIncrement(dataSize()));
                     }
                     return result;
                 }
@@ -478,15 +518,16 @@ public final class TypedMessage
             new ObjectArraySerializer<Long>(FieldTypes.LONG_64_ARRAY, 8, new Long(0), "Long_64_array")
             {
                 @Override
-                public void serializeElement(final Long object, final byte[] buffer, final int offset)
+                public void serializeElement(final Long object, final byte[] buffer, final int offset,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeLong(object, buffer, offset);
+                    endianUtil.encodeLong(object, buffer, offset);
                 }
 
                 @Override
-                public Long deSerializeElement(final byte[] buffer, final int offset)
+                public Long deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeLong(buffer, offset);
+                    return endianUtil.decodeLong(buffer, offset);
                 }
             };
 
@@ -502,24 +543,26 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                public void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
                     float[] array = (float[]) object;
-                    EndianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
-                        EndianUtil.encodeFloat(array[i], buffer, pointer.getAndIncrement(dataSize()));
+                        endianUtil.encodeFloat(array[i], buffer, pointer.getAndIncrement(dataSize()));
                     }
                 }
 
                 @Override
-                public float[] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                public float[] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
-                    int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     float[] result = new float[size];
                     for (int i = 0; i < size; i++)
                     {
-                        result[i] = EndianUtil.decodeFloat(buffer, pointer.getAndIncrement(dataSize()));
+                        result[i] = endianUtil.decodeFloat(buffer, pointer.getAndIncrement(dataSize()));
                     }
                     return result;
                 }
@@ -530,15 +573,16 @@ public final class TypedMessage
             new ObjectArraySerializer<Float>(FieldTypes.FLOAT_32_ARRAY, 4, new Float(0), "Float_32_array")
             {
                 @Override
-                public void serializeElement(final Float object, final byte[] buffer, final int offset)
+                public void serializeElement(final Float object, final byte[] buffer, final int offset,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeFloat(object, buffer, offset);
+                    endianUtil.encodeFloat(object, buffer, offset);
                 }
 
                 @Override
-                public Float deSerializeElement(final byte[] buffer, final int offset)
+                public Float deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeFloat(buffer, offset);
+                    return endianUtil.decodeFloat(buffer, offset);
                 }
             };
 
@@ -554,24 +598,26 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                public void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
                     double[] array = (double[]) object;
-                    EndianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
-                        EndianUtil.encodeDouble(array[i], buffer, pointer.getAndIncrement(dataSize()));
+                        endianUtil.encodeDouble(array[i], buffer, pointer.getAndIncrement(dataSize()));
                     }
                 }
 
                 @Override
-                public double[] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                public double[] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
-                    int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     double[] result = new double[size];
                     for (int i = 0; i < size; i++)
                     {
-                        result[i] = EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(dataSize()));
+                        result[i] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(dataSize()));
                     }
                     return result;
                 }
@@ -582,15 +628,16 @@ public final class TypedMessage
             new ObjectArraySerializer<Double>(FieldTypes.DOUBLE_64_ARRAY, 8, new Double(0), "Double_64_array")
             {
                 @Override
-                public void serializeElement(final Double object, final byte[] buffer, final int offset)
+                public void serializeElement(final Double object, final byte[] buffer, final int offset,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeDouble(object, buffer, offset);
+                    endianUtil.encodeDouble(object, buffer, offset);
                 }
 
                 @Override
-                public Double deSerializeElement(final byte[] buffer, final int offset)
+                public Double deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeDouble(buffer, offset);
+                    return endianUtil.decodeDouble(buffer, offset);
                 }
             };
 
@@ -606,10 +653,11 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                public void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
                     boolean[] array = (boolean[]) object;
-                    EndianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
                         buffer[pointer.getAndIncrement(dataSize())] = (byte) (array[i] ? 1 : 0);
@@ -617,9 +665,10 @@ public final class TypedMessage
                 }
 
                 @Override
-                public boolean[] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                public boolean[] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
-                    int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     boolean[] result = new boolean[size];
                     for (int i = 0; i < size; i++)
                     {
@@ -634,13 +683,14 @@ public final class TypedMessage
             new ObjectArraySerializer<Boolean>(FieldTypes.BOOLEAN_8_ARRAY, 1, new Boolean(false), "Boolean_8_array")
             {
                 @Override
-                public void serializeElement(final Boolean object, final byte[] buffer, final int offset)
+                public void serializeElement(final Boolean object, final byte[] buffer, final int offset,
+                        final EndianUtil endianUtil)
                 {
                     buffer[offset] = (byte) (object ? 1 : 0);
                 }
 
                 @Override
-                public Boolean deSerializeElement(final byte[] buffer, final int offset)
+                public Boolean deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
                     return buffer[offset] == 0 ? false : true;
                 }
@@ -658,13 +708,14 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                public void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
                     byte[][] matrix = (byte[][]) object;
                     int height = matrix.length;
                     int width = matrix[0].length;
-                    EndianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
-                    EndianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < height; i++)
                     {
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
@@ -676,10 +727,11 @@ public final class TypedMessage
                 }
 
                 @Override
-                public byte[][] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                public byte[][] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
-                    int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     byte[][] result = new byte[height][width];
                     for (int i = 0; i < height; i++)
                     {
@@ -697,13 +749,14 @@ public final class TypedMessage
             new ObjectMatrixSerializer<Byte>(FieldTypes.BYTE_8_MATRIX, 1, new Byte((byte) 0), "Byte_8_matrix")
             {
                 @Override
-                public void serializeElement(final Byte object, final byte[] buffer, final int offset)
+                public void serializeElement(final Byte object, final byte[] buffer, final int offset,
+                        final EndianUtil endianUtil)
                 {
                     buffer[offset] = object;
                 }
 
                 @Override
-                public Byte deSerializeElement(final byte[] buffer, final int offset)
+                public Byte deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
                     return buffer[offset];
                 }
@@ -721,34 +774,36 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                public void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
                     short[][] matrix = (short[][]) object;
                     int height = matrix.length;
                     int width = matrix[0].length;
-                    EndianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
-                    EndianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < height; i++)
                     {
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
                         for (int j = 0; j < width; j++)
                         {
-                            EndianUtil.encodeShort(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
+                            endianUtil.encodeShort(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
                         }
                     }
                 }
 
                 @Override
-                public short[][] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                public short[][] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
-                    int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     short[][] result = new short[height][width];
                     for (int i = 0; i < height; i++)
                     {
                         for (int j = 0; j < width; j++)
                         {
-                            result[i][j] = EndianUtil.decodeShort(buffer, pointer.getAndIncrement(dataSize()));
+                            result[i][j] = endianUtil.decodeShort(buffer, pointer.getAndIncrement(dataSize()));
                         }
                     }
                     return result;
@@ -760,15 +815,16 @@ public final class TypedMessage
             new ObjectMatrixSerializer<Short>(FieldTypes.SHORT_16_MATRIX, 2, new Short((short) 0), "Short_16_matrix")
             {
                 @Override
-                public void serializeElement(final Short object, final byte[] buffer, final int offset)
+                public void serializeElement(final Short object, final byte[] buffer, final int offset,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeShort(object, buffer, offset);
+                    endianUtil.encodeShort(object, buffer, offset);
                 }
 
                 @Override
-                public Short deSerializeElement(final byte[] buffer, final int offset)
+                public Short deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeShort(buffer, offset);
+                    return endianUtil.decodeShort(buffer, offset);
                 }
             };
 
@@ -784,34 +840,36 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                public void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
                     int[][] matrix = (int[][]) object;
                     int height = matrix.length;
                     int width = matrix[0].length;
-                    EndianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
-                    EndianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < height; i++)
                     {
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
                         for (int j = 0; j < width; j++)
                         {
-                            EndianUtil.encodeInt(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
+                            endianUtil.encodeInt(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
                         }
                     }
                 }
 
                 @Override
-                public int[][] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                public int[][] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
-                    int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     int[][] result = new int[height][width];
                     for (int i = 0; i < height; i++)
                     {
                         for (int j = 0; j < width; j++)
                         {
-                            result[i][j] = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(dataSize()));
+                            result[i][j] = endianUtil.decodeInt(buffer, pointer.getAndIncrement(dataSize()));
                         }
                     }
                     return result;
@@ -823,15 +881,16 @@ public final class TypedMessage
             new ObjectMatrixSerializer<Integer>(FieldTypes.INT_32_MATRIX, 4, new Integer(0), "Int_32_matrix")
             {
                 @Override
-                public void serializeElement(final Integer object, final byte[] buffer, final int offset)
+                public void serializeElement(final Integer object, final byte[] buffer, final int offset,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeInt(object, buffer, offset);
+                    endianUtil.encodeInt(object, buffer, offset);
                 }
 
                 @Override
-                public Integer deSerializeElement(final byte[] buffer, final int offset)
+                public Integer deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeInt(buffer, offset);
+                    return endianUtil.decodeInt(buffer, offset);
                 }
             };
 
@@ -847,34 +906,36 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                public void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
                     long[][] matrix = (long[][]) object;
                     int height = matrix.length;
                     int width = matrix[0].length;
-                    EndianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
-                    EndianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < height; i++)
                     {
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
                         for (int j = 0; j < width; j++)
                         {
-                            EndianUtil.encodeLong(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
+                            endianUtil.encodeLong(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
                         }
                     }
                 }
 
                 @Override
-                public long[][] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                public long[][] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
-                    int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     long[][] result = new long[height][width];
                     for (int i = 0; i < height; i++)
                     {
                         for (int j = 0; j < width; j++)
                         {
-                            result[i][j] = EndianUtil.decodeLong(buffer, pointer.getAndIncrement(dataSize()));
+                            result[i][j] = endianUtil.decodeLong(buffer, pointer.getAndIncrement(dataSize()));
                         }
                     }
                     return result;
@@ -886,15 +947,16 @@ public final class TypedMessage
             new ObjectMatrixSerializer<Long>(FieldTypes.LONG_64_MATRIX, 8, new Long(0), "Long_64_matrix")
             {
                 @Override
-                public void serializeElement(final Long object, final byte[] buffer, final int offset)
+                public void serializeElement(final Long object, final byte[] buffer, final int offset,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeLong(object, buffer, offset);
+                    endianUtil.encodeLong(object, buffer, offset);
                 }
 
                 @Override
-                public Long deSerializeElement(final byte[] buffer, final int offset)
+                public Long deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeLong(buffer, offset);
+                    return endianUtil.decodeLong(buffer, offset);
                 }
             };
 
@@ -910,34 +972,36 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                public void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
                     float[][] matrix = (float[][]) object;
                     int height = matrix.length;
                     int width = matrix[0].length;
-                    EndianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
-                    EndianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < height; i++)
                     {
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
                         for (int j = 0; j < width; j++)
                         {
-                            EndianUtil.encodeFloat(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
+                            endianUtil.encodeFloat(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
                         }
                     }
                 }
 
                 @Override
-                public float[][] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                public float[][] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
-                    int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     float[][] result = new float[height][width];
                     for (int i = 0; i < height; i++)
                     {
                         for (int j = 0; j < width; j++)
                         {
-                            result[i][j] = EndianUtil.decodeFloat(buffer, pointer.getAndIncrement(dataSize()));
+                            result[i][j] = endianUtil.decodeFloat(buffer, pointer.getAndIncrement(dataSize()));
                         }
                     }
                     return result;
@@ -949,15 +1013,16 @@ public final class TypedMessage
             new ObjectMatrixSerializer<Float>(FieldTypes.FLOAT_32_MATRIX, 4, new Float(0), "Float_32_matrix")
             {
                 @Override
-                public void serializeElement(final Float object, final byte[] buffer, final int offset)
+                public void serializeElement(final Float object, final byte[] buffer, final int offset,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeFloat(object, buffer, offset);
+                    endianUtil.encodeFloat(object, buffer, offset);
                 }
 
                 @Override
-                public Float deSerializeElement(final byte[] buffer, final int offset)
+                public Float deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeFloat(buffer, offset);
+                    return endianUtil.decodeFloat(buffer, offset);
                 }
             };
 
@@ -973,34 +1038,36 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                public void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
                     double[][] matrix = (double[][]) object;
                     int height = matrix.length;
                     int width = matrix[0].length;
-                    EndianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
-                    EndianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < height; i++)
                     {
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
                         for (int j = 0; j < width; j++)
                         {
-                            EndianUtil.encodeDouble(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
+                            endianUtil.encodeDouble(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
                         }
                     }
                 }
 
                 @Override
-                public double[][] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                public double[][] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
-                    int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     double[][] result = new double[height][width];
                     for (int i = 0; i < height; i++)
                     {
                         for (int j = 0; j < width; j++)
                         {
-                            result[i][j] = EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(dataSize()));
+                            result[i][j] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(dataSize()));
                         }
                     }
                     return result;
@@ -1012,15 +1079,16 @@ public final class TypedMessage
             new ObjectMatrixSerializer<Double>(FieldTypes.DOUBLE_64_MATRIX, 8, new Double(0), "Double_64_matrix")
             {
                 @Override
-                public void serializeElement(final Double object, final byte[] buffer, final int offset)
+                public void serializeElement(final Double object, final byte[] buffer, final int offset,
+                        final EndianUtil endianUtil)
                 {
-                    EndianUtil.encodeDouble(object, buffer, offset);
+                    endianUtil.encodeDouble(object, buffer, offset);
                 }
 
                 @Override
-                public Double deSerializeElement(final byte[] buffer, final int offset)
+                public Double deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
-                    return EndianUtil.decodeDouble(buffer, offset);
+                    return endianUtil.decodeDouble(buffer, offset);
                 }
             };
 
@@ -1036,13 +1104,14 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(Object object, byte[] buffer, Pointer pointer) throws SerializationException
+                public void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
                     boolean[][] matrix = (boolean[][]) object;
                     int height = matrix.length;
                     int width = matrix[0].length;
-                    EndianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
-                    EndianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < height; i++)
                     {
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
@@ -1054,10 +1123,11 @@ public final class TypedMessage
                 }
 
                 @Override
-                public boolean[][] deSerialize(byte[] buffer, Pointer pointer) throws SerializationException
+                public boolean[][] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
                 {
-                    int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     boolean[][] result = new boolean[height][width];
                     for (int i = 0; i < height; i++)
                     {
@@ -1075,13 +1145,14 @@ public final class TypedMessage
             new ObjectMatrixSerializer<Boolean>(FieldTypes.BOOLEAN_8_MATRIX, 1, new Boolean(false), "Boolean_8_matrix")
             {
                 @Override
-                public void serializeElement(final Boolean object, final byte[] buffer, final int offset)
+                public void serializeElement(final Boolean object, final byte[] buffer, final int offset,
+                        final EndianUtil endianUtil)
                 {
                     buffer[offset] = (byte) (object ? 1 : 0);
                 }
 
                 @Override
-                public Boolean deSerializeElement(final byte[] buffer, final int offset)
+                public Boolean deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
                     return buffer[offset] == 0 ? false : true;
                 }
@@ -1202,36 +1273,38 @@ public final class TypedMessage
 
     /**
      * Encode the object array into a byte[] message. Use UTF8 for the characters and for the String.
+     * @param endianUtil EndianUtil; encoder to use for multi-byte values
      * @param content the objects to encode
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
-    public static byte[] encodeUTF8(final Object... content) throws SerializationException
+    public static byte[] encodeUTF8(final EndianUtil endianUtil, final Object... content) throws SerializationException
     {
-        return encode(true, false, content);
+        return encode(true, endianUtil, content);
     }
 
     /**
      * Encode the object array into a byte[] message. Use UTF16 for the characters and for the String.
+     * @param endianUtil EndianUtil; encoder for multi-byte values
      * @param content the objects to encode
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
-    public static byte[] encodeUTF16(final Object... content) throws SerializationException
+    public static byte[] encodeUTF16(final EndianUtil endianUtil, final Object... content) throws SerializationException
     {
-        return encode(false, false, content);
+        return encode(false, endianUtil, content);
     }
 
     /**
      * Encode the object array into a Big Endian message.
      * @param utf8 whether to encode String fields and characters in utf8 or not
-     * @param firstUtf8 whether to encode the first String field in utf8 or not
+     * @param endianUtil EndianUtil; encoder for multi-byte values
      * @param content the objects to encode
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
     @SuppressWarnings({ "checkstyle:methodlength", "checkstyle:needbraces" })
-    private static byte[] encode(final boolean utf8, final boolean firstUtf8, final Object... content)
+    private static byte[] encode(final boolean utf8, final EndianUtil endianUtil, final Object... content)
             throws SerializationException
     {
         // Pass one: compute total size
@@ -1242,7 +1315,7 @@ public final class TypedMessage
             Serializer<?> serializer = encoders.get(object.getClass());
             if (serializer != null)
             {
-                System.out.println("Computing length using " + serializer.dataClassName());
+                // System.out.println("Computing length using " + serializer.dataClassName());
                 size += serializer.sizeWithPrefix(object);
             }
             else if (object instanceof Character)
@@ -1322,8 +1395,8 @@ public final class TypedMessage
             Serializer<?> serializer = encoders.get(object.getClass());
             if (serializer != null)
             {
-                System.out.println("Applying serializer for " + serializer.dataClassName());
-                serializer.serializeWithPrefix(object, message, pointer);
+                // System.out.println("Applying serializer for " + serializer.dataClassName());
+                serializer.serializeWithPrefix(object, message, pointer, endianUtil);
             }
             else
             {
@@ -1331,49 +1404,49 @@ public final class TypedMessage
                 {
                     if (utf8)
                     {
-                        convertCharacter8.serializeWithPrefix(object, message, pointer);
+                        convertCharacter8.serializeWithPrefix(object, message, pointer, endianUtil);
                     }
                     else
                     {
-                        convertCharacter16.serializeWithPrefix(object, message, pointer);
+                        convertCharacter16.serializeWithPrefix(object, message, pointer, endianUtil);
                     }
                 }
                 else if (object instanceof String)
                 {
                     if (utf8)
                     {
-                        convertString8.serializeWithPrefix(object, message, pointer);
+                        convertString8.serializeWithPrefix(object, message, pointer, endianUtil);
                     }
                     else
                     {
-                        convertString16.serializeWithPrefix(object, message, pointer);
+                        convertString16.serializeWithPrefix(object, message, pointer, endianUtil);
                     }
                 }
                 else if (object instanceof AbstractFloatScalar)
                 {
                     message[pointer.getAndIncrement(1)] = FieldTypes.FLOAT_32_UNIT;
-                    encodeUnit(((AbstractFloatScalar<?, ?>) object).getUnit(), message, pointer);
+                    encodeUnit(((AbstractFloatScalar<?, ?>) object).getUnit(), message, pointer, endianUtil);
                     float v = ((AbstractFloatScalar<?, ?>) object).si;
-                    EndianUtil.encodeFloat(v, message, pointer.getAndIncrement(4));
+                    endianUtil.encodeFloat(v, message, pointer.getAndIncrement(4));
                 }
                 else if (object instanceof AbstractDoubleScalar)
                 {
                     message[pointer.getAndIncrement(1)] = FieldTypes.DOUBLE_64_UNIT;
-                    encodeUnit(((AbstractDoubleScalar<?, ?>) object).getUnit(), message, pointer);
+                    encodeUnit(((AbstractDoubleScalar<?, ?>) object).getUnit(), message, pointer, endianUtil);
                     double v = ((AbstractDoubleScalar<?, ?>) object).si;
-                    EndianUtil.encodeDouble(v, message, pointer.getAndIncrement(8));
+                    endianUtil.encodeDouble(v, message, pointer.getAndIncrement(8));
                 }
                 else if (object instanceof AbstractFloatVector)
                 {
                     message[pointer.getAndIncrement(1)] = FieldTypes.FLOAT_32_UNIT_ARRAY;
                     AbstractFloatVector<?, ?> afv = (AbstractFloatVector<?, ?>) object;
-                    EndianUtil.encodeInt(afv.size(), message, pointer.getAndIncrement(4));
-                    encodeUnit(afv.getUnit(), message, pointer);
+                    endianUtil.encodeInt(afv.size(), message, pointer.getAndIncrement(4));
+                    encodeUnit(afv.getUnit(), message, pointer, endianUtil);
                     try
                     {
                         for (int j = 0; j < afv.size(); j++)
                         {
-                            EndianUtil.encodeFloat(afv.getSI(j), message, pointer.getAndIncrement(4));
+                            endianUtil.encodeFloat(afv.getSI(j), message, pointer.getAndIncrement(4));
                         }
                     }
                     catch (ValueException exception)
@@ -1385,13 +1458,13 @@ public final class TypedMessage
                 {
                     message[pointer.getAndIncrement(1)] = FieldTypes.DOUBLE_64_UNIT_ARRAY;
                     AbstractDoubleVector<?, ?> adv = (AbstractDoubleVector<?, ?>) object;
-                    EndianUtil.encodeInt(adv.size(), message, pointer.getAndIncrement(4));
-                    encodeUnit(adv.getUnit(), message, pointer);
+                    endianUtil.encodeInt(adv.size(), message, pointer.getAndIncrement(4));
+                    encodeUnit(adv.getUnit(), message, pointer, endianUtil);
                     try
                     {
                         for (int j = 0; j < adv.size(); j++)
                         {
-                            EndianUtil.encodeDouble(adv.getSI(j), message, pointer.getAndIncrement(8));
+                            endianUtil.encodeDouble(adv.getSI(j), message, pointer.getAndIncrement(8));
                         }
                     }
                     catch (ValueException exception)
@@ -1403,16 +1476,16 @@ public final class TypedMessage
                 {
                     message[pointer.getAndIncrement(1)] = FieldTypes.FLOAT_32_UNIT_MATRIX;
                     AbstractFloatMatrix<?, ?> afm = (AbstractFloatMatrix<?, ?>) object;
-                    EndianUtil.encodeInt(afm.rows(), message, pointer.getAndIncrement(4));
-                    EndianUtil.encodeInt(afm.columns(), message, pointer.getAndIncrement(4));
-                    encodeUnit(afm.getUnit(), message, pointer);
+                    endianUtil.encodeInt(afm.rows(), message, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(afm.columns(), message, pointer.getAndIncrement(4));
+                    encodeUnit(afm.getUnit(), message, pointer, endianUtil);
                     try
                     {
                         for (int row = 0; row < afm.rows(); row++)
                         {
                             for (int col = 0; col < afm.columns(); col++)
                             {
-                                EndianUtil.encodeFloat(afm.getSI(row, col), message, pointer.getAndIncrement(4));
+                                endianUtil.encodeFloat(afm.getSI(row, col), message, pointer.getAndIncrement(4));
                             }
                         }
                     }
@@ -1425,16 +1498,16 @@ public final class TypedMessage
                 {
                     message[pointer.getAndIncrement(1)] = FieldTypes.DOUBLE_64_UNIT_MATRIX;
                     AbstractDoubleMatrix<?, ?> adm = (AbstractDoubleMatrix<?, ?>) object;
-                    EndianUtil.encodeInt(adm.rows(), message, pointer.getAndIncrement(4));
-                    EndianUtil.encodeInt(adm.columns(), message, pointer.getAndIncrement(4));
-                    encodeUnit(adm.getUnit(), message, pointer);
+                    endianUtil.encodeInt(adm.rows(), message, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(adm.columns(), message, pointer.getAndIncrement(4));
+                    encodeUnit(adm.getUnit(), message, pointer, endianUtil);
                     try
                     {
                         for (int row = 0; row < adm.rows(); row++)
                         {
                             for (int col = 0; col < adm.columns(); col++)
                             {
-                                EndianUtil.encodeDouble(adm.getSI(row, col), message, pointer.getAndIncrement(8));
+                                endianUtil.encodeDouble(adm.getSI(row, col), message, pointer.getAndIncrement(8));
                             }
                         }
                     }
@@ -1458,9 +1531,10 @@ public final class TypedMessage
      * @param unit the unit to code in the byte array
      * @param message the byte array
      * @param pointer the start pointer in the byte array
+     * @param endianUtil EndianUtil; encoder to use for multi-byte values
      */
     @SuppressWarnings("rawtypes")
-    private static void encodeUnit(final Unit unit, final byte[] message, final Pointer pointer)
+    private static void encodeUnit(final Unit unit, final byte[] message, final Pointer pointer, final EndianUtil endianUtil)
     {
         @SuppressWarnings("unchecked") // TODO see how this can be solved with type <U extends Unit<U>>
         SerializationUnits unitType = SerializationUnits.getUnitType(unit);
@@ -1469,47 +1543,47 @@ public final class TypedMessage
         {
             @SuppressWarnings("unchecked")
             DisplayType displayType = DisplayType.getDisplayType(unit);
-            EndianUtil.encodeShort((short) displayType.getIntCode(), message, pointer.getAndIncrement(2));
+            endianUtil.encodeShort((short) displayType.getIntCode(), message, pointer.getAndIncrement(2));
         }
         else if (unit instanceof MoneyPerAreaUnit)
         {
             DisplayType moneyType = DisplayType.getDisplayType(((MoneyPerAreaUnit) unit).getMoneyUnit());
-            EndianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
+            endianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
             DisplayType perType = DisplayType.getDisplayType(((MoneyPerAreaUnit) unit).getAreaUnit());
             message[pointer.getAndIncrement(1)] = perType.getByteCode();
         }
         else if (unit instanceof MoneyPerEnergyUnit)
         {
             DisplayType moneyType = DisplayType.getDisplayType(((MoneyPerEnergyUnit) unit).getMoneyUnit());
-            EndianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
+            endianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
             DisplayType perType = DisplayType.getDisplayType(((MoneyPerEnergyUnit) unit).getEnergyUnit());
             message[pointer.getAndIncrement(1)] = perType.getByteCode();
         }
         else if (unit instanceof MoneyPerLengthUnit)
         {
             DisplayType moneyType = DisplayType.getDisplayType(((MoneyPerLengthUnit) unit).getMoneyUnit());
-            EndianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
+            endianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
             DisplayType perType = DisplayType.getDisplayType(((MoneyPerLengthUnit) unit).getLengthUnit());
             message[pointer.getAndIncrement(1)] = perType.getByteCode();
         }
         else if (unit instanceof MoneyPerMassUnit)
         {
             DisplayType moneyType = DisplayType.getDisplayType(((MoneyPerMassUnit) unit).getMoneyUnit());
-            EndianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
+            endianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
             DisplayType perType = DisplayType.getDisplayType(((MoneyPerMassUnit) unit).getMassUnit());
             message[pointer.getAndIncrement(1)] = perType.getByteCode();
         }
         else if (unit instanceof MoneyPerDurationUnit)
         {
             DisplayType moneyType = DisplayType.getDisplayType(((MoneyPerDurationUnit) unit).getMoneyUnit());
-            EndianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
+            endianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
             DisplayType perType = DisplayType.getDisplayType(((MoneyPerDurationUnit) unit).getDurationUnit());
             message[pointer.getAndIncrement(1)] = perType.getByteCode();
         }
         else if (unit instanceof MoneyPerVolumeUnit)
         {
             DisplayType moneyType = DisplayType.getDisplayType(((MoneyPerVolumeUnit) unit).getMoneyUnit());
-            EndianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
+            endianUtil.encodeShort((short) moneyType.getIntCode(), message, pointer.getAndIncrement(2));
             DisplayType perType = DisplayType.getDisplayType(((MoneyPerVolumeUnit) unit).getVolumeUnit());
             message[pointer.getAndIncrement(1)] = perType.getByteCode();
         }
@@ -1628,19 +1702,20 @@ public final class TypedMessage
      * Retrieve and decode a DJUNITS unit.
      * @param buffer byte[]; the encoded data
      * @param pointer Pointer; position in the encoded data where the unit is to be decoded from
+     * @param endianUtil EndianUtil; decoder for multi-byte values
      * @return Unit
      */
-    static private Unit<? extends Unit<?>> getUnit(final byte[] buffer, final Pointer pointer)
+    static private Unit<? extends Unit<?>> getUnit(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
     {
         SerializationUnits unitType = SerializationUnits.getUnitType(buffer[pointer.getAndIncrement(1)]);
         if (unitType.getCode() == 100) // money
         {
-            int moneyCode = EndianUtil.decodeShort(buffer, pointer.getAndIncrement(2));
+            int moneyCode = endianUtil.decodeShort(buffer, pointer.getAndIncrement(2));
             return decodeMoneyUnit(moneyCode);
         }
         else if (unitType.getCode() >= 101 && unitType.getCode() <= 106)
         {
-            int moneyCode = EndianUtil.decodeShort(buffer, pointer.getAndIncrement(2));
+            int moneyCode = endianUtil.decodeShort(buffer, pointer.getAndIncrement(2));
             return decodeMoneyPerUnit(unitType, moneyCode, 0 + buffer[pointer.getAndIncrement(1)]);
         }
         else
@@ -1653,34 +1728,40 @@ public final class TypedMessage
     /**
      * Decode the message into an object array, constructing Java Primitive data arrays and matrices where possible.
      * @param buffer the byte array to decode
+     * @param endianUtil EndianUtil; decoder for multi-byte values
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    public static Object[] decodeToPrimitiveDataTypes(final byte[] buffer) throws SerializationException
+    public static Object[] decodeToPrimitiveDataTypes(final byte[] buffer, final EndianUtil endianUtil)
+            throws SerializationException
     {
-        return decode(buffer, primitiveDataDecoders);
+        return decode(buffer, primitiveDataDecoders, endianUtil);
     }
 
     /**
      * Decode the message into an object array, constructing Java Object arrays and matrices where possible.
      * @param buffer the byte array to decode
+     * @param endianUtil EndianUtil; decoder for multi-byte values
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    public static Object[] decodeToObjectDataTypes(final byte[] buffer) throws SerializationException
+    public static Object[] decodeToObjectDataTypes(final byte[] buffer, final EndianUtil endianUtil)
+            throws SerializationException
     {
-        return decode(buffer, objectDecoders);
+        return decode(buffer, objectDecoders, endianUtil);
     }
 
     /**
      * Decode the message into an object array.
      * @param buffer the byte array to decode
      * @param decoderMap Map&lt;Byte, Serializer&lt;?&gt;&gt;; the map with decoders to use
+     * @param endianUtil EndianUtil; decoder for multi-byte values
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
     @SuppressWarnings({ "checkstyle:methodlength", "checkstyle:needbraces" })
-    public static Object[] decode(final byte[] buffer, final Map<Byte, Serializer<?>> decoderMap) throws SerializationException
+    public static Object[] decode(final byte[] buffer, final Map<Byte, Serializer<?>> decoderMap, EndianUtil endianUtil)
+            throws SerializationException
     {
         List<Object> list = new ArrayList<>();
         Pointer pointer = new Pointer();
@@ -1690,8 +1771,8 @@ public final class TypedMessage
             Serializer<?> serializer = decoderMap.get(fieldType);
             if (null != serializer)
             {
-                System.out.println("Applying deserializer for " + serializer.dataClassName());
-                list.add(serializer.deSerialize(buffer, pointer));
+                // System.out.println("Applying deserializer for " + serializer.dataClassName());
+                list.add(serializer.deSerialize(buffer, pointer, endianUtil));
             }
             else
             {
@@ -1699,28 +1780,28 @@ public final class TypedMessage
                 {
                     case FieldTypes.FLOAT_32_UNIT:
                     {
-                        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
+                        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianUtil);
                         list.add(FloatScalarUtil
-                                .instantiateAnonymousSI(EndianUtil.decodeFloat(buffer, pointer.getAndIncrement(4)), unit));
+                                .instantiateAnonymousSI(endianUtil.decodeFloat(buffer, pointer.getAndIncrement(4)), unit));
                         break;
                     }
 
                     case FieldTypes.DOUBLE_64_UNIT:
                     {
-                        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
+                        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianUtil);
                         list.add(DoubleScalarUtil
-                                .instantiateAnonymousSI(EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(8)), unit));
+                                .instantiateAnonymousSI(endianUtil.decodeDouble(buffer, pointer.getAndIncrement(8)), unit));
                         break;
                     }
 
                     case FieldTypes.FLOAT_32_UNIT_ARRAY:
                     {
-                        int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
+                        int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianUtil);
                         float[] array = new float[size];
                         for (int i = 0; i < size; i++)
                         {
-                            array[i] = EndianUtil.decodeFloat(buffer, pointer.getAndIncrement(4));
+                            array[i] = endianUtil.decodeFloat(buffer, pointer.getAndIncrement(4));
                         }
                         try
                         {
@@ -1735,12 +1816,12 @@ public final class TypedMessage
 
                     case FieldTypes.DOUBLE_64_UNIT_ARRAY:
                     {
-                        int size = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
+                        int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianUtil);
                         double[] array = new double[size];
                         for (int i = 0; i < size; i++)
                         {
-                            array[i] = EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
+                            array[i] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
                         }
                         try
                         {
@@ -1755,15 +1836,15 @@ public final class TypedMessage
 
                     case FieldTypes.FLOAT_32_UNIT_MATRIX:
                     {
-                        int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                        int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
+                        int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                        int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianUtil);
                         float[][] matrix = new float[height][width];
                         for (int i = 0; i < height; i++)
                         {
                             for (int j = 0; j < width; j++)
                             {
-                                matrix[i][j] = EndianUtil.decodeFloat(buffer, pointer.getAndIncrement(4));
+                                matrix[i][j] = endianUtil.decodeFloat(buffer, pointer.getAndIncrement(4));
                             }
                         }
                         try
@@ -1779,15 +1860,15 @@ public final class TypedMessage
 
                     case FieldTypes.DOUBLE_64_UNIT_MATRIX:
                     {
-                        int height = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                        int width = EndianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer);
+                        int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                        int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianUtil);
                         double[][] matrix = new double[height][width];
                         for (int i = 0; i < height; i++)
                         {
                             for (int j = 0; j < width; j++)
                             {
-                                matrix[i][j] = EndianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
+                                matrix[i][j] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
                             }
                         }
                         try
