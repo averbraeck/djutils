@@ -90,13 +90,6 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
      */
     abstract void serializeElement(T object, byte[] buffer, int offset);
 
-    @Override
-    public String toString()
-    {
-        return "BasicFixedSizeArraySerializer [dataSize=" + dataSize + ", sampleClass=" + sample.getClass() + ", dataType="
-                + dataClassName() + "]";
-    }
-
     /**
      * Deserializer for one array element (without type prefix) must be implemented in implementing sub classes.
      * @param buffer byte[]; the byte buffer from which the object is to be deserialized

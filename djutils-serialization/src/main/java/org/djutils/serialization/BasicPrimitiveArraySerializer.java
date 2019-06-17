@@ -42,12 +42,6 @@ public abstract class BasicPrimitiveArraySerializer<T extends Object> extends Ba
         serialize(object, buffer, pointer);
     }
 
-    @Override
-    public String toString()
-    {
-        return "BasicFixedSizeArraySerializer [dataSize=" + dataSize + ", dataType=" + dataClassName() + "]";
-    }
-    
     /**
      * Retrieve the number of bytes needed to encode one additional array element.
      * @return int; the number of bytes needed to encode one additional array element
