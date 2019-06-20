@@ -43,4 +43,10 @@ public abstract class BasicSerializer<T extends Object> implements Serializer<T>
         return this.dataClassName;
     }
 
+    @Override
+    public String toString()
+    {
+        return "BasicSerializer [type=" + type + ", dataClassName=" + dataClassName + "]";
+    }
+
 }

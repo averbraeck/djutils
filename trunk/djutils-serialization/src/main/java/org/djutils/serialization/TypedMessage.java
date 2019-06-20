@@ -116,7 +116,7 @@ public final class TypedMessage
 
     /** Converter for Integer. */
     static final private Serializer<Integer> convertInteger =
-            new FixedSizeObjectSerializer<Integer>(FieldTypes.INT_32, 4, "Int_32")
+            new FixedSizeObjectSerializer<Integer>(FieldTypes.INT_32, 4, "Integer_32")
             {
                 @Override
                 public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
@@ -886,7 +886,7 @@ public final class TypedMessage
 
     /** Converter for Integer matrix. */
     static final private Serializer<Integer[][]> convertIntegerMatrix =
-            new ObjectMatrixSerializer<Integer>(FieldTypes.INT_32_MATRIX, 4, new Integer(0), "Int_32_matrix")
+            new ObjectMatrixSerializer<Integer>(FieldTypes.INT_32_MATRIX, 4, new Integer(0), "Integer_32_matrix")
             {
                 @Override
                 public void serializeElement(final Integer object, final byte[] buffer, final int offset,
