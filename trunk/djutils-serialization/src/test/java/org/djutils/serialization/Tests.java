@@ -8,7 +8,9 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.djunits.unit.AccelerationUnit;
 import org.djunits.unit.AreaUnit;
@@ -42,6 +44,7 @@ import org.djunits.value.vfloat.scalar.FloatArea;
 import org.djunits.value.vfloat.scalar.FloatMoney;
 import org.djunits.value.vfloat.scalar.FloatMoneyPerVolume;
 import org.djunits.value.vfloat.vector.FloatElectricalResistanceVector;
+import org.djutils.decoderdumper.HexDumper;
 import org.junit.Test;
 
 /**
@@ -202,7 +205,7 @@ public class Tests
     /**
      * Test encoding and decoding of strongly typed quantities (DJUNITS).
      * @throws SerializationException when that happens uncaught, this test has failed
-     * @throws ValueException
+     * @throws ValueException when that happens uncaught, this test has failed
      */
     @Test
     public void testDJunits() throws SerializationException, ValueException
@@ -244,6 +247,146 @@ public class Tests
                 {
                     assertTrue("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
                             deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                }
+            }
+        }
+    }
+
+    /** Class used to test serialization of classes that implement SerializableObject. */
+    static class Compound implements SerializableObject<Compound>
+    {
+        /** Field 1. */
+        public Integer intValue;
+
+        /** Field 2. */
+        public Double doubleValue;
+
+        @Override
+        public int hashCode()
+        {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((doubleValue == null) ? 0 : doubleValue.hashCode());
+            result = prime * result + ((intValue == null) ? 0 : intValue.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj)
+        {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            Compound other = (Compound) obj;
+            if (doubleValue == null)
+            {
+                if (other.doubleValue != null)
+                    return false;
+            }
+            else if (!doubleValue.equals(other.doubleValue))
+                return false;
+            if (intValue == null)
+            {
+                if (other.intValue != null)
+                    return false;
+            }
+            else if (!intValue.equals(other.intValue))
+                return false;
+            return true;
+        }
+
+        @Override
+        public String toString()
+        {
+            return "Compound [intValue=" + intValue + ", doubleValue=" + doubleValue + "]";
+        }
+
+        /**
+         * Construct a new Compound object.
+         * @param intValue int; the value to assign to intValue
+         * @param doubleValue double; the value to assign to doubleValue
+         */
+        Compound(final int intValue, final double doubleValue)
+        {
+            this.intValue = intValue;
+            this.doubleValue = doubleValue;
+        }
+
+        @Override
+        public List<Object> exportAsList()
+        {
+            List<Object> result = new ArrayList<>();
+            result.add(this.intValue);
+            result.add(this.doubleValue);
+            return result;
+        }
+
+    }
+
+    /**
+     * Test the compound array encoder and decoder.
+     * @throws SerializationException when that happens uncaught, this test has failed
+     */
+    @Test
+    public void TestCompoundArrays() throws SerializationException
+    {
+        Compound testArray[] = new Compound[] { new Compound(1, 0.1), new Compound(2, 0.2), new Compound(3, 0.3) };
+        Object[] objects = new Object[] { testArray };
+        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
+        {
+            for (boolean encodeUTF8 : new boolean[] { false, true })
+            {
+                System.out.println("Encoding " + (encodeUTF8 ? "UTF8" : "UTF16") + ", " + endianUtil);
+                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
+                        : TypedMessage.encodeUTF16(endianUtil, objects);
+                // System.out.print(HexDumper.hexDumper(serialized));
+                for (boolean primitive : new boolean[] { false, true })
+                {
+                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
+                            : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
+                    assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                    // Replace all List objects in the result by corresponding new Compound objects
+                    for (int i = 0; i < objects.length; i++)
+                    {
+                        Object o = decodedObjects[i];
+                        if (o instanceof TypedMessage.MinimalSerializableObject[])
+                        {
+                            TypedMessage.MinimalSerializableObject[] in = ((TypedMessage.MinimalSerializableObject[]) o);
+                            Compound[] out = new Compound[in.length];
+                            for (int j = 0; j < in.length; j++)
+                            {
+                                List<Object> fields = in[j].exportAsList();
+                                Integer intValue = (Integer) fields.get(0);
+                                Double doubleValue = (Double) fields.get(1);
+                                out[j] = new Compound(intValue, doubleValue);
+                            }
+                            decodedObjects[i] = out;
+                        }
+                    }
+                    for (int i = 0; i < objects.length; i++)
+                    {
+                        if (objects[i] instanceof Compound[])
+                        {
+                            Compound[] in = (Compound[] ) objects[i];
+                            assertTrue("decoded object is now also a Compound[]", decodedObjects[i] instanceof Compound[]);
+                            Compound[] out = (Compound[]) objects[i];
+                            assertEquals("Compound arrays have same length", in.length, out.length);
+                            for (int j = 0; j < in.length; j++)
+                            {
+                                assertEquals("reconstructed compound object matches input", in[j], out[j]);
+                            }
+                        }
+                        else
+                        {
+                            assertTrue(
+                                    "decoded object at index " + i + "(" + objects[i]
+                                            + ") equals corresponding object in input",
+                                    deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                        }
+                    }
                 }
             }
         }
