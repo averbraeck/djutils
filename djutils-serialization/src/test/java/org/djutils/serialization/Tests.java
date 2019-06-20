@@ -809,4 +809,55 @@ public class Tests
         assertTrue("EndianUtil has descriptive toString method", EndianUtil.BIG_ENDIAN.toString().startsWith("EndianUtil"));
     }
 
+    /**
+     * Test the toString and dataClassName methods of the BasicSerializer.
+     */
+    @Test
+    public void TestBasicSerializer()
+    {
+        byte code = 123;
+        String dataClassName = "dataClass";
+        BasicSerializer<Byte> testSerializer = new BasicSerializer<Byte>(code, dataClassName) {
+
+            @Override
+            public int size(Object object) throws SerializationException
+            {
+                // TODO Auto-generated method stub
+                return 0;
+            }
+
+            @Override
+            public int sizeWithPrefix(Object object) throws SerializationException
+            {
+                // TODO Auto-generated method stub
+                return 0;
+            }
+
+            @Override
+            public void serialize(Object object, byte[] buffer, Pointer pointer, EndianUtil endianUtil)
+                    throws SerializationException
+            {
+                // TODO Auto-generated method stub
+                
+            }
+
+            @Override
+            public void serializeWithPrefix(Object object, byte[] buffer, Pointer pointer, EndianUtil endianUtil)
+                    throws SerializationException
+            {
+                // TODO Auto-generated method stub
+                
+            }
+
+            @Override
+            public Byte deSerialize(byte[] buffer, Pointer pointer, EndianUtil endianUtil) throws SerializationException
+            {
+                // TODO Auto-generated method stub
+                return null;
+            }
+        };
+        // We only want to test two methods; so we don't have to provide real implementation for other methods
+        assertEquals("data class name is returned", dataClassName, testSerializer.dataClassName());
+        assertTrue("toString returns something descriptive", testSerializer.toString().startsWith("BasicSerializer"));
+    }
 }
