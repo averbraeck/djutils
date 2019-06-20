@@ -1484,6 +1484,160 @@ public final class TypedMessage
                 }
             };
 
+    /** Converter for array of SerializebleObject using UTF16 for strings and characters. */
+    static final private Serializer<SerializableObject<?>[]> compoundArraySerializerUTF16 =
+            new ObjectSerializer<SerializableObject<?>[]>((byte) 120, "Compound")
+            {
+
+                @Override
+                public int size(Object object) throws SerializationException
+                {
+                    int result = 4 + 4;
+                    SerializableObject<?>[] objects = (SerializableObject[]) object;
+                    SerializableObject<?> so = objects[0];
+                    Object[] objectArray = so.exportAsList().toArray();
+                    Serializer<?>[] serializers = buildEncoderList(false, objectArray);
+                    result += serializers.length;
+                    // TODO this assumes that objectArray does not contain money types that use a multi-byte field type
+                    for (int i = 0; i < objectArray.length; i++)
+                    {
+                        result += objects.length * serializers[i].size(objectArray[i]);
+                    }
+                    return result;
+                }
+
+                @Override
+                public void serialize(Object object, byte[] buffer, Pointer pointer, EndianUtil endianUtil)
+                        throws SerializationException
+                {
+                    SerializableObject<?>[] objects = (SerializableObject[]) object;
+                    SerializableObject<?> so = objects[0];
+                    Object[] objectArray = so.exportAsList().toArray();
+                    endianUtil.encodeInt(objects.length, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(objectArray.length, buffer, pointer.getAndIncrement(4));
+                    Serializer<?>[] serializers = buildEncoderList(false, objectArray);
+                    for (int i = 0; i < objectArray.length; i++)
+                    {
+                        buffer[pointer.getAndIncrement(1)] = serializers[i].fieldType();
+                    }
+                    for (int i = 0; i < objects.length; i++)
+                    {
+                        List<Object> row = objects[i].exportAsList();
+                        Throw.when(row.size() != objectArray.length, SerializationException.class,
+                                "List in row %d has %d elements which differs from the %d elements in row 0", i, row.size(),
+                                objectArray.length);
+                        for (int j = 0; j < row.size(); j++)
+                        {
+                            serializers[j].serialize(row.get(j), buffer, pointer, endianUtil);
+                        }
+                    }
+                }
+
+                @Override
+                public SerializableObject<?>[] deSerialize(byte[] buffer, Pointer pointer, EndianUtil endianUtil)
+                        throws SerializationException
+                {
+                    int arraySize = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int fieldCount = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    Serializer<?>[] deSerializers = new Serializer[fieldCount];
+                    for (int i = 0; i < fieldCount; i++)
+                    {
+                        Byte key = buffer[pointer.getAndIncrement(1)];
+                        Serializer<?> deSerializer = primitiveDataDecoders.get(key);
+                        Throw.whenNull(SerializationException.class, "No decoder for %d", key);
+                        deSerializers[i] = deSerializer;
+                    }
+                    MinimalSerializableObject[] result = new MinimalSerializableObject[arraySize];
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        List<Object> element = new ArrayList<>();
+                        for (int j = 0; j < fieldCount; j++)
+                        {
+                            element.add(deSerializers[j].deSerialize(buffer, pointer, endianUtil));
+                        }
+                        result[i] = new MinimalSerializableObject(element);
+                    }
+                    return (SerializableObject<?>[]) result;
+                }
+            };
+
+    /** Converter for array of SerializebleObject using UTF8 for strings and characters. */
+    static final private Serializer<SerializableObject<?>[]> compoundArraySerializerUTF8 =
+            new ObjectSerializer<SerializableObject<?>[]>((byte) 121, "Compound")
+            {
+
+                @Override
+                public int size(Object object) throws SerializationException
+                {
+                    int result = 4 + 4;
+                    SerializableObject<?>[] objects = (SerializableObject[]) object;
+                    SerializableObject<?> so = objects[0];
+                    Object[] objectArray = so.exportAsList().toArray();
+                    Serializer<?>[] serializers = buildEncoderList(true, objectArray);
+                    result += serializers.length;
+                    // TODO this assumes that objectArray does not contain money types that use a multi-byte field type
+                    for (int i = 0; i < objectArray.length; i++)
+                    {
+                        result += objects.length * serializers[i].size(objectArray[i]);
+                    }
+                    return result;
+                }
+
+                @Override
+                public void serialize(Object object, byte[] buffer, Pointer pointer, EndianUtil endianUtil)
+                        throws SerializationException
+                {
+                    SerializableObject<?>[] objects = (SerializableObject[]) object;
+                    SerializableObject<?> so = objects[0];
+                    Object[] objectArray = so.exportAsList().toArray();
+                    endianUtil.encodeInt(objects.length, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(objectArray.length, buffer, pointer.getAndIncrement(4));
+                    Serializer<?>[] serializers = buildEncoderList(true, objectArray);
+                    for (int i = 0; i < objectArray.length; i++)
+                    {
+                        buffer[pointer.getAndIncrement(1)] = serializers[i].fieldType();
+                    }
+                    for (int i = 0; i < objects.length; i++)
+                    {
+                        List<Object> row = objects[i].exportAsList();
+                        Throw.when(row.size() != objectArray.length, SerializationException.class,
+                                "List in row %d has %d elements which differs from the %d elements in row 0", i, row.size(),
+                                objectArray.length);
+                        for (int j = 0; j < row.size(); j++)
+                        {
+                            serializers[j].serialize(row.get(j), buffer, pointer, endianUtil);
+                        }
+                    }
+                }
+
+                @Override
+                public SerializableObject<?>[] deSerialize(byte[] buffer, Pointer pointer, EndianUtil endianUtil)
+                        throws SerializationException
+                {
+                    int arraySize = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int fieldCount = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    Serializer<?>[] deSerializers = new Serializer[fieldCount];
+                    for (int i = 0; i < fieldCount; i++)
+                    {
+                        Byte key = buffer[pointer.getAndIncrement(1)];
+                        Serializer<?> deSerializer = primitiveDataDecoders.get(key);
+                        Throw.whenNull(SerializationException.class, "No decoder for %d", key);
+                        deSerializers[i] = deSerializer;
+                    }
+                    MinimalSerializableObject[] result = new MinimalSerializableObject[arraySize];
+                    for (int i = 0; i < arraySize; i++)
+                    {
+                        List<Object> element = new ArrayList<>();
+                        for (int j = 0; j < fieldCount; j++)
+                        {
+                            element.add(deSerializers[j].deSerialize(buffer, pointer, endianUtil));
+                        }
+                        result[i] = new MinimalSerializableObject(element);
+                    }
+                    return (SerializableObject<?>[]) result;
+                }
+            };
+
     static
     {
         encoders.put(Byte.class, convertByte);
@@ -1560,6 +1714,8 @@ public final class TypedMessage
         primitiveDataDecoders.put(convertDjunitsDoubleVector.fieldType(), convertDjunitsDoubleVector);
         primitiveDataDecoders.put(convertDjunitsFloatMatrix.fieldType(), convertDjunitsFloatMatrix);
         primitiveDataDecoders.put(convertDjunitsDoubleMatrix.fieldType(), convertDjunitsDoubleMatrix);
+        primitiveDataDecoders.put(compoundArraySerializerUTF16.fieldType(), compoundArraySerializerUTF16);
+        primitiveDataDecoders.put(compoundArraySerializerUTF8.fieldType(), compoundArraySerializerUTF8);
 
         objectDecoders.put(convertByte.fieldType(), convertByte);
         objectDecoders.put(convertCharacter8.fieldType(), convertCharacter8);
@@ -1592,6 +1748,8 @@ public final class TypedMessage
         objectDecoders.put(convertDjunitsDoubleVector.fieldType(), convertDjunitsDoubleVector);
         objectDecoders.put(convertDjunitsFloatMatrix.fieldType(), convertDjunitsFloatMatrix);
         objectDecoders.put(convertDjunitsDoubleMatrix.fieldType(), convertDjunitsDoubleMatrix);
+        objectDecoders.put(compoundArraySerializerUTF16.fieldType(), compoundArraySerializerUTF16);
+        objectDecoders.put(compoundArraySerializerUTF8.fieldType(), compoundArraySerializerUTF8);
 
     }
 
@@ -1675,6 +1833,10 @@ public final class TypedMessage
             else if (object instanceof AbstractDoubleMatrix)
             {
                 result[i] = convertDjunitsDoubleMatrix;
+            }
+            else if (object instanceof SerializableObject[])
+            {
+                result[i] = utf8 ? compoundArraySerializerUTF8 : compoundArraySerializerUTF16;
             }
             else
             {
@@ -2002,6 +2164,31 @@ public final class TypedMessage
             return 2;
         }
         return 0;
+    }
+    
+    /**
+     * Minimal implementation of SerializableObject
+     */
+    static class MinimalSerializableObject implements SerializableObject<MinimalSerializableObject>
+    {
+        /** The List that is returned by the <code>exportAsList</bode method. */
+        private final List<Object> list;
+        
+        /**
+         * Construct a new MinimalCompound object.
+         * @param list List&lt;Object&gt;; the object list that is returned by <code>exportAsList</code> method
+         */
+        MinimalSerializableObject(List<Object> list)
+        {
+            this.list = list;
+        }
+        
+        @Override
+        public List<Object> exportAsList()
+        {
+            return this.list;
+        }
+        
     }
 
 }
