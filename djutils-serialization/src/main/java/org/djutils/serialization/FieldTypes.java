@@ -10,7 +10,7 @@ package org.djutils.serialization;
  * initial version Mar 4, 2017 <br>
  * @author <a href="http://www.tbm.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class FieldTypes
+public final class FieldTypes
 {
 
     /** byte, 8 bit signed two's complement integer. */

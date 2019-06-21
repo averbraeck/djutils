@@ -1551,24 +1551,27 @@ public final class TypedMessage
                 public AbstractDoubleVector<?, ?>[] deSerialize(final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(8));
-                    int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(8));
+                    int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
                     AbstractDoubleVector<?, ?>[] result = new AbstractDoubleVector<?, ?>[width];
                     Unit<? extends Unit<?>>[] units = new Unit<?>[width];
                     for (int col = 0; col < width; col++)
                     {
                         units[col] = getUnit(buffer, pointer, endianUtil);
                     }
+                    double[][] values = new double[width][height];
+                    for (int row = 0; row < height; row++)
+                    {
+                        for (int col = 0; col < width; col++)
+                        {
+                            values[col][row] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
+                        }
+                    }
                     for (int col = 0; col < width; col++)
                     {
-                        double[] values = new double[height];
-                        for (int row = 0; row < height; row++)
-                        {
-                            values[row] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
-                        }
                         try
                         {
-                            result[col] = DoubleVectorUtil.instantiateAnonymousSI(values, units[col], StorageType.DENSE);
+                            result[col] = DoubleVectorUtil.instantiateAnonymousSI(values[col], units[col], StorageType.DENSE);
                         }
                         catch (ValueException e)
                         {
@@ -1935,6 +1938,10 @@ public final class TypedMessage
             else if (object instanceof SerializableObject[])
             {
                 result[i] = utf8 ? COMPOUND_ARRAY_SERIALIZER_UTF8 : COMPOUND_ARRAY_SERIALIZER_UTF16;
+            }
+            else if (object instanceof AbstractDoubleVector[])
+            {
+                result[i] = CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY;
             }
             else
             {

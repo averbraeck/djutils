@@ -38,13 +38,15 @@ import org.djunits.value.vdouble.scalar.MoneyPerEnergy;
 import org.djunits.value.vdouble.scalar.MoneyPerLength;
 import org.djunits.value.vdouble.scalar.MoneyPerMass;
 import org.djunits.value.vdouble.scalar.MoneyPerVolume;
+import org.djunits.value.vdouble.vector.AbstractDoubleVector;
 import org.djunits.value.vdouble.vector.ElectricalCurrentVector;
+import org.djunits.value.vdouble.vector.LengthVector;
+import org.djunits.value.vdouble.vector.MoneyVector;
 import org.djunits.value.vfloat.matrix.FloatElectricalResistanceMatrix;
 import org.djunits.value.vfloat.scalar.FloatArea;
 import org.djunits.value.vfloat.scalar.FloatMoney;
 import org.djunits.value.vfloat.scalar.FloatMoneyPerVolume;
 import org.djunits.value.vfloat.vector.FloatElectricalResistanceVector;
-import org.djutils.decoderdumper.HexDumper;
 import org.junit.Test;
 
 /**
@@ -66,14 +68,14 @@ public class Tests
      * @throws SerializationException when that happens uncaught this test has failed
      */
     @Test
-    public void SimpleTests() throws SerializationException
+    public void simpleTests() throws SerializationException
     {
         int intValue = 123;
         Integer integerValue = -456;
         short shortValue = 234;
         Short shortValue2 = -345;
-        long longValue = 98765l;
-        Long longValue2 = -98765l;
+        long longValue = 98765L;
+        Long longValue2 = -98765L;
         Byte byteValue = 12;
         byte byteValue2 = -23;
         float floatValue = 1.234f;
@@ -117,14 +119,14 @@ public class Tests
      * @throws SerializationException when that happens uncaught this test has failed
      */
     @Test
-    public void TestArrays() throws SerializationException
+    public void testArrays() throws SerializationException
     {
         int[] integer = new int[] { 1, 2, 3 };
         Integer[] integerValues2 = new Integer[] { -1, -2, -3 };
         short[] shortValues = new short[] { 10, 20, 30 };
         Short[] shortValues2 = new Short[] { -10, -20, -30 };
         long[] longValues = new long[] { 1000, 2000, 3000 };
-        Long[] longValues2 = new Long[] { -1000l, -2000l, -3000l };
+        Long[] longValues2 = new Long[] { -1000L, -2000L, -3000L };
         byte[] byteValues = new byte[] { 12, 13, 14 };
         Byte[] byteValues2 = new Byte[] { -12, -13, -14 };
         boolean[] boolValues = new boolean[] { false, true, true };
@@ -162,14 +164,14 @@ public class Tests
      * @throws SerializationException when that happens uncaught this test has failed
      */
     @Test
-    public void TestMatricess() throws SerializationException
+    public void testMatricess() throws SerializationException
     {
         int[][] integer = new int[][] { { 1, 2, 3 }, { 4, 5, 6 } };
         Integer[][] integerValues2 = new Integer[][] { { -1, -2, -3 }, { -4, -5, -6 } };
         short[][] shortValues = new short[][] { { 10, 20, 30 }, { 40, 50, 60 } };
         Short[][] shortValues2 = new Short[][] { { -10, -20, -30 }, { -40, -50, -60 } };
         long[][] longValues = new long[][] { { 1000, 2000, 3000 }, { 3000, 4000, 5000 } };
-        Long[][] longValues2 = new Long[][] { { -1000l, -2000l, -3000l }, { -3000l, -4000l, -5000l } };
+        Long[][] longValues2 = new Long[][] { { -1000L, -2000L, -3000L }, { -3000L, -4000L, -5000L } };
         byte[][] byteValues = new byte[][] { { 12, 13, 14 }, { 15, 16, 17 } };
         Byte[][] byteValues2 = new Byte[][] { { -12, -13, -14 }, { -15, -16, -17 } };
         boolean[][] boolValues = new boolean[][] { { false, true, true }, { false, false, false } };
@@ -271,8 +273,9 @@ public class Tests
             return result;
         }
 
+        @SuppressWarnings("checkstyle:needbraces")
         @Override
-        public boolean equals(Object obj)
+        public boolean equals(final Object obj)
         {
             if (this == obj)
                 return true;
@@ -331,15 +334,15 @@ public class Tests
      * @throws SerializationException when that happens uncaught, this test has failed
      */
     @Test
-    public void TestCompoundArrays() throws SerializationException
+    public void testCompoundArrays() throws SerializationException
     {
-        Compound testArray[] = new Compound[] { new Compound(1, 0.1), new Compound(2, 0.2), new Compound(3, 0.3) };
+        Compound[] testArray = new Compound[] { new Compound(1, 0.1), new Compound(2, 0.2), new Compound(3, 0.3) };
         Object[] objects = new Object[] { testArray };
         for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
         {
             for (boolean encodeUTF8 : new boolean[] { false, true })
             {
-                System.out.println("Encoding " + (encodeUTF8 ? "UTF8" : "UTF16") + ", " + endianUtil);
+                // System.out.println("Encoding " + (encodeUTF8 ? "UTF8" : "UTF16") + ", " + endianUtil);
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
                 // System.out.print(HexDumper.hexDumper(serialized));
@@ -370,13 +373,62 @@ public class Tests
                     {
                         if (objects[i] instanceof Compound[])
                         {
-                            Compound[] in = (Compound[] ) objects[i];
+                            Compound[] in = (Compound[]) objects[i];
                             assertTrue("decoded object is now also a Compound[]", decodedObjects[i] instanceof Compound[]);
                             Compound[] out = (Compound[]) objects[i];
                             assertEquals("Compound arrays have same length", in.length, out.length);
                             for (int j = 0; j < in.length; j++)
                             {
                                 assertEquals("reconstructed compound object matches input", in[j], out[j]);
+                            }
+                        }
+                        else
+                        {
+                            assertTrue(
+                                    "decoded object at index " + i + "(" + objects[i]
+                                            + ") equals corresponding object in input",
+                                    deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Test serialization and deserialization of arrays of Djutils vectors.
+     * @throws ValueException if that happens uncaught; this test has failed
+     * @throws SerializationException if that happens uncaught; this test has failed
+     */
+    @Test
+    public void testArrayOfDjutilsVectors() throws ValueException, SerializationException
+    {
+        AbstractDoubleVector<?, ?>[] array = new AbstractDoubleVector[] {
+                new LengthVector(new double[] { 0.1, 0.2, 0.3 }, LengthUnit.INCH, StorageType.DENSE),
+                new MoneyVector(new double[] { 10.1, 20.2, 30.3 }, MoneyUnit.EUR, StorageType.DENSE) };
+        Object[] objects = new Object[] { array };
+        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
+        {
+            for (boolean encodeUTF8 : new boolean[] { false, true })
+            {
+                System.out.println("Encoding " + (encodeUTF8 ? "UTF8" : "UTF16") + ", " + endianUtil);
+                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
+                        : TypedMessage.encodeUTF16(endianUtil, objects);
+                // System.out.print(HexDumper.hexDumper(serialized));
+                for (boolean primitive : new boolean[] { false, true })
+                {
+                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
+                            : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
+                    assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                    for (int i = 0; i < objects.length; i++)
+                    {
+                        if (objects[i] instanceof AbstractDoubleVector<?, ?>[])
+                        {
+                            AbstractDoubleVector<?, ?>[] arrayIn = (AbstractDoubleVector<?, ?>[]) objects[i];
+                            AbstractDoubleVector<?, ?>[] arrayOut = (AbstractDoubleVector<?, ?>[]) decodedObjects[i];
+                            for (int j = 0; j < arrayOut.length; j++)
+                            {
+                                assertEquals("Decoded Djutils array vector element matches", arrayIn[j], arrayOut[j]);
                             }
                         }
                         else
@@ -403,7 +455,7 @@ public class Tests
         short[][] shortValues = new short[][] { { 10, 20 }, { 40, 50, 60 } };
         Short[][] shortValues2 = new Short[][] { { -10, -20, -30 }, { -40, -50 } };
         long[][] longValues = new long[][] { { 1000, 2000, 3000 }, { 3000, 4000 } };
-        Long[][] longValues2 = new Long[][] { { -1000l, -2000l }, { -3000l, -4000l, -5000l } };
+        Long[][] longValues2 = new Long[][] { { -1000L, -2000L }, { -3000L, -4000L, -5000L } };
         byte[][] byteValues = new byte[][] { { 12, 13 }, { 15, 16, 17 } };
         Byte[][] byteValues2 = new Byte[][] { { -12, -13, -14 }, { -15, -16 } };
         boolean[][] boolValues = new boolean[][] { { false, true, true }, { false, false } };
@@ -445,7 +497,7 @@ public class Tests
      * Test that the encoder throws a SerializationException when given something that it does not know how to serialize.
      */
     @Test
-    public void TestUnhandledObject()
+    public void testUnhandledObject()
     {
         File file = new File("whatever");
         Object[] objects = new Object[] { file };
@@ -479,7 +531,7 @@ public class Tests
      * Test the Pointer class.
      */
     @Test
-    public void PointerTest()
+    public void pointerTest()
     {
         Pointer pointer = new Pointer();
         assertEquals("initial offset is 0", 0, pointer.get());
@@ -662,13 +714,13 @@ public class Tests
     }
 
     /**
-     * Compare two arrays of any type (stolen from java.util.Arrays)
+     * Compare two arrays of any type (stolen from java.util.Arrays).
      * @param e1 Object (should be some kind of array)
      * @param e2 Object (should be some kind of array)
      * @return boolean; true of the arrays have the same type, size and all elements in the arrays are equal to their
      *         counterpart
      */
-    static boolean deepEquals0(Object e1, Object e2)
+    static boolean deepEquals0(final Object e1, final Object e2)
     {
         if (e1 instanceof Object[] && e2 instanceof Object[])
         {
@@ -713,7 +765,7 @@ public class Tests
      * Test the UnitType class.
      */
     @Test
-    public void TestUnitType()
+    public void testUnitType()
     {
         byte code = 127;
         Class<AccelerationUnit> unitClass = AccelerationUnit.class;
@@ -746,7 +798,7 @@ public class Tests
      * Test all constructors for SerializationException.
      */
     @Test
-    public final void SerializationExceptionTest()
+    public final void terializationExceptionTest()
     {
         String message = "MessageString";
         Exception e = new SerializationException(message);
@@ -798,7 +850,7 @@ public class Tests
      * Test the remainder of the EndianUtil class.
      */
     @Test
-    public void TestEndianUtil()
+    public void testEndianUtil()
     {
         assertTrue("EndianUtil.BIG_ENDIAN is big endian", EndianUtil.BIG_ENDIAN.isBigEndian());
         assertFalse("EndianUtil.LITTLE_ENDIAN is not big endian", EndianUtil.LITTLE_ENDIAN.isBigEndian());
@@ -813,44 +865,46 @@ public class Tests
      * Test the toString and dataClassName methods of the BasicSerializer.
      */
     @Test
-    public void TestBasicSerializer()
+    public void testBasicSerializer()
     {
         byte code = 123;
         String dataClassName = "dataClass";
-        BasicSerializer<Byte> testSerializer = new BasicSerializer<Byte>(code, dataClassName) {
+        BasicSerializer<Byte> testSerializer = new BasicSerializer<Byte>(code, dataClassName)
+        {
 
             @Override
-            public int size(Object object) throws SerializationException
+            public int size(final Object object) throws SerializationException
             {
                 // TODO Auto-generated method stub
                 return 0;
             }
 
             @Override
-            public int sizeWithPrefix(Object object) throws SerializationException
+            public int sizeWithPrefix(final Object object) throws SerializationException
             {
                 // TODO Auto-generated method stub
                 return 0;
             }
 
             @Override
-            public void serialize(Object object, byte[] buffer, Pointer pointer, EndianUtil endianUtil)
+            public void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
                     throws SerializationException
             {
                 // TODO Auto-generated method stub
-                
+
             }
 
             @Override
-            public void serializeWithPrefix(Object object, byte[] buffer, Pointer pointer, EndianUtil endianUtil)
-                    throws SerializationException
+            public void serializeWithPrefix(final Object object, final byte[] buffer, final Pointer pointer,
+                    final EndianUtil endianUtil) throws SerializationException
             {
                 // TODO Auto-generated method stub
-                
+
             }
 
             @Override
-            public Byte deSerialize(byte[] buffer, Pointer pointer, EndianUtil endianUtil) throws SerializationException
+            public Byte deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+                    throws SerializationException
             {
                 // TODO Auto-generated method stub
                 return null;

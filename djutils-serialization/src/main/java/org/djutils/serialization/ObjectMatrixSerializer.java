@@ -84,7 +84,7 @@ public abstract class ObjectMatrixSerializer<T extends Object> extends BasicSeri
     }
 
     @Override
-    public final T[][] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+    public final T[][] deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
     {
         int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));

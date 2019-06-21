@@ -19,7 +19,7 @@ public abstract class ObjectSerializer<T extends Object> extends BasicSerializer
      * @param type byte; the field type (returned by the <code>fieldType</code> method)
      * @param dataClassName String; returned by the dataClassName method
      */
-    public ObjectSerializer(byte type, final String dataClassName)
+    public ObjectSerializer(final byte type, final String dataClassName)
     {
         super(type, dataClassName);
     }

@@ -72,6 +72,6 @@ public interface Serializer<T extends Object>
      * Return a description of the type of data that this serializer handles.
      * @return String; description of the type of data that this serializer handles
      */
-    abstract String dataClassName();
+    String dataClassName();
 
 }
