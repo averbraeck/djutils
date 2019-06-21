@@ -59,7 +59,7 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
     }
 
     @Override
-    public final void serialize(Object object, byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+    public final void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
     {
         @SuppressWarnings("unchecked")
         T[] array = (T[]) object;
@@ -71,7 +71,7 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
     }
 
     @Override
-    public final T[] deSerialize(byte[] buffer, Pointer pointer, final EndianUtil endianUtil)
+    public final T[] deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
     {
         int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         @SuppressWarnings("unchecked")
@@ -90,7 +90,7 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
      * @param offset int; index in byte buffer where first serialized byte must be stored
      * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
      */
-    abstract void serializeElement(T object, byte[] buffer, int offset, final EndianUtil endianUtil);
+    abstract void serializeElement(T object, byte[] buffer, int offset, EndianUtil endianUtil);
 
     /**
      * Deserializer for one array element (without type prefix) must be implemented in implementing sub classes.
@@ -99,6 +99,6 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
      * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
      * @return T; the deserialized object
      */
-    abstract T deSerializeElement(byte[] buffer, int offset, final EndianUtil endianUtil);
+    abstract T deSerializeElement(byte[] buffer, int offset, EndianUtil endianUtil);
 
 }

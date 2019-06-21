@@ -45,7 +45,7 @@ public class ItemName implements Serializer<String>
     }
 
     @Override
-    public int size(Object object) throws SerializationException
+    public int size(final Object object) throws SerializationException
     {
         return 1 + this.string.length();
     }

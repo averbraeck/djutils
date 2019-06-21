@@ -48,7 +48,7 @@ class Pointer
      * @param increment int; the amount by which the offset must be incremented
      * @return int; the offset (before the increment was added)
      */
-    int getAndIncrement(int increment)
+    int getAndIncrement(final int increment)
     {
         int result = this.offset;
         this.offset += increment;
