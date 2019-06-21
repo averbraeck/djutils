@@ -39,9 +39,10 @@ public final class EndianUtil
 
     /**
      * Construct an EndianUtil object with user specified endianness.
-     * @param bigEndian
+     * @param bigEndian boolean; if true encoding and decoding use big endian style; if false; encoding and decoding use little
+     *            endian style
      */
-    private EndianUtil(boolean bigEndian)
+    private EndianUtil(final boolean bigEndian)
     {
         this.bigEndian = bigEndian;
     }
