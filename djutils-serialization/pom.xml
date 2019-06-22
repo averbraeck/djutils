@@ -107,6 +107,7 @@
           <outputEncoding>UTF-8</outputEncoding>
           <templateDirectory>src/site</templateDirectory>
           <template>site.vm</template>
+          <relativizeDecorationLinks>false</relativizeDecorationLinks>
         </configuration>
         <executions>
           <execution>
