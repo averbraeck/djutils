@@ -75,7 +75,7 @@ public final class TypedMessage
     private static final Map<Class<?>, Serializer<?>> ENCODERS = new HashMap<>();
 
     /** All the converters that decode into primitive data when possible, keyed by prefix. */
-    private static final Map<Byte, Serializer<?>> PRIMITIVE_DATA_DECODERS = new HashMap<>();
+    static final Map<Byte, Serializer<?>> PRIMITIVE_DATA_DECODERS = new HashMap<>();
 
     /** All the converters that decode into arrays and matrices of Objects, keyed by prefix. */
     private static final Map<Byte, Serializer<?>> OBJECT_DECODERS = new HashMap<>();
@@ -1655,7 +1655,7 @@ public final class TypedMessage
                         }
                         result[i] = new MinimalSerializableObject(element);
                     }
-                    return (SerializableObject<?>[]) result;
+                    return result;
                 }
             };
 
@@ -1732,7 +1732,7 @@ public final class TypedMessage
                         }
                         result[i] = new MinimalSerializableObject(element);
                     }
-                    return (SerializableObject<?>[]) result;
+                    return result;
                 }
             };
 
@@ -1892,7 +1892,7 @@ public final class TypedMessage
      * @return Serializer[]; array filled with the serializers needed for the objects in the Object array
      * @throws SerializationException when an object in <code>content</code> cannot be serialized
      */
-    private static Serializer<?>[] buildEncoderList(final boolean utf8, final Object... content) throws SerializationException
+    static Serializer<?>[] buildEncoderList(final boolean utf8, final Object... content) throws SerializationException
     {
         Serializer<?>[] result = new Serializer[content.length];
         for (int i = 0; i < content.length; i++)
@@ -1994,7 +1994,7 @@ public final class TypedMessage
      * @param endianUtil EndianUtil; encoder to use for multi-byte values
      */
     @SuppressWarnings("rawtypes")
-    private static void encodeUnit(final Unit unit, final byte[] message, final Pointer pointer, final EndianUtil endianUtil)
+    static void encodeUnit(final Unit unit, final byte[] message, final Pointer pointer, final EndianUtil endianUtil)
     {
         @SuppressWarnings("unchecked") // TODO see how this can be solved with type <U extends Unit<U>>
         SerializationUnits unitType = SerializationUnits.getUnitType(unit);
@@ -2165,7 +2165,7 @@ public final class TypedMessage
      * @param endianUtil EndianUtil; decoder for multi-byte values
      * @return Unit
      */
-    private static Unit<? extends Unit<?>> getUnit(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    static Unit<? extends Unit<?>> getUnit(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
     {
         SerializationUnits unitType = SerializationUnits.getUnitType(buffer[pointer.getAndIncrement(1)]);
         if (unitType.getCode() == 100) // money
@@ -2248,7 +2248,7 @@ public final class TypedMessage
      * @param o the object to check
      * @return 1 or 2 to indicate whether an extra byte is needed
      */
-    private static int extraBytesMoney(final Object o)
+    static int extraBytesMoney(final Object o)
     {
         if (o instanceof Money)
         {

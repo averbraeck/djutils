@@ -44,24 +44,28 @@ public class ItemName implements Serializer<String>
         deSerialize(buffer, pointer, null);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int size(final Object object) throws SerializationException
     {
         return 1 + this.string.length();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int sizeWithPrefix(final Object object) throws SerializationException
     {
         return 1 + size(object);
     }
 
+    /** {@inheritDoc} */
     @Override
     public byte fieldType()
     {
         return 33;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
             throws SerializationException
@@ -73,6 +77,7 @@ public class ItemName implements Serializer<String>
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void serializeWithPrefix(final Object object, final byte[] buffer, final Pointer pointer,
             final EndianUtil endianUtil) throws SerializationException
@@ -81,6 +86,7 @@ public class ItemName implements Serializer<String>
         serialize(object, buffer, pointer, endianUtil);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
     {
@@ -94,6 +100,7 @@ public class ItemName implements Serializer<String>
         return this.string;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String dataClassName()
     {

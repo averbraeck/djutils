@@ -89,7 +89,7 @@ public abstract class ObjectMatrixSerializer<T extends Object> extends BasicSeri
         int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         @SuppressWarnings("unchecked")
-        T[][] result = (T[][]) Array.newInstance(sample.getClass(), height, width);
+        T[][] result = (T[][]) Array.newInstance(this.sample.getClass(), height, width);
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)

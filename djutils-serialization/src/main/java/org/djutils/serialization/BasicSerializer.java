@@ -31,18 +31,21 @@ public abstract class BasicSerializer<T extends Object> implements Serializer<T>
         this.dataClassName = dataClassName;
     }
     
+    /** {@inheritDoc} */
     @Override
     public final byte fieldType()
     {
         return this.type;
     }
 
+    /** {@inheritDoc} */
     @Override
     public final String dataClassName()
     {
         return this.dataClassName;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString()
     {
