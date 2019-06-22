@@ -75,7 +75,7 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
     {
         int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         @SuppressWarnings("unchecked")
-        T[] result = (T[]) Array.newInstance(sample.getClass(), size);
+        T[] result = (T[]) Array.newInstance(this.sample.getClass(), size);
         for (int i = 0; i < size; i++)
         {
             result[i] = deSerializeElement(buffer, pointer.getAndIncrement(this.dataSize), endianUtil);

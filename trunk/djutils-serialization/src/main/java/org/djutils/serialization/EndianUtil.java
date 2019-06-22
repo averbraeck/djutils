@@ -71,7 +71,7 @@ public final class EndianUtil
      */
     public boolean isBigEndian()
     {
-        return bigEndian;
+        return this.bigEndian;
     }
 
     /**
@@ -82,7 +82,7 @@ public final class EndianUtil
      */
     public short decodeShort(final byte[] message, final int pointer)
     {
-        if (bigEndian)
+        if (this.bigEndian)
         {
             return (short) (((message[pointer] & 0xff) << 8) | ((message[pointer + 1] & 0xff)));
         }
@@ -100,7 +100,7 @@ public final class EndianUtil
      */
     public int decodeInt(final byte[] message, final int pointer)
     {
-        if (bigEndian)
+        if (this.bigEndian)
         {
             return (((message[pointer] & 0xff) << 24) | ((message[pointer + 1] & 0xff) << 16)
                     | ((message[pointer + 2] & 0xff) << 8) | ((message[pointer + 3] & 0xff)));
@@ -120,7 +120,7 @@ public final class EndianUtil
      */
     public long decodeLong(final byte[] message, final int pointer)
     {
-        if (bigEndian)
+        if (this.bigEndian)
         {
             return ((((long) message[pointer]) << 56) | (((long) message[pointer + 1] & 0xff) << 48)
                     | (((long) message[pointer + 2] & 0xff) << 40) | (((long) message[pointer + 3] & 0xff) << 32)
@@ -184,7 +184,7 @@ public final class EndianUtil
         byte[] c = new byte[len];
         for (int i = 0; i < len; i++)
         {
-            c[i] = (byte) message[pointer + i + 4];
+            c[i] = message[pointer + i + 4];
         }
         try
         {
@@ -223,7 +223,7 @@ public final class EndianUtil
     public int encodeShort(final short v, final byte[] message, final int pointer)
     {
         int p = pointer;
-        if (bigEndian)
+        if (this.bigEndian)
         {
             message[p++] = (byte) (v >> 8);
             message[p++] = (byte) (v);
@@ -257,7 +257,7 @@ public final class EndianUtil
     public void encodeInt(final int v, final byte[] message, final int pointer)
     {
         int p = pointer;
-        if (bigEndian)
+        if (this.bigEndian)
         {
             message[p++] = (byte) ((v >> 24) & 0xFF);
             message[p++] = (byte) ((v >> 16) & 0xFF);
@@ -283,7 +283,7 @@ public final class EndianUtil
     public int encodeLong(final long v, final byte[] message, final int pointer)
     {
         int p = pointer;
-        if (bigEndian)
+        if (this.bigEndian)
         {
             message[p++] = (byte) ((v >> 56) & 0xFF);
             message[p++] = (byte) ((v >> 48) & 0xFF);
@@ -336,7 +336,7 @@ public final class EndianUtil
     @Override
     public String toString()
     {
-        return "EndianUtil [bigEndian=" + bigEndian + "]";
+        return "EndianUtil [bigEndian=" + this.bigEndian + "]";
     }
 
 }
