@@ -234,7 +234,7 @@ public final class TypedMessage
                 @Override
                 public Character deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
                 {
-                    return new Character((char) buffer[pointer.getAndIncrement(1)]);
+                    return Character.valueOf((char) buffer[pointer.getAndIncrement(1)]);
                 }
             };
 
