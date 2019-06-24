@@ -798,7 +798,7 @@ public class Tests
      * Test all constructors for SerializationException.
      */
     @Test
-    public final void terializationExceptionTest()
+    public final void serializationExceptionTest()
     {
         String message = "MessageString";
         Exception e = new SerializationException(message);
