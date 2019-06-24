@@ -411,7 +411,7 @@ public class Tests
         {
             for (boolean encodeUTF8 : new boolean[] { false, true })
             {
-                System.out.println("Encoding " + (encodeUTF8 ? "UTF8" : "UTF16") + ", " + endianUtil);
+                // System.out.println("Encoding " + (encodeUTF8 ? "UTF8" : "UTF16") + ", " + endianUtil);
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
                 // System.out.print(HexDumper.hexDumper(serialized));
