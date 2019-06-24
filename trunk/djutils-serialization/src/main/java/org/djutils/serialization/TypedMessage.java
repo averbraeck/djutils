@@ -2276,7 +2276,7 @@ public final class TypedMessage
      */
     static class MinimalSerializableObject implements SerializableObject<MinimalSerializableObject>
     {
-        /** The List that is returned by the <code>exportAsList</bode method. */
+        /** The List that is returned by the <code>exportAsList</code> method. */
         private final List<Object> list;
 
         /**
