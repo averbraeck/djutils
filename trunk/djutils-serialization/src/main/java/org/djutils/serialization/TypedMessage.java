@@ -358,7 +358,7 @@ public final class TypedMessage
 
     /** Converter for Byte array. */
     private static final Serializer<Byte[]> CONVERT_BYTE_ARRAY =
-            new ObjectArraySerializer<Byte>(FieldTypes.BYTE_8_ARRAY, 1, new Byte((byte) 0), "Byte_8_array")
+            new ObjectArraySerializer<Byte>(FieldTypes.BYTE_8_ARRAY, 1, Byte.valueOf((byte) 0), "Byte_8_array")
             {
                 @Override
                 public void serializeElement(final Byte object, final byte[] buffer, final int offset,
@@ -413,7 +413,7 @@ public final class TypedMessage
 
     /** Converter for Short array. */
     private static final Serializer<Short[]> CONVERT_SHORT_ARRAY =
-            new ObjectArraySerializer<Short>(FieldTypes.SHORT_16_ARRAY, 2, new Short((short) 0), "Short_16_array")
+            new ObjectArraySerializer<Short>(FieldTypes.SHORT_16_ARRAY, 2, Short.valueOf((short) 0), "Short_16_array")
             {
                 @Override
                 public void serializeElement(final Short object, final byte[] buffer, final int offset,
@@ -468,7 +468,7 @@ public final class TypedMessage
 
     /** Converter for Integer array. */
     private static final Serializer<Integer[]> CONVERT_INTEGER_ARRAY =
-            new ObjectArraySerializer<Integer>(FieldTypes.INT_32_ARRAY, 4, new Integer(0), "Integer_32_array")
+            new ObjectArraySerializer<Integer>(FieldTypes.INT_32_ARRAY, 4, Integer.valueOf(0), "Integer_32_array")
             {
                 @Override
                 public void serializeElement(final Integer object, final byte[] buffer, final int offset,
@@ -523,7 +523,7 @@ public final class TypedMessage
 
     /** Converter for Long array. */
     private static final Serializer<Long[]> CONVERT_LONG_ARRAY =
-            new ObjectArraySerializer<Long>(FieldTypes.LONG_64_ARRAY, 8, new Long(0), "Long_64_array")
+            new ObjectArraySerializer<Long>(FieldTypes.LONG_64_ARRAY, 8, Long.valueOf(0), "Long_64_array")
             {
                 @Override
                 public void serializeElement(final Long object, final byte[] buffer, final int offset,
@@ -688,7 +688,7 @@ public final class TypedMessage
 
     /** Converter for Boolean array. */
     private static final Serializer<Boolean[]> CONVERT_BOOLEAN_ARRAY =
-            new ObjectArraySerializer<Boolean>(FieldTypes.BOOLEAN_8_ARRAY, 1, new Boolean(false), "Boolean_8_array")
+            new ObjectArraySerializer<Boolean>(FieldTypes.BOOLEAN_8_ARRAY, 1, Boolean.FALSE, "Boolean_8_array")
             {
                 @Override
                 public void serializeElement(final Boolean object, final byte[] buffer, final int offset,
@@ -1150,7 +1150,7 @@ public final class TypedMessage
 
     /** Converter for Boolean matrix. */
     private static final Serializer<Boolean[][]> CONVERT_BOOLEAN_MATRIX =
-            new ObjectMatrixSerializer<Boolean>(FieldTypes.BOOLEAN_8_MATRIX, 1, new Boolean(false), "Boolean_8_matrix")
+            new ObjectMatrixSerializer<Boolean>(FieldTypes.BOOLEAN_8_MATRIX, 1, Boolean.FALSE, "Boolean_8_matrix")
             {
                 @Override
                 public void serializeElement(final Boolean object, final byte[] buffer, final int offset,
