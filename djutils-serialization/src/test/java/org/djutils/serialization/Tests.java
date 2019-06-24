@@ -875,14 +875,14 @@ public class Tests
             @Override
             public int size(final Object object) throws SerializationException
             {
-                // TODO Auto-generated method stub
+                // Auto-generated method stub; never called
                 return 0;
             }
 
             @Override
             public int sizeWithPrefix(final Object object) throws SerializationException
             {
-                // TODO Auto-generated method stub
+                // Auto-generated method stub; never called
                 return 0;
             }
 
@@ -890,23 +890,21 @@ public class Tests
             public void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
                     throws SerializationException
             {
-                // TODO Auto-generated method stub
-
+                // Auto-generated method stub; never called
             }
 
             @Override
             public void serializeWithPrefix(final Object object, final byte[] buffer, final Pointer pointer,
                     final EndianUtil endianUtil) throws SerializationException
             {
-                // TODO Auto-generated method stub
-
+                // Auto-generated method stub; never called
             }
 
             @Override
             public Byte deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
                     throws SerializationException
             {
-                // TODO Auto-generated method stub
+                // Auto-generated method stub; never called
                 return null;
             }
         };
@@ -914,4 +912,5 @@ public class Tests
         assertEquals("data class name is returned", dataClassName, testSerializer.dataClassName());
         assertTrue("toString returns something descriptive", testSerializer.toString().startsWith("BasicSerializer"));
     }
+    
 }
