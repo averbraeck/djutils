@@ -321,7 +321,7 @@ public final class TypedMessage
 
     /** Converter for byte array. */
     private static final Serializer<byte[]> CONVERT_BT_ARRAY =
-            new BasicPrimitiveArraySerializer<byte[]>(FieldTypes.BYTE_8_ARRAY, 1, "byte_8_array")
+            new BasicPrimitiveArrayOrMatrixSerializer<byte[]>(FieldTypes.BYTE_8_ARRAY, 1, "byte_8_array", 1)
             {
                 @Override
                 public int size(final Object object)
@@ -376,7 +376,7 @@ public final class TypedMessage
 
     /** Converter for short array. */
     private static final Serializer<short[]> CONVERT_SHRT_ARRAY =
-            new BasicPrimitiveArraySerializer<short[]>(FieldTypes.SHORT_16_ARRAY, 2, "short_16_array")
+            new BasicPrimitiveArrayOrMatrixSerializer<short[]>(FieldTypes.SHORT_16_ARRAY, 2, "short_16_array", 1)
             {
                 @Override
                 public int size(final Object object)
@@ -431,7 +431,7 @@ public final class TypedMessage
 
     /** Converter for int array. */
     private static final Serializer<int[]> CONVERT_INT_ARRAY =
-            new BasicPrimitiveArraySerializer<int[]>(FieldTypes.INT_32_ARRAY, 4, "int_32_array")
+            new BasicPrimitiveArrayOrMatrixSerializer<int[]>(FieldTypes.INT_32_ARRAY, 4, "int_32_array", 1)
             {
                 @Override
                 public int size(final Object object)
@@ -486,7 +486,7 @@ public final class TypedMessage
 
     /** Converter for long array. */
     private static final Serializer<long[]> CONVERT_LNG_ARRAY =
-            new BasicPrimitiveArraySerializer<long[]>(FieldTypes.LONG_64_ARRAY, 8, "long_64_array")
+            new BasicPrimitiveArrayOrMatrixSerializer<long[]>(FieldTypes.LONG_64_ARRAY, 8, "long_64_array", 1)
             {
                 @Override
                 public int size(final Object object)
@@ -541,7 +541,7 @@ public final class TypedMessage
 
     /** Converter for float array. */
     private static final Serializer<float[]> CONVERT_FLT_ARRAY =
-            new BasicPrimitiveArraySerializer<float[]>(FieldTypes.FLOAT_32_ARRAY, 4, "float_32_array")
+            new BasicPrimitiveArrayOrMatrixSerializer<float[]>(FieldTypes.FLOAT_32_ARRAY, 4, "float_32_array", 1)
             {
                 @Override
                 public int size(final Object object)
@@ -596,7 +596,7 @@ public final class TypedMessage
 
     /** Converter for double array. */
     private static final Serializer<double[]> CONVERT_DBL_ARRAY =
-            new BasicPrimitiveArraySerializer<double[]>(FieldTypes.DOUBLE_64_ARRAY, 8, "double_64_array")
+            new BasicPrimitiveArrayOrMatrixSerializer<double[]>(FieldTypes.DOUBLE_64_ARRAY, 8, "double_64_array", 1)
             {
                 @Override
                 public int size(final Object object)
@@ -651,7 +651,7 @@ public final class TypedMessage
 
     /** Converter for boolean array. */
     private static final Serializer<boolean[]> CONVERT_BOOL_ARRAY =
-            new BasicPrimitiveArraySerializer<boolean[]>(FieldTypes.BOOLEAN_8_ARRAY, 1, "bool_8_array")
+            new BasicPrimitiveArrayOrMatrixSerializer<boolean[]>(FieldTypes.BOOLEAN_8_ARRAY, 1, "bool_8_array", 1)
             {
                 @Override
                 public int size(final Object object)
@@ -706,7 +706,7 @@ public final class TypedMessage
 
     /** Converter for byte matrix. */
     private static final Serializer<byte[][]> CONVERT_BT_MATRIX =
-            new BasicPrimitiveArraySerializer<byte[][]>(FieldTypes.BYTE_8_MATRIX, 1, "byte_8_matrix")
+            new BasicPrimitiveArrayOrMatrixSerializer<byte[][]>(FieldTypes.BYTE_8_MATRIX, 1, "byte_8_matrix", 2)
             {
                 @Override
                 public int size(final Object object)
@@ -772,7 +772,7 @@ public final class TypedMessage
 
     /** Converter for short matrix. */
     private static final Serializer<short[][]> CONVERT_SHRT_MATRIX =
-            new BasicPrimitiveArraySerializer<short[][]>(FieldTypes.SHORT_16_MATRIX, 2, "short_16_matrix")
+            new BasicPrimitiveArrayOrMatrixSerializer<short[][]>(FieldTypes.SHORT_16_MATRIX, 2, "short_16_matrix", 2)
             {
                 @Override
                 public int size(final Object object)
@@ -838,7 +838,7 @@ public final class TypedMessage
 
     /** Converter for int matrix. */
     private static final Serializer<int[][]> CONVERT_INT_MATRIX =
-            new BasicPrimitiveArraySerializer<int[][]>(FieldTypes.INT_32_MATRIX, 4, "int_32_matrix")
+            new BasicPrimitiveArrayOrMatrixSerializer<int[][]>(FieldTypes.INT_32_MATRIX, 4, "int_32_matrix", 2)
             {
                 @Override
                 public int size(final Object object)
@@ -904,7 +904,7 @@ public final class TypedMessage
 
     /** Converter for long matrix. */
     private static final Serializer<long[][]> CONVERT_LNG_MATRIX =
-            new BasicPrimitiveArraySerializer<long[][]>(FieldTypes.LONG_64_MATRIX, 8, "long_64_matrix")
+            new BasicPrimitiveArrayOrMatrixSerializer<long[][]>(FieldTypes.LONG_64_MATRIX, 8, "long_64_matrix", 2)
             {
                 @Override
                 public int size(final Object object)
@@ -970,7 +970,7 @@ public final class TypedMessage
 
     /** Converter for float matrix. */
     private static final Serializer<float[][]> CONVERT_FLT_MATRIX =
-            new BasicPrimitiveArraySerializer<float[][]>(FieldTypes.FLOAT_32_MATRIX, 4, "float_32_matrix")
+            new BasicPrimitiveArrayOrMatrixSerializer<float[][]>(FieldTypes.FLOAT_32_MATRIX, 4, "float_32_matrix", 2)
             {
                 @Override
                 public int size(final Object object)
@@ -1036,7 +1036,7 @@ public final class TypedMessage
 
     /** Converter for double matrix. */
     private static final Serializer<double[][]> CONVERT_DBL_MATRIX =
-            new BasicPrimitiveArraySerializer<double[][]>(FieldTypes.DOUBLE_64_MATRIX, 8, "double_64_matrix")
+            new BasicPrimitiveArrayOrMatrixSerializer<double[][]>(FieldTypes.DOUBLE_64_MATRIX, 8, "double_64_matrix", 2)
             {
                 @Override
                 public int size(final Object object)
@@ -1102,7 +1102,7 @@ public final class TypedMessage
 
     /** Converter for boolean matrix. */
     private static final Serializer<boolean[][]> CONVERT_BOOL_MATRIX =
-            new BasicPrimitiveArraySerializer<boolean[][]>(FieldTypes.BOOLEAN_8_MATRIX, 1, "boolean_8_matrix")
+            new BasicPrimitiveArrayOrMatrixSerializer<boolean[][]>(FieldTypes.BOOLEAN_8_MATRIX, 1, "boolean_8_matrix", 2)
             {
                 @Override
                 public int size(final Object object)
