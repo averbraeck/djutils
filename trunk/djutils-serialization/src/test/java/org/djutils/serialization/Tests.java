@@ -144,6 +144,7 @@ public class Tests
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
                 // System.out.print(HexDumper.hexDumper(serialized));
+                // System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
                 for (boolean primitive : new boolean[] { false, true })
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
@@ -919,5 +920,5 @@ public class Tests
         assertEquals("data class name is returned", dataClassName, testSerializer.dataClassName());
         assertTrue("toString returns something descriptive", testSerializer.toString().startsWith("BasicSerializer"));
     }
-    
+
 }

@@ -338,7 +338,7 @@ public final class TypedMessage
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
-                        array[i] = buffer[pointer.getAndIncrement(getElementSize())];
+                        buffer[pointer.getAndIncrement(getElementSize())] = array[i];
                     }
                 }
 
