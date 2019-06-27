@@ -16,11 +16,8 @@ import org.djutils.exceptions.Throw;
  * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <T> class
  */
-public abstract class ObjectMatrixSerializer<T extends Object> extends BasicSerializer<T[][]>
+public abstract class ObjectMatrixSerializer<T extends Object> extends ArrayOrMatrixSerializer<T[][], T>
 {
-    /** Size of one element of the encoded data. */
-    private final int dataSize;
-
     /** Sample object with required type info (zero length array suffices). */
     private final T sample;
 
@@ -33,8 +30,7 @@ public abstract class ObjectMatrixSerializer<T extends Object> extends BasicSeri
      */
     public ObjectMatrixSerializer(final byte type, final int dataSize, final T sample, final String dataClassName)
     {
-        super(type, dataClassName);
-        this.dataSize = dataSize;
+        super(type, dataSize, dataClassName, 2);
         this.sample = sample;
     }
 
@@ -44,7 +40,7 @@ public abstract class ObjectMatrixSerializer<T extends Object> extends BasicSeri
         @SuppressWarnings("unchecked")
         T[][] matrix = (T[][]) object;
         Throw.when(matrix.length == 0 || matrix[0].length == 0, SerializationException.class, "Zero sized matrix not allowed");
-        return 4 + 4 + this.dataSize * matrix.length * matrix[0].length;
+        return 4 + 4 + getElementSize() * matrix.length * matrix[0].length;
     }
 
     @Override
@@ -78,7 +74,7 @@ public abstract class ObjectMatrixSerializer<T extends Object> extends BasicSeri
             Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
             for (int j = 0; j < width; j++)
             {
-                serializeElement(matrix[i][j], buffer, pointer.getAndIncrement(this.dataSize), endianUtil);
+                serializeElement(matrix[i][j], buffer, pointer.getAndIncrement(getElementSize()), endianUtil);
             }
         }
     }
@@ -94,28 +90,10 @@ public abstract class ObjectMatrixSerializer<T extends Object> extends BasicSeri
         {
             for (int j = 0; j < width; j++)
             {
-                result[i][j] = deSerializeElement(buffer, pointer.getAndIncrement(this.dataSize), endianUtil);
+                result[i][j] = deSerializeElement(buffer, pointer.getAndIncrement(getElementSize()), endianUtil);
             }
         }
         return result;
     }
-
-    /**
-     * Serializer for one matrix element (without type prefix) must be implemented in implementing sub classes.
-     * @param object T; the object to serialize
-     * @param buffer byte[]; the byte buffer for the serialized object
-     * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
-     * @param offset int; index in byte buffer where first serialized byte must be stored
-     */
-    abstract void serializeElement(T object, byte[] buffer, int offset, EndianUtil endianUtil);
-
-    /**
-     * Deserializer for one matrix element (without type prefix) must be implemented in implementing sub classes.
-     * @param buffer byte[]; the byte buffer from which the object is to be deserialized
-     * @param offset int; index in byte buffer where first byte of the object is stored
-     * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
-     * @return T; the deserialized object
-     */
-    abstract T deSerializeElement(byte[] buffer, int offset, EndianUtil endianUtil);
 
 }

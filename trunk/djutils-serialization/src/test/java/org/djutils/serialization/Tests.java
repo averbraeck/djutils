@@ -907,6 +907,13 @@ public class Tests
                 // Auto-generated method stub; never called
                 return null;
             }
+
+            @Override
+            public int getNumberOfDimensions()
+            {
+                // TODO Auto-generated method stub
+                return 0;
+            }
         };
         // We only want to test two methods; so we don't have to provide real implementation for other methods
         assertEquals("data class name is returned", dataClassName, testSerializer.dataClassName());

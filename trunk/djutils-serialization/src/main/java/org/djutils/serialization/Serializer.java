@@ -76,4 +76,10 @@ public interface Serializer<T extends Object>
      */
     String dataClassName();
 
+    /**
+     * Return the number of dimensions of the stored data.
+     * @return int; 0 for plain data, 1 for array, 2 for matrix
+     */
+    int getNumberOfDimensions();
+
 }
