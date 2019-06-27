@@ -98,6 +98,7 @@ public class Tests
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
                 // System.out.print(HexDumper.hexDumper(serialized));
+                // System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
                 for (boolean primitive : new boolean[] { false, true })
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
@@ -144,7 +145,6 @@ public class Tests
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
                 // System.out.print(HexDumper.hexDumper(serialized));
-                // System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
                 for (boolean primitive : new boolean[] { false, true })
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
@@ -165,7 +165,7 @@ public class Tests
      * @throws SerializationException when that happens uncaught this test has failed
      */
     @Test
-    public void testMatricess() throws SerializationException
+    public void testMatrices() throws SerializationException
     {
         int[][] integer = new int[][] { { 1, 2, 3 }, { 4, 5, 6 } };
         Integer[][] integerValues2 = new Integer[][] { { -1, -2, -3 }, { -4, -5, -6 } };

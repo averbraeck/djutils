@@ -170,9 +170,9 @@ public class SerialDataDecoder implements Decoder
                     {
                         elementSize = ((ArrayOrMatrixSerializer<?, ?>) this.currentSerializer).getElementSize();
                     }
-                    else if (this.currentSerializer instanceof BasicPrimitiveArraySerializer)
+                    else if (this.currentSerializer instanceof BasicPrimitiveArrayOrMatrixSerializer)
                     {
-                        elementSize = ((BasicPrimitiveArraySerializer<?>) this.currentSerializer).getElementSize();
+                        elementSize = ((BasicPrimitiveArrayOrMatrixSerializer<?>) this.currentSerializer).getElementSize();
                     }
                     else
                     {
@@ -186,52 +186,60 @@ public class SerialDataDecoder implements Decoder
                 else
                 {
                     // Got one data element
+                    if (this.currentSerializer.getNumberOfDimensions() == 1)
+                    {
+                        this.buffer.append(String.format("value at index %d: ", this.currentColumn));
+                    }
+                    else // it is 2
+                    {
+                        this.buffer.append(String.format("value at row %d column %d: ", this.currentRow, this.currentColumn));
+                    }
                     if (this.currentSerializer instanceof ArrayOrMatrixSerializer<?, ?>)
                     {
                         Object value = ((ArrayOrMatrixSerializer<?, ?>) this.currentSerializer)
                                 .deSerializeElement(dataElementBytes, 0, this.endianUtil);
                         this.buffer.append(value.toString());
                     }
-                    else if (this.currentSerializer instanceof BasicPrimitiveArraySerializer)
+                    else if (this.currentSerializer instanceof BasicPrimitiveArrayOrMatrixSerializer)
                     {
                         // It looks like we'll have to do this ourselves.
-                        BasicPrimitiveArraySerializer<?> basicPrimitiveArraySerializer =
-                                (BasicPrimitiveArraySerializer<?>) this.currentSerializer;
+                        BasicPrimitiveArrayOrMatrixSerializer<?> basicPrimitiveArraySerializer =
+                                (BasicPrimitiveArrayOrMatrixSerializer<?>) this.currentSerializer;
                         switch (basicPrimitiveArraySerializer.fieldType())
                         {
                             case FieldTypes.BYTE_8_ARRAY:
                             case FieldTypes.BYTE_8_MATRIX:
-                                this.buffer.append(String.format(" %02x", dataElementBytes[0]));
+                                this.buffer.append(String.format("%02x", dataElementBytes[0]));
                                 break;
 
                             case FieldTypes.SHORT_16_ARRAY:
                             case FieldTypes.SHORT_16_MATRIX:
-                                this.buffer.append(String.format(" %d", endianUtil.decodeShort(dataElementBytes, 0)));
+                                this.buffer.append(String.format("%d", endianUtil.decodeShort(dataElementBytes, 0)));
                                 break;
 
                             case FieldTypes.INT_32_ARRAY:
                             case FieldTypes.INT_32_MATRIX:
-                                this.buffer.append(String.format(" %d", endianUtil.decodeInt(dataElementBytes, 0)));
+                                this.buffer.append(String.format("%d", endianUtil.decodeInt(dataElementBytes, 0)));
                                 break;
 
                             case FieldTypes.LONG_64_ARRAY:
                             case FieldTypes.LONG_64_MATRIX:
-                                this.buffer.append(String.format(" %d", endianUtil.decodeLong(dataElementBytes, 0)));
+                                this.buffer.append(String.format("%d", endianUtil.decodeLong(dataElementBytes, 0)));
                                 break;
 
                             case FieldTypes.FLOAT_32_ARRAY:
                             case FieldTypes.FLOAT_32_MATRIX:
-                                this.buffer.append(String.format(" %f", endianUtil.decodeFloat(dataElementBytes, 0)));
+                                this.buffer.append(String.format("%f", endianUtil.decodeFloat(dataElementBytes, 0)));
                                 break;
 
                             case FieldTypes.DOUBLE_64_ARRAY:
                             case FieldTypes.DOUBLE_64_MATRIX:
-                                this.buffer.append(String.format(" %f", endianUtil.decodeDouble(dataElementBytes, 0)));
+                                this.buffer.append(String.format("%f", endianUtil.decodeDouble(dataElementBytes, 0)));
                                 break;
 
                             case FieldTypes.BOOLEAN_8_ARRAY:
                             case FieldTypes.BOOLEAN_8_MATRIX:
-                                this.buffer.append(0 == dataElementBytes[0] ? " false" : " true");
+                                this.buffer.append(0 == dataElementBytes[0] ? "false" : "true");
                                 break;
 
                             default:

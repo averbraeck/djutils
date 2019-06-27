@@ -12,21 +12,27 @@ package org.djutils.serialization;
  * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <T> array type, e.g. int[]
  */
-public abstract class BasicPrimitiveArraySerializer<T extends Object> extends BasicSerializer<T>
+public abstract class BasicPrimitiveArrayOrMatrixSerializer<T extends Object> extends BasicSerializer<T>
 {
     /** Size of one element of the encoded data. */
     private final int elementSize;
 
+    /** Number of dimensions of the data. */
+    private final int numberOfDimensions;
+
     /**
-     * Construct a new BasicNonClassArraySerializer.
+     * Construct a new BasicPrimitiveArrayOrMatrixSerializer.
      * @param type byte; the field type (returned by the <code>fieldType</code> method)
      * @param elementSize int; the number of bytes needed to encode one additional array element
      * @param dataClassName String; returned by the dataClassName method
+     * @param numberOfDimensions int; number of dimensions (1 for array, 2 for matrix)
      */
-    public BasicPrimitiveArraySerializer(final byte type, final int elementSize, final String dataClassName)
+    public BasicPrimitiveArrayOrMatrixSerializer(final byte type, final int elementSize, final String dataClassName,
+            final int numberOfDimensions)
     {
         super(type, dataClassName);
         this.elementSize = elementSize;
+        this.numberOfDimensions = numberOfDimensions;
     }
 
     @Override
@@ -55,7 +61,7 @@ public abstract class BasicPrimitiveArraySerializer<T extends Object> extends Ba
     @Override
     public final int getNumberOfDimensions()
     {
-        return 1;
+        return this.numberOfDimensions;
     }
 
 }
