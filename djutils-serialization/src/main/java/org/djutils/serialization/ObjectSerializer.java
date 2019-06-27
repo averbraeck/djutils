@@ -38,4 +38,10 @@ public abstract class ObjectSerializer<T extends Object> extends BasicSerializer
         serialize(object, buffer, pointer, endianUtil);
     }
 
+    @Override
+    public final int getNumberOfDimensions()
+    {
+        return 0;
+    }
+
 }

@@ -15,18 +15,18 @@ package org.djutils.serialization;
 public abstract class BasicPrimitiveArraySerializer<T extends Object> extends BasicSerializer<T>
 {
     /** Size of one element of the encoded data. */
-    private final int dataSize;
+    private final int elementSize;
 
     /**
      * Construct a new BasicNonClassArraySerializer.
      * @param type byte; the field type (returned by the <code>fieldType</code> method)
-     * @param dataSize int; the number of bytes needed to encode one additional array element
+     * @param elementSize int; the number of bytes needed to encode one additional array element
      * @param dataClassName String; returned by the dataClassName method
      */
-    public BasicPrimitiveArraySerializer(final byte type, final int dataSize, final String dataClassName)
+    public BasicPrimitiveArraySerializer(final byte type, final int elementSize, final String dataClassName)
     {
         super(type, dataClassName);
-        this.dataSize = dataSize;
+        this.elementSize = elementSize;
     }
 
     @Override
@@ -47,9 +47,15 @@ public abstract class BasicPrimitiveArraySerializer<T extends Object> extends Ba
      * Retrieve the number of bytes needed to encode one additional array element.
      * @return int; the number of bytes needed to encode one additional array element
      */
-    public final int dataSize()
+    public final int getElementSize()
     {
-        return this.dataSize;
+        return this.elementSize;
+    }
+
+    @Override
+    public final int getNumberOfDimensions()
+    {
+        return 1;
     }
 
 }

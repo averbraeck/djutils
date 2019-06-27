@@ -327,7 +327,7 @@ public final class TypedMessage
                 public int size(final Object object)
                 {
                     byte[] array = (byte[]) object;
-                    return 4 + dataSize() * array.length;
+                    return 4 + getElementSize() * array.length;
                 }
 
                 @Override
@@ -338,7 +338,7 @@ public final class TypedMessage
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
-                        array[i] = buffer[pointer.getAndIncrement(dataSize())];
+                        array[i] = buffer[pointer.getAndIncrement(getElementSize())];
                     }
                 }
 
@@ -350,7 +350,7 @@ public final class TypedMessage
                     byte[] result = new byte[size];
                     for (int i = 0; i < size; i++)
                     {
-                        result[i] = buffer[pointer.getAndIncrement(dataSize())];
+                        result[i] = buffer[pointer.getAndIncrement(getElementSize())];
                     }
                     return result;
                 }
@@ -382,7 +382,7 @@ public final class TypedMessage
                 public int size(final Object object)
                 {
                     short[] array = (short[]) object;
-                    return 4 + dataSize() * array.length;
+                    return 4 + getElementSize() * array.length;
                 }
 
                 @Override
@@ -393,7 +393,7 @@ public final class TypedMessage
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
-                        endianUtil.encodeShort(array[i], buffer, pointer.getAndIncrement(dataSize()));
+                        endianUtil.encodeShort(array[i], buffer, pointer.getAndIncrement(getElementSize()));
                     }
                 }
 
@@ -405,7 +405,7 @@ public final class TypedMessage
                     short[] result = new short[size];
                     for (int i = 0; i < size; i++)
                     {
-                        result[i] = endianUtil.decodeShort(buffer, pointer.getAndIncrement(dataSize()));
+                        result[i] = endianUtil.decodeShort(buffer, pointer.getAndIncrement(getElementSize()));
                     }
                     return result;
                 }
@@ -437,7 +437,7 @@ public final class TypedMessage
                 public int size(final Object object)
                 {
                     int[] array = (int[]) object;
-                    return 4 + dataSize() * array.length;
+                    return 4 + getElementSize() * array.length;
                 }
 
                 @Override
@@ -448,7 +448,7 @@ public final class TypedMessage
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
-                        endianUtil.encodeInt(array[i], buffer, pointer.getAndIncrement(dataSize()));
+                        endianUtil.encodeInt(array[i], buffer, pointer.getAndIncrement(getElementSize()));
                     }
                 }
 
@@ -460,7 +460,7 @@ public final class TypedMessage
                     int[] result = new int[size];
                     for (int i = 0; i < size; i++)
                     {
-                        result[i] = endianUtil.decodeInt(buffer, pointer.getAndIncrement(dataSize()));
+                        result[i] = endianUtil.decodeInt(buffer, pointer.getAndIncrement(getElementSize()));
                     }
                     return result;
                 }
@@ -492,7 +492,7 @@ public final class TypedMessage
                 public int size(final Object object)
                 {
                     long[] array = (long[]) object;
-                    return 4 + dataSize() * array.length;
+                    return 4 + getElementSize() * array.length;
                 }
 
                 @Override
@@ -503,7 +503,7 @@ public final class TypedMessage
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
-                        endianUtil.encodeLong(array[i], buffer, pointer.getAndIncrement(dataSize()));
+                        endianUtil.encodeLong(array[i], buffer, pointer.getAndIncrement(getElementSize()));
                     }
                 }
 
@@ -515,7 +515,7 @@ public final class TypedMessage
                     long[] result = new long[size];
                     for (int i = 0; i < size; i++)
                     {
-                        result[i] = endianUtil.decodeLong(buffer, pointer.getAndIncrement(dataSize()));
+                        result[i] = endianUtil.decodeLong(buffer, pointer.getAndIncrement(getElementSize()));
                     }
                     return result;
                 }
@@ -547,7 +547,7 @@ public final class TypedMessage
                 public int size(final Object object)
                 {
                     float[] array = (float[]) object;
-                    return 4 + dataSize() * array.length;
+                    return 4 + getElementSize() * array.length;
                 }
 
                 @Override
@@ -558,7 +558,7 @@ public final class TypedMessage
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
-                        endianUtil.encodeFloat(array[i], buffer, pointer.getAndIncrement(dataSize()));
+                        endianUtil.encodeFloat(array[i], buffer, pointer.getAndIncrement(getElementSize()));
                     }
                 }
 
@@ -570,7 +570,7 @@ public final class TypedMessage
                     float[] result = new float[size];
                     for (int i = 0; i < size; i++)
                     {
-                        result[i] = endianUtil.decodeFloat(buffer, pointer.getAndIncrement(dataSize()));
+                        result[i] = endianUtil.decodeFloat(buffer, pointer.getAndIncrement(getElementSize()));
                     }
                     return result;
                 }
@@ -602,7 +602,7 @@ public final class TypedMessage
                 public int size(final Object object)
                 {
                     double[] array = (double[]) object;
-                    return 4 + dataSize() * array.length;
+                    return 4 + getElementSize() * array.length;
                 }
 
                 @Override
@@ -613,7 +613,7 @@ public final class TypedMessage
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
-                        endianUtil.encodeDouble(array[i], buffer, pointer.getAndIncrement(dataSize()));
+                        endianUtil.encodeDouble(array[i], buffer, pointer.getAndIncrement(getElementSize()));
                     }
                 }
 
@@ -625,7 +625,7 @@ public final class TypedMessage
                     double[] result = new double[size];
                     for (int i = 0; i < size; i++)
                     {
-                        result[i] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(dataSize()));
+                        result[i] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(getElementSize()));
                     }
                     return result;
                 }
@@ -657,7 +657,7 @@ public final class TypedMessage
                 public int size(final Object object)
                 {
                     boolean[] array = (boolean[]) object;
-                    return 4 + dataSize() * array.length;
+                    return 4 + getElementSize() * array.length;
                 }
 
                 @Override
@@ -668,7 +668,7 @@ public final class TypedMessage
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
-                        buffer[pointer.getAndIncrement(dataSize())] = (byte) (array[i] ? 1 : 0);
+                        buffer[pointer.getAndIncrement(getElementSize())] = (byte) (array[i] ? 1 : 0);
                     }
                 }
 
@@ -680,7 +680,7 @@ public final class TypedMessage
                     boolean[] result = new boolean[size];
                     for (int i = 0; i < size; i++)
                     {
-                        result[i] = buffer[pointer.getAndIncrement(dataSize())] == 0 ? false : true;
+                        result[i] = buffer[pointer.getAndIncrement(getElementSize())] == 0 ? false : true;
                     }
                     return result;
                 }
@@ -712,7 +712,7 @@ public final class TypedMessage
                 public int size(final Object object)
                 {
                     byte[][] array = (byte[][]) object;
-                    return 8 + dataSize() * array.length * array[0].length;
+                    return 8 + getElementSize() * array.length * array[0].length;
                 }
 
                 @Override
@@ -729,7 +729,7 @@ public final class TypedMessage
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
                         for (int j = 0; j < width; j++)
                         {
-                            matrix[i][j] = buffer[pointer.getAndIncrement(dataSize())];
+                            matrix[i][j] = buffer[pointer.getAndIncrement(getElementSize())];
                         }
                     }
                 }
@@ -745,7 +745,7 @@ public final class TypedMessage
                     {
                         for (int j = 0; j < width; j++)
                         {
-                            result[i][j] = buffer[pointer.getAndIncrement(dataSize())];
+                            result[i][j] = buffer[pointer.getAndIncrement(getElementSize())];
                         }
                     }
                     return result;
@@ -778,7 +778,7 @@ public final class TypedMessage
                 public int size(final Object object)
                 {
                     short[][] array = (short[][]) object;
-                    return 8 + dataSize() * array.length * array[0].length;
+                    return 8 + getElementSize() * array.length * array[0].length;
                 }
 
                 @Override
@@ -795,7 +795,7 @@ public final class TypedMessage
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
                         for (int j = 0; j < width; j++)
                         {
-                            endianUtil.encodeShort(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
+                            endianUtil.encodeShort(matrix[i][j], buffer, pointer.getAndIncrement(getElementSize()));
                         }
                     }
                 }
@@ -811,7 +811,7 @@ public final class TypedMessage
                     {
                         for (int j = 0; j < width; j++)
                         {
-                            result[i][j] = endianUtil.decodeShort(buffer, pointer.getAndIncrement(dataSize()));
+                            result[i][j] = endianUtil.decodeShort(buffer, pointer.getAndIncrement(getElementSize()));
                         }
                     }
                     return result;
@@ -844,7 +844,7 @@ public final class TypedMessage
                 public int size(final Object object)
                 {
                     int[][] array = (int[][]) object;
-                    return 8 + dataSize() * array.length * array[0].length;
+                    return 8 + getElementSize() * array.length * array[0].length;
                 }
 
                 @Override
@@ -861,7 +861,7 @@ public final class TypedMessage
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
                         for (int j = 0; j < width; j++)
                         {
-                            endianUtil.encodeInt(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
+                            endianUtil.encodeInt(matrix[i][j], buffer, pointer.getAndIncrement(getElementSize()));
                         }
                     }
                 }
@@ -877,7 +877,7 @@ public final class TypedMessage
                     {
                         for (int j = 0; j < width; j++)
                         {
-                            result[i][j] = endianUtil.decodeInt(buffer, pointer.getAndIncrement(dataSize()));
+                            result[i][j] = endianUtil.decodeInt(buffer, pointer.getAndIncrement(getElementSize()));
                         }
                     }
                     return result;
@@ -910,7 +910,7 @@ public final class TypedMessage
                 public int size(final Object object)
                 {
                     long[][] array = (long[][]) object;
-                    return 8 + dataSize() * array.length * array[0].length;
+                    return 8 + getElementSize() * array.length * array[0].length;
                 }
 
                 @Override
@@ -927,7 +927,7 @@ public final class TypedMessage
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
                         for (int j = 0; j < width; j++)
                         {
-                            endianUtil.encodeLong(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
+                            endianUtil.encodeLong(matrix[i][j], buffer, pointer.getAndIncrement(getElementSize()));
                         }
                     }
                 }
@@ -943,7 +943,7 @@ public final class TypedMessage
                     {
                         for (int j = 0; j < width; j++)
                         {
-                            result[i][j] = endianUtil.decodeLong(buffer, pointer.getAndIncrement(dataSize()));
+                            result[i][j] = endianUtil.decodeLong(buffer, pointer.getAndIncrement(getElementSize()));
                         }
                     }
                     return result;
@@ -976,7 +976,7 @@ public final class TypedMessage
                 public int size(final Object object)
                 {
                     float[][] array = (float[][]) object;
-                    return 8 + dataSize() * array.length * array[0].length;
+                    return 8 + getElementSize() * array.length * array[0].length;
                 }
 
                 @Override
@@ -993,7 +993,7 @@ public final class TypedMessage
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
                         for (int j = 0; j < width; j++)
                         {
-                            endianUtil.encodeFloat(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
+                            endianUtil.encodeFloat(matrix[i][j], buffer, pointer.getAndIncrement(getElementSize()));
                         }
                     }
                 }
@@ -1009,7 +1009,7 @@ public final class TypedMessage
                     {
                         for (int j = 0; j < width; j++)
                         {
-                            result[i][j] = endianUtil.decodeFloat(buffer, pointer.getAndIncrement(dataSize()));
+                            result[i][j] = endianUtil.decodeFloat(buffer, pointer.getAndIncrement(getElementSize()));
                         }
                     }
                     return result;
@@ -1042,7 +1042,7 @@ public final class TypedMessage
                 public int size(final Object object)
                 {
                     double[][] array = (double[][]) object;
-                    return 8 + dataSize() * array.length * array[0].length;
+                    return 8 + getElementSize() * array.length * array[0].length;
                 }
 
                 @Override
@@ -1059,7 +1059,7 @@ public final class TypedMessage
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
                         for (int j = 0; j < width; j++)
                         {
-                            endianUtil.encodeDouble(matrix[i][j], buffer, pointer.getAndIncrement(dataSize()));
+                            endianUtil.encodeDouble(matrix[i][j], buffer, pointer.getAndIncrement(getElementSize()));
                         }
                     }
                 }
@@ -1075,7 +1075,7 @@ public final class TypedMessage
                     {
                         for (int j = 0; j < width; j++)
                         {
-                            result[i][j] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(dataSize()));
+                            result[i][j] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(getElementSize()));
                         }
                     }
                     return result;
@@ -1108,7 +1108,7 @@ public final class TypedMessage
                 public int size(final Object object)
                 {
                     boolean[][] array = (boolean[][]) object;
-                    return 8 + dataSize() * array.length * array[0].length;
+                    return 8 + getElementSize() * array.length * array[0].length;
                 }
 
                 @Override
@@ -1125,7 +1125,7 @@ public final class TypedMessage
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
                         for (int j = 0; j < width; j++)
                         {
-                            buffer[pointer.getAndIncrement(dataSize())] = (byte) (matrix[i][j] ? 1 : 0);
+                            buffer[pointer.getAndIncrement(getElementSize())] = (byte) (matrix[i][j] ? 1 : 0);
                         }
                     }
                 }
@@ -1141,7 +1141,7 @@ public final class TypedMessage
                     {
                         for (int j = 0; j < width; j++)
                         {
-                            result[i][j] = buffer[pointer.getAndIncrement(dataSize())] == 0 ? false : true;
+                            result[i][j] = buffer[pointer.getAndIncrement(getElementSize())] == 0 ? false : true;
                         }
                     }
                     return result;
@@ -1885,6 +1885,67 @@ public final class TypedMessage
     }
 
     /**
+     * Find the serializer for one object.
+     * @param utf8 boolean; if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters
+     *            and Strings
+     * @param object Object; the object for which the serializer must be returned
+     * @return Serializer; the serializer needed for <code>object</object>
+     * @throws SerializationException when there is no known serializer for <code>object</code>
+     */
+    static Serializer<?> findEncoder(final boolean utf8, final Object object) throws SerializationException
+    {
+        Serializer<?> serializer = ENCODERS.get(object.getClass());
+        if (serializer != null)
+        {
+            return serializer;
+        }
+        else if (object instanceof Character)
+        {
+            return utf8 ? CONVERT_CHARACTER8 : CONVERT_CHARACTER16;
+        }
+        else if (object instanceof String)
+        {
+            return utf8 ? CONVERT_STRING8 : CONVERT_STRING16;
+        }
+        else if (object instanceof AbstractFloatScalar)
+        {
+            return CONVERT_DJUNITS_FLOAT_SCALAR;
+        }
+        else if (object instanceof AbstractDoubleScalar)
+        {
+            return CONVERT_DJUNITS_DOUBLE_SCALAR;
+        }
+        else if (object instanceof AbstractFloatVector)
+        {
+            return CONVERT_DJUNITS_FLOAT_VECTOR;
+        }
+        else if (object instanceof AbstractDoubleVector)
+        {
+            return CONVERT_DJUNITS_DOUBLE_VECTOR;
+        }
+        else if (object instanceof AbstractFloatMatrix)
+        {
+            return CONVERT_DJUNITS_FLOAT_MATRIX;
+        }
+        else if (object instanceof AbstractDoubleMatrix)
+        {
+            return CONVERT_DJUNITS_DOUBLE_MATRIX;
+        }
+        else if (object instanceof SerializableObject[])
+        {
+            return utf8 ? COMPOUND_ARRAY_SERIALIZER_UTF8 : COMPOUND_ARRAY_SERIALIZER_UTF16;
+        }
+        else if (object instanceof AbstractDoubleVector[])
+        {
+            return CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY;
+        }
+        else
+        {
+            throw new SerializationException("Unhandled data type " + object.getClass());
+        }
+    }
+    
+    /**
      * Build the list of serializers corresponding to the data in an Object array.
      * @param utf8 boolean; if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters
      *            and Strings
@@ -1898,55 +1959,7 @@ public final class TypedMessage
         for (int i = 0; i < content.length; i++)
         {
             Object object = content[i];
-            Serializer<?> serializer = ENCODERS.get(object.getClass());
-            if (serializer != null)
-            {
-                result[i] = serializer;
-            }
-            else if (object instanceof Character)
-            {
-                result[i] = utf8 ? CONVERT_CHARACTER8 : CONVERT_CHARACTER16;
-            }
-            else if (object instanceof String)
-            {
-                result[i] = utf8 ? CONVERT_STRING8 : CONVERT_STRING16;
-            }
-            else if (object instanceof AbstractFloatScalar)
-            {
-                result[i] = CONVERT_DJUNITS_FLOAT_SCALAR;
-            }
-            else if (object instanceof AbstractDoubleScalar)
-            {
-                result[i] = CONVERT_DJUNITS_DOUBLE_SCALAR;
-            }
-            else if (object instanceof AbstractFloatVector)
-            {
-                result[i] = CONVERT_DJUNITS_FLOAT_VECTOR;
-            }
-            else if (object instanceof AbstractDoubleVector)
-            {
-                result[i] = CONVERT_DJUNITS_DOUBLE_VECTOR;
-            }
-            else if (object instanceof AbstractFloatMatrix)
-            {
-                result[i] = CONVERT_DJUNITS_FLOAT_MATRIX;
-            }
-            else if (object instanceof AbstractDoubleMatrix)
-            {
-                result[i] = CONVERT_DJUNITS_DOUBLE_MATRIX;
-            }
-            else if (object instanceof SerializableObject[])
-            {
-                result[i] = utf8 ? COMPOUND_ARRAY_SERIALIZER_UTF8 : COMPOUND_ARRAY_SERIALIZER_UTF16;
-            }
-            else if (object instanceof AbstractDoubleVector[])
-            {
-                result[i] = CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY;
-            }
-            else
-            {
-                throw new SerializationException("Unhandled data type " + object.getClass());
-            }
+            result[i] = findEncoder(utf8, object);
         }
 
         return result;

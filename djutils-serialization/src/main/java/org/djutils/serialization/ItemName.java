@@ -107,4 +107,10 @@ public class ItemName implements Serializer<String>
         return "Name";
     }
 
+    @Override
+    public final int getNumberOfDimensions()
+    {
+        return 0;
+    }
+
 }

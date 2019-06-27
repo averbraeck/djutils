@@ -14,11 +14,8 @@ import java.lang.reflect.Array;
  * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <T> class of the object version
  */
-public abstract class ObjectArraySerializer<T extends Object> extends BasicSerializer<T[]>
+public abstract class ObjectArraySerializer<T extends Object> extends ArrayOrMatrixSerializer<T[], T>
 {
-    /** Size of one element of the encoded data. */
-    private final int dataSize;
-
     /** Sample object with required type info (zero length array suffices). */
     private final T sample;
 
@@ -31,8 +28,7 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
      */
     public ObjectArraySerializer(final byte type, final int dataSize, final T sample, final String dataClassName)
     {
-        super(type, dataClassName);
-        this.dataSize = dataSize;
+        super(type, dataSize, dataClassName, 1);
         this.sample = sample;
     }
 
@@ -41,7 +37,7 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
     {
         @SuppressWarnings("unchecked")
         T[] array = (T[]) object;
-        return 4 + this.dataSize * array.length;
+        return 4 + getElementSize() * array.length;
     }
 
     @Override
@@ -66,7 +62,7 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
         endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
         for (int i = 0; i < array.length; i++)
         {
-            serializeElement(array[i], buffer, pointer.getAndIncrement(this.dataSize), endianUtil);
+            serializeElement(array[i], buffer, pointer.getAndIncrement(getElementSize()), endianUtil);
         }
     }
 
@@ -78,27 +74,9 @@ public abstract class ObjectArraySerializer<T extends Object> extends BasicSeria
         T[] result = (T[]) Array.newInstance(this.sample.getClass(), size);
         for (int i = 0; i < size; i++)
         {
-            result[i] = deSerializeElement(buffer, pointer.getAndIncrement(this.dataSize), endianUtil);
+            result[i] = deSerializeElement(buffer, pointer.getAndIncrement(getElementSize()), endianUtil);
         }
         return result;
     }
-
-    /**
-     * Serializer for one array element (without type prefix) must be implemented in implementing sub classes.
-     * @param object T; the object to serialize
-     * @param buffer byte[]; the byte buffer for the serialized object
-     * @param offset int; index in byte buffer where first serialized byte must be stored
-     * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
-     */
-    abstract void serializeElement(T object, byte[] buffer, int offset, EndianUtil endianUtil);
-
-    /**
-     * Deserializer for one array element (without type prefix) must be implemented in implementing sub classes.
-     * @param buffer byte[]; the byte buffer from which the object is to be deserialized
-     * @param offset int; index in byte buffer where first byte of the object is stored
-     * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
-     * @return T; the deserialized object
-     */
-    abstract T deSerializeElement(byte[] buffer, int offset, EndianUtil endianUtil);
-
+    
 }
