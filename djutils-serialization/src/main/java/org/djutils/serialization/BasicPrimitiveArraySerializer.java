@@ -10,7 +10,7 @@ package org.djutils.serialization;
  * @author <a href="http://www.tbm.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="http://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
- * @param <T> class
+ * @param <T> array type, e.g. int[]
  */
 public abstract class BasicPrimitiveArraySerializer<T extends Object> extends BasicSerializer<T>
 {

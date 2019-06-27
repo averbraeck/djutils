@@ -79,6 +79,7 @@ public class SerialDataDecoder implements Decoder
     @Override
     public final boolean append(final int address, final byte theByte) throws IOException
     {
+        boolean result = false;
         if (null == this.currentSerializer)
         {
             // We are expecting a field type byte
@@ -87,44 +88,49 @@ public class SerialDataDecoder implements Decoder
             if (null == this.currentSerializer)
             {
                 this.buffer.append(String.format("Bad field type %02x - resynchronizing", this.currentFieldType));
-                return true;
+                result = true;
                 // May eventually re-synchronize, but that could take a lot of data.
-            }
-            this.positionInData = 0;
-            if (this.currentSerializer instanceof ObjectSerializer)
-            {
-                // TODO handle the display unit si unit and money unit
-            }
-            else if (this.currentSerializer instanceof FixedSizeObjectSerializer)
-            {
-                try
-                {
-                    int size = this.currentSerializer.sizeWithPrefix(null);
-                    this.totalDataSize = size;
-                }
-                catch (SerializationException e)
-                {
-                    e.printStackTrace(); // Cannot happen
-                }
-            }
-            else if (this.currentSerializer instanceof ArrayOrMatrixSerializer)
-            {
-                prepareForDataElement(4 * ((ArrayOrMatrixSerializer<?, ?>) this.currentSerializer).getNumberOfDimensions());
-                this.rowCount = 0;
-                this.columnCount = 0;
             }
             else
             {
-                throw new RuntimeException("unhandled serializer");
+                this.positionInData = 1;
+                this.totalDataSize = 1; // to be adjusted
+                if (this.currentSerializer instanceof ObjectSerializer)
+                {
+                    // TODO handle the display unit si unit and money unit
+                }
+                else
+                {
+                    try
+                    {
+                        if (this.currentSerializer.getNumberOfDimensions() == 0)
+                        {
+                            int size = this.currentSerializer.size(null);
+                            this.totalDataSize += size;
+                            prepareForDataElement(size);
+                        }
+                        else
+                        {
+                            int size = this.currentSerializer.getNumberOfDimensions() * 4;
+                            prepareForDataElement(size);
+                            this.totalDataSize += size;
+                        }
+                    }
+                    catch (SerializationException e)
+                    {
+                        e.printStackTrace(); // Cannot happen
+                    }
+                }
             }
-            return false;
+            return result;
         }
-        if (this.positionInData < this.dataElementBytes.length)
+        if (this.nextDataElementByte < this.dataElementBytes.length)
         {
-            this.dataElementBytes[this.positionInData] = theByte;
+            this.dataElementBytes[this.nextDataElementByte] = theByte;
         }
+        this.nextDataElementByte++;
         this.positionInData++;
-        if (this.positionInData == this.dataElementBytes.length)
+        if (this.nextDataElementByte == this.dataElementBytes.length)
         {
             if (this.currentSerializer instanceof FixedSizeObjectSerializer)
             {
@@ -138,34 +144,112 @@ public class SerialDataDecoder implements Decoder
                     buffer.append("Error deserializing data");
                 }
             }
-            else if (this.currentSerializer instanceof ArrayOrMatrixSerializer)
+            else if (this.currentSerializer.getNumberOfDimensions() > 0)
             {
                 if (this.rowCount == 0)
                 {
                     // Got the height and width of a matrix, or length of an array
-                    this.rowCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
+                    this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
                     this.currentRow = 0;
                     this.currentColumn = 0;
                     if (this.dataElementBytes.length == 8)
                     {
+                        this.rowCount = this.columnCount;
                         this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 4);
-                        this.buffer.append(String.format("matrix height %d, width %d", this.rowCount, this.columnCount));
+                        this.buffer.append(String.format("%s height %d, width %d", this.currentSerializer.dataClassName(),
+                                this.rowCount, this.columnCount));
                     }
                     else
                     {
-                        this.columnCount = 1;
-                        this.buffer.append(String.format("array length %d", this.rowCount));
+                        this.rowCount = 1;
+                        this.buffer
+                                .append(String.format("%s length %d", this.currentSerializer.dataClassName(), this.columnCount));
                     }
-                    this.totalDataSize += ((ArrayOrMatrixSerializer<?, ?>) this.currentSerializer).getElementSize() * this.rowCount
-                            * this.columnCount;
-                    prepareForDataElement(((ArrayOrMatrixSerializer<?, ?>) this.currentSerializer).getElementSize());
+                    int elementSize = -1;
+                    if (this.currentSerializer instanceof ArrayOrMatrixSerializer<?, ?>)
+                    {
+                        elementSize = ((ArrayOrMatrixSerializer<?, ?>) this.currentSerializer).getElementSize();
+                    }
+                    else if (this.currentSerializer instanceof BasicPrimitiveArraySerializer)
+                    {
+                        elementSize = ((BasicPrimitiveArraySerializer<?>) this.currentSerializer).getElementSize();
+                    }
+                    else
+                    {
+                        throw new RuntimeException("Unhandled type of array or matrix serializer");
+                    }
+                    this.totalDataSize += elementSize * this.rowCount * this.columnCount;
+                    prepareForDataElement(elementSize);
+                    // System.out.println("Selecting element size " + elementSize + " for serializer "
+                    // + this.currentSerializer.dataClassName());
                 }
                 else
                 {
                     // Got one data element
-                    Object value = ((ArrayOrMatrixSerializer<?, ?>) this.currentSerializer);
+                    if (this.currentSerializer instanceof ArrayOrMatrixSerializer<?, ?>)
+                    {
+                        Object value = ((ArrayOrMatrixSerializer<?, ?>) this.currentSerializer)
+                                .deSerializeElement(dataElementBytes, 0, this.endianUtil);
+                        this.buffer.append(value.toString());
+                    }
+                    else if (this.currentSerializer instanceof BasicPrimitiveArraySerializer)
+                    {
+                        // It looks like we'll have to do this ourselves.
+                        BasicPrimitiveArraySerializer<?> basicPrimitiveArraySerializer =
+                                (BasicPrimitiveArraySerializer<?>) this.currentSerializer;
+                        switch (basicPrimitiveArraySerializer.fieldType())
+                        {
+                            case FieldTypes.BYTE_8_ARRAY:
+                            case FieldTypes.BYTE_8_MATRIX:
+                                this.buffer.append(String.format(" %02x", dataElementBytes[0]));
+                                break;
+
+                            case FieldTypes.SHORT_16_ARRAY:
+                            case FieldTypes.SHORT_16_MATRIX:
+                                this.buffer.append(String.format(" %d", endianUtil.decodeShort(dataElementBytes, 0)));
+                                break;
+
+                            case FieldTypes.INT_32_ARRAY:
+                            case FieldTypes.INT_32_MATRIX:
+                                this.buffer.append(String.format(" %d", endianUtil.decodeInt(dataElementBytes, 0)));
+                                break;
+
+                            case FieldTypes.LONG_64_ARRAY:
+                            case FieldTypes.LONG_64_MATRIX:
+                                this.buffer.append(String.format(" %d", endianUtil.decodeLong(dataElementBytes, 0)));
+                                break;
+
+                            case FieldTypes.FLOAT_32_ARRAY:
+                            case FieldTypes.FLOAT_32_MATRIX:
+                                this.buffer.append(String.format(" %f", endianUtil.decodeFloat(dataElementBytes, 0)));
+                                break;
+
+                            case FieldTypes.DOUBLE_64_ARRAY:
+                            case FieldTypes.DOUBLE_64_MATRIX:
+                                this.buffer.append(String.format(" %f", endianUtil.decodeDouble(dataElementBytes, 0)));
+                                break;
+
+                            case FieldTypes.BOOLEAN_8_ARRAY:
+                            case FieldTypes.BOOLEAN_8_MATRIX:
+                                this.buffer.append(0 == dataElementBytes[0] ? " false" : " true");
+                                break;
+
+                            default:
+                                throw new RuntimeException(
+                                        "Unhandled type of basicPrimitiveArraySerializer: " + basicPrimitiveArraySerializer);
+                        }
+                    }
+                    this.nextDataElementByte = 0;
+                    this.currentColumn++;
+                    if (this.currentColumn == this.columnCount)
+                    {
+                        this.currentColumn = 0;
+                        this.currentRow++;
+                    }
                 }
-                return true; // line break in the output
+                // System.out.println(
+                // "Parsed 1 element; next element is for column " + this.currentColumn + ", row " + this.currentRow);
+                result = true;
             }
         }
         if (this.positionInData == this.totalDataSize)
@@ -173,16 +257,21 @@ public class SerialDataDecoder implements Decoder
             this.currentSerializer = null;
             this.positionInData = -1;
             this.totalDataSize = -1;
+            this.rowCount = 0;
+            this.columnCount = 0;
             return true;
         }
-        return false;
+        return result;
     }
 
+    /**
+     * Allocate a buffer for the next data element (or two).
+     * @param dataElementSize int; size of the buffer
+     */
     private void prepareForDataElement(final int dataElementSize)
     {
         this.dataElementBytes = new byte[dataElementSize];
         this.nextDataElementByte = 0;
-
     }
 
     @Override
