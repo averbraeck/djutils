@@ -2,9 +2,16 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.01.01" date="2019-07-01" description="djutils-serialization project added">
+    <release version="1.01.02" date="2019-07-02" description="ImmutableLinkedHashMap.values() repaired">
       <action dev="averbraeck" type="fix">
-        The ImmutableLinkedHashMap returned a non-linked HastSet as EntrySet and as KeySet. This has
+        The ImmutableLinkedHashMap.values() was overriding a non-reproducible values() method from the 
+        ImmutableAbstractMap. The ImmutableLinkedHashMap now has its own values() method.
+      </action>
+    </release>
+  
+    <release version="1.01.01" date="2019-07-01" description="ImmutableLinkedHashMap repaired; serialization of UTF-8, UTF-16">
+      <action dev="averbraeck" type="fix">
+        The ImmutableLinkedHashMap returned a non-linked HashSet as EntrySet and as KeySet. This has
         been repaired.
       </action>
       <action dev="averbraeck" type="fix">
@@ -20,6 +27,12 @@
       <action dev="averbraeck" type="fix">
         The byte array in djutils-serialization has been repaired. The underlying byte array was nulled 
         during serialization.
+      </action>
+      <action dev="pknoppers" type="add">
+        ObjectArraySerializer and ObjectMatrixSerializer added. 
+      </action>
+      <action dev="averbraeck" type="add">
+        SerialDataDumper added to provide insight into structure of the serialized data.
       </action>
     </release>
 

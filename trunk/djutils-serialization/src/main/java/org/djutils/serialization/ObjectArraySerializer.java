@@ -3,7 +3,7 @@ package org.djutils.serialization;
 import java.lang.reflect.Array;
 
 /**
- * Serializer for Object array classes. *
+ * Serializer for Object array classes. 
  * <p>
  * Copyright (c) 2019-2019 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="http://opentrafficsim.org/node/13">OpenTrafficSim License</a>.

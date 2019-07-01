@@ -112,6 +112,18 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
 
     /** {@inheritDoc} */
     @Override
+    public ImmutableCollection<V> values()
+    {
+        if (this.cachedValues == null)
+        {
+            Set<V> immutableValues = new LinkedHashSet<>(getMap().values());
+            this.cachedValues = new ImmutableLinkedHashSet<>(immutableValues, Immutable.WRAP);
+        }
+        return this.cachedValues;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
     public final String toString()
     {
         Map<K, V> map = getMap();
