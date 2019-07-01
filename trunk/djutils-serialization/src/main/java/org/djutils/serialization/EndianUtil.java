@@ -205,10 +205,10 @@ public final class EndianUtil
     public String decodeUTF16String(final byte[] message, final int pointer)
     {
         int len = decodeInt(message, pointer);
-        char[] c = new char[len / 2];
-        for (int i = 0; i < len; i += 2)
+        char[] c = new char[len];
+        for (int i = 0; i < len; i++)
         {
-            c[i / 2] = decodeChar(message, pointer + i + 4);
+            c[i] = decodeChar(message, pointer + 2 * i + 4);
         }
         return String.copyValueOf(c);
     }

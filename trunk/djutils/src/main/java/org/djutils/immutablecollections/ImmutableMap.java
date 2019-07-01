@@ -9,8 +9,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import org.djutils.immutablecollections.ImmutableMap.ImmutableEntry;
-
 /**
  * A Map interface without the methods that can change it. The constructor of the ImmutableMap needs to be given an initial Map.
  * <p>
