@@ -1876,7 +1876,7 @@ public final class TypedMessage
      * @param utf8 boolean; if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters
      *            and Strings
      * @param object Object; the object for which the serializer must be returned
-     * @return Serializer; the serializer needed for <code>object</object>
+     * @return Serializer; the serializer needed for <code>object</code>
      * @throws SerializationException when there is no known serializer for <code>object</code>
      */
     static Serializer<?> findEncoder(final boolean utf8, final Object object) throws SerializationException
