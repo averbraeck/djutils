@@ -252,29 +252,16 @@ public final class TypedMessage
         {
             String string = ((String) object);
             // System.out.println("Encoding string \"" + string + "\"");
-            if (endianUtil == EndianUtil.BIG_ENDIAN)
+            char[] chars = new char[string.length()];
+            string.getChars(0, chars.length, chars, 0);
+            endianUtil.encodeInt(chars.length, buffer, pointer.getAndIncrement(4));
+            // int originalPos = pointer.get();
+            for (char c : chars)
             {
-                byte[] s = string.getBytes(UTF16);
-                // System.out.print(HexDumper.hexDumper(s));
-                endianUtil.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
-                for (byte b : s)
-                {
-                    buffer[pointer.getAndIncrement(1)] = b;
-                }
+                endianUtil.encodeChar(c, buffer, pointer.getAndIncrement(2));
             }
-            else
-            {
-                char[] chars = new char[string.length()];
-                string.getChars(0, chars.length, chars, 0);
-                endianUtil.encodeInt(chars.length * 2, buffer, pointer.getAndIncrement(4));
-                // int originalPos = pointer.get();
-                for (char c : chars)
-                {
-                    endianUtil.encodeChar(c, buffer, pointer.getAndIncrement(2));
-                }
-                // System.out.println("encoded string starts at " + originalPos);
-                // System.out.print(HexDumper.hexDumper(buffer));
-            }
+            // System.out.println("encoded string starts at " + originalPos);
+            // System.out.print(HexDumper.hexDumper(buffer));
         }
 
         @Override
@@ -1944,7 +1931,7 @@ public final class TypedMessage
             throw new SerializationException("Unhandled data type " + object.getClass());
         }
     }
-    
+
     /**
      * Build the list of serializers corresponding to the data in an Object array.
      * @param utf8 boolean; if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters
@@ -2232,7 +2219,7 @@ public final class TypedMessage
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    @SuppressWarnings({ "checkstyle:methodlength", "checkstyle:needbraces" })
+    @SuppressWarnings({"checkstyle:methodlength", "checkstyle:needbraces"})
     public static Object[] decode(final byte[] buffer, final Map<Byte, Serializer<?>> decoderMap, final EndianUtil endianUtil)
             throws SerializationException
     {

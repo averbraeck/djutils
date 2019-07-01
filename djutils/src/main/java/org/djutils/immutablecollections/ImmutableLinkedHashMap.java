@@ -1,7 +1,7 @@
 package org.djutils.immutablecollections;
 
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -88,7 +88,7 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
     {
         if (this.cachedKeySet == null)
         {
-            Set<K> immutableKeySet = new HashSet<>(getMap().keySet());
+            Set<K> immutableKeySet = new LinkedHashSet<>(getMap().keySet());
             this.cachedKeySet = new ImmutableHashSet<>(immutableKeySet, Immutable.WRAP);
         }
         return this.cachedKeySet;
@@ -100,7 +100,7 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
     {
         if (this.cachedEntrySet == null)
         {
-            Set<ImmutableEntry<K,V>> immutableEntrySet = new HashSet<>();
+            Set<ImmutableEntry<K,V>> immutableEntrySet = new LinkedHashSet<>();
             for (Entry<K, V> entry : getMap().entrySet())
             {
                 immutableEntrySet.add(new ImmutableEntry<>(entry));
