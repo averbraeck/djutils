@@ -24,14 +24,14 @@
         2-byte and 4-byte characters. The length of the UTF-16 String indicates the number of 2-byte
         shorts in the array. The length does not say anything about the number of characters.
       </action>
-      <action dev="averbraeck" type="fix">
+      <action dev="pknoppers" type="fix">
         The byte array in djutils-serialization has been repaired. The underlying byte array was nulled 
         during serialization.
       </action>
       <action dev="pknoppers" type="add">
         ObjectArraySerializer and ObjectMatrixSerializer added. 
       </action>
-      <action dev="averbraeck" type="add">
+      <action dev="pknoppers" type="add">
         SerialDataDumper added to provide insight into structure of the serialized data.
       </action>
     </release>
