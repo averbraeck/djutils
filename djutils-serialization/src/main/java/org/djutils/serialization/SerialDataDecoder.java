@@ -1,7 +1,5 @@
 package org.djutils.serialization;
 
-import static org.junit.Assert.fail;
-
 import java.io.IOException;
 
 import org.djunits.unit.Unit;
@@ -99,7 +97,7 @@ public class SerialDataDecoder implements Decoder
             }
             else
             {
-                buffer.append(this.currentSerializer.dataClassName() + " ");
+                this.buffer.append(this.currentSerializer.dataClassName() + " ");
                 this.positionInData = 1;
                 this.totalDataSize = 1; // to be adjusted
                 this.columnCount = 0;
@@ -184,23 +182,23 @@ public class SerialDataDecoder implements Decoder
                     {
                         if (this.dataElementBytes[0] > 32 && this.dataElementBytes[0] < 127)
                         {
-                            buffer.append((char) this.dataElementBytes[0]); // safe to print
+                            this.buffer.append((char) this.dataElementBytes[0]); // safe to print
                         }
                         else
                         {
-                            buffer.append("."); // not safe to print
+                            this.buffer.append("."); // not safe to print
                         }
                     }
                     else
                     {
-                        char character = this.endianUtil.decodeChar(dataElementBytes, 0);
+                        char character = this.endianUtil.decodeChar(this.dataElementBytes, 0);
                         if (Character.isAlphabetic(character))
                         {
-                            buffer.append(character); // safe to print
+                            this.buffer.append(character); // safe to print
                         }
                         else
                         {
-                            buffer.append("."); // not safe to print
+                            this.buffer.append("."); // not safe to print
                         }
                     }
                 }
@@ -211,8 +209,8 @@ public class SerialDataDecoder implements Decoder
             {
                 if (this.rowCount == 0)
                 {
-                    this.rowCount = endianUtil.decodeInt(dataElementBytes, 0);
-                    this.columnCount = endianUtil.decodeInt(dataElementBytes, 4);
+                    this.rowCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
+                    this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 4);
                     this.currentRow = -1; // indicates we are parsing the units
                     this.currentColumn = 0;
                     prepareForDataElement(2);
@@ -227,8 +225,8 @@ public class SerialDataDecoder implements Decoder
                     }
                     TypedMessage.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
                     this.displayUnit = TypedMessage.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
-                    buffer.append("unit for column " + this.currentColumn + ": ");
-                    buffer.append(this.displayUnit);
+                    this.buffer.append("unit for column " + this.currentColumn + ": ");
+                    this.buffer.append(this.displayUnit);
                     this.currentColumn++;
                     if (this.currentColumn < this.columnCount)
                     {
@@ -247,7 +245,7 @@ public class SerialDataDecoder implements Decoder
                 else
                 {
                     // process one double value
-                    buffer.append(this.endianUtil.decodeDouble(dataElementBytes, 0));
+                    this.buffer.append(this.endianUtil.decodeDouble(this.dataElementBytes, 0));
                     this.positionInData = 0;
                     this.currentColumn++;
                     if (this.currentColumn >= this.columnCount)
@@ -289,14 +287,14 @@ public class SerialDataDecoder implements Decoder
                         return false;
                     }
                     this.displayUnit = TypedMessage.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
-                    buffer.append(" unit " + this.displayUnit);
+                    this.buffer.append(" unit " + this.displayUnit);
                     int numberOfDimensions = this.currentSerializer.getNumberOfDimensions();
                     int elementSize = this.currentSerializer.dataClassName().contains("Float") ? 4 : 8;
                     this.totalDataSize += elementSize * (0 == numberOfDimensions ? 1 : this.rowCount * this.columnCount);
                     prepareForDataElement(elementSize);
                     if (0 == numberOfDimensions)
                     {
-                        buffer.append(": ");
+                        this.buffer.append(": ");
                     }
                     else
                     {
@@ -336,11 +334,11 @@ public class SerialDataDecoder implements Decoder
                 try
                 {
                     Object value = this.currentSerializer.deSerialize(this.dataElementBytes, new Pointer(), this.endianUtil);
-                    buffer.append(value.toString());
+                    this.buffer.append(value.toString());
                 }
                 catch (SerializationException e)
                 {
-                    buffer.append("Error deserializing data");
+                    this.buffer.append("Error deserializing data");
                 }
             }
             else if (this.currentSerializer.getNumberOfDimensions() > 0)
@@ -396,7 +394,7 @@ public class SerialDataDecoder implements Decoder
                     if (this.currentSerializer instanceof ArrayOrMatrixSerializer<?, ?>)
                     {
                         Object value = ((ArrayOrMatrixSerializer<?, ?>) this.currentSerializer)
-                                .deSerializeElement(dataElementBytes, 0, this.endianUtil);
+                                .deSerializeElement(this.dataElementBytes, 0, this.endianUtil);
                         this.buffer.append(value.toString());
                     }
                     else if (this.currentSerializer instanceof BasicPrimitiveArrayOrMatrixSerializer)
@@ -408,37 +406,37 @@ public class SerialDataDecoder implements Decoder
                         {
                             case FieldTypes.BYTE_8_ARRAY:
                             case FieldTypes.BYTE_8_MATRIX:
-                                this.buffer.append(String.format("%02x", dataElementBytes[0]));
+                                this.buffer.append(String.format("%02x", this.dataElementBytes[0]));
                                 break;
 
                             case FieldTypes.SHORT_16_ARRAY:
                             case FieldTypes.SHORT_16_MATRIX:
-                                this.buffer.append(String.format("%d", endianUtil.decodeShort(dataElementBytes, 0)));
+                                this.buffer.append(String.format("%d", this.endianUtil.decodeShort(this.dataElementBytes, 0)));
                                 break;
 
                             case FieldTypes.INT_32_ARRAY:
                             case FieldTypes.INT_32_MATRIX:
-                                this.buffer.append(String.format("%d", endianUtil.decodeInt(dataElementBytes, 0)));
+                                this.buffer.append(String.format("%d", this.endianUtil.decodeInt(this.dataElementBytes, 0)));
                                 break;
 
                             case FieldTypes.LONG_64_ARRAY:
                             case FieldTypes.LONG_64_MATRIX:
-                                this.buffer.append(String.format("%d", endianUtil.decodeLong(dataElementBytes, 0)));
+                                this.buffer.append(String.format("%d", this.endianUtil.decodeLong(this.dataElementBytes, 0)));
                                 break;
 
                             case FieldTypes.FLOAT_32_ARRAY:
                             case FieldTypes.FLOAT_32_MATRIX:
-                                this.buffer.append(String.format("%f", endianUtil.decodeFloat(dataElementBytes, 0)));
+                                this.buffer.append(String.format("%f", this.endianUtil.decodeFloat(this.dataElementBytes, 0)));
                                 break;
 
                             case FieldTypes.DOUBLE_64_ARRAY:
                             case FieldTypes.DOUBLE_64_MATRIX:
-                                this.buffer.append(String.format("%f", endianUtil.decodeDouble(dataElementBytes, 0)));
+                                this.buffer.append(String.format("%f", this.endianUtil.decodeDouble(this.dataElementBytes, 0)));
                                 break;
 
                             case FieldTypes.BOOLEAN_8_ARRAY:
                             case FieldTypes.BOOLEAN_8_MATRIX:
-                                this.buffer.append(0 == dataElementBytes[0] ? "false" : "true");
+                                this.buffer.append(0 == this.dataElementBytes[0] ? "false" : "true");
                                 break;
 
                             default:
