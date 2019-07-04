@@ -14,55 +14,51 @@ import org.djutils.exceptions.Throw;
  * @author <a href="http://www.tbm.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="http://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
- * @param <T> class
+ * @param <E> class of the single (not matrix or vector) type
  */
-public abstract class ObjectMatrixSerializer<T extends Object> extends ArrayOrMatrixSerializer<T[][], T>
+public abstract class ObjectMatrixSerializer<E extends Object> extends ArrayOrMatrixSerializer<E[][], E>
 {
-    /** Sample object with required type info (zero length array suffices). */
-    private final T sample;
+    /** class of the single object that needs to be serialized. */
+    private final Class<E> dataClass;
 
     /**
      * Construct a new ObjectMatrixSerializer.
      * @param type byte; the field type (returned by the <code>fieldType</code> method)
      * @param dataSize int; the number of bytes needed to encode one additional array element
+     * @param dataClass Class&lt;T&gt;; class of the single object that needs to be serialized
      * @param dataClassName String; returned by the dataClassName method
-     * @param sample T[]; sample object (can be zero length array).
      */
-    public ObjectMatrixSerializer(final byte type, final int dataSize, final T sample, final String dataClassName)
+    public ObjectMatrixSerializer(final byte type, final int dataSize, final Class<E> dataClass, final String dataClassName)
     {
         super(type, dataSize, dataClassName, 2);
-        this.sample = sample;
+        this.dataClass = dataClass;
     }
 
     @Override
-    public final int size(final Object object) throws SerializationException
+    public final int size(final E[][] matrix) throws SerializationException
     {
-        @SuppressWarnings("unchecked")
-        T[][] matrix = (T[][]) object;
         Throw.when(matrix.length == 0 || matrix[0].length == 0, SerializationException.class, "Zero sized matrix not allowed");
         return 4 + 4 + getElementSize() * matrix.length * matrix[0].length;
     }
 
     @Override
-    public final int sizeWithPrefix(final Object object) throws SerializationException
+    public final int sizeWithPrefix(final E[][] matrix) throws SerializationException
     {
-        return 1 + size(object);
+        return 1 + size(matrix);
     }
 
     @Override
-    public final void serializeWithPrefix(final Object object, final byte[] buffer, final Pointer pointer,
+    public final void serializeWithPrefix(final E[][] matrix, final byte[] buffer, final Pointer pointer,
             final EndianUtil endianUtil) throws SerializationException
     {
         buffer[pointer.getAndIncrement(1)] = fieldType();
-        serialize(object, buffer, pointer, endianUtil);
+        serialize(matrix, buffer, pointer, endianUtil);
     }
 
     @Override
-    public final void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public final void serialize(final E[][] matrix, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
             throws SerializationException
     {
-        @SuppressWarnings("unchecked")
-        T[][] matrix = (T[][]) object;
         int height = matrix.length;
         Throw.when(0 == height, SerializationException.class, "Zero height matrix is not allowed");
         int width = matrix[0].length;
@@ -80,12 +76,12 @@ public abstract class ObjectMatrixSerializer<T extends Object> extends ArrayOrMa
     }
 
     @Override
-    public final T[][] deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public final E[][] deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
     {
         int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         @SuppressWarnings("unchecked")
-        T[][] result = (T[][]) Array.newInstance(this.sample.getClass(), height, width);
+        E[][] result = (E[][]) Array.newInstance(this.dataClass, height, width);
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)

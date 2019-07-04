@@ -84,9 +84,9 @@ public final class TypedMessage
     private static final Serializer<Byte> CONVERT_BYTE = new FixedSizeObjectSerializer<Byte>(FieldTypes.BYTE_8, 1, "Byte_8")
     {
         @Override
-        public void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+        public void serialize(final Byte object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
         {
-            buffer[pointer.getAndIncrement(1)] = (Byte) object;
+            buffer[pointer.getAndIncrement(1)] = object;
         }
 
         @Override
@@ -101,10 +101,10 @@ public final class TypedMessage
             new FixedSizeObjectSerializer<Short>(FieldTypes.SHORT_16, 2, "Short_16")
             {
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final Short object, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil)
                 {
-                    endianUtil.encodeShort((Short) object, buffer, pointer.getAndIncrement(2));
+                    endianUtil.encodeShort(object, buffer, pointer.getAndIncrement(2));
                 }
 
                 @Override
@@ -119,10 +119,10 @@ public final class TypedMessage
             new FixedSizeObjectSerializer<Integer>(FieldTypes.INT_32, 4, "Integer_32")
             {
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final Integer object, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil)
                 {
-                    endianUtil.encodeInt((Integer) object, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(object, buffer, pointer.getAndIncrement(4));
                 }
 
                 @Override
@@ -136,9 +136,9 @@ public final class TypedMessage
     private static final Serializer<Long> CONVERT_LONG = new FixedSizeObjectSerializer<Long>(FieldTypes.LONG_64, 8, "Long_64")
     {
         @Override
-        public void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+        public void serialize(final Long object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
         {
-            endianUtil.encodeLong((Long) object, buffer, pointer.getAndIncrement(8));
+            endianUtil.encodeLong(object, buffer, pointer.getAndIncrement(8));
         }
 
         @Override
@@ -153,10 +153,10 @@ public final class TypedMessage
             new FixedSizeObjectSerializer<Float>(FieldTypes.FLOAT_32, 4, "Float_32")
             {
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final Float object, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil)
                 {
-                    endianUtil.encodeFloat((Float) object, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeFloat(object, buffer, pointer.getAndIncrement(4));
                 }
 
                 @Override
@@ -171,10 +171,10 @@ public final class TypedMessage
             new FixedSizeObjectSerializer<Double>(FieldTypes.DOUBLE_64, 8, "Double_64")
             {
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final Double object, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil)
                 {
-                    endianUtil.encodeDouble((Double) object, buffer, pointer.getAndIncrement(8));
+                    endianUtil.encodeDouble(object, buffer, pointer.getAndIncrement(8));
                 }
 
                 @Override
@@ -189,10 +189,10 @@ public final class TypedMessage
             new FixedSizeObjectSerializer<Boolean>(FieldTypes.BOOLEAN_8, 1, "Boolean_8")
             {
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final Boolean object, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil)
                 {
-                    buffer[pointer.getAndIncrement(1)] = (byte) (((Boolean) object) ? 1 : 0);
+                    buffer[pointer.getAndIncrement(1)] = (byte) (object ? 1 : 0);
                 }
 
                 @Override
@@ -207,10 +207,10 @@ public final class TypedMessage
             new FixedSizeObjectSerializer<Character>(FieldTypes.CHAR_16, 2, "Char_16")
             {
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final Character object, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil)
                 {
-                    endianUtil.encodeChar((Character) object, buffer, pointer.getAndIncrement(size(object)));
+                    endianUtil.encodeChar(object, buffer, pointer.getAndIncrement(size(object)));
                 }
 
                 @Override
@@ -225,10 +225,10 @@ public final class TypedMessage
             new FixedSizeObjectSerializer<Character>(FieldTypes.CHAR_8, 1, "Char_8")
             {
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final Character object, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil)
                 {
-                    buffer[pointer.getAndIncrement(size(object))] = (byte) (((Character) object) & 0xFF);
+                    buffer[pointer.getAndIncrement(size(object))] = (byte) (object & 0xFF);
                 }
 
                 @Override
@@ -242,15 +242,14 @@ public final class TypedMessage
     private static final Serializer<String> CONVERT_STRING16 = new ObjectSerializer<String>(FieldTypes.STRING_16, "String_16")
     {
         @Override
-        public int size(final Object object)
+        public int size(final String object)
         {
-            return 4 + ((String) object).getBytes(UTF16).length;
+            return 4 + object.getBytes(UTF16).length;
         }
 
         @Override
-        public void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+        public void serialize(final String string, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
         {
-            String string = ((String) object);
             // System.out.println("Encoding string \"" + string + "\"");
             char[] chars = new char[string.length()];
             string.getChars(0, chars.length, chars, 0);
@@ -279,15 +278,15 @@ public final class TypedMessage
     private static final Serializer<String> CONVERT_STRING8 = new ObjectSerializer<String>(FieldTypes.STRING_8, "String_8")
     {
         @Override
-        public int size(final Object object)
+        public int size(final String string)
         {
-            return 4 + ((String) object).getBytes(UTF8).length;
+            return 4 + string.getBytes(UTF8).length;
         }
 
         @Override
-        public void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+        public void serialize(final String string, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
         {
-            byte[] s = ((String) object).getBytes(UTF8);
+            byte[] s = string.getBytes(UTF8);
             endianUtil.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
             for (byte b : s)
             {
@@ -311,17 +310,15 @@ public final class TypedMessage
             new BasicPrimitiveArrayOrMatrixSerializer<byte[]>(FieldTypes.BYTE_8_ARRAY, 1, "byte_8_array", 1)
             {
                 @Override
-                public int size(final Object object)
+                public int size(final byte[] array)
                 {
-                    byte[] array = (byte[]) object;
                     return 4 + getElementSize() * array.length;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final byte[] array, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    byte[] array = (byte[]) object;
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
@@ -366,17 +363,15 @@ public final class TypedMessage
             new BasicPrimitiveArrayOrMatrixSerializer<short[]>(FieldTypes.SHORT_16_ARRAY, 2, "short_16_array", 1)
             {
                 @Override
-                public int size(final Object object)
+                public int size(final short[] array)
                 {
-                    short[] array = (short[]) object;
                     return 4 + getElementSize() * array.length;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final short[] array, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    short[] array = (short[]) object;
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
@@ -421,17 +416,15 @@ public final class TypedMessage
             new BasicPrimitiveArrayOrMatrixSerializer<int[]>(FieldTypes.INT_32_ARRAY, 4, "int_32_array", 1)
             {
                 @Override
-                public int size(final Object object)
+                public int size(final int[] array)
                 {
-                    int[] array = (int[]) object;
                     return 4 + getElementSize() * array.length;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final int[] array, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    int[] array = (int[]) object;
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
@@ -476,17 +469,15 @@ public final class TypedMessage
             new BasicPrimitiveArrayOrMatrixSerializer<long[]>(FieldTypes.LONG_64_ARRAY, 8, "long_64_array", 1)
             {
                 @Override
-                public int size(final Object object)
+                public int size(final long[] array)
                 {
-                    long[] array = (long[]) object;
                     return 4 + getElementSize() * array.length;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final long[] array, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    long[] array = (long[]) object;
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
@@ -531,17 +522,15 @@ public final class TypedMessage
             new BasicPrimitiveArrayOrMatrixSerializer<float[]>(FieldTypes.FLOAT_32_ARRAY, 4, "float_32_array", 1)
             {
                 @Override
-                public int size(final Object object)
+                public int size(final float[] array)
                 {
-                    float[] array = (float[]) object;
                     return 4 + getElementSize() * array.length;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final float[] array, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    float[] array = (float[]) object;
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
@@ -586,17 +575,15 @@ public final class TypedMessage
             new BasicPrimitiveArrayOrMatrixSerializer<double[]>(FieldTypes.DOUBLE_64_ARRAY, 8, "double_64_array", 1)
             {
                 @Override
-                public int size(final Object object)
+                public int size(final double[] array)
                 {
-                    double[] array = (double[]) object;
                     return 4 + getElementSize() * array.length;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final double[] array, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    double[] array = (double[]) object;
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
@@ -641,17 +628,15 @@ public final class TypedMessage
             new BasicPrimitiveArrayOrMatrixSerializer<boolean[]>(FieldTypes.BOOLEAN_8_ARRAY, 1, "bool_8_array", 1)
             {
                 @Override
-                public int size(final Object object)
+                public int size(final boolean[] array)
                 {
-                    boolean[] array = (boolean[]) object;
                     return 4 + getElementSize() * array.length;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final boolean[] array, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    boolean[] array = (boolean[]) object;
                     endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
                     for (int i = 0; i < array.length; i++)
                     {
@@ -696,17 +681,15 @@ public final class TypedMessage
             new BasicPrimitiveArrayOrMatrixSerializer<byte[][]>(FieldTypes.BYTE_8_MATRIX, 1, "byte_8_matrix", 2)
             {
                 @Override
-                public int size(final Object object)
+                public int size(final byte[][] matrix)
                 {
-                    byte[][] array = (byte[][]) object;
-                    return 8 + getElementSize() * array.length * array[0].length;
+                    return 8 + getElementSize() * matrix.length * matrix[0].length;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final byte[][] matrix, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    byte[][] matrix = (byte[][]) object;
                     int height = matrix.length;
                     int width = matrix[0].length;
                     endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
@@ -716,7 +699,7 @@ public final class TypedMessage
                         Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
                         for (int j = 0; j < width; j++)
                         {
-                            matrix[i][j] = buffer[pointer.getAndIncrement(getElementSize())];
+                            buffer[pointer.getAndIncrement(getElementSize())] = matrix[i][j];
                         }
                     }
                 }
@@ -741,7 +724,7 @@ public final class TypedMessage
 
     /** Converter for Byte matrix. */
     private static final Serializer<Byte[][]> CONVERT_BYTE_MATRIX =
-            new ObjectMatrixSerializer<Byte>(FieldTypes.BYTE_8_MATRIX, 1, new Byte((byte) 0), "Byte_8_matrix")
+            new ObjectMatrixSerializer<Byte>(FieldTypes.BYTE_8_MATRIX, 1, Byte.class, "Byte_8_matrix")
             {
                 @Override
                 public void serializeElement(final Byte object, final byte[] buffer, final int offset,
@@ -762,17 +745,15 @@ public final class TypedMessage
             new BasicPrimitiveArrayOrMatrixSerializer<short[][]>(FieldTypes.SHORT_16_MATRIX, 2, "short_16_matrix", 2)
             {
                 @Override
-                public int size(final Object object)
+                public int size(final short[][] matrix)
                 {
-                    short[][] array = (short[][]) object;
-                    return 8 + getElementSize() * array.length * array[0].length;
+                    return 8 + getElementSize() * matrix.length * matrix[0].length;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final short[][] matrix, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    short[][] matrix = (short[][]) object;
                     int height = matrix.length;
                     int width = matrix[0].length;
                     endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
@@ -807,7 +788,7 @@ public final class TypedMessage
 
     /** Converter for Short matrix. */
     private static final Serializer<Short[][]> CONVERT_SHORT_MATRIX =
-            new ObjectMatrixSerializer<Short>(FieldTypes.SHORT_16_MATRIX, 2, new Short((short) 0), "Short_16_matrix")
+            new ObjectMatrixSerializer<Short>(FieldTypes.SHORT_16_MATRIX, 2, Short.class, "Short_16_matrix")
             {
                 @Override
                 public void serializeElement(final Short object, final byte[] buffer, final int offset,
@@ -828,17 +809,15 @@ public final class TypedMessage
             new BasicPrimitiveArrayOrMatrixSerializer<int[][]>(FieldTypes.INT_32_MATRIX, 4, "int_32_matrix", 2)
             {
                 @Override
-                public int size(final Object object)
+                public int size(final int[][] matrix)
                 {
-                    int[][] array = (int[][]) object;
-                    return 8 + getElementSize() * array.length * array[0].length;
+                    return 8 + getElementSize() * matrix.length * matrix[0].length;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final int[][] matrix, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    int[][] matrix = (int[][]) object;
                     int height = matrix.length;
                     int width = matrix[0].length;
                     endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
@@ -873,7 +852,7 @@ public final class TypedMessage
 
     /** Converter for Integer matrix. */
     private static final Serializer<Integer[][]> CONVERT_INTEGER_MATRIX =
-            new ObjectMatrixSerializer<Integer>(FieldTypes.INT_32_MATRIX, 4, new Integer(0), "Integer_32_matrix")
+            new ObjectMatrixSerializer<Integer>(FieldTypes.INT_32_MATRIX, 4, Integer.class, "Integer_32_matrix")
             {
                 @Override
                 public void serializeElement(final Integer object, final byte[] buffer, final int offset,
@@ -894,17 +873,15 @@ public final class TypedMessage
             new BasicPrimitiveArrayOrMatrixSerializer<long[][]>(FieldTypes.LONG_64_MATRIX, 8, "long_64_matrix", 2)
             {
                 @Override
-                public int size(final Object object)
+                public int size(final long[][] matrix)
                 {
-                    long[][] array = (long[][]) object;
-                    return 8 + getElementSize() * array.length * array[0].length;
+                    return 8 + getElementSize() * matrix.length * matrix[0].length;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final long[][] matrix, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    long[][] matrix = (long[][]) object;
                     int height = matrix.length;
                     int width = matrix[0].length;
                     endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
@@ -939,7 +916,7 @@ public final class TypedMessage
 
     /** Converter for Long matrix. */
     private static final Serializer<Long[][]> CONVERT_LONG_MATRIX =
-            new ObjectMatrixSerializer<Long>(FieldTypes.LONG_64_MATRIX, 8, new Long(0), "Long_64_matrix")
+            new ObjectMatrixSerializer<Long>(FieldTypes.LONG_64_MATRIX, 8, Long.class, "Long_64_matrix")
             {
                 @Override
                 public void serializeElement(final Long object, final byte[] buffer, final int offset,
@@ -960,17 +937,15 @@ public final class TypedMessage
             new BasicPrimitiveArrayOrMatrixSerializer<float[][]>(FieldTypes.FLOAT_32_MATRIX, 4, "float_32_matrix", 2)
             {
                 @Override
-                public int size(final Object object)
+                public int size(final float[][] matrix)
                 {
-                    float[][] array = (float[][]) object;
-                    return 8 + getElementSize() * array.length * array[0].length;
+                    return 8 + getElementSize() * matrix.length * matrix[0].length;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final float[][] matrix, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    float[][] matrix = (float[][]) object;
                     int height = matrix.length;
                     int width = matrix[0].length;
                     endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
@@ -1005,7 +980,7 @@ public final class TypedMessage
 
     /** Converter for Float matrix. */
     private static final Serializer<Float[][]> CONVERT_FLOAT_MATRIX =
-            new ObjectMatrixSerializer<Float>(FieldTypes.FLOAT_32_MATRIX, 4, new Float(0), "Float_32_matrix")
+            new ObjectMatrixSerializer<Float>(FieldTypes.FLOAT_32_MATRIX, 4, Float.class, "Float_32_matrix")
             {
                 @Override
                 public void serializeElement(final Float object, final byte[] buffer, final int offset,
@@ -1026,17 +1001,15 @@ public final class TypedMessage
             new BasicPrimitiveArrayOrMatrixSerializer<double[][]>(FieldTypes.DOUBLE_64_MATRIX, 8, "double_64_matrix", 2)
             {
                 @Override
-                public int size(final Object object)
+                public int size(final double[][] matrix)
                 {
-                    double[][] array = (double[][]) object;
-                    return 8 + getElementSize() * array.length * array[0].length;
+                    return 8 + getElementSize() * matrix.length * matrix[0].length;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final double[][] matrix, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    double[][] matrix = (double[][]) object;
                     int height = matrix.length;
                     int width = matrix[0].length;
                     endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
@@ -1071,7 +1044,7 @@ public final class TypedMessage
 
     /** Converter for Double matrix. */
     private static final Serializer<Double[][]> CONVERT_DOUBLE_MATRIX =
-            new ObjectMatrixSerializer<Double>(FieldTypes.DOUBLE_64_MATRIX, 8, new Double(0), "Double_64_matrix")
+            new ObjectMatrixSerializer<Double>(FieldTypes.DOUBLE_64_MATRIX, 8, Double.class, "Double_64_matrix")
             {
                 @Override
                 public void serializeElement(final Double object, final byte[] buffer, final int offset,
@@ -1092,17 +1065,15 @@ public final class TypedMessage
             new BasicPrimitiveArrayOrMatrixSerializer<boolean[][]>(FieldTypes.BOOLEAN_8_MATRIX, 1, "boolean_8_matrix", 2)
             {
                 @Override
-                public int size(final Object object)
+                public int size(final boolean[][] matrix)
                 {
-                    boolean[][] array = (boolean[][]) object;
-                    return 8 + getElementSize() * array.length * array[0].length;
+                    return 8 + getElementSize() * matrix.length * matrix[0].length;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final boolean[][] matrix, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    boolean[][] matrix = (boolean[][]) object;
                     int height = matrix.length;
                     int width = matrix[0].length;
                     endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
@@ -1137,7 +1108,7 @@ public final class TypedMessage
 
     /** Converter for Boolean matrix. */
     private static final Serializer<Boolean[][]> CONVERT_BOOLEAN_MATRIX =
-            new ObjectMatrixSerializer<Boolean>(FieldTypes.BOOLEAN_8_MATRIX, 1, Boolean.FALSE, "Boolean_8_matrix")
+            new ObjectMatrixSerializer<Boolean>(FieldTypes.BOOLEAN_8_MATRIX, 1, Boolean.class, "Boolean_8_matrix")
             {
                 @Override
                 public void serializeElement(final Boolean object, final byte[] buffer, final int offset,
@@ -1158,17 +1129,15 @@ public final class TypedMessage
             new ObjectSerializer<AbstractFloatScalar<?, ?>>(FieldTypes.FLOAT_32_UNIT, "Djunits_FloatScalar")
             {
                 @Override
-                public int size(final Object object) throws SerializationException
+                public int size(final AbstractFloatScalar<?, ?> afs) throws SerializationException
                 {
-                    AbstractFloatScalar<?, ?> afs = (AbstractFloatScalar<?, ?>) object;
                     return 2 + extraBytesMoney(afs) + 4;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final AbstractFloatScalar<?, ?> afs, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    AbstractFloatScalar<?, ?> afs = (AbstractFloatScalar<?, ?>) object;
                     encodeUnit(afs.getUnit(), buffer, pointer, endianUtil);
                     float v = afs.si;
                     endianUtil.encodeFloat(v, buffer, pointer.getAndIncrement(4));
@@ -1189,17 +1158,15 @@ public final class TypedMessage
             new ObjectSerializer<AbstractDoubleScalar<?, ?>>(FieldTypes.DOUBLE_64_UNIT, "Djunits_DoubleScalar")
             {
                 @Override
-                public int size(final Object object) throws SerializationException
+                public int size(final AbstractDoubleScalar<?, ?> ads) throws SerializationException
                 {
-                    AbstractDoubleScalar<?, ?> ads = (AbstractDoubleScalar<?, ?>) object;
                     return 2 + extraBytesMoney(ads) + 8;
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final AbstractDoubleScalar<?, ?> ads, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    AbstractDoubleScalar<?, ?> ads = (AbstractDoubleScalar<?, ?>) object;
                     encodeUnit(ads.getUnit(), buffer, pointer, endianUtil);
                     double v = ads.si;
                     endianUtil.encodeDouble(v, buffer, pointer.getAndIncrement(8));
@@ -1220,11 +1187,10 @@ public final class TypedMessage
             new ObjectSerializer<AbstractFloatVector<?, ?>>(FieldTypes.FLOAT_32_UNIT_ARRAY, "Djunits_FloatVector")
             {
                 @Override
-                public int size(final Object object) throws SerializationException
+                public int size(final AbstractFloatVector<?, ?> afv) throws SerializationException
                 {
                     try
                     {
-                        AbstractFloatVector<?, ?> afv = (AbstractFloatVector<?, ?>) object;
                         return 4 + 2 + extraBytesMoney(afv.get(0)) + 4 * afv.size();
                     }
                     catch (ValueException e)
@@ -1234,12 +1200,11 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final AbstractFloatVector<?, ?> afv, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
                     try
                     {
-                        AbstractFloatVector<?, ?> afv = (AbstractFloatVector<?, ?>) object;
                         endianUtil.encodeInt(afv.size(), buffer, pointer.getAndIncrement(4));
                         encodeUnit(afv.getUnit(), buffer, pointer, endianUtil);
                         for (int i = 0; i < afv.size(); i++)
@@ -1280,11 +1245,10 @@ public final class TypedMessage
             new ObjectSerializer<AbstractDoubleVector<?, ?>>(FieldTypes.DOUBLE_64_UNIT_ARRAY, "Djunits_DoubleVector")
             {
                 @Override
-                public int size(final Object object) throws SerializationException
+                public int size(final AbstractDoubleVector<?, ?> adv) throws SerializationException
                 {
                     try
                     {
-                        AbstractDoubleVector<?, ?> adv = (AbstractDoubleVector<?, ?>) object;
                         return 4 + 2 + extraBytesMoney(adv.get(0)) + 8 * adv.size();
                     }
                     catch (ValueException e)
@@ -1294,12 +1258,11 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final AbstractDoubleVector<?, ?> adv, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
                     try
                     {
-                        AbstractDoubleVector<?, ?> adv = (AbstractDoubleVector<?, ?>) object;
                         endianUtil.encodeInt(adv.size(), buffer, pointer.getAndIncrement(4));
                         encodeUnit(adv.getUnit(), buffer, pointer, endianUtil);
                         for (int i = 0; i < adv.size(); i++)
@@ -1340,11 +1303,10 @@ public final class TypedMessage
             new ObjectSerializer<AbstractFloatMatrix<?, ?>>(FieldTypes.FLOAT_32_UNIT_MATRIX, "Djunits_FloatMatrix")
             {
                 @Override
-                public int size(final Object object) throws SerializationException
+                public int size(final AbstractFloatMatrix<?, ?> afm) throws SerializationException
                 {
                     try
                     {
-                        AbstractFloatMatrix<?, ?> afm = (AbstractFloatMatrix<?, ?>) object;
                         return 4 + 4 + 2 + extraBytesMoney(afm.get(0, 0)) + 4 * afm.rows() * afm.columns();
                     }
                     catch (ValueException e)
@@ -1354,12 +1316,11 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final AbstractFloatMatrix<?, ?> afm, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
                     try
                     {
-                        AbstractFloatMatrix<?, ?> afm = (AbstractFloatMatrix<?, ?>) object;
                         endianUtil.encodeInt(afm.rows(), buffer, pointer.getAndIncrement(4));
                         endianUtil.encodeInt(afm.columns(), buffer, pointer.getAndIncrement(4));
                         encodeUnit(afm.getUnit(), buffer, pointer, endianUtil);
@@ -1408,11 +1369,10 @@ public final class TypedMessage
             new ObjectSerializer<AbstractDoubleMatrix<?, ?>>(FieldTypes.DOUBLE_64_UNIT_MATRIX, "Djunits_DoubleMatrix")
             {
                 @Override
-                public int size(final Object object) throws SerializationException
+                public int size(final AbstractDoubleMatrix<?, ?> adm) throws SerializationException
                 {
                     try
                     {
-                        AbstractDoubleMatrix<?, ?> adm = (AbstractDoubleMatrix<?, ?>) object;
                         return 4 + 4 + 2 + extraBytesMoney(adm.get(0, 0)) + 8 * adm.rows() * adm.columns();
                     }
                     catch (ValueException e)
@@ -1422,12 +1382,11 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final AbstractDoubleMatrix<?, ?> adm, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
                     try
                     {
-                        AbstractDoubleMatrix<?, ?> adm = (AbstractDoubleMatrix<?, ?>) object;
                         endianUtil.encodeInt(adm.rows(), buffer, pointer.getAndIncrement(4));
                         endianUtil.encodeInt(adm.columns(), buffer, pointer.getAndIncrement(4));
                         encodeUnit(adm.getUnit(), buffer, pointer, endianUtil);
@@ -1477,10 +1436,9 @@ public final class TypedMessage
             {
 
                 @Override
-                public int size(final Object object) throws SerializationException
+                public int size(final AbstractDoubleVector<?, ?>[] adva) throws SerializationException
                 {
                     int result = 4 + 4;
-                    AbstractDoubleVector<?, ?>[] adva = (AbstractDoubleVector<?, ?>[]) object;
                     int width = adva.length;
                     int height = adva[0].size();
                     for (int i = 0; i < width; i++)
@@ -1502,10 +1460,9 @@ public final class TypedMessage
                 }
 
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final AbstractDoubleVector<?, ?>[] adva, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    AbstractDoubleVector<?, ?>[] adva = (AbstractDoubleVector<?, ?>[]) object;
                     int width = adva.length;
                     int height = adva[0].size();
                     endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
@@ -1574,14 +1531,14 @@ public final class TypedMessage
             new ObjectSerializer<SerializableObject<?>[]>((byte) 120, "Compound")
             {
 
+                @SuppressWarnings({"unchecked", "rawtypes"})
                 @Override
-                public int size(final Object object) throws SerializationException
+                public int size(final SerializableObject<?>[] objects) throws SerializationException
                 {
                     int result = 4 + 4;
-                    SerializableObject<?>[] objects = (SerializableObject[]) object;
                     SerializableObject<?> so = objects[0];
                     Object[] objectArray = so.exportAsList().toArray();
-                    Serializer<?>[] serializers = buildEncoderList(false, objectArray);
+                    Serializer[] serializers = buildEncoderList(false, objectArray);
                     result += serializers.length;
                     // TODO this assumes that objectArray does not contain money types that use a multi-byte field type
                     for (int i = 0; i < objectArray.length; i++)
@@ -1591,16 +1548,16 @@ public final class TypedMessage
                     return result;
                 }
 
+                @SuppressWarnings({"unchecked", "rawtypes"})
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final SerializableObject<?>[] objects, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    SerializableObject<?>[] objects = (SerializableObject[]) object;
                     SerializableObject<?> so = objects[0];
                     Object[] objectArray = so.exportAsList().toArray();
                     endianUtil.encodeInt(objects.length, buffer, pointer.getAndIncrement(4));
                     endianUtil.encodeInt(objectArray.length, buffer, pointer.getAndIncrement(4));
-                    Serializer<?>[] serializers = buildEncoderList(false, objectArray);
+                    Serializer[] serializers = buildEncoderList(false, objectArray);
                     for (int i = 0; i < objectArray.length; i++)
                     {
                         buffer[pointer.getAndIncrement(1)] = serializers[i].fieldType();
@@ -1651,14 +1608,14 @@ public final class TypedMessage
             new ObjectSerializer<SerializableObject<?>[]>((byte) 121, "Compound")
             {
 
+                @SuppressWarnings({"unchecked", "rawtypes"})
                 @Override
-                public int size(final Object object) throws SerializationException
+                public int size(final SerializableObject<?>[] objects) throws SerializationException
                 {
                     int result = 4 + 4;
-                    SerializableObject<?>[] objects = (SerializableObject[]) object;
                     SerializableObject<?> so = objects[0];
                     Object[] objectArray = so.exportAsList().toArray();
-                    Serializer<?>[] serializers = buildEncoderList(true, objectArray);
+                    Serializer[] serializers = buildEncoderList(true, objectArray);
                     result += serializers.length;
                     // TODO this assumes that objectArray does not contain money types that use a multi-byte field type
                     for (int i = 0; i < objectArray.length; i++)
@@ -1668,16 +1625,16 @@ public final class TypedMessage
                     return result;
                 }
 
+                @SuppressWarnings({"unchecked", "rawtypes"})
                 @Override
-                public void serialize(final Object object, final byte[] buffer, final Pointer pointer,
+                public void serialize(final SerializableObject<?>[] objects, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil) throws SerializationException
                 {
-                    SerializableObject<?>[] objects = (SerializableObject[]) object;
                     SerializableObject<?> so = objects[0];
                     Object[] objectArray = so.exportAsList().toArray();
                     endianUtil.encodeInt(objects.length, buffer, pointer.getAndIncrement(4));
                     endianUtil.encodeInt(objectArray.length, buffer, pointer.getAndIncrement(4));
-                    Serializer<?>[] serializers = buildEncoderList(true, objectArray);
+                    Serializer[] serializers = buildEncoderList(true, objectArray);
                     for (int i = 0; i < objectArray.length; i++)
                     {
                         buffer[pointer.getAndIncrement(1)] = serializers[i].fieldType();
@@ -1960,10 +1917,11 @@ public final class TypedMessage
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private static byte[] encode(final boolean utf8, final EndianUtil endianUtil, final Object... content)
             throws SerializationException
     {
-        Serializer<?>[] serializers = buildEncoderList(utf8, content);
+        Serializer[] serializers = buildEncoderList(utf8, content);
         // Pass one: compute total size
         int size = 0;
         for (int i = 0; i < serializers.length; i++)

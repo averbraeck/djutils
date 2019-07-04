@@ -46,14 +46,14 @@ public class ItemName implements Serializer<String>
 
     /** {@inheritDoc} */
     @Override
-    public int size(final Object object) throws SerializationException
+    public int size(final String object) throws SerializationException
     {
         return 1 + this.string.length();
     }
 
     /** {@inheritDoc} */
     @Override
-    public int sizeWithPrefix(final Object object) throws SerializationException
+    public int sizeWithPrefix(final String object) throws SerializationException
     {
         return 1 + size(object);
     }
@@ -67,7 +67,7 @@ public class ItemName implements Serializer<String>
 
     /** {@inheritDoc} */
     @Override
-    public void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public void serialize(final String object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
             throws SerializationException
     {
         buffer[pointer.getAndIncrement(1)] = (byte) this.string.length();
@@ -79,7 +79,7 @@ public class ItemName implements Serializer<String>
 
     /** {@inheritDoc} */
     @Override
-    public void serializeWithPrefix(final Object object, final byte[] buffer, final Pointer pointer,
+    public void serializeWithPrefix(final String object, final byte[] buffer, final Pointer pointer,
             final EndianUtil endianUtil) throws SerializationException
     {
         buffer[pointer.getAndIncrement(1)] = fieldType();

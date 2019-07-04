@@ -40,6 +40,7 @@ public abstract class ArrayOrMatrixSerializer<T extends Object, E extends Object
      * Return the number of dimensions of the stored data.
      * @return int; 1 for array, 2 for matrix
      */
+    @Override
     public final int getNumberOfDimensions()
     {
         return this.numberOfDimensions;

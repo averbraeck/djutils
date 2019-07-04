@@ -21,7 +21,7 @@ public interface Serializer<T extends Object>
      * @return int; the number of bytes needed to serialize an object of type T
      * @throws SerializationException when the <code>object</code> cannot be serialized
      */
-    int size(Object object) throws SerializationException;
+    int size(T object) throws SerializationException;
 
     /**
      * Compute the number of bytes needed to serialize an object of type T (including the byte(s) that indicate that an object
@@ -30,7 +30,7 @@ public interface Serializer<T extends Object>
      * @return int; the number of bytes needed to serialize an object of type T
      * @throws SerializationException when the <code>object</code> cannot be serialized
      */
-    int sizeWithPrefix(Object object) throws SerializationException;
+    int sizeWithPrefix(T object) throws SerializationException;
 
     /**
      * Return the byte representation of the field type.
@@ -46,7 +46,7 @@ public interface Serializer<T extends Object>
      * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
      * @throws SerializationException when a matrix has size zero or is jagged
      */
-    void serialize(Object object, byte[] buffer, Pointer pointer, EndianUtil endianUtil) throws SerializationException;
+    void serialize(T object, byte[] buffer, Pointer pointer, EndianUtil endianUtil) throws SerializationException;
 
     /**
      * Serialize an object of type T including the prefix byte(s).
@@ -56,7 +56,7 @@ public interface Serializer<T extends Object>
      * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
      * @throws SerializationException when a matrix has size zero or is jagged
      */
-    void serializeWithPrefix(Object object, byte[] buffer, Pointer pointer, EndianUtil endianUtil)
+    void serializeWithPrefix(T object, byte[] buffer, Pointer pointer, EndianUtil endianUtil)
             throws SerializationException;
 
     /**

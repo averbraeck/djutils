@@ -36,13 +36,13 @@ public abstract class BasicPrimitiveArrayOrMatrixSerializer<T extends Object> ex
     }
 
     @Override
-    public final int sizeWithPrefix(final Object object) throws SerializationException
+    public final int sizeWithPrefix(final T object) throws SerializationException
     {
         return 1 + size(object);
     }
 
     @Override
-    public final void serializeWithPrefix(final Object object, final byte[] buffer, final Pointer pointer,
+    public final void serializeWithPrefix(final T object, final byte[] buffer, final Pointer pointer,
             final EndianUtil endianUtil) throws SerializationException
     {
         buffer[pointer.getAndIncrement(1)] = fieldType();
