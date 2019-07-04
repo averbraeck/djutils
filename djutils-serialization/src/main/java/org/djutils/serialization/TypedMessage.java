@@ -1184,7 +1184,8 @@ public final class TypedMessage
 
     /** Converter for descendants of AbstractFloatVector. */
     private static final Serializer<AbstractFloatVector<?, ?>> CONVERT_DJUNITS_FLOAT_VECTOR =
-            new ObjectSerializer<AbstractFloatVector<?, ?>>(FieldTypes.FLOAT_32_UNIT_ARRAY, "Djunits_FloatVector")
+            new DjunitsArrayOrMatrixSerializer<AbstractFloatVector<?, ?>>(FieldTypes.FLOAT_32_UNIT_ARRAY, "Djunits_FloatVector",
+                    1)
             {
                 @Override
                 public int size(final AbstractFloatVector<?, ?> afv) throws SerializationException
@@ -1242,7 +1243,8 @@ public final class TypedMessage
 
     /** Converter for descendants of AbstractDoubleVector. */
     private static final Serializer<AbstractDoubleVector<?, ?>> CONVERT_DJUNITS_DOUBLE_VECTOR =
-            new ObjectSerializer<AbstractDoubleVector<?, ?>>(FieldTypes.DOUBLE_64_UNIT_ARRAY, "Djunits_DoubleVector")
+            new DjunitsArrayOrMatrixSerializer<AbstractDoubleVector<?, ?>>(FieldTypes.DOUBLE_64_UNIT_ARRAY,
+                    "Djunits_DoubleVector", 1)
             {
                 @Override
                 public int size(final AbstractDoubleVector<?, ?> adv) throws SerializationException
@@ -1300,7 +1302,8 @@ public final class TypedMessage
 
     /** Converter for descendants of AbstractFloatMatrix. */
     private static final Serializer<AbstractFloatMatrix<?, ?>> CONVERT_DJUNITS_FLOAT_MATRIX =
-            new ObjectSerializer<AbstractFloatMatrix<?, ?>>(FieldTypes.FLOAT_32_UNIT_MATRIX, "Djunits_FloatMatrix")
+            new DjunitsArrayOrMatrixSerializer<AbstractFloatMatrix<?, ?>>(FieldTypes.FLOAT_32_UNIT_MATRIX,
+                    "Djunits_FloatMatrix", 2)
             {
                 @Override
                 public int size(final AbstractFloatMatrix<?, ?> afm) throws SerializationException
@@ -1366,7 +1369,8 @@ public final class TypedMessage
 
     /** Converter for descendants of AbstractDoubleMatrix. */
     private static final Serializer<AbstractDoubleMatrix<?, ?>> CONVERT_DJUNITS_DOUBLE_MATRIX =
-            new ObjectSerializer<AbstractDoubleMatrix<?, ?>>(FieldTypes.DOUBLE_64_UNIT_MATRIX, "Djunits_DoubleMatrix")
+            new DjunitsArrayOrMatrixSerializer<AbstractDoubleMatrix<?, ?>>(FieldTypes.DOUBLE_64_UNIT_MATRIX,
+                    "Djunits_DoubleMatrix", 2)
             {
                 @Override
                 public int size(final AbstractDoubleMatrix<?, ?> adm) throws SerializationException
@@ -2177,7 +2181,7 @@ public final class TypedMessage
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    @SuppressWarnings({"checkstyle:methodlength", "checkstyle:needbraces"})
+    @SuppressWarnings({ "checkstyle:methodlength", "checkstyle:needbraces" })
     public static Object[] decode(final byte[] buffer, final Map<Byte, Serializer<?>> decoderMap, final EndianUtil endianUtil)
             throws SerializationException
     {

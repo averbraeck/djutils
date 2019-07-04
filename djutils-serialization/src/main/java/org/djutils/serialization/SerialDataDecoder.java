@@ -1,7 +1,10 @@
 package org.djutils.serialization;
 
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 
+import org.djunits.unit.Unit;
 import org.djutils.decoderdumper.Decoder;
 
 /**
@@ -26,7 +29,7 @@ public class SerialDataDecoder implements Decoder
     /** The serializer for the <code>currentFieldType</code>. */
     private Serializer<?> currentSerializer = null;
 
-    /** Position in the data of the <code>currentFieldType</code>. */
+    /** Position in the data of the <code>dataElementBytes</code>. */
     private int positionInData = -1;
 
     /** Position in the dataElementBytes where the next input byte shall be store. */
@@ -49,6 +52,9 @@ public class SerialDataDecoder implements Decoder
 
     /** Column of matrix that we are now reading. */
     private int currentColumn;
+
+    /** Djunits display unit. */
+    private Unit<?> displayUnit;
 
     /** String builder for current output line. */
     private StringBuilder buffer = new StringBuilder();
@@ -93,28 +99,59 @@ public class SerialDataDecoder implements Decoder
             }
             else
             {
+                buffer.append(this.currentSerializer.dataClassName() + " ");
                 this.positionInData = 1;
                 this.totalDataSize = 1; // to be adjusted
-                if (this.currentSerializer instanceof ObjectSerializer)
+                this.columnCount = 0;
+                this.rowCount = 0;
+                this.displayUnit = null;
+                if (this.currentSerializer.dataClassName().startsWith("String_"))
                 {
-                    // TODO handle the display unit si unit and money unit
+                    prepareForDataElement(4);
+                    this.totalDataSize += 4;
+                }
+                else if (this.currentSerializer.dataClassName().contentEquals("Djunits_vector_array"))
+                {
+                    prepareForDataElement(8);
+                    this.totalDataSize += 8;
+                }
+                else if (this.currentSerializer.getNumberOfDimensions() > 0)
+                {
+                    int size = this.currentSerializer.getNumberOfDimensions() * 4;
+                    prepareForDataElement(size);
+                    this.totalDataSize += size;
+                }
+                else if (this.currentSerializer instanceof ObjectSerializer)
+                {
+                    try
+                    {
+                        int size;
+                        if (this.currentSerializer.dataClassName().startsWith("Djunits"))
+                        {
+                            // We won't get away calling the size method with null here
+                            // Prepare to get the display unit; requires at least two more bytes
+                            size = 2;
+                            this.displayUnit = null;
+                        }
+                        else
+                        {
+                            size = this.currentSerializer.size(null);
+                        }
+                        prepareForDataElement(size);
+                        this.totalDataSize += size;
+                    }
+                    catch (SerializationException e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
                 else
                 {
                     try
                     {
-                        if (this.currentSerializer.getNumberOfDimensions() == 0)
-                        {
-                            int size = this.currentSerializer.size(null);
-                            this.totalDataSize += size;
-                            prepareForDataElement(size);
-                        }
-                        else
-                        {
-                            int size = this.currentSerializer.getNumberOfDimensions() * 4;
-                            prepareForDataElement(size);
-                            this.totalDataSize += size;
-                        }
+                        int size = this.currentSerializer.size(null);
+                        this.totalDataSize += size;
+                        prepareForDataElement(size);
                     }
                     catch (SerializationException e)
                     {
@@ -132,7 +169,169 @@ public class SerialDataDecoder implements Decoder
         this.positionInData++;
         if (this.nextDataElementByte == this.dataElementBytes.length)
         {
-            if (this.currentSerializer instanceof FixedSizeObjectSerializer)
+            if (this.currentSerializer.dataClassName().startsWith("String_"))
+            {
+                int elementSize = this.currentSerializer.dataClassName().endsWith("8") ? 1 : 2;
+                if (this.columnCount == 0) // re-using columnCount to store number of characters
+                {
+                    this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
+                    prepareForDataElement(elementSize);
+                    this.totalDataSize += this.columnCount * elementSize;
+                }
+                else
+                {
+                    if (1 == elementSize)
+                    {
+                        if (this.dataElementBytes[0] > 32 && this.dataElementBytes[0] < 127)
+                        {
+                            buffer.append((char) this.dataElementBytes[0]); // safe to print
+                        }
+                        else
+                        {
+                            buffer.append("."); // not safe to print
+                        }
+                    }
+                    else
+                    {
+                        char character = this.endianUtil.decodeChar(dataElementBytes, 0);
+                        if (Character.isAlphabetic(character))
+                        {
+                            buffer.append(character); // safe to print
+                        }
+                        else
+                        {
+                            buffer.append("."); // not safe to print
+                        }
+                    }
+                }
+                this.currentColumn = 0;
+                this.nextDataElementByte = 0;
+            }
+            else if (this.currentSerializer.dataClassName().contentEquals("Djunits_vector_array"))
+            {
+                if (this.rowCount == 0)
+                {
+                    this.rowCount = endianUtil.decodeInt(dataElementBytes, 0);
+                    this.columnCount = endianUtil.decodeInt(dataElementBytes, 4);
+                    this.currentRow = -1; // indicates we are parsing the units
+                    this.currentColumn = 0;
+                    prepareForDataElement(2);
+                    this.totalDataSize += 2;
+                }
+                else if (this.currentRow < 0)
+                {
+                    // parse one unit
+                    if (checkMoneyNeedsMoreBytes())
+                    {
+                        return false;
+                    }
+                    TypedMessage.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
+                    this.displayUnit = TypedMessage.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
+                    buffer.append("unit for column " + this.currentColumn + ": ");
+                    buffer.append(this.displayUnit);
+                    this.currentColumn++;
+                    if (this.currentColumn < this.columnCount)
+                    {
+                        prepareForDataElement(2);
+                        this.totalDataSize += 2;
+                    }
+                    else
+                    {
+                        // Done with the units; prepare to parse the values
+                        this.currentRow = 0;
+                        this.currentColumn = 0;
+                        prepareForDataElement(8);
+                        this.totalDataSize += 8 * this.columnCount * this.rowCount;
+                    }
+                }
+                else
+                {
+                    // process one double value
+                    buffer.append(this.endianUtil.decodeDouble(dataElementBytes, 0));
+                    this.positionInData = 0;
+                    this.currentColumn++;
+                    if (this.currentColumn >= this.columnCount)
+                    {
+                        this.currentColumn = 0;
+                        this.currentRow++;
+                    }
+                }
+            }
+            else if (this.currentSerializer.dataClassName().startsWith("Djunits"))
+            {
+                if (this.currentSerializer.getNumberOfDimensions() > 0 && 0 == this.rowCount)
+                {
+                    this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
+                    this.currentRow = 0;
+                    this.currentColumn = 0;
+                    if (this.dataElementBytes.length == 8)
+                    {
+                        this.rowCount = this.columnCount;
+                        this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 4);
+                        this.buffer.append(String.format("%s height %d, width %d", this.currentSerializer.dataClassName(),
+                                this.rowCount, this.columnCount));
+                    }
+                    else
+                    {
+                        this.rowCount = 1;
+                        this.buffer.append(
+                                String.format("%s length %d", this.currentSerializer.dataClassName(), this.columnCount));
+                    }
+                    // Prepare for the unit.
+                    prepareForDataElement(2);
+                    this.totalDataSize += 2;
+                    return false;
+                }
+                else if (null == this.displayUnit)
+                {
+                    if (checkMoneyNeedsMoreBytes())
+                    {
+                        return false;
+                    }
+                    this.displayUnit = TypedMessage.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
+                    buffer.append(" unit " + this.displayUnit);
+                    int numberOfDimensions = this.currentSerializer.getNumberOfDimensions();
+                    int elementSize = this.currentSerializer.dataClassName().contains("Float") ? 4 : 8;
+                    this.totalDataSize += elementSize * (0 == numberOfDimensions ? 1 : this.rowCount * this.columnCount);
+                    prepareForDataElement(elementSize);
+                    if (0 == numberOfDimensions)
+                    {
+                        buffer.append(": ");
+                    }
+                    else
+                    {
+                        result = true;
+                    }
+                }
+                else
+                {
+                    // get one value
+                    int dimensions = this.currentSerializer.getNumberOfDimensions();
+                    if (dimensions == 1)
+                    {
+                        this.buffer.append(String.format("value at index %d: ", this.currentColumn));
+                    }
+                    else if (dimensions == 2)
+                    {
+                        this.buffer.append(String.format("value at row %d column %d: ", this.currentRow, this.currentColumn));
+                    }
+                    // else dimension == 0
+                    if (dimensions > 0)
+                    {
+                        this.currentColumn++;
+                        if (this.currentColumn >= this.columnCount)
+                        {
+                            this.currentColumn = 0;
+                            this.currentRow++;
+                        }
+                    }
+                    this.buffer.append(this.dataElementBytes.length == 4 ? this.endianUtil.decodeFloat(this.dataElementBytes, 0)
+                            : this.endianUtil.decodeDouble(this.dataElementBytes, 0));
+                    this.nextDataElementByte = 0;
+                    result = true;
+                }
+            }
+            else if (this.currentSerializer instanceof FixedSizeObjectSerializer)
             {
                 try
                 {
@@ -162,8 +361,8 @@ public class SerialDataDecoder implements Decoder
                     else
                     {
                         this.rowCount = 1;
-                        this.buffer
-                                .append(String.format("%s length %d", this.currentSerializer.dataClassName(), this.columnCount));
+                        this.buffer.append(
+                                String.format("%s length %d", this.currentSerializer.dataClassName(), this.columnCount));
                     }
                     int elementSize = -1;
                     if (this.currentSerializer instanceof ArrayOrMatrixSerializer<?, ?>)
@@ -190,7 +389,7 @@ public class SerialDataDecoder implements Decoder
                     {
                         this.buffer.append(String.format("value at index %d: ", this.currentColumn));
                     }
-                    else // it is 2
+                    else // 2 dimensions
                     {
                         this.buffer.append(String.format("value at row %d column %d: ", this.currentRow, this.currentColumn));
                     }
@@ -261,6 +460,7 @@ public class SerialDataDecoder implements Decoder
             }
         }
         if (this.positionInData == this.totalDataSize)
+
         {
             this.currentSerializer = null;
             this.positionInData = -1;
@@ -270,6 +470,23 @@ public class SerialDataDecoder implements Decoder
             return true;
         }
         return result;
+    }
+
+    /**
+     * Check if additional bytes are needed to decode a money unit. Increases the buffer and the <code>totalDataSize</code> to
+     * accommodate all needed bytes.
+     * @return boolean; true if more bytes are needed; false if no more bytes are needed.
+     */
+    private boolean checkMoneyNeedsMoreBytes()
+    {
+        if (this.dataElementBytes[0] < 100 || this.dataElementBytes[0] > 106 || this.dataElementBytes.length != 2)
+        {
+            return false;
+        }
+        int requiredLength = this.dataElementBytes[0] == 100 ? 3 : 4;
+        this.totalDataSize += requiredLength - this.dataElementBytes.length;
+        this.dataElementBytes = java.util.Arrays.copyOf(this.dataElementBytes, requiredLength);
+        return true;
     }
 
     /**
