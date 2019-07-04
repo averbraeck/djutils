@@ -970,28 +970,28 @@ public class Tests
         {
 
             @Override
-            public int size(final Object object) throws SerializationException
+            public int size(final Byte object) throws SerializationException
             {
                 // Auto-generated method stub; never called
                 return 0;
             }
 
             @Override
-            public int sizeWithPrefix(final Object object) throws SerializationException
+            public int sizeWithPrefix(final Byte object) throws SerializationException
             {
                 // Auto-generated method stub; never called
                 return 0;
             }
 
             @Override
-            public void serialize(final Object object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+            public void serialize(final Byte object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
                     throws SerializationException
             {
                 // Auto-generated method stub; never called
             }
 
             @Override
-            public void serializeWithPrefix(final Object object, final byte[] buffer, final Pointer pointer,
+            public void serializeWithPrefix(final Byte object, final byte[] buffer, final Pointer pointer,
                     final EndianUtil endianUtil) throws SerializationException
             {
                 // Auto-generated method stub; never called

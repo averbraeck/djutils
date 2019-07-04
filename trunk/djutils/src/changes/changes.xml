@@ -7,6 +7,13 @@
         The ImmutableLinkedHashMap.values() was overriding a non-reproducible values() method from the 
         ImmutableAbstractMap. The ImmutableLinkedHashMap now has its own values() method.
       </action>
+      <action dev="averbraeck" type="fix">
+        The byte[][] serialization destroyed the underlying data -- this has been repaired.
+      </action>
+      <action dev="averbraeck" type="update">
+        The serializers have all been made strongly typed, avoiding casting. Or actually, the casting has been 
+        shifted to the encode method on a higher level.
+      </action>
     </release>
   
     <release version="1.01.01" date="2019-07-01" description="ImmutableLinkedHashMap repaired; serialization of UTF-8, UTF-16">
