@@ -45,7 +45,7 @@
   <interface id="5" language="java" name="org.djutils.serialization.Serializer" project="djutils-serialization" 
     file="/djutils-serialization/src/main/java/org/djutils/serialization/Serializer.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="910" y="161"/>    
+    <position height="-1" width="-1" x="894" y="160"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false" static="false"/>      
@@ -84,7 +84,7 @@
     </display>  
   </class>  
   <generalization id="9">    
-    <end type="SOURCE" refId="4"/>    
+    <end type="SOURCE" refId="3"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
   <generalization id="10">    
@@ -92,15 +92,15 @@
     <end type="TARGET" refId="3"/>  
   </generalization>  
   <generalization id="11">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="12">    
     <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="8"/>  
   </generalization>  
-  <generalization id="12">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
   <generalization id="13">    
-    <end type="SOURCE" refId="3"/>    
+    <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
   <generalization id="14">    
