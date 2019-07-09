@@ -17,7 +17,7 @@ public interface Serializer<T extends Object>
     /**
      * Compute the number of bytes needed to serialize an object of type T (excluding the byte(s) that indicate that an object
      * of type T is next in the data stream).
-     * @param object Object; Instance of the object (should be of type T)
+     * @param object T; Instance of the object
      * @return int; the number of bytes needed to serialize an object of type T
      * @throws SerializationException when the <code>object</code> cannot be serialized
      */
@@ -26,7 +26,7 @@ public interface Serializer<T extends Object>
     /**
      * Compute the number of bytes needed to serialize an object of type T (including the byte(s) that indicate that an object
      * of type T is next in the data stream).
-     * @param object Instance of the object (should be instance of T)
+     * @param object T; Instance of the object
      * @return int; the number of bytes needed to serialize an object of type T
      * @throws SerializationException when the <code>object</code> cannot be serialized
      */
@@ -40,7 +40,7 @@ public interface Serializer<T extends Object>
 
     /**
      * Serialize an object of type T; not including the prefix byte(s).
-     * @param object Object; the object to serialize (should be of type T)
+     * @param object T; the object to serialize
      * @param buffer byte[]; buffer for the serialized T
      * @param pointer Pointer; position in buffer where the first byte of the serialized T will be stored
      * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
@@ -50,14 +50,13 @@ public interface Serializer<T extends Object>
 
     /**
      * Serialize an object of type T including the prefix byte(s).
-     * @param object Object; the object to serialize (should be of type T)
+     * @param object T; the object to serialize
      * @param buffer byte[]; buffer for the serialized T
      * @param pointer Pointer; position in buffer where the first byte of the serialized T will be stored
      * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
      * @throws SerializationException when a matrix has size zero or is jagged
      */
-    void serializeWithPrefix(T object, byte[] buffer, Pointer pointer, EndianUtil endianUtil)
-            throws SerializationException;
+    void serializeWithPrefix(T object, byte[] buffer, Pointer pointer, EndianUtil endianUtil) throws SerializationException;
 
     /**
      * Deserialize an object of type T. The <code>pointer</code> should be on the first byte of the object; i.e. just after the
@@ -71,7 +70,8 @@ public interface Serializer<T extends Object>
     T deSerialize(byte[] buffer, Pointer pointer, EndianUtil endianUtil) throws SerializationException;
 
     /**
-     * Return a description of the type of data that this serializer handles.
+     * Return a description of the type of data that this serializer handles. The result of this method should <b>not</b> be
+     * subject to localization because it is used in the SerialDataDecoder to identify the type of a serializer.
      * @return String; description of the type of data that this serializer handles
      */
     String dataClassName();
