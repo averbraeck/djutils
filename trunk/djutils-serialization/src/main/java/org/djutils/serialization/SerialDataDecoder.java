@@ -97,7 +97,8 @@ public class SerialDataDecoder implements Decoder
             }
             else
             {
-                this.buffer.append(this.currentSerializer.dataClassName() + " ");
+                this.buffer.append(this.currentSerializer.dataClassName() + (this.currentSerializer.getNumberOfDimensions() > 0
+                        || this.currentSerializer.dataClassName().startsWith("Djunits") ? " " : ": "));
                 this.positionInData = 1;
                 this.totalDataSize = 1; // to be adjusted
                 this.columnCount = 0;
@@ -232,6 +233,7 @@ public class SerialDataDecoder implements Decoder
                     {
                         prepareForDataElement(2);
                         this.totalDataSize += 2;
+                        this.buffer.append(", ");
                     }
                     else
                     {
@@ -245,6 +247,7 @@ public class SerialDataDecoder implements Decoder
                 else
                 {
                     // process one double value
+                    this.buffer.append(String.format("value at row %d column %d: ", this.currentRow, this.currentColumn));
                     this.buffer.append(this.endianUtil.decodeDouble(this.dataElementBytes, 0));
                     this.positionInData = 0;
                     this.currentColumn++;
@@ -253,6 +256,8 @@ public class SerialDataDecoder implements Decoder
                         this.currentColumn = 0;
                         this.currentRow++;
                     }
+                    this.buffer.append(" ");
+                    this.nextDataElementByte = 0;
                 }
             }
             else if (this.currentSerializer.dataClassName().startsWith("Djunits"))
@@ -266,18 +271,17 @@ public class SerialDataDecoder implements Decoder
                     {
                         this.rowCount = this.columnCount;
                         this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 4);
-                        this.buffer.append(String.format("%s height %d, width %d", this.currentSerializer.dataClassName(),
-                                this.rowCount, this.columnCount));
+                        this.buffer.append(String.format("height %d, width %d", this.rowCount, this.columnCount));
                     }
                     else
                     {
                         this.rowCount = 1;
-                        this.buffer.append(
-                                String.format("%s length %d", this.currentSerializer.dataClassName(), this.columnCount));
+                        this.buffer.append(String.format("length %d", this.columnCount));
                     }
                     // Prepare for the unit.
                     prepareForDataElement(2);
                     this.totalDataSize += 2;
+                    this.buffer.append(", ");
                     return false;
                 }
                 else if (null == this.displayUnit)
@@ -287,7 +291,7 @@ public class SerialDataDecoder implements Decoder
                         return false;
                     }
                     this.displayUnit = TypedMessage.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
-                    this.buffer.append(" unit " + this.displayUnit);
+                    this.buffer.append("unit " + this.displayUnit);
                     int numberOfDimensions = this.currentSerializer.getNumberOfDimensions();
                     int elementSize = this.currentSerializer.dataClassName().contains("Float") ? 4 : 8;
                     this.totalDataSize += elementSize * (0 == numberOfDimensions ? 1 : this.rowCount * this.columnCount);
@@ -353,14 +357,12 @@ public class SerialDataDecoder implements Decoder
                     {
                         this.rowCount = this.columnCount;
                         this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 4);
-                        this.buffer.append(String.format("%s height %d, width %d", this.currentSerializer.dataClassName(),
-                                this.rowCount, this.columnCount));
+                        this.buffer.append(String.format("height %d, width %d", this.rowCount, this.columnCount));
                     }
                     else
                     {
                         this.rowCount = 1;
-                        this.buffer.append(
-                                String.format("%s length %d", this.currentSerializer.dataClassName(), this.columnCount));
+                        this.buffer.append(String.format("length %d", this.columnCount));
                     }
                     int elementSize = -1;
                     if (this.currentSerializer instanceof ArrayOrMatrixSerializer<?, ?>)
