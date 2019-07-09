@@ -77,7 +77,7 @@ public class SerialDataDecoder implements Decoder
     @Override
     public final int getMaximumWidth()
     {
-        return 40;
+        return 80;
     }
 
     @Override
