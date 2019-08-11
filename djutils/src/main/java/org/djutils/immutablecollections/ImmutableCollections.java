@@ -82,6 +82,7 @@ public class ImmutableCollections
      * @return int; if <code>key</code> is present in the list, the index of <code>key</code>, or, when <code>key</code> is not
      *         present in the list <code>(-(<i>insertion point</i>) - 1)</code> where <code>insertion point</code> is the index
      *         of <code>key</code> if it were contained in the list.
+     * @param <T> the object type in the list
      */
     public static <T> int binarySearch(ImmutableList<? extends T> il, T key, Comparator<? super T> comparator)
     {
@@ -207,6 +208,7 @@ public class ImmutableCollections
      * @param ic ImmutableCollection&lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt;; the immutable collection
      * @return T &lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt;; the maximum element in the immutable collection
      * @throws NoSuchElementException if the immutable collection is empty.
+     * @param <T> the object type in the collection
      */
     public static <T extends Object & Comparable<? super T>> T max(ImmutableCollection<? extends T> ic)
     {
@@ -219,6 +221,7 @@ public class ImmutableCollections
      * @param comparator Comparator&lt;? super T&gt;; a comparator for <code>T</code>
      * @return T &lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt;; the maximum element in the immutable collection
      * @throws NoSuchElementException if the immutable collection is empty.
+     * @param <T> the object type in the collection
      */
     public static <T extends Object> T max(ImmutableCollection<? extends T> ic, Comparator<? super T> comparator)
     {
@@ -230,6 +233,7 @@ public class ImmutableCollections
      * @param ic ImmutableCollection&lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt;; the immutable collection
      * @return T &lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt;; the minimum element in the immutable collection
      * @throws NoSuchElementException if the immutable collection is empty.
+     * @param <T> the object type in the collection
      */
     public static <T extends Object & Comparable<? super T>> T min(ImmutableCollection<? extends T> ic)
     {
@@ -242,6 +246,7 @@ public class ImmutableCollections
      * @param comparator Comparator&lt;? super T&gt;; a comparator for <code>T</code>
      * @return T &lt;T extends Object &amp; Comparable&lt;? super T&gt;&gt;; the minimum element in the immutable collection
      * @throws NoSuchElementException if the immutable collection is empty.
+     * @param <T> the object type in the collection
      */
     public static <T extends Object> T min(ImmutableCollection<? extends T> ic, Comparator<? super T> comparator)
     {
