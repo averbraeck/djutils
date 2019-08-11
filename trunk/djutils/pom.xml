@@ -215,6 +215,7 @@
           <links>
             <link>https://download.java.net/media/java3d/javadoc/1.5.1</link>
             <link>https://tinylog.org/javadoc</link>
+            <link>https://picocli.info/apidocs</link>
           </links>
           <minmemory>256m</minmemory>
           <maxmemory>1g</maxmemory>
@@ -370,6 +371,7 @@
           <links>
             <link>https://download.java.net/media/java3d/javadoc/1.5.1</link>
             <link>https://tinylog.org/javadoc</link>
+            <link>https://picocli.info/apidocs</link>
           </links>
           <minmemory>256m</minmemory>
           <maxmemory>1g</maxmemory>
@@ -611,7 +613,7 @@
         <role>maintainance</role>
       </roles>
     </developer>
- 
+
     <developer>
       <id>wjschakel</id>
       <name>Wouter Schakel</name>

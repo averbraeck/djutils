@@ -12,6 +12,7 @@
 
     <menu name="MODULES">
       <item name="djutils" href="https://djutils.org/docs/${version}/index.html" />
+      <item name="djutils-ext" href="https://djutils.org/docs/${version}/djutils-ext/index.html" />
       <item name="djutils-serialization" href="https://djutils.org/docs/${version}/djutils-serialization/index.html" />
     </menu>
 
