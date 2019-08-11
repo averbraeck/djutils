@@ -2,6 +2,20 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.02.00" date="2019-08-11" description="djutils-ext project added; CLI code">
+      <action dev="averbraeck" type="add">
+        A project for more utility classes that require more dependencies called djutils-ext has been added.
+      </action>
+      <action dev="averbraeck" type="add">
+        Classes for Command Line Interface parsing have been added. The classes are based on picocli.
+      </action>
+      <action dev="averbraeck" type="add">
+        A utility class with converters for DJUTILS command line arguments has been added. With these
+        converters, it is possible to e.g. specify --timeout=30s on the command line and convert the 
+        timeout to a DJUNITS Duration scalar. 
+      </action>
+    </release>
+
     <release version="1.01.03" date="2019-07-04" description="byte[][] serialization repaired">
       <action dev="averbraeck" type="fix">
         The byte[][] serialization destroyed the underlying data -- this has been repaired.
