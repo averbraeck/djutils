@@ -4,6 +4,12 @@
 
     <release version="1.02.00" date="2019-08-11" description="djutils-ext project added; CLI code">
       <action dev="averbraeck" type="add">
+        Little-Endian types have been added to the FieldTypes in djutils-serialization.
+      </action>
+    </release>
+    
+    <release version="1.02.00" date="2019-08-11" description="djutils-ext project added; CLI code">
+      <action dev="averbraeck" type="add">
         A project for more utility classes that require more dependencies called djutils-ext has been added.
       </action>
       <action dev="averbraeck" type="add">

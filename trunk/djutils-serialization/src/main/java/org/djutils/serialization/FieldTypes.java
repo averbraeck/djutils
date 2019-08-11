@@ -329,6 +329,190 @@ public final class FieldTypes
      */
     public static final byte DOUBLE_64_UNIT_COLUMN_ARRAY = 32;
 
+    /** 128 (-128) Byte, 8 bit signed two's complement integer; equal to code 0. */
+    public static final byte BYTE_8_LE = -128;
+
+    /**
+     * 129 (-127) Short, 16 bit signed two's complement integer, little endian order.
+     */
+    public static final byte SHORT_16_LE = -127;
+
+    /**
+     * 130 (-126) Integer, 32 bit signed two's complement integer, little endian order.
+     */
+    public static final byte INT_32_LE = -126;
+
+    /**
+     * 131 (-125) Long, 64 bit signed two's complement integer, little endian order.
+     */
+    public static final byte LONG_64_LE = -125;
+
+    /**
+     * 132 (-124) Float, single-precision 32-bit IEEE 754 floating point, little endian order.
+     */
+    public static final byte FLOAT_32_LE = -124;
+
+    /**
+     * 133 (-123) Float, double-precision 64-bit IEEE 754 floating point, little endian order.
+     */
+    public static final byte DOUBLE_64_LE = -123;
+
+    /**
+     * 134 (-122) Boolean, sent / received as a byte; 0 = false, 1 = true; equal to code 6.
+     */
+    public static final byte BOOLEAN_8_LE = -122;
+
+    /**
+     * 135 (-121) Char, 8-bit ASCII character; equal to code 7.
+     */
+    public static final byte CHAR_8_LE = -121;
+
+    /**
+     * 136 (-120) Char, 16-bit Unicode character, little-endian order for the 2 part.
+     */
+    public static final byte CHAR_16_LE = -120;
+
+    /**
+     * s 137 (-119) String, 32-bit little-endian number-preceded byte array of 8-bits characters.
+     */
+    public static final byte STRING_8_LE = -119;
+
+    /**
+     * 138 (-118) String, 32-bit little-endian number-preceded char array of 16-bits characters, each 2-byte character in
+     * little-endian order.
+     */
+    public static final byte STRING_16_LE = -118;
+
+    /**
+     * 139 (-117) Byte array, preceded by a 32-bit little-endian number indicating the number of bytes.
+     */
+    public static final byte BYTE_8_ARRAY_LE = -117;
+
+    /**
+     * 140 (-116) Short array, preceded by a 32-bit little-endian number indicating the number of shorts, little-endian coded
+     * shorts.
+     */
+    public static final byte SHORT_16_ARRAY_LE = -116;
+
+    /**
+     * 141 (-115) Integer array, preceded by a 32-bit little-endian number indicating the number of integers, little-endian
+     * coded ints.
+     */
+    public static final byte INT_32_ARRAY_LE = -115;
+
+    /**
+     * 142 (-114) Long array, preceded by a 32-bit little-endian number indicating the number of longs, little-endian coded
+     * longs.
+     */
+    public static final byte LONG_64_ARRAY_LE = -114;
+
+    /**
+     * 143 (-113) Float array, preceded by a 32-bit little-endian number indicating the number of floats, little-endian coded
+     * floats.
+     */
+    public static final byte FLOAT_32_ARRAY_LE = -113;
+
+    /**
+     * 144 (-112) Double array, preceded by a 32-bit little-endian number indicating the number of doubles, little-endian coded
+     * doubles.
+     */
+    public static final byte DOUBLE_64_ARRAY_LE = -112;
+
+    /**
+     * 145 (-111) Boolean array, preceded by a 32-bit little-endian number indicating the number of booleans.
+     */
+    public static final byte BOOLEAN_8_ARRAY_LE = -111;
+
+    /**
+     * 146 (-110) Byte matrix, preceded by a 32-bit little-endian number row count and a 32-bit little-endian number column
+     * count.
+     */
+    public static final byte BYTE_8_MATRIX_LE = -110;
+
+    /**
+     * 147 (-109) Short matrix, preceded by a 32-bit little-endian number row count and a 32-bit little-endian number column
+     * count, little-endian coded shorts.
+     */
+    public static final byte SHORT_16_MATRIX_LE = -109;
+
+    /**
+     * 148 (-108) Integer matrix, preceded by a 32-bit little-endian number row count and a 32-bit little-endian number column
+     * count, little-endian coded ints.
+     */
+    public static final byte INT_32_MATRIX_LE = -108;
+
+    /**
+     * 149 (-107) Long matrix, preceded by a 32-bit little-endian number row count and a 32-bit little-endian number column
+     * count, little-endian coded longs.
+     */
+    public static final byte LONG_64_MATRIX_LE = -107;
+
+    /**
+     * 150 (-106) Float matrix, preceded by a 32-bit little-endian number row count and a 32-bit little-endian number column
+     * count, little-endian coded floats.
+     */
+    public static final byte FLOAT_32_MATRIX_LE = -106;
+
+    /**
+     * 151 (-105) Double matrix, preceded by a 32-bit little-endian number row count and a 32-bit little-endian number column
+     * count, little-endian doubles.
+     */
+    public static final byte DOUBLE_64_MATRIX_LE = -105;
+
+    /**
+     * 152 (-104) Boolean matrix, preceded by a 32-bit little-endian number row count and a 32-bit little-endian number column
+     * count.
+     */
+    public static final byte BOOLEAN_8_MATRIX_LE = -104;
+
+    /**
+     * 153 (-103) Float stored internally as a little-endian float in the corresponding SI unit, with unit type and display unit
+     * attached. The total size of the object is 7 bytes plus 1 or 2 extra bytes when a money unit is involved.
+     */
+    public static final byte FLOAT_32_UNIT_LE = -103;
+
+    /**
+     * 154 (-102) Double stored internally as a little-endian double in the corresponding SI unit, with unit type and display
+     * unit attached. The total size of the object is 11 bytes plus 1 or 2 extra bytes when a money unit is involved.
+     */
+    public static final byte DOUBLE_64_UNIT_LE = -102;
+
+    /**
+     * 155 (-101) Dense float array, preceded by a little-endian 32-bit number indicating the number of floats, with unit type
+     * and display unit attached to the entire float array. Each float is stored in little-endian order.
+     */
+    public static final byte FLOAT_32_UNIT_ARRAY_LE = -101;
+
+    /**
+     * 156 (-100) Dense double array, preceded by a little-endian 32-bit number indicating the number of doubles, little-endian
+     * order, with unit type and display unit attached to the entire double array. Each double is stored in little-endian order.
+     */
+    public static final byte DOUBLE_64_UNIT_ARRAY_LE = -100;
+
+    /**
+     * 157 (-99) Dense float matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian column count
+     * int, with unit type and display unit attached to the entire float matrix. Each float is stored in little-endian order.
+     */
+    public static final byte FLOAT_32_UNIT_MATRIX_LE = -99;
+
+    /**
+     * 158 (-98) Dense double matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian column count
+     * int, with unit type and display unit attached to the entire double matrix. Each double is stored in little-endian order.
+     */
+    public static final byte DOUBLE_64_UNIT_MATRIX_LE = -98;
+
+    /**
+     * 159 (-97) Dense little-endian float matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian
+     * column count int, with a unique unit type and display unit per row of the float matrix.
+     */
+    public static final byte FLOAT_32_UNIT2_MATRIX_LE = -97;
+
+    /**
+     * 160 (-96) Dense little-endian double matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian
+     * column count int, with a unique unit type and display unit per row of the double matrix.
+     */
+    public static final byte DOUBLE_64_UNIT2_MATRIX_LE = -96;
+
     /**
      * Utility class, cannot be instantiated.
      */
