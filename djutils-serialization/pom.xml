@@ -4,7 +4,7 @@
 
   <groupId>org.djutils</groupId>
   <artifactId>djutils-serialization</artifactId>
-  <version>1.01.03</version>
+  <version>1.02.00</version>
 
   <name>DJUTILS serialization of data structures</name>
   <description>DJUTILS serialization of data structures</description>
