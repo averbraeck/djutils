@@ -8,13 +8,13 @@ package org.djutils.reflection;
  * source code and binary code of this software is proprietary information of Delft University of Technology.
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
  */
-public class XTest
+public class Test
 {
 
     /**
      * Test class to find in ClassUtil.classFileDescriptor.
      */
-    public XTest()
+    public Test()
     {
         // Test class to find in ClassUtil.classFileDescriptor
     }
