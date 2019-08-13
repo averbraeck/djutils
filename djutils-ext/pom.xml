@@ -542,6 +542,13 @@
     </dependency>
 
     <dependency>
+      <groupId>com.github.stefanbirkner</groupId>
+      <artifactId>system-rules</artifactId>
+      <version>1.19.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.djutils</groupId>
       <artifactId>djutils</artifactId>
       <version>${djutils.version}</version>

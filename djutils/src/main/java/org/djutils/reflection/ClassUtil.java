@@ -1,10 +1,14 @@
 package org.djutils.reflection;
 
+import java.io.File;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,7 +17,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
+import org.djutils.io.URLResource;
 import org.djutils.primitives.Primitive;
 
 /**
@@ -119,8 +127,7 @@ public final class ClassUtil
      * @return Constructor
      * @throws NoSuchMethodException on lookup failure
      */
-    public static Constructor<?> resolveConstructor(final Class<?> clazz, final Object[] arguments)
-            throws NoSuchMethodException
+    public static Constructor<?> resolveConstructor(final Class<?> clazz, final Object[] arguments) throws NoSuchMethodException
     {
         Class<?>[] parameterTypes = ClassUtil.getClass(arguments);
         String key = "CONSTRUCTOR:" + clazz + "@" + FieldSignature.toDescriptor(parameterTypes);
@@ -422,8 +429,8 @@ public final class ClassUtil
     }
 
     /**
-     * Determines &amp; returns whether constructor 'a' is more specific than constructor 'b', as defined in the Java
-     * Language Specification ???15.12.
+     * Determines &amp; returns whether constructor 'a' is more specific than constructor 'b', as defined in the Java Language
+     * Specification ???15.12.
      * @return true if 'a' is more specific than b, false otherwise. 'false' is also returned when constructors are
      *         incompatible, e.g. have different names or a different number of parameters.
      * @param a Class&lt;?&gt;[]; reflects the first constructor
@@ -448,8 +455,8 @@ public final class ClassUtil
     }
 
     /**
-     * Determines &amp; returns whether constructor 'a' is more specific than constructor 'b', as defined in the Java
-     * Language Specification ???15.12.
+     * Determines &amp; returns whether constructor 'a' is more specific than constructor 'b', as defined in the Java Language
+     * Specification ???15.12.
      * @return true if 'a' is more specific than b, false otherwise. 'false' is also returned when constructors are
      *         incompatible, e.g. have different names or a different number of parameters.
      * @param a Constructor&lt;?&gt;; reflects the first constructor
@@ -468,8 +475,8 @@ public final class ClassUtil
     }
 
     /**
-     * Determines &amp; returns whether constructor 'a' is more specific than constructor 'b', as defined in the Java
-     * Language Specification ???15.12.
+     * Determines &amp; returns whether constructor 'a' is more specific than constructor 'b', as defined in the Java Language
+     * Specification ???15.12.
      * @return true if 'a' is more specific than b, false otherwise. 'false' is also returned when constructors are
      *         incompatible, e.g. have different names or a different number of parameters.
      * @param a Method; reflects the first method
@@ -522,8 +529,8 @@ public final class ClassUtil
      * @param methods Method[]; which are methods to be filtered.
      * @param name String; reflects the method's name, part of the signature
      * @param argTypes Class&lt;?&gt;[]; are the method's argument types
-     * @return Method[] An unordered Method-array consisting of the elements of 'methods' that match with the given
-     *         signature. An array with 0 elements is returned when no matching Method objects are found.
+     * @return Method[] An unordered Method-array consisting of the elements of 'methods' that match with the given signature.
+     *         An array with 0 elements is returned when no matching Method objects are found.
      */
     public static Method[] matchSignature(final Method[] methods, final String name, final Class<?>[] argTypes)
     {
@@ -593,9 +600,8 @@ public final class ClassUtil
      * Filters an array methods for signatures that are compatible with a given signature.
      * @param constructors Constructor&lt;?&gt;[]; which are constructors to be filtered.
      * @param argTypes Class&lt;?&gt;[]; are the constructor's argument types
-     * @return Constructor&lt;?&gt;[] An unordered Constructor-array consisting of the elements of 'constructors' that
-     *         match with the given signature. An array with 0 elements is returned when no matching Method objects are
-     *         found.
+     * @return Constructor&lt;?&gt;[] An unordered Constructor-array consisting of the elements of 'constructors' that match
+     *         with the given signature. An array with 0 elements is returned when no matching Method objects are found.
      */
     public static Constructor<?>[] matchSignature(final Constructor<?>[] constructors, final Class<?>[] argTypes)
     {
@@ -654,10 +660,10 @@ public final class ClassUtil
     }
 
     /**
-     * Determines & returns the most specific constructor as defined in the Java Language Specification par 15.12. The
-     * current algorithm is simple and reliable, but probably slow.
-     * @param methods Constructor&lt;?&gt;[]; are the constructors to be searched. They are assumed to have the same
-     *            name and number of parameters, as determined by the constructor matchSignature.
+     * Determines & returns the most specific constructor as defined in the Java Language Specification par 15.12. The current
+     * algorithm is simple and reliable, but probably slow.
+     * @param methods Constructor&lt;?&gt;[]; are the constructors to be searched. They are assumed to have the same name and
+     *            number of parameters, as determined by the constructor matchSignature.
      * @return Constructor which is the most specific constructor.
      * @throws NoSuchMethodException when no constructor is found that's more specific than the others.
      */
@@ -700,10 +706,10 @@ public final class ClassUtil
     }
 
     /**
-     * Determines & returns the most specific method as defined in the Java Language Specification par 15.12. The
-     * current algorithm is simple and reliable, but probably slow.
-     * @param methods Method[]; which are the methods to be searched. They are assumed to have the same name and number
-     *            of parameters, as determined by the method matchSignature.
+     * Determines & returns the most specific method as defined in the Java Language Specification par 15.12. The current
+     * algorithm is simple and reliable, but probably slow.
+     * @param methods Method[]; which are the methods to be searched. They are assumed to have the same name and number of
+     *            parameters, as determined by the method matchSignature.
      * @return The most specific method.
      * @throws NoSuchMethodException when no method is found that's more specific than the others.
      */
@@ -842,6 +848,205 @@ public final class ClassUtil
                 return result;
             }
             throw new NoSuchFieldException(exception.getMessage());
+        }
+    }
+
+    /**
+     * Change the value of a property of an annotation through reflection. The annotation that can be changed can be a class,
+     * field, or method annotation. Based on:
+     * https://stackoverflow.com/questions/14268981/modify-a-class-definitions-annotation-string-parameter-at-runtime
+     * @param annotation the annotation to change
+     * @param key the field to look for in the annotation
+     * @param newValue the value to set the annotation field to
+     * @throws IllegalStateException when the annotation has no member values or access to the member values is denied
+     * @throws IllegalArgumentException when the value that is changed is of a different type than the type of the newValue
+     */
+    @SuppressWarnings("unchecked")
+    public static void changeAnnotationValue(final Annotation annotation, final String key, final Object newValue)
+    {
+        Object handler = Proxy.getInvocationHandler(annotation);
+        Field f;
+        try
+        {
+            f = handler.getClass().getDeclaredField("memberValues");
+        }
+        catch (NoSuchFieldException | SecurityException e)
+        {
+            throw new IllegalStateException(e);
+        }
+        f.setAccessible(true);
+        Map<String, Object> memberValues;
+        try
+        {
+            memberValues = (Map<String, Object>) f.get(handler);
+        }
+        catch (IllegalArgumentException | IllegalAccessException e)
+        {
+            throw new IllegalStateException(e);
+        }
+        Object oldValue = memberValues.get(key);
+        if (oldValue == null || oldValue.getClass() != newValue.getClass())
+        {
+            throw new IllegalArgumentException();
+        }
+        memberValues.put(key, newValue);
+    }
+
+    /**
+     * Retrieve a file pointer of a class, e.g. to request the last compilation date.
+     * @param object Object; the object for which the class information should be retrieved
+     * @return a ClassFileDescriptor with some information of the .class file
+     */
+    public static ClassFileDescriptor classFileDescriptor(final Object object)
+    {
+        return classFileDescriptor(object.getClass());
+    }
+
+    /**
+     * Retrieve a file pointer of a class, e.g. to request the last compilation date.
+     * @param clazz Class&lt;?&gt;; the class for which a file descriptor should be retrieved
+     * @return a ClassFileDescriptor with some information of the .class file
+     */
+    public static ClassFileDescriptor classFileDescriptor(final Class<?> clazz)
+    {
+        URL clazzUrl = URLResource.getResource("/" + clazz.getName().replaceAll("\\.", "/") + ".class");
+        return classFileDescriptor(clazzUrl);
+    }
+
+    /**
+     * Retrieve a file pointer of a class, e.g. to request the last compilation date.
+     * @param clazzUrl URL; the URL to a class for which a file descriptor should be retrieved
+     * @return a ClassFileDescriptor with some information of the .class file
+     */
+    public static ClassFileDescriptor classFileDescriptor(final URL clazzUrl)
+    {
+        if (clazzUrl.toString().startsWith("jar:file:") && clazzUrl.toString().contains("!"))
+        {
+            String[] parts = clazzUrl.toString().split("\\!");
+            String jarFileName = parts[0].replace("jar:file:", "");
+            try
+            {
+                try (JarFile jarFile = new JarFile(jarFileName))
+                {
+                    if (parts[1].startsWith("/"))
+                    {
+                        parts[1] = parts[1].substring(1);
+                    }
+                    JarEntry jarEntry = jarFile.getJarEntry(parts[1]);
+                    return new ClassFileDescriptor(jarEntry, jarFileName + "!" + parts[1]);
+                }
+                catch (Exception exception)
+                {
+                    return new ClassFileDescriptor(new File(jarFileName));
+                }
+            }
+            catch (Exception exception)
+            {
+                return new ClassFileDescriptor(new File(jarFileName));
+            }
+        }
+        return new ClassFileDescriptor(new File(clazzUrl.getPath()));
+    }
+
+    /**
+     * ClassFileDescriptor contains some information about a class file, either stand-alone on the classpath, or within a Jar
+     * file.<br>
+     * <br>
+     * Copyright (c) 2019-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved.
+     * See for project information <a href="https://www.simulation.tudelft.nl/" target="_blank">www.simulation.tudelft.nl</a>.
+     * The source code and binary code of this software is proprietary information of Delft University of Technology.
+     * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
+     */
+    public static class ClassFileDescriptor
+    {
+        /** the final name + extension (without path) of the file. */
+        private final String name;
+
+        /** the full path (with a ! inside if it is a Jar file descriptor). */
+        private final String path;
+
+        /** whether it is a file from a Jar container. */
+        private final boolean jar;
+
+        /** last changed date of the file in millis, if known. Otherwise 1-1-1970, 00:00. */
+        private long lastChangedDate;
+
+        /**
+         * Construct a ClassFileDescriptor from a File.
+         * @param classFile File; the file to use.
+         */
+        public ClassFileDescriptor(final File classFile)
+        {
+            this.name = classFile.getName();
+            this.path = classFile.getPath();
+            this.jar = false;
+            this.lastChangedDate = classFile.lastModified();
+        }
+
+        /**
+         * Construct a ClassFileDescriptor from a JarEntry.
+         * @param jarEntry JarEntry; the JarEntry to use.
+         * @param path the path of the JarEntry
+         */
+        public ClassFileDescriptor(final JarEntry jarEntry, final String path)
+        {
+            this.name = jarEntry.getName();
+            this.path = path;
+            this.jar = false;
+            this.lastChangedDate = jarEntry.getLastModifiedTime().toMillis();
+        }
+
+        /**
+         * Construct a ClassFileDescriptor from a ZipEntry.
+         * @param zipEntry ZipEntry; the ZipEntry to use.
+         * @param path the path of the ZipEntry
+         */
+        public ClassFileDescriptor(final ZipEntry zipEntry, final String path)
+        {
+            this.name = zipEntry.getName();
+            this.path = path;
+            this.jar = false;
+            this.lastChangedDate = zipEntry.getLastModifiedTime().toMillis();
+        }
+
+        /**
+         * @return name
+         */
+        public String getName()
+        {
+            return this.name;
+        }
+
+        /**
+         * @return path
+         */
+        public String getPath()
+        {
+            return this.path;
+        }
+
+        /**
+         * @return jar
+         */
+        public boolean isJar()
+        {
+            return this.jar;
+        }
+
+        /**
+         * @return lastChangedDate
+         */
+        public long getLastChangedDate()
+        {
+            return this.lastChangedDate;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public String toString()
+        {
+            return "ClassFileDescriptor [name=" + this.name + ", path=" + this.path + ", jar=" + this.jar + ", lastChangedDate="
+                    + this.lastChangedDate + "]";
         }
     }
 }

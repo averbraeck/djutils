@@ -2,9 +2,22 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.02.00" date="2019-08-11" description="djutils-ext project added; CLI code">
+    <release version="1.02.02" date="2019-08-XX" description="Little Endian (de)serialization">
       <action dev="averbraeck" type="add">
         Little-Endian types have been added to the FieldTypes in djutils-serialization.
+      </action>
+    </release>
+    
+    <release version="1.02.01" date="2019-08-13" description="CLI helper methods, ClassFileDescriptor">
+      <action dev="averbraeck" type="add">
+        ClassUtil got extra methods to retrieve information about a class file, e.g. the last changed date.
+      </action>
+      <action dev="averbraeck" type="fix">
+        CliIUtil has been renamed to the correct CliUtil.
+      </action>
+      <action dev="averbraeck" type="add">
+        Several helper methods have been added to CliUtil to change some of the @Options and
+        @Command settings.
       </action>
     </release>
     
