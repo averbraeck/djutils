@@ -2,12 +2,21 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.02.02" date="2019-08-XX" description="Little Endian (de)serialization">
+    <!-- release version="1.02.03" date="2019-08-XX" description="Little Endian (de)serialization">
       <action dev="averbraeck" type="add">
         Little-Endian types have been added to the FieldTypes in djutils-serialization.
       </action>
-    </release>
+    </release -->
     
+    <release version="1.02.02" date="2019-08-16" description="Resolving annotations">
+      <action dev="averbraeck" type="add">
+        ClassUtil has resolveAnnotation methods.
+      </action>
+      <action dev="averbraeck" type="add">
+        CliUtil also resolved @Command and @Option annotations in a superclass.
+      </action>
+    </release>
+
     <release version="1.02.01" date="2019-08-13" description="CLI helper methods, ClassFileDescriptor">
       <action dev="averbraeck" type="add">
         ClassUtil got extra methods to retrieve information about a class file, e.g. the last changed date.
