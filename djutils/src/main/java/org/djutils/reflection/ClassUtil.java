@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -395,6 +396,92 @@ public final class ClassUtil
             return result;
         }
     }
+
+    /* ************ ANNOTATION UTILITIES *********** */
+
+    /**
+     * gets all the annotations of a class (public, protected, package, and private) and adds the result to the return value.
+     * @param clazz Class&lt;?&gt;; the class
+     * @param result Set&lt;Annotation&gt;; the resulting set
+     * @return the set of annotations including all annotations of the annotation clazz
+     */
+    public static Set<Annotation> getAllAnnotations(final Class<?> clazz, final Set<Annotation> result)
+    {
+        Annotation[] annotations = clazz.getDeclaredAnnotations();
+        for (int i = 0; i < annotations.length; i++)
+        {
+            result.add(annotations[i]);
+        }
+        if (clazz.getSuperclass() != null)
+        {
+            return ClassUtil.getAllAnnotations(clazz.getSuperclass(), result);
+        }
+        return result;
+    }
+
+    /**
+     * gets all the annotations of a class (public, protected, package, and private).
+     * @param clazz Class&lt;?&gt;; the class
+     * @return all annotations of the class
+     */
+    public static Set<Annotation> getAllAnnotations(final Class<?> clazz)
+    {
+        Set<Annotation> annotationSet = new HashSet<Annotation>();
+        return ClassUtil.getAllAnnotations(clazz, annotationSet);
+    }
+
+    /**
+     * resolves the annotation for a class, taking into account inner classes.
+     * @param clazz the class to resolve the annotation for, including inner classes
+     * @param annotationClass class of the annotation
+     * @return Annotation the annotation
+     * @throws NoSuchElementException on no such annotation
+     */
+
+    public static Annotation resolveAnnotation(final Class<?> clazz, final Class<? extends Annotation> annotationClass)
+            throws NoSuchElementException
+    {
+        try
+        {
+            return resolveAnnotationSuper(clazz, annotationClass);
+        }
+        catch (NoSuchElementException noSuchAnnotationException)
+        {
+            String className = clazz.getName();
+            if (className.indexOf("$") >= 0)
+            {
+                Class<?> clazz2 = null;
+                try
+                {
+                    clazz2 = Class.forName(className.substring(0, className.lastIndexOf("$")));
+                }
+                catch (ClassNotFoundException classNotFoundException)
+                {
+                    throw new NoSuchElementException("class " + clazz + " not found to resolve annotation " + annotationClass);
+                }
+                return ClassUtil.resolveAnnotation(clazz2, annotationClass);
+            }
+            throw new NoSuchElementException("class " + clazz + " does not contain annotation " + annotationClass);
+        }
+    }
+
+    /**
+     * resolves the annotation for a given object instance.
+     * @param object Object; the object to resolve the annotation for
+     * @param annotationName String; name of the annotation to resolve
+     * @return the annotation (if found)
+     * @throws NoSuchElementException if the annotation cannot be resolved
+     */
+    public static Annotation resolveAnnotation(final Object object, final String annotationName) throws NoSuchElementException
+    {
+        if (object == null)
+        {
+            throw new NoSuchElementException("resolveAnnotation: object is null for annotation " + annotationName);
+        }
+        return resolveAnnotation(object.getClass(), annotationName);
+    }
+
+    /* ************ OTHER UTILITIES *********** */
 
     /**
      * Returns whether a declaringClass is accessible according to the modifiers.
@@ -848,6 +935,52 @@ public final class ClassUtil
                 return result;
             }
             throw new NoSuchFieldException(exception.getMessage());
+        }
+    }
+
+    /**
+     * resolves the annotation for a class, taking into account superclasses.
+     * @param clazz Class&lt;?&gt;; the class for which superclasses will be probed
+     * @param annotationClass Class&lt;? extends Annotation&gt;; the class of the annotation to resolve
+     * @return the annotation (if found)
+     * @throws NoSuchElementException if the annotation cannot be resolved
+     */
+    private static Annotation resolveAnnotationSuper(final Class<?> clazz, final Class<? extends Annotation> annotationClass)
+            throws NoSuchElementException
+    {
+        String key = "ANNOTATION:" + clazz + "@" + annotationClass;
+        try
+        {
+            if (CACHE.containsKey(key))
+            {
+                return (Annotation) CACHE.get(key);
+            }
+            Annotation[] annotations = clazz.getDeclaredAnnotations();
+            Annotation result = null;
+            for (Annotation annotation : annotations)
+            {
+                if (annotation.annotationType().equals(annotationClass))
+                {
+                    result = annotation;
+                    break;
+                }
+            }
+            if (result == null)
+            {
+                throw new NoSuchElementException("Annotation " + annotationClass + " not found in class " + clazz.getName());
+            }
+            CACHE.put(key, result);
+            return result;
+        }
+        catch (Exception exception)
+        {
+            if (clazz.getSuperclass() != null)
+            {
+                Annotation result = ClassUtil.resolveAnnotationSuper(clazz.getSuperclass(), annotationClass);
+                CACHE.put(key, result);
+                return result;
+            }
+            throw new NoSuchElementException(exception.getMessage());
         }
     }
 

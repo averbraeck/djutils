@@ -1,5 +1,6 @@
 package org.djutils.cli;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -123,7 +124,26 @@ public class CliUtil
     }
 
     /**
-     * Change the value of a property of an already present &#64;Option annotation.
+     * Change the value of a property of an already present &#64;Option annotation of a field in a class or superclass.
+     * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
+     * @param fieldName String; the field for which the defaultValue in &#64;Option should be changed
+     * @param propertyName String; the name of the property to change the value of
+     * @param newValue String; the new value of the property
+     * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
+     * @throws NoSuchFieldException when the field with the name does not exist in the program object
+     * @throws IllegalStateException when the annotation has no member values or access to the member values is denied
+     * @throws IllegalArgumentException when the value that is changed is of a different type than the type of the newValue
+     */
+    public static void changeOptionProperty(final Class<?> programClass, final String fieldName, final String propertyName,
+            final Object newValue) throws CliException, NoSuchFieldException, IllegalStateException, IllegalArgumentException
+    {
+        Field field = ClassUtil.resolveField(programClass, fieldName);
+        Option option = field.getAnnotation(Option.class);
+        ClassUtil.changeAnnotationValue(option, propertyName, newValue);
+    }
+
+    /**
+     * Change the value of a property of an already present &#64;Option annotation of a field in a class or superclass.
      * @param program Object; the program for which the options should be changed
      * @param fieldName String; the field for which the defaultValue in &#64;Option should be changed
      * @param propertyName String; the name of the property to change the value of
@@ -136,13 +156,12 @@ public class CliUtil
     public static void changeOptionProperty(final Object program, final String fieldName, final String propertyName,
             final Object newValue) throws CliException, NoSuchFieldException, IllegalStateException, IllegalArgumentException
     {
-        Field field = ClassUtil.resolveField(program, fieldName);
-        Option option = field.getAnnotation(Option.class);
-        ClassUtil.changeAnnotationValue(option, propertyName, newValue);
+        changeOptionProperty(program.getClass(), fieldName, propertyName, newValue);
     }
 
     /**
-     * Change the default value of an already present &#64;Option annotation.
+     * Change the default value of an already present &#64;Option annotation of the "defaultValue" field in a class or
+     * superclass.
      * @param program Object; the program for which the options should be changed
      * @param fieldName String; the field for which the defaultValue in &#64;Option should be changed
      * @param newDefaultValue Object; the new value of the defaultValue
@@ -158,7 +177,24 @@ public class CliUtil
     }
 
     /**
-     * Change the value of a property of an already present &#64;Command annotation.
+     * Change the default value of an already present &#64;Option annotation of the "defaultValue" field in a class or
+     * superclass.
+     * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
+     * @param fieldName String; the field for which the defaultValue in &#64;Option should be changed
+     * @param newDefaultValue Object; the new value of the defaultValue
+     * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
+     * @throws NoSuchFieldException when the field with the name does not exist in the program object
+     * @throws IllegalStateException when the annotation has no member values or access to the member values is denied
+     * @throws IllegalArgumentException when the value that is changed is of a different type than the type of the newValue
+     */
+    public static void changeOptionDefault(final Class<?> programClass, final String fieldName, final String newDefaultValue)
+            throws CliException, NoSuchFieldException, IllegalStateException, IllegalArgumentException
+    {
+        changeOptionProperty(programClass, fieldName, "defaultValue", newDefaultValue);
+    }
+
+    /**
+     * Change the value of a property of an already present &#64;Command annotation in a class or superclass of that class.
      * @param program Object; the program for which the cli property should be changed
      * @param propertyName String; the name of the property to change the value of
      * @param newValue Object; the new value of the property
@@ -170,12 +206,30 @@ public class CliUtil
     public static void changeCommandProperty(final Object program, final String propertyName, final Object newValue)
             throws CliException, NoSuchFieldException, IllegalStateException, IllegalArgumentException
     {
-        Command command = program.getClass().getAnnotation(Command.class);
-        ClassUtil.changeAnnotationValue(command, propertyName, newValue);
+        Annotation annotation = ClassUtil.resolveAnnotation(program.getClass(), Command.class);
+        ClassUtil.changeAnnotationValue(annotation, propertyName, newValue);
     }
 
     /**
-     * Change the value of the 'name' property of an already present &#64;Command annotation.
+     * Change the value of a property of an already present &#64;Command annotation in a class or superclass of that class.
+     * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
+     * @param propertyName String; the name of the property to change the value of
+     * @param newValue Object; the new value of the property
+     * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
+     * @throws NoSuchFieldException when the field with the name does not exist in the program object
+     * @throws IllegalStateException when the annotation has no member values or access to the member values is denied
+     * @throws IllegalArgumentException when the value that is changed is of a different type than the type of the newValue
+     */
+    public static void changeCommandProperty(final Class<?> programClass, final String propertyName, final Object newValue)
+            throws CliException, NoSuchFieldException, IllegalStateException, IllegalArgumentException
+    {
+        Annotation annotation = ClassUtil.resolveAnnotation(programClass, Command.class);
+        ClassUtil.changeAnnotationValue(annotation, propertyName, newValue);
+    }
+
+    /**
+     * Change the value of the 'name' property of an already present &#64;Command annotation in a class or superclass of that
+     * class.
      * @param program Object; the program for which the cli property should be changed
      * @param newName String; the new value of the name
      * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
@@ -190,7 +244,24 @@ public class CliUtil
     }
 
     /**
-     * Change the value of the 'description' property of an already present &#64;Command annotation.
+     * Change the value of the 'name' property of an already present &#64;Command annotation in a class or superclass of that
+     * class.
+     * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
+     * @param newName String; the new value of the name
+     * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
+     * @throws NoSuchFieldException when the field with the name does not exist in the program object
+     * @throws IllegalStateException when the annotation has no member values or access to the member values is denied
+     * @throws IllegalArgumentException when the value that is changed is of a different type than the type of the newValue
+     */
+    public static void changeCommandName(final Class<?> programClass, final String newName)
+            throws CliException, NoSuchFieldException, IllegalStateException, IllegalArgumentException
+    {
+        changeCommandProperty(programClass, "name", newName);
+    }
+
+    /**
+     * Change the value of the 'description' property of an already present &#64;Command annotation in a class or superclass of
+     * that class.
      * @param program Object; the program for which the cli property should be changed
      * @param newDescription String; the new value of the description
      * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
@@ -205,7 +276,24 @@ public class CliUtil
     }
 
     /**
-     * Change the value of the 'version' property of an already present &#64;Command annotation.
+     * Change the value of the 'description' property of an already present &#64;Command annotation in a class or superclass of
+     * that class.
+     * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
+     * @param newDescription String; the new value of the description
+     * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
+     * @throws NoSuchFieldException when the field with the name does not exist in the program object
+     * @throws IllegalStateException when the annotation has no member values or access to the member values is denied
+     * @throws IllegalArgumentException when the value that is changed is of a different type than the type of the newValue
+     */
+    public static void changeCommandDescription(final Class<?> programClass, final String newDescription)
+            throws CliException, NoSuchFieldException, IllegalStateException, IllegalArgumentException
+    {
+        changeCommandProperty(programClass, "description", new String[] {newDescription});
+    }
+
+    /**
+     * Change the value of the 'version' property of an already present &#64;Command annotation in a class or superclass of that
+     * class.
      * @param program Object; the program for which the cli property should be changed
      * @param newVersion String; the new value of the version
      * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
@@ -217,6 +305,22 @@ public class CliUtil
             throws CliException, NoSuchFieldException, IllegalStateException, IllegalArgumentException
     {
         changeCommandProperty(program, "version", new String[] {newVersion});
+    }
+
+    /**
+     * Change the value of the 'version' property of an already present &#64;Command annotation in a class or superclass of that
+     * class.
+     * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
+     * @param newVersion String; the new value of the version
+     * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
+     * @throws NoSuchFieldException when the field with the name does not exist in the program object
+     * @throws IllegalStateException when the annotation has no member values or access to the member values is denied
+     * @throws IllegalArgumentException when the value that is changed is of a different type than the type of the newValue
+     */
+    public static void changeCommandVersion(final Class<?> programClass, final String newVersion)
+            throws CliException, NoSuchFieldException, IllegalStateException, IllegalArgumentException
+    {
+        changeCommandProperty(programClass, "version", new String[] {newVersion});
     }
 
 }
