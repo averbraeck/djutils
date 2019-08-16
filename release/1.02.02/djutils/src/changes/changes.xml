@@ -1,0 +1,155 @@
+<document xmlns="http://maven.apache.org/changes/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
+  <body>
+
+    <!-- release version="1.02.03" date="2019-08-XX" description="Little Endian (de)serialization">
+      <action dev="averbraeck" type="add">
+        Little-Endian types have been added to the FieldTypes in djutils-serialization.
+      </action>
+    </release -->
+    
+    <release version="1.02.02" date="2019-08-16" description="Resolving annotations">
+      <action dev="averbraeck" type="add">
+        ClassUtil has resolveAnnotation methods.
+      </action>
+      <action dev="averbraeck" type="add">
+        CliUtil also resolved @Command and @Option annotations in a superclass.
+      </action>
+    </release>
+
+    <release version="1.02.01" date="2019-08-13" description="CLI helper methods, ClassFileDescriptor">
+      <action dev="averbraeck" type="add">
+        ClassUtil got extra methods to retrieve information about a class file, e.g. the last changed date.
+      </action>
+      <action dev="averbraeck" type="fix">
+        CliIUtil has been renamed to the correct CliUtil.
+      </action>
+      <action dev="averbraeck" type="add">
+        Several helper methods have been added to CliUtil to change some of the @Options and
+        @Command settings.
+      </action>
+    </release>
+    
+    <release version="1.02.00" date="2019-08-11" description="djutils-ext project added; CLI code">
+      <action dev="averbraeck" type="add">
+        A project for more utility classes that require more dependencies called djutils-ext has been added.
+      </action>
+      <action dev="averbraeck" type="add">
+        Classes for Command Line Interface parsing have been added. The classes are based on picocli.
+      </action>
+      <action dev="averbraeck" type="add">
+        A utility class with converters for DJUTILS command line arguments has been added. With these
+        converters, it is possible to e.g. specify --timeout=30s on the command line and convert the 
+        timeout to a DJUNITS Duration scalar. 
+      </action>
+    </release>
+
+    <release version="1.01.03" date="2019-07-04" description="byte[][] serialization repaired">
+      <action dev="averbraeck" type="fix">
+        The byte[][] serialization destroyed the underlying data -- this has been repaired.
+      </action>
+      <action dev="averbraeck" type="update">
+        The serializers have all been made strongly typed, avoiding casting. Or actually, the casting has been 
+        shifted to the encode method on a higher level.
+      </action>
+    </release>
+
+    <release version="1.01.02" date="2019-07-02" description="ImmutableLinkedHashMap.values() repaired">
+      <action dev="averbraeck" type="fix">
+        The ImmutableLinkedHashMap.values() was overriding a non-reproducible values() method from the 
+        ImmutableAbstractMap. The ImmutableLinkedHashMap now has its own values() method.
+      </action>
+    </release>
+  
+    <release version="1.01.01" date="2019-07-01" description="ImmutableLinkedHashMap repaired; serialization of UTF-8, UTF-16">
+      <action dev="averbraeck" type="fix">
+        The ImmutableLinkedHashMap returned a non-linked HashSet as EntrySet and as KeySet. This has
+        been repaired.
+      </action>
+      <action dev="averbraeck" type="fix">
+        The UTF-8 Strings in djutils-serialization have been improved. The UTF-8 String can now handle 
+        1-byte, 2-byte, 3-byte and 4-byte characters. The length of the UTF-8 serialized bytes indicates
+        the number of bytes. The length does not say anything about the number of characters.
+      </action>
+      <action dev="averbraeck" type="fix">
+        The UTF-16 Strings in djutils-serialization have been improved. The UTF-16 String can now handle
+        2-byte and 4-byte characters. The length of the UTF-16 String indicates the number of 2-byte
+        shorts in the array. The length does not say anything about the number of characters.
+      </action>
+      <action dev="pknoppers" type="fix">
+        The byte array in djutils-serialization has been repaired. The underlying byte array was nulled 
+        during serialization.
+      </action>
+      <action dev="pknoppers" type="add">
+        ObjectArraySerializer and ObjectMatrixSerializer added. 
+      </action>
+      <action dev="pknoppers" type="add">
+        SerialDataDumper added to provide insight into structure of the serialized data.
+      </action>
+    </release>
+
+    <release version="1.01.00" date="2019-06-21" description="djutils-serialization project added">
+      <action dev="pknoppers" type="add">
+        The djunits-serialization project has been added to serialize and deserialize different classes
+        including djunits scalars, vectors and matrices in a strongly typed manner.
+      </action>
+    </release>
+
+    <release version="1.00.06" date="2019-05-10" description="EntrySets added; caching of keySet, values in Map">
+      <action dev="averbraeck" type="add">
+        EntrySets have been added to the ImmutableMap classes.
+      </action>
+      <action dev="averbraeck" type="update">
+        The keySet(), values() and entrySet() methods cache the results as these are often called.
+      </action>
+    </release>
+
+    <release version="1.00.05" date="2019-02-26" description="ImmutableCollections class added">
+      <action dev="averbraeck" type="add">
+        The ImmutableCollections class has been added, which takes care of those functions of the
+        Collections class that do not update the (immutable) collections that the methods receive
+        as arguments.
+      </action>
+    </release>
+
+    <release version="1.00.04" date="2019-01-29" description="Removed logger Cat class">
+      <action dev="averbraeck" type="remove">
+        Cat class in the logger package belongs in dsol, not in djutils, so removed it.
+      </action>
+    </release>
+
+    <release version="1.00.03" date="2018-12-18" description="DecoderDumper package">
+      <action dev="pknoppers" type="add">
+        The 'decoderdumper' package has been added to the djutils project, extending
+        and replacing HexDump. 
+      </action>
+    </release>
+
+    <release version="1.00.02" date="2019-01-17" description="ConditionalLogger, HexDump">
+      <action dev="averbraeck" type="add">
+        The CategoryLogger has been extended with a 'when(condition)' static method. 
+        A call like CategoryLogger.when(ok).always().info("Ok"); is now possible.
+      </action>
+      <action dev="pknoppers" type="add">
+        The HexDump class has been added to djutils to create hexadecimal dumps of data.
+      </action>
+      <action dev="averbraeck" type="update">
+        Copyright message changed to 2019.
+      </action>
+    </release>
+
+    <release version="1.00.01" date="2018-12-15" description="Means package">
+      <action dev="pknoppers" type="add">
+        The 'means' package has been added to the djutils project. 
+      </action>
+    </release>
+
+    <release version="1.00.00" date="2018-11-17" description="Initial release">
+      <action dev="averbraeck" type="add">
+        Several classes from other projects that are heavily shared between the projects, but not 
+        specific for one of the projects have been transferred to the djutils project. 
+      </action>
+    </release>
+
+  </body>
+</document>
