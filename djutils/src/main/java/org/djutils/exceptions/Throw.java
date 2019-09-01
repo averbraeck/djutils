@@ -60,7 +60,7 @@ public final class Throw
      * Throw.when(Double.isNan(object.getValue()), IllegalArgumentException.class, &quot;Value may not be NaN.&quot;);
      * </pre>
      * 
-     * @param condition the condition to check; an exception will be thrown if this is <b>true</b>
+     * @param condition boolean; the condition to check; an exception will be thrown if this is <b>true</b>
      * @param throwableClass Class&lt;T&gt;; the Throwable type to throw
      * @param message String; the message to use in the exception
      * @throws T the throwable to throw on true condition
@@ -84,7 +84,7 @@ public final class Throw
      *         object);
      * </pre>
      * 
-     * @param condition the condition to check; an exception will be thrown if this is <b>true</b>
+     * @param condition boolean; the condition to check; an exception will be thrown if this is <b>true</b>
      * @param throwableClass Class&lt;T&gt;; the Throwable type to throw
      * @param message String; the message to use in the exception, with formatting identifiers
      * @param arg Object; value to use for the formatting identifiers
@@ -111,7 +111,7 @@ public final class Throw
      *         &quot;Value may not be NaN for object %s with name %s.&quot;, object, name);
      * </pre>
      * 
-     * @param condition the condition to check; an exception will be thrown if this is <b>true</b>
+     * @param condition boolean; the condition to check; an exception will be thrown if this is <b>true</b>
      * @param throwableClass Class&lt;T&gt;; the Throwable type to throw
      * @param message String; the message to use in the exception, with formatting identifiers
      * @param arg1 Object; 1st value to use for the formatting identifiers
@@ -140,7 +140,7 @@ public final class Throw
      *         &quot;Value may not be NaN for object %s with name %s and id %s.&quot;, object, name, id);
      * </pre>
      * 
-     * @param condition the condition to check; an exception will be thrown if this is <b>true</b>
+     * @param condition boolean; the condition to check; an exception will be thrown if this is <b>true</b>
      * @param throwableClass Class&lt;T&gt;; the Throwable type to throw
      * @param message String; the message to use in the exception, with formatting identifiers
      * @param arg1 Object; 1st value to use for the formatting identifiers
@@ -171,7 +171,7 @@ public final class Throw
      *         &quot;Value may not be NaN for object %s with name %s, id %s and parent %s.&quot;, object, name, id, parent);
      * </pre>
      * 
-     * @param condition the condition to check; an exception will be thrown if this is <b>true</b>
+     * @param condition boolean; the condition to check; an exception will be thrown if this is <b>true</b>
      * @param throwableClass Class&lt;T&gt;; the Throwable type to throw
      * @param message String; the message to use in the exception, with formatting identifiers
      * @param arg1 Object; 1st value to use for the formatting identifiers
@@ -253,7 +253,7 @@ public final class Throw
      * </pre>
      * 
      * @param object O; the object to return by this static method
-     * @param condition the condition to check; an exception will be thrown if this is <b>true</b>
+     * @param condition boolean; the condition to check; an exception will be thrown if this is <b>true</b>
      * @param throwableClass Class&lt;T&gt;; the Throwable type to throw
      * @param message String; the message to use in the exception
      * @throws T the throwable to throw on true condition
@@ -282,7 +282,7 @@ public final class Throw
      * </pre>
      * 
      * @param object O; the object to return by this static method
-     * @param condition the condition to check; an exception will be thrown if this is <b>true</b>
+     * @param condition boolean; the condition to check; an exception will be thrown if this is <b>true</b>
      * @param throwableClass Class&lt;T&gt;; the Throwable type to throw
      * @param message String; the message to use in the exception, with formatting identifiers
      * @param arg Object; value to use for the formatting identifiers
@@ -314,7 +314,7 @@ public final class Throw
      * </pre>
      * 
      * @param object O; the object to return by this static method
-     * @param condition the condition to check; an exception will be thrown if this is <b>true</b>
+     * @param condition boolean; the condition to check; an exception will be thrown if this is <b>true</b>
      * @param throwableClass Class&lt;T&gt;; the Throwable type to throw
      * @param message String; the message to use in the exception, with formatting identifiers
      * @param arg1 Object; 1st value to use for the formatting identifiers
@@ -348,7 +348,7 @@ public final class Throw
      * </pre>
      * 
      * @param object O; the object to return by this static method
-     * @param condition the condition to check; an exception will be thrown if this is <b>true</b>
+     * @param condition boolean; the condition to check; an exception will be thrown if this is <b>true</b>
      * @param throwableClass Class&lt;T&gt;; the Throwable type to throw
      * @param message String; the message to use in the exception, with formatting identifiers
      * @param arg1 Object; 1st value to use for the formatting identifiers
@@ -385,7 +385,7 @@ public final class Throw
      * </pre>
      * 
      * @param object O; the object to return by this static method
-     * @param condition the condition to check; an exception will be thrown if this is <b>true</b>
+     * @param condition boolean; the condition to check; an exception will be thrown if this is <b>true</b>
      * @param throwableClass Class&lt;T&gt;; the Throwable type to throw
      * @param message String; the message to use in the exception, with formatting identifiers
      * @param arg1 Object; 1st value to use for the formatting identifiers
