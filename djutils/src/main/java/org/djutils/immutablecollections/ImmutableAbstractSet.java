@@ -17,8 +17,8 @@ import org.djutils.exceptions.Throw;
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="http://www.tudelft.nl/pknoppers">Peter Knoppers</a>
- * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
+ * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
+ * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <E> the type of content of this Set
  */
 public abstract class ImmutableAbstractSet<E> extends ImmutableAbstractCollection<E> implements ImmutableSet<E>

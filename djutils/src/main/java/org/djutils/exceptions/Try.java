@@ -53,9 +53,9 @@ import org.djutils.reflection.ClassUtil;
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
- * @author <a href="http://www.tbm.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="http://www.tudelft.nl/pknoppers">Peter Knoppers</a>
- * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
+ * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+ * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
+ * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
 public final class Try
 {
@@ -901,12 +901,12 @@ public final class Try
      * <p>
      * Copyright (c) 2013-2019 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved.
      * <br>
-     * BSD-style license. See <a href="http://opentrafficsim.org/node/13">OpenTrafficSim License</a>.
+     * BSD-style license. See <a href="https://opentrafficsim.org/node/13">OpenTrafficSim License</a>.
      * <p>
      * @version $Revision$, $LastChangedDate$, by $Author$, initial version 31 jan. 2018 <br>
-     * @author <a href="http://www.tbm.tudelft.nl/averbraeck">Alexander Verbraeck</a>
-     * @author <a href="http://www.tudelft.nl/pknoppers">Peter Knoppers</a>
-     * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
+     * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+     * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
+     * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
      * @param <V> value type
      */
     @FunctionalInterface
@@ -929,12 +929,12 @@ public final class Try
      * <p>
      * Copyright (c) 2013-2019 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved.
      * <br>
-     * BSD-style license. See <a href="http://opentrafficsim.org/node/13">OpenTrafficSim License</a>.
+     * BSD-style license. See <a href="https://opentrafficsim.org/node/13">OpenTrafficSim License</a>.
      * <p>
      * @version $Revision$, $LastChangedDate$, by $Author$, initial version 31 jan. 2018 <br>
-     * @author <a href="http://www.tbm.tudelft.nl/averbraeck">Alexander Verbraeck</a>
-     * @author <a href="http://www.tudelft.nl/pknoppers">Peter Knoppers</a>
-     * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
+     * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+     * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
+     * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
      */
     @FunctionalInterface
     public interface Execution

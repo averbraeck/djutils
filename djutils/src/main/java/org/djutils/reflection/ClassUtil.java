@@ -50,40 +50,63 @@ public final class ClassUtil
     }
 
     /** ************ CONSTRUCTOR UTILITIES *********** */
+
     /**
-     * gets all the constructors of a class and adds the result to result.
-     * @param clazz Class&lt;?&gt;; the class
-     * @param result Constructor&lt;?&gt;[]; the resulting set
-     * @return result
+     * Returns all the constructors of a class. Public, package, protected and private constructors are returned. This method
+     * returns an array of length 0 if the class object represents an interface, a primitive type, an array class, or void. Note
+     * that the constructors of the superclass are not returned as these can never be invoked.
+     * @param clazz Class&lt;?&gt;; the class to resolve the constructors for.
+     * @return an array with all constructors
      */
-    public static Constructor<?>[] getAllConstructors(final Class<?> clazz, final Constructor<?>[] result)
+    @SuppressWarnings("unchecked")
+    public static <T> Constructor<T>[] getAllConstructors(final Class<T> clazz)
     {
-        List<Constructor<?>> list = new ArrayList<Constructor<?>>(Arrays.asList(result));
-        list.addAll(Arrays.asList(clazz.getDeclaredConstructors()));
-        if (clazz.getSuperclass() != null)
-        {
-            return ClassUtil.getAllConstructors(clazz.getSuperclass(), list.toArray(new Constructor[list.size()]));
-        }
-        return list.toArray(new Constructor[list.size()]);
+        return (Constructor<T>[]) clazz.getDeclaredConstructors();
     }
 
     /**
-     * returns the interface method.
-     * @param clazz Class&lt;?&gt;; the class to start with
-     * @param callerClass Class&lt;?&gt;; the calling class
-     * @param parameterTypes Class&lt;?&gt;[]; the parameterTypes
-     * @return Constructor
-     * @throws NoSuchMethodException if the method cannot be resolved
+     * Returns a constructor with the given signature, possibly from the cache. When the constructor is resolved for the first
+     * time, it will be added to the cache.
+     * @param clazz Class&lt;?&gt;; the class to resolve the constructor for
+     * @param parameterTypes Class&lt;?&gt;[]; the parameter types of the signature
+     * @return the constructor with the given signature, if found
+     * @throws NoSuchMethodException if the constructor cannot be resolved
      */
-    public static Constructor<?> resolveConstructor(final Class<?> clazz, final Class<?> callerClass,
-            final Class<?>[] parameterTypes) throws NoSuchMethodException
+    @SuppressWarnings("unchecked")
+    private static <T> Constructor<T> resolveConstructorCache(final Class<T> clazz, final Class<?>[] parameterTypes)
+            throws NoSuchMethodException
     {
-        Constructor<?> constructor = ClassUtil.resolveConstructor(clazz, parameterTypes);
+        String key = "CONSTRUCTOR:" + clazz + "@" + FieldSignature.toDescriptor(parameterTypes);
+        if (CACHE.containsKey(key))
+        {
+            return (Constructor<T>) CACHE.get(key);
+        }
+        Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes);
+        CACHE.put(key, constructor);
+        return constructor;
+    }
+
+    /**
+     * Returns the constructor of a class with a particular signature if and only if the caller class can invoke that
+     * constructor. So a private constructor will not be invoked, unless the caller class is the class that defines the
+     * constructor. For a protected class the superclass and classes in the same package can invoke the constructor, but other
+     * classes should not be able to invoke the constructor.
+     * @param clazz Class&lt;?&gt;; the class for which the constructor needs to be
+     * @param callerClass Class&lt;?&gt;; the calling class for which the test is carried out whether the constructor is visible
+     * @param parameterTypes Class&lt;?&gt;[]; the parameter types for the constructor's signature
+     * @return the retrieved constructor
+     * @throws NoSuchMethodException if the constructor with the given signature does not exist
+     * @throws IllegalAccessException if the constructor exists but is not callable from the callerClass
+     */
+    public static <T> Constructor<T> resolveConstructor(final Class<T> clazz, final Class<?> callerClass,
+            final Class<?>[] parameterTypes) throws NoSuchMethodException, IllegalAccessException
+    {
+        Constructor<T> constructor = ClassUtil.resolveConstructor(clazz, parameterTypes);
         if (ClassUtil.isVisible(constructor, callerClass.getClass()))
         {
             return constructor;
         }
-        throw new NoSuchMethodException("constructor resolved but not visible");
+        throw new IllegalAccessException("constructor resolved but not visible");
     }
 
     /**
@@ -93,12 +116,13 @@ public final class ClassUtil
      * @return Constructor
      * @throws NoSuchMethodException if the method cannot be resolved
      */
-    public static Constructor<?> resolveConstructor(final Class<?> clazz, final Class<?>[] parameterTypes)
+    @SuppressWarnings("unchecked")
+    public static <T> Constructor<T> resolveConstructor(final Class<T> clazz, final Class<?>[] parameterTypes)
             throws NoSuchMethodException
     {
         try
         {
-            return resolveConstructorSuper(clazz, (Class<?>[]) ClassUtil.checkInput(parameterTypes, Class.class));
+            return resolveConstructorCache(clazz, (Class<?>[]) ClassUtil.checkInput(parameterTypes, Class.class));
         }
         catch (Exception exception)
         {
@@ -114,7 +138,7 @@ public final class ClassUtil
                 {
                     throw new NoSuchMethodException("class " + parentClass + " not found to resolve constructor");
                 }
-                return ClassUtil.resolveConstructor(parentClass,
+                return (Constructor<T>) ClassUtil.resolveConstructor(parentClass,
                         (Class<?>[]) ClassUtil.checkInput(parameterTypes, Class.class));
             }
             throw new NoSuchMethodException("class " + clazz + " does not contain constructor");
@@ -128,13 +152,14 @@ public final class ClassUtil
      * @return Constructor
      * @throws NoSuchMethodException on lookup failure
      */
-    public static Constructor<?> resolveConstructor(final Class<?> clazz, final Object[] arguments) throws NoSuchMethodException
+    @SuppressWarnings("unchecked")
+    public static <T> Constructor<T> resolveConstructor(final Class<T> clazz, final Object[] arguments) throws NoSuchMethodException
     {
         Class<?>[] parameterTypes = ClassUtil.getClass(arguments);
         String key = "CONSTRUCTOR:" + clazz + "@" + FieldSignature.toDescriptor(parameterTypes);
         if (CACHE.containsKey(key))
         {
-            return (Constructor<?>) CACHE.get(key);
+            return (Constructor<T>) CACHE.get(key);
         }
         try
         {
@@ -143,16 +168,60 @@ public final class ClassUtil
         catch (NoSuchMethodException noSuchMethodException)
         {
             // We get all constructors
-            Constructor<?>[] constructors = ClassUtil.getAllConstructors(clazz, new Constructor[0]);
+            Constructor<T>[] constructors = ClassUtil.getAllConstructors(clazz);
             // now we match the signatures
             constructors = ClassUtil.matchSignature(constructors, parameterTypes);
             // Now we find the most specific
-            Constructor<?> result = ClassUtil.getSpecificConstructor(constructors);
+            Constructor<T> result = (Constructor<T>) ClassUtil.getSpecificConstructor(constructors);
             CACHE.put(key, result);
             return result;
         }
     }
 
+    /**
+     * Filters an array methods for signatures that are compatible with a given signature.
+     * @param constructor Constructor&lt;?&gt;; which are constructors to be filtered.
+     * @param argTypes Class&lt;?&gt;[]; are the constructor's argument types
+     * @return boolean if methodParameters assignable from argTypes
+     */
+    public static <T> boolean matchSignature(final Constructor<T> constructor, final Class<?>[] argTypes)
+    {
+        if (constructor.getParameterTypes().length != argTypes.length)
+        {
+            return false;
+        }
+        Class<?>[] types = constructor.getParameterTypes();
+        for (int i = 0; i < constructor.getParameterTypes().length; i++)
+        {
+            if (!(types[i].isAssignableFrom(argTypes[i]) || types[i].equals(Primitive.getPrimitive(argTypes[i]))))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Filters an array methods for signatures that are compatible with a given signature.
+     * @param constructors Constructor&lt;?&gt;[]; which are constructors to be filtered.
+     * @param argTypes Class&lt;?&gt;[]; are the constructor's argument types
+     * @return Constructor&lt;?&gt;[] An unordered Constructor-array consisting of the elements of 'constructors' that match
+     *         with the given signature. An array with 0 elements is returned when no matching Method objects are found.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Constructor<T>[] matchSignature(final Constructor<T>[] constructors, final Class<?>[] argTypes)
+    {
+        List<Constructor<T>> results = new ArrayList<Constructor<T>>();
+        for (int i = 0; i < constructors.length; i++)
+        {
+            if (ClassUtil.matchSignature(constructors[i], argTypes))
+            {
+                results.add(constructors[i]);
+            }
+        }
+        return results.toArray(new Constructor[results.size()]);
+    }
+    
     /* ************ FIELD UTILITIES *********** */
 
     /**
@@ -661,50 +730,9 @@ public final class ClassUtil
     }
 
     /**
-     * Filters an array methods for signatures that are compatible with a given signature.
-     * @param constructor Constructor&lt;?&gt;; which are constructors to be filtered.
-     * @param argTypes Class&lt;?&gt;[]; are the constructor's argument types
-     * @return boolean if methodParameters assignable from argTypes
-     */
-    public static boolean matchSignature(final Constructor<?> constructor, final Class<?>[] argTypes)
-    {
-        if (constructor.getParameterTypes().length != argTypes.length)
-        {
-            return false;
-        }
-        Class<?>[] types = constructor.getParameterTypes();
-        for (int i = 0; i < constructor.getParameterTypes().length; i++)
-        {
-            if (!(types[i].isAssignableFrom(argTypes[i]) || types[i].equals(Primitive.getPrimitive(argTypes[i]))))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Filters an array methods for signatures that are compatible with a given signature.
-     * @param constructors Constructor&lt;?&gt;[]; which are constructors to be filtered.
-     * @param argTypes Class&lt;?&gt;[]; are the constructor's argument types
-     * @return Constructor&lt;?&gt;[] An unordered Constructor-array consisting of the elements of 'constructors' that match
-     *         with the given signature. An array with 0 elements is returned when no matching Method objects are found.
-     */
-    public static Constructor<?>[] matchSignature(final Constructor<?>[] constructors, final Class<?>[] argTypes)
-    {
-        List<Constructor<?>> results = new ArrayList<Constructor<?>>();
-        for (int i = 0; i < constructors.length; i++)
-        {
-            if (ClassUtil.matchSignature(constructors[i], argTypes))
-            {
-                results.add(constructors[i]);
-            }
-        }
-        return results.toArray(new Constructor[results.size()]);
-    }
-
-    /**
-     * converts an array of objects to their corresponding classes.
+     * Converts an array of objects to their corresponding classes. Note that primitive types are always autoboxed to the
+     * corresponding object types. So an int in the array will have an Integer.class at the position in the resulting Class
+     * array.
      * @param array Object[]; the array to invoke
      * @return Class&lt;?&gt;[] the result;
      */
@@ -837,39 +865,6 @@ public final class ClassUtil
         }
         // No method is most specific, thus:
         throw new NoSuchMethodException();
-    }
-
-    /**
-     * returns the constructor.
-     * @param clazz Class&lt;?&gt;; the class to start with
-     * @param parameterTypes Class&lt;?&gt;[]; the parameterTypes
-     * @return Method
-     * @throws NoSuchMethodException if the method cannot be resolved
-     */
-    private static Constructor<?> resolveConstructorSuper(final Class<?> clazz, final Class<?>[] parameterTypes)
-            throws NoSuchMethodException
-    {
-        String key = "CONSTRUCTOR:" + clazz + "@" + FieldSignature.toDescriptor(parameterTypes);
-        try
-        {
-            if (CACHE.containsKey(key))
-            {
-                return (Constructor<?>) CACHE.get(key);
-            }
-            Constructor<?> constructor = clazz.getDeclaredConstructor(parameterTypes);
-            CACHE.put(key, constructor);
-            return constructor;
-        }
-        catch (Exception exception)
-        {
-            if (clazz.getSuperclass() != null)
-            {
-                Constructor<?> constructor = ClassUtil.resolveConstructorSuper(clazz.getSuperclass(), parameterTypes);
-                CACHE.put(key, constructor);
-                return constructor;
-            }
-            throw new NoSuchMethodException(exception.getMessage());
-        }
     }
 
     /**
