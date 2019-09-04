@@ -6,7 +6,7 @@ package org.djutils.serialization;
  * Copyright (c) 2019-2019 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://opentrafficsim.org/node/13">OpenTrafficSim License</a>.
  * <p>
- * @version $Revision$, $LastChangedDate$, by $Author$,  <br>
+ * @version $Revision$, $LastChangedDate$, by $Author$, <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
@@ -16,7 +16,7 @@ public abstract class BasicSerializer<T extends Object> implements Serializer<T>
 {
     /** The field type that usually prefixes the serialized data. */
     private final byte type;
-    
+
     /** String returned by the dataClassName method. */
     private final String dataClassName;
 
@@ -30,7 +30,7 @@ public abstract class BasicSerializer<T extends Object> implements Serializer<T>
         this.type = type;
         this.dataClassName = dataClassName;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public final byte fieldType()

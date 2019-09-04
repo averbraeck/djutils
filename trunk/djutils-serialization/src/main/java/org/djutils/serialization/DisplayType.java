@@ -42,8 +42,6 @@ import org.djunits.unit.VolumeUnit;
  * Copyright (c) 2016-2017 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://sim0mq.org/docs/current/license.html">Sim0MQ License</a>.
  * </p>
- * $LastChangedDate: 2015-07-24 02:58:59 +0200 (Fri, 24 Jul 2015) $, @version $Revision: 1147 $, by $Author: averbraeck $,
- * initial version Mar 4, 2017 <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
 public class DisplayType implements Serializable
@@ -81,8 +79,8 @@ public class DisplayType implements Serializable
     /* ================================================== ACCELERATION =================================================== */
 
     /** Acceleration.METER_PER_SECOND_2 unit type with code 0. */
-    public static final DisplayType ACCELERATION_METER_PER_SECOND_2 = new DisplayType(SerializationUnits.ACCELERATION,
-            0, AccelerationUnit.METER_PER_SECOND_2, "METER_PER_SECOND_2", "m/s2");
+    public static final DisplayType ACCELERATION_METER_PER_SECOND_2 = new DisplayType(SerializationUnits.ACCELERATION, 0,
+            AccelerationUnit.METER_PER_SECOND_2, "METER_PER_SECOND_2", "m/s2");
 
     /** Acceleration.KM_PER_HOUR_2 unit type with code 1. */
     public static final DisplayType ACCELERATION_KM_PER_HOUR_2 =
@@ -101,8 +99,8 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.ACCELERATION, 4, AccelerationUnit.MILE_PER_HOUR_2, "MILE_PER_HOUR_2", "mi/h2");
 
     /** Acceleration.MILE_PER_HOUR_PER_SECOND unit type with code 5. */
-    public static final DisplayType ACCELERATION_MILE_PER_HOUR_PER_SECOND = new DisplayType(
-            SerializationUnits.ACCELERATION, 5, AccelerationUnit.MILE_PER_HOUR_PER_SECOND, "MILE_PER_HOUR_PER_SECOND", "mi/h/s");
+    public static final DisplayType ACCELERATION_MILE_PER_HOUR_PER_SECOND = new DisplayType(SerializationUnits.ACCELERATION, 5,
+            AccelerationUnit.MILE_PER_HOUR_PER_SECOND, "MILE_PER_HOUR_PER_SECOND", "mi/h/s");
 
     /** Acceleration.KNOT_PER_SECOND unit type with code 6. */
     public static final DisplayType ACCELERATION_KNOT_PER_SECOND =
@@ -153,8 +151,7 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.ANGLE, 5, AngleUnit.DEGREE, "DEGREE", "deg");
 
     /** Angle.GRAD unit type with code 6. */
-    public static final DisplayType ANGLE_GRAD =
-            new DisplayType(SerializationUnits.ANGLE, 6, AngleUnit.GRAD, "GRAD", "grad");
+    public static final DisplayType ANGLE_GRAD = new DisplayType(SerializationUnits.ANGLE, 6, AngleUnit.GRAD, "GRAD", "grad");
 
     /* ==================================================== DIRECTION ==================================================== */
 
@@ -249,8 +246,7 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.AREA, 17, AreaUnit.SQUARE_NAUTICAL_MILE, "SQUARE_NAUTICAL_MILE", "NM2");
 
     /** Area.ACRE unit type with code 18. */
-    public static final DisplayType AREA_ACRE =
-            new DisplayType(SerializationUnits.AREA, 18, AreaUnit.ACRE, "ACRE", "acre");
+    public static final DisplayType AREA_ACRE = new DisplayType(SerializationUnits.AREA, 18, AreaUnit.ACRE, "ACRE", "acre");
 
     /** Area.ARE unit type with code 19. */
     public static final DisplayType AREA_ARE = new DisplayType(SerializationUnits.AREA, 19, AreaUnit.ARE, "ARE", "a");
@@ -270,8 +266,8 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.DENSITY, 0, DensityUnit.KG_PER_METER_3, "KG_PER_METER_3", "kg/m3");
 
     /** Density.GRAM_PER_CENTIMETER_3 unit type with code 1. */
-    public static final DisplayType DENSITY_GRAM_PER_CENTIMETER_3 = new DisplayType(SerializationUnits.DENSITY, 1,
-            DensityUnit.GRAM_PER_CENTIMETER_3, "GRAM_PER_CENTIMETER_3", "g/cm3");
+    public static final DisplayType DENSITY_GRAM_PER_CENTIMETER_3 =
+            new DisplayType(SerializationUnits.DENSITY, 1, DensityUnit.GRAM_PER_CENTIMETER_3, "GRAM_PER_CENTIMETER_3", "g/cm3");
 
     /* ================================================ ELECTRICALCHARGE ================================================= */
 
@@ -320,28 +316,28 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.ELECTRICALCHARGE, 10, ElectricalChargeUnit.FRANKLIN, "FRANKLIN  ", "Fr");
 
     /** ElectricalCharge.STATCOULOMB unit type with code 11. */
-    public static final DisplayType ELECTRICALCHARGE_STATCOULOMB = new DisplayType(SerializationUnits.ELECTRICALCHARGE,
-            11, ElectricalChargeUnit.STATCOULOMB, "STATCOULOMB", "statC");
+    public static final DisplayType ELECTRICALCHARGE_STATCOULOMB =
+            new DisplayType(SerializationUnits.ELECTRICALCHARGE, 11, ElectricalChargeUnit.STATCOULOMB, "STATCOULOMB", "statC");
 
     /** ElectricalCharge.MILLIAMPERE_HOUR unit type with code 12. */
-    public static final DisplayType ELECTRICALCHARGE_MILLIAMPERE_HOUR = new DisplayType(
-            SerializationUnits.ELECTRICALCHARGE, 12, ElectricalChargeUnit.MILLIAMPERE_HOUR, "MILLIAMPERE_HOUR", "mAh");
+    public static final DisplayType ELECTRICALCHARGE_MILLIAMPERE_HOUR = new DisplayType(SerializationUnits.ELECTRICALCHARGE, 12,
+            ElectricalChargeUnit.MILLIAMPERE_HOUR, "MILLIAMPERE_HOUR", "mAh");
 
     /** ElectricalCharge.AMPERE_HOUR unit type with code 13. */
     public static final DisplayType ELECTRICALCHARGE_AMPERE_HOUR =
             new DisplayType(SerializationUnits.ELECTRICALCHARGE, 13, ElectricalChargeUnit.AMPERE_HOUR, "AMPERE_HOUR", "Ah");
 
     /** ElectricalCharge.KILOAMPERE_HOUR unit type with code 14. */
-    public static final DisplayType ELECTRICALCHARGE_KILOAMPERE_HOUR = new DisplayType(
-            SerializationUnits.ELECTRICALCHARGE, 14, ElectricalChargeUnit.KILOAMPERE_HOUR, "KILOAMPERE_HOUR", "kAh");
+    public static final DisplayType ELECTRICALCHARGE_KILOAMPERE_HOUR = new DisplayType(SerializationUnits.ELECTRICALCHARGE, 14,
+            ElectricalChargeUnit.KILOAMPERE_HOUR, "KILOAMPERE_HOUR", "kAh");
 
     /** ElectricalCharge.MEGAAMPERE_HOUR unit type with code 15. */
-    public static final DisplayType ELECTRICALCHARGE_MEGAAMPERE_HOUR = new DisplayType(
-            SerializationUnits.ELECTRICALCHARGE, 15, ElectricalChargeUnit.MEGAAMPERE_HOUR, "MEGAAMPERE_HOUR", "MAh");
+    public static final DisplayType ELECTRICALCHARGE_MEGAAMPERE_HOUR = new DisplayType(SerializationUnits.ELECTRICALCHARGE, 15,
+            ElectricalChargeUnit.MEGAAMPERE_HOUR, "MEGAAMPERE_HOUR", "MAh");
 
     /** ElectricalCharge.MILLIAMPERE_SECOND unit type with code 16. */
-    public static final DisplayType ELECTRICALCHARGE_MILLIAMPERE_SECOND = new DisplayType(
-            SerializationUnits.ELECTRICALCHARGE, 16, ElectricalChargeUnit.MILLIAMPERE_SECOND, "MILLIAMPERE_SECOND", "mAs");
+    public static final DisplayType ELECTRICALCHARGE_MILLIAMPERE_SECOND = new DisplayType(SerializationUnits.ELECTRICALCHARGE,
+            16, ElectricalChargeUnit.MILLIAMPERE_SECOND, "MILLIAMPERE_SECOND", "mAs");
 
     /* ============================================== ELECTRICALCURRENT ================================================== */
 
@@ -596,8 +592,7 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.ENERGY, 34, EnergyUnit.FOOT_POUND_FORCE, "FOOT_POUND_FORCE", "ft lbf");
 
     /** Energy.ERG unit type with code 35. */
-    public static final DisplayType ENERGY_ERG =
-            new DisplayType(SerializationUnits.ENERGY, 35, EnergyUnit.ERG, "ERG", "erg");
+    public static final DisplayType ENERGY_ERG = new DisplayType(SerializationUnits.ENERGY, 35, EnergyUnit.ERG, "ERG", "erg");
 
     /** Energy.BTU_ISO unit type with code 36. */
     public static final DisplayType ENERGY_BTU_ISO =
@@ -624,12 +619,12 @@ public class DisplayType implements Serializable
     /* =================================================== FLOWVOLUME ==================================================== */
 
     /** FlowVolume.CUBIC_METER_PER_SECOND unit type with code 0. */
-    public static final DisplayType FLOWVOLUME_CUBIC_METER_PER_SECOND = new DisplayType(SerializationUnits.FLOWVOLUME,
-            0, FlowVolumeUnit.CUBIC_METER_PER_SECOND, "CUBIC_METER_PER_SECOND", "m3/s");
+    public static final DisplayType FLOWVOLUME_CUBIC_METER_PER_SECOND = new DisplayType(SerializationUnits.FLOWVOLUME, 0,
+            FlowVolumeUnit.CUBIC_METER_PER_SECOND, "CUBIC_METER_PER_SECOND", "m3/s");
 
     /** FlowVolume.CUBIC_METER_PER_MINUTE unit type with code 1. */
-    public static final DisplayType FLOWVOLUME_CUBIC_METER_PER_MINUTE = new DisplayType(SerializationUnits.FLOWVOLUME,
-            1, FlowVolumeUnit.CUBIC_METER_PER_MINUTE, "CUBIC_METER_PER_MINUTE", "m3/min");
+    public static final DisplayType FLOWVOLUME_CUBIC_METER_PER_MINUTE = new DisplayType(SerializationUnits.FLOWVOLUME, 1,
+            FlowVolumeUnit.CUBIC_METER_PER_MINUTE, "CUBIC_METER_PER_MINUTE", "m3/min");
 
     /** FlowVolume.CUBIC_METER_PER_HOUR unit type with code 2. */
     public static final DisplayType FLOWVOLUME_CUBIC_METER_PER_HOUR = new DisplayType(SerializationUnits.FLOWVOLUME, 2,
@@ -660,8 +655,8 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.FLOWVOLUME, 8, FlowVolumeUnit.GALLON_PER_SECOND, "GALLON_PER_SECOND", "gal/s");
 
     /** FlowVolume.GALLON_PER_MINUTE unit type with code 9. */
-    public static final DisplayType FLOWVOLUME_GALLON_PER_MINUTE = new DisplayType(SerializationUnits.FLOWVOLUME, 9,
-            FlowVolumeUnit.GALLON_PER_MINUTE, "GALLON_PER_MINUTE", "gal/min");
+    public static final DisplayType FLOWVOLUME_GALLON_PER_MINUTE =
+            new DisplayType(SerializationUnits.FLOWVOLUME, 9, FlowVolumeUnit.GALLON_PER_MINUTE, "GALLON_PER_MINUTE", "gal/min");
 
     /** FlowVolume.GALLON_PER_HOUR unit type with code 10. */
     public static final DisplayType FLOWVOLUME_GALLON_PER_HOUR =
@@ -710,8 +705,7 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.FORCE, 4, ForceUnit.TON_FORCE, "TON_FORCE", "tnf");
 
     /** Force.DYNE unit type with code 5. */
-    public static final DisplayType FORCE_DYNE =
-            new DisplayType(SerializationUnits.FORCE, 5, ForceUnit.DYNE, "DYNE", "dyne");
+    public static final DisplayType FORCE_DYNE = new DisplayType(SerializationUnits.FORCE, 5, ForceUnit.DYNE, "DYNE", "dyne");
 
     /** Force.STHENE unit type with code 6. */
     public static final DisplayType FORCE_STHENE =
@@ -842,20 +836,16 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.LENGTH, 12, LengthUnit.MEGAMETER, "MEGAMETER", "Mm");
 
     /** Length.INCH unit type with code 13. */
-    public static final DisplayType LENGTH_INCH =
-            new DisplayType(SerializationUnits.LENGTH, 13, LengthUnit.INCH, "INCH", "in");
+    public static final DisplayType LENGTH_INCH = new DisplayType(SerializationUnits.LENGTH, 13, LengthUnit.INCH, "INCH", "in");
 
     /** Length.FOOT unit type with code 14. */
-    public static final DisplayType LENGTH_FOOT =
-            new DisplayType(SerializationUnits.LENGTH, 14, LengthUnit.FOOT, "FOOT", "ft");
+    public static final DisplayType LENGTH_FOOT = new DisplayType(SerializationUnits.LENGTH, 14, LengthUnit.FOOT, "FOOT", "ft");
 
     /** Length.YARD unit type with code 15. */
-    public static final DisplayType LENGTH_YARD =
-            new DisplayType(SerializationUnits.LENGTH, 15, LengthUnit.YARD, "YARD", "yd");
+    public static final DisplayType LENGTH_YARD = new DisplayType(SerializationUnits.LENGTH, 15, LengthUnit.YARD, "YARD", "yd");
 
     /** Length.MILE unit type with code 16. */
-    public static final DisplayType LENGTH_MILE =
-            new DisplayType(SerializationUnits.LENGTH, 16, LengthUnit.MILE, "MILE", "mi");
+    public static final DisplayType LENGTH_MILE = new DisplayType(SerializationUnits.LENGTH, 16, LengthUnit.MILE, "MILE", "mi");
 
     /** Length.NAUTICAL_MILE unit type with code 17. */
     public static final DisplayType LENGTH_NAUTICAL_MILE =
@@ -1038,12 +1028,12 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.LINEARDENSITY, 16, LinearDensityUnit.PER_MILE, "PER_MILE", "1/mi");
 
     /** LinearDensity.PER_NAUTICAL_MILE unit type with code 17. */
-    public static final DisplayType LINEARDENSITY_PER_NAUTICAL_MILE = new DisplayType(SerializationUnits.LINEARDENSITY,
-            17, LinearDensityUnit.PER_NAUTICAL_MILE, "PER_NAUTICAL_MILE", "1/NM");
+    public static final DisplayType LINEARDENSITY_PER_NAUTICAL_MILE = new DisplayType(SerializationUnits.LINEARDENSITY, 17,
+            LinearDensityUnit.PER_NAUTICAL_MILE, "PER_NAUTICAL_MILE", "1/NM");
 
     /** LinearDensity.PER_ASTRONOMICAL_UNIT unit type with code 18. */
-    public static final DisplayType LINEARDENSITY_PER_ASTRONOMICAL_UNIT = new DisplayType(
-            SerializationUnits.LINEARDENSITY, 18, LinearDensityUnit.PER_ASTRONOMICAL_UNIT, "PER_ASTRONOMICAL_UNIT", "1/au");
+    public static final DisplayType LINEARDENSITY_PER_ASTRONOMICAL_UNIT = new DisplayType(SerializationUnits.LINEARDENSITY, 18,
+            LinearDensityUnit.PER_ASTRONOMICAL_UNIT, "PER_ASTRONOMICAL_UNIT", "1/au");
 
     /** LinearDensity.PER_PARSEC unit type with code 19. */
     public static final DisplayType LINEARDENSITY_PER_PARSEC =
@@ -1084,8 +1074,7 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.MASS, 5, MassUnit.MILLIGRAM, "MILLIGRAM", "mg");
 
     /** Mass.GRAM unit type with code 6. */
-    public static final DisplayType MASS_GRAM =
-            new DisplayType(SerializationUnits.MASS, 6, MassUnit.GRAM, "GRAM", "kg");
+    public static final DisplayType MASS_GRAM = new DisplayType(SerializationUnits.MASS, 6, MassUnit.GRAM, "GRAM", "kg");
 
     /** Mass.MEGAGRAM unit type with code 7. */
     public static final DisplayType MASS_MEGAGRAM =
@@ -1140,16 +1129,13 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.MASS, 19, MassUnit.EXAELECTRONVOLT, "EXAELECTRONVOLT", "EeV");
 
     /** Mass.OUNCE unit type with code 20. */
-    public static final DisplayType MASS_OUNCE =
-            new DisplayType(SerializationUnits.MASS, 20, MassUnit.OUNCE, "OUNCE", "oz");
+    public static final DisplayType MASS_OUNCE = new DisplayType(SerializationUnits.MASS, 20, MassUnit.OUNCE, "OUNCE", "oz");
 
     /** Mass.POUND unit type with code 21. */
-    public static final DisplayType MASS_POUND =
-            new DisplayType(SerializationUnits.MASS, 21, MassUnit.POUND, "POUND", "lb");
+    public static final DisplayType MASS_POUND = new DisplayType(SerializationUnits.MASS, 21, MassUnit.POUND, "POUND", "lb");
 
     /** Mass.DALTON unit type with code 22. */
-    public static final DisplayType MASS_DALTON =
-            new DisplayType(SerializationUnits.MASS, 22, MassUnit.DALTON, "DALTON", "Da");
+    public static final DisplayType MASS_DALTON = new DisplayType(SerializationUnits.MASS, 22, MassUnit.DALTON, "DALTON", "Da");
 
     /** Mass.TON_LONG unit type with code 23. */
     public static final DisplayType MASS_TON_LONG =
@@ -1160,14 +1146,12 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.MASS, 24, MassUnit.TON_SHORT, "TON_SHORT", "ton (short)");
 
     /** Mass.TONNE unit type with code 25. */
-    public static final DisplayType MASS_TONNE =
-            new DisplayType(SerializationUnits.MASS, 25, MassUnit.TONNE, "TONNE", "tonne");
+    public static final DisplayType MASS_TONNE = new DisplayType(SerializationUnits.MASS, 25, MassUnit.TONNE, "TONNE", "tonne");
 
     /* ===================================================== POWER ======================================================= */
 
     /** Power.WATT unit type with code 0. */
-    public static final DisplayType POWER_WATT =
-            new DisplayType(SerializationUnits.POWER, 0, PowerUnit.WATT, "WATT", "W");
+    public static final DisplayType POWER_WATT = new DisplayType(SerializationUnits.POWER, 0, PowerUnit.WATT, "WATT", "W");
 
     /** Power.FEMTOWATT unit type with code 1. */
     public static final DisplayType POWER_FEMTOWATT =
@@ -1358,8 +1342,7 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.SPEED, 12, SpeedUnit.MILE_PER_HOUR, "MILE_PER_HOUR", "mi/h");
 
     /** Speed.KNOT unit type with code 13. */
-    public static final DisplayType SPEED_KNOT =
-            new DisplayType(SerializationUnits.SPEED, 13, SpeedUnit.KNOT, "KNOT", "kt");
+    public static final DisplayType SPEED_KNOT = new DisplayType(SerializationUnits.SPEED, 13, SpeedUnit.KNOT, "KNOT", "kt");
 
     /* =================================================== TEMPERATURE =================================================== */
 
@@ -1390,20 +1373,20 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.ABSOLUTETEMPERATURE, 0, AbsoluteTemperatureUnit.KELVIN, "KELVIN", "K");
 
     /** AbsoluteTemperature.DEGREE_CELSIUS unit type with code 1. */
-    public static final DisplayType ABSOLUTETEMPERATURE_DEGREE_CELSIUS = new DisplayType(
-            SerializationUnits.ABSOLUTETEMPERATURE, 1, AbsoluteTemperatureUnit.DEGREE_CELSIUS, "DEGREE_CELSIUS", "OC");
+    public static final DisplayType ABSOLUTETEMPERATURE_DEGREE_CELSIUS = new DisplayType(SerializationUnits.ABSOLUTETEMPERATURE,
+            1, AbsoluteTemperatureUnit.DEGREE_CELSIUS, "DEGREE_CELSIUS", "OC");
 
     /** AbsoluteTemperature.DEGREE_FAHRENHEIT unit type with code 2. */
     public static final DisplayType ABSOLUTETEMPERATURE_DEGREE_FAHRENHEIT = new DisplayType(
             SerializationUnits.ABSOLUTETEMPERATURE, 2, AbsoluteTemperatureUnit.DEGREE_FAHRENHEIT, "DEGREE_FAHRENHEIT", "OF");
 
     /** AbsoluteTemperature.DEGREE_RANKINE unit type with code 3. */
-    public static final DisplayType ABSOLUTETEMPERATURE_DEGREE_RANKINE = new DisplayType(
-            SerializationUnits.ABSOLUTETEMPERATURE, 3, AbsoluteTemperatureUnit.DEGREE_RANKINE, "DEGREE_RANKINE", "OR");
+    public static final DisplayType ABSOLUTETEMPERATURE_DEGREE_RANKINE = new DisplayType(SerializationUnits.ABSOLUTETEMPERATURE,
+            3, AbsoluteTemperatureUnit.DEGREE_RANKINE, "DEGREE_RANKINE", "OR");
 
     /** AbsoluteTemperature.DEGREE_REAUMUR unit type with code 4. */
-    public static final DisplayType ABSOLUTETEMPERATURE_DEGREE_REAUMUR = new DisplayType(
-            SerializationUnits.ABSOLUTETEMPERATURE, 4, AbsoluteTemperatureUnit.DEGREE_REAUMUR, "DEGREE_REAUMUR", "ORé");
+    public static final DisplayType ABSOLUTETEMPERATURE_DEGREE_REAUMUR = new DisplayType(SerializationUnits.ABSOLUTETEMPERATURE,
+            4, AbsoluteTemperatureUnit.DEGREE_REAUMUR, "DEGREE_REAUMUR", "ORé");
 
     /* ==================================================== DURATION ===================================================== */
 
@@ -1848,8 +1831,7 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.MONEY, 230, MoneyUnit.ETB, "ETB", "Ethiopian birr");
 
     /** Money.EUR unit type with code 978. */
-    public static final DisplayType MONEY_EUR =
-            new DisplayType(SerializationUnits.MONEY, 978, MoneyUnit.EUR, "EUR", "Euro");
+    public static final DisplayType MONEY_EUR = new DisplayType(SerializationUnits.MONEY, 978, MoneyUnit.EUR, "EUR", "Euro");
 
     /** Money.FJD unit type with code 242. */
     public static final DisplayType MONEY_FJD =
@@ -1984,8 +1966,7 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.MONEY, 398, MoneyUnit.KZT, "KZT", "Kazakhstani tenge");
 
     /** Money.LAK unit type with code 418. */
-    public static final DisplayType MONEY_LAK =
-            new DisplayType(SerializationUnits.MONEY, 418, MoneyUnit.LAK, "LAK", "Lao kip");
+    public static final DisplayType MONEY_LAK = new DisplayType(SerializationUnits.MONEY, 418, MoneyUnit.LAK, "LAK", "Lao kip");
 
     /** Money.LBP unit type with code 422. */
     public static final DisplayType MONEY_LBP =
@@ -2336,8 +2317,7 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.MONEY, 962, MoneyUnit.XPT, "XPT", "Platinum (one troy ounce)");
 
     /** Money.XSU unit type with code 994. */
-    public static final DisplayType MONEY_XSU =
-            new DisplayType(SerializationUnits.MONEY, 994, MoneyUnit.XSU, "XSU", "SUCRE");
+    public static final DisplayType MONEY_XSU = new DisplayType(SerializationUnits.MONEY, 994, MoneyUnit.XSU, "XSU", "SUCRE");
 
     /** Money.XTS unit type with code 963. */
     public static final DisplayType MONEY_XTS =

@@ -56,8 +56,6 @@ import org.djutils.exceptions.Throw;
  * Copyright (c) 2016-2019 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://sim0mq.org/docs/current/license.html">OpenTrafficSim License</a>.
  * </p>
- * $LastChangedDate: 2015-07-24 02:58:59 +0200 (Fri, 24 Jul 2015) $, @version $Revision: 1147 $, by $Author: averbraeck $,
- * initial version Mar 1, 2017 <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
@@ -2181,7 +2179,7 @@ public final class TypedMessage
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    @SuppressWarnings({ "checkstyle:methodlength", "checkstyle:needbraces" })
+    @SuppressWarnings({"checkstyle:methodlength", "checkstyle:needbraces"})
     public static Object[] decode(final byte[] buffer, final Map<Byte, Serializer<?>> decoderMap, final EndianUtil endianUtil)
             throws SerializationException
     {
