@@ -22,5 +22,5 @@ public interface SerializableObject<T>
      * @return List&lt;Object&gt;; list of the elements that need to serialized
      */
     List<Object> exportAsList();
-    
+
 }

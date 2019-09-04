@@ -57,8 +57,6 @@ import org.junit.Test;
  * Copyright (c) 2019-2019 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://sim0mq.org/docs/current/license.html">OpenTrafficSim License</a>.
  * </p>
- * $LastChangedDate: 2015-07-24 02:58:59 +0200 (Fri, 24 Jul 2015) $, @version $Revision: 1147 $, by $Author: averbraeck $,
- * initial version Jun 10, 2019 <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
@@ -89,19 +87,19 @@ public class Tests
         Character charValue = 'a';
         char charValue2 = 'b';
         String stringValue = "abcDEF123!@#ȦȧȨ\u0776\u0806\u080e";
-        Object[] objects = new Object[] { intValue, integerValue, shortValue, shortValue2, longValue, longValue2, byteValue,
+        Object[] objects = new Object[] {intValue, integerValue, shortValue, shortValue2, longValue, longValue2, byteValue,
                 byteValue2, floatValue, floatValue2, doubleValue, doubleValue2, boolValue, boolValue2, charValue, charValue2,
-                stringValue };
-        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
+                stringValue};
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
         {
-            for (boolean encodeUTF8 : new boolean[] { false, true })
+            for (boolean encodeUTF8 : new boolean[] {false, true})
             {
                 // System.out.println("" + endianUtil + ", UTF8=" + encodeUTF8);
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
                 System.out.print(HexDumper.hexDumper(serialized));
                 System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
-                for (boolean primitive : new boolean[] { false, true })
+                for (boolean primitive : new boolean[] {false, true})
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
                             : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
@@ -139,19 +137,19 @@ public class Tests
         testString(4, 4, smiley);
 
         compare(TypedMessage.encodeUTF8(EndianUtil.BIG_ENDIAN, permille),
-                new byte[] { 9, 0, 0, 0, 3, (byte) 0xE2, (byte) 0x80, (byte) 0xB0 });
+                new byte[] {9, 0, 0, 0, 3, (byte) 0xE2, (byte) 0x80, (byte) 0xB0});
         compare(TypedMessage.encodeUTF16(EndianUtil.BIG_ENDIAN, permille),
-                new byte[] { 10, 0, 0, 0, 1, (byte) 0x20, (byte) 0x30 });
+                new byte[] {10, 0, 0, 0, 1, (byte) 0x20, (byte) 0x30});
 
         compare(TypedMessage.encodeUTF8(EndianUtil.BIG_ENDIAN, smiley),
-                new byte[] { 9, 0, 0, 0, 4, (byte) 0xF0, (byte) 0x9F, (byte) 0x98, (byte) 0x80 });
+                new byte[] {9, 0, 0, 0, 4, (byte) 0xF0, (byte) 0x9F, (byte) 0x98, (byte) 0x80});
         compare(TypedMessage.encodeUTF16(EndianUtil.BIG_ENDIAN, smiley),
-                new byte[] { 10, 0, 0, 0, 2, (byte) 0xD8, (byte) 0x3D, (byte) 0xDE, (byte) 0x00 });
+                new byte[] {10, 0, 0, 0, 2, (byte) 0xD8, (byte) 0x3D, (byte) 0xDE, (byte) 0x00});
 
-        Object[] objects = new Object[] { copyright, xi, permille, smiley, abc, complex };
-        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
+        Object[] objects = new Object[] {copyright, xi, permille, smiley, abc, complex};
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
         {
-            for (boolean encodeUTF8 : new boolean[] { false, true })
+            for (boolean encodeUTF8 : new boolean[] {false, true})
             {
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
@@ -222,31 +220,31 @@ public class Tests
     @Test
     public void testArrays() throws SerializationException
     {
-        int[] integer = new int[] { 1, 2, 3 };
-        Integer[] integerValues2 = new Integer[] { -1, -2, -3 };
-        short[] shortValues = new short[] { 10, 20, 30 };
-        Short[] shortValues2 = new Short[] { -10, -20, -30 };
-        long[] longValues = new long[] { 1000, 2000, 3000 };
-        Long[] longValues2 = new Long[] { -1000L, -2000L, -3000L };
-        byte[] byteValues = new byte[] { 12, 13, 14 };
-        Byte[] byteValues2 = new Byte[] { -12, -13, -14 };
-        boolean[] boolValues = new boolean[] { false, true, true };
-        Boolean[] boolValues2 = new Boolean[] { true, true, false };
-        float[] floatValues = new float[] { 12.3f, 23.4f, 34.5f };
-        Float[] floatValues2 = new Float[] { -12.3f, -23.4f, -34.5f };
-        double[] doubleValues = new double[] { 23.45, 34.56, 45.67 };
-        Double[] doubleValues2 = new Double[] { -23.45, -34.56, -45.67 };
-        Object[] objects = new Object[] { integer, integerValues2, shortValues, shortValues2, longValues, longValues2,
-                byteValues, byteValues2, floatValues, floatValues2, doubleValues, doubleValues2, boolValues, boolValues2 };
-        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
+        int[] integer = new int[] {1, 2, 3};
+        Integer[] integerValues2 = new Integer[] {-1, -2, -3};
+        short[] shortValues = new short[] {10, 20, 30};
+        Short[] shortValues2 = new Short[] {-10, -20, -30};
+        long[] longValues = new long[] {1000, 2000, 3000};
+        Long[] longValues2 = new Long[] {-1000L, -2000L, -3000L};
+        byte[] byteValues = new byte[] {12, 13, 14};
+        Byte[] byteValues2 = new Byte[] {-12, -13, -14};
+        boolean[] boolValues = new boolean[] {false, true, true};
+        Boolean[] boolValues2 = new Boolean[] {true, true, false};
+        float[] floatValues = new float[] {12.3f, 23.4f, 34.5f};
+        Float[] floatValues2 = new Float[] {-12.3f, -23.4f, -34.5f};
+        double[] doubleValues = new double[] {23.45, 34.56, 45.67};
+        Double[] doubleValues2 = new Double[] {-23.45, -34.56, -45.67};
+        Object[] objects = new Object[] {integer, integerValues2, shortValues, shortValues2, longValues, longValues2,
+                byteValues, byteValues2, floatValues, floatValues2, doubleValues, doubleValues2, boolValues, boolValues2};
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
         {
-            for (boolean encodeUTF8 : new boolean[] { false, true })
+            for (boolean encodeUTF8 : new boolean[] {false, true})
             {
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
                 System.out.print(HexDumper.hexDumper(serialized));
                 System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
-                for (boolean primitive : new boolean[] { false, true })
+                for (boolean primitive : new boolean[] {false, true})
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
                             : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
@@ -268,31 +266,31 @@ public class Tests
     @Test
     public void testMatrices() throws SerializationException
     {
-        int[][] integer = new int[][] { { 1, 2, 3 }, { 4, 5, 6 } };
-        Integer[][] integerValues2 = new Integer[][] { { -1, -2, -3 }, { -4, -5, -6 } };
-        short[][] shortValues = new short[][] { { 10, 20, 30 }, { 40, 50, 60 } };
-        Short[][] shortValues2 = new Short[][] { { -10, -20, -30 }, { -40, -50, -60 } };
-        long[][] longValues = new long[][] { { 1000, 2000, 3000 }, { 3000, 4000, 5000 } };
-        Long[][] longValues2 = new Long[][] { { -1000L, -2000L, -3000L }, { -3000L, -4000L, -5000L } };
-        byte[][] byteValues = new byte[][] { { 12, 13, 14 }, { 15, 16, 17 } };
-        Byte[][] byteValues2 = new Byte[][] { { -12, -13, -14 }, { -15, -16, -17 } };
-        boolean[][] boolValues = new boolean[][] { { false, true, true }, { false, false, false } };
-        Boolean[][] boolValues2 = new Boolean[][] { { true, true, false }, { true, true, true } };
-        float[][] floatValues = new float[][] { { 12.3f, 23.4f, 34.5f }, { 44.4f, 55.5f, 66.6f } };
-        Float[][] floatValues2 = new Float[][] { { -12.3f, -23.4f, -34.5f }, { -11.1f, -22.2f, -33.3f } };
-        double[][] doubleValues = new double[][] { { 23.45, 34.56, 45.67 }, { 55.5, 66.6, 77.7 } };
-        Double[][] doubleValues2 = new Double[][] { { -23.45, -34.56, -45.67 }, { -22.2, -33.3, -44.4 } };
-        Object[] objects = new Object[] { integer, integerValues2, shortValues, shortValues2, longValues, longValues2,
-                byteValues, byteValues2, floatValues, floatValues2, doubleValues, doubleValues2, boolValues, boolValues2 };
-        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
+        int[][] integer = new int[][] {{1, 2, 3}, {4, 5, 6}};
+        Integer[][] integerValues2 = new Integer[][] {{-1, -2, -3}, {-4, -5, -6}};
+        short[][] shortValues = new short[][] {{10, 20, 30}, {40, 50, 60}};
+        Short[][] shortValues2 = new Short[][] {{-10, -20, -30}, {-40, -50, -60}};
+        long[][] longValues = new long[][] {{1000, 2000, 3000}, {3000, 4000, 5000}};
+        Long[][] longValues2 = new Long[][] {{-1000L, -2000L, -3000L}, {-3000L, -4000L, -5000L}};
+        byte[][] byteValues = new byte[][] {{12, 13, 14}, {15, 16, 17}};
+        Byte[][] byteValues2 = new Byte[][] {{-12, -13, -14}, {-15, -16, -17}};
+        boolean[][] boolValues = new boolean[][] {{false, true, true}, {false, false, false}};
+        Boolean[][] boolValues2 = new Boolean[][] {{true, true, false}, {true, true, true}};
+        float[][] floatValues = new float[][] {{12.3f, 23.4f, 34.5f}, {44.4f, 55.5f, 66.6f}};
+        Float[][] floatValues2 = new Float[][] {{-12.3f, -23.4f, -34.5f}, {-11.1f, -22.2f, -33.3f}};
+        double[][] doubleValues = new double[][] {{23.45, 34.56, 45.67}, {55.5, 66.6, 77.7}};
+        Double[][] doubleValues2 = new Double[][] {{-23.45, -34.56, -45.67}, {-22.2, -33.3, -44.4}};
+        Object[] objects = new Object[] {integer, integerValues2, shortValues, shortValues2, longValues, longValues2,
+                byteValues, byteValues2, floatValues, floatValues2, doubleValues, doubleValues2, boolValues, boolValues2};
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
         {
-            for (boolean encodeUTF8 : new boolean[] { false, true })
+            for (boolean encodeUTF8 : new boolean[] {false, true})
             {
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
                 System.out.print(HexDumper.hexDumper(serialized));
                 System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
-                for (boolean primitive : new boolean[] { false, true })
+                for (boolean primitive : new boolean[] {false, true})
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
                             : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
@@ -327,24 +325,23 @@ public class Tests
         MoneyPerVolume mpv = new MoneyPerVolume(0.44, MoneyPerVolumeUnit.USD_PER_OUNCE_US_FLUID);
         FloatMoneyPerVolume mpvw = new FloatMoneyPerVolume(0.55, MoneyPerVolumeUnit.USD_PER_OUNCE_US_FLUID);
         FloatArea area = new FloatArea(66.66f, AreaUnit.ACRE);
-        ElectricalCurrentVector currents = new ElectricalCurrentVector(new double[] { 1.2, 2.3, 3.4 },
-                ElectricalCurrentUnit.MILLIAMPERE, StorageType.DENSE);
-        FloatElectricalResistanceVector resistors = new FloatElectricalResistanceVector(new float[] { 1.2f, 4.7f, 6.8f },
+        ElectricalCurrentVector currents =
+                new ElectricalCurrentVector(new double[] {1.2, 2.3, 3.4}, ElectricalCurrentUnit.MILLIAMPERE, StorageType.DENSE);
+        FloatElectricalResistanceVector resistors = new FloatElectricalResistanceVector(new float[] {1.2f, 4.7f, 6.8f},
                 ElectricalResistanceUnit.KILOOHM, StorageType.DENSE);
-        ElectricalCurrentMatrix currentMatrix = new ElectricalCurrentMatrix(
-                new double[][] { { 1.2, 2.3, 3.4 }, { 5.5, 6.6, 7.7 } }, ElectricalCurrentUnit.MILLIAMPERE, StorageType.DENSE);
-        FloatElectricalResistanceMatrix resistorMatrix =
-                new FloatElectricalResistanceMatrix(new float[][] { { 1.2f, 4.7f, 6.8f }, { 2.2f, 3.3f, 4.4f } },
-                        ElectricalResistanceUnit.KILOOHM, StorageType.DENSE);
+        ElectricalCurrentMatrix currentMatrix = new ElectricalCurrentMatrix(new double[][] {{1.2, 2.3, 3.4}, {5.5, 6.6, 7.7}},
+                ElectricalCurrentUnit.MILLIAMPERE, StorageType.DENSE);
+        FloatElectricalResistanceMatrix resistorMatrix = new FloatElectricalResistanceMatrix(
+                new float[][] {{1.2f, 4.7f, 6.8f}, {2.2f, 3.3f, 4.4f}}, ElectricalResistanceUnit.KILOOHM, StorageType.DENSE);
 
-        Object[] objects = new Object[] { length, value, money, floatMoney, mpa, mpl, mpe, mpm, mpt, mpv, mpvw, area, currents,
-                resistors, currentMatrix, resistorMatrix };
-        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
+        Object[] objects = new Object[] {length, value, money, floatMoney, mpa, mpl, mpe, mpm, mpt, mpv, mpvw, area, currents,
+                resistors, currentMatrix, resistorMatrix};
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
         {
             byte[] serialized = TypedMessage.encodeUTF16(endianUtil, objects);
             System.out.print(HexDumper.hexDumper(serialized));
             System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
-            for (boolean primitive : new boolean[] { false, true })
+            for (boolean primitive : new boolean[] {false, true})
             {
                 Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
                         : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
@@ -440,17 +437,17 @@ public class Tests
     @Test
     public void testCompoundArrays() throws SerializationException
     {
-        Compound[] testArray = new Compound[] { new Compound(1, 0.1), new Compound(2, 0.2), new Compound(3, 0.3) };
-        Object[] objects = new Object[] { testArray };
-        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
+        Compound[] testArray = new Compound[] {new Compound(1, 0.1), new Compound(2, 0.2), new Compound(3, 0.3)};
+        Object[] objects = new Object[] {testArray};
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
         {
-            for (boolean encodeUTF8 : new boolean[] { false, true })
+            for (boolean encodeUTF8 : new boolean[] {false, true})
             {
                 // System.out.println("Encoding " + (encodeUTF8 ? "UTF8" : "UTF16") + ", " + endianUtil);
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
                 // System.out.print(HexDumper.hexDumper(serialized));
-                for (boolean primitive : new boolean[] { false, true })
+                for (boolean primitive : new boolean[] {false, true})
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
                             : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
@@ -507,20 +504,20 @@ public class Tests
     @Test
     public void testArrayOfDjutilsVectors() throws ValueException, SerializationException
     {
-        AbstractDoubleVector<?, ?>[] array = new AbstractDoubleVector[] {
-                new LengthVector(new double[] { 0.1, 0.2, 0.3 }, LengthUnit.INCH, StorageType.DENSE),
-                new MoneyVector(new double[] { 10.1, 20.2, 30.3 }, MoneyUnit.EUR, StorageType.DENSE) };
-        Object[] objects = new Object[] { array };
-        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
+        AbstractDoubleVector<?, ?>[] array =
+                new AbstractDoubleVector[] {new LengthVector(new double[] {0.1, 0.2, 0.3}, LengthUnit.INCH, StorageType.DENSE),
+                        new MoneyVector(new double[] {10.1, 20.2, 30.3}, MoneyUnit.EUR, StorageType.DENSE)};
+        Object[] objects = new Object[] {array};
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
         {
-            for (boolean encodeUTF8 : new boolean[] { false, true })
+            for (boolean encodeUTF8 : new boolean[] {false, true})
             {
                 // System.out.println("Encoding " + (encodeUTF8 ? "UTF8" : "UTF16") + ", " + endianUtil);
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
                 System.out.print(HexDumper.hexDumper(serialized));
                 System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
-                for (boolean primitive : new boolean[] { false, true })
+                for (boolean primitive : new boolean[] {false, true})
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
                             : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
@@ -555,27 +552,27 @@ public class Tests
     @Test
     public void testJaggedMatrices()
     {
-        int[][] integer = new int[][] { { 1, 2, 3 }, { 5, 6 } };
-        Integer[][] integerValues2 = new Integer[][] { { -1, -2 }, { -4, -5, -6 } };
-        short[][] shortValues = new short[][] { { 10, 20 }, { 40, 50, 60 } };
-        Short[][] shortValues2 = new Short[][] { { -10, -20, -30 }, { -40, -50 } };
-        long[][] longValues = new long[][] { { 1000, 2000, 3000 }, { 3000, 4000 } };
-        Long[][] longValues2 = new Long[][] { { -1000L, -2000L }, { -3000L, -4000L, -5000L } };
-        byte[][] byteValues = new byte[][] { { 12, 13 }, { 15, 16, 17 } };
-        Byte[][] byteValues2 = new Byte[][] { { -12, -13, -14 }, { -15, -16 } };
-        boolean[][] boolValues = new boolean[][] { { false, true, true }, { false, false } };
-        Boolean[][] boolValues2 = new Boolean[][] { { true, true }, { true, true, true } };
-        float[][] floatValues = new float[][] { { 12.3f, 23.4f }, { 44.4f, 55.5f, 66.6f } };
-        Float[][] floatValues2 = new Float[][] { { -12.3f, -23.4f, -34.5f }, { -11.1f, -22.2f } };
-        double[][] doubleValues = new double[][] { { 23.45, 34.56, 45.67 }, { 55.5, 66.6 } };
-        Double[][] doubleValues2 = new Double[][] { { -23.45, -34.56 }, { -22.2, -33.3, -44.4 } };
-        Object[] objects = new Object[] { integer, integerValues2, shortValues, shortValues2, longValues, longValues2,
-                byteValues, byteValues2, floatValues, floatValues2, doubleValues, doubleValues2, boolValues, boolValues2 };
-        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
+        int[][] integer = new int[][] {{1, 2, 3}, {5, 6}};
+        Integer[][] integerValues2 = new Integer[][] {{-1, -2}, {-4, -5, -6}};
+        short[][] shortValues = new short[][] {{10, 20}, {40, 50, 60}};
+        Short[][] shortValues2 = new Short[][] {{-10, -20, -30}, {-40, -50}};
+        long[][] longValues = new long[][] {{1000, 2000, 3000}, {3000, 4000}};
+        Long[][] longValues2 = new Long[][] {{-1000L, -2000L}, {-3000L, -4000L, -5000L}};
+        byte[][] byteValues = new byte[][] {{12, 13}, {15, 16, 17}};
+        Byte[][] byteValues2 = new Byte[][] {{-12, -13, -14}, {-15, -16}};
+        boolean[][] boolValues = new boolean[][] {{false, true, true}, {false, false}};
+        Boolean[][] boolValues2 = new Boolean[][] {{true, true}, {true, true, true}};
+        float[][] floatValues = new float[][] {{12.3f, 23.4f}, {44.4f, 55.5f, 66.6f}};
+        Float[][] floatValues2 = new Float[][] {{-12.3f, -23.4f, -34.5f}, {-11.1f, -22.2f}};
+        double[][] doubleValues = new double[][] {{23.45, 34.56, 45.67}, {55.5, 66.6}};
+        Double[][] doubleValues2 = new Double[][] {{-23.45, -34.56}, {-22.2, -33.3, -44.4}};
+        Object[] objects = new Object[] {integer, integerValues2, shortValues, shortValues2, longValues, longValues2,
+                byteValues, byteValues2, floatValues, floatValues2, doubleValues, doubleValues2, boolValues, boolValues2};
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
         {
             for (Object object : objects)
             {
-                Object[] singleObjectArray = new Object[] { object };
+                Object[] singleObjectArray = new Object[] {object};
                 try
                 {
                     TypedMessage.encodeUTF16(endianUtil, singleObjectArray);
@@ -605,8 +602,8 @@ public class Tests
     public void testUnhandledObject()
     {
         File file = new File("whatever");
-        Object[] objects = new Object[] { file };
-        for (EndianUtil endianUtil : new EndianUtil[] { EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN })
+        Object[] objects = new Object[] {file};
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
         {
             try
             {
@@ -619,7 +616,7 @@ public class Tests
             }
 
             Integer[][] badMatrix = new Integer[0][0];
-            objects = new Object[] { badMatrix };
+            objects = new Object[] {badMatrix};
             try
             {
                 TypedMessage.encodeUTF16(endianUtil, objects);
@@ -920,9 +917,9 @@ public class Tests
         assertEquals("message should be our message", message, e.getMessage());
         assertEquals("cause should not be our cause", cause, e.getCause());
         assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
-        for (boolean enableSuppression : new boolean[] { true, false })
+        for (boolean enableSuppression : new boolean[] {true, false})
         {
-            for (boolean writableStackTrace : new boolean[] { true, false })
+            for (boolean writableStackTrace : new boolean[] {true, false})
             {
                 e = new SerializationException(message, cause, enableSuppression, writableStackTrace);
                 assertTrue("Exception should not be null", null != e);

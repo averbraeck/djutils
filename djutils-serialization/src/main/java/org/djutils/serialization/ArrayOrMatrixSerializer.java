@@ -9,7 +9,7 @@ public abstract class ArrayOrMatrixSerializer<T extends Object, E extends Object
 {
     /** Size of one element of the encoded data. */
     private final int elementSize;
-    
+
     /** Number of dimension; 1 for array, 2 for matrix. */
     private final int numberOfDimensions;
 
@@ -26,7 +26,7 @@ public abstract class ArrayOrMatrixSerializer<T extends Object, E extends Object
         this.elementSize = elementSize;
         this.numberOfDimensions = numberOfDimensions;
     }
-    
+
     /**
      * Return the number of bytes needed to encode one additional element.
      * @return int; the number of bytes needed to encode one additional element
@@ -45,7 +45,7 @@ public abstract class ArrayOrMatrixSerializer<T extends Object, E extends Object
     {
         return this.numberOfDimensions;
     }
-    
+
     /**
      * Serializer for one array or matrix element (without type prefix) must be implemented in implementing sub classes.
      * @param object E; the object to serialize
