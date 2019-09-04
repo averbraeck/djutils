@@ -116,8 +116,7 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
      * @return this AbstractMean&lt;MT, V, W&gt;; for method chaining
      * @throws IllegalArgumentException if the number of values is not equal to the number of weights
      */
-    public final AbstractMean<MT, V, W> add(final Iterable<V> values, final Iterable<W> weights)
-            throws IllegalArgumentException
+    public final AbstractMean<MT, V, W> add(final Iterable<V> values, final Iterable<W> weights) throws IllegalArgumentException
     {
         Iterator<V> itV = values.iterator();
         Iterator<W> itW = weights.iterator();

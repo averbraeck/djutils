@@ -3,8 +3,8 @@ package org.djutils.immutablecollections;
 import java.util.List;
 
 /**
- * A List interface without the methods that can change it. The constructor of the ImmutableList needs to be given an
- * initial List.
+ * A List interface without the methods that can change it. The constructor of the ImmutableList needs to be given an initial
+ * List.
  * <p>
  * Copyright (c) 2016-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -27,40 +27,37 @@ public interface ImmutableList<E> extends ImmutableCollection<E>
     E get(int index);
 
     /**
-     * Returns the index of the first occurrence of the specified element in this immutable list, or -1 if this
-     * immutable list does not contain the element. More formally, returns the lowest index <tt>i</tt> such that
+     * Returns the index of the first occurrence of the specified element in this immutable list, or -1 if this immutable list
+     * does not contain the element. More formally, returns the lowest index <tt>i</tt> such that
      * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>, or -1 if there is no such index.
      * @param o Object; element to search for
-     * @return the index of the first occurrence of the specified element in this immutable list, or -1 if this
-     *         immutable list does not contain the element
+     * @return the index of the first occurrence of the specified element in this immutable list, or -1 if this immutable list
+     *         does not contain the element
      * @throws ClassCastException if the type of the specified element is incompatible with this immutable list
-     * @throws NullPointerException if the specified element is null and this immutable list does not permit null
-     *             elements
+     * @throws NullPointerException if the specified element is null and this immutable list does not permit null elements
      */
     int indexOf(Object o);
 
     /**
-     * Returns the index of the last occurrence of the specified element in this immutable list, or -1 if this immutable
-     * list does not contain the element. More formally, returns the highest index <tt>i</tt> such that
+     * Returns the index of the last occurrence of the specified element in this immutable list, or -1 if this immutable list
+     * does not contain the element. More formally, returns the highest index <tt>i</tt> such that
      * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>, or -1 if there is no such index.
      * @param o Object; element to search for
-     * @return the index of the last occurrence of the specified element in this immutable list, or -1 if this immutable
-     *         list does not contain the element
+     * @return the index of the last occurrence of the specified element in this immutable list, or -1 if this immutable list
+     *         does not contain the element
      * @throws ClassCastException if the type of the specified element is incompatible with this immutable list
-     * @throws NullPointerException if the specified element is null and this immutable list does not permit null
-     *             elements
+     * @throws NullPointerException if the specified element is null and this immutable list does not permit null elements
      */
     int lastIndexOf(Object o);
 
     /**
-     * Returns a safe, immutable copy of the portion of this immutable list between the specified <tt>fromIndex</tt>,
-     * inclusive, and <tt>toIndex</tt>, exclusive. (If <tt>fromIndex</tt> and <tt>toIndex</tt> are equal, the returned
-     * immutable list is empty).
+     * Returns a safe, immutable copy of the portion of this immutable list between the specified <tt>fromIndex</tt>, inclusive,
+     * and <tt>toIndex</tt>, exclusive. (If <tt>fromIndex</tt> and <tt>toIndex</tt> are equal, the returned immutable list is
+     * empty).
      * @param fromIndex int; low endpoint (inclusive) of the subList
      * @param toIndex int; high endpoint (exclusive) of the subList
      * @return a view of the specified range within this immutable list
-     * @throws IndexOutOfBoundsException for an illegal endpoint index value
-     *             (<tt>fromIndex &lt; 0 || toIndex &gt; size ||
+     * @throws IndexOutOfBoundsException for an illegal endpoint index value (<tt>fromIndex &lt; 0 || toIndex &gt; size ||
      *         fromIndex &gt; toIndex</tt>)
      */
     ImmutableList<E> subList(int fromIndex, int toIndex);

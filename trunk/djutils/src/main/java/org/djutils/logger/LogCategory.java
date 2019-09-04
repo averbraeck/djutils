@@ -42,8 +42,8 @@ public class LogCategory
     }
 
     /**
-     * Calculate the hashCode. In case of a blank name, use a reproducible random number (so NOT the memory address of
-     * the LogCategory object)
+     * Calculate the hashCode. In case of a blank name, use a reproducible random number (so NOT the memory address of the
+     * LogCategory object)
      * @return the calculated hash code
      */
     private int calcHashCode()

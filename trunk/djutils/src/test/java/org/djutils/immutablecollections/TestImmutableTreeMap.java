@@ -12,7 +12,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * TestImmutableTreeMap.java. 
+ * TestImmutableTreeMap.java.
  * <p>
  * Copyright (c) 2002-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -59,12 +59,12 @@ public class TestImmutableTreeMap
         Assert.assertTrue(imMap.keySet().first() == 1);
         Assert.assertTrue(imMap.keySet().last() == 10);
         Assert.assertTrue(imMap.values().contains(200));
-        
+
         Assert.assertArrayEquals(map.keySet().toArray(), imMap.keySet().toSet().toArray());
         Assert.assertArrayEquals(map.values().toArray(), imMap.values().toSet().toArray());
         Assert.assertArrayEquals(map.keySet().toArray(), imMap.keySet().toSet().toArray()); // cached
         Assert.assertArrayEquals(map.values().toArray(), imMap.values().toSet().toArray());
-        
+
         Assert.assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet()));
         Assert.assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet())); // cached
 
@@ -91,7 +91,7 @@ public class TestImmutableTreeMap
         else
             Assert.assertTrue(imMap.size() == 11);
     }
-    
+
     private boolean checkEntrySets(Set<Entry<Integer, Integer>> es, Set<ImmutableEntry<Integer, Integer>> ies)
     {
         if (es.size() != ies.size())

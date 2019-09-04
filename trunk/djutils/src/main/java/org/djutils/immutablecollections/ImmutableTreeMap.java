@@ -110,7 +110,7 @@ public class ImmutableTreeMap<K, V> extends ImmutableAbstractMap<K, V> implement
                 {
                     return ((Comparable<K>) o1.getKey()).compareTo(o2.getKey());
                 }
-                 
+
             });
             for (Entry<K, V> entry : getMap().entrySet())
             {

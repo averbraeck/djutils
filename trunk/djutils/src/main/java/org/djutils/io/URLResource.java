@@ -9,8 +9,8 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 
 /**
- * The URLResource class helps to resolve a file location in a project, JAR, or folder. The static methods return a URL
- * of the file location that was found, or null in case it was not found.
+ * The URLResource class helps to resolve a file location in a project, JAR, or folder. The static methods return a URL of the
+ * file location that was found, or null in case it was not found.
  * <p>
  * Copyright (c) 2002-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -96,8 +96,8 @@ public final class URLResource
     }
 
     /**
-     * Resolves a resource for name. For relative names, base is used to resolve to an absolute name. If name is
-     * absolute, base is ignored.
+     * Resolves a resource for name. For relative names, base is used to resolve to an absolute name. If name is absolute, base
+     * is ignored.
      * @param name String; the name to search for
      * @param base String; the base for relative paths
      * @return the resolved URL

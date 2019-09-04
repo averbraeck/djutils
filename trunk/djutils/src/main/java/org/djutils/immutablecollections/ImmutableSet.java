@@ -3,8 +3,7 @@ package org.djutils.immutablecollections;
 import java.util.Set;
 
 /**
- * A Set interface without the methods that can change it. The constructor of the ImmutableSet needs to be given an
- * initial Set.
+ * A Set interface without the methods that can change it. The constructor of the ImmutableSet needs to be given an initial Set.
  * <p>
  * Copyright (c) 2016-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is

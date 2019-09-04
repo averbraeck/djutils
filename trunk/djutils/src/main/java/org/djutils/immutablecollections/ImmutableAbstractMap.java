@@ -30,7 +30,7 @@ public abstract class ImmutableAbstractMap<K, V> implements ImmutableMap<K, V>
 
     /** COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection. */
     protected final Immutable copyOrWrap;
-    
+
     /** the cached values. */
     protected ImmutableCollection<V> cachedValues = null;
 

@@ -35,8 +35,7 @@ public class HexDecoder implements Decoder
         this.fieldsPerLine = fieldsPerLine;
         this.extraSpaceAfterEvery = extraSpaceAfterEvery > 0 ? extraSpaceAfterEvery : Integer.MAX_VALUE;
         String format =
-                String.format("%%%ds", fieldsPerLine * 2 + fieldsPerLine - 1 + (fieldsPerLine - 1)
-                        / this.extraSpaceAfterEvery);
+                String.format("%%%ds", fieldsPerLine * 2 + fieldsPerLine - 1 + (fieldsPerLine - 1) / this.extraSpaceAfterEvery);
         this.prototypeLine = String.format(format, "");
     }
 

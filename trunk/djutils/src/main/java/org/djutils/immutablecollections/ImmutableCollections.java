@@ -26,7 +26,7 @@ public class ImmutableCollections
     {
         // Do not instantiate
     }
-    
+
     /**
      * Return an immutable empty set.
      * @return ImmutableSet&lt;T&gt;; an immutable empty set
@@ -252,7 +252,7 @@ public class ImmutableCollections
     {
         return Collections.min(ic.toCollection(), comparator);
     }
-    
+
     /**
      * Return the number of occurrences of an object in an immutable collection.
      * @param ic ImmutableCollection; the immutable collection

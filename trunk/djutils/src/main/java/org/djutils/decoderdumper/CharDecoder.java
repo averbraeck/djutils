@@ -16,13 +16,13 @@ public class CharDecoder implements Decoder
 {
     /** Prototype output line. */
     private final String prototypeLine;
-    
+
     /** Maximum number of fields on one output line. */
     private final int fieldsPerLine;
-    
+
     /** Insert one extra space every N fields. */
     private final int extraSpaceAfterEvery;
-    
+
     /**
      * Construct a new CharDecoder.
      * @param fieldsPerLine int; maximum number of fields on one output line

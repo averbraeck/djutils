@@ -35,8 +35,8 @@ public class HarmonicMean<V extends Number, W extends Number> extends AbstractMe
     @Override
     public final String toString()
     {
-        return "HarmonicMean [current sum of reciprocal values=" + getSum() + ", current sum of weights="
-                + getSumOfWeights() + ", current harmonic mean=" + getMean() + "]";
+        return "HarmonicMean [current sum of reciprocal values=" + getSum() + ", current sum of weights=" + getSumOfWeights()
+                + ", current harmonic mean=" + getMean() + "]";
     }
 
 }

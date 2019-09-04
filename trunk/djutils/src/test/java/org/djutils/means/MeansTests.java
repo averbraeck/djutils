@@ -26,10 +26,10 @@ import org.junit.Test;
 public class MeansTests
 {
     /** Some double values. */
-    private static Double[] testValues = { 10.0, Math.PI, Math.E, 1234. };
+    private static Double[] testValues = {10.0, Math.PI, Math.E, 1234.};
 
     /** Some weights. */
-    private static Double[] testWeights = { 1.0, 2.0, Math.PI, 1.0 };
+    private static Double[] testWeights = {1.0, 2.0, Math.PI, 1.0};
 
     /**
      * Test the Mean classes using unity weights.
@@ -108,8 +108,8 @@ public class MeansTests
             assertEquals("check with alternative way to compute geometric mean", geometricMean, gm.getMean(),
                     geometricMean / 99999999);
         }
-        System.out.println("Mean of test data: arithmetic=" + am.getMean() + ", harmonic=" + hm.getMean() + ", geometric="
-                + gm.getMean());
+        System.out.println(
+                "Mean of test data: arithmetic=" + am.getMean() + ", harmonic=" + hm.getMean() + ", geometric=" + gm.getMean());
         am = new ArithmeticMean<Double, Double>();
         hm = new HarmonicMean<Double, Double>();
         gm = new GeometricMean<Double, Double>();
@@ -206,7 +206,7 @@ public class MeansTests
         am = new ArithmeticMean<Double, Double>();
         hm = new HarmonicMean<Double, Double>();
         gm = new GeometricMean<Double, Double>();
-        Integer[] indices = new Integer[] { 0, 1, 2, 3 };
+        Integer[] indices = new Integer[] {0, 1, 2, 3};
         List<Integer> indexList = new ArrayList<>(Arrays.asList(indices));
         assertEquals("add returns object for method chaining", am,
                 am.add(indexList, (Integer i) -> testValues[i], (Integer i) -> testWeights[i]));

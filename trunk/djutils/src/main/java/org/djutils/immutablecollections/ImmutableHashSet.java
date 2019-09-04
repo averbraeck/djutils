@@ -32,8 +32,7 @@ public class ImmutableHashSet<E> extends ImmutableAbstractSet<E>
 
     /**
      * @param set Set&lt;E&gt;; the set to use for the immutable set.
-     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original
-     *            collection
+     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection
      */
     public ImmutableHashSet(final Set<E> set, final Immutable copyOrWrap)
     {
@@ -50,8 +49,7 @@ public class ImmutableHashSet<E> extends ImmutableAbstractSet<E>
 
     /**
      * @param set ImmutableAbstractSet&lt;E&gt;; the set to use for the immutable set.
-     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original
-     *            collection
+     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection
      */
     public ImmutableHashSet(final ImmutableAbstractSet<E> set, final Immutable copyOrWrap)
     {

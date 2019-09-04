@@ -153,7 +153,8 @@ public final class ClassUtil
      * @throws NoSuchMethodException on lookup failure
      */
     @SuppressWarnings("unchecked")
-    public static <T> Constructor<T> resolveConstructor(final Class<T> clazz, final Object[] arguments) throws NoSuchMethodException
+    public static <T> Constructor<T> resolveConstructor(final Class<T> clazz, final Object[] arguments)
+            throws NoSuchMethodException
     {
         Class<?>[] parameterTypes = ClassUtil.getClass(arguments);
         String key = "CONSTRUCTOR:" + clazz + "@" + FieldSignature.toDescriptor(parameterTypes);
@@ -221,7 +222,7 @@ public final class ClassUtil
         }
         return results.toArray(new Constructor[results.size()]);
     }
-    
+
     /* ************ FIELD UTILITIES *********** */
 
     /**
