@@ -30,7 +30,7 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
 
     /** the cached entrySet. */
     private ImmutableSet<ImmutableEntry<K, V>> cachedEntrySet = null;
-    
+
     /**
      * @param map Map&lt;K,V&gt;; the map to use for the immutable map.
      */
@@ -41,8 +41,7 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
 
     /**
      * @param map Map&lt;K,V&gt;; the map to use for the immutable map.
-     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original
-     *            collection
+     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection
      */
     public ImmutableLinkedHashMap(final Map<K, V> map, final Immutable copyOrWrap)
     {
@@ -59,8 +58,7 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
 
     /**
      * @param immutableMap ImmutableAbstractMap&lt;K,V&gt;; the map to use for the immutable map.
-     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original
-     *            collection
+     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection
      */
     public ImmutableLinkedHashMap(final ImmutableAbstractMap<K, V> immutableMap, final Immutable copyOrWrap)
     {
@@ -100,7 +98,7 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
     {
         if (this.cachedEntrySet == null)
         {
-            Set<ImmutableEntry<K,V>> immutableEntrySet = new LinkedHashSet<>();
+            Set<ImmutableEntry<K, V>> immutableEntrySet = new LinkedHashSet<>();
             for (Entry<K, V> entry : getMap().entrySet())
             {
                 immutableEntrySet.add(new ImmutableEntry<>(entry));
@@ -121,7 +119,7 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
         }
         return this.cachedValues;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public final String toString()

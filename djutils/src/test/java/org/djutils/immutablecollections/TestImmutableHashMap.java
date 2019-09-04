@@ -3,8 +3,8 @@ package org.djutils.immutablecollections;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.djutils.immutablecollections.ImmutableMap.ImmutableEntry;
 import org.junit.Assert;
@@ -60,7 +60,7 @@ public class TestImmutableHashMap
         Assert.assertTrue(sameContent(map.values(), imMap.values().toCollection()));
         Assert.assertTrue(sameContent(map.keySet(), imMap.keySet().toSet())); // cached
         Assert.assertTrue(sameContent(map.values(), imMap.values().toCollection()));
-        
+
         Assert.assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet()));
         Assert.assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet())); // cached
 
@@ -87,12 +87,12 @@ public class TestImmutableHashMap
         else
             Assert.assertTrue(imMap.size() == 11);
     }
-    
+
     private boolean sameContent(Collection<?> a, Collection<?> b)
     {
         return a.containsAll(b) && b.containsAll(b);
     }
-    
+
     private boolean checkEntrySets(Set<Entry<Integer, Integer>> es, Set<ImmutableEntry<Integer, Integer>> ies)
     {
         if (es.size() != ies.size())

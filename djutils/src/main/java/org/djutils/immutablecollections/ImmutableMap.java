@@ -197,7 +197,7 @@ public interface ImmutableMap<K, V> extends Serializable
     {
         /** the wrapped entry. */
         private final Entry<K, V> wrappedEntry;
-        
+
         /**
          * @param wrappedEntry the wrapped entry
          */

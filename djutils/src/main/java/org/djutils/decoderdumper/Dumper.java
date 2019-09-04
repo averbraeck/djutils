@@ -249,7 +249,7 @@ public class Dumper<T>
         writeFilteringOutput(totalReturnedWidth == 0 ? "" : result.toString(), pattern.toString());
         return totalReturnedWidth > 0;
     }
-    
+
     /**
      * Return the maximum width of an output line.
      * @return int; the maximum width of an output line

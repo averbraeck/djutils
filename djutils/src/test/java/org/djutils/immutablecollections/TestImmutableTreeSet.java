@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * TestImmutableTreeSet.java. 
+ * TestImmutableTreeSet.java.
  * <p>
  * Copyright (c) 2002-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -25,7 +25,7 @@ public class TestImmutableTreeSet
     @Test
     public final void testTreeSet()
     {
-        Set<Integer> intSet = new TreeSet<>(Arrays.asList(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
+        Set<Integer> intSet = new TreeSet<>(Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
         NavigableSet<Integer> sortedSet = new TreeSet<Integer>(intSet);
         testIntSet(sortedSet, new ImmutableTreeSet<Integer>(sortedSet, Immutable.WRAP), Immutable.WRAP);
         sortedSet = new TreeSet<Integer>(intSet);
@@ -37,12 +37,11 @@ public class TestImmutableTreeSet
         testIntSet(sortedSet, new ImmutableTreeSet<Integer>(ihs), Immutable.COPY);
 
         sortedSet = new TreeSet<Integer>(intSet);
-        List<Integer> il = Arrays.asList(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+        List<Integer> il = Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
         testIntSet(sortedSet, new ImmutableTreeSet<Integer>(il), Immutable.COPY);
     }
 
-    private void testIntSet(final NavigableSet<Integer> set, final ImmutableTreeSet<Integer> imSet,
-            final Immutable copyOrWrap)
+    private void testIntSet(final NavigableSet<Integer> set, final ImmutableTreeSet<Integer> imSet, final Immutable copyOrWrap)
     {
         Assert.assertTrue(set.size() == 10);
         Assert.assertTrue(imSet.size() == 10);
@@ -70,8 +69,8 @@ public class TestImmutableTreeSet
         Set<Integer> to = imSet.toSet();
         Assert.assertTrue(set.equals(to));
 
-        Integer[] arr = (Integer[]) imSet.toArray(new Integer[]{});
-        Integer[] sar = (Integer[]) set.toArray(new Integer[]{});
+        Integer[] arr = (Integer[]) imSet.toArray(new Integer[] {});
+        Integer[] sar = (Integer[]) set.toArray(new Integer[] {});
         Assert.assertArrayEquals(arr, sar);
 
         // modify the underlying data structure

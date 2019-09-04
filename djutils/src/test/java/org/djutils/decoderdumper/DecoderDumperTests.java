@@ -37,7 +37,7 @@ public class DecoderDumperTests
     public final void testHexDumper() throws InterruptedException, IOException
     {
         assertEquals("Empty input yields empty output", "", HexDumper.hexDumper(new byte[] {}));
-        byte[] input = new byte[] { 1, 2 };
+        byte[] input = new byte[] {1, 2};
         String output = HexDumper.hexDumper(input);
         assertTrue("Output starts with address \"00000000: \"", output.startsWith("00000000: "));
         for (int length = 1; length < 100; length++)
@@ -55,13 +55,11 @@ public class DecoderDumperTests
                     output.contains(String.format(" %02x ", value)));
         }
         assertEquals("output of 16 byte input fills one lines", 1,
-                HexDumper.hexDumper(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }).split("\n").length);
-        assertEquals(
-                "output of 17 byte input fills two lines",
-                2,
-                HexDumper.hexDumper(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }).split("\n").length);
-        assertTrue("address offset is printed at start of output", HexDumper.hexDumper(0x12345, new byte[] { 0, 1 })
-                .startsWith("00012340"));
+                HexDumper.hexDumper(new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}).split("\n").length);
+        assertEquals("output of 17 byte input fills two lines", 2,
+                HexDumper.hexDumper(new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}).split("\n").length);
+        assertTrue("address offset is printed at start of output",
+                HexDumper.hexDumper(0x12345, new byte[] {0, 1}).startsWith("00012340"));
         Dumper<HexDumper> hd = new HexDumper(0x12345);
         assertTrue("toString makes some sense", hd.toString().startsWith("HexDumper"));
 
@@ -76,7 +74,7 @@ public class DecoderDumperTests
         // System.out.println(hd.getDump());
         for (int i = 33; i < 127; i++)
         {
-            String dump = HexDumper.hexDumper(new byte[] { (byte) i });
+            String dump = HexDumper.hexDumper(new byte[] {(byte) i});
             String letter = "" + (char) i;
             String trimmed = dump.trim();
             String lastLetter = trimmed.substring(trimmed.length() - 1);
@@ -107,7 +105,7 @@ public class DecoderDumperTests
         });
         try
         {
-            hd.append(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 });
+            hd.append(new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
             fail("Writing sufficient number of bytes to output that throws an exception should have thrown an exception");
         }
         catch (Exception exception)
@@ -116,7 +114,7 @@ public class DecoderDumperTests
         }
         baos.reset();
         hd = new HexDumper().setOutputStream(baos);
-        hd.append(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 });
+        hd.append(new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
         // By now there should be something in the ByteArrayOutputStream
         assertTrue("ByteArrayOutputStream contains start of hex dump", baos.toString().startsWith("00000000: 00 "));
         baos.reset();
@@ -155,7 +153,7 @@ public class DecoderDumperTests
         assertEquals("Result should be 16 lines", 16, result.split("\n").length);
         // System.out.print("baos contains:\n" + result);
         baos.reset();
-        hd = new HexDumper().setOutputStream(baos).append(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 4, 2);
+        hd = new HexDumper().setOutputStream(baos).append(new byte[] {1, 2, 3, 4, 5, 6, 7, 8}, 4, 2);
         hd.flush();
         result = baos.toString();
         assertTrue("start and length parameter select the correct bytes", result.startsWith("00000000: 05 06    "));
@@ -178,13 +176,12 @@ public class DecoderDumperTests
         hd.flush();
         result = baos.toString();
         // System.out.println(result);
-        assertTrue("Ten bytes should have been accumulated",
-                result.startsWith("00000000: 00 01 02 03 04 05 06 07  08 09    "));
+        assertTrue("Ten bytes should have been accumulated", result.startsWith("00000000: 00 01 02 03 04 05 06 07  08 09    "));
         baos.reset();
         hd = new HexDumper().setSuppressMultipleIdenticalLines(true).setOutputStream(baos);
         for (int line = 0; line < 20; line++)
         {
-            hd.append(new byte[] { 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 });
+            hd.append(new byte[] {42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57});
         }
         hd.flush();
         // System.out.println(baos);
@@ -194,9 +191,9 @@ public class DecoderDumperTests
         hd = new HexDumper().setSuppressMultipleIdenticalLines(true).setOutputStream(baos);
         for (int line = 0; line < 20; line++)
         {
-            hd.append(new byte[] { 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 });
+            hd.append(new byte[] {42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57});
         }
-        hd.append(new byte[] { 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56 });
+        hd.append(new byte[] {42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56});
         hd.flush();
         assertEquals("Suppression reduced the output to four lines", 4, baos.toString().split("\n").length);
         // System.out.println(baos);
@@ -204,9 +201,9 @@ public class DecoderDumperTests
         hd = new HexDumper().setSuppressMultipleIdenticalLines(true).setOutputStream(baos);
         for (int line = 0; line < 20; line++)
         {
-            hd.append(new byte[] { 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 });
+            hd.append(new byte[] {42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57});
         }
-        hd.append(new byte[] { 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 99 });
+        hd.append(new byte[] {42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 99});
         hd.flush();
         assertEquals("Suppression reduced the output to four lines", 4, baos.toString().split("\n").length);
         // System.out.println(baos);
@@ -221,14 +218,13 @@ public class DecoderDumperTests
     public void testBase64Dumper()
     {
         assertEquals("Empty input yields empty output", "", Base64Dumper.base64Dumper(new byte[] {}));
-        byte[] input = new byte[] { 1, 2 };
+        byte[] input = new byte[] {1, 2};
         String output = HexDumper.hexDumper(input);
         assertTrue("Output starts with address \"00000000: \"", output.startsWith("00000000: "));
         for (int length = 1; length < 100; length++)
         {
             input = new byte[length];
-            assertTrue("Output ends on newline (even though the input is invalid)", HexDumper.hexDumper(input)
-                    .endsWith("\n"));
+            assertTrue("Output ends on newline (even though the input is invalid)", HexDumper.hexDumper(input).endsWith("\n"));
         }
         // Generate many possible 24-bit values; then construct the base64 string that would generate the 3 bytes
         for (int pattern = 0; pattern < 256 * 256 * 256; pattern += 259)
@@ -289,17 +285,17 @@ public class DecoderDumperTests
         // System.out.print("reference: " + expectedResult);
         for (int pos = 0; pos <= base64.length(); pos++)
         {
-            for (String insert : new String[] { " ", "\t", "\n", "\n\t" })
+            for (String insert : new String[] {" ", "\t", "\n", "\n\t"})
             {
                 String modified = base64.substring(0, pos) + insert + base64.substring(pos);
                 String result = Base64Dumper.base64Dumper(modified.getBytes()).substring(30);
-                // System.out.print("result:    " + result);
+                // System.out.print("result: " + result);
                 assertEquals("Extra space in input does not change output", expectedResult, result);
             }
         }
         // Error character in input is (currently) silently ignored
         String result = Base64Dumper.base64Dumper(("!" + base64).getBytes()).substring(30);
-        // System.out.print("result:    " + result);
+        // System.out.print("result: " + result);
         assertEquals("bad char in input is (currently) ignored", expectedResult, result);
     }
 

@@ -78,7 +78,7 @@ public class ClassUtilTest
         {
             // ok
         }
-        
+
         // test access to public and private constructors
         ClassUtil.resolveConstructor(TestClass.class, new Class<?>[] {boolean.class});
         ClassUtil.resolveConstructor(TestClass.class, ClassUtilTest.class, new Class<?>[] {String.class});
@@ -91,7 +91,7 @@ public class ClassUtilTest
         {
             // ok
         }
-        
+
         assertEquals(3, ClassUtil.getAllConstructors(TestClass.class));
     }
 }

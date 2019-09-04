@@ -22,8 +22,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <E> the type of content of this List
  */
-public abstract class ImmutableAbstractList<E> extends ImmutableAbstractCollection<E>
-        implements ImmutableList<E>, RandomAccess
+public abstract class ImmutableAbstractList<E> extends ImmutableAbstractCollection<E> implements ImmutableList<E>, RandomAccess
 {
     /** */
     private static final long serialVersionUID = 20160507L;
@@ -32,8 +31,8 @@ public abstract class ImmutableAbstractList<E> extends ImmutableAbstractCollecti
     private final List<E> list;
 
     /**
-     * Construct an abstract immutable list. Make sure that the argument is a safe copy of the list or pointer to the
-     * list of the right type! Copying does not take place in the Abstract class!
+     * Construct an abstract immutable list. Make sure that the argument is a safe copy of the list or pointer to the list of
+     * the right type! Copying does not take place in the Abstract class!
      * @param list List&lt;E&gt;; a safe copy of the list, or pointer to the list to use for the immutable list
      * @param copyOrWrap Immutable; indicate whether the immutable is a copy or a wrap
      */

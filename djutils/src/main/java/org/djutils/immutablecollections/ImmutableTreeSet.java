@@ -33,8 +33,7 @@ public class ImmutableTreeSet<E> extends ImmutableAbstractSet<E> implements Immu
 
     /**
      * @param treeSet NavigableSet&lt;E&gt;; the collection to use for the immutable set.
-     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original
-     *            collection
+     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection
      */
     public ImmutableTreeSet(final NavigableSet<E> treeSet, final Immutable copyOrWrap)
     {
@@ -51,8 +50,7 @@ public class ImmutableTreeSet<E> extends ImmutableAbstractSet<E> implements Immu
 
     /**
      * @param immutableTreeSet ImmutableTreeSet&lt;E&gt;; the collection to use for the immutable set.
-     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original
-     *            collection
+     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection
      */
     public ImmutableTreeSet(final ImmutableTreeSet<E> immutableTreeSet, final Immutable copyOrWrap)
     {

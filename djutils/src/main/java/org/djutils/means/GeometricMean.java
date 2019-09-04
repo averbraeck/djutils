@@ -35,8 +35,8 @@ public class GeometricMean<V extends Number, W extends Number> extends AbstractM
     @Override
     public final String toString()
     {
-        return "GeometricMean [current sum of logarithmic values=" + getSum() + ", current sum of weights="
-                + getSumOfWeights() + ", current geometric mean=" + getMean() + "]";
+        return "GeometricMean [current sum of logarithmic values=" + getSum() + ", current sum of weights=" + getSumOfWeights()
+                + ", current geometric mean=" + getMean() + "]";
     }
 
 }

@@ -35,8 +35,7 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
 
     /**
      * @param vector Vector&lt;E&gt;; the vector to use for the immutable vector.
-     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original
-     *            collection
+     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection
      */
     public ImmutableVector(final Vector<E> vector, final Immutable copyOrWrap)
     {
@@ -44,8 +43,8 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
     }
 
     /**
-     * @param collection ImmutableAbstractCollection&lt;? extends E&gt;; the immutable collection to use for the
-     *            immutable vector.
+     * @param collection ImmutableAbstractCollection&lt;? extends E&gt;; the immutable collection to use for the immutable
+     *            vector.
      */
     public ImmutableVector(final ImmutableAbstractCollection<? extends E> collection)
     {
@@ -54,8 +53,7 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
 
     /**
      * @param vector ImmutableVector&lt;E&gt;; the vector to use for the immutable vector.
-     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original
-     *            collection
+     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection
      */
     public ImmutableVector(final ImmutableVector<E> vector, final Immutable copyOrWrap)
     {
@@ -93,14 +91,14 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
     }
 
     /**
-     * Copies the components of this immutable vector into the specified array. The item at index {@code k} in this
-     * immutable vector is copied into component {@code k} of {@code anArray}.
+     * Copies the components of this immutable vector into the specified array. The item at index {@code k} in this immutable
+     * vector is copied into component {@code k} of {@code anArray}.
      * @param anArray Object[]; the array into which the components get copied
      * @throws NullPointerException if the given array is null
-     * @throws IndexOutOfBoundsException if the specified array is not large enough to hold all the components of this
-     *             immutable vector
-     * @throws ArrayStoreException if a component of this immutable vector is not of a runtime type that can be stored
-     *             in the specified array
+     * @throws IndexOutOfBoundsException if the specified array is not large enough to hold all the components of this immutable
+     *             vector
+     * @throws ArrayStoreException if a component of this immutable vector is not of a runtime type that can be stored in the
+     *             specified array
      * @see #toArray(Object[])
      */
     public final void copyInto(final Object[] anArray)
@@ -118,9 +116,8 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
     }
 
     /**
-     * Returns an enumeration of the components of this vector. The returned {@code Enumeration} object will generate
-     * all items in this vector. The first item generated is the item at index {@code 0}, then the item at index
-     * {@code 1}, and so on.
+     * Returns an enumeration of the components of this vector. The returned {@code Enumeration} object will generate all items
+     * in this vector. The first item generated is the item at index {@code 0}, then the item at index {@code 1}, and so on.
      * @return an enumeration of the components of this vector
      * @see Iterator
      */
@@ -130,15 +127,14 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
     }
 
     /**
-     * Returns the index of the first occurrence of the specified element in this immutable vector, searching forwards
-     * from {@code index}, or returns -1 if the element is not found. More formally, returns the lowest index {@code i}
-     * such that
+     * Returns the index of the first occurrence of the specified element in this immutable vector, searching forwards from
+     * {@code index}, or returns -1 if the element is not found. More formally, returns the lowest index {@code i} such that
      * <tt>(i&nbsp;&gt;=&nbsp;index&nbsp;&amp;&amp;&nbsp;(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i))))</tt>,
      * or -1 if there is no such index.
      * @param o Object; element to search for
      * @param index int; index to start searching from
-     * @return the index of the first occurrence of the element in this immutable vector at position {@code index} or
-     *         later in the vector; {@code -1} if the element is not found.
+     * @return the index of the first occurrence of the element in this immutable vector at position {@code index} or later in
+     *         the vector; {@code -1} if the element is not found.
      * @throws IndexOutOfBoundsException if the specified index is negative
      * @see Object#equals(Object)
      */
@@ -148,17 +144,16 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
     }
 
     /**
-     * Returns the index of the last occurrence of the specified element in this immutable vector, searching backwards
-     * from {@code index}, or returns -1 if the element is not found. More formally, returns the highest index {@code i}
-     * such that
+     * Returns the index of the last occurrence of the specified element in this immutable vector, searching backwards from
+     * {@code index}, or returns -1 if the element is not found. More formally, returns the highest index {@code i} such that
      * <tt>(i&nbsp;&lt;=&nbsp;index&nbsp;&amp;&amp;&nbsp;(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i))))</tt>,
      * or -1 if there is no such index.
      * @param o Object; element to search for
      * @param index int; index to start searching backwards from
-     * @return the index of the last occurrence of the element at position less than or equal to {@code index} in this
-     *         immutable vector; -1 if the element is not found.
-     * @throws IndexOutOfBoundsException if the specified index is greater than or equal to the current size of this
-     *             immutable vector
+     * @return the index of the last occurrence of the element at position less than or equal to {@code index} in this immutable
+     *         vector; -1 if the element is not found.
+     * @throws IndexOutOfBoundsException if the specified index is greater than or equal to the current size of this immutable
+     *             vector
      */
     public final int lastIndexOf(final Object o, final int index)
     {
@@ -168,8 +163,7 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
     /**
      * Returns the component at the specified index.
      * <p>
-     * This method is identical in functionality to the {@link #get(int)} method (which is part of the {@link List}
-     * interface).
+     * This method is identical in functionality to the {@link #get(int)} method (which is part of the {@link List} interface).
      * @param index int; an index into this immutable vector
      * @return the component at the specified index
      * @throws ArrayIndexOutOfBoundsException if the index is out of range ({@code index < 0 || index >= size()})
@@ -191,8 +185,7 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
 
     /**
      * Returns the last component of the immutable vector.
-     * @return the last component of the immutable vector, i.e., the component at index
-     *         <code>size()&nbsp;-&nbsp;1</code>.
+     * @return the last component of the immutable vector, i.e., the component at index <code>size()&nbsp;-&nbsp;1</code>.
      * @throws NoSuchElementException if this immutable vector is empty
      */
     public final E lastElement()

@@ -3,8 +3,8 @@ package org.djutils.immutablecollections;
 import java.util.Iterator;
 
 /**
- * An immutable iterator over elements, wrapping a "mutable" iterator. The default remove method from the interface will
- * throw an exception.
+ * An immutable iterator over elements, wrapping a "mutable" iterator. The default remove method from the interface will throw
+ * an exception.
  * <p>
  * Copyright (c) 2016-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is

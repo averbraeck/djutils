@@ -30,7 +30,7 @@ public class ImmutableHashMap<K, V> extends ImmutableAbstractMap<K, V>
 
     /** the cached entrySet. */
     private ImmutableSet<ImmutableEntry<K, V>> cachedEntrySet = null;
-    
+
     /**
      * @param map Map&lt;K,V&gt;; the map to use for the immutable map.
      */
@@ -41,8 +41,7 @@ public class ImmutableHashMap<K, V> extends ImmutableAbstractMap<K, V>
 
     /**
      * @param map Map&lt;K,V&gt;; the map to use for the immutable map.
-     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original
-     *            collection
+     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection
      */
     public ImmutableHashMap(final Map<K, V> map, final Immutable copyOrWrap)
     {
@@ -59,13 +58,11 @@ public class ImmutableHashMap<K, V> extends ImmutableAbstractMap<K, V>
 
     /**
      * @param immutableMap ImmutableAbstractMap&lt;K,V&gt;; the map to use for the immutable map.
-     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original
-     *            collection
+     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection
      */
     public ImmutableHashMap(final ImmutableAbstractMap<K, V> immutableMap, final Immutable copyOrWrap)
     {
-        super(copyOrWrap == Immutable.COPY ? new HashMap<K, V>(immutableMap.getMap()) : immutableMap.getMap(),
-                copyOrWrap);
+        super(copyOrWrap == Immutable.COPY ? new HashMap<K, V>(immutableMap.getMap()) : immutableMap.getMap(), copyOrWrap);
     }
 
     /** {@inheritDoc} */
@@ -100,7 +97,7 @@ public class ImmutableHashMap<K, V> extends ImmutableAbstractMap<K, V>
     {
         if (this.cachedEntrySet == null)
         {
-            Set<ImmutableEntry<K,V>> immutableEntrySet = new HashSet<>();
+            Set<ImmutableEntry<K, V>> immutableEntrySet = new HashSet<>();
             for (Entry<K, V> entry : getMap().entrySet())
             {
                 immutableEntrySet.add(new ImmutableEntry<>(entry));

@@ -36,9 +36,8 @@ public abstract class ImmutableAbstractCollection<E> implements ImmutableCollect
     }
 
     /**
-     * Returns the underlying collection of this immutable collection. In case of Immutable.WRAP, this will be the
-     * original collection. In case of IMMUTABLE.COPY, this will be the internally stored (mutable) copy of the
-     * collection.
+     * Returns the underlying collection of this immutable collection. In case of Immutable.WRAP, this will be the original
+     * collection. In case of IMMUTABLE.COPY, this will be the internally stored (mutable) copy of the collection.
      * @return the underlying collection of this immutable collection.
      */
     protected abstract Collection<E> getCollection();

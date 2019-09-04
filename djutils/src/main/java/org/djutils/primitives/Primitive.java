@@ -1,8 +1,8 @@
 package org.djutils.primitives;
 
 /**
- * The Primitive class is a utility class to deal with primitives. Besides widening and unwidening this class casts and
- * parses UTF8 strings into appropriate primitive classes.
+ * The Primitive class is a utility class to deal with primitives. Besides widening and unwidening this class casts and parses
+ * UTF8 strings into appropriate primitive classes.
  * <p>
  * Copyright (c) 2002-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -45,8 +45,7 @@ public final class Primitive
      */
     public static Object cast(final Class<?> clazz, final Object object)
     {
-        if (clazz.isInstance(object) || !clazz.isPrimitive()
-                || (clazz.equals(Primitive.getPrimitive(object.getClass()))))
+        if (clazz.isInstance(object) || !clazz.isPrimitive() || (clazz.equals(Primitive.getPrimitive(object.getClass()))))
         {
             return object;
         }
@@ -102,8 +101,8 @@ public final class Primitive
     }
 
     /**
-     * returns the primitiveClass of the name given as defined by the Java VM class constants. (i.e. both "int" and "I"
-     * return int.class). Both void and "V" return void.class. null is returned whenever an unknown className is given.
+     * returns the primitiveClass of the name given as defined by the Java VM class constants. (i.e. both "int" and "I" return
+     * int.class). Both void and "V" return void.class. null is returned whenever an unknown className is given.
      * @param className String; the className
      * @return Class the primitiveClass
      */

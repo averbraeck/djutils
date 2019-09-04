@@ -17,7 +17,7 @@ public class FixedString implements Decoder
      * append.
      */
     private final String fixedResult;
-    
+
     /** Remember if the append method was ever called. */
     private boolean appendWasCalled = false;
 

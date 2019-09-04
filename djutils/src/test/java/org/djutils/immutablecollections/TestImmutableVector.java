@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * TestImmutableVector.java. 
+ * TestImmutableVector.java.
  * <p>
  * Copyright (c) 2002-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -24,7 +24,7 @@ public class TestImmutableVector
     @Test
     public final void testVector()
     {
-        Vector<Integer> intVector = new Vector(Arrays.asList(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
+        Vector<Integer> intVector = new Vector(Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
         Vector<Integer> vector = new Vector<Integer>(intVector);
         testIntVector(vector, new ImmutableVector<Integer>(vector, Immutable.WRAP), Immutable.WRAP);
         vector = new Vector<Integer>(intVector);
@@ -36,7 +36,7 @@ public class TestImmutableVector
         testIntVector(vector, new ImmutableVector<Integer>(ial), Immutable.COPY);
 
         vector = new Vector<Integer>(intVector);
-        Set<Integer> intSet = new HashSet<>(Arrays.asList(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
+        Set<Integer> intSet = new HashSet<>(Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
         testIntVector(vector, new ImmutableVector<Integer>(intSet), Immutable.COPY);
     }
 
@@ -66,8 +66,8 @@ public class TestImmutableVector
         Vector<Integer> to = imVector.toVector();
         Assert.assertTrue(vector.equals(to));
 
-        Integer[] arr = (Integer[]) imVector.toArray(new Integer[]{});
-        Integer[] sar = (Integer[]) vector.toArray(new Integer[]{});
+        Integer[] arr = (Integer[]) imVector.toArray(new Integer[] {});
+        Integer[] sar = (Integer[]) vector.toArray(new Integer[] {});
         Assert.assertArrayEquals(arr, sar);
 
         // modify the underlying data structure

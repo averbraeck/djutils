@@ -619,7 +619,7 @@ public final class Try
         {
             @SuppressWarnings("unchecked")
             Constructor<T> constructor = (Constructor<T>) ClassUtil.resolveConstructor(throwableClass,
-                    new Class<?>[] { String.class, Throwable.class });
+                    new Class<?>[] {String.class, Throwable.class});
             List<StackTraceElement> steCause = new ArrayList<>(Arrays.asList(cause.getStackTrace()));
             steCause.remove(steCause.size() - 1); // remove method that called Attemp.assign/execute(...) as that's in steList
             steCause.remove(steCause.size() - 1); // remove the Attemp.assign/execute(...) call

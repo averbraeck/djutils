@@ -12,7 +12,6 @@ import java.util.Set;
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
- * $LastChangedDate: 2015-07-24 02:58:59 +0200 (Fri, 24 Jul 2015) $, @version $Revision: 1147 $, by $Author: averbraeck
  * $, initial version May 7, 2016 <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
@@ -34,8 +33,7 @@ public class ImmutableLinkedHashSet<E> extends ImmutableAbstractSet<E>
 
     /**
      * @param collection Set&lt;E&gt;; the collection to use for the immutable set.
-     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original
-     *            collection
+     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection
      */
     public ImmutableLinkedHashSet(final Set<E> collection, final Immutable copyOrWrap)
     {
@@ -52,13 +50,11 @@ public class ImmutableLinkedHashSet<E> extends ImmutableAbstractSet<E>
 
     /**
      * @param set ImmutableAbstractSet&lt;E&gt;; the collection to use for the immutable set.
-     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original
-     *            collection
+     * @param copyOrWrap COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection
      */
     public ImmutableLinkedHashSet(final ImmutableAbstractSet<E> set, final Immutable copyOrWrap)
     {
-        super(copyOrWrap == Immutable.COPY ? new LinkedHashSet<E>(set.getCollection()) : set.getCollection(),
-                copyOrWrap);
+        super(copyOrWrap == Immutable.COPY ? new LinkedHashSet<E>(set.getCollection()) : set.getCollection(), copyOrWrap);
     }
 
     /** {@inheritDoc} */
