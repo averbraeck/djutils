@@ -1,9 +1,13 @@
 package org.djutils.cli;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -15,8 +19,12 @@ import picocli.CommandLine.Option;
  * source code and binary code of this software is proprietary information of Delft University of Technology.
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
  */
-public class TestCLI
+public class TestCLICommandLine
 {
+    /** catch the System.exit() call and prevent exiting. */
+    @Rule
+    public final ExpectedSystemExit exit = ExpectedSystemExit.none();
+
     /** */
     @Command(description = "Test program for CLI", name = "Program", mixinStandardHelpOptions = true, version = "1.0")
     public static class Options implements Checkable
@@ -51,34 +59,22 @@ public class TestCLI
     @Test
     public void testCli() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
-        String[] args = new String[] {"-p", "1200"};
+        // test CliUtil with CommandLine
+        String[] args = new String[] {"-p", "2400"};
         Options options = new Options();
-        CliUtil.execute(options, args);
-        assertEquals(1200, options.getPort());
+        CommandLine cmd = new CommandLine(options);
+        CliUtil.execute(cmd, args);
+        assertEquals(2400, options.getPort());
         assertEquals("1.0", options.getClass().getAnnotation(Command.class).version()[0]);
         assertEquals("Program", options.getClass().getAnnotation(Command.class).name());
         assertEquals("Test program for CLI", options.getClass().getAnnotation(Command.class).description()[0]);
 
-        args = new String[] {};
+        // test CliUtil with CommandLine and check() method
+        this.exit.expectSystemExit();
+        args = new String[] {"-p", "240000"};
         options = new Options();
-        CliUtil.execute(options, args);
-        assertEquals(80, options.getPort());
-
-        args = new String[] {};
-        options = new Options();
-        CliUtil.changeOptionDefault(options, "port", "8080");
-        CliUtil.execute(options, args);
-        assertEquals(8080, options.getPort());
-
-        // change the 'Options'
-        args = new String[] {};
-        options = new Options();
-        CliUtil.changeCommandVersion(options, "2.0");
-        CliUtil.changeCommandName(options, "Program2");
-        CliUtil.changeCommandDescription(options, "2nd version of program");
-        CliUtil.execute(options, args);
-        assertEquals("2.0", options.getClass().getAnnotation(Command.class).version()[0]);
-        assertEquals("Program2", options.getClass().getAnnotation(Command.class).name());
-        assertEquals("2nd version of program", options.getClass().getAnnotation(Command.class).description()[0]);
+        cmd = new CommandLine(options);
+        CliUtil.execute(cmd, args);
+        fail("check() is not called: the program should exit with an error message when a wrong port is provided");
     }
 }

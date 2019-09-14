@@ -2,11 +2,19 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-    <!-- release version="1.02.04" date="2019-08-XX" description="Little Endian (de)serialization">
+    <!-- release version="1.02.05" date="2019-09-XX" description="Little Endian (de)serialization">
       <action dev="averbraeck" type="add">
         Little-Endian types have been added to the FieldTypes in djutils-serialization.
       </action>
     </release -->
+    
+    <release version="1.02.04" date="2019-09-14" description="CliUtil.execute with CommandLine object">
+      <action dev="averbraeck" type="add">
+        CliUtil in djutils-ext now has a method call with a CommandLine object. This enables e.g., the
+        registration of custom parameter converters. An example and test is provided in 
+        TestCLIRegisterConverters.java in the test package.
+      </action>
+    </release>
     
     <release version="1.02.03" date="2019-08-17" description="Extra unit tests">
       <action dev="averbraeck" type="add">
