@@ -76,20 +76,33 @@ import picocli.CommandLine.ParseResult;
 public class CliUtil
 {
     /**
-     * Register Unit converters, parse the command line, catch --help, --version and errors. If the program implements the
-     * Checkable interface, it calls the "check" method of the class that can take care of further checks of the CLI arguments.
-     * Potentially, check() can also provide other initialization of the program to be executed, but this can better be provided
-     * by other methods in main(). The method will exit on requesting help or version information, or when the arguments are not
-     * complete or not correct.
-     * @param program Checkable; the checkable program with the &#64;Option information
+     * Parse the command line for the program. Register Unit converters, parse the command line, catch --help, --version and
+     * errors. If the program implements the Checkable interface, it calls the "check" method of the class that can take care of
+     * further checks of the CLI arguments. Potentially, check() can also provide other initialization of the program to be
+     * executed, but this can better be provided by other methods in main(). The method will exit on requesting help or version
+     * information, or when the arguments are not complete or not correct.
+     * @param program Object; the potentially checkable program with the &#64;Option information
      * @param args String[]; the arguments from the command line
      */
     public static void execute(final Object program, final String[] args)
     {
-        CommandLine cmd = new CommandLine(program);
-        CliUnitConverters.registerAll(cmd);
-        cmd.getCommandSpec().parser().collectErrors(true);
-        ParseResult parseResult = cmd.parseArgs(args);
+        execute(new CommandLine(program), args);
+    }
+
+    /**
+     * Parse the given CommandLine object, that has been generated for a program. Register Unit converters, parse the command
+     * line, catch --help, --version and errors. If the program implements the Checkable interface, it calls the "check" method
+     * of the class that can take care of further checks of the CLI arguments. Potentially, check() can also provide other
+     * initialization of the program to be executed, but this can better be provided by other methods in main(). The method will
+     * exit on requesting help or version information, or when the arguments are not complete or not correct.
+     * @param commandLine CommandLine; the CommandLine object for the program with the &#64;Option information
+     * @param args String[]; the arguments from the command line
+     */
+    public static void execute(final CommandLine commandLine, final String[] args)
+    {
+        CliUnitConverters.registerAll(commandLine);
+        commandLine.getCommandSpec().parser().collectErrors(true);
+        ParseResult parseResult = commandLine.parseArgs(args);
         List<Exception> parseErrors = parseResult.errors();
         if (parseErrors.size() > 0)
         {
@@ -101,14 +114,15 @@ public class CliUtil
         }
         if (parseResult.isUsageHelpRequested())
         {
-            cmd.usage(System.out);
+            commandLine.usage(System.out);
             System.exit(0);
         }
         else if (parseResult.isVersionHelpRequested())
         {
-            cmd.printVersionHelp(System.out);
+            commandLine.printVersionHelp(System.out);
             System.exit(0);
         }
+        Object program = commandLine.getCommand();
         if (program instanceof Checkable)
         {
             try
