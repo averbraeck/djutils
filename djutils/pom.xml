@@ -250,7 +250,8 @@
           <!-- Excludes integration tests when unit tests are run. -->
           <excludes>
             <exclude>**/IT*.java</exclude>
-            <exclude>/org/djutils/test/Test.class</exclude>
+            <exclude>/org/djutils-test-resources/test/Test.class</exclude>
+            <exclude>/org/djutils-test-resources/test folder/Test.class</exclude>
           </excludes>
         </configuration>
       </plugin>
