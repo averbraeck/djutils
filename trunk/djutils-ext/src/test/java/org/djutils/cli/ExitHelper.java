@@ -1,0 +1,56 @@
+package org.djutils.cli;
+
+import java.security.Permission;
+
+/**
+ * ExitHelper.java.
+ * <p>
+ * Copyright (c) 2019-2019 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * BSD-style license. See <a href="https://djunits.org/docs/license.html">DJUNITS License</a>.
+ * <p>
+ * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
+ */
+public class ExitHelper
+{
+    /** Exception that will be thrown instead of the System.exit() call. */
+    public static class ExitException extends SecurityException 
+    {
+        /** */
+        private static final long serialVersionUID = 1L;
+        
+        /** the exit code. */
+        public final int status;
+        
+        /**
+         * Instantiate the exception.
+         * @param status the exit code
+         */
+        public ExitException(final int status) 
+        {
+            super("System.exit(" + status + ") called");
+            this.status = status;
+        }
+    }
+
+    /** The security manager for the exit exception. */
+    public static class NoExitSecurityManager extends SecurityManager 
+    {
+        @Override
+        public void checkPermission(Permission perm) 
+        {
+            // allow anything.
+        }
+        @Override
+        public void checkPermission(Permission perm, Object context) 
+        {
+            // allow anything.
+        }
+        @Override
+        public void checkExit(int status) 
+        {
+            super.checkExit(status);
+            throw new ExitException(status);
+        }
+    }
+}
+

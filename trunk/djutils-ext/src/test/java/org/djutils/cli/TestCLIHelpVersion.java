@@ -5,7 +5,6 @@ import static org.junit.Assert.fail;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 import org.junit.contrib.java.lang.system.SystemOutRule;
 
 import picocli.CommandLine.Command;
@@ -46,9 +45,9 @@ public class TestCLIHelpVersion
     }
 
     /** catch the System.exit() call and prevent exiting. */
-    @Rule
-    public final ExpectedSystemExit exit = ExpectedSystemExit.none();
-    
+    // @Rule
+    // public final ExpectedSystemExit exit = ExpectedSystemExit.none();
+
     /** store the System.out.print() information in a log. */
     @Rule
     public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
@@ -63,13 +62,21 @@ public class TestCLIHelpVersion
     @Test
     public void testCliHelp() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
-        this.exit.expectSystemExit();
+        System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
         String[] args = new String[] {"--help"};
         Options options = new Options();
         CliUtil.changeCommandVersion(options, "2.0");
         CliUtil.changeCommandName(options, "Program2");
         CliUtil.changeCommandDescription(options, "2nd version of program");
-        CliUtil.execute(options, args);
+        try
+        {
+            CliUtil.execute(options, args);
+        }
+        catch (ExitHelper.ExitException e)
+        {
+            // ok!
+        }
+        System.setSecurityManager(null);
         String helpText = this.systemOutRule.getLog();
         assertTrue(helpText.contains("Program2"));
         assertTrue(helpText.contains("2nd version of program"));
@@ -85,41 +92,72 @@ public class TestCLIHelpVersion
     @Test
     public void testCliVersion() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
-        this.exit.expectSystemExit();
+        System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
         String[] args = new String[] {"-V"};
         Options options = new Options();
         CliUtil.changeCommandVersion(options, "2.0");
         CliUtil.changeCommandName(options, "Program2");
         CliUtil.changeCommandDescription(options, "2nd version of program");
-        CliUtil.execute(options, args);
+        try
+        {
+            CliUtil.execute(options, args);
+        }
+        catch (ExitHelper.ExitException e)
+        {
+            // ok!
+        }
+        System.setSecurityManager(null);
         String versionText = this.systemOutRule.getLog();
         assertTrue(versionText.contains("2.0"));
     }
-    
+
     /**
      * Test the CliUtil methods with a wrong port.
      */
     @Test
     public void testCliWrongValue()
     {
-        this.exit.expectSystemExit();
+        // this.exit.expectSystemExit();
+        // prevent exit to really exit
+        System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
+
         String[] args = new String[] {"-p", "120000"};
         Options options = new Options();
-        CliUtil.execute(options, args);
-        fail("the program should exit with an error message when a wrong port is provided");
+        try
+        {
+            CliUtil.execute(options, args);
+            fail("the program should exit with an error message when a wrong port is provided");
+        }
+        catch (ExitHelper.ExitException e)
+        {
+            // ok!
+        }
+        System.setSecurityManager(null);
     }
-    
+
     /**
      * Test the CliUtil methods with a wrong option.
      */
     @Test
     public void testCliWrongOption()
     {
-        this.exit.expectSystemExit();
+        // this.exit.expectSystemExit();
+        // prevent exit to really exit
+        System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
+
         String[] args = new String[] {"--wrongOption=50"};
         Options options = new Options();
-        CliUtil.execute(options, args);
-        fail("the program should exit with an error message when a wrong option is provided");
+        try
+        {
+            CliUtil.execute(options, args);
+            fail("the program should exit with an error message when a wrong option is provided");
+        }
+        catch (ExitHelper.ExitException e)
+        {
+            // ok!
+        }
+
+        System.setSecurityManager(null);
     }
 
 }
