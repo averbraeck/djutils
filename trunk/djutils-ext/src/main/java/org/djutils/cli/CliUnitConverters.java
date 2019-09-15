@@ -172,7 +172,15 @@ public class CliUnitConverters
         @Override
         public Dimensionless convert(final String value) throws Exception
         {
-            return Dimensionless.valueOf(value);
+            try
+            {
+                return Dimensionless.valueOf(value);
+            }
+            catch (Exception e)
+            {
+                // try to return the number as a Dimensionless value
+                return Dimensionless.createSI(Double.parseDouble(value));
+            }
         }
     }
 

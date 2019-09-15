@@ -44,10 +44,6 @@ public class TestCLIHelpVersion
         }
     }
 
-    /** catch the System.exit() call and prevent exiting. */
-    // @Rule
-    // public final ExpectedSystemExit exit = ExpectedSystemExit.none();
-
     /** store the System.out.print() information in a log. */
     @Rule
     public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
@@ -117,7 +113,6 @@ public class TestCLIHelpVersion
     @Test
     public void testCliWrongValue()
     {
-        // this.exit.expectSystemExit();
         // prevent exit to really exit
         System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
 
@@ -141,7 +136,6 @@ public class TestCLIHelpVersion
     @Test
     public void testCliWrongOption()
     {
-        // this.exit.expectSystemExit();
         // prevent exit to really exit
         System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
 

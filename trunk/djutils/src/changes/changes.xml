@@ -15,9 +15,14 @@
         TestCLIRegisterConverters.java in the test package.
       </action>
       <action dev="averbraeck" type="add">
-        Added unit tests for djunits converters for the CLI package.
+        Added unit tests for djunits converters for the CLI package. Dimensionless can also parse just a number.
       </action>
-      <action dev="averbraeck" type="add">
+      <action dev="averbraeck" type="fix">
+        Unit tests with System.exit() were failing in Maven surefire. Surefire documents that System.exit()
+        calls cannot be tested. Therefore a Security Manager has been implemented in the test class ExitHelper
+        for these tests that catches the System.Exit and turns it into an ExitException. 
+      </action>
+      <action dev="averbraeck" type="fix">
         Repaired the code for the ClassFileDescriptor for paths with spaces.
       </action>
       <action dev="averbraeck" type="add">
