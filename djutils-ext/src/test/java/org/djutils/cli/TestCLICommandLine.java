@@ -19,10 +19,6 @@ import picocli.CommandLine.Option;
  */
 public class TestCLICommandLine
 {
-    // /** catch the System.exit() call and prevent exiting. */
-    // @Rule
-    // public final ExpectedSystemExit exit = ExpectedSystemExit.none();
-
     /** */
     @Command(description = "Test program for CLI", name = "Program", mixinStandardHelpOptions = true, version = "1.0")
     public static class Options implements Checkable
@@ -71,7 +67,6 @@ public class TestCLICommandLine
         assertEquals("Test program for CLI", options.getClass().getAnnotation(Command.class).description()[0]);
 
         // test CliUtil with CommandLine and check() method
-        // this.exit.expectSystemExit();
         args = new String[] {"-p", "240000"};
         options = new Options();
         cmd = new CommandLine(options);

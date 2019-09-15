@@ -285,9 +285,9 @@ public class TestCLIUnitConverters
         options = new Options();
         CliUtil.execute(options, args);
         assertEquals(new ElectricalCharge(2.0, ElectricalChargeUnit.COULOMB), options.electricalcharge);
-        args = new String[] {"--electricalcharge", "1.0mAh"};
+        args = new String[] {"--electricalcharge", "1.0e"};
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalCharge(1.0, ElectricalChargeUnit.MILLIAMPERE_HOUR), options.electricalcharge);
+        assertEquals(new ElectricalCharge(1.0, ElectricalChargeUnit.ATOMIC_UNIT), options.electricalcharge);
 
         args = new String[] {};
         options = new Options();
