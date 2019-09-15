@@ -33,7 +33,7 @@ public class ClassFileDescriptorTest
     @Test
     public void classFileDescriptorTest() throws ParseException, MalformedURLException
     {
-        URL cfdClassURL = URLResource.getResource("/org/djutils/test/Test.class");
+        URL cfdClassURL = URLResource.getResource("/org/djutils-test-resources/test/Test.class");
         // change the last accessed date
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         File fileClass = new File(cfdClassURL.getPath());
@@ -44,7 +44,7 @@ public class ClassFileDescriptorTest
         Date cfdClassDate = new Date(cfdClass.getLastChangedDate());
         assertEquals("2000-01-01 01:02:03", formatter.format(cfdClassDate));
 
-        URL cfdJarURL = URLResource.getResource("/org/djutils/test/Test.jar");
+        URL cfdJarURL = URLResource.getResource("/org/djutils-test-resources/test/Test.jar");
         // change the last accessed date of the jar -- not of the file in the jar
         File fileJar = new File(cfdJarURL.getPath());
         fileJar.setLastModified(formatter.parse("2010-11-12 01:02:03").getTime());
@@ -78,7 +78,7 @@ public class ClassFileDescriptorTest
     @Test
     public void classFileDescriptorTestWithSpaces() throws ParseException, MalformedURLException, URISyntaxException
     {
-        URL cfdClassURL = URLResource.getResource("/org/djutils/test folder/Test.class");
+        URL cfdClassURL = URLResource.getResource("/org/djutils-test-resources/test folder/Test.class");
         // change the last accessed date
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         File fileClass = new File(cfdClassURL.toURI());
@@ -90,7 +90,7 @@ public class ClassFileDescriptorTest
         Date cfdClassDate = new Date(cfdClass.getLastChangedDate());
         assertEquals("2000-01-01 01:02:03", formatter.format(cfdClassDate));
 
-        URL cfdJarURL = URLResource.getResource("/org/djutils/test folder/Test.jar");
+        URL cfdJarURL = URLResource.getResource("/org/djutils-test-resources/test folder/Test.jar");
         // change the last accessed date of the jar -- not of the file in the jar
         File fileJar = new File(cfdJarURL.toURI());
         fileJar.setLastModified(formatter.parse("2010-11-12 01:02:03").getTime());
