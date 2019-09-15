@@ -3,9 +3,7 @@ package org.djutils.cli;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -21,9 +19,9 @@ import picocli.CommandLine.Option;
  */
 public class TestCLICommandLine
 {
-    /** catch the System.exit() call and prevent exiting. */
-    @Rule
-    public final ExpectedSystemExit exit = ExpectedSystemExit.none();
+    // /** catch the System.exit() call and prevent exiting. */
+    // @Rule
+    // public final ExpectedSystemExit exit = ExpectedSystemExit.none();
 
     /** */
     @Command(description = "Test program for CLI", name = "Program", mixinStandardHelpOptions = true, version = "1.0")
@@ -59,6 +57,9 @@ public class TestCLICommandLine
     @Test
     public void testCli() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
+        // prevent exit to really exit
+        System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
+
         // test CliUtil with CommandLine
         String[] args = new String[] {"-p", "2400"};
         Options options = new Options();
@@ -70,11 +71,20 @@ public class TestCLICommandLine
         assertEquals("Test program for CLI", options.getClass().getAnnotation(Command.class).description()[0]);
 
         // test CliUtil with CommandLine and check() method
-        this.exit.expectSystemExit();
+        // this.exit.expectSystemExit();
         args = new String[] {"-p", "240000"};
         options = new Options();
         cmd = new CommandLine(options);
-        CliUtil.execute(cmd, args);
-        fail("check() is not called: the program should exit with an error message when a wrong port is provided");
+        try
+        {
+            CliUtil.execute(cmd, args);
+            fail("check() is not called: the program should exit with an error message when a wrong port is provided");
+        }
+        catch (ExitHelper.ExitException e)
+        {
+            // ok!
+        }
+
+        System.setSecurityManager(null);
     }
 }
