@@ -429,6 +429,11 @@
         <version>${maven.surefire-report.version}</version>
         <configuration>
           <argLine>-XX:MaxPermSize=4096m -Xmx4096m</argLine>
+          <excludes>
+            <exclude>**/IT*.java</exclude>
+            <exclude>/org/djutils-test-resources/test/Test.class</exclude>
+            <exclude>/org/djutils-test-resources/test folder/Test.class</exclude>
+          </excludes>
         </configuration>
       </plugin>
 
