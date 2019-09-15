@@ -92,6 +92,6 @@ public class ClassUtilTest
             // ok
         }
 
-        assertEquals(3, ClassUtil.getAllConstructors(TestClass.class));
+        assertEquals(3, ClassUtil.getAllConstructors(TestClass.class).length);
     }
 }

@@ -1,9 +1,11 @@
 package org.djutils.reflection;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,14 +73,16 @@ public class ClassFileDescriptorTest
      * Test the classFileDescriptor method in ClassUtil.
      * @throws ParseException on error
      * @throws MalformedURLException on error
+     * @throws URISyntaxException on error
      */
     @Test
-    public void classFileDescriptorTestWithSpaces() throws ParseException, MalformedURLException
+    public void classFileDescriptorTestWithSpaces() throws ParseException, MalformedURLException, URISyntaxException
     {
         URL cfdClassURL = URLResource.getResource("/org/djutils/test folder/Test.class");
         // change the last accessed date
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        File fileClass = new File(cfdClassURL.getPath());
+        File fileClass = new File(cfdClassURL.toURI());
+        assertTrue(fileClass.exists());
         fileClass.setLastModified(formatter.parse("2000-01-01 01:02:03").getTime());
 
         ClassFileDescriptor cfdClass = ClassUtil.classFileDescriptor(cfdClassURL);
@@ -88,7 +92,7 @@ public class ClassFileDescriptorTest
 
         URL cfdJarURL = URLResource.getResource("/org/djutils/test folder/Test.jar");
         // change the last accessed date of the jar -- not of the file in the jar
-        File fileJar = new File(cfdJarURL.getPath());
+        File fileJar = new File(cfdJarURL.toURI());
         fileJar.setLastModified(formatter.parse("2010-11-12 01:02:03").getTime());
 
         ClassFileDescriptor cfdJar = ClassUtil.classFileDescriptor(cfdJarURL);

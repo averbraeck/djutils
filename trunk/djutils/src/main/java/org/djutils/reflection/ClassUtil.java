@@ -1,6 +1,7 @@
 package org.djutils.reflection;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -8,7 +9,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1055,7 +1060,9 @@ public final class ClassUtil
             String jarFileName = parts[0].replace("jar:file:", "");
             try
             {
-                try (JarFile jarFile = new JarFile(jarFileName))
+                URL jarURL = new URL("file:" + jarFileName);
+                File jarUrlFile = new File(jarURL.toURI());
+                try (JarFile jarFile = new JarFile(jarUrlFile))
                 {
                     if (parts[1].startsWith("/"))
                     {
@@ -1066,7 +1073,8 @@ public final class ClassUtil
                 }
                 catch (Exception exception)
                 {
-                    return new ClassFileDescriptor(new File(jarFileName));
+                    URL jarURL2 = new URL("file:" + jarFileName);
+                    return new ClassFileDescriptor(new File(jarURL2.toURI()));
                 }
             }
             catch (Exception exception)
@@ -1074,7 +1082,14 @@ public final class ClassUtil
                 return new ClassFileDescriptor(new File(jarFileName));
             }
         }
-        return new ClassFileDescriptor(new File(clazzUrl.getPath()));
+        try
+        {
+            return new ClassFileDescriptor(new File(clazzUrl.toURI()));
+        }
+        catch (URISyntaxException exception)
+        {
+            return new ClassFileDescriptor(new File(clazzUrl.getPath()));
+        }
     }
 
     /**
@@ -1109,7 +1124,21 @@ public final class ClassUtil
             this.name = classFile.getName();
             this.path = classFile.getPath();
             this.jar = false;
-            this.lastChangedDate = classFile.lastModified();
+            long lastModified = classFile.lastModified();
+            if (lastModified == 0L)
+            {
+                BasicFileAttributes attributes;
+                try
+                {
+                    attributes = Files.readAttributes(Paths.get(this.path), BasicFileAttributes.class);
+                    lastModified = attributes.lastModifiedTime().toMillis();
+                }
+                catch (IOException exception)
+                {
+                    // ignore - date will be 1-1-1970
+                }
+            }
+            this.lastChangedDate = lastModified;
         }
 
         /**
