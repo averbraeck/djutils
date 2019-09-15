@@ -4,7 +4,7 @@
 
   <groupId>org.djutils</groupId>
   <artifactId>djutils</artifactId>
-  <version>1.02.02</version>
+  <version>1.02.03</version>
 
   <name>DJUTILS - Delft Java Utilities</name>
   <description>DJUTILS - Delft Java Utilities for DSOL, OTS, DJUNITS, SIM0MQ projects</description>
