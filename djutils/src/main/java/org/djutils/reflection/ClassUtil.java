@@ -1109,7 +1109,7 @@ public final class ClassUtil
         /** the full path (with a ! inside if it is a Jar file descriptor). */
         private final String path;
 
-        /** whether it is a file from a Jar container. */
+        /** whether it is a file from a Jar container or a zip file. */
         private final boolean jar;
 
         /** last changed date of the file in millis, if known. Otherwise 1-1-1970, 00:00. */
@@ -1150,7 +1150,7 @@ public final class ClassUtil
         {
             this.name = jarEntry.getName();
             this.path = path;
-            this.jar = false;
+            this.jar = true;
             this.lastChangedDate = jarEntry.getLastModifiedTime().toMillis();
         }
 
@@ -1163,7 +1163,7 @@ public final class ClassUtil
         {
             this.name = zipEntry.getName();
             this.path = path;
-            this.jar = false;
+            this.jar = true;
             this.lastChangedDate = zipEntry.getLastModifiedTime().toMillis();
         }
 
