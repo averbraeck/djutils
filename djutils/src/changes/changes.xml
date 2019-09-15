@@ -18,6 +18,9 @@
         Added unit tests for djunits converters for the CLI package.
       </action>
       <action dev="averbraeck" type="add">
+        Repaired the code for the ClassFileDescriptor for paths with spaces.
+      </action>
+      <action dev="averbraeck" type="add">
         Added a unit test to see if folders with spaces can be found for the ClassFileDescriptor.
       </action>
       <action dev="averbraeck" type="fix">
