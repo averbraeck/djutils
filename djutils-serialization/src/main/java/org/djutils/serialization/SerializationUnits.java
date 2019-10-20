@@ -5,36 +5,42 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.djunits.unit.AbsoluteTemperatureUnit;
+import org.djunits.unit.AbsorbedDoseUnit;
 import org.djunits.unit.AccelerationUnit;
-import org.djunits.unit.AngleSolidUnit;
+import org.djunits.unit.AmountOfSubstanceUnit;
 import org.djunits.unit.AngleUnit;
 import org.djunits.unit.AreaUnit;
+import org.djunits.unit.CatalyticActivityUnit;
 import org.djunits.unit.DensityUnit;
 import org.djunits.unit.DimensionlessUnit;
 import org.djunits.unit.DirectionUnit;
 import org.djunits.unit.DurationUnit;
+import org.djunits.unit.ElectricalCapacitanceUnit;
 import org.djunits.unit.ElectricalChargeUnit;
+import org.djunits.unit.ElectricalConductanceUnit;
 import org.djunits.unit.ElectricalCurrentUnit;
+import org.djunits.unit.ElectricalInductanceUnit;
 import org.djunits.unit.ElectricalPotentialUnit;
 import org.djunits.unit.ElectricalResistanceUnit;
 import org.djunits.unit.EnergyUnit;
+import org.djunits.unit.EquivalentDoseUnit;
 import org.djunits.unit.FlowMassUnit;
 import org.djunits.unit.FlowVolumeUnit;
 import org.djunits.unit.ForceUnit;
 import org.djunits.unit.FrequencyUnit;
+import org.djunits.unit.IlluminanceUnit;
 import org.djunits.unit.LengthUnit;
 import org.djunits.unit.LinearDensityUnit;
+import org.djunits.unit.LuminousFluxUnit;
+import org.djunits.unit.LuminousIntensityUnit;
+import org.djunits.unit.MagneticFluxDensityUnit;
+import org.djunits.unit.MagneticFluxUnit;
 import org.djunits.unit.MassUnit;
-import org.djunits.unit.MoneyPerAreaUnit;
-import org.djunits.unit.MoneyPerDurationUnit;
-import org.djunits.unit.MoneyPerEnergyUnit;
-import org.djunits.unit.MoneyPerLengthUnit;
-import org.djunits.unit.MoneyPerMassUnit;
-import org.djunits.unit.MoneyPerVolumeUnit;
-import org.djunits.unit.MoneyUnit;
 import org.djunits.unit.PositionUnit;
 import org.djunits.unit.PowerUnit;
 import org.djunits.unit.PressureUnit;
+import org.djunits.unit.RadioActivityUnit;
+import org.djunits.unit.SolidAngleUnit;
 import org.djunits.unit.SpeedUnit;
 import org.djunits.unit.TemperatureUnit;
 import org.djunits.unit.TimeUnit;
@@ -69,9 +75,9 @@ public class SerializationUnits implements Serializable
     public static final SerializationUnits ACCELERATION =
             new SerializationUnits(1, AccelerationUnit.class, "Acceleration", "Acceleration", "[m/s^2]");
 
-    /** AngleSolid unit type with code 2. */
-    public static final SerializationUnits ANGLESOLID =
-            new SerializationUnits(2, AngleSolidUnit.class, "AngleSolid", "Solid angle ", "[steradian]");
+    /** SolidAngle unit type with code 2. */
+    public static final SerializationUnits SOLIDANGLE =
+            new SerializationUnits(2, SolidAngleUnit.class, "SolidAngle", "Solid angle (steradian)", "[sr]");
 
     /** Angle unit type with code 3. */
     public static final SerializationUnits ANGLE =
@@ -79,10 +85,10 @@ public class SerializationUnits implements Serializable
 
     /** Direction unit type with code 4. */
     public static final SerializationUnits DIRECTION =
-            new SerializationUnits(4, DirectionUnit.class, "Direction", "Angle  (absolute)", "[rad]");
+            new SerializationUnits(4, DirectionUnit.class, "Direction", "Angle (absolute)", "[rad]");
 
     /** Area unit type with code 5. */
-    public static final SerializationUnits AREA = new SerializationUnits(5, AreaUnit.class, "Area", "Area", "[m^2]");
+    public static final SerializationUnits AREA = new SerializationUnits(5, AreaUnit.class, "Area", "Area (m2)", "[m^2]");
 
     /** Density unit type with code 6. */
     public static final SerializationUnits DENSITY =
@@ -90,7 +96,7 @@ public class SerializationUnits implements Serializable
 
     /** ElectricalCharge unit type with code 7. */
     public static final SerializationUnits ELECTRICALCHARGE =
-            new SerializationUnits(7, ElectricalChargeUnit.class, "ElectricalCharge", "Electrical charge (Coulomb)", "[sA]");
+            new SerializationUnits(7, ElectricalChargeUnit.class, "ElectricalCharge", "Electrical charge (Coulomb)", "[s.A]");
 
     /** ElectricalCurrent unit type with code 8. */
     public static final SerializationUnits ELECTRICALCURRENT =
@@ -98,15 +104,15 @@ public class SerializationUnits implements Serializable
 
     /** ElectricalPotential unit type with code 9. */
     public static final SerializationUnits ELECTRICALPOTENTIAL = new SerializationUnits(9, ElectricalPotentialUnit.class,
-            "ElectricalPotential", "Electrical potential (Volt)", "[kgm^2/s^3A]");
+            "ElectricalPotential", "Electrical potential (Volt)", "[kg.m^2/s^3.A]");
 
     /** ElectricalResistance unit type with code 10. */
     public static final SerializationUnits ELECTRICALRESISTANCE = new SerializationUnits(10, ElectricalResistanceUnit.class,
-            "ElectricalResistance", "Electrical resistance (Ohm)", "[kgm^2/s^3A^2]");
+            "ElectricalResistance", "Electrical resistance (Ohm)", "[kg.m^2/s^3.A^2]");
 
     /** Energy unit type with code 11. */
     public static final SerializationUnits ENERGY =
-            new SerializationUnits(11, EnergyUnit.class, "Energy", "Energy (Joule)", "[kgm^2/s^2]");
+            new SerializationUnits(11, EnergyUnit.class, "Energy", "Energy (Joule)", "[kg.m^2/s^2]");
 
     /** FlowMass unit type with code 12. */
     public static final SerializationUnits FLOWMASS =
@@ -118,7 +124,7 @@ public class SerializationUnits implements Serializable
 
     /** Force unit type with code 14. */
     public static final SerializationUnits FORCE =
-            new SerializationUnits(14, ForceUnit.class, "Force", "Force (Newton)", "[kgm/s^2]");
+            new SerializationUnits(14, ForceUnit.class, "Force", "Force (Newton)", "[kg.m/s^2]");
 
     /** Frequency unit type with code 15. */
     public static final SerializationUnits FREQUENCY =
@@ -141,11 +147,11 @@ public class SerializationUnits implements Serializable
 
     /** Power unit type with code 20. */
     public static final SerializationUnits POWER =
-            new SerializationUnits(20, PowerUnit.class, "Power", "Power (Watt)", "[kgm^2/s^3]");
+            new SerializationUnits(20, PowerUnit.class, "Power", "Power (Watt)", "[kg.m^2/s^3]");
 
     /** Pressure unit type with code 21. */
     public static final SerializationUnits PRESSURE =
-            new SerializationUnits(21, PressureUnit.class, "Pressure", "Pressure (Pascal)", "[kg/ms^2]");
+            new SerializationUnits(21, PressureUnit.class, "Pressure", "Pressure (Pascal)", "[kg/m.s^2]");
 
     /** Speed unit type with code 22. */
     public static final SerializationUnits SPEED = new SerializationUnits(22, SpeedUnit.class, "Speed", "Speed", "[m/s]");
@@ -167,38 +173,62 @@ public class SerializationUnits implements Serializable
 
     /** Torque unit type with code 27. */
     public static final SerializationUnits TORQUE =
-            new SerializationUnits(27, TorqueUnit.class, "Torque", "Torque (Newton-meter)", "[kgm^2/s^2]");
+            new SerializationUnits(27, TorqueUnit.class, "Torque", "Torque (Newton-meter)", "[kg.m^2/s^2]");
 
     /** Volume unit type with code 28. */
     public static final SerializationUnits VOLUME = new SerializationUnits(28, VolumeUnit.class, "Volume", "Volume", "[m^3]");
 
-    /** Money unit type with code 100. */
-    public static final SerializationUnits MONEY =
-            new SerializationUnits(100, MoneyUnit.class, "Money", "Money (cost in e.g., $, €, ...)", "[$]");
+    /** AbsorbedDose unit type with code 29. */
+    public static final SerializationUnits ABSORBEDDOSE =
+            new SerializationUnits(28, AbsorbedDoseUnit.class, "Absorbed dose", "Absorbed Dose (Gray)", "[m^2/s^2]");
 
-    /** MoneyPerArea unit type with code 101. */
-    public static final SerializationUnits MONEYPERAREA =
-            new SerializationUnits(101, MoneyPerAreaUnit.class, "MoneyPerArea", "Money/Area (cost/m^2)", "[$/m^2]");
+    /** AmountOfSubstance unit type with code 30. */
+    public static final SerializationUnits AMOUNTOFSUBSTANCE = new SerializationUnits(30, AmountOfSubstanceUnit.class,
+            "Amount of substance", "Amount of substance (mole)", "[mol]");
 
-    /** MoneyPerEnergy unit type with code 102. */
-    public static final SerializationUnits MONEYPERENERGY =
-            new SerializationUnits(102, MoneyPerEnergyUnit.class, "MoneyPerEnergy", "Money/Energy (cost/W)", "[$s^3/kgm^2]");
+    /** CatalyticActivity unit type with code 31. */
+    public static final SerializationUnits CATALYTICACTIVITY = new SerializationUnits(31, CatalyticActivityUnit.class,
+            "Catalytic activity", "Catalytic activity (katal)", "[mol/s]");
 
-    /** MoneyPerLength unit type with code 103. */
-    public static final SerializationUnits MONEYPERLENGTH =
-            new SerializationUnits(103, MoneyPerLengthUnit.class, "MoneyPerLength", "Money/Length (cost/m)", "[$/m]");
+    /** ElectricalCapacitance unit type with code 32. */
+    public static final SerializationUnits ELECTRICALCAPACITANCE = new SerializationUnits(32, ElectricalCapacitanceUnit.class,
+            "Electrical capacitance", "Electrical capacitance (Farad)", "[s^4.A^2/kg.m^2]");
 
-    /** MoneyPerMass unit type with code 104. */
-    public static final SerializationUnits MONEYPERMASS =
-            new SerializationUnits(104, MoneyPerMassUnit.class, "MoneyPerMass", "Money/Mass (cost/kg)", "[$/kg]");
+    /** ElectricalConductance unit type with code 33. */
+    public static final SerializationUnits ELECTRICALCONDUCTANCE = new SerializationUnits(33, ElectricalConductanceUnit.class,
+            "Electrical conductance", "Electrical conductance (Siemens)", "[s^3.A^2/kg.m^2]");
 
-    /** MoneyPerDuration unit type with code 105. */
-    public static final SerializationUnits MONEYPERDURATION =
-            new SerializationUnits(105, MoneyPerDurationUnit.class, "MoneyPerDuration", "Money/Duration (cost/s)", "[$/s]");
+    /** ElectricalInductance unit type with code 34. */
+    public static final SerializationUnits ELECTRICALINDUCTANCE = new SerializationUnits(34, ElectricalInductanceUnit.class,
+            "Electrical inductance", "Electrical inductance (Henry)", "[kg.m^2/s^2.A^2]");
 
-    /** MoneyPerVolume unit type with code 106. */
-    public static final SerializationUnits MONEYPERVOLUME =
-            new SerializationUnits(106, MoneyPerVolumeUnit.class, "MoneyPerVolume", "Money/Volume (cost/m^3)", "[$/m^3]");
+    /** EquivalentDose unit type with code 35. */
+    public static final SerializationUnits EQUIVALENTDOSE =
+            new SerializationUnits(35, EquivalentDoseUnit.class, "Equivalent dose", "Equivalent dose (Sievert)", "[m^2/s^2]");
+
+    /** Illuminance unit type with code 36. */
+    public static final SerializationUnits ILLUMINANCE =
+            new SerializationUnits(36, IlluminanceUnit.class, "Illuminance", "Illuminance (lux)", "[sr.cd/m^2]");
+
+    /** LuminousFlux unit type with code 37. */
+    public static final SerializationUnits LUMINOUSFLUX =
+            new SerializationUnits(37, LuminousFluxUnit.class, "Luminous flux", "Luminous flux (lumen)", "[sr.cd]");
+
+    /** LuminousIntensity unit type with code 38. */
+    public static final SerializationUnits LUMINOUSINTENSITY = new SerializationUnits(38, LuminousIntensityUnit.class,
+            "Luminous intensity", "Luminous intensity (candela)", "[cd]");
+
+    /** MagneticFluxDensity unit type with code 39. */
+    public static final SerializationUnits MAGNETICFLUXDENSITY = new SerializationUnits(39, MagneticFluxDensityUnit.class,
+            "Magnetic flux density", "Magnetic flux density (Tesla)", "[kg/s^2.A]");
+
+    /** MagneticFlux unit type with code 40. */
+    public static final SerializationUnits MAGNETICFLUX =
+            new SerializationUnits(40, MagneticFluxUnit.class, "Magnetic flux", "Magnetic flux (Weber)", "[kg.m^2/s^2.A]");
+
+    /** RadioActivity unit type with code 41. */
+    public static final SerializationUnits RADIOACTIVITY =
+            new SerializationUnits(41, RadioActivityUnit.class, "Radioactivity", "Radioactivity (Becquerel)", "[1/s]");
 
     /** The code of the unit as a byte. */
     private final byte code;

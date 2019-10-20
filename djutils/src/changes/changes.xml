@@ -2,11 +2,27 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-    <!-- release version="1.02.04" date="2019-09-XX" description="Little Endian (de)serialization">
-      <action dev="averbraeck" type="add">
-        Little-Endian types have been added to the FieldTypes in djutils-serialization.
+    <release version="1.03.00" date="2019-10-19" description="Little Endian (de)serialization">
+      <action dev="averbraeck" type="remove">
+        Little-Endian types have been removed as FieldTypes in djutils-serialization. Instead, messages that
+        need to be decoded can indicate whether they want to (de)code as Little-Endian or Big-Endian.
+        By default, following Java standards, djutils-serialization encodes in Big Endian (network byte order).
       </action>
-    </release -->
+      <action dev="averbraeck" type="update">
+        DJUNITS has been updated to version 4.00.04, bringing major changes to the way vectors and matrices
+        are stored and processed.
+      </action>
+      <action dev="averbraeck" type="remove">
+        As a result of moving to DJUNITS-4, the Money units with their special encoding have been removed
+        temporarily. This also holds for the MoneyPerUnit types.
+      </action>
+      <action dev="averbraeck" type="add">
+        As a result of moving to DJUNITS-4, several new types have been added to the possible units to use: 
+        AbsorbedDose, AmountOfSubstance, CatalyticActivity, ElectricalCapacitance, ElectricalConductance, 
+        ElectricalInductance, EquivalentDose, Illuminance, LuminousFlux, LuminousIntensity, 
+        MagneticFluxDensity, MagneticFlux, and RadioActivity.
+      </action>
+    </release>
     
     <release version="1.02.03" date="2019-09-14" description="CliUtil.execute with CommandLine object; unit tests">
       <action dev="averbraeck" type="add">

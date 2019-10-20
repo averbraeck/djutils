@@ -220,10 +220,6 @@ public class SerialDataDecoder implements Decoder
                 else if (this.currentRow < 0)
                 {
                     // parse one unit
-                    if (checkMoneyNeedsMoreBytes())
-                    {
-                        return false;
-                    }
                     TypedMessage.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
                     this.displayUnit = TypedMessage.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
                     this.buffer.append("unit for column " + this.currentColumn + ": ");
@@ -286,10 +282,6 @@ public class SerialDataDecoder implements Decoder
                 }
                 else if (null == this.displayUnit)
                 {
-                    if (checkMoneyNeedsMoreBytes())
-                    {
-                        return false;
-                    }
                     this.displayUnit = TypedMessage.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
                     this.buffer.append("unit " + this.displayUnit);
                     int numberOfDimensions = this.currentSerializer.getNumberOfDimensions();
@@ -470,23 +462,6 @@ public class SerialDataDecoder implements Decoder
             return true;
         }
         return result;
-    }
-
-    /**
-     * Check if additional bytes are needed to decode a money unit. Increases the buffer and the <code>totalDataSize</code> to
-     * accommodate all needed bytes.
-     * @return boolean; true if more bytes are needed; false if no more bytes are needed.
-     */
-    private boolean checkMoneyNeedsMoreBytes()
-    {
-        if (this.dataElementBytes[0] < 100 || this.dataElementBytes[0] > 106 || this.dataElementBytes.length != 2)
-        {
-            return false;
-        }
-        int requiredLength = this.dataElementBytes[0] == 100 ? 3 : 4;
-        this.totalDataSize += requiredLength - this.dataElementBytes.length;
-        this.dataElementBytes = java.util.Arrays.copyOf(this.dataElementBytes, requiredLength);
-        return true;
     }
 
     /**
