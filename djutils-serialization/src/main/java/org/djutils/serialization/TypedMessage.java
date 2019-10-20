@@ -7,26 +7,27 @@ import java.util.List;
 import java.util.Map;
 
 import org.djunits.unit.Unit;
-import org.djunits.unit.scale.IdentityScale;
-import org.djunits.value.ValueRuntimeException;
-import org.djunits.value.storage.StorageType;
 import org.djunits.value.vdouble.matrix.base.AbstractDoubleMatrix;
-import org.djunits.value.vdouble.matrix.base.DoubleMatrix;
-import org.djunits.value.vdouble.matrix.data.DoubleMatrixData;
 import org.djunits.value.vdouble.scalar.base.AbstractDoubleScalar;
-import org.djunits.value.vdouble.scalar.base.DoubleScalar;
 import org.djunits.value.vdouble.vector.base.AbstractDoubleVector;
-import org.djunits.value.vdouble.vector.base.DoubleVector;
-import org.djunits.value.vdouble.vector.data.DoubleVectorData;
 import org.djunits.value.vfloat.matrix.base.AbstractFloatMatrix;
-import org.djunits.value.vfloat.matrix.base.FloatMatrix;
-import org.djunits.value.vfloat.matrix.data.FloatMatrixData;
 import org.djunits.value.vfloat.scalar.base.AbstractFloatScalar;
-import org.djunits.value.vfloat.scalar.base.FloatScalar;
 import org.djunits.value.vfloat.vector.base.AbstractFloatVector;
-import org.djunits.value.vfloat.vector.base.FloatVector;
-import org.djunits.value.vfloat.vector.data.FloatVectorData;
 import org.djutils.exceptions.Throw;
+import org.djutils.serialization.serializers.BasicPrimitiveArrayOrMatrixSerializer;
+import org.djutils.serialization.serializers.DoubleMatrixSerializer;
+import org.djutils.serialization.serializers.DoubleScalarSerializer;
+import org.djutils.serialization.serializers.DoubleVectorArraySerializer;
+import org.djutils.serialization.serializers.DoubleVectorSerializer;
+import org.djutils.serialization.serializers.FixedSizeObjectSerializer;
+import org.djutils.serialization.serializers.FloatMatrixSerializer;
+import org.djutils.serialization.serializers.FloatScalarSerializer;
+import org.djutils.serialization.serializers.FloatVectorSerializer;
+import org.djutils.serialization.serializers.ObjectArraySerializer;
+import org.djutils.serialization.serializers.ObjectMatrixSerializer;
+import org.djutils.serialization.serializers.ObjectSerializer;
+import org.djutils.serialization.serializers.Pointer;
+import org.djutils.serialization.serializers.Serializer;
 
 /**
  * Message conversions. These take into account the endianness for coding the different values. Java is by default big-endian.
@@ -1101,418 +1102,33 @@ public final class TypedMessage
             };
 
     /** Converter for descendants of AbstractFloatScalar. */
-    private static final Serializer<AbstractFloatScalar<?, ?>> CONVERT_DJUNITS_FLOAT_SCALAR =
-            new ObjectSerializer<AbstractFloatScalar<?, ?>>(FieldTypes.FLOAT_32_UNIT, "Djunits_FloatScalar")
-            {
-                @Override
-                public int size(final AbstractFloatScalar<?, ?> afs) throws SerializationException
-                {
-                    return 2 + 4;
-                }
-
-                @Override
-                public void serialize(final AbstractFloatScalar<?, ?> afs, final byte[] buffer, final Pointer pointer,
-                        final EndianUtil endianUtil) throws SerializationException
-                {
-                    encodeUnit(afs.getDisplayUnit(), buffer, pointer, endianUtil);
-                    float v = afs.si;
-                    endianUtil.encodeFloat(v, buffer, pointer.getAndIncrement(4));
-                }
-
-                @SuppressWarnings({"unchecked", "rawtypes"})
-                @Override
-                public AbstractFloatScalar<?, ?> deSerialize(final byte[] buffer, final Pointer pointer,
-                        final EndianUtil endianUtil) throws SerializationException
-                {
-                    // TODO: see if an even more generic instantiateAnonymous method can be added to djunits
-                    Unit unit = getUnit(buffer, pointer, endianUtil);
-                    AbstractFloatScalar afs = FloatScalar.instantiateAnonymous(
-                            endianUtil.decodeFloat(buffer, pointer.getAndIncrement(4)), unit.getStandardUnit());
-                    afs.setDisplayUnit(unit);
-                    return afs;
-                }
-            };
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static final Serializer<AbstractFloatScalar<?, ?>> CONVERT_DJUNITS_FLOAT_SCALAR = new FloatScalarSerializer();
 
     /** Converter for descendants of AbstractDoubleScalar. */
-    private static final Serializer<AbstractDoubleScalar<?, ?>> CONVERT_DJUNITS_DOUBLE_SCALAR =
-            new ObjectSerializer<AbstractDoubleScalar<?, ?>>(FieldTypes.DOUBLE_64_UNIT, "Djunits_DoubleScalar")
-            {
-                @Override
-                public int size(final AbstractDoubleScalar<?, ?> ads) throws SerializationException
-                {
-                    return 2 + 8;
-                }
-
-                @Override
-                public void serialize(final AbstractDoubleScalar<?, ?> ads, final byte[] buffer, final Pointer pointer,
-                        final EndianUtil endianUtil) throws SerializationException
-                {
-                    encodeUnit(ads.getDisplayUnit(), buffer, pointer, endianUtil);
-                    double v = ads.si;
-                    endianUtil.encodeDouble(v, buffer, pointer.getAndIncrement(8));
-                }
-
-                @SuppressWarnings({"rawtypes", "unchecked"})
-                @Override
-                public AbstractDoubleScalar<?, ?> deSerialize(final byte[] buffer, final Pointer pointer,
-                        final EndianUtil endianUtil) throws SerializationException
-                {
-                    // TODO: see if an even more generic instantiateAnonymous method can be added to djunits
-                    Unit unit = getUnit(buffer, pointer, endianUtil);
-                    AbstractDoubleScalar afd = DoubleScalar.instantiateAnonymous(
-                            endianUtil.decodeDouble(buffer, pointer.getAndIncrement(8)), unit.getStandardUnit());
-                    afd.setDisplayUnit(unit);
-                    return afd;
-                }
-            };
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static final Serializer<AbstractDoubleScalar<?, ?>> CONVERT_DJUNITS_DOUBLE_SCALAR = new DoubleScalarSerializer();
 
     /** Converter for descendants of AbstractFloatVector. */
-    private static final Serializer<AbstractFloatVector<?, ?, ?>> CONVERT_DJUNITS_FLOAT_VECTOR =
-            new DjunitsArrayOrMatrixSerializer<AbstractFloatVector<?, ?, ?>>(FieldTypes.FLOAT_32_UNIT_ARRAY,
-                    "Djunits_FloatVector", 1)
-            {
-                @Override
-                public int size(final AbstractFloatVector<?, ?, ?> afv) throws SerializationException
-                {
-                    try
-                    {
-                        return 4 + 2 + 4 * afv.size();
-                    }
-                    catch (ValueRuntimeException e)
-                    {
-                        throw new SerializationException(e);
-                    }
-                }
-
-                @Override
-                public void serialize(final AbstractFloatVector<?, ?, ?> afv, final byte[] buffer, final Pointer pointer,
-                        final EndianUtil endianUtil) throws SerializationException
-                {
-                    try
-                    {
-                        endianUtil.encodeInt(afv.size(), buffer, pointer.getAndIncrement(4));
-                        encodeUnit(afv.getDisplayUnit(), buffer, pointer, endianUtil);
-                        for (int i = 0; i < afv.size(); i++)
-                        {
-                            endianUtil.encodeFloat(afv.get(i).si, buffer, pointer.getAndIncrement(4));
-                        }
-                    }
-                    catch (ValueRuntimeException e)
-                    {
-                        throw new SerializationException(e);
-                    }
-                }
-
-                @Override
-                public AbstractFloatVector<?, ?, ?> deSerialize(final byte[] buffer, final Pointer pointer,
-                        final EndianUtil endianUtil) throws SerializationException
-                {
-                    int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                    Unit<?> unit = getUnit(buffer, pointer, endianUtil);
-                    float[] array = new float[size];
-                    for (int i = 0; i < size; i++)
-                    {
-                        array[i] = endianUtil.decodeFloat(buffer, pointer.getAndIncrement(4));
-                    }
-                    try
-                    {
-                        FloatVectorData fvd = FloatVectorData.instantiate(array, IdentityScale.SCALE, StorageType.DENSE);
-                        return (AbstractFloatVector<?, ?, ?>) FloatVector.instantiateAnonymous(fvd, unit);
-                    }
-                    catch (ValueRuntimeException exception)
-                    {
-                        throw new SerializationException(exception);
-                    }
-                }
-            };
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static final Serializer<AbstractFloatVector<?, ?, ?>> CONVERT_DJUNITS_FLOAT_VECTOR = new FloatVectorSerializer();
 
     /** Converter for descendants of AbstractDoubleVector. */
-    private static final Serializer<AbstractDoubleVector<?, ?, ?>> CONVERT_DJUNITS_DOUBLE_VECTOR =
-            new DjunitsArrayOrMatrixSerializer<AbstractDoubleVector<?, ?, ?>>(FieldTypes.DOUBLE_64_UNIT_ARRAY,
-                    "Djunits_DoubleVector", 1)
-            {
-                @Override
-                public int size(final AbstractDoubleVector<?, ?, ?> adv) throws SerializationException
-                {
-                    try
-                    {
-                        return 4 + 2 + 8 * adv.size();
-                    }
-                    catch (ValueRuntimeException e)
-                    {
-                        throw new SerializationException(e);
-                    }
-                }
-
-                @Override
-                public void serialize(final AbstractDoubleVector<?, ?, ?> adv, final byte[] buffer, final Pointer pointer,
-                        final EndianUtil endianUtil) throws SerializationException
-                {
-                    try
-                    {
-                        endianUtil.encodeInt(adv.size(), buffer, pointer.getAndIncrement(4));
-                        encodeUnit(adv.getDisplayUnit(), buffer, pointer, endianUtil);
-                        for (int i = 0; i < adv.size(); i++)
-                        {
-                            endianUtil.encodeDouble(adv.get(i).si, buffer, pointer.getAndIncrement(8));
-                        }
-                    }
-                    catch (ValueRuntimeException e)
-                    {
-                        throw new SerializationException(e);
-                    }
-                }
-
-                @Override
-                public AbstractDoubleVector<?, ?, ?> deSerialize(final byte[] buffer, final Pointer pointer,
-                        final EndianUtil endianUtil) throws SerializationException
-                {
-                    int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                    Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianUtil);
-                    double[] array = new double[size];
-                    for (int i = 0; i < size; i++)
-                    {
-                        array[i] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
-                    }
-                    try
-                    {
-                        DoubleVectorData fvd = DoubleVectorData.instantiate(array, IdentityScale.SCALE, StorageType.DENSE);
-                        return (AbstractDoubleVector<?, ?, ?>) DoubleVector.instantiateAnonymous(fvd, unit);
-                    }
-                    catch (ValueRuntimeException exception)
-                    {
-                        throw new SerializationException(exception);
-                    }
-                }
-            };
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static final Serializer<AbstractDoubleVector<?, ?, ?>> CONVERT_DJUNITS_DOUBLE_VECTOR = new DoubleVectorSerializer();
 
     /** Converter for descendants of AbstractFloatMatrix. */
-    private static final Serializer<AbstractFloatMatrix<?, ?, ?, ?>> CONVERT_DJUNITS_FLOAT_MATRIX =
-            new DjunitsArrayOrMatrixSerializer<AbstractFloatMatrix<?, ?, ?, ?>>(FieldTypes.FLOAT_32_UNIT_MATRIX,
-                    "Djunits_FloatMatrix", 2)
-            {
-                @Override
-                public int size(final AbstractFloatMatrix<?, ?, ?, ?> afm) throws SerializationException
-                {
-                    try
-                    {
-                        return 4 + 4 + 2 + 4 * afm.rows() * afm.cols();
-                    }
-                    catch (ValueRuntimeException e)
-                    {
-                        throw new SerializationException(e);
-                    }
-                }
-
-                @Override
-                public void serialize(final AbstractFloatMatrix<?, ?, ?, ?> afm, final byte[] buffer, final Pointer pointer,
-                        final EndianUtil endianUtil) throws SerializationException
-                {
-                    try
-                    {
-                        endianUtil.encodeInt(afm.rows(), buffer, pointer.getAndIncrement(4));
-                        endianUtil.encodeInt(afm.cols(), buffer, pointer.getAndIncrement(4));
-                        encodeUnit(afm.getDisplayUnit(), buffer, pointer, endianUtil);
-                        for (int i = 0; i < afm.rows(); i++)
-                        {
-                            for (int j = 0; j < afm.cols(); j++)
-                            {
-                                endianUtil.encodeFloat(afm.get(i, j).si, buffer, pointer.getAndIncrement(4));
-                            }
-                        }
-                    }
-                    catch (ValueRuntimeException e)
-                    {
-                        throw new SerializationException(e);
-                    }
-                }
-
-                @Override
-                public AbstractFloatMatrix<?, ?, ?, ?> deSerialize(final byte[] buffer, final Pointer pointer,
-                        final EndianUtil endianUtil) throws SerializationException
-                {
-                    int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                    Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianUtil);
-                    float[][] array = new float[height][width];
-                    for (int i = 0; i < height; i++)
-                    {
-                        for (int j = 0; j < width; j++)
-                        {
-                            array[i][j] = endianUtil.decodeFloat(buffer, pointer.getAndIncrement(4));
-                        }
-                    }
-                    try
-                    {
-                        FloatMatrixData fvd = FloatMatrixData.instantiate(array, IdentityScale.SCALE, StorageType.DENSE);
-                        return (AbstractFloatMatrix<?, ?, ?, ?>) FloatMatrix.instantiateAnonymous(fvd, unit);
-                    }
-                    catch (ValueRuntimeException exception)
-                    {
-                        throw new SerializationException(exception);
-                    }
-                }
-            };
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static final Serializer<AbstractFloatMatrix<?, ?, ?, ?>> CONVERT_DJUNITS_FLOAT_MATRIX = new FloatMatrixSerializer();
 
     /** Converter for descendants of AbstractDoubleMatrix. */
-    private static final Serializer<AbstractDoubleMatrix<?, ?, ?, ?>> CONVERT_DJUNITS_DOUBLE_MATRIX =
-            new DjunitsArrayOrMatrixSerializer<AbstractDoubleMatrix<?, ?, ?, ?>>(FieldTypes.DOUBLE_64_UNIT_MATRIX,
-                    "Djunits_DoubleMatrix", 2)
-            {
-                @Override
-                public int size(final AbstractDoubleMatrix<?, ?, ?, ?> adm) throws SerializationException
-                {
-                    try
-                    {
-                        return 4 + 4 + 2 + 8 * adm.rows() * adm.cols();
-                    }
-                    catch (ValueRuntimeException e)
-                    {
-                        throw new SerializationException(e);
-                    }
-                }
-
-                @Override
-                public void serialize(final AbstractDoubleMatrix<?, ?, ?, ?> adm, final byte[] buffer, final Pointer pointer,
-                        final EndianUtil endianUtil) throws SerializationException
-                {
-                    try
-                    {
-                        endianUtil.encodeInt(adm.rows(), buffer, pointer.getAndIncrement(4));
-                        endianUtil.encodeInt(adm.cols(), buffer, pointer.getAndIncrement(4));
-                        encodeUnit(adm.getDisplayUnit(), buffer, pointer, endianUtil);
-                        for (int i = 0; i < adm.rows(); i++)
-                        {
-                            for (int j = 0; j < adm.cols(); j++)
-                            {
-                                endianUtil.encodeDouble(adm.get(i, j).si, buffer, pointer.getAndIncrement(8));
-                            }
-                        }
-                    }
-                    catch (ValueRuntimeException e)
-                    {
-                        throw new SerializationException(e);
-                    }
-                }
-
-                @Override
-                public AbstractDoubleMatrix<?, ?, ?, ?> deSerialize(final byte[] buffer, final Pointer pointer,
-                        final EndianUtil endianUtil) throws SerializationException
-                {
-                    try
-                    {
-                        int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                        int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianUtil);
-                        double[][] array = new double[height][width];
-                        for (int i = 0; i < height; i++)
-                        {
-                            for (int j = 0; j < width; j++)
-                            {
-                                array[i][j] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
-                            }
-                        }
-                        DoubleMatrixData fvd = DoubleMatrixData.instantiate(array, IdentityScale.SCALE, StorageType.DENSE);
-                        return (AbstractDoubleMatrix<?, ?, ?, ?>) DoubleMatrix.instantiateAnonymous(fvd, unit);
-                    }
-                    catch (ValueRuntimeException exception)
-                    {
-                        throw new SerializationException(exception);
-                    }
-                }
-            };
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static final Serializer<AbstractDoubleMatrix> CONVERT_DJUNITS_DOUBLE_MATRIX = new DoubleMatrixSerializer();
 
     /** Serializer for array of DoubleVector. Each DoubleVector must have same size. */
-    private static final Serializer<AbstractDoubleVector<?, ?, ?>[]> CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY =
-            new ObjectSerializer<AbstractDoubleVector<?, ?, ?>[]>(FieldTypes.DOUBLE_64_UNIT_COLUMN_ARRAY,
-                    "Djunits_vector_array")
-            {
-
-                @Override
-                public int size(final AbstractDoubleVector<?, ?, ?>[] adva) throws SerializationException
-                {
-                    int result = 4 + 4;
-                    int width = adva.length;
-                    int height = adva[0].size();
-                    for (int i = 0; i < width; i++)
-                    {
-                        AbstractDoubleVector<?, ?, ?> adv = adva[i];
-                        Throw.when(adv.size() != height, SerializationException.class,
-                                "All AbstractDoubleVectors in array must have same size");
-                        result += 2;
-                    }
-                    result += height * width * 8;
-                    return result;
-                }
-
-                @Override
-                public void serialize(final AbstractDoubleVector<?, ?, ?>[] adva, final byte[] buffer, final Pointer pointer,
-                        final EndianUtil endianUtil) throws SerializationException
-                {
-                    int width = adva.length;
-                    int height = adva[0].size();
-                    endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
-                    endianUtil.encodeInt(adva.length, buffer, pointer.getAndIncrement(4));
-                    for (int i = 0; i < width; i++)
-                    {
-                        AbstractDoubleVector<?, ?, ?> adv = adva[i];
-                        Throw.when(adv.size() != height, SerializationException.class,
-                                "All AbstractDoubleVectors in array must have same size");
-                        encodeUnit(adv.getDisplayUnit(), buffer, pointer, endianUtil);
-                    }
-                    for (int row = 0; row < height; row++)
-                    {
-                        for (int col = 0; col < width; col++)
-                        {
-                            try
-                            {
-                                endianUtil.encodeDouble(adva[col].getSI(row), buffer, pointer.getAndIncrement(8));
-                            }
-                            catch (ValueRuntimeException e)
-                            {
-                                throw new SerializationException(e);
-                            }
-                        }
-                    }
-
-                }
-
-                @Override
-                public AbstractDoubleVector<?, ?, ?>[] deSerialize(final byte[] buffer, final Pointer pointer,
-                        final EndianUtil endianUtil) throws SerializationException
-                {
-                    int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                    int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-                    AbstractDoubleVector<?, ?, ?>[] result = new AbstractDoubleVector<?, ?, ?>[width];
-                    Unit<? extends Unit<?>>[] units = new Unit<?>[width];
-                    for (int col = 0; col < width; col++)
-                    {
-                        units[col] = getUnit(buffer, pointer, endianUtil);
-                    }
-                    double[][] values = new double[width][height];
-                    for (int row = 0; row < height; row++)
-                    {
-                        for (int col = 0; col < width; col++)
-                        {
-                            values[col][row] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
-                        }
-                    }
-                    for (int col = 0; col < width; col++)
-                    {
-                        try
-                        {
-                            DoubleVectorData fvd =
-                                    DoubleVectorData.instantiate(values[col], IdentityScale.SCALE, StorageType.DENSE);
-                            result[col] = (AbstractDoubleVector<?, ?, ?>) DoubleVector.instantiateAnonymous(fvd, units[col]);
-                        }
-                        catch (ValueRuntimeException e)
-                        {
-                            throw new SerializationException(e);
-                        }
-                    }
-                    return result;
-                }
-            };
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static final Serializer<AbstractDoubleVector[]> CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY =
+            new DoubleVectorArraySerializer();
 
     /** Converter for array of SerializebleObject using UTF16 for strings and characters. */
     private static final Serializer<SerializableObject<?>[]> COMPOUND_ARRAY_SERIALIZER_UTF16 =
@@ -1931,37 +1547,6 @@ public final class TypedMessage
     }
 
     /**
-     * Code a unit, including MoneyUnits.
-     * @param unit the unit to code in the byte array
-     * @param message the byte array
-     * @param pointer the start pointer in the byte array
-     * @param endianUtil EndianUtil; encoder to use for multi-byte values
-     * @param <U> the unit type
-     */
-    static <U extends Unit<U>> void encodeUnit(final U unit, final byte[] message, final Pointer pointer,
-            final EndianUtil endianUtil)
-    {
-        SerializationUnits unitType = SerializationUnits.getUnitType(unit);
-        message[pointer.getAndIncrement(1)] = unitType.getCode();
-        DisplayType displayType = DisplayType.getDisplayType(unit);
-        message[pointer.getAndIncrement(1)] = displayType.getByteCode();
-    }
-
-    /**
-     * Retrieve and decode a DJUNITS unit.
-     * @param buffer byte[]; the encoded data
-     * @param pointer Pointer; position in the encoded data where the unit is to be decoded from
-     * @param endianUtil EndianUtil; decoder for multi-byte values
-     * @return Unit
-     */
-    static Unit<? extends Unit<?>> getUnit(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
-    {
-        SerializationUnits unitType = SerializationUnits.getUnitType(buffer[pointer.getAndIncrement(1)]);
-        DisplayType displayType = DisplayType.getDisplayType(unitType, 0 + buffer[pointer.getAndIncrement(1)]);
-        return displayType.getDjunitsType();
-    }
-
-    /**
      * Decode the message into an object array, constructing Java Primitive data arrays and matrices where possible.
      * @param buffer the byte array to decode
      * @param endianUtil EndianUtil; decoder for multi-byte values
@@ -2017,6 +1602,22 @@ public final class TypedMessage
             }
         }
         return list.toArray();
+    }
+
+    /**
+     * Retrieve and decode a DJUNITS unit.
+     * @param buffer byte[]; the encoded data
+     * @param pointer Pointer; position in the encoded data where the unit is to be decoded from
+     * @param endianUtil EndianUtil; decoder for multi-byte values
+     * @return U; decoded Unit
+     * @param <U> the unit type
+     */
+    @SuppressWarnings("unchecked")
+    public static <U extends Unit<U>> U getUnit(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    {
+        SerializationUnits unitType = SerializationUnits.getUnitType(buffer[pointer.getAndIncrement(1)]);
+        DisplayType displayType = DisplayType.getDisplayType(unitType, 0 + buffer[pointer.getAndIncrement(1)]);
+        return (U) displayType.getDjunitsType();
     }
 
     /**

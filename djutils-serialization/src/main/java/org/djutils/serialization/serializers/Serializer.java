@@ -1,4 +1,7 @@
-package org.djutils.serialization;
+package org.djutils.serialization.serializers;
+
+import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.SerializationException;
 
 /**
  * Interface to serialize and deserialize data.

@@ -38,6 +38,9 @@ import org.djunits.value.vfloat.scalar.FloatArea;
 import org.djunits.value.vfloat.vector.FloatElectricalResistanceVector;
 import org.djunits.value.vfloat.vector.base.FloatVector;
 import org.djutils.decoderdumper.HexDumper;
+import org.djutils.serialization.serializers.BasicSerializer;
+import org.djutils.serialization.serializers.Pointer;
+import org.djutils.serialization.util.SerialDataDumper;
 import org.junit.Test;
 
 /**

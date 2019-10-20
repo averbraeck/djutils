@@ -1,4 +1,4 @@
-package org.djutils.serialization;
+package org.djutils.serialization.serializers;
 
 /**
  * Serializer for simple, fixed size, classes.

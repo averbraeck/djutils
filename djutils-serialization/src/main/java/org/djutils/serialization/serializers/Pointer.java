@@ -1,4 +1,4 @@
-package org.djutils.serialization;
+package org.djutils.serialization.serializers;
 
 /**
  * Container for an offset.
@@ -11,7 +11,7 @@ package org.djutils.serialization;
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
-class Pointer
+public class Pointer
 {
     /** Current value of the offset. */
     private int offset;
@@ -28,7 +28,7 @@ class Pointer
     /**
      * Construct a new Pointer with offset 0.
      */
-    Pointer()
+    public Pointer()
     {
         this(0);
     }
@@ -37,7 +37,7 @@ class Pointer
      * Retrieve the offset.
      * @return int; the offset
      */
-    int get()
+    public int get()
     {
         return this.offset;
     }
@@ -48,7 +48,7 @@ class Pointer
      * @param increment int; the amount by which the offset must be incremented
      * @return int; the offset (before the increment was added)
      */
-    int getAndIncrement(final int increment)
+    public int getAndIncrement(final int increment)
     {
         int result = this.offset;
         this.offset += increment;
