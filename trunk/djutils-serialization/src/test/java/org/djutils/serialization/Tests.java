@@ -2,6 +2,7 @@ package org.djutils.serialization;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -18,36 +19,24 @@ import org.djunits.unit.AreaUnit;
 import org.djunits.unit.DimensionlessUnit;
 import org.djunits.unit.ElectricalCurrentUnit;
 import org.djunits.unit.ElectricalResistanceUnit;
+import org.djunits.unit.EnergyUnit;
 import org.djunits.unit.LengthUnit;
-import org.djunits.unit.MoneyPerAreaUnit;
-import org.djunits.unit.MoneyPerDurationUnit;
-import org.djunits.unit.MoneyPerEnergyUnit;
-import org.djunits.unit.MoneyPerLengthUnit;
-import org.djunits.unit.MoneyPerMassUnit;
-import org.djunits.unit.MoneyPerVolumeUnit;
-import org.djunits.unit.MoneyUnit;
 import org.djunits.unit.SpeedUnit;
-import org.djunits.value.StorageType;
-import org.djunits.value.ValueException;
+import org.djunits.unit.TimeUnit;
+import org.djunits.value.ValueRuntimeException;
+import org.djunits.value.storage.StorageType;
 import org.djunits.value.vdouble.matrix.ElectricalCurrentMatrix;
+import org.djunits.value.vdouble.matrix.base.DoubleMatrix;
 import org.djunits.value.vdouble.scalar.Dimensionless;
 import org.djunits.value.vdouble.scalar.Length;
-import org.djunits.value.vdouble.scalar.Money;
-import org.djunits.value.vdouble.scalar.MoneyPerArea;
-import org.djunits.value.vdouble.scalar.MoneyPerDuration;
-import org.djunits.value.vdouble.scalar.MoneyPerEnergy;
-import org.djunits.value.vdouble.scalar.MoneyPerLength;
-import org.djunits.value.vdouble.scalar.MoneyPerMass;
-import org.djunits.value.vdouble.scalar.MoneyPerVolume;
-import org.djunits.value.vdouble.vector.AbstractDoubleVector;
 import org.djunits.value.vdouble.vector.ElectricalCurrentVector;
-import org.djunits.value.vdouble.vector.LengthVector;
-import org.djunits.value.vdouble.vector.MoneyVector;
+import org.djunits.value.vdouble.vector.base.AbstractDoubleVector;
+import org.djunits.value.vdouble.vector.base.DoubleVector;
 import org.djunits.value.vfloat.matrix.FloatElectricalResistanceMatrix;
+import org.djunits.value.vfloat.matrix.base.FloatMatrix;
 import org.djunits.value.vfloat.scalar.FloatArea;
-import org.djunits.value.vfloat.scalar.FloatMoney;
-import org.djunits.value.vfloat.scalar.FloatMoneyPerVolume;
 import org.djunits.value.vfloat.vector.FloatElectricalResistanceVector;
+import org.djunits.value.vfloat.vector.base.FloatVector;
 import org.djutils.decoderdumper.HexDumper;
 import org.junit.Test;
 
@@ -308,34 +297,24 @@ public class Tests
     /**
      * Test encoding and decoding of strongly typed quantities (DJUNITS).
      * @throws SerializationException when that happens uncaught, this test has failed
-     * @throws ValueException when that happens uncaught, this test has failed
+     * @throws ValueRuntimeException when that happens uncaught, this test has failed
      */
     @Test
-    public void testDJunits() throws SerializationException, ValueException
+    public void testDJunits() throws SerializationException, ValueRuntimeException
     {
         Length length = new Length(123.4, LengthUnit.FOOT);
         Dimensionless value = new Dimensionless(345.6, DimensionlessUnit.SI);
-        Money money = new Money(456, MoneyUnit.EUR);
-        FloatMoney floatMoney = new FloatMoney(123.45f, MoneyUnit.AED);
-        MoneyPerArea mpa = new MoneyPerArea(0.33, MoneyPerAreaUnit.USD_PER_ACRE);
-        MoneyPerLength mpl = new MoneyPerLength(0.22, MoneyPerLengthUnit.USD_PER_MILE);
-        MoneyPerEnergy mpe = new MoneyPerEnergy(0.33, MoneyPerEnergyUnit.EUR_PER_KILOWATTHOUR);
-        MoneyPerMass mpm = new MoneyPerMass(0.33, MoneyPerMassUnit.USD_PER_POUND);
-        MoneyPerDuration mpt = new MoneyPerDuration(0.33, MoneyPerDurationUnit.EUR_PER_DAY);
-        MoneyPerVolume mpv = new MoneyPerVolume(0.44, MoneyPerVolumeUnit.USD_PER_OUNCE_US_FLUID);
-        FloatMoneyPerVolume mpvw = new FloatMoneyPerVolume(0.55, MoneyPerVolumeUnit.USD_PER_OUNCE_US_FLUID);
         FloatArea area = new FloatArea(66.66f, AreaUnit.ACRE);
         ElectricalCurrentVector currents =
-                new ElectricalCurrentVector(new double[] {1.2, 2.3, 3.4}, ElectricalCurrentUnit.MILLIAMPERE, StorageType.DENSE);
-        FloatElectricalResistanceVector resistors = new FloatElectricalResistanceVector(new float[] {1.2f, 4.7f, 6.8f},
-                ElectricalResistanceUnit.KILOOHM, StorageType.DENSE);
-        ElectricalCurrentMatrix currentMatrix = new ElectricalCurrentMatrix(new double[][] {{1.2, 2.3, 3.4}, {5.5, 6.6, 7.7}},
+                DoubleVector.instantiate(new double[] {1.2, 2.3, 3.4}, ElectricalCurrentUnit.MILLIAMPERE, StorageType.DENSE);
+        FloatElectricalResistanceVector resistors =
+                FloatVector.instantiate(new float[] {1.2f, 4.7f, 6.8f}, ElectricalResistanceUnit.KILOOHM, StorageType.DENSE);
+        ElectricalCurrentMatrix currentMatrix = DoubleMatrix.instantiate(new double[][] {{1.2, 2.3, 3.4}, {5.5, 6.6, 7.7}},
                 ElectricalCurrentUnit.MILLIAMPERE, StorageType.DENSE);
-        FloatElectricalResistanceMatrix resistorMatrix = new FloatElectricalResistanceMatrix(
+        FloatElectricalResistanceMatrix resistorMatrix = FloatMatrix.instantiate(
                 new float[][] {{1.2f, 4.7f, 6.8f}, {2.2f, 3.3f, 4.4f}}, ElectricalResistanceUnit.KILOOHM, StorageType.DENSE);
 
-        Object[] objects = new Object[] {length, value, money, floatMoney, mpa, mpl, mpe, mpm, mpt, mpv, mpvw, area, currents,
-                resistors, currentMatrix, resistorMatrix};
+        Object[] objects = new Object[] {length, value, area, currents, resistors, currentMatrix, resistorMatrix};
         for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
         {
             byte[] serialized = TypedMessage.encodeUTF16(endianUtil, objects);
@@ -353,6 +332,72 @@ public class Tests
                 }
             }
         }
+    }
+
+    /**
+     * Test stored information about djunits SerializationUnits.
+     * @throws SerializationException when that happens uncaught, this test has failed
+     * @throws ValueRuntimeException when that happens uncaught, this test has failed
+     */
+    @Test
+    public void testSerializationUnits() throws SerializationException, ValueRuntimeException
+    {
+        SerializationUnits areaSerUnit = SerializationUnits.AREA;
+        assertEquals("Area", areaSerUnit.getName());
+        assertEquals("Area (m2)", areaSerUnit.getDescription());
+        assertEquals(5, areaSerUnit.getCode());
+        assertEquals(AreaUnit.class, areaSerUnit.getDjunitsType());
+        assertEquals("[m^2]", areaSerUnit.getSiUnit());
+        
+        assertEquals(LengthUnit.class, SerializationUnits.getUnitClass((byte) 16));
+        assertEquals(16, SerializationUnits.getUnitCode(LengthUnit.INCH));
+        assertEquals(areaSerUnit, SerializationUnits.getUnitType((byte) 5));
+        assertEquals(areaSerUnit, SerializationUnits.getUnitType(AreaUnit.ARE));
+
+        assertNotEquals(SerializationUnits.RADIOACTIVITY, areaSerUnit);
+        assertNotEquals(new Object(), areaSerUnit);
+        assertNotEquals(SerializationUnits.RADIOACTIVITY.hashCode(), areaSerUnit.hashCode());
+        assertNotEquals(new Object().hashCode(), areaSerUnit.hashCode());
+    }
+
+    /**
+     * Test stored information about djunits display types.
+     * @throws SerializationException when that happens uncaught, this test has failed
+     * @throws ValueRuntimeException when that happens uncaught, this test has failed
+     */
+    @Test
+    public void testDJunitDisplayTypes() throws SerializationException, ValueRuntimeException
+    {
+        SerializationUnits areaSerUnit = SerializationUnits.AREA;
+        DisplayType aream2 = DisplayType.AREA_SQUARE_METER;
+        DisplayType areaacre = DisplayType.AREA_ACRE;
+        DisplayType masskg = DisplayType.MASS_KILOGRAM;
+        assertEquals("m2", aream2.getAbbreviation());
+        assertEquals(0, aream2.getByteCode());
+        assertEquals(18, areaacre.getByteCode());
+        assertEquals(AreaUnit.SQUARE_METER, aream2.getDjunitsType());
+        assertEquals(AreaUnit.ACRE, areaacre.getDjunitsType());
+        assertEquals(0, aream2.getIntCode());
+        assertEquals(18, areaacre.getIntCode());
+        assertEquals("SQUARE_METER", aream2.getName());
+        assertEquals("ACRE", areaacre.getName());
+        assertEquals(areaSerUnit, aream2.getUnitType());
+        assertEquals(areaacre.getUnitType(), aream2.getUnitType());
+        
+        assertEquals(8, DisplayType.getByteCode(ElectricalResistanceUnit.STATOHM));
+        assertEquals(areaacre, DisplayType.getDisplayType(AreaUnit.ACRE));
+        assertEquals(DisplayType.ENERGY_CALORIE, DisplayType.getDisplayType((byte) 11, 30));
+        assertEquals(areaacre, DisplayType.getDisplayType(areaSerUnit, 18));
+        assertEquals(30, DisplayType.getIntCode(EnergyUnit.CALORIE));
+        assertEquals(EnergyUnit.CALORIE, DisplayType.getUnit((byte) 11, 30));
+        assertEquals(AreaUnit.ACRE, DisplayType.getUnit(areaSerUnit, 18));
+        
+        assertNotEquals(aream2, areaacre);
+        assertNotEquals(masskg, areaacre);
+        assertNotEquals(new Object(), areaacre);
+        assertNotEquals(aream2.hashCode(), areaacre.hashCode());
+        assertNotEquals(masskg.hashCode(), areaacre.hashCode());
+        assertNotEquals(new Object().hashCode(), areaacre.hashCode());
     }
 
     /** Class used to test serialization of classes that implement SerializableObject. */
@@ -498,15 +543,16 @@ public class Tests
 
     /**
      * Test serialization and deserialization of arrays of Djutils vectors.
-     * @throws ValueException if that happens uncaught; this test has failed
+     * @throws ValueRuntimeException if that happens uncaught; this test has failed
      * @throws SerializationException if that happens uncaught; this test has failed
      */
+    @SuppressWarnings("unchecked")
     @Test
-    public void testArrayOfDjutilsVectors() throws ValueException, SerializationException
+    public void testArrayOfDjutilsVectors() throws ValueRuntimeException, SerializationException
     {
-        AbstractDoubleVector<?, ?>[] array =
-                new AbstractDoubleVector[] {new LengthVector(new double[] {0.1, 0.2, 0.3}, LengthUnit.INCH, StorageType.DENSE),
-                        new MoneyVector(new double[] {10.1, 20.2, 30.3}, MoneyUnit.EUR, StorageType.DENSE)};
+        AbstractDoubleVector<?, ?, ?>[] array = new AbstractDoubleVector[] {
+                DoubleVector.instantiate(new double[] {0.1, 0.2, 0.3}, LengthUnit.INCH, StorageType.DENSE),
+                DoubleVector.instantiate(new double[] {10.1, 20.2, 30.3}, TimeUnit.BASE_MINUTE, StorageType.DENSE)};
         Object[] objects = new Object[] {array};
         for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
         {
@@ -524,10 +570,10 @@ public class Tests
                     assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
                     for (int i = 0; i < objects.length; i++)
                     {
-                        if (objects[i] instanceof AbstractDoubleVector<?, ?>[])
+                        if (objects[i] instanceof AbstractDoubleVector<?, ?, ?>[])
                         {
-                            AbstractDoubleVector<?, ?>[] arrayIn = (AbstractDoubleVector<?, ?>[]) objects[i];
-                            AbstractDoubleVector<?, ?>[] arrayOut = (AbstractDoubleVector<?, ?>[]) decodedObjects[i];
+                            AbstractDoubleVector<?, ?, ?>[] arrayIn = (AbstractDoubleVector<?, ?, ?>[]) objects[i];
+                            AbstractDoubleVector<?, ?, ?>[] arrayOut = (AbstractDoubleVector<?, ?, ?>[]) decodedObjects[i];
                             for (int j = 0; j < arrayOut.length; j++)
                             {
                                 assertEquals("Decoded Djutils array vector element matches", arrayIn[j], arrayOut[j]);
