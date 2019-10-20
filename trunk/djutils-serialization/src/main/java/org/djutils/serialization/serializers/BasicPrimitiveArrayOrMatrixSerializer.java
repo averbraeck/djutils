@@ -1,7 +1,10 @@
-package org.djutils.serialization;
+package org.djutils.serialization.serializers;
+
+import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.SerializationException;
 
 /**
- * Serializer for Djunits arrays and matrices.
+ * Serializer for primitive data array classes. *
  * <p>
  * Copyright (c) 2019-2019 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://opentrafficsim.org/node/13">OpenTrafficSim License</a>.
@@ -10,22 +13,28 @@ package org.djutils.serialization;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
- * @param <T> Either Double of Float
+ * @param <T> array type, e.g. int[]
  */
-public abstract class DjunitsArrayOrMatrixSerializer<T extends Object> extends BasicSerializer<T>
+public abstract class BasicPrimitiveArrayOrMatrixSerializer<T extends Object> extends BasicSerializer<T>
 {
-    /** Number of dimension; 1 for array, 2 for matrix. */
+    /** Size of one element of the encoded data. */
+    private final int elementSize;
+
+    /** Number of dimensions of the data. */
     private final int numberOfDimensions;
 
     /**
-     * Construct a new serializer for Djunits arrays or matrices.
+     * Construct a new BasicPrimitiveArrayOrMatrixSerializer.
      * @param type byte; the field type (returned by the <code>fieldType</code> method)
+     * @param elementSize int; the number of bytes needed to encode one additional array element
      * @param dataClassName String; returned by the dataClassName method
-     * @param numberOfDimensions int; should be 1 for array serializer and 2 for matrix serializer
+     * @param numberOfDimensions int; number of dimensions (1 for array, 2 for matrix)
      */
-    public DjunitsArrayOrMatrixSerializer(final byte type, final String dataClassName, final int numberOfDimensions)
+    public BasicPrimitiveArrayOrMatrixSerializer(final byte type, final int elementSize, final String dataClassName,
+            final int numberOfDimensions)
     {
         super(type, dataClassName);
+        this.elementSize = elementSize;
         this.numberOfDimensions = numberOfDimensions;
     }
 
@@ -41,6 +50,15 @@ public abstract class DjunitsArrayOrMatrixSerializer<T extends Object> extends B
     {
         buffer[pointer.getAndIncrement(1)] = fieldType();
         serialize(object, buffer, pointer, endianUtil);
+    }
+
+    /**
+     * Retrieve the number of bytes needed to encode one additional array element.
+     * @return int; the number of bytes needed to encode one additional array element
+     */
+    public final int getElementSize()
+    {
+        return this.elementSize;
     }
 
     @Override

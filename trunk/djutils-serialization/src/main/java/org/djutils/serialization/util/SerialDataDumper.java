@@ -1,4 +1,4 @@
-package org.djutils.serialization;
+package org.djutils.serialization.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,6 +7,8 @@ import org.djutils.decoderdumper.Dumper;
 import org.djutils.decoderdumper.FixedString;
 import org.djutils.decoderdumper.HexAddressDecoder;
 import org.djutils.decoderdumper.HexDecoder;
+import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.SerialDataDecoder;
 
 /**
  * Dumper for serialized data.

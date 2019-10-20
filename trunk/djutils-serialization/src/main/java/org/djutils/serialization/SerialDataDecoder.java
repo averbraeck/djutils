@@ -4,6 +4,12 @@ import java.io.IOException;
 
 import org.djunits.unit.Unit;
 import org.djutils.decoderdumper.Decoder;
+import org.djutils.serialization.serializers.ArrayOrMatrixSerializer;
+import org.djutils.serialization.serializers.BasicPrimitiveArrayOrMatrixSerializer;
+import org.djutils.serialization.serializers.FixedSizeObjectSerializer;
+import org.djutils.serialization.serializers.ObjectSerializer;
+import org.djutils.serialization.serializers.Pointer;
+import org.djutils.serialization.serializers.Serializer;
 
 /**
  * Decoder for inspection of serialized data.
@@ -61,7 +67,7 @@ public class SerialDataDecoder implements Decoder
      * Construct a new SerialDataDecoder.
      * @param endianUtil EndianUtil; the endian util to use to decode multi-byte values
      */
-    SerialDataDecoder(final EndianUtil endianUtil)
+    public SerialDataDecoder(final EndianUtil endianUtil)
     {
         this.endianUtil = endianUtil;
     }

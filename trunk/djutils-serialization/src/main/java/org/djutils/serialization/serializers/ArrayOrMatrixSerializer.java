@@ -1,4 +1,6 @@
-package org.djutils.serialization;
+package org.djutils.serialization.serializers;
+
+import org.djutils.serialization.EndianUtil;
 
 /**
  * Serializer for arrays or matrices.
@@ -53,7 +55,7 @@ public abstract class ArrayOrMatrixSerializer<T extends Object, E extends Object
      * @param offset int; index in byte buffer where first serialized byte must be stored
      * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
      */
-    abstract void serializeElement(E object, byte[] buffer, int offset, EndianUtil endianUtil);
+    public abstract void serializeElement(E object, byte[] buffer, int offset, EndianUtil endianUtil);
 
     /**
      * Deserializer for one array or matrix element (without type prefix) must be implemented in implementing sub classes.
@@ -62,6 +64,6 @@ public abstract class ArrayOrMatrixSerializer<T extends Object, E extends Object
      * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
      * @return E; the deserialized object
      */
-    abstract E deSerializeElement(byte[] buffer, int offset, EndianUtil endianUtil);
+    public abstract E deSerializeElement(byte[] buffer, int offset, EndianUtil endianUtil);
 
 }

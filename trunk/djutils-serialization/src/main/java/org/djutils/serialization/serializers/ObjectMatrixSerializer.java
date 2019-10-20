@@ -1,8 +1,10 @@
-package org.djutils.serialization;
+package org.djutils.serialization.serializers;
 
 import java.lang.reflect.Array;
 
 import org.djutils.exceptions.Throw;
+import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.SerializationException;
 
 /**
  * Serializer for simple matrix (non-jagged, non-empty, 2D array) classes.

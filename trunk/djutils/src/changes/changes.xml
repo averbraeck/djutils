@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.03.00" date="2019-10-19" description="Little Endian (de)serialization">
+    <release version="1.03.00" date="2019-10-19" description="Little Endian (de)serialization; use of djunits v4">
       <action dev="averbraeck" type="remove">
         Little-Endian types have been removed as FieldTypes in djutils-serialization. Instead, messages that
         need to be decoded can indicate whether they want to (de)code as Little-Endian or Big-Endian.
@@ -21,6 +21,10 @@
         AbsorbedDose, AmountOfSubstance, CatalyticActivity, ElectricalCapacitance, ElectricalConductance, 
         ElectricalInductance, EquivalentDose, Illuminance, LuminousFlux, LuminousIntensity, 
         MagneticFluxDensity, MagneticFlux, and RadioActivity.
+      </action>
+      <action dev="averbraeck" type="update">
+        The package structure for djutils-serialization has been updated. Complex (de)serializers
+        have been coded in their own classes rather than in an inline class.
       </action>
     </release>
     
