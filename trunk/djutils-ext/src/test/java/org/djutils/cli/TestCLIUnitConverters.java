@@ -3,58 +3,84 @@ package org.djutils.cli;
 import static org.junit.Assert.assertEquals;
 
 import org.djunits.unit.AbsoluteTemperatureUnit;
+import org.djunits.unit.AbsorbedDoseUnit;
 import org.djunits.unit.AccelerationUnit;
-import org.djunits.unit.SolidAngleUnit;
+import org.djunits.unit.AmountOfSubstanceUnit;
 import org.djunits.unit.AngleUnit;
 import org.djunits.unit.AreaUnit;
+import org.djunits.unit.CatalyticActivityUnit;
 import org.djunits.unit.DensityUnit;
 import org.djunits.unit.DimensionlessUnit;
 import org.djunits.unit.DirectionUnit;
 import org.djunits.unit.DurationUnit;
+import org.djunits.unit.ElectricalCapacitanceUnit;
 import org.djunits.unit.ElectricalChargeUnit;
+import org.djunits.unit.ElectricalConductanceUnit;
 import org.djunits.unit.ElectricalCurrentUnit;
+import org.djunits.unit.ElectricalInductanceUnit;
 import org.djunits.unit.ElectricalPotentialUnit;
 import org.djunits.unit.ElectricalResistanceUnit;
 import org.djunits.unit.EnergyUnit;
+import org.djunits.unit.EquivalentDoseUnit;
 import org.djunits.unit.FlowMassUnit;
 import org.djunits.unit.FlowVolumeUnit;
 import org.djunits.unit.ForceUnit;
 import org.djunits.unit.FrequencyUnit;
+import org.djunits.unit.IlluminanceUnit;
 import org.djunits.unit.LengthUnit;
 import org.djunits.unit.LinearDensityUnit;
+import org.djunits.unit.LuminousFluxUnit;
+import org.djunits.unit.LuminousIntensityUnit;
+import org.djunits.unit.MagneticFluxDensityUnit;
+import org.djunits.unit.MagneticFluxUnit;
 import org.djunits.unit.MassUnit;
 import org.djunits.unit.PositionUnit;
 import org.djunits.unit.PowerUnit;
 import org.djunits.unit.PressureUnit;
+import org.djunits.unit.RadioActivityUnit;
+import org.djunits.unit.SolidAngleUnit;
 import org.djunits.unit.SpeedUnit;
 import org.djunits.unit.TemperatureUnit;
 import org.djunits.unit.TimeUnit;
 import org.djunits.unit.TorqueUnit;
 import org.djunits.unit.VolumeUnit;
 import org.djunits.value.vdouble.scalar.AbsoluteTemperature;
+import org.djunits.value.vdouble.scalar.AbsorbedDose;
 import org.djunits.value.vdouble.scalar.Acceleration;
+import org.djunits.value.vdouble.scalar.AmountOfSubstance;
 import org.djunits.value.vdouble.scalar.Angle;
-import org.djunits.value.vdouble.scalar.SolidAngle;
 import org.djunits.value.vdouble.scalar.Area;
+import org.djunits.value.vdouble.scalar.CatalyticActivity;
 import org.djunits.value.vdouble.scalar.Density;
 import org.djunits.value.vdouble.scalar.Dimensionless;
 import org.djunits.value.vdouble.scalar.Direction;
 import org.djunits.value.vdouble.scalar.Duration;
+import org.djunits.value.vdouble.scalar.ElectricalCapacitance;
 import org.djunits.value.vdouble.scalar.ElectricalCharge;
+import org.djunits.value.vdouble.scalar.ElectricalConductance;
 import org.djunits.value.vdouble.scalar.ElectricalCurrent;
+import org.djunits.value.vdouble.scalar.ElectricalInductance;
 import org.djunits.value.vdouble.scalar.ElectricalPotential;
 import org.djunits.value.vdouble.scalar.ElectricalResistance;
 import org.djunits.value.vdouble.scalar.Energy;
+import org.djunits.value.vdouble.scalar.EquivalentDose;
 import org.djunits.value.vdouble.scalar.FlowMass;
 import org.djunits.value.vdouble.scalar.FlowVolume;
 import org.djunits.value.vdouble.scalar.Force;
 import org.djunits.value.vdouble.scalar.Frequency;
+import org.djunits.value.vdouble.scalar.Illuminance;
 import org.djunits.value.vdouble.scalar.Length;
 import org.djunits.value.vdouble.scalar.LinearDensity;
+import org.djunits.value.vdouble.scalar.LuminousFlux;
+import org.djunits.value.vdouble.scalar.LuminousIntensity;
+import org.djunits.value.vdouble.scalar.MagneticFlux;
+import org.djunits.value.vdouble.scalar.MagneticFluxDensity;
 import org.djunits.value.vdouble.scalar.Mass;
 import org.djunits.value.vdouble.scalar.Position;
 import org.djunits.value.vdouble.scalar.Power;
 import org.djunits.value.vdouble.scalar.Pressure;
+import org.djunits.value.vdouble.scalar.RadioActivity;
+import org.djunits.value.vdouble.scalar.SolidAngle;
 import org.djunits.value.vdouble.scalar.Speed;
 import org.djunits.value.vdouble.scalar.Temperature;
 import org.djunits.value.vdouble.scalar.Time;
@@ -80,12 +106,20 @@ public class TestCLIUnitConverters
     public static class Options
     {
         /** */
+        @Option(names = {"--absorbeddose"}, description = "AbsorbedDose", defaultValue = "200Gy")
+        protected AbsorbedDose absorbeddose;
+        
+        /** */
         @Option(names = {"--absolutetemperature"}, description = "AbsoluteTemperature", defaultValue = "200.0K")
         protected AbsoluteTemperature absolutetemperature;
 
         /** */
         @Option(names = {"--acceleration"}, description = "Acceleration", defaultValue = "2.0m/s^2")
         protected Acceleration acceleration;
+
+        /** */
+        @Option(names = {"--amountofsubstance"}, description = "AmountOfSubstance", defaultValue = "200.0mol")
+        protected AmountOfSubstance amountofsubstance;
 
         /** */
         @Option(names = {"--angle"}, description = "Angle", defaultValue = "2.0rad")
@@ -98,6 +132,10 @@ public class TestCLIUnitConverters
         /** */
         @Option(names = {"--area"}, description = "Area", defaultValue = "2.0m^2")
         protected Area area;
+
+        /** */
+        @Option(names = {"--catalyticactivity"}, description = "CatalyticActivity", defaultValue = "2.0kat")
+        protected CatalyticActivity catalyticactivity;
 
         /** */
         @Option(names = {"--density"}, description = "Density", defaultValue = "2.0kg/m^3")
@@ -116,24 +154,40 @@ public class TestCLIUnitConverters
         protected Duration duration;
 
         /** */
+        @Option(names = {"--electricalcapacitance"}, description = "ElectricalCapacitance", defaultValue = "2.0F")
+        protected ElectricalCapacitance electricalcapacitance;
+
+        /** */
         @Option(names = {"--electricalcharge"}, description = "ElectricalCharge", defaultValue = "2.0C")
         protected ElectricalCharge electricalcharge;
+
+        /** */
+        @Option(names = {"--electricalconductance"}, description = "ElectricalConductance", defaultValue = "2.0S")
+        protected ElectricalConductance electricalconductance;
 
         /** */
         @Option(names = {"--electricalcurrent"}, description = "ElectricalCurrent", defaultValue = "2.0A")
         protected ElectricalCurrent electricalcurrent;
 
         /** */
+        @Option(names = {"--electricalinductance"}, description = "ElectricalInductance", defaultValue = "2.0H")
+        protected ElectricalInductance electricalinductance;
+
+        /** */
         @Option(names = {"--electricalpotential"}, description = "ElectricalPotential", defaultValue = "2.0V")
         protected ElectricalPotential electricalpotential;
 
         /** */
-        @Option(names = {"--electricalresistance"}, description = "ElectricalResistance", defaultValue = "2.0Ohm")
+        @Option(names = { "--electricalresistance" }, description = "ElectricalResistance", defaultValue = "2.0ohm")
         protected ElectricalResistance electricalresistance;
 
         /** */
         @Option(names = {"--energy"}, description = "Energy", defaultValue = "2.0J")
         protected Energy energy;
+
+        /** */
+        @Option(names = {"--equivalentdose"}, description = "EquivalentDose", defaultValue = "2.0Sv")
+        protected EquivalentDose equivalentdose;
 
         /** */
         @Option(names = {"--flowmass"}, description = "FlowMass", defaultValue = "2.0kg/s")
@@ -152,12 +206,32 @@ public class TestCLIUnitConverters
         protected Frequency frequency;
 
         /** */
+        @Option(names = {"--illuminance"}, description = "Illuminance", defaultValue = "2.0lx")
+        protected Illuminance illuminance;
+
+        /** */
         @Option(names = {"--length"}, description = "Length", defaultValue = "2.0m")
         protected Length length;
 
         /** */
         @Option(names = {"--lineardensity"}, description = "LinearDensity", defaultValue = "2.0/m")
         protected LinearDensity lineardensity;
+
+        /** */
+        @Option(names = {"--luminousflux"}, description = "LuminousFlux", defaultValue = "2.0lm")
+        protected LuminousFlux luminousflux;
+
+        /** */
+        @Option(names = {"--luminousintensity"}, description = "LuminousIntensity", defaultValue = "2.0cd")
+        protected LuminousIntensity luminousintensity;
+
+        /** */
+        @Option(names = {"--magneticflux"}, description = "MagneticFlux", defaultValue = "2.0Wb")
+        protected MagneticFlux magneticflux;
+
+        /** */
+        @Option(names = {"--magneticfluxdensity"}, description = "MagneticFluxDensity", defaultValue = "2.0T")
+        protected MagneticFluxDensity magneticfluxdensity;
 
         /** */
         @Option(names = {"--mass"}, description = "Mass", defaultValue = "2.0kg")
@@ -174,6 +248,10 @@ public class TestCLIUnitConverters
         /** */
         @Option(names = {"--pressure"}, description = "Pressure", defaultValue = "2.0Pa")
         protected Pressure pressure;
+
+        /** */
+        @Option(names = {"--radioactivity"}, description = "RadioActivity", defaultValue = "2.0Bq")
+        protected RadioActivity radioactivity;
 
         /** */
         @Option(names = {"--speed"}, description = "Speed", defaultValue = "2.0m/s")
@@ -212,6 +290,14 @@ public class TestCLIUnitConverters
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
+        assertEquals(new AbsorbedDose(200.0, AbsorbedDoseUnit.GRAY), options.absorbeddose);
+        args = new String[] {"--absorbeddose", "100.0erg/g"};
+        CliUtil.execute(options, args);
+        assertEquals(new AbsorbedDose(100.0, AbsorbedDoseUnit.ERG_PER_GRAM), options.absorbeddose);
+
+        args = new String[] {};
+        options = new Options();
+        CliUtil.execute(options, args);
         assertEquals(new AbsoluteTemperature(200.0, AbsoluteTemperatureUnit.KELVIN), options.absolutetemperature);
         args = new String[] {"--absolutetemperature", "100.0C"};
         CliUtil.execute(options, args);
@@ -224,6 +310,14 @@ public class TestCLIUnitConverters
         args = new String[] {"--acceleration", "1.0km/h^2"};
         CliUtil.execute(options, args);
         assertEquals(new Acceleration(1.0, AccelerationUnit.KM_PER_HOUR_2), options.acceleration);
+
+        args = new String[] {};
+        options = new Options();
+        CliUtil.execute(options, args);
+        assertEquals(new AmountOfSubstance(200.0, AmountOfSubstanceUnit.MOLE), options.amountofsubstance);
+        args = new String[] {"--amountofsubstance", "10.0mmol"};
+        CliUtil.execute(options, args);
+        assertEquals(new AmountOfSubstance(10.0, AmountOfSubstanceUnit.MILLIMOLE), options.amountofsubstance);
 
         args = new String[] {};
         options = new Options();
@@ -245,9 +339,17 @@ public class TestCLIUnitConverters
         options = new Options();
         CliUtil.execute(options, args);
         assertEquals(new Area(2.0, AreaUnit.SQUARE_METER), options.area);
-        args = new String[] {"--area", "1.0acre"};
+        args = new String[] {"--area", "1.0ac"};
         CliUtil.execute(options, args);
         assertEquals(new Area(1.0, AreaUnit.ACRE), options.area);
+
+        args = new String[] {};
+        options = new Options();
+        CliUtil.execute(options, args);
+        assertEquals(new CatalyticActivity(2.0, CatalyticActivityUnit.KATAL), options.catalyticactivity);
+        args = new String[] {"--catalyticactivity", "1.0mkat"};
+        CliUtil.execute(options, args);
+        assertEquals(new CatalyticActivity(1.0, CatalyticActivityUnit.MILLIKATAL), options.catalyticactivity);
 
         args = new String[] {};
         options = new Options();
@@ -284,6 +386,14 @@ public class TestCLIUnitConverters
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
+        assertEquals(new ElectricalCapacitance(2.0, ElectricalCapacitanceUnit.FARAD), options.electricalcapacitance);
+        args = new String[] {"--electricalcapacitance", "1.0uF"};
+        CliUtil.execute(options, args);
+        assertEquals(new ElectricalCapacitance(1.0, ElectricalCapacitanceUnit.MICROFARAD), options.electricalcapacitance);
+
+        args = new String[] {};
+        options = new Options();
+        CliUtil.execute(options, args);
         assertEquals(new ElectricalCharge(2.0, ElectricalChargeUnit.COULOMB), options.electricalcharge);
         args = new String[] {"--electricalcharge", "1.0e"};
         CliUtil.execute(options, args);
@@ -292,10 +402,26 @@ public class TestCLIUnitConverters
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
+        assertEquals(new ElectricalConductance(2.0, ElectricalConductanceUnit.SIEMENS), options.electricalconductance);
+        args = new String[] {"--electricalconductance", "1.0mS"};
+        CliUtil.execute(options, args);
+        assertEquals(new ElectricalConductance(1.0, ElectricalConductanceUnit.MILLISIEMENS), options.electricalconductance);
+
+        args = new String[] {};
+        options = new Options();
+        CliUtil.execute(options, args);
         assertEquals(new ElectricalCurrent(2.0, ElectricalCurrentUnit.AMPERE), options.electricalcurrent);
         args = new String[] {"--electricalcurrent", "1.0statA"};
         CliUtil.execute(options, args);
         assertEquals(new ElectricalCurrent(1.0, ElectricalCurrentUnit.STATAMPERE), options.electricalcurrent);
+
+        args = new String[] {};
+        options = new Options();
+        CliUtil.execute(options, args);
+        assertEquals(new ElectricalInductance(2.0, ElectricalInductanceUnit.HENRY), options.electricalinductance);
+        args = new String[] {"--electricalinductance", "1.0mH"};
+        CliUtil.execute(options, args);
+        assertEquals(new ElectricalInductance(1.0, ElectricalInductanceUnit.MILLIHENRY), options.electricalinductance);
 
         args = new String[] {};
         options = new Options();
@@ -309,7 +435,7 @@ public class TestCLIUnitConverters
         options = new Options();
         CliUtil.execute(options, args);
         assertEquals(new ElectricalResistance(2.0, ElectricalResistanceUnit.OHM), options.electricalresistance);
-        args = new String[] {"--electricalresistance", "1.0stOhm"};
+        args = new String[] { "--electricalresistance", "1.0stohm" };
         CliUtil.execute(options, args);
         assertEquals(new ElectricalResistance(1.0, ElectricalResistanceUnit.STATOHM), options.electricalresistance);
 
@@ -324,6 +450,14 @@ public class TestCLIUnitConverters
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
+        assertEquals(new EquivalentDose(2.0, EquivalentDoseUnit.SIEVERT), options.equivalentdose);
+        args = new String[] { "--equivalentdose", "1.0rem" };
+        CliUtil.execute(options, args);
+        assertEquals(new EquivalentDose(1.0, EquivalentDoseUnit.REM), options.equivalentdose);
+
+        args = new String[] {};
+        options = new Options();
+        CliUtil.execute(options, args);
         assertEquals(new FlowMass(2.0, FlowMassUnit.KILOGRAM_PER_SECOND), options.flowmass);
         args = new String[] {"--flowmass", "1.0lb/s"};
         CliUtil.execute(options, args);
@@ -333,7 +467,7 @@ public class TestCLIUnitConverters
         options = new Options();
         CliUtil.execute(options, args);
         assertEquals(new FlowVolume(2.0, FlowVolumeUnit.CUBIC_METER_PER_SECOND), options.flowvolume);
-        args = new String[] {"--flowvolume", "1.0gal/day"};
+        args = new String[] {"--flowvolume", "1.0gal(US)/day"};
         CliUtil.execute(options, args);
         assertEquals(new FlowVolume(1.0, FlowVolumeUnit.GALLON_US_PER_DAY), options.flowvolume);
 
@@ -356,6 +490,14 @@ public class TestCLIUnitConverters
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
+        assertEquals(new Illuminance(2.0, IlluminanceUnit.LUX), options.illuminance);
+        args = new String[] {"--illuminance", "1.0ph"};
+        CliUtil.execute(options, args);
+        assertEquals(new Illuminance(1.0, IlluminanceUnit.PHOT), options.illuminance);
+
+        args = new String[] {};
+        options = new Options();
+        CliUtil.execute(options, args);
         assertEquals(new Length(2.0, LengthUnit.METER), options.length);
         args = new String[] {"--length", "1.0in"};
         CliUtil.execute(options, args);
@@ -372,10 +514,42 @@ public class TestCLIUnitConverters
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
+        assertEquals(new LuminousFlux(2.0, LuminousFluxUnit.LUMEN), options.luminousflux);
+        args = new String[] {"--luminousflux", "1.0srcd"};
+        CliUtil.execute(options, args);
+        assertEquals(new LuminousFlux(1.0, LuminousFluxUnit.SI), options.luminousflux);
+
+        args = new String[] {};
+        options = new Options();
+        CliUtil.execute(options, args);
+        assertEquals(new LuminousIntensity(2.0, LuminousIntensityUnit.CANDELA), options.luminousintensity);
+        args = new String[] {"--luminousintensity", "1.0cd"};
+        CliUtil.execute(options, args);
+        assertEquals(new LuminousIntensity(1.0, LuminousIntensityUnit.SI), options.luminousintensity);
+
+        args = new String[] {};
+        options = new Options();
+        CliUtil.execute(options, args);
         assertEquals(new Mass(2.0, MassUnit.KILOGRAM), options.mass);
         args = new String[] {"--mass", "1.0GeV"};
         CliUtil.execute(options, args);
         assertEquals(new Mass(1.0, MassUnit.GIGAELECTRONVOLT), options.mass);
+
+        args = new String[] {};
+        options = new Options();
+        CliUtil.execute(options, args);
+        assertEquals(new MagneticFlux(2.0, MagneticFluxUnit.WEBER), options.magneticflux);
+        args = new String[] {"--magneticflux", "1.0Mx"};
+        CliUtil.execute(options, args);
+        assertEquals(new MagneticFlux(1.0, MagneticFluxUnit.MAXWELL), options.magneticflux);
+
+        args = new String[] {};
+        options = new Options();
+        CliUtil.execute(options, args);
+        assertEquals(new MagneticFluxDensity(2.0, MagneticFluxDensityUnit.TESLA), options.magneticfluxdensity);
+        args = new String[] {"--magneticfluxdensity", "1.0G"};
+        CliUtil.execute(options, args);
+        assertEquals(new MagneticFluxDensity(1.0, MagneticFluxDensityUnit.GAUSS), options.magneticfluxdensity);
 
         args = new String[] {};
         options = new Options();
@@ -400,6 +574,14 @@ public class TestCLIUnitConverters
         args = new String[] {"--pressure", "1.0mmHg"};
         CliUtil.execute(options, args);
         assertEquals(new Pressure(1.0, PressureUnit.MILLIMETER_MERCURY), options.pressure);
+
+        args = new String[] {};
+        options = new Options();
+        CliUtil.execute(options, args);
+        assertEquals(new RadioActivity(2.0, RadioActivityUnit.BECQUEREL), options.radioactivity);
+        args = new String[] {"--radioactivity", "1.0Ci"};
+        CliUtil.execute(options, args);
+        assertEquals(new RadioActivity(1.0, RadioActivityUnit.CURIE), options.radioactivity);
 
         args = new String[] {};
         options = new Options();
