@@ -1,28 +1,41 @@
 package org.djutils.cli;
 
 import org.djunits.value.vdouble.scalar.AbsoluteTemperature;
+import org.djunits.value.vdouble.scalar.AbsorbedDose;
 import org.djunits.value.vdouble.scalar.Acceleration;
+import org.djunits.value.vdouble.scalar.AmountOfSubstance;
 import org.djunits.value.vdouble.scalar.Angle;
 import org.djunits.value.vdouble.scalar.Area;
+import org.djunits.value.vdouble.scalar.CatalyticActivity;
 import org.djunits.value.vdouble.scalar.Density;
 import org.djunits.value.vdouble.scalar.Dimensionless;
 import org.djunits.value.vdouble.scalar.Direction;
 import org.djunits.value.vdouble.scalar.Duration;
+import org.djunits.value.vdouble.scalar.ElectricalCapacitance;
 import org.djunits.value.vdouble.scalar.ElectricalCharge;
+import org.djunits.value.vdouble.scalar.ElectricalConductance;
 import org.djunits.value.vdouble.scalar.ElectricalCurrent;
+import org.djunits.value.vdouble.scalar.ElectricalInductance;
 import org.djunits.value.vdouble.scalar.ElectricalPotential;
 import org.djunits.value.vdouble.scalar.ElectricalResistance;
 import org.djunits.value.vdouble.scalar.Energy;
+import org.djunits.value.vdouble.scalar.EquivalentDose;
 import org.djunits.value.vdouble.scalar.FlowMass;
 import org.djunits.value.vdouble.scalar.FlowVolume;
 import org.djunits.value.vdouble.scalar.Force;
 import org.djunits.value.vdouble.scalar.Frequency;
+import org.djunits.value.vdouble.scalar.Illuminance;
 import org.djunits.value.vdouble.scalar.Length;
 import org.djunits.value.vdouble.scalar.LinearDensity;
+import org.djunits.value.vdouble.scalar.LuminousFlux;
+import org.djunits.value.vdouble.scalar.LuminousIntensity;
+import org.djunits.value.vdouble.scalar.MagneticFlux;
+import org.djunits.value.vdouble.scalar.MagneticFluxDensity;
 import org.djunits.value.vdouble.scalar.Mass;
 import org.djunits.value.vdouble.scalar.Position;
 import org.djunits.value.vdouble.scalar.Power;
 import org.djunits.value.vdouble.scalar.Pressure;
+import org.djunits.value.vdouble.scalar.RadioActivity;
 import org.djunits.value.vdouble.scalar.SolidAngle;
 import org.djunits.value.vdouble.scalar.Speed;
 import org.djunits.value.vdouble.scalar.Temperature;
@@ -54,30 +67,43 @@ public class CliUnitConverters
      */
     public static void registerAll(final CommandLine cmd)
     {
+        cmd.registerConverter(AbsorbedDose.class, new ABSORBEDDOSE());
         cmd.registerConverter(AbsoluteTemperature.class, new ABSOLUTETEMPERATURE());
         cmd.registerConverter(Acceleration.class, new ACCELERATION());
+        cmd.registerConverter(AmountOfSubstance.class, new AMOUNTOFSUBSTANCE());
         cmd.registerConverter(Angle.class, new ANGLE());
-        cmd.registerConverter(SolidAngle.class, new SOLIDANGLE());
         cmd.registerConverter(Area.class, new AREA());
+        cmd.registerConverter(CatalyticActivity.class, new CATALYTICACTIVITY());
         cmd.registerConverter(Density.class, new DENSITY());
         cmd.registerConverter(Dimensionless.class, new DIMENSIONLESS());
         cmd.registerConverter(Direction.class, new DIRECTION());
         cmd.registerConverter(Duration.class, new DURATION());
+        cmd.registerConverter(ElectricalCapacitance.class, new ELECTRICALCAPACITANCE());
         cmd.registerConverter(ElectricalCharge.class, new ELECTRICALCHARGE());
         cmd.registerConverter(ElectricalCurrent.class, new ELECTRICALCURRENT());
+        cmd.registerConverter(ElectricalConductance.class, new ELECTRICALCONDUCTANCE());
+        cmd.registerConverter(ElectricalInductance.class, new ELECTRICALINDUCTANCE());
         cmd.registerConverter(ElectricalPotential.class, new ELECTRICALPOTENTIAL());
         cmd.registerConverter(ElectricalResistance.class, new ELECTRICALRESISTANCE());
         cmd.registerConverter(Energy.class, new ENERGY());
+        cmd.registerConverter(EquivalentDose.class, new EQUIVALENTDOSE());
         cmd.registerConverter(FlowMass.class, new FLOWMASS());
         cmd.registerConverter(FlowVolume.class, new FLOWVOLUME());
         cmd.registerConverter(Force.class, new FORCE());
         cmd.registerConverter(Frequency.class, new FREQUENCY());
+        cmd.registerConverter(Illuminance.class, new ILLUMINANCE());
         cmd.registerConverter(Length.class, new LENGTH());
         cmd.registerConverter(LinearDensity.class, new LINEARDENSITY());
+        cmd.registerConverter(LuminousFlux.class, new LUMINOUSFLUX());
+        cmd.registerConverter(LuminousIntensity.class, new LUMINOUSINTENSITY());
+        cmd.registerConverter(MagneticFlux.class, new MAGNETICFLUX());
+        cmd.registerConverter(MagneticFluxDensity.class, new MAGNETICFLUXDENSITY());
         cmd.registerConverter(Mass.class, new MASS());
+        cmd.registerConverter(SolidAngle.class, new SOLIDANGLE());
         cmd.registerConverter(Position.class, new POSITION());
         cmd.registerConverter(Power.class, new POWER());
         cmd.registerConverter(Pressure.class, new PRESSURE());
+        cmd.registerConverter(RadioActivity.class, new RADIOACTIVITY());
         cmd.registerConverter(Speed.class, new SPEED());
         cmd.registerConverter(Temperature.class, new TEMPERATURE());
         cmd.registerConverter(Time.class, new TIME());
@@ -85,6 +111,18 @@ public class CliUnitConverters
         cmd.registerConverter(Volume.class, new VOLUME());
     }
 
+    /**
+     * Convert an absorbed dose String with unit on the command line to an AbsorbedDose scalar.
+     */
+    public static class ABSORBEDDOSE implements ITypeConverter<AbsorbedDose>
+    {
+        @Override
+        public AbsorbedDose convert(String value) throws Exception
+        {
+            return AbsorbedDose.valueOf(value);
+        }
+    }
+    
     /**
      * Convert an absolute temperature String with unit on the command line to an AbsoluteTemperature scalar.
      */
@@ -112,6 +150,19 @@ public class CliUnitConverters
     }
 
     /**
+     * Convert an amount of substance String with unit on the command line to an Angle scalar.
+     */
+    public static class AMOUNTOFSUBSTANCE implements ITypeConverter<AmountOfSubstance>
+    {
+        /** {@inheritDoc} */
+        @Override
+        public AmountOfSubstance convert(final String value) throws Exception
+        {
+            return AmountOfSubstance.valueOf(value);
+        }
+    }
+
+    /**
      * Convert an angle String with unit on the command line to an Angle scalar.
      */
     public static class ANGLE implements ITypeConverter<Angle>
@@ -125,19 +176,6 @@ public class CliUnitConverters
     }
 
     /**
-     * Convert a solid angle String with unit on the command line to an SolidAngle scalar.
-     */
-    public static class SOLIDANGLE implements ITypeConverter<SolidAngle>
-    {
-        /** {@inheritDoc} */
-        @Override
-        public SolidAngle convert(final String value) throws Exception
-        {
-            return SolidAngle.valueOf(value);
-        }
-    }
-
-    /**
      * Convert an area String with unit on the command line to an Area scalar.
      */
     public static class AREA implements ITypeConverter<Area>
@@ -147,6 +185,19 @@ public class CliUnitConverters
         public Area convert(final String value) throws Exception
         {
             return Area.valueOf(value);
+        }
+    }
+
+    /**
+     * Convert a catalytic activity String with unit on the command line to a Density scalar.
+     */
+    public static class CATALYTICACTIVITY implements ITypeConverter<CatalyticActivity>
+    {
+        /** {@inheritDoc} */
+        @Override
+        public CatalyticActivity convert(final String value) throws Exception
+        {
+            return CatalyticActivity.valueOf(value);
         }
     }
 
@@ -213,6 +264,19 @@ public class CliUnitConverters
     /**
      * Convert an electrical charge String with unit on the command line to an ElectricalCharge scalar.
      */
+    public static class ELECTRICALCAPACITANCE implements ITypeConverter<ElectricalCapacitance>
+    {
+        /** {@inheritDoc} */
+        @Override
+        public ElectricalCapacitance convert(final String value) throws Exception
+        {
+            return ElectricalCapacitance.valueOf(value);
+        }
+    }
+
+    /**
+     * Convert an electrical charge String with unit on the command line to an ElectricalCharge scalar.
+     */
     public static class ELECTRICALCHARGE implements ITypeConverter<ElectricalCharge>
     {
         /** {@inheritDoc} */
@@ -220,6 +284,19 @@ public class CliUnitConverters
         public ElectricalCharge convert(final String value) throws Exception
         {
             return ElectricalCharge.valueOf(value);
+        }
+    }
+
+    /**
+     * Convert an electrical conductance String with unit on the command line to an ElectricalConductance scalar.
+     */
+    public static class ELECTRICALCONDUCTANCE implements ITypeConverter<ElectricalConductance>
+    {
+        /** {@inheritDoc} */
+        @Override
+        public ElectricalConductance convert(final String value) throws Exception
+        {
+            return ElectricalConductance.valueOf(value);
         }
     }
 
@@ -233,6 +310,19 @@ public class CliUnitConverters
         public ElectricalCurrent convert(final String value) throws Exception
         {
             return ElectricalCurrent.valueOf(value);
+        }
+    }
+
+    /**
+     * Convert an electrical inductance String with unit on the command line to an ElectricalInductance scalar.
+     */
+    public static class ELECTRICALINDUCTANCE implements ITypeConverter<ElectricalInductance>
+    {
+        /** {@inheritDoc} */
+        @Override
+        public ElectricalInductance convert(final String value) throws Exception
+        {
+            return ElectricalInductance.valueOf(value);
         }
     }
 
@@ -272,6 +362,19 @@ public class CliUnitConverters
         public Energy convert(final String value) throws Exception
         {
             return Energy.valueOf(value);
+        }
+    }
+
+    /**
+     * Convert an energy String with unit on the command line to an Energy scalar.
+     */
+    public static class EQUIVALENTDOSE implements ITypeConverter<EquivalentDose>
+    {
+        /** {@inheritDoc} */
+        @Override
+        public EquivalentDose convert(final String value) throws Exception
+        {
+            return EquivalentDose.valueOf(value);
         }
     }
 
@@ -328,6 +431,19 @@ public class CliUnitConverters
     }
 
     /**
+     * Convert an illuminance String with unit on the command line to an Illuminance scalar.
+     */
+    public static class ILLUMINANCE implements ITypeConverter<Illuminance>
+    {
+        /** {@inheritDoc} */
+        @Override
+        public Illuminance convert(final String value) throws Exception
+        {
+            return Illuminance.valueOf(value);
+        }
+    }
+
+    /**
      * Convert a length String with unit on the command line to a Length scalar.
      */
     public static class LENGTH implements ITypeConverter<Length>
@@ -350,6 +466,58 @@ public class CliUnitConverters
         public LinearDensity convert(final String value) throws Exception
         {
             return LinearDensity.valueOf(value);
+        }
+    }
+
+    /**
+     * Convert a luminous flux String with unit on the command line to a LuminousFlux scalar.
+     */
+    public static class LUMINOUSFLUX implements ITypeConverter<LuminousFlux>
+    {
+        /** {@inheritDoc} */
+        @Override
+        public LuminousFlux convert(final String value) throws Exception
+        {
+            return LuminousFlux.valueOf(value);
+        }
+    }
+
+    /**
+     * Convert a luminous intensity String with unit on the command line to a LuminousIntensity scalar.
+     */
+    public static class LUMINOUSINTENSITY implements ITypeConverter<LuminousIntensity>
+    {
+        /** {@inheritDoc} */
+        @Override
+        public LuminousIntensity convert(final String value) throws Exception
+        {
+            return LuminousIntensity.valueOf(value);
+        }
+    }
+
+    /**
+     * Convert a magnetic flux String with unit on the command line to a MagneticFlux scalar.
+     */
+    public static class MAGNETICFLUX implements ITypeConverter<MagneticFlux>
+    {
+        /** {@inheritDoc} */
+        @Override
+        public MagneticFlux convert(final String value) throws Exception
+        {
+            return MagneticFlux.valueOf(value);
+        }
+    }
+
+    /**
+     * Convert a magnetic flux density String with unit on the command line to a MagneticFluxDensity scalar.
+     */
+    public static class MAGNETICFLUXDENSITY implements ITypeConverter<MagneticFluxDensity>
+    {
+        /** {@inheritDoc} */
+        @Override
+        public MagneticFluxDensity convert(final String value) throws Exception
+        {
+            return MagneticFluxDensity.valueOf(value);
         }
     }
 
@@ -402,6 +570,32 @@ public class CliUnitConverters
         public Pressure convert(final String value) throws Exception
         {
             return Pressure.valueOf(value);
+        }
+    }
+
+    /**
+     * Convert a radio activity String with unit on the command line to a RadioActivity scalar.
+     */
+    public static class RADIOACTIVITY implements ITypeConverter<RadioActivity>
+    {
+        /** {@inheritDoc} */
+        @Override
+        public RadioActivity convert(final String value) throws Exception
+        {
+            return RadioActivity.valueOf(value);
+        }
+    }
+
+    /**
+     * Convert a solid angle String with unit on the command line to an SolidAngle scalar.
+     */
+    public static class SOLIDANGLE implements ITypeConverter<SolidAngle>
+    {
+        /** {@inheritDoc} */
+        @Override
+        public SolidAngle convert(final String value) throws Exception
+        {
+            return SolidAngle.valueOf(value);
         }
     }
 
