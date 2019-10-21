@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.djunits.unit.AbsoluteTemperatureUnit;
 import org.djunits.unit.AccelerationUnit;
-import org.djunits.unit.AngleSolidUnit;
+import org.djunits.unit.SolidAngleUnit;
 import org.djunits.unit.AngleUnit;
 import org.djunits.unit.AreaUnit;
 import org.djunits.unit.DensityUnit;
@@ -34,7 +34,7 @@ import org.djunits.unit.VolumeUnit;
 import org.djunits.value.vdouble.scalar.AbsoluteTemperature;
 import org.djunits.value.vdouble.scalar.Acceleration;
 import org.djunits.value.vdouble.scalar.Angle;
-import org.djunits.value.vdouble.scalar.AngleSolid;
+import org.djunits.value.vdouble.scalar.SolidAngle;
 import org.djunits.value.vdouble.scalar.Area;
 import org.djunits.value.vdouble.scalar.Density;
 import org.djunits.value.vdouble.scalar.Dimensionless;
@@ -92,8 +92,8 @@ public class TestCLIUnitConverters
         protected Angle angle;
 
         /** */
-        @Option(names = {"--anglesolid"}, description = "AngleSolid", defaultValue = "2.0sr")
-        protected AngleSolid anglesolid;
+        @Option(names = {"--anglesolid"}, description = "SolidAngle", defaultValue = "2.0sr")
+        protected SolidAngle anglesolid;
 
         /** */
         @Option(names = {"--area"}, description = "Area", defaultValue = "2.0m^2")
@@ -236,10 +236,10 @@ public class TestCLIUnitConverters
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new AngleSolid(2.0, AngleSolidUnit.STERADIAN), options.anglesolid);
+        assertEquals(new SolidAngle(2.0, SolidAngleUnit.STERADIAN), options.anglesolid);
         args = new String[] {"--anglesolid", "1.0sq.deg"};
         CliUtil.execute(options, args);
-        assertEquals(new AngleSolid(1.0, AngleSolidUnit.SQUARE_DEGREE), options.anglesolid);
+        assertEquals(new SolidAngle(1.0, SolidAngleUnit.SQUARE_DEGREE), options.anglesolid);
 
         args = new String[] {};
         options = new Options();
@@ -335,7 +335,7 @@ public class TestCLIUnitConverters
         assertEquals(new FlowVolume(2.0, FlowVolumeUnit.CUBIC_METER_PER_SECOND), options.flowvolume);
         args = new String[] {"--flowvolume", "1.0gal/day"};
         CliUtil.execute(options, args);
-        assertEquals(new FlowVolume(1.0, FlowVolumeUnit.GALLON_PER_DAY), options.flowvolume);
+        assertEquals(new FlowVolume(1.0, FlowVolumeUnit.GALLON_US_PER_DAY), options.flowvolume);
 
         args = new String[] {};
         options = new Options();

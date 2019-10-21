@@ -3,7 +3,6 @@ package org.djutils.cli;
 import org.djunits.value.vdouble.scalar.AbsoluteTemperature;
 import org.djunits.value.vdouble.scalar.Acceleration;
 import org.djunits.value.vdouble.scalar.Angle;
-import org.djunits.value.vdouble.scalar.AngleSolid;
 import org.djunits.value.vdouble.scalar.Area;
 import org.djunits.value.vdouble.scalar.Density;
 import org.djunits.value.vdouble.scalar.Dimensionless;
@@ -24,6 +23,7 @@ import org.djunits.value.vdouble.scalar.Mass;
 import org.djunits.value.vdouble.scalar.Position;
 import org.djunits.value.vdouble.scalar.Power;
 import org.djunits.value.vdouble.scalar.Pressure;
+import org.djunits.value.vdouble.scalar.SolidAngle;
 import org.djunits.value.vdouble.scalar.Speed;
 import org.djunits.value.vdouble.scalar.Temperature;
 import org.djunits.value.vdouble.scalar.Time;
@@ -57,7 +57,7 @@ public class CliUnitConverters
         cmd.registerConverter(AbsoluteTemperature.class, new ABSOLUTETEMPERATURE());
         cmd.registerConverter(Acceleration.class, new ACCELERATION());
         cmd.registerConverter(Angle.class, new ANGLE());
-        cmd.registerConverter(AngleSolid.class, new ANGLESOLID());
+        cmd.registerConverter(SolidAngle.class, new SOLIDANGLE());
         cmd.registerConverter(Area.class, new AREA());
         cmd.registerConverter(Density.class, new DENSITY());
         cmd.registerConverter(Dimensionless.class, new DIMENSIONLESS());
@@ -125,15 +125,15 @@ public class CliUnitConverters
     }
 
     /**
-     * Convert a solid angle String with unit on the command line to an AngleSolid scalar.
+     * Convert a solid angle String with unit on the command line to an SolidAngle scalar.
      */
-    public static class ANGLESOLID implements ITypeConverter<AngleSolid>
+    public static class SOLIDANGLE implements ITypeConverter<SolidAngle>
     {
         /** {@inheritDoc} */
         @Override
-        public AngleSolid convert(final String value) throws Exception
+        public SolidAngle convert(final String value) throws Exception
         {
-            return AngleSolid.valueOf(value);
+            return SolidAngle.valueOf(value);
         }
     }
 
@@ -179,7 +179,7 @@ public class CliUnitConverters
             catch (Exception e)
             {
                 // try to return the number as a Dimensionless value
-                return Dimensionless.createSI(Double.parseDouble(value));
+                return Dimensionless.instantiateSI(Double.parseDouble(value));
             }
         }
     }
