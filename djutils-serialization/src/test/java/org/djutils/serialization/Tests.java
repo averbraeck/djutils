@@ -998,6 +998,58 @@ public class Tests
     }
 
     /**
+     * Test all constructors for SerializationRuntimeException.
+     */
+    @Test
+    public final void serializationRuntimeExceptionTest()
+    {
+        String message = "MessageString";
+        Exception e = new SerializationRuntimeException(message);
+        assertEquals("message should be our message", message, e.getMessage());
+        assertEquals("cause should be null", null, e.getCause());
+        e = new SerializationRuntimeException();
+        assertEquals("cause should be null", null, e.getCause());
+        String causeString = "CauseString";
+        Throwable cause = new Throwable(causeString);
+        e = new SerializationRuntimeException(cause);
+        assertEquals("cause should not be our cause", cause, e.getCause());
+        assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+        e = new SerializationRuntimeException(message, cause);
+        assertEquals("message should be our message", message, e.getMessage());
+        assertEquals("cause should not be our cause", cause, e.getCause());
+        assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+        for (boolean enableSuppression : new boolean[] {true, false})
+        {
+            for (boolean writableStackTrace : new boolean[] {true, false})
+            {
+                e = new SerializationRuntimeException(message, cause, enableSuppression, writableStackTrace);
+                assertTrue("Exception should not be null", null != e);
+                assertEquals("message should be our message", message, e.getMessage());
+                assertEquals("cause should not be our cause", cause, e.getCause());
+                assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+                // Don't know how to check if suppression is enabled/disabled
+                StackTraceElement[] stackTrace = new StackTraceElement[1];
+                stackTrace[0] = new StackTraceElement("a", "b", "c", 1234);
+                try
+                {
+                    e.setStackTrace(stackTrace);
+                }
+                catch (Exception e1)
+                {
+                    assertTrue("Stack trace should be writable", writableStackTrace);
+                    continue;
+                }
+                // You wouldn't believe it, but a call to setStackTrace if non-writable is silently ignored
+                StackTraceElement[] retrievedStackTrace = e.getStackTrace();
+                if (retrievedStackTrace.length > 0)
+                {
+                    assertTrue("stack trace should be writable", writableStackTrace);
+                }
+            }
+        }
+    }
+
+    /**
      * Test the remainder of the EndianUtil class.
      */
     @Test
