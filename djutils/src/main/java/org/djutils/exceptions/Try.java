@@ -617,7 +617,6 @@ public final class Try
         T exception;
         try
         {
-            @SuppressWarnings("unchecked")
             Constructor<T> constructor = (Constructor<T>) ClassUtil.resolveConstructor(throwableClass,
                     new Class<?>[] {String.class, Throwable.class});
             List<StackTraceElement> steCause = new ArrayList<>(Arrays.asList(cause.getStackTrace()));
