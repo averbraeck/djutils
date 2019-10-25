@@ -598,8 +598,13 @@ public final class Try
     {
         // create a clear message
         List<StackTraceElement> steList = new ArrayList<>(Arrays.asList(new Throwable().getStackTrace()));
-        steList.remove(0); // remove the catchThrowable(...) call
-        steList.remove(0); // remove the Attemp.assign/execute(...) call
+        // see https://stackoverflow.com/questions/2411487/nullpointerexception-in-java-with-no-stacktrace
+        // and https://hg.openjdk.java.net/jdk/jdk/file/tip/src/hotspot/share/opto/graphKit.cpp
+        if (steList.size() > 2)
+        {
+            steList.remove(0); // remove the catchThrowable(...) call
+            steList.remove(0); // remove the Attemp.assign/execute(...) call
+        }
         StackTraceElement[] ste = steList.toArray(new StackTraceElement[steList.size()]);
         String where = ste[0].getClassName() + "." + ste[0].getMethodName() + " (" + ste[0].getLineNumber() + "): ";
         Object[] args = argList.toArray();
@@ -617,12 +622,18 @@ public final class Try
         T exception;
         try
         {
-            Constructor<T> constructor = (Constructor<T>) ClassUtil.resolveConstructor(throwableClass,
-                    new Class<?>[] {String.class, Throwable.class});
+            Constructor<T> constructor =
+                    ClassUtil.resolveConstructor(throwableClass, new Class<?>[] {String.class, Throwable.class});
             List<StackTraceElement> steCause = new ArrayList<>(Arrays.asList(cause.getStackTrace()));
-            steCause.remove(steCause.size() - 1); // remove method that called Attemp.assign/execute(...) as that's in steList
-            steCause.remove(steCause.size() - 1); // remove the Attemp.assign/execute(...) call
-            steCause.remove(steCause.size() - 1); // remove the Assignment/Execution implementation (can be lambda$#)
+            // see https://stackoverflow.com/questions/2411487/nullpointerexception-in-java-with-no-stacktrace
+            // and https://hg.openjdk.java.net/jdk/jdk/file/tip/src/hotspot/share/opto/graphKit.cpp
+            if (steList.size() > 3)
+            {
+                steCause.remove(steCause.size() - 1); // remove method that called Attemp.assign/execute(...) as that's in
+                                                      // steList
+                steCause.remove(steCause.size() - 1); // remove the Attemp.assign/execute(...) call
+                steCause.remove(steCause.size() - 1); // remove the Assignment/Execution implementation (can be lambda$#)
+            }
             cause.setStackTrace(steCause.toArray(new StackTraceElement[steCause.size()]));
             exception = constructor.newInstance(formattedMessage, cause);
             exception.setStackTrace(ste);
