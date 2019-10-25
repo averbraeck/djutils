@@ -2,6 +2,7 @@ package org.djutils.exceptions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -17,7 +18,9 @@ import org.junit.Test;
  */
 public class ThrowTest
 {
-    /** */
+    /**
+     * Test the Throw class.
+     */
     @Test
     public void testThrow()
     {
@@ -155,6 +158,106 @@ public class ThrowTest
         assertEquals(d, Throw.when(d, false, RuntimeException.class, message3arg, d, s, i));
         assertEquals(d, Throw.when(d, false, RuntimeException.class, message4arg, d, s, hex, i));
 
+        try
+        {
+            Throw.when(true, RuntimeException.class, message);
+            fail("Throw.when(true, ...) should have thrown an exception");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("exception is a RuntimeException", rte instanceof RuntimeException);
+            assertTrue("message is present", rte.getMessage().contains(message));
+        }
+
+        String badFormatString = "FormatString with bad placeholder %f";
+        String notAFloatOrDouble = "this is not a float or double";
+        try
+        {
+            Throw.when(true, RuntimeException.class, badFormatString, notAFloatOrDouble);
+            fail("Throw.when(true, ...) should have thrown an exception");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("exception is a RuntimeException", rte instanceof RuntimeException);
+            assertTrue("description is descriptive, despite error in format string",
+                    rte.getMessage().contains(badFormatString));
+            assertTrue("description is descriptive, despite error in format string",
+                    rte.getMessage().contains(notAFloatOrDouble));
+        }
+
+        try
+        {
+            Throw.when("result (which will not be returned because there will be no return)", true, RuntimeException.class,
+                    badFormatString, notAFloatOrDouble);
+            fail("Throw.when(true, ...) should have thrown an exception");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("exception is a RuntimeException", rte instanceof RuntimeException);
+            assertTrue("description is descriptive, despite error in format string",
+                    rte.getMessage().contains(badFormatString));
+            assertTrue("description is descriptive, despite error in format string",
+                    rte.getMessage().contains(notAFloatOrDouble));
+        }
+
+        try
+        {
+            Throw.when("result (which will not be returned because there will be no return)", true, RuntimeException.class,
+                    message);
+            fail("Throw.when(true, ...) should have thrown an exception");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("exception is a RuntimeException", rte instanceof RuntimeException);
+            assertTrue("description is descriptive", rte.getMessage().contains(message));
+        }
+
+        Object result = new Double(123/456);
+        String formatStringWith2PlaceHolders = "message %s %s";
+        String arg1 = "arg1";
+        String arg2 = "arg2";
+        try
+        {
+            Throw.when(result, true, RuntimeException.class, formatStringWith2PlaceHolders, arg1, arg2);
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("exception is a RuntimeException", rte instanceof RuntimeException);
+            assertTrue("description is descriptive", rte.getMessage().contains("message"));
+            assertTrue("description is descriptive", rte.getMessage().contains(arg1));
+            assertTrue("description is descriptive", rte.getMessage().contains(arg2));
+        }
+
+        String formatStringWith3PlaceHolders = "message %s %s %s";
+        String arg3 = "arg3";
+        try
+        {
+            Throw.when(result, true, RuntimeException.class, formatStringWith3PlaceHolders, arg1, arg2, arg3);
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("exception is a RuntimeException", rte instanceof RuntimeException);
+            assertTrue("description is descriptive", rte.getMessage().contains("message"));
+            assertTrue("description is descriptive", rte.getMessage().contains(arg1));
+            assertTrue("description is descriptive", rte.getMessage().contains(arg2));
+            assertTrue("description is descriptive", rte.getMessage().contains(arg3));
+        }
+
+        String formatStringWith4PlaceHolders = "message %s %s %s %s";
+        String arg4 = "arg4";
+        try
+        {
+            Throw.when(result, true, RuntimeException.class, formatStringWith4PlaceHolders, arg1, arg2, arg3, arg4);
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("exception is a RuntimeException", rte instanceof RuntimeException);
+            assertTrue("description is descriptive", rte.getMessage().contains("message"));
+            assertTrue("description is descriptive", rte.getMessage().contains(arg1));
+            assertTrue("description is descriptive", rte.getMessage().contains(arg2));
+            assertTrue("description is descriptive", rte.getMessage().contains(arg3));
+            assertTrue("description is descriptive", rte.getMessage().contains(arg4));
+        }
     }
 
 }

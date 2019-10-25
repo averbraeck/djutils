@@ -225,7 +225,6 @@ public final class Throw
         T exception;
         try
         {
-            @SuppressWarnings("unchecked")
             Constructor<T> constructor =
                     (Constructor<T>) ClassUtil.resolveConstructor(throwableClass, new Class<?>[] {String.class});
             exception = constructor.newInstance(formattedMessage);
