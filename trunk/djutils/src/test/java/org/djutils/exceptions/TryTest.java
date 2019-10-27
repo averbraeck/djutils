@@ -45,7 +45,8 @@ public class TryTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
         }
         assertEquals("Result has not changed", initialValueOfResult, result);
@@ -57,7 +58,8 @@ public class TryTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
         }
@@ -70,7 +72,8 @@ public class TryTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
             assertTrue("message contains arg2", rte.getMessage().contains(arg2));
@@ -84,7 +87,8 @@ public class TryTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
             assertTrue("message contains arg2", rte.getMessage().contains(arg2));
@@ -99,7 +103,8 @@ public class TryTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
             assertTrue("message contains arg2", rte.getMessage().contains(arg2));
@@ -119,7 +124,8 @@ public class TryTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
         }
         assertEquals("Result has not changed", initialValueOfResult, result);
@@ -132,7 +138,8 @@ public class TryTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
         }
@@ -146,7 +153,8 @@ public class TryTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
             assertTrue("message contains arg2", rte.getMessage().contains(arg2));
@@ -161,7 +169,8 @@ public class TryTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
             assertTrue("message contains arg2", rte.getMessage().contains(arg2));
@@ -177,7 +186,8 @@ public class TryTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
             assertTrue("message contains arg2", rte.getMessage().contains(arg2));
@@ -189,12 +199,13 @@ public class TryTest
         try
         {
             Try.execute(() -> String.format(nullPointer, "unused argument"), RuntimeException.class, formatWithoutArg);
-            fail("String.format with nullPointer should have thrown a nullPointerException");
+            fail("String.format with nullPointer should have thrown a NullPointerException");
         }
         catch (RuntimeException rte)
         {
             System.out.println("Cause: " + rte.getCause().toString());
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
         }
         assertEquals("Result has not changed", initialValueOfResult, result);
@@ -207,7 +218,8 @@ public class TryTest
         catch (RuntimeException rte)
         {
             System.out.println("Cause: " + rte.getCause().toString());
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
         }
@@ -222,7 +234,8 @@ public class TryTest
         catch (RuntimeException rte)
         {
             System.out.println("Cause: " + rte.getCause().toString());
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
             assertTrue("message contains arg2", rte.getMessage().contains(arg2));
@@ -238,7 +251,8 @@ public class TryTest
         catch (RuntimeException rte)
         {
             System.out.println("Cause: " + rte.getCause().toString());
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
             assertTrue("message contains arg2", rte.getMessage().contains(arg2));
@@ -255,7 +269,8 @@ public class TryTest
         catch (RuntimeException rte)
         {
             System.out.println("Cause: " + rte.getCause().toString());
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
             assertTrue("message contains arg2", rte.getMessage().contains(arg2));
@@ -272,7 +287,8 @@ public class TryTest
         catch (RuntimeException rte)
         {
             System.out.println("Cause: " + rte.getCause().toString());
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
         }
         assertEquals("Result has not changed", initialValueOfResult, result);
@@ -285,7 +301,8 @@ public class TryTest
         catch (RuntimeException rte)
         {
             System.out.println("Cause: " + rte.getCause().toString());
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
         }
@@ -299,7 +316,8 @@ public class TryTest
         catch (RuntimeException rte)
         {
             System.out.println("Cause: " + rte.getCause().toString());
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
             assertTrue("message contains arg2", rte.getMessage().contains(arg2));
@@ -314,7 +332,8 @@ public class TryTest
         catch (RuntimeException rte)
         {
             System.out.println("Cause: " + rte.getCause().toString());
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
             assertTrue("message contains arg2", rte.getMessage().contains(arg2));
@@ -330,7 +349,8 @@ public class TryTest
         catch (RuntimeException rte)
         {
             System.out.println("Cause: " + rte.getCause().toString());
-            assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+            assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                    rte.getCause().toString().contains("NullPointerException"));
             assertTrue("message contains format", rte.getMessage().contains(formatWithoutArg));
             assertTrue("message contains arg1", rte.getMessage().contains(arg1));
             assertTrue("message contains arg2", rte.getMessage().contains(arg2));
@@ -387,7 +407,8 @@ public class TryTest
                 {
                     System.out.println("Expected NullPointerException; got " + rte.getCause().toString());
                 }
-                assertTrue("message cause is NullPointerException", rte.getCause().toString().contains("NullPointerException"));
+                assertTrue("message cause is NullPointerException, instead got: " + rte.getCause().toString(),
+                        rte.getCause().toString().contains("NullPointerException"));
             }
         }
     }

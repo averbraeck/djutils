@@ -603,7 +603,7 @@ public final class Try
         if (steList.size() > 2)
         {
             steList.remove(0); // remove the catchThrowable(...) call
-            steList.remove(0); // remove the Attemp.assign/execute(...) call
+            steList.remove(0); // remove the Try.assign/execute(...) call
         }
         StackTraceElement[] ste = steList.toArray(new StackTraceElement[steList.size()]);
         String where = ste[0].getClassName() + "." + ste[0].getMethodName() + " (" + ste[0].getLineNumber() + "): ";
@@ -627,14 +627,13 @@ public final class Try
             List<StackTraceElement> steCause = new ArrayList<>(Arrays.asList(cause.getStackTrace()));
             // see https://stackoverflow.com/questions/2411487/nullpointerexception-in-java-with-no-stacktrace
             // and https://hg.openjdk.java.net/jdk/jdk/file/tip/src/hotspot/share/opto/graphKit.cpp
-            if (steList.size() > 3)
+            if (steCause.size() > 3)
             {
-                steCause.remove(steCause.size() - 1); // remove method that called Attemp.assign/execute(...) as that's in
-                                                      // steList
-                steCause.remove(steCause.size() - 1); // remove the Attemp.assign/execute(...) call
+                steCause.remove(steCause.size() - 1); // remove method that called Try.assign/execute(...) 
+                steCause.remove(steCause.size() - 1); // remove the Try.assign/execute(...) call
                 steCause.remove(steCause.size() - 1); // remove the Assignment/Execution implementation (can be lambda$#)
+                cause.setStackTrace(steCause.toArray(new StackTraceElement[steCause.size()]));
             }
-            cause.setStackTrace(steCause.toArray(new StackTraceElement[steCause.size()]));
             exception = constructor.newInstance(formattedMessage, cause);
             exception.setStackTrace(ste);
         }
