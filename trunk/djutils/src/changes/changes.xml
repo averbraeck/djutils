@@ -10,6 +10,12 @@
       <action dev="averbraeck" type="update">
         DJUNITS updated to 4.01.01.
       </action>
+      <action dev="averbraeck" type="update">
+        Included jakarta.annotation-api to be compatible with Java 11+.
+      </action>
+      <action dev="averbraeck" type="fix">
+        tt-tag in javadoc replaced by code-tag to be compatible with HTML-5 and Java-11+.
+      </action>
     </release>
     
     <release version="1.03.01" date="2019-10-25" description="">

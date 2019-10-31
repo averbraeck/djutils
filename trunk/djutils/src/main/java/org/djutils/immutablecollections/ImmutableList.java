@@ -22,14 +22,14 @@ public interface ImmutableList<E> extends ImmutableCollection<E>
      * Returns the element at the specified position in this immutable list.
      * @param index int; index of the element to return
      * @return the element at the specified position in this immutable list
-     * @throws IndexOutOfBoundsException if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
+     * @throws IndexOutOfBoundsException if the index is out of range (<code>index &lt; 0 || index &gt;= size()</code>)
      */
     E get(int index);
 
     /**
      * Returns the index of the first occurrence of the specified element in this immutable list, or -1 if this immutable list
-     * does not contain the element. More formally, returns the lowest index <tt>i</tt> such that
-     * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>, or -1 if there is no such index.
+     * does not contain the element. More formally, returns the lowest index <code>i</code> such that
+     * <code>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</code>, or -1 if there is no such index.
      * @param o Object; element to search for
      * @return the index of the first occurrence of the specified element in this immutable list, or -1 if this immutable list
      *         does not contain the element
@@ -40,8 +40,8 @@ public interface ImmutableList<E> extends ImmutableCollection<E>
 
     /**
      * Returns the index of the last occurrence of the specified element in this immutable list, or -1 if this immutable list
-     * does not contain the element. More formally, returns the highest index <tt>i</tt> such that
-     * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>, or -1 if there is no such index.
+     * does not contain the element. More formally, returns the highest index <code>i</code> such that
+     * <code>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</code>, or -1 if there is no such index.
      * @param o Object; element to search for
      * @return the index of the last occurrence of the specified element in this immutable list, or -1 if this immutable list
      *         does not contain the element
@@ -51,14 +51,14 @@ public interface ImmutableList<E> extends ImmutableCollection<E>
     int lastIndexOf(Object o);
 
     /**
-     * Returns a safe, immutable copy of the portion of this immutable list between the specified <tt>fromIndex</tt>, inclusive,
-     * and <tt>toIndex</tt>, exclusive. (If <tt>fromIndex</tt> and <tt>toIndex</tt> are equal, the returned immutable list is
+     * Returns a safe, immutable copy of the portion of this immutable list between the specified <code>fromIndex</code>, inclusive,
+     * and <code>toIndex</code>, exclusive. (If <code>fromIndex</code> and <code>toIndex</code> are equal, the returned immutable list is
      * empty).
      * @param fromIndex int; low endpoint (inclusive) of the subList
      * @param toIndex int; high endpoint (exclusive) of the subList
      * @return a view of the specified range within this immutable list
-     * @throws IndexOutOfBoundsException for an illegal endpoint index value (<tt>fromIndex &lt; 0 || toIndex &gt; size ||
-     *         fromIndex &gt; toIndex</tt>)
+     * @throws IndexOutOfBoundsException for an illegal endpoint index value (<code>fromIndex &lt; 0 || toIndex &gt; size ||
+     *         fromIndex &gt; toIndex</code>)
      */
     ImmutableList<E> subList(int fromIndex, int toIndex);
 

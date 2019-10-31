@@ -73,7 +73,7 @@ public interface ImmutableNavigableSet<E> extends ImmutableSortedSet<E>
      * Returns a reverse order view of the elements contained in this immutable set.
      * <p>
      * The returned immutable set has an ordering equivalent to
-     * <tt>{@link Collections#reverseOrder(Comparator) Collections.reverseOrder}(comparator())</tt>. The expression
+     * <code>{@link Collections#reverseOrder(Comparator) Collections.reverseOrder}(comparator())</code>. The expression
      * {@code s.descendingSet().descendingSet()} returns a view of {@code s} essentially equivalent to {@code s}.
      * @return a reverse order view of this immutable set
      */

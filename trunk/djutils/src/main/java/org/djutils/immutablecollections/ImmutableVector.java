@@ -129,7 +129,7 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
     /**
      * Returns the index of the first occurrence of the specified element in this immutable vector, searching forwards from
      * {@code index}, or returns -1 if the element is not found. More formally, returns the lowest index {@code i} such that
-     * <tt>(i&nbsp;&gt;=&nbsp;index&nbsp;&amp;&amp;&nbsp;(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i))))</tt>,
+     * <code>(i&nbsp;&gt;=&nbsp;index&nbsp;&amp;&amp;&nbsp;(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i))))</code>,
      * or -1 if there is no such index.
      * @param o Object; element to search for
      * @param index int; index to start searching from
@@ -146,7 +146,7 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
     /**
      * Returns the index of the last occurrence of the specified element in this immutable vector, searching backwards from
      * {@code index}, or returns -1 if the element is not found. More formally, returns the highest index {@code i} such that
-     * <tt>(i&nbsp;&lt;=&nbsp;index&nbsp;&amp;&amp;&nbsp;(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i))))</tt>,
+     * <code>(i&nbsp;&lt;=&nbsp;index&nbsp;&amp;&amp;&nbsp;(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i))))</code>,
      * or -1 if there is no such index.
      * @param o Object; element to search for
      * @param index int; index to start searching backwards from

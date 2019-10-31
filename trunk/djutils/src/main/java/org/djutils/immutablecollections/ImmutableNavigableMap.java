@@ -79,7 +79,7 @@ public interface ImmutableNavigableMap<K, V> extends ImmutableSortedMap<K, V>
      * Returns a reverse order view of the keys contained in this immutable map.
      * <p>
      * The returned immutable map has an ordering equivalent to
-     * <tt>{@link Collections#reverseOrder(Comparator) Collections.reverseOrder}(comparator())</tt>. The expression
+     * <code>{@link Collections#reverseOrder(Comparator) Collections.reverseOrder}(comparator())</code>. The expression
      * {@code s.descendingMap().descendingMap()} returns a view of {@code s} essentially equivalent to {@code s}.
      * @return a reverse order view of this immutable map
      */

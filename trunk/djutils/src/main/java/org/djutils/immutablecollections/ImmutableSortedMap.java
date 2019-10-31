@@ -29,67 +29,67 @@ public interface ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
     SortedMap<K, V> toMap();
 
     /**
-     * Returns the comparator used to order the keys in this immutable map, or <tt>null</tt> if this immutable map uses the
+     * Returns the comparator used to order the keys in this immutable map, or <code>null</code> if this immutable map uses the
      * {@linkplain Comparable natural ordering} of its keys.
-     * @return the comparator used to order the keys in this immutable map, or <tt>null</tt> if this immutable map uses the
+     * @return the comparator used to order the keys in this immutable map, or <code>null</code> if this immutable map uses the
      *         natural ordering of its keys
      */
     Comparator<? super K> comparator();
 
     /**
-     * Returns a view of the portion of this immutable map whose keys range from <tt>fromKey</tt>, inclusive, to <tt>toKey</tt>,
-     * exclusive. (If <tt>fromKey</tt> and <tt>toKey</tt> are equal, the returned immutable map is empty.)
+     * Returns a view of the portion of this immutable map whose keys range from <code>fromKey</code>, inclusive, to <code>toKey</code>,
+     * exclusive. (If <code>fromKey</code> and <code>toKey</code> are equal, the returned immutable map is empty.)
      * <p>
      * The result of this method is a new, immutable sorted map.
      * @param fromKey K; low endpoint (inclusive) of the returned immutable map
      * @param toKey K; high endpoint (exclusive) of the returned immutable map
-     * @return a new, immutable sorted map of the portion of this immutable map whose keys range from <tt>fromKey</tt>,
-     *         inclusive, to <tt>toKey</tt>, exclusive
-     * @throws ClassCastException if <tt>fromKey</tt> and <tt>toKey</tt> cannot be compared to one another using this immutable
+     * @return a new, immutable sorted map of the portion of this immutable map whose keys range from <code>fromKey</code>,
+     *         inclusive, to <code>toKey</code>, exclusive
+     * @throws ClassCastException if <code>fromKey</code> and <code>toKey</code> cannot be compared to one another using this immutable
      *             map's comparator (or, if the immutable map has no comparator, using natural ordering). Implementations may,
-     *             but are not required to, throw this exception if <tt>fromKey</tt> or <tt>toKey</tt> cannot be compared to
+     *             but are not required to, throw this exception if <code>fromKey</code> or <code>toKey</code> cannot be compared to
      *             keys currently in the immutable map.
-     * @throws NullPointerException if <tt>fromKey</tt> or <tt>toKey</tt> is null and this immutable map does not permit null
+     * @throws NullPointerException if <code>fromKey</code> or <code>toKey</code> is null and this immutable map does not permit null
      *             keys
-     * @throws IllegalArgumentException if <tt>fromKey</tt> is greater than <tt>toKey</tt>; or if this immutable map itself has
-     *             a restricted range, and <tt>fromKey</tt> or <tt>toKey</tt> lies outside the bounds of the range
+     * @throws IllegalArgumentException if <code>fromKey</code> is greater than <code>toKey</code>; or if this immutable map itself has
+     *             a restricted range, and <code>fromKey</code> or <code>toKey</code> lies outside the bounds of the range
      */
     ImmutableSortedMap<K, V> subMap(K fromKey, K toKey);
 
     /**
-     * Returns a view of the portion of this immutable map whose keys are strictly less than <tt>toKey</tt>. The returned
+     * Returns a view of the portion of this immutable map whose keys are strictly less than <code>toKey</code>. The returned
      * immutable map is backed by this immutable map, so changes in the returned immutable map are reflected in this immutable
      * map, and vice-versa. The returned immutable map supports all optional immutable map operations that this immutable map
      * supports.
      * <p>
      * The result of this method is a new, immutable sorted map.
      * @param toKey K; high endpoint (exclusive) of the returned immutable map
-     * @return a view of the portion of this immutable map whose keys are strictly less than <tt>toKey</tt>
-     * @throws ClassCastException if <tt>toKey</tt> is not compatible with this immutable map's comparator (or, if the immutable
-     *             map has no comparator, if <tt>toKey</tt> does not implement {@link Comparable}). Implementations may, but are
-     *             not required to, throw this exception if <tt>toKey</tt> cannot be compared to keys currently in the immutable
+     * @return a view of the portion of this immutable map whose keys are strictly less than <code>toKey</code>
+     * @throws ClassCastException if <code>toKey</code> is not compatible with this immutable map's comparator (or, if the immutable
+     *             map has no comparator, if <code>toKey</code> does not implement {@link Comparable}). Implementations may, but are
+     *             not required to, throw this exception if <code>toKey</code> cannot be compared to keys currently in the immutable
      *             map.
-     * @throws NullPointerException if <tt>toKey</tt> is null and this immutable map does not permit null keys
-     * @throws IllegalArgumentException if this immutable map itself has a restricted range, and <tt>toKey</tt> lies outside the
+     * @throws NullPointerException if <code>toKey</code> is null and this immutable map does not permit null keys
+     * @throws IllegalArgumentException if this immutable map itself has a restricted range, and <code>toKey</code> lies outside the
      *             bounds of the range
      */
     ImmutableSortedMap<K, V> headMap(K toKey);
 
     /**
-     * Returns a view of the portion of this immutable map whose keys are greater than or equal to <tt>fromKey</tt>. The
+     * Returns a view of the portion of this immutable map whose keys are greater than or equal to <code>fromKey</code>. The
      * returned immutable map is backed by this immutable map, so changes in the returned immutable map are reflected in this
      * immutable map, and vice-versa. The returned immutable map supports all optional immutable map operations that this
      * immutable map supports.
      * <p>
      * The result of this method is a new, immutable sorted map.
      * @param fromKey K; low endpoint (inclusive) of the returned immutable map
-     * @return a view of the portion of this immutable map whose keys are greater than or equal to <tt>fromKey</tt>
-     * @throws ClassCastException if <tt>fromKey</tt> is not compatible with this immutable map's comparator (or, if the
-     *             immutable map has no comparator, if <tt>fromKey</tt> does not implement {@link Comparable}). Implementations
-     *             may, but are not required to, throw this exception if <tt>fromKey</tt> cannot be compared to keys currently
+     * @return a view of the portion of this immutable map whose keys are greater than or equal to <code>fromKey</code>
+     * @throws ClassCastException if <code>fromKey</code> is not compatible with this immutable map's comparator (or, if the
+     *             immutable map has no comparator, if <code>fromKey</code> does not implement {@link Comparable}). Implementations
+     *             may, but are not required to, throw this exception if <code>fromKey</code> cannot be compared to keys currently
      *             in the immutable map.
-     * @throws NullPointerException if <tt>fromKey</tt> is null and this immutable map does not permit null keys
-     * @throws IllegalArgumentException if this immutable map itself has a restricted range, and <tt>fromKey</tt> lies outside
+     * @throws NullPointerException if <code>fromKey</code> is null and this immutable map does not permit null keys
+     * @throws IllegalArgumentException if this immutable map itself has a restricted range, and <code>fromKey</code> lies outside
      *             the bounds of the range
      */
     ImmutableSortedMap<K, V> tailMap(K fromKey);
