@@ -39,6 +39,14 @@ public class TestImmutableTreeMap
         map = new TreeMap<Integer, Integer>(isMap);
         ImmutableTreeMap<Integer, Integer> ihs = new ImmutableTreeMap<Integer, Integer>(map);
         testIntMap(map, new ImmutableTreeMap<Integer, Integer>(ihs), Immutable.COPY);
+        
+        ImmutableTreeMap<Integer, Integer> itm = new ImmutableTreeMap<>(isMap, Immutable.WRAP);
+        ImmutableTreeMap<Integer, Integer> itmw = new ImmutableTreeMap<>(itm, Immutable.WRAP);
+        Assert.assertEquals("wrapper is equal to wrapped",  itm, itmw);
+        itmw = new ImmutableTreeMap<>(itm, Immutable.COPY);
+        Assert.assertEquals("copied is equal to wrapped",  itm, itmw);
+        Assert.assertEquals("wrapped is equal to copied",  itmw, itm);
+        Assert.assertTrue("toString returns something descriptive", itm.toString().startsWith("ImmutableTreeMap ["));
     }
 
     private void testIntMap(final NavigableMap<Integer, Integer> map, final ImmutableTreeMap<Integer, Integer> imMap,
