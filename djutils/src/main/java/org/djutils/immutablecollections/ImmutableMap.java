@@ -27,35 +27,35 @@ public interface ImmutableMap<K, V> extends Serializable
 {
     /**
      * Returns the number of elements in this immutable collection. If this immutable collection contains more than
-     * <tt>Integer.MAX_VALUE</tt> elements, returns <tt>Integer.MAX_VALUE</tt>.
+     * <code>Integer.MAX_VALUE</code> elements, returns <code>Integer.MAX_VALUE</code>.
      * @return the number of elements in this immutable collection
      */
     int size();
 
     /**
-     * Returns <tt>true</tt> if this immutable collection contains no elements.
-     * @return <tt>true</tt> if this immutable collection contains no elements
+     * Returns <code>true</code> if this immutable collection contains no elements.
+     * @return <code>true</code> if this immutable collection contains no elements
      */
     boolean isEmpty();
 
     /**
-     * Returns <tt>true</tt> if this map contains a mapping for the specified key. More formally, returns <tt>true</tt> if and
-     * only if this map contains a mapping for a key <tt>k</tt> such that <tt>(key==null ? k==null : key.equals(k))</tt>. (There
+     * Returns <code>true</code> if this map contains a mapping for the specified key. More formally, returns <code>true</code> if and
+     * only if this map contains a mapping for a key <code>k</code> such that <code>(key==null ? k==null : key.equals(k))</code>. (There
      * can be at most one such mapping.)
      * @param key Object; key whose presence in this map is to be tested
-     * @return <tt>true</tt> if this map contains a mapping for the specified key
+     * @return <code>true</code> if this map contains a mapping for the specified key
      * @throws ClassCastException if the key is of an inappropriate type for this map
      * @throws NullPointerException if the specified key is null and this map does not permit null keys
      */
     boolean containsKey(Object key);
 
     /**
-     * Returns <tt>true</tt> if this map maps one or more keys to the specified value. More formally, returns <tt>true</tt> if
-     * and only if this map contains at least one mapping to a value <tt>v</tt> such that
-     * <tt>(value==null ? v==null : value.equals(v))</tt>. This operation will probably require time linear in the map size for
-     * most implementations of the <tt>Map</tt> interface.
+     * Returns <code>true</code> if this map maps one or more keys to the specified value. More formally, returns <code>true</code> if
+     * and only if this map contains at least one mapping to a value <code>v</code> such that
+     * <code>(value==null ? v==null : value.equals(v))</code>. This operation will probably require time linear in the map size for
+     * most implementations of the <code>Map</code> interface.
      * @param value Object; value whose presence in this map is to be tested
-     * @return <tt>true</tt> if this map maps one or more keys to the specified value
+     * @return <code>true</code> if this map maps one or more keys to the specified value
      * @throws ClassCastException if the value is of an inappropriate type for this map
      * @throws NullPointerException if the specified value is null and this map does not permit null values
      */
@@ -185,11 +185,11 @@ public interface ImmutableMap<K, V> extends Serializable
     }
 
     /**
-     * A map entry (key-value pair). The <tt>Map.entrySet</tt> method returns a collection-view of the map, whose elements are
+     * A map entry (key-value pair). The <code>Map.entrySet</code> method returns a collection-view of the map, whose elements are
      * of this class. The <i>only</i> way to obtain a reference to a map entry is from the iterator of this collection-view.
-     * These <tt>ImmutableMap.ImmutableEntry</tt> objects are valid <i>only</i> for the duration of the iteration; more
+     * These <code>ImmutableMap.ImmutableEntry</code> objects are valid <i>only</i> for the duration of the iteration; more
      * formally, the behavior of a map entry is undefined if the backing map has been modified after the entry was returned by
-     * the iterator, except through the <tt>setValue</tt> operation on the map entry.
+     * the iterator, except through the <code>setValue</code> operation on the map entry.
      * @param <K> key
      * @param <V> value
      */
@@ -219,7 +219,7 @@ public interface ImmutableMap<K, V> extends Serializable
 
         /**
          * Returns the value corresponding to this entry. If the mapping has been removed from the backing map (by the
-         * iterator's <tt>remove</tt> operation), the results of this call are undefined.
+         * iterator's <code>remove</code> operation), the results of this call are undefined.
          * @return the value corresponding to this entry
          * @throws IllegalStateException implementations may, but are not required to, throw this exception if the entry has
          *             been removed from the backing map.
