@@ -40,6 +40,11 @@ public class TestImmutableLinkedHashSet
         testIntSet(set, new ImmutableLinkedHashSet<Integer>(il), Immutable.COPY);
         ImmutableLinkedHashSet<Integer> ilhs = new ImmutableLinkedHashSet<Integer>(set, Immutable.COPY);
         Assert.assertTrue("toString returns something descriptive", ilhs.toString().startsWith("ImmutableLinkedHashSet ["));
+        
+        ImmutableLinkedHashSet<Integer> wilhs = new ImmutableLinkedHashSet<Integer>(ilhs, Immutable.WRAP);
+        Assert.assertEquals("wrapped immutable linked hash set is equal to that immutable hash set", wilhs, ilhs);
+        ImmutableLinkedHashSet<Integer> cilhs = new ImmutableLinkedHashSet<Integer>(ilhs, Immutable.COPY);
+        Assert.assertEquals("copied immutable linked hash set is equal to that immutable hash set", cilhs, ilhs);
     }
 
     private void testIntSet(final Set<Integer> set, final ImmutableSet<Integer> imSet, final Immutable copyOrWrap)
