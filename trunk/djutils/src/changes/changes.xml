@@ -7,6 +7,9 @@
         Replaced FindBugs (which already had a problem supporting Java 8) with SpotBugs 
         (supporting later Java versions as well).
       </action>
+      <action dev="averbraeck" type="update">
+        DJUNITS updated to 4.01.01.
+      </action>
     </release>
     
     <release version="1.03.01" date="2019-10-25" description="">
