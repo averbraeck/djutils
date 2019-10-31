@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 import org.djutils.immutablecollections.ImmutableMap.ImmutableEntry;
 import org.junit.Assert;
@@ -29,7 +30,7 @@ public class TestImmutableHashMap
 {
 
     /**
-     * Test most of the equals and hashCode methods of the ImmutableAbstractMap class.
+     * Test most of the equals and hashCode methods and the forEach method of the ImmutableAbstractMap class.
      */
     @SuppressWarnings({ "unlikely-arg-type" })
     @Test
@@ -89,6 +90,32 @@ public class TestImmutableHashMap
                 map3.getOrDefault(keys[0], Math.asin(2.0)));
         assertEquals("get with default returns default for key when it does not exist", Math.asin(2.0),
                 map3.getOrDefault(-123, Math.asin(2.0)), 0.00001);
+        final ImmutableMap<Integer, Double> map4 =
+                new ImmutableHashMap<Integer, Double>((ImmutableAbstractMap<Integer, Double>) im1Wrap, Immutable.WRAP);
+        boolean[] tested = new boolean[keys.length];
+        map3.forEach(new BiConsumer<Integer, Double>()
+        {
+            @Override
+            public void accept(Integer t, Double u)
+            {
+                assertEquals("accept got a value that matches the key", u, map4.get(t), 0.0001);
+                int index = -1;
+                for (int i = 0; i < keys.length; i++)
+                {
+                    if (keys[i] == t)
+                    {
+                        index = i;
+                    }
+                }
+                assertTrue("key is contained in keys", index >= 0);
+                assertFalse("key has not appeared before", tested[index]);
+                tested[index] = true;
+            }
+        });
+        for (int index = 0; index < tested.length; index++)
+        {
+            assertTrue("each index got tested", tested[index]);
+        }
     }
 
     @Test
