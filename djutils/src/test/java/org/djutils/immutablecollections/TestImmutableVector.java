@@ -1,6 +1,7 @@
 package org.djutils.immutablecollections;
 
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
@@ -24,7 +25,8 @@ public class TestImmutableVector
     @Test
     public final void testVector()
     {
-        Vector<Integer> intVector = new Vector(Arrays.asList(new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }));
+        Integer[] testData = new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        Vector<Integer> intVector = new Vector<>(Arrays.asList(testData));
         Vector<Integer> vector = new Vector<Integer>(intVector);
         testIntVector(vector, new ImmutableVector<Integer>(vector, Immutable.WRAP), Immutable.WRAP);
         vector = new Vector<Integer>(intVector);
@@ -47,6 +49,9 @@ public class TestImmutableVector
         iv2 = new ImmutableVector<>(iv, Immutable.WRAP);
         Assert.assertEquals("ImmutableVector wrapping other ImmutableVector tests equal to it", iv, iv2);
         Assert.assertEquals("ImmutableVector wrapping other ImmutableVector has same hash code", iv.hashCode(), iv2.hashCode());
+        // start anew as the testIntVector method modifies the underlying data.
+        intVector = new Vector<>(Arrays.asList(testData));
+        iv = new ImmutableVector<Integer>(intVector);
         ImmutableList<Integer> subList = iv.subList(2, 5);
         Assert.assertEquals("size of sub list is 3", 3, subList.size());
         for (int index = 0; index < subList.size(); index++)
@@ -80,35 +85,60 @@ public class TestImmutableVector
         {
             // Ignore expected exception
         }
-        subList = iv.subList(4,  4);
+        subList = iv.subList(4, 4);
         Assert.assertEquals("sub list should be empty", 0, subList.size());
         Integer[] justRight = new Integer[iv.size()];
         iv.copyInto(justRight);
         for (int index = 0; index < iv.size(); index++)
         {
-            Assert.assertEquals("contents of array matches",  iv.get(index), justRight[index]);
+            Assert.assertEquals("contents of array matches", iv.get(index), justRight[index]);
         }
         Integer[] bigger = new Integer[iv.size() + 3];
         bigger[bigger.length - 2] = -1;
         iv.copyInto(bigger);
         for (int index = 0; index < iv.size(); index++)
         {
-            Assert.assertEquals("contents of array matches",  iv.get(index), justRight[index]);
+            Assert.assertEquals("contents of array matches", iv.get(index), justRight[index]);
         }
         Assert.assertEquals("element after required length is still null", null, bigger[iv.size()]);
         Assert.assertEquals("element at length - 2 is still -1", -1, bigger[bigger.length - 2], 0);
         Assert.assertEquals("element at length - 1 is null", null, bigger[bigger.length - 1]);
-                
+
         Integer[] tooShort = new Integer[iv.size() - 1];
         try
         {
             iv.copyInto(tooShort);
             Assert.fail("Too short target array should have thrown an IndexOutOfBoundsException");
         }
-        catch(IndexOutOfBoundsException ioobe)
+        catch (IndexOutOfBoundsException ioobe)
         {
             // Ignore expected exception
         }
+        Assert.assertTrue("capacity returns capacity of the underlying collection", iv.capacity() >= testData.length);
+
+        Enumeration<Integer> e = iv.elements();
+        for (int index = 0; index < testData.length; index++)
+        {
+            Assert.assertTrue("There is another element to be had", e.hasMoreElements());
+            Integer got = e.nextElement();
+            Assert.assertEquals("element at index matches", testData[index], got);
+        }
+        Assert.assertFalse("there are no more elements to be had", e.hasMoreElements());
+        for (int index = 0; index < testData.length; index++)
+        {
+            int indexOf = iv.indexOf(testData[index]);
+            Assert.assertEquals("index matches", index, indexOf);
+            Assert.assertEquals("value at index matches", testData[index], iv.get(indexOf));
+            indexOf = iv.lastIndexOf(testData[index]);
+            Assert.assertEquals("index matches", index, indexOf);
+            int noIndex = iv.indexOf(testData[index], indexOf + 1);
+            Assert.assertEquals("there is no later next index for this value", -1, noIndex);
+            noIndex = iv.lastIndexOf(testData[index], indexOf - 1);
+            Assert.assertEquals("there is no earlier next index for this value", -1, noIndex);
+            Assert.assertEquals("get returns same as elementAt",  iv.get(index), iv.elementAt(index));
+        }
+        Assert.assertEquals("firstElement returns first element", testData[0], iv.firstElement());
+        Assert.assertEquals("lastElement returns last element", testData[testData.length - 1], iv.lastElement());
     }
 
     private void testIntVector(final Vector<Integer> vector, final ImmutableVector<Integer> imVector,
