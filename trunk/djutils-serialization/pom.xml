@@ -215,6 +215,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven.javadoc.version}</version>
         <configuration>
+          <source>8</source>
           <links>
             <link>https://download.java.net/media/java3d/javadoc/1.5.1</link>
             <link>https://tinylog.org/javadoc</link>
@@ -352,8 +353,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven.javadoc.version}</version>
-
         <configuration>
+          <source>8</source>
           <links>
             <link>https://download.java.net/media/java3d/javadoc/1.5.1</link>
             <link>https://tinylog.org/javadoc</link>
