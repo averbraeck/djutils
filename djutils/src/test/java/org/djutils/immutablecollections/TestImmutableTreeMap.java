@@ -47,6 +47,33 @@ public class TestImmutableTreeMap
         Assert.assertEquals("copied is equal to wrapped",  itm, itmw);
         Assert.assertEquals("wrapped is equal to copied",  itmw, itm);
         Assert.assertTrue("toString returns something descriptive", itm.toString().startsWith("ImmutableTreeMap ["));
+        ImmutableTreeMap<Integer, Integer> subMap = (ImmutableTreeMap<Integer, Integer>) itm.subMap(3, 5);
+        Assert.assertEquals("size is 2", 2, subMap.size());
+        Assert.assertEquals("first key is 3", 3, subMap.firstKey(), 0);
+        Assert.assertEquals("last key is 4", 4, subMap.lastKey(), 0);
+        Assert.assertNull("sub map has no value for key 2", subMap.get(2));
+        Assert.assertNull("sub map has no value for key 5", subMap.get(5));
+        Assert.assertEquals("value for key 3 is 300", 300, subMap.get(3), 0);
+        Assert.assertEquals("value for key 4 is 400", 400, subMap.get(4), 0);
+        ImmutableTreeMap<Integer, Integer> headMap = (ImmutableTreeMap<Integer, Integer>) itm.headMap(5);
+        Assert.assertEquals("headMap has 4 entries", 4, headMap.size());
+        Assert.assertEquals("first key is 1", 1, headMap.firstKey(), 0);
+        Assert.assertEquals("last key is 4", 4, headMap.lastKey(), 0);
+        ImmutableTreeMap<Integer, Integer> tailMap = (ImmutableTreeMap<Integer, Integer>) itm.tailMap(5);
+        Assert.assertEquals("tailMap has 6 entries",  6, tailMap.size());
+        Assert.assertEquals("first key is 5",  5, tailMap.firstKey(), 0);
+        Assert.assertNull("there is no lower key than 1", itm.lowerKey(1));
+        Assert.assertEquals("highest key lower than 5 is 4", 4, itm.lowerKey(5), 0);
+        Assert.assertEquals("highest key lower than 999 is 10", 10, itm.lowerKey(999), 0);
+        Assert.assertEquals("highest key lower than, or equal to 5 is s", 5, itm.floorKey(5), 0);
+        Assert.assertNull("highest key lower than, or equal to 0 does not exist", itm.floorKey(0));
+        Assert.assertEquals("lowest key equal or bigger than 3 is 3", 3, itm.ceilingKey(3), 0);
+        Assert.assertNull("lowest key equal or bigger than 11 does not exist", itm.ceilingKey(11));
+        Assert.assertEquals("lowest key bigger than -10 is 1", 1, itm.higherKey(-10), 0);
+        Assert.assertEquals("lowest key bigger than 5 is 6", 6, itm.higherKey(5), 0);
+        Assert.assertNull("lowest key bigger than 10 does not exist", itm.higherKey(10));
+        ImmutableTreeMap<Integer, Integer> descending = (ImmutableTreeMap<Integer, Integer>) itm.descendingMap();
+        Assert.assertEquals("descending map has same size", itm.size(), descending.size());
     }
 
     private void testIntMap(final NavigableMap<Integer, Integer> map, final ImmutableTreeMap<Integer, Integer> imMap,
