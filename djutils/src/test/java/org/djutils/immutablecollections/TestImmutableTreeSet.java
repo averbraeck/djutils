@@ -25,7 +25,7 @@ public class TestImmutableTreeSet
     @Test
     public final void testTreeSet()
     {
-        Set<Integer> intSet = new TreeSet<>(Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
+        Set<Integer> intSet = new TreeSet<>(Arrays.asList(new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }));
         NavigableSet<Integer> sortedSet = new TreeSet<Integer>(intSet);
         testIntSet(sortedSet, new ImmutableTreeSet<Integer>(sortedSet, Immutable.WRAP), Immutable.WRAP);
         sortedSet = new TreeSet<Integer>(intSet);
@@ -37,10 +37,16 @@ public class TestImmutableTreeSet
         testIntSet(sortedSet, new ImmutableTreeSet<Integer>(ihs), Immutable.COPY);
 
         sortedSet = new TreeSet<Integer>(intSet);
-        List<Integer> il = Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+        List<Integer> il = Arrays.asList(new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
         testIntSet(sortedSet, new ImmutableTreeSet<Integer>(il), Immutable.COPY);
         ImmutableTreeSet<Integer> its = new ImmutableTreeSet<Integer>(sortedSet);
         Assert.assertTrue("toString returns something descriptive", its.toString().startsWith("ImmutableTreeSet ["));
+
+        ImmutableTreeSet<Integer> wrapped = new ImmutableTreeSet<Integer>(its, Immutable.WRAP);
+        Assert.assertEquals("wrapped is equal wrapped-wrapped", its, wrapped);
+        ImmutableTreeSet<Integer> copied = new ImmutableTreeSet<Integer>(its, Immutable.COPY);
+        Assert.assertEquals("wrapped is equal to copy-wrapped", its, copied);
+        Assert.assertEquals("copy-wrapped is equal to wrapped", copied, its);
     }
 
     private void testIntSet(final NavigableSet<Integer> set, final ImmutableTreeSet<Integer> imSet, final Immutable copyOrWrap)

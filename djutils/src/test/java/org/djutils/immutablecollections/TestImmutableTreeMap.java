@@ -100,6 +100,8 @@ public class TestImmutableTreeMap
         Assert.assertFalse("Self made entry containing null is not equal to sampleEntry", containsNull.equals(sampleEntry));
         ImmutableEntry<Integer, Integer> otherContainsNull = new ImmutableEntry<Integer, Integer>(null);
         Assert.assertEquals("entry containing null is equal to another entry containing null", containsNull, otherContainsNull);
+        
+        
     }
 
     private void testIntMap(final NavigableMap<Integer, Integer> map, final ImmutableTreeMap<Integer, Integer> imMap,
