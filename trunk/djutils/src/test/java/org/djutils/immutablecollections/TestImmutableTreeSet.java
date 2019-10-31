@@ -39,6 +39,8 @@ public class TestImmutableTreeSet
         sortedSet = new TreeSet<Integer>(intSet);
         List<Integer> il = Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
         testIntSet(sortedSet, new ImmutableTreeSet<Integer>(il), Immutable.COPY);
+        ImmutableTreeSet<Integer> its = new ImmutableTreeSet<Integer>(sortedSet);
+        Assert.assertTrue("toString returns something descriptive", its.toString().startsWith("ImmutableTreeSet ["));
     }
 
     private void testIntSet(final NavigableSet<Integer> set, final ImmutableTreeSet<Integer> imSet, final Immutable copyOrWrap)

@@ -202,11 +202,4 @@ public abstract class ImmutableAbstractList<E> extends ImmutableAbstractCollecti
         return true;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    @SuppressWarnings("checkstyle:designforextension")
-    public String toString()
-    {
-        return "Immutable[" + this.list.toString() + "]";
-    }
 }

@@ -180,11 +180,4 @@ public abstract class ImmutableAbstractSet<E> extends ImmutableAbstractCollectio
         return true;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    @SuppressWarnings("checkstyle:designforextension")
-    public String toString()
-    {
-        return "Immutable[" + this.set.toString() + "]";
-    }
 }

@@ -1,5 +1,10 @@
 package org.djutils.immutablecollections;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +27,69 @@ import org.junit.Test;
  */
 public class TestImmutableHashMap
 {
+
+    /**
+     * Test most of the equals and hashCode methods of the ImmutableAbstractMap class.
+     */
+    @SuppressWarnings({ "unlikely-arg-type" })
+    @Test
+    public final void testMapEqualsAndHashCode()
+    {
+        Integer[] keys = new Integer[] { 10, 20, 30, 40 };
+        Map<Integer, Double> mutableMap1 = new HashMap<>();
+        Map<Integer, Double> mutableMap2 = new HashMap<>();
+        for (Integer key : keys)
+        {
+            mutableMap1.put(key, Math.PI + key);
+            mutableMap2.put(key, Math.PI + key);
+        }
+        assertEquals("maps with same content should be equal", mutableMap1, mutableMap2);
+        assertEquals("maps with same content should have same hash code", mutableMap1.hashCode(), mutableMap2.hashCode());
+        // No see that the same logic holds for our immutable maps
+        ImmutableMap<Integer, Double> im1 = new ImmutableHashMap<>(mutableMap1, Immutable.WRAP);
+        assertFalse(im1.isCopy());
+        ImmutableMap<Integer, Double> im2 = new ImmutableHashMap<>(mutableMap2, Immutable.WRAP);
+        assertEquals("immutable maps with same content should be equal", im1, im2);
+        assertEquals("immutable maps with same content should have same hash code", im1.hashCode(), im2.hashCode());
+        im2 = new ImmutableHashMap<>(mutableMap2, Immutable.COPY);
+        assertEquals("immutable maps with same content should be equal", im1, im2);
+        assertEquals("immutable maps with same content should be equal", im2, im1);
+        im1 = new ImmutableHashMap<>(mutableMap1, Immutable.COPY);
+        assertTrue(im1.isCopy());
+        assertEquals("immutable maps with same content should be equal", im1, im2);
+        assertEquals("immutable maps with same content should be equal", im2, im1);
+        // test the short cut path in equals
+        assertEquals("immutable map is equal to itself", im1, im1);
+        assertFalse("immutable map is not equal to null", im1.equals(null));
+        assertFalse("immutable map is not equal to some totally different object", im1.equals("abc"));
+        mutableMap2.put(keys[0], Math.E);
+        assertFalse("altered mutable map differs", mutableMap1.equals(mutableMap2));
+        assertEquals("immutable map holding copy is not altered", im1, im2);
+        ImmutableMap<Integer, Double> im1Wrap = new ImmutableHashMap<>(mutableMap1, Immutable.WRAP);
+        assertEquals("another immutable map from the same collection is equal", im1, im1Wrap);
+        assertEquals("another immutable map from the same collection has same hash code", im1.hashCode(), im1Wrap.hashCode());
+        mutableMap1.put(keys[0], -Math.PI);
+        assertFalse("wrapped immutable map re-checks content", im1.equals(im1Wrap));
+        assertFalse("wrapped immutable map re-checks content", im1Wrap.equals(im1));
+        assertFalse("wrapped immutable map re-computes hash code", im1.hashCode() == im1Wrap.hashCode());
+        assertFalse("wrapped immutable map re-computes hash code", im1Wrap.hashCode() == im1.hashCode());
+        // Test the get method
+        assertNull("result of get for non-existent key returns null", im1.get(-123));
+        for (Integer key : keys)
+        {
+            assertEquals("Immutable map returns same as underlying mutable map", mutableMap1.get(key), im1Wrap.get(key));
+        }
+        ImmutableMap<Integer, Double> map3 =
+                new ImmutableHashMap<>((ImmutableAbstractMap<Integer, Double>) im1Wrap, Immutable.WRAP);
+        assertEquals("immutable map constructed by wrapping another immutable map is equals", im1Wrap, map3);
+        map3 = new ImmutableHashMap<>((ImmutableAbstractMap<Integer, Double>) im1Wrap, Immutable.COPY);
+        assertEquals("immutable map constructed by copyinig another immutable map is equals", im1Wrap, map3);
+        assertTrue("toString returns something descriptive", map3.toString().startsWith("ImmutableHashMap ["));
+        assertEquals("get with default returns value for key when it exists", mutableMap1.get(keys[0]),
+                map3.getOrDefault(keys[0], Math.asin(2.0)));
+        assertEquals("get with default returns default for key when it does not exist", Math.asin(2.0),
+                map3.getOrDefault(-123, Math.asin(2.0)), 0.00001);
+    }
 
     @Test
     public final void testHashMap()

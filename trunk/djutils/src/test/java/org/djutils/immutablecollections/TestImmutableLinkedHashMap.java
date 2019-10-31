@@ -38,6 +38,8 @@ public class TestImmutableLinkedHashMap
         map = new LinkedHashMap<Integer, Integer>(isMap);
         ImmutableLinkedHashMap<Integer, Integer> ihs = new ImmutableLinkedHashMap<Integer, Integer>(map);
         testIntMap(map, new ImmutableLinkedHashMap<Integer, Integer>(ihs), Immutable.COPY);
+        ImmutableLinkedHashMap<Integer, Integer> ilhm = new ImmutableLinkedHashMap<>(ihs, Immutable.COPY);
+        Assert.assertTrue("toString returns something descriptive", ilhm.toString().startsWith("ImmutableLinkedHashMap ["));
     }
 
     private void testIntMap(final Map<Integer, Integer> map, final ImmutableMap<Integer, Integer> imMap,

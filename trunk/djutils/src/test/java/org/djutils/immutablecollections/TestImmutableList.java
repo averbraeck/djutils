@@ -38,6 +38,7 @@ public class TestImmutableList
     {
         Integer[] values = new Integer[] {2, 5, 1, 2, 4, 9};
         ImmutableList<Integer> il = new ImmutableArrayList<>(Arrays.asList(values));
+        assertTrue("toString returns something descriptive", il.toString().startsWith("ImmutableArrayList ["));
         assertTrue("default is to copy", il.isCopy());
         assertFalse("default is not to wrap", il.isWrap());
         ImmutableList<Integer> il2 = new ImmutableArrayList<>(Arrays.asList(values), Immutable.COPY);
@@ -55,6 +56,8 @@ public class TestImmutableList
         assertEquals("has same size", il.size(), il2.size());
         il2 = new ImmutableArrayList<Integer>((ImmutableAbstractList<Integer>) il, Immutable.WRAP);
         assertTrue("WRAP means wrap", il2.isWrap());
+        assertFalse("WRAP is not copy", il2.isCopy());
+        assertTrue("Wrap is wrap", il2.isWrap());
         assertEquals("has same size", il.size(), il2.size());
         il2 = il.subList(2, 4);
         assertEquals("sublist has length 2", 2, il2.size());
@@ -84,6 +87,7 @@ public class TestImmutableList
             assertEquals("values can be retrieved one by one", values[index], il.get(index));
         }
         ImmutableIterator<Integer> ii = il.iterator();
+        assertTrue("toString method of iterator returns something descriptive", ii.toString().startsWith("ImmutableIterator ["));
         for (int index = 0; index < values.length; index++)
         {
             assertTrue(ii.hasNext());
