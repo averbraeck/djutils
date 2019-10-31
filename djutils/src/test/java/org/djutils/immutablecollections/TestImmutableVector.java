@@ -24,7 +24,7 @@ public class TestImmutableVector
     @Test
     public final void testVector()
     {
-        Vector<Integer> intVector = new Vector(Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
+        Vector<Integer> intVector = new Vector(Arrays.asList(new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }));
         Vector<Integer> vector = new Vector<Integer>(intVector);
         testIntVector(vector, new ImmutableVector<Integer>(vector, Immutable.WRAP), Immutable.WRAP);
         vector = new Vector<Integer>(intVector);
@@ -36,8 +36,79 @@ public class TestImmutableVector
         testIntVector(vector, new ImmutableVector<Integer>(ial), Immutable.COPY);
 
         vector = new Vector<Integer>(intVector);
-        Set<Integer> intSet = new HashSet<>(Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
+        Set<Integer> intSet = new HashSet<>(Arrays.asList(new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }));
         testIntVector(vector, new ImmutableVector<Integer>(intSet), Immutable.COPY);
+        ImmutableVector<Integer> iv = new ImmutableVector<Integer>(vector);
+        Assert.assertTrue("toString returns something descriptive", iv.toString().startsWith("ImmutableVector ["));
+        ImmutableVector<Integer> iv2 = new ImmutableVector<>(iv, Immutable.COPY);
+        Assert.assertEquals("ImmutableVector with copy of other ImmutableVector tests equal to it", iv, iv2);
+        Assert.assertEquals("ImmutableVector with copy of other ImmutableVector has same hash code", iv.hashCode(),
+                iv2.hashCode());
+        iv2 = new ImmutableVector<>(iv, Immutable.WRAP);
+        Assert.assertEquals("ImmutableVector wrapping other ImmutableVector tests equal to it", iv, iv2);
+        Assert.assertEquals("ImmutableVector wrapping other ImmutableVector has same hash code", iv.hashCode(), iv2.hashCode());
+        ImmutableList<Integer> subList = iv.subList(2, 5);
+        Assert.assertEquals("size of sub list is 3", 3, subList.size());
+        for (int index = 0; index < subList.size(); index++)
+        {
+            Assert.assertEquals("value at index matches", iv.get(index + 2), subList.get(index));
+        }
+        try
+        {
+            iv.subList(-1, 3);
+            Assert.fail("Negative from index should have thrown an IndexOutOfBoundsException");
+        }
+        catch (IndexOutOfBoundsException ioobe)
+        {
+            // Ignore expected exception
+        }
+        try
+        {
+            iv.subList(1, iv.size() + 1);
+            Assert.fail("To index bigger than size should have thrown an IndexOutOfBoundsException");
+        }
+        catch (IndexOutOfBoundsException ioobe)
+        {
+            // Ignore expected exception
+        }
+        try
+        {
+            iv.subList(5, 4);
+            Assert.fail("negative range should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+        subList = iv.subList(4,  4);
+        Assert.assertEquals("sub list should be empty", 0, subList.size());
+        Integer[] justRight = new Integer[iv.size()];
+        iv.copyInto(justRight);
+        for (int index = 0; index < iv.size(); index++)
+        {
+            Assert.assertEquals("contents of array matches",  iv.get(index), justRight[index]);
+        }
+        Integer[] bigger = new Integer[iv.size() + 3];
+        bigger[bigger.length - 2] = -1;
+        iv.copyInto(bigger);
+        for (int index = 0; index < iv.size(); index++)
+        {
+            Assert.assertEquals("contents of array matches",  iv.get(index), justRight[index]);
+        }
+        Assert.assertEquals("element after required length is still null", null, bigger[iv.size()]);
+        Assert.assertEquals("element at length - 2 is still -1", -1, bigger[bigger.length - 2], 0);
+        Assert.assertEquals("element at length - 1 is null", null, bigger[bigger.length - 1]);
+                
+        Integer[] tooShort = new Integer[iv.size() - 1];
+        try
+        {
+            iv.copyInto(tooShort);
+            Assert.fail("Too short target array should have thrown an IndexOutOfBoundsException");
+        }
+        catch(IndexOutOfBoundsException ioobe)
+        {
+            // Ignore expected exception
+        }
     }
 
     private void testIntVector(final Vector<Integer> vector, final ImmutableVector<Integer> imVector,
