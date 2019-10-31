@@ -2,6 +2,13 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.03.02" date="2019-10-31" description="SpotBus instead of FindBugs in Maven">
+      <action dev="averbraeck" type="fix">
+        Replaced FindBugs (which already had a problem supporting Java 8) with SpotBugs 
+        (supporting later Java versions as well).
+      </action>
+    </release>
+    
     <release version="1.03.01" date="2019-10-25" description="">
       <action dev="averbraeck" type="update">
         DJUNITS updated to 4.01.00.

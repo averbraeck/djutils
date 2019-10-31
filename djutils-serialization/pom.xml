@@ -40,7 +40,8 @@
     <maven.project-info-reports.version>3.0.0</maven.project-info-reports.version>
     <maven.jxr.version>3.0.0</maven.jxr.version>
     <maven.taglist.version>2.4</maven.taglist.version>
-    <maven.findbugs.version>3.0.5</maven.findbugs.version>
+    <maven.spotbugs.version>3.1.12.2</maven.spotbugs.version>
+    <spotbugs.version>4.0.0-beta4</spotbugs.version>
     <maven.pmd.version>3.12.0</maven.pmd.version>
     <maven.changes.version>2.12.1</maven.changes.version>
     <wagon.maven.version>2.0.0</wagon.maven.version>
@@ -316,22 +317,6 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <version>${maven.findbugs.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <failOnError>false</failOnError>
-        </configuration>
-      </plugin>
-
     </plugins>
 
   </build>
@@ -492,9 +477,18 @@
       </plugin>
 
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <version>${maven.findbugs.version}</version>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>${maven.spotbugs.version}</version>
+        <configuration>
+          <dependencies>
+            <dependency>
+              <groupId>com.github.spotbugs</groupId>
+              <artifactId>spotbugs</artifactId>
+              <version>${spotbugs.version}</version>
+            </dependency>
+          </dependencies>
+        </configuration>
       </plugin>
 
       <plugin>
