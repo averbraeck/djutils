@@ -38,6 +38,8 @@ public class TestImmutableLinkedHashSet
         set = new LinkedHashSet<Integer>(intSet);
         List<Integer> il = Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
         testIntSet(set, new ImmutableLinkedHashSet<Integer>(il), Immutable.COPY);
+        ImmutableLinkedHashSet<Integer> ilhs = new ImmutableLinkedHashSet<Integer>(set, Immutable.COPY);
+        Assert.assertTrue("toString returns something descriptive", ilhs.toString().startsWith("ImmutableLinkedHashSet ["));
     }
 
     private void testIntSet(final Set<Integer> set, final ImmutableSet<Integer> imSet, final Immutable copyOrWrap)

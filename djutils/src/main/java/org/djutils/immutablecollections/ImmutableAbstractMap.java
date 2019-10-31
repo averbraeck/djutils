@@ -154,11 +154,4 @@ public abstract class ImmutableAbstractMap<K, V> implements ImmutableMap<K, V>
         return true;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    @SuppressWarnings("checkstyle:designforextension")
-    public String toString()
-    {
-        return "Immutable[" + this.map.toString() + "]";
-    }
 }

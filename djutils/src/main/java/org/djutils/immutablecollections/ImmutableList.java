@@ -83,4 +83,11 @@ public interface ImmutableList<E> extends ImmutableCollection<E>
     @Override
     int hashCode();
 
+    /**
+     * Force to redefine toString.
+     * @return String; a description of this immutable list
+     */
+    @Override
+    String toString();
+
 }

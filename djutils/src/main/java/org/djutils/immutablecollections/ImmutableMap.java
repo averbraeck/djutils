@@ -333,4 +333,11 @@ public interface ImmutableMap<K, V> extends Serializable
         }
     }
 
+    /**
+     * Force to redefine toString.
+     * @return String; a description of this immutable list
+     */
+    @Override
+    String toString();
+
 }
