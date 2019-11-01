@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.djutils.reflection.TestClass.InnerPublic;
 import org.junit.Test;
@@ -28,16 +29,16 @@ public class ClassUtilTest
     public void testClassUtilClass()
     {
         assertEquals(0, ClassUtil.getClass(null).length);
-        assertEquals(String.class, ClassUtil.getClass(new Object[] {"Peter"})[0]);
+        assertEquals(String.class, ClassUtil.getClass(new Object[] { "Peter" })[0]);
         // Note that primitive types are always autoboxed to the corresponding object types.
-        assertArrayEquals(new Class<?>[] {String.class, Double.class, Integer.class, Integer.class},
-                ClassUtil.getClass(new Object[] {"X", 1.0d, 5, new Integer(5)}));
-        assertArrayEquals(new Class<?>[] {String.class, Double.class, null, Integer.class},
-                ClassUtil.getClass(new Object[] {"X", 1.0d, null, 5}));
+        assertArrayEquals(new Class<?>[] { String.class, Double.class, Integer.class, Integer.class },
+                ClassUtil.getClass(new Object[] { "X", 1.0d, 5, new Integer(5) }));
+        assertArrayEquals(new Class<?>[] { String.class, Double.class, null, Integer.class },
+                ClassUtil.getClass(new Object[] { "X", 1.0d, null, 5 }));
     }
-    
+
     /**
-     * Test the toDescriptor method.
+     * Test the toDescriptor method of the FieldSignature class.
      */
     @Test
     public void testToDescriptor()
@@ -54,9 +55,9 @@ public class ClassUtilTest
         // System.out.println(FieldSignature.toDescriptor(int[].class));
         assertEquals("Ljava/lang/Integer;", FieldSignature.toDescriptor(Integer.class));
     }
-    
+
     /**
-     * Test the toClass method.
+     * Test the toClass method of the FieldSignature class.
      * @throws ClassNotFoundException if that happens uncaught; this test has failed
      */
     @Test
@@ -74,7 +75,7 @@ public class ClassUtilTest
         assertEquals(int[].class, FieldSignature.toClass("[I")); // repeated call uses the cache
         assertEquals(Integer.class, FieldSignature.toClass("Ljava/lang/Integer;"));
     }
-    
+
     /**
      * Test the constructors and fields of the FieldSignature class.
      * @throws ClassNotFoundException if that happens uncaught; this test has failed
@@ -93,6 +94,72 @@ public class ClassUtilTest
     }
 
     /**
+     * Test the constructors and fields of the MethodSignature class.
+     * @throws SecurityException if that happens uncaught; this test has failed
+     * @throws NoSuchMethodException if that happens uncaught; this test has failed
+     * @throws ClassNotFoundException if that happens uncaught; this test has failed
+     */
+    @Test
+    public void testMethodSignature() throws NoSuchMethodException, SecurityException, ClassNotFoundException
+    {
+        MethodSignature ms = new MethodSignature(String.class.getConstructor(String.class));
+        assertEquals(String.class, ms.getReturnType());
+        Class<?>[] parameterTypes = ms.getParameterTypes();
+        assertEquals(1, parameterTypes.length);
+        assertEquals(String.class, parameterTypes[0]);
+        assertEquals("Ljava/lang/String;", ms.getParameterDescriptor());
+        ms = new MethodSignature(String.class.getConstructor()); // Constructor for empty string
+        assertEquals(String.class, ms.getReturnType());
+        parameterTypes = ms.getParameterTypes();
+        assertEquals(0, parameterTypes.length);
+        ms = new MethodSignature("(I)[D");
+        assertEquals(double[].class, ms.getReturnType());
+        parameterTypes = ms.getParameterTypes();
+        assertEquals(1, parameterTypes.length);
+        assertEquals(int.class, parameterTypes[0]);
+        ms = new MethodSignature(String.class.getMethod("length"));
+        parameterTypes = ms.getParameterTypes();
+        assertEquals(0, parameterTypes.length);
+        Class<?> returnType = ms.getReturnType();
+        assertEquals(int.class, returnType);
+        Method[] methods = String.class.getMethods();
+        // find the substring method that takes two arguments
+        Method substring = null;
+        for (Method m : methods)
+        {
+            if (m.getName().equals("substring") && m.getParameterCount() == 2)
+            {
+                substring = m;
+            }
+        }
+        if (null == substring)
+        {
+            System.err.println("Could not find substring(int from, int to) method");
+        }
+        else
+        {
+            ms = new MethodSignature(substring);
+            parameterTypes = ms.getParameterTypes();
+            assertEquals(2, parameterTypes.length);
+            assertEquals(int.class, parameterTypes[0]);
+            assertEquals(int.class, parameterTypes[1]);
+            returnType = ms.getReturnType();
+            assertEquals(String.class, returnType);
+            assertEquals("II", ms.getParameterDescriptor());
+            assertEquals("Ljava/lang/String;", ms.getReturnDescriptor());
+            assertEquals("(II)Ljava/lang/String;", ms.toString());
+        }
+        ms = new MethodSignature(String.class.getMethod("getBytes"));
+        returnType = ms.getReturnType();
+        assertEquals(byte[].class, returnType);
+        ms = new MethodSignature(String.class.getConstructor(byte[].class));
+        parameterTypes = ms.getParameterTypes();
+        assertEquals(1, parameterTypes.length);
+        assertEquals(byte[].class, parameterTypes[0]);
+        assertEquals("[B", ms.getParameterDescriptor());
+    }
+
+    /**
      * Tests the ClassUtil Constructors
      * @throws NoSuchMethodException on error
      * @throws InvocationTargetException on error
@@ -108,7 +175,7 @@ public class ClassUtilTest
         TestClass o1 = c1.newInstance();
         assertEquals("<init>", o1.getState());
 
-        Constructor<TestClass> c2 = ClassUtil.resolveConstructor(TestClass.class, new Class<?>[] {String.class});
+        Constructor<TestClass> c2 = ClassUtil.resolveConstructor(TestClass.class, new Class<?>[] { String.class });
         TestClass o2 = c2.newInstance("c2");
         assertEquals("c2", o2.getState());
 
@@ -116,19 +183,19 @@ public class ClassUtilTest
         InnerPublic o3 = c3.newInstance();
         assertEquals("<initInnerPublic>", o3.getInnerState());
 
-        Constructor<InnerPublic> c4 = ClassUtil.resolveConstructor(InnerPublic.class, new Class<?>[] {String.class});
+        Constructor<InnerPublic> c4 = ClassUtil.resolveConstructor(InnerPublic.class, new Class<?>[] { String.class });
         InnerPublic o4 = c4.newInstance("inner");
         assertEquals("inner", o4.getInnerState());
 
         // test caching
-        Constructor<InnerPublic> c4a = ClassUtil.resolveConstructor(InnerPublic.class, new Class<?>[] {String.class});
+        Constructor<InnerPublic> c4a = ClassUtil.resolveConstructor(InnerPublic.class, new Class<?>[] { String.class });
         InnerPublic o4a = c4a.newInstance("inner2");
         assertEquals("inner2", o4a.getInnerState());
 
         // test constructor that cannot be found
         try
         {
-            ClassUtil.resolveConstructor(TestClass.class, new Class<?>[] {Integer.class});
+            ClassUtil.resolveConstructor(TestClass.class, new Class<?>[] { Integer.class });
             fail("Constructor TestClass(int) does not exist and resolving should throw an exception");
         }
         catch (NoSuchMethodException e)
@@ -137,11 +204,11 @@ public class ClassUtilTest
         }
 
         // test access to public and private constructors
-        ClassUtil.resolveConstructor(TestClass.class, new Class<?>[] {boolean.class});
-        ClassUtil.resolveConstructor(TestClass.class, ClassUtilTest.class, new Class<?>[] {String.class});
+        ClassUtil.resolveConstructor(TestClass.class, new Class<?>[] { boolean.class });
+        ClassUtil.resolveConstructor(TestClass.class, ClassUtilTest.class, new Class<?>[] { String.class });
         try
         {
-            ClassUtil.resolveConstructor(TestClass.class, ClassUtilTest.class, new Class<?>[] {boolean.class});
+            ClassUtil.resolveConstructor(TestClass.class, ClassUtilTest.class, new Class<?>[] { boolean.class });
             fail("Constructor TestClass(boolean) is private and resolving should throw an exception");
         }
         catch (IllegalAccessException e)
