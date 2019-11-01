@@ -43,6 +43,10 @@ public class ClassFileDescriptorTest
         assertEquals("Test.class", cfdClass.getName());
         Date cfdClassDate = new Date(cfdClass.getLastChangedDate());
         assertEquals("2000-01-01 01:02:03", formatter.format(cfdClassDate));
+        
+        assertTrue(
+                cfdClass.getPath().toString().replaceAll("\\\\", "/").endsWith("/org/djutils-test-resources/test/Test.class"));
+        assertTrue(cfdClass.toString().startsWith("ClassFileDescriptor ["));
 
         URL cfdJarURL = URLResource.getResource("/org/djutils-test-resources/test/Test.jar");
         // change the last accessed date of the jar -- not of the file in the jar
