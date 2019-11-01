@@ -19,6 +19,7 @@ import org.junit.Test;
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
+ * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
 public class ClassUtilTest
 {
@@ -33,6 +34,62 @@ public class ClassUtilTest
                 ClassUtil.getClass(new Object[] {"X", 1.0d, 5, new Integer(5)}));
         assertArrayEquals(new Class<?>[] {String.class, Double.class, null, Integer.class},
                 ClassUtil.getClass(new Object[] {"X", 1.0d, null, 5}));
+    }
+    
+    /**
+     * Test the toDescriptor method.
+     */
+    @Test
+    public void testToDescriptor()
+    {
+        assertEquals("I", FieldSignature.toDescriptor(int.class));
+        assertEquals("D", FieldSignature.toDescriptor(double.class));
+        assertEquals("Z", FieldSignature.toDescriptor(boolean.class));
+        assertEquals("C", FieldSignature.toDescriptor(char.class));
+        assertEquals("B", FieldSignature.toDescriptor(byte.class));
+        assertEquals("F", FieldSignature.toDescriptor(float.class));
+        assertEquals("J", FieldSignature.toDescriptor(long.class));
+        assertEquals("S", FieldSignature.toDescriptor(short.class));
+        assertEquals("[I", FieldSignature.toDescriptor(int[].class));
+        // System.out.println(FieldSignature.toDescriptor(int[].class));
+        assertEquals("Ljava/lang/Integer;", FieldSignature.toDescriptor(Integer.class));
+    }
+    
+    /**
+     * Test the toClass method.
+     * @throws ClassNotFoundException if that happens uncaught; this test has failed
+     */
+    @Test
+    public void testToClass() throws ClassNotFoundException
+    {
+        assertEquals(int.class, FieldSignature.toClass("I"));
+        assertEquals(double.class, FieldSignature.toClass("D"));
+        assertEquals(boolean.class, FieldSignature.toClass("Z"));
+        assertEquals(char.class, FieldSignature.toClass("C"));
+        assertEquals(byte.class, FieldSignature.toClass("B"));
+        assertEquals(float.class, FieldSignature.toClass("F"));
+        assertEquals(long.class, FieldSignature.toClass("J"));
+        assertEquals(short.class, FieldSignature.toClass("S"));
+        assertEquals(int[].class, FieldSignature.toClass("[I"));
+        assertEquals(int[].class, FieldSignature.toClass("[I")); // repeated call uses the cache
+        assertEquals(Integer.class, FieldSignature.toClass("Ljava/lang/Integer;"));
+    }
+    
+    /**
+     * Test the constructors and fields of the FieldSignature class.
+     * @throws ClassNotFoundException if that happens uncaught; this test has failed
+     */
+    @Test
+    public void testFieldSignature() throws ClassNotFoundException
+    {
+        FieldSignature fs = new FieldSignature("[J");
+        assertEquals("[J", fs.toString());
+        assertEquals("[J", fs.getStringValue());
+        assertEquals(long[].class, fs.getClassValue());
+        FieldSignature fs2 = new FieldSignature(double[].class);
+        assertEquals("[D", fs2.toString());
+        assertEquals("[D", fs2.getStringValue());
+        assertEquals(double[].class, fs2.getClassValue());
     }
 
     /**
