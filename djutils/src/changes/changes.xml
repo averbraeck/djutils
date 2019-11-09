@@ -4,6 +4,9 @@
 
     <release version="1.03.02" date="2019-10-31" description="SpotBus instead of FindBugs in Maven">
       <action dev="averbraeck" type="fix">
+        Ensured that "package-list" exists in apidocs for backward compatibility of javadoc linking.
+      </action>
+      <action dev="averbraeck" type="fix">
         Replaced FindBugs (which already had a problem supporting Java 8) with SpotBugs 
         (supporting later Java versions as well).
       </action>

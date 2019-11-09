@@ -182,6 +182,7 @@
               <url>scp://djutils.org/home/web/djutils.org</url>
               <serverId>djutils-deployment</serverId>
               <commands>
+                <command>cp -f /home/web/djutils.org/docs/${project.version}/djutils-serialization/apidocs/element-list /home/web/djutils.org/docs/${project.version}/djutils-serialization/apidocs/package-list</command>
                 <command>rm -r -f /home/web/djutils.org/docs/current</command>
                 <command>mkdir -p /home/web/djutils.org/docs/current</command>
                 <command>cp -r -f /home/web/djutils.org/docs/${project.version}/. /home/web/djutils.org/docs/current</command>
@@ -566,8 +567,8 @@
     </repository>
 
     <repository>
+      <name>DJUNITS Repository</name>
       <id>djunits</id>
-      <name>djunits Public Repository</name>
       <url>https://djunits.org/maven</url>
     </repository>
 
