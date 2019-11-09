@@ -230,7 +230,6 @@
           <maxmemory>1g</maxmemory>
           <show>package</show>
           <detectJavaApiLink>true</detectJavaApiLink>
-          <additionalOptions>--frames</additionalOptions>
           <detectLinks>true</detectLinks>
           <detectOfflineLinks>true</detectOfflineLinks>
         </configuration>
@@ -375,7 +374,6 @@
           <maxmemory>1g</maxmemory>
           <show>package</show>
           <detectJavaApiLink>true</detectJavaApiLink>
-          <additionalOptions>--frames</additionalOptions>
           <detectLinks>true</detectLinks>
           <detectOfflineLinks>true</detectOfflineLinks>
         </configuration>
