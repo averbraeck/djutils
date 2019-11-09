@@ -222,7 +222,7 @@
           <source>8</source>
           <links>
             <link>https://download.java.net/media/java3d/javadoc/1.5.1/</link>
-            <link>https://tinylog.org/javadoc/</link>
+            <link>https://tinylog.org/v1/javadoc/</link>
             <link>https://picocli.info/apidocs/</link>
             <link>https://djunits.org/docs/current/apidocs/</link>
           </links>
@@ -230,8 +230,6 @@
           <maxmemory>1g</maxmemory>
           <show>package</show>
           <detectJavaApiLink>true</detectJavaApiLink>
-          <detectLinks>true</detectLinks>
-          <detectOfflineLinks>true</detectOfflineLinks>
         </configuration>
         <executions>
           <execution>
@@ -366,7 +364,7 @@
           <source>8</source>
           <links>
             <link>https://download.java.net/media/java3d/javadoc/1.5.1/</link>
-            <link>https://tinylog.org/javadoc/</link>
+            <link>https://tinylog.org/v1/javadoc/</link>
             <link>https://picocli.info/apidocs/</link>
             <link>https://djunits.org/docs/current/apidocs/</link>
           </links>
@@ -374,8 +372,6 @@
           <maxmemory>1g</maxmemory>
           <show>package</show>
           <detectJavaApiLink>true</detectJavaApiLink>
-          <detectLinks>true</detectLinks>
-          <detectOfflineLinks>true</detectOfflineLinks>
         </configuration>
 
         <reportSets>
