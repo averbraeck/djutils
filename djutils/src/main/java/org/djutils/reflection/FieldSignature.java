@@ -2,7 +2,7 @@ package org.djutils.reflection;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.djutils.primitives.Primitive;
@@ -22,10 +22,10 @@ import org.djutils.primitives.Primitive;
 public class FieldSignature implements Serializable
 {
     /** The default serial version UID for serializable classes. */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 20191230L;
 
     /** the CAHCHe. */
-    private static final Map<String, Class<?>> CACHE = new HashMap<String, Class<?>>();
+    private static final Map<String, Class<?>> CACHE = new LinkedHashMap<String, Class<?>>();
 
     /** the value of the field descriptor. */
     private String value;

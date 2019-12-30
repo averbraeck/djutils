@@ -331,16 +331,16 @@ public final class Primitive
     {
         if (object instanceof Character)
         {
-            return new Integer(((Character) object).charValue());
+            return Integer.valueOf(((Character) object).charValue());
         }
         if (object instanceof Boolean)
         {
             if (((Boolean) object).booleanValue())
             {
-                return new Integer(1);
+                return Integer.valueOf(1);
             }
-            return new Integer(0);
+            return Integer.valueOf(0);
         }
-        return new Integer(((Number) object).intValue());
+        return Integer.valueOf(((Number) object).intValue());
     }
 }

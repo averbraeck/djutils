@@ -51,7 +51,7 @@ public abstract class ImmutableAbstractSet<E> extends ImmutableAbstractCollectio
 
     /** {@inheritDoc} */
     @Override
-    protected Set<E> getCollection()
+    protected Set<E> getUnderlyingCollection()
     {
         return this.set;
     }

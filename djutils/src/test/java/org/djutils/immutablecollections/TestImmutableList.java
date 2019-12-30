@@ -65,11 +65,11 @@ public class TestImmutableList
         {
             assertEquals("sub list element matches", values[index + 2], il2.get(index));
         }
-        assertEquals("position of first 2", 0, il.indexOf(new Integer(2)));
-        assertEquals("position of first (and only) 4", 4, il.indexOf(new Integer(4)));
-        assertEquals("position of last 2", 3, il.lastIndexOf(new Integer(2)));
-        assertTrue("contains 1", il.contains(new Integer(1)));
-        assertFalse("does not contain 123", il.contains(new Integer(123)));
+        assertEquals("position of first 2", 0, il.indexOf(Integer.valueOf(2)));
+        assertEquals("position of first (and only) 4", 4, il.indexOf(Integer.valueOf(4)));
+        assertEquals("position of last 2", 3, il.lastIndexOf(Integer.valueOf(2)));
+        assertTrue("contains 1", il.contains(Integer.valueOf(1)));
+        assertFalse("does not contain 123", il.contains(Integer.valueOf(123)));
         Object[] outObject = il.toArray();
         assertEquals("length of toArray matches size of what went in", values.length, outObject.length);
         for (int index = 0; index < outObject.length; index++)
@@ -165,8 +165,8 @@ public class TestImmutableList
         is2 = new ImmutableHashSet<Integer>((ImmutableAbstractSet<Integer>) is, Immutable.WRAP);
         assertTrue("WRAP means wrap", is2.isWrap());
         assertEquals("has same size", is.size(), is2.size());
-        assertTrue("contains 1", is.contains(new Integer(1)));
-        assertFalse("does not contain 123", is.contains(new Integer(123)));
+        assertTrue("contains 1", is.contains(Integer.valueOf(1)));
+        assertFalse("does not contain 123", is.contains(Integer.valueOf(123)));
         Object[] outObject = is.toArray();
         assertEquals("length of toArray matches size of what went in", values.length, outObject.length);
         Set<Integer> verify = new HashSet<>(Arrays.asList(values));

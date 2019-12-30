@@ -53,7 +53,7 @@ public class ImmutableHashMap<K, V> extends ImmutableAbstractMap<K, V>
      */
     public ImmutableHashMap(final ImmutableAbstractMap<K, V> immutableMap)
     {
-        super(new HashMap<K, V>(immutableMap.getMap()), Immutable.COPY);
+        super(new HashMap<K, V>(immutableMap.getUnderlyingMap()), Immutable.COPY);
     }
 
     /**
@@ -62,21 +62,21 @@ public class ImmutableHashMap<K, V> extends ImmutableAbstractMap<K, V>
      */
     public ImmutableHashMap(final ImmutableAbstractMap<K, V> immutableMap, final Immutable copyOrWrap)
     {
-        super(copyOrWrap == Immutable.COPY ? new HashMap<K, V>(immutableMap.getMap()) : immutableMap.getMap(), copyOrWrap);
+        super(copyOrWrap == Immutable.COPY ? new HashMap<K, V>(immutableMap.getUnderlyingMap()) : immutableMap.getUnderlyingMap(), copyOrWrap);
     }
 
     /** {@inheritDoc} */
     @Override
-    protected final Map<K, V> getMap()
+    protected final Map<K, V> getUnderlyingMap()
     {
-        return super.getMap();
+        return super.getUnderlyingMap();
     }
 
     /** {@inheritDoc} */
     @Override
     public final Map<K, V> toMap()
     {
-        return new HashMap<K, V>(getMap());
+        return new HashMap<K, V>(getUnderlyingMap());
     }
 
     /** {@inheritDoc} */
@@ -85,7 +85,7 @@ public class ImmutableHashMap<K, V> extends ImmutableAbstractMap<K, V>
     {
         if (this.cachedKeySet == null)
         {
-            Set<K> immutableKeySet = new HashSet<>(getMap().keySet());
+            Set<K> immutableKeySet = new HashSet<>(getUnderlyingMap().keySet());
             this.cachedKeySet = new ImmutableHashSet<>(immutableKeySet, Immutable.WRAP);
         }
         return this.cachedKeySet;
@@ -98,7 +98,7 @@ public class ImmutableHashMap<K, V> extends ImmutableAbstractMap<K, V>
         if (this.cachedEntrySet == null)
         {
             Set<ImmutableEntry<K, V>> immutableEntrySet = new HashSet<>();
-            for (Entry<K, V> entry : getMap().entrySet())
+            for (Entry<K, V> entry : getUnderlyingMap().entrySet())
             {
                 immutableEntrySet.add(new ImmutableEntry<>(entry));
             }
@@ -112,7 +112,7 @@ public class ImmutableHashMap<K, V> extends ImmutableAbstractMap<K, V>
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()
     {
-        Map<K, V> map = getMap();
+        Map<K, V> map = getUnderlyingMap();
         if (null == map)
         {
             return "ImmutableHashMap []";

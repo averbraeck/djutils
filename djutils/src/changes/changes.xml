@@ -2,7 +2,50 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.03.02" date="2019-10-31" description="SpotBus instead of FindBugs in Maven">
+    <release version="1.04.00" date="2019-12-30" description="DSOL Event package added to DJUTILS">
+      <action dev="averbraeck" type="add">
+        The event package for pub/sub, originally the dsol-event package, has been added to DJUTILS and 
+        will be removed from the next version of DSOL.
+      </action>
+      <action dev="averbraeck" type="fix">
+        Many open issues in the DSOL event package has been fixed in the port to DJUTILS. Examples are adding
+        equals and hashCode methods for the TimedEvent, better writeObject and readObject methods for the
+        EventListenerMap, repair of the failure to sometimes remove an EventListener from the EventProducer, etc. 
+      </action>
+      <action dev="averbraeck" type="add">
+        Almost full unit test coverage has been added to the djunits event package. 
+      </action>
+      <action dev="averbraeck" type="update">
+        The event producing collections in the event.util package now only fire events when additions or 
+        removals actually took place, not just when the add / remove / put methods are called.  
+      </action>
+      <action dev="averbraeck" type="add">
+        The EventProducingCollection, EventProducingList, EventProducingMap and EventProducingSet in the 
+        event.util package also fire events when content in the collections has changed. In that case, 
+        a CHANGE_EVENT is fired.
+      </action>
+      <action dev="averbraeck" type="add">
+        The events of the event producing collections in the event.util package now have events that carry a
+        payload. The payload is the new number of entries in the collection for the ADD_EVENT and REMOVE_EVENT.
+        It is equal to the changed index for the CHANGE_EVENT of the List, and null for the CHANGE_EVENT of
+        the other collection types that are not indexed.
+      </action>
+      <action dev="averbraeck" type="update">
+        Since the boolean for strong versus weak references in the EventProducer was always unclear (does
+        true mean strong or weak?), it has been replaced by an enum.   
+      </action>
+      <action dev="averbraeck" type="update">
+        Several of the underlying data structures of the djutils package have been changed from a HashMap
+        to a LinkedHashMap and from a HashSet to a LinkedHashSet to guarantee reproducibility of results.
+        As an exception the ImmutableHashSet and ImmutableHashMap are still backed by unlinked variants,
+        as they explicitly are not reproducible.
+      </action>      
+      <action dev="averbraeck" type="update">
+        DJUNITS updated to 4.01.03.
+      </action>
+    </release>
+    
+    <release version="1.03.02" date="2019-10-31" description="SpotBugs instead of FindBugs in Maven">
       <action dev="averbraeck" type="fix">
         Ensured that "package-list" exists in apidocs for backward compatibility of javadoc linking.
       </action>

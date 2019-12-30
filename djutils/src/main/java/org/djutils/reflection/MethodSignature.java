@@ -22,7 +22,7 @@ import java.util.List;
 public class MethodSignature implements Serializable
 {
     /** The default serial version UID for serializable classes. */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 20191230L;
 
     /** the value of the methodDescriptor. */
     private String value = null;

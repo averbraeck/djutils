@@ -44,7 +44,7 @@ public class ImmutableHashSet<E> extends ImmutableAbstractSet<E>
      */
     public ImmutableHashSet(final ImmutableAbstractCollection<? extends E> collection)
     {
-        super(new HashSet<E>(collection.getCollection()), Immutable.COPY);
+        super(new HashSet<E>(collection.getUnderlyingCollection()), Immutable.COPY);
     }
 
     /**
@@ -53,21 +53,21 @@ public class ImmutableHashSet<E> extends ImmutableAbstractSet<E>
      */
     public ImmutableHashSet(final ImmutableAbstractSet<E> set, final Immutable copyOrWrap)
     {
-        super(copyOrWrap == Immutable.COPY ? new HashSet<E>(set.getCollection()) : set.getCollection(), copyOrWrap);
+        super(copyOrWrap == Immutable.COPY ? new HashSet<E>(set.getUnderlyingCollection()) : set.getUnderlyingCollection(), copyOrWrap);
     }
 
     /** {@inheritDoc} */
     @Override
-    protected Set<E> getCollection()
+    protected Set<E> getUnderlyingCollection()
     {
-        return super.getCollection();
+        return super.getUnderlyingCollection();
     }
 
     /** {@inheritDoc} */
     @Override
     public final Set<E> toSet()
     {
-        return new HashSet<E>(getCollection());
+        return new HashSet<E>(getUnderlyingCollection());
     }
 
     /** {@inheritDoc} */
@@ -75,7 +75,7 @@ public class ImmutableHashSet<E> extends ImmutableAbstractSet<E>
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()
     {
-        Set<E> set = getCollection();
+        Set<E> set = getUnderlyingCollection();
         if (null == set)
         {
             return "ImmutableHashSet []";

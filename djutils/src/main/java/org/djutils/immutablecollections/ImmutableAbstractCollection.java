@@ -40,5 +40,5 @@ public abstract class ImmutableAbstractCollection<E> implements ImmutableCollect
      * collection. In case of IMMUTABLE.COPY, this will be the internally stored (mutable) copy of the collection.
      * @return the underlying collection of this immutable collection.
      */
-    protected abstract Collection<E> getCollection();
+    protected abstract Collection<E> getUnderlyingCollection();
 }

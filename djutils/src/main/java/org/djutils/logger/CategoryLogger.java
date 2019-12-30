@@ -1,8 +1,8 @@
 package org.djutils.logger;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
@@ -49,16 +49,16 @@ public class CategoryLogger
     private static Level defaultLevel = Level.INFO;
 
     /** The writers registered with this CategoryLogger. */
-    private static Set<Writer> writers = new HashSet<>();
+    private static Set<Writer> writers = new LinkedHashSet<>();
 
     /** The log level per Writer. */
-    private static Map<Writer, Level> writerLevels = new HashMap<>();
+    private static Map<Writer, Level> writerLevels = new LinkedHashMap<>();
 
     /** The message format per Writer. */
-    private static Map<Writer, String> writerFormats = new HashMap<>();
+    private static Map<Writer, String> writerFormats = new LinkedHashMap<>();
 
     /** The categories to log. */
-    protected static Set<LogCategory> categories = new HashSet<>(256);
+    protected static Set<LogCategory> categories = new LinkedHashSet<>(256);
 
     /** The console writer, replacing the default one. */
     private static Writer consoleWriter;

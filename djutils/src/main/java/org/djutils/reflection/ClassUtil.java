@@ -17,8 +17,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -43,7 +43,7 @@ import org.djutils.primitives.Primitive;
 public final class ClassUtil
 {
     /** CACHE reflects the internal repository CACHE. */
-    private static final Map<String, Object> CACHE = Collections.synchronizedMap(new HashMap<String, Object>());
+    private static final Map<String, Object> CACHE = Collections.synchronizedMap(new LinkedHashMap<String, Object>());
 
     /**
      * constructs a new ClassUtil.
@@ -257,7 +257,7 @@ public final class ClassUtil
      */
     public static Set<Field> getAllFields(final Class<?> clazz)
     {
-        Set<Field> fieldSet = new HashSet<Field>();
+        Set<Field> fieldSet = new LinkedHashSet<Field>();
         return ClassUtil.getAllFields(clazz, fieldSet);
     }
 
@@ -501,7 +501,7 @@ public final class ClassUtil
      */
     public static Set<Annotation> getAllAnnotations(final Class<?> clazz)
     {
-        Set<Annotation> annotationSet = new HashSet<Annotation>();
+        Set<Annotation> annotationSet = new LinkedHashSet<Annotation>();
         return ClassUtil.getAllAnnotations(clazz, annotationSet);
     }
 

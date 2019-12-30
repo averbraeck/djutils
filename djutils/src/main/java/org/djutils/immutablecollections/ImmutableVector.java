@@ -48,7 +48,7 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
      */
     public ImmutableVector(final ImmutableAbstractCollection<? extends E> collection)
     {
-        super(new Vector<E>(collection.getCollection()), Immutable.COPY);
+        super(new Vector<E>(collection.getUnderlyingCollection()), Immutable.COPY);
     }
 
     /**
@@ -57,14 +57,14 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
      */
     public ImmutableVector(final ImmutableVector<E> vector, final Immutable copyOrWrap)
     {
-        this(copyOrWrap == Immutable.COPY ? new Vector<E>(vector.getCollection()) : vector.getCollection(), copyOrWrap);
+        this(copyOrWrap == Immutable.COPY ? new Vector<E>(vector.getUnderlyingCollection()) : vector.getUnderlyingCollection(), copyOrWrap);
     }
 
     /** {@inheritDoc} */
     @Override
     public final List<E> toList()
     {
-        return new Vector<E>(getCollection());
+        return new Vector<E>(getUnderlyingCollection());
     }
 
     /**
@@ -73,21 +73,21 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
      */
     public final Vector<E> toVector()
     {
-        return new Vector<E>(getCollection());
+        return new Vector<E>(getUnderlyingCollection());
     }
 
     /** {@inheritDoc} */
     @Override
-    protected Vector<E> getCollection()
+    protected Vector<E> getUnderlyingCollection()
     {
-        return (Vector<E>) super.getCollection();
+        return (Vector<E>) super.getUnderlyingCollection();
     }
 
     /** {@inheritDoc} */
     @Override
     public final ImmutableList<E> subList(final int fromIndex, final int toIndex)
     {
-        return new ImmutableVector<E>(getCollection().subList(fromIndex, toIndex));
+        return new ImmutableVector<E>(getUnderlyingCollection().subList(fromIndex, toIndex));
     }
 
     /**
@@ -103,7 +103,7 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
      */
     public final void copyInto(final Object[] anArray)
     {
-        getCollection().copyInto(anArray);
+        getUnderlyingCollection().copyInto(anArray);
     }
 
     /**
@@ -112,7 +112,7 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
      */
     public final int capacity()
     {
-        return getCollection().capacity();
+        return getUnderlyingCollection().capacity();
     }
 
     /**
@@ -123,7 +123,7 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
      */
     public final Enumeration<E> elements()
     {
-        return getCollection().elements();
+        return getUnderlyingCollection().elements();
     }
 
     /**
@@ -140,7 +140,7 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
      */
     public final int indexOf(final Object o, final int index)
     {
-        return getCollection().indexOf(o, index);
+        return getUnderlyingCollection().indexOf(o, index);
     }
 
     /**
@@ -157,7 +157,7 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
      */
     public final int lastIndexOf(final Object o, final int index)
     {
-        return getCollection().lastIndexOf(o, index);
+        return getUnderlyingCollection().lastIndexOf(o, index);
     }
 
     /**
@@ -170,7 +170,7 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
      */
     public final E elementAt(final int index)
     {
-        return getCollection().elementAt(index);
+        return getUnderlyingCollection().elementAt(index);
     }
 
     /**
@@ -180,7 +180,7 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
      */
     public final E firstElement()
     {
-        return getCollection().firstElement();
+        return getUnderlyingCollection().firstElement();
     }
 
     /**
@@ -190,14 +190,14 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
      */
     public final E lastElement()
     {
-        return getCollection().lastElement();
+        return getUnderlyingCollection().lastElement();
     }
 
     /** {@inheritDoc} */
     @Override
     public final String toString()
     {
-        List<E> list = getCollection();
+        List<E> list = getUnderlyingCollection();
         if (null == list)
         {
             return "ImmutableVector []";

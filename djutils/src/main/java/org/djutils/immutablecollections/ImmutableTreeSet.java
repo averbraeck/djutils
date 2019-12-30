@@ -45,7 +45,7 @@ public class ImmutableTreeSet<E> extends ImmutableAbstractSet<E> implements Immu
      */
     public ImmutableTreeSet(final ImmutableAbstractSet<E> immutableSortedSet)
     {
-        super(new TreeSet<E>(immutableSortedSet.getCollection()), Immutable.COPY);
+        super(new TreeSet<E>(immutableSortedSet.getUnderlyingCollection()), Immutable.COPY);
     }
 
     /**
@@ -54,106 +54,106 @@ public class ImmutableTreeSet<E> extends ImmutableAbstractSet<E> implements Immu
      */
     public ImmutableTreeSet(final ImmutableTreeSet<E> immutableTreeSet, final Immutable copyOrWrap)
     {
-        super(copyOrWrap == Immutable.COPY ? new TreeSet<E>(immutableTreeSet.getCollection())
-                : immutableTreeSet.getCollection(), copyOrWrap);
+        super(copyOrWrap == Immutable.COPY ? new TreeSet<E>(immutableTreeSet.getUnderlyingCollection())
+                : immutableTreeSet.getUnderlyingCollection(), copyOrWrap);
     }
 
     /** {@inheritDoc} */
     @Override
     public final NavigableSet<E> toSet()
     {
-        return new TreeSet<E>(getCollection());
+        return new TreeSet<E>(getUnderlyingCollection());
     }
 
     /** {@inheritDoc} */
     @Override
-    protected NavigableSet<E> getCollection()
+    protected NavigableSet<E> getUnderlyingCollection()
     {
-        return (NavigableSet<E>) super.getCollection();
+        return (NavigableSet<E>) super.getUnderlyingCollection();
     }
 
     /** {@inheritDoc} */
     @Override
     public final Comparator<? super E> comparator()
     {
-        return getCollection().comparator();
+        return getUnderlyingCollection().comparator();
     }
 
     /** {@inheritDoc} */
     @Override
     public final ImmutableSortedSet<E> subSet(final E fromElement, final E toElement)
     {
-        return new ImmutableTreeSet<E>(getCollection().subSet(fromElement, toElement));
+        return new ImmutableTreeSet<E>(getUnderlyingCollection().subSet(fromElement, toElement));
     }
 
     /** {@inheritDoc} */
     @Override
     public final ImmutableSortedSet<E> headSet(final E toElement)
     {
-        return new ImmutableTreeSet<E>(getCollection().headSet(toElement));
+        return new ImmutableTreeSet<E>(getUnderlyingCollection().headSet(toElement));
     }
 
     /** {@inheritDoc} */
     @Override
     public final ImmutableSortedSet<E> tailSet(final E fromElement)
     {
-        return new ImmutableTreeSet<E>(getCollection().tailSet(fromElement));
+        return new ImmutableTreeSet<E>(getUnderlyingCollection().tailSet(fromElement));
     }
 
     /** {@inheritDoc} */
     @Override
     public final E first()
     {
-        return getCollection().first();
+        return getUnderlyingCollection().first();
     }
 
     /** {@inheritDoc} */
     @Override
     public final E last()
     {
-        return getCollection().last();
+        return getUnderlyingCollection().last();
     }
 
     /** {@inheritDoc} */
     @Override
     public final E lower(final E e)
     {
-        return getCollection().lower(e);
+        return getUnderlyingCollection().lower(e);
     }
 
     /** {@inheritDoc} */
     @Override
     public final E floor(final E e)
     {
-        return getCollection().floor(e);
+        return getUnderlyingCollection().floor(e);
     }
 
     /** {@inheritDoc} */
     @Override
     public final E ceiling(final E e)
     {
-        return getCollection().ceiling(e);
+        return getUnderlyingCollection().ceiling(e);
     }
 
     /** {@inheritDoc} */
     @Override
     public final E higher(final E e)
     {
-        return getCollection().higher(e);
+        return getUnderlyingCollection().higher(e);
     }
 
     /** {@inheritDoc} */
     @Override
     public final ImmutableNavigableSet<E> descendingSet()
     {
-        return new ImmutableTreeSet<E>(getCollection().descendingSet());
+        return new ImmutableTreeSet<E>(getUnderlyingCollection().descendingSet());
     }
 
     /** {@inheritDoc} */
     @Override
     public final ImmutableIterator<E> descendingIterator()
     {
-        return new ImmutableIterator<E>(getCollection().descendingIterator());
+        return new ImmutableIterator<E>(getUnderlyingCollection().descendingIterator());
     }
 
     /** {@inheritDoc} */
@@ -161,28 +161,28 @@ public class ImmutableTreeSet<E> extends ImmutableAbstractSet<E> implements Immu
     public final ImmutableNavigableSet<E> subSet(final E fromElement, final boolean fromInclusive, final E toElement,
             final boolean toInclusive)
     {
-        return new ImmutableTreeSet<E>(getCollection().subSet(fromElement, fromInclusive, toElement, toInclusive));
+        return new ImmutableTreeSet<E>(getUnderlyingCollection().subSet(fromElement, fromInclusive, toElement, toInclusive));
     }
 
     /** {@inheritDoc} */
     @Override
     public final ImmutableNavigableSet<E> headSet(final E toElement, final boolean inclusive)
     {
-        return new ImmutableTreeSet<E>(getCollection().headSet(toElement, inclusive));
+        return new ImmutableTreeSet<E>(getUnderlyingCollection().headSet(toElement, inclusive));
     }
 
     /** {@inheritDoc} */
     @Override
     public final ImmutableNavigableSet<E> tailSet(final E fromElement, final boolean inclusive)
     {
-        return new ImmutableTreeSet<E>(getCollection().tailSet(fromElement, inclusive));
+        return new ImmutableTreeSet<E>(getUnderlyingCollection().tailSet(fromElement, inclusive));
     }
 
     /** {@inheritDoc} */
     @Override
     public final String toString()
     {
-        NavigableSet<E> set = getCollection();
+        NavigableSet<E> set = getUnderlyingCollection();
         if (null == set)
         {
             return "ImmutableTreeSet []";
