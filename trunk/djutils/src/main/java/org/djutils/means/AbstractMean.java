@@ -96,7 +96,7 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
     protected abstract AbstractMean<MT, V, W> addImpl(final V value, final Number weight);
 
     /** Unity weight. */
-    private final Number unityWeight = new Integer(1);
+    private final Number unityWeight = Integer.valueOf(1);
 
     /**
      * Add a value with weight 1.

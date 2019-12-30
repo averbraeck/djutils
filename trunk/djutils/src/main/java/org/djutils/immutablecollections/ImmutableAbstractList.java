@@ -52,7 +52,7 @@ public abstract class ImmutableAbstractList<E> extends ImmutableAbstractCollecti
 
     /** {@inheritDoc} */
     @Override
-    protected List<E> getCollection()
+    protected List<E> getUnderlyingCollection()
     {
         return this.list;
     }

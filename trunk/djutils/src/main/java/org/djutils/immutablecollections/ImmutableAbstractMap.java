@@ -1,6 +1,6 @@
 package org.djutils.immutablecollections;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,20 +49,11 @@ public abstract class ImmutableAbstractMap<K, V> implements ImmutableMap<K, V>
     }
 
     /**
-     * Prepare the map of the right type for use a subclass. Implement e.g. as follows:
-     * 
-     * <pre>
-     * {@literal @}Override
-     * protected HashMap&lt;E&gt; getMap()
-     * {
-     *     return (HashMap&lt;E&gt;) super.getMap();
-     * }
-     * </pre>
-     * 
-     * @return the map of the right type for use a subclass
+     * Return the raw underlying map.
+     * @return Map&lt;K, V&gt;; the raw underlying map
      */
     @SuppressWarnings("checkstyle:designforextension")
-    protected Map<K, V> getMap()
+    protected Map<K, V> getUnderlyingMap()
     {
         return this.map;
     }
@@ -108,7 +99,7 @@ public abstract class ImmutableAbstractMap<K, V> implements ImmutableMap<K, V>
     {
         if (this.cachedValues == null)
         {
-            Set<V> immutableValues = new HashSet<>(getMap().values());
+            Set<V> immutableValues = new LinkedHashSet<>(getUnderlyingMap().values());
             this.cachedValues = new ImmutableHashSet<>(immutableValues, Immutable.WRAP);
         }
         return this.cachedValues;

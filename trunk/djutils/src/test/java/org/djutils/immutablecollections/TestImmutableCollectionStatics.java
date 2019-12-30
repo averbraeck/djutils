@@ -43,8 +43,8 @@ public class TestImmutableCollectionStatics
     {
         final Integer[] values = new Integer[] {10, 2, -5, 2, 2, 6};
         ImmutableList<Integer> il = new ImmutableArrayList<>(new ArrayList<Integer>(Arrays.asList(values)), Immutable.WRAP);
-        assertEquals("max", new Integer(10), ImmutableCollections.max(il));
-        assertEquals("min", new Integer(-5), ImmutableCollections.min(il));
+        assertEquals("max", Integer.valueOf(10), ImmutableCollections.max(il));
+        assertEquals("min", Integer.valueOf(-5), ImmutableCollections.min(il));
         Comparator<Integer> indexComparator = new Comparator<Integer>()
         {
             // This crazy comparator compares position of the given values in the array values
@@ -54,11 +54,11 @@ public class TestImmutableCollectionStatics
                 return Arrays.binarySearch(values, o1) - Arrays.binarySearch(values, o2);
             }
         };
-        assertEquals("custom comparator max", new Integer(6), ImmutableCollections.max(il, indexComparator));
-        assertEquals("custom comparator min", new Integer(10), ImmutableCollections.min(il, indexComparator));
-        assertEquals("number of 10s", 1, ImmutableCollections.frequency(il, new Integer(10)));
-        assertEquals("number of 100s", 0, ImmutableCollections.frequency(il, new Integer(100)));
-        assertEquals("number of 2s", 3, ImmutableCollections.frequency(il, new Integer(2)));
+        assertEquals("custom comparator max", Integer.valueOf(6), ImmutableCollections.max(il, indexComparator));
+        assertEquals("custom comparator min", Integer.valueOf(10), ImmutableCollections.min(il, indexComparator));
+        assertEquals("number of 10s", 1, ImmutableCollections.frequency(il, Integer.valueOf(10)));
+        assertEquals("number of 100s", 0, ImmutableCollections.frequency(il, Integer.valueOf(100)));
+        assertEquals("number of 2s", 3, ImmutableCollections.frequency(il, Integer.valueOf(2)));
         Integer[] subList = new Integer[] {2, 2};
         ImmutableList<Integer> isl = new ImmutableArrayList<Integer>(new ArrayList<>(Arrays.asList(subList)));
         assertEquals("position of sub list", 3, ImmutableCollections.indexOfSubList(il, isl));
@@ -73,8 +73,8 @@ public class TestImmutableCollectionStatics
 
         Arrays.sort(values); // this modifies the contents of our array
         il = new ImmutableArrayList<>(new ArrayList<Integer>(Arrays.asList(values)));
-        assertEquals("position of 6", 4, ImmutableCollections.binarySearch(il, new Integer(6)));
-        assertEquals("position where 5 would be if it were present", -5, ImmutableCollections.binarySearch(il, new Integer(5)));
+        assertEquals("position of 6", 4, ImmutableCollections.binarySearch(il, Integer.valueOf(6)));
+        assertEquals("position where 5 would be if it were present", -5, ImmutableCollections.binarySearch(il, Integer.valueOf(5)));
         final Integer[] uniqueValues = new Integer[] {10, 2, -5, 6};
         ImmutableList<Integer> il2 = new ImmutableArrayList<>(new ArrayList<Integer>(Arrays.asList(uniqueValues)));
         indexComparator = new Comparator<Integer>()
@@ -87,11 +87,11 @@ public class TestImmutableCollectionStatics
             }
         };
         assertEquals("position of 2 binary search with crazy comparator", 1,
-                ImmutableCollections.binarySearch(il2, new Integer(2), indexComparator));
+                ImmutableCollections.binarySearch(il2, Integer.valueOf(2), indexComparator));
         assertEquals("position of 10 binary search with crazy comparator", 0,
-                ImmutableCollections.binarySearch(il2, new Integer(10), indexComparator));
+                ImmutableCollections.binarySearch(il2, Integer.valueOf(10), indexComparator));
         assertEquals("position of 6 binary search with crazy comparator", 3,
-                ImmutableCollections.binarySearch(il2, new Integer(6), indexComparator));
+                ImmutableCollections.binarySearch(il2, Integer.valueOf(6), indexComparator));
         assertFalse("The collections are not disjoint", ImmutableCollections.disjoint(il, il2));
         ImmutableList<Integer> il3 = new ImmutableArrayList<>(new ArrayList<Integer>(Arrays.asList(new Integer[] {99, 999})));
         assertTrue("The collections are disjoint", ImmutableCollections.disjoint(il, il3));

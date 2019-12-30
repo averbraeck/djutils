@@ -32,7 +32,7 @@ public class ClassUtilTest
         assertEquals(String.class, ClassUtil.getClass(new Object[] { "Peter" })[0]);
         // Note that primitive types are always autoboxed to the corresponding object types.
         assertArrayEquals(new Class<?>[] { String.class, Double.class, Integer.class, Integer.class },
-                ClassUtil.getClass(new Object[] { "X", 1.0d, 5, new Integer(5) }));
+                ClassUtil.getClass(new Object[] { "X", 1.0d, 5, Integer.valueOf(5) }));
         assertArrayEquals(new Class<?>[] { String.class, Double.class, null, Integer.class },
                 ClassUtil.getClass(new Object[] { "X", 1.0d, null, 5 }));
     }

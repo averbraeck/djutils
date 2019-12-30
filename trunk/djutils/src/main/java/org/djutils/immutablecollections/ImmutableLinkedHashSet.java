@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * An immutable wrapper for a HashSet.
+ * An immutable wrapper for a LinkedHashSet.
  * <p>
  * Copyright (c) 2016-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -45,7 +45,7 @@ public class ImmutableLinkedHashSet<E> extends ImmutableAbstractSet<E>
      */
     public ImmutableLinkedHashSet(final ImmutableAbstractCollection<? extends E> collection)
     {
-        super(new LinkedHashSet<E>(collection.getCollection()), Immutable.COPY);
+        super(new LinkedHashSet<E>(collection.getUnderlyingCollection()), Immutable.COPY);
     }
 
     /**
@@ -54,28 +54,28 @@ public class ImmutableLinkedHashSet<E> extends ImmutableAbstractSet<E>
      */
     public ImmutableLinkedHashSet(final ImmutableAbstractSet<E> set, final Immutable copyOrWrap)
     {
-        super(copyOrWrap == Immutable.COPY ? new LinkedHashSet<E>(set.getCollection()) : set.getCollection(), copyOrWrap);
+        super(copyOrWrap == Immutable.COPY ? new LinkedHashSet<E>(set.getUnderlyingCollection()) : set.getUnderlyingCollection(), copyOrWrap);
     }
 
     /** {@inheritDoc} */
     @Override
-    protected Set<E> getCollection()
+    protected Set<E> getUnderlyingCollection()
     {
-        return super.getCollection();
+        return super.getUnderlyingCollection();
     }
 
     /** {@inheritDoc} */
     @Override
     public final Set<E> toSet()
     {
-        return new LinkedHashSet<E>(getCollection());
+        return new LinkedHashSet<E>(getUnderlyingCollection());
     }
 
     /** {@inheritDoc} */
     @Override
     public final String toString()
     {
-        Set<E> set = getCollection();
+        Set<E> set = getUnderlyingCollection();
         if (null == set)
         {
             return "ImmutableLinkedHashSet []";

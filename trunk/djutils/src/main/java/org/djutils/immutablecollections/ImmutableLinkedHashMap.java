@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 /**
- * An immutable wrapper for a HashMap.
+ * An immutable wrapper for a LinkedHashMap.
  * <p>
  * Copyright (c) 2016-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -53,7 +53,7 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
      */
     public ImmutableLinkedHashMap(final ImmutableAbstractMap<K, V> immutableMap)
     {
-        super(new LinkedHashMap<K, V>(immutableMap.getMap()), Immutable.COPY);
+        super(new LinkedHashMap<K, V>(immutableMap.getUnderlyingMap()), Immutable.COPY);
     }
 
     /**
@@ -62,22 +62,22 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
      */
     public ImmutableLinkedHashMap(final ImmutableAbstractMap<K, V> immutableMap, final Immutable copyOrWrap)
     {
-        super(copyOrWrap == Immutable.COPY ? new LinkedHashMap<K, V>(immutableMap.getMap()) : immutableMap.getMap(),
+        super(copyOrWrap == Immutable.COPY ? new LinkedHashMap<K, V>(immutableMap.getUnderlyingMap()) : immutableMap.getUnderlyingMap(),
                 copyOrWrap);
     }
 
     /** {@inheritDoc} */
     @Override
-    protected final Map<K, V> getMap()
+    protected final Map<K, V> getUnderlyingMap()
     {
-        return super.getMap();
+        return super.getUnderlyingMap();
     }
 
     /** {@inheritDoc} */
     @Override
     public final Map<K, V> toMap()
     {
-        return new LinkedHashMap<K, V>(getMap());
+        return new LinkedHashMap<K, V>(getUnderlyingMap());
     }
 
     /** {@inheritDoc} */
@@ -86,7 +86,7 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
     {
         if (this.cachedKeySet == null)
         {
-            Set<K> immutableKeySet = new LinkedHashSet<>(getMap().keySet());
+            Set<K> immutableKeySet = new LinkedHashSet<>(getUnderlyingMap().keySet());
             this.cachedKeySet = new ImmutableHashSet<>(immutableKeySet, Immutable.WRAP);
         }
         return this.cachedKeySet;
@@ -99,7 +99,7 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
         if (this.cachedEntrySet == null)
         {
             Set<ImmutableEntry<K, V>> immutableEntrySet = new LinkedHashSet<>();
-            for (Entry<K, V> entry : getMap().entrySet())
+            for (Entry<K, V> entry : getUnderlyingMap().entrySet())
             {
                 immutableEntrySet.add(new ImmutableEntry<>(entry));
             }
@@ -114,7 +114,7 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
     {
         if (this.cachedValues == null)
         {
-            Set<V> immutableValues = new LinkedHashSet<>(getMap().values());
+            Set<V> immutableValues = new LinkedHashSet<>(getUnderlyingMap().values());
             this.cachedValues = new ImmutableLinkedHashSet<>(immutableValues, Immutable.WRAP);
         }
         return this.cachedValues;
@@ -124,7 +124,7 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
     @Override
     public final String toString()
     {
-        Map<K, V> map = getMap();
+        Map<K, V> map = getUnderlyingMap();
         if (null == map)
         {
             return "ImmutableLinkedHashMap []";

@@ -64,20 +64,20 @@ public class PrimitiveTest extends TestCase
             // Ignore expected exception
         }
 
-        TestCase.assertEquals(Primitive.toBoolean(new Integer(1)), Boolean.TRUE);
+        TestCase.assertEquals(Primitive.toBoolean(Integer.valueOf(1)), Boolean.TRUE);
         TestCase.assertEquals(Primitive.toBoolean(new Double(1.0)), Boolean.TRUE);
         TestCase.assertEquals(Primitive.toBoolean(new Float(1.0)), Boolean.TRUE);
         TestCase.assertEquals(Primitive.toBoolean(new Short((short) 1.0)), Boolean.TRUE);
         TestCase.assertEquals(Primitive.toBoolean(new Long(1l)), Boolean.TRUE);
 
-        TestCase.assertEquals(Primitive.toBoolean(new Integer(0)), Boolean.FALSE);
+        TestCase.assertEquals(Primitive.toBoolean(Integer.valueOf(0)), Boolean.FALSE);
         TestCase.assertEquals(Primitive.toBoolean(new Double(0.0)), Boolean.FALSE);
         TestCase.assertEquals(Primitive.toBoolean(new Float(0.0)), Boolean.FALSE);
         TestCase.assertEquals(Primitive.toBoolean(new Short((short) 0.0)), Boolean.FALSE);
         TestCase.assertEquals(Primitive.toBoolean(new Long(0l)), Boolean.FALSE);
         try
         {
-            Primitive.toBoolean(new Integer(-1));
+            Primitive.toBoolean(Integer.valueOf(-1));
             fail("casting number not in {0, 1} to boolean should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -86,7 +86,7 @@ public class PrimitiveTest extends TestCase
         }
         try
         {
-            Primitive.toBoolean(new Integer(2));
+            Primitive.toBoolean(Integer.valueOf(2));
             fail("casting number not in {0, 1} to boolean should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)

@@ -22,6 +22,7 @@ import org.junit.Test;
 public class TestImmutableArrayList
 {
 
+    /** Test the ImmutableArrayList. */
     @Test
     public final void testArrayList()
     {
@@ -41,6 +42,12 @@ public class TestImmutableArrayList
         testIntList(list, new ImmutableArrayList<Integer>(intSet), Immutable.COPY);
     }
 
+    /**
+     * Test for the int list
+     * @param list the expected list
+     * @param imList the immutable ist
+     * @param copyOrWrap whether to expect COPY or WRAP
+     */
     private void testIntList(final List<Integer> list, final ImmutableList<Integer> imList, final Immutable copyOrWrap)
     {
         Assert.assertTrue(list.size() == 10);

@@ -45,7 +45,7 @@ public class ImmutableArrayList<E> extends ImmutableAbstractList<E>
      */
     public ImmutableArrayList(final ImmutableAbstractCollection<? extends E> collection)
     {
-        super(new ArrayList<E>(collection.getCollection()), Immutable.COPY);
+        super(new ArrayList<E>(collection.getUnderlyingCollection()), Immutable.COPY);
     }
 
     /**
@@ -54,35 +54,35 @@ public class ImmutableArrayList<E> extends ImmutableAbstractList<E>
      */
     public ImmutableArrayList(final ImmutableAbstractList<E> list, final Immutable copyOrWrap)
     {
-        super(copyOrWrap == Immutable.COPY ? new ArrayList<E>(list.getCollection()) : list.getCollection(), copyOrWrap);
+        super(copyOrWrap == Immutable.COPY ? new ArrayList<E>(list.getUnderlyingCollection()) : list.getUnderlyingCollection(), copyOrWrap);
     }
 
     /** {@inheritDoc} */
     @Override
     public final ArrayList<E> toList()
     {
-        return new ArrayList<E>(getCollection());
+        return new ArrayList<E>(getUnderlyingCollection());
     }
 
     /** {@inheritDoc} */
     @Override
-    protected List<E> getCollection()
+    protected List<E> getUnderlyingCollection()
     {
-        return super.getCollection();
+        return super.getUnderlyingCollection();
     }
 
     /** {@inheritDoc} */
     @Override
     public final ImmutableList<E> subList(final int fromIndex, final int toIndex)
     {
-        return new ImmutableArrayList<>(getCollection().subList(fromIndex, toIndex));
+        return new ImmutableArrayList<>(getUnderlyingCollection().subList(fromIndex, toIndex));
     }
 
     /** {@inheritDoc} */
     @Override
     public final String toString()
     {
-        List<E> list = getCollection();
+        List<E> list = getUnderlyingCollection();
         if (null == list)
         {
             return "ImmutableArrayList []";
