@@ -92,20 +92,23 @@ public interface EventProducerInterface
     /**
      * Return whether the EventProducer has listeners.
      * @return boolean; whether the EventProducer has listeners or not
+     * @throws RemoteException If a network connection failure occurs.
      */
-    boolean hasListeners();
+    boolean hasListeners() throws RemoteException;
     
     /**
      * Return the number of listeners for the provided EventType.
      * @param eventType EventType; the event type to return the number of listeners for
      * @return boolean; whether the EventProducer has listeners or not
+     * @throws RemoteException If a network connection failure occurs.
      */
-    int numberOfListeners(EventType eventType);
+    int numberOfListeners(EventType eventType) throws RemoteException;
 
     /**
      * Return the EventTypes for which the EventProducer has listeners.
      * @return Set&lt;EventType&gt;; the EventTypes for which the EventProducer has registered listeners 
+     * @throws RemoteException If a network connection failure occurs.
      */
-    Set<EventType> getEventTypesWithListeners();
+    Set<EventType> getEventTypesWithListeners() throws RemoteException;
 
 }

@@ -159,7 +159,7 @@ public class EventListenerMapTest implements Serializable
         {
             EventType remoteEventType = new EventType("REMOTE_EVENT_TYPE");
             List<Reference<EventListenerInterface>> remoteList = new ArrayList<>();
-            remoteList.add(new WeakReference<EventListenerInterface>(new RemoteEventListener(new TestEventListener())));
+            remoteList.add(new WeakReference<EventListenerInterface>(new TestRemoteEventListener()));
             elm.put(remoteEventType, remoteList);
             assertEquals(3, elm.size());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -276,6 +276,28 @@ public class EventListenerMapTest implements Serializable
             assertEquals(this.expectedObject, event.getContent());
         }
 
+    }
+
+    /** */
+    protected static class TestRemoteEventListener extends RemoteEventListener
+    {
+        /** */
+        private static final long serialVersionUID = 20191230L;
+
+        /**
+         * @throws RemoteException on error
+         */
+        public TestRemoteEventListener() throws RemoteException
+        {
+            super();
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void notify(final EventInterface event) throws RemoteException
+        {
+            // tagging method
+        }
     }
 
 }

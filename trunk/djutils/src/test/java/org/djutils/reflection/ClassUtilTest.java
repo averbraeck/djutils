@@ -2,12 +2,28 @@ package org.djutils.reflection;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
+import org.djutils.exceptions.Try;
 import org.djutils.reflection.TestClass.InnerPublic;
 import org.junit.Test;
 
@@ -29,12 +45,12 @@ public class ClassUtilTest
     public void testClassUtilClass()
     {
         assertEquals(0, ClassUtil.getClass(null).length);
-        assertEquals(String.class, ClassUtil.getClass(new Object[] { "Peter" })[0]);
+        assertEquals(String.class, ClassUtil.getClass(new Object[] {"Peter"})[0]);
         // Note that primitive types are always autoboxed to the corresponding object types.
-        assertArrayEquals(new Class<?>[] { String.class, Double.class, Integer.class, Integer.class },
-                ClassUtil.getClass(new Object[] { "X", 1.0d, 5, Integer.valueOf(5) }));
-        assertArrayEquals(new Class<?>[] { String.class, Double.class, null, Integer.class },
-                ClassUtil.getClass(new Object[] { "X", 1.0d, null, 5 }));
+        assertArrayEquals(new Class<?>[] {String.class, Double.class, Integer.class, Integer.class},
+                ClassUtil.getClass(new Object[] {"X", 1.0d, 5, Integer.valueOf(5)}));
+        assertArrayEquals(new Class<?>[] {String.class, Double.class, null, Integer.class},
+                ClassUtil.getClass(new Object[] {"X", 1.0d, null, 5}));
     }
 
     /**
@@ -175,7 +191,7 @@ public class ClassUtilTest
         TestClass o1 = c1.newInstance();
         assertEquals("<init>", o1.getState());
 
-        Constructor<TestClass> c2 = ClassUtil.resolveConstructor(TestClass.class, new Class<?>[] { String.class });
+        Constructor<TestClass> c2 = ClassUtil.resolveConstructor(TestClass.class, new Class<?>[] {String.class});
         TestClass o2 = c2.newInstance("c2");
         assertEquals("c2", o2.getState());
 
@@ -183,19 +199,19 @@ public class ClassUtilTest
         InnerPublic o3 = c3.newInstance();
         assertEquals("<initInnerPublic>", o3.getInnerState());
 
-        Constructor<InnerPublic> c4 = ClassUtil.resolveConstructor(InnerPublic.class, new Class<?>[] { String.class });
+        Constructor<InnerPublic> c4 = ClassUtil.resolveConstructor(InnerPublic.class, new Class<?>[] {String.class});
         InnerPublic o4 = c4.newInstance("inner");
         assertEquals("inner", o4.getInnerState());
 
         // test caching
-        Constructor<InnerPublic> c4a = ClassUtil.resolveConstructor(InnerPublic.class, new Class<?>[] { String.class });
+        Constructor<InnerPublic> c4a = ClassUtil.resolveConstructor(InnerPublic.class, new Class<?>[] {String.class});
         InnerPublic o4a = c4a.newInstance("inner2");
         assertEquals("inner2", o4a.getInnerState());
 
         // test constructor that cannot be found
         try
         {
-            ClassUtil.resolveConstructor(TestClass.class, new Class<?>[] { Integer.class });
+            ClassUtil.resolveConstructor(TestClass.class, new Class<?>[] {Integer.class});
             fail("Constructor TestClass(int) does not exist and resolving should throw an exception");
         }
         catch (NoSuchMethodException e)
@@ -204,11 +220,11 @@ public class ClassUtilTest
         }
 
         // test access to public and private constructors
-        ClassUtil.resolveConstructor(TestClass.class, new Class<?>[] { boolean.class });
-        ClassUtil.resolveConstructor(TestClass.class, ClassUtilTest.class, new Class<?>[] { String.class });
+        ClassUtil.resolveConstructor(TestClass.class, new Class<?>[] {boolean.class});
+        ClassUtil.resolveConstructor(TestClass.class, ClassUtilTest.class, new Class<?>[] {String.class});
         try
         {
-            ClassUtil.resolveConstructor(TestClass.class, ClassUtilTest.class, new Class<?>[] { boolean.class });
+            ClassUtil.resolveConstructor(TestClass.class, ClassUtilTest.class, new Class<?>[] {boolean.class});
             fail("Constructor TestClass(boolean) is private and resolving should throw an exception");
         }
         catch (IllegalAccessException e)
@@ -218,4 +234,961 @@ public class ClassUtilTest
 
         assertEquals(3, ClassUtil.getAllConstructors(TestClass.class).length);
     }
+
+    /**
+     * Tests the ClassUtil Constructor lookup methods
+     * @throws NoSuchMethodException on error
+     * @throws InvocationTargetException on error
+     * @throws IllegalArgumentException on error
+     * @throws IllegalAccessException on error
+     * @throws InstantiationException on error
+     */
+    @Test
+    public void testClassUtilConstructor() throws NoSuchMethodException, InstantiationException, IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException
+    {
+        Constructor<Sup>[] cArr = ClassUtil.getAllConstructors(Sup.class);
+        assertEquals(2, cArr.length);
+        // retrieve again from cache
+        cArr = ClassUtil.getAllConstructors(Sup.class);
+        assertEquals(2, cArr.length);
+        Constructor<Sup> c1 = ClassUtil.resolveConstructor(Sup.class, new Class<?>[] {String.class, int.class});
+        assertNotNull(c1);
+        // retrieve again from cache
+        Constructor<Sup> c1a = ClassUtil.resolveConstructor(Sup.class, new Class<?>[] {String.class, int.class});
+        assertEquals(c1, c1a);
+        Constructor<Sup> c2 = ClassUtil.resolveConstructor(Sup.class, new Object[] {"abc", 1, 2.0d});
+        assertNotNull(c2);
+        // retrieve again from cache
+        Constructor<Sup> c2a = ClassUtil.resolveConstructor(Sup.class, new Object[] {"abc", 1, 2.0d});
+        assertEquals(c2, c2a);
+        Constructor<Sub> c2b = ClassUtil.resolveConstructor(Sub.class, new Object[] {"abc", 1, 2.0d});
+        assertNotEquals(c2a, c2b);
+        assertTrue(ClassUtil.isMoreSpecific(c2b, c2a));
+        // XXX: look carefully at isMoreSpecific: assertFalse(ClassUtil.isMoreSpecific(c2a, c2b));
+        assertFalse(ClassUtil.isMoreSpecific(c2a, c1));
+        assertFalse(ClassUtil.isMoreSpecific(c1, c2a));
+        assertFalse(ClassUtil.isMoreSpecific(c1, c2b));
+        
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Constructor<Sup> cx = ClassUtil.resolveConstructor(Sup.class, new Class<?>[] {String.class, float.class});
+                fail("illegal retrieval of constructor " + cx.toString());
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Constructor<Sup> cx = ClassUtil.resolveConstructor(Sup.class, new Object[] {1.2f});
+                fail("illegal retrieval of constructor " + cx.toString());
+            }
+        });
+
+        Sub sup = new Sub("a", 1);
+        Constructor<Sub.Inner> csi2 = ClassUtil.resolveConstructor(Sub.Inner.class, new Object[] {sup, 123L});
+        assertNotNull(csi2);
+    }
+
+    /**
+     * Tests the ClassUtil Field lookup methods
+     * @throws NoSuchFieldException on error
+     */
+    @Test
+    public void testClassUtilField() throws NoSuchFieldException
+    {
+        Set<Field> fSet = ClassUtil.getAllFields(Sup.class);
+        removeJacoco(fSet);
+        assertEquals(7, fSet.size());
+
+        testField(Sup.class, "staticFinalString", Modifier.FINAL, Modifier.STATIC, Modifier.PUBLIC);
+        testField(Sup.class, "finalString", Modifier.FINAL, Modifier.PUBLIC);
+        testField(Sup.class, "publicInt", Modifier.PUBLIC);
+        testField(Sup.class, "protectedLong", Modifier.PROTECTED);
+        testField(Sup.class, "packageDouble");
+        testField(Sup.class, "privateFloat", Modifier.PRIVATE);
+        testField(Sup.class, "publicSubInt", Modifier.PUBLIC);
+
+        testField(Sub.class, "staticFinalString", Modifier.FINAL, Modifier.STATIC, Modifier.PUBLIC);
+        testField(Sub.class, "finalString", Modifier.FINAL, Modifier.PUBLIC);
+        testField(Sub.class, "publicInt", Modifier.PUBLIC);
+        testField(Sub.class, "protectedLong", Modifier.PROTECTED);
+        testField(Sub.class, "packageDouble");
+        testField(Sub.class, "privateFloat", Modifier.PRIVATE);
+        testField(Sub.class, "publicSuperInt", Modifier.PUBLIC);
+        testField(Sub.class, "publicSubInt", Modifier.PUBLIC);
+
+        Sub sup = new Sub("a", 1);
+        testField(sup, "staticFinalString", Modifier.FINAL, Modifier.STATIC, Modifier.PUBLIC);
+        testField(sup, "finalString", Modifier.FINAL, Modifier.PUBLIC);
+        testField(sup, "publicInt", Modifier.PUBLIC);
+        testField(sup, "protectedLong", Modifier.PROTECTED);
+        testField(sup, "packageDouble");
+        testField(sup, "privateFloat", Modifier.PRIVATE);
+        testField(sup, "publicSuperInt", Modifier.PUBLIC);
+        testField(sup, "publicSubInt", Modifier.PUBLIC);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                testField(sup, "xyz", Modifier.PUBLIC);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                testField(Sub.class, "xyz", Modifier.PUBLIC);
+            }
+        });
+        Field f1 = ClassUtil.resolveField(Sub.class, this.getClass(), "publicInt");
+        assertNotNull(f1);
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Field f2 = ClassUtil.resolveField(Sub.class, this.getClass(), "privateFloat");
+                fail("should not be able to resolve private field " + f2);
+            }
+        });
+
+        Sub.Inner supInn = new Sub("a", 1).new Inner(12L);
+        testField(supInn, "publicInnerLong", Modifier.PUBLIC);
+        testField(supInn, "staticFinalString", Modifier.FINAL, Modifier.STATIC, Modifier.PUBLIC);
+        testField(supInn, "finalString", Modifier.FINAL, Modifier.PUBLIC);
+        testField(supInn, "publicInt", Modifier.PUBLIC);
+        testField(supInn, "protectedLong", Modifier.PROTECTED);
+        testField(supInn, "packageDouble");
+        testField(supInn, "privateFloat", Modifier.PRIVATE);
+        testField(supInn, "publicSuperInt", Modifier.PUBLIC);
+        testField(supInn, "publicSubInt", Modifier.PUBLIC);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Field f3 = ClassUtil.resolveField((Class<?>) null, "publicSubInt");
+                fail("should not be able to resolve field from null object" + f3);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Field f3 = ClassUtil.resolveField(Sub.class, null);
+                fail("should not be able to resolve field from null object" + f3);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Field f3 = ClassUtil.resolveField((Object) null, "publicSubInt");
+                fail("should not be able to resolve field from null object" + f3);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Field f3 = ClassUtil.resolveField(supInn, null);
+                fail("should not be able to resolve field from null object" + f3);
+            }
+        });
+    }
+
+    /**
+     * Tests the ClassUtil Method lookup methods
+     * @throws NoSuchMethodException on error
+     */
+    @Test
+    public void testClassUtilMethod() throws NoSuchMethodException
+    {
+        List<Method> mList0 = ClassUtil.getAllMethods(Object.class);
+        removeJacoco(mList0);
+        List<Method> mList1 = ClassUtil.getAllMethods(Sup.class);
+        removeJacoco(mList1);
+        // 12 methods in Sub
+        assertEquals(mList0.size() + 12, mList1.size());
+        List<Method> mList2 = ClassUtil.getAllMethods(Sup.class, "privateVoid");
+        assertEquals(1, mList2.size());
+
+        testMethod(Sup.class, "publicVoid", new Class<?>[] {}, Modifier.PUBLIC);
+        testMethod(Sup.class, "publicInt", new Class<?>[] {}, Modifier.PUBLIC);
+        testMethod(Sup.class, "publicArgs", new Class<?>[] {String.class, double.class}, Modifier.PUBLIC);
+        testMethod(Sup.class, "protectedVoid", new Class<?>[] {}, Modifier.PROTECTED);
+        testMethod(Sup.class, "protectedInt", new Class<?>[] {}, Modifier.PROTECTED);
+        testMethod(Sup.class, "protectedArgs", new Class<?>[] {String.class, double.class}, Modifier.PROTECTED);
+        testMethod(Sup.class, "packageVoid", new Class<?>[] {});
+        testMethod(Sup.class, "packageInt", new Class<?>[] {});
+        testMethod(Sup.class, "packageArgs", new Class<?>[] {String.class, double.class});
+        testMethod(Sup.class, "privateVoid", new Class<?>[] {}, Modifier.PRIVATE);
+        testMethod(Sup.class, "privateInt", new Class<?>[] {}, Modifier.PRIVATE);
+        testMethod(Sup.class, "privateArgs", new Class<?>[] {String.class, double.class}, Modifier.PRIVATE);
+
+        testMethod(Sub.class, "publicVoid", new Class<?>[] {}, Modifier.PUBLIC);
+        testMethod(Sub.class, "publicInt", new Class<?>[] {}, Modifier.PUBLIC);
+        testMethod(Sub.class, "publicArgs", new Class<?>[] {String.class, double.class}, Modifier.PUBLIC);
+        testMethod(Sub.class, "publicArgs", new Class<?>[] {String.class}, Modifier.PUBLIC);
+        testMethod(Sub.class, "protectedVoid", new Class<?>[] {}, Modifier.PROTECTED);
+        testMethod(Sub.class, "protectedInt", new Class<?>[] {}, Modifier.PROTECTED);
+        testMethod(Sub.class, "protectedArgs", new Class<?>[] {String.class, double.class}, Modifier.PROTECTED);
+        testMethod(Sub.class, "packageVoid", new Class<?>[] {});
+        testMethod(Sub.class, "packageInt", new Class<?>[] {});
+        testMethod(Sub.class, "packageArgs", new Class<?>[] {String.class, double.class});
+        testMethod(Sub.class, "privateVoid", new Class<?>[] {}, Modifier.PRIVATE);
+        testMethod(Sub.class, "privateInt", new Class<?>[] {}, Modifier.PRIVATE);
+        testMethod(Sub.class, "privateArgs", new Class<?>[] {String.class, double.class}, Modifier.PRIVATE);
+
+        Sub sup = new Sub("a", 1);
+        testMethod(sup, "publicVoid", new Class<?>[] {}, Modifier.PUBLIC);
+        testMethod(sup, "publicInt", new Class<?>[] {}, Modifier.PUBLIC);
+        testMethod(sup, "publicArgs", new Class<?>[] {String.class, double.class}, Modifier.PUBLIC);
+        testMethod(sup, "publicArgs", new Class<?>[] {String.class}, Modifier.PUBLIC);
+        testMethod(sup, "protectedVoid", new Class<?>[] {}, Modifier.PROTECTED);
+        testMethod(sup, "protectedInt", new Class<?>[] {}, Modifier.PROTECTED);
+        testMethod(sup, "protectedArgs", new Class<?>[] {String.class, double.class}, Modifier.PROTECTED);
+        testMethod(sup, "packageVoid", new Class<?>[] {});
+        testMethod(sup, "packageInt", new Class<?>[] {});
+        testMethod(sup, "packageArgs", new Class<?>[] {String.class, double.class});
+        testMethod(sup, "privateVoid", new Class<?>[] {}, Modifier.PRIVATE);
+        testMethod(sup, "privateInt", new Class<?>[] {}, Modifier.PRIVATE);
+        testMethod(sup, "privateArgs", new Class<?>[] {String.class, double.class}, Modifier.PRIVATE);
+
+        testMethod(sup, "publicVoid", new Object[] {}, Modifier.PUBLIC);
+        testMethod(sup, "publicInt", new Object[] {}, Modifier.PUBLIC);
+        testMethod(sup, "publicArgs", new Object[] {"abc", 12.0d}, Modifier.PUBLIC);
+        testMethod(sup, "publicArgs", new Object[] {"def"}, Modifier.PUBLIC);
+        testMethod(sup, "protectedVoid", new Object[] {}, Modifier.PROTECTED);
+        testMethod(sup, "protectedInt", new Object[] {}, Modifier.PROTECTED);
+        testMethod(sup, "protectedArgs", new Object[] {"ghi", 13.0d}, Modifier.PROTECTED);
+        testMethod(sup, "packageVoid", new Object[] {});
+        testMethod(sup, "packageInt", new Object[] {});
+        testMethod(sup, "packageArgs", new Object[] {"jkl", 14.0d});
+        testMethod(sup, "privateVoid", new Object[] {}, Modifier.PRIVATE);
+        testMethod(sup, "privateInt", new Object[] {}, Modifier.PRIVATE);
+        testMethod(sup, "privateArgs", new Object[] {"mno", 15.0d}, Modifier.PRIVATE);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                testMethod(sup, "xyz", new Class<?>[] {}, Modifier.PUBLIC);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                testMethod(sup, "publicArgs", new Class<?>[] {float.class}, Modifier.PUBLIC);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                testMethod(sup, "xyz", new Object[] {}, Modifier.PUBLIC);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                testMethod(sup, "publicArgs", new Object[] {12L}, Modifier.PUBLIC);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                testMethod(Sub.class, "xyz", new Class<?>[] {}, Modifier.PUBLIC);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                testMethod(Sub.class, "publicArgs", new Class<?>[] {float.class}, Modifier.PUBLIC);
+            }
+        });
+
+        Method m1 = ClassUtil.resolveMethod(Sub.class, this.getClass(), "publicArgs", new Class<?>[] {String.class});
+        assertNotNull(m1);
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Method m2 = ClassUtil.resolveMethod(Sub.class, this.getClass(), "privateArgs", new Class<?>[] {});
+                fail("should not be able to resolve private field " + m2);
+            }
+        });
+
+        Sub.Inner supInn = new Sub("a", 1).new Inner(12L);
+        testMethod(supInn, "publicInnerMethod", new Class<?>[] {long.class}, Modifier.PUBLIC);
+        testMethod(supInn, "publicVoid", new Class<?>[] {}, Modifier.PUBLIC);
+        testMethod(supInn, "publicInt", new Class<?>[] {}, Modifier.PUBLIC);
+        testMethod(supInn, "publicArgs", new Class<?>[] {String.class, double.class}, Modifier.PUBLIC);
+        testMethod(supInn, "publicArgs", new Class<?>[] {String.class}, Modifier.PUBLIC);
+        testMethod(supInn, "protectedVoid", new Class<?>[] {}, Modifier.PROTECTED);
+        testMethod(supInn, "protectedInt", new Class<?>[] {}, Modifier.PROTECTED);
+        testMethod(supInn, "protectedArgs", new Class<?>[] {String.class, double.class}, Modifier.PROTECTED);
+        testMethod(supInn, "packageVoid", new Class<?>[] {});
+        testMethod(supInn, "packageInt", new Class<?>[] {});
+        testMethod(supInn, "packageArgs", new Class<?>[] {String.class, double.class});
+        testMethod(supInn, "privateVoid", new Class<?>[] {}, Modifier.PRIVATE);
+        testMethod(supInn, "privateInt", new Class<?>[] {}, Modifier.PRIVATE);
+        testMethod(supInn, "privateArgs", new Class<?>[] {String.class, double.class}, Modifier.PRIVATE);
+
+        testMethod(supInn, "publicInnerMethod", new Object[] {12L}, Modifier.PUBLIC);
+        testMethod(supInn, "publicVoid", new Object[] {}, Modifier.PUBLIC);
+        testMethod(supInn, "publicInt", new Object[] {}, Modifier.PUBLIC);
+        testMethod(supInn, "publicArgs", new Object[] {"abc", 12.0d}, Modifier.PUBLIC);
+        testMethod(supInn, "publicArgs", new Object[] {"def"}, Modifier.PUBLIC);
+        testMethod(supInn, "protectedVoid", new Object[] {}, Modifier.PROTECTED);
+        testMethod(supInn, "protectedInt", new Object[] {}, Modifier.PROTECTED);
+        testMethod(supInn, "protectedArgs", new Object[] {"ghi", 13.0d}, Modifier.PROTECTED);
+        testMethod(supInn, "packageVoid", new Object[] {});
+        testMethod(supInn, "packageInt", new Object[] {});
+        testMethod(supInn, "packageArgs", new Object[] {"jkl", 14.0d});
+        testMethod(supInn, "privateVoid", new Object[] {}, Modifier.PRIVATE);
+        testMethod(supInn, "privateInt", new Object[] {}, Modifier.PRIVATE);
+        testMethod(supInn, "privateArgs", new Object[] {"mno", 15.0d}, Modifier.PRIVATE);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Method m3 = ClassUtil.resolveMethod((Class<?>) null, "publicInt", new Class<?>[] {});
+                fail("should not be able to resolve field from null object" + m3);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Method m3 = ClassUtil.resolveMethod(Sub.class, null, new Class<?>[] {});
+                fail("should not be able to resolve field from null object" + m3);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Method m3 = ClassUtil.resolveMethod((Object) null, "publicInt", new Class<?>[] {});
+                fail("should not be able to resolve field from null object" + m3);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Method m3 = ClassUtil.resolveMethod(supInn, null, new Class<?>[] {});
+                fail("should not be able to resolve field from null object" + m3);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Method m3 = ClassUtil.resolveMethod((Object) null, "publicInt", new Object[] {});
+                fail("should not be able to resolve field from null object" + m3);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Method m3 = ClassUtil.resolveMethod(supInn, null, new Object[] {});
+                fail("should not be able to resolve field from null object" + m3);
+            }
+        });
+    }
+
+    /**
+     * Tests the ClassUtil Annotation lookup methods
+     */
+    @Test
+    public void testClassUtilAnnotation()
+    {
+        Set<Annotation> aSet0 = ClassUtil.getAllAnnotations(Sub.class);
+        assertEquals(2, aSet0.size());
+
+        Annotation a1 = ClassUtil.resolveAnnotation(Sub.class, AnnTag.class);
+        assertNotNull(a1);
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Annotation a3 = ClassUtil.resolveAnnotation(Sup.class, AnnTag.class);
+                fail("should not be able to resolve non-existing annotation " + a3);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Annotation a3 = ClassUtil.resolveAnnotation(null, AnnTag.class);
+                fail("should not be able to resolve non-existing annotation " + a3);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                Annotation a3 = ClassUtil.resolveAnnotation(Sub.class, null);
+                fail("should not be able to resolve non-existing annotation " + a3);
+            }
+        });
+        
+        Annotation a4 = ClassUtil.resolveAnnotation(Sub.Inner.class, AnnTag.class);
+        assertNotNull(a4);
+        
+        AnnString a5 = (AnnString) ClassUtil.resolveAnnotation(Sub.class, AnnString.class);
+        assertNotNull(a5);
+        assertEquals("avalue", a5.value());
+        ClassUtil.changeAnnotationValue(a5, "value", "bvalue");
+        assertEquals("bvalue", a5.value());
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ClassUtil.changeAnnotationValue(a5, "value", 12L);
+            }
+        });
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ClassUtil.changeAnnotationValue(a5, "xyz", 12L);
+            }
+        });
+        ClassUtil.changeAnnotationValue(a5, "value", "avalue"); // restore original state
+    }
+
+    /**
+     * Clean up the fields to remove jacoco / debugger artifacts.
+     * @param fields the set to clean
+     */
+    private void removeJacoco(final Set<Field> fields)
+    {
+        for (Iterator<Field> it = fields.iterator(); it.hasNext();)
+        {
+            Field field = it.next();
+            if (field.getName().contains("jacoco"))
+            {
+                it.remove();
+            }
+        }
+    }
+
+    /**
+     * @param clazz the class to test
+     * @param fieldName the field to retrieve
+     * @param modifiers the expected modifiers
+     * @throws NoSuchFieldException on error
+     */
+    protected void testField(Class<?> clazz, String fieldName, int... modifiers) throws NoSuchFieldException
+    {
+        Field field = ClassUtil.resolveField(clazz, fieldName);
+        assertNotNull(field);
+        assertEquals(fieldName, field.getName());
+        Set<Integer> mSet = new HashSet<>();
+        for (int m : modifiers)
+        {
+            assertTrue("failed modifier for field " + clazz.getSimpleName() + "." + fieldName + " for modifier " + m,
+                    (field.getModifiers() & m) != 0);
+            mSet.add(m);
+        }
+        for (int p = 0; p < 12; p++)
+        {
+            int m = 1 << p;
+            if (!mSet.contains(m))
+                assertTrue("failed modifier for field " + clazz.getSimpleName() + "." + fieldName + " for bit " + p,
+                        (field.getModifiers() & m) == 0);
+        }
+    }
+
+    /**
+     * @param object the object to test
+     * @param fieldName the field to retrieve
+     * @param modifiers the expected modifiers
+     * @throws NoSuchFieldException on error
+     */
+    protected void testField(Object object, String fieldName, int... modifiers) throws NoSuchFieldException
+    {
+        Field field = ClassUtil.resolveField(object, fieldName);
+        assertNotNull(field);
+        assertEquals(fieldName, field.getName());
+        Set<Integer> mSet = new HashSet<>();
+        for (int m : modifiers)
+        {
+            assertTrue(
+                    "failed modifier for field " + object.getClass().getSimpleName() + "." + fieldName + " for modifier " + m,
+                    (field.getModifiers() & m) != 0);
+            mSet.add(m);
+        }
+        for (int p = 0; p < 12; p++)
+        {
+            int m = 1 << p;
+            if (!mSet.contains(m))
+                assertTrue("failed modifier for field " + object.getClass().getSimpleName() + "." + fieldName + " for bit " + p,
+                        (field.getModifiers() & m) == 0);
+        }
+    }
+
+    /**
+     * Clean up the fields to remove jacoco / debugger artifacts.
+     * @param methods the set to clean
+     */
+    private void removeJacoco(final List<Method> methods)
+    {
+        for (Iterator<Method> it = methods.iterator(); it.hasNext();)
+        {
+            Method method = it.next();
+            if (method.getName().contains("jacoco"))
+            {
+                it.remove();
+            }
+        }
+    }
+
+    /**
+     * @param clazz the class to test
+     * @param methodName the method to retrieve
+     * @param params the parameters of the method as a class array
+     * @param modifiers the expected modifiers
+     * @throws NoSuchMethodException on error
+     */
+    protected void testMethod(Class<?> clazz, String methodName, Class<?>[] params, int... modifiers)
+            throws NoSuchMethodException
+    {
+        Method method = ClassUtil.resolveMethod(clazz, methodName, params);
+        assertNotNull(method);
+        assertEquals(methodName, method.getName());
+        Set<Integer> mSet = new HashSet<>();
+        for (int m : modifiers)
+        {
+            assertTrue("failed modifier for method " + clazz.getSimpleName() + "." + methodName + " for modifier " + m,
+                    (method.getModifiers() & m) != 0);
+            mSet.add(m);
+        }
+        for (int p = 0; p < 12; p++)
+        {
+            int m = 1 << p;
+            if (!mSet.contains(m))
+                assertTrue("failed modifier for method " + clazz.getSimpleName() + "." + methodName + " for bit " + p,
+                        (method.getModifiers() & m) == 0);
+        }
+    }
+
+    /**
+     * @param object the object to test
+     * @param methodName the method to retrieve
+     * @param params the parameters of the method as a class array
+     * @param modifiers the expected modifiers
+     * @throws NoSuchMethodException on error
+     */
+    protected void testMethod(Object object, String methodName, Class<?>[] params, int... modifiers)
+            throws NoSuchMethodException
+    {
+        Method method = ClassUtil.resolveMethod(object, methodName, params);
+        assertNotNull(method);
+        assertEquals(methodName, method.getName());
+        Set<Integer> mSet = new HashSet<>();
+        for (int m : modifiers)
+        {
+            assertTrue(
+                    "failed modifier for method " + object.getClass().getSimpleName() + "." + methodName + " for modifier " + m,
+                    (method.getModifiers() & m) != 0);
+            mSet.add(m);
+        }
+        for (int p = 0; p < 12; p++)
+        {
+            int m = 1 << p;
+            if (!mSet.contains(m))
+                assertTrue(
+                        "failed modifier for method " + object.getClass().getSimpleName() + "." + methodName + " for bit " + p,
+                        (method.getModifiers() & m) == 0);
+        }
+    }
+
+    /**
+     * @param object the object to test
+     * @param methodName the method to retrieve
+     * @param args the parameters of the method as an object array
+     * @param modifiers the expected modifiers
+     * @throws NoSuchMethodException on error
+     */
+    protected void testMethod(Object object, String methodName, Object[] args, int... modifiers) throws NoSuchMethodException
+    {
+        Method method = ClassUtil.resolveMethod(object, methodName, args);
+        assertNotNull(method);
+        assertEquals(methodName, method.getName());
+        Set<Integer> mSet = new HashSet<>();
+        for (int m : modifiers)
+        {
+            assertTrue(
+                    "failed modifier for method " + object.getClass().getSimpleName() + "." + methodName + " for modifier " + m,
+                    (method.getModifiers() & m) != 0);
+            mSet.add(m);
+        }
+        for (int p = 0; p < 12; p++)
+        {
+            int m = 1 << p;
+            if (!mSet.contains(m))
+                assertTrue(
+                        "failed modifier for method " + object.getClass().getSimpleName() + "." + methodName + " for bit " + p,
+                        (method.getModifiers() & m) == 0);
+        }
+    }
+
+    /** subclass with fields and methods. */
+    @SuppressWarnings("unused")
+    protected static class Sup
+    {
+        /** */
+        public static final String staticFinalString = "ABC";
+
+        /** */
+        public final String finalString = "DEF";
+
+        /** */
+        private float privateFloat = 8.0f;
+
+        /** */
+        double packageDouble = 4.0d;
+
+        /** */
+        protected long protectedLong = 2L;
+
+        /** */
+        public int publicInt = 1;
+
+        /** */
+        public int publicSubInt = 21;
+
+        /**
+         * @param s String
+         * @param i int
+         * @param d double
+         */
+        public Sup(String s, int i, double d)
+        {
+            //
+        }
+
+        /**
+         * @param s String
+         * @param i int
+         */
+        public Sup(String s, int i)
+        {
+            //
+        }
+
+        /** */
+        private void privateVoid()
+        {
+            //
+        }
+
+        /** */
+        void packageVoid()
+        {
+            //
+        }
+
+        /** */
+        protected void protectedVoid()
+        {
+            //
+        }
+
+        /** */
+        public void publicVoid()
+        {
+            //
+        }
+
+        /**
+         * @return int
+         */
+        private int privateInt()
+        {
+            return 1;
+        }
+
+        /**
+         * @return int
+         */
+        int packageInt()
+        {
+            return 2;
+        }
+
+        /**
+         * @return int
+         */
+        protected int protectedInt()
+        {
+            return 3;
+        }
+
+        /**
+         * @return int
+         */
+        public int publicInt()
+        {
+            return 4;
+        }
+
+        /**
+         * @param s String
+         * @param d double
+         */
+        private void privateArgs(final String s, final double d)
+        {
+            //
+        }
+
+        /**
+         * @param s String
+         * @param d double
+         */
+        void packageArgs(final String s, final double d)
+        {
+            //
+        }
+
+        /**
+         * @param s String
+         * @param d double
+         */
+        protected void protectedArgs(final String s, final double d)
+        {
+            //
+        }
+
+        /**
+         * @param s String
+         * @param d double
+         */
+        public void publicArgs(final String s, final double d)
+        {
+            //
+        }
+    }
+
+    /** superclass with fields and methods. */
+    @SuppressWarnings({"hiding", "unused"})
+    @AnnTag
+    @AnnString("avalue")
+    protected static class Sub extends Sup
+    {
+        /** */
+        public static final String staticFinalString = "ABC";
+
+        /** */
+        public final String finalString = "DEF";
+
+        /** */
+        private float privateFloat = 8.0f;
+
+        /** */
+        double packageDouble = 4.0d;
+
+        /** */
+        protected long protectedLong = 2L;
+
+        /** */
+        public int publicInt = 1;
+
+        /** */
+        public int publicSuperInt = 11;
+
+        /**
+         * @param s String
+         * @param i int
+         * @param d double
+         */
+        public Sub(String s, int i, double d)
+        {
+            super(s, i, d);
+        }
+
+        /**
+         * @param s String
+         * @param i int
+         */
+        public Sub(String s, int i)
+        {
+            super(s, i);
+        }
+
+        /** */
+        private void privateVoid()
+        {
+            //
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        void packageVoid()
+        {
+            //
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected void protectedVoid()
+        {
+            //
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void publicVoid()
+        {
+            //
+        }
+
+        /**
+         * @return int
+         */
+        private int privateInt()
+        {
+            return 1;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        int packageInt()
+        {
+            return 2;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected int protectedInt()
+        {
+            return 3;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public int publicInt()
+        {
+            return 4;
+        }
+
+        /**
+         * @param s string
+         * @param d double
+         */
+        private void privateArgs(final String s, final double d)
+        {
+            //
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        void packageArgs(final String s, final double d)
+        {
+            //
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected void protectedArgs(final String s, final double d)
+        {
+            //
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void publicArgs(final String s, final double d)
+        {
+            //
+        }
+
+        /**
+         * @param s String
+         */
+        public void publicArgs(final String s)
+        {
+            //
+        }
+
+        /** non-static inner class. */
+        @AnnTag
+        public class Inner
+        {
+            /**
+             * @param l long
+             */
+            public Inner(final long l)
+            {
+                //
+            }
+
+            /** */
+            public long publicInnerLong = 123L;
+
+            /**
+             * @param l long
+             */
+            public void publicInnerMethod(final long l)
+            {
+                //
+            }
+        }
+    }
+
+    /** annotation class. */
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface AnnTag
+    {
+        // tagging annotation
+    }
+
+    /** annotation class with String parameter. */
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface AnnString
+    {
+        /** value. */
+        String value();
+    }
+
 }

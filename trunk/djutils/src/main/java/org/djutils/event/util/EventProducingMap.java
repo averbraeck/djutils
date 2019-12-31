@@ -39,15 +39,14 @@ public class EventProducingMap<K, V> extends EventProducer implements Map<K, V>
     public static final EventType OBJECT_CHANGED_EVENT = new EventType("OBJECT_CHANGED_EVENT");
 
     /** the parent map. */
-    private Map<K, V> parent = null;
+    private final Map<K, V> parent;
 
     /**
      * constructs a new EventProducingMap.
-     * @param parent Map&lt;K,V&gt;; the parent map.
+     * @param parent Map&lt;K,V&gt;; the embedded map.
      */
     public EventProducingMap(final Map<K, V> parent)
     {
-        super();
         this.parent = parent;
     }
 
@@ -67,57 +66,72 @@ public class EventProducingMap<K, V> extends EventProducer implements Map<K, V>
 
     /** {@inheritDoc} */
     @Override
-    public boolean containsKey(final Object arg0)
+    public boolean containsKey(final Object key)
     {
-        return this.parent.containsKey(arg0);
+        return this.parent.containsKey(key);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean containsValue(final Object arg0)
+    public boolean containsValue(final Object value)
     {
-        return this.parent.containsValue(arg0);
+        return this.parent.containsValue(value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public V get(final Object arg0)
+    public V get(final Object key)
     {
-        return this.parent.get(arg0);
+        return this.parent.get(key);
     }
 
     /** {@inheritDoc} */
     @Override
-    public V put(final K arg0, final V arg1)
+    public V put(final K key, final V value)
     {
-        V result = this.parent.put(arg0, arg1);
-        this.fireEvent(OBJECT_ADDED_EVENT, null);
+        int nr = this.parent.size();
+        V result = this.parent.put(key, value);
+        if (nr != this.parent.size())
+            this.fireEvent(OBJECT_ADDED_EVENT, this.parent.size());
+        else
+            this.fireEvent(OBJECT_CHANGED_EVENT, null);
         return result;
     }
 
     /** {@inheritDoc} */
     @Override
-    public V remove(final Object arg0)
+    public V remove(final Object key)
     {
-        V result = this.parent.remove(arg0);
-        this.fireEvent(OBJECT_REMOVED_EVENT, null);
+        int nr = this.parent.size();
+        V result = this.parent.remove(key);
+        if (nr != this.parent.size())
+            this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
         return result;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void putAll(final Map<? extends K, ? extends V> arg0)
+    public void putAll(final Map<? extends K, ? extends V> map)
     {
-        this.parent.putAll(arg0);
-        this.fireEvent(OBJECT_ADDED_EVENT, null);
+        int nr = this.parent.size();
+        this.parent.putAll(map);
+        if (nr != this.parent.size())
+            this.fireEvent(OBJECT_ADDED_EVENT, this.parent.size());
+        else
+        {
+            if (!map.isEmpty())
+                this.fireEvent(OBJECT_CHANGED_EVENT, null);
+        }
     }
 
     /** {@inheritDoc} */
     @Override
     public void clear()
     {
+        int nr = this.parent.size();
         this.parent.clear();
-        this.fireEvent(OBJECT_REMOVED_EVENT, null);
+        if (nr != this.parent.size())
+            this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
     }
 
     /** {@inheritDoc} */

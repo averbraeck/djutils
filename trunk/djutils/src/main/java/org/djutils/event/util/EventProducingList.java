@@ -157,12 +157,7 @@ public class EventProducingList<E> extends EventProducer implements EventListene
     @Override
     public ListEventIterator<E> listIterator()
     {
-        ListEventIterator<E> iterator = new ListEventIterator<E>(this.parent.listIterator());
-        // WEAK references as an iterator is usually local and should be eligible for garbage collection
-        iterator.addListener(this, EventIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
-        iterator.addListener(this, ListEventIterator.OBJECT_ADDED_EVENT, ReferenceType.WEAK);
-        iterator.addListener(this, ListEventIterator.OBJECT_CHANGED_EVENT, ReferenceType.WEAK);
-        return iterator;
+        return listIterator(0);
     }
 
     /** {@inheritDoc} */

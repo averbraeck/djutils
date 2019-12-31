@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -11,12 +12,24 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.djutils.event.util.EventIterator;
 import org.djutils.event.util.EventProducingCollection;
 import org.djutils.event.util.EventProducingList;
+import org.djutils.event.util.EventProducingMap;
 import org.djutils.event.util.EventProducingSet;
+import org.djutils.event.util.ListEventIterator;
+import org.djutils.exceptions.Try;
 import org.junit.Test;
 
 /**
@@ -303,7 +316,7 @@ public class EventUtilTest implements Serializable
         assertEquals(EventProducingList.OBJECT_REMOVED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(1), listener.getReceivedEvent().getContent());
         assertEquals(1, epl.size());
-        
+
         // test remove(object)
         ok = epl.remove("abc");
         assertTrue(ok);
@@ -315,12 +328,18 @@ public class EventUtilTest implements Serializable
         assertFalse(ok);
         listener.setExpectingNotification(true);
 
-        // test addAll, set, size
-        ok = epl.addAll(Arrays.asList("a", "b", "c", "d", "e"));
+        // test addAll, set, size, indexOf, lastIndexOf
+        ok = epl.addAll(Arrays.asList("a", "e"));
+        assertTrue(ok);
+        assertEquals(EventProducingList.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
+        assertEquals(Integer.valueOf(2), listener.getReceivedEvent().getContent());
+        assertEquals(2, epl.size());
+        ok = epl.addAll(1, Arrays.asList("b", "c", "d"));
         assertTrue(ok);
         assertEquals(EventProducingList.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(5), listener.getReceivedEvent().getContent());
         assertEquals(5, epl.size());
+        assertEquals(2, epl.indexOf("c"));
         String old = epl.set(0, "aa");
         assertEquals("a", old);
         assertEquals(EventProducingList.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
@@ -328,9 +347,24 @@ public class EventUtilTest implements Serializable
         ok = epl.addAll(Arrays.asList());
         assertFalse(ok);
         listener.setExpectingNotification(true);
+        epl.add(1, "z");
+        assertEquals(6, epl.size());
+        assertEquals(3, epl.indexOf("c"));
+        assertEquals(1, epl.indexOf("z"));
+        epl.add("z");
+        assertEquals(7, epl.size());
+        assertEquals(3, epl.indexOf("c"));
+        assertEquals(6, epl.lastIndexOf("z"));
+        listener.setExpectingNotification(false);
+        epl.addAll(2, Arrays.asList());
+        listener.setExpectingNotification(true);
+
+        // test subList
+        List<String> subList = epl.subList(2, 5); // from = inclusive, to = exclusive
+        assertEquals(Arrays.asList("b", "c", "d"), subList);
 
         // test removeAll
-        epl.removeAll(Arrays.asList("b", "c"));
+        epl.removeAll(Arrays.asList("b", "c", "z")); // { "aa", "d", "e" } left
         assertEquals(EventProducingList.OBJECT_REMOVED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(3), listener.getReceivedEvent().getContent());
         listener.setExpectingNotification(false);
@@ -338,29 +372,27 @@ public class EventUtilTest implements Serializable
         listener.setExpectingNotification(true);
 
         // test retainAll
-        epl.retainAll(Arrays.asList("c", "d", "e"));
+        epl.retainAll(Arrays.asList("c", "d", "e")); // { "d", "e" } left
         assertEquals(EventProducingList.OBJECT_REMOVED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(2), listener.getReceivedEvent().getContent());
         listener.setExpectingNotification(false);
         epl.retainAll(Arrays.asList("d", "e"));
         listener.setExpectingNotification(true);
 
-        // test contains, containsAll
+        // test contains, containsAll, get
         assertTrue(epl.contains("d"));
         assertFalse(epl.contains("a"));
         assertTrue(epl.containsAll(Arrays.asList("d", "e")));
+        assertEquals("d", epl.get(0));
+        assertEquals("e", epl.get(1));
 
         // test toArray
         Object[] arr = epl.toArray();
         String[] stringArr = epl.toArray(new String[] {});
         assertEquals(2, arr.length);
-        assertTrue(arr[0].equals("d") || arr[0].equals("e"));
-        assertTrue(arr[1].equals("d") || arr[1].equals("e"));
-        assertNotEquals(arr[0], arr[1]);
+        assertTrue(arr[0].equals("d") && arr[1].equals("e"));
         assertEquals(2, stringArr.length);
-        assertTrue(stringArr[0].equals("d") || stringArr[0].equals("e"));
-        assertTrue(stringArr[1].equals("d") || stringArr[1].equals("e"));
-        assertNotEquals(stringArr[0], stringArr[1]);
+        assertTrue(stringArr[0].equals("d") && stringArr[1].equals("e"));
 
         // test clear
         epl.clear();
@@ -388,10 +420,165 @@ public class EventUtilTest implements Serializable
         assertEquals(4, epl.size());
         assertTrue(epl.contains(firstString));
         assertFalse(epl.contains(secondString));
+        epl.clear();
+
+        // test listIterator
+        ok = epl.addAll(Arrays.asList("a", "b", "c", "d", "e"));
+        assertTrue(ok);
+        assertEquals(EventProducingList.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
+        assertEquals(Integer.valueOf(5), listener.getReceivedEvent().getContent());
+        assertEquals(5, epl.size());
+        ListEventIterator<String> leit = epl.listIterator();
+        assertNotNull(leit);
+        assertTrue(leit.hasNext());
+        assertFalse(leit.hasPrevious());
+        assertEquals(-1, leit.previousIndex());
+        assertEquals(0, leit.nextIndex());
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                System.out.println(leit.previous());
+            }
+        }, "call to previous() should have caused exception", NoSuchElementException.class);
+        firstString = leit.next();
+        assertEquals("a", firstString);
+        assertTrue(leit.hasNext());
+        secondString = leit.next();
+        assertEquals("b", secondString);
+        assertEquals(1, leit.previousIndex());
+        assertEquals(2, leit.nextIndex());
+        leit.remove();
+        assertEquals(EventProducingList.OBJECT_REMOVED_EVENT, listener.getReceivedEvent().getType());
+        assertEquals(Integer.valueOf(4), listener.getReceivedEvent().getContent());
+        assertEquals(4, epl.size());
+        assertTrue(epl.contains(firstString));
+        assertFalse(epl.contains(secondString));
+        assertEquals(0, leit.previousIndex());
+        assertEquals(1, leit.nextIndex());
+        String thirdString = leit.next();
+        assertEquals("c", thirdString);
+        leit.set("cc");
+        assertEquals(EventProducingList.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
+        assertEquals(4, epl.size());
+        assertEquals(Arrays.asList("a", "cc", "d", "e"), Arrays.asList(epl.toArray()));
+        leit.add("dd");
+        assertEquals(EventProducingList.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
+        assertEquals(5, epl.size());
+        assertEquals(Arrays.asList("a", "cc", "dd", "d", "e"), Arrays.asList(epl.toArray()));
+        assertEquals("dd", leit.previous());
+        assertEquals("dd", leit.next());
+        assertEquals("d", leit.next());
+        assertEquals("e", leit.next());
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                System.out.println(leit.next());
+            }
+        }, "call to next() should have caused exception", NoSuchElementException.class);
+        epl.clear();
 
         // clear the collection and remove the listeners
         epl.removeAllListeners();
         epl.clear();
+    }
+
+    /**
+     * Test the EventProducingMap.
+     */
+    @Test
+    public void testEventProducingMap()
+    {
+        EventProducingMap<Integer, String> epm = new EventProducingMap<>(new TreeMap<>());
+        TestEventListener listener = new TestEventListener();
+        epm.addListener(listener, EventProducingMap.OBJECT_ADDED_EVENT);
+        epm.addListener(listener, EventProducingMap.OBJECT_REMOVED_EVENT);
+        epm.addListener(listener, EventProducingMap.OBJECT_CHANGED_EVENT);
+
+        // test put, get, size, containsKey, containsValue
+        listener.setExpectingNotification(true);
+        assertTrue(epm.isEmpty());
+        assertEquals(0, epm.size());
+        String replaced = epm.put(1, "abc");
+        assertNull(replaced);
+        assertEquals(epm, listener.getReceivedEvent().getSource());
+        assertEquals(EventProducingMap.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
+        assertEquals(Integer.valueOf(1), listener.getReceivedEvent().getContent());
+        assertFalse(epm.isEmpty());
+        assertEquals(1, epm.size());
+        replaced = epm.put(1, "def");
+        assertEquals("abc", replaced);
+        assertEquals(epm, listener.getReceivedEvent().getSource());
+        assertEquals(EventProducingMap.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
+        assertNull(listener.getReceivedEvent().getContent());
+        assertNull(epm.get(2));
+        assertEquals("def", epm.get(1));
+        assertEquals(1, epm.size());
+        assertTrue(epm.containsKey(1));
+        assertFalse(epm.containsKey(2));
+        assertTrue(epm.containsValue("def"));
+        assertFalse(epm.containsValue("abc"));
+
+        // test remove
+        String removed = epm.remove(123);
+        assertNull(removed);
+        removed = epm.remove(1);
+        assertEquals("def", removed);
+        assertEquals(EventProducingMap.OBJECT_REMOVED_EVENT, listener.getReceivedEvent().getType());
+        assertEquals(Integer.valueOf(0), listener.getReceivedEvent().getContent());
+        assertTrue(epm.isEmpty());
+        listener.setExpectingNotification(false);
+        removed = epm.remove(234);
+        assertNull(removed);
+        listener.setExpectingNotification(true);
+        epm.clear();
+
+        // test addAll, size
+        Map<Integer, String> addMap = new LinkedHashMap<>();
+        addMap.put(1, "a");
+        addMap.put(2, "b");
+        addMap.put(3, "c");
+        addMap.put(4, "d");
+        addMap.put(5, "e");
+        epm.putAll(addMap);
+        assertEquals(EventProducingMap.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
+        assertEquals(Integer.valueOf(5), listener.getReceivedEvent().getContent());
+        assertEquals(5, epm.size());
+        epm.putAll(addMap);
+        assertEquals(EventProducingMap.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
+        assertNull(listener.getReceivedEvent().getContent());
+        listener.setExpectingNotification(false);
+        epm.putAll(new LinkedHashMap<>());
+        assertEquals(5, epm.size());
+        listener.setExpectingNotification(true);
+
+        // test keySet, values, entrySet
+        assertEquals(new HashSet<Integer>(Arrays.asList(1, 2, 3, 4, 5)), new HashSet<Integer>(epm.keySet()));
+        assertEquals(new TreeSet<String>(Arrays.asList("a", "b", "c", "d", "e")), new TreeSet<String>(epm.values()));
+        Set<Map.Entry<Integer, String>> entrySet = epm.entrySet(); // TreeMap so set is sorted
+        assertEquals(5, entrySet.size());
+        Iterator<Map.Entry<Integer, String>> it = entrySet.iterator();
+        Map.Entry<Integer, String> entry = it.next();
+        assertEquals(1, entry.getKey().intValue());
+        assertEquals("a", entry.getValue());
+        entry = it.next();
+        assertEquals(2, entry.getKey().intValue());
+        assertEquals("b", entry.getValue());
+
+        // test clear
+        epm.clear();
+        assertEquals(EventProducingMap.OBJECT_REMOVED_EVENT, listener.getReceivedEvent().getType());
+        assertEquals(Integer.valueOf(0), listener.getReceivedEvent().getContent());
+        listener.setExpectingNotification(false);
+        epm.clear();
+        listener.setExpectingNotification(true);
+
+        // clear the collection and remove the listeners
+        epm.removeAllListeners();
+        epm.clear();
     }
 
     /** */
