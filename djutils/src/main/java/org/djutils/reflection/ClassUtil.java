@@ -15,7 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -331,29 +330,73 @@ public final class ClassUtil
     }
 
     /** ************ METHOD UTILITIES *********** */
+
     /**
-     * gets all the methods of a class and adds the result to result.
+     * gets all the methods of a class (public, protected, package, and private) and adds the result to the return value.
      * @param clazz Class&lt;?&gt;; the class
-     * @param name String; the name of the method
-     * @param result Method[]; the resulting set
-     * @return result
+     * @param result Set&lt;Field&gt;; the resulting set
+     * @return the set of methods including all methods of the field clazz
      */
-    public static Method[] getAllMethods(final Class<?> clazz, final String name, final Method[] result)
+    public static List<Method> getAllMethods(final Class<?> clazz, final List<Method> result)
     {
-        List<Method> list = new ArrayList<Method>(Arrays.asList(result));
+        Method[] methods = clazz.getDeclaredMethods();
+        for (int i = 0; i < methods.length; i++)
+        {
+            result.add(methods[i]);
+        }
+        if (clazz.getSuperclass() != null)
+        {
+            return ClassUtil.getAllMethods(clazz.getSuperclass(), result);
+        }
+        return result;
+    }
+
+    /**
+     * gets all the methods of a class (public, protected, package, and private).
+     * @param clazz Class&lt;?&gt;; the class
+     * @return all methods of the class
+     */
+    public static List<Method> getAllMethods(final Class<?> clazz)
+    {
+        List<Method> methodSet = new ArrayList<Method>();
+        return ClassUtil.getAllMethods(clazz, methodSet);
+    }
+
+    /**
+     * gets all the methods of a class (public, protected, package, and private) with a certain name and adds the result to the
+     * return value.
+     * @param clazz Class&lt;?&gt;; the class
+     * @param name String; the name of the method to look up
+     * @param result Set&lt;Field&gt;; the resulting set
+     * @return the set of methods including all methods with the given name of the field clazz
+     */
+    public static List<Method> getAllMethods(final Class<?> clazz, final String name, final List<Method> result)
+    {
         Method[] methods = clazz.getDeclaredMethods();
         for (int i = 0; i < methods.length; i++)
         {
             if (methods[i].getName().equals(name))
             {
-                list.add(methods[i]);
+                result.add(methods[i]);
             }
         }
         if (clazz.getSuperclass() != null)
         {
-            return ClassUtil.getAllMethods(clazz.getSuperclass(), name, list.toArray(new Method[list.size()]));
+            return ClassUtil.getAllMethods(clazz.getSuperclass(), name, result);
         }
-        return list.toArray(new Method[list.size()]);
+        return result;
+    }
+
+    /**
+     * gets all the methods of a class (public, protected, package, and private) with a certain name.
+     * @param clazz Class&lt;?&gt;; the class
+     * @param name String; the name of the method to look up
+     * @return all methods of the class with a certain name
+     */
+    public static List<Method> getAllMethods(final Class<?> clazz, final String name)
+    {
+        List<Method> methodSet = new ArrayList<Method>();
+        return ClassUtil.getAllMethods(clazz, name, methodSet);
     }
 
     /**
@@ -454,14 +497,14 @@ public final class ClassUtil
         catch (NoSuchMethodException noSuchMethodException)
         {
             // We get all methods
-            Method[] methods = ClassUtil.getAllMethods(object.getClass(), name, new Method[0]);
-            if (methods.length == 0)
+            List<Method> methods = ClassUtil.getAllMethods(object.getClass(), name);
+            if (methods.size() == 0)
             {
                 throw new NoSuchMethodException("No such method: " + name + " for object " + object);
             }
             // now we match the signatures
             methods = ClassUtil.matchSignature(methods, name, parameterTypes);
-            if (methods.length == 0)
+            if (methods.size() == 0)
             {
                 throw new NoSuchMethodException("No method with right signature: " + name + " for object " + object);
             }
@@ -540,22 +583,6 @@ public final class ClassUtil
         }
     }
 
-    /**
-     * resolves the annotation for a given object instance.
-     * @param object Object; the object to resolve the annotation for
-     * @param annotationName String; name of the annotation to resolve
-     * @return the annotation (if found)
-     * @throws NoSuchElementException if the annotation cannot be resolved
-     */
-    public static Annotation resolveAnnotation(final Object object, final String annotationName) throws NoSuchElementException
-    {
-        if (object == null)
-        {
-            throw new NoSuchElementException("resolveAnnotation: object is null for annotation " + annotationName);
-        }
-        return resolveAnnotation(object.getClass(), annotationName);
-    }
-
     /* ************ OTHER UTILITIES *********** */
 
     /**
@@ -592,7 +619,7 @@ public final class ClassUtil
 
     /**
      * Determines &amp; returns whether constructor 'a' is more specific than constructor 'b', as defined in the Java Language
-     * Specification ???15.12.
+     * Specification par 15.12.
      * @return true if 'a' is more specific than b, false otherwise. 'false' is also returned when constructors are
      *         incompatible, e.g. have different names or a different number of parameters.
      * @param a Class&lt;?&gt;[]; reflects the first constructor
@@ -618,11 +645,11 @@ public final class ClassUtil
 
     /**
      * Determines &amp; returns whether constructor 'a' is more specific than constructor 'b', as defined in the Java Language
-     * Specification ???15.12.
+     * Specification par 15.12.
      * @return true if 'a' is more specific than b, false otherwise. 'false' is also returned when constructors are
      *         incompatible, e.g. have different names or a different number of parameters.
-     * @param a Constructor&lt;?&gt;; reflects the first constructor
-     * @param b Constructor&lt;?&gt;; reflects the second constructor
+     * @param a Constructor&lt;?&gt;; the first constructor
+     * @param b Constructor&lt;?&gt;; the second constructor
      */
     public static boolean isMoreSpecific(final Constructor<?> a, final Constructor<?> b)
     {
@@ -638,7 +665,7 @@ public final class ClassUtil
 
     /**
      * Determines &amp; returns whether constructor 'a' is more specific than constructor 'b', as defined in the Java Language
-     * Specification ???15.12.
+     * Specification par 15.12.
      * @return true if 'a' is more specific than b, false otherwise. 'false' is also returned when constructors are
      *         incompatible, e.g. have different names or a different number of parameters.
      * @param a Method; reflects the first method
@@ -694,17 +721,17 @@ public final class ClassUtil
      * @return Method[] An unordered Method-array consisting of the elements of 'methods' that match with the given signature.
      *         An array with 0 elements is returned when no matching Method objects are found.
      */
-    public static Method[] matchSignature(final Method[] methods, final String name, final Class<?>[] argTypes)
+    public static List<Method> matchSignature(final List<Method> methods, final String name, final Class<?>[] argTypes)
     {
         List<Method> results = new ArrayList<Method>();
-        for (int i = 0; i < methods.length; i++)
+        for (int i = 0; i < methods.size(); i++)
         {
-            if (ClassUtil.matchSignature(methods[i], name, argTypes))
+            if (ClassUtil.matchSignature(methods.get(i), name, argTypes))
             {
-                results.add(methods[i]);
+                results.add(methods.get(i));
             }
         }
-        return results.toArray(new Method[results.size()]);
+        return results;
     }
 
     /**
@@ -834,30 +861,30 @@ public final class ClassUtil
      * @return The most specific method.
      * @throws NoSuchMethodException when no method is found that's more specific than the others.
      */
-    private static Method getSpecificMethod(final Method[] methods) throws NoSuchMethodException
+    private static Method getSpecificMethod(final List<Method> methods) throws NoSuchMethodException
     {
         // Check for evident cases
-        if (methods.length == 0)
+        if (methods.size() == 0)
         {
             throw new NoSuchMethodException();
         }
-        if (methods.length == 1)
+        if (methods.size() == 1)
         {
-            return methods[0];
+            return methods.get(0);
         }
         // Apply generic algorithm
         int resultID = 0; // Assume first method to be most specific
-        while (resultID < methods.length)
+        while (resultID < methods.size())
         {
             // Verify assumption
             boolean success = true;
-            for (int i = 0; i < methods.length; i++)
+            for (int i = 0; i < methods.size(); i++)
             {
                 if (resultID == i)
                 {
                     continue;
                 }
-                if (!isMoreSpecific(methods[resultID], methods[i]))
+                if (!isMoreSpecific(methods.get(resultID), methods.get(i)))
                 {
                     success = false;
                 }
@@ -865,7 +892,7 @@ public final class ClassUtil
             // Assumption verified
             if (success)
             {
-                return methods[resultID];
+                return methods.get(resultID);
             }
             resultID++;
         }

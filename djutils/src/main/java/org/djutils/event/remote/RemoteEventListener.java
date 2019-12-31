@@ -3,9 +3,6 @@ package org.djutils.event.remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import org.djutils.event.EventInterface;
-import org.djutils.event.EventListenerInterface;
-
 /**
  * The RemoteEventListener class embodies a remote EventListener.
  * <p>
@@ -19,31 +16,19 @@ import org.djutils.event.EventListenerInterface;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class RemoteEventListener implements RemoteEventListenerInterface
+public abstract class RemoteEventListener implements RemoteEventListenerInterface
 {
     /** */
     private static final long serialVersionUID = 20191230L;
-    
-    /** the owner of the remote listener. */
-    private EventListenerInterface owner = null;
 
     /**
      * Constructs a new RemoteListener.
-     * @param owner EventListenerInterface; The owner of the listener.
      * @throws RemoteException in case of network error
      */
-    public RemoteEventListener(final EventListenerInterface owner) throws RemoteException
+    public RemoteEventListener() throws RemoteException
     {
         super();
         // TODO: which port should the RemoteEventListener use? Probably this asks for a Factory
         UnicastRemoteObject.exportObject(this, 5555);
-        this.owner = owner;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void notify(final EventInterface event) throws RemoteException
-    {
-        this.owner.notify(event);
     }
 }
