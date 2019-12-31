@@ -2,6 +2,18 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.04.01" date="2019-12-31" description="EventProducer serializability">
+      <action dev="averbraeck" type="fix">
+        The EventProducer had a non-transient semaphore object, rendering it non-serializable. The
+        lock has been replaced by a lock on the listeners object instead. The lock has been applied
+        more consistently in the code to avoid ConcurrentModificationExceptions.
+      </action>
+      <action dev="averbraeck" type="update">
+        All Dumper classes in DecoderDumper now use UTF-8 to dump the data, to ensure reproducibility of the
+        code across platforms.
+      </action>
+    </release>
+
     <release version="1.04.00" date="2019-12-30" description="DSOL Event package added to DJUTILS">
       <action dev="averbraeck" type="add">
         The event package for pub/sub, originally the dsol-event package, has been added to DJUTILS and 
@@ -71,13 +83,13 @@
       </action>
     </release>
     
-    <release version="1.03.01" date="2019-10-25" description="">
+    <release version="1.03.01" date="2019-10-25" description="Updated DJUTILS to version 4">
       <action dev="averbraeck" type="update">
         DJUNITS updated to 4.01.00.
       </action>
     </release>
     
-    <release version="1.03.00" date="2019-10-19" description="">
+    <release version="1.03.00" date="2019-10-19" description="@Generated annotations in code in djutils-cli">
       <action dev="averbraeck" type="update">
         CliUnitConverters in djutils-ext have been regenerated. A @Generated tag has been added to each generated method. 
       </action>

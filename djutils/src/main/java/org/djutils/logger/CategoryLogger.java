@@ -58,22 +58,22 @@ public class CategoryLogger
     private static Map<Writer, String> writerFormats = new LinkedHashMap<>();
 
     /** The categories to log. */
-    protected static Set<LogCategory> categories = new LinkedHashSet<>(256);
+    protected static final Set<LogCategory> categories = new LinkedHashSet<>(256);
 
     /** The console writer, replacing the default one. */
     private static Writer consoleWriter;
 
     /** The conditional logger works on the basis of a true condition. */
-    protected static ConditionalLogger conditionalLogger = new ConditionalLogger(true);
+    protected static final ConditionalLogger conditionalLogger = new ConditionalLogger(true);
 
     /** The conditional logger works on the basis of a condition, failing the condition. */
-    protected static ConditionalLogger conditionalNoLogger = new ConditionalLogger(false);
+    protected static final ConditionalLogger conditionalNoLogger = new ConditionalLogger(false);
 
     /** The delegate logger instance that does the actual logging work, after a positive filter outcome. */
-    protected static DelegateLogger delegateLogger = new DelegateLogger(true);
+    protected static final DelegateLogger delegateLogger = new DelegateLogger(true);
 
     /** The delegate logger that returns immediately after a negative filter outcome. */
-    protected static DelegateLogger noLogger = new DelegateLogger(false);
+    protected static final DelegateLogger noLogger = new DelegateLogger(false);
 
     /** */
     protected CategoryLogger()

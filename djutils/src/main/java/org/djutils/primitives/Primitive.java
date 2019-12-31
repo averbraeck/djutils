@@ -263,7 +263,7 @@ public final class Primitive
     {
         if (object instanceof Number)
         {
-            return new Byte(((Number) object).byteValue());
+            return Byte.valueOf(((Number) object).byteValue());
         }
         return (Byte) object;
     }
@@ -277,7 +277,7 @@ public final class Primitive
     {
         if (object instanceof Number)
         {
-            return new Character((char) ((Number) object).byteValue());
+            return Character.valueOf((char) ((Number) object).byteValue());
         }
         return (Character) object;
     }
@@ -289,7 +289,7 @@ public final class Primitive
      */
     public static Double toDouble(final Object object)
     {
-        return new Double(((Number) object).doubleValue());
+        return Double.valueOf(((Number) object).doubleValue());
     }
 
     /**
@@ -299,7 +299,7 @@ public final class Primitive
      */
     public static Float toFloat(final Object object)
     {
-        return new Float(((Number) object).floatValue());
+        return Float.valueOf(((Number) object).floatValue());
     }
 
     /**
@@ -309,7 +309,7 @@ public final class Primitive
      */
     public static Long toLong(final Object object)
     {
-        return new Long(((Number) object).longValue());
+        return Long.valueOf(((Number) object).longValue());
     }
 
     /**
@@ -319,7 +319,7 @@ public final class Primitive
      */
     public static Short toShort(final Object object)
     {
-        return new Short(((Number) object).shortValue());
+        return Short.valueOf(((Number) object).shortValue());
     }
 
     /**
