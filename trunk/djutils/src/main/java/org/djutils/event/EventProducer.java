@@ -41,9 +41,6 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     /** listeners is the collection of interested listeners. */
     protected EventListenerMap listeners = new EventListenerMap();
 
-    /** the semaphore used to lock while performing thread sensitive operations. */
-    private Object semaphore = new Object();
-
     /** the cache to prevent continuous reflection. */
     private transient static Map<Class<? extends EventProducer>, EventType[]> EVENTTYPE_CACHE = new LinkedHashMap<>();
 
@@ -115,7 +112,7 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
         {
             return false;
         }
-        synchronized (this.semaphore)
+        synchronized (this.listeners)
         {
             Reference<EventListenerInterface> reference = null;
             if (referenceType.isStrong())
@@ -179,7 +176,7 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     {
         if (this.listeners.containsKey(event.getType()))
         {
-            synchronized (this.semaphore)
+            synchronized (this.listeners)
             {
                 // make a safe copy because of possible removeListener() in notify() method during fireEvent
                 List<Reference<EventListenerInterface>> listenerList = new ArrayList<>(this.listeners.get(event.getType()));
@@ -460,8 +457,11 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     protected synchronized int removeAllListeners()
     {
         int result = this.listeners.size();
-        this.listeners = null;
-        this.listeners = new EventListenerMap();
+        synchronized (this.listeners)
+        {
+            this.listeners = null;
+            this.listeners = new EventListenerMap();
+        }
         return result;
     }
 
@@ -474,7 +474,7 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     {
         int result = 0;
         Map<EventType, Reference<EventListenerInterface>> removeMap = new LinkedHashMap<>();
-        synchronized (this.semaphore)
+        synchronized (this.listeners)
         {
             for (EventType type : this.listeners.keySet())
             {
@@ -505,7 +505,7 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
             return false;
         }
         boolean result = false;
-        synchronized (this.semaphore)
+        synchronized (this.listeners)
         {
             for (Iterator<Reference<EventListenerInterface>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
             {
@@ -541,17 +541,20 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     private synchronized boolean removeListener(final Reference<EventListenerInterface> reference, final EventType eventType)
     {
         boolean success = false;
-        for (Iterator<Reference<EventListenerInterface>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
+        synchronized (this.listeners)
         {
-            if (i.next().equals(reference))
+            for (Iterator<Reference<EventListenerInterface>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
             {
-                i.remove();
-                success = true;
+                if (i.next().equals(reference))
+                {
+                    i.remove();
+                    success = true;
+                }
             }
-        }
-        if (this.listeners.get(eventType).size() == 0)
-        {
-            this.listeners.remove(eventType);
+            if (this.listeners.get(eventType).size() == 0)
+            {
+                this.listeners.remove(eventType);
+            }
         }
         return success;
     }
@@ -579,5 +582,4 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
         return this.listeners.keySet(); // is already a safe copy
     }
 
-    
 }

@@ -57,7 +57,7 @@ public class Base64Decoder implements Decoder
         try
         {
             this.internalDumper.flush();
-            String result = this.baos.toString();
+            String result = this.baos.toString("UTF-8");
             this.baos.reset();
             return result;
         }

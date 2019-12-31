@@ -51,12 +51,13 @@ public class Base64Dumper extends Dumper<Base64Dumper>
         try
         {
             new Base64Dumper(addressOffset).setOutputStream(baos).append(bytes).flush();
+            return baos.toString("UTF-8");
         }
         catch (IOException exception)
         {
-            // Cannot happen because ByteOutputStream.write(byte[]) cannot fail
+            // Cannot happen because ByteOutputStream.write(byte[]) cannot fail and UTF-8 exists
+            return "";
         }
-        return baos.toString();
     }
 
     /**

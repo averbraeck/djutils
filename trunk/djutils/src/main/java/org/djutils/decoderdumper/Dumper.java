@@ -113,7 +113,7 @@ public class Dumper<T>
      */
     private void writeOutput(final String outputText) throws IOException
     {
-        this.outputStream.write(outputText.getBytes());
+        this.outputStream.write(outputText.getBytes("UTF-8"));
     }
 
     /**

@@ -80,12 +80,12 @@ public class FieldSignature implements Serializable
      */
     public static final String toDescriptor(final Class<?>[] classes)
     {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < classes.length; i++)
         {
-            result = result + FieldSignature.toDescriptor(classes[i]);
+            result.append(FieldSignature.toDescriptor(classes[i]));
         }
-        return result;
+        return result.toString();
     }
 
     /**

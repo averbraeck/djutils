@@ -9,12 +9,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -653,7 +655,7 @@ public final class ClassUtil
      */
     public static boolean isMoreSpecific(final Constructor<?> a, final Constructor<?> b)
     {
-        if (a.getParameterTypes().equals(b.getParameterTypes()))
+        if (Arrays.equals(a.getParameterTypes(), b.getParameterTypes()))
         {
             if (b.getDeclaringClass().isAssignableFrom(a.getDeclaringClass()))
             {
@@ -1104,7 +1106,7 @@ public final class ClassUtil
                     return new ClassFileDescriptor(new File(jarURL2.toURI()));
                 }
             }
-            catch (Exception exception)
+            catch (URISyntaxException | MalformedURLException exception)
             {
                 return new ClassFileDescriptor(new File(jarFileName));
             }
