@@ -38,20 +38,21 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140830L;
 
-    /** listeners is the collection of interested listeners. */
+    /** The collection of interested listeners. */
+    @SuppressWarnings("checkstyle:visibilitymodifier")
     protected EventListenerMap listeners = new EventListenerMap();
 
-    /** the cache to prevent continuous reflection. */
-    private transient static Map<Class<? extends EventProducer>, EventType[]> EVENTTYPE_CACHE = new LinkedHashMap<>();
+    /** Cache to prevent continuous reflection. */
+    private static final transient Map<Class<? extends EventProducer>, EventType[]> EVENTTYPE_CACHE = new LinkedHashMap<>();
 
     /**
-     * checks whether no duplicate short values are assigned to the producer. An event producer produces events of a certain
+     * Checks that no duplicate short values are assigned to the producer. An event producer produces events of a certain
      * eventType. This eventType functions as a marker for registration. If the eventProducer defines two non-private, static
      * EventTypes with an equal value, the marker function is lost. This method checks for this particular problem. Note that
      * this will also return true when a superclass defines the same non-private, static EventType as a subclass.
-     * @return returns whether every non-private, static EventType in this class is unique.
+     * @return boolean; true if every non-private, static EventType in this class is unique; false if a duplicate exists.
      */
-    private boolean checkDuplicateEventTypes()
+    private boolean checkNoDuplicateEventTypes()
     {
         EventType[] events = getStaticEventTypes(getClass());
         for (int i = 0; i < events.length; i++)
@@ -68,11 +69,11 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     }
 
     /**
-     * constructs a new EventProducer and checks for double values in events.
+     * Constructs a new EventProducer and checks for duplicate values in event types.
      */
     public EventProducer()
     {
-        if (!this.checkDuplicateEventTypes())
+        if (!this.checkNoDuplicateEventTypes())
         {
             throw new RuntimeException("EventProducer failed: " + "more events have the same class + name combination");
         }
@@ -106,61 +107,59 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     public final synchronized boolean addListener(final EventListenerInterface listener, final EventType eventType,
             final int position, final ReferenceType referenceType)
     {
+        Throw.whenNull(listener, "listener cannot be null");
         Throw.whenNull(eventType, "eventType cannot be null");
         Throw.whenNull(referenceType, "referenceType cannot be null");
-        if (listener == null || position < EventProducerInterface.LAST_POSITION)
+        if (position < EventProducerInterface.LAST_POSITION)
         {
             return false;
         }
-        synchronized (this.listeners)
+        Reference<EventListenerInterface> reference = null;
+        if (referenceType.isStrong())
         {
-            Reference<EventListenerInterface> reference = null;
-            if (referenceType.isStrong())
+            reference = new StrongReference<EventListenerInterface>(listener);
+        }
+        else
+        {
+            reference = new WeakReference<EventListenerInterface>(listener);
+        }
+        if (this.listeners.containsKey(eventType))
+        {
+            for (Reference<EventListenerInterface> entry : this.listeners.get(eventType))
             {
-                reference = new StrongReference<EventListenerInterface>(listener);
-            }
-            else
-            {
-                reference = new WeakReference<EventListenerInterface>(listener);
-            }
-            if (this.listeners.containsKey(eventType))
-            {
-                for (Reference<EventListenerInterface> entry : this.listeners.get(eventType))
+                if (listener.equals(entry.get()))
                 {
-                    if (listener.equals(entry.get()))
-                    {
-                        return false;
-                    }
-                }
-                List<Reference<EventListenerInterface>> entries = this.listeners.get(eventType);
-                if (position == EventProducerInterface.LAST_POSITION)
-                {
-                    entries.add(reference);
-                }
-                else
-                {
-                    entries.add(position, reference);
+                    return false;
                 }
             }
-            else
+            List<Reference<EventListenerInterface>> entries = this.listeners.get(eventType);
+            if (position == EventProducerInterface.LAST_POSITION)
             {
-                List<Reference<EventListenerInterface>> entries = new ArrayList<>();
                 entries.add(reference);
-                this.listeners.put(eventType, entries);
             }
+            else
+            {
+                entries.add(position, reference);
+            }
+        }
+        else
+        {
+            List<Reference<EventListenerInterface>> entries = new ArrayList<>();
+            entries.add(reference);
+            this.listeners.put(eventType, entries);
         }
         return true;
     }
 
     /**
-     * fires the event to the listener. This method is a hook method. The default implementation simply invokes the notify on
+     * Transmit an event to a listener. This method is a hook method. The default implementation simply invokes the notify on
      * the listener. In specific cases (filtering, storing, queuing, this method can be overwritten.
      * @param listener EventListenerInterface; the listener for this event
      * @param event EventInterface; the event to fire
-     * @return the event
-     * @throws RemoteException on network failure.
+     * @return EventInterface; the event
+     * @throws RemoteException on network failure
      */
-    protected synchronized EventInterface fireEvent(final EventListenerInterface listener, final EventInterface event)
+    protected EventInterface fireEvent(final EventListenerInterface listener, final EventInterface event)
             throws RemoteException
     {
         listener.notify(event);
@@ -168,41 +167,40 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     }
 
     /**
-     * fires an event to subscribed listeners.
-     * @param event EventInterface; the event.
-     * @return the event.
+     * Transmit an event to all interested listeners.
+     * @param event EventInterface; the event
+     * @return the event
      */
     protected synchronized EventInterface fireEvent(final EventInterface event)
     {
+        Throw.whenNull(event, "event may not be null");
+        Throw.whenNull(event.getType(), "event type may not be null");
         if (this.listeners.containsKey(event.getType()))
         {
-            synchronized (this.listeners)
+            // make a safe copy because of possible removeListener() in notify() method during fireEvent
+            List<Reference<EventListenerInterface>> listenerList = new ArrayList<>(this.listeners.get(event.getType()));
+            for (Reference<EventListenerInterface> reference : listenerList)
             {
-                // make a safe copy because of possible removeListener() in notify() method during fireEvent
-                List<Reference<EventListenerInterface>> listenerList = new ArrayList<>(this.listeners.get(event.getType()));
-                for (Reference<EventListenerInterface> reference : listenerList)
+                EventListenerInterface listener = reference.get();
+                try
                 {
-                    EventListenerInterface listener = reference.get();
-                    try
+                    if (listener != null)
                     {
-                        if (listener != null)
-                        {
-                            // The garbage collection has not cleaned the referent
-                            this.fireEvent(listener, event);
-                        }
-                        else
-                        {
-                            // The garbage collection cleaned the referent;
-                            // there is no need to keep the subscription
-                            this.removeListener(reference, event.getType());
-                        }
+                        // The garbage collection has not cleaned the referent
+                        this.fireEvent(listener, event);
                     }
-                    catch (RemoteException remoteException)
+                    else
                     {
-                        // A network failure prevented the delivery,
-                        // subscription is removed.
+                        // The garbage collection cleaned the referent;
+                        // there is no need to keep the subscription
                         this.removeListener(reference, event.getType());
                     }
+                }
+                catch (RemoteException remoteException)
+                {
+                    // A network failure prevented the delivery,
+                    // subscription is removed.
+                    this.removeListener(reference, event.getType());
                 }
             }
         }
@@ -210,62 +208,63 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     }
 
     /**
-     * fires a value to listeners subscribed to eventType.
-     * @param eventType EventType; the eventType of the event.
-     * @param value Object; the value of the event.
-     * @return the Serializable value.
+     * Transmit an event with a serializable object as payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value Serializable; the object sent with the event
+     * @return Serializable; the payload
      */
-    protected synchronized Object fireEvent(final EventType eventType, final Object value)
+    protected Serializable fireEvent(final EventType eventType, final Serializable value)
     {
         this.fireEvent(new Event(eventType, this, value));
         return value;
     }
 
     /**
-     * notifies listeners subscribed to eventType.
-     * @param eventType EventType; the eventType of the event.
+     * Transmit an event with no payload object to all interested listeners.
+     * @param eventType EventType; the eventType of the event
      */
-    protected synchronized void fireEvent(final EventType eventType)
+    protected void fireEvent(final EventType eventType)
     {
         this.fireEvent(new Event(eventType, this, null));
     }
 
     /**
-     * fires a Serializable value to listeners subscribed to eventType. A timed event is fired.
+     * Transmit a time-stamped event with a Serializable object (payload) to all interested listeners.
      * @param eventType EventType; the eventType of the event.
-     * @param value Object; the value of the event.
-     * @param time C; a timestamp for the event.
-     * @return the Serializable value.
-     * @param <C> the comparable type to indicate the time when the event is fired.
+     * @param value Serializable; the payload sent with the event
+     * @param time C; a time stamp for the event
+     * @return Serializable; the payload
+     * @param <C> the comparable type to indicate the time when the event is fired
      */
-    protected synchronized <C extends Comparable<C>> Object fireTimedEvent(final EventType eventType, final Object value,
+    protected <C extends Comparable<C>> Serializable fireTimedEvent(final EventType eventType, final Serializable value,
             final C time)
     {
+        Throw.whenNull(time, "time may not be null");
         this.fireEvent(new TimedEvent<C>(eventType, this, value, time));
         return value;
     }
 
     /**
-     * fires a byte value to listeners subscribed to eventType.
-     * @param eventType EventType; the eventType of the event.
-     * @param value byte; the value of the event.
-     * @return the byte value.
+     * Transmit an event with a one byte payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value byte; the payload
+     * @return byte; the payload
      */
-    protected synchronized byte fireEvent(final EventType eventType, final byte value)
+    protected byte fireEvent(final EventType eventType, final byte value)
     {
         this.fireEvent(eventType, Byte.valueOf(value));
         return value;
     }
 
     /**
-     * fires a byte value to listeners subscribed to eventType. A timed event is fired.
-     * @param eventType EventType; the eventType of the event.
-     * @param value byte; the value of the event.
-     * @param time C; a timestamp for the event.
-     * @param <C> the comparable type to indicate the time when the event is fired.
-     * @return the byte value.
+     * Transmit a time-stamped event with a one byte payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value byte; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return byte; the payload
      */
-    protected synchronized <C extends Comparable<C>> byte fireTimedEvent(final EventType eventType, final byte value,
+    protected <C extends Comparable<C>> byte fireTimedEvent(final EventType eventType, final byte value,
             final C time)
     {
         this.fireTimedEvent(eventType, Byte.valueOf(value), time);
@@ -273,26 +272,26 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     }
 
     /**
-     * fires a boolean value to listeners subscribed to eventType.
-     * @param eventType EventType; the eventType of the event.
-     * @param value boolean; the value of the event.
-     * @return the boolean value.
+     * Transmit an event with a boolean payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value boolean; the payload
+     * @return boolean; the payload
      */
-    protected synchronized boolean fireEvent(final EventType eventType, final boolean value)
+    protected boolean fireEvent(final EventType eventType, final boolean value)
     {
         this.fireEvent(eventType, Boolean.valueOf(value));
         return value;
     }
 
     /**
-     * fires a boolean value to listeners subscribed to eventType. A timed event is fired.
-     * @param eventType EventType; the eventType of the event.
-     * @param value boolean; the value of the event.
-     * @param time C; a timestamp for the event.
-     * @param <C> the comparable type to indicate the time when the event is fired.
-     * @return the boolean value.
+     * Transmit a time-stamped event with a boolean payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value boolean; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return boolean; the payload
      */
-    protected synchronized <C extends Comparable<C>> boolean fireTimedEvent(final EventType eventType, final boolean value,
+    protected <C extends Comparable<C>> boolean fireTimedEvent(final EventType eventType, final boolean value,
             final C time)
     {
         this.fireTimedEvent(eventType, Boolean.valueOf(value), time);
@@ -300,26 +299,26 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     }
 
     /**
-     * fires a double value to listeners subscribed to eventType.
-     * @param eventType EventType; the eventType of the event.
-     * @param value double; the value of the event.
-     * @return the double value.
+     * Transmit an event with a double value payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value double; the payload
+     * @return double; the payload
      */
-    protected synchronized double fireEvent(final EventType eventType, final double value)
+    protected double fireEvent(final EventType eventType, final double value)
     {
         this.fireEvent(eventType, Double.valueOf(value));
         return value;
     }
 
     /**
-     * fires a double value to listeners subscribed to eventType. A timed event is fired.
-     * @param eventType EventType; the eventType of the event.
-     * @param value double; the value of the event.
-     * @param time C; a timestamp for the event.
-     * @param <C> the comparable type to indicate the time when the event is fired.
-     * @return the double value.
+     * Transmit a time-stamped event with a double value payload to interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value double; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return double; the payload
      */
-    protected synchronized <C extends Comparable<C>> double fireTimedEvent(final EventType eventType, final double value,
+    protected <C extends Comparable<C>> double fireTimedEvent(final EventType eventType, final double value,
             final C time)
     {
         this.fireTimedEvent(eventType, Double.valueOf(value), time);
@@ -327,26 +326,26 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     }
 
     /**
-     * fires an integer value to listeners subscribed to eventType.
-     * @param eventType EventType; the eventType of the event.
-     * @param value int; the value of the event.
-     * @return the integer value.
+     * Transmit an event with an integer payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value int; the payload
+     * @return int; the payload
      */
-    protected synchronized int fireEvent(final EventType eventType, final int value)
+    protected int fireEvent(final EventType eventType, final int value)
     {
         this.fireEvent(eventType, Integer.valueOf(value));
         return value;
     }
 
     /**
-     * fires an integer value to listeners subscribed to eventType. A timed event is fired.
-     * @param eventType EventType; the eventType of the event.
-     * @param value int; the value of the event.
-     * @param time C; a timestamp for the event.
-     * @param <C> the comparable type to indicate the time when the event is fired.
-     * @return the integer value.
+     * Transmit a time-stamped event with an integer payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value int; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return int; the payload
      */
-    protected synchronized <C extends Comparable<C>> int fireTimedEvent(final EventType eventType, final int value,
+    protected <C extends Comparable<C>> int fireTimedEvent(final EventType eventType, final int value,
             final C time)
     {
         this.fireTimedEvent(eventType, Integer.valueOf(value), time);
@@ -354,26 +353,26 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     }
 
     /**
-     * fires a long value to listeners subscribed to eventType.
-     * @param eventType EventType; the eventType of the event.
-     * @param value long; the value of the event.
-     * @return the long value.
+     * Transmit an event with a long payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value long; the payload
+     * @return long; the payload
      */
-    protected synchronized long fireEvent(final EventType eventType, final long value)
+    protected long fireEvent(final EventType eventType, final long value)
     {
         this.fireEvent(eventType, Long.valueOf(value));
         return value;
     }
 
     /**
-     * fires a long value to listeners subscribed to eventType. A timed event is fired.
-     * @param eventType EventType; the eventType of the event.
-     * @param value long; the value of the event.
-     * @param time C; a timestamp for the event.
-     * @param <C> the comparable type to indicate the time when the event is fired.
-     * @return the long value.
+     * Transmit a time-stamped event with a long payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value long; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return long; the payload
      */
-    protected synchronized <C extends Comparable<C>> long fireTimedEvent(final EventType eventType, final long value,
+    protected <C extends Comparable<C>> long fireTimedEvent(final EventType eventType, final long value,
             final C time)
     {
         this.fireTimedEvent(eventType, Long.valueOf(value), time);
@@ -381,26 +380,26 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     }
 
     /**
-     * fires a short value to listeners subscribed to eventType.
-     * @param eventType EventType; the eventType of the event.
-     * @param value short; the value of the event.
-     * @return the short value.
+     * Transmit an event with a short payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value short; the payload
+     * @return short; the payload
      */
-    protected synchronized short fireEvent(final EventType eventType, final short value)
+    protected short fireEvent(final EventType eventType, final short value)
     {
         this.fireEvent(eventType, Short.valueOf(value));
         return value;
     }
 
     /**
-     * fires a short value to listeners subscribed to eventType. A timed event is fired.
-     * @param eventType EventType; the eventType of the event.
-     * @param value short; the value of the event.
-     * @param time C; a timestamp for the event.
-     * @param <C> the comparable type to indicate the time when the event is fired.
-     * @return the short value.
+     * Transmit a time-stamped event with a short payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value short; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return short; the payload
      */
-    protected synchronized <C extends Comparable<C>> short fireTimedEvent(final EventType eventType, final short value,
+    protected <C extends Comparable<C>> short fireTimedEvent(final EventType eventType, final short value,
             final C time)
     {
         this.fireTimedEvent(eventType, Short.valueOf(value), time);
@@ -412,8 +411,9 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
      * @param checkClass Class&lt;? extends EventProducer&gt;; the class to return the non-private, static EventTypes for
      * @return EventType[]; the non-private, static event types of this EventProducer
      */
-    private static synchronized EventType[] getStaticEventTypes(final Class<? extends EventProducer> checkClass)
+    private static EventType[] getStaticEventTypes(final Class<? extends EventProducer> checkClass)
     {
+        Throw.whenNull(checkClass, "checkClass may not be null");
         if (EVENTTYPE_CACHE.containsKey(checkClass))
         {
             return EVENTTYPE_CACHE.get(checkClass);
@@ -451,41 +451,36 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     }
 
     /**
-     * removes all the listeners from the producer.
-     * @return the number of removed listeners. XXX : not...
+     * Remove all the listeners from this event producer.
+     * @return int; the number of removed event types
      */
     protected synchronized int removeAllListeners()
     {
         int result = this.listeners.size();
-        synchronized (this.listeners)
-        {
-            this.listeners = null;
-            this.listeners = new EventListenerMap();
-        }
+        this.listeners = null;
+        this.listeners = new EventListenerMap();
         return result;
     }
 
     /**
-     * removes all the listeners of a class.
-     * @param ofClass Class&lt;?&gt;; the class or superclass.
-     * @return the number of listeners which were removed.
+     * Removes all the listeners of a class from this event producer.
+     * @param ofClass Class&lt;?&gt;; the class or superclass
+     * @return int; the number of removed listeners
      */
     protected synchronized int removeAllListeners(final Class<?> ofClass)
     {
+        Throw.whenNull(ofClass, "ofClass may not be null");
         int result = 0;
         Map<EventType, Reference<EventListenerInterface>> removeMap = new LinkedHashMap<>();
-        synchronized (this.listeners)
+        for (EventType type : this.listeners.keySet())
         {
-            for (EventType type : this.listeners.keySet())
+            for (Iterator<Reference<EventListenerInterface>> ii = this.listeners.get(type).iterator(); ii.hasNext();)
             {
-                for (Iterator<Reference<EventListenerInterface>> ii = this.listeners.get(type).iterator(); ii.hasNext();)
+                Reference<EventListenerInterface> listener = ii.next();
+                if (listener.get().getClass().isAssignableFrom(ofClass))
                 {
-                    Reference<EventListenerInterface> listener = ii.next();
-                    if (listener.get().getClass().isAssignableFrom(ofClass))
-                    {
-                        removeMap.put(type, listener);
-                        result++;
-                    }
+                    removeMap.put(type, listener);
+                    result++;
                 }
             }
         }
@@ -500,28 +495,27 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     @Override
     public final synchronized boolean removeListener(final EventListenerInterface listener, final EventType eventType)
     {
+        Throw.whenNull(listener, "listener may not be null");
+        Throw.whenNull(eventType, "eventType may not be null");
         if (!this.listeners.containsKey(eventType))
         {
             return false;
         }
         boolean result = false;
-        synchronized (this.listeners)
+        for (Iterator<Reference<EventListenerInterface>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
         {
-            for (Iterator<Reference<EventListenerInterface>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
+            Reference<EventListenerInterface> reference = i.next();
+            EventListenerInterface entry = reference.get();
+            if (entry == null)
             {
-                Reference<EventListenerInterface> reference = i.next();
-                EventListenerInterface entry = reference.get();
-                if (entry == null)
+                i.remove();
+            }
+            else
+            {
+                if (listener.equals(entry))
                 {
                     i.remove();
-                }
-                else
-                {
-                    if (listener.equals(entry))
-                    {
-                        i.remove();
-                        result = true;
-                    }
+                    result = true;
                 }
             }
             if (this.listeners.get(eventType).size() == 0)
@@ -533,28 +527,27 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     }
 
     /**
-     * removes a reference from the subscription list.
-     * @param reference Reference&lt;EventListenerInterface&gt;; the reference to remove
+     * Remove one reference from the subscription list.
+     * @param reference Reference&lt;EventListenerInterface&gt;; the (strong or weak) reference to remove
      * @param eventType EventType; the eventType for which reference must be removed
-     * @return success whenever the reference is removes; otherwise returns false.
+     * @return boolean; true if the reference was removed; otherwise false
      */
     private synchronized boolean removeListener(final Reference<EventListenerInterface> reference, final EventType eventType)
     {
+        Throw.whenNull(reference, "reference may not be null");
+        Throw.whenNull(eventType, "eventType may not be null");
         boolean success = false;
-        synchronized (this.listeners)
+        for (Iterator<Reference<EventListenerInterface>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
         {
-            for (Iterator<Reference<EventListenerInterface>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
+            if (i.next().equals(reference))
             {
-                if (i.next().equals(reference))
-                {
-                    i.remove();
-                    success = true;
-                }
+                i.remove();
+                success = true;
             }
-            if (this.listeners.get(eventType).size() == 0)
-            {
-                this.listeners.remove(eventType);
-            }
+        }
+        if (this.listeners.get(eventType).size() == 0)
+        {
+            this.listeners.remove(eventType);
         }
         return success;
     }
@@ -568,16 +561,18 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
 
     /** {@inheritDoc} */
     @Override
-    public int numberOfListeners(final EventType eventType)
+    public synchronized int numberOfListeners(final EventType eventType)
     {
         if (this.listeners.containsKey(eventType))
+        {
             return this.listeners.get(eventType).size();
+        }
         return 0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public Set<EventType> getEventTypesWithListeners()
+    public synchronized Set<EventType> getEventTypesWithListeners()
     {
         return this.listeners.keySet(); // is already a safe copy
     }

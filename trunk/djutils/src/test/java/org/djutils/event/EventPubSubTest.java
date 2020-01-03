@@ -223,9 +223,16 @@ public class EventPubSubTest implements Serializable
         TestEventListener listener = new TestEventListener();
 
         // test illegal parameters and null pointer exceptions in adding a listener
-        boolean addListenerOK = producer.addListener(null, TestEventProducer.PRODUCER_EVENT_1);
-        assertFalse(addListenerOK);
-        addListenerOK = producer.addListener(listener, TestEventProducer.PRODUCER_EVENT_1, -10, ReferenceType.STRONG);
+        try
+        {
+            producer.addListener(null, TestEventProducer.PRODUCER_EVENT_1);
+            fail("null listener should have thrown an exception");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+        boolean addListenerOK = producer.addListener(listener, TestEventProducer.PRODUCER_EVENT_1, -10, ReferenceType.STRONG);
         assertFalse(addListenerOK);
         Try.testFail(new Try.Execution()
         {
