@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 
+import org.djutils.exceptions.Throw;
+import org.djutils.immutablecollections.Immutable;
+import org.djutils.immutablecollections.ImmutableLinkedHashSet;
+import org.djutils.immutablecollections.ImmutableSet;
 import org.pmw.tinylog.Configurator;
 import org.pmw.tinylog.Level;
 import org.pmw.tinylog.LogEntryForwarder;
@@ -62,12 +66,6 @@ public class CategoryLogger
 
     /** The console writer, replacing the default one. */
     private static Writer consoleWriter;
-
-    /** The conditional logger works on the basis of a true condition. */
-    protected static final ConditionalLogger conditionalLogger = new ConditionalLogger(true);
-
-    /** The conditional logger works on the basis of a condition, failing the condition. */
-    protected static final ConditionalLogger conditionalNoLogger = new ConditionalLogger(false);
 
     /** The delegate logger instance that does the actual logging work, after a positive filter outcome. */
     protected static final DelegateLogger delegateLogger = new DelegateLogger(true);
@@ -132,12 +130,12 @@ public class CategoryLogger
      */
     public static void setAllLogLevel(final Level newLevel)
     {
+        defaultLevel = newLevel;
         for (Writer writer : writers)
         {
             Configurator.currentConfig().removeWriter(writer).activate();
-            defaultLevel = newLevel;
             writerLevels.put(writer, newLevel);
-            Configurator.currentConfig().addWriter(writer, defaultLevel, defaultMessageFormat).activate();
+            Configurator.currentConfig().addWriter(writer).formatPattern(defaultMessageFormat).level(defaultLevel).activate();
         }
     }
 
@@ -177,6 +175,41 @@ public class CategoryLogger
         Configurator.currentConfig().addWriter(writer, newLevel, writerFormats.get(writer)).activate();
     }
 
+    /**
+     * Add a writer to the CategoryLogger.
+     * @param writer Writer; the writer to add
+     * @return boolean; true when the writer was added; false when the writer was already registered
+     */
+    public static boolean addWriter(final Writer writer)
+    {
+        Throw.whenNull(writer, "writer may not be null");
+        boolean result = writers.add(writer);
+        Configurator.currentConfig().addWriter(writer, defaultLevel, defaultMessageFormat).activate();
+        return result;
+    }
+    
+    /**
+     * Remove a writer from the CategoryLogger.
+     * @param writer Writer; the writer to remove
+     * @return boolean; true if the writer was removed; false if the writer was not registered (and thus could not be removed)
+     */
+    public static boolean removeWriter(final Writer writer)
+    {
+        Throw.whenNull(writer, "writer may not be null");
+        boolean result = writers.remove(writer);
+        Configurator.currentConfig().removeWriter(writer).activate();
+        return result;
+    }
+    
+    /**
+     * Return the set of all registered writers.
+     * @return ImmutableSet&lt;Writer&gt;; the set of all registered writers
+     */
+    public static ImmutableSet<Writer> getWriters()
+    {
+        return new ImmutableLinkedHashSet<>(writers, Immutable.WRAP);
+    }
+    
     /**
      * Add a category to be logged to the Writers.
      * @param logCategory LogCategory; the LogCategory to add
@@ -268,102 +301,27 @@ public class CategoryLogger
     }
 
     /**
-     * The conditional filter that will result in the usage of a ConditionalLogger.
+     * The conditional filter that will result in the usage of a DelegateLogger.
      * @param condition boolean; the condition that should be evaluated
-     * @return the logger that further processes logging (ConditionalLogger)
+     * @return the logger that further processes logging (DelegateLogger)
      */
-    public static ConditionalLogger when(final boolean condition)
+    public static DelegateLogger when(final boolean condition)
     {
         if (condition)
-            return conditionalLogger;
-        return conditionalNoLogger;
+            return delegateLogger;
+        return noLogger;
     }
 
     /**
-     * The conditional filter that will result in the usage of a ConditionalLogger.
+     * The conditional filter that will result in the usage of a DelegateLogger.
      * @param supplier BooleanSupplier; the function evaluating the condition
-     * @return the logger that further processes logging (ConditionalLogger)
+     * @return the logger that further processes logging (DelegateLogger)
      */
-    public static ConditionalLogger when(final BooleanSupplier supplier)
+    public static DelegateLogger when(final BooleanSupplier supplier)
     {
         if (supplier.getAsBoolean())
-            return conditionalLogger;
-        return conditionalNoLogger;
-    }
-
-    /* *********************************** CONDITIONAL LOGGER *************************************/
-
-    /**
-     * ConditionalLogger class that takes care of filtering based on a condition. <br>
-     * <br>
-     * Copyright (c) 2003-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved.
-     * See for project information <a href="https://www.simulation.tudelft.nl/" target="_blank"> www.simulation.tudelft.nl</a>.
-     * The source code and binary code of this software is proprietary information of Delft University of Technology.
-     * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
-     */
-    public static class ConditionalLogger
-    {
-        /** Should we try to log or not? */
-        private final boolean log;
-
-        /**
-         * @param log boolean; indicate whether we should log or not.
-         */
-        public ConditionalLogger(final boolean log)
-        {
-            super();
-            this.log = log;
-        }
-
-        /**
-         * The "pass" filter that will result in always trying to log.
-         * @return the logger that tries to execute logging (delegateLogger)
-         */
-        public DelegateLogger always()
-        {
-            if (this.log)
-                return delegateLogger;
-            return noLogger;
-        }
-
-        /**
-         * Check whether the provided category needs to be logged. Note that when LogCategory.ALL is contained in the
-         * categories, filter will return true.
-         * @param logCategory LogCategory; the category to check for.
-         * @return the logger that either tries to log (delegateLogger), or returns without logging (noLogger)
-         */
-        public DelegateLogger filter(final LogCategory logCategory)
-        {
-            if (this.log)
-            {
-                if (categories.contains(LogCategory.ALL))
-                    return delegateLogger;
-                if (categories.contains(logCategory))
-                    return delegateLogger;
-            }
-            return noLogger;
-        }
-
-        /**
-         * Check whether the provided categories contain one or more categories that need to be logged. Note that when
-         * LogCategory.ALL is contained in the categories, filter will return true.
-         * @param logCategories LogCategory...; elements or array with the categories to check for
-         * @return the logger that either tries to log (delegateLogger), or returns without logging (noLogger)
-         */
-        public DelegateLogger filter(final LogCategory... logCategories)
-        {
-            if (this.log)
-            {
-                if (categories.contains(LogCategory.ALL))
-                    return delegateLogger;
-                for (LogCategory logCategory : logCategories)
-                {
-                    if (categories.contains(logCategory))
-                        return delegateLogger;
-                }
-            }
-            return noLogger;
-        }
+            return delegateLogger;
+        return noLogger;
     }
 
     /* ************************************ DELEGATE LOGGER ***************************************/
@@ -380,7 +338,7 @@ public class CategoryLogger
     {
         /** Should we try to log or not? */
         private final boolean log;
-
+        
         /**
          * @param log boolean; indicate whether we should log or not.
          */
@@ -388,6 +346,30 @@ public class CategoryLogger
         {
             super();
             this.log = log;
+        }
+
+        /**
+         * The conditional filter that will result in the usage of a DelegateLogger.
+         * @param condition boolean; the condition that should be evaluated
+         * @return the logger that further processes logging (DelegateLogger)
+         */
+        public DelegateLogger when(final boolean condition)
+        {
+            if (this.log && condition)
+                return this;
+            return CategoryLogger.noLogger;
+        }
+
+        /**
+         * The conditional filter that will result in the usage of a DelegateLogger.
+         * @param supplier BooleanSupplier; the function evaluating the condition
+         * @return the logger that further processes logging (DelegateLogger)
+         */
+        public DelegateLogger when(final BooleanSupplier supplier)
+        {
+            if (this.log && supplier.getAsBoolean())
+                return this;
+            return CategoryLogger.noLogger;
         }
 
         /* ****************************************** TRACE ******************************************/
@@ -398,7 +380,7 @@ public class CategoryLogger
          */
         public void trace(final Object object)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.TRACE.ordinal()) 
                 LogEntryForwarder.forward(1, Level.TRACE, object);
         }
 
@@ -408,7 +390,7 @@ public class CategoryLogger
          */
         public void trace(final String message)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.TRACE.ordinal()) 
                 LogEntryForwarder.forward(1, Level.TRACE, message);
         }
 
@@ -419,7 +401,7 @@ public class CategoryLogger
          */
         public void trace(final String message, final Object... arguments)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.TRACE.ordinal()) 
                 LogEntryForwarder.forward(1, Level.TRACE, message, arguments);
         }
 
@@ -429,7 +411,7 @@ public class CategoryLogger
          */
         public void trace(final Throwable exception)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.TRACE.ordinal()) 
                 LogEntryForwarder.forward(1, Level.TRACE, exception);
         }
 
@@ -440,7 +422,7 @@ public class CategoryLogger
          */
         public void trace(final Throwable exception, final String message)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.TRACE.ordinal()) 
                 LogEntryForwarder.forward(1, Level.TRACE, exception, message);
         }
 
@@ -452,7 +434,7 @@ public class CategoryLogger
          */
         public void trace(final Throwable exception, final String message, final Object... arguments)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.TRACE.ordinal()) 
                 LogEntryForwarder.forward(1, Level.TRACE, exception, message, arguments);
         }
 
@@ -464,7 +446,7 @@ public class CategoryLogger
          */
         public void debug(final Object object)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.DEBUG.ordinal()) 
                 LogEntryForwarder.forward(1, Level.DEBUG, object);
         }
 
@@ -474,7 +456,7 @@ public class CategoryLogger
          */
         public void debug(final String message)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.DEBUG.ordinal()) 
                 LogEntryForwarder.forward(1, Level.DEBUG, message);
         }
 
@@ -485,7 +467,7 @@ public class CategoryLogger
          */
         public void debug(final String message, final Object... arguments)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.DEBUG.ordinal()) 
                 LogEntryForwarder.forward(1, Level.DEBUG, message, arguments);
         }
 
@@ -495,7 +477,7 @@ public class CategoryLogger
          */
         public void debug(final Throwable exception)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.DEBUG.ordinal()) 
                 LogEntryForwarder.forward(1, Level.DEBUG, exception);
         }
 
@@ -506,7 +488,7 @@ public class CategoryLogger
          */
         public void debug(final Throwable exception, final String message)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.DEBUG.ordinal()) 
                 LogEntryForwarder.forward(1, Level.DEBUG, exception, message);
         }
 
@@ -518,7 +500,7 @@ public class CategoryLogger
          */
         public void debug(final Throwable exception, final String message, final Object... arguments)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.DEBUG.ordinal()) 
                 LogEntryForwarder.forward(1, Level.DEBUG, exception, message, arguments);
         }
 
@@ -530,7 +512,7 @@ public class CategoryLogger
          */
         public void info(final Object object)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.INFO.ordinal()) 
                 LogEntryForwarder.forward(1, Level.INFO, object);
         }
 
@@ -540,7 +522,7 @@ public class CategoryLogger
          */
         public void info(final String message)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.INFO.ordinal()) 
                 LogEntryForwarder.forward(1, Level.INFO, message);
         }
 
@@ -551,7 +533,7 @@ public class CategoryLogger
          */
         public void info(final String message, final Object... arguments)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.INFO.ordinal()) 
                 LogEntryForwarder.forward(1, Level.INFO, message, arguments);
         }
 
@@ -561,7 +543,7 @@ public class CategoryLogger
          */
         public void info(final Throwable exception)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.INFO.ordinal()) 
                 LogEntryForwarder.forward(1, Level.INFO, exception);
         }
 
@@ -572,7 +554,7 @@ public class CategoryLogger
          */
         public void info(final Throwable exception, final String message)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.INFO.ordinal()) 
                 LogEntryForwarder.forward(1, Level.INFO, exception, message);
         }
 
@@ -584,7 +566,7 @@ public class CategoryLogger
          */
         public void info(final Throwable exception, final String message, final Object... arguments)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.INFO.ordinal()) 
                 LogEntryForwarder.forward(1, Level.INFO, exception, message, arguments);
         }
 
@@ -596,7 +578,7 @@ public class CategoryLogger
          */
         public void warn(final Object object)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.WARNING.ordinal()) 
                 LogEntryForwarder.forward(1, Level.WARNING, object);
         }
 
@@ -606,7 +588,7 @@ public class CategoryLogger
          */
         public void warn(final String message)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.WARNING.ordinal()) 
                 LogEntryForwarder.forward(1, Level.WARNING, message);
         }
 
@@ -617,7 +599,7 @@ public class CategoryLogger
          */
         public void warn(final String message, final Object... arguments)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.WARNING.ordinal()) 
                 LogEntryForwarder.forward(1, Level.WARNING, message, arguments);
         }
 
@@ -627,7 +609,7 @@ public class CategoryLogger
          */
         public void warn(final Throwable exception)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.WARNING.ordinal()) 
                 LogEntryForwarder.forward(1, Level.WARNING, exception);
         }
 
@@ -638,7 +620,7 @@ public class CategoryLogger
          */
         public void warn(final Throwable exception, final String message)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.WARNING.ordinal()) 
                 LogEntryForwarder.forward(1, Level.WARNING, exception, message);
         }
 
@@ -650,7 +632,7 @@ public class CategoryLogger
          */
         public void warn(final Throwable exception, final String message, final Object... arguments)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.WARNING.ordinal()) 
                 LogEntryForwarder.forward(1, Level.WARNING, exception, message, arguments);
         }
 
@@ -662,7 +644,7 @@ public class CategoryLogger
          */
         public void error(final Object object)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.ERROR.ordinal()) 
                 LogEntryForwarder.forward(1, Level.ERROR, object);
         }
 
@@ -672,7 +654,7 @@ public class CategoryLogger
          */
         public void error(final String message)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.ERROR.ordinal()) 
                 LogEntryForwarder.forward(1, Level.ERROR, message);
         }
 
@@ -683,7 +665,7 @@ public class CategoryLogger
          */
         public void error(final String message, final Object... arguments)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.ERROR.ordinal()) 
                 LogEntryForwarder.forward(1, Level.ERROR, message, arguments);
         }
 
@@ -693,7 +675,7 @@ public class CategoryLogger
          */
         public void error(final Throwable exception)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.ERROR.ordinal()) 
                 LogEntryForwarder.forward(1, Level.ERROR, exception);
         }
 
@@ -704,7 +686,7 @@ public class CategoryLogger
          */
         public void error(final Throwable exception, final String message)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.ERROR.ordinal()) 
                 LogEntryForwarder.forward(1, Level.ERROR, exception, message);
         }
 
@@ -716,7 +698,7 @@ public class CategoryLogger
          */
         public void error(final Throwable exception, final String message, final Object... arguments)
         {
-            if (this.log)
+            if (this.log && CategoryLogger.defaultLevel.ordinal() <= Level.ERROR.ordinal()) 
                 LogEntryForwarder.forward(1, Level.ERROR, exception, message, arguments);
         }
     }
