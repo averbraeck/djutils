@@ -1,6 +1,14 @@
 <document xmlns="http://maven.apache.org/changes/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
+  
+    <release version="1.04.02" date="2020-01-XX" description="Code cleanup">
+      <action dev="pknoppers" type="fix">
+        Removed various redundant synchronized blocks from EventProducer.java (method was already synchronized). 
+        More complete nullPointer checks in EventProducer.java.
+        Javadoc cleanup in EventProducer.java
+      </action>
+    </release>
 
     <release version="1.04.01" date="2019-12-31" description="EventProducer serializability">
       <action dev="averbraeck" type="fix">
