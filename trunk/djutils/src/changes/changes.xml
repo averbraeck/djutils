@@ -2,11 +2,32 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
   
-    <release version="1.04.02" date="2020-01-XX" description="Code cleanup">
+    <release version="1.04.02" date="2020-01-XX" description="EventProducer cleanup; Logger updates">
       <action dev="pknoppers" type="fix">
-        Removed various redundant synchronized blocks from EventProducer.java (method was already synchronized). 
-        More complete nullPointer checks in EventProducer.java.
-        Javadoc cleanup in EventProducer.java
+        Removed various redundant synchronized blocks from EventProducer.java (method was already synchronized).
+      </action>
+      <action dev="pknoppers" type="update">
+        More complete nullPointer checks in EventProducer.java; Javadoc cleanup in EventProducer.java
+      </action>
+      <action dev="pknoppers" type="update">
+        Removed the ConditionalLogger from the CategoryLogger and transfered the when(...) functions to
+        both the static Logger and the DelegateLogger class.  
+      </action>
+      <action dev="pknoppers" type="fix">
+        DelegateLogger did not consider the LogLevel correctly in deciding whether a message needed to be logged.
+        This has been repaired. Every logging method now first checks whether the indicated log level is 
+        included in the log levels that need to be shown. 
+      </action>
+      <action dev="pknoppers" type="update">
+        CategoryLogger now has methods for adding and removing Writers, and listing which writers are available. 
+      </action>
+      <action dev="pknoppers" type="update">
+        Expanded unit tests for CategoryLogger and EventProducer. 
+      </action>
+      <action dev="averbraeck" type="fix">
+        The explicit setting of log level and message formatter on individual writers in the CategoryLogger now works
+        as intended. The setAllLogMessageFormat and setAllLogLevel methods in the CategoryWriter reset the values
+        for each individual Writer, as well as the global standard for next writers to be registered.
       </action>
     </release>
 
