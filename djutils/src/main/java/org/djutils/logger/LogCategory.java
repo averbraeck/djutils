@@ -19,7 +19,7 @@ public class LogCategory
     /** Cached hashcode for very quick retrieval. */
     private final int hashCode;
 
-    /** Random number to generate fast hashCode. */
+    /** Random number to generate hashCode for null or "" name. */
     private static Random random = new Random(1L);
 
     /** The category to indicate that ALL messages need to be logged. */
@@ -50,7 +50,7 @@ public class LogCategory
     {
         final int prime = 31;
         int result = 1;
-        result = (this.name == null || this.name.length() == 0) ? random.nextInt() : prime + this.name.hashCode();
+        result = (this.name.length() == 0) ? random.nextInt() : prime + this.name.hashCode(); // name != null
         return result;
     }
 
