@@ -70,15 +70,15 @@ public class TestCLI
         CliUtil.execute(options, args);
         assertEquals(8080, options.getPort());
 
-        // change the 'Options'
+        // change the @Command annotation
         args = new String[] {};
         options = new Options();
         CliUtil.changeCommandVersion(options, "2.0");
         CliUtil.changeCommandName(options, "Program2");
         CliUtil.changeCommandDescription(options, "2nd version of program");
         CliUtil.execute(options, args);
-        assertEquals("2.0", options.getClass().getAnnotation(Command.class).version()[0]);
-        assertEquals("Program2", options.getClass().getAnnotation(Command.class).name());
-        assertEquals("2nd version of program", options.getClass().getAnnotation(Command.class).description()[0]);
+        assertEquals("2.0", CliUtil.getCommandVersion(options)[0]);
+        assertEquals("Program2", CliUtil.getCommandName(options));
+        assertEquals("2nd version of program", CliUtil.getCommandDescription(options)[0]);
     }
 }
