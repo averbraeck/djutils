@@ -59,6 +59,7 @@ public class MeansTests
     /**
      * Test the Mean classes using varying weights.
      */
+    @SuppressWarnings("checkstyle:methodlength")
     @Test
     public final void testMeansWithWeights()
     {
@@ -108,8 +109,8 @@ public class MeansTests
             assertEquals("check with alternative way to compute geometric mean", geometricMean, gm.getMean(),
                     geometricMean / 99999999);
         }
-        System.out.println(
-                "Mean of test data: arithmetic=" + am.getMean() + ", harmonic=" + hm.getMean() + ", geometric=" + gm.getMean());
+        // System.out.println(
+        // "Mean of test data: arithmetic=" + am.getMean() + ", harmonic=" + hm.getMean() + ", geometric=" + gm.getMean());
         am = new ArithmeticMean<Double, Double>();
         hm = new HarmonicMean<Double, Double>();
         gm = new GeometricMean<Double, Double>();

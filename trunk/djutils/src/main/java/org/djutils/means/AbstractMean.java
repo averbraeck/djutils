@@ -93,7 +93,7 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
      * @param weight Number; the weight
      * @return this AbstractMean&lt;MT, V, W&gt;; for method chaining
      */
-    protected abstract AbstractMean<MT, V, W> addImpl(final V value, final Number weight);
+    protected abstract AbstractMean<MT, V, W> addImpl(V value, Number weight);
 
     /** Unity weight. */
     private final Number unityWeight = Integer.valueOf(1);
