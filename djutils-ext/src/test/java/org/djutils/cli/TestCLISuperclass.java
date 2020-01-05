@@ -89,9 +89,8 @@ public class TestCLISuperclass
         CliUtil.changeCommandDescription(OptionsSub.class, "NewDescription");
         CliUtil.changeCommandVersion(OptionsSub.class, "1.1");
         CliUtil.execute(optionsSub, args);
-        assertEquals("1.1", optionsSub.getClass().getSuperclass().getAnnotation(Command.class).version()[0]);
-        assertEquals("NewName", optionsSub.getClass().getSuperclass().getAnnotation(Command.class).name());
-        assertEquals("NewDescription", optionsSub.getClass().getSuperclass().getAnnotation(Command.class).description()[0]);
-
+        assertEquals("1.1", CliUtil.getCommandVersion(options)[0]);
+        assertEquals("NewName", CliUtil.getCommandName(options));
+        assertEquals("NewDescription", CliUtil.getCommandDescription(options)[0]);
     }
 }
