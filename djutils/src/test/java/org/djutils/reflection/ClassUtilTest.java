@@ -674,25 +674,6 @@ public class ClassUtilTest
         AnnString a5 = (AnnString) ClassUtil.resolveAnnotation(Sub.class, AnnString.class);
         assertNotNull(a5);
         assertEquals("avalue", a5.value());
-        ClassUtil.changeAnnotationValue(a5, "value", "bvalue");
-        assertEquals("bvalue", a5.value());
-        Try.testFail(new Try.Execution()
-        {
-            @Override
-            public void execute() throws Throwable
-            {
-                ClassUtil.changeAnnotationValue(a5, "value", 12L);
-            }
-        });
-        Try.testFail(new Try.Execution()
-        {
-            @Override
-            public void execute() throws Throwable
-            {
-                ClassUtil.changeAnnotationValue(a5, "xyz", 12L);
-            }
-        });
-        ClassUtil.changeAnnotationValue(a5, "value", "avalue"); // restore original state
     }
 
     /**
