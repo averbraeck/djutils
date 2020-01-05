@@ -1021,47 +1021,6 @@ public final class ClassUtil
     }
 
     /**
-     * Change the value of a property of an annotation through reflection. The annotation that can be changed can be a class,
-     * field, or method annotation. Based on:
-     * https://stackoverflow.com/questions/14268981/modify-a-class-definitions-annotation-string-parameter-at-runtime
-     * @param annotation the annotation to change
-     * @param key the field to look for in the annotation
-     * @param newValue the value to set the annotation field to
-     * @throws IllegalStateException when the annotation has no member values or access to the member values is denied
-     * @throws IllegalArgumentException when the value that is changed is of a different type than the type of the newValue
-     */
-    @SuppressWarnings("unchecked")
-    public static void changeAnnotationValue(final Annotation annotation, final String key, final Object newValue)
-    {
-        Object handler = Proxy.getInvocationHandler(annotation);
-        Field f;
-        try
-        {
-            f = handler.getClass().getDeclaredField("memberValues");
-        }
-        catch (NoSuchFieldException | SecurityException e)
-        {
-            throw new IllegalStateException(e);
-        }
-        f.setAccessible(true);
-        Map<String, Object> memberValues;
-        try
-        {
-            memberValues = (Map<String, Object>) f.get(handler);
-        }
-        catch (IllegalArgumentException | IllegalAccessException e)
-        {
-            throw new IllegalStateException(e);
-        }
-        Object oldValue = memberValues.get(key);
-        if (oldValue == null || oldValue.getClass() != newValue.getClass())
-        {
-            throw new IllegalArgumentException();
-        }
-        memberValues.put(key, newValue);
-    }
-
-    /**
      * Retrieve a file pointer of a class, e.g. to request the last compilation date.
      * @param object Object; the object for which the class information should be retrieved
      * @return a ClassFileDescriptor with some information of the .class file
