@@ -176,7 +176,7 @@ public class ClassUtilTest
     }
 
     /**
-     * Tests the ClassUtil Constructors
+     * Tests the ClassUtil Constructors.
      * @throws NoSuchMethodException on error
      * @throws InvocationTargetException on error
      * @throws IllegalArgumentException on error
@@ -236,7 +236,7 @@ public class ClassUtilTest
     }
 
     /**
-     * Tests the ClassUtil Constructor lookup methods
+     * Tests the ClassUtil Constructor lookup methods.
      * @throws NoSuchMethodException on error
      * @throws InvocationTargetException on error
      * @throws IllegalArgumentException on error
@@ -269,7 +269,7 @@ public class ClassUtilTest
         assertFalse(ClassUtil.isMoreSpecific(c2a, c1));
         assertFalse(ClassUtil.isMoreSpecific(c1, c2a));
         assertFalse(ClassUtil.isMoreSpecific(c1, c2b));
-        
+
         Try.testFail(new Try.Execution()
         {
             @Override
@@ -295,7 +295,7 @@ public class ClassUtilTest
     }
 
     /**
-     * Tests the ClassUtil Field lookup methods
+     * Tests the ClassUtil Field lookup methods.
      * @throws NoSuchFieldException on error
      */
     @Test
@@ -410,7 +410,7 @@ public class ClassUtilTest
     }
 
     /**
-     * Tests the ClassUtil Method lookup methods
+     * Tests the ClassUtil Method lookup methods.
      * @throws NoSuchMethodException on error
      */
     @Test
@@ -630,7 +630,7 @@ public class ClassUtilTest
     }
 
     /**
-     * Tests the ClassUtil Annotation lookup methods
+     * Tests the ClassUtil Annotation lookup methods.
      */
     @Test
     public void testClassUtilAnnotation()
@@ -667,10 +667,10 @@ public class ClassUtilTest
                 fail("should not be able to resolve non-existing annotation " + a3);
             }
         });
-        
+
         Annotation a4 = ClassUtil.resolveAnnotation(Sub.Inner.class, AnnTag.class);
         assertNotNull(a4);
-        
+
         AnnString a5 = (AnnString) ClassUtil.resolveAnnotation(Sub.class, AnnString.class);
         assertNotNull(a5);
         assertEquals("avalue", a5.value());
@@ -717,7 +717,7 @@ public class ClassUtilTest
      * @param modifiers the expected modifiers
      * @throws NoSuchFieldException on error
      */
-    protected void testField(Class<?> clazz, String fieldName, int... modifiers) throws NoSuchFieldException
+    protected void testField(final Class<?> clazz, final String fieldName, final int... modifiers) throws NoSuchFieldException
     {
         Field field = ClassUtil.resolveField(clazz, fieldName);
         assertNotNull(field);
@@ -733,8 +733,10 @@ public class ClassUtilTest
         {
             int m = 1 << p;
             if (!mSet.contains(m))
+            {
                 assertTrue("failed modifier for field " + clazz.getSimpleName() + "." + fieldName + " for bit " + p,
                         (field.getModifiers() & m) == 0);
+            }
         }
     }
 
@@ -744,7 +746,7 @@ public class ClassUtilTest
      * @param modifiers the expected modifiers
      * @throws NoSuchFieldException on error
      */
-    protected void testField(Object object, String fieldName, int... modifiers) throws NoSuchFieldException
+    protected void testField(final Object object, final String fieldName, final int... modifiers) throws NoSuchFieldException
     {
         Field field = ClassUtil.resolveField(object, fieldName);
         assertNotNull(field);
@@ -761,8 +763,10 @@ public class ClassUtilTest
         {
             int m = 1 << p;
             if (!mSet.contains(m))
+            {
                 assertTrue("failed modifier for field " + object.getClass().getSimpleName() + "." + fieldName + " for bit " + p,
                         (field.getModifiers() & m) == 0);
+            }
         }
     }
 
@@ -789,7 +793,7 @@ public class ClassUtilTest
      * @param modifiers the expected modifiers
      * @throws NoSuchMethodException on error
      */
-    protected void testMethod(Class<?> clazz, String methodName, Class<?>[] params, int... modifiers)
+    protected void testMethod(final Class<?> clazz, final String methodName, final Class<?>[] params, final int... modifiers)
             throws NoSuchMethodException
     {
         Method method = ClassUtil.resolveMethod(clazz, methodName, params);
@@ -806,8 +810,10 @@ public class ClassUtilTest
         {
             int m = 1 << p;
             if (!mSet.contains(m))
+            {
                 assertTrue("failed modifier for method " + clazz.getSimpleName() + "." + methodName + " for bit " + p,
                         (method.getModifiers() & m) == 0);
+            }
         }
     }
 
@@ -818,7 +824,7 @@ public class ClassUtilTest
      * @param modifiers the expected modifiers
      * @throws NoSuchMethodException on error
      */
-    protected void testMethod(Object object, String methodName, Class<?>[] params, int... modifiers)
+    protected void testMethod(final Object object, final String methodName, final Class<?>[] params, final int... modifiers)
             throws NoSuchMethodException
     {
         Method method = ClassUtil.resolveMethod(object, methodName, params);
@@ -836,9 +842,11 @@ public class ClassUtilTest
         {
             int m = 1 << p;
             if (!mSet.contains(m))
+            {
                 assertTrue(
                         "failed modifier for method " + object.getClass().getSimpleName() + "." + methodName + " for bit " + p,
                         (method.getModifiers() & m) == 0);
+            }
         }
     }
 
@@ -849,7 +857,8 @@ public class ClassUtilTest
      * @param modifiers the expected modifiers
      * @throws NoSuchMethodException on error
      */
-    protected void testMethod(Object object, String methodName, Object[] args, int... modifiers) throws NoSuchMethodException
+    protected void testMethod(final Object object, final String methodName, final Object[] args, final int... modifiers)
+            throws NoSuchMethodException
     {
         Method method = ClassUtil.resolveMethod(object, methodName, args);
         assertNotNull(method);
@@ -866,9 +875,11 @@ public class ClassUtilTest
         {
             int m = 1 << p;
             if (!mSet.contains(m))
+            {
                 assertTrue(
                         "failed modifier for method " + object.getClass().getSimpleName() + "." + methodName + " for bit " + p,
                         (method.getModifiers() & m) == 0);
+            }
         }
     }
 
@@ -902,7 +913,7 @@ public class ClassUtilTest
          * @param i int
          * @param d double
          */
-        public Sup(String s, int i, double d)
+        public Sup(final String s, int i, final double d)
         {
             //
         }
@@ -911,7 +922,7 @@ public class ClassUtilTest
          * @param s String
          * @param i int
          */
-        public Sup(String s, int i)
+        public Sup(final String s, final int i)
         {
             //
         }
@@ -1041,7 +1052,7 @@ public class ClassUtilTest
          * @param i int
          * @param d double
          */
-        public Sub(String s, int i, double d)
+        public Sub(final String s, int i, final double d)
         {
             super(s, i, d);
         }
@@ -1050,7 +1061,7 @@ public class ClassUtilTest
          * @param s String
          * @param i int
          */
-        public Sub(String s, int i)
+        public Sub(final String s, final int i)
         {
             super(s, i);
         }
@@ -1187,7 +1198,7 @@ public class ClassUtilTest
     @Retention(RetentionPolicy.RUNTIME)
     public @interface AnnString
     {
-        /** value. */
+        /** @return String; the value */
         String value();
     }
 

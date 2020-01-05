@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
   
-    <release version="1.04.02" date="2020-01-XX" description="EventProducer cleanup; Logger updates">
+    <release version="1.04.02" date="2020-01-05" description="EventProducer cleanup; Logger updates">
       <action dev="pknoppers" type="fix">
         Removed various redundant synchronized blocks from EventProducer.java (method was already synchronized).
       </action>
@@ -28,6 +28,17 @@
         The explicit setting of log level and message formatter on individual writers in the CategoryLogger now works
         as intended. The setAllLogMessageFormat and setAllLogLevel methods in the CategoryWriter reset the values
         for each individual Writer, as well as the global standard for next writers to be registered.
+      </action>
+      <action dev="averbraeck" type="fix">
+        ClassUtil had a method called changeAnnotationValue to change the value of an annotation field value. This
+        method made changes to an internal data structure that is not intended to be altered. From Java-13 onwards
+        a warning appears in the console for manipulating this data structure. Therefore the method has been removed.
+      </action>
+      <action dev="averbraeck" type="fix">
+        The CliUtil class in djutils-ext used the changeAnnotationValue method from ClassUtil. Instead of changing 
+        the internal data structure of the annotations, an override map is now used to store the changes. This also
+        ensures that the code structure is reentrant: no structural changes have been made to the appearance of the
+        loaded code (which the changeAnnotationValue method did in a sense).
       </action>
     </release>
 

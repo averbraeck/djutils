@@ -63,6 +63,7 @@ public final class ClassUtil
      * that the constructors of the superclass are not returned as these can never be invoked.
      * @param clazz Class&lt;?&gt;; the class to resolve the constructors for.
      * @return an array with all constructors
+     * @param <T> the class of the constructors
      */
     @SuppressWarnings("unchecked")
     public static <T> Constructor<T>[] getAllConstructors(final Class<T> clazz)
@@ -77,6 +78,7 @@ public final class ClassUtil
      * @param parameterTypes Class&lt;?&gt;[]; the parameter types of the signature
      * @return the constructor with the given signature, if found
      * @throws NoSuchMethodException if the constructor cannot be resolved
+     * @param <T> the class of the constructor
      */
     @SuppressWarnings("unchecked")
     private static <T> Constructor<T> resolveConstructorCache(final Class<T> clazz, final Class<?>[] parameterTypes)
@@ -103,6 +105,7 @@ public final class ClassUtil
      * @return the retrieved constructor
      * @throws NoSuchMethodException if the constructor with the given signature does not exist
      * @throws IllegalAccessException if the constructor exists but is not callable from the callerClass
+     * @param <T> the class of the constructor
      */
     public static <T> Constructor<T> resolveConstructor(final Class<T> clazz, final Class<?> callerClass,
             final Class<?>[] parameterTypes) throws NoSuchMethodException, IllegalAccessException
@@ -121,6 +124,7 @@ public final class ClassUtil
      * @param parameterTypes Class&lt;?&gt;[]; the parameterTypes
      * @return Constructor
      * @throws NoSuchMethodException if the method cannot be resolved
+     * @param <T> the class of the constructor
      */
     @SuppressWarnings("unchecked")
     public static <T> Constructor<T> resolveConstructor(final Class<T> clazz, final Class<?>[] parameterTypes)
@@ -157,6 +161,7 @@ public final class ClassUtil
      * @param arguments Object[]; the arguments
      * @return Constructor
      * @throws NoSuchMethodException on lookup failure
+     * @param <T> the class of the constructor
      */
     @SuppressWarnings("unchecked")
     public static <T> Constructor<T> resolveConstructor(final Class<T> clazz, final Object[] arguments)
@@ -191,7 +196,7 @@ public final class ClassUtil
      * @param argTypes Class&lt;?&gt;[]; are the constructor's argument types
      * @return boolean if methodParameters assignable from argTypes
      */
-    public static <T> boolean matchSignature(final Constructor<T> constructor, final Class<?>[] argTypes)
+    public static boolean matchSignature(final Constructor<?> constructor, final Class<?>[] argTypes)
     {
         if (constructor.getParameterTypes().length != argTypes.length)
         {
@@ -214,6 +219,7 @@ public final class ClassUtil
      * @param argTypes Class&lt;?&gt;[]; are the constructor's argument types
      * @return Constructor&lt;?&gt;[] An unordered Constructor-array consisting of the elements of 'constructors' that match
      *         with the given signature. An array with 0 elements is returned when no matching Method objects are found.
+     * @param <T> the class of the constructor
      */
     @SuppressWarnings("unchecked")
     public static <T> Constructor<T>[] matchSignature(final Constructor<T>[] constructors, final Class<?>[] argTypes)
