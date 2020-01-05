@@ -40,6 +40,10 @@
         ensures that the code structure is reentrant: no structural changes have been made to the appearance of the
         loaded code (which the changeAnnotationValue method did in a sense).
       </action>
+      <action dev="averbraeck" type="add">
+        Methods to read the (overridden or original) program version, program name and program description 
+        in @Command have been added to CliUtil. 
+      </action>
     </release>
 
     <release version="1.04.01" date="2019-12-31" description="EventProducer serializability">
