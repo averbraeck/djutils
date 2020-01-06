@@ -92,9 +92,13 @@ public class EventProducingMap<K, V> extends EventProducer implements Map<K, V>
         int nr = this.parent.size();
         V result = this.parent.put(key, value);
         if (nr != this.parent.size())
+        {
             this.fireEvent(OBJECT_ADDED_EVENT, this.parent.size());
+        }
         else
+        {
             this.fireEvent(OBJECT_CHANGED_EVENT, null);
+        }
         return result;
     }
 
@@ -105,7 +109,9 @@ public class EventProducingMap<K, V> extends EventProducer implements Map<K, V>
         int nr = this.parent.size();
         V result = this.parent.remove(key);
         if (nr != this.parent.size())
+        {
             this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+        }
         return result;
     }
 
@@ -116,11 +122,15 @@ public class EventProducingMap<K, V> extends EventProducer implements Map<K, V>
         int nr = this.parent.size();
         this.parent.putAll(map);
         if (nr != this.parent.size())
+        {
             this.fireEvent(OBJECT_ADDED_EVENT, this.parent.size());
+        }
         else
         {
             if (!map.isEmpty())
+            {
                 this.fireEvent(OBJECT_CHANGED_EVENT, null);
+            }
         }
     }
 
@@ -131,7 +141,9 @@ public class EventProducingMap<K, V> extends EventProducer implements Map<K, V>
         int nr = this.parent.size();
         this.parent.clear();
         if (nr != this.parent.size())
+        {
             this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+        }
     }
 
     /** {@inheritDoc} */

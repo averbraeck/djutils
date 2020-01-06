@@ -51,7 +51,7 @@ public class FixedString implements Decoder
 
     /** {@inheritDoc} */
     @Override
-    public boolean append(int address, byte theByte)
+    public boolean append(final int address, final byte theByte)
     {
         this.appendWasCalled = true;
         return false;

@@ -23,10 +23,10 @@ public class Base64Decoder implements Decoder
     private int accumulatedBits = 0;
 
     /** Dumper used internally to assemble the decoded data into hex values and char values. */
-    final private Dumper<Base64Decoder> internalDumper = new Dumper<>();
+    private final Dumper<Base64Decoder> internalDumper = new Dumper<>();
 
     /** Collector for the output of the internal dumper. */
-    final private ByteArrayOutputStream baos;
+    private final ByteArrayOutputStream baos;
 
     /** Count number of equals (=) symbols seen. */
     private int endOfInputCharsSeen = 0;
@@ -40,7 +40,7 @@ public class Base64Decoder implements Decoder
      * @param extraSpaceAfterEvery int; insert an extra space after every N output fields (a multiple of 3 makes sense for the
      *            base64 decoder because base64 encodes three bytes into 4 characters)
      */
-    public Base64Decoder(int decodedBytesPerLine, int extraSpaceAfterEvery)
+    public Base64Decoder(final int decodedBytesPerLine, final int extraSpaceAfterEvery)
     {
         this.baos = new ByteArrayOutputStream();
         this.internalDumper.setOutputStream(this.baos);
@@ -77,7 +77,7 @@ public class Base64Decoder implements Decoder
 
     /** {@inheritDoc} */
     @Override
-    public boolean append(int address, byte theByte) throws IOException
+    public boolean append(final int address, final byte theByte) throws IOException
     {
         if (theByte == 61)
         {

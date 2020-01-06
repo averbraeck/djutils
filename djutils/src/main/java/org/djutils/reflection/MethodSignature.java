@@ -87,7 +87,7 @@ public class MethodSignature implements Serializable
     }
 
     /**
-     * returns the parameterTypes
+     * returns the parameterTypes.
      * @return ClassDescriptor[] the result
      * @throws ClassNotFoundException on incomplete classPath
      */
@@ -97,7 +97,7 @@ public class MethodSignature implements Serializable
     }
 
     /**
-     * @return Returns the returnDescriptor
+     * @return Returns the returnDescriptor.
      */
     public String getReturnDescriptor()
     {
@@ -105,7 +105,7 @@ public class MethodSignature implements Serializable
     }
 
     /**
-     * returns the returnType of this methodDescriptor
+     * returns the returnType of this methodDescriptor.
      * @return Returns the returnType
      * @throws ClassNotFoundException on incomplete classPath
      */
@@ -131,7 +131,7 @@ public class MethodSignature implements Serializable
     }
 
     /**
-     * returns the parameterTypes
+     * returns the parameterTypes.
      * @param methodDescriptor String; the string
      * @return ClassDescriptor[] the result
      * @throws ClassNotFoundException on incomplete classPath
@@ -175,7 +175,7 @@ public class MethodSignature implements Serializable
     }
 
     /**
-     * returns the returnType of this methodDescriptor
+     * returns the returnType of this methodDescriptor.
      * @param methodDescriptor String; the returnDescriptor
      * @return Returns the returnType
      * @throws ClassNotFoundException on incomplete classPath

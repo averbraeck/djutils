@@ -28,7 +28,7 @@ public class TestImmutableCollectionStatics
      * Test the empty constructors.
      */
     @Test
-    public void TestEmptyConstructors()
+    public void testEmptyConstructors()
     {
         assertEquals("empty immutable set is empty", 0, ImmutableCollections.emptyImmutableSet().size());
         assertEquals("empty immutable list is empty", 0, ImmutableCollections.emptyImmutableList().size());
@@ -39,7 +39,7 @@ public class TestImmutableCollectionStatics
      * Test the various methods that return an index.
      */
     @Test
-    public void TestSearchers()
+    public void testSearchers()
     {
         final Integer[] values = new Integer[] {10, 2, -5, 2, 2, 6};
         ImmutableList<Integer> il = new ImmutableArrayList<>(new ArrayList<Integer>(Arrays.asList(values)), Immutable.WRAP);
@@ -49,7 +49,7 @@ public class TestImmutableCollectionStatics
         {
             // This crazy comparator compares position of the given values in the array values
             @Override
-            public int compare(Integer o1, Integer o2)
+            public int compare(final Integer o1, final Integer o2)
             {
                 return Arrays.binarySearch(values, o1) - Arrays.binarySearch(values, o2);
             }
@@ -81,7 +81,7 @@ public class TestImmutableCollectionStatics
         {
             // This crazy comparator compares position of the given values in the array values
             @Override
-            public int compare(Integer o1, Integer o2)
+            public int compare(final Integer o1, final Integer o2)
             {
                 return Arrays.binarySearch(uniqueValues, o1) - Arrays.binarySearch(uniqueValues, o2);
             }

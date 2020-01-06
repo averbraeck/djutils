@@ -153,7 +153,7 @@ public interface ImmutableCollection<E> extends Iterable<E>, Serializable
      * @return whether the objects are equal
      */
     @Override
-    boolean equals(final Object obj);
+    boolean equals(Object obj);
 
     /**
      * Force to redefine hashCode for the implementations of immutable collection classes.

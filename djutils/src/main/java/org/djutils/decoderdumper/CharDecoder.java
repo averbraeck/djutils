@@ -28,7 +28,7 @@ public class CharDecoder implements Decoder
      * @param fieldsPerLine int; maximum number of fields on one output line
      * @param extraSpaceAfterEvery int; insert an extra space after every N fields
      */
-    public CharDecoder(final int fieldsPerLine, int extraSpaceAfterEvery)
+    public CharDecoder(final int fieldsPerLine, final int extraSpaceAfterEvery)
     {
         this.fieldsPerLine = fieldsPerLine;
         this.extraSpaceAfterEvery = extraSpaceAfterEvery > 0 ? extraSpaceAfterEvery : Integer.MAX_VALUE;
@@ -57,7 +57,7 @@ public class CharDecoder implements Decoder
 
     /** {@inheritDoc} */
     @Override
-    public boolean append(int address, byte theByte) throws IOException
+    public boolean append(final int address, final byte theByte) throws IOException
     {
         if (this.buffer.length() == 0)
         {

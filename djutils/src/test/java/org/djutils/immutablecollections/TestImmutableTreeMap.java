@@ -24,13 +24,18 @@ import org.junit.Test;
 public class TestImmutableTreeMap
 {
 
+    /**
+     * ...
+     */
     @SuppressWarnings({ "unlikely-arg-type" })
     @Test
     public final void testTreeMap()
     {
         NavigableMap<Integer, Integer> isMap = new TreeMap<>();
         for (int i = 1; i <= 10; i++)
+        {
             isMap.put(i, 100 * i);
+        }
         NavigableMap<Integer, Integer> map = new TreeMap<Integer, Integer>(isMap);
         testIntMap(map, new ImmutableTreeMap<Integer, Integer>(map, Immutable.WRAP), Immutable.WRAP);
         map = new TreeMap<Integer, Integer>(isMap);
@@ -103,16 +108,25 @@ public class TestImmutableTreeMap
         
         
     }
-
+    /**
+     * ...
+     * @param map Navigablemap&lt;Integer, Integer&gt;; map
+     * @param imMap ImmutabletreeMap&lt;Integer, Integer&gt;; immutable map
+     * @param copyOrWrap Immutable;
+     */
     private void testIntMap(final NavigableMap<Integer, Integer> map, final ImmutableTreeMap<Integer, Integer> imMap,
             final Immutable copyOrWrap)
     {
         Assert.assertTrue(map.size() == 10);
         Assert.assertTrue(imMap.size() == 10);
         for (int i = 0; i < 10; i++)
+        {
             Assert.assertTrue(imMap.containsKey(i + 1));
+        }
         for (int i = 0; i < 10; i++)
+        {
             Assert.assertTrue(imMap.containsValue(100 * (i + 1)));
+        }
         Assert.assertFalse(imMap.isEmpty());
         Assert.assertFalse(imMap.containsKey(15));
         Assert.assertFalse(imMap.containsValue(1500));
@@ -150,15 +164,27 @@ public class TestImmutableTreeMap
         // modify the underlying data structure
         map.put(11, 1100);
         if (copyOrWrap == Immutable.COPY)
+        {
             Assert.assertTrue(imMap.size() == 10);
+        }
         else
+        {
             Assert.assertTrue(imMap.size() == 11);
+        }
     }
 
-    private boolean checkEntrySets(Set<Entry<Integer, Integer>> es, Set<ImmutableEntry<Integer, Integer>> ies)
+    /**
+     * Determine if two entry sets contain the same keys and corresponding values.
+     * @param es Set&lt;Entry&lt;Integer, Integer&gt;&gt;; entry set
+     * @param ies Set&gt;ImmutableEntry&lt;Integer, Integer&gt;&gt;; immutable entry set
+     * @return boolean; true if the sets contain the same keys and corresponding values
+     */
+    private boolean checkEntrySets(final Set<Entry<Integer, Integer>> es, final Set<ImmutableEntry<Integer, Integer>> ies)
     {
         if (es.size() != ies.size())
+        {
             return false;
+        }
         Iterator<Entry<Integer, Integer>> entryIt = es.iterator();
         Iterator<ImmutableEntry<Integer, Integer>> immEntryIt = ies.iterator();
         while (entryIt.hasNext())
@@ -166,7 +192,9 @@ public class TestImmutableTreeMap
             Entry<Integer, Integer> e1 = entryIt.next();
             ImmutableEntry<Integer, Integer> e2 = immEntryIt.next();
             if (!e1.getKey().equals(e2.getKey()) || !e1.getValue().equals(e2.getValue()))
+            {
                 return false;
+            }
         }
         return true;
     }

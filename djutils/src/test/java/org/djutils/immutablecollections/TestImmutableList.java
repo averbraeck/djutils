@@ -100,7 +100,7 @@ public class TestImmutableList
         {
 
             @Override
-            public void accept(Integer t)
+            public void accept(final Integer t)
             {
                 TestImmutableList.this.sum += t;
             }
@@ -198,7 +198,7 @@ public class TestImmutableList
         {
 
             @Override
-            public void accept(Integer t)
+            public void accept(final Integer t)
             {
                 TestImmutableList.this.sum += t;
             }

@@ -47,7 +47,7 @@ public class WeakReference<T extends Serializable> extends Reference<T>
     }
 
     /**
-     * writes a serializable method to stream
+     * Write a serializable method to a stream.
      * @param out ObjectOutputStream; the output stream
      * @throws IOException on IOException
      */
@@ -57,7 +57,7 @@ public class WeakReference<T extends Serializable> extends Reference<T>
     }
 
     /**
-     * reads a serializable method from stream
+     * Read a serializable method from a stream.
      * @param in java.io.ObjectInputStream; the input stream
      * @throws IOException on IOException
      * @throws ClassNotFoundException on ClassNotFoundException

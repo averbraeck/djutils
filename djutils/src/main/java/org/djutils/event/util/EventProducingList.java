@@ -74,7 +74,9 @@ public class EventProducingList<E> extends EventProducer implements EventListene
         int nr = this.parent.size();
         this.parent.clear();
         if (nr != this.parent.size())
+        {
             this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+        }
     }
 
     /** {@inheritDoc} */
@@ -91,7 +93,9 @@ public class EventProducingList<E> extends EventProducer implements EventListene
     {
         boolean result = this.parent.add(o);
         if (result)
+        {
             this.fireEvent(OBJECT_ADDED_EVENT, this.parent.size());
+        }
         return result;
     }
 
@@ -101,7 +105,9 @@ public class EventProducingList<E> extends EventProducer implements EventListene
     {
         boolean result = this.parent.addAll(c);
         if (result)
+        {
             this.fireEvent(OBJECT_ADDED_EVENT, this.parent.size());
+        }
         return result;
     }
 
@@ -111,7 +117,9 @@ public class EventProducingList<E> extends EventProducer implements EventListene
     {
         boolean result = this.parent.addAll(index, c);
         if (result)
+        {
             this.fireEvent(OBJECT_ADDED_EVENT, this.parent.size());
+        }
         return result;
     }
 
@@ -213,7 +221,9 @@ public class EventProducingList<E> extends EventProducer implements EventListene
     {
         boolean result = this.parent.remove(o);
         if (result)
+        {
             this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+        }
         return result;
     }
 
@@ -223,7 +233,9 @@ public class EventProducingList<E> extends EventProducer implements EventListene
     {
         boolean result = this.parent.removeAll(c);
         if (result)
+        {
             this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+        }
         return result;
     }
 
@@ -233,7 +245,9 @@ public class EventProducingList<E> extends EventProducer implements EventListene
     {
         boolean result = this.parent.retainAll(c);
         if (result)
+        {
             this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+        }
         return result;
     }
 

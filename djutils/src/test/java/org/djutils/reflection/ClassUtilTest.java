@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.djutils.exceptions.Try;
-import org.djutils.primitives.Primitive;
 import org.djutils.reflection.TestClass.InnerPublic;
 import org.junit.Test;
 
@@ -915,7 +914,7 @@ public class ClassUtilTest
          * @param i int
          * @param d double
          */
-        public Sup(final String s, int i, final double d)
+        public Sup(final String s, final int i, final double d)
         {
             //
         }
@@ -1054,7 +1053,7 @@ public class ClassUtilTest
          * @param i int
          * @param d double
          */
-        public Sub(final String s, int i, final double d)
+        public Sub(final String s, final int i, final double d)
         {
             super(s, i, d);
         }
@@ -1169,7 +1168,7 @@ public class ClassUtilTest
             /**
              * @param l long
              */
-            public Inner(final long l)
+            Inner(final long l)
             {
                 //
             }

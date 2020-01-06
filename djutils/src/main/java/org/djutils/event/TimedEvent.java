@@ -75,7 +75,7 @@ public class TimedEvent<T extends Comparable<T>> extends Event implements Compar
 
     /** {@inheritDoc} */
     @Override
-    public int compareTo(TimedEvent<T> o)
+    public int compareTo(final TimedEvent<T> o)
     {
         return this.timeStamp.compareTo(o.getTimeStamp());
     }

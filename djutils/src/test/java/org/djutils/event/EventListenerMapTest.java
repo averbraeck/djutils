@@ -243,7 +243,7 @@ public class EventListenerMapTest implements Serializable
         /**
          * @param expectingNotification set expectingNotification
          */
-        public void setExpectingNotification(boolean expectingNotification)
+        public void setExpectingNotification(final boolean expectingNotification)
         {
             this.expectingNotification = expectingNotification;
         }
@@ -251,7 +251,7 @@ public class EventListenerMapTest implements Serializable
         /**
          * @param expectedObject set expectedObject
          */
-        public void setExpectedObject(Object expectedObject)
+        public void setExpectedObject(final Object expectedObject)
         {
             this.expectedObject = expectedObject;
         }

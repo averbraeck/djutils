@@ -22,6 +22,9 @@ import org.junit.Test;
 public class TestImmutableVector
 {
 
+    /**
+     * Test vectors.
+     */
     @Test
     public final void testVector()
     {
@@ -141,13 +144,21 @@ public class TestImmutableVector
         Assert.assertEquals("lastElement returns last element", testData[testData.length - 1], iv.lastElement());
     }
 
+    /**
+     * ...
+     * @param vector Vector&lt;Integer&gt;; a vector of Integer
+     * @param imVector ImmutableVector&lt;Integer&gt;; an immutable vector of Integer
+     * @param copyOrWrap Immutable
+     */
     private void testIntVector(final Vector<Integer> vector, final ImmutableVector<Integer> imVector,
             final Immutable copyOrWrap)
     {
         Assert.assertTrue(vector.size() == 10);
         Assert.assertTrue(imVector.size() == 10);
         for (int i = 0; i < 10; i++)
+        {
             Assert.assertTrue(imVector.get(i) == vector.get(i));
+        }
         Assert.assertFalse(imVector.isEmpty());
         Assert.assertTrue(imVector.contains(5));
         Assert.assertFalse(imVector.contains(15));
@@ -174,8 +185,12 @@ public class TestImmutableVector
         // modify the underlying data structure
         vector.add(11);
         if (copyOrWrap == Immutable.COPY)
+        {
             Assert.assertTrue(imVector.size() == 10);
+        }
         else
+        {
             Assert.assertTrue(imVector.size() == 11);
+        }
     }
 }

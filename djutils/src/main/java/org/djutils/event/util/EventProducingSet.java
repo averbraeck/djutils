@@ -74,7 +74,9 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
         int nr = this.parent.size();
         this.parent.clear();
         if (nr != this.parent.size())
+        {
             this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+        }
     }
 
     /** {@inheritDoc} */
@@ -83,9 +85,13 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
     {
         boolean changed = this.parent.add(o);
         if (changed)
+        {
             this.fireEvent(OBJECT_ADDED_EVENT, this.parent.size());
+        }
         else
+        {
             this.fireEvent(OBJECT_CHANGED_EVENT, this.parent.size());
+        }
         return changed;
     }
 
@@ -95,11 +101,15 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
     {
         boolean changed = this.parent.addAll(c);
         if (changed)
+        {
             this.fireEvent(OBJECT_ADDED_EVENT, this.parent.size());
+        }
         else
         {
             if (!c.isEmpty())
+            {
                 this.fireEvent(OBJECT_CHANGED_EVENT, this.parent.size());
+            }
         }
         return changed;
     }
@@ -145,7 +155,9 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
     {
         boolean changed = this.parent.remove(o);
         if (changed)
+        {
             this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+        }
         return changed;
     }
 
@@ -155,7 +167,9 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
     {
         boolean changed = this.parent.removeAll(c);
         if (changed)
+        {
             this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+        }
         return changed;
     }
 
@@ -165,7 +179,9 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
     {
         boolean changed = this.parent.retainAll(c);
         if (changed)
+        {
             this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+        }
         return changed;
     }
 

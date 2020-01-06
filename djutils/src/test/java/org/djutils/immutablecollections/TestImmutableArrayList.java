@@ -43,7 +43,7 @@ public class TestImmutableArrayList
     }
 
     /**
-     * Test for the int list
+     * Test for the int list.
      * @param list the expected list
      * @param imList the immutable ist
      * @param copyOrWrap whether to expect COPY or WRAP
@@ -53,7 +53,9 @@ public class TestImmutableArrayList
         Assert.assertTrue(list.size() == 10);
         Assert.assertTrue(imList.size() == 10);
         for (int i = 0; i < 10; i++)
+        {
             Assert.assertTrue(imList.get(i) == list.get(i));
+        }
         Assert.assertFalse(imList.isEmpty());
         Assert.assertTrue(imList.contains(5));
         Assert.assertFalse(imList.contains(15));
@@ -80,8 +82,13 @@ public class TestImmutableArrayList
         // modify the underlying data structure
         list.add(11);
         if (copyOrWrap == Immutable.COPY)
+        {
             Assert.assertTrue(imList.size() == 10);
+        }
         else
+        {
             Assert.assertTrue(imList.size() == 11);
+        }
     }
+    
 }

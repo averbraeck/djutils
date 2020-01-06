@@ -596,7 +596,7 @@ public class EventUtilTest implements Serializable
         /**
          * @param expectingNotification set expectingNotification
          */
-        public void setExpectingNotification(boolean expectingNotification)
+        public void setExpectingNotification(final boolean expectingNotification)
         {
             this.expectingNotification = expectingNotification;
         }

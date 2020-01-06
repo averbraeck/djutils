@@ -307,7 +307,7 @@ public interface ImmutableMap<K, V> extends Serializable
          * @since 1.8
          */
         @SuppressWarnings("unchecked")
-        public static <K, V> Comparator<ImmutableMap.ImmutableEntry<K, V>> comparingByKey(Comparator<? super K> cmp)
+        public static <K, V> Comparator<ImmutableMap.ImmutableEntry<K, V>> comparingByKey(final Comparator<? super K> cmp)
         {
             Objects.requireNonNull(cmp);
             return (Comparator<ImmutableMap.ImmutableEntry<K, V>> & Serializable) (c1, c2) -> cmp.compare(c1.getKey(),
@@ -325,7 +325,7 @@ public interface ImmutableMap<K, V> extends Serializable
          * @since 1.8
          */
         @SuppressWarnings("unchecked")
-        public static <K, V> Comparator<ImmutableMap.ImmutableEntry<K, V>> comparingByValue(Comparator<? super V> cmp)
+        public static <K, V> Comparator<ImmutableMap.ImmutableEntry<K, V>> comparingByValue(final Comparator<? super V> cmp)
         {
             Objects.requireNonNull(cmp);
             return (Comparator<ImmutableMap.ImmutableEntry<K, V>> & Serializable) (c1, c2) -> cmp.compare(c1.getValue(),

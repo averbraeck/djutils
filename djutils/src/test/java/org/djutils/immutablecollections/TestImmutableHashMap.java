@@ -96,7 +96,7 @@ public class TestImmutableHashMap
         map3.forEach(new BiConsumer<Integer, Double>()
         {
             @Override
-            public void accept(Integer t, Double u)
+            public void accept(final Integer t, final Double u)
             {
                 assertEquals("accept got a value that matches the key", u, map4.get(t), 0.0001);
                 int index = -1;
@@ -118,12 +118,17 @@ public class TestImmutableHashMap
         }
     }
 
+    /**
+     * ...
+     */
     @Test
     public final void testHashMap()
     {
         Map<Integer, Integer> isMap = new HashMap<>();
         for (int i = 1; i <= 10; i++)
+        {
             isMap.put(i, 100 * i);
+        }
         Map<Integer, Integer> map = new HashMap<Integer, Integer>(isMap);
         testIntMap(map, new ImmutableHashMap<Integer, Integer>(map, Immutable.WRAP), Immutable.WRAP);
         map = new HashMap<Integer, Integer>(isMap);
@@ -135,15 +140,25 @@ public class TestImmutableHashMap
         testIntMap(map, new ImmutableHashMap<Integer, Integer>(ihs), Immutable.COPY);
     }
 
+    /**
+     * ...
+     * @param map
+     * @param imMap
+     * @param copyOrWrap
+     */
     private void testIntMap(final Map<Integer, Integer> map, final ImmutableMap<Integer, Integer> imMap,
             final Immutable copyOrWrap)
     {
         Assert.assertTrue(map.size() == 10);
         Assert.assertTrue(imMap.size() == 10);
         for (int i = 0; i < 10; i++)
+        {
             Assert.assertTrue(imMap.containsKey(i + 1));
+        }
         for (int i = 0; i < 10; i++)
+        {
             Assert.assertTrue(imMap.containsValue(100 * (i + 1)));
+        }
         Assert.assertFalse(imMap.isEmpty());
         Assert.assertFalse(imMap.containsKey(15));
         Assert.assertFalse(imMap.containsValue(1500));
@@ -178,20 +193,38 @@ public class TestImmutableHashMap
         // modify the underlying data structure
         map.put(11, 1100);
         if (copyOrWrap == Immutable.COPY)
+        {
             Assert.assertTrue(imMap.size() == 10);
+        }
         else
+        {
             Assert.assertTrue(imMap.size() == 11);
+        }
     }
 
-    private boolean sameContent(Collection<?> a, Collection<?> b)
+    /**
+     * Check that two collection contain the same objects.
+     * @param a Collection&lt;?&gt;;
+     * @param b Collection&lt;?&gt;;
+     * @return boolean; 
+     */
+    private boolean sameContent(final Collection<?> a, final Collection<?> b)
     {
-        return a.containsAll(b) && b.containsAll(b);
+        return a.containsAll(b) && b.containsAll(a); // Oops: second half was b.containsAll(b)
     }
 
-    private boolean checkEntrySets(Set<Entry<Integer, Integer>> es, Set<ImmutableEntry<Integer, Integer>> ies)
+    /**
+     * Check that two Sets of Entries contain the same entries.
+     * @param es Set&lt;Entry&ltInteger, Integer&gt;&gt;; a set of Entries
+     * @param ies Set&lt;Entry&ltInteger, Integer&gt;&gt;; an immutable set of Entries
+     * @return boolean; true if the two sets contain the same entries
+     */
+    private boolean checkEntrySets(final Set<Entry<Integer, Integer>> es, final Set<ImmutableEntry<Integer, Integer>> ies)
     {
         if (es.size() != ies.size())
+        {
             return false;
+        }
         for (Entry<Integer, Integer> entry : es)
         {
             boolean found = false;
@@ -204,7 +237,9 @@ public class TestImmutableHashMap
                 }
             }
             if (!found)
+            {
                 return false;
+            }
         }
         return true;
     }
