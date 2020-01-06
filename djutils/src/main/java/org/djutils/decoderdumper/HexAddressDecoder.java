@@ -27,7 +27,7 @@ public class HexAddressDecoder implements Decoder
     }
 
     /** Result returned by getResult. */
-    String result = "";
+    private String result = "";
 
     /** {@inheritDoc} */
     @Override
@@ -47,7 +47,7 @@ public class HexAddressDecoder implements Decoder
 
     /** {@inheritDoc} */
     @Override
-    public boolean append(int address, byte theByte)
+    public boolean append(final int address, final byte theByte)
     {
         this.result = String.format("%08x", address / this.roundToMultiple * this.roundToMultiple);
         return this.roundToMultiple > 1 && address % this.roundToMultiple == this.roundToMultiple - 1;
