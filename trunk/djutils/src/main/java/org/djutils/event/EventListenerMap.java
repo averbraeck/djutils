@@ -163,7 +163,7 @@ public final class EventListenerMap implements Serializable
     }
 
     /**
-     * Returns a safe copy of the Set of EventTypes for which listeners are registered
+     * Returns a safe copy of the Set of EventTypes for which listeners are registered.
      * @return Set&lt;EventType&gt;; a safe copy of the Set of EventType keys for which listeners are registered
      */
     public Set<EventType> keySet()
@@ -186,7 +186,7 @@ public final class EventListenerMap implements Serializable
     }
 
     /**
-     * Remove the List of references to EventListeners for the given EventType
+     * Remove the List of references to EventListeners for the given EventType.
      * @param key EventType; the eventType to remove the listeners for
      * @return List&lt;Reference&lt;EventListenerInterface&gt;&gt;; the removed List of references to EventListeners for the
      *         given EventType

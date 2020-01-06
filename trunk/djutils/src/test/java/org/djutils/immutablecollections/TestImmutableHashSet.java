@@ -21,6 +21,9 @@ import org.junit.Test;
 public class TestImmutableHashSet
 {
 
+    /**
+     * ...
+     */
     @Test
     public final void testHashSet()
     {
@@ -40,12 +43,20 @@ public class TestImmutableHashSet
         testIntSet(set, new ImmutableHashSet<Integer>(il), Immutable.COPY);
     }
 
+    /**
+     * ...
+     * @param set Set&lt;Integer&gt;; set
+     * @param imSet ImmutableSet&lt;Integer&gt;; immutable set
+     * @param copyOrWrap Immutable
+     */
     private void testIntSet(final Set<Integer> set, final ImmutableSet<Integer> imSet, final Immutable copyOrWrap)
     {
         Assert.assertTrue(set.size() == 10);
         Assert.assertTrue(imSet.size() == 10);
         for (int i = 0; i < 10; i++)
+        {
             Assert.assertTrue(imSet.contains(i + 1));
+        }
         Assert.assertFalse(imSet.isEmpty());
         Assert.assertFalse(imSet.contains(15));
         if (copyOrWrap == Immutable.COPY)
@@ -71,8 +82,12 @@ public class TestImmutableHashSet
         // modify the underlying data structure
         set.add(11);
         if (copyOrWrap == Immutable.COPY)
+        {
             Assert.assertTrue(imSet.size() == 10);
+        }
         else
+        {
             Assert.assertTrue(imSet.size() == 11);
+        }
     }
 }

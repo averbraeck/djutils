@@ -42,7 +42,7 @@ public interface Decoder
 
     /**
      * If the result of this Decoder should not be used to compare output lines for suppressing identical lines, this method
-     * should return true; otherwise it should return false;
+     * should return true; otherwise it should return false.
      * @return boolean; true if the result of this Decoder should be ignored in testing for identical output lines; otherwise
      *         false
      */

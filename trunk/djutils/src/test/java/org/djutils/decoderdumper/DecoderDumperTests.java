@@ -300,7 +300,7 @@ public class DecoderDumperTests
     }
 
     /**
-     * Base64 encode one 6-bit value
+     * Base64 encode one 6-bit value.
      * @param value int; value in the range 0..63
      * @return byte; the encoded value
      */

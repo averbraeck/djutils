@@ -22,6 +22,9 @@ import org.junit.Test;
 public class TestImmutableTreeSet
 {
 
+    /**
+     * Test the tree set.
+     */
     @Test
     public final void testTreeSet()
     {
@@ -49,12 +52,20 @@ public class TestImmutableTreeSet
         Assert.assertEquals("copy-wrapped is equal to wrapped", copied, its);
     }
 
+    /**
+     * ...
+     * @param set NavigableSet&lt;Integer&gt;; set
+     * @param imSet ImmutableTreeSet&lt;Integer&gt;; immutable set
+     * @param copyOrWrap Immutable;
+     */
     private void testIntSet(final NavigableSet<Integer> set, final ImmutableTreeSet<Integer> imSet, final Immutable copyOrWrap)
     {
         Assert.assertTrue(set.size() == 10);
         Assert.assertTrue(imSet.size() == 10);
         for (int i = 0; i < 10; i++)
+        {
             Assert.assertTrue(imSet.contains(i + 1));
+        }
         Assert.assertFalse(imSet.isEmpty());
         Assert.assertFalse(imSet.contains(15));
 
@@ -84,8 +95,12 @@ public class TestImmutableTreeSet
         // modify the underlying data structure
         set.add(11);
         if (copyOrWrap == Immutable.COPY)
+        {
             Assert.assertTrue(imSet.size() == 10);
+        }
         else
+        {
             Assert.assertTrue(imSet.size() == 11);
+        }
     }
 }

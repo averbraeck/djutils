@@ -76,7 +76,7 @@ public class ListEventIterator<T> extends EventIterator<T> implements ListIterat
 
     /** {@inheritDoc} */
     @Override
-    public void set(T e)
+    public void set(final T e)
     {
         getParent().set(e);
         fireEvent(OBJECT_CHANGED_EVENT);
@@ -84,7 +84,7 @@ public class ListEventIterator<T> extends EventIterator<T> implements ListIterat
 
     /** {@inheritDoc} */
     @Override
-    public void add(T e)
+    public void add(final T e)
     {
         getParent().add(e);
         fireEvent(OBJECT_ADDED_EVENT);

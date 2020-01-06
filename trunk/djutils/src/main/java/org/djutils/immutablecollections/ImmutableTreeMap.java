@@ -106,7 +106,7 @@ public class ImmutableTreeMap<K, V> extends ImmutableAbstractMap<K, V> implement
                 /** {@inheritDoc} */
                 @SuppressWarnings("unchecked")
                 @Override
-                public int compare(ImmutableEntry<K, V> o1, ImmutableEntry<K, V> o2)
+                public int compare(final ImmutableEntry<K, V> o1, final ImmutableEntry<K, V> o2)
                 {
                     return ((Comparable<K>) o1.getKey()).compareTo(o2.getKey());
                 }

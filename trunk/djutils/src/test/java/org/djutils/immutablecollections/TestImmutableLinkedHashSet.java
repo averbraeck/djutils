@@ -21,6 +21,9 @@ import org.junit.Test;
 public class TestImmutableLinkedHashSet
 {
 
+    /**
+     * ...
+     */
     @Test
     public final void testLinkedHashSet()
     {
@@ -47,12 +50,20 @@ public class TestImmutableLinkedHashSet
         Assert.assertEquals("copied immutable linked hash set is equal to that immutable hash set", cilhs, ilhs);
     }
 
+    /**
+     * ...
+     * @param set Set&lt;Integer&gt;; a set
+     * @param imSet ImmutableSet&lt;Integer&gt;; an immutable set
+     * @param copyOrWrap Immutable;
+     */
     private void testIntSet(final Set<Integer> set, final ImmutableSet<Integer> imSet, final Immutable copyOrWrap)
     {
         Assert.assertTrue(set.size() == 10);
         Assert.assertTrue(imSet.size() == 10);
         for (int i = 0; i < 10; i++)
+        {
             Assert.assertTrue(imSet.contains(i + 1));
+        }
         Assert.assertFalse(imSet.isEmpty());
         Assert.assertFalse(imSet.contains(15));
         if (copyOrWrap == Immutable.COPY)
@@ -78,8 +89,13 @@ public class TestImmutableLinkedHashSet
         // modify the underlying data structure
         set.add(11);
         if (copyOrWrap == Immutable.COPY)
+        {
             Assert.assertTrue(imSet.size() == 10);
+        }
         else
+        {
             Assert.assertTrue(imSet.size() == 11);
+        }
     }
+    
 }

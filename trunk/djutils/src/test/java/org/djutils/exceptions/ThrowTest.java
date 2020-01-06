@@ -212,7 +212,7 @@ public class ThrowTest
             assertTrue("description is descriptive", rte.getMessage().contains(message));
         }
 
-        Object result = new Double(123/456);
+        Object result = new Double(123 / 456);
         String formatStringWith2PlaceHolders = "message %s %s";
         String arg1 = "arg1";
         String arg2 = "arg2";

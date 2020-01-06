@@ -49,7 +49,7 @@ public class StrongReference<T extends Serializable> extends Reference<T>
     }
 
     /**
-     * writes a serializable referent to stream
+     * writes a serializable referent to stream.
      * @param out ObjectOutputStream; the output stream
      * @throws IOException on IOException
      */
@@ -59,7 +59,7 @@ public class StrongReference<T extends Serializable> extends Reference<T>
     }
 
     /**
-     * reads a serializable method from stream
+     * reads a serializable method from stream.
      * @param in java.io.ObjectInputStream; the input stream
      * @throws IOException on IOException
      * @throws ClassNotFoundException on ClassNotFoundException

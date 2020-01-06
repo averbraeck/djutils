@@ -404,7 +404,7 @@ public class EventPubSubTest implements Serializable
         /**
          * @param expectingNotification set expectingNotification
          */
-        public void setExpectingNotification(boolean expectingNotification)
+        public void setExpectingNotification(final boolean expectingNotification)
         {
             this.expectingNotification = expectingNotification;
         }
@@ -412,7 +412,7 @@ public class EventPubSubTest implements Serializable
         /**
          * @param expectedObject set expectedObject
          */
-        public void setExpectedObject(Object expectedObject)
+        public void setExpectedObject(final Object expectedObject)
         {
             this.expectedObject = expectedObject;
         }
@@ -460,7 +460,7 @@ public class EventPubSubTest implements Serializable
         /**
          * @param expectingNotification set expectingNotification
          */
-        public void setExpectingNotification(boolean expectingNotification)
+        public void setExpectingNotification(final boolean expectingNotification)
         {
             this.expectingNotification = expectingNotification;
         }
@@ -468,7 +468,7 @@ public class EventPubSubTest implements Serializable
         /**
          * @param expectedObject set expectedObject
          */
-        public void setExpectedObject(Object expectedObject)
+        public void setExpectedObject(final Object expectedObject)
         {
             this.expectedObject = expectedObject;
         }

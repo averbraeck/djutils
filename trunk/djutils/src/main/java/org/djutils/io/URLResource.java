@@ -251,7 +251,7 @@ public final class URLResource
          * @param userName String; my userName
          * @param password String; my passWord
          */
-        public PasswordAuthenticator(final String userName, final String password)
+        PasswordAuthenticator(final String userName, final String password)
         {
             super();
             this.userName = userName;

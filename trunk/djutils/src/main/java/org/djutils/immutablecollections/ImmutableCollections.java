@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
-public class ImmutableCollections
+public final class ImmutableCollections
 {
     /**
      * There is never a need to instantiate an object of this class.
@@ -68,7 +68,7 @@ public class ImmutableCollections
      *         of <code>key</code> if it were contained in the list.
      * @param <T> the data type of the ImmutableList
      */
-    public static <T> int binarySearch(ImmutableList<? extends Comparable<? super T>> il, T key)
+    public static <T> int binarySearch(final ImmutableList<? extends Comparable<? super T>> il, final T key)
     {
         return Collections.binarySearch(il.toList(), key);
     }
@@ -84,7 +84,7 @@ public class ImmutableCollections
      *         of <code>key</code> if it were contained in the list.
      * @param <T> the object type in the list
      */
-    public static <T> int binarySearch(ImmutableList<? extends T> il, T key, Comparator<? super T> comparator)
+    public static <T> int binarySearch(final ImmutableList<? extends T> il, final T key, final Comparator<? super T> comparator)
     {
         return Collections.binarySearch(il.toList(), key, comparator);
     }
@@ -96,31 +96,31 @@ public class ImmutableCollections
      * @return boolean; true if the collections have no common members; false if the collections have at least one member in
      *         common
      */
-    public static boolean disjoint(ImmutableCollection<?> ic1, ImmutableCollection<?> ic2)
+    public static boolean disjoint(final ImmutableCollection<?> ic1, final ImmutableCollection<?> ic2)
     {
         return Collections.disjoint(ic1.toCollection(), ic2.toCollection());
     }
 
     /**
-     * Determine if an immutable collection and a (non immutable) collection have no common members
+     * Determine if an immutable collection and a (non immutable) collection have no common members.
      * @param ic1 ImmutableCollection&lt;?&gt; an immutable collection
      * @param c2 Collection&lt;?&gt; a (mutable) collection
      * @return boolean; true if the collections have no common members; false if the collections have at least one member in
      *         common
      */
-    public static boolean disjoint(ImmutableCollection<?> ic1, Collection<?> c2)
+    public static boolean disjoint(final ImmutableCollection<?> ic1, final Collection<?> c2)
     {
         return Collections.disjoint(ic1.toCollection(), c2);
     }
 
     /**
-     * Determine if an immutable collection and a (non immutable) collection have no common members
+     * Determine if an immutable collection and a (non immutable) collection have no common members.
      * @param c1 Collection&lt;?&gt; a (mutable) collection
      * @param ic2 ImmutableCollection&lt;?&gt; an immutable collection
      * @return boolean; true if the collections have no common members; false if the collections have at least one member in
      *         common
      */
-    public static boolean disjoint(Collection<?> c1, ImmutableCollection<?> ic2)
+    public static boolean disjoint(final Collection<?> c1, final ImmutableCollection<?> ic2)
     {
         return Collections.disjoint(c1, ic2.toCollection());
     }
@@ -133,7 +133,7 @@ public class ImmutableCollections
      * @return int; the index in <code>source</code> of the first occurrence of <code>target</code> or -1 if <code>target</code>
      *         does not occur anywhere in <code>source</code>
      */
-    public static int indexOfSubList(ImmutableList<?> source, ImmutableList<?> target)
+    public static int indexOfSubList(final ImmutableList<?> source, final ImmutableList<?> target)
     {
         return Collections.indexOfSubList(source.toList(), target.toList());
     }
@@ -146,7 +146,7 @@ public class ImmutableCollections
      * @return int; the index in <code>source</code> of the first occurrence of <code>target</code> or -1 if <code>target</code>
      *         does not occur anywhere in <code>source</code>
      */
-    public static int indexOfSubList(ImmutableList<?> source, List<?> target)
+    public static int indexOfSubList(final ImmutableList<?> source, final List<?> target)
     {
         return Collections.indexOfSubList(source.toList(), target);
     }
@@ -159,7 +159,7 @@ public class ImmutableCollections
      * @return int; the index in <code>source</code> of the first occurrence of <code>target</code> or -1 if <code>target</code>
      *         does not occur anywhere in <code>source</code>
      */
-    public static int indexOfSubList(List<?> source, ImmutableList<?> target)
+    public static int indexOfSubList(final List<?> source, final ImmutableList<?> target)
     {
         return Collections.indexOfSubList(source, target.toList());
     }
@@ -172,7 +172,7 @@ public class ImmutableCollections
      * @return int; the index in <code>source</code> of the last occurrence of <code>target</code> or -1 if <code>target</code>
      *         does not occur anywhere in <code>source</code>
      */
-    public static int lastIndexOfSubList(ImmutableList<?> source, ImmutableList<?> target)
+    public static int lastIndexOfSubList(final ImmutableList<?> source, final ImmutableList<?> target)
     {
         return Collections.lastIndexOfSubList(source.toList(), target.toList());
     }
@@ -185,7 +185,7 @@ public class ImmutableCollections
      * @return int; the index in <code>source</code> of the last occurrence of <code>target</code> or -1 if <code>target</code>
      *         does not occur anywhere in <code>source</code>
      */
-    public static int lastIndexOfSubList(ImmutableList<?> source, List<?> target)
+    public static int lastIndexOfSubList(final ImmutableList<?> source, final List<?> target)
     {
         return Collections.lastIndexOfSubList(source.toList(), target);
     }
@@ -198,7 +198,7 @@ public class ImmutableCollections
      * @return int; the index in <code>source</code> of the last occurrence of <code>target</code> or -1 if <code>target</code>
      *         does not occur anywhere in <code>source</code>
      */
-    public static int lastIndexOfSubList(List<?> source, ImmutableList<?> target)
+    public static int lastIndexOfSubList(final List<?> source, final ImmutableList<?> target)
     {
         return Collections.indexOfSubList(source, target.toList());
     }
@@ -210,7 +210,7 @@ public class ImmutableCollections
      * @throws NoSuchElementException if the immutable collection is empty.
      * @param <T> the object type in the collection
      */
-    public static <T extends Object & Comparable<? super T>> T max(ImmutableCollection<? extends T> ic)
+    public static <T extends Object & Comparable<? super T>> T max(final ImmutableCollection<? extends T> ic)
     {
         return Collections.max(ic.toCollection());
     }
@@ -223,7 +223,7 @@ public class ImmutableCollections
      * @throws NoSuchElementException if the immutable collection is empty.
      * @param <T> the object type in the collection
      */
-    public static <T extends Object> T max(ImmutableCollection<? extends T> ic, Comparator<? super T> comparator)
+    public static <T extends Object> T max(final ImmutableCollection<? extends T> ic, final Comparator<? super T> comparator)
     {
         return Collections.max(ic.toCollection(), comparator);
     }
@@ -235,7 +235,7 @@ public class ImmutableCollections
      * @throws NoSuchElementException if the immutable collection is empty.
      * @param <T> the object type in the collection
      */
-    public static <T extends Object & Comparable<? super T>> T min(ImmutableCollection<? extends T> ic)
+    public static <T extends Object & Comparable<? super T>> T min(final ImmutableCollection<? extends T> ic)
     {
         return Collections.min(ic.toCollection());
     }
@@ -248,7 +248,7 @@ public class ImmutableCollections
      * @throws NoSuchElementException if the immutable collection is empty.
      * @param <T> the object type in the collection
      */
-    public static <T extends Object> T min(ImmutableCollection<? extends T> ic, Comparator<? super T> comparator)
+    public static <T extends Object> T min(final ImmutableCollection<? extends T> ic, final Comparator<? super T> comparator)
     {
         return Collections.min(ic.toCollection(), comparator);
     }
@@ -259,7 +259,7 @@ public class ImmutableCollections
      * @param o Object; the object to count the number occurrences of
      * @return int; the number of occurrences of <code>o</code> in <code>ic</code>
      */
-    public static int frequency(ImmutableCollection<?> ic, Object o)
+    public static int frequency(final ImmutableCollection<?> ic, final Object o)
     {
         return Collections.frequency(ic.toCollection(), o);
     }

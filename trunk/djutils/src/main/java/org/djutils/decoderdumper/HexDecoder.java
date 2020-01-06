@@ -60,7 +60,7 @@ public class HexDecoder implements Decoder
 
     /** {@inheritDoc} */
     @Override
-    public boolean append(int address, byte theByte) throws IOException
+    public boolean append(final int address, final byte theByte) throws IOException
     {
         if (this.buffer.length() == 0)
         {

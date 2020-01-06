@@ -78,7 +78,14 @@ public class URLResourceTest
         // Assert.assertNotNull(jar1);
     }
 
-    public void addToJarFile(String fileName, JarOutputStream jos) throws FileNotFoundException, IOException
+    /**
+     * Copy a plain file into a jar file. 
+     * @param fileName String; name of the file to copy
+     * @param jos JarOutputStream; stream for writing into the jar file
+     * @throws FileNotFoundException when the input file could not be found
+     * @throws IOException when the input file could not be read, or writing to the jar stream fails
+     */
+    public void addToJarFile(final String fileName, final JarOutputStream jos) throws FileNotFoundException, IOException
     {
         File file = new File(fileName);
         FileInputStream fis = new FileInputStream(file);
