@@ -1,5 +1,7 @@
 package org.djutils.primitives;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 /**
@@ -16,44 +18,29 @@ public class PrimitiveTest extends TestCase
 {
 
     /**
-     * constructs a new PrimitiveTest.
+     * Test most of the Primitive class.
      */
-    public PrimitiveTest()
-    {
-        this("test");
-    }
-
-    /**
-     * constructs a new PrimitiveTest.
-     * @param arg0 arg
-     */
-    public PrimitiveTest(String arg0)
-    {
-        super(arg0);
-    }
-
-    /**
-     * tests the Primitive
-     */
+    @Test
     public void test()
     {
-        TestCase.assertEquals(Primitive.getPrimitive(Boolean.class), boolean.class);
-        TestCase.assertEquals(Primitive.getPrimitive(Integer.class), int.class);
-        TestCase.assertEquals(Primitive.getPrimitive(Double.class), double.class);
-        TestCase.assertEquals(Primitive.getPrimitive(Float.class), float.class);
-        TestCase.assertEquals(Primitive.getPrimitive(Character.class), char.class);
-        TestCase.assertEquals(Primitive.getPrimitive(Byte.class), byte.class);
-        TestCase.assertEquals(Primitive.getPrimitive(Short.class), short.class);
-        TestCase.assertEquals(Primitive.getPrimitive(Long.class), long.class);
+        assertEquals(Primitive.getPrimitive(Boolean.class), boolean.class);
+        assertEquals(Primitive.getPrimitive(Integer.class), int.class);
+        assertEquals(Primitive.getPrimitive(Double.class), double.class);
+        assertEquals(Primitive.getPrimitive(Float.class), float.class);
+        assertEquals(Primitive.getPrimitive(Character.class), char.class);
+        assertEquals(Primitive.getPrimitive(Byte.class), byte.class);
+        assertEquals(Primitive.getPrimitive(Short.class), short.class);
+        assertEquals(Primitive.getPrimitive(Long.class), long.class);
+        assertNull(Primitive.getPrimitive(String.class));
 
-        TestCase.assertEquals(Primitive.getWrapper(boolean.class), Boolean.class);
-        TestCase.assertEquals(Primitive.getWrapper(int.class), Integer.class);
-        TestCase.assertEquals(Primitive.getWrapper(double.class), Double.class);
-        TestCase.assertEquals(Primitive.getWrapper(float.class), Float.class);
-        TestCase.assertEquals(Primitive.getWrapper(char.class), Character.class);
-        TestCase.assertEquals(Primitive.getWrapper(byte.class), Byte.class);
-        TestCase.assertEquals(Primitive.getWrapper(long.class), Long.class);
-        TestCase.assertEquals(Primitive.getWrapper(short.class), Short.class);
+        assertEquals(Primitive.getWrapper(boolean.class), Boolean.class);
+        assertEquals(Primitive.getWrapper(int.class), Integer.class);
+        assertEquals(Primitive.getWrapper(double.class), Double.class);
+        assertEquals(Primitive.getWrapper(float.class), Float.class);
+        assertEquals(Primitive.getWrapper(char.class), Character.class);
+        assertEquals(Primitive.getWrapper(byte.class), Byte.class);
+        assertEquals(Primitive.getWrapper(long.class), Long.class);
+        assertEquals(Primitive.getWrapper(short.class), Short.class);
         try
         {
             Primitive.getWrapper(String[].class);
@@ -64,17 +51,17 @@ public class PrimitiveTest extends TestCase
             // Ignore expected exception
         }
 
-        TestCase.assertEquals(Primitive.toBoolean(Integer.valueOf(1)), Boolean.TRUE);
-        TestCase.assertEquals(Primitive.toBoolean(new Double(1.0)), Boolean.TRUE);
-        TestCase.assertEquals(Primitive.toBoolean(new Float(1.0)), Boolean.TRUE);
-        TestCase.assertEquals(Primitive.toBoolean(new Short((short) 1.0)), Boolean.TRUE);
-        TestCase.assertEquals(Primitive.toBoolean(new Long(1l)), Boolean.TRUE);
+        assertEquals(Primitive.toBoolean(Integer.valueOf(1)), Boolean.TRUE);
+        assertEquals(Primitive.toBoolean(1.0), Boolean.TRUE);
+        assertEquals(Primitive.toBoolean(1.0f), Boolean.TRUE);
+        assertEquals(Primitive.toBoolean((short) 1.0), Boolean.TRUE);
+        assertEquals(Primitive.toBoolean(1L), Boolean.TRUE);
 
-        TestCase.assertEquals(Primitive.toBoolean(Integer.valueOf(0)), Boolean.FALSE);
-        TestCase.assertEquals(Primitive.toBoolean(new Double(0.0)), Boolean.FALSE);
-        TestCase.assertEquals(Primitive.toBoolean(new Float(0.0)), Boolean.FALSE);
-        TestCase.assertEquals(Primitive.toBoolean(new Short((short) 0.0)), Boolean.FALSE);
-        TestCase.assertEquals(Primitive.toBoolean(new Long(0l)), Boolean.FALSE);
+        assertEquals(Primitive.toBoolean(Integer.valueOf(0)), Boolean.FALSE);
+        assertEquals(Primitive.toBoolean(0.0), Boolean.FALSE);
+        assertEquals(Primitive.toBoolean(0.0f), Boolean.FALSE);
+        assertEquals(Primitive.toBoolean((short) 0.0), Boolean.FALSE);
+        assertEquals(Primitive.toBoolean(0L), Boolean.FALSE);
         try
         {
             Primitive.toBoolean(Integer.valueOf(-1));
@@ -102,9 +89,36 @@ public class PrimitiveTest extends TestCase
         {
             // Ignore expected exception
         }
-        TestCase.assertEquals(Primitive.toBoolean(new Boolean(false)), Boolean.FALSE);
-        TestCase.assertEquals(Primitive.toBoolean(new Boolean(true)), Boolean.TRUE);
-
+        assertEquals(Primitive.toBoolean(false), Boolean.FALSE);
+        assertEquals(Primitive.toBoolean(true), Boolean.TRUE);
+        
+        assertEquals((Integer) 0x61, Primitive.toInteger('a'));
+        assertEquals((Integer) 1, Primitive.toInteger(true));
+        assertEquals((Integer) 0, Primitive.toInteger(false));
     }
-
+    
+    /**
+     * Test the cast methods.
+     */
+    @Test
+    public void testCast()
+    {
+        String junk = "Junk";
+        assertEquals(junk, Primitive.cast(String.class, junk));
+        assertEquals(true, Primitive.cast(boolean.class, 1));
+        assertEquals('a', Primitive.cast(char.class, 0x61));
+        Byte b = 0x77;
+        assertEquals(b, Primitive.cast(byte.class, 0x77));
+        assertEquals(123.0, Primitive.cast(double.class, 123L));
+        assertEquals(123.0f, Primitive.cast(float.class, 123L));
+        assertEquals(123456L, Primitive.cast(long.class, 123456.0));
+        assertEquals(-123456, Primitive.cast(int.class, -123456.0));
+        assertEquals((short) -123, Primitive.cast(short.class, -123.0));
+        Object[] in = new Object[] {123, 2.0};
+        Class<?>[] to = new Class[] { float.class, byte.class };
+        Object[] out = Primitive.cast(to, in);
+        assertEquals(123.0f, out[0]);
+        assertEquals((byte) 2, out[1]);
+    }
+    
 }
