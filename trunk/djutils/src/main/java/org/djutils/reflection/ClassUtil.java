@@ -47,12 +47,11 @@ public final class ClassUtil
     private static final Map<String, Object> CACHE = Collections.synchronizedMap(new LinkedHashMap<String, Object>());
 
     /**
-     * constructs a new ClassUtil.
+     * Do not instantiate.
      */
     private ClassUtil()
     {
-        super();
-        // unreachable code
+        // Do not instantiate
     }
 
     /** ************ CONSTRUCTOR UTILITIES *********** */
