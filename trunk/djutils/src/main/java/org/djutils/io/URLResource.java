@@ -23,12 +23,11 @@ import java.net.URL;
 public final class URLResource
 {
     /**
-     * constructs a new URLResource.
+     * Utility class; do not instantiate.
      */
     private URLResource()
     {
-        super();
-        // unreachable code
+        // Do not instantiate
     }
 
     /**
