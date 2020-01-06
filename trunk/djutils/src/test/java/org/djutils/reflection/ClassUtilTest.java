@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.djutils.exceptions.Try;
+import org.djutils.primitives.Primitive;
 import org.djutils.reflection.TestClass.InnerPublic;
 import org.junit.Test;
 
@@ -79,17 +81,36 @@ public class ClassUtilTest
     @Test
     public void testToClass() throws ClassNotFoundException
     {
+        assertEquals(int.class, FieldSignature.toClass("int"));
         assertEquals(int.class, FieldSignature.toClass("I"));
+        assertEquals(double.class, FieldSignature.toClass("double"));
         assertEquals(double.class, FieldSignature.toClass("D"));
+        assertEquals(boolean.class, FieldSignature.toClass("boolean"));
         assertEquals(boolean.class, FieldSignature.toClass("Z"));
         assertEquals(char.class, FieldSignature.toClass("C"));
+        assertEquals(char.class, FieldSignature.toClass("char"));
         assertEquals(byte.class, FieldSignature.toClass("B"));
+        assertEquals(byte.class, FieldSignature.toClass("byte"));
         assertEquals(float.class, FieldSignature.toClass("F"));
+        assertEquals(float.class, FieldSignature.toClass("float"));
         assertEquals(long.class, FieldSignature.toClass("J"));
+        assertEquals(long.class, FieldSignature.toClass("long"));
         assertEquals(short.class, FieldSignature.toClass("S"));
+        assertEquals(short.class, FieldSignature.toClass("short"));
         assertEquals(int[].class, FieldSignature.toClass("[I"));
         assertEquals(int[].class, FieldSignature.toClass("[I")); // repeated call uses the cache
         assertEquals(Integer.class, FieldSignature.toClass("Ljava/lang/Integer;"));
+        assertEquals(void.class, FieldSignature.toClass("void"));
+        assertEquals(void.class, FieldSignature.toClass("V"));
+        try
+        {
+            assertNull(FieldSignature.toClass("XXX"));
+            fail("name of non existant class should have thrown a ClassNotFoundException");
+        }
+        catch (ClassNotFoundException cnfe)
+        {
+            // Ignore expected exception
+        }
     }
 
     /**
@@ -293,7 +314,7 @@ public class ClassUtilTest
         Constructor<Sub.Inner> csi2 = ClassUtil.resolveConstructor(Sub.Inner.class, new Object[] {sup, 123L});
         assertNotNull(csi2);
     }
-
+    
     /**
      * Tests the ClassUtil Field lookup methods.
      * @throws NoSuchFieldException on error
