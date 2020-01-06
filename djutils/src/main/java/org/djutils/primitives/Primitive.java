@@ -14,12 +14,11 @@ package org.djutils.primitives;
 public final class Primitive
 {
     /**
-     * constructs a new Primitive.
+     * Utility class should not be instantiated.
      */
     private Primitive()
     {
-        super();
-        // unreachable code
+        // Do not instantiate
     }
 
     /**
@@ -41,7 +40,7 @@ public final class Primitive
      * casts an object to a instance of clazz.
      * @param clazz Class&lt;?&gt;; the class to cast to
      * @param object Object; the object to cast
-     * @return the casted object
+     * @return Object; the casted object
      */
     public static Object cast(final Class<?> clazz, final Object object)
     {
