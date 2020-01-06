@@ -178,7 +178,7 @@ public final class URLResource
      * @param path String; the path to search for
      * @return the resolved URL to the path
      */
-    private static URL getResourceOrFile(String path)
+    private static URL getResourceOrFile(final String path)
     {
         URL url = null;
 
