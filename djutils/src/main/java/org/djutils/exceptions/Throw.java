@@ -225,8 +225,7 @@ public final class Throw
         T exception;
         try
         {
-            Constructor<T> constructor =
-                    (Constructor<T>) ClassUtil.resolveConstructor(throwableClass, new Class<?>[] {String.class});
+            Constructor<T> constructor = ClassUtil.resolveConstructor(throwableClass, new Class<?>[] {String.class});
             exception = constructor.newInstance(formattedMessage);
             exception.setStackTrace(ste);
         }
@@ -244,7 +243,7 @@ public final class Throw
      * version of the method returns its first parameter, so it can be used inside a constructor. Use e.g., as follows:
      * 
      * <pre>
-     * super(Throw.when(object, Double.isNan(object.getValue()), IllegalArgumentException.class, &quot;Value may not be NaN.&quot;));
+     * super(Throw.when(object, Double.isNaN(object.getValue()), IllegalArgumentException.class, "Value may not be NaN."));
      * </pre>
      * 
      * @param object O; the object to return by this static method

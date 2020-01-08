@@ -1,7 +1,11 @@
 package org.djutils.event;
 
+import java.io.Serializable;
+
 /**
- * The TimedEvent is the reference implementation for a timed event.
+ * The TimedEvent is the reference implementation for a timed event. Because events are often sent over the network, the
+ * interface demands that the event, its source, content and timestamp are serializable. It is the repsonsibility of the
+ * programmer, though, that the <b>content</b> of the source, content and timestamp are serializable as well.
  * <p>
  * Copyright (c) 2002-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -14,7 +18,7 @@ package org.djutils.event;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <T> the Comparable type that represents time
  */
-public class TimedEvent<T extends Comparable<T>> extends Event implements Comparable<TimedEvent<T>>
+public class TimedEvent<T extends Comparable<T> & Serializable> extends Event implements Comparable<TimedEvent<T>>
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140826L;
@@ -29,7 +33,7 @@ public class TimedEvent<T extends Comparable<T>> extends Event implements Compar
      * @param value Object; the value of the event.
      * @param timeStamp T; the timeStamp.
      */
-    public TimedEvent(final EventType type, final Object source, final Object value, final T timeStamp)
+    public TimedEvent(final EventType type, final Serializable source, final Serializable value, final T timeStamp)
     {
         super(type, source, value);
         this.timeStamp = timeStamp;
@@ -56,7 +60,8 @@ public class TimedEvent<T extends Comparable<T>> extends Event implements Compar
 
     /** {@inheritDoc} */
     @Override
-    public boolean equals(Object obj)
+    @SuppressWarnings("checkstyle:needbraces")
+    public boolean equals(final Object obj)
     {
         if (this == obj)
             return true;
