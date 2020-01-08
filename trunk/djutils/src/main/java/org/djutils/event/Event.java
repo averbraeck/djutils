@@ -1,7 +1,11 @@
 package org.djutils.event;
 
+import java.io.Serializable;
+
 /**
- * The Event class forms the reference implementation for the EventInterface.
+ * The Event class forms the reference implementation for the EventInterface. Because events are often sent over the network,
+ * the interface demands that the event and its source and content are serializable. It is the repsonsibility of the programmer,
+ * though, that the <b>content</b> of the object is serializable as well.
  * <p>
  * Copyright (c) 2002-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -22,10 +26,10 @@ public class Event implements EventInterface
     private final EventType type;
 
     /** content refers to the content of the event. */
-    private final Object content;
+    private final Serializable content;
 
     /** the source of an event. */
-    private final Object source;
+    private final Serializable source;
 
     /**
      * constructs a new Event.
@@ -33,7 +37,7 @@ public class Event implements EventInterface
      * @param source Object; the source of the sender.
      * @param content Object; the content of the event.
      */
-    public Event(final EventType type, final Object source, final Object content)
+    public Event(final EventType type, final Serializable source, final Serializable content)
     {
         this.type = type;
         this.source = source;
@@ -42,14 +46,14 @@ public class Event implements EventInterface
 
     /** {@inheritDoc} */
     @Override
-    public final Object getSource()
+    public final Serializable getSource()
     {
         return this.source;
     }
 
     /** {@inheritDoc} */
     @Override
-    public final Object getContent()
+    public final Serializable getContent()
     {
         return this.content;
     }

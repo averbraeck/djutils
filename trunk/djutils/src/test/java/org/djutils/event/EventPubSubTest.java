@@ -327,7 +327,7 @@ public class EventPubSubTest implements Serializable
         assertTrue(addListenerOK);
         assertTrue(producer.hasListeners());
         assertEquals(1, producer.numberOfListeners(TestEventProducer.PRODUCER_EVENT_1));
-        
+
         // fire an event -- should arrive
         listener.setExpectingNotification(true);
         listener.setExpectedObject(Integer.valueOf(12));
@@ -344,7 +344,7 @@ public class EventPubSubTest implements Serializable
         referent.setAccessible(true);
         referent.set(ref, new java.lang.ref.WeakReference<EventListenerInterface>(null));
         referent.setAccessible(false);
-        
+
         // fire an event -- should not arrive
         listener.setExpectingNotification(false);
         producer.fireEvent(TestEventProducer.PRODUCER_EVENT_1, 34);
@@ -370,7 +370,7 @@ public class EventPubSubTest implements Serializable
 
         /** this should be okay. */
         @SuppressWarnings("unused")
-        private EventType PRODUCER_EVENT_4 = new EventType("PRODUCER_EVENT_1");
+        private static final EventType PRODUCER_EVENT_4 = new EventType("PRODUCER_EVENT_1");
     }
 
     /** */
@@ -443,7 +443,7 @@ public class EventPubSubTest implements Serializable
      * TimedEventListener.
      * @param <C> the comparable time type
      */
-    protected static class TestTimedEventListener<C extends Comparable<C>> implements EventListenerInterface
+    protected static class TestTimedEventListener<C extends Comparable<C> & Serializable> implements EventListenerInterface
     {
         /** */
         private static final long serialVersionUID = 20191230L;

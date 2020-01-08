@@ -34,7 +34,7 @@ public class EventTest implements Serializable
     {
         EventType eventType = new EventType("TEST_TYPE");
         assertEquals(eventType, eventType);
-        Object content = new Object();
+        Object content = new SerializableObject();
         assertNotEquals(eventType, content);
         assertNotEquals(eventType, null);
         assertNotEquals(eventType, new EventType("TEST_TYPE2"));
@@ -65,12 +65,12 @@ public class EventTest implements Serializable
     @Test
     public void testEvent()
     {
-        Object source = this;
-        Object source2 = new Object();
+        Serializable source = this;
+        Serializable source2 = new SerializableObject();
         EventType eventType = new EventType("TEST_TYPE");
         EventType eventType2 = new EventType("TEST_TYPE2");
-        Object content = new Object();
-        Object content2 = new Object();
+        Serializable content = new SerializableObject();
+        Serializable content2 = new SerializableObject();
         EventInterface event = new Event(eventType, source, content);
         assertEquals(event.getContent(), content);
         assertEquals(event.getSource(), source);
@@ -118,12 +118,12 @@ public class EventTest implements Serializable
     @Test
     public void testTimedEvent()
     {
-        Object source = this;
-        Object source2 = new Object();
+        Serializable source = this;
+        Serializable source2 = new SerializableObject();
         EventType eventType = new EventType("TEST_TYPE");
         EventType eventType2 = new EventType("TEST_TYPE2");
-        Object content = new Object();
-        Object content2 = new Object();
+        Serializable content = new SerializableObject();
+        Serializable content2 = new SerializableObject();
         long time = 123L;
         long time2 = 456L;
         TimedEvent<Long> event = new TimedEvent<>(eventType, source, content, time);
@@ -154,9 +154,11 @@ public class EventTest implements Serializable
         assertNotEquals(new TimedEvent<Long>(eventType, source, content, null), event);
 
         assertEquals(new TimedEvent<Long>(null, source, content, time), new TimedEvent<Long>(null, source, content, time));
-        assertEquals(new TimedEvent<Long>(eventType, null, content, time), new TimedEvent<Long>(eventType, null, content, time));
+        assertEquals(new TimedEvent<Long>(eventType, null, content, time),
+                new TimedEvent<Long>(eventType, null, content, time));
         assertEquals(new TimedEvent<Long>(eventType, source, null, time), new TimedEvent<Long>(eventType, source, null, time));
-        assertEquals(new TimedEvent<Long>(eventType, source, content, null), new TimedEvent<Long>(eventType, source, content, null));
+        assertEquals(new TimedEvent<Long>(eventType, source, content, null),
+                new TimedEvent<Long>(eventType, source, content, null));
 
         assertEquals(event.hashCode(), event.hashCode());
         assertEquals(event.hashCode(), new TimedEvent<Long>(eventType, source, content, time).hashCode());
@@ -174,10 +176,16 @@ public class EventTest implements Serializable
 
         assertTrue(event.toString().contains("TEST_TYPE"));
         assertTrue(event.toString().contains("123"));
-        
+
         assertTrue(event.compareTo(event) == 0);
         assertTrue(event.compareTo(event2) < 0);
         assertTrue(event2.compareTo(event) > 0);
     }
 
+    /** Serializable object class. */
+    class SerializableObject extends Object implements Serializable
+    {
+        /** */
+        private static final long serialVersionUID = 1L;
+    }
 }

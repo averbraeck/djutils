@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 /**
  * The EventInterface defines the a strongly typed event (using the EventType). The sender of the event can be identified,
- * allowing for fine-grained filtering of events.
+ * allowing for fine-grained filtering of events. Because events are often sent over the network, the interface demands that the
+ * event and its source and content are serializable. It is the repsonsibility of the programmer, though, that the
+ * <b>content</b> of the object is serializable as well.
  * <p>
  * Copyright (c) 2002-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -24,13 +26,13 @@ public interface EventInterface extends Serializable
      * returns the source of the event. The source is the sender of the event
      * @return the source of the event
      */
-    Object getSource();
+    Serializable getSource();
 
     /**
      * returns the content of this event.
      * @return the content of this event
      */
-    Object getContent();
+    Serializable getContent();
 
     /**
      * returns the type of the event.

@@ -159,8 +159,7 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
      * @return EventInterface; the event
      * @throws RemoteException on network failure
      */
-    protected EventInterface fireEvent(final EventListenerInterface listener, final EventInterface event)
-            throws RemoteException
+    protected EventInterface fireEvent(final EventListenerInterface listener, final EventInterface event) throws RemoteException
     {
         listener.notify(event);
         return event;
@@ -236,8 +235,8 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
      * @return Serializable; the payload
      * @param <C> the comparable type to indicate the time when the event is fired
      */
-    protected <C extends Comparable<C>> Serializable fireTimedEvent(final EventType eventType, final Serializable value,
-            final C time)
+    protected <C extends Comparable<C> & Serializable> Serializable fireTimedEvent(final EventType eventType,
+            final Serializable value, final C time)
     {
         Throw.whenNull(time, "time may not be null");
         this.fireEvent(new TimedEvent<C>(eventType, this, value, time));
@@ -264,7 +263,7 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return byte; the payload
      */
-    protected <C extends Comparable<C>> byte fireTimedEvent(final EventType eventType, final byte value,
+    protected <C extends Comparable<C> & Serializable> byte fireTimedEvent(final EventType eventType, final byte value,
             final C time)
     {
         this.fireTimedEvent(eventType, Byte.valueOf(value), time);
@@ -291,10 +290,10 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return boolean; the payload
      */
-    protected <C extends Comparable<C>> boolean fireTimedEvent(final EventType eventType, final boolean value,
+    protected <C extends Comparable<C> & Serializable> boolean fireTimedEvent(final EventType eventType, final boolean value,
             final C time)
     {
-        this.fireTimedEvent(eventType, Boolean.valueOf(value), time);
+        fireTimedEvent(eventType, Boolean.valueOf(value), time);
         return value;
     }
 
@@ -318,7 +317,7 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return double; the payload
      */
-    protected <C extends Comparable<C>> double fireTimedEvent(final EventType eventType, final double value,
+    protected <C extends Comparable<C> & Serializable> double fireTimedEvent(final EventType eventType, final double value,
             final C time)
     {
         this.fireTimedEvent(eventType, Double.valueOf(value), time);
@@ -345,7 +344,7 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return int; the payload
      */
-    protected <C extends Comparable<C>> int fireTimedEvent(final EventType eventType, final int value,
+    protected <C extends Comparable<C> & Serializable> int fireTimedEvent(final EventType eventType, final int value,
             final C time)
     {
         this.fireTimedEvent(eventType, Integer.valueOf(value), time);
@@ -372,7 +371,7 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return long; the payload
      */
-    protected <C extends Comparable<C>> long fireTimedEvent(final EventType eventType, final long value,
+    protected <C extends Comparable<C> & Serializable> long fireTimedEvent(final EventType eventType, final long value,
             final C time)
     {
         this.fireTimedEvent(eventType, Long.valueOf(value), time);
@@ -399,7 +398,7 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return short; the payload
      */
-    protected <C extends Comparable<C>> short fireTimedEvent(final EventType eventType, final short value,
+    protected <C extends Comparable<C> & Serializable> short fireTimedEvent(final EventType eventType, final short value,
             final C time)
     {
         this.fireTimedEvent(eventType, Short.valueOf(value), time);
