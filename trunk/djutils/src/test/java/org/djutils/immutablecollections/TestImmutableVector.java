@@ -178,8 +178,8 @@ public class TestImmutableVector
         Vector<Integer> to = imVector.toVector();
         Assert.assertTrue(vector.equals(to));
 
-        Integer[] arr = (Integer[]) imVector.toArray(new Integer[] {});
-        Integer[] sar = (Integer[]) vector.toArray(new Integer[] {});
+        Integer[] arr = imVector.toArray(new Integer[] {});
+        Integer[] sar = vector.toArray(new Integer[] {});
         Assert.assertArrayEquals(arr, sar);
 
         // modify the underlying data structure

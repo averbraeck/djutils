@@ -27,12 +27,13 @@ import org.junit.Test;
 public class TestImmutableList
 {
     /** Accumulator for forEach test. */
+    @SuppressWarnings("checkstyle:visibilitymodifier")
     int sum;
 
     /**
      * Test the immutable list class.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "unlikely-arg-type"})
     @Test
     public void testImmutableList()
     {
@@ -87,7 +88,8 @@ public class TestImmutableList
             assertEquals("values can be retrieved one by one", values[index], il.get(index));
         }
         ImmutableIterator<Integer> ii = il.iterator();
-        assertTrue("toString method of iterator returns something descriptive", ii.toString().startsWith("ImmutableIterator ["));
+        assertTrue("toString method of iterator returns something descriptive",
+                ii.toString().startsWith("ImmutableIterator ["));
         for (int index = 0; index < values.length; index++)
         {
             assertTrue(ii.hasNext());
@@ -141,7 +143,7 @@ public class TestImmutableList
     /**
      * Test the ImmutableHashMap class.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "unlikely-arg-type"})
     @Test
     public void testImmutableHashSet()
     {

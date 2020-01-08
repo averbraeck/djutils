@@ -3,6 +3,8 @@ package org.djutils.decoderdumper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import org.djutils.logger.CategoryLogger;
+
 /**
  * Decode base64 encoded data and show it as hex bytes. See https://en.wikipedia.org/wiki/Base64
  * <p>
@@ -117,7 +119,8 @@ public class Base64Decoder implements Decoder
             // Illegal byte in input
             if (!this.errorDetected) // First error
             {
-                // At this point we might insert some indicator in the output to indicate the location of the first error
+                CategoryLogger.always().info("illegal character found in Base64Decoder stream at address {}, character {}",
+                        address, theByte);
             }
             this.errorDetected = true;
             return false;

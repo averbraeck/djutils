@@ -39,9 +39,9 @@ public interface ImmutableMap<K, V> extends Serializable
     boolean isEmpty();
 
     /**
-     * Returns <code>true</code> if this map contains a mapping for the specified key. More formally, returns <code>true</code> if and
-     * only if this map contains a mapping for a key <code>k</code> such that <code>(key==null ? k==null : key.equals(k))</code>. (There
-     * can be at most one such mapping.)
+     * Returns <code>true</code> if this map contains a mapping for the specified key. More formally, returns <code>true</code>
+     * if and only if this map contains a mapping for a key <code>k</code> such that
+     * <code>(key==null ? k==null : key.equals(k))</code>. (There can be at most one such mapping.)
      * @param key Object; key whose presence in this map is to be tested
      * @return <code>true</code> if this map contains a mapping for the specified key
      * @throws ClassCastException if the key is of an inappropriate type for this map
@@ -50,10 +50,10 @@ public interface ImmutableMap<K, V> extends Serializable
     boolean containsKey(Object key);
 
     /**
-     * Returns <code>true</code> if this map maps one or more keys to the specified value. More formally, returns <code>true</code> if
-     * and only if this map contains at least one mapping to a value <code>v</code> such that
-     * <code>(value==null ? v==null : value.equals(v))</code>. This operation will probably require time linear in the map size for
-     * most implementations of the <code>Map</code> interface.
+     * Returns <code>true</code> if this map maps one or more keys to the specified value. More formally, returns
+     * <code>true</code> if and only if this map contains at least one mapping to a value <code>v</code> such that
+     * <code>(value==null ? v==null : value.equals(v))</code>. This operation will probably require time linear in the map size
+     * for most implementations of the <code>Map</code> interface.
      * @param value Object; value whose presence in this map is to be tested
      * @return <code>true</code> if this map maps one or more keys to the specified value
      * @throws ClassCastException if the value is of an inappropriate type for this map
@@ -185,8 +185,8 @@ public interface ImmutableMap<K, V> extends Serializable
     }
 
     /**
-     * A map entry (key-value pair). The <code>Map.entrySet</code> method returns a collection-view of the map, whose elements are
-     * of this class. The <i>only</i> way to obtain a reference to a map entry is from the iterator of this collection-view.
+     * A map entry (key-value pair). The <code>Map.entrySet</code> method returns a collection-view of the map, whose elements
+     * are of this class. The <i>only</i> way to obtain a reference to a map entry is from the iterator of this collection-view.
      * These <code>ImmutableMap.ImmutableEntry</code> objects are valid <i>only</i> for the duration of the iteration; more
      * formally, the behavior of a map entry is undefined if the backing map has been modified after the entry was returned by
      * the iterator, except through the <code>setValue</code> operation on the map entry.
@@ -241,7 +241,8 @@ public interface ImmutableMap<K, V> extends Serializable
 
         /** {@inheritDoc} */
         @Override
-        public boolean equals(Object obj)
+        @SuppressWarnings("checkstyle:needbraces")
+        public boolean equals(final Object obj)
         {
             if (this == obj)
                 return true;

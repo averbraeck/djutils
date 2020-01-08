@@ -42,7 +42,7 @@ public class Dumper<T>
     private String lastOutput = "";
 
     /** Line that is output to indicate where one or more output lines were suppressed. */
-    private static String SUPPRESSEDOUTPUTINDICATORLINE = "*\n";
+    private static final String SUPPRESSEDOUTPUTINDICATORLINE = "*\n";
 
     /**
      * Construct a new Dumper.
