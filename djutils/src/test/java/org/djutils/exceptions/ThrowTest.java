@@ -21,13 +21,14 @@ public class ThrowTest
     /**
      * Test the Throw class.
      */
+    @SuppressWarnings({"checkstyle:methodlength", "cast"})
     @Test
     public void testThrow()
     {
         Object object = new Object();
         Object objectNull = null;
         int i = 10;
-        Double d = new Double(20.0);
+        Double d = Double.valueOf(20.0);
         String s = "argument";
         int hex = 26; // 1A
 
@@ -212,7 +213,7 @@ public class ThrowTest
             assertTrue("description is descriptive", rte.getMessage().contains(message));
         }
 
-        Object result = new Double(123 / 456);
+        Object result = Double.valueOf(123 / 456);
         String formatStringWith2PlaceHolders = "message %s %s";
         String arg1 = "arg1";
         String arg2 = "arg2";

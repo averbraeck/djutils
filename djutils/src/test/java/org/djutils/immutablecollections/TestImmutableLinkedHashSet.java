@@ -82,8 +82,8 @@ public class TestImmutableLinkedHashSet
         Set<Integer> to = imSet.toSet();
         Assert.assertTrue(set.equals(to));
 
-        Integer[] arr = (Integer[]) imSet.toArray(new Integer[] {});
-        Integer[] sar = (Integer[]) set.toArray(new Integer[] {});
+        Integer[] arr = imSet.toArray(new Integer[] {});
+        Integer[] sar = set.toArray(new Integer[] {});
         Assert.assertArrayEquals(arr, sar);
 
         // modify the underlying data structure

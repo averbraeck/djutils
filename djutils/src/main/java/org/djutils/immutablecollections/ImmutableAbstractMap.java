@@ -29,9 +29,11 @@ public abstract class ImmutableAbstractMap<K, V> implements ImmutableMap<K, V>
     private final Map<K, V> map;
 
     /** COPY stores a safe, internal copy of the collection; WRAP stores a pointer to the original collection. */
+    @SuppressWarnings("checkstyle:visibilitymodifier")
     protected final Immutable copyOrWrap;
 
     /** the cached values. */
+    @SuppressWarnings("checkstyle:visibilitymodifier")
     protected ImmutableCollection<V> cachedValues = null;
 
     /**

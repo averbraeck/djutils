@@ -313,7 +313,7 @@ public class ClassUtilTest
         Constructor<Sub.Inner> csi2 = ClassUtil.resolveConstructor(Sub.Inner.class, new Object[] {sup, 123L});
         assertNotNull(csi2);
     }
-    
+
     /**
      * Tests the ClassUtil Field lookup methods.
      * @throws NoSuchFieldException on error
@@ -433,6 +433,7 @@ public class ClassUtilTest
      * Tests the ClassUtil Method lookup methods.
      * @throws NoSuchMethodException on error
      */
+    @SuppressWarnings("checkstyle:methodlength")
     @Test
     public void testClassUtilMethod() throws NoSuchMethodException
     {
@@ -889,24 +890,31 @@ public class ClassUtilTest
     protected static class Sup
     {
         /** */
+        @SuppressWarnings({"checkstyle:visibilitymodifier", "checkstyle:constantname"})
         public static final String staticFinalString = "ABC";
 
         /** */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         public final String finalString = "DEF";
 
         /** */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         private float privateFloat = 8.0f;
 
         /** */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         double packageDouble = 4.0d;
 
         /** */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         protected long protectedLong = 2L;
 
         /** */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         public int publicInt = 1;
 
         /** */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         public int publicSubInt = 21;
 
         /**
@@ -1028,24 +1036,31 @@ public class ClassUtilTest
     protected static class Sub extends Sup
     {
         /** */
+        @SuppressWarnings({"checkstyle:visibilitymodifier", "checkstyle:constantname"})
         public static final String staticFinalString = "ABC";
 
         /** */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         public final String finalString = "DEF";
 
         /** */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         private float privateFloat = 8.0f;
 
         /** */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         double packageDouble = 4.0d;
 
         /** */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         protected long protectedLong = 2L;
 
         /** */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         public int publicInt = 1;
 
         /** */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         public int publicSuperInt = 11;
 
         /**
@@ -1174,6 +1189,7 @@ public class ClassUtilTest
             }
 
             /** */
+            @SuppressWarnings("checkstyle:visibilitymodifier")
             public long publicInnerLong = 123L;
 
             /**
