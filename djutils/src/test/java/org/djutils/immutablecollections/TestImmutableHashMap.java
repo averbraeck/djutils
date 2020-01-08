@@ -142,9 +142,9 @@ public class TestImmutableHashMap
 
     /**
      * ...
-     * @param map
-     * @param imMap
-     * @param copyOrWrap
+     * @param map map from int to int
+     * @param imMap immutable map from int to int
+     * @param copyOrWrap whether the map within the immutable map is copied or wrapped
      */
     private void testIntMap(final Map<Integer, Integer> map, final ImmutableMap<Integer, Integer> imMap,
             final Immutable copyOrWrap)
