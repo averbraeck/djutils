@@ -3,6 +3,13 @@
   <body>
 
     <release version="1.04.03" date="2020-01-XX" description="">
+      <action dev="averbraeck" type="add">
+        The classes RMIUtils and RMIObject have been added to make it easier to work with remote objects. 
+      </action>
+      <action dev="averbraeck" type="update">
+        RemoteEventProducer and RemoteEventListener extend RMIObject to select the host and port of the
+        RMI registry. Therewith the remote event handling has become a lot more flexible.  
+      </action>
       <action dev="averbraeck" type="update">
         Demanded that the fields of the Event and TimedEvent are serializable, so they can be sent over
         the network or stored on disk by serialization. 
