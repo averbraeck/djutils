@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +25,7 @@ import org.djutils.event.ref.Reference;
 import org.djutils.event.ref.StrongReference;
 import org.djutils.event.ref.WeakReference;
 import org.djutils.event.remote.RemoteEventListener;
+import org.djutils.rmi.RMIUtils;
 import org.junit.Test;
 
 /**
@@ -46,6 +48,7 @@ public class EventListenerMapTest implements Serializable
     /**
      * Test the EventListenerMap.
      */
+    @SuppressWarnings("checkstyle:methodlength")
     @Test
     public void testEventListenerMap()
     {
@@ -159,7 +162,8 @@ public class EventListenerMapTest implements Serializable
         {
             EventType remoteEventType = new EventType("REMOTE_EVENT_TYPE");
             List<Reference<EventListenerInterface>> remoteList = new ArrayList<>();
-            remoteList.add(new WeakReference<EventListenerInterface>(new TestRemoteEventListener()));
+            TestRemoteEventListener remoteEventListener = new TestRemoteEventListener();
+            remoteList.add(new WeakReference<EventListenerInterface>(remoteEventListener));
             elm.put(remoteEventType, remoteList);
             assertEquals(3, elm.size());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -182,8 +186,9 @@ public class EventListenerMapTest implements Serializable
             oos.close();
             bais.close();
             ois.close();
+            RMIUtils.closeRegistry(remoteEventListener.getRegistry());
         }
-        catch (IOException | ClassNotFoundException exception)
+        catch (IOException | ClassNotFoundException | AlreadyBoundException exception)
         {
             fail(exception.getMessage());
         }
@@ -286,10 +291,11 @@ public class EventListenerMapTest implements Serializable
 
         /**
          * @throws RemoteException on error
+         * @throws AlreadyBoundException on error
          */
-        public TestRemoteEventListener() throws RemoteException
+        public TestRemoteEventListener() throws RemoteException, AlreadyBoundException
         {
-            super();
+            super("localhost", 1099, "testListener");
         }
 
         /** {@inheritDoc} */

@@ -11,6 +11,10 @@
         RMI registry. Therewith the remote event handling has become a lot more flexible.  
       </action>
       <action dev="averbraeck" type="update">
+        EventProducer is not an abstract class anymore, as it does not contain any unimplemented methods and 
+        because it is used as an embedded class in the RemoteEventProducer.  
+      </action>
+      <action dev="averbraeck" type="update">
         Demanded that the fields of the Event and TimedEvent are serializable, so they can be sent over
         the network or stored on disk by serialization. 
       </action>

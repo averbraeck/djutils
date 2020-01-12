@@ -1,7 +1,11 @@
 package org.djutils.event.remote;
 
+import java.net.URL;
+import java.rmi.AccessException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
+
+import org.djutils.rmi.RMIObject;
 
 /**
  * The RemoteEventListener class embodies a remote EventListener.
@@ -16,19 +20,45 @@ import java.rmi.server.UnicastRemoteObject;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public abstract class RemoteEventListener implements RemoteEventListenerInterface
+public abstract class RemoteEventListener extends RMIObject implements RemoteEventListenerInterface
 {
     /** */
     private static final long serialVersionUID = 20191230L;
 
     /**
-     * Constructs a new RemoteListener.
-     * @throws RemoteException in case of network error
+     * Create a remote event listener and register the listener in the RMI registry. When the RMI registry does not exist yet,
+     * it will be created, but <b>only</b> on the local host. Remote creation of a registry on another computer is not possible.
+     * Any attempt to do so will cause an AccessException to be fired.
+     * @param host String; the host where the RMI registry resides or will be created. Creation is only possible on localhost.
+     * @param port int; the port where the RMI registry can be found or will be created
+     * @param bindingKey the key under which this object will be bound in the RMI registry
+     * @throws RemoteException when there is a problem with the RMI registry
+     * @throws AlreadyBoundException when there is already another object bound to the bindingKey
+     * @throws NullPointerException when host, path, or bindingKey is null
+     * @throws IllegalArgumentException when port &lt; 0 or port &gt; 65535
+     * @throws AccessException when there is an attempt to create a registry on a remote host
      */
-    public RemoteEventListener() throws RemoteException
+    public RemoteEventListener(final String host, final int port, final String bindingKey)
+            throws RemoteException, AlreadyBoundException
     {
-        super();
-        // TODO: which port should the RemoteEventListener use? Probably this asks for a Factory
-        UnicastRemoteObject.exportObject(this, 5555);
+        super(host, port, bindingKey);
     }
+
+    /**
+     * Create a remote event listener and register the listener in the RMI registry. When the host has not been specified in the
+     * URL, 127.0.0.1 will be used. When the port has not been specified in the URL, the default RMI port 1099 will be used.
+     * When the RMI registry does not exist yet, it will be created, but <b>only</b> on the local host. Remote creation of a
+     * registry on another computer is not possible. Any attempt to do so will cause an AccessException to be fired.
+     * @param registryURL URL; the URL of the registry, e.g., "http://localhost:1099" or "http://130.161.185.14:28452"
+     * @param bindingKey String; the key under which this object will be bound in the RMI registry
+     * @throws RemoteException when there is a problem with the RMI registry
+     * @throws AlreadyBoundException when there is already another object bound to the bindingKey
+     * @throws NullPointerException when registryURL or bindingKey is null
+     * @throws AccessException when there is an attempt to create a registry on a remote host
+     */
+    public RemoteEventListener(final URL registryURL, final String bindingKey) throws RemoteException, AlreadyBoundException
+    {
+        super(registryURL, bindingKey);
+    }
+
 }
