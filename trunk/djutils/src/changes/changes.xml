@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.04.03" date="2020-01-XX" description="">
+    <release version="1.04.03" date="2020-01-XX" description="RMIUtils, RMIObject and RemoteEvent updates">
       <action dev="averbraeck" type="add">
         The classes RMIUtils and RMIObject have been added to make it easier to work with remote objects. 
       </action>
