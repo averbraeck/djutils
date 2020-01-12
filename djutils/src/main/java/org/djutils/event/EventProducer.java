@@ -23,6 +23,10 @@ import org.djutils.logger.CategoryLogger;
  * all the functionalities for registration and event firing. The storage of the listeners is done in a Map with the EventType
  * as the key, and a List of References (weak or strong) to the Listeners.
  * <p>
+ * The EventPruducer is <b>not</b> an abstract class because it does not contain any unimplemented methods. Furthermore, the
+ * "bare" EventProducer is used as an embedded class in the RemoteEventProducer.
+ * </p>
+ * <p>
  * Copyright (c) 2002-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
@@ -33,7 +37,7 @@ import org.djutils.logger.CategoryLogger;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public abstract class EventProducer implements EventProducerInterface, Serializable
+public class EventProducer implements EventProducerInterface, Serializable
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140830L;

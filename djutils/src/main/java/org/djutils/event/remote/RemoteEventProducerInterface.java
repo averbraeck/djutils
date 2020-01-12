@@ -19,5 +19,5 @@ import org.djutils.event.EventProducerInterface;
  */
 public interface RemoteEventProducerInterface extends Remote, EventProducerInterface
 {
-    // nothing here
+    // Nothing here
 }

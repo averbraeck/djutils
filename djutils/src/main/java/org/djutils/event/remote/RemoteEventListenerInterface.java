@@ -19,5 +19,5 @@ import org.djutils.event.EventListenerInterface;
  */
 public interface RemoteEventListenerInterface extends EventListenerInterface, Remote
 {
-    // nothing here
+    // Nothing here
 }

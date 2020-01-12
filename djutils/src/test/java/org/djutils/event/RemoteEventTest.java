@@ -5,12 +5,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 
 import org.djutils.event.remote.RemoteEventListener;
 import org.djutils.event.remote.RemoteEventListenerInterface;
 import org.djutils.event.remote.RemoteEventProducer;
 import org.djutils.event.remote.RemoteEventProducerInterface;
+import org.djutils.rmi.RMIUtils;
 import org.junit.Test;
 
 /**
@@ -26,9 +28,10 @@ public class RemoteEventTest
     /**
      * Test the construction of the RemoteEventListsner and RemoteEventProducer.
      * @throws RemoteException on remote error
+     * @throws AlreadyBoundException when producer or listener is already bound in the RMI registry
      */
     @Test
-    public void testRemoteEventListenerProducer() throws RemoteException
+    public void testRemoteEventListenerProducer() throws RemoteException, AlreadyBoundException
     {
         RemoteEventProducerInterface producer = new TestRemoteEventProducer();
         RemoteEventListenerInterface listener = new TestRemoteEventListener();
@@ -36,6 +39,9 @@ public class RemoteEventTest
         producer.addListener(listener, TestRemoteEventProducer.REMOTE_EVENT_1);
         assertTrue(producer.hasListeners());
         assertEquals(1, producer.getEventTypesWithListeners().size());
+        
+        // clean up the registry
+        RMIUtils.closeRegistry(((TestRemoteEventProducer) producer).getRegistry());
     }
 
     /** */
@@ -53,10 +59,11 @@ public class RemoteEventTest
         /**
          * Construct a RemoteEventProducer.
          * @throws RemoteException on error
+         * @throws AlreadyBoundException on error
          */
-        public TestRemoteEventProducer() throws RemoteException
+        public TestRemoteEventProducer() throws RemoteException, AlreadyBoundException
         {
-            super();
+            super("localhost", 1099, "producer");
         }
     }
 
@@ -74,10 +81,11 @@ public class RemoteEventTest
 
         /**
          * @throws RemoteException on error
+         * @throws AlreadyBoundException on error
          */
-        public TestRemoteEventListener() throws RemoteException
+        public TestRemoteEventListener() throws RemoteException, AlreadyBoundException
         {
-            super();
+            super("localhost", 1099, "listener");
         }
 
         /**

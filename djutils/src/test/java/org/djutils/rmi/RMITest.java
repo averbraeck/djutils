@@ -19,7 +19,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.djutils.exceptions.Try;
+import org.djutils.logger.CategoryLogger;
 import org.junit.Test;
+import org.pmw.tinylog.Level;
 
 /**
  * RMITest tests the RMIUtils class and the RMIObject class. Note that port 1099 should be opened for 'localhost' for this test.
@@ -41,6 +43,7 @@ public class RMITest
     @Test
     public void testRMIRegistry() throws RemoteException, AlreadyBoundException, NotBoundException
     {
+        CategoryLogger.setAllLogLevel(Level.OFF);
         // test making the registry
         Try.testFail(new Try.Execution()
         {
@@ -294,6 +297,8 @@ public class RMITest
                 RMIUtils.closeRegistry(registry);
             }
         }, "did not get expected exception for closeRegistry()");
+        
+        CategoryLogger.setAllLogLevel(Level.INFO);
     }
 
     /**
@@ -304,6 +309,8 @@ public class RMITest
     @Test
     public void testRMIRegistryLocalHost() throws UnknownHostException
     {
+        CategoryLogger.setAllLogLevel(Level.OFF);
+
         for (String localHostName : new String[] {"localhost", "127.0.0.1", InetAddress.getLocalHost().getHostName(),
                 InetAddress.getLocalHost().getHostAddress()})
         {
@@ -339,6 +346,8 @@ public class RMITest
                         + exception.getMessage());
             }
         }
+        
+        CategoryLogger.setAllLogLevel(Level.INFO);
     }
 
     /**
@@ -351,6 +360,8 @@ public class RMITest
     @Test
     public void testRMIObject() throws RemoteException, AlreadyBoundException, NotBoundException, MalformedURLException
     {
+        CategoryLogger.setAllLogLevel(Level.OFF);
+
         // make the producer
         Producer producer = new Producer();
         assertNotNull(producer);
@@ -462,6 +473,8 @@ public class RMITest
         assertNotNull(producer.getRegistry());
         RMIUtils.closeRegistry(producer.getRegistry());
         sleep(200);
+
+        CategoryLogger.setAllLogLevel(Level.INFO);
     }
 
     /**
