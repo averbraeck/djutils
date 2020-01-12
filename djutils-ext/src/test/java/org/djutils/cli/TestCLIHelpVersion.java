@@ -67,6 +67,7 @@ public class TestCLIHelpVersion
         try
         {
             CliUtil.execute(options, args);
+            fail("Program should have exited");
         }
         catch (ExitHelper.ExitException e)
         {
@@ -97,6 +98,7 @@ public class TestCLIHelpVersion
         try
         {
             CliUtil.execute(options, args);
+            fail("Program should have exited");
         }
         catch (ExitHelper.ExitException e)
         {
