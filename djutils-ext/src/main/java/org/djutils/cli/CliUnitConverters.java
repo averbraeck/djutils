@@ -7,6 +7,8 @@ import org.djunits.value.vdouble.scalar.AbsorbedDose;
 import org.djunits.value.vdouble.scalar.Acceleration;
 import org.djunits.value.vdouble.scalar.AmountOfSubstance;
 import org.djunits.value.vdouble.scalar.Angle;
+import org.djunits.value.vdouble.scalar.AngularAcceleration;
+import org.djunits.value.vdouble.scalar.AngularVelocity;
 import org.djunits.value.vdouble.scalar.Area;
 import org.djunits.value.vdouble.scalar.CatalyticActivity;
 import org.djunits.value.vdouble.scalar.Density;
@@ -34,6 +36,7 @@ import org.djunits.value.vdouble.scalar.LuminousIntensity;
 import org.djunits.value.vdouble.scalar.MagneticFlux;
 import org.djunits.value.vdouble.scalar.MagneticFluxDensity;
 import org.djunits.value.vdouble.scalar.Mass;
+import org.djunits.value.vdouble.scalar.Momentum;
 import org.djunits.value.vdouble.scalar.Position;
 import org.djunits.value.vdouble.scalar.Power;
 import org.djunits.value.vdouble.scalar.Pressure;
@@ -73,7 +76,7 @@ public final class CliUnitConverters
      * Register all DJUNITS converters for a CommandLine.
      * @param cmd String; the CommandLine for which the DJUNITS converters should be registered
      */
-    @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+    @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
     public static void registerAll(final CommandLine cmd)
     {
         cmd.registerConverter(AbsoluteTemperature.class, new ABSOLUTETEMPERATURE());
@@ -81,6 +84,8 @@ public final class CliUnitConverters
         cmd.registerConverter(Acceleration.class, new ACCELERATION());
         cmd.registerConverter(AmountOfSubstance.class, new AMOUNTOFSUBSTANCE());
         cmd.registerConverter(Angle.class, new ANGLE());
+        cmd.registerConverter(AngularAcceleration.class, new ANGULARACCELERATION());
+        cmd.registerConverter(AngularVelocity.class, new ANGULARVELOCITY());
         cmd.registerConverter(Area.class, new AREA());
         cmd.registerConverter(CatalyticActivity.class, new CATALYTICACTIVITY());
         cmd.registerConverter(Density.class, new DENSITY());
@@ -108,6 +113,7 @@ public final class CliUnitConverters
         cmd.registerConverter(MagneticFlux.class, new MAGNETICFLUX());
         cmd.registerConverter(MagneticFluxDensity.class, new MAGNETICFLUXDENSITY());
         cmd.registerConverter(Mass.class, new MASS());
+        cmd.registerConverter(Momentum.class, new MOMENTUM());
         cmd.registerConverter(Position.class, new POSITION());
         cmd.registerConverter(Power.class, new POWER());
         cmd.registerConverter(Pressure.class, new PRESSURE());
@@ -127,7 +133,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public AbsoluteTemperature convert(final String value) throws Exception
         {
             return AbsoluteTemperature.valueOf(value);
@@ -141,7 +147,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public AbsorbedDose convert(final String value) throws Exception
         {
             return AbsorbedDose.valueOf(value);
@@ -155,7 +161,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Acceleration convert(final String value) throws Exception
         {
             return Acceleration.valueOf(value);
@@ -169,7 +175,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public AmountOfSubstance convert(final String value) throws Exception
         {
             return AmountOfSubstance.valueOf(value);
@@ -183,10 +189,38 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Angle convert(final String value) throws Exception
         {
             return Angle.valueOf(value);
+        }
+    }
+
+    /**
+     * Convert an angular acceleration String with unit on the command line to an AngularAcceleration scalar.
+     */
+    public static class ANGULARACCELERATION implements ITypeConverter<AngularAcceleration>
+    {
+        /** {@inheritDoc} */
+        @Override
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        public AngularAcceleration convert(final String value) throws Exception
+        {
+            return AngularAcceleration.valueOf(value);
+        }
+    }
+
+    /**
+     * Convert an angular velocity String with unit on the command line to an AngularVelocity scalar.
+     */
+    public static class ANGULARVELOCITY implements ITypeConverter<AngularVelocity>
+    {
+        /** {@inheritDoc} */
+        @Override
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        public AngularVelocity convert(final String value) throws Exception
+        {
+            return AngularVelocity.valueOf(value);
         }
     }
 
@@ -197,7 +231,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Area convert(final String value) throws Exception
         {
             return Area.valueOf(value);
@@ -211,7 +245,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public CatalyticActivity convert(final String value) throws Exception
         {
             return CatalyticActivity.valueOf(value);
@@ -225,7 +259,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Density convert(final String value) throws Exception
         {
             return Density.valueOf(value);
@@ -239,7 +273,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Dimensionless convert(final String value) throws Exception
         {
             return Dimensionless.valueOf(value);
@@ -253,7 +287,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Direction convert(final String value) throws Exception
         {
             return Direction.valueOf(value);
@@ -267,7 +301,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Duration convert(final String value) throws Exception
         {
             return Duration.valueOf(value);
@@ -281,7 +315,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public ElectricalCapacitance convert(final String value) throws Exception
         {
             return ElectricalCapacitance.valueOf(value);
@@ -295,7 +329,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public ElectricalCharge convert(final String value) throws Exception
         {
             return ElectricalCharge.valueOf(value);
@@ -309,7 +343,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public ElectricalConductance convert(final String value) throws Exception
         {
             return ElectricalConductance.valueOf(value);
@@ -323,7 +357,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public ElectricalCurrent convert(final String value) throws Exception
         {
             return ElectricalCurrent.valueOf(value);
@@ -337,7 +371,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public ElectricalInductance convert(final String value) throws Exception
         {
             return ElectricalInductance.valueOf(value);
@@ -351,7 +385,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public ElectricalPotential convert(final String value) throws Exception
         {
             return ElectricalPotential.valueOf(value);
@@ -365,7 +399,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public ElectricalResistance convert(final String value) throws Exception
         {
             return ElectricalResistance.valueOf(value);
@@ -379,7 +413,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Energy convert(final String value) throws Exception
         {
             return Energy.valueOf(value);
@@ -393,7 +427,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public EquivalentDose convert(final String value) throws Exception
         {
             return EquivalentDose.valueOf(value);
@@ -407,7 +441,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public FlowMass convert(final String value) throws Exception
         {
             return FlowMass.valueOf(value);
@@ -421,7 +455,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public FlowVolume convert(final String value) throws Exception
         {
             return FlowVolume.valueOf(value);
@@ -435,7 +469,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Force convert(final String value) throws Exception
         {
             return Force.valueOf(value);
@@ -449,7 +483,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Frequency convert(final String value) throws Exception
         {
             return Frequency.valueOf(value);
@@ -463,7 +497,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Illuminance convert(final String value) throws Exception
         {
             return Illuminance.valueOf(value);
@@ -477,7 +511,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Length convert(final String value) throws Exception
         {
             return Length.valueOf(value);
@@ -491,7 +525,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public LinearDensity convert(final String value) throws Exception
         {
             return LinearDensity.valueOf(value);
@@ -505,7 +539,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public LuminousFlux convert(final String value) throws Exception
         {
             return LuminousFlux.valueOf(value);
@@ -519,7 +553,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public LuminousIntensity convert(final String value) throws Exception
         {
             return LuminousIntensity.valueOf(value);
@@ -533,7 +567,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public MagneticFlux convert(final String value) throws Exception
         {
             return MagneticFlux.valueOf(value);
@@ -547,7 +581,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public MagneticFluxDensity convert(final String value) throws Exception
         {
             return MagneticFluxDensity.valueOf(value);
@@ -561,10 +595,24 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Mass convert(final String value) throws Exception
         {
             return Mass.valueOf(value);
+        }
+    }
+
+    /**
+     * Convert a momentum String with unit on the command line to a Momentum scalar.
+     */
+    public static class MOMENTUM implements ITypeConverter<Momentum>
+    {
+        /** {@inheritDoc} */
+        @Override
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        public Momentum convert(final String value) throws Exception
+        {
+            return Momentum.valueOf(value);
         }
     }
 
@@ -575,7 +623,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Position convert(final String value) throws Exception
         {
             return Position.valueOf(value);
@@ -589,7 +637,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Power convert(final String value) throws Exception
         {
             return Power.valueOf(value);
@@ -603,7 +651,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Pressure convert(final String value) throws Exception
         {
             return Pressure.valueOf(value);
@@ -617,7 +665,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public RadioActivity convert(final String value) throws Exception
         {
             return RadioActivity.valueOf(value);
@@ -631,7 +679,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public SolidAngle convert(final String value) throws Exception
         {
             return SolidAngle.valueOf(value);
@@ -645,7 +693,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Speed convert(final String value) throws Exception
         {
             return Speed.valueOf(value);
@@ -659,7 +707,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Temperature convert(final String value) throws Exception
         {
             return Temperature.valueOf(value);
@@ -673,7 +721,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Time convert(final String value) throws Exception
         {
             return Time.valueOf(value);
@@ -687,7 +735,7 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Torque convert(final String value) throws Exception
         {
             return Torque.valueOf(value);
@@ -701,10 +749,11 @@ public final class CliUnitConverters
     {
         /** {@inheritDoc} */
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2019-10-22T07:39:24.604Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Volume convert(final String value) throws Exception
         {
             return Volume.valueOf(value);
         }
     }
+
 }
