@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.04.03" date="2020-01-XX" description="RMIUtils, RMIObject and RemoteEvent updates">
+    <release version="1.04.03" date="2020-01-17" description="RMIUtils, RMIObject and RemoteEvent updates">
       <action dev="pknoppers" type="add">
         New version  of generated code in TestCLIUnitConverters.java.
         New units in CliUnitConverters.
