@@ -1,5 +1,6 @@
 package org.djutils.event.remote;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
@@ -25,7 +26,7 @@ import org.djutils.rmi.RMIObject;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class RemoteEventProducer extends RMIObject implements RemoteEventProducerInterface
+public abstract class RemoteEventProducer extends RMIObject implements RemoteEventProducerInterface
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140830L;
@@ -50,7 +51,17 @@ public class RemoteEventProducer extends RMIObject implements RemoteEventProduce
             throws RemoteException, AlreadyBoundException
     {
         super(host, port, bindingKey);
-        this.eventProducer = new EventProducer();
+        this.eventProducer = new EventProducer()
+        {
+            /** */
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public Serializable getSourceId()
+            {
+                return bindingKey; // the identifier of the embedded eventProducer
+            }
+        };
     }
 
     /**
@@ -68,9 +79,19 @@ public class RemoteEventProducer extends RMIObject implements RemoteEventProduce
     public RemoteEventProducer(final URL registryURL, final String bindingKey) throws RemoteException, AlreadyBoundException
     {
         super(registryURL, bindingKey);
-        this.eventProducer = new EventProducer();
-    }
+        this.eventProducer = new EventProducer()
+        {
+            /** */
+            private static final long serialVersionUID = 1L;
 
+            @Override
+            public Serializable getSourceId()
+            {
+                return bindingKey; // the identifier of the embedded eventProducer
+            }
+        };
+    }
+    
     /** {@inheritDoc} */
     @Override
     public boolean addListener(final EventListenerInterface listener, final EventType eventType) throws RemoteException

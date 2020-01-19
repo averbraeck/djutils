@@ -1,11 +1,14 @@
 package org.djutils.event.util;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
 import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
+import org.djutils.event.IdProvider;
+import org.djutils.exceptions.Throw;
 
 /**
  * The Event producing map provides a map to which one can subscribe interest in entry changes. This class does not keep track
@@ -41,13 +44,48 @@ public class EventProducingMap<K, V> extends EventProducer implements Map<K, V>
     /** the parent map. */
     private final Map<K, V> parent;
 
+    /** the function that produces the id by which the EventProducer can be identified. */
+    private final IdProvider sourceIdProvider;
+
     /**
      * constructs a new EventProducingMap.
      * @param parent Map&lt;K,V&gt;; the embedded map.
+     * @param sourceId Serializable; the id by which the EventProducer can be identified by the EventListener
      */
-    public EventProducingMap(final Map<K, V> parent)
+    public EventProducingMap(final Map<K, V> parent, final Serializable sourceId)
     {
+        this(parent, new IdProvider()
+        {
+            /** */
+            private static final long serialVersionUID = 20200119L;
+
+            @Override
+            public Serializable id()
+            {
+                return sourceId;
+            }
+        });
+    }
+
+    /**
+     * Constructs a new EventProducingMap.
+     * @param parent Map&lt;K, V&gt;; the parent map.
+     * @param sourceIdProvider IdProvider; the function that produces the id by which the EventProducer can be identified by the
+     *            EventListener
+     */
+    public EventProducingMap(final Map<K, V> parent, final IdProvider sourceIdProvider)
+    {
+        Throw.whenNull(parent, "parent cannot be null");
+        Throw.whenNull(sourceIdProvider, "sourceIdprovider cannot be null");
         this.parent = parent;
+        this.sourceIdProvider = sourceIdProvider;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Serializable getSourceId()
+    {
+        return this.sourceIdProvider.id();
     }
 
     /** {@inheritDoc} */

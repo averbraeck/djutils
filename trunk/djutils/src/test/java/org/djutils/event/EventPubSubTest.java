@@ -29,11 +29,8 @@ import org.junit.Test;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class EventPubSubTest implements Serializable
+public class EventPubSubTest
 {
-    /** */
-    private static final long serialVersionUID = 20191230L;
-
     /**
      * Test the EventProducer and EventListener.
      */
@@ -52,7 +49,7 @@ public class EventPubSubTest implements Serializable
         producer.fireEvent(new Event(eventType, producer, string));
         assertEquals(string, listener.getReceivedEvent().getContent());
         assertEquals(eventType, listener.getReceivedEvent().getType());
-        assertEquals(producer, listener.getReceivedEvent().getSource());
+        assertEquals(producer, listener.getReceivedEvent().getSourceId());
 
         listener.setExpectedObject(Boolean.valueOf(true));
         producer.fireEvent(eventType, true);
@@ -155,7 +152,7 @@ public class EventPubSubTest implements Serializable
         producer.fireEvent(new TimedEvent<Double>(eventType, producer, string, 12.01d));
         assertEquals(string, listener.getReceivedEvent().getContent());
         assertEquals(eventType, listener.getReceivedEvent().getType());
-        assertEquals(producer, listener.getReceivedEvent().getSource());
+        assertEquals(producer, listener.getReceivedEvent().getSourceId());
         assertEquals(12.01d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Boolean.valueOf(true));
@@ -371,6 +368,13 @@ public class EventPubSubTest implements Serializable
         /** this should be okay. */
         @SuppressWarnings("unused")
         private static final EventType PRODUCER_EVENT_4 = new EventType("PRODUCER_EVENT_1");
+
+        /** {@inheritDoc} */
+        @Override
+        public Serializable getSourceId()
+        {
+            return "producer_source_id";
+        }
     }
 
     /** */
@@ -384,6 +388,13 @@ public class EventPubSubTest implements Serializable
 
         /** duplicate static non-private EventType should give error on class construction. */
         public static final EventType PRODUCER_EVENT_2 = new EventType("PRODUCER_EVENT_1");
+
+        /** {@inheritDoc} */
+        @Override
+        public Serializable getSourceId()
+        {
+            return "illegal_producer_source_id";
+        }
     }
 
     /** */

@@ -531,7 +531,7 @@ public final class TypedMessage
 
     /** Converter for Float array. */
     private static final Serializer<Float[]> CONVERT_FLOAT_ARRAY =
-            new ObjectArraySerializer<Float>(FieldTypes.FLOAT_32_ARRAY, 4, new Float(0), "Float_32_array")
+            new ObjectArraySerializer<Float>(FieldTypes.FLOAT_32_ARRAY, 4, Float.valueOf(0), "Float_32_array")
             {
                 @Override
                 public void serializeElement(final Float object, final byte[] buffer, final int offset,
@@ -584,7 +584,7 @@ public final class TypedMessage
 
     /** Converter for Double array. */
     private static final Serializer<Double[]> CONVERT_DOUBLE_ARRAY =
-            new ObjectArraySerializer<Double>(FieldTypes.DOUBLE_64_ARRAY, 8, new Double(0), "Double_64_array")
+            new ObjectArraySerializer<Double>(FieldTypes.DOUBLE_64_ARRAY, 8, Double.valueOf(0), "Double_64_array")
             {
                 @Override
                 public void serializeElement(final Double object, final byte[] buffer, final int offset,

@@ -1,5 +1,6 @@
 package org.djutils.event.util;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
@@ -8,7 +9,9 @@ import org.djutils.event.EventInterface;
 import org.djutils.event.EventListenerInterface;
 import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
+import org.djutils.event.IdProvider;
 import org.djutils.event.ref.ReferenceType;
+import org.djutils.exceptions.Throw;
 
 /**
  * The Event producing list provides a list to which one can subscribe interest in entry changes. This class does not keep track
@@ -43,14 +46,48 @@ public class EventProducingList<E> extends EventProducer implements EventListene
     /** the parent list. */
     private List<E> parent = null;
 
+    /** the function that produces the id by which the EventProducer can be identified. */
+    private final IdProvider sourceIdProvider;
+
     /**
      * constructs a new EventProducingList.
-     * @param parent List&lt;T&gt;; the parent list.
+     * @param parent List&lt;E&gt;; the parent list.
+     * @param sourceId Serializable; the id by which the EventProducer can be identified by the EventListener
      */
-    public EventProducingList(final List<E> parent)
+    public EventProducingList(final List<E> parent, final Serializable sourceId)
     {
-        super();
+        this(parent, new IdProvider()
+        {
+            /** */
+            private static final long serialVersionUID = 20200119L;
+
+            @Override
+            public Serializable id()
+            {
+                return sourceId;
+            }
+        });
+    }
+
+    /**
+     * Constructs a new EventProducingList.
+     * @param parent List&lt;E&gt;; the parent set.
+     * @param sourceIdProvider IdProvider; the function that produces the id by which the EventProducer can be identified by the
+     *            EventListener
+     */
+    public EventProducingList(final List<E> parent, final IdProvider sourceIdProvider)
+    {
+        Throw.whenNull(parent, "parent cannot be null");
+        Throw.whenNull(sourceIdProvider, "sourceIdprovider cannot be null");
         this.parent = parent;
+        this.sourceIdProvider = sourceIdProvider;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Serializable getSourceId()
+    {
+        return this.sourceIdProvider.id();
     }
 
     /** {@inheritDoc} */
@@ -153,30 +190,31 @@ public class EventProducingList<E> extends EventProducer implements EventListene
 
     /** {@inheritDoc} */
     @Override
-    public EventIterator<E> iterator()
+    public EventProducingIterator<E> iterator()
     {
-        EventIterator<E> iterator = new EventIterator<E>(this.parent.iterator());
+        EventProducingIterator<E> iterator = new EventProducingIterator<E>(this.parent.iterator(), this.sourceIdProvider);
         // WEAK reference as an iterator is usually local and should be eligible for garbage collection
-        iterator.addListener(this, EventIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
+        iterator.addListener(this, EventProducingIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
         return iterator;
     }
 
     /** {@inheritDoc} */
     @Override
-    public ListEventIterator<E> listIterator()
+    public EventProducingListIterator<E> listIterator()
     {
         return listIterator(0);
     }
 
     /** {@inheritDoc} */
     @Override
-    public ListEventIterator<E> listIterator(final int index)
+    public EventProducingListIterator<E> listIterator(final int index)
     {
-        ListEventIterator<E> iterator = new ListEventIterator<E>(this.parent.listIterator(index));
+        EventProducingListIterator<E> iterator =
+                new EventProducingListIterator<E>(this.parent.listIterator(index), this.sourceIdProvider);
         // WEAK references as an iterator is usually local and should be eligible for garbage collection
-        iterator.addListener(this, EventIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
-        iterator.addListener(this, ListEventIterator.OBJECT_ADDED_EVENT, ReferenceType.WEAK);
-        iterator.addListener(this, ListEventIterator.OBJECT_CHANGED_EVENT, ReferenceType.WEAK);
+        iterator.addListener(this, EventProducingIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
+        iterator.addListener(this, EventProducingListIterator.OBJECT_ADDED_EVENT, ReferenceType.WEAK);
+        iterator.addListener(this, EventProducingListIterator.OBJECT_CHANGED_EVENT, ReferenceType.WEAK);
         return iterator;
     }
 
@@ -185,15 +223,15 @@ public class EventProducingList<E> extends EventProducer implements EventListene
     public void notify(final EventInterface event) throws RemoteException
     {
         // pass through the OBJECT_REMOVED_EVENT from the iterator
-        if (event.getType().equals(EventIterator.OBJECT_REMOVED_EVENT))
+        if (event.getType().equals(EventProducingIterator.OBJECT_REMOVED_EVENT))
         {
             this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
         }
-        else if (event.getType().equals(ListEventIterator.OBJECT_ADDED_EVENT))
+        else if (event.getType().equals(EventProducingListIterator.OBJECT_ADDED_EVENT))
         {
             this.fireEvent(OBJECT_ADDED_EVENT, this.parent.size());
         }
-        else if (event.getType().equals(ListEventIterator.OBJECT_CHANGED_EVENT))
+        else if (event.getType().equals(EventProducingListIterator.OBJECT_CHANGED_EVENT))
         {
             this.fireEvent(OBJECT_CHANGED_EVENT, null);
         }

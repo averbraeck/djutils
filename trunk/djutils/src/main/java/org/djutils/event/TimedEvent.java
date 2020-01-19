@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 /**
  * The TimedEvent is the reference implementation for a timed event. Because events are often sent over the network, the
- * interface demands that the event, its source, content and timestamp are serializable. It is the repsonsibility of the
- * programmer, though, that the <b>content</b> of the source, content and timestamp are serializable as well.
+ * interface demands that the event, its sourceId, content and timestamp are serializable. It is the repsonsibility of the
+ * programmer, though, that the <b>fields</b> of the sourceId, content and timestamp are serializable as well.
  * <p>
  * Copyright (c) 2002-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -29,13 +29,13 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
     /**
      * constructs a new timed event.
      * @param type EventType; the eventType of the event.
-     * @param source Object; the source of the event.
-     * @param value Object; the value of the event.
+     * @param sourceId Serializable; the source of the event.
+     * @param content Serializable; the content of the event.
      * @param timeStamp T; the timeStamp.
      */
-    public TimedEvent(final EventType type, final Serializable source, final Serializable value, final T timeStamp)
+    public TimedEvent(final EventType type, final Serializable sourceId, final Serializable content, final T timeStamp)
     {
-        super(type, source, value);
+        super(type, sourceId, content);
         this.timeStamp = timeStamp;
     }
 

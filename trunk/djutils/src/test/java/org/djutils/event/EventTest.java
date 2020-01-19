@@ -21,11 +21,8 @@ import org.junit.Test;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class EventTest implements Serializable
+public class EventTest
 {
-    /** */
-    private static final long serialVersionUID = 20191230L;
-
     /**
      * Test the EventType.
      */
@@ -65,7 +62,7 @@ public class EventTest implements Serializable
     @Test
     public void testEvent()
     {
-        Serializable source = this;
+        Serializable source = "source_id";
         Serializable source2 = new SerializableObject();
         EventType eventType = new EventType("TEST_TYPE");
         EventType eventType2 = new EventType("TEST_TYPE2");
@@ -73,7 +70,7 @@ public class EventTest implements Serializable
         Serializable content2 = new SerializableObject();
         EventInterface event = new Event(eventType, source, content);
         assertEquals(event.getContent(), content);
-        assertEquals(event.getSource(), source);
+        assertEquals(event.getSourceId(), source);
         assertEquals(event.getType(), eventType);
 
         assertEquals(event, event);
@@ -118,7 +115,7 @@ public class EventTest implements Serializable
     @Test
     public void testTimedEvent()
     {
-        Serializable source = this;
+        Serializable source = "timed_source_id";
         Serializable source2 = new SerializableObject();
         EventType eventType = new EventType("TEST_TYPE");
         EventType eventType2 = new EventType("TEST_TYPE2");
@@ -129,7 +126,7 @@ public class EventTest implements Serializable
         TimedEvent<Long> event = new TimedEvent<>(eventType, source, content, time);
         TimedEvent<Long> event2 = new TimedEvent<>(eventType2, source2, content2, time2);
         assertEquals(content, event.getContent());
-        assertEquals(source, event.getSource());
+        assertEquals(source, event.getSourceId());
         assertEquals(eventType, event.getType());
         assertEquals(time, event.getTimeStamp().longValue());
 

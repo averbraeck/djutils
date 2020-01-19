@@ -1,5 +1,6 @@
 package org.djutils.event;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Set;
 
@@ -33,6 +34,13 @@ public interface EventProducerInterface
     /** The LAST_POSITION in the queue. */
     int LAST_POSITION = -1;
 
+    /**
+     * Provide the sourceId that will be transmitted with the fired Event.
+     * @return Serializable; the sourceId that will be transmitted with the fired Event
+     * @throws RemoteException if a network failure occurs
+     */
+    Serializable getSourceId() throws RemoteException;
+    
     /**
      * adds a listener as strong reference to the BEGINNING of a queue of listeners.
      * @param listener EventListenerInterface; the listener which is interested at events of eventType.
