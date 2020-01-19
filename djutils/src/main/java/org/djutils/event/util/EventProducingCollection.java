@@ -1,5 +1,6 @@
 package org.djutils.event.util;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Collection;
 
@@ -7,7 +8,9 @@ import org.djutils.event.EventInterface;
 import org.djutils.event.EventListenerInterface;
 import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
+import org.djutils.event.IdProvider;
 import org.djutils.event.ref.ReferenceType;
+import org.djutils.exceptions.Throw;
 
 /**
  * The Event producing collection provides a set to which one can subscribe interest in entry changes. This class does not keep
@@ -42,14 +45,48 @@ public class EventProducingCollection<T> extends EventProducer implements EventL
     /** the parent collection. */
     private Collection<T> parent = null;
 
+    /** the function that produces the id by which the EventProducer can be identified. */
+    private final IdProvider sourceIdProvider;
+
     /**
-     * constructs a new EventProducingList.
+     * constructs a new EventProducingCollectiont.
      * @param parent Collection&lt;T&gt;; the parent collection.
+     * @param sourceId Serializable; the id by which the EventProducer can be identified by the EventListener
      */
-    public EventProducingCollection(final Collection<T> parent)
+    public EventProducingCollection(final Collection<T> parent, final Serializable sourceId)
     {
-        super();
+        this(parent, new IdProvider()
+        {
+            /** */
+            private static final long serialVersionUID = 20200119L;
+
+            @Override
+            public Serializable id()
+            {
+                return sourceId;
+            }
+        });
+    }
+
+    /**
+     * Constructs a new EventProducingCollection.
+     * @param parent Collection&lt;T&gt;; the parent set.
+     * @param sourceIdProvider IdProvider; the function that produces the id by which the EventProducer can be identified by the
+     *            EventListener
+     */
+    public EventProducingCollection(final Collection<T> parent, final IdProvider sourceIdProvider)
+    {
+        Throw.whenNull(parent, "parent cannot be null");
+        Throw.whenNull(sourceIdProvider, "sourceIdprovider cannot be null");
         this.parent = parent;
+        this.sourceIdProvider = sourceIdProvider;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Serializable getSourceId()
+    {
+        return this.sourceIdProvider.id();
     }
 
     /** {@inheritDoc} */
@@ -129,20 +166,20 @@ public class EventProducingCollection<T> extends EventProducer implements EventL
 
     /** {@inheritDoc} */
     @Override
-    public EventIterator<T> iterator()
+    public EventProducingIterator<T> iterator()
     {
-        EventIterator<T> iterator = new EventIterator<T>(this.parent.iterator());
-        // WEAK reference as an iterator is usually local and should be eligible for garbage collection 
-        iterator.addListener(this, EventIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
+        EventProducingIterator<T> iterator = new EventProducingIterator<T>(this.parent.iterator(), this.sourceIdProvider);
+        // WEAK reference as an iterator is usually local and should be eligible for garbage collection
+        iterator.addListener(this, EventProducingIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
         return iterator;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void notify(final EventInterface event) throws RemoteException
     {
         // pass through the OBJECT_REMOVED_EVENT from the iterator
-        if (event.getType().equals(EventIterator.OBJECT_REMOVED_EVENT))
+        if (event.getType().equals(EventProducingIterator.OBJECT_REMOVED_EVENT))
         {
             this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
         }

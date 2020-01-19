@@ -1,13 +1,16 @@
 package org.djutils.event.util;
 
+import java.io.Serializable;
 import java.util.ListIterator;
 
 import org.djutils.event.EventType;
+import org.djutils.event.IdProvider;
 
 /**
- * ListEventIterator provides an iterator embedding the ListIterator, which fires an event when an object has been removed. Note
- * that one does not have to subscribe specifically to the events of the EventIterator, as the EventProducing collection
- * subscribes to the ListEventIterator's remove events and fires these again to its subscribers.
+ * EventProducingListIterator provides an iterator embedding the ListIterator, which fires an event when an object has been
+ * removed. Note that one does not have to subscribe specifically to the events of the EventProducingListIterator, as the
+ * EventProducing collection subscribes to the EventProducingListIterator's remove events and fires these again to its
+ * subscribers.
  * <p>
  * Copyright (c) 2002-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -19,7 +22,7 @@ import org.djutils.event.EventType;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <T> the type of elements to iterate on
  */
-public class ListEventIterator<T> extends EventIterator<T> implements ListIterator<T>
+public class EventProducingListIterator<T> extends EventProducingIterator<T> implements ListIterator<T>
 {
     /** */
     private static final long serialVersionUID = 20191230L;
@@ -31,21 +34,33 @@ public class ListEventIterator<T> extends EventIterator<T> implements ListIterat
     public static final EventType OBJECT_CHANGED_EVENT = new EventType("OBJECT_CHANGED_EVENT");
 
     /**
-     * constructs a new ListEventIterator, embedding the parent ListIterator.
+     * constructs a new EventProducingListIterator, embedding the parent ListIterator.
      * @param parent Iterator&lt;T&gt;; embedded iterator.
+     * @param sourceId Serializable; the id by which the EventProducer can be identified by the EventListener
      */
-    public ListEventIterator(final ListIterator<T> parent)
+    public EventProducingListIterator(final ListIterator<T> parent, final Serializable sourceId)
     {
-        super(parent);
+        super(parent, sourceId);
+    }
+
+    /**
+     * Constructs a new EventProducingListIterator, embedding the parent iterator.
+     * @param parent Iterator&lt;T&gt;; the parent set.
+     * @param sourceIdProvider IdProvider; the function that produces the id by which the EventProducer can be identified by the
+     *            EventListener
+     */
+    public EventProducingListIterator(final ListIterator<T> parent, final IdProvider sourceIdProvider)
+    {
+        super(parent, sourceIdProvider);
     }
 
     /** {@inheritDoc} */
     @Override
-    public ListIterator<T> getParent()
+    protected ListIterator<T> getParent()
     {
         return (ListIterator<T>) super.getParent();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean hasPrevious()

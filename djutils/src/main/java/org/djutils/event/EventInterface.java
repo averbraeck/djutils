@@ -5,8 +5,18 @@ import java.io.Serializable;
 /**
  * The EventInterface defines the a strongly typed event (using the EventType). The sender of the event can be identified,
  * allowing for fine-grained filtering of events. Because events are often sent over the network, the interface demands that the
- * event and its source and content are serializable. It is the repsonsibility of the programmer, though, that the
+ * event and its source id and content are serializable. It is the repsonsibility of the programmer, though, that the
  * <b>content</b> of the object is serializable as well.
+ * <p>
+ * In contrast with earlier implementations of the Event package, a <b>sourceId</b> is sent over the network rather than a
+ * pointer to the source itself. This has several advantages:
+ * <ol>
+ * <li>The object extending the EventProducer does not have to be Serializable itself</li>
+ * <li>There is no risk that the entire EventProducer object gets serialized (including subclasses) and is sent over the network
+ * <li>There is no risk that the receiver of an event gets a pointer to the sending object, while still being able to identify
+ * the sending object
+ * </ol>
+ * </p>
  * <p>
  * Copyright (c) 2002-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -23,20 +33,20 @@ public interface EventInterface extends Serializable
 {
 
     /**
-     * returns the source of the event. The source is the sender of the event
-     * @return the source of the event
+     * returns the id for the source of the event. The source is the sender of the event
+     * @return Serializable; the id for the source of the event
      */
-    Serializable getSource();
+    Serializable getSourceId();
 
     /**
      * returns the content of this event.
-     * @return the content of this event
+     * @return Serializable; the content of this event
      */
     Serializable getContent();
 
     /**
      * returns the type of the event.
-     * @return the eventType of the event
+     * @return EbentType; the eventType of the event
      */
     EventType getType();
 }

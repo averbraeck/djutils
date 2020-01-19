@@ -23,10 +23,6 @@ import org.djutils.logger.CategoryLogger;
  * all the functionalities for registration and event firing. The storage of the listeners is done in a Map with the EventType
  * as the key, and a List of References (weak or strong) to the Listeners.
  * <p>
- * The EventPruducer is <b>not</b> an abstract class because it does not contain any unimplemented methods. Furthermore, the
- * "bare" EventProducer is used as an embedded class in the RemoteEventProducer.
- * </p>
- * <p>
  * Copyright (c) 2002-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
@@ -37,7 +33,7 @@ import org.djutils.logger.CategoryLogger;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class EventProducer implements EventProducerInterface, Serializable
+public abstract class EventProducer implements EventProducerInterface, Serializable
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140830L;
@@ -45,7 +41,7 @@ public class EventProducer implements EventProducerInterface, Serializable
     /** The collection of interested listeners. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     protected EventListenerMap listeners = new EventListenerMap();
-
+    
     /** Cache to prevent continuous reflection. */
     private static final transient Map<Class<? extends EventProducer>, EventType[]> EVENTTYPE_CACHE = new LinkedHashMap<>();
 
@@ -82,6 +78,10 @@ public class EventProducer implements EventProducerInterface, Serializable
             throw new RuntimeException("EventProducer failed: " + "more events have the same class + name combination");
         }
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public abstract Serializable getSourceId(); // without RemoteException
 
     /** {@inheritDoc} */
     @Override
@@ -218,7 +218,7 @@ public class EventProducer implements EventProducerInterface, Serializable
      */
     protected Serializable fireEvent(final EventType eventType, final Serializable value)
     {
-        this.fireEvent(new Event(eventType, this, value));
+        this.fireEvent(new Event(eventType, getSourceId(), value));
         return value;
     }
 
@@ -228,7 +228,7 @@ public class EventProducer implements EventProducerInterface, Serializable
      */
     protected void fireEvent(final EventType eventType)
     {
-        this.fireEvent(new Event(eventType, this, null));
+        this.fireEvent(new Event(eventType, getSourceId(), null));
     }
 
     /**
@@ -243,7 +243,7 @@ public class EventProducer implements EventProducerInterface, Serializable
             final Serializable value, final C time)
     {
         Throw.whenNull(time, "time may not be null");
-        this.fireEvent(new TimedEvent<C>(eventType, this, value, time));
+        this.fireEvent(new TimedEvent<C>(eventType, getSourceId(), value, time));
         return value;
     }
 

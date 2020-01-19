@@ -8,7 +8,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,12 +22,12 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.djutils.event.util.EventIterator;
 import org.djutils.event.util.EventProducingCollection;
+import org.djutils.event.util.EventProducingIterator;
 import org.djutils.event.util.EventProducingList;
+import org.djutils.event.util.EventProducingListIterator;
 import org.djutils.event.util.EventProducingMap;
 import org.djutils.event.util.EventProducingSet;
-import org.djutils.event.util.ListEventIterator;
 import org.djutils.exceptions.Try;
 import org.junit.Test;
 
@@ -44,18 +43,15 @@ import org.junit.Test;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class EventUtilTest implements Serializable
+public class EventUtilTest
 {
-    /** */
-    private static final long serialVersionUID = 20191230L;
-
     /**
      * Test the EventProducingCollection.
      */
     @Test
     public void testEventProducingCollection()
     {
-        EventProducingCollection<String> epc = new EventProducingCollection<>(new LinkedHashSet<>());
+        EventProducingCollection<String> epc = new EventProducingCollection<>(new LinkedHashSet<>(), "epc");
         TestEventListener listener = new TestEventListener();
         epc.addListener(listener, EventProducingCollection.OBJECT_ADDED_EVENT);
         epc.addListener(listener, EventProducingCollection.OBJECT_REMOVED_EVENT);
@@ -66,13 +62,13 @@ public class EventUtilTest implements Serializable
         assertTrue(epc.isEmpty());
         boolean ok = epc.add("abc");
         assertTrue(ok);
-        assertEquals(epc, listener.getReceivedEvent().getSource());
+        assertEquals("epc", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingCollection.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(1), listener.getReceivedEvent().getContent());
         assertFalse(epc.isEmpty());
         ok = epc.add("abc");
         assertFalse(ok);
-        assertEquals(epc, listener.getReceivedEvent().getSource());
+        assertEquals("epc", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingCollection.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(1), listener.getReceivedEvent().getContent());
 
@@ -149,7 +145,7 @@ public class EventUtilTest implements Serializable
         assertEquals(EventProducingCollection.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(5), listener.getReceivedEvent().getContent());
         assertEquals(5, epc.size());
-        EventIterator<String> eit = epc.iterator();
+        EventProducingIterator<String> eit = epc.iterator();
         assertNotNull(eit);
         assertTrue(eit.hasNext());
         String firstString = eit.next();
@@ -173,7 +169,7 @@ public class EventUtilTest implements Serializable
     @Test
     public void testEventProducingSet()
     {
-        EventProducingSet<String> eps = new EventProducingSet<>(new LinkedHashSet<>());
+        EventProducingSet<String> eps = new EventProducingSet<>(new LinkedHashSet<>(), "eps");
         TestEventListener listener = new TestEventListener();
         eps.addListener(listener, EventProducingSet.OBJECT_ADDED_EVENT);
         eps.addListener(listener, EventProducingSet.OBJECT_REMOVED_EVENT);
@@ -184,13 +180,13 @@ public class EventUtilTest implements Serializable
         assertTrue(eps.isEmpty());
         boolean ok = eps.add("abc");
         assertTrue(ok);
-        assertEquals(eps, listener.getReceivedEvent().getSource());
+        assertEquals("eps", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingSet.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(1), listener.getReceivedEvent().getContent());
         assertFalse(eps.isEmpty());
         ok = eps.add("abc");
         assertFalse(ok);
-        assertEquals(eps, listener.getReceivedEvent().getSource());
+        assertEquals("eps", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingSet.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(1), listener.getReceivedEvent().getContent());
 
@@ -267,7 +263,7 @@ public class EventUtilTest implements Serializable
         assertEquals(EventProducingSet.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(5), listener.getReceivedEvent().getContent());
         assertEquals(5, eps.size());
-        EventIterator<String> eit = eps.iterator();
+        EventProducingIterator<String> eit = eps.iterator();
         assertNotNull(eit);
         assertTrue(eit.hasNext());
         String firstString = eit.next();
@@ -291,7 +287,7 @@ public class EventUtilTest implements Serializable
     @Test
     public void testEventProducingList()
     {
-        EventProducingList<String> epl = new EventProducingList<>(new ArrayList<>());
+        EventProducingList<String> epl = new EventProducingList<>(new ArrayList<>(), "epl");
         TestEventListener listener = new TestEventListener();
         epl.addListener(listener, EventProducingList.OBJECT_ADDED_EVENT);
         epl.addListener(listener, EventProducingList.OBJECT_REMOVED_EVENT);
@@ -303,13 +299,13 @@ public class EventUtilTest implements Serializable
         assertEquals(0, epl.size());
         boolean ok = epl.add("abc");
         assertTrue(ok);
-        assertEquals(epl, listener.getReceivedEvent().getSource());
+        assertEquals("epl", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingList.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(1), listener.getReceivedEvent().getContent());
         assertFalse(epl.isEmpty());
         ok = epl.add("abc");
         assertTrue(ok); // duplicates allowed in list
-        assertEquals(epl, listener.getReceivedEvent().getSource());
+        assertEquals("epl", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingList.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(2), listener.getReceivedEvent().getContent());
         epl.remove(1);
@@ -408,7 +404,7 @@ public class EventUtilTest implements Serializable
         assertEquals(EventProducingList.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(5), listener.getReceivedEvent().getContent());
         assertEquals(5, epl.size());
-        EventIterator<String> eit = epl.iterator();
+        EventProducingIterator<String> eit = epl.iterator();
         assertNotNull(eit);
         assertTrue(eit.hasNext());
         String firstString = eit.next();
@@ -428,7 +424,7 @@ public class EventUtilTest implements Serializable
         assertEquals(EventProducingList.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(5), listener.getReceivedEvent().getContent());
         assertEquals(5, epl.size());
-        ListEventIterator<String> leit = epl.listIterator();
+        EventProducingListIterator<String> leit = epl.listIterator();
         assertNotNull(leit);
         assertTrue(leit.hasNext());
         assertFalse(leit.hasPrevious());
@@ -492,7 +488,7 @@ public class EventUtilTest implements Serializable
     @Test
     public void testEventProducingMap()
     {
-        EventProducingMap<Integer, String> epm = new EventProducingMap<>(new TreeMap<>());
+        EventProducingMap<Integer, String> epm = new EventProducingMap<>(new TreeMap<>(), "epm");
         TestEventListener listener = new TestEventListener();
         epm.addListener(listener, EventProducingMap.OBJECT_ADDED_EVENT);
         epm.addListener(listener, EventProducingMap.OBJECT_REMOVED_EVENT);
@@ -504,14 +500,14 @@ public class EventUtilTest implements Serializable
         assertEquals(0, epm.size());
         String replaced = epm.put(1, "abc");
         assertNull(replaced);
-        assertEquals(epm, listener.getReceivedEvent().getSource());
+        assertEquals("epm", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingMap.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(1), listener.getReceivedEvent().getContent());
         assertFalse(epm.isEmpty());
         assertEquals(1, epm.size());
         replaced = epm.put(1, "def");
         assertEquals("abc", replaced);
-        assertEquals(epm, listener.getReceivedEvent().getSource());
+        assertEquals("epm", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingMap.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
         assertNull(listener.getReceivedEvent().getContent());
         assertNull(epm.get(2));

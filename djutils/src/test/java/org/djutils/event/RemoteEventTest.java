@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.Serializable;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 
@@ -64,6 +65,13 @@ public class RemoteEventTest
         public TestRemoteEventProducer() throws RemoteException, AlreadyBoundException
         {
             super("localhost", 1099, "producer");
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public Serializable getSourceId() throws RemoteException
+        {
+            return "producer";
         }
     }
 
