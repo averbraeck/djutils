@@ -41,7 +41,7 @@ import org.pmw.tinylog.writers.Writer;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  */
-@SuppressWarnings({"checkstyle:visibilitymodifier", "checkstyle:finalclass", "checkstyle:needbraces"})
+@SuppressWarnings("checkstyle:needbraces")
 public class CategoryLogger
 {
     /** The singleton instance of the CategoryLogger. */
@@ -54,7 +54,7 @@ public class CategoryLogger
     private String defaultMessageFormat = DEFAULT_MESSAGE_FORMAT;
 
     /** The current logging level. */
-    protected Level defaultLevel = Level.INFO;
+    private Level defaultLevel = Level.INFO;
 
     /** The writers registered with this CategoryLogger. */
     private final Set<Writer> writers = new LinkedHashSet<>();
@@ -66,13 +66,13 @@ public class CategoryLogger
     private final Map<Writer, String> writerFormats = new LinkedHashMap<>();
 
     /** The categories to log. */
-    protected final Set<LogCategory> logCategories = new LinkedHashSet<>(256);
+    private final Set<LogCategory> logCategories = new LinkedHashSet<>(256);
 
     /** The delegate logger instance that does the actual logging work, after a positive filter outcome. */
-    protected final DelegateLogger delegateLogger = new DelegateLogger(true);
+    private final DelegateLogger delegateLogger = new DelegateLogger(true);
 
     /** The delegate logger that returns immediately after a negative filter outcome. */
-    protected final DelegateLogger noLogger = new DelegateLogger(false);
+    private final DelegateLogger noLogger = new DelegateLogger(false);
 
     /** Instantiate the CategoryLogger singleton in the class initialization method. */
     static
@@ -350,6 +350,69 @@ public class CategoryLogger
         return INSTANCE.noLogger;
     }
 
+    /**
+     * Return the defaultMessageFormat.
+     * @return String; the defaultMessageFormat
+     */
+    protected String getDefaultMessageFormat()
+    {
+        return this.defaultMessageFormat;
+    }
+
+    /**
+     * Return the default logging level.
+     * @return Level; the default logging level
+     */
+    protected Level getDefaultLevel()
+    {
+        return this.defaultLevel;
+    }
+
+    /**
+     * return the raw Map with the writer levels.
+     * @return Map&lt;Writer, Level&gt;; the raw Map with the writer levels
+     */
+    protected Map<Writer, Level> getWriterLevels()
+    {
+        return this.writerLevels;
+    }
+
+    /**
+     * Return the raw Map with the writer formats.
+     * @return Map&lt;Writer, String&gt;; the raw Map with the writer formats
+     */
+    protected Map<Writer, String> getWriterFormats()
+    {
+        return this.writerFormats;
+    }
+
+    /**
+     * Return the raw Set with the log categories.
+     * @return Set&lt;LogCategory&gt;; the raw Set with the log categories
+     */
+    protected Set<LogCategory> getLogCategories()
+    {
+        return this.logCategories;
+    }
+
+    /**
+     * Return the delegateLogger.
+     * @return DelegateLogger; the delegateLogger
+     */
+    protected DelegateLogger getDelegateLogger()
+    {
+        return this.delegateLogger;
+    }
+
+    /**
+     * Return the noLogger.
+     * @return DelegateLogger; the noLogger
+     */
+    protected DelegateLogger getNoLogger()
+    {
+        return this.noLogger;
+    }
+
     /* ************************************ DELEGATE LOGGER ***************************************/
 
     /**
@@ -383,7 +446,7 @@ public class CategoryLogger
         {
             if (this.log && condition)
                 return this;
-            return CategoryLogger.INSTANCE.noLogger;
+            return CategoryLogger.INSTANCE.getNoLogger();
         }
 
         /**
@@ -395,7 +458,7 @@ public class CategoryLogger
         {
             if (this.log && supplier.getAsBoolean())
                 return this;
-            return CategoryLogger.INSTANCE.noLogger;
+            return CategoryLogger.INSTANCE.getNoLogger();
         }
 
         /* ****************************************** TRACE ******************************************/
