@@ -348,10 +348,12 @@ public class TestCLIUnitConverters
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new AngularAcceleration(2.0, AngularAccelerationUnit.RADIAN_PER_SECOND_SQUARED), options.angularacceleration);
+        assertEquals(new AngularAcceleration(2.0, AngularAccelerationUnit.RADIAN_PER_SECOND_SQUARED),
+                options.angularacceleration);
         args = new String[] {"--angularacceleration", "10.0c\"/sec2"};
         CliUtil.execute(options, args);
-        assertEquals(new AngularAcceleration(10.0, AngularAccelerationUnit.CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED), options.angularacceleration);
+        assertEquals(new AngularAcceleration(10.0, AngularAccelerationUnit.CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED),
+                options.angularacceleration);
 
         args = new String[] {};
         options = new Options();
@@ -666,5 +668,5 @@ public class TestCLIUnitConverters
         assertEquals(new Volume(1.0, VolumeUnit.LITER), options.volume);
 
     }
-    
+
 }

@@ -62,8 +62,8 @@ public class ImmutableLinkedHashMap<K, V> extends ImmutableAbstractMap<K, V>
      */
     public ImmutableLinkedHashMap(final ImmutableAbstractMap<K, V> immutableMap, final Immutable copyOrWrap)
     {
-        super(copyOrWrap == Immutable.COPY ? new LinkedHashMap<K, V>(immutableMap.getUnderlyingMap()) : immutableMap.getUnderlyingMap(),
-                copyOrWrap);
+        super(copyOrWrap == Immutable.COPY ? new LinkedHashMap<K, V>(immutableMap.getUnderlyingMap())
+                : immutableMap.getUnderlyingMap(), copyOrWrap);
     }
 
     /** {@inheritDoc} */

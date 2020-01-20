@@ -64,8 +64,8 @@ public class ImmutableTreeMap<K, V> extends ImmutableAbstractMap<K, V> implement
      */
     public ImmutableTreeMap(final ImmutableTreeMap<K, V> immutableTreeMap, final Immutable copyOrWrap)
     {
-        super(copyOrWrap == Immutable.COPY ? new TreeMap<K, V>(immutableTreeMap.getUnderlyingMap()) : immutableTreeMap.getUnderlyingMap(),
-                copyOrWrap);
+        super(copyOrWrap == Immutable.COPY ? new TreeMap<K, V>(immutableTreeMap.getUnderlyingMap())
+                : immutableTreeMap.getUnderlyingMap(), copyOrWrap);
     }
 
     /** {@inheritDoc} */

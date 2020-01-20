@@ -82,7 +82,7 @@ public class PrimitiveTest extends TestCase
         }
         try
         {
-            Primitive.toBoolean(new String[] { "ab", "cd" });
+            Primitive.toBoolean(new String[] {"ab", "cd"});
             fail("casting unrelated object to boolean should have thrown a ClassCastException");
         }
         catch (ClassCastException cce)
@@ -91,12 +91,12 @@ public class PrimitiveTest extends TestCase
         }
         assertEquals(Primitive.toBoolean(false), Boolean.FALSE);
         assertEquals(Primitive.toBoolean(true), Boolean.TRUE);
-        
+
         assertEquals((Integer) 0x61, Primitive.toInteger('a'));
         assertEquals((Integer) 1, Primitive.toInteger(true));
         assertEquals((Integer) 0, Primitive.toInteger(false));
     }
-    
+
     /**
      * Test the cast methods.
      */
@@ -115,10 +115,10 @@ public class PrimitiveTest extends TestCase
         assertEquals(-123456, Primitive.cast(int.class, -123456.0));
         assertEquals((short) -123, Primitive.cast(short.class, -123.0));
         Object[] in = new Object[] {123, 2.0};
-        Class<?>[] to = new Class[] { float.class, byte.class };
+        Class<?>[] to = new Class[] {float.class, byte.class};
         Object[] out = Primitive.cast(to, in);
         assertEquals(123.0f, out[0]);
         assertEquals((byte) 2, out[1]);
     }
-    
+
 }

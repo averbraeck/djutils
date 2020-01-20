@@ -12,7 +12,7 @@ public enum ReferenceType
 {
     /** Strong reference. */
     STRONG,
-    
+
     /** Weak reference. */
     WEAK;
 
@@ -34,4 +34,3 @@ public enum ReferenceType
         return this.equals(WEAK);
     }
 }
-

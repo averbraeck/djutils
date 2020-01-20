@@ -40,7 +40,7 @@ public interface EventProducerInterface
      * @throws RemoteException if a network failure occurs
      */
     Serializable getSourceId() throws RemoteException;
-    
+
     /**
      * adds a listener as strong reference to the BEGINNING of a queue of listeners.
      * @param listener EventListenerInterface; the listener which is interested at events of eventType.
@@ -96,14 +96,14 @@ public interface EventProducerInterface
      * @throws RemoteException If a network connection failure occurs.
      */
     boolean removeListener(EventListenerInterface listener, EventType eventType) throws RemoteException;
-    
+
     /**
      * Return whether the EventProducer has listeners.
      * @return boolean; whether the EventProducer has listeners or not
      * @throws RemoteException If a network connection failure occurs.
      */
     boolean hasListeners() throws RemoteException;
-    
+
     /**
      * Return the number of listeners for the provided EventType.
      * @param eventType EventType; the event type to return the number of listeners for
@@ -114,7 +114,7 @@ public interface EventProducerInterface
 
     /**
      * Return the EventTypes for which the EventProducer has listeners.
-     * @return Set&lt;EventType&gt;; the EventTypes for which the EventProducer has registered listeners 
+     * @return Set&lt;EventType&gt;; the EventTypes for which the EventProducer has registered listeners
      * @throws RemoteException If a network connection failure occurs.
      */
     Set<EventType> getEventTypesWithListeners() throws RemoteException;

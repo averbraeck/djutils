@@ -62,7 +62,8 @@ public class ImmutableHashMap<K, V> extends ImmutableAbstractMap<K, V>
      */
     public ImmutableHashMap(final ImmutableAbstractMap<K, V> immutableMap, final Immutable copyOrWrap)
     {
-        super(copyOrWrap == Immutable.COPY ? new HashMap<K, V>(immutableMap.getUnderlyingMap()) : immutableMap.getUnderlyingMap(), copyOrWrap);
+        super(copyOrWrap == Immutable.COPY ? new HashMap<K, V>(immutableMap.getUnderlyingMap())
+                : immutableMap.getUnderlyingMap(), copyOrWrap);
     }
 
     /** {@inheritDoc} */

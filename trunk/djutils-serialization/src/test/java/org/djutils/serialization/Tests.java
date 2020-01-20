@@ -351,7 +351,7 @@ public class Tests
         assertEquals(5, areaSerUnit.getCode());
         assertEquals(AreaUnit.class, areaSerUnit.getDjunitsType());
         assertEquals("[m^2]", areaSerUnit.getSiUnit());
-        
+
         assertEquals(LengthUnit.class, SerializationUnits.getUnitClass((byte) 16));
         assertEquals(16, SerializationUnits.getUnitCode(LengthUnit.INCH));
         assertEquals(areaSerUnit, SerializationUnits.getUnitType((byte) 5));
@@ -386,7 +386,7 @@ public class Tests
         assertEquals("ACRE", areaacre.getName());
         assertEquals(areaSerUnit, aream2.getUnitType());
         assertEquals(areaacre.getUnitType(), aream2.getUnitType());
-        
+
         assertEquals(8, DisplayType.getByteCode(ElectricalResistanceUnit.STATOHM));
         assertEquals(areaacre, DisplayType.getDisplayType(AreaUnit.ACRE));
         assertEquals(DisplayType.ENERGY_CALORIE, DisplayType.getDisplayType((byte) 11, 30));
@@ -394,7 +394,7 @@ public class Tests
         assertEquals(30, DisplayType.getIntCode(EnergyUnit.CALORIE));
         assertEquals(EnergyUnit.CALORIE, DisplayType.getUnit((byte) 11, 30));
         assertEquals(AreaUnit.ACRE, DisplayType.getUnit(areaSerUnit, 18));
-        
+
         assertNotEquals(aream2, areaacre);
         assertNotEquals(masskg, areaacre);
         assertNotEquals(new Object(), areaacre);

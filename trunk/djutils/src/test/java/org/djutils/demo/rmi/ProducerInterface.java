@@ -19,6 +19,5 @@ public interface ProducerInterface extends Remote
      * @throws RemoteException on network error
      */
     void addListener(ListenerInterface listener) throws RemoteException;
-    
-}
 
+}

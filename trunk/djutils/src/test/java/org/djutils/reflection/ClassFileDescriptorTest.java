@@ -43,7 +43,7 @@ public class ClassFileDescriptorTest
         assertEquals("Test.class", cfdClass.getName());
         Date cfdClassDate = new Date(cfdClass.getLastChangedDate());
         assertEquals("2000-01-01 01:02:03", formatter.format(cfdClassDate));
-        
+
         assertTrue(
                 cfdClass.getPath().toString().replaceAll("\\\\", "/").endsWith("/org/djutils-test-resources/test/Test.class"));
         assertTrue(cfdClass.toString().startsWith("ClassFileDescriptor ["));

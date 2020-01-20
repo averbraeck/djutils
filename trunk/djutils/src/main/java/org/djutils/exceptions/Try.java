@@ -629,7 +629,7 @@ public final class Try
             // and https://hg.openjdk.java.net/jdk/jdk/file/tip/src/hotspot/share/opto/graphKit.cpp
             if (steCause.size() > 3)
             {
-                steCause.remove(steCause.size() - 1); // remove method that called Try.assign/execute(...) 
+                steCause.remove(steCause.size() - 1); // remove method that called Try.assign/execute(...)
                 steCause.remove(steCause.size() - 1); // remove the Try.assign/execute(...) call
                 steCause.remove(steCause.size() - 1); // remove the Assignment/Execution implementation (can be lambda$#)
                 cause.setStackTrace(steCause.toArray(new StackTraceElement[steCause.size()]));

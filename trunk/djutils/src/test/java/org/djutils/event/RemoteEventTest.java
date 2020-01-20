@@ -40,7 +40,7 @@ public class RemoteEventTest
         producer.addListener(listener, TestRemoteEventProducer.REMOTE_EVENT_1);
         assertTrue(producer.hasListeners());
         assertEquals(1, producer.getEventTypesWithListeners().size());
-        
+
         // clean up the registry
         RMIUtils.closeRegistry(((TestRemoteEventProducer) producer).getRegistry());
     }

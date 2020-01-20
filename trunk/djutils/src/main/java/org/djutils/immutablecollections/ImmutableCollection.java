@@ -36,8 +36,8 @@ public interface ImmutableCollection<E> extends Iterable<E>, Serializable
     boolean isEmpty();
 
     /**
-     * Returns <code>true</code> if this immutable collection contains the specified element. More formally, returns <code>true</code>
-     * if and only if this immutable collection contains at least one element <code>e</code> such that
+     * Returns <code>true</code> if this immutable collection contains the specified element. More formally, returns
+     * <code>true</code> if and only if this immutable collection contains at least one element <code>e</code> such that
      * <code>(o==null&nbsp;?&nbsp;e==null&nbsp;:&nbsp;o.equals(e))</code>.
      * @param o Object; element whose presence in this immutable collection is to be tested
      * @return <code>true</code> if this immutable collection contains the specified element
@@ -94,7 +94,8 @@ public interface ImmutableCollection<E> extends Iterable<E>, Serializable
     boolean containsAll(Collection<?> c);
 
     /**
-     * Returns <code>true</code> if this immutable collection contains all of the elements in the specified immutable collection.
+     * Returns <code>true</code> if this immutable collection contains all of the elements in the specified immutable
+     * collection.
      * @param c ImmutableCollection&lt;?&gt;; immutable collection to be checked for containment in this immutable collection
      * @return <code>true</code> if this immutable collection contains all of the elements in the specified immutable collection
      * @throws ClassCastException if the types of one or more elements in the specified immutable collection are incompatible

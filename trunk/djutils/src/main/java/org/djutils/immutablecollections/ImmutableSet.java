@@ -37,6 +37,7 @@ public interface ImmutableSet<E> extends ImmutableCollection<E>
      */
     @Override
     int hashCode();
+
     /**
      * Force to redefine toString.
      * @return String; a description of this immutable set

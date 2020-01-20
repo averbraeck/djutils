@@ -145,12 +145,12 @@ public class Producer extends RMIObject implements ProducerInterface
         {
             Producer producer = new Producer();
             producer.commands();
-            
+
         }
         catch (RemoteException | AlreadyBoundException exception)
         {
             exception.printStackTrace();
-            System.exit(-1); 
+            System.exit(-1);
         }
         System.exit(0);
     }

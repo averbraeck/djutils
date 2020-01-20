@@ -1,5 +1,5 @@
 /**
- * The rmi package has objects to help in defining and finding the RMI registry.  
+ * The rmi package has objects to help in defining and finding the RMI registry.
  * <p>
  * Copyright (c) 2019-2019 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djunits.org/docs/license.html">DJUNITS License</a>.

@@ -32,11 +32,11 @@ public class TestImmutableHashMap
     /**
      * Test most of the equals and hashCode methods and the forEach method of the ImmutableAbstractMap class.
      */
-    @SuppressWarnings({ "unlikely-arg-type" })
+    @SuppressWarnings({"unlikely-arg-type"})
     @Test
     public final void testMapEqualsAndHashCode()
     {
-        Integer[] keys = new Integer[] { 10, 20, 30, 40 };
+        Integer[] keys = new Integer[] {10, 20, 30, 40};
         Map<Integer, Double> mutableMap1 = new HashMap<>();
         Map<Integer, Double> mutableMap2 = new HashMap<>();
         for (Integer key : keys)
@@ -206,7 +206,7 @@ public class TestImmutableHashMap
      * Check that two collection contain the same objects.
      * @param a Collection&lt;?&gt;;
      * @param b Collection&lt;?&gt;;
-     * @return boolean; 
+     * @return boolean;
      */
     private boolean sameContent(final Collection<?> a, final Collection<?> b)
     {

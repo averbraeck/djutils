@@ -99,7 +99,7 @@ public class CategoryLogger
 
         this.logCategories.add(LogCategory.ALL);
     }
-    
+
     /**
      * Set a new logging format for the message lines of all writers. The default message format is:<br>
      * {class_name}.{method}:{line} {message|indent=4}<br>

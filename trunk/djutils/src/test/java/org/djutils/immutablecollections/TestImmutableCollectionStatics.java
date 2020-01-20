@@ -74,7 +74,8 @@ public class TestImmutableCollectionStatics
         Arrays.sort(values); // this modifies the contents of our array
         il = new ImmutableArrayList<>(new ArrayList<Integer>(Arrays.asList(values)));
         assertEquals("position of 6", 4, ImmutableCollections.binarySearch(il, Integer.valueOf(6)));
-        assertEquals("position where 5 would be if it were present", -5, ImmutableCollections.binarySearch(il, Integer.valueOf(5)));
+        assertEquals("position where 5 would be if it were present", -5,
+                ImmutableCollections.binarySearch(il, Integer.valueOf(5)));
         final Integer[] uniqueValues = new Integer[] {10, 2, -5, 6};
         ImmutableList<Integer> il2 = new ImmutableArrayList<>(new ArrayList<Integer>(Arrays.asList(uniqueValues)));
         indexComparator = new Comparator<Integer>()
