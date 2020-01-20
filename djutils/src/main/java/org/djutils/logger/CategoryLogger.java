@@ -45,7 +45,7 @@ import org.pmw.tinylog.writers.Writer;
 public class CategoryLogger
 {
     /** The singleton instance of the CategoryLogger. */
-    protected static final CategoryLogger INSTANCE;
+    public static final CategoryLogger INSTANCE;
 
     /** The default message format. */
     public static final String DEFAULT_MESSAGE_FORMAT = "{class_name}.{method}:{line} {message|indent=4}";
