@@ -6,8 +6,8 @@ import java.io.Serializable;
  * The EventInterface defines the a strongly typed event (using the EventType). The sender of the event can be identified,
  * allowing for fine-grained filtering of events. Because events are often sent over the network, the interface demands that the
  * event and its source id and content are serializable. It is the repsonsibility of the programmer, though, that the
- * <b>content</b> of the object is serializable as well.
- * <p>
+ * <b>content</b> of the object is serializable as well.<br>
+ * <br>
  * In contrast with earlier implementations of the Event package, a <b>sourceId</b> is sent over the network rather than a
  * pointer to the source itself. This has several advantages:
  * <ol>
@@ -16,7 +16,6 @@ import java.io.Serializable;
  * <li>There is no risk that the receiver of an event gets a pointer to the sending object, while still being able to identify
  * the sending object
  * </ol>
- * </p>
  * <p>
  * Copyright (c) 2002-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
