@@ -76,10 +76,16 @@ import picocli.CommandLine.ParseResult;
  * source code and binary code of this software is proprietary information of Delft University of Technology.
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
  */
-public class CliUtil
+public final class CliUtil
 {
+    /** Utility class constructor. */
+    private CliUtil()
+    {
+        // Utility class
+    }
+    
     /**
-     * The map with overrides for default values and other Option and Program annotation values. vaues in the map are:
+     * The map with overrides for default values and other Option and Program annotation values. values in the map are:
      * <ul>
      * <li>className%fieldName%propertyName for the &#64;Option annotation for field fieldName within the class named className,
      * and the annotation property propertyName. An example of the propertyName is "defaultValue"</li>
@@ -87,7 +93,8 @@ public class CliUtil
      * class. Examples of the propertyName are "name", "version", and "description"</li>
      * </ul>
      */
-    public static Map<String, Object> overrideMap = new LinkedHashMap<>();
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    static Map<String, Object> overrideMap = new LinkedHashMap<>();
 
     /**
      * Parse the command line for the program. Register Unit converters, parse the command line, catch --help, --version and
@@ -416,7 +423,7 @@ public class CliUtil
      * @return Class&lt;?&gt;; the class or superclass in which the &#64;Command annotation was found
      * @throws CliException when the class or one of its superclasses is not annotated with &#64;Command
      */
-    public static final Class<?> getCommandAnnotationClass(final Class<?> programClass) throws CliException
+    public static Class<?> getCommandAnnotationClass(final Class<?> programClass) throws CliException
     {
         Class<?> clazz = programClass;
         while (clazz != null)

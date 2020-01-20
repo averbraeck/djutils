@@ -31,6 +31,7 @@ public class TestCLI
             return this.port;
         }
 
+        /** {@inheritDoc} */
         @Override
         public void check() throws Exception
         {

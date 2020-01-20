@@ -33,6 +33,7 @@ public class TestCLICommandLine
             return this.port;
         }
 
+        /** {@inheritDoc} */
         @Override
         public void check() throws Exception
         {

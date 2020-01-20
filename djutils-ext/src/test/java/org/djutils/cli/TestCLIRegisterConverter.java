@@ -33,7 +33,7 @@ public class TestCLIRegisterConverter
          * @param lat lat
          * @param lon lon
          */
-        public LatLon(double lat, double lon)
+        public LatLon(final double lat, final double lon)
         {
             this.lat = lat;
             this.lon = lon;
