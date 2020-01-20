@@ -57,7 +57,8 @@ public class ImmutableVector<E> extends ImmutableAbstractList<E>
      */
     public ImmutableVector(final ImmutableVector<E> vector, final Immutable copyOrWrap)
     {
-        this(copyOrWrap == Immutable.COPY ? new Vector<E>(vector.getUnderlyingCollection()) : vector.getUnderlyingCollection(), copyOrWrap);
+        this(copyOrWrap == Immutable.COPY ? new Vector<E>(vector.getUnderlyingCollection()) : vector.getUnderlyingCollection(),
+                copyOrWrap);
     }
 
     /** {@inheritDoc} */

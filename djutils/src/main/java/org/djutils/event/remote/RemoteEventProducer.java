@@ -91,7 +91,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
             }
         };
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean addListener(final EventListenerInterface listener, final EventType eventType) throws RemoteException

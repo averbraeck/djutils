@@ -54,7 +54,8 @@ public class ImmutableArrayList<E> extends ImmutableAbstractList<E>
      */
     public ImmutableArrayList(final ImmutableAbstractList<E> list, final Immutable copyOrWrap)
     {
-        super(copyOrWrap == Immutable.COPY ? new ArrayList<E>(list.getUnderlyingCollection()) : list.getUnderlyingCollection(), copyOrWrap);
+        super(copyOrWrap == Immutable.COPY ? new ArrayList<E>(list.getUnderlyingCollection()) : list.getUnderlyingCollection(),
+                copyOrWrap);
     }
 
     /** {@inheritDoc} */

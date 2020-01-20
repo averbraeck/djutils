@@ -54,7 +54,8 @@ public class ImmutableLinkedHashSet<E> extends ImmutableAbstractSet<E>
      */
     public ImmutableLinkedHashSet(final ImmutableAbstractSet<E> set, final Immutable copyOrWrap)
     {
-        super(copyOrWrap == Immutable.COPY ? new LinkedHashSet<E>(set.getUnderlyingCollection()) : set.getUnderlyingCollection(), copyOrWrap);
+        super(copyOrWrap == Immutable.COPY ? new LinkedHashSet<E>(set.getUnderlyingCollection())
+                : set.getUnderlyingCollection(), copyOrWrap);
     }
 
     /** {@inheritDoc} */

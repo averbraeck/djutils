@@ -28,7 +28,7 @@ public class TestImmutableVector
     @Test
     public final void testVector()
     {
-        Integer[] testData = new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        Integer[] testData = new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         Vector<Integer> intVector = new Vector<>(Arrays.asList(testData));
         Vector<Integer> vector = new Vector<Integer>(intVector);
         testIntVector(vector, new ImmutableVector<Integer>(vector, Immutable.WRAP), Immutable.WRAP);
@@ -41,7 +41,7 @@ public class TestImmutableVector
         testIntVector(vector, new ImmutableVector<Integer>(ial), Immutable.COPY);
 
         vector = new Vector<Integer>(intVector);
-        Set<Integer> intSet = new HashSet<>(Arrays.asList(new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }));
+        Set<Integer> intSet = new HashSet<>(Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
         testIntVector(vector, new ImmutableVector<Integer>(intSet), Immutable.COPY);
         ImmutableVector<Integer> iv = new ImmutableVector<Integer>(vector);
         Assert.assertTrue("toString returns something descriptive", iv.toString().startsWith("ImmutableVector ["));
@@ -138,7 +138,7 @@ public class TestImmutableVector
             Assert.assertEquals("there is no later next index for this value", -1, noIndex);
             noIndex = iv.lastIndexOf(testData[index], indexOf - 1);
             Assert.assertEquals("there is no earlier next index for this value", -1, noIndex);
-            Assert.assertEquals("get returns same as elementAt",  iv.get(index), iv.elementAt(index));
+            Assert.assertEquals("get returns same as elementAt", iv.get(index), iv.elementAt(index));
         }
         Assert.assertEquals("firstElement returns first element", testData[0], iv.firstElement());
         Assert.assertEquals("lastElement returns last element", testData[testData.length - 1], iv.lastElement());

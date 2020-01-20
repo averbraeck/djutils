@@ -63,8 +63,7 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
      * @param pointer the start pointer in the byte array
      * @param endianUtil EndianUtil; encoder to use for multi-byte values
      */
-    protected void encodeUnit(final U unit, final byte[] message, final Pointer pointer,
-            final EndianUtil endianUtil)
+    protected void encodeUnit(final U unit, final byte[] message, final Pointer pointer, final EndianUtil endianUtil)
     {
         SerializationUnits unitType = SerializationUnits.getUnitType(unit);
         message[pointer.getAndIncrement(1)] = unitType.getCode();

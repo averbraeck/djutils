@@ -34,8 +34,7 @@ public abstract class ObjectWithUnitSerializer<U extends Unit<U>, T> extends Obj
      * @param pointer the start pointer in the byte array
      * @param endianUtil EndianUtil; encoder to use for multi-byte values
      */
-    protected void encodeUnit(final U unit, final byte[] message, final Pointer pointer,
-            final EndianUtil endianUtil)
+    protected void encodeUnit(final U unit, final byte[] message, final Pointer pointer, final EndianUtil endianUtil)
     {
         SerializationUnits unitType = SerializationUnits.getUnitType(unit);
         message[pointer.getAndIncrement(1)] = unitType.getCode();
@@ -57,6 +56,5 @@ public abstract class ObjectWithUnitSerializer<U extends Unit<U>, T> extends Obj
         DisplayType displayType = DisplayType.getDisplayType(unitType, 0 + buffer[pointer.getAndIncrement(1)]);
         return (U) displayType.getDjunitsType();
     }
-
 
 }

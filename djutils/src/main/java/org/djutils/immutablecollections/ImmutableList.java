@@ -51,9 +51,9 @@ public interface ImmutableList<E> extends ImmutableCollection<E>
     int lastIndexOf(Object o);
 
     /**
-     * Returns a safe, immutable copy of the portion of this immutable list between the specified <code>fromIndex</code>, inclusive,
-     * and <code>toIndex</code>, exclusive. (If <code>fromIndex</code> and <code>toIndex</code> are equal, the returned immutable list is
-     * empty).
+     * Returns a safe, immutable copy of the portion of this immutable list between the specified <code>fromIndex</code>,
+     * inclusive, and <code>toIndex</code>, exclusive. (If <code>fromIndex</code> and <code>toIndex</code> are equal, the
+     * returned immutable list is empty).
      * @param fromIndex int; low endpoint (inclusive) of the subList
      * @param toIndex int; high endpoint (exclusive) of the subList
      * @return a view of the specified range within this immutable list

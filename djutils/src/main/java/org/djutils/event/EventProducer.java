@@ -41,7 +41,7 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     /** The collection of interested listeners. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     protected EventListenerMap listeners = new EventListenerMap();
-    
+
     /** Cache to prevent continuous reflection. */
     private static final transient Map<Class<? extends EventProducer>, EventType[]> EVENTTYPE_CACHE = new LinkedHashMap<>();
 

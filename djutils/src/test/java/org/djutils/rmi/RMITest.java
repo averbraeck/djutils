@@ -297,7 +297,7 @@ public class RMITest
                 RMIUtils.closeRegistry(registry);
             }
         }, "did not get expected exception for closeRegistry()");
-        
+
         CategoryLogger.setAllLogLevel(Level.INFO);
     }
 
@@ -346,7 +346,7 @@ public class RMITest
                         + exception.getMessage());
             }
         }
-        
+
         CategoryLogger.setAllLogLevel(Level.INFO);
     }
 
@@ -414,7 +414,7 @@ public class RMITest
         // close down
         Registry registry = producer.getRegistry();
         RMIUtils.closeRegistry(registry);
-        
+
         // check errors in creating RMIObject
         Try.testFail(new Try.Execution()
         {
@@ -456,7 +456,7 @@ public class RMITest
                 new Producer("localhost", 1099, null);
             }
         }, "did not get expected exception", NullPointerException.class);
-        
+
         // test a few constructions that should work
         producer = new Producer(new URL("http", null, ""), "producer");
         assertNotNull(producer);
@@ -491,7 +491,7 @@ public class RMITest
             // Ignore
         }
     }
-    
+
     /** A test remote object. */
     protected static class RemoteObject implements Remote
     {

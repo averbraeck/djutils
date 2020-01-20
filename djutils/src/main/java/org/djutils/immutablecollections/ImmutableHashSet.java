@@ -53,7 +53,8 @@ public class ImmutableHashSet<E> extends ImmutableAbstractSet<E>
      */
     public ImmutableHashSet(final ImmutableAbstractSet<E> set, final Immutable copyOrWrap)
     {
-        super(copyOrWrap == Immutable.COPY ? new HashSet<E>(set.getUnderlyingCollection()) : set.getUnderlyingCollection(), copyOrWrap);
+        super(copyOrWrap == Immutable.COPY ? new HashSet<E>(set.getUnderlyingCollection()) : set.getUnderlyingCollection(),
+                copyOrWrap);
     }
 
     /** {@inheritDoc} */

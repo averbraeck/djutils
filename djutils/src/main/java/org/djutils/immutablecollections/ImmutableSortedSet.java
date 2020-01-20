@@ -28,32 +28,32 @@ public interface ImmutableSortedSet<E> extends ImmutableSet<E>
     SortedSet<E> toSet();
 
     /**
-     * Returns the comparator used to order the elements in this immutable set, or <code>null</code> if this immutable set uses the
-     * {@linkplain Comparable natural ordering} of its elements.
-     * @return the comparator used to order the elements in this immutable set, or <code>null</code> if this immutable set uses the
-     *         natural ordering of its elements
+     * Returns the comparator used to order the elements in this immutable set, or <code>null</code> if this immutable set uses
+     * the {@linkplain Comparable natural ordering} of its elements.
+     * @return the comparator used to order the elements in this immutable set, or <code>null</code> if this immutable set uses
+     *         the natural ordering of its elements
      */
     Comparator<? super E> comparator();
 
     /**
      * Returns a view of the portion of this immutable set whose elements range from <code>fromElement</code>, inclusive, to
-     * <code>toElement</code>, exclusive. (If <code>fromElement</code> and <code>toElement</code> are equal, the returned immutable set is
-     * empty.)
+     * <code>toElement</code>, exclusive. (If <code>fromElement</code> and <code>toElement</code> are equal, the returned
+     * immutable set is empty.)
      * <p>
      * The result of this method is a new, immutable sorted set.
      * @param fromElement E; low endpoint (inclusive) of the returned immutable set
      * @param toElement E; high endpoint (exclusive) of the returned immutable set
-     * @return a new, immutable sorted set of the portion of this immutable set whose elements range from <code>fromElement</code>,
-     *         inclusive, to <code>toElement</code>, exclusive
-     * @throws ClassCastException if <code>fromElement</code> and <code>toElement</code> cannot be compared to one another using this
-     *             immutable set's comparator (or, if the immutable set has no comparator, using natural ordering).
+     * @return a new, immutable sorted set of the portion of this immutable set whose elements range from
+     *         <code>fromElement</code>, inclusive, to <code>toElement</code>, exclusive
+     * @throws ClassCastException if <code>fromElement</code> and <code>toElement</code> cannot be compared to one another using
+     *             this immutable set's comparator (or, if the immutable set has no comparator, using natural ordering).
      *             Implementations may, but are not required to, throw this exception if <code>fromElement</code> or
      *             <code>toElement</code> cannot be compared to elements currently in the immutable set.
-     * @throws NullPointerException if <code>fromElement</code> or <code>toElement</code> is null and this immutable set does not permit
-     *             null elements
-     * @throws IllegalArgumentException if <code>fromElement</code> is greater than <code>toElement</code>; or if this immutable set
-     *             itself has a restricted range, and <code>fromElement</code> or <code>toElement</code> lies outside the bounds of the
-     *             range
+     * @throws NullPointerException if <code>fromElement</code> or <code>toElement</code> is null and this immutable set does
+     *             not permit null elements
+     * @throws IllegalArgumentException if <code>fromElement</code> is greater than <code>toElement</code>; or if this immutable
+     *             set itself has a restricted range, and <code>fromElement</code> or <code>toElement</code> lies outside the
+     *             bounds of the range
      */
     ImmutableSortedSet<E> subSet(E fromElement, E toElement);
 
@@ -68,18 +68,18 @@ public interface ImmutableSortedSet<E> extends ImmutableSet<E>
      * @return a view of the portion of this immutable set whose elements are strictly less than <code>toElement</code>
      * @throws ClassCastException if <code>toElement</code> is not compatible with this immutable set's comparator (or, if the
      *             immutable set has no comparator, if <code>toElement</code> does not implement {@link Comparable}).
-     *             Implementations may, but are not required to, throw this exception if <code>toElement</code> cannot be compared
-     *             to elements currently in the immutable set.
+     *             Implementations may, but are not required to, throw this exception if <code>toElement</code> cannot be
+     *             compared to elements currently in the immutable set.
      * @throws NullPointerException if <code>toElement</code> is null and this immutable set does not permit null elements
-     * @throws IllegalArgumentException if this immutable set itself has a restricted range, and <code>toElement</code> lies outside
-     *             the bounds of the range
+     * @throws IllegalArgumentException if this immutable set itself has a restricted range, and <code>toElement</code> lies
+     *             outside the bounds of the range
      */
     ImmutableSortedSet<E> headSet(E toElement);
 
     /**
-     * Returns a view of the portion of this immutable set whose elements are greater than or equal to <code>fromElement</code>. The
-     * returned immutable set is backed by this immutable set, so changes in the returned immutable set are reflected in this
-     * immutable set, and vice-versa. The returned immutable set supports all optional immutable set operations that this
+     * Returns a view of the portion of this immutable set whose elements are greater than or equal to <code>fromElement</code>.
+     * The returned immutable set is backed by this immutable set, so changes in the returned immutable set are reflected in
+     * this immutable set, and vice-versa. The returned immutable set supports all optional immutable set operations that this
      * immutable set supports.
      * <p>
      * The result of this method is a new, immutable sorted set.
@@ -87,8 +87,8 @@ public interface ImmutableSortedSet<E> extends ImmutableSet<E>
      * @return a view of the portion of this immutable set whose elements are greater than or equal to <code>fromElement</code>
      * @throws ClassCastException if <code>fromElement</code> is not compatible with this immutable set's comparator (or, if the
      *             immutable set has no comparator, if <code>fromElement</code> does not implement {@link Comparable}).
-     *             Implementations may, but are not required to, throw this exception if <code>fromElement</code> cannot be compared
-     *             to elements currently in the immutable set.
+     *             Implementations may, but are not required to, throw this exception if <code>fromElement</code> cannot be
+     *             compared to elements currently in the immutable set.
      * @throws NullPointerException if <code>fromElement</code> is null and this immutable set does not permit null elements
      * @throws IllegalArgumentException if this immutable set itself has a restricted range, and <code>fromElement</code> lies
      *             outside the bounds of the range
