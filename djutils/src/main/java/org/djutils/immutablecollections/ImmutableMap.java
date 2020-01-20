@@ -332,6 +332,13 @@ public interface ImmutableMap<K, V> extends Serializable
             return (Comparator<ImmutableMap.ImmutableEntry<K, V>> & Serializable) (c1, c2) -> cmp.compare(c1.getValue(),
                     c2.getValue());
         }
+
+        @Override
+        public String toString()
+        {
+            return "ImmutableEntry [wrappedEntry=" + wrappedEntry + "]";
+        }
+        
     }
 
     /**
