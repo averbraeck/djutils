@@ -213,8 +213,7 @@ public class LoggerTest
                 // String; no additional arguments
                 String message = "test message";
                 String methodName = methodNames[methodIndex];
-                Method method =
-                        CategoryLogger.INSTANCE.getDelegateLogger().getClass().getDeclaredMethod(methodName, String.class);
+                Method method = CategoryLogger.DELEGATE_LOGGER.getClass().getDeclaredMethod(methodName, String.class);
                 method.invoke(CategoryLogger.always(), message);
                 if (methodIndex < levelIndex)
                 {
@@ -228,7 +227,7 @@ public class LoggerTest
                 verifyLogMessage(null);
 
                 // Object (no arguments - of course)
-                method = CategoryLogger.INSTANCE.getDelegateLogger().getClass().getDeclaredMethod(methodName, Object.class);
+                method = CategoryLogger.DELEGATE_LOGGER.getClass().getDeclaredMethod(methodName, Object.class);
                 method.invoke(CategoryLogger.always(), message);
                 if (methodIndex < levelIndex)
                 {
@@ -244,7 +243,7 @@ public class LoggerTest
                 // Throwable
                 String exceptionMessage = "ExceptionMessage";
                 Exception exception = new Exception(exceptionMessage);
-                method = CategoryLogger.INSTANCE.getDelegateLogger().getClass().getDeclaredMethod(methodName, Throwable.class);
+                method = CategoryLogger.DELEGATE_LOGGER.getClass().getDeclaredMethod(methodName, Throwable.class);
                 method.invoke(CategoryLogger.always(), exception);
                 if (methodIndex < levelIndex)
                 {
@@ -259,8 +258,7 @@ public class LoggerTest
 
                 // Throwable with message
                 String extraMessage = "Extra Message";
-                method = CategoryLogger.INSTANCE.getDelegateLogger().getClass().getDeclaredMethod(methodName, Throwable.class,
-                        String.class);
+                method = CategoryLogger.DELEGATE_LOGGER.getClass().getDeclaredMethod(methodName, Throwable.class, String.class);
                 method.invoke(CategoryLogger.always(), exception, extraMessage);
                 if (methodIndex < levelIndex)
                 {
@@ -279,8 +277,7 @@ public class LoggerTest
                 int arg1 = 1;
                 String arg2 = "2";
                 String expectedMessage = message.replaceFirst("\\{\\}", String.valueOf(arg1)).replaceFirst("\\{\\}", arg2);
-                method = CategoryLogger.INSTANCE.getDelegateLogger().getClass().getDeclaredMethod(methodName, String.class,
-                        Object[].class);
+                method = CategoryLogger.DELEGATE_LOGGER.getClass().getDeclaredMethod(methodName, String.class, Object[].class);
                 method.invoke(CategoryLogger.always(), message, new Object[] {arg1, arg2});
                 if (methodIndex < levelIndex)
                 {
@@ -294,8 +291,8 @@ public class LoggerTest
                 verifyLogMessage(null);
 
                 // Throwable with message and arguments
-                method = CategoryLogger.INSTANCE.getDelegateLogger().getClass().getDeclaredMethod(methodName, Throwable.class,
-                        String.class, Object[].class);
+                method = CategoryLogger.DELEGATE_LOGGER.getClass().getDeclaredMethod(methodName, Throwable.class, String.class,
+                        Object[].class);
                 method.invoke(CategoryLogger.always(), exception, message, new Object[] {arg1, arg2});
                 if (methodIndex < levelIndex)
                 {
@@ -346,8 +343,7 @@ public class LoggerTest
                     // String; no additional arguments
                     String message = "test message";
                     String methodName = methodNames[methodIndex];
-                    Method method =
-                            CategoryLogger.INSTANCE.getDelegateLogger().getClass().getDeclaredMethod(methodName, String.class);
+                    Method method = CategoryLogger.DELEGATE_LOGGER.getClass().getDeclaredMethod(methodName, String.class);
                     method.invoke(CategoryLogger.always(), message);
                     if (methodIndex < writerLevelIndex)
                     {
@@ -361,7 +357,7 @@ public class LoggerTest
                     verifyLogMessage(null);
 
                     // Object (no arguments - of course)
-                    method = CategoryLogger.INSTANCE.getDelegateLogger().getClass().getDeclaredMethod(methodName, Object.class);
+                    method = CategoryLogger.DELEGATE_LOGGER.getClass().getDeclaredMethod(methodName, Object.class);
                     method.invoke(CategoryLogger.always(), message);
                     if (methodIndex < writerLevelIndex)
                     {
@@ -377,8 +373,7 @@ public class LoggerTest
                     // Throwable
                     String exceptionMessage = "ExceptionMessage";
                     Exception exception = new Exception(exceptionMessage);
-                    method = CategoryLogger.INSTANCE.getDelegateLogger().getClass().getDeclaredMethod(methodName,
-                            Throwable.class);
+                    method = CategoryLogger.DELEGATE_LOGGER.getClass().getDeclaredMethod(methodName, Throwable.class);
                     method.invoke(CategoryLogger.always(), exception);
                     if (methodIndex < writerLevelIndex)
                     {
@@ -393,8 +388,8 @@ public class LoggerTest
 
                     // Throwable with message
                     String extraMessage = "Extra Message";
-                    method = CategoryLogger.INSTANCE.getDelegateLogger().getClass().getDeclaredMethod(methodName,
-                            Throwable.class, String.class);
+                    method = CategoryLogger.DELEGATE_LOGGER.getClass().getDeclaredMethod(methodName, Throwable.class,
+                            String.class);
                     method.invoke(CategoryLogger.always(), exception, extraMessage);
                     if (methodIndex < writerLevelIndex)
                     {
@@ -413,7 +408,7 @@ public class LoggerTest
                     int arg1 = 1;
                     String arg2 = "2";
                     String expectedMessage = message.replaceFirst("\\{\\}", String.valueOf(arg1)).replaceFirst("\\{\\}", arg2);
-                    method = CategoryLogger.INSTANCE.getDelegateLogger().getClass().getDeclaredMethod(methodName, String.class,
+                    method = CategoryLogger.DELEGATE_LOGGER.getClass().getDeclaredMethod(methodName, String.class,
                             Object[].class);
                     method.invoke(CategoryLogger.always(), message, new Object[] {arg1, arg2});
                     if (methodIndex < writerLevelIndex)
@@ -428,8 +423,8 @@ public class LoggerTest
                     verifyLogMessage(null);
 
                     // Throwable with message and arguments
-                    method = CategoryLogger.INSTANCE.getDelegateLogger().getClass().getDeclaredMethod(methodName,
-                            Throwable.class, String.class, Object[].class);
+                    method = CategoryLogger.DELEGATE_LOGGER.getClass().getDeclaredMethod(methodName, Throwable.class,
+                            String.class, Object[].class);
                     method.invoke(CategoryLogger.always(), exception, message, new Object[] {arg1, arg2});
                     if (methodIndex < writerLevelIndex)
                     {
