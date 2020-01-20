@@ -17,7 +17,7 @@ public class CliException extends Exception
     /**
      * @param message the description of the exception
      */
-    public CliException(String message)
+    public CliException(final String message)
     {
         super(message);
     }
@@ -34,7 +34,7 @@ public class CliException extends Exception
      * @param message the description of the exception
      * @param cause the cause of the exception
      */
-    public CliException(String message, Throwable cause)
+    public CliException(final String message, final Throwable cause)
     {
         super(message, cause);
     }

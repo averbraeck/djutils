@@ -407,9 +407,11 @@ public class Tests
     static class Compound implements SerializableObject<Compound>
     {
         /** Field 1. */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         public Integer intValue;
 
         /** Field 2. */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         public Double doubleValue;
 
         @Override

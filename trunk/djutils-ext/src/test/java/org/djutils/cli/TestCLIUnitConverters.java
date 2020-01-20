@@ -105,6 +105,7 @@ import picocli.CommandLine.Option;
  * source code and binary code of this software is proprietary information of Delft University of Technology.
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
  */
+@SuppressWarnings("checkstyle:visibilitymodifier")
 public class TestCLIUnitConverters
 {
     /** */

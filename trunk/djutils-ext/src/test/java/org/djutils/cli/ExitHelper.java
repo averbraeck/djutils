@@ -26,6 +26,7 @@ public class ExitHelper
         private static final long serialVersionUID = 1L;
 
         /** the exit code. */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         public final int status;
 
         /**
@@ -43,19 +44,20 @@ public class ExitHelper
     public static class NoExitSecurityManager extends SecurityManager
     {
         @Override
-        public void checkPermission(Permission perm)
+        public void checkPermission(final Permission perm)
         {
             // allow anything.
         }
 
         @Override
-        public void checkPermission(Permission perm, Object context)
+        public void checkPermission(final Permission perm, final Object context)
         {
             // allow anything.
         }
 
+        /** {@inheritDoc} */
         @Override
-        public void checkExit(int status)
+        public void checkExit(final int status)
         {
             super.checkExit(status);
             throw new ExitException(status);
