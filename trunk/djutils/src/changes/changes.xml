@@ -2,23 +2,16 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
     
-    <release version="1.04.04" date="2020-01-19" description="CategoryLogger implemented as singleton; EventProducer sourceId">
-      <action dev="averbraeck" type="add">
-        The CategoryLogger had a private constructor and used a number of 'protected static final' fields
-        that should be accessible from derived loggers. Since the CategoryLogger cannot be extended due 
-        to its private constructor, the protected fields are also not accessible, making it impossible
-        to base new Loggers on the CategoryLogger. As a solution, the CategoryLogger has been turned into
-        a Singleton, which can be extended.
-      </action>
+    <release version="1.04.04" date="2020-01-19" description="EventProducer uses Serializable sourceId">
       <action dev="averbraeck" type="update">
-      In contrast with earlier implementations of the Event package, a sourceId is sent over the  network 
-      rather than a pointer to the source itself. This has several advantages:
+        In contrast with earlier implementations of the Event package, a sourceId is sent over the  network 
+        rather than a pointer to the source itself. This has several advantages:
 <![CDATA[
-       <ol><li>The object extending the EventProducer does not have to be Serializable itself</li>
-       <li>There is no risk that the entire EventProducer object gets serialized (including subclasses) 
-       and is sent over the network</li>
-       <li>The receiver of an event does not get a pointer to the sending object</li>
-       <li>The receiver of an event is still able to identify the sending object</li></ol>
+        <ol><li>The object extending the EventProducer does not have to be Serializable itself</li>
+        <li>There is no risk that the entire EventProducer object gets serialized (including subclasses) 
+        and is sent over the network</li>
+        <li>The receiver of an event does not get a pointer to the sending object</li>
+        <li>The receiver of an event is still able to identify the sending object</li></ol>
 ]]>
       </action>
     </release>

@@ -41,43 +41,45 @@ import org.pmw.tinylog.writers.Writer;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  */
-@SuppressWarnings("checkstyle:needbraces")
+@SuppressWarnings({"checkstyle:visibilitymodifier", "checkstyle:finalclass", "checkstyle:needbraces"})
 public class CategoryLogger
 {
-    /** The singleton instance of the CategoryLogger. */
-    public static final CategoryLogger INSTANCE;
-
     /** The default message format. */
     public static final String DEFAULT_MESSAGE_FORMAT = "{class_name}.{method}:{line} {message|indent=4}";
 
     /** The current message format. */
-    private String defaultMessageFormat = DEFAULT_MESSAGE_FORMAT;
+    private static String defaultMessageFormat = DEFAULT_MESSAGE_FORMAT;
 
     /** The current logging level. */
-    private Level defaultLevel = Level.INFO;
+    protected static Level defaultLevel = Level.INFO;
 
     /** The writers registered with this CategoryLogger. */
-    private final Set<Writer> writers = new LinkedHashSet<>();
+    private static final Set<Writer> WRITERS = new LinkedHashSet<>();
 
     /** The log level per Writer. */
-    private final Map<Writer, Level> writerLevels = new LinkedHashMap<>();
+    private static final Map<Writer, Level> WRITER_LEVELS = new LinkedHashMap<>();
 
     /** The message format per Writer. */
-    private final Map<Writer, String> writerFormats = new LinkedHashMap<>();
+    private static final Map<Writer, String> WRITER_FORMATS = new LinkedHashMap<>();
 
     /** The categories to log. */
-    private final Set<LogCategory> logCategories = new LinkedHashSet<>(256);
+    protected static final Set<LogCategory> LOG_CATEGORIES = new LinkedHashSet<>(256);
 
     /** The delegate logger instance that does the actual logging work, after a positive filter outcome. */
-    private final DelegateLogger delegateLogger = new DelegateLogger(true);
+    protected static final DelegateLogger DELEGATE_LOGGER = new DelegateLogger(true);
 
     /** The delegate logger that returns immediately after a negative filter outcome. */
-    private final DelegateLogger noLogger = new DelegateLogger(false);
+    protected static final DelegateLogger NO_LOGGER = new DelegateLogger(false);
 
-    /** Instantiate the CategoryLogger singleton in the class initialization method. */
+    /** */
+    private CategoryLogger()
+    {
+        // Utility class.
+    }
+
     static
     {
-        INSTANCE = new CategoryLogger();
+        create();
     }
 
     /**
@@ -85,19 +87,11 @@ public class CategoryLogger
      * LogCategory.ALL, so all categories will be logged. This category has to be explicitly removed (or new categories have to
      * be set) to log a limited set of categories.
      */
-    protected CategoryLogger()
+    protected static void create()
     {
         Logger.getConfiguration().removeAllWriters().activate();
-
-        Configurator configurator = Logger.getConfiguration();
-        Writer writer = new ConsoleWriter();
-        this.writers.add(writer);
-        this.writerLevels.put(writer, this.defaultLevel);
-        this.writerFormats.put(writer, this.defaultMessageFormat);
-        configurator.addWriter(writer, this.defaultLevel, this.defaultMessageFormat);
-        configurator.activate();
-
-        this.logCategories.add(LogCategory.ALL);
+        addWriter(new ConsoleWriter());
+        LOG_CATEGORIES.add(LogCategory.ALL);
     }
 
     /**
@@ -122,13 +116,13 @@ public class CategoryLogger
     public static void setAllLogMessageFormat(final String newMessageFormat)
     {
         Configurator configurator = Logger.getConfiguration();
-        INSTANCE.defaultMessageFormat = newMessageFormat;
-        configurator.formatPattern(INSTANCE.defaultMessageFormat).level(Level.TRACE);
-        for (Writer writer : INSTANCE.writers)
+        defaultMessageFormat = newMessageFormat;
+        configurator.formatPattern(defaultMessageFormat).level(Level.TRACE);
+        for (Writer writer : WRITERS)
         {
             configurator.removeWriter(writer).activate();
-            INSTANCE.writerFormats.put(writer, newMessageFormat);
-            configurator.addWriter(writer, INSTANCE.writerLevels.get(writer), INSTANCE.defaultMessageFormat);
+            WRITER_FORMATS.put(writer, newMessageFormat);
+            configurator.addWriter(writer, WRITER_LEVELS.get(writer), defaultMessageFormat);
         }
         configurator.activate();
     }
@@ -142,13 +136,13 @@ public class CategoryLogger
     public static void setAllLogLevel(final Level newLevel)
     {
         Configurator configurator = Logger.getConfiguration();
-        INSTANCE.defaultLevel = newLevel;
-        configurator.formatPattern(INSTANCE.defaultMessageFormat).level(Level.TRACE);
-        for (Writer writer : INSTANCE.writers)
+        defaultLevel = newLevel;
+        configurator.formatPattern(defaultMessageFormat).level(Level.TRACE);
+        for (Writer writer : WRITERS)
         {
             configurator.removeWriter(writer).activate();
-            INSTANCE.writerLevels.put(writer, newLevel);
-            configurator.addWriter(writer, newLevel, INSTANCE.writerFormats.get(writer));
+            WRITER_LEVELS.put(writer, newLevel);
+            configurator.addWriter(writer, newLevel, WRITER_FORMATS.get(writer));
         }
         configurator.activate();
     }
@@ -174,8 +168,8 @@ public class CategoryLogger
     {
         Configurator configurator = Logger.getConfiguration();
         configurator.removeWriter(writer);
-        INSTANCE.writerFormats.put(writer, newMessageFormat);
-        configurator.addWriter(writer, INSTANCE.writerLevels.get(writer), newMessageFormat);
+        WRITER_FORMATS.put(writer, newMessageFormat);
+        configurator.addWriter(writer, WRITER_LEVELS.get(writer), newMessageFormat);
         configurator.activate();
     }
 
@@ -188,8 +182,8 @@ public class CategoryLogger
     {
         Configurator configurator = Logger.getConfiguration();
         configurator.removeWriter(writer);
-        INSTANCE.writerLevels.put(writer, newLevel);
-        configurator.addWriter(writer, newLevel, INSTANCE.writerFormats.get(writer));
+        WRITER_LEVELS.put(writer, newLevel);
+        configurator.addWriter(writer, newLevel, WRITER_FORMATS.get(writer));
         configurator.activate();
     }
 
@@ -202,10 +196,10 @@ public class CategoryLogger
     {
         Throw.whenNull(writer, "writer may not be null");
         Configurator configurator = Logger.getConfiguration();
-        boolean result = INSTANCE.writers.add(writer);
-        INSTANCE.writerLevels.put(writer, INSTANCE.defaultLevel);
-        INSTANCE.writerFormats.put(writer, INSTANCE.defaultMessageFormat);
-        configurator.addWriter(writer, INSTANCE.defaultLevel, INSTANCE.defaultMessageFormat);
+        boolean result = WRITERS.add(writer);
+        WRITER_LEVELS.put(writer, defaultLevel);
+        WRITER_FORMATS.put(writer, defaultMessageFormat);
+        configurator.addWriter(writer, defaultLevel, defaultMessageFormat);
         configurator.activate();
         return result;
     }
@@ -219,9 +213,9 @@ public class CategoryLogger
     {
         Throw.whenNull(writer, "writer may not be null");
         Configurator configurator = Logger.getConfiguration();
-        boolean result = INSTANCE.writers.remove(writer);
-        INSTANCE.writerLevels.remove(writer);
-        INSTANCE.writerFormats.remove(writer);
+        boolean result = WRITERS.remove(writer);
+        WRITER_LEVELS.remove(writer);
+        WRITER_FORMATS.remove(writer);
         configurator.removeWriter(writer);
         configurator.activate();
         return result;
@@ -233,7 +227,7 @@ public class CategoryLogger
      */
     public static ImmutableSet<Writer> getWriters()
     {
-        return new ImmutableLinkedHashSet<>(INSTANCE.writers, Immutable.WRAP);
+        return new ImmutableLinkedHashSet<>(WRITERS, Immutable.WRAP);
     }
 
     /**
@@ -242,7 +236,7 @@ public class CategoryLogger
      */
     public static void addLogCategory(final LogCategory logCategory)
     {
-        INSTANCE.logCategories.add(logCategory);
+        LOG_CATEGORIES.add(logCategory);
     }
 
     /**
@@ -251,7 +245,7 @@ public class CategoryLogger
      */
     public static void removeLogCategory(final LogCategory logCategory)
     {
-        INSTANCE.logCategories.remove(logCategory);
+        LOG_CATEGORIES.remove(logCategory);
     }
 
     /**
@@ -260,8 +254,8 @@ public class CategoryLogger
      */
     public static void setLogCategories(final LogCategory... newLogCategories)
     {
-        INSTANCE.logCategories.clear();
-        INSTANCE.logCategories.addAll(Arrays.asList(newLogCategories));
+        LOG_CATEGORIES.clear();
+        LOG_CATEGORIES.addAll(Arrays.asList(newLogCategories));
     }
 
     /* ****************************************** FILTER ******************************************/
@@ -272,7 +266,7 @@ public class CategoryLogger
      */
     public static DelegateLogger always()
     {
-        return INSTANCE.delegateLogger;
+        return DELEGATE_LOGGER;
     }
 
     /**
@@ -283,11 +277,11 @@ public class CategoryLogger
      */
     public static DelegateLogger filter(final LogCategory logCategory)
     {
-        if (INSTANCE.logCategories.contains(LogCategory.ALL))
-            return INSTANCE.delegateLogger;
-        if (INSTANCE.logCategories.contains(logCategory))
-            return INSTANCE.delegateLogger;
-        return INSTANCE.noLogger;
+        if (LOG_CATEGORIES.contains(LogCategory.ALL))
+            return DELEGATE_LOGGER;
+        if (LOG_CATEGORIES.contains(logCategory))
+            return DELEGATE_LOGGER;
+        return NO_LOGGER;
     }
 
     /**
@@ -298,14 +292,14 @@ public class CategoryLogger
      */
     public static DelegateLogger filter(final LogCategory... logCategories)
     {
-        if (INSTANCE.logCategories.contains(LogCategory.ALL))
-            return INSTANCE.delegateLogger;
+        if (LOG_CATEGORIES.contains(LogCategory.ALL))
+            return DELEGATE_LOGGER;
         for (LogCategory logCategory : logCategories)
         {
-            if (INSTANCE.logCategories.contains(logCategory))
-                return INSTANCE.delegateLogger;
+            if (LOG_CATEGORIES.contains(logCategory))
+                return DELEGATE_LOGGER;
         }
-        return INSTANCE.noLogger;
+        return NO_LOGGER;
     }
 
     /**
@@ -316,14 +310,14 @@ public class CategoryLogger
      */
     public static DelegateLogger filter(final Set<LogCategory> logCategories)
     {
-        if (INSTANCE.logCategories.contains(LogCategory.ALL))
-            return INSTANCE.delegateLogger;
+        if (LOG_CATEGORIES.contains(LogCategory.ALL))
+            return DELEGATE_LOGGER;
         for (LogCategory logCategory : logCategories)
         {
-            if (INSTANCE.logCategories.contains(logCategory))
-                return INSTANCE.delegateLogger;
+            if (LOG_CATEGORIES.contains(logCategory))
+                return DELEGATE_LOGGER;
         }
-        return INSTANCE.noLogger;
+        return NO_LOGGER;
     }
 
     /**
@@ -334,8 +328,8 @@ public class CategoryLogger
     public static DelegateLogger when(final boolean condition)
     {
         if (condition)
-            return INSTANCE.delegateLogger;
-        return INSTANCE.noLogger;
+            return DELEGATE_LOGGER;
+        return NO_LOGGER;
     }
 
     /**
@@ -346,71 +340,8 @@ public class CategoryLogger
     public static DelegateLogger when(final BooleanSupplier supplier)
     {
         if (supplier.getAsBoolean())
-            return INSTANCE.delegateLogger;
-        return INSTANCE.noLogger;
-    }
-
-    /**
-     * Return the defaultMessageFormat.
-     * @return String; the defaultMessageFormat
-     */
-    protected String getDefaultMessageFormat()
-    {
-        return this.defaultMessageFormat;
-    }
-
-    /**
-     * Return the default logging level.
-     * @return Level; the default logging level
-     */
-    protected Level getDefaultLevel()
-    {
-        return this.defaultLevel;
-    }
-
-    /**
-     * return the raw Map with the writer levels.
-     * @return Map&lt;Writer, Level&gt;; the raw Map with the writer levels
-     */
-    protected Map<Writer, Level> getWriterLevels()
-    {
-        return this.writerLevels;
-    }
-
-    /**
-     * Return the raw Map with the writer formats.
-     * @return Map&lt;Writer, String&gt;; the raw Map with the writer formats
-     */
-    protected Map<Writer, String> getWriterFormats()
-    {
-        return this.writerFormats;
-    }
-
-    /**
-     * Return the raw Set with the log categories.
-     * @return Set&lt;LogCategory&gt;; the raw Set with the log categories
-     */
-    protected Set<LogCategory> getLogCategories()
-    {
-        return this.logCategories;
-    }
-
-    /**
-     * Return the delegateLogger.
-     * @return DelegateLogger; the delegateLogger
-     */
-    protected DelegateLogger getDelegateLogger()
-    {
-        return this.delegateLogger;
-    }
-
-    /**
-     * Return the noLogger.
-     * @return DelegateLogger; the noLogger
-     */
-    protected DelegateLogger getNoLogger()
-    {
-        return this.noLogger;
+            return DELEGATE_LOGGER;
+        return NO_LOGGER;
     }
 
     /* ************************************ DELEGATE LOGGER ***************************************/
@@ -446,7 +377,7 @@ public class CategoryLogger
         {
             if (this.log && condition)
                 return this;
-            return CategoryLogger.INSTANCE.getNoLogger();
+            return CategoryLogger.NO_LOGGER;
         }
 
         /**
@@ -458,7 +389,7 @@ public class CategoryLogger
         {
             if (this.log && supplier.getAsBoolean())
                 return this;
-            return CategoryLogger.INSTANCE.getNoLogger();
+            return CategoryLogger.NO_LOGGER;
         }
 
         /* ****************************************** TRACE ******************************************/
