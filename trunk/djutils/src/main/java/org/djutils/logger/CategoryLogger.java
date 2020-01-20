@@ -41,8 +41,8 @@ import org.pmw.tinylog.writers.Writer;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  */
-@SuppressWarnings({"checkstyle:visibilitymodifier", "checkstyle:finalclass", "checkstyle:needbraces"})
-public class CategoryLogger
+@SuppressWarnings("checkstyle:needbraces")
+public final class CategoryLogger
 {
     /** The default message format. */
     public static final String DEFAULT_MESSAGE_FORMAT = "{class_name}.{method}:{line} {message|indent=4}";
@@ -51,7 +51,7 @@ public class CategoryLogger
     private static String defaultMessageFormat = DEFAULT_MESSAGE_FORMAT;
 
     /** The current logging level. */
-    protected static Level defaultLevel = Level.INFO;
+    private static Level defaultLevel = Level.INFO;
 
     /** The writers registered with this CategoryLogger. */
     private static final Set<Writer> WRITERS = new LinkedHashSet<>();
@@ -63,13 +63,16 @@ public class CategoryLogger
     private static final Map<Writer, String> WRITER_FORMATS = new LinkedHashMap<>();
 
     /** The categories to log. */
-    protected static final Set<LogCategory> LOG_CATEGORIES = new LinkedHashSet<>(256);
+    private static final Set<LogCategory> LOG_CATEGORIES = new LinkedHashSet<>(256);
+
+    /** A cached immutable copy of the log categories to return to `extending` classes. */
+    private static ImmutableSet<LogCategory> immutableLogCategories;
 
     /** The delegate logger instance that does the actual logging work, after a positive filter outcome. */
-    protected static final DelegateLogger DELEGATE_LOGGER = new DelegateLogger(true);
+    public static final DelegateLogger DELEGATE_LOGGER = new DelegateLogger(true);
 
     /** The delegate logger that returns immediately after a negative filter outcome. */
-    protected static final DelegateLogger NO_LOGGER = new DelegateLogger(false);
+    public static final DelegateLogger NO_LOGGER = new DelegateLogger(false);
 
     /** */
     private CategoryLogger()
@@ -92,6 +95,7 @@ public class CategoryLogger
         Logger.getConfiguration().removeAllWriters().activate();
         addWriter(new ConsoleWriter());
         LOG_CATEGORIES.add(LogCategory.ALL);
+        immutableLogCategories = new ImmutableLinkedHashSet<>(LOG_CATEGORIES, Immutable.COPY);
     }
 
     /**
@@ -237,6 +241,7 @@ public class CategoryLogger
     public static void addLogCategory(final LogCategory logCategory)
     {
         LOG_CATEGORIES.add(logCategory);
+        immutableLogCategories = new ImmutableLinkedHashSet<>(LOG_CATEGORIES, Immutable.COPY);
     }
 
     /**
@@ -246,6 +251,7 @@ public class CategoryLogger
     public static void removeLogCategory(final LogCategory logCategory)
     {
         LOG_CATEGORIES.remove(logCategory);
+        immutableLogCategories = new ImmutableLinkedHashSet<>(LOG_CATEGORIES, Immutable.COPY);
     }
 
     /**
@@ -256,6 +262,16 @@ public class CategoryLogger
     {
         LOG_CATEGORIES.clear();
         LOG_CATEGORIES.addAll(Arrays.asList(newLogCategories));
+        immutableLogCategories = new ImmutableLinkedHashSet<>(LOG_CATEGORIES, Immutable.COPY);
+    }
+
+    /**
+     * Return the set of all log categories (cached immutable copy).
+     * @return ImmutableSet&lt;Writer&gt;; the set of all registered writers
+     */
+    public static ImmutableSet<LogCategory> getLogCategories()
+    {
+        return immutableLogCategories;
     }
 
     /* ****************************************** FILTER ******************************************/
