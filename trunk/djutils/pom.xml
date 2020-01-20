@@ -34,6 +34,7 @@
     <maven.source.version>3.1.0</maven.source.version>
     <maven.javadoc.version>3.1.1</maven.javadoc.version>
     <maven.checkstyle.version>3.1.0</maven.checkstyle.version>
+    <checkstyle.version>8.28</checkstyle.version>
     <maven.surefire.version>3.0.0-M4</maven.surefire.version>
     <maven.surefire-report.version>3.0.0-M4</maven.surefire-report.version>
     <maven.failsafe.version>3.0.0-M4</maven.failsafe.version>
@@ -241,6 +242,13 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>${maven.checkstyle.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>${checkstyle.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <plugin>
