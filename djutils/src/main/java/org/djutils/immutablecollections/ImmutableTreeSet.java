@@ -83,21 +83,21 @@ public class ImmutableTreeSet<E> extends ImmutableAbstractSet<E> implements Immu
     @Override
     public final ImmutableSortedSet<E> subSet(final E fromElement, final E toElement)
     {
-        return new ImmutableTreeSet<E>(getUnderlyingCollection().subSet(fromElement, toElement));
+        return new ImmutableTreeSet<E>((TreeSet<E>) getUnderlyingCollection().subSet(fromElement, toElement), Immutable.WRAP);
     }
 
     /** {@inheritDoc} */
     @Override
     public final ImmutableSortedSet<E> headSet(final E toElement)
     {
-        return new ImmutableTreeSet<E>(getUnderlyingCollection().headSet(toElement));
+        return new ImmutableTreeSet<E>((TreeSet<E>) getUnderlyingCollection().headSet(toElement), Immutable.WRAP);
     }
 
     /** {@inheritDoc} */
     @Override
     public final ImmutableSortedSet<E> tailSet(final E fromElement)
     {
-        return new ImmutableTreeSet<E>(getUnderlyingCollection().tailSet(fromElement));
+        return new ImmutableTreeSet<E>((TreeSet<E>) getUnderlyingCollection().tailSet(fromElement), Immutable.WRAP);
     }
 
     /** {@inheritDoc} */
@@ -161,21 +161,23 @@ public class ImmutableTreeSet<E> extends ImmutableAbstractSet<E> implements Immu
     public final ImmutableNavigableSet<E> subSet(final E fromElement, final boolean fromInclusive, final E toElement,
             final boolean toInclusive)
     {
-        return new ImmutableTreeSet<E>(getUnderlyingCollection().subSet(fromElement, fromInclusive, toElement, toInclusive));
+        return new ImmutableTreeSet<E>(
+                (TreeSet<E>) getUnderlyingCollection().subSet(fromElement, fromInclusive, toElement, toInclusive),
+                Immutable.WRAP);
     }
 
     /** {@inheritDoc} */
     @Override
     public final ImmutableNavigableSet<E> headSet(final E toElement, final boolean inclusive)
     {
-        return new ImmutableTreeSet<E>(getUnderlyingCollection().headSet(toElement, inclusive));
+        return new ImmutableTreeSet<E>((TreeSet<E>) getUnderlyingCollection().headSet(toElement, inclusive), Immutable.WRAP);
     }
 
     /** {@inheritDoc} */
     @Override
     public final ImmutableNavigableSet<E> tailSet(final E fromElement, final boolean inclusive)
     {
-        return new ImmutableTreeSet<E>(getUnderlyingCollection().tailSet(fromElement, inclusive));
+        return new ImmutableTreeSet<E>((TreeSet<E>) getUnderlyingCollection().tailSet(fromElement, inclusive), Immutable.WRAP);
     }
 
     /** {@inheritDoc} */
