@@ -1,5 +1,7 @@
 package org.djutils.immutablecollections;
 
+import static org.junit.Assert.fail;
+
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -39,6 +41,19 @@ public class TestImmutableVector
         vector = new Vector<Integer>(intVector);
         ImmutableVector<Integer> ial = new ImmutableVector<Integer>(vector);
         testIntVector(vector, new ImmutableVector<Integer>(ial), Immutable.COPY);
+        
+        // Verify that the ImmutableIterator throws an exception when the remove method is called.
+        ImmutableIterator<Integer> ii = ial.iterator();
+        ii.next();
+        try
+        {
+            ii.remove();
+            fail("remove method of ImmutableIterator should have thrown an exception");
+        }
+        catch (UnsupportedOperationException e)
+        {
+            // Ignore expected exception
+        }
 
         vector = new Vector<Integer>(intVector);
         Set<Integer> intSet = new HashSet<>(Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
