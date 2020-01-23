@@ -9,6 +9,8 @@ import org.djunits.unit.AbsorbedDoseUnit;
 import org.djunits.unit.AccelerationUnit;
 import org.djunits.unit.AmountOfSubstanceUnit;
 import org.djunits.unit.AngleUnit;
+import org.djunits.unit.AngularAccelerationUnit;
+import org.djunits.unit.AngularVelocityUnit;
 import org.djunits.unit.AreaUnit;
 import org.djunits.unit.CatalyticActivityUnit;
 import org.djunits.unit.DensityUnit;
@@ -36,6 +38,7 @@ import org.djunits.unit.LuminousIntensityUnit;
 import org.djunits.unit.MagneticFluxDensityUnit;
 import org.djunits.unit.MagneticFluxUnit;
 import org.djunits.unit.MassUnit;
+import org.djunits.unit.MomentumUnit;
 import org.djunits.unit.PositionUnit;
 import org.djunits.unit.PowerUnit;
 import org.djunits.unit.PressureUnit;
@@ -230,6 +233,18 @@ public class SerializationUnits implements Serializable
     public static final SerializationUnits RADIOACTIVITY =
             new SerializationUnits(41, RadioActivityUnit.class, "Radioactivity", "Radioactivity (Becquerel)", "[1/s]");
 
+    /** AngularAcceleration unit type with code 42. */
+    public static final SerializationUnits ANGULARACCELERATION = new SerializationUnits(42, AngularAccelerationUnit.class,
+            "AngularAcceleration", "AngularAcceleration", "[rad/s^2]");
+
+    /** AngularVelocity unit type with code 43. */
+    public static final SerializationUnits ANGULARVELOCITY = new SerializationUnits(43, AngularVelocityUnit.class,
+            "AngularVelocity", "AngularVelocity", "[rad/s]");
+
+    /** AngularAcceleration unit type with code 44. */
+    public static final SerializationUnits MOMENTUM = new SerializationUnits(44, MomentumUnit.class,
+            "Momentum", "Momentum", "[rad/s^2]");
+
     /** The code of the unit as a byte. */
     private final byte code;
 
@@ -373,7 +388,7 @@ public class SerializationUnits implements Serializable
 
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings({"checkstyle:designforextension", "needbraces"})
+    @SuppressWarnings({ "checkstyle:designforextension", "needbraces" })
     public boolean equals(final Object obj)
     {
         if (this == obj)

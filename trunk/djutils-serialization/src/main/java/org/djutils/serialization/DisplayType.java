@@ -9,6 +9,8 @@ import org.djunits.unit.AbsorbedDoseUnit;
 import org.djunits.unit.AccelerationUnit;
 import org.djunits.unit.AmountOfSubstanceUnit;
 import org.djunits.unit.AngleUnit;
+import org.djunits.unit.AngularAccelerationUnit;
+import org.djunits.unit.AngularVelocityUnit;
 import org.djunits.unit.AreaUnit;
 import org.djunits.unit.CatalyticActivityUnit;
 import org.djunits.unit.DensityUnit;
@@ -36,6 +38,7 @@ import org.djunits.unit.LuminousIntensityUnit;
 import org.djunits.unit.MagneticFluxDensityUnit;
 import org.djunits.unit.MagneticFluxUnit;
 import org.djunits.unit.MassUnit;
+import org.djunits.unit.MomentumUnit;
 import org.djunits.unit.PositionUnit;
 import org.djunits.unit.PowerUnit;
 import org.djunits.unit.PressureUnit;
@@ -1914,6 +1917,83 @@ public class DisplayType implements Serializable
     /** RadioActivity.RUTHERFORD unit type with code 10. */
     public static final DisplayType RADIOACTIVITY_RUTHERFORD =
             new DisplayType(SerializationUnits.RADIOACTIVITY, 10, RadioActivityUnit.RUTHERFORD, "RUTHERFORD", "Rd");
+
+    /* ============================================= ANGULARACCELERATION =============================================== */
+    
+    /** AngularAcceleration.RADIAN_PER_SECOND_2 unit type with code 0. */
+    public static final DisplayType ANGULARACCELERATION_RADIAN_PER_SECOND_2 =
+            new DisplayType(SerializationUnits.ANGULARACCELERATION, 0, AngularAccelerationUnit.RADIAN_PER_SECOND_SQUARED,
+                    "RADIAN_PER_SECOND_SQUARED", "rad/s2");
+
+    /** AngularAcceleration.DEGREE_PER_SECOND_2 unit type with code 1. */
+    public static final DisplayType ANGULARACCELERATION_DEGREE_PER_SECOND_2 =
+            new DisplayType(SerializationUnits.ANGULARACCELERATION, 1, AngularAccelerationUnit.DEGREE_PER_SECOND_SQUARED,
+                    "DEGREE_PER_SECOND_SQUARED", "deg/s2");
+
+    /** AngularAcceleration.ARCMINUTE_PER_SECOND_2 unit type with code 2. */
+    public static final DisplayType ANGULARACCELERATION_ARCMINUTE_PER_SECOND_2 =
+            new DisplayType(SerializationUnits.ANGULARACCELERATION, 2, AngularAccelerationUnit.ARCMINUTE_PER_SECOND_SQUARED,
+                    "ARCMINUTE_PER_SECOND_SQUARED", "arcmin/s2");
+
+    /** AngularAcceleration.ARCSECOND_PER_SECOND_2 unit type with code 3. */
+    public static final DisplayType ANGULARACCELERATION_ARCSECOND_PER_SECOND_2 =
+            new DisplayType(SerializationUnits.ANGULARACCELERATION, 3, AngularAccelerationUnit.ARCSECOND_PER_SECOND_SQUARED,
+                    "ARCSECOND_PER_SECOND_SQUARED", "arcsec/s2");
+
+    /** AngularAcceleration.GRAD_PER_SECOND_2 unit type with code 4. */
+    public static final DisplayType ANGULARACCELERATION_GRAD_PER_SECOND_2 =
+            new DisplayType(SerializationUnits.ANGULARACCELERATION, 4, AngularAccelerationUnit.GRAD_PER_SECOND_SQUARED,
+                    "GRAD_PER_SECOND_SQUARED", "grad/s2");
+
+    /** AngularAcceleration.CENTESIMAL_ARCMINUTE_PER_SECOND_SQUARED unit type with code 5. */
+    public static final DisplayType ANGULARACCELERATION_CENTECIMAL_ARCMINUTE_PER_SECOND_2 = new DisplayType(
+            SerializationUnits.ANGULARACCELERATION, 5, AngularAccelerationUnit.CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED,
+            "CENTECIMALARCMINUTE_PER_SECOND_SQUARED", "cdm/s2");
+
+    /** AngularAcceleration.CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED unit type with code 6. */
+    public static final DisplayType ANGULARACCELERATION_CENTESIMAL_ARCSECOND_PER_SECOND_2 = new DisplayType(
+            SerializationUnits.ANGULARACCELERATION, 6, AngularAccelerationUnit.CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED,
+            "CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED", "cds/s2");
+
+    /* =============================================== ANGULARVELOCITY ================================================= */
+    
+    /** AngularVelocity.RADIAN_PER_SECOND unit type with code 0. */
+    public static final DisplayType ANGULARVELOCITY_RADIAN_PER_SECOND = new DisplayType(SerializationUnits.ANGULARACCELERATION,
+            0, AngularVelocityUnit.RADIAN_PER_SECOND, "RADIAN_PER_SECOND", "rad/s");
+
+    /** AngularVelocity.DEGREE_PER_SECOND unit type with code 1. */
+    public static final DisplayType ANGULARVELOCITY_DEGREE_PER_SECOND = new DisplayType(SerializationUnits.ANGULARACCELERATION,
+            1, AngularVelocityUnit.DEGREE_PER_SECOND, "DEGREE_PER_SECOND", "deg/s");
+
+    /** AngularVelocity.ARCMINUTE_PER_SECOND unit type with code 2. */
+    public static final DisplayType ANGULARVELOCITY_ARCMINUTE_PER_SECOND =
+            new DisplayType(SerializationUnits.ANGULARACCELERATION, 2, AngularVelocityUnit.ARCMINUTE_PER_SECOND,
+                    "ARCMINUTE_PER_SECOND", "arcmin/s");
+
+    /** AngularVelocity.ARCSECOND_PER_SECOND unit type with code 3. */
+    public static final DisplayType ANGULARVELOCITY_ARCSECOND_PER_SECOND =
+            new DisplayType(SerializationUnits.ANGULARACCELERATION, 3, AngularVelocityUnit.ARCSECOND_PER_SECOND,
+                    "ARCSECOND_PER_SECOND", "arcsec/s");
+
+    /** AngularVelocity.GRAD_PER_SECOND unit type with code 4. */
+    public static final DisplayType ANGULARVELOCITY_GRAD_PER_SECOND = new DisplayType(SerializationUnits.ANGULARACCELERATION, 4,
+            AngularVelocityUnit.GRAD_PER_SECOND, "GRAD_PER_SECOND", "grad/s");
+
+    /** AngularVelocity.CENTESIMAL_ARCMINUTE_PER_SECOND unit type with code 5. */
+    public static final DisplayType ANGULARVELOCITY_CENTECIMAL_ARCMINUTE_PER_SECOND =
+            new DisplayType(SerializationUnits.ANGULARACCELERATION, 5, AngularVelocityUnit.CENTESIMAL_ARCSECOND_PER_SECOND,
+                    "CENTECIMALARCMINUTE_PER_SECOND", "cdm/s");
+
+    /** AngularVelocity.CENTESIMAL_ARCSECOND_PER_SECOND unit type with code 6. */
+    public static final DisplayType ANGULARVELOCITY_CENTESIMAL_ARCSECOND_PER_SECOND =
+            new DisplayType(SerializationUnits.ANGULARACCELERATION, 6, AngularVelocityUnit.CENTESIMAL_ARCSECOND_PER_SECOND,
+                    "CENTESIMAL_ARCSECOND_PER_SECOND", "cds/s");
+    
+    /* ================================================== MOMENTUM ===================================================== */
+    
+    /** Momentum.KILOGRAM_METER_PER_SECOND unit type with code 0. */
+    public static final DisplayType KILOGRAM_METER_PER_SECOND = new DisplayType(SerializationUnits.ANGULARACCELERATION, 0,
+            MomentumUnit.KILOGRAM_METER_PER_SECOND, "KILOGRAM_METER_PER_SECOND", "kgm/s");
 
     /* ================================================== END TYPES ==================================================== */
 
