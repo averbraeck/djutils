@@ -20,8 +20,8 @@ public final class DecoderDumperDemos
 
     /**
      * Run the demonstation(s).
-     * @param args
-     * @throws IOException
+     * @param args can be left blank
+     * @throws IOException on error
      */
     public static void main(final String[] args) throws IOException
     {
