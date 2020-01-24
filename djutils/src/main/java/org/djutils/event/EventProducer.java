@@ -50,7 +50,7 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
      * eventType. This eventType functions as a marker for registration. If the eventProducer defines two non-private, static
      * EventTypes with an equal value, the marker function is lost. This method checks for this particular problem. Note that
      * this will also return true when a superclass defines the same non-private, static EventType as a subclass.
-     * @return boolean; true if every non-private, static EventType in this class is unique; false if a duplicate exists.
+     * @return boolean; true if every non-private, static EventType in this class is unique; false if a duplicate exists
      */
     private boolean checkNoDuplicateEventTypes()
     {
@@ -172,7 +172,7 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     /**
      * Transmit an event to all interested listeners.
      * @param event EventInterface; the event
-     * @return the event
+     * @return EventInterface; the event (for method chaining)
      */
     protected synchronized EventInterface fireEvent(final EventInterface event)
     {

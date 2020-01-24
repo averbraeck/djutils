@@ -380,7 +380,6 @@ public final class CategoryLogger
          */
         public DelegateLogger(final boolean log)
         {
-            super();
             this.log = log;
         }
 

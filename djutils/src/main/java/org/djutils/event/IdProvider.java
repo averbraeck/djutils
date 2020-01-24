@@ -18,4 +18,5 @@ public interface IdProvider extends Serializable
      * @return Serializable; an id that identifies the EventProducer
      */
     Serializable id();
+    
 }

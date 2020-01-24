@@ -33,7 +33,6 @@ public class MethodSignature implements Serializable
      */
     public MethodSignature(final String value)
     {
-        super();
         this.value = value;
     }
 
@@ -43,7 +42,6 @@ public class MethodSignature implements Serializable
      */
     public MethodSignature(final Method method)
     {
-        super();
         Class<?>[] parameterTypes = new Class<?>[0];
         if (method.getParameterTypes() != null)
         {
@@ -63,7 +61,6 @@ public class MethodSignature implements Serializable
      */
     public MethodSignature(final Constructor<?> constructor)
     {
-        super();
         Class<?>[] parameterTypes = new Class<?>[0];
         if (constructor.getParameterTypes() != null)
         {

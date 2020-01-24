@@ -21,20 +21,19 @@ public final class EventType implements Serializable
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140830L;
 
-    /** the internal representation of the hashCode. */
+    /** The internal representation of the hashCode. */
     private final int hashcode;
 
-    /** name refers to the name of the eventType. */
+    /** The name of the eventType. */
     private final String name;
 
     /**
-     * constructs a new EventType.
+     * Construct a new EventType.
      * @param name String; the name of this eventType. Two values are not appreciated : &lt;code&gt;null&lt;/code&gt; and
      *            &lt;code&gt;""&lt;/code&gt;.
      */
     public EventType(final String name)
     {
-        super();
         if (name == null || name.equals(""))
         {
             throw new IllegalArgumentException("EventType name == null || EventType name == \"\"");
@@ -55,7 +54,8 @@ public final class EventType implements Serializable
     }
 
     /**
-     * Returns a hash code for the name of the this eventType. The hash code for an <code>EventType</code> object is computed as
+     * Return a hash code based on the name of the this eventType. The hash code for an <code>EventType</code> object is
+     * computed as 
      * <blockquote>
      * 
      * <pre>
@@ -65,7 +65,7 @@ public final class EventType implements Serializable
      * </blockquote> using <code>int</code> arithmetic, where <code>s[i]</code> is the <i>i </i>th character of the name of the
      * eventType, <code>n</code> is the length of the name, and <code>^</code> indicates exponentiation. This algorithm assures
      * JVM, host, time independence.
-     * @return a hash code value for this object.
+     * @return int; a hash code value for this object.
      */
     @Override
     public int hashCode()
@@ -74,7 +74,8 @@ public final class EventType implements Serializable
     }
 
     /**
-     * @return the event type name
+     * Return the event type name.
+     * @return String; the event type name
      */
     public String getName()
     {

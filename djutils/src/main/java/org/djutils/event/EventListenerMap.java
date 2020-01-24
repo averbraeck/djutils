@@ -37,11 +37,11 @@ public final class EventListenerMap implements Serializable
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140830L;
 
-    /** the hasMap we map on. */
+    /** The hasMap we map on. */
     private Map<EventType, List<Reference<EventListenerInterface>>> map = Collections.synchronizedMap(new LinkedHashMap<>());
 
     /**
-     * Returns the size of the EventListenerMap, i.e. the number of EventTypes that are registered.
+     * Return the size of the EventListenerMap, i.e. the number of EventTypes that are registered.
      * @return int; the size of the EventListenerMap, i.e. the number of EventTypes that are registered
      */
     public int size()
@@ -58,7 +58,7 @@ public final class EventListenerMap implements Serializable
     }
 
     /**
-     * Returns whether the EventListenerMap is empty.
+     * Return whether the EventListenerMap is empty.
      * @return boolean; whether the EventListenerMap is empty
      */
     public boolean isEmpty()
@@ -67,7 +67,7 @@ public final class EventListenerMap implements Serializable
     }
 
     /**
-     * Returns whether the EventListenerMap contains the EventType as a key.
+     * Return whether the EventListenerMap contains the EventType as a key.
      * @param eventType EventType; the EventType key to search for
      * @return boolean; whether the EventListenerMap contains the EventType as a key
      */
@@ -78,9 +78,9 @@ public final class EventListenerMap implements Serializable
     }
 
     /**
-     * Returns whether the EventListenerMap contains the eventListener as one of the subscribers.
+     * Return whether the EventListenerMap contains the eventListener as one of the subscribers.
      * @param eventListener EventListenerInterface; the EventListener value to search for
-     * @return boolean; whether the EventListenerMap contains the eventListener as one of the subscribers.
+     * @return boolean; true if the EventListenerMap contains the eventListener as one of the subscribers; false otherwise
      */
     public boolean containsValue(final EventListenerInterface eventListener)
     {
@@ -101,7 +101,8 @@ public final class EventListenerMap implements Serializable
     /**
      * Returns whether the EventListenerMap contains the reference to the eventListener as one of the subscribers.
      * @param reference EventListenerInterface; the reference pointer an EventListener to search for
-     * @return boolean; whether the EventListenerMap contains the reference to the eventListener as one of the subscribers.
+     * @return boolean; true if the EventListenerMap contains the reference to the eventListener as one of the subscribers;
+     *         false otherwise
      */
     public boolean containsValue(final Reference<EventListenerInterface> reference)
     {
@@ -155,7 +156,7 @@ public final class EventListenerMap implements Serializable
      * underlying map.
      * @return Set&lt;Map.Entry&lt;EventType, List&lt;Reference&lt;EventListenerInterface&gt;&gt;&gt;&gt;;the Set of Entry types
      *         holding pairs of a key (EventType) and a value (List of references to EventListeners for that EventType). Note:
-     *         this is not a safe copy!
+     *         this is <b>not</b> a safe copy!
      */
     public Set<Map.Entry<EventType, List<Reference<EventListenerInterface>>>> entrySet()
     {
@@ -215,7 +216,7 @@ public final class EventListenerMap implements Serializable
     }
 
     /**
-     * writes the EventListenerMap to a stream. RemoteEventListeners are not written, as they are fully dependent on the state
+     * Write the EventListenerMap to a stream. RemoteEventListeners are not written, as they are fully dependent on the state
      * of the network, which might not be the same when the EventListenerMap is read back. Weak references and strong references
      * are both written to the stream.
      * @param out ObjectOutputStream; the output stream
@@ -246,7 +247,7 @@ public final class EventListenerMap implements Serializable
     }
 
     /**
-     * reads an EventListenerMap from a stream.
+     * Read an EventListenerMap from a stream and use it to replace the internal map.
      * @param in java.io.ObjectInputStream; the input stream
      * @throws IOException on IOException
      * @throws ClassNotFoundException on ClassNotFoundException
@@ -256,4 +257,5 @@ public final class EventListenerMap implements Serializable
     {
         this.map = (LinkedHashMap<EventType, List<Reference<EventListenerInterface>>>) in.readObject();
     }
+    
 }

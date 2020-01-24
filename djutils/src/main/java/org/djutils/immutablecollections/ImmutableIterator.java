@@ -26,7 +26,6 @@ public class ImmutableIterator<E> implements Iterator<E>
      */
     public ImmutableIterator(final Iterator<E> iterator)
     {
-        super();
         this.iterator = iterator;
     }
 

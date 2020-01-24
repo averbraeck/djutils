@@ -42,21 +42,20 @@ public interface EventProducerInterface
     Serializable getSourceId() throws RemoteException;
 
     /**
-     * adds a listener as strong reference to the BEGINNING of a queue of listeners.
-     * @param listener EventListenerInterface; the listener which is interested at events of eventType.
-     * @param eventType EventType; the events of interest.
-     * @return the success of adding the listener. If a listener was already added false is returned.
+     * Add a listener as strong reference to the BEGINNING of a queue of listeners.
+     * @param listener EventListenerInterface; the listener which is interested at events of eventType
+     * @param eventType EventType; the events of interest
+     * @return the success of adding the listener. If a listener was already added false is returned
      * @throws RemoteException If a network connection failure occurs.
-     * @see org.djutils.event.ref.WeakReference
      */
     boolean addListener(EventListenerInterface listener, EventType eventType) throws RemoteException;
 
     /**
-     * adds a listener to the BEGINNING of a queue of listeners.
-     * @param listener EventListenerInterface; the listener which is interested at events of eventType.
-     * @param eventType EventType; the events of interest.
-     * @param referenceType ReferenceType; whether the listener is added as a strong or as a weak reference.
-     * @return the success of adding the listener. If a listener was already added false is returned.
+     * Add a listener to the BEGINNING of a queue of listeners.
+     * @param listener EventListenerInterface; the listener which is interested at events of eventType
+     * @param eventType EventType; the events of interest
+     * @param referenceType ReferenceType; whether the listener is added as a strong or as a weak reference
+     * @return the success of adding the listener. If a listener was already added false is returned
      * @throws RemoteException If a network connection failure occurs.
      * @see org.djutils.event.ref.WeakReference
      */
@@ -64,35 +63,35 @@ public interface EventProducerInterface
             throws RemoteException;
 
     /**
-     * adds a listener as strong reference to the specified position of a queue of listeners.
-     * @param listener EventListenerInterface; the listener which is interested at events of eventType.
-     * @param eventType EventType; the events of interest.
-     * @param position int; the position of the listener in the queue.
+     * Add a listener as strong reference to the specified position of a queue of listeners.
+     * @param listener EventListenerInterface; the listener which is interested at events of eventType
+     * @param eventType EventType; the events of interest
+     * @param position int; the position of the listener in the queue
      * @return the success of adding the listener. If a listener was already added, or an illegal position is provided false is
-     *         returned.
+     *         returned
      * @throws RemoteException If a network connection failure occurs.
-     * @see org.djutils.event.ref.WeakReference
      */
     boolean addListener(EventListenerInterface listener, EventType eventType, int position) throws RemoteException;
 
     /**
-     * adds a listener to the specified position of a queue of listeners.
-     * @param listener EventListenerInterface; which is interested at certain events,
-     * @param eventType EventType; the events of interest.
+     * Add a listener to the specified position of a queue of listeners.
+     * @param listener EventListenerInterface; which is interested at certain events
+     * @param eventType EventType; the events of interest
      * @param position int; the position of the listener in the queue
-     * @param referenceType ReferenceType; whether the listener is added as a strong or as a weak reference.
+     * @param referenceType ReferenceType; whether the listener is added as a strong or as a weak reference
      * @return the success of adding the listener. If a listener was already added or an illegal position is provided false is
-     *         returned.
+     *         returned
      * @throws RemoteException If a network connection failure occurs.
+     * @see org.djutils.event.ref.WeakReference
      */
     boolean addListener(EventListenerInterface listener, EventType eventType, int position, ReferenceType referenceType)
             throws RemoteException;
 
     /**
-     * removes the subscription of a listener for a specific event.
-     * @param listener EventListenerInterface; which is no longer interested.
-     * @param eventType EventType; the event which is of no interest any more.
-     * @return the success of removing the listener. If a listener was not subscribed false is returned.
+     * Remove the subscription of a listener for a specific event.
+     * @param listener EventListenerInterface; which is no longer interested
+     * @param eventType EventType; the event which is of no interest any more
+     * @return the success of removing the listener. If a listener was not subscribed false is returned
      * @throws RemoteException If a network connection failure occurs.
      */
     boolean removeListener(EventListenerInterface listener, EventType eventType) throws RemoteException;
