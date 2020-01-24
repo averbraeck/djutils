@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * The Event class forms the reference implementation for the EventInterface. Because events are often sent over the network,
- * the interface demands that source of the event and its content are serializable. It is the repsonsibility of the programmer,
+ * the interface demands that source of the event and its content are serializable. It is the responsibility of the programmer,
  * though, that the <b>fields</b> of the sourceId and content are serializable as well.
  * <p>
  * Copyright (c) 2002-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
@@ -22,20 +22,20 @@ public class Event implements EventInterface
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140826L;
 
-    /** type is the type of the event. */
+    /** The type of the event. */
     private final EventType type;
 
-    /** content refers to the content of the event. */
+    /** The content of the event. */
     private final Serializable content;
 
-    /** the source id of an event. */
+    /** The source id of an event. */
     private final Serializable sourceId;
 
     /**
-     * constructs a new Event.
+     * Construct a new Event.
      * @param type EventType; the name of the Event.
-     * @param sourceId Serializable; the source id of the sender.
-     * @param content Serializable; the content of the event.
+     * @param sourceId Serializable; the source id of the sender
+     * @param content Serializable; the content of the event
      */
     public Event(final EventType type, final Serializable sourceId, final Serializable content)
     {

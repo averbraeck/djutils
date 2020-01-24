@@ -23,11 +23,11 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140826L;
 
-    /** timeStamp refers to the time stamp of the event. */
+    /** Time stamp of this TimedEvent. */
     private final T timeStamp;
 
     /**
-     * constructs a new timed event.
+     * Construct a new timed event.
      * @param type EventType; the eventType of the event.
      * @param sourceId Serializable; the source of the event.
      * @param content Serializable; the content of the event.
@@ -40,8 +40,8 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
     }
 
     /**
-     * returns the timeStamp of this event.
-     * @return the timestamp as double.
+     * Returns the timeStamp of this event.
+     * @return T; the time stamp
      */
     public T getTimeStamp()
     {
@@ -91,4 +91,5 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
     {
         return super.toString().split("]")[0] + ";" + this.getTimeStamp() + "]";
     }
+    
 }

@@ -32,20 +32,21 @@ public interface EventInterface extends Serializable
 {
 
     /**
-     * returns the id for the source of the event. The source is the sender of the event
-     * @return Serializable; the id for the source of the event
+     * Return the id of the source of the event. The source is, or identifies the sender of the event
+     * @return Serializable; the id of the source of the event
      */
     Serializable getSourceId();
 
     /**
-     * returns the content of this event.
-     * @return Serializable; the content of this event
+     * Return the content (payload) of this event.
+     * @return Serializable; the content (payload) of this event
      */
     Serializable getContent();
 
     /**
-     * returns the type of the event.
-     * @return EbentType; the eventType of the event
+     * Return the type of the event.
+     * @return EventType; the type of the event
      */
     EventType getType();
+    
 }

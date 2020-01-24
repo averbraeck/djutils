@@ -36,7 +36,6 @@ public class FieldSignature implements Serializable
      */
     public FieldSignature(final String value)
     {
-        super();
         this.value = value;
     }
 

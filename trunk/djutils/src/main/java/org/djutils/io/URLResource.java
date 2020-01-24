@@ -253,7 +253,6 @@ public final class URLResource
          */
         PasswordAuthenticator(final String userName, final String password)
         {
-            super();
             this.userName = userName;
             this.password = password;
         }
