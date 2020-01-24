@@ -1,13 +1,12 @@
 <document xmlns="http://maven.apache.org/changes/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
-   <release version="1.04.06" date="2020-01-23" description="added units AngularAcceleration, AngularVelocity and Momentum">
-      <action dev="pknoppers" type="add">
-        Added the three new DJUNITS units to djutils-serialization.
-      </action>
-    </release>
 
-   <release version="1.04.05" date="2020-01-21" description="subSet, headSet, tailSet of immutableTreeset did not take comparator">
+
+   <release version="1.04.05" date="2020-01-24" description="Comparator immutableTreeset; new units for serialization">
+      <action dev="pknoppers" type="add">
+        Added the three new DJUNITS units  AngularAcceleration, AngularVelocity and Momentum to djutils-serialization.
+      </action>
       <action dev="pknoppers" type="fix">
         The subSet, headSet and tailSet methods of ImmutableTreeSet would use the default comparator of the data type instead of
         inheriting the comparator of the underlying set. This bug was discovered while writing thorough unit tests.
