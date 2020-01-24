@@ -1,0 +1,25 @@
+                   -------------------------------------
+                   DJUTILS-EXT
+                   -------------------------------------
+                   August, 2019
+                   -------------------------------------
+                   
+DJUTILS-EXT - extra utility classes that have more dependencies
+
+	DJUTILS-EXT is a set of utilities for multiple projects.
+
+    * The classes in the org.djutils.cli package take care of command line argument parsing using picocli.
+    
+    []
+
+==========
+
+	DJUTILS-EXT has an open source BSD 3-clause license.
+
+    * Third party components used in DJUTILS-EXT can not have a license that is more restrictive than BSD, Apache, MIT, LGPL, or Eclipse.
+
+    * DJUTILS-EXT can be incorporated in part or in full in other products for any use (educational, commercial, whatever).
+
+    * DJUTILS-EXT may be extended, evolved by anyone into anything else for any purpose.
+    
+    []
