@@ -78,6 +78,9 @@ public class TestCLIHelpVersion
         String helpText = this.systemOutRule.getLog();
         assertTrue(helpText.contains("Program2"));
         assertTrue(helpText.contains("2nd version of program"));
+        
+        // clean the override map
+        CliUtil.overrideMap.clear();
     }
 
     /**
@@ -108,6 +111,9 @@ public class TestCLIHelpVersion
         System.setSecurityManager(null);
         String versionText = this.systemOutRule.getLog();
         assertTrue(versionText.contains("2.0"));
+        
+        // clean the override map
+        CliUtil.overrideMap.clear();
     }
 
     /**
