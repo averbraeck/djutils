@@ -68,6 +68,7 @@ public class TestCLISuperclass
     @Test
     public void testCli() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
+        // do the command line overrrides work?
         String[] args = new String[] {"-p", "1200"};
         Options options = new Options();
         CliUtil.execute(options, args);
@@ -76,6 +77,7 @@ public class TestCLISuperclass
         assertEquals("Program", options.getClass().getAnnotation(Command.class).name());
         assertEquals("Test program for CLI", options.getClass().getAnnotation(Command.class).description()[0]);
 
+        // do the command line overrides work for classes and subclasses? 
         args = new String[] {"-p", "2400", "--timeout", "60s"};
         OptionsSub optionsSub = new OptionsSub();
         CliUtil.execute(optionsSub, args);
@@ -86,6 +88,7 @@ public class TestCLISuperclass
         assertEquals("Test program for CLI",
                 optionsSub.getClass().getSuperclass().getAnnotation(Command.class).description()[0]);
 
+        // does the change of command name, description and version work?
         CliUtil.changeCommandName(OptionsSub.class, "NewName");
         CliUtil.changeCommandDescription(OptionsSub.class, "NewDescription");
         CliUtil.changeCommandVersion(OptionsSub.class, "1.1");
@@ -93,5 +96,31 @@ public class TestCLISuperclass
         assertEquals("1.1", CliUtil.getCommandVersion(options)[0]);
         assertEquals("NewName", CliUtil.getCommandName(options));
         assertEquals("NewDescription", CliUtil.getCommandDescription(options)[0]);
+        
+        // does the change work for the main class?
+        args = new String[] {};
+        OptionsSub optionsChanged1 = new OptionsSub();
+        CliUtil.changeOptionDefault(OptionsSub.class, "timeout", "30s");
+        CliUtil.execute(optionsChanged1, args);
+        assertEquals(80, optionsChanged1.getPort());
+        assertEquals(new Duration(30.0, DurationUnit.SECOND), optionsChanged1.getTimeout());
+        
+        // does the change work for a subclass?
+        args = new String[] {};
+        OptionsSub optionsChanged2 = new OptionsSub();
+        CliUtil.changeOptionDefault(optionsChanged2.getClass().getSuperclass(), "port", "8080");
+        CliUtil.execute(optionsChanged2, args);
+        assertEquals(8080, optionsChanged2.getPort());
+        assertEquals(new Duration(30.0, DurationUnit.SECOND), optionsChanged2.getTimeout());
+
+        // does the change stay?
+        args = new String[] {};
+        OptionsSub optionsChanged3 = new OptionsSub();
+        CliUtil.execute(optionsChanged3, args);
+        assertEquals(8080, optionsChanged3.getPort());
+        assertEquals(new Duration(30.0, DurationUnit.SECOND), optionsChanged3.getTimeout());
+        
+        // clean the override map
+        CliUtil.overrideMap.clear();
     }
 }

@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.djutils.reflection.ClassUtil;
+
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Help;
@@ -128,7 +130,17 @@ public final class CliUtil
             public String defaultValue(final ArgSpec argSpec) throws Exception
             {
                 String fieldName = ((Field) argSpec.userObject()).getName();
-                String key = CliUtil.makeOverrideKeyDefault(commandLine.getCommand().getClass(), fieldName, "defaultValue");
+                Class<?> fieldClass = null;
+                try
+                {
+                    Field field = ClassUtil.resolveField(commandLine.getCommand().getClass(), fieldName);
+                    fieldClass = field.getDeclaringClass();
+                }
+                catch (NoSuchFieldException nsfe)
+                {
+                    fieldClass = commandLine.getCommand().getClass();
+                }
+                String key = CliUtil.makeOverrideKeyProperty(fieldClass, fieldName, "defaultValue");
                 if (CliUtil.overrideMap.containsKey(key))
                 {
                     return CliUtil.overrideMap.get(key).toString();
@@ -250,14 +262,14 @@ public final class CliUtil
     public static void changeOptionProperty(final Class<?> programClass, final String fieldName, final String propertyName,
             final Object newValue) throws CliException, NoSuchFieldException
     {
-        Field field = programClass.getDeclaredField(fieldName);
+        Field field = ClassUtil.resolveField(programClass, fieldName);
         Option optionAnnotation = field.getAnnotation(Option.class);
         if (optionAnnotation == null)
         {
             throw new CliException(
                     String.format("@Option annotation not found for field %s in class %s", fieldName, programClass.getName()));
         }
-        String key = makeOverrideKeyDefault(programClass, fieldName, propertyName);
+        String key = makeOverrideKeyProperty(field.getDeclaringClass(), fieldName, propertyName);
         overrideMap.put(key, newValue);
     }
 
@@ -537,7 +549,7 @@ public final class CliUtil
      * @param propertyName String; the name of the property to change the value of
      * @return String; the override key for an option property
      */
-    static String makeOverrideKeyDefault(final Class<?> programClass, final String fieldName, final String propertyName)
+    static String makeOverrideKeyProperty(final Class<?> programClass, final String fieldName, final String propertyName)
     {
         return programClass.getName() + "%" + fieldName + "%" + propertyName;
     }
