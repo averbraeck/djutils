@@ -7,8 +7,9 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.util.Set;
 
+import org.djutils.event.EventInterface;
 import org.djutils.event.EventListenerInterface;
-import org.djutils.event.EventProducer;
+import org.djutils.event.EventProducerImpl;
 import org.djutils.event.EventType;
 import org.djutils.event.ref.ReferenceType;
 import org.djutils.rmi.RMIObject;
@@ -31,8 +32,9 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140830L;
 
-    /** The embedded event producer. */
-    private final EventProducer eventProducer;
+    /** The EventProducer helper class with the actual implementation to avoid code duplication. */
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    protected final EventProducerImpl eventProducerImpl;
 
     /**
      * Create a remote event listener and register the listener in the RMI registry. When the RMI registry does not exist yet,
@@ -51,17 +53,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
             throws RemoteException, AlreadyBoundException
     {
         super(host, port, bindingKey);
-        this.eventProducer = new EventProducer()
-        {
-            /** */
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public Serializable getSourceId()
-            {
-                return bindingKey; // the identifier of the embedded eventProducer
-            }
-        };
+        this.eventProducerImpl = new EventProducerImpl(this);
     }
 
     /**
@@ -79,76 +71,304 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
     public RemoteEventProducer(final URL registryURL, final String bindingKey) throws RemoteException, AlreadyBoundException
     {
         super(registryURL, bindingKey);
-        this.eventProducer = new EventProducer()
-        {
-            /** */
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public Serializable getSourceId()
-            {
-                return bindingKey; // the identifier of the embedded eventProducer
-            }
-        };
+        this.eventProducerImpl = new EventProducerImpl(this);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean addListener(final EventListenerInterface listener, final EventType eventType) throws RemoteException
-    {
-        return this.eventProducer.addListener(listener, eventType);
-    }
+    public abstract Serializable getSourceId(); // without RemoteException
 
     /** {@inheritDoc} */
     @Override
-    public boolean addListener(final EventListenerInterface listener, final EventType eventType,
-            final ReferenceType referenceType) throws RemoteException
-    {
-        return this.eventProducer.addListener(listener, eventType, referenceType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean addListener(final EventListenerInterface listener, final EventType eventType, final int position)
+    public final synchronized boolean addListener(final EventListenerInterface listener, final EventType eventType)
             throws RemoteException
     {
-        return this.eventProducer.addListener(listener, eventType, position);
+        return this.eventProducerImpl.addListener(listener, eventType);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean addListener(final EventListenerInterface listener, final EventType eventType, final int position,
+    public final synchronized boolean addListener(final EventListenerInterface listener, final EventType eventType,
             final ReferenceType referenceType) throws RemoteException
     {
-        return this.eventProducer.addListener(listener, eventType, position, referenceType);
+        return this.eventProducerImpl.addListener(listener, eventType, referenceType);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean removeListener(final EventListenerInterface listener, final EventType eventType) throws RemoteException
+    public final synchronized boolean addListener(final EventListenerInterface listener, final EventType eventType,
+            final int position) throws RemoteException
     {
-        return this.eventProducer.removeListener(listener, eventType);
+        return this.eventProducerImpl.addListener(listener, eventType, position);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final synchronized boolean addListener(final EventListenerInterface listener, final EventType eventType,
+            final int position, final ReferenceType referenceType) throws RemoteException
+    {
+        return this.eventProducerImpl.addListener(listener, eventType, position, referenceType);
+    }
+
+    /**
+     * Transmit an event to all interested listeners.
+     * @param event EventInterface; the event
+     * @return EventInterface; the event (for method chaining)
+     * @throws RemoteException on network failure
+     */
+    protected synchronized EventInterface fireEvent(final EventInterface event) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(event);
+    }
+
+    /**
+     * Transmit an event with a serializable object as payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value Serializable; the object sent with the event
+     * @return Serializable; the payload
+     * @throws RemoteException on network failure
+     */
+    protected Serializable fireEvent(final EventType eventType, final Serializable value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value);
+    }
+
+    /**
+     * Transmit an event with no payload object to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @throws RemoteException on network failure
+     */
+    protected void fireEvent(final EventType eventType) throws RemoteException
+    {
+        this.eventProducerImpl.fireEvent(eventType);
+    }
+
+    /**
+     * Transmit a time-stamped event with a Serializable object (payload) to all interested listeners.
+     * @param eventType EventType; the eventType of the event.
+     * @param value Serializable; the payload sent with the event
+     * @param time C; a time stamp for the event
+     * @return Serializable; the payload
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> Serializable fireTimedEvent(final EventType eventType,
+            final Serializable value, final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time);
+    }
+
+    /**
+     * Transmit an event with a one byte payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value byte; the payload
+     * @return byte; the payload
+     * @throws RemoteException on network failure
+     */
+    protected byte fireEvent(final EventType eventType, final byte value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value);
+    }
+
+    /**
+     * Transmit a time-stamped event with a one byte payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value byte; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return byte; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> byte fireTimedEvent(final EventType eventType, final byte value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time);
+    }
+
+    /**
+     * Transmit an event with a boolean payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value boolean; the payload
+     * @return boolean; the payload
+     * @throws RemoteException on network failure
+     */
+    protected boolean fireEvent(final EventType eventType, final boolean value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value);
+    }
+
+    /**
+     * Transmit a time-stamped event with a boolean payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value boolean; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return boolean; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> boolean fireTimedEvent(final EventType eventType, final boolean value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time);
+    }
+
+    /**
+     * Transmit an event with a double value payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value double; the payload
+     * @return double; the payload
+     * @throws RemoteException on network failure
+     */
+    protected double fireEvent(final EventType eventType, final double value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value);
+    }
+
+    /**
+     * Transmit a time-stamped event with a double value payload to interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value double; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return double; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> double fireTimedEvent(final EventType eventType, final double value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time);
+    }
+
+    /**
+     * Transmit an event with an integer payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value int; the payload
+     * @return int; the payload
+     * @throws RemoteException on network failure
+     */
+    protected int fireEvent(final EventType eventType, final int value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value);
+    }
+
+    /**
+     * Transmit a time-stamped event with an integer payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value int; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return int; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> int fireTimedEvent(final EventType eventType, final int value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time);
+    }
+
+    /**
+     * Transmit an event with a long payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value long; the payload
+     * @return long; the payload
+     * @throws RemoteException on network failure
+     */
+    protected long fireEvent(final EventType eventType, final long value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value);
+    }
+
+    /**
+     * Transmit a time-stamped event with a long payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value long; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return long; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> long fireTimedEvent(final EventType eventType, final long value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time);
+    }
+
+    /**
+     * Transmit an event with a short payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value short; the payload
+     * @return short; the payload
+     * @throws RemoteException on network failure
+     */
+    protected short fireEvent(final EventType eventType, final short value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value);
+    }
+
+    /**
+     * Transmit a time-stamped event with a short payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value short; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return short; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> short fireTimedEvent(final EventType eventType, final short value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time);
+    }
+
+    /**
+     * Remove all the listeners from this event producer.
+     * @return int; the number of removed event types
+     * @throws RemoteException on network failure
+     */
+    protected synchronized int removeAllListeners() throws RemoteException
+    {
+        return this.eventProducerImpl.removeAllListeners();
+    }
+
+    /**
+     * Removes all the listeners of a class from this event producer.
+     * @param ofClass Class&lt;?&gt;; the class or superclass
+     * @return int; the number of removed listeners
+     * @throws RemoteException on network failure
+     */
+    protected synchronized int removeAllListeners(final Class<?> ofClass) throws RemoteException
+    {
+        return this.eventProducerImpl.removeAllListeners(ofClass);
+
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final synchronized boolean removeListener(final EventListenerInterface listener, final EventType eventType)
+            throws RemoteException
+    {
+        return this.eventProducerImpl.removeListener(listener, eventType);
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean hasListeners() throws RemoteException
     {
-        return this.eventProducer.hasListeners();
+        return this.eventProducerImpl.hasListeners();
     }
 
     /** {@inheritDoc} */
     @Override
-    public int numberOfListeners(final EventType eventType) throws RemoteException
+    public synchronized int numberOfListeners(final EventType eventType) throws RemoteException
     {
-        return this.eventProducer.numberOfListeners(eventType);
+        return this.eventProducerImpl.numberOfListeners(eventType);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Set<EventType> getEventTypesWithListeners() throws RemoteException
+    public synchronized Set<EventType> getEventTypesWithListeners() throws RemoteException
     {
-        return this.eventProducer.getEventTypesWithListeners();
+        return this.eventProducerImpl.getEventTypesWithListeners();
     }
 
 }

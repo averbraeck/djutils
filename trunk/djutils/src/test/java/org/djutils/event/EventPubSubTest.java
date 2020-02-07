@@ -2,6 +2,7 @@ package org.djutils.event;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -70,6 +71,9 @@ public class EventPubSubTest
 
         listener.setExpectedObject(Long.valueOf(123456L));
         producer.fireEvent(eventType, 123456L);
+
+        listener.setExpectedObject("abcde");
+        producer.fireEvent(eventType, "abcde");
 
         listener.setExpectedObject(null);
         producer.fireEvent(eventType);
@@ -188,21 +192,12 @@ public class EventPubSubTest
     }
 
     /**
-     * Test the EventProducer and EventListener for TimedEvents.
+     * Test the EventProducer and EventListener for two events with the same name still being unequal.
      */
     @Test
     public void testIllegalEventProducer()
     {
-        try
-        {
-            EventProducerInterface illegal = new TestIllegalEventProducer();
-            System.err.println("EventProducer with identical events constructed: " + illegal.toString());
-            fail("Construction of EventProducer with identical events should have triggered a RuntimeException");
-        }
-        catch (RuntimeException e)
-        {
-            // ok
-        }
+        assertNotEquals(TestIllegalEventProducer.PRODUCER_EVENT_1, TestIllegalEventProducer.PRODUCER_EVENT_2);
     }
 
     /**
@@ -298,7 +293,7 @@ public class EventPubSubTest
 
         // get the underlying listener map
         EventListenerMap map =
-                (EventListenerMap) producer.getClass().getSuperclass().getDeclaredField("listeners").get(producer);
+                (EventListenerMap) EventProducerImpl.class.getDeclaredField("listeners").get(producer.eventProducerImpl);
         // check whether positions have been inserted okay: listener3 - listener - listener2
         List<Reference<EventListenerInterface>> listenerList = map.get(TestEventProducer.PRODUCER_EVENT_2);
         assertEquals(3, listenerList.size());
@@ -332,7 +327,7 @@ public class EventPubSubTest
 
         // get the underlying listener map
         EventListenerMap map =
-                (EventListenerMap) producer.getClass().getSuperclass().getDeclaredField("listeners").get(producer);
+                (EventListenerMap) EventProducerImpl.class.getDeclaredField("listeners").get(producer.eventProducerImpl);
         List<Reference<EventListenerInterface>> listenerList = map.get(TestEventProducer.PRODUCER_EVENT_1);
         assertEquals(1, listenerList.size());
         Reference<EventListenerInterface> ref = listenerList.get(0);
