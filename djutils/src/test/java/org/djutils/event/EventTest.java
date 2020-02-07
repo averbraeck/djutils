@@ -35,7 +35,6 @@ public class EventTest
         assertNotEquals(eventType, content);
         assertNotEquals(eventType, null);
         assertNotEquals(eventType, new EventType("TEST_TYPE2"));
-        assertEquals(eventType.hashCode(), "TEST_TYPE".hashCode());
         assertEquals(eventType.getName(), "TEST_TYPE");
         assertEquals(eventType.toString(), "TEST_TYPE");
         Try.testFail(new Try.Execution()

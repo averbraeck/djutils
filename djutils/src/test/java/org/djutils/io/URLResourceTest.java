@@ -1,15 +1,23 @@
 package org.djutils.io;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
+import org.djutils.exceptions.Try;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -45,6 +53,64 @@ public class URLResourceTest
         Assert.assertNotNull(url2);
         Assert.assertEquals(new File(url2.getPath()).getAbsolutePath().replaceAll("\\\\", "/"),
                 tempFilePath.replaceAll("\\\\", "/"));
+    }
+
+    /**
+     * Test whether URLResource retrieves files.
+     * @throws IOException on I/O error
+     * @throws URISyntaxException on URL error
+     */
+    @Test
+    public final void resourceTest() throws IOException, URISyntaxException
+    {
+        URL url = URLResource.getResource("/org/djutils-test-resources/test.txt");
+        String absolutePath = url.toURI().getPath();
+        List<String> lines = Files.readAllLines(Paths.get(url.toURI()));
+        assertEquals(3, lines.size());
+        assertEquals("abc", lines.get(0));
+
+        url = null;
+        lines = null;
+
+        url = URLResource.getResource("test.txt", "/org/djutils-test-resources/");
+        lines = Files.readAllLines(Paths.get(url.toURI()));
+        assertEquals(3, lines.size());
+        assertEquals("def", lines.get(1));
+
+        url = null;
+        lines = null;
+
+        url = URLResource.getResource("/org/djutils-test-resources/test.txt", "/");
+        lines = Files.readAllLines(Paths.get(url.toURI()));
+        assertEquals(3, lines.size());
+        assertEquals("ghi", lines.get(2));
+        
+        url = null;
+        lines = null;
+
+        url = URLResource.getResource("file://" + absolutePath);
+        lines = Files.readAllLines(Paths.get(url.toURI()));
+        assertEquals(3, lines.size());
+        assertEquals("abc", lines.get(0));
+    }
+
+    /**
+     * Test whether URLResource retrieves files.
+     * @throws IOException on I/O error
+     * @throws URISyntaxException on URL error
+     */
+    @Test
+    public final void resourceAsStreamTest() throws IOException, URISyntaxException
+    {
+        InputStream stream = URLResource.getResourceAsStream("/org/djutils-test-resources/test.txt");
+        byte[] barr = stream.readAllBytes();
+        stream.close();
+        assertEquals('a', barr[0]);
+
+        Try.testFail(() -> URLResource.getResourceAsStream("xxx:///org::djutils-test-resources<>test.txt"));
+
+        stream = URLResource.getResourceAsStream("/org/djutils-test-resources/test123.txt");
+        assertNull(stream);
     }
 
     /**

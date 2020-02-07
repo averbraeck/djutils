@@ -2,7 +2,21 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-   <release version="1.04.07" date="2020-XX-XX" description="...">
+   <release version="1.04.07" date="2020-02-07" description="EventProducerImpl; RemoteEventProducer; Profile class">
+       <action dev="averbraeck" type="update">
+        The EventProducer classes uses a helper class EventProducerImpl to do the real work, to avoid code duplication.
+      </action> 
+       <action dev="averbraeck" type="add">
+        The RemoteEventProducer class lacked implementation of the fireEvent and fireTimedEvent protected methods.
+        These have been added and linked to the EventProducerImpl class to do the work.
+      </action> 
+      <action dev="pknoppers" type="add">
+        Added the Profile class to DJUTILS (moved it out of the ots-core project). Contains profiler code for methods or
+        parts of methods.
+      </action>
+      <action dev="averbraeck" type="add">
+        More extensive tests of the Try class and the URLResource class added.  
+      </action> 
    </release>
    
    <release version="1.04.06" date="2020-02-04" description="CliUtil for subclasses">
@@ -12,10 +26,6 @@
         changed to the actual class where the option was defined, both in storing and in retrieving the 
         override. Tests in the TestCLI unit tests check the new behavior.  
       </action> 
-      <action dev="pknoppers" type="add">
-        Added the Profile class to DJUTILS (moved it out of the ots-core project). Contains profiler code for methods or
-        parts of methods.
-      </action>
    </release>
 
    <release version="1.04.05" date="2020-01-24" description="Comparator immutableTreeset; new units for serialization">
