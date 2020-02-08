@@ -220,7 +220,7 @@ public final class Profile
             {
                 return null;
             }
-            if (name.equals(result.name))
+            if (name.equals(result.getName()))
             {
                 return result.toString();
             }

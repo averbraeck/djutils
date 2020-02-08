@@ -134,10 +134,11 @@ public class TestImmutableEntry
             return this.value;
         }
 
+        /** {@inheritDoc} */
         @Override
         public String toString()
         {
-            return "MyEntry [key=" + key + ", value=" + value + "]";
+            return "MyEntry [key=" + this.key + ", value=" + this.value + "]";
         }
 
     }

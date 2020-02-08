@@ -42,8 +42,17 @@ public class EventPubSubTest
         TestEventListener listener = new TestEventListener();
         EventType eventType = new EventType("TEST_TYPE");
 
+        assertFalse(producer.hasListeners());
+        assertEquals(0, producer.numberOfListeners(eventType));
+        assertEquals(0, producer.getEventTypesWithListeners().size());
+        assertEquals(0, producer.getListenerReferences(eventType).size());
         boolean addListenerOK = producer.addListener(listener, eventType);
         assertTrue(addListenerOK);
+        assertTrue(producer.hasListeners());
+        assertEquals(1, producer.numberOfListeners(eventType));
+        assertEquals(1, producer.getEventTypesWithListeners().size());
+        assertEquals(1, producer.getListenerReferences(eventType).size());
+        assertEquals(listener, producer.getListenerReferences(eventType).get(0).get());
 
         String string = "abc123";
         listener.setExpectedObject(string);
@@ -291,11 +300,9 @@ public class EventPubSubTest
                 producer.addListener(listener3, TestEventProducer.PRODUCER_EVENT_2, EventProducerInterface.FIRST_POSITION);
         assertEquals(3, producer.numberOfListeners(TestEventProducer.PRODUCER_EVENT_2));
 
-        // get the underlying listener map
-        EventListenerMap map =
-                (EventListenerMap) EventProducerImpl.class.getDeclaredField("listeners").get(producer.eventProducerImpl);
         // check whether positions have been inserted okay: listener3 - listener - listener2
-        List<Reference<EventListenerInterface>> listenerList = map.get(TestEventProducer.PRODUCER_EVENT_2);
+        List<Reference<EventListenerInterface>> listenerList =
+                producer.getListenerReferences(TestEventProducer.PRODUCER_EVENT_2);
         assertEquals(3, listenerList.size());
         assertEquals(listener3, listenerList.get(0).get());
         assertEquals(listener, listenerList.get(1).get());
@@ -325,13 +332,12 @@ public class EventPubSubTest
         listener.setExpectedObject(Integer.valueOf(12));
         producer.fireEvent(TestEventProducer.PRODUCER_EVENT_1, 12);
 
-        // get the underlying listener map
-        EventListenerMap map =
-                (EventListenerMap) EventProducerImpl.class.getDeclaredField("listeners").get(producer.eventProducerImpl);
-        List<Reference<EventListenerInterface>> listenerList = map.get(TestEventProducer.PRODUCER_EVENT_1);
+        // check the registered listeners in the map
+        List<Reference<EventListenerInterface>> listenerList =
+                producer.getListenerReferences(TestEventProducer.PRODUCER_EVENT_1);
         assertEquals(1, listenerList.size());
         Reference<EventListenerInterface> ref = listenerList.get(0);
-        // simulate clearing by GC
+        // simulate clearing by GC (the list is a safe copy, but the reference is original)
         Field referent = ref.getClass().getDeclaredField("referent");
         referent.setAccessible(true);
         referent.set(ref, new java.lang.ref.WeakReference<EventListenerInterface>(null));

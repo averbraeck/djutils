@@ -2,7 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-   <release version="1.04.08" date="2020-XX-XX" description="...">
+   <release version="1.04.08" date="2020-02-08" description="EventProducer access to listeners">
+      <action>
+        Added a protected method to the EventProducer to return a safe copy of the list of (soft or weak) 
+        references to the registered listeners for a provided event type, rather than exposing the 
+        internal 'listener' object.
+      </action>
    </release>
   
    <release version="1.04.07" date="2020-02-07" description="EventProducerImpl; RemoteEventProducer; Profile class">
@@ -19,7 +24,7 @@
       </action>
       <action dev="averbraeck" type="add">
         More extensive tests of the Try class and the URLResource class added.  
-      </action> 
+      </action>
    </release>
    
    <release version="1.04.06" date="2020-02-04" description="CliUtil for subclasses">
