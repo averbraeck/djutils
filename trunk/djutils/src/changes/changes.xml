@@ -3,7 +3,7 @@
   <body>
 
    <release version="1.04.08" date="2020-02-08" description="EventProducer access to listeners">
-      <action>
+      <action dev="averbraeck" type="add">
         Added a protected method to the EventProducer to return a safe copy of the list of (soft or weak) 
         references to the registered listeners for a provided event type, rather than exposing the 
         internal 'listener' object.
