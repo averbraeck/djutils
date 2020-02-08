@@ -18,8 +18,6 @@ import java.util.List;
 import org.djutils.event.Event;
 import org.djutils.event.EventInterface;
 import org.djutils.event.EventListenerInterface;
-import org.djutils.event.EventListenerMap;
-import org.djutils.event.EventProducerImpl;
 import org.djutils.event.EventProducerInterface;
 import org.djutils.event.EventType;
 import org.djutils.event.TimedEvent;
@@ -53,9 +51,16 @@ public class RemoteEventPubSubTest
         {
             TestRemoteEventListener listener = new TestRemoteEventListener("listener");
             assertFalse(producer.hasListeners());
-            producer.addListener(listener, TestRemoteEventProducer.REMOTE_EVENT_1);
+            assertEquals(0, producer.numberOfListeners(TestRemoteEventProducer.REMOTE_EVENT_1));
+            assertEquals(0, producer.getEventTypesWithListeners().size());
+            assertEquals(0, producer.getListenerReferences(TestRemoteEventProducer.REMOTE_EVENT_1).size());
+            boolean addListenerOK = producer.addListener(listener, TestRemoteEventProducer.REMOTE_EVENT_1);
+            assertTrue(addListenerOK);
             assertTrue(producer.hasListeners());
+            assertEquals(1, producer.numberOfListeners(TestRemoteEventProducer.REMOTE_EVENT_1));
             assertEquals(1, producer.getEventTypesWithListeners().size());
+            assertEquals(1, producer.getListenerReferences(TestRemoteEventProducer.REMOTE_EVENT_1).size());
+            assertEquals(listener, producer.getListenerReferences(TestRemoteEventProducer.REMOTE_EVENT_1).get(0).get());
 
             String string = "abc123";
             listener.setExpectedObject(string);
@@ -99,7 +104,7 @@ public class RemoteEventPubSubTest
             listener.setExpectingNotification(false);
             producer.fireEvent(TestRemoteEventProducer.REMOTE_EVENT_1, 12345);
 
-            boolean addListenerOK = producer.addListener(listener, TestRemoteEventProducer.REMOTE_EVENT_2);
+            addListenerOK = producer.addListener(listener, TestRemoteEventProducer.REMOTE_EVENT_2);
             assertTrue(addListenerOK);
             addListenerOK = producer.addListener(listener, TestRemoteEventProducer.REMOTE_EVENT_1);
             assertTrue(addListenerOK);
@@ -326,14 +331,9 @@ public class RemoteEventPubSubTest
                     EventProducerInterface.FIRST_POSITION);
             assertEquals(3, producer.numberOfListeners(TestRemoteEventProducer.REMOTE_EVENT_2));
 
-            // get the underlying listener map
-            Field field = EventProducerImpl.class.getDeclaredField("listeners");
-            field.setAccessible(true);
-            EventListenerMap map = (EventListenerMap) field.get(producer.eventProducerImpl);
-            field.setAccessible(false);
-
             // check whether positions have been inserted okay: listener3 - listener - listener2
-            List<Reference<EventListenerInterface>> listenerList = map.get(TestRemoteEventProducer.REMOTE_EVENT_2);
+            List<Reference<EventListenerInterface>> listenerList =
+                    producer.getListenerReferences(TestRemoteEventProducer.REMOTE_EVENT_2);
             assertEquals(3, listenerList.size());
             assertEquals(listener3, listenerList.get(0).get());
             assertEquals(listener, listenerList.get(1).get());
@@ -377,16 +377,11 @@ public class RemoteEventPubSubTest
             listener.setExpectedObject(Integer.valueOf(12));
             producer.fireEvent(TestRemoteEventProducer.REMOTE_EVENT_1, 12);
 
-            // get the underlying listener map
-            Field field = EventProducerImpl.class.getDeclaredField("listeners");
-            field.setAccessible(true);
-            EventListenerMap map = (EventListenerMap) field.get(producer.eventProducerImpl);
-            field.setAccessible(false);
-
-            List<Reference<EventListenerInterface>> listenerList = map.get(TestRemoteEventProducer.REMOTE_EVENT_1);
+            List<Reference<EventListenerInterface>> listenerList =
+                    producer.getListenerReferences(TestRemoteEventProducer.REMOTE_EVENT_1);
             assertEquals(1, listenerList.size());
             Reference<EventListenerInterface> ref = listenerList.get(0);
-            // simulate clearing by GC
+            // simulate clearing by GC (the list is a safe copy, but the reference is original)
             Field referent = ref.getClass().getDeclaredField("referent");
             referent.setAccessible(true);
             referent.set(ref, new java.lang.ref.WeakReference<EventListenerInterface>(null));

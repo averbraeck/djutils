@@ -336,7 +336,7 @@ public interface ImmutableMap<K, V> extends Serializable
         @Override
         public String toString()
         {
-            return "ImmutableEntry [wrappedEntry=" + wrappedEntry + "]";
+            return "ImmutableEntry [wrappedEntry=" + this.wrappedEntry + "]";
         }
         
     }

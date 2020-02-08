@@ -161,8 +161,7 @@ public class ImmutableTreeSet<E> extends ImmutableAbstractSet<E> implements Immu
     public final ImmutableNavigableSet<E> subSet(final E fromElement, final boolean fromInclusive, final E toElement,
             final boolean toInclusive)
     {
-        return new ImmutableTreeSet<E>(
-                (TreeSet<E>) getUnderlyingCollection().subSet(fromElement, fromInclusive, toElement, toInclusive),
+        return new ImmutableTreeSet<E>(getUnderlyingCollection().subSet(fromElement, fromInclusive, toElement, toInclusive),
                 Immutable.WRAP);
     }
 
@@ -170,14 +169,14 @@ public class ImmutableTreeSet<E> extends ImmutableAbstractSet<E> implements Immu
     @Override
     public final ImmutableNavigableSet<E> headSet(final E toElement, final boolean inclusive)
     {
-        return new ImmutableTreeSet<E>((TreeSet<E>) getUnderlyingCollection().headSet(toElement, inclusive), Immutable.WRAP);
+        return new ImmutableTreeSet<E>(getUnderlyingCollection().headSet(toElement, inclusive), Immutable.WRAP);
     }
 
     /** {@inheritDoc} */
     @Override
     public final ImmutableNavigableSet<E> tailSet(final E fromElement, final boolean inclusive)
     {
-        return new ImmutableTreeSet<E>((TreeSet<E>) getUnderlyingCollection().tailSet(fromElement, inclusive), Immutable.WRAP);
+        return new ImmutableTreeSet<E>(getUnderlyingCollection().tailSet(fromElement, inclusive), Immutable.WRAP);
     }
 
     /** {@inheritDoc} */

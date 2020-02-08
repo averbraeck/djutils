@@ -5,12 +5,14 @@ import java.net.URL;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.Set;
 
 import org.djutils.event.EventInterface;
 import org.djutils.event.EventListenerInterface;
 import org.djutils.event.EventProducerImpl;
 import org.djutils.event.EventType;
+import org.djutils.event.ref.Reference;
 import org.djutils.event.ref.ReferenceType;
 import org.djutils.rmi.RMIObject;
 
@@ -369,6 +371,19 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
     public synchronized Set<EventType> getEventTypesWithListeners() throws RemoteException
     {
         return this.eventProducerImpl.getEventTypesWithListeners();
+    }
+
+    /**
+     * Return a safe copy of the list of (soft or weak) references to the registered listeners for the provided event type, or
+     * an empty list when nothing is registered for this event type. The method never returns a null pointer, so it is safe to
+     * use the result directly in an iterator. The references to the listeners are the original references, so not safe copies.
+     * @param eventType EventType; the event type to look up the listeners for
+     * @return List&lt;Reference&lt;EventListenerInterface&gt;&gt;; the list of references to the listeners for this event type,
+     *         or an empty list when the event type is not registered
+     */
+    protected List<Reference<EventListenerInterface>> getListenerReferences(final EventType eventType)
+    {
+        return this.eventProducerImpl.getListenerReferences(eventType);
     }
 
 }

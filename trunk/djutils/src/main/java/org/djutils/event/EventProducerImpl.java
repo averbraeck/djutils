@@ -36,14 +36,13 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
     private static final long serialVersionUID = 20200207;
 
     /** The collection of interested listeners. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected EventListenerMap listeners = new EventListenerMap();
+    private EventListenerMap listeners = new EventListenerMap();
 
     /** The embedding event producer that uses this helper class. */
     private final EventProducerInterface embeddingEventProducer;
-    
+
     /**
-     * Construct the helper class to execute the work for registering listeners and firing events.  
+     * Construct the helper class to execute the work for registering listeners and firing events.
      * @param embeddingEventProducer EventProducerInterface; the embedding event producer class
      */
     public EventProducerImpl(final EventProducerInterface embeddingEventProducer)
@@ -331,8 +330,7 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return int; the payload
      */
-    public <C extends Comparable<C> & Serializable> int fireTimedEvent(final EventType eventType, final int value,
-            final C time)
+    public <C extends Comparable<C> & Serializable> int fireTimedEvent(final EventType eventType, final int value, final C time)
     {
         this.fireTimedEvent(eventType, Integer.valueOf(value), time);
         return value;
@@ -510,6 +508,24 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
             return this.listeners.get(eventType).size();
         }
         return 0;
+    }
+
+    /**
+     * Return a safe copy of the list of (soft or weak) references to the registered listeners for the provided event type, or
+     * an empty list when nothing is registered for this event type. The method never returns a null pointer, so it is safe to
+     * use the result directly in an iterator. The references to the listeners are the original references, so not safe copies.
+     * @param eventType EventType; the event type to look up the listeners for
+     * @return List&lt;Reference&lt;EventListenerInterface&gt;&gt;; the list of references to the listeners for this event type,
+     *         or an empty list when the event type is not registered
+     */
+    public List<Reference<EventListenerInterface>> getListenerReferences(final EventType eventType)
+    {
+        List<Reference<EventListenerInterface>> result = new ArrayList<>();
+        if (this.listeners.get(eventType) != null)
+        {
+            result.addAll(this.listeners.get(eventType));
+        }
+        return result;
     }
 
     /** {@inheritDoc} */
