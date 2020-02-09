@@ -318,7 +318,7 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
     }
 
     /**
-     * Return a safe copy of the list of (soft or weak) references to the registered listeners for the provided event type, or
+     * Return a safe copy of the list of (strong or weak) references to the registered listeners for the provided event type, or
      * an empty list when nothing is registered for this event type. The method never returns a null pointer, so it is safe to
      * use the result directly in an iterator. The references to the listeners are the original references, so not safe copies.
      * @param eventType EventType; the event type to look up the listeners for
