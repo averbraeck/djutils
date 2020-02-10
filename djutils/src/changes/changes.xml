@@ -2,14 +2,23 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-   <release version="1.04.09" date="2020-XX-XX" description="...">
-   </release>
-   
-   <release version="1.04.08" date="2020-02-08" description="EventProducer access to listeners">
+   <release version="1.04.09" date="2020-02-10" description="MultiKeyMap added; EventType equals() and hashCode()">
       <action dev="pknoppers" type="add">
         Added the MultiKeyMap to djutils (comes from ots.core.gtu.NestedCache in a less generic form). MultiKeyMap implements 
         a map with multiple keys.
       </action>
+      <action dev="averbraeck" type="add">
+        In order to prevent name clashes for the EventType, the full name of the class from which the EventType 
+        was defined (usually in the clinit method) is added to the equals() and hashCode() methods of the EventType. 
+        In that way, EventTypes that are the same will be unique, but EventTypes with just the same name but defined 
+        in different classes will be different. The reason why this is important is because remote events that use 
+        EventTypes can have multiple versions of the same public static final EventType: one the is defined 
+        in the client, and one that is defined via the network. These will have different addresses in memory 
+        but they share the same class and name info, so equals() will yield true.
+      </action>
+   </release>
+   
+   <release version="1.04.08" date="2020-02-08" description="EventProducer access to listeners">
       <action dev="averbraeck" type="add">
         Added a protected method to the EventProducer to return a safe copy of the list of (strong or weak) 
         references to the registered listeners for a provided event type, rather than exposing the 

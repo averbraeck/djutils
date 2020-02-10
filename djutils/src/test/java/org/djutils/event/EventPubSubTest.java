@@ -201,12 +201,14 @@ public class EventPubSubTest
     }
 
     /**
-     * Test the EventProducer and EventListener for two events with the same name still being unequal.
+     * Test the EventProducer and EventListener for two events with the same name being equal...
      */
     @Test
     public void testIllegalEventProducer()
     {
-        assertNotEquals(TestIllegalEventProducer.PRODUCER_EVENT_1, TestIllegalEventProducer.PRODUCER_EVENT_2);
+        assertEquals(TestIllegalEventProducer.PRODUCER_EVENT_1, TestIllegalEventProducer.PRODUCER_EVENT_2);
+        assertNotEquals(TestIllegalEventProducer.PRODUCER_EVENT_1, TestEventProducer.PRODUCER_EVENT_1);
+        assertNotEquals(TestEventProducer.PRODUCER_EVENT_2, TestEventProducer.PRODUCER_EVENT_1);
     }
 
     /**
