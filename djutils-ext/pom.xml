@@ -4,7 +4,7 @@
 
   <groupId>org.djutils</groupId>
   <artifactId>djutils-ext</artifactId>
-  <version>1.04.08</version>
+  <version>1.04.09</version>
 
   <name>DJUTILS extensions</name>
   <description>DJUTILS extensions with more dependencies</description>
