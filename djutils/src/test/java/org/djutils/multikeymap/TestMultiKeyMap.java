@@ -140,6 +140,19 @@ public class TestMultiKeyMap
         mkm.put("dummy", "1", 123.456);
         assertEquals("dummy is back", "dummy", mkm.get("1", 123.456));
         mkm.put("dummy2", "2", 23.456);
+        MultiKeyMap<String> subMap = mkm.getSubMap();
+        assertEquals("Top level sub map ", subMap, mkm);
+        subMap = mkm.getSubMap("1");
+        assertEquals("level one sub map contains dummy", "dummy", subMap.get(123.456));
+        try
+        {
+            mkm.getSubMap("1", 123.456);
+            fail("Too many arguments should have thrown an exception");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
         mkm.clear("1");
         assertNull("dummy was removed", mkm.get("1", 123.456));
         assertEquals("dummy2 is still there", "dummy2", mkm.get("2", 23.456));

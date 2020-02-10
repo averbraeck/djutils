@@ -66,6 +66,17 @@ public class MultiKeyMap<T>
     {
         return getValue(null, Arrays.asList(keys));
     }
+    
+    /**
+     * Retrieve a sub map.
+     * @param keys  Object...; the key objects (must be at least one item shorter than the full depth)
+     * @return MultiKeyMap&lt;T&gt;; the sub map
+     */
+    public MultiKeyMap<T> getSubMap(final Object... keys)
+    {
+        Throw.when(keys.length >= this.keyTypes.length, IllegalArgumentException.class, "Too many keys");
+        return getSubMap(false, Arrays.asList(keys));
+    }
 
     /**
      * Put (add or replace) a value in this MultiKeyMap.
