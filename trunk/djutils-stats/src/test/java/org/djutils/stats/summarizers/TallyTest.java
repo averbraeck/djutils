@@ -1,13 +1,13 @@
 package org.djutils.stats.summarizers;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.djutils.event.Event;
+import org.djutils.stats.summarizers.quantileaccumulator.NoStorageAccumulator;
 import org.junit.Test;
 
 /**
@@ -20,7 +20,7 @@ import org.junit.Test;
  * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
  * </p>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
- * @since 1.5
+ * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
 public class TallyTest
 {
@@ -41,26 +41,8 @@ public class TallyTest
         assertTrue(Double.valueOf(tally.getSampleMean()).isNaN());
         assertTrue(Double.valueOf(tally.getSampleVariance()).isNaN());
         assertTrue(Double.valueOf(tally.getStdDev()).isNaN());
-        assertTrue(Double.valueOf(tally.getSum()).isNaN());
-        assertEquals(Long.MIN_VALUE, tally.getN());
-        assertNull(tally.getConfidenceInterval(0.95));
-        assertNull(tally.getConfidenceInterval(0.95, Tally.LEFT_SIDE_CONFIDENCE));
-        assertNull(tally.getConfidenceInterval(0.95, Tally.RIGHT_SIDE_CONFIDENCE));
-        assertNull(tally.getConfidenceInterval(0.95, Tally.BOTH_SIDE_CONFIDENCE));
-
-        // now we initialize the tally
-        assertFalse(tally.isInitialized());
-        tally.initialize();
-        assertTrue(tally.isInitialized());
-
-        // now we check wether all the properties are correct
-        assertTrue(tally.getMin() == Double.MAX_VALUE);
-        assertTrue(tally.getMax() == -Double.MAX_VALUE);
-        assertTrue(Double.valueOf(tally.getSampleMean()).isNaN());
-        assertTrue(Double.valueOf(tally.getSampleVariance()).isNaN());
-        assertTrue(Double.valueOf(tally.getStdDev()).isNaN());
-        assertEquals(0.0, tally.getSum(), 1.0E-6);
-        assertEquals(0, tally.getN());
+        assertEquals(0, tally.getSum(), 0);
+        assertEquals(0L, tally.getN());
         assertNull(tally.getConfidenceInterval(0.95));
         assertNull(tally.getConfidenceInterval(0.95, Tally.LEFT_SIDE_CONFIDENCE));
         assertNull(tally.getConfidenceInterval(0.95, Tally.RIGHT_SIDE_CONFIDENCE));
@@ -103,8 +85,8 @@ public class TallyTest
         assertEquals(11, tally.getN());
         assertEquals(16.5, tally.getSum(), 1.0E-6);
         assertEquals(1.5, tally.getSampleMean(), 1.0E-6);
-        assertEquals(0.11, tally.getSampleVariance(), 1.0E-6);
-        assertEquals(0.332, tally.getStdDev(), 1.0E-3);
+        assertEquals(0.110000, tally.getSampleVariance(), 1.0E-6);
+        assertEquals(0.331662, tally.getStdDev(), 1.0E-6);
         assertEquals(1.304, tally.getConfidenceInterval(0.05)[0], 1.0E-6);
 
         // we check the input of the confidence interval
@@ -150,4 +132,28 @@ public class TallyTest
         assertEquals(variance, tally.getSampleVariance(), 1.0E-6);
         assertEquals(stDev, tally.getStdDev(), 1.0E-6);
     }
+    
+    /**
+     * Test Tally with the NoStorageAccumulator.
+     */
+    @Test
+    public void testNoStorageAccumulator()
+    {
+        Tally tally = new Tally("test with the NoStorageAccumulator", new NoStorageAccumulator());
+        assertTrue("mean of no data is NaN", Double.isNaN(tally.getSampleMean()));
+        try
+        {
+            tally.getQuantile(0.5);
+            fail("getQuantile of no data should have resulted in an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+        
+        tally.ingest(2.0);
+        System.out.println(tally.getSampleMean());
+        assertEquals("mean of one value is that value", 2.0, tally.getSampleMean(), 0);
+    }
+    
 }

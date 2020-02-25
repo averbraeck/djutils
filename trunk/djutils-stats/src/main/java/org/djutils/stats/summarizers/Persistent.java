@@ -24,8 +24,11 @@ public class Persistent extends Tally
     /** */
     private static final long serialVersionUID = 20140805L;
 
-    /** VALUE_EVENT is fired whenever on a change in measurements. */
-    public static final EventType VALUE_EVENT = new EventType("VALUE_EVENT");
+    /** OBSERVATION_ADDED_EVENT is fired whenever an observation is processed. */
+    public static final EventType OBSERVATION_ADDED_EVENT = new EventType("OBSERVATION_ADDED_EVENT");
+
+    /** INITIALIZED_EVENT is fired whenever a Tally is (re-)initialized. */
+    public static final EventType INITIALIZED_EVENT = new EventType("INITIALIZED_EVENT");
 
     /** startTime defines the time of the first event. */
     private double startTime = Double.NaN;
@@ -115,10 +118,10 @@ public class Persistent extends Tally
             {
                 @SuppressWarnings({"rawtypes", "unchecked"})
                 TimedEvent lastValueEvent =
-                        new TimedEvent(Persistent.VALUE_EVENT, this, this.lastValue, timedEvent.getTimeStamp());
+                        new TimedEvent(Persistent.OBSERVATION_ADDED_EVENT, this, this.lastValue, timedEvent.getTimeStamp());
                 fireEvent(lastValueEvent);
                 @SuppressWarnings({"rawtypes", "unchecked"})
-                TimedEvent valueEvent = new TimedEvent(Persistent.VALUE_EVENT, this, value, timedEvent.getTimeStamp());
+                TimedEvent valueEvent = new TimedEvent(Persistent.OBSERVATION_ADDED_EVENT, this, value, timedEvent.getTimeStamp());
                 fireEvent(valueEvent);
                 double timestamp = 0;
                 if (timedEvent.getTimeStamp() instanceof Number)
@@ -134,21 +137,10 @@ public class Persistent extends Tally
                     CategoryLogger.always().warn("Persistent.notify: Timestamp {} should be a Number or Calendar",
                             event.getContent());
                 }
-                super.setN(super.n + 1); // we increase the number of measurements.
-                if (value < super.min)
+                if (this.n == 0)
                 {
-                    super.setMin(value);
-                }
-                if (value > super.max)
-                {
-                    super.setMax(value);
-                }
-                super.setSum(super.sum + value);
-
-                // see Knuth's The Art Of Computer Programming Volume II: Seminumerical Algorithms
-                if (this.n == 1)
-                {
-                    super.setSampleMean(value);
+                    this.min = Double.MAX_VALUE;
+                    this.max = -Double.MAX_VALUE;
                     this.startTime = timestamp;
                 }
                 else
@@ -156,6 +148,7 @@ public class Persistent extends Tally
                     this.deltaTime = timestamp - (this.elapsedTime + this.startTime);
                     if (this.deltaTime > 0.0)
                     {
+                        this.sum += value * 
                         double newAverage = ((super.sampleMean * (this.elapsedTime)) + (this.lastValue * this.deltaTime))
                                 / (this.elapsedTime + this.deltaTime);
                         super.varianceSum +=
@@ -164,6 +157,18 @@ public class Persistent extends Tally
                         this.elapsedTime = this.elapsedTime + this.deltaTime;
                     }
                 }
+                this.n++;
+                if (value < this.min)
+                {
+                    this.min = value;
+                }
+                if (value > this.max)
+                {
+                    this.max = value;
+                }
+                // TODO this.quantileAccumulator.ingest(value);
+                this.fireEvent(Tally.OBSERVATION_ADDED_EVENT, value);
+
                 if (this.n > 1)
                 {
                     super.fireEvent(Tally.STANDARD_DEVIATION_EVENT, this.getStdDev());
