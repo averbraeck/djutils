@@ -2,15 +2,16 @@ package org.djutils.stats.summarizers;
 
 import java.io.Serializable;
 
-import javax.swing.table.TableModel;
-
+import org.djunits.Throw;
 import org.djutils.event.EventInterface;
 import org.djutils.event.EventListenerInterface;
+import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
-import org.djutils.event.ref.ReferenceType;
+import org.djutils.stats.summarizers.quantileaccumulator.NoStorageAccumulator;
+import org.djutils.stats.summarizers.quantileaccumulator.QuantileAccumulator;
 
 /**
- * The Tally class defines a statistics event tally.
+ * The Tally class ingests a series of values and provides mean, standard deviation, etc. of the ingested values.
  * <p>
  * Copyright (c) 2002-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
@@ -20,36 +21,20 @@ import org.djutils.event.ref.ReferenceType;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
+ * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-public class Tally extends StatisticsObject implements EventListenerInterface
+public class Tally extends EventProducer implements EventListenerInterface, Serializable
 {
     /** */
     private static final long serialVersionUID = 20140805L;
 
-    /** SAMPLE_MEAN_EVENT is fired whenever the sample mean is updated. */
-    public static final EventType SAMPLE_MEAN_EVENT = new EventType("SAMPLE_MEAN_EVENT");
+    /** OBSERVATION_ADDED_EVENT is fired whenever an observation is processed. */
+    public static final EventType OBSERVATION_ADDED_EVENT = new EventType("OBSERVATION_ADDED_EVENT");
 
-    /**
-     * SAMPLE_VARIANCE_EVENT is fired whenever the sample variance is updated.
-     */
-    public static final EventType SAMPLE_VARIANCE_EVENT = new EventType("SAMPLE_VARIANCE_EVENT");
+    /** INITIALIZED_EVENT is fired whenever a Tally is (re-)initialized. */
+    public static final EventType INITIALIZED_EVENT = new EventType("INITIALIZED_EVENT");
 
-    /** MIN_EVENT is fired whenever a new minimum value has reached. */
-    public static final EventType MIN_EVENT = new EventType("MIN_EVENT");
-
-    /** MAX_EVENT is fired whenever a new maximum value has reached. */
-    public static final EventType MAX_EVENT = new EventType("MAX_EVENT");
-
-    /** N_EVENT is fired whenever on a change in measurements. */
-    public static final EventType N_EVENT = new EventType("N_EVENT");
-
-    /** STANDARD_DEVIATION_EVENT is fired whenever the standard deviation is updated. */
-    public static final EventType STANDARD_DEVIATION_EVENT = new EventType("STANDARD_DEVIATION_EVENT");
-
-    /** SUM_EVENT is fired whenever the sum sis updated. */
-    public static final EventType SUM_EVENT = new EventType("SUM_EVENT");
-
-    /** LEFT_SIDE_CONFIDENCE refers to the left side confidence. */
+    /** LEFT_SIDE_CONFIDENCE refers to the left side confidence. TODO make enum. */
     public static final short LEFT_SIDE_CONFIDENCE = -1;
 
     /** BOTH_SIDE_CONFIDENCE refers to both sides of the confidence. */
@@ -60,7 +45,7 @@ public class Tally extends StatisticsObject implements EventListenerInterface
 
     /** sum refers to the sum of the tally. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected double sum = Double.NaN;
+    protected double sum = 0;
 
     /** min refers to the min of the tally. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
@@ -70,44 +55,51 @@ public class Tally extends StatisticsObject implements EventListenerInterface
     @SuppressWarnings("checkstyle:visibilitymodifier")
     protected double max = Double.NaN;
 
-    /** sampleMean refers to the mean of the tally. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected double sampleMean = Double.NaN;
-
     /** varianceSum refers to the varianceSum of the tally. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected double varianceSum = Double.NaN;
+    protected double varianceSum = 0;
 
     /** n refers to the number of measurements. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected long n = Long.MIN_VALUE;
+    protected long n = 0;
 
     /** description refers to the description of this tally. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     protected String description;
 
-    /** the confidenceDistribution. */
-    private DistNormalTable confidenceDistribution = new DistNormalTable();
-
     /** the semaphore. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     protected Object semaphore = new Object();
 
+    /** The quantile accumulator. */
+    private final QuantileAccumulator quantileAccumulator;
+
     /**
      * Constructs a new Tally.
+     * @param description String; the description of this tally
+     * @param quantileAccumulator QuantileAccumulator; the input series accumulator that can approximate or compute quantiles.
+     */
+    public Tally(final String description, final QuantileAccumulator quantileAccumulator)
+    {
+        this.description = description;
+        this.quantileAccumulator = quantileAccumulator;
+        initialize();
+    }
+
+    /**
+     * Convenience constructor that uses a NoStorageAccumulator to estimate quantiles.
      * @param description String; the description of this tally
      */
     public Tally(final String description)
     {
-        super();
-        this.description = description;
+        this(description, new NoStorageAccumulator());
     }
 
     /** {@inheritDoc} */
     @Override
     public Serializable getSourceId()
     {
-        return this.description;
+        return this;
     }
 
     /**
@@ -116,7 +108,17 @@ public class Tally extends StatisticsObject implements EventListenerInterface
      */
     public final double getSampleMean()
     {
-        return this.sampleMean;
+        return this.sum / this.n;
+    }
+
+    /**
+     * Compute a quantile.
+     * @param probability double; the probability for which the quantile is to be computed
+     * @return double; the quantile for the probability
+     */
+    public final double getQuantile(final double probability)
+    {
+        return this.quantileAccumulator.getQuantile(this, probability);
     }
 
     /**
@@ -149,25 +151,26 @@ public class Tally extends StatisticsObject implements EventListenerInterface
         }
         synchronized (this.semaphore)
         {
-            if (Double.valueOf(this.sampleMean).isNaN() || Double.valueOf(this.getStdDev()).isNaN())
+            double sampleMean = getSampleMean();
+            if (Double.isNaN(sampleMean) || Double.valueOf(this.getStdDev()).isNaN())
             {
-                return null;
+                return null; // TODO throw something
             }
             double level = 1 - alpha;
             if (side == Tally.BOTH_SIDE_CONFIDENCE)
             {
                 level = 1 - alpha / 2.0;
             }
-            double z = this.confidenceDistribution.getInverseCumulativeProbability(level);
+            double z = DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, level);
             double confidence = z * Math.sqrt(this.getSampleVariance() / this.n);
-            double[] result = {this.sampleMean - confidence, this.sampleMean + confidence};
+            double[] result = { sampleMean - confidence, sampleMean + confidence };
             if (side == Tally.LEFT_SIDE_CONFIDENCE)
             {
-                result[1] = this.sampleMean;
+                result[1] = sampleMean;
             }
             if (side == Tally.RIGHT_SIDE_CONFIDENCE)
             {
-                result[0] = this.sampleMean;
+                result[0] = sampleMean;
             }
             result[0] = Math.max(result[0], this.min);
             result[1] = Math.min(result[1], this.max);
@@ -222,7 +225,7 @@ public class Tally extends StatisticsObject implements EventListenerInterface
         {
             if (this.n > 1)
             {
-                return Math.sqrt(this.varianceSum / (this.n - 1));
+                return Math.sqrt((this.varianceSum - this.sum * this.sum / this.n) / (this.n - 1));
             }
             return Double.NaN;
         }
@@ -248,48 +251,10 @@ public class Tally extends StatisticsObject implements EventListenerInterface
         {
             if (this.n > 1)
             {
-                return this.varianceSum / (this.n - 1);
+                return (this.varianceSum - this.sum * this.sum / this.n) / (this.n - 1);
             }
             return Double.NaN;
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final TableModel getTable()
-    {
-        String[] columnNames = {"field", "value"};
-        EventType[] eventTypes = {null, Tally.N_EVENT, Tally.MIN_EVENT, Tally.MAX_EVENT, Tally.SAMPLE_MEAN_EVENT,
-                Tally.SAMPLE_VARIANCE_EVENT, Tally.STANDARD_DEVIATION_EVENT, Tally.SUM_EVENT};
-        StatisticsTableModel result = new StatisticsTableModel(columnNames, eventTypes, 8);
-        this.addListener(result, Tally.N_EVENT, ReferenceType.WEAK);
-        this.addListener(result, Tally.MAX_EVENT, ReferenceType.WEAK);
-        this.addListener(result, Tally.MIN_EVENT, ReferenceType.WEAK);
-        this.addListener(result, Tally.SAMPLE_MEAN_EVENT, ReferenceType.WEAK);
-        this.addListener(result, Tally.SAMPLE_VARIANCE_EVENT, ReferenceType.WEAK);
-        this.addListener(result, Tally.STANDARD_DEVIATION_EVENT, ReferenceType.WEAK);
-        this.addListener(result, Tally.SUM_EVENT, ReferenceType.WEAK);
-
-        result.setValueAt("name", 0, 0);
-        result.setValueAt("n", 1, 0);
-        result.setValueAt("min", 2, 0);
-        result.setValueAt("max", 3, 0);
-        result.setValueAt("sample-mean", 4, 0);
-        result.setValueAt("sample-variance", 5, 0);
-        result.setValueAt("st. dev.", 6, 0);
-        result.setValueAt("sum", 7, 0);
-
-        // Since the result is subscribed to the actual values
-        // there is no need to create a synchronized block.
-        result.setValueAt(this.description, 0, 1);
-        result.setValueAt(Long.valueOf(this.n), 1, 1);
-        result.setValueAt(Double.valueOf(this.min), 2, 1);
-        result.setValueAt(Double.valueOf(this.max), 3, 1);
-        result.setValueAt(Double.valueOf(this.sampleMean), 4, 1);
-        result.setValueAt(Double.valueOf(this.getSampleVariance()), 5, 1);
-        result.setValueAt(Double.valueOf(this.getStdDev()), 6, 1);
-        result.setValueAt(Double.valueOf(this.getSum()), 7, 1);
-        return result;
     }
 
     /**
@@ -300,21 +265,14 @@ public class Tally extends StatisticsObject implements EventListenerInterface
     {
         synchronized (this.semaphore)
         {
-            this.setMax(-Double.MAX_VALUE);
-            this.setMin(Double.MAX_VALUE);
-            this.setN(0);
-            this.setSum(0.0);
+            this.min = Double.NaN;
+            this.max = Double.NaN;
+            this.n = 0;
+            this.sum = 0.0;
             this.varianceSum = 0.0;
+            this.quantileAccumulator.initialize();
+            fireEvent(INITIALIZED_EVENT);
         }
-    }
-
-    /**
-     * is this tally initialized?
-     * @return true whenever this.initialize is invoked.
-     */
-    public final boolean isInitialized()
-    {
-        return !Double.isNaN(this.max);
     }
 
     /** {@inheritDoc} */
@@ -327,34 +285,39 @@ public class Tally extends StatisticsObject implements EventListenerInterface
             throw new IllegalArgumentException("Tally does not accept " + event);
         }
         double value = ((Number) event.getContent()).doubleValue();
+        ingest(value);
+    }
 
+    /**
+     * Process one observed value.
+     * @param value double; the value to process
+     * @return double; the value (for method chaining)
+     */
+    public double ingest(final double value)
+    {
+        Throw.when(Double.isNaN(value), IllegalArgumentException.class, "value may not be NaN");
         synchronized (this.semaphore)
         {
-            if (Double.valueOf(this.sampleMean).isNaN())
+            if (this.n == 0)
             {
-                this.sampleMean = 0.0;
+                this.min = Double.MAX_VALUE;
+                this.max = -Double.MAX_VALUE;
             }
-            // see Knuth's The Art Of Computer Programming
-            // Volume II: Seminumerical Algorithms
-            double newsampleMean = this.sampleMean + (value - this.sampleMean) / (this.n + 1);
-            this.varianceSum += (value - this.sampleMean) * (value - newsampleMean);
-            this.setSampleMean(newsampleMean);
-            this.setSum(this.sum + value);
-            this.setN(this.n + 1);
+            this.sum += value;
+            this.n++;
+            this.varianceSum += value * value;
             if (value < this.min)
             {
-                this.setMin(value);
+                this.min = value;
             }
             if (value > this.max)
             {
-                this.setMax(value);
+                this.max = value;
             }
-            if (this.n > 1)
-            {
-                this.fireEvent(Tally.STANDARD_DEVIATION_EVENT, getStdDev());
-                this.fireEvent(Tally.SAMPLE_VARIANCE_EVENT, getSampleVariance());
-            }
+            this.quantileAccumulator.ingest(value);
+            this.fireEvent(Tally.OBSERVATION_ADDED_EVENT, value);
         }
+        return value;
     }
 
     /** {@inheritDoc} */
@@ -365,70 +328,4 @@ public class Tally extends StatisticsObject implements EventListenerInterface
         return this.description;
     }
 
-    // ***************** PROTECTED METHODS **************/
-
-    /**
-     * sets sampleMean.
-     * @param newSampleMean double; the new mean
-     * @return double sampleMean
-     */
-    @SuppressWarnings("checkstyle:designforextension")
-    protected double setSampleMean(final double newSampleMean)
-    {
-        this.sampleMean = newSampleMean;
-        this.fireEvent(Tally.SAMPLE_MEAN_EVENT, newSampleMean);
-        return this.sampleMean;
-    }
-
-    /**
-     * sets min.
-     * @param newMin double; the new minimum value
-     * @return double the input
-     */
-    @SuppressWarnings("checkstyle:designforextension")
-    protected double setMin(final double newMin)
-    {
-        this.min = newMin;
-        this.fireEvent(Tally.MIN_EVENT, newMin);
-        return this.min;
-    }
-
-    /**
-     * sets max.
-     * @param newMax double; the new maximum value
-     * @return double the input
-     */
-    @SuppressWarnings("checkstyle:designforextension")
-    protected double setMax(final double newMax)
-    {
-        this.max = newMax;
-        this.fireEvent(Tally.MAX_EVENT, newMax);
-        return this.max;
-    }
-
-    /**
-     * sets n.
-     * @param newN long; the new n
-     * @return double the input
-     */
-    @SuppressWarnings("checkstyle:designforextension")
-    protected long setN(final long newN)
-    {
-        this.n = newN;
-        this.fireEvent(Tally.N_EVENT, newN);
-        return this.n;
-    }
-
-    /**
-     * sets the count.
-     * @param newSum double; the new sum
-     * @return double the input
-     */
-    @SuppressWarnings("checkstyle:designforextension")
-    protected double setSum(final double newSum)
-    {
-        this.sum = newSum;
-        this.fireEvent(Tally.SUM_EVENT, newSum);
-        return this.sum;
-    }
 }
