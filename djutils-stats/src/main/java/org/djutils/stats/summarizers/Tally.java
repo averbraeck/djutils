@@ -34,45 +34,30 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
     /** INITIALIZED_EVENT is fired whenever a Tally is (re-)initialized. */
     public static final EventType INITIALIZED_EVENT = new EventType("INITIALIZED_EVENT");
 
-    /** LEFT_SIDE_CONFIDENCE refers to the left side confidence. TODO make enum. */
-    public static final short LEFT_SIDE_CONFIDENCE = -1;
-
-    /** BOTH_SIDE_CONFIDENCE refers to both sides of the confidence. */
-    public static final short BOTH_SIDE_CONFIDENCE = 0;
-
-    /** RIGTH_SIDE_CONFIDENCE refers to the right side confidence. */
-    public static final short RIGHT_SIDE_CONFIDENCE = 1;
-
     /** sum refers to the sum of the tally. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected double sum = 0;
+    private double sum = 0;
 
     /** min refers to the min of the tally. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected double min = Double.NaN;
+    private double min = Double.NaN;
 
     /** max refers to the max of the tally. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected double max = Double.NaN;
+    private double max = Double.NaN;
 
     /** varianceSum refers to the varianceSum of the tally. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected double varianceSum = 0;
+    private double varianceSum = 0;
 
     /** n refers to the number of measurements. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected long n = 0;
+    private long n = 0;
 
     /** description refers to the description of this tally. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected String description;
-
-    /** the semaphore. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected Object semaphore = new Object();
+    private final String description;
 
     /** The quantile accumulator. */
     private final QuantileAccumulator quantileAccumulator;
+
+    /** the synchronized lock. */
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    protected Object semaphore = new Object();
 
     /**
      * Constructs a new Tally.
@@ -129,7 +114,7 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
      */
     public final double[] getConfidenceInterval(final double alpha)
     {
-        return this.getConfidenceInterval(alpha, Tally.BOTH_SIDE_CONFIDENCE);
+        return this.getConfidenceInterval(alpha, ConfidenceInterval.BOTH_SIDE_CONFIDENCE);
     }
 
     /**
@@ -139,16 +124,11 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
      * @param side short; the side of the confidence interval with respect to the mean
      * @return double[] the confidence interval of this tally
      */
-    public final double[] getConfidenceInterval(final double alpha, final short side)
+    public final double[] getConfidenceInterval(final double alpha, final ConfidenceInterval side)
     {
-        if (!(side == LEFT_SIDE_CONFIDENCE || side == BOTH_SIDE_CONFIDENCE || side == RIGHT_SIDE_CONFIDENCE))
-        {
-            throw new IllegalArgumentException("side of confidence level is not defined");
-        }
-        if (alpha < 0 || alpha > 1)
-        {
-            throw new IllegalArgumentException("1 >= confidenceLevel >= 0");
-        }
+        Throw.whenNull(side, "type of confidence level cannot be null");
+        Throw.when(alpha < 0 || alpha > 1, IllegalArgumentException.class,
+                "confidenceLevel should be between 0 and 1 (inclusive)");
         synchronized (this.semaphore)
         {
             double sampleMean = getSampleMean();
@@ -157,18 +137,18 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
                 return null; // TODO throw something
             }
             double level = 1 - alpha;
-            if (side == Tally.BOTH_SIDE_CONFIDENCE)
+            if (side.equals(ConfidenceInterval.BOTH_SIDE_CONFIDENCE))
             {
                 level = 1 - alpha / 2.0;
             }
             double z = DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, level);
             double confidence = z * Math.sqrt(this.getSampleVariance() / this.n);
-            double[] result = { sampleMean - confidence, sampleMean + confidence };
-            if (side == Tally.LEFT_SIDE_CONFIDENCE)
+            double[] result = {sampleMean - confidence, sampleMean + confidence};
+            if (side.equals(ConfidenceInterval.LEFT_SIDE_CONFIDENCE))
             {
                 result[1] = sampleMean;
             }
-            if (side == Tally.RIGHT_SIDE_CONFIDENCE)
+            if (side.equals(ConfidenceInterval.RIGHT_SIDE_CONFIDENCE))
             {
                 result[0] = sampleMean;
             }
@@ -218,14 +198,13 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
      * Returns the current tally standard deviation.
      * @return double the standard deviation
      */
-    @SuppressWarnings("checkstyle:designforextension")
-    public double getStdDev()
+    public final double getStdDev()
     {
         synchronized (this.semaphore)
         {
             if (this.n > 1)
             {
-                return Math.sqrt((this.varianceSum - this.sum * this.sum / this.n) / (this.n - 1));
+                return Math.sqrt(getSampleVariance());
             }
             return Double.NaN;
         }
@@ -244,8 +223,7 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
      * Returns the current tally variance.
      * @return double samplevariance
      */
-    @SuppressWarnings("checkstyle:designforextension")
-    public double getSampleVariance()
+    public final double getSampleVariance()
     {
         synchronized (this.semaphore)
         {
@@ -260,8 +238,7 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
     /**
      * initializes the Tally. This methods sets the max, min, n, sum and variance values to their initial values.
      */
-    @SuppressWarnings("checkstyle:designforextension")
-    public void initialize()
+    public final void initialize()
     {
         synchronized (this.semaphore)
         {

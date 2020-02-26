@@ -1,11 +1,8 @@
 package org.djutils.stats.summarizers;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
-import javax.swing.table.TableModel;
 
 import org.djutils.event.Event;
 import org.djutils.event.EventInterface;
@@ -28,7 +25,7 @@ public class CounterTest
 {
     /** the event to fire. */
     private static final EventType COUNT_EVENT = new EventType("CountEvent");
-    
+
     /** Test the counter. */
     @Test
     public void test()
@@ -38,12 +35,16 @@ public class CounterTest
         assertEquals(description, counter.toString());
         assertEquals(description, counter.getDescription());
 
-        assertEquals(Long.MIN_VALUE, counter.getN());
-        assertEquals(Long.MIN_VALUE, counter.getCount());
+        assertEquals(0L, counter.getN());
+        assertEquals(0L, counter.getCount());
 
-        assertFalse(counter.isInitialized());
+        counter.notify(new Event(COUNT_EVENT, "CounterTest", 2));
+        assertEquals(1L, counter.getN());
+        assertEquals(2L, counter.getCount());
+        
         counter.initialize();
-        assertTrue(counter.isInitialized());
+        assertEquals(0L, counter.getN());
+        assertEquals(0L, counter.getCount());
 
         counter.addListener(new EventListenerInterface()
         {
@@ -53,10 +54,10 @@ public class CounterTest
             @Override
             public void notify(final EventInterface event)
             {
-                assertTrue(event.getType().equals(Counter.COUNT_EVENT));
+                assertTrue(event.getType().equals(Counter.OBSERVATION_ADDED_EVENT));
                 assertTrue(event.getContent().getClass().equals(Long.class));
             }
-        }, Counter.COUNT_EVENT);
+        }, Counter.OBSERVATION_ADDED_EVENT);
 
         // test wrong event
         try
@@ -68,21 +69,14 @@ public class CounterTest
         {
             // ok, should have given error
         }
-        
+
         long value = 0;
         for (int i = 0; i < 100; i++)
         {
-            counter.notify(new Event(Counter.COUNT_EVENT, "CounterTest", Long.valueOf(2 * i)));
+            counter.notify(new Event(Counter.OBSERVATION_ADDED_EVENT, "CounterTest", Long.valueOf(2 * i)));
             value += 2 * i;
         }
         assertEquals(100, counter.getN());
         assertEquals(value, counter.getCount());
-        
-        // get the TableModel
-        TableModel table = counter.getTable();
-        assertEquals(2, table.getColumnCount());
-        assertEquals(3, table.getRowCount());
-        assertEquals("n", table.getValueAt(1, 0));
-        assertEquals(100L, table.getValueAt(1, 1));
     }
 }

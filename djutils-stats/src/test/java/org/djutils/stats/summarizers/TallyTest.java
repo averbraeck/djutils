@@ -44,9 +44,9 @@ public class TallyTest
         assertEquals(0, tally.getSum(), 0);
         assertEquals(0L, tally.getN());
         assertNull(tally.getConfidenceInterval(0.95));
-        assertNull(tally.getConfidenceInterval(0.95, Tally.LEFT_SIDE_CONFIDENCE));
-        assertNull(tally.getConfidenceInterval(0.95, Tally.RIGHT_SIDE_CONFIDENCE));
-        assertNull(tally.getConfidenceInterval(0.95, Tally.BOTH_SIDE_CONFIDENCE));
+        assertNull(tally.getConfidenceInterval(0.95, ConfidenceInterval.LEFT_SIDE_CONFIDENCE));
+        assertNull(tally.getConfidenceInterval(0.95, ConfidenceInterval.RIGHT_SIDE_CONFIDENCE));
+        assertNull(tally.getConfidenceInterval(0.95, ConfidenceInterval.BOTH_SIDE_CONFIDENCE));
 
         // We first fire a wrong event
         try
@@ -92,12 +92,12 @@ public class TallyTest
         // we check the input of the confidence interval
         try
         {
-            tally.getConfidenceInterval(0.95, (short) 14);
-            fail("14 is not defined as side of confidence level");
+            tally.getConfidenceInterval(0.95, null);
+            fail("null is not defined as side of confidence level");
         }
         catch (Exception exception)
         {
-            assertTrue(exception.getClass().equals(IllegalArgumentException.class));
+            assertTrue(exception.getClass().equals(NullPointerException.class));
         }
         try
         {
