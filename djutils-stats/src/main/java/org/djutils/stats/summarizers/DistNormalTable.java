@@ -46,8 +46,7 @@ public final class DistNormalTable
         }
         return 1 - DistNormalTable.CUMULATIVE_NORMAL_PROBABILITIES[absZ];
     }
-    
-    // TODO get rid of the 10.0 multipliers (suggestive range of the table) and put that into a constant.
+
     // TODO ensure the table has decent values above 6 sigma.
     // TODO switch to a different (new) table for values way above 6 sigma.
 
@@ -86,13 +85,16 @@ public final class DistNormalTable
             }
         }
         // TODO linearly interpolate between pivot and pivot + 1.
-        return mu + 10.0 * pivot / tableSize * sigma;
+        return mu + CUMULATIVE_NORMAL_PROBABILITIES_TABLE_RANGE * pivot / tableSize * sigma;
     }
+
+    /** CUMULATIVE_NORMAL_PROBABILITIES table runs from 0 * sigma to CUMULATIVE_NORMAL_PROBABILITIES_TABLE_RANGE * sigma */
+    public static final double CUMULATIVE_NORMAL_PROBABILITIES_TABLE_RANGE = 10.0;
 
     /**
      * CUMULATIVE_NORMAL_PROBABILITIES represents the NORMAL DISTRIBUTION FUNCTION TABLE. In order to keep this table as fast as
-     * possible no x values are stored. The range of the table is {0.00,0.01,0.02,...,10.00}, but accuracy is severely lacking
-     * after 6.00
+     * possible no x values are stored. The range of the table is
+     * {0.00,0.01,0.02,...,CUMULATIVE_NORMAL_PROBABILITIES_TABLE_RANGE}, but accuracy is severely lacking after 6.00
      */
     // @formatter:off
     public static final double[] CUMULATIVE_NORMAL_PROBABILITIES = { 

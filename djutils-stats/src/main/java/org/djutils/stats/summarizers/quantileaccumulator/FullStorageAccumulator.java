@@ -22,9 +22,8 @@ public class FullStorageAccumulator implements QuantileAccumulator
 
     /**
      * Construct a new FullStorageAccumulator.
-     * @param tally Tally; the tally that computes mean, minimum, maximum, count, etc.
      */
-    public FullStorageAccumulator(final Tally tally)
+    public FullStorageAccumulator()
     {
         // Nothing to do here
     }
@@ -49,10 +48,10 @@ public class FullStorageAccumulator implements QuantileAccumulator
             Collections.sort(this.accumulator);
             this.isSorted = true;
         }
-        double doubleIndex = this.accumulator.size() * probability;
-        int index = (int) Math.floor(doubleIndex);
+        double doubleIndex = (this.accumulator.size() - 1) * probability;
+        int index = Math.min((int) Math.floor(doubleIndex), this.accumulator.size() - 1);
         double v0 = this.accumulator.get(index);
-        if (index == this.accumulator.size())
+        if (index >= this.accumulator.size() - 1)
         {
             return v0;
         }
