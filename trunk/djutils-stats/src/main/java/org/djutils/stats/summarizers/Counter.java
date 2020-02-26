@@ -2,13 +2,10 @@ package org.djutils.stats.summarizers;
 
 import java.io.Serializable;
 
-import javax.swing.table.TableModel;
-
-import org.djutils.event.Event;
 import org.djutils.event.EventInterface;
 import org.djutils.event.EventListenerInterface;
+import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
-import org.djutils.event.ref.ReferenceType;
 
 /**
  * The Counter class defines a statistics event counter.
@@ -22,24 +19,24 @@ import org.djutils.event.ref.ReferenceType;
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  */
-public class Counter extends StatisticsObject implements EventListenerInterface
+public class Counter extends EventProducer implements EventListenerInterface, Serializable
 {
     /** */
     private static final long serialVersionUID = 20140805L;
 
-    /** COUNT_EVENT is fired whenever setCount() is invoked. */
-    public static final EventType COUNT_EVENT = new EventType("COUNT_EVENT");
+    /** OBSERVATION_ADDED_EVENT is fired whenever an observation is processed. */
+    public static final EventType OBSERVATION_ADDED_EVENT = new EventType("OBSERVATION_ADDED_EVENT");
 
-    /** N_EVENT is fired on every new measurement. */
-    public static final EventType N_EVENT = new EventType("N_EVENT");
+    /** INITIALIZED_EVENT is fired whenever a Tally is (re-)initialized. */
+    public static final EventType INITIALIZED_EVENT = new EventType("INITIALIZED_EVENT");
 
     /** count represents the value of the counter. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected long count = Long.MIN_VALUE;
+    protected long count = 0;
 
     /** n represents the number of measurements. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected long n = Long.MIN_VALUE;
+    protected long n = 0;
 
     /** description refers to the title of this counter. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
@@ -55,13 +52,14 @@ public class Counter extends StatisticsObject implements EventListenerInterface
     public Counter(final String description)
     {
         this.description = description;
+        initialize();
     }
 
     /** {@inheritDoc} */
     @Override
     public Serializable getSourceId()
     {
-        return this.description;
+        return this;
     }
 
     /**
@@ -93,26 +91,28 @@ public class Counter extends StatisticsObject implements EventListenerInterface
         }
         else
         {
-            throw new RuntimeException("event content for counter not a number but of type " + event.getClass());
+            throw new IllegalArgumentException("event content for counter not a number but of type " + event.getClass());
         }
-
-        synchronized (this.semaphore)
-        {
-            this.setCount(this.count + value);
-            this.setN(this.n + 1);
-            if (hasListeners())
-            {
-                this.fireEvent(Counter.COUNT_EVENT, this.count);
-                this.fireEvent(Counter.N_EVENT, this.n);
-            }
-        }
+        ingest(value);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public String toString()
+    /**
+     * Process one observed value.
+     * @param value long; the value to process
+     * @return long; the value (for method chaining)
+     */
+    public long ingest(final long value)
     {
-        return this.description;
+        synchronized (this.semaphore)
+        {
+            this.count += value;
+            this.n++;
+            if (hasListeners())
+            {
+                this.fireEvent(Counter.OBSERVATION_ADDED_EVENT, this.count);
+            }
+        }
+        return value;
     }
 
     /**
@@ -122,38 +122,10 @@ public class Counter extends StatisticsObject implements EventListenerInterface
     {
         synchronized (this.semaphore)
         {
-            this.setN(0);
-            this.setCount(0);
+            this.n = 0;
+            this.count = 0;
+            fireEvent(Counter.INITIALIZED_EVENT);
         }
-    }
-
-    /**
-     * is the counter initialized?
-     * @return returns whether the counter is initialized
-     */
-    public boolean isInitialized()
-    {
-        return this.n != Long.MIN_VALUE;
-    }
-
-    /**
-     * sets the count.
-     * @param count long; the value
-     */
-    private void setCount(final long count)
-    {
-        this.count = count;
-        this.fireEvent(new Event(COUNT_EVENT, getSourceId(), Long.valueOf(this.count)));
-    }
-
-    /**
-     * sets n.
-     * @param n long; the number of measurements.
-     */
-    private void setN(final long n)
-    {
-        this.n = n;
-        this.fireEvent(new Event(N_EVENT, getSourceId(), Long.valueOf(this.n)));
     }
 
     /**
@@ -167,20 +139,9 @@ public class Counter extends StatisticsObject implements EventListenerInterface
 
     /** {@inheritDoc} */
     @Override
-    public TableModel getTable()
+    public String toString()
     {
-        String[] columnNames = {"field", "value"};
-        EventType[] eventTypes = {null, Counter.N_EVENT, Counter.COUNT_EVENT};
-        StatisticsTableModel result = new StatisticsTableModel(columnNames, eventTypes, 3);
-        this.addListener(result, Counter.N_EVENT, ReferenceType.STRONG);
-        this.addListener(result, Counter.COUNT_EVENT, ReferenceType.STRONG);
-
-        result.setValueAt("name", 0, 0);
-        result.setValueAt("n", 1, 0);
-        result.setValueAt("count", 2, 0);
-        result.setValueAt(this.description, 0, 1);
-        result.setValueAt(Long.valueOf(this.n), 1, 1);
-        result.setValueAt(Long.valueOf(this.count), 2, 1);
-        return result;
+        return this.description;
     }
+
 }
