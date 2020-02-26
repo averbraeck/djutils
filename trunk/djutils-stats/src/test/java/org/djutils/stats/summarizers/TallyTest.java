@@ -132,7 +132,7 @@ public class TallyTest
         assertEquals(variance, tally.getSampleVariance(), 1.0E-6);
         assertEquals(stDev, tally.getStdDev(), 1.0E-6);
     }
-    
+
     /**
      * Test Tally with the NoStorageAccumulator.
      */
@@ -150,10 +150,47 @@ public class TallyTest
         {
             // Ignore expected exception
         }
+
+        tally.ingest(90.0);
+        assertEquals("mean of one value is that value", 90.0, tally.getSampleMean(), 0);
+        try
+        {
+            tally.getQuantile(0.5);
+            fail("getQuantile of one value should have resulted in an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        tally.ingest(110.0);
+        assertEquals("mean of two value", 100.0, tally.getSampleMean(), 0);
+        assertEquals("50% quantile", 100.0, tally.getQuantile(0.5), 0);
+        double sigma = tally.getStdDev();
+        double mu = tally.getSampleMean();
+        System.out.println("sigma=" + tally.getStdDev() + " mu=" + mu);
+        for (double symmetricProbability : new double[] { 0.0, 0.682689492137086, 0.954499736103642, 0.997300203936740,
+                0.999936657516334, 0.999999426696856, 0.999999998026825, 0.999999999997440 })
+        {
+            double probability = symmetricProbability + (1.0 - symmetricProbability) / 2;
+            double x = tally.getQuantile(probability);
+            System.out.println(String.format("probability=%20.18f 1-probability=%20.18f, x=%20.16f, sigmaCount=%20.17f",
+                    probability, 1 - probability, x, (x - mu) / sigma));
+        }
+        System.out.println(tally.getQuantile(0.00));
+        System.out.println(tally.getQuantile(0.15));
+        System.out.println(tally.getQuantile(0.50));
+        System.out.println(tally.getQuantile(0.85));
+        System.out.println(tally.getQuantile(1.00));
         
-        tally.ingest(2.0);
-        System.out.println(tally.getSampleMean());
-        assertEquals("mean of one value is that value", 2.0, tally.getSampleMean(), 0);
+        // Test for the problem that Peter Knoppers had in Tritapt where really small rounding errors caused sqrt(-1e-14).
+        double value = 166.0 / 25.0;
+        tally.initialize();
+        tally.ingest(value);
+        tally.ingest(value);
+        tally.ingest(value);
+        tally.ingest(value);
+        System.out.println(tally.getStdDev());
     }
-    
+
 }
