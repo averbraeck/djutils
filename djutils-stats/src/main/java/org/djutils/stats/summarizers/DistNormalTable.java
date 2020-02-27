@@ -84,8 +84,20 @@ public final class DistNormalTable
                 pivot = Math.min(tableSize - 1, pivot + stepSize);
             }
         }
-        // TODO linearly interpolate between pivot and pivot + 1.
-        return mu + CUMULATIVE_NORMAL_PROBABILITIES_TABLE_RANGE * pivot / tableSize * sigma;
+        // Linearly interpolate between pivot and pivot + 1.
+        double interpolatedPivot = pivot;
+        if (pivot < tableSize)
+        {
+            double pivotFraction = (prob - DistNormalTable.CUMULATIVE_NORMAL_PROBABILITIES[pivot])
+                    / (DistNormalTable.CUMULATIVE_NORMAL_PROBABILITIES[pivot + 1]
+                            - DistNormalTable.CUMULATIVE_NORMAL_PROBABILITIES[pivot]);
+            // System.out.println("pivotFraction=" + pivotFraction);
+            if (Double.isFinite(pivotFraction))
+            {
+                interpolatedPivot += pivotFraction;
+            }
+        }
+        return mu + CUMULATIVE_NORMAL_PROBABILITIES_TABLE_RANGE * interpolatedPivot / tableSize * sigma;
     }
 
     /** CUMULATIVE_NORMAL_PROBABILITIES table runs from 0 * sigma to CUMULATIVE_NORMAL_PROBABILITIES_TABLE_RANGE * sigma */
