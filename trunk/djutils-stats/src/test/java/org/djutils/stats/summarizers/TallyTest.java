@@ -173,14 +173,16 @@ public class TallyTest
         double mu = tally.getSampleMean();
         System.out.println("sigma=" + tally.getStdDev() + " mu=" + mu);
         // For loop below makes painfully clear where the getQuantile method fails
-        for (double symmetricProbability : new double[] { 0.0, 0.682689492137086, 0.954499736103642, 0.997300203936740,
-                0.999936657516334, 0.999999426696856, 0.999999998026825, 0.999999999997440 })
+        // Values are from last table in https://en.wikipedia.org/wiki/Standard_normal_table
+        for (double probability : new double[] { 1 - 5.00000E-1, 1 - 1.58655E-1, 1 - 2.27501E-2, 1 - 1.34990E-3, 1 - 3.16712E-5,
+                1 - 2.86652E-7, 1 - 9.86588E-10, 1 - 1.27981E-12, 1 - 6.22096E-16, 1 - 1.12859E-19, 1 - 7.61985E-24 })
         {
-            double probability = symmetricProbability + (1.0 - symmetricProbability) / 2;
             double x = tally.getQuantile(probability);
-            System.out.println(String.format("probability=%20.18f 1-probability=%20.18f, x=%20.16f, sigmaCount=%20.17f",
+            System.out.println(String.format("probability=%19.16f 1-probability=%19.16f, x=%19.14f, sigmaCount=%19.16f",
                     probability, 1 - probability, x, (x - mu) / sigma));
         }
+        // Output shows that the inverse cumulative probability function works fine up to about 8 sigma
+
         // Test for the problem that Peter Knoppers had in Tritapt where really small rounding errors caused sqrt(-1e-14).
         double value = 166.0 / 25.0;
         tally.initialize();
