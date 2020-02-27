@@ -222,7 +222,8 @@ public class TallyTest
         {
             double expected = 100 * probability;
             double got = tally.getQuantile(probability);
-            System.out.println(String.format("probability %5.2f: expected %20.15f, got %20.15f", probability, expected, got));
+            // System.out.println(String.format("probability %5.2f: expected %20.15f, got %20.15f", probability, expected,
+            // got));
             assertEquals("quantile should match", expected, got, 0.00001);
         }
         try
