@@ -1,4 +1,4 @@
-package stats;
+package org.djutils.generator.stats;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
 
