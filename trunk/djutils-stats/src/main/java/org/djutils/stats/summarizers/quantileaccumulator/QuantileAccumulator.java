@@ -12,7 +12,7 @@ public interface QuantileAccumulator
     /**
      * Ingest one value with weight 1. Should be called only from the Tally object and AFTER processing the value in the tally.
      * @param value double; the value
-     * @return double; the ingested value (for method chaining)
+     * @return double; the ingested value
      */
     double ingest(double value);
     

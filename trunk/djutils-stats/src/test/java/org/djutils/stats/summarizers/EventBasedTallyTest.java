@@ -1,12 +1,15 @@
 package org.djutils.stats.summarizers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.Random;
 
+import org.djutils.event.Event;
+import org.djutils.event.EventType;
 import org.djutils.stats.summarizers.quantileaccumulator.FullStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.NoStorageAccumulator;
 import org.junit.Test;
@@ -23,19 +26,21 @@ import org.junit.Test;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-public class TallyTest
+public class EventBasedTallyTest
 {
-    /** Test the tally. */
+    /** an event to fire. */
+    private static final EventType VALUE_EVENT = new EventType("VALUE_EVENT");
+
+    /** Test the event based tally. */
     @Test
-    public void testTally()
+    public void testEventBasedTally()
     {
         String description = "THIS TALLY IS TESTED";
-        Tally tally = new Tally(description);
+        EventBasedTally tally = new EventBasedTally(description);
 
         // check the description
         assertTrue(tally.toString().contains(description));
         assertEquals(description, tally.getDescription());
-        assertTrue(tally.toString().startsWith("Tally"));
 
         // now we check the initial values
         assertTrue(Double.valueOf(tally.getMin()).isNaN());
@@ -50,20 +55,31 @@ public class TallyTest
         assertNull(tally.getConfidenceInterval(0.95, ConfidenceInterval.RIGHT_SIDE_CONFIDENCE));
         assertNull(tally.getConfidenceInterval(0.95, ConfidenceInterval.BOTH_SIDE_CONFIDENCE));
 
-        // Now we ingest some values
+        // We first fire a wrong event
         try
         {
-            tally.ingest(1.1);
-            tally.ingest(1.2);
-            tally.ingest(1.3);
-            tally.ingest(1.4);
-            tally.ingest(1.5);
-            tally.ingest(1.6);
-            tally.ingest(1.7);
-            tally.ingest(1.8);
-            tally.ingest(1.9);
-            tally.ingest(2.0);
-            tally.ingest(1.0);
+            tally.notify(new Event(VALUE_EVENT, "ERROR", "ERROR"));
+            fail("tally should react on events.value !instanceOf Double");
+        }
+        catch (Exception exception)
+        {
+            assertNotNull(exception);
+        }
+
+        // Now we fire some events
+        try
+        {
+            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.1));
+            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.2));
+            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.3));
+            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.4));
+            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.5));
+            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.6));
+            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.7));
+            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.8));
+            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.9));
+            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 2.0));
+            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.0));
         }
         catch (Exception exception)
         {
@@ -78,7 +94,7 @@ public class TallyTest
         assertEquals(1.5, tally.getSampleMean(), 1.0E-6);
         assertEquals(0.110000, tally.getSampleVariance(), 1.0E-6);
         assertEquals(0.331662, tally.getStdDev(), 1.0E-6);
-        
+
         assertEquals(1.304003602, tally.getConfidenceInterval(0.05)[0], 1E-05);
         assertEquals(1.695996398, tally.getConfidenceInterval(0.05)[1], 1E-05);
         assertEquals(1.335514637, tally.getConfidenceInterval(0.10)[0], 1E-05);
@@ -112,7 +128,7 @@ public class TallyTest
         assertEquals(1.567448975, tally.getConfidenceInterval(0.25, ConfidenceInterval.RIGHT_SIDE_CONFIDENCE)[1], 1E-05);
         assertEquals(1.500000000, tally.getConfidenceInterval(0.40, ConfidenceInterval.RIGHT_SIDE_CONFIDENCE)[0], 1E-05);
         assertEquals(1.525334710, tally.getConfidenceInterval(0.40, ConfidenceInterval.RIGHT_SIDE_CONFIDENCE)[1], 1E-05);
-
+        
         // we check the input of the confidence interval
         try
         {
@@ -155,22 +171,15 @@ public class TallyTest
 
         assertEquals(variance, tally.getSampleVariance(), 1.0E-6);
         assertEquals(stDev, tally.getStdDev(), 1.0E-6);
-        
-        // test confidence interval failure on uninitialized tally
-        Tally t = new Tally("unused");
-        assertNull(t.getConfidenceInterval(0.95));
-        t.ingest(1.0);
-        assertNull(t.getConfidenceInterval(0.95));
-
     }
 
     /**
-     * Test Tally with the NoStorageAccumulator.
+     * Test EventBasedTally with the NoStorageAccumulator.
      */
     @Test
     public void testNoStorageAccumulator()
     {
-        Tally tally = new Tally("test with the NoStorageAccumulator", new NoStorageAccumulator());
+        EventBasedTally tally = new EventBasedTally("test with the NoStorageAccumulator", new NoStorageAccumulator());
         assertTrue("mean of no data is NaN", Double.isNaN(tally.getSampleMean()));
         try
         {
@@ -182,7 +191,7 @@ public class TallyTest
             // Ignore expected exception
         }
 
-        tally.ingest(90.0);
+        tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 90.0));
         assertEquals("mean of one value is that value", 90.0, tally.getSampleMean(), 0);
         try
         {
@@ -194,7 +203,7 @@ public class TallyTest
             // Ignore expected exception
         }
 
-        tally.ingest(110.0);
+        tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 110.0));
         assertEquals("mean of two value", 100.0, tally.getSampleMean(), 0);
         assertEquals("50% quantile", 100.0, tally.getQuantile(0.5), 0);
         double sigma = tally.getStdDev();
@@ -217,10 +226,10 @@ public class TallyTest
         // Test for the problem that Peter Knoppers had in Tritapt where really small rounding errors caused sqrt(-1e-14).
         double value = 166.0 / 25.0;
         tally.initialize();
-        tally.ingest(value);
-        tally.ingest(value);
-        tally.ingest(value);
-        tally.ingest(value);
+        tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
+        tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
+        tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
+        tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
         System.out.println(tally.getStdDev());
         tally.initialize();
         // Throw a lot of pseudo-randomly normally distributed values in and see if the expected mean and stddev come out
@@ -231,7 +240,7 @@ public class TallyTest
         {
             value = generateGaussianNoise(mean, stddev, random);
             // System.out.println(value);
-            tally.ingest(value);
+            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
         }
         System.out.println(String.format("mean in: %10.15f out %20.15f, stddev in %20.15f, out %20.15f", mean,
                 tally.getSampleMean(), stddev, tally.getStdDev()));
@@ -240,16 +249,17 @@ public class TallyTest
     }
 
     /**
-     * Test the FullStorageAccumulator.
+     * Test the Event based tally with the FullStorageAccumulator.
      */
     @Test
     public void testFullStorageAccumulator()
     {
-        Tally tally = new Tally("Tally for FullStorageAccumulator test", new FullStorageAccumulator());
+        EventBasedTally tally =
+                new EventBasedTally("EventBasedTally for FullStorageAccumulator test", new FullStorageAccumulator());
         // Insert values from 0.0 .. 100.0 (step 1.0)
         for (int step = 0; step <= 100; step++)
         {
-            tally.ingest(1.0 * step);
+            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.0 * step));
         }
         for (double probability : new double[] {0.0, 0.01, 0.1, 0.49, 0.5, 0.51, 0.9, 0.99, 1.0})
         {

@@ -1,11 +1,9 @@
 package org.djutils.stats.summarizers;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.djutils.event.Event;
 import org.junit.Test;
 
 /**
@@ -24,9 +22,9 @@ public class WeightedTallyTest
 {
     /** Test the persistent. */
     @Test
-    public void testPersistent()
+    public void testWeightedTally()
     {
-        String description = "THIS PERSISTENT IS TESTED";
+        String description = "THIS WEIGHTED TALLY IS TESTED";
         WeightedTally wt = new WeightedTally(description);
         assertEquals(description, wt.getDescription());
 
@@ -42,17 +40,6 @@ public class WeightedTallyTest
         assertTrue(Double.isNaN(wt.getWeightedSampleStdDev()));
         assertEquals(0.0, wt.getWeightedSum(), 0.0);
         assertEquals(0L, wt.getN());
-
-        // We first fire a wrong event
-        try
-        {
-            wt.notify(new Event(null, "ERROR", "ERROR"));
-            fail("persistent should react on events.value !instanceOf Double");
-        }
-        catch (Exception exception)
-        {
-            assertNotNull(exception);
-        }
 
         wt.ingest(0.1, 1.1);
         wt.ingest(0.1, 1.2);
@@ -109,16 +96,7 @@ public class WeightedTallyTest
 
         assertEquals(1716.0, wt.getWeightedSum(), 0.001);
         assertEquals(42.9, wt.getWeightedSampleMean(), 0.001);
-
-        // When we shift the times, we should get the same answers
-        wt = new WeightedTally("simple WeightedTally statistic");
-        wt.initialize();
-        wt.ingest(13.0, 86.0);
-        wt.ingest(23.0, 26.0);
-        wt.ingest(14.0, 0.0);
-
-        assertEquals(1716.0, wt.getWeightedSum(), 0.001);
-        assertEquals(34.32, wt.getWeightedSampleMean(), 0.001);
+        assertEquals(3, wt.getN());
 
         // When we have observations with duration 0, we should get the same answers
         wt = new WeightedTally("simple WeightedTally statistic");
@@ -131,6 +109,7 @@ public class WeightedTallyTest
 
         assertEquals(1716.0, wt.getWeightedSum(), 0.001);
         assertEquals(42.9, wt.getWeightedSampleMean(), 0.001);
+        assertEquals(3, wt.getN()); // non-zero values only
 
         // Example from NIST: https://www.itl.nist.gov/div898/software/dataplot/refman2/ch2/weightsd.pdf
         wt = new WeightedTally("NIST");
