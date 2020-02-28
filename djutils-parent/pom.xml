@@ -18,6 +18,24 @@
 
   <inceptionYear>2018</inceptionYear>
 
+  <profiles>
+    <!-- select profiles with -P option, e.g. "mvn install -P all" -->
+    <profile>
+      <id>all</id>
+      <activation>
+        <property>
+          <name>all</name>
+        </property>
+      </activation>
+      <modules>
+        <module>../djutils</module>
+        <module>../djutils-cli</module>
+        <module>../djutils-serialization</module>
+        <module>../djutils-stats</module>
+      </modules>
+    </profile>
+  </profiles>
+
   <properties>
     <jdk.version>1.8</jdk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
