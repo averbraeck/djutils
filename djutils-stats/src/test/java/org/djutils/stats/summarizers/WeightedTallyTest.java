@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.djutils.event.Event;
-import org.djutils.event.TimedEvent;
 import org.junit.Test;
 
 /**
@@ -28,24 +27,25 @@ public class WeightedTallyTest
     public void testPersistent()
     {
         String description = "THIS PERSISTENT IS TESTED";
-        WeightedTally persistent = new WeightedTally(description);
+        WeightedTally wt = new WeightedTally(description);
+        assertEquals(description, wt.getDescription());
 
         // check the description
-        assertTrue(persistent.toString().equals(description));
+        assertTrue(wt.toString().equals(description));
 
         // now we check the initial values
-        assertTrue(Double.isNaN(persistent.getMin()));
-        assertTrue(Double.isNaN(persistent.getMax()));
-        assertTrue(Double.isNaN(persistent.getWeightedSampleMean()));
-        assertTrue(Double.isNaN(persistent.getWeightedSampleVariance()));
-        assertTrue(Double.isNaN(persistent.getWeightedStdDev()));
-        assertEquals(0.0, persistent.getWeightedSum(), 0.0);
-        assertEquals(0L, persistent.getN());
+        assertTrue(Double.isNaN(wt.getMin()));
+        assertTrue(Double.isNaN(wt.getMax()));
+        assertTrue(Double.isNaN(wt.getWeightedSampleMean()));
+        assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
+        assertTrue(Double.isNaN(wt.getWeightedSampleStdDev()));
+        assertEquals(0.0, wt.getWeightedSum(), 0.0);
+        assertEquals(0L, wt.getN());
 
         // We first fire a wrong event
         try
         {
-            persistent.notify(new Event(null, "ERROR", "ERROR"));
+            wt.notify(new Event(null, "ERROR", "ERROR"));
             fail("persistent should react on events.value !instanceOf Double");
         }
         catch (Exception exception)
@@ -53,33 +53,24 @@ public class WeightedTallyTest
             assertNotNull(exception);
         }
 
-        // Now we fire some events
-        try
-        {
-            persistent.notify(new TimedEvent<Double>(null, "PersistentTest", 1.0, 0.0));
-            persistent.notify(new TimedEvent<Double>(null, "PersistentTest", 1.1, 0.1));
-            persistent.notify(new TimedEvent<Double>(null, "PersistentTest", 1.2, 0.2));
-            persistent.notify(new TimedEvent<Double>(null, "PersistentTest", 1.3, 0.3));
-            persistent.notify(new TimedEvent<Double>(null, "PersistentTest", 1.4, 0.4));
-            persistent.notify(new TimedEvent<Double>(null, "PersistentTest", 1.5, 0.5));
-            persistent.notify(new TimedEvent<Double>(null, "PersistentTest", 1.6, 0.6));
-            persistent.notify(new TimedEvent<Double>(null, "PersistentTest", 1.7, 0.7));
-            persistent.notify(new TimedEvent<Double>(null, "PersistentTest", 1.8, 0.8));
-            persistent.notify(new TimedEvent<Double>(null, "PersistentTest", 1.9, 0.9));
-            persistent.notify(new TimedEvent<Double>(null, "PersistentTest", 2.0, 1.0));
-            persistent.notify(new TimedEvent<Double>(null, "PersistentTest", 2.1, 1.1));
-        }
-        catch (Exception exception)
-        {
-            fail(exception.getMessage());
-        }
+        wt.ingest(0.1, 1.1);
+        wt.ingest(0.1, 1.2);
+        wt.ingest(0.1, 1.3);
+        wt.ingest(0.1, 1.4);
+        wt.ingest(0.1, 1.5);
+        wt.ingest(0.1, 1.6);
+        wt.ingest(0.1, 1.7);
+        wt.ingest(0.1, 1.8);
+        wt.ingest(0.1, 1.9);
+        wt.ingest(0.1, 2.0);
+        wt.ingest(0.1, 1.0);
 
-        // Now we check the persistent
-        assertEquals(2.1, persistent.getMax(), 1.0E-6);
-        assertEquals(1.0, persistent.getMin(), 1.0E-6);
-        assertEquals(12, persistent.getN());
-        assertEquals(1.65, persistent.getWeightedSum(), 1.0E-6);
-        assertEquals(1.5, persistent.getWeightedSampleMean(), 1.0E-6);
+        // Now we check the WeightedTally
+        assertEquals(2.0, wt.getMax(), 1.0E-6);
+        assertEquals(1.0, wt.getMin(), 1.0E-6);
+        assertEquals(11, wt.getN());
+        assertEquals(1.5 * 0.1 * 11, wt.getWeightedSum(), 1.0E-6);
+        assertEquals(1.5, wt.getWeightedSampleMean(), 1.0E-6);
 
         // Let's compute the standard deviation
         double variance = 0;
@@ -90,8 +81,18 @@ public class WeightedTallyTest
         variance = variance / 10.0;
         double stDev = Math.sqrt(variance);
 
-        assertEquals(variance, persistent.getWeightedSampleVariance(), 1.0E-6);
-        assertEquals(stDev, persistent.getWeightedStdDev(), 1.0E-6);
+        assertEquals(variance, wt.getWeightedSampleVariance(), 1.0E-6);
+        assertEquals(stDev, wt.getWeightedSampleStdDev(), 1.0E-6);
+
+        try
+        {
+            wt.ingest(-0.1, 123.456);
+            fail("negative weight should have thrown an exception");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
     }
 
     /** Test the persistent on a simple example. */
@@ -99,54 +100,50 @@ public class WeightedTallyTest
     public void testPersistentSimple()
     {
         // From: https://sciencing.com/calculate-time-decimals-5962681.html
-        WeightedTally persistent = new WeightedTally("simple persistent statistic");
-        persistent.initialize();
-        persistent.ingest(0.0, 86.0);
-        persistent.ingest(13.0, 26.0);
-        persistent.ingest(36.0, 0.0);
-        persistent.endObservations(40.0);
+        WeightedTally wt = new WeightedTally("simple persistent statistic");
+        wt.initialize();
+        wt.ingest(13.0, 86.0);
+        wt.ingest(23.0, 26.0);
+        wt.ingest(4.0, 0.0);
 
-        assertEquals(1716.0, persistent.getWeightedSum(), 0.001);
-        assertEquals(42.9, persistent.getWeightedSampleMean(), 0.001);
+        assertEquals(1716.0, wt.getWeightedSum(), 0.001);
+        assertEquals(42.9, wt.getWeightedSampleMean(), 0.001);
 
         // When we shift the times, we should get the same answers
-        persistent = new WeightedTally("simple persistent statistic");
-        persistent.initialize();
-        persistent.ingest(10.0, 86.0);
-        persistent.ingest(23.0, 26.0);
-        persistent.ingest(46.0, 0.0);
-        persistent.endObservations(50.0);
+        wt = new WeightedTally("simple persistent statistic");
+        wt.initialize();
+        wt.ingest(13.0, 86.0);
+        wt.ingest(23.0, 26.0);
+        wt.ingest(14.0, 0.0);
 
-        assertEquals(1716.0, persistent.getWeightedSum(), 0.001);
-        assertEquals(42.9, persistent.getWeightedSampleMean(), 0.001);
+        assertEquals(1716.0, wt.getWeightedSum(), 0.001);
+        assertEquals(34.32, wt.getWeightedSampleMean(), 0.001);
 
         // When we have observations with duration 0, we should get the same answers
-        persistent = new WeightedTally("simple persistent statistic");
-        persistent.initialize();
-        persistent.ingest(10.0, 86.0);
-        persistent.ingest(23.0, 26.0);
-        persistent.ingest(23.0, 100.0);
-        persistent.ingest(23.0, 26.0);
-        persistent.ingest(46.0, 0.0);
-        persistent.endObservations(50.0);
+        wt = new WeightedTally("simple persistent statistic");
+        wt.initialize();
+        wt.ingest(13.0, 86.0);
+        wt.ingest(0.0, 86.0);
+        wt.ingest(23.0, 26.0);
+        wt.ingest(4.0, 0.0);
+        wt.ingest(0.0, 0.0);
 
-        assertEquals(1716.0, persistent.getWeightedSum(), 0.001);
-        assertEquals(42.9, persistent.getWeightedSampleMean(), 0.001);
+        assertEquals(1716.0, wt.getWeightedSum(), 0.001);
+        assertEquals(42.9, wt.getWeightedSampleMean(), 0.001);
 
         // Example from NIST: https://www.itl.nist.gov/div898/software/dataplot/refman2/ch2/weightsd.pdf
-        persistent = new WeightedTally("NIST");
-        persistent.ingest(0, 2);
-        persistent.ingest(1, 3);
-        persistent.ingest(2, 5);
-        persistent.ingest(2, 7);
-        persistent.ingest(2, 11);
-        persistent.ingest(6, 13);
-        persistent.ingest(7, 17);
-        persistent.ingest(9, 19);
-        persistent.ingest(10, 23);
-        persistent.endObservations(10.0);
+        wt = new WeightedTally("NIST");
+        wt.ingest(1, 2);
+        wt.ingest(1, 3);
+        wt.ingest(0, 5);
+        wt.ingest(0, 7);
+        wt.ingest(4, 11);
+        wt.ingest(1, 13);
+        wt.ingest(2, 17);
+        wt.ingest(1, 19);
+        wt.ingest(0, 23);
 
-        assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, persistent.getWeightedSampleMean(), 0.001);
-        assertEquals(5.82, persistent.getWeightedStdDev(), 0.01);
+        assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedSampleMean(), 0.001);
+        assertEquals(5.82, wt.getWeightedSampleStdDev(), 0.01);
     }
 }

@@ -1,7 +1,6 @@
 package org.djutils.stats.summarizers;
 
 import java.io.Serializable;
-import java.util.Calendar;
 
 import org.djunits.Throw;
 import org.djutils.event.EventInterface;
@@ -11,8 +10,8 @@ import org.djutils.event.EventType;
 import org.djutils.event.TimedEvent;
 
 /**
- * The Persistent class defines a statistics event persistent. A Persistent is a time-weighted tally. The persistent used to
- * extend the Tally, but because the calculation method and method signatures are different, the Persistent has been made
+ * The WeightedTally class defines a statistics event persistent. A Persistent is a time-weighted tally. The WeightedTally used to
+ * extend the Tally, but because the calculation method and method signatures are different, the WeightedTally has been made
  * self-contained.
  * <p>
  * Copyright (c) 2002-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
@@ -22,6 +21,7 @@ import org.djutils.event.TimedEvent;
  * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
+ * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
 public class WeightedTally extends EventProducer implements EventListenerInterface, Serializable
 {
@@ -34,40 +34,31 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     /** INITIALIZED_EVENT is fired whenever a Tally is (re-)initialized. */
     public static final EventType INITIALIZED_EVENT = new EventType("INITIALIZED_EVENT");
 
-    /** sum refers to the sum of the time-persistent statistic. */
+    /** The sum of the weights of this WeightedTally. */
+    private double sumOfWeights = 0;
+
+    /** The mean of this WeightedTally. */
+    private double weightedMean = 0;
+
+    /** The sum of this WeightedTally. */
     private double weightedSum = 0;
 
-    /** min refers to the min of the time-persistent statistic. */
+    /** The total ingested weight times the variance of this WeightedTally. */
+    private double weightTimesVariance = 0;
+
+    /** The minimum observed value of this WeightedTally. */
     private double min = Double.NaN;
 
-    /** max refers to the max of the time-persistent statistic. */
+    /** The maximum observed value of this WeightedTally. */
     private double max = Double.NaN;
 
-    /** varianceSum refers to the varianceSum of the time-persistent statistic. */
-    private double varianceSum = 0;
-
-    /** n refers to the number of non-zero duration measurements. */
+    /** The number of non-zero weight measurements of this WeightedTally. */
     private long n = 0;
 
-    /** startTime defines the time of the first observation. Often equals to 0.0, but can also have other value. */
-    private double startTime = Double.NaN;
-
-    /** elapsedTime tracks the time during which we have calculated observations. This excludes the start time. */
-    private double elapsedTime = Double.NaN;
-
-    /** lastTimestamp stores the time of the last observation. Stored separately to avoid ulp rounding errors and allow ==. */
-    private double lastTimestamp = Double.NaN;
-
-    /** lastValue tracks the last value. */
-    private double lastValue = Double.NaN;
-
-    /** description refers to the description of this time-persistent statistic. */
+    /** The description of this WeightedTally. */
     private final String description;
 
-    /** whether the persistent is active or not. */
-    private boolean active;
-
-    /** the synchronized lock. */
+    /** The synchronization lock. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     protected Object semaphore = new Object();
 
@@ -134,7 +125,7 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
         {
             if (this.n > 1)
             {
-                return this.weightedSum / this.elapsedTime;
+                return this.weightedMean;
             }
             return Double.NaN;
         }
@@ -144,7 +135,7 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
      * Returns the current standard deviation of the time-weighted observations.
      * @return double; weighted standard deviation
      */
-    public double getWeightedStdDev()
+    public double getWeightedSampleStdDev()
     {
         synchronized (this.semaphore)
         {
@@ -157,10 +148,7 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     }
 
     /**
-     * Returns the current variance of the time-weighted observations. See
-     * <a href="https://www.itl.nist.gov/div898/software/dataplot/refman2/ch2/weightsd.pdf" target= "_blank">
-     * https://www.itl.nist.gov/div898/software/dataplot/refman2/ch2/weightsd.pdf</a> for some of the definitions and a
-     * calculation example.
+     * Returns the current variance of the time-weighted observations.
      * @return double; weighted sample variance
      */
     public double getWeightedSampleVariance()
@@ -169,15 +157,14 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
         {
             if (this.n > 1)
             {
-                return (this.varianceSum - this.weightedSum * this.weightedSum / this.elapsedTime)
-                        / (((this.n - 1.0) / (1.0 * this.n)) * this.elapsedTime);
+                return this.weightTimesVariance / this.sumOfWeights * this.n / (this.n - 1);
             }
             return Double.NaN;
         }
     }
 
     /**
-     * returns the sum of the values of the observations multiplied by their duration.
+     * Return the sum of the values of the observations multiplied by their duration.
      * @return double; weighted sum
      */
     public final double getWeightedSum()
@@ -186,53 +173,22 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     }
 
     /**
-     * initializes the Persistent statistic. This methods sets the max, min, n, sum and variance values to their initial values.
+     * initializes the WeightedTally. This methods sets the max, min, n, sum and variance values to their initial values.
      */
     public void initialize()
     {
         synchronized (this.semaphore)
         {
-            this.active = true;
             this.min = Double.NaN;
             this.max = Double.NaN;
             this.n = 0;
+            this.sumOfWeights = 0.0;
+            this.weightedMean = 0.0;
+            this.weightTimesVariance = 0.0;
             this.weightedSum = 0.0;
-            this.varianceSum = 0.0;
-
-            this.startTime = Double.NaN;
-            this.elapsedTime = 0.0;
-            this.lastTimestamp = Double.NaN;
-            this.lastValue = 0.0;
 
             fireEvent(INITIALIZED_EVENT);
         }
-    }
-
-    /**
-     * @return whether the time-persistent statistic is active (accepting observations) or not.
-     */
-    public boolean isActive()
-    {
-        return this.active;
-    }
-
-    /**
-     * End the observations. After ending, no more observations will be accepted.
-     * @param timestamp Number; the Number object representing the final timestamp
-     */
-    public void endObservations(final Number timestamp)
-    {
-        ingest(timestamp, this.lastValue);
-        this.active = false;
-    }
-
-    /**
-     * End the observations. After ending, no more observations will be accepted.
-     * @param timestamp Calendar; the Calendar object representing the final timestamp
-     */
-    public void endObservations(final Calendar timestamp)
-    {
-        endObservations(timestamp.getTimeInMillis());
     }
 
     /** {@inheritDoc} */
@@ -254,12 +210,12 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
             Object timestamp = timedEvent.getTimeStamp();
             if (timestamp instanceof Number)
             {
-                ingest((Number) timestamp, value);
+                ingest(1, value); // FIXME must compute weight as duration since previous event.
             }
-            else if (timestamp instanceof Calendar)
-            {
-                ingest((Calendar) timestamp, value);
-            }
+            // else if (timestamp instanceof Calendar)
+            // {
+            // ingest((Calendar) timestamp, value);
+            // }
             else
             {
                 throw new IllegalArgumentException("Persistent.notify: timestamp should be a Number or Calendar");
@@ -273,68 +229,46 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
 
     /**
      * Process one observed value.
-     * @param timestamp Calendar; the Calendar object representing the timestamp
+     * @param weight double; the weight of the value to ingest
      * @param value double; the value to process
-     * @return double; the value (for method chaining)
+     * @return double; the value
      */
-    public double ingest(final Calendar timestamp, final double value)
+    public double ingest(final double weight, final double value)
     {
-        Throw.whenNull(timestamp, "timestamp object may not be null");
-        return ingest(timestamp.getTimeInMillis(), value);
-    }
-
-    /**
-     * Process one observed value.
-     * @param timestampNumber Number; the object representing the timestamp
-     * @param value double; the value to process
-     * @return double; the value (for method chaining)
-     */
-    public double ingest(final Number timestampNumber, final double value)
-    {
-        Throw.whenNull(timestampNumber, "timestamp object may not be null");
+        Throw.when(Double.isNaN(weight), IllegalArgumentException.class, "weight may not be NaN");
+        Throw.when(weight < 0, IllegalArgumentException.class, "weight may not be negative");
         Throw.when(Double.isNaN(value), IllegalArgumentException.class, "value may not be NaN");
-        double timestamp = timestampNumber.doubleValue();
-        Throw.when(timestamp < (this.elapsedTime + this.startTime), IllegalArgumentException.class,
-                "times not offered in ascending order. Last time was " + (this.elapsedTime + this.startTime)
-                        + ", new timestamp was " + timestamp);
-
-        synchronized (this.semaphore)
+        if (0 == weight)
         {
-            // only calculate anything when the time interval is larger than 0, and when the persistent is active
-            if ((Double.isNaN(this.lastTimestamp) || timestamp > this.lastTimestamp) && this.active)
-            {
-                if (this.n == 0)
-                {
-                    this.min = Double.MAX_VALUE;
-                    this.max = -Double.MAX_VALUE;
-                    this.startTime = timestamp;
-                    this.elapsedTime = 0.0;
-                }
-                else
-                {
-                    double deltaTime = timestamp - this.lastTimestamp;
-                    double timeValue = this.lastValue * deltaTime;
-                    this.weightedSum += timeValue;
-                    this.varianceSum += timeValue * timeValue;
-                    this.elapsedTime += deltaTime;
-                }
-
-                this.n++;
-                this.lastTimestamp = timestamp;
-                if (value < this.min)
-                {
-                    this.min = value;
-                }
-                if (value > this.max)
-                {
-                    this.max = value;
-                }
-                this.fireEvent(Tally.OBSERVATION_ADDED_EVENT, value);
-            }
-
-            this.lastValue = value;
             return value;
         }
+        synchronized (this.semaphore)
+        {
+            if (this.n == 0)
+            {
+                this.min = value;
+                this.max = value;
+            }
+            this.n++;
+            // Eq 47 in https://fanf2.user.srcf.net/hermes/doc/antiforgery/stats.pdf
+            this.sumOfWeights += weight;
+            double prevWeightedMean = this.weightedMean;
+            // Eq 53 in https://fanf2.user.srcf.net/hermes/doc/antiforgery/stats.pdf
+            this.weightedMean += weight / this.sumOfWeights * (value - prevWeightedMean);
+            // Eq 68 in https://fanf2.user.srcf.net/hermes/doc/antiforgery/stats.pdf
+            this.weightTimesVariance += weight * (value - prevWeightedMean) * (value - this.weightedMean);
+            this.weightedSum += weight * value;
+            if (value < this.min)
+            {
+                this.min = value;
+            }
+            if (value > this.max)
+            {
+                this.max = value;
+            }
+            this.fireEvent(Tally.OBSERVATION_ADDED_EVENT, value);
+        }
+        return value;
     }
 
     /** {@inheritDoc} */
