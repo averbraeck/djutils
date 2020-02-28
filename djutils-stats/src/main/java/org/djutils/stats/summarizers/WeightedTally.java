@@ -63,7 +63,7 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     protected Object semaphore = new Object();
 
     /**
-     * constructs a new WeightedTally with a description.
+     * Construct a new WeightedTally with a description.
      * @param description String; the description of this WeightedTally
      */
     public WeightedTally(final String description)
@@ -80,8 +80,8 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     }
 
     /**
-     * returns the description of this tally.
-     * @return Sting description
+     * Retrieve the description of this WeightedTally.
+     * @return String; description of this WeightedTally
      */
     public final String getDescription()
     {
@@ -89,8 +89,8 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     }
 
     /**
-     * Returns the max.
-     * @return double
+     * Retrieve the highest observed value (that did not come with zero weight).
+     * @return double; the highest observed value (that did not come with zero weight)
      */
     public final double getMax()
     {
@@ -98,8 +98,8 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     }
 
     /**
-     * Returns the min.
-     * @return double
+     * Retrieve the lowest observed value (that did not come with zero weight).
+     * @return double; the lowest observed value (that did not come with zero weight)
      */
     public final double getMin()
     {
@@ -108,7 +108,7 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
 
     /**
      * Returns the number of observations.
-     * @return long n
+     * @return long; the number of observations
      */
     public final long getN()
     {
@@ -116,8 +116,8 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     }
 
     /**
-     * Returns the sampleMean of all observations since the initialization.
-     * @return double; weighted sampleMean
+     * Retrieve the current weighted sampleMean of all observations since the initialization.
+     * @return double; the current weighted sampleMean
      */
     public final double getWeightedSampleMean()
     {
@@ -132,8 +132,8 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     }
 
     /**
-     * Returns the current standard deviation of the time-weighted observations.
-     * @return double; weighted standard deviation
+     * Retrieve the current weighted standard deviation of the observations.
+     * @return double; the current weighted standard deviation
      */
     public double getWeightedSampleStdDev()
     {
@@ -148,8 +148,8 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     }
 
     /**
-     * Returns the current variance of the time-weighted observations.
-     * @return double; weighted sample variance
+     * Retrieve the current weighted variance of the observations.
+     * @return double; the current weighted variance of the observations
      */
     public double getWeightedSampleVariance()
     {
@@ -164,8 +164,8 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     }
 
     /**
-     * Return the sum of the values of the observations multiplied by their duration.
-     * @return double; weighted sum
+     * Retrieve the current weighted sum of the values of the observations.
+     * @return double; the current weighted sum of the values of the observations
      */
     public final double getWeightedSum()
     {
@@ -173,7 +173,7 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     }
 
     /**
-     * initializes the WeightedTally. This methods sets the max, min, n, sum and variance values to their initial values.
+     * Initialize this WeightedTally. This methods sets the max, min, n, sum and variance values to their initial values.
      */
     public void initialize()
     {
@@ -228,8 +228,8 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     }
 
     /**
-     * Process one observed value.
-     * @param weight double; the weight of the value to ingest
+     * Process one observed weighted value.
+     * @param weight double; the weight of the value to process
      * @param value double; the value to process
      * @return double; the value
      */
