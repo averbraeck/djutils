@@ -203,7 +203,7 @@
               <url>scp://djutils.org/home/web/djutils.org</url>
               <serverId>djutils-deployment</serverId>
               <commands>
-                <command>cp -f /home/web/djutils.org/docs/${project.version}/${project.artifactId}/apidocs/element-list /home/web/djutils.org/docs/${project.version}/${project.artifactId}/apidocs/package-list</command>
+                <command>cp -f /home/web/djutils.org/docs/${project.version}/${project.artifactId}/apidocs/element-list /home/web/djutils.org/docs/${project.version}/${project.artifactId}/apidocs/package-list | true</command>
                 <command>rm -r -f /home/web/djutils.org/docs/current</command>
                 <command>mkdir -p /home/web/djutils.org/docs/current</command>
                 <command>cp -r -f /home/web/djutils.org/docs/${project.version}/. /home/web/djutils.org/docs/current</command>
