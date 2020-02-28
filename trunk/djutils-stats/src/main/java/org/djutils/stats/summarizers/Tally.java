@@ -314,7 +314,8 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()
     {
-        return this.description;
+        return "Tally [sum=" + sum + ", mean=" + mean + ", varianceTImesN=" + varianceTImesN + ", min=" + min + ", max=" + max
+                + ", n=" + n + ", description=" + description + ", quantileAccumulator=" + quantileAccumulator + "]";
     }
 
 }
