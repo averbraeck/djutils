@@ -208,7 +208,6 @@ public class EventBasedTallyTest
         assertEquals("50% quantile", 100.0, tally.getQuantile(0.5), 0);
         double sigma = tally.getStdDev();
         double mu = tally.getSampleMean();
-        System.out.println("sigma=" + tally.getStdDev() + " mu=" + mu);
         // For loop below makes painfully clear where the getQuantile method fails
         // Values are from last table in https://en.wikipedia.org/wiki/Standard_normal_table
         for (double probability : new double[] {1 - 5.00000E-1, 1 - 1.58655E-1, 1 - 2.27501E-2, 1 - 1.34990E-3, 1 - 3.16712E-5,
@@ -230,7 +229,6 @@ public class EventBasedTallyTest
         tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
         tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
         tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
-        System.out.println(tally.getStdDev());
         tally.initialize();
         // Throw a lot of pseudo-randomly normally distributed values in and see if the expected mean and stddev come out
         double mean = 123.456;
@@ -239,11 +237,8 @@ public class EventBasedTallyTest
         for (int sample = 0; sample < 10000; sample++)
         {
             value = generateGaussianNoise(mean, stddev, random);
-            // System.out.println(value);
             tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
         }
-        System.out.println(String.format("mean in: %10.15f out %20.15f, stddev in %20.15f, out %20.15f", mean,
-                tally.getSampleMean(), stddev, tally.getStdDev()));
         assertEquals("mean should approximately match", mean, tally.getSampleMean(), stddev / 10);
         assertEquals("stddev should approximately match", stddev, tally.getStdDev(), stddev / 10);
     }
@@ -265,8 +260,6 @@ public class EventBasedTallyTest
         {
             double expected = 100 * probability;
             double got = tally.getQuantile(probability);
-            // System.out.println(String.format("probability %5.2f: expected %20.15f, got %20.15f", probability, expected,
-            // got));
             assertEquals("quantile should match", expected, got, 0.00001);
         }
         try
