@@ -276,7 +276,9 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()
     {
-        return this.description;
+        return "WeightedTally [sumOfWeights=" + sumOfWeights + ", weightedMean=" + weightedMean + ", weightedSum=" + weightedSum
+                + ", weightTimesVariance=" + weightTimesVariance + ", min=" + min + ", max=" + max + ", n=" + n
+                + ", description=" + description + "]";
     }
 
 }
