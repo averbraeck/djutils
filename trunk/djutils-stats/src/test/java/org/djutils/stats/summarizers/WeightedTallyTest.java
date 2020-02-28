@@ -21,14 +21,14 @@ import org.junit.Test;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @since 1.5
  */
-public class PersistentTest
+public class WeightedTallyTest
 {
     /** Test the persistent. */
     @Test
     public void testPersistent()
     {
         String description = "THIS PERSISTENT IS TESTED";
-        Persistent persistent = new Persistent(description);
+        WeightedTally persistent = new WeightedTally(description);
 
         // check the description
         assertTrue(persistent.toString().equals(description));
@@ -99,7 +99,7 @@ public class PersistentTest
     public void testPersistentSimple()
     {
         // From: https://sciencing.com/calculate-time-decimals-5962681.html
-        Persistent persistent = new Persistent("simple persistent statistic");
+        WeightedTally persistent = new WeightedTally("simple persistent statistic");
         persistent.initialize();
         persistent.ingest(0.0, 86.0);
         persistent.ingest(13.0, 26.0);
@@ -110,7 +110,7 @@ public class PersistentTest
         assertEquals(42.9, persistent.getWeightedSampleMean(), 0.001);
 
         // When we shift the times, we should get the same answers
-        persistent = new Persistent("simple persistent statistic");
+        persistent = new WeightedTally("simple persistent statistic");
         persistent.initialize();
         persistent.ingest(10.0, 86.0);
         persistent.ingest(23.0, 26.0);
@@ -121,7 +121,7 @@ public class PersistentTest
         assertEquals(42.9, persistent.getWeightedSampleMean(), 0.001);
 
         // When we have observations with duration 0, we should get the same answers
-        persistent = new Persistent("simple persistent statistic");
+        persistent = new WeightedTally("simple persistent statistic");
         persistent.initialize();
         persistent.ingest(10.0, 86.0);
         persistent.ingest(23.0, 26.0);
@@ -134,7 +134,7 @@ public class PersistentTest
         assertEquals(42.9, persistent.getWeightedSampleMean(), 0.001);
 
         // Example from NIST: https://www.itl.nist.gov/div898/software/dataplot/refman2/ch2/weightsd.pdf
-        persistent = new Persistent("NIST");
+        persistent = new WeightedTally("NIST");
         persistent.ingest(0, 2);
         persistent.ingest(1, 3);
         persistent.ingest(2, 5);
