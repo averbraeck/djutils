@@ -1,26 +1,32 @@
                    --------------------------------
                    DJUTILS - Delft Java Utilities
                    --------------------------------
-                   November, 2018
+                   February, 2020
                    --------------------------------
                    
 DJUTILS - Delft Java Utilities
 
 	DJUTILS is a set of Java classes that are commonly used and shared across many different projects. They contain, amongst others:
 
-    * DJUTILS has a set of Immutable Collections, which copy or wrap other collections, and implement the collections
+    * Immutable Collections, which copy or wrap other collections, and implement the collections
       interfaces, with the exception of the add(), put(), clear(), and other methods that can change the contents.
 
-    * DJUTILS contains the URLResource class that can help to obtain a URL from a local directory, a resource location,
+    * The URLResource class that can help to obtain a URL from a local directory, a resource location,
       or within a JAR file.
 
-    * DJUTILS has calculation classes for arithmetic mean, geometric mean, and harmonic mean.
+    * Calculation classes for arithmetic mean, geometric mean, and harmonic mean.
 
-    * DJUTILS has methods for creating easy access loggers that use tinylog as their basis.
+    * Methods for creating easy access loggers that use tinylog as their basis.
 
-    * DJUTILS has exception handling classes for testing preconditions and blocks, such as the Throw and the Try class.
+    * Exception handling classes for testing preconditions and blocks, such as the Throw and the Try class.
 
-    * DJUTILS has methods for creating hexadecimal (and other) dumps of data.
+    * Methods for creating hexadecimal (and other) dumps of data.
+    
+    * Nested maps such as the MultiKeyMap.
+    
+    * Root objects for RMI-based classes.
+    
+    * Event handling classes both for within-JVM publish-subscribe behavior and remote pub/sub.
 
     []
 

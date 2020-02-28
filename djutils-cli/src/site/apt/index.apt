@@ -1,12 +1,12 @@
                    -------------------------------------
-                   DJUTILS-EXT
+                   DJUTILS-CLI
                    -------------------------------------
-                   August, 2019
+                   February, 2020
                    -------------------------------------
                    
-DJUTILS-EXT - extra utility classes that have more dependencies
+DJUTILS-CLI - Command Line Interface (CLI) utility classes.
 
-	DJUTILS-EXT is a set of utilities for multiple projects.
+	DJUTILS-CLI is a set of utilities for easy handling of command line interface options.
 
     * The classes in the org.djutils.cli package take care of command line argument parsing using picocli.
     

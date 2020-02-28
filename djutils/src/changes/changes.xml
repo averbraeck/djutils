@@ -2,10 +2,31 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+   <release version="1.04.10" date="2020-02-29" description="djutils-stats project added; djutils-parent project for pom">
+      <action dev="pknoppers" type="add">
+        The djutils-stats project contains data summarizers such as the Counter, the Tally, and the WeighedTally.
+        The original classes Counter, Tally and Persistent from dsol-core have been generalized and improved.
+      </action>
+      <action dev="pknoppers" type="add">
+        A class called DistNormalTable has been added to calculate the cumulative values of the cumulative
+        normal distribution. This replaces an older and less precise table from dsol-core. A project called
+        djutils-generator has been added that contains a class to generate this table.
+      </action>
+      <action dev="averbraeck" type="add">
+        For the new classes in djutils-stats, EventBased versions have been created that can receive the data
+        via a notify() method. 
+      </action>
+      <action dev="averbraeck" type="add">
+        Because of the increasing number of sub-projects in djutils, a parent pom project has been added called
+        djutils-pom. This project contains all version numbers, dependencies and definitions for the derived
+        djutils projects.   
+      </action>
+   </release>
+   
    <release version="1.04.09" date="2020-02-10" description="MultiKeyMap added; EventType equals() and hashCode()">
       <action dev="pknoppers" type="add">
-        Added the MultiKeyMap to djutils (comes from ots.core.gtu.NestedCache in a less generic form). MultiKeyMap implements 
-        a map with multiple keys.
+        Added the MultiKeyMap to djutils (comes from ots.core.gtu.NestedCache in a less generic form). 
+        MultiKeyMap implements a map with multiple keys.
       </action>
       <action dev="averbraeck" type="add">
         In order to prevent name clashes for the EventType, the full name of the class from which the EventType 
