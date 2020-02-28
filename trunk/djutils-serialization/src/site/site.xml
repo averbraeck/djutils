@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="${artifactId} ${version}" xmlns="http://maven.apache.org/DECORATION/1.6.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0 http://maven.apache.org/xsd/decoration-1.6.0.xsd">
+<project name="${artifactId} ${version}" xmlns="http://maven.apache.org/DECORATION/1.6.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0 http://maven.apache.org/xsd/decoration-1.6.0.xsd">
 
   <publishDate position="left" format="dd-MM-yyyy hh:mm" />
 
@@ -11,9 +10,11 @@
   <body>
 
     <menu name="MODULES">
-      <item name="dhutils" href="https://djutils.org/docs/${version}/index.html" />
-      <item name="djutils-ext" href="https://djutils.org/docs/${version}/djutils-ext/index.html" />
+      <item name="djutils-parent" href="https://djutils.org/docs/${version}/djutils-parent/index.html" />
+      <item name="djutils" href="https://djutils.org/docs/${version}/djutils/index.html" />
+      <item name="djutils-cli" href="https://djutils.org/docs/${version}/djutils-cli/index.html" />
       <item name="djutils-serialization" href="https://djutils.org/docs/${version}/djutils-serialization/index.html" />
+      <item name="djutils-stats" href="https://djutils.org/docs/${version}/djutils-stats/index.html" />
     </menu>
 
     <menu name="API">

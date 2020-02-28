@@ -168,7 +168,7 @@
     <site>
       <id>djutils-deployment</id>
       <name>djutils website</name>
-      <url>scp://djutils.org/home/web/djutils.org/docs/${project.version}/djutils-ext</url>
+      <url>scp://djutils.org/home/web/djutils.org/docs/${project.version}/djutils-cli</url>
     </site>
   </distributionManagement>
 
