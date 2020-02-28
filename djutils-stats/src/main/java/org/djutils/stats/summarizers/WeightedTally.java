@@ -10,7 +10,7 @@ import org.djutils.event.EventType;
 import org.djutils.event.TimedEvent;
 
 /**
- * The WeightedTally class defines a statistics event persistent. A Persistent is a time-weighted tally. The WeightedTally used to
+ * The WeightedTally class defines a statistical tally. A WeightedTally is a time-weighted tally. The WeightedTally used to
  * extend the Tally, but because the calculation method and method signatures are different, the WeightedTally has been made
  * self-contained.
  * <p>
@@ -63,8 +63,8 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
     protected Object semaphore = new Object();
 
     /**
-     * constructs a new Persistent with a description.
-     * @param description String; the description of this Persistent
+     * constructs a new WeightedTally with a description.
+     * @param description String; the description of this WeightedTally
      */
     public WeightedTally(final String description)
     {
@@ -205,7 +205,7 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
             }
             else
             {
-                throw new IllegalArgumentException("Persistent.notify: Content " + event.getContent() + " should be a Number");
+                throw new IllegalArgumentException("WeightedTally.notify: Content " + event.getContent() + " should be a Number");
             }
             Object timestamp = timedEvent.getTimeStamp();
             if (timestamp instanceof Number)
@@ -218,12 +218,12 @@ public class WeightedTally extends EventProducer implements EventListenerInterfa
             // }
             else
             {
-                throw new IllegalArgumentException("Persistent.notify: timestamp should be a Number or Calendar");
+                throw new IllegalArgumentException("WeightedTally.notify: timestamp should be a Number or Calendar");
             }
         }
         else
         {
-            throw new IllegalArgumentException("Persistent.notify: Event should be a TimedEvent");
+            throw new IllegalArgumentException("WeightedTally.notify: Event should be a TimedEvent");
         }
     }
 

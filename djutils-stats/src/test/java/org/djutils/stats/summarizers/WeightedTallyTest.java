@@ -95,12 +95,12 @@ public class WeightedTallyTest
         }
     }
 
-    /** Test the persistent on a simple example. */
+    /** Test the WeightedTally on a simple example. */
     @Test
-    public void testPersistentSimple()
+    public void testWeightedTallySimple()
     {
         // From: https://sciencing.com/calculate-time-decimals-5962681.html
-        WeightedTally wt = new WeightedTally("simple persistent statistic");
+        WeightedTally wt = new WeightedTally("simple WeightedTally statistic");
         wt.initialize();
         wt.ingest(13.0, 86.0);
         wt.ingest(23.0, 26.0);
@@ -110,7 +110,7 @@ public class WeightedTallyTest
         assertEquals(42.9, wt.getWeightedSampleMean(), 0.001);
 
         // When we shift the times, we should get the same answers
-        wt = new WeightedTally("simple persistent statistic");
+        wt = new WeightedTally("simple WeightedTally statistic");
         wt.initialize();
         wt.ingest(13.0, 86.0);
         wt.ingest(23.0, 26.0);
@@ -120,7 +120,7 @@ public class WeightedTallyTest
         assertEquals(34.32, wt.getWeightedSampleMean(), 0.001);
 
         // When we have observations with duration 0, we should get the same answers
-        wt = new WeightedTally("simple persistent statistic");
+        wt = new WeightedTally("simple WeightedTally statistic");
         wt.initialize();
         wt.ingest(13.0, 86.0);
         wt.ingest(0.0, 86.0);
