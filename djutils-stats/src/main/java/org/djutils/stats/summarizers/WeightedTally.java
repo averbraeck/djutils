@@ -23,7 +23,7 @@ import org.djutils.event.TimedEvent;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  */
-public class Persistent extends EventProducer implements EventListenerInterface, Serializable
+public class WeightedTally extends EventProducer implements EventListenerInterface, Serializable
 {
     /** */
     private static final long serialVersionUID = 20140805L;
@@ -75,7 +75,7 @@ public class Persistent extends EventProducer implements EventListenerInterface,
      * constructs a new Persistent with a description.
      * @param description String; the description of this Persistent
      */
-    public Persistent(final String description)
+    public WeightedTally(final String description)
     {
         this.description = description;
         initialize();
