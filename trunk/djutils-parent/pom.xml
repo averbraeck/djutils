@@ -154,7 +154,7 @@
             <configuration>
               <fromDir>${basedir}/target/site/jacoco-ut</fromDir>
               <includes>.*, .resources/*</includes>
-              <url>scp://djutils.org/home/web/djutils.org/docs/${djutils.version}/${project.artifactId}</url>
+              <url>scp://djutils.org/home/web/djutils.org/docs/${project.version}/${project.artifactId}</url>
               <toDir>jacoco-ut</toDir>
               <serverId>djutils-deployment</serverId>
             </configuration>
@@ -185,7 +185,7 @@
               <url>scp://djutils.org/home/web/djutils.org</url>
               <serverId>djutils-deployment</serverId>
               <commands>
-                <command>cp -f /home/web/djutils.org/docs/${project.version}/apidocs/element-list /home/web/djutils.org/docs/${project.version}/apidocs/package-list</command>
+                <command>cp -f /home/web/djutils.org/docs/${project.version}/${project.artifactId}/apidocs/element-list /home/web/djutils.org/docs/${project.version}/${project.artifactId}/apidocs/package-list</command>
                 <command>rm -r -f /home/web/djutils.org/docs/current</command>
                 <command>mkdir -p /home/web/djutils.org/docs/current</command>
                 <command>cp -r -f /home/web/djutils.org/docs/${project.version}/. /home/web/djutils.org/docs/current</command>
@@ -531,7 +531,7 @@
         <version>${maven.changes.version}</version>
         <configuration>
           <escapeHTML>false</escapeHTML>
-          <xmlPath>../djutils/src/changes/changes.xml</xmlPath>
+          <xmlPath>../djutils-parent/src/changes/changes.xml</xmlPath>
         </configuration>
         <reportSets>
           <reportSet>
