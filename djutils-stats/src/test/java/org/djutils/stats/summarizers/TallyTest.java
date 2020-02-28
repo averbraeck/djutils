@@ -182,6 +182,9 @@ public class TallyTest
                     probability, 1 - probability, x, (x - mu) / sigma));
         }
         // Output shows that the inverse cumulative probability function works fine up to about 8 sigma
+        
+        assertEquals("84% is about one sigma", 1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.84), 0.01);
+        assertEquals("16% is about minus one sigma", -1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.16), 0.01);
 
         // Test for the problem that Peter Knoppers had in Tritapt where really small rounding errors caused sqrt(-1e-14).
         double value = 166.0 / 25.0;

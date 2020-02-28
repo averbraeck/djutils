@@ -64,7 +64,7 @@ public final class DistNormalTable
                 "cumulativeProbability should be between 0 and 1 (inclusive)");
         if (cumulativeProbability < 0.5)
         {
-            return getInverseCumulativeProbability(mu, sigma, 1.0 - cumulativeProbability);
+            return mu - getInverseCumulativeProbability(0, 1, 1.0 - cumulativeProbability) * sigma;
         }
         Throw.when(Double.isNaN(mu) || Double.isNaN(sigma), IllegalArgumentException.class, "my and sigma may not be NaN");
         double prob = cumulativeProbability;
