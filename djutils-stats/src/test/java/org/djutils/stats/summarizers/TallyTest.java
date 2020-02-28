@@ -35,8 +35,9 @@ public class TallyTest
         Tally tally = new Tally(description);
 
         // check the description
-        assertEquals(description, tally.toString());
+        assertTrue(tally.toString().contains(description));
         assertEquals(description, tally.getDescription());
+        assertTrue(tally.toString().startsWith("Tally"));
 
         // now we check the initial values
         assertTrue(Double.valueOf(tally.getMin()).isNaN());
