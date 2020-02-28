@@ -34,22 +34,25 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
     /** INITIALIZED_EVENT is fired whenever a Tally is (re-)initialized. */
     public static final EventType INITIALIZED_EVENT = new EventType("INITIALIZED_EVENT");
 
-    /** sum refers to the sum of the tally. */
+    /** The sum of this tally. */
     private double sum = 0;
 
-    /** min refers to the min of the tally. */
+    /** The mean of this tally. */
+    private double mean = 0;
+
+    /** The variance of this tally times the number of samples. */
+    private double varianceTImesN = 0;
+
+    /** The minimum observed value of this tally. */
     private double min = Double.NaN;
 
-    /** max refers to the max of the tally. */
+    /** The maximum observed value of this tally. */
     private double max = Double.NaN;
 
-    /** varianceSum refers to the varianceSum of the tally. */
-    private double varianceSum = 0;
-
-    /** n refers to the number of measurements. */
+    /** The number of measurements of this tally. */
     private long n = 0;
 
-    /** description refers to the description of this tally. */
+    /** The description of this tally. */
     private final String description;
 
     /** The quantile accumulator. */
@@ -93,7 +96,11 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
      */
     public final double getSampleMean()
     {
-        return this.sum / this.n;
+        if (this.n > 0)
+        {
+            return this.mean;
+        }
+        return Double.NaN;
     }
 
     /**
@@ -143,7 +150,7 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
             }
             double z = DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, level);
             double confidence = z * Math.sqrt(this.getSampleVariance() / this.n);
-            double[] result = {sampleMean - confidence, sampleMean + confidence};
+            double[] result = { sampleMean - confidence, sampleMean + confidence };
             if (side.equals(ConfidenceInterval.LEFT_SIDE_CONFIDENCE))
             {
                 result[1] = sampleMean;
@@ -220,8 +227,8 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
     }
 
     /**
-     * Returns the current tally variance.
-     * @return double samplevariance
+     * Returns the current variance of this tally.
+     * @return double; the current variance of this tally
      */
     public final double getSampleVariance()
     {
@@ -229,7 +236,7 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
         {
             if (this.n > 1)
             {
-                return (this.varianceSum - this.sum * this.sum / this.n) / (this.n - 1);
+                return this.varianceTImesN / (this.n - 1);
             }
             return Double.NaN;
         }
@@ -246,7 +253,8 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
             this.max = Double.NaN;
             this.n = 0;
             this.sum = 0.0;
-            this.varianceSum = 0.0;
+            this.mean = 0.0;
+            this.varianceTImesN = 0.0;
             this.quantileAccumulator.initialize();
             fireEvent(INITIALIZED_EVENT);
         }
@@ -280,9 +288,13 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
                 this.min = Double.MAX_VALUE;
                 this.max = -Double.MAX_VALUE;
             }
-            this.sum += value;
             this.n++;
-            this.varianceSum += value * value;
+            double prevMean = this.mean;
+            // Eq 4 in https://fanf2.user.srcf.net/hermes/doc/antiforgery/stats.pdf
+            this.mean = prevMean + (value - prevMean) / this.n;
+            // Eq 44 in https://fanf2.user.srcf.net/hermes/doc/antiforgery/stats.pdf
+            this.varianceTImesN = this.varianceTImesN + (value - prevMean) * (value - this.mean);
+            this.sum += value;
             if (value < this.min)
             {
                 this.min = value;

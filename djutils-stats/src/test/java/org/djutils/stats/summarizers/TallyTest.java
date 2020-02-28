@@ -89,6 +89,8 @@ public class TallyTest
         assertEquals(16.5, tally.getSum(), 1.0E-6);
         assertEquals(1.5, tally.getSampleMean(), 1.0E-6);
         assertEquals(0.110000, tally.getSampleVariance(), 1.0E-6);
+        // System.out.println(
+        // String.format("variance %20.17f, variance2 %20.17f", tally.getSampleVariance(), tally.getSampleVariance2()));
         assertEquals(0.331662, tally.getStdDev(), 1.0E-6);
         assertEquals(1.304, tally.getConfidenceInterval(0.05)[0], 1E-03 /* FIXME: was 1.0E-6 */);
 
@@ -182,7 +184,7 @@ public class TallyTest
                     probability, 1 - probability, x, (x - mu) / sigma));
         }
         // Output shows that the inverse cumulative probability function works fine up to about 8 sigma
-        
+
         assertEquals("84% is about one sigma", 1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.84), 0.01);
         assertEquals("16% is about minus one sigma", -1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.16), 0.01);
 
