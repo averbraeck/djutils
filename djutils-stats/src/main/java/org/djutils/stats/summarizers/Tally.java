@@ -1,12 +1,6 @@
 package org.djutils.stats.summarizers;
 
-import java.io.Serializable;
-
 import org.djunits.Throw;
-import org.djutils.event.EventInterface;
-import org.djutils.event.EventListenerInterface;
-import org.djutils.event.EventProducer;
-import org.djutils.event.EventType;
 import org.djutils.stats.summarizers.quantileaccumulator.NoStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.QuantileAccumulator;
 
@@ -23,16 +17,10 @@ import org.djutils.stats.summarizers.quantileaccumulator.QuantileAccumulator;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-public class Tally extends EventProducer implements EventListenerInterface, Serializable
+public class Tally implements TallyInterface
 {
     /** */
-    private static final long serialVersionUID = 20140805L;
-
-    /** OBSERVATION_ADDED_EVENT is fired whenever an observation is processed. */
-    public static final EventType OBSERVATION_ADDED_EVENT = new EventType("OBSERVATION_ADDED_EVENT");
-
-    /** INITIALIZED_EVENT is fired whenever a Tally is (re-)initialized. */
-    public static final EventType INITIALIZED_EVENT = new EventType("INITIALIZED_EVENT");
+    private static final long serialVersionUID = 20200228L;
 
     /** The sum of this tally. */
     private double sum = 0;
@@ -41,7 +29,7 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
     private double mean = 0;
 
     /** The variance of this tally times the number of samples. */
-    private double varianceTImesN = 0;
+    private double varianceTimesN = 0;
 
     /** The minimum observed value of this tally. */
     private double min = Double.NaN;
@@ -85,15 +73,6 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
 
     /** {@inheritDoc} */
     @Override
-    public Serializable getSourceId()
-    {
-        return this;
-    }
-
-    /**
-     * Returns the sampleMean of all observations since the initialization.
-     * @return double the sampleMean
-     */
     public final double getSampleMean()
     {
         if (this.n > 0)
@@ -103,34 +82,22 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
         return Double.NaN;
     }
 
-    /**
-     * Compute a quantile.
-     * @param probability double; the probability for which the quantile is to be computed
-     * @return double; the quantile for the probability
-     */
+    /** {@inheritDoc} */
+    @Override
     public final double getQuantile(final double probability)
     {
         return this.quantileAccumulator.getQuantile(this, probability);
     }
 
-    /**
-     * returns the confidence interval on either side of the mean.
-     * @param alpha double; Alpha is the significance level used to compute the confidence level. The confidence level equals
-     *            100*(1 - alpha)%, or in other words, an alpha of 0.05 indicates a 95 percent confidence level.
-     * @return double[] the confidence interval of this tally
-     */
+    /** {@inheritDoc} */
+    @Override
     public final double[] getConfidenceInterval(final double alpha)
     {
         return this.getConfidenceInterval(alpha, ConfidenceInterval.BOTH_SIDE_CONFIDENCE);
     }
 
-    /**
-     * returns the confidence interval based of the mean.
-     * @param alpha double; Alpha is the significance level used to compute the confidence level. The confidence level equals
-     *            100*(1 - alpha)%, or in other words, an alpha of 0.05 indicates a 95 percent confidence level.
-     * @param side short; the side of the confidence interval with respect to the mean
-     * @return double[] the confidence interval of this tally
-     */
+    /** {@inheritDoc} */
+    @Override
     public final double[] getConfidenceInterval(final double alpha, final ConfidenceInterval side)
     {
         Throw.whenNull(side, "type of confidence level cannot be null");
@@ -150,7 +117,7 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
             }
             double z = DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, level);
             double confidence = z * Math.sqrt(this.getSampleVariance() / this.n);
-            double[] result = { sampleMean - confidence, sampleMean + confidence };
+            double[] result = {sampleMean - confidence, sampleMean + confidence};
             if (side.equals(ConfidenceInterval.LEFT_SIDE_CONFIDENCE))
             {
                 result[1] = sampleMean;
@@ -165,46 +132,36 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
         }
     }
 
-    /**
-     * returns the description of this tally.
-     * @return Sting description
-     */
+    /** {@inheritDoc} */
+    @Override
     public final String getDescription()
     {
         return this.description;
     }
 
-    /**
-     * Returns the max.
-     * @return double
-     */
+    /** {@inheritDoc} */
+    @Override
     public final double getMax()
     {
         return this.max;
     }
 
-    /**
-     * Returns the min.
-     * @return double
-     */
+    /** {@inheritDoc} */
+    @Override
     public final double getMin()
     {
         return this.min;
     }
 
-    /**
-     * Returns the number of observations.
-     * @return long n
-     */
+    /** {@inheritDoc} */
+    @Override
     public final long getN()
     {
         return this.n;
     }
 
-    /**
-     * Returns the current tally standard deviation.
-     * @return double the standard deviation
-     */
+    /** {@inheritDoc} */
+    @Override
     public final double getStdDev()
     {
         synchronized (this.semaphore)
@@ -217,34 +174,29 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
         }
     }
 
-    /**
-     * returns the sum of the values of the observations.
-     * @return double sum
-     */
+    /** {@inheritDoc} */
+    @Override
     public final double getSum()
     {
         return this.sum;
     }
 
-    /**
-     * Returns the current variance of this tally.
-     * @return double; the current variance of this tally
-     */
+    /** {@inheritDoc} */
+    @Override
     public final double getSampleVariance()
     {
         synchronized (this.semaphore)
         {
             if (this.n > 1)
             {
-                return this.varianceTImesN / (this.n - 1);
+                return this.varianceTimesN / (this.n - 1);
             }
             return Double.NaN;
         }
     }
 
-    /**
-     * initializes the Tally. This methods sets the max, min, n, sum and variance values to their initial values.
-     */
+    /** {@inheritDoc} */
+    @Override
     public final void initialize()
     {
         synchronized (this.semaphore)
@@ -254,30 +206,13 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
             this.n = 0;
             this.sum = 0.0;
             this.mean = 0.0;
-            this.varianceTImesN = 0.0;
+            this.varianceTimesN = 0.0;
             this.quantileAccumulator.initialize();
-            fireEvent(INITIALIZED_EVENT);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings("checkstyle:designforextension")
-    public void notify(final EventInterface event)
-    {
-        if (!(event.getContent() instanceof Number))
-        {
-            throw new IllegalArgumentException("Tally does not accept " + event);
-        }
-        double value = ((Number) event.getContent()).doubleValue();
-        ingest(value);
-    }
-
-    /**
-     * Process one observed value.
-     * @param value double; the value to process
-     * @return double; the value (for method chaining)
-     */
     public double ingest(final double value)
     {
         Throw.when(Double.isNaN(value), IllegalArgumentException.class, "value may not be NaN");
@@ -293,7 +228,7 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
             // Eq 4 in https://fanf2.user.srcf.net/hermes/doc/antiforgery/stats.pdf
             this.mean = prevMean + (value - prevMean) / this.n;
             // Eq 44 in https://fanf2.user.srcf.net/hermes/doc/antiforgery/stats.pdf
-            this.varianceTImesN = this.varianceTImesN + (value - prevMean) * (value - this.mean);
+            this.varianceTimesN = this.varianceTimesN + (value - prevMean) * (value - this.mean);
             this.sum += value;
             if (value < this.min)
             {
@@ -304,7 +239,6 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
                 this.max = value;
             }
             this.quantileAccumulator.ingest(value);
-            this.fireEvent(Tally.OBSERVATION_ADDED_EVENT, value);
         }
         return value;
     }
@@ -314,8 +248,9 @@ public class Tally extends EventProducer implements EventListenerInterface, Seri
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()
     {
-        return "Tally [sum=" + sum + ", mean=" + mean + ", varianceTImesN=" + varianceTImesN + ", min=" + min + ", max=" + max
-                + ", n=" + n + ", description=" + description + ", quantileAccumulator=" + quantileAccumulator + "]";
+        return "Tally [sum=" + this.sum + ", mean=" + this.mean + ", varianceTImesN=" + this.varianceTimesN + ", min="
+                + this.min + ", max=" + this.max + ", n=" + this.n + ", description=" + this.description
+                + ", quantileAccumulator=" + this.quantileAccumulator + "]";
     }
 
 }

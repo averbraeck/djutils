@@ -1,12 +1,5 @@
 package org.djutils.stats.summarizers;
 
-import java.io.Serializable;
-
-import org.djutils.event.EventInterface;
-import org.djutils.event.EventListenerInterface;
-import org.djutils.event.EventProducer;
-import org.djutils.event.EventType;
-
 /**
  * The Counter class defines a statistics event counter.
  * <p>
@@ -19,16 +12,10 @@ import org.djutils.event.EventType;
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  */
-public class Counter extends EventProducer implements EventListenerInterface, Serializable
+public class Counter implements CounterInterface
 {
     /** */
-    private static final long serialVersionUID = 20140805L;
-
-    /** OBSERVATION_ADDED_EVENT is fired whenever an observation is processed. */
-    public static final EventType OBSERVATION_ADDED_EVENT = new EventType("OBSERVATION_ADDED_EVENT");
-
-    /** INITIALIZED_EVENT is fired whenever a Tally is (re-)initialized. */
-    public static final EventType INITIALIZED_EVENT = new EventType("INITIALIZED_EVENT");
+    private static final long serialVersionUID = 20200228L;
 
     /** count represents the value of the counter. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
@@ -46,7 +33,7 @@ public class Counter extends EventProducer implements EventListenerInterface, Se
     private Object semaphore = new Object();
 
     /**
-     * constructs a new CounterTest.
+     * Constructs a new Counter.
      * @param description String; the description for this counter
      */
     public Counter(final String description)
@@ -57,24 +44,13 @@ public class Counter extends EventProducer implements EventListenerInterface, Se
 
     /** {@inheritDoc} */
     @Override
-    public Serializable getSourceId()
-    {
-        return this;
-    }
-
-    /**
-     * Returns the current counter value.
-     * @return long the counter value
-     */
     public long getCount()
     {
         return this.count;
     }
 
-    /**
-     * Returns the current number of observations.
-     * @return long the number of observations
-     */
+    /** {@inheritDoc} */
+    @Override
     public long getN()
     {
         return this.n;
@@ -82,56 +58,29 @@ public class Counter extends EventProducer implements EventListenerInterface, Se
 
     /** {@inheritDoc} */
     @Override
-    public void notify(final EventInterface event)
-    {
-        long value = 1;
-        if (event.getContent() instanceof Number)
-        {
-            value = Math.round(((Number) event.getContent()).doubleValue());
-        }
-        else
-        {
-            throw new IllegalArgumentException("event content for counter not a number but of type " + event.getClass());
-        }
-        ingest(value);
-    }
-
-    /**
-     * Process one observed value.
-     * @param value long; the value to process
-     * @return long; the value (for method chaining)
-     */
     public long ingest(final long value)
     {
         synchronized (this.semaphore)
         {
             this.count += value;
             this.n++;
-            if (hasListeners())
-            {
-                this.fireEvent(Counter.OBSERVATION_ADDED_EVENT, this.count);
-            }
         }
         return value;
     }
 
-    /**
-     * initializes the counter.
-     */
+    /** {@inheritDoc} */
+    @Override
     public void initialize()
     {
         synchronized (this.semaphore)
         {
             this.n = 0;
             this.count = 0;
-            fireEvent(Counter.INITIALIZED_EVENT);
         }
     }
 
-    /**
-     * returns the description of the counter.
-     * @return String the description
-     */
+    /** {@inheritDoc} */
+    @Override
     public String getDescription()
     {
         return this.description;

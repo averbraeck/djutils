@@ -31,9 +31,11 @@ public final class DistNormalTable
      * @param sigma double; standard deviation
      * @param x double; the observation x
      * @return double the cumulative probability
+     * @throws IllegalArgumentException when sigma less than 0
      */
     public static double getCumulativeProbability(final double mu, final double sigma, final double x)
     {
+        Throw.when(sigma < 0.0, IllegalArgumentException.class, "sigma cannot be < 0");
         int z = (int) Math.rint((x - mu) / sigma * 100);
         int absZ = Math.abs(z);
         if (absZ > 1000)
@@ -56,10 +58,12 @@ public final class DistNormalTable
      * @param sigma double; standard deviation
      * @param cumulativeProbability double; the cumulative probability
      * @return double the x-value that corresponds closely to the given cumulative probability
+     * @throws IllegalArgumentException when sigma less than 0, or when cumulative probability not between 0 and 1 (inclusive)
      */
     public static double getInverseCumulativeProbability(final double mu, final double sigma,
             final double cumulativeProbability)
     {
+        Throw.when(sigma < 0.0, IllegalArgumentException.class, "sigma cannot be < 0");
         Throw.when(cumulativeProbability < 0 || cumulativeProbability > 1, IllegalArgumentException.class,
                 "cumulativeProbability should be between 0 and 1 (inclusive)");
         if (cumulativeProbability < 0.5)
@@ -91,7 +95,6 @@ public final class DistNormalTable
             double pivotFraction = (prob - DistNormalTable.CUMULATIVE_NORMAL_PROBABILITIES[pivot])
                     / (DistNormalTable.CUMULATIVE_NORMAL_PROBABILITIES[pivot + 1]
                             - DistNormalTable.CUMULATIVE_NORMAL_PROBABILITIES[pivot]);
-            // System.out.println("pivotFraction=" + pivotFraction);
             if (Double.isFinite(pivotFraction))
             {
                 interpolatedPivot += pivotFraction;
