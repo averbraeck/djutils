@@ -118,7 +118,7 @@ public class MultiKeyMap<T>
     private Map<Object, T> getFinalMap(final boolean createBranches, final List<Object> keys)
     {
         Throw.when(keys.size() != this.keyTypes.length, IllegalArgumentException.class, "Incorrect number of keys.");
-        MultiKeyMap<T> finalMap = (MultiKeyMap<T>) getSubMap(createBranches, keys.subList(0, keys.size() - 1));
+        MultiKeyMap<T> finalMap = getSubMap(createBranches, keys.subList(0, keys.size() - 1));
         if (null == finalMap)
         {
             return null;
@@ -153,7 +153,7 @@ public class MultiKeyMap<T>
             leaf = supplier.get();
             branch.put(key, leaf);
         }
-        return (T) leaf;
+        return leaf;
     }
 
     /**
