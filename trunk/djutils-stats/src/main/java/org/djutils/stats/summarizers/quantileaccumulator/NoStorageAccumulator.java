@@ -13,14 +13,14 @@ public class NoStorageAccumulator implements QuantileAccumulator
 {
     /** {@inheritDoc} */
     @Override
-    public double ingest(double value)
+    public double ingest(final double value)
     {
         return value;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getQuantile(Tally tally, double probability)
+    public double getQuantile(final Tally tally, final double probability)
     {
         return DistNormalTable.getInverseCumulativeProbability(tally.getSampleMean(),
                 Math.sqrt(tally.getSampleVariance()), probability);

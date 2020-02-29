@@ -15,7 +15,7 @@ import org.djutils.stats.summarizers.Tally;
 public class FullStorageAccumulator implements QuantileAccumulator
 {
     /** Storage for the accumulated values. */
-    List<Double> accumulator = new ArrayList<>();
+    private List<Double> accumulator = new ArrayList<>();
 
     /** Is the accumulator currently sorted? */
     private boolean isSorted = true;
@@ -30,7 +30,7 @@ public class FullStorageAccumulator implements QuantileAccumulator
 
     /** {@inheritDoc} */
     @Override
-    public double ingest(double value)
+    public double ingest(final double value)
     {
         this.accumulator.add(value);
         this.isSorted = false;
@@ -39,7 +39,7 @@ public class FullStorageAccumulator implements QuantileAccumulator
 
     /** {@inheritDoc} */
     @Override
-    public double getQuantile(Tally tally, double probability)
+    public double getQuantile(final Tally tally, final double probability)
     {
         Throw.when(probability < 0 || probability > 1, IllegalArgumentException.class,
                 "Probability should be between 0.0 and 1.0 (inclusive); got {}", probability);
