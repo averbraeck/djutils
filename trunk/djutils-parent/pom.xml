@@ -719,7 +719,7 @@
     <site>
       <id>djutils-deployment</id>
       <name>djutils website</name>
-      <url>scp://djutils.org/home/web/djutils.org/docs/${djutils.version}/${project.artifactId}</url>
+      <url>scp://djutils.org/home/web/djutils.org/docs/${djutils.version}</url>
     </site>
   </distributionManagement>
 
