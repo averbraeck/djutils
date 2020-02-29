@@ -13,8 +13,7 @@ import org.djutils.exceptions.Throw;
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
- * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
- * <br>
+ * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  */
 public class TimestampWeightedTally implements TimestampTallyInterface
@@ -42,7 +41,7 @@ public class TimestampWeightedTally implements TimestampTallyInterface
 
     /**
      * constructs a new TimestampWeightedTally with a description.
-     * @param description String; the description of this Persistent
+     * @param description String; the description of this TimestampWeightedTally
      */
     public TimestampWeightedTally(final String description)
     {
@@ -109,7 +108,7 @@ public class TimestampWeightedTally implements TimestampTallyInterface
 
         synchronized (this.wrappedWeightedTally.semaphore)
         {
-            // only calculate anything when the time interval is larger than 0, and when the persistent is active
+            // only calculate anything when the time interval is larger than 0, and when the TimestampWeightedTally is active
             if ((Double.isNaN(this.lastTimestamp) || timestampDouble > this.lastTimestamp) && this.active)
             {
                 if (Double.isNaN(this.startTime))

@@ -30,7 +30,7 @@ public class EventBasedTimestampWeightedTallyTest
     /** an event to fire. */
     private static final EventType VALUE_EVENT = new EventType("VALUE_EVENT");
 
-    /** Test the persistent. */
+    /** Test the EventBasedTimestampWeightedTally. */
     @Test
     public void testEventBasedTimestampWeightedTally()
     {

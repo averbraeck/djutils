@@ -56,7 +56,7 @@ public interface TimestampTallyInterface extends BasicTallyInterface
     double getWeightedSum();
 
     /**
-     * @return whether the time-persistent statistic is active (accepting observations) or not.
+     * @return whether the statistic is active (accepting observations) or not.
      */
     boolean isActive();
 

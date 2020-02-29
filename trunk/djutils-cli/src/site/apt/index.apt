@@ -14,12 +14,12 @@ DJUTILS-CLI - Command Line Interface (CLI) utility classes.
 
 ==========
 
-	DJUTILS-EXT has an open source BSD 3-clause license.
+	DJUTILS-CLI has an open source BSD 3-clause license.
 
-    * Third party components used in DJUTILS-EXT can not have a license that is more restrictive than BSD, Apache, MIT, LGPL, or Eclipse.
+    * Third party components used in DJUTILS-CLI can not have a license that is more restrictive than BSD, Apache, MIT, LGPL, or Eclipse.
 
-    * DJUTILS-EXT can be incorporated in part or in full in other products for any use (educational, commercial, whatever).
+    * DJUTILS-CLI can be incorporated in part or in full in other products for any use (educational, commercial, whatever).
 
-    * DJUTILS-EXT may be extended, evolved by anyone into anything else for any purpose.
+    * DJUTILS-CLI may be extended, evolved by anyone into anything else for any purpose.
     
     []

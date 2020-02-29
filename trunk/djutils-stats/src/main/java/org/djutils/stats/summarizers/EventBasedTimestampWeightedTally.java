@@ -20,8 +20,7 @@ import org.djutils.event.TimedEvent;
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
- * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
- * <br>
+ * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  */
 public class EventBasedTimestampWeightedTally extends EventProducer implements EventListenerInterface, TimestampTallyInterface
@@ -40,7 +39,7 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
 
     /**
      * constructs a new EventBasefdTimestampWeightedTally with a description.
-     * @param description String; the description of this Persistent
+     * @param description String; the description of this EventBasedTimestampWeightedTally
      */
     public EventBasedTimestampWeightedTally(final String description)
     {
@@ -99,7 +98,8 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
             }
             else
             {
-                throw new IllegalArgumentException("Persistent.notify: Content " + event.getContent() + " should be a Number");
+                throw new IllegalArgumentException(
+                        "EventBasedTimestampWeightedTally.notify: Content " + event.getContent() + " should be a Number");
             }
             Object timestamp = timedEvent.getTimeStamp();
             if (timestamp instanceof Number)
@@ -112,12 +112,13 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
             }
             else
             {
-                throw new IllegalArgumentException("Persistent.notify: timestamp should be a Number or Calendar");
+                throw new IllegalArgumentException(
+                        "EventBasedTimestampWeightedTally.notify: timestamp should be a Number or Calendar");
             }
         }
         else
         {
-            throw new IllegalArgumentException("Persistent.notify: Event should be a TimedEvent");
+            throw new IllegalArgumentException("EventBasedTimestampWeightedTally.notify: Event should be a TimedEvent");
         }
     }
 

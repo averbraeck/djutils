@@ -27,13 +27,13 @@ DJUTILS-STATS - Delft Java Utilities for Statistical calculations
 
 ==========
 
-	DJUTILS has an open source BSD 3-clause license.
+	DJUTILS-STATS has an open source BSD 3-clause license.
 
-    * Third party components used in DJUTILS can not have a license that is more restrictive than BSD, Apache, MIT, LGPL, or Eclipse.
+    * Third party components used in DJUTILS-STATS can not have a license that is more restrictive than BSD, Apache, MIT, LGPL, or Eclipse.
 
-    * DJUTILS can be incorporated in part or in full in other products for any use (educational, commercial, whatever).
+    * DJUTILS-STATS can be incorporated in part or in full in other products for any use (educational, commercial, whatever).
 
-    * DJUTILS may be extended, evolved by anyone into anything else for any purpose.
+    * DJUTILS-STATS may be extended, evolved by anyone into anything else for any purpose.
     
     []
     
