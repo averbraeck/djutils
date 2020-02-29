@@ -5,6 +5,7 @@
     <groupId>org.djutils</groupId>
     <artifactId>djutils-parent</artifactId>
     <version>1.04.09</version>
+    <relativePath>../djutils-parent/pom.xml</relativePath>
   </parent>
 
   <artifactId>djutils-stats</artifactId>
