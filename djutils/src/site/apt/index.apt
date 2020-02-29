@@ -6,7 +6,8 @@
                    
 DJUTILS - Delft Java Utilities
 
-	DJUTILS is a set of Java classes that are commonly used and shared across many different projects. They contain, amongst others:
+	The base DJUTILS project contains a set of Java classes that are commonly used and shared across many different projects. 
+	The classes have, amongst others, the following functionalities:
 
     * Immutable Collections, which copy or wrap other collections, and implement the collections
       interfaces, with the exception of the add(), put(), clear(), and other methods that can change the contents.

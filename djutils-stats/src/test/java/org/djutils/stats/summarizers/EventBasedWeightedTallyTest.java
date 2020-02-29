@@ -26,7 +26,7 @@ public class EventBasedWeightedTallyTest
     /** an event to fire. */
     private static final EventType VALUE_EVENT = new EventType("VALUE_EVENT");
 
-    /** Test the persistent. */
+    /** Test the EventBasedWeightedTally. */
     @Test
     public void testEventBasedWeightedTally()
     {

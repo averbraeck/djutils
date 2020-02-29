@@ -7,7 +7,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
- * The PersistentTest test the persistent
+ * The WeightedTallyTest tests the WeightedTally.
  * <p>
  * Copyright (c) 2002-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
@@ -20,7 +20,7 @@ import org.junit.Test;
  */
 public class WeightedTallyTest
 {
-    /** Test the persistent. */
+    /** Test the WeightedTally. */
     @Test
     public void testWeightedTally()
     {
