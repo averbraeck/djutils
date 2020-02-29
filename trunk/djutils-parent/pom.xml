@@ -618,6 +618,12 @@
     </repository>
 
     <repository>
+      <name>DJUNITS Repository</name>
+      <id>djunits</id>
+      <url>https://djunits.org/maven</url>
+    </repository>
+
+    <repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
