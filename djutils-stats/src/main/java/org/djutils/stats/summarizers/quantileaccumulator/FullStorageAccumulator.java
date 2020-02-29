@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.djunits.Throw;
+import org.djutils.exceptions.Throw;
 import org.djutils.stats.summarizers.Tally;
 
 /**

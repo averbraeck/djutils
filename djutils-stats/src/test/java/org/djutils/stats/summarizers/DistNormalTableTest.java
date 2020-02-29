@@ -8,7 +8,7 @@ import org.junit.Test;
 
 /**
  * Test the DistNormalTable class.
- * </p>
+ * <br>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
 public class DistNormalTableTest

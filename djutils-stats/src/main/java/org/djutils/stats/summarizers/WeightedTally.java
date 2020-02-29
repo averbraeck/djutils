@@ -1,6 +1,6 @@
 package org.djutils.stats.summarizers;
 
-import org.djunits.Throw;
+import org.djutils.exceptions.Throw;
 
 /**
  * The WeightedTally class defines a statistical tally. A WeightedTally is a time-weighted tally. The WeightedTally used to
@@ -12,7 +12,7 @@ import org.djunits.Throw;
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
  * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
- * </p>
+ * <br>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
