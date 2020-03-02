@@ -31,6 +31,7 @@
         <module>../djutils</module>
         <module>../djutils-cli</module>
         <module>../djutils-serialization</module>
+        <module>../djutils-data</module>
         <module>../djutils-stats</module>
       </modules>
     </profile>
