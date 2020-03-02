@@ -78,7 +78,7 @@ public interface TextSerializer<T>
             }
         }
 
-        else if (valueClass.isAssignableFrom(Number.class))
+        else if (Number.class.isAssignableFrom(valueClass))
         {
             if (valueClass.equals(Integer.class))
             {
@@ -104,29 +104,29 @@ public interface TextSerializer<T>
             {
                 return new ByteSerializer();
             }
-            else if (valueClass.equals(Boolean.class))
+            else if (DoubleScalarInterface.class.isAssignableFrom(valueClass)) // Scalar is a Number
             {
-                return new BooleanSerializer();
+                return new DoubleScalarSerializer();
             }
-            else if (valueClass.equals(Character.class))
+            else if (FloatScalarInterface.class.isAssignableFrom(valueClass)) // Scalar is a Number
             {
-                return new CharacterSerializer();
+                return new FloatScalarSerializer();
             }
+        }
+
+        else if (valueClass.equals(Boolean.class))
+        {
+            return new BooleanSerializer();
+        }
+
+        else if (valueClass.equals(Character.class))
+        {
+            return new CharacterSerializer();
         }
 
         else if (valueClass.equals(String.class))
         {
             return new StringSerializer();
-        }
-
-        else if (valueClass.isAssignableFrom(DoubleScalarInterface.class))
-        {
-            return new DoubleScalarSerializer();
-        }
-
-        else if (valueClass.isAssignableFrom(FloatScalarInterface.class))
-        {
-            return new FloatScalarSerializer();
         }
 
         throw new TextSerializationException("Cannot resolve the Text(se)serializer for class " + valueClass.getName());

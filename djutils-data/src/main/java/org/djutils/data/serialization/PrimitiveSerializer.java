@@ -11,8 +11,13 @@ package org.djutils.data.serialization;
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
-public class PrimitiveSerializer
+public final class PrimitiveSerializer
 {
+    /** Utility class cannot be initialized. */
+    private PrimitiveSerializer()
+    {
+        // utility class.
+    }
 
     /** Serializer and deserializer for int. */
     public static class Int implements TextSerializer<java.lang.Integer>

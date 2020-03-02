@@ -2,11 +2,13 @@ package org.djutils.data;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.djutils.data.csv.CSVData;
@@ -63,5 +65,16 @@ public class TestCSVData
         assertArrayEquals(table1.getColumnDescriptions(), table2.getColumnDescriptions());
         assertArrayEquals(table1.getColumnDataTypes(), table2.getColumnDataTypes());
         assertArrayEquals(table1.getColumnDataTypeStrings(), table2.getColumnDataTypeStrings());
+        
+        Iterator<DataRecord> it1 = table1.iterator();
+        Iterator<DataRecord> it2 = table2.iterator();
+        while (it1.hasNext() && it2.hasNext())
+        {
+            DataRecord r1 = it1.next();
+            DataRecord r2 = it2.next();
+            assertArrayEquals(r1.getValues(), r2.getValues());
+        }
+        assertFalse(it1.hasNext());
+        assertFalse(it2.hasNext());
     }
 }
