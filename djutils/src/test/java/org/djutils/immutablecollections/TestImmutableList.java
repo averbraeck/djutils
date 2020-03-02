@@ -250,4 +250,50 @@ public class TestImmutableList
         // Testing the spliterator and parallelstream will have to wait until I understand how to write a unit test for that
     }
 
+    /** test the of() methods. */
+    @Test
+    public void testOf()
+    {
+        ImmutableList<Integer> list = ImmutableList.of();
+        assertTrue(list.isEmpty());
+
+        list = ImmutableList.of(1);
+        assertEquals(1, list.size());
+        assertEquals(1, list.get(0).intValue());
+
+        list = ImmutableList.of(1, 2);
+        assertEquals(2, list.size());
+        assertEquals(1, list.get(0).intValue());
+        assertEquals(2, list.get(1).intValue());
+
+        list = ImmutableList.of(1, 2, 3);
+        assertEquals(3, list.size());
+        assertEquals(1, list.get(0).intValue());
+        assertEquals(2, list.get(1).intValue());
+        assertEquals(3, list.get(2).intValue());
+
+        list = ImmutableList.of(1, 2, 3, 4);
+        assertEquals(4, list.size());
+        assertEquals(1, list.get(0).intValue());
+        assertEquals(2, list.get(1).intValue());
+        assertEquals(3, list.get(2).intValue());
+        assertEquals(4, list.get(3).intValue());
+
+        list = ImmutableList.of(1, 2, 3, 4, 5);
+        assertEquals(5, list.size());
+        assertEquals(1, list.get(0).intValue());
+        assertEquals(2, list.get(1).intValue());
+        assertEquals(3, list.get(2).intValue());
+        assertEquals(4, list.get(3).intValue());
+        assertEquals(5, list.get(4).intValue());
+
+        list = ImmutableList.of(1, 2, 3, 4, 5, 6);
+        assertEquals(6, list.size());
+        assertEquals(1, list.get(0).intValue());
+        assertEquals(2, list.get(1).intValue());
+        assertEquals(3, list.get(2).intValue());
+        assertEquals(4, list.get(3).intValue());
+        assertEquals(5, list.get(4).intValue());
+        assertEquals(6, list.get(5).intValue());
+    }
 }

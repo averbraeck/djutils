@@ -3,6 +3,7 @@ package org.djutils.immutablecollections;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.ConcurrentModificationException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -145,8 +146,8 @@ public interface ImmutableMap<K, V> extends Serializable
     }
 
     /**
-     * Returns a modifiable copy of this immutable list.
-     * @return a modifiable copy of this immutable list.
+     * Returns a modifiable copy of this immutable map.
+     * @return a modifiable copy of this immutable map.
      */
     Map<K, V> toMap();
 
@@ -182,6 +183,231 @@ public interface ImmutableMap<K, V> extends Serializable
     default boolean isCopy()
     {
         return !isWrap();
+    }
+
+    /**
+     * Return an empty ImmutableMap, backed by a LinkedHashMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @return ImmutableMap&lt;K, V&gt;; an empty ImmutableMap
+     */
+    static <K, V> ImmutableMap<K, V> of()
+    {
+        return new ImmutableLinkedHashMap<>(new LinkedHashMap<K, V>(), Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableMap with 1 entry, backed by a LinkedHashMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @return ImmutableMap&lt;K, V&gt;; an ImmutableMap with 1 entry, backed by a LinkedHashMap
+     */
+    static <K, V> ImmutableMap<K, V> of(final K k1, final V v1)
+    {
+        LinkedHashMap<K, V> map = new LinkedHashMap<>();
+        map.put(k1, v1);
+        return new ImmutableLinkedHashMap<>(map, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableMap with 2 entries, backed by a LinkedHashMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @param k2 K; key 2
+     * @param v2 V; value 2
+     * @return ImmutableMap&lt;K, V&gt;; an ImmutableMap with 2 entries, backed by a LinkedHashMap
+     */
+    static <K, V> ImmutableMap<K, V> of(final K k1, final V v1, final K k2, final V v2)
+    {
+        LinkedHashMap<K, V> map = new LinkedHashMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        return new ImmutableLinkedHashMap<>(map, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableMap with 3 entries, backed by a LinkedHashMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @param k2 K; key 2
+     * @param v2 V; value 2
+     * @param k3 K; key 3
+     * @param v3 V; value 3
+     * @return ImmutableMap&lt;K, V&gt;; an ImmutableMap with 3 entries, backed by a LinkedHashMap
+     */
+    static <K, V> ImmutableMap<K, V> of(final K k1, final V v1, final K k2, final V v2, final K k3, final V v3)
+    {
+        LinkedHashMap<K, V> map = new LinkedHashMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        return new ImmutableLinkedHashMap<>(map, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableMap with 4 entries, backed by a LinkedHashMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @param k2 K; key 2
+     * @param v2 V; value 2
+     * @param k3 K; key 3
+     * @param v3 V; value 3
+     * @param k4 K; key 4
+     * @param v4 V; value 4
+     * @return ImmutableMap&lt;K, V&gt;; an ImmutableMap with 4 entries, backed by a LinkedHashMap
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    static <K, V> ImmutableMap<K, V> of(final K k1, final V v1, final K k2, final V v2, final K k3, final V v3, final K k4,
+            final V v4)
+    {
+        LinkedHashMap<K, V> map = new LinkedHashMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        map.put(k4, v4);
+        return new ImmutableLinkedHashMap<>(map, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableMap with 5 entries, backed by a LinkedHashMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @param k2 K; key 2
+     * @param v2 V; value 2
+     * @param k3 K; key 3
+     * @param v3 V; value 3
+     * @param k4 K; key 4
+     * @param v4 V; value 4
+     * @param k5 K; key 5
+     * @param v5 V; value 5
+     * @return ImmutableMap&lt;K, V&gt;; an ImmutableMap with 5 entries, backed by a LinkedHashMap
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    static <K, V> ImmutableMap<K, V> of(final K k1, final V v1, final K k2, final V v2, final K k3, final V v3, final K k4,
+            final V v4, final K k5, final V v5)
+    {
+        LinkedHashMap<K, V> map = new LinkedHashMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        map.put(k4, v4);
+        map.put(k5, v5);
+        return new ImmutableLinkedHashMap<>(map, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableMap with 6 entries, backed by a LinkedHashMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @param k2 K; key 2
+     * @param v2 V; value 2
+     * @param k3 K; key 3
+     * @param v3 V; value 3
+     * @param k4 K; key 4
+     * @param v4 V; value 4
+     * @param k5 K; key 5
+     * @param v5 V; value 5
+     * @param k6 K; key 6
+     * @param v6 V; value 6
+     * @return ImmutableMap&lt;K, V&gt;; an ImmutableMap with 6 entries, backed by a LinkedHashMap
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    static <K, V> ImmutableMap<K, V> of(final K k1, final V v1, final K k2, final V v2, final K k3, final V v3, final K k4,
+            final V v4, final K k5, final V v5, final K k6, final V v6)
+    {
+        LinkedHashMap<K, V> map = new LinkedHashMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        map.put(k4, v4);
+        map.put(k5, v5);
+        map.put(k6, v6);
+        return new ImmutableLinkedHashMap<>(map, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableMap with 7 entries, backed by a LinkedHashMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @param k2 K; key 2
+     * @param v2 V; value 2
+     * @param k3 K; key 3
+     * @param v3 V; value 3
+     * @param k4 K; key 4
+     * @param v4 V; value 4
+     * @param k5 K; key 5
+     * @param v5 V; value 5
+     * @param k6 K; key 6
+     * @param v6 V; value 6
+     * @param k7 K; key 7
+     * @param v7 V; value 7
+     * @return ImmutableMap&lt;K, V&gt;; an ImmutableMap with 7 entries, backed by a LinkedHashMap
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    static <K, V> ImmutableMap<K, V> of(final K k1, final V v1, final K k2, final V v2, final K k3, final V v3, final K k4,
+            final V v4, final K k5, final V v5, final K k6, final V v6, final K k7, final V v7)
+    {
+        LinkedHashMap<K, V> map = new LinkedHashMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        map.put(k4, v4);
+        map.put(k5, v5);
+        map.put(k6, v6);
+        map.put(k7, v7);
+        return new ImmutableLinkedHashMap<>(map, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableMap with 8 entries, backed by a LinkedHashMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @param k2 K; key 2
+     * @param v2 V; value 2
+     * @param k3 K; key 3
+     * @param v3 V; value 3
+     * @param k4 K; key 4
+     * @param v4 V; value 4
+     * @param k5 K; key 5
+     * @param v5 V; value 5
+     * @param k6 K; key 6
+     * @param v6 V; value 6
+     * @param k7 K; key 7
+     * @param v7 V; value 7
+     * @param k8 K; key 8
+     * @param v8 V; value 8
+     * @return ImmutableMap&lt;K, V&gt;; an ImmutableMap with 8 entries, backed by a LinkedHashMap
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    static <K, V> ImmutableMap<K, V> of(final K k1, final V v1, final K k2, final V v2, final K k3, final V v3, final K k4,
+            final V v4, final K k5, final V v5, final K k6, final V v6, final K k7, final V v7, final K k8, final V v8)
+    {
+        LinkedHashMap<K, V> map = new LinkedHashMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        map.put(k4, v4);
+        map.put(k5, v5);
+        map.put(k6, v6);
+        map.put(k7, v7);
+        map.put(k8, v8);
+        return new ImmutableLinkedHashMap<>(map, Immutable.WRAP);
     }
 
     /**
@@ -338,12 +564,12 @@ public interface ImmutableMap<K, V> extends Serializable
         {
             return "ImmutableEntry [wrappedEntry=" + this.wrappedEntry + "]";
         }
-        
+
     }
 
     /**
      * Force to redefine toString.
-     * @return String; a description of this immutable list
+     * @return String; a description of this immutable map
      */
     @Override
     String toString();

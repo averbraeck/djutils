@@ -121,4 +121,23 @@ public class PrimitiveTest extends TestCase
         assertEquals((byte) 2, out[1]);
     }
 
+    /**
+     * test the isPrimitiveAssignable method.
+     */
+    @Test
+    public void testPrimitiveAssignable()
+    {
+        assertFalse(Primitive.isPrimitiveAssignableFrom(Integer.class, Number.class));
+        assertTrue(Primitive.isPrimitiveAssignableFrom(Number.class, Integer.class));
+        assertFalse(Primitive.isPrimitiveAssignableFrom(double.class, Number.class));
+        assertTrue(Primitive.isPrimitiveAssignableFrom(Number.class, double.class));
+        assertTrue(Primitive.isPrimitiveAssignableFrom(Integer.class, int.class));
+        assertFalse(Primitive.isPrimitiveAssignableFrom(Double.class, Integer.class));
+        assertTrue(Primitive.isPrimitiveAssignableFrom(long.class, Long.class));
+        assertFalse(Primitive.isPrimitiveAssignableFrom(double.class, int.class));
+        assertFalse(Primitive.isPrimitiveAssignableFrom(Double.class, int.class));
+        assertFalse(Primitive.isPrimitiveAssignableFrom(double.class, Integer.class));
+        assertFalse(Primitive.isPrimitiveAssignableFrom(String.class, CharSequence.class));
+        assertTrue(Primitive.isPrimitiveAssignableFrom(CharSequence.class, String.class));
+    }
 }

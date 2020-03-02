@@ -342,4 +342,34 @@ public final class Primitive
         }
         return Integer.valueOf(((Number) object).intValue());
     }
+
+    /**
+     * Returns true when the first class is assignable from the second class, e.g. when firstClass is Number and secondClass is
+     * Integer, the result is true (a number is assignable from an integer, i.e. Number n = Integer.valueOf(4) will work, but
+     * Integer i = new Number(4) will not work). This method also takes into account primitive types, so when firstClass is
+     * Number, and secondClass is int, the result is true, or when the firstClass is int, and the second class is Integer /
+     * firstClass is Integer and secondClass is int, the result will also be true.
+     * @param firstClass the class to which secondClass should be assignable
+     * @param secondClass the class from which firstClass should be assignable
+     * @return firstClass.isAssignableFrom(secondClass) taking into acount primitive types
+     */
+    public static boolean isPrimitiveAssignableFrom(final Class<?> firstClass, final Class<?> secondClass)
+    {
+        boolean result = firstClass.isAssignableFrom(secondClass);
+        if (!result)
+        {
+            if (firstClass.isPrimitive())
+            {
+                result = getWrapper(firstClass).isAssignableFrom(secondClass);
+            }
+            if (!result)
+            {
+                if (secondClass.isPrimitive())
+                {
+                    result = firstClass.isAssignableFrom(getWrapper(secondClass));
+                }
+            }
+        }
+        return result;
+    }
 }

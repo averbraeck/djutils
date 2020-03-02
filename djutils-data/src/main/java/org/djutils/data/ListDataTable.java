@@ -11,6 +11,12 @@ import java.util.Spliterator;
 import java.util.stream.Stream;
 
 import org.djunits.Throw;
+import org.djutils.immutablecollections.Immutable;
+import org.djutils.immutablecollections.ImmutableArrayList;
+import org.djutils.immutablecollections.ImmutableLinkedHashMap;
+import org.djutils.immutablecollections.ImmutableList;
+import org.djutils.immutablecollections.ImmutableMap;
+import org.djutils.primitives.Primitive;
 
 /**
  * List implementation of {@code Table}.
@@ -22,35 +28,46 @@ import org.djunits.Throw;
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
-public class ListTable extends AbstractTable
+public class ListDataTable extends AbstractDataTable
 {
 
     /** Records. */
-    private List<Record> records = Collections.synchronizedList(new ArrayList<>());
+    private List<DataRecord> records = Collections.synchronizedList(new ArrayList<>());
 
     /** Column numbers. */
-    private Map<Column<?>, Integer> columnNumbers = new LinkedHashMap<>();
+    private Map<DataColumn<?>, Integer> columnNumbers = new LinkedHashMap<>();
 
     /** Id numbers. */
     private Map<String, Integer> idNumbers = new LinkedHashMap<>();
 
     /**
-     * Constructor.
+     * Constructor with a regular collection.
      * @param id String; id
      * @param description String; description
      * @param columns Collection&lt;Column&lt;?&gt;&gt;; columns
      */
-    public ListTable(final String id, final String description, final Collection<Column<?>> columns)
+    public ListDataTable(final String id, final String description, final Collection<DataColumn<?>> columns)
+    {
+        this(id, description, new ImmutableArrayList<DataColumn<?>>(columns));
+    }
+
+    /**
+     * Constructor with an immutable list.
+     * @param id String; id
+     * @param description String; description
+     * @param columns ImmutableList&lt;Column&lt;?&gt;&gt;; columns
+     */
+    public ListDataTable(final String id, final String description, final ImmutableList<DataColumn<?>> columns)
     {
         super(id, description, columns);
         for (int index = 0; index < getColumns().size(); index++)
         {
-            Column<?> column = getColumns().get(index);
+            DataColumn<?> column = getColumns().get(index);
             this.columnNumbers.put(column, index);
             this.idNumbers.put(column.getId(), index);
         }
         Throw.when(getNumberOfColumns() != this.idNumbers.size(), IllegalArgumentException.class,
-            "Duplicate column ids are not allowed.");
+                "Duplicate column ids are not allowed.");
     }
 
     /**
@@ -74,7 +91,7 @@ public class ListTable extends AbstractTable
      * <br>
      */
     @Override
-    public Iterator<Record> iterator()
+    public Iterator<DataRecord> iterator()
     {
         return this.records.iterator();
     }
@@ -87,50 +104,76 @@ public class ListTable extends AbstractTable
     }
 
     /**
-     * Adds a record to the table. 
+     * Adds a record to the table, based on a map with columns and values.
      * @param data Map&lt;String, Object&gt;; data with values given per column
      * @throws IllegalArgumentException when the size or data types in the data map do not comply to the columns
+     * @throws NullPointerException when data is null
      */
-    public void addRecord(final Map<Column<?>, Object> data)
+    public void addRecordByColumns(final Map<DataColumn<?>, Object> data)
+    {
+        Throw.whenNull(data, "Data may not be null.");
+        addRecordByColumns(new ImmutableLinkedHashMap<>(data, Immutable.WRAP));
+    }
+
+    /**
+     * Adds a record to the table, based on an immutable map with columns and values.
+     * @param data Map&lt;String, Object&gt;; data with values given per column
+     * @throws IllegalArgumentException when the size or data types in the data map do not comply to the columns
+     * @throws NullPointerException when data is null
+     */
+    public void addRecordByColumns(final ImmutableMap<DataColumn<?>, Object> data)
     {
         Throw.whenNull(data, "Data may not be null.");
         Throw.when(data.size() != getNumberOfColumns(), IllegalArgumentException.class,
-            "Number of data columns doesn't match number of table columns.");
+                "Number of data columns doesn't match number of table columns.");
         Object[] dataObjects = new Object[getNumberOfColumns()];
         for (int index = 0; index < getColumns().size(); index++)
         {
-            Column<?> column = getColumns().get(index);
+            DataColumn<?> column = getColumns().get(index);
             Throw.when(!data.containsKey(column), IllegalArgumentException.class, "Missing data for column %s", column.getId());
             Object value = data.get(column);
-            Throw.when(!column.getValueType().isAssignableFrom(value.getClass()), IllegalArgumentException.class,
-                "Data value for column %s is not of type %s, but of type %s.", column.getId(), column.getValueType(), value
-                    .getClass());
+            Throw.when(!Primitive.isPrimitiveAssignableFrom(column.getValueType(), value.getClass()),
+                    IllegalArgumentException.class, "Data value for column %s is not of type %s, but of type %s.",
+                    column.getId(), column.getValueType(), value.getClass());
             dataObjects[index] = value;
         }
         this.records.add(new ListRecord(dataObjects));
     }
 
     /**
-     * Adds a record to the table. 
-     * @param data Map&lt;String, Object&gt;; data with values given per column id
+     * Adds a record to the table, based on a map with column ids and values.
+     * @param data Map&lt;String, Object&gt;; immutable data with values given per column id
      * @throws IllegalArgumentException when the size or data types in the data map do not comply to the columns
+     * @throws NullPointerException when data is null
      */
     public void addRecordByColumnIds(final Map<String, Object> data)
     {
         Throw.whenNull(data, "Data may not be null.");
+        addRecordByColumnIds(new ImmutableLinkedHashMap<>(data, Immutable.WRAP));
+    }
+
+    /**
+     * Adds a record to the table, based on an immutable map with column ids and values.
+     * @param data Map&lt;String, Object&gt;; data with values given per column id
+     * @throws IllegalArgumentException when the size or data types in the data map do not comply to the columns
+     * @throws NullPointerException when data is null
+     */
+    public void addRecordByColumnIds(final ImmutableMap<String, Object> data)
+    {
+        Throw.whenNull(data, "Data may not be null.");
         Throw.when(data.size() != getNumberOfColumns(), IllegalArgumentException.class,
-            "Number of data columns doesn't match number of table columns.");
+                "Number of data columns doesn't match number of table columns.");
         Object[] dataObjects = new Object[getNumberOfColumns()];
         for (int index = 0; index < getColumns().size(); index++)
         {
-            Column<?> column = getColumns().get(index);
-            Throw.when(!data.containsKey(column.getId()), IllegalArgumentException.class, "Missing data for column %s", column
-                .getId());
+            DataColumn<?> column = getColumns().get(index);
+            Throw.when(!data.containsKey(column.getId()), IllegalArgumentException.class, "Missing data for column %s",
+                    column.getId());
             Object value = data.get(column.getId());
             Class<?> dataClass = value.getClass();
-            Throw.when(!column.getValueType().isAssignableFrom(dataClass), IllegalArgumentException.class,
-                "Data value for column %s is not of type %s, but of type %s.", column.getId(), column.getValueType(),
-                dataClass);
+            Throw.when(!Primitive.isPrimitiveAssignableFrom(column.getValueType(), dataClass), IllegalArgumentException.class,
+                    "Data value for column %s is not of type %s, but of type %s.", column.getId(), column.getValueType(),
+                    dataClass);
             dataObjects[index] = value;
         }
         this.records.add(new ListRecord(dataObjects));
@@ -141,27 +184,28 @@ public class ListTable extends AbstractTable
      * the columns.
      * @param data Object[]; record data
      * @throws IllegalArgumentException when the size, order or data types in the {@code Object[]} do not comply to the columns
+     * @throws NullPointerException when data is null
      */
     public void addRecord(final Object[] data)
     {
         Throw.whenNull(data, "Data may not be null.");
         Throw.when(data.length != getNumberOfColumns(), IllegalArgumentException.class,
-            "Number of data columns doesn't match number of table columns.");
+                "Number of data columns doesn't match number of table columns.");
         Object[] dataObjects = new Object[getNumberOfColumns()];
         for (int index = 0; index < getColumns().size(); index++)
         {
-            Column<?> column = getColumns().get(index);
+            DataColumn<?> column = getColumns().get(index);
             Class<?> dataClass = data[index].getClass();
-            Throw.when(!column.getValueType().isAssignableFrom(dataClass), IllegalArgumentException.class,
-                "Data value for column %s is not of type %s, but of type %s.", column.getId(), column.getValueType(),
-                dataClass);
+            Throw.when(!Primitive.isPrimitiveAssignableFrom(column.getValueType(), dataClass), IllegalArgumentException.class,
+                    "Data value for column %s is not of type %s, but of type %s.", column.getId(), column.getValueType(),
+                    dataClass);
             dataObjects[index] = data[index];
         }
         this.records.add(new ListRecord(dataObjects));
     }
 
     /** Record in a {@code ListTable}. */
-    public class ListRecord implements Record
+    public class ListRecord implements DataRecord
     {
 
         /** Values. */
@@ -179,9 +223,9 @@ public class ListTable extends AbstractTable
         /** {@inheritDoc} */
         @SuppressWarnings({"unchecked", "synthetic-access"})
         @Override
-        public <T> T getValue(final Column<T> column)
+        public <T> T getValue(final DataColumn<T> column)
         {
-            return (T) this.values[ListTable.this.columnNumbers.get(column)];
+            return (T) this.values[ListDataTable.this.columnNumbers.get(column)];
         }
 
         /** {@inheritDoc} */
@@ -189,7 +233,26 @@ public class ListTable extends AbstractTable
         @Override
         public Object getValue(final String id)
         {
-            return this.values[ListTable.this.idNumbers.get(id)];
+            return this.values[ListDataTable.this.idNumbers.get(id)];
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public Object[] getValues()
+        {
+            return this.values;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public String[] getValuesAsStrings()
+        {
+            String[] result = new String[this.values.length];
+            for (int i = 0; i < this.values.length; i++)
+            {
+                result[i] = this.values[i].toString();
+            }
+            return result;
         }
 
     }

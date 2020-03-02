@@ -3,6 +3,7 @@ package org.djutils.immutablecollections;
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * A SortedSet interface without the methods that can change it. The return values of subSet, tailSet and headSet are all
@@ -123,5 +124,106 @@ public interface ImmutableSortedSet<E> extends ImmutableSet<E>
      */
     @Override
     int hashCode();
+
+    /**
+     * Return an empty ImmutableSortedSet, backed by a TreeSet.
+     * @param <E> the value type
+     * @return ImmutableSortedSet&lt;K, V&gt;; an empty ImmutableSortedSet
+     */
+    static <E> ImmutableSortedSet<E> of()
+    {
+        return new ImmutableTreeSet<>(new TreeSet<E>(), Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableSortedSet with 1 entry, backed by a TreeSet.
+     * @param <E> the value type
+     * @param v1 E; value 1
+     * @return ImmutableSortedSet&lt;K, V&gt;; an ImmutableSortedSet with 1 entry, backed by a TreeSet
+     */
+    static <E> ImmutableSortedSet<E> of(final E v1)
+    {
+        TreeSet<E> set = new TreeSet<>();
+        set.add(v1);
+        return new ImmutableTreeSet<>(set, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableSortedSet with 2 entries, backed by a TreeSet.
+     * @param <E> the value type
+     * @param v1 E; value 1
+     * @param v2 E; value 2
+     * @return ImmutableSortedSet&lt;K, V&gt;; an ImmutableSortedSet with 2 entries, backed by a TreeSet
+     */
+    static <E> ImmutableSortedSet<E> of(final E v1, final E v2)
+    {
+        TreeSet<E> set = new TreeSet<>();
+        set.add(v1);
+        set.add(v2);
+        return new ImmutableTreeSet<>(set, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableSortedSet with 3 entries, backed by a TreeSet.
+     * @param <E> the value type
+     * @param v1 E; value 1
+     * @param v2 E; value 2
+     * @param v3 E; value 3
+     * @return ImmutableSortedSet&lt;K, V&gt;; an ImmutableSortedSet with 3 entries, backed by a TreeSet
+     */
+    static <E> ImmutableSortedSet<E> of(final E v1, final E v2, final E v3)
+    {
+        TreeSet<E> set = new TreeSet<>();
+        set.add(v1);
+        set.add(v2);
+        set.add(v3);
+        return new ImmutableTreeSet<>(set, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableSortedSet with 4 entries, backed by a TreeSet.
+     * @param <E> the value type
+     * @param v1 E; value 1
+     * @param v2 E; value 2
+     * @param v3 E; value 3
+     * @param v4 E; value 4
+     * @return ImmutableSortedSet&lt;K, V&gt;; an ImmutableSortedSet with 4 entries, backed by a TreeSet
+     */
+    static <E> ImmutableSortedSet<E> of(final E v1, final E v2, final E v3, final E v4)
+    {
+        TreeSet<E> set = new TreeSet<>();
+        set.add(v1);
+        set.add(v2);
+        set.add(v3);
+        set.add(v4);
+        return new ImmutableTreeSet<>(set, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableSortedSet with 5 or more entries, backed by a TreeSet.
+     * @param <E> the value type
+     * @param v1 E; value 1
+     * @param v2 E; value 2
+     * @param v3 E; value 3
+     * @param v4 E; value 4
+     * @param v5 E; value 5
+     * @param vn V[]; values 6 and beyond
+     * @return ImmutableSortedSet&lt;K, V&gt;; an ImmutableSortedSet with 5 or more entries, backed by a TreeSet
+     */
+    @SuppressWarnings("unchecked")
+    static <E> ImmutableSortedSet<E> of(final E v1, final E v2, final E v3, final E v4, final E v5, final E... vn)
+    {
+        TreeSet<E> set = new TreeSet<>();
+        set.add(v1);
+        set.add(v2);
+        set.add(v3);
+        set.add(v4);
+        set.add(v5);
+        for (E v : vn)
+        {
+            set.add(v);
+        }
+        return new ImmutableTreeSet<>(set, Immutable.WRAP);
+    }
 
 }

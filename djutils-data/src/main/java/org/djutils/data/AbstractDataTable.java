@@ -1,9 +1,6 @@
 package org.djutils.data;
 
-import java.util.Collection;
-
 import org.djunits.Throw;
-import org.djutils.immutablecollections.ImmutableArrayList;
 import org.djutils.immutablecollections.ImmutableList;
 
 /**
@@ -16,7 +13,7 @@ import org.djutils.immutablecollections.ImmutableList;
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
-public abstract class AbstractTable implements Table
+public abstract class AbstractDataTable implements DataTable
 {
 
     /** Id. */
@@ -26,26 +23,31 @@ public abstract class AbstractTable implements Table
     private final String description;
     
     /** Columns. */
-    private final ImmutableList<Column<?>> columns;
+    private final ImmutableList<DataColumn<?>> columns;
     
     /**
-     * Constructor.
+     * Constructor for the data table using an ImmutableCollection for the columns.
      * @param id String; id
      * @param description String; description
-     * @param columns Collection&lt;Column&lt;?&gt;&gt;; columns
+     * @param columns ImmutableList&lt;Column&lt;?&gt;&gt;; columns
+     * @throws NullPointerException when id, description or columns is null
+     * @throws IllegalArgumentException when id is empty or there are zero columns
      */
-    public AbstractTable(final String id, final String description, final Collection<Column<?>> columns)
+    public AbstractDataTable(final String id, final String description, final ImmutableList<DataColumn<?>> columns)
     {
         Throw.whenNull(id, "Id may not be null.");
         Throw.whenNull(description, "Description may not be null.");
+        Throw.whenNull(columns, "Columns may not be null.");
+        Throw.when(id.length() == 0, IllegalArgumentException.class, "id cannot be empty");
+        Throw.when(columns.size() == 0, IllegalArgumentException.class, "there should be at least one column");
         this.id = id;
         this.description = description;
-        this.columns = new ImmutableArrayList<>(columns);
+        this.columns = columns;
     }
     
     /** {@inheritDoc} */
     @Override
-    public ImmutableList<Column<?>> getColumns()
+    public ImmutableList<DataColumn<?>> getColumns()
     {
         return this.columns;
     }
