@@ -9,6 +9,7 @@ import java.util.Random;
 
 import org.djutils.stats.summarizers.quantileaccumulator.FullStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.NoStorageAccumulator;
+import org.djutils.stats.summarizers.quantileaccumulator.TDigestAccumulator;
 import org.junit.Test;
 
 /**
@@ -18,8 +19,7 @@ import org.junit.Test;
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
- * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
- * <br>
+ * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
@@ -78,7 +78,7 @@ public class TallyTest
         assertEquals(1.5, tally.getSampleMean(), 1.0E-6);
         assertEquals(0.110000, tally.getSampleVariance(), 1.0E-6);
         assertEquals(0.331662, tally.getStdDev(), 1.0E-6);
-        
+
         assertEquals(1.304003602, tally.getConfidenceInterval(0.05)[0], 1E-05);
         assertEquals(1.695996398, tally.getConfidenceInterval(0.05)[1], 1E-05);
         assertEquals(1.335514637, tally.getConfidenceInterval(0.10)[0], 1E-05);
@@ -155,7 +155,7 @@ public class TallyTest
 
         assertEquals(variance, tally.getSampleVariance(), 1.0E-6);
         assertEquals(stDev, tally.getStdDev(), 1.0E-6);
-        
+
         // test confidence interval failure on uninitialized tally
         Tally t = new Tally("unused");
         assertNull(t.getConfidenceInterval(0.95));
@@ -201,8 +201,8 @@ public class TallyTest
         double mu = tally.getSampleMean();
         // For loop below makes painfully clear where the getQuantile method fails
         // Values are from last table in https://en.wikipedia.org/wiki/Standard_normal_table
-        for (double probability : new double[] {1 - 5.00000E-1, 1 - 1.58655E-1, 1 - 2.27501E-2, 1 - 1.34990E-3, 1 - 3.16712E-5,
-                1 - 2.86652E-7, 1 - 9.86588E-10, 1 - 1.27981E-12, 1 - 6.22096E-16, 1 - 1.12859E-19, 1 - 7.61985E-24})
+        for (double probability : new double[] { 1 - 5.00000E-1, 1 - 1.58655E-1, 1 - 2.27501E-2, 1 - 1.34990E-3, 1 - 3.16712E-5,
+                1 - 2.86652E-7, 1 - 9.86588E-10, 1 - 1.27981E-12, 1 - 6.22096E-16, 1 - 1.12859E-19, 1 - 7.61985E-24 })
         {
             double x = tally.getQuantile(probability);
             System.out.println(String.format("probability=%19.16f 1-probability=%19.16f, x=%19.14f, sigmaCount=%19.16f",
@@ -246,7 +246,7 @@ public class TallyTest
         {
             tally.ingest(1.0 * step);
         }
-        for (double probability : new double[] {0.0, 0.01, 0.1, 0.49, 0.5, 0.51, 0.9, 0.99, 1.0})
+        for (double probability : new double[] { 0.0, 0.01, 0.1, 0.49, 0.5, 0.51, 0.9, 0.99, 1.0 })
         {
             double expected = 100 * probability;
             double got = tally.getQuantile(probability);
@@ -286,7 +286,7 @@ public class TallyTest
     double generateGaussianNoise(final double mu, final double sigma, final Random random)
     {
         final double epsilon = Double.MIN_VALUE;
-        final double two_pi = Math.PI * 2;
+        final double twoPi = Math.PI * 2;
 
         double u1, u2;
         do
@@ -296,7 +296,96 @@ public class TallyTest
         }
         while (u1 <= epsilon);
 
-        return mu + sigma * Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(two_pi * u2);
+        return mu + sigma * Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(twoPi * u2);
+    }
+
+    /**
+     * Test the T-Digest accumulator.
+     */
+    @Test
+    public void testTDigestAccumulator()
+    {
+        Tally tally = new Tally("Tally for TDigestAccumulator test", new TDigestAccumulator());
+        // Insert values from 0.0 .. 100.0 (step 1.0)
+        for (int step = 0; step <= 100; step++)
+        {
+            tally.ingest(1.0 * step);
+        }
+        for (double probability : new double[] { 0.0, 0.01, 0.1, 0.49, 0.5, 0.51, 0.9, 0.99, 1.0 })
+        {
+            double expected = 100 * probability;
+            double got = tally.getQuantile(probability);
+            System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
+            assertEquals("quantile should match", expected, got, 1.0); // With 100 bins the error should be below 1%
+        }
+        tally.initialize();
+        // Insert values from 0.0 .. 100.0 (step 0.0001)
+        for (int step = 0; step <= 1000000; step++)
+        {
+            tally.ingest(0.0001 * step);
+        }
+        for (double probability : new double[] { 0.0, 0.01, 0.1, 0.49, 0.5, 0.51, 0.9, 0.99, 1.0 })
+        {
+            double expected = 100 * probability;
+            double got = tally.getQuantile(probability);
+            System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
+            assertEquals("quantile should match", expected, got, 0.01); // Uniformly distributed data yields very good estimates
+        }
+        tally = new Tally("Tally for TDigestAccumulator test", new TDigestAccumulator(4));
+        // Insert values from 0.0 .. 100.0 (step 0.0001)
+        for (int step = 0; step <= 1000000; step++)
+        {
+            tally.ingest(0.0001 * step);
+        }
+        for (double probability : new double[] { 0.0, 0.01, 0.1, 0.49, 0.5, 0.51, 0.9, 0.99, 1.0 })
+        {
+            double expected = 100 * probability;
+            double got = tally.getQuantile(probability);
+            System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
+            assertEquals("quantile should match", expected, got, 0.01); // Uniformly distributed data yields very good estimates
+        }
+        try
+        {
+            tally.getQuantile(-0.01);
+            fail("negative probability should have thrown an exception");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            tally.getQuantile(1.01);
+            fail("Probability > 1 should have thrown an exception");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+        assertTrue("toString returns something descriptive",
+                new TDigestAccumulator().toString().startsWith("TDigestAccumulator"));
+        tally = new Tally("Tally for TDigestAccumulator test", new TDigestAccumulator());
+        // Throw a lot of pseudo-randomly normally distributed values in and see if the accumulator gets a good approximation
+        // of the distribution
+        double mean = 123.456;
+        double stddev = 234.567;
+        Random random = new Random(123456);
+        for (int sample = 0; sample < 10000; sample++)
+        {
+            double value = generateGaussianNoise(mean, stddev, random);
+            tally.ingest(value);
+        }
+        // Test that tally reports cumulative probabilities that roughly follow that of normal distribution
+        for (double probability : new double[] { 0.01, 0.1, 0.25, 0.49, 0.5, 0.51, 0.75, 0.9, 0.99 })
+        {
+            double expected = DistNormalTable.getInverseCumulativeProbability(mean, stddev, probability);
+            double got = tally.getQuantile(probability);
+            double margin = mean / 10 / Math.sqrt(Math.min(probability, 1 - probability));
+            System.out.println(String.format("probability %12.7f, expected %12.7f, reasonable margin %12.7f, got %12.7f",
+                    probability, expected, margin, got));
+            assertEquals("quantile should match", expected, got, margin);
+        }
     }
 
 }
