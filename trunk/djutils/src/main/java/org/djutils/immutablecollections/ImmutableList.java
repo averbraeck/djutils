@@ -1,5 +1,6 @@
 package org.djutils.immutablecollections;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -89,5 +90,108 @@ public interface ImmutableList<E> extends ImmutableCollection<E>
      */
     @Override
     String toString();
+
+    /**
+     * Return an empty ImmutableList, backed by a ArrayList.
+     * @param <E> the value type
+     * @return ImmutableList&lt;K, V&gt;; an empty ImmutableList
+     */
+    static <E> ImmutableList<E> of()
+    {
+        return new ImmutableArrayList<>(new ArrayList<E>(), Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableList with 1 entry, backed by a ArrayList.
+     * @param <E> the value type
+     * @param v1 E; value 1
+     * @return ImmutableList&lt;K, V&gt;; an ImmutableList with 1 entry, backed by a ArrayList
+     */
+    static <E> ImmutableList<E> of(final E v1)
+    {
+        ArrayList<E> list = new ArrayList<>();
+        list.add(v1);
+        return new ImmutableArrayList<>(list, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableList with 2 entries, backed by a ArrayList.
+     * @param <E> the value type
+     * @param v1 E; value 1
+     * @param v2 E; value 2
+     * @return ImmutableList&lt;K, V&gt;; an ImmutableList with 2 entries, backed by a ArrayList
+     */
+    static <E> ImmutableList<E> of(final E v1, final E v2)
+    {
+        ArrayList<E> list = new ArrayList<>();
+        list.add(v1);
+        list.add(v2);
+        return new ImmutableArrayList<>(list, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableList with 3 entries, backed by a ArrayList.
+     * @param <E> the value type
+     * @param v1 E; value 1
+     * @param v2 E; value 2
+     * @param v3 E; value 3
+     * @return ImmutableList&lt;K, V&gt;; an ImmutableList with 3 entries, backed by a ArrayList
+     */
+    static <E> ImmutableList<E> of(final E v1, final E v2, final E v3)
+    {
+        ArrayList<E> list = new ArrayList<>();
+        list.add(v1);
+        list.add(v2);
+        list.add(v3);
+        return new ImmutableArrayList<>(list, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableList with 4 entries, backed by a ArrayList.
+     * @param <E> the value type
+     * @param v1 E; value 1
+     * @param v2 E; value 2
+     * @param v3 E; value 3
+     * @param v4 E; value 4
+     * @return ImmutableList&lt;K, V&gt;; an ImmutableList with 4 entries, backed by a ArrayList
+     */
+    static <E> ImmutableList<E> of(final E v1, final E v2, final E v3, 
+            final E v4)
+    {
+        ArrayList<E> list = new ArrayList<>();
+        list.add(v1);
+        list.add(v2);
+        list.add(v3);
+        list.add(v4);
+        return new ImmutableArrayList<>(list, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableList with 5 or more entries, backed by a ArrayList.
+     * @param <E> the value type
+     * @param v1 E; value 1
+     * @param v2 E; value 2
+     * @param v3 E; value 3
+     * @param v4 E; value 4
+     * @param v5 E; value 5
+     * @param vn V[]; values 6 and beyond
+     * @return ImmutableList&lt;K, V&gt;; an ImmutableList with 5 or more entries, backed by a ArrayList
+     */
+    @SuppressWarnings("unchecked")
+    static <E> ImmutableList<E> of(final E v1, final E v2, final E v3, 
+            final E v4, final E v5, final E... vn)
+    {
+        ArrayList<E> list = new ArrayList<>();
+        list.add(v1);
+        list.add(v2);
+        list.add(v3);
+        list.add(v4);
+        list.add(v5);
+        for (E v : vn)
+        {
+            list.add(v);
+        }
+        return new ImmutableArrayList<>(list, Immutable.WRAP);
+    }
 
 }

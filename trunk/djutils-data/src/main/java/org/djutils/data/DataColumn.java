@@ -13,7 +13,7 @@ import org.djutils.base.Identifiable;
  * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <T> type of value
  */
-public interface Column<T> extends Identifiable
+public interface DataColumn<T> extends Identifiable
 {
 
     /**

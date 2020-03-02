@@ -3,6 +3,7 @@ package org.djutils.immutablecollections;
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * A SortedMap interface without the methods that can change it. The return values of subMap, tailMap and headMap are all
@@ -131,5 +132,231 @@ public interface ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
      */
     @Override
     int hashCode();
+
+    /**
+     * Return an empty ImmutableSortedMap, backed by a TreeMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @return ImmutableSortedMap&lt;K, V&gt;; an empty ImmutableSortedMap
+     */
+    static <K, V> ImmutableSortedMap<K, V> of()
+    {
+        return new ImmutableTreeMap<>(new TreeMap<K, V>(), Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableSortedMap with 1 entry, backed by a TreeMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @return ImmutableSortedMap&lt;K, V&gt;; an ImmutableSortedMap with 1 entry, backed by a TreeMap
+     */
+    static <K, V> ImmutableSortedMap<K, V> of(final K k1, final V v1)
+    {
+        TreeMap<K, V> map = new TreeMap<>();
+        map.put(k1, v1);
+        return new ImmutableTreeMap<>(map, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableSortedMap with 2 entries, backed by a TreeMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @param k2 K; key 2
+     * @param v2 V; value 2
+     * @return ImmutableSortedMap&lt;K, V&gt;; an ImmutableSortedMap with 2 entries, backed by a TreeMap
+     */
+    static <K, V> ImmutableSortedMap<K, V> of(final K k1, final V v1, final K k2, final V v2)
+    {
+        TreeMap<K, V> map = new TreeMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        return new ImmutableTreeMap<>(map, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableSortedMap with 3 entries, backed by a TreeMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @param k2 K; key 2
+     * @param v2 V; value 2
+     * @param k3 K; key 3
+     * @param v3 V; value 3
+     * @return ImmutableSortedMap&lt;K, V&gt;; an ImmutableSortedMap with 3 entries, backed by a TreeMap
+     */
+    static <K, V> ImmutableSortedMap<K, V> of(final K k1, final V v1, final K k2, final V v2, final K k3, final V v3)
+    {
+        TreeMap<K, V> map = new TreeMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        return new ImmutableTreeMap<>(map, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableSortedMap with 4 entries, backed by a TreeMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @param k2 K; key 2
+     * @param v2 V; value 2
+     * @param k3 K; key 3
+     * @param v3 V; value 3
+     * @param k4 K; key 4
+     * @param v4 V; value 4
+     * @return ImmutableSortedMap&lt;K, V&gt;; an ImmutableSortedMap with 4 entries, backed by a TreeMap
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    static <K, V> ImmutableSortedMap<K, V> of(final K k1, final V v1, final K k2, final V v2, final K k3, final V v3,
+            final K k4, final V v4)
+    {
+        TreeMap<K, V> map = new TreeMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        map.put(k4, v4);
+        return new ImmutableTreeMap<>(map, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableSortedMap with 5 entries, backed by a TreeMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @param k2 K; key 2
+     * @param v2 V; value 2
+     * @param k3 K; key 3
+     * @param v3 V; value 3
+     * @param k4 K; key 4
+     * @param v4 V; value 4
+     * @param k5 K; key 5
+     * @param v5 V; value 5
+     * @return ImmutableSortedMap&lt;K, V&gt;; an ImmutableSortedMap with 5 entries, backed by a TreeMap
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    static <K, V> ImmutableSortedMap<K, V> of(final K k1, final V v1, final K k2, final V v2, final K k3, final V v3,
+            final K k4, final V v4, final K k5, final V v5)
+    {
+        TreeMap<K, V> map = new TreeMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        map.put(k4, v4);
+        map.put(k5, v5);
+        return new ImmutableTreeMap<>(map, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableSortedMap with 6 entries, backed by a TreeMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @param k2 K; key 2
+     * @param v2 V; value 2
+     * @param k3 K; key 3
+     * @param v3 V; value 3
+     * @param k4 K; key 4
+     * @param v4 V; value 4
+     * @param k5 K; key 5
+     * @param v5 V; value 5
+     * @param k6 K; key 6
+     * @param v6 V; value 6
+     * @return ImmutableSortedMap&lt;K, V&gt;; an ImmutableSortedMap with 6 entries, backed by a TreeMap
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    static <K, V> ImmutableSortedMap<K, V> of(final K k1, final V v1, final K k2, final V v2, final K k3, final V v3,
+            final K k4, final V v4, final K k5, final V v5, final K k6, final V v6)
+    {
+        TreeMap<K, V> map = new TreeMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        map.put(k4, v4);
+        map.put(k5, v5);
+        map.put(k6, v6);
+        return new ImmutableTreeMap<>(map, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableSortedMap with 7 entries, backed by a TreeMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @param k2 K; key 2
+     * @param v2 V; value 2
+     * @param k3 K; key 3
+     * @param v3 V; value 3
+     * @param k4 K; key 4
+     * @param v4 V; value 4
+     * @param k5 K; key 5
+     * @param v5 V; value 5
+     * @param k6 K; key 6
+     * @param v6 V; value 6
+     * @param k7 K; key 7
+     * @param v7 V; value 7
+     * @return ImmutableSortedMap&lt;K, V&gt;; an ImmutableSortedMap with 7 entries, backed by a TreeMap
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    static <K, V> ImmutableSortedMap<K, V> of(final K k1, final V v1, final K k2, final V v2, final K k3, final V v3,
+            final K k4, final V v4, final K k5, final V v5, final K k6, final V v6, final K k7, final V v7)
+    {
+        TreeMap<K, V> map = new TreeMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        map.put(k4, v4);
+        map.put(k5, v5);
+        map.put(k6, v6);
+        map.put(k7, v7);
+        return new ImmutableTreeMap<>(map, Immutable.WRAP);
+    }
+
+    /**
+     * Return an ImmutableSortedMap with 8 entries, backed by a TreeMap.
+     * @param <K> the key type
+     * @param <V> the value type
+     * @param k1 K; key 1
+     * @param v1 V; value 1
+     * @param k2 K; key 2
+     * @param v2 V; value 2
+     * @param k3 K; key 3
+     * @param v3 V; value 3
+     * @param k4 K; key 4
+     * @param v4 V; value 4
+     * @param k5 K; key 5
+     * @param v5 V; value 5
+     * @param k6 K; key 6
+     * @param v6 V; value 6
+     * @param k7 K; key 7
+     * @param v7 V; value 7
+     * @param k8 K; key 8
+     * @param v8 V; value 8
+     * @return ImmutableSortedMap&lt;K, V&gt;; an ImmutableSortedMap with 8 entries, backed by a TreeMap
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    static <K, V> ImmutableSortedMap<K, V> of(final K k1, final V v1, final K k2, final V v2, final K k3, final V v3,
+            final K k4, final V v4, final K k5, final V v5, final K k6, final V v6, final K k7, final V v7, final K k8,
+            final V v8)
+    {
+        TreeMap<K, V> map = new TreeMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        map.put(k4, v4);
+        map.put(k5, v5);
+        map.put(k6, v6);
+        map.put(k7, v7);
+        map.put(k8, v8);
+        return new ImmutableTreeMap<>(map, Immutable.WRAP);
+    }
 
 }

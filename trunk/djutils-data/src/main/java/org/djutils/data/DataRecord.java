@@ -10,22 +10,35 @@ package org.djutils.data;
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
-public interface Record
+public interface DataRecord
 {
     
     /**
      * Returns the column value of this record.
      * @param column Column&lt;T&gt;; column
      * @param <T> value type
-     * @return the column value in this record
+     * @return T; the column value in this record
      */
-    <T> T getValue(Column<T> column);
+    <T> T getValue(DataColumn<T> column);
     
     /**
      * Returns the column value of this record.
      * @param id String; column id
-     * @return the column value in this record
+     * @return Object; the column value in this record
      */
     Object getValue(String id);
+
+    /**
+     * Returns the column values of this record in the natural order of the columns.
+     * @return the column value in this record
+     */
+    Object[] getValues();
+
+    /**
+     * Returns the column values of this record as an array of Strings in the natural order of the columns. For each value, the
+     * toString() method is used to determine the value to put in the array. If the value type is an array type, 
+     * @return the column value in this record
+     */
+    String[] getValuesAsStrings();
 
 }
