@@ -11,8 +11,7 @@ import org.djutils.stats.summarizers.quantileaccumulator.QuantileAccumulator;
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
- * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
- * <br>
+ * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
@@ -26,10 +25,16 @@ public class Tally implements TallyInterface
     private double sum = 0;
 
     /** The mean of this tally. */
-    private double mean = 0;
+    private double m1 = 0;
 
-    /** The variance of this tally times the number of samples. */
-    private double varianceTimesN = 0;
+    /** The summation for the second moment (variance). */
+    private double m2 = 0;
+
+    /** The summation for the third moment (skew). */
+    private double m3 = 0;
+
+    /** The summation for the fourth moment (kurtosis). */
+    private double m4 = 0;
 
     /** The minimum observed value of this tally. */
     private double min = Double.NaN;
@@ -77,7 +82,7 @@ public class Tally implements TallyInterface
     {
         if (this.n > 0)
         {
-            return this.mean;
+            return this.m1;
         }
         return Double.NaN;
     }
@@ -117,7 +122,7 @@ public class Tally implements TallyInterface
             }
             double z = DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, level);
             double confidence = z * Math.sqrt(this.getSampleVariance() / this.n);
-            double[] result = {sampleMean - confidence, sampleMean + confidence};
+            double[] result = { sampleMean - confidence, sampleMean + confidence };
             if (side.equals(ConfidenceInterval.LEFT_SIDE_CONFIDENCE))
             {
                 result[1] = sampleMean;
@@ -189,10 +194,39 @@ public class Tally implements TallyInterface
         {
             if (this.n > 1)
             {
-                return this.varianceTimesN / (this.n - 1);
+                return this.m2 / (this.n - 1);
             }
             return Double.NaN;
         }
+    }
+
+    /**
+     * Return the sample skewness of the ingested data.
+     * @return double; the skewness of the ingested data
+     */
+    public final double getSampleSkewness()
+    {
+        if (this.n > 2)
+        {
+            double g1 = this.m3 / this.n / Math.pow(this.m2 / this.n, 1.5);
+            return g1 * Math.sqrt(this.n * (this.n - 1)) / (this.n - 2);
+        }
+        return Double.NaN;
+    }
+
+    /**
+     * Return the sample excess kurtosis of the ingested data.
+     * @return double; the skewness of the ingested data
+     */
+    public final double getSampleKurtosis()
+    {
+        if (this.n > 3)
+        {
+            double a4 = this.m4 / this.n / (this.m2 / this.n) / (this.m2 / this.n);
+            double g2 = a4 - 3; // convert kurtosis to excess kurtosis
+            return 1.0 * (this.n - 1) / (this.n - 2) / (this.n - 3) * ((this.n + 1) * g2 + 6);
+        }
+        return Double.NaN;
     }
 
     /** {@inheritDoc} */
@@ -205,8 +239,10 @@ public class Tally implements TallyInterface
             this.max = Double.NaN;
             this.n = 0;
             this.sum = 0.0;
-            this.mean = 0.0;
-            this.varianceTimesN = 0.0;
+            this.m1 = 0.0;
+            this.m2 = 0.0;
+            this.m3 = 0;
+            this.m4 = 0;
             this.quantileAccumulator.initialize();
         }
     }
@@ -224,11 +260,20 @@ public class Tally implements TallyInterface
                 this.max = -Double.MAX_VALUE;
             }
             this.n++;
-            double prevMean = this.mean;
+            double delta = value - this.m1;
+            double oldm2 = this.m2;
+            double oldm3 = this.m3;
             // Eq 4 in https://fanf2.user.srcf.net/hermes/doc/antiforgery/stats.pdf
-            this.mean = prevMean + (value - prevMean) / this.n;
+            // Eq 1.1 in https://prod-ng.sandia.gov/techlib-noauth/access-control.cgi/2008/086212.pdf
+            this.m1 += delta / this.n;
             // Eq 44 in https://fanf2.user.srcf.net/hermes/doc/antiforgery/stats.pdf
-            this.varianceTimesN = this.varianceTimesN + (value - prevMean) * (value - this.mean);
+            // Eq 1.2 in https://prod-ng.sandia.gov/techlib-noauth/access-control.cgi/2008/086212.pdf
+            this.m2 += delta * (value - this.m1);
+            // Eq 2.13 in https://prod-ng.sandia.gov/techlib-noauth/access-control.cgi/2008/086212.pdf
+            this.m3 += -3 * oldm2 * delta / this.n + (this.n - 1) * (this.n - 2) * delta * delta * delta / this.n / this.n;
+            // Eq 2.16 in https://prod-ng.sandia.gov/techlib-noauth/access-control.cgi/2008/086212.pdf
+            this.m4 += -4 * oldm3 * delta / this.n + 6 * oldm2 * delta * delta / this.n / this.n + (this.n - 1)
+                    * (this.n * this.n - 3 * this.n + 3) * delta * delta * delta * delta / this.n / this.n / this.n;
             this.sum += value;
             if (value < this.min)
             {
@@ -248,8 +293,8 @@ public class Tally implements TallyInterface
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()
     {
-        return "Tally [sum=" + this.sum + ", mean=" + this.mean + ", varianceTImesN=" + this.varianceTimesN + ", min="
-                + this.min + ", max=" + this.max + ", n=" + this.n + ", description=" + this.description
+        return "Tally [sum=" + this.sum + ", m1=" + this.m1 + ", m2=" + this.m2 + ", m3=" + this.m3 + ", m4=" + this.m4
+                + ", min=" + this.min + ", max=" + this.max + ", n=" + this.n + ", description=" + this.description
                 + ", quantileAccumulator=" + this.quantileAccumulator + "]";
     }
 

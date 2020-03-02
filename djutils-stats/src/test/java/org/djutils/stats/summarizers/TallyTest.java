@@ -1,10 +1,13 @@
 package org.djutils.stats.summarizers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.djutils.stats.summarizers.quantileaccumulator.FullStorageAccumulator;
@@ -54,9 +57,16 @@ public class TallyTest
         try
         {
             tally.ingest(1.1);
+            assertFalse("mean is now available", Double.isNaN(tally.getSampleMean()));
+            assertTrue("variance is not available", Double.isNaN(tally.getSampleVariance()));
             tally.ingest(1.2);
+            assertFalse("variance is now available", Double.isNaN(tally.getSampleVariance()));
+            assertTrue("skewness is not available", Double.isNaN(tally.getSampleSkewness()));
             tally.ingest(1.3);
+            assertFalse("skewness is now available", Double.isNaN(tally.getSampleSkewness()));
+            assertTrue("kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
             tally.ingest(1.4);
+            assertFalse("kurtosis is now available", Double.isNaN(tally.getSampleKurtosis()));
             tally.ingest(1.5);
             tally.ingest(1.6);
             tally.ingest(1.7);
@@ -318,6 +328,11 @@ public class TallyTest
             System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
             assertEquals("quantile should match", expected, got, 1.0); // With 100 bins the error should be below 1%
         }
+        // https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)
+        assertEquals("skewness should be 0", 0, tally.getSampleSkewness(), 0.0001);
+        assertEquals("kurtosis should be 0", -1.2, tally.getSampleKurtosis(), 0.0001);
+        // System.out.println(String.format("%d uniformly distributed values: skewness %20.15f, kurtosis %20.15f", tally.getN(),
+        // tally.getSampleSkewness(), tally.getSampleKurtosis()));
         tally.initialize();
         // Insert values from 0.0 .. 100.0 (step 0.0001)
         for (int step = 0; step <= 1000000; step++)
@@ -331,6 +346,10 @@ public class TallyTest
             System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
             assertEquals("quantile should match", expected, got, 0.01); // Uniformly distributed data yields very good estimates
         }
+        // System.out.println(String.format("%d uniformly distributed values: skewness %20.15f, kurtosis %20.15f", tally.getN(),
+        // tally.getSampleSkewness(), tally.getSampleKurtosis()));
+        assertEquals("skewness should be 0", 0, tally.getSampleSkewness(), 0.0001);
+        assertEquals("kurtosis should be 0", -1.2, tally.getSampleKurtosis(), 0.0001);
         tally = new Tally("Tally for TDigestAccumulator test", new TDigestAccumulator(4));
         // Insert values from 0.0 .. 100.0 (step 0.0001)
         for (int step = 0; step <= 1000000; step++)
@@ -386,6 +405,69 @@ public class TallyTest
                     probability, expected, margin, got));
             assertEquals("quantile should match", expected, got, margin);
         }
+    }
+
+    /**
+     * Test skewness and kurtosis. Test data from http://web.ipac.caltech.edu/staff/fmasci/home/astro_refs/SkewStatSignif.pdf
+     */
+    @Test
+    public void testSkewnessAndCurtosis()
+    {
+        List<Double> testValues = new ArrayList<>();
+        for (int i = 5; --i >= 0;)
+        {
+            testValues.add(61.0);
+        }
+        for (int i = 18; --i >= 0;)
+        {
+            testValues.add(64.0);
+        }
+        for (int i = 42; --i >= 0;)
+        {
+            testValues.add(67.0);
+        }
+        for (int i = 27; --i >= 0;)
+        {
+            testValues.add(70.0);
+        }
+        for (int i = 8; --i >= 0;)
+        {
+            testValues.add(73.0);
+        }
+        int count = testValues.size();
+        Tally tally = new Tally("");
+        for (double value : testValues)
+        {
+            tally.ingest(value);
+        }
+        System.out.println(tally);
+        System.out.println(String.format("count %d mean %20.15f variance %20.15f skew %20.15f kurtosis %20.15f", count,
+                tally.getSampleMean(), tally.getSampleVariance(), tally.getSampleSkewness(), tally.getSampleKurtosis()));
+        // Do the math the "classic" way (i.e. using two passes; the first pass gets the mean)
+        double mean = tally.getSampleMean();
+        double m2 = 0;
+        double m3 = 0;
+        double m4 = 0;
+        for (double value : testValues)
+        {
+            double delta = value - mean;
+            m2 += delta * delta;
+            m3 += delta * delta * delta;
+            m4 += delta * delta * delta * delta;
+        }
+        m2 /= count;
+        m3 /= count;
+        m4 /= count;
+        double g1 = m3 / Math.pow(m2, 1.5);
+        double sg1 = g1 * Math.sqrt(count * (count - 1)) / (count - 2);
+        double a4 = m4 / m2 / m2;
+        System.out.println(String.format("m2 %20.15f, m3 %20.15f, m4 %20.15f", m2, m3, m4));
+        double g2 = a4 - 3;
+        double sg2 = 1.0 * (count - 1) / (count - 2) / (count - 3) * ((count + 1) * g2 + 6);
+        System.out.println(String.format("g1 %20.15f sampleSkewness %20.15f, a4 %20.15f g2 %20.15f sampleKurtosis %20.15f", g1,
+                sg1, a4, g2, sg2));
+        assertEquals("skew should match", sg1, tally.getSampleSkewness(), 0.0001);
+        assertEquals("kurtosis should match", sg2, tally.getSampleKurtosis(), 0.0001);
     }
 
 }
