@@ -243,18 +243,6 @@ public class ListDataTable extends AbstractDataTable
             return this.values;
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public String[] getValuesAsStrings()
-        {
-            String[] result = new String[this.values.length];
-            for (int i = 0; i < this.values.length; i++)
-            {
-                result[i] = this.values[i].toString();
-            }
-            return result;
-        }
-
     }
 
 }

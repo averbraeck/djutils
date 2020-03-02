@@ -16,9 +16,9 @@ public class StringSerializer implements TextSerializer<String>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final String value)
+    public String serialize(final Object value)
     {
-        return value;
+        return value.toString();
     }
 
     /** {@inheritDoc} */

@@ -16,9 +16,9 @@ public class IntegerSerializer implements TextSerializer<Integer>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final Integer value)
+    public String serialize(final Object value)
     {
-        return String.valueOf(value.intValue());
+        return String.valueOf(((Integer) value).intValue());
     }
 
     /** {@inheritDoc} */

@@ -16,9 +16,9 @@ public class LongSerializer implements TextSerializer<Long>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final Long value)
+    public String serialize(final Object value)
     {
-        return String.valueOf(value.longValue());
+        return String.valueOf(((Long) value).longValue());
     }
 
     /** {@inheritDoc} */

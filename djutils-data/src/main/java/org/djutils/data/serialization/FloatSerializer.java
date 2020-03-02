@@ -16,9 +16,9 @@ public class FloatSerializer implements TextSerializer<Float>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final Float value)
+    public String serialize(final Object value)
     {
-        return String.valueOf(value.floatValue());
+        return String.valueOf(((Float) value).floatValue());
     }
 
     /** {@inheritDoc} */

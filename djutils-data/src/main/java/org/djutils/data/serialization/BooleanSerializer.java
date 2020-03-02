@@ -16,9 +16,9 @@ public class BooleanSerializer implements TextSerializer<Boolean>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final Boolean value)
+    public String serialize(final Object value)
     {
-        return String.valueOf(value.booleanValue());
+        return String.valueOf(((Boolean) value).booleanValue());
     }
 
     /** {@inheritDoc} */

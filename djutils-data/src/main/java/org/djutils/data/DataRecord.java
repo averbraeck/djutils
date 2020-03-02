@@ -34,11 +34,4 @@ public interface DataRecord
      */
     Object[] getValues();
 
-    /**
-     * Returns the column values of this record as an array of Strings in the natural order of the columns. For each value, the
-     * toString() method is used to determine the value to put in the array. If the value type is an array type, 
-     * @return the column value in this record
-     */
-    String[] getValuesAsStrings();
-
 }

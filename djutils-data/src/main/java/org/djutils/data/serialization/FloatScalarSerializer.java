@@ -33,10 +33,11 @@ public class FloatScalarSerializer<U extends Unit<U>, S extends FloatScalarInter
      * @param value S; the scalar to serialize
      * @return String; a string representation of the value that can later be deserialized
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public String serialize(final S value)
+    public String serialize(final Object value)
     {
-        return value.getClass().getName() + "#" + value.toTextualString();
+        return value.getClass().getName() + "#" + ((S) value).toTextualString();
     }
 
     /**

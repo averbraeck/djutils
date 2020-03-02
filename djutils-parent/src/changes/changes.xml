@@ -2,14 +2,15 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-   <release version="1.04.11" date="2020-03-01" description="djutils-data project added; Immutable.of() methods">
+   <release version="1.04.11" date="2020-03-02" description="djutils-data project added; Immutable.of() methods">
       <action dev="wjschakel" type="add">
         The djutils-data project contains classes for sampling, storing and retrieving statistics data.
         For now, the main data type is a data table with column heading information and records.
       </action>
       <action dev="averbraeck" type="add">
         Separate packages to read/write the tables from the djutils-data project have been added for: 
-        JSON, XML, and csv/tsv. 
+        JSON, XML, and csv/tsv. Specific (de)serializers have been added for primitive types, Number types,
+        String, DoubleScalar types and FloatScalar types.
       </action>
       <action dev="averbraeck" type="add">
         static 'of' methods have been added to the Immutable collections, to have an easy instantiation method
@@ -17,6 +18,9 @@
         These static methods have been added to: ImmutableList, ImmutableSet, ImmutableSortedSet, ImmutableMap,
         and ImmutableSortedMap. The maps can take up to 8 key-value parameters, whereas the sets and lists
         can take an unlimited number. 
+      </action>
+      <action dev="pknoppers" type="add">
+        The Tally now has methods to request the skewness and kurtosis of the provided data.
       </action>
    </release>
    

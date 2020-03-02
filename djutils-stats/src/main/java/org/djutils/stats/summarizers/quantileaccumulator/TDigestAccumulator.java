@@ -69,7 +69,7 @@ public class TDigestAccumulator implements QuantileAccumulator
     @Override
     public final String toString()
     {
-        return "TDigestAccumulator [tDigest=" + tDigest + ", compression=" + compression + "]";
+        return "TDigestAccumulator [tDigest=" + this.tDigest + ", compression=" + this.compression + "]";
     }
 
 }
