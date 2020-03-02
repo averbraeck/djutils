@@ -16,9 +16,9 @@ public class ShortSerializer implements TextSerializer<Short>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final Short value)
+    public String serialize(final Object value)
     {
-        return String.valueOf(value.shortValue());
+        return String.valueOf(((Short) value).shortValue());
     }
 
     /** {@inheritDoc} */

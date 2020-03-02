@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.djutils.data.csv.CSVData;
+import org.djutils.data.serialization.TextSerializationException;
 import org.junit.Test;
 
 import com.opencsv.exceptions.CsvValidationException;
@@ -31,9 +32,10 @@ public class TestCSVData
      * test reading and writing of a CSV file.
      * @throws IOException on error
      * @throws CsvValidationException on CSV error
+     * @throws TextSerializationException on unknown data type for (de)serialization
      */
     @Test
-    public void testreadWriteCSV() throws IOException, CsvValidationException
+    public void testreadWriteCSV() throws IOException, CsvValidationException, TextSerializationException
     {
         File tempDataFile = File.createTempFile("testdata", "csv");
         File tempMetaDataFile = File.createTempFile("testmetadata", "csv");
@@ -61,7 +63,5 @@ public class TestCSVData
         assertArrayEquals(table1.getColumnDescriptions(), table2.getColumnDescriptions());
         assertArrayEquals(table1.getColumnDataTypes(), table2.getColumnDataTypes());
         assertArrayEquals(table1.getColumnDataTypeStrings(), table2.getColumnDataTypeStrings());
-        
-        
     }
 }

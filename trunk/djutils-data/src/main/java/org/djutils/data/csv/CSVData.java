@@ -13,7 +13,10 @@ import org.djutils.data.DataRecord;
 import org.djutils.data.DataTable;
 import org.djutils.data.ListDataTable;
 import org.djutils.data.SimpleDataColumn;
+import org.djutils.data.serialization.TextSerializationException;
+import org.djutils.data.serialization.TextSerializer;
 import org.djutils.exceptions.Throw;
+import org.djutils.primitives.Primitive;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -55,19 +58,11 @@ public final class CSVData
      * @param metaWriter Writer; the writer for the metadata
      * @param dataTable the data table to write
      * @throws IOException on I/O error when writing the data
+     * @throws TextSerializationException on unknown data type for serialization
      */
-    public static void writeData(final Writer writer, final Writer metaWriter, final DataTable dataTable) throws IOException
+    public static void writeData(final Writer writer, final Writer metaWriter, final DataTable dataTable)
+            throws IOException, TextSerializationException
     {
-        // write the data file
-        CSVWriter csvWriter = new CSVWriter(writer);
-        csvWriter.writeNext(dataTable.getColumnIds());
-        for (DataRecord record : dataTable)
-        {
-            csvWriter.writeNext(record.getValuesAsStrings());
-        }
-        csvWriter.close();
-        writer.close();
-
         // write the metadata file
         CSVWriter csvMetaWriter = new CSVWriter(metaWriter);
         csvMetaWriter.writeNext(new String[] {"id", "description", "className"});
@@ -78,6 +73,30 @@ public final class CSVData
         }
         csvMetaWriter.close();
         metaWriter.close();
+
+        // initialize the serializers
+        TextSerializer<?>[] serializers = new TextSerializer[dataTable.getNumberOfColumns()];
+        for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
+        {
+            DataColumn<?> column = dataTable.getColumns().get(i);
+            serializers[i] = TextSerializer.resolve(column.getValueType());
+        }
+
+        // write the data file
+        CSVWriter csvWriter = new CSVWriter(writer);
+        csvWriter.writeNext(dataTable.getColumnIds());
+        String[] textFields = new String[dataTable.getNumberOfColumns()];
+        for (DataRecord record : dataTable)
+        {
+            Object[] values = record.getValues();
+            for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
+            {
+                textFields[i] = serializers[i].serialize(values[i]);
+            }
+            csvWriter.writeNext(textFields);
+        }
+        csvWriter.close();
+        writer.close();
     }
 
     /**
@@ -86,8 +105,10 @@ public final class CSVData
      * @param metaFilename String; the file name to write the metadata to
      * @param dataTable the data table to write
      * @throws IOException on I/O error when writing the data
+     * @throws TextSerializationException on unknown data type for serialization
      */
-    public static void writeData(final String filename, final String metaFilename, final DataTable dataTable) throws IOException
+    public static void writeData(final String filename, final String metaFilename, final DataTable dataTable)
+            throws IOException, TextSerializationException
     {
         writeData(new FileWriter(filename), new FileWriter(metaFilename), dataTable);
     }
@@ -99,8 +120,10 @@ public final class CSVData
      * @return dataTable the data table reconstructed from the meta data and filled with the data
      * @throws IOException on I/O error when reading the data
      * @throws CsvValidationException when the CSV data was not formatted right
+     * @throws TextSerializationException on unknown data type for serialization
      */
-    public static DataTable readData(final Reader reader, final Reader metaReader) throws IOException, CsvValidationException
+    public static DataTable readData(final Reader reader, final Reader metaReader)
+            throws IOException, CsvValidationException, TextSerializationException
     {
         // read the metadata file and reconstruct the data table
         CSVReader csvMetaReader = new CSVReader(metaReader);
@@ -124,47 +147,8 @@ public final class CSVData
         {
             Throw.when(line.length != 3, IOException.class, "column data in the metafile does not contain 3 fields");
             String type = line[2];
-            Class<?> valueClass;
-            if ("|int|double|float|long|short|byte|boolean|char|".contains(type))
-            {
-                if (type.equals("int"))
-                {
-                    valueClass = int.class;
-                }
-                else if (type.equals("double"))
-                {
-                    valueClass = double.class;
-                }
-                else if (type.equals("float"))
-                {
-                    valueClass = float.class;
-                }
-                else if (type.equals("long"))
-                {
-                    valueClass = long.class;
-                }
-                else if (type.equals("short"))
-                {
-                    valueClass = short.class;
-                }
-                else if (type.equals("byte"))
-                {
-                    valueClass = byte.class;
-                }
-                else if (type.equals("boolean"))
-                {
-                    valueClass = boolean.class;
-                }
-                else if (type.equals("char"))
-                {
-                    valueClass = char.class;
-                }
-                else
-                {
-                    throw new IOException("Unknown primitive type: " + type);
-                }
-            }
-            else
+            Class<?> valueClass = Primitive.forName(type);
+            if (valueClass == null)
             {
                 try
                 {
@@ -191,6 +175,14 @@ public final class CSVData
         csvMetaReader.close();
         metaReader.close();
 
+        // obtain the serializers
+        TextSerializer<?>[] serializers = new TextSerializer[dataTable.getNumberOfColumns()];
+        for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
+        {
+            DataColumn<?> column = dataTable.getColumns().get(i);
+            serializers[i] = TextSerializer.resolve(column.getValueType());
+        }
+
         // read the data file header
         CSVReader csvReader = new CSVReader(reader);
         header = csvReader.readNext();
@@ -209,84 +201,7 @@ public final class CSVData
             Object[] values = new Object[columns.size()];
             for (int i = 0; i < values.length; i++)
             {
-                String type = columns.get(i).getValueType().getName();
-                if (type.equals("int"))
-                {
-                    values[i] = Integer.valueOf(data[i]).intValue();
-                }
-                else if (type.equals("double"))
-                {
-                    values[i] = Double.valueOf(data[i]).doubleValue();
-                }
-                else if (type.equals("float"))
-                {
-                    values[i] = Float.valueOf(data[i]).floatValue();
-                }
-                else if (type.equals("long"))
-                {
-                    values[i] = Long.valueOf(data[i]).longValue();
-                }
-                else if (type.equals("short"))
-                {
-                    values[i] = Short.valueOf(data[i]).shortValue();
-                }
-                else if (type.equals("byte"))
-                {
-                    values[i] = Byte.valueOf(data[i]).byteValue();
-                }
-                else if (type.equals("boolean"))
-                {
-                    values[i] = Boolean.valueOf(data[i]).booleanValue();
-                }
-                else if (type.equals("char")) // TODO: UTF-16?
-                {
-                    values[i] = (char) Byte.valueOf(data[i]).byteValue();
-                }
-
-                else if (type.equals("java.lang.Integer"))
-                {
-                    values[i] = Integer.valueOf(data[i]);
-                }
-                else if (type.equals("java.lang.Double"))
-                {
-                    values[i] = Double.valueOf(data[i]);
-                }
-                else if (type.equals("java.lang.Float"))
-                {
-                    values[i] = Float.valueOf(data[i]);
-                }
-                else if (type.equals("java.lang.Long"))
-                {
-                    values[i] = Long.valueOf(data[i]);
-                }
-                else if (type.equals("java.lang.Short"))
-                {
-                    values[i] = Short.valueOf(data[i]);
-                }
-                else if (type.equals("java.lang.Byte"))
-                {
-                    values[i] = Byte.valueOf(data[i]);
-                }
-                else if (type.equals("java.lang.Boolean"))
-                {
-                    values[i] = Boolean.valueOf(data[i]);
-                }
-                else if (type.equals("java.lang.Character"))
-                {
-                    values[i] = "" + data[i]; // TODO: UTF-16?
-                }
-
-                else if (type.equals("java.lang.String"))
-                {
-                    values[i] = new String(data[i]);
-                }
-
-                else
-                {
-                    csvReader.close();
-                    reader.close();
-                    throw new IOException("cannot parse data type " + data[i].getClass());
-                }
+                values[i] = serializers[i].deserialize(data[i]);
             }
             dataTable.addRecord(values);
             data = csvReader.readNext();
@@ -304,9 +219,10 @@ public final class CSVData
      * @return dataTable the data table reconstructed from the meta data and filled with the data
      * @throws IOException on I/O error when reading the data
      * @throws CsvValidationException when the CSV data was not formatted right
+     * @throws TextSerializationException on unknown data type for serialization
      */
     public static DataTable readData(final String filename, final String metaFilename)
-            throws IOException, CsvValidationException
+            throws IOException, CsvValidationException, TextSerializationException
     {
         return readData(new FileReader(filename), new FileReader(metaFilename));
     }

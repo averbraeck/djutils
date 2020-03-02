@@ -16,7 +16,7 @@ public class CharacterSerializer implements TextSerializer<Character>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final Character value)
+    public String serialize(final Object value)
     {
         return "" + value;
     }

@@ -78,7 +78,6 @@ public class TestListDataTable
         
         DataRecord record = table.iterator().next();
         assertArrayEquals(new Object[] {2, 5.0, "normal"}, record.getValues());
-        assertArrayEquals(new String[] {"2", "5.0", "normal"}, record.getValuesAsStrings());
 
         DataColumn<Double> c1 = new SimpleDataColumn<>("x", "x", double.class);
         DataColumn<double[][]> c2 = new SimpleDataColumn<>("y", "y", double[][].class);

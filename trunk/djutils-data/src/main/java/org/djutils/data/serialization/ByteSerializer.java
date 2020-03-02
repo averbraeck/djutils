@@ -16,9 +16,9 @@ public class ByteSerializer implements TextSerializer<Byte>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final Byte value)
+    public String serialize(final Object value)
     {
-        return String.valueOf(value.byteValue());
+        return String.valueOf(((Byte) value).byteValue());
     }
 
     /** {@inheritDoc} */

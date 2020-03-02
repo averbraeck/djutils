@@ -16,9 +16,9 @@ public class DoubleSerializer implements TextSerializer<Double>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final Double value)
+    public String serialize(final Object value)
     {
-        return String.valueOf(value.doubleValue());
+        return String.valueOf(((Double) value).doubleValue());
     }
 
     /** {@inheritDoc} */
