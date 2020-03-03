@@ -185,7 +185,7 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
 
     /** {@inheritDoc} */
     @Override
-    public final void initialize()
+    public void initialize()
     {
         this.wrappedTally.initialize();
         fireEvent(INITIALIZED_EVENT);
@@ -218,7 +218,7 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()
     {
-        return "EventBasedTally [wrappedTally=" + wrappedTally + "]";
+        return "EventBasedTally [wrappedTally=" + this.wrappedTally + "]";
     }
 
 }

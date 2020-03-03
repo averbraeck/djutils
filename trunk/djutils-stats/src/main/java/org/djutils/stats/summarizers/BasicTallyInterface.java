@@ -16,7 +16,7 @@ import java.io.Serializable;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-interface BasicTallyInterface extends Serializable
+public interface BasicTallyInterface extends Serializable
 {
     /**
      * initializes the Tally. This methods sets the max, min, n, sum and variance values to their initial values.
