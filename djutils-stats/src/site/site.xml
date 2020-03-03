@@ -14,6 +14,7 @@
       <item name="djutils" href="https://djutils.org/docs/${version}/djutils/index.html" />
       <item name="djutils-cli" href="https://djutils.org/docs/${version}/djutils-cli/index.html" />
       <item name="djutils-serialization" href="https://djutils.org/docs/${version}/djutils-serialization/index.html" />
+      <item name="djutils-data" href="https://djutils.org/docs/${version}/djutils-data/index.html" />
       <item name="djutils-stats" href="https://djutils.org/docs/${version}/djutils-stats/index.html" />
     </menu>
 
