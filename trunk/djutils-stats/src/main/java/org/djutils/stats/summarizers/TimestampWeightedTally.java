@@ -168,7 +168,7 @@ public class TimestampWeightedTally implements TimestampTallyInterface
     @Override
     public double getWeightedSampleStdDev()
     {
-        return this.wrappedWeightedTally.getWeightedSampleStdDev();
+        return this.wrappedWeightedTally.getWeightedSampleStDev();
     }
 
     /** {@inheritDoc} */

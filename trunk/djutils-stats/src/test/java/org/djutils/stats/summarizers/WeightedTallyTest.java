@@ -37,7 +37,7 @@ public class WeightedTallyTest
         assertTrue(Double.isNaN(wt.getMax()));
         assertTrue(Double.isNaN(wt.getWeightedSampleMean()));
         assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
-        assertTrue(Double.isNaN(wt.getWeightedSampleStdDev()));
+        assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
         assertEquals(0.0, wt.getWeightedSum(), 0.0);
         assertEquals(0L, wt.getN());
 
@@ -70,7 +70,7 @@ public class WeightedTallyTest
         double stDev = Math.sqrt(variance);
 
         assertEquals(variance, wt.getWeightedSampleVariance(), 1.0E-6);
-        assertEquals(stDev, wt.getWeightedSampleStdDev(), 1.0E-6);
+        assertEquals(stDev, wt.getWeightedSampleStDev(), 1.0E-6);
 
         try
         {
@@ -124,6 +124,16 @@ public class WeightedTallyTest
         wt.ingest(0, 23);
 
         assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedSampleMean(), 0.001);
-        assertEquals(5.82, wt.getWeightedSampleStdDev(), 0.01);
+        assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedMean(), 0.001);
+        
+        assertEquals(5.82, wt.getWeightedSampleStDev(), 0.01);
+        // System.out.println("sample variance " + wt.getWeightedSampleVariance());
+        // System.out.println("sample stdev " + wt.getWeightedSampleStDev());
+        // System.out.println("sample stdev^2 " + wt.getWeightedSampleStDev() * wt.getWeightedSampleStDev());
+        // System.out.println(" variance " + wt.getWeightedVariance());
+        // System.out.println(" stdev " + wt.getWeightedStDev());
+        // System.out.println(" stdev^2 " + wt.getWeightedStDev() * wt.getWeightedStDev());
+        assertEquals(5.32, wt.getWeightedStDev(), 0.01); // Computed with Excel sheet
+        assertEquals(28.25, wt.getWeightedVariance(), 0.01); // Computed with Excel sheet
     }
 }

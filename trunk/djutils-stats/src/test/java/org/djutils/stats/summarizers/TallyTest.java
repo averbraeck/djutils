@@ -44,6 +44,7 @@ public class TallyTest
         assertTrue(Double.valueOf(tally.getMin()).isNaN());
         assertTrue(Double.valueOf(tally.getMax()).isNaN());
         assertTrue(Double.valueOf(tally.getSampleMean()).isNaN());
+        assertTrue(Double.valueOf(tally.getMean()).isNaN());
         assertTrue(Double.valueOf(tally.getSampleVariance()).isNaN());
         assertTrue(Double.valueOf(tally.getVariance()).isNaN());
         assertTrue(Double.valueOf(tally.getSampleStDev()).isNaN());
@@ -60,7 +61,10 @@ public class TallyTest
         try
         {
             tally.ingest(1.1);
-            assertFalse("mean is now available", Double.isNaN(tally.getSampleMean()));
+            assertFalse("sample mean is now available", Double.isNaN(tally.getSampleMean()));
+            assertFalse("mean is now available", Double.isNaN(tally.getMean()));
+            assertEquals("smaple mean is 1.1", 1.1, tally.getSampleMean(), 0.0000001);
+            assertEquals("mean is 1.1", 1.1, tally.getMean(), 0.0000001);
             assertTrue("sample variance is not available", Double.isNaN(tally.getSampleVariance()));
             assertFalse("variance is not available", Double.isNaN(tally.getVariance()));
             assertTrue("skewness is not available", Double.isNaN(tally.getSkewness()));

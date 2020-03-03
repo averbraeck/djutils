@@ -42,7 +42,7 @@ public class EventBasedWeightedTallyTest
         assertTrue(Double.isNaN(wt.getMax()));
         assertTrue(Double.isNaN(wt.getWeightedSampleMean()));
         assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
-        assertTrue(Double.isNaN(wt.getWeightedSampleStdDev()));
+        assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
         assertEquals(0.0, wt.getWeightedSum(), 0.0);
         assertEquals(0L, wt.getN());
 
@@ -64,6 +64,10 @@ public class EventBasedWeightedTallyTest
         assertEquals(11, wt.getN());
         assertEquals(1.5 * 0.1 * 11, wt.getWeightedSum(), 1.0E-6);
         assertEquals(1.5, wt.getWeightedSampleMean(), 1.0E-6);
+        assertEquals(0.316228, wt.getWeightedStDev(), 1.0E-6); // Computed with Excel sheet
+        assertEquals(0.100000, wt.getWeightedVariance(), 1.0E-6);
+        assertEquals(0.331662, wt.getWeightedSampleStDev(), 1.0E-6); // Computed with Excel sheet
+        assertEquals(0.110000, wt.getWeightedSampleVariance(), 1.0E-6);
 
         // Let's compute the standard deviation
         double variance = 0;
@@ -75,7 +79,7 @@ public class EventBasedWeightedTallyTest
         double stDev = Math.sqrt(variance);
 
         assertEquals(variance, wt.getWeightedSampleVariance(), 1.0E-6);
-        assertEquals(stDev, wt.getWeightedSampleStdDev(), 1.0E-6);
+        assertEquals(stDev, wt.getWeightedSampleStDev(), 1.0E-6);
 
         try
         {
@@ -183,6 +187,6 @@ public class EventBasedWeightedTallyTest
         wt.notify(new Event(VALUE_EVENT, "EventBasedWeightedTallyTest", new Object[] {0, 23}));
 
         assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedSampleMean(), 0.001);
-        assertEquals(5.82, wt.getWeightedSampleStdDev(), 0.01);
+        assertEquals(5.82, wt.getWeightedSampleStDev(), 0.01);
     }
 }
