@@ -216,6 +216,7 @@ public class TallyTest
         tally.ingest(110.0);
         assertEquals("mean of two value", 100.0, tally.getSampleMean(), 0);
         assertEquals("50% quantile", 100.0, tally.getQuantile(0.5), 0);
+        /*-
         double sigma = tally.getSampleStDev();
         double mu = tally.getSampleMean();
         // For loop below makes painfully clear where the getQuantile method fails
@@ -228,6 +229,7 @@ public class TallyTest
                     probability, 1 - probability, x, (x - mu) / sigma));
         }
         // Output shows that the inverse cumulative probability function works fine up to about 8 sigma
+         */
 
         assertEquals("84% is about one sigma", 1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.84), 0.01);
         assertEquals("16% is about minus one sigma", -1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.16), 0.01);
@@ -334,7 +336,7 @@ public class TallyTest
         {
             double expected = 100 * probability;
             double got = tally.getQuantile(probability);
-            System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
+            // System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
             assertEquals("quantile should match", expected, got, 1.0); // With 100 bins the error should be below 1%
         }
         // https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)
@@ -354,7 +356,7 @@ public class TallyTest
         {
             double expected = 100 * probability;
             double got = tally.getQuantile(probability);
-            System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
+            // System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
             assertEquals("quantile should match", expected, got, 0.01); // Uniformly distributed data yields very good estimates
         }
         // System.out.println(String.format("%d uniformly distributed values: skewness %20.15f, kurtosis %20.15f", tally.getN(),
@@ -373,7 +375,7 @@ public class TallyTest
         {
             double expected = 100 * probability;
             double got = tally.getQuantile(probability);
-            System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
+            // System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
             assertEquals("quantile should match", expected, got, 0.01); // Uniformly distributed data yields very good estimates
         }
         try
@@ -414,8 +416,8 @@ public class TallyTest
             double expected = DistNormalTable.getInverseCumulativeProbability(mean, stddev, probability);
             double got = tally.getQuantile(probability);
             double margin = mean / 10 / Math.sqrt(Math.min(probability, 1 - probability));
-            System.out.println(String.format("probability %12.7f, expected %12.7f, reasonable margin %12.7f, got %12.7f",
-                    probability, expected, margin, got));
+            // System.out.println(String.format("probability %12.7f, expected %12.7f, reasonable margin %12.7f, got %12.7f",
+            // probability, expected, margin, got));
             assertEquals("quantile should match", expected, got, margin);
         }
     }
@@ -453,9 +455,9 @@ public class TallyTest
         {
             tally.ingest(value);
         }
-        System.out.println(tally);
-        System.out.println(String.format("count %d mean %20.15f variance %20.15f skew %20.15f kurtosis %20.15f", count,
-                tally.getSampleMean(), tally.getSampleVariance(), tally.getSampleSkewness(), tally.getSampleKurtosis()));
+        // System.out.println(tally);
+        // System.out.println(String.format("count %d mean %20.15f variance %20.15f skew %20.15f kurtosis %20.15f", count,
+        // tally.getSampleMean(), tally.getSampleVariance(), tally.getSampleSkewness(), tally.getSampleKurtosis()));
         // Do the math the "classic" way (i.e. using two passes; the first pass gets the mean)
         double mean = tally.getSampleMean();
         double m2 = 0;
@@ -474,11 +476,11 @@ public class TallyTest
         double g1 = m3 / Math.pow(m2, 1.5);
         double sg1 = g1 * Math.sqrt(count * (count - 1)) / (count - 2);
         double a4 = m4 / m2 / m2;
-        System.out.println(String.format("m2 %20.15f, m3 %20.15f, m4 %20.15f", m2, m3, m4));
+        // System.out.println(String.format("m2 %20.15f, m3 %20.15f, m4 %20.15f", m2, m3, m4));
         double g2 = a4 - 3;
         double sg2 = 1.0 * (count - 1) / (count - 2) / (count - 3) * ((count + 1) * g2 + 6);
-        System.out.println(String.format("g1 %20.15f sampleSkewness %20.15f, a4 %20.15f g2 %20.15f sampleKurtosis %20.15f", g1,
-                sg1, a4, g2, sg2));
+        // System.out.println(String.format("g1 %20.15f sampleSkewness %20.15f, a4 %20.15f g2 %20.15f sampleKurtosis %20.15f",
+        // g1, sg1, a4, g2, sg2));
         assertEquals("skew should match", sg1, tally.getSampleSkewness(), 0.0001);
         assertEquals("kurtosis should match", sg2, tally.getSampleKurtosis(), 0.0001);
     }
