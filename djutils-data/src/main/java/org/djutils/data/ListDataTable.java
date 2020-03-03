@@ -204,6 +204,25 @@ public class ListDataTable extends AbstractDataTable
         this.records.add(new ListRecord(dataObjects));
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        StringBuilder result = new StringBuilder();
+        result.append("ListDataTable [getId()=");
+        result.append(this.getId());
+        result.append(", getDescription()=");
+        result.append(this.getDescription());
+        result.append("]\nColumns:\n");
+        for (DataColumn<?> column : getColumns())
+        {
+            result.append("  ");
+            result.append(column.toString());
+            result.append("\n");
+        }
+        return result.toString();
+    }
+
     /** Record in a {@code ListTable}. */
     public class ListRecord implements DataRecord
     {
@@ -241,6 +260,23 @@ public class ListDataTable extends AbstractDataTable
         public Object[] getValues()
         {
             return this.values;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public String toString()
+        {
+            StringBuilder result = new StringBuilder();
+            result.append("ListDataTable.ListRecord\n");
+            for (DataColumn<?> column : ListDataTable.this.getColumns())
+            {
+                result.append("  ");
+                result.append(column.getId());
+                result.append(" = ");
+                result.append(getValue(column.getId()));
+                result.append("\n");
+            }
+            return result.toString();
         }
 
     }

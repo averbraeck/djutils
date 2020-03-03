@@ -69,5 +69,12 @@ public class SimpleDataColumn<T> implements DataColumn<T>, Serializable
         return this.valueType;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "SimpleDataColumn [id=" + this.id + ", description=" + this.description + ", valueType=" + this.valueType + "]";
+    }
+
 }
 

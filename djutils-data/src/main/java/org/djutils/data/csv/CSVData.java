@@ -18,8 +18,11 @@ import org.djutils.data.serialization.TextSerializer;
 import org.djutils.exceptions.Throw;
 import org.djutils.primitives.Primitive;
 
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
+import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 
 /**
@@ -28,7 +31,8 @@ import com.opencsv.exceptions.CsvValidationException;
  * <pre>
  * DataTable dataTable = new ListDataTable("data", "dataTable", columns);
  * Writer writer = new FileWriter("c:/data/data.csv");
- * CSVData.writeData(writer, dataTable);
+ * Writer metaWriter = new FileWriter("c:/data/data.meta.csv");
+ * CSVData.writeData(writer, metaWriter, dataTable);
  * </pre>
  * 
  * Copyright (c) 2020-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
@@ -57,14 +61,18 @@ public final class CSVData
      * @param writer Writer; the writer that writes the data, e.g. to a file
      * @param metaWriter Writer; the writer for the metadata
      * @param dataTable the data table to write
+     * @param separator char; the delimiter to use for separating entries
+     * @param quotechar char; the character to use for quoted elements
+     * @param escapechar char; the character to use for escaping quotechars or escapechars
+     * @param lineEnd String; the line feed terminator to use
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
-    public static void writeData(final Writer writer, final Writer metaWriter, final DataTable dataTable)
-            throws IOException, TextSerializationException
+    public static void writeData(final Writer writer, final Writer metaWriter, final DataTable dataTable, final char separator,
+            final char quotechar, final char escapechar, final String lineEnd) throws IOException, TextSerializationException
     {
         // write the metadata file
-        CSVWriter csvMetaWriter = new CSVWriter(metaWriter);
+        CSVWriter csvMetaWriter = new CSVWriter(metaWriter, separator, quotechar, escapechar, lineEnd);
         csvMetaWriter.writeNext(new String[] {"id", "description", "className"});
         csvMetaWriter.writeNext(new String[] {dataTable.getId(), dataTable.getDescription(), dataTable.getClass().getName()});
         for (DataColumn<?> column : dataTable.getColumns())
@@ -83,7 +91,7 @@ public final class CSVData
         }
 
         // write the data file
-        CSVWriter csvWriter = new CSVWriter(writer);
+        CSVWriter csvWriter = new CSVWriter(writer, separator, quotechar, escapechar, lineEnd);
         csvWriter.writeNext(dataTable.getColumnIds());
         String[] textFields = new String[dataTable.getNumberOfColumns()];
         for (DataRecord record : dataTable)
@@ -97,6 +105,24 @@ public final class CSVData
         }
         csvWriter.close();
         writer.close();
+    }
+
+    /**
+     * Write the data from the data table in CSV format. The writer writes the data, whereas the metaWriter writes the metadata.
+     * The metadata consists of a CSV file with three columns: the id, the description, and the class. The first row after the
+     * header contains the id, description, and class of the data table itself. The second and further rows contain information
+     * about the columns of the data table. The writers are closed after finishing the writing of the data.
+     * @param writer Writer; the writer that writes the data, e.g. to a file
+     * @param metaWriter Writer; the writer for the metadata
+     * @param dataTable the data table to write
+     * @throws IOException on I/O error when writing the data
+     * @throws TextSerializationException on unknown data type for serialization
+     */
+    public static void writeData(final Writer writer, final Writer metaWriter, final DataTable dataTable)
+            throws IOException, TextSerializationException
+    {
+        writeData(writer, metaWriter, dataTable, ICSVWriter.DEFAULT_SEPARATOR, ICSVWriter.DEFAULT_QUOTE_CHARACTER, '\\',
+                ICSVWriter.DEFAULT_LINE_END);
     }
 
     /**
@@ -118,15 +144,21 @@ public final class CSVData
      * @param reader Reader; the reader that can read the data, e.g. from a file
      * @param metaReader Reader; the writer for the metadata
      * @return dataTable the data table reconstructed from the meta data and filled with the data
+     * @param separator char; the delimiter to use for separating entries
+     * @param quotechar char; the character to use for quoted elements
+     * @param escapechar char; the character to use for escaping quotechars or escapechars
+     * @param lineEnd String; the line feed terminator to use
      * @throws IOException on I/O error when reading the data
      * @throws CsvValidationException when the CSV data was not formatted right
      * @throws TextSerializationException on unknown data type for serialization
      */
-    public static DataTable readData(final Reader reader, final Reader metaReader)
-            throws IOException, CsvValidationException, TextSerializationException
+    public static DataTable readData(final Reader reader, final Reader metaReader, final char separator, final char quotechar,
+            final char escapechar, final String lineEnd) throws IOException, CsvValidationException, TextSerializationException
     {
         // read the metadata file and reconstruct the data table
-        CSVReader csvMetaReader = new CSVReader(metaReader);
+        CSVReader csvMetaReader = new CSVReaderBuilder(metaReader).withCSVParser(
+                new CSVParserBuilder().withSeparator(separator).withQuoteChar(quotechar).withEscapeChar(escapechar).build())
+                .build();
         List<DataColumn<?>> columns = new ArrayList<>();
         String[] header = csvMetaReader.readNext();
         Throw.when(
@@ -156,12 +188,9 @@ public final class CSVData
                 }
                 catch (ClassNotFoundException exception)
                 {
-                    throw new IOException("Could not find class " + type, exception);
-                }
-                finally
-                {
                     csvMetaReader.close();
                     metaReader.close();
+                    throw new IOException("Could not find class " + type, exception);
                 }
             }
             @SuppressWarnings({"rawtypes", "unchecked"})
@@ -184,7 +213,9 @@ public final class CSVData
         }
 
         // read the data file header
-        CSVReader csvReader = new CSVReader(reader);
+        CSVReader csvReader = new CSVReaderBuilder(reader).withCSVParser(
+                new CSVParserBuilder().withSeparator(separator).withQuoteChar(quotechar).withEscapeChar(escapechar).build())
+                .build();
         header = csvReader.readNext();
         Throw.when(header.length != columns.size(), IOException.class,
                 "Number of columns in the data file does not match column metadata size");
@@ -210,6 +241,22 @@ public final class CSVData
         reader.close();
 
         return dataTable;
+    }
+
+    /**
+     * Read the data from the csv-file into the data table. Use the metadata to reconstruct the data table.
+     * @param reader Reader; the reader that can read the data, e.g. from a file
+     * @param metaReader Reader; the writer for the metadata
+     * @return dataTable the data table reconstructed from the meta data and filled with the data
+     * @throws IOException on I/O error when reading the data
+     * @throws CsvValidationException when the CSV data was not formatted right
+     * @throws TextSerializationException on unknown data type for serialization
+     */
+    public static DataTable readData(final Reader reader, final Reader metaReader)
+            throws IOException, CsvValidationException, TextSerializationException
+    {
+        return readData(reader, metaReader, ICSVWriter.DEFAULT_SEPARATOR, ICSVWriter.DEFAULT_QUOTE_CHARACTER, '\\',
+                ICSVWriter.DEFAULT_LINE_END);
     }
 
     /**
