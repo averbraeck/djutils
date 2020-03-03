@@ -66,14 +66,14 @@ public class TimestampWeightedTally implements TimestampTallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public boolean isActive()
+    public final boolean isActive()
     {
         return this.active;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void endObservations(final Number timestamp)
+    public final void endObservations(final Number timestamp)
     {
         ingest(timestamp, this.lastValue);
         this.active = false;
@@ -131,70 +131,70 @@ public class TimestampWeightedTally implements TimestampTallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public String getDescription()
+    public final String getDescription()
     {
         return this.wrappedWeightedTally.getDescription();
     }
 
     /** {@inheritDoc} */
     @Override
-    public long getN()
+    public final long getN()
     {
         return this.wrappedWeightedTally.getN();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getMax()
+    public final double getMax()
     {
         return this.wrappedWeightedTally.getMax();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getMin()
+    public final double getMin()
     {
         return this.wrappedWeightedTally.getMin();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSampleMean()
+    public final double getWeightedSampleMean()
     {
         return this.wrappedWeightedTally.getWeightedSampleMean();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSampleStDev()
+    public final double getWeightedSampleStDev()
     {
         return this.wrappedWeightedTally.getWeightedSampleStDev();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedStDev()
+    public final double getWeightedStDev()
     {
         return this.wrappedWeightedTally.getWeightedStDev();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSampleVariance()
+    public final double getWeightedSampleVariance()
     {
         return this.wrappedWeightedTally.getWeightedSampleVariance();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedVariance()
+    public final double getWeightedVariance()
     {
         return this.wrappedWeightedTally.getWeightedVariance();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSum()
+    public final double getWeightedSum()
     {
         return this.wrappedWeightedTally.getWeightedSum();
     }

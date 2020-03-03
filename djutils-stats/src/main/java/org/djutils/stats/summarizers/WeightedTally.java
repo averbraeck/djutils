@@ -102,7 +102,7 @@ public class WeightedTally implements WeightedTallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSampleStDev()
+    public final double getWeightedSampleStDev()
     {
         synchronized (this.semaphore)
         {
@@ -116,7 +116,7 @@ public class WeightedTally implements WeightedTallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedStDev()
+    public final double getWeightedStDev()
     {
         synchronized (this.semaphore)
         {
@@ -126,7 +126,7 @@ public class WeightedTally implements WeightedTallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSampleVariance()
+    public final double getWeightedSampleVariance()
     {
         synchronized (this.semaphore)
         {
@@ -140,7 +140,7 @@ public class WeightedTally implements WeightedTallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedVariance()
+    public final double getWeightedVariance()
     {
         synchronized (this.semaphore)
         {
