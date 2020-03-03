@@ -24,29 +24,65 @@ interface TallyInterface extends BasicTallyInterface
     double ingest(double value);
 
     /**
-     * Returns the sampleMean of all observations since the initialization.
-     * @return double the sampleMean
-     */
-    double getSampleMean();
-
-    /**
-     * Returns the current tally standard deviation.
-     * @return double the standard deviation
-     */
-    double getStdDev();
-
-    /**
      * returns the sum of the values of the observations.
      * @return double sum
      */
     double getSum();
 
     /**
-     * Returns the current variance of this tally.
-     * @return double; the current variance of this tally
+     * Returns the sampleMean of all observations since the initialization.
+     * @return double the sampleMean
+     */
+    double getSampleMean();
+
+    /**
+     * Returns the current tally sample standard deviation.
+     * @return double the sample standard deviation
+     */
+    double getSampleStDev();
+
+    /**
+     * Returns the current tally standard deviation.
+     * @return double the standard deviation
+     */
+    double getStDev();
+
+    /**
+     * Returns the current sample variance of this tally.
+     * @return double; the current sample variance of this tally
      */
     double getSampleVariance();
 
+    /**
+     * Returns the current variance of this tally.
+     * @return double; the current variance of this tally
+     */
+    double getVariance();
+
+    /**
+     * Return the sample skewness of the ingested data.
+     * @return double; the sample skewness of the ingested data
+     */
+    double getSampleSkewness();
+    
+    /**
+     * Return the skewness of the ingested data.
+     * @return double; the skewness of the ingested data
+     */
+    double getSkewness();
+    
+    /**
+     * Return the sample excess kurtosis of the ingested data.
+     * @return double; the sample excess kurtosis of the ingested data
+     */
+    double getSampleKurtosis();
+    
+    /**
+     * Return the excess kurtosis of the ingested data.
+     * @return double; the excess kurtosis of the ingested data
+     */
+    double getKurtosis();
+    
     /**
      * Compute a quantile.
      * @param probability double; the probability for which the quantile is to be computed

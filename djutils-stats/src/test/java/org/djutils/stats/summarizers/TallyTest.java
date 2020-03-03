@@ -45,7 +45,10 @@ public class TallyTest
         assertTrue(Double.valueOf(tally.getMax()).isNaN());
         assertTrue(Double.valueOf(tally.getSampleMean()).isNaN());
         assertTrue(Double.valueOf(tally.getSampleVariance()).isNaN());
-        assertTrue(Double.valueOf(tally.getStdDev()).isNaN());
+        assertTrue(Double.valueOf(tally.getVariance()).isNaN());
+        assertTrue(Double.valueOf(tally.getSampleStDev()).isNaN());
+        assertTrue(Double.valueOf(tally.getSkewness()).isNaN());
+        assertTrue(Double.valueOf(tally.getKurtosis()).isNaN());
         assertEquals(0, tally.getSum(), 0);
         assertEquals(0L, tally.getN());
         assertNull(tally.getConfidenceInterval(0.95));
@@ -58,15 +61,20 @@ public class TallyTest
         {
             tally.ingest(1.1);
             assertFalse("mean is now available", Double.isNaN(tally.getSampleMean()));
-            assertTrue("variance is not available", Double.isNaN(tally.getSampleVariance()));
+            assertTrue("sample variance is not available", Double.isNaN(tally.getSampleVariance()));
+            assertFalse("variance is not available", Double.isNaN(tally.getVariance()));
+            assertTrue("skewness is not available", Double.isNaN(tally.getSkewness()));
             tally.ingest(1.2);
-            assertFalse("variance is now available", Double.isNaN(tally.getSampleVariance()));
-            assertTrue("skewness is not available", Double.isNaN(tally.getSampleSkewness()));
+            assertFalse("sample variance is now available", Double.isNaN(tally.getSampleVariance()));
+            assertTrue("sample skewness is not available", Double.isNaN(tally.getSampleSkewness()));
+            assertFalse("skewness is available", Double.isNaN(tally.getSkewness()));
+            assertTrue("kurtosis is not available", Double.isNaN(tally.getKurtosis()));
             tally.ingest(1.3);
             assertFalse("skewness is now available", Double.isNaN(tally.getSampleSkewness()));
-            assertTrue("kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
+            assertFalse("kurtosis is now available", Double.isNaN(tally.getKurtosis()));
+            assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
             tally.ingest(1.4);
-            assertFalse("kurtosis is now available", Double.isNaN(tally.getSampleKurtosis()));
+            assertFalse("sample kurtosis is now available", Double.isNaN(tally.getSampleKurtosis()));
             tally.ingest(1.5);
             tally.ingest(1.6);
             tally.ingest(1.7);
@@ -87,7 +95,7 @@ public class TallyTest
         assertEquals(16.5, tally.getSum(), 1.0E-6);
         assertEquals(1.5, tally.getSampleMean(), 1.0E-6);
         assertEquals(0.110000, tally.getSampleVariance(), 1.0E-6);
-        assertEquals(0.331662, tally.getStdDev(), 1.0E-6);
+        assertEquals(0.331662, tally.getSampleStDev(), 1.0E-6);
 
         assertEquals(1.304003602, tally.getConfidenceInterval(0.05)[0], 1E-05);
         assertEquals(1.695996398, tally.getConfidenceInterval(0.05)[1], 1E-05);
@@ -155,16 +163,17 @@ public class TallyTest
         assertTrue(Math.abs(tally.getSampleMean() - 1.5) < 10E-6);
 
         // Let's compute the standard deviation
-        double variance = 0;
+        double varianceAccumulator = 0;
         for (int i = 0; i < 11; i++)
         {
-            variance = Math.pow(1.5 - (1.0 + i / 10.0), 2) + variance;
+            varianceAccumulator = Math.pow(1.5 - (1.0 + i / 10.0), 2) + varianceAccumulator;
         }
-        variance = variance / 10.0;
-        double stDev = Math.sqrt(variance);
 
-        assertEquals(variance, tally.getSampleVariance(), 1.0E-6);
-        assertEquals(stDev, tally.getStdDev(), 1.0E-6);
+        assertEquals(varianceAccumulator / 10.0, tally.getSampleVariance(), 1.0E-6);
+        assertEquals(Math.sqrt(varianceAccumulator / 10.0), tally.getSampleStDev(), 1.0E-6);
+
+        assertEquals(varianceAccumulator / 11.0, tally.getVariance(), 1.0E-6);
+        assertEquals(Math.sqrt(varianceAccumulator / 11.0), tally.getStDev(), 1.0E-6);
 
         // test confidence interval failure on uninitialized tally
         Tally t = new Tally("unused");
@@ -207,7 +216,7 @@ public class TallyTest
         tally.ingest(110.0);
         assertEquals("mean of two value", 100.0, tally.getSampleMean(), 0);
         assertEquals("50% quantile", 100.0, tally.getQuantile(0.5), 0);
-        double sigma = tally.getStdDev();
+        double sigma = tally.getSampleStDev();
         double mu = tally.getSampleMean();
         // For loop below makes painfully clear where the getQuantile method fails
         // Values are from last table in https://en.wikipedia.org/wiki/Standard_normal_table
@@ -241,7 +250,7 @@ public class TallyTest
             tally.ingest(value);
         }
         assertEquals("mean should approximately match", mean, tally.getSampleMean(), stddev / 10);
-        assertEquals("stddev should approximately match", stddev, tally.getStdDev(), stddev / 10);
+        assertEquals("stddev should approximately match", stddev, tally.getSampleStDev(), stddev / 10);
     }
 
     /**
@@ -329,8 +338,10 @@ public class TallyTest
             assertEquals("quantile should match", expected, got, 1.0); // With 100 bins the error should be below 1%
         }
         // https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)
-        assertEquals("skewness should be 0", 0, tally.getSampleSkewness(), 0.0001);
-        assertEquals("kurtosis should be 0", -1.2, tally.getSampleKurtosis(), 0.0001);
+        assertEquals("sample skewness should be 0", 0, tally.getSampleSkewness(), 0.0001);
+        assertEquals("skewness should be 0", 0, tally.getSkewness(), 0.0001);
+        assertEquals("sample kurtosis should be 0", -1.2, tally.getSampleKurtosis(), 0.0001);
+        assertEquals("kurtosis should be 0", -1.2, tally.getKurtosis(), 0.01);
         // System.out.println(String.format("%d uniformly distributed values: skewness %20.15f, kurtosis %20.15f", tally.getN(),
         // tally.getSampleSkewness(), tally.getSampleKurtosis()));
         tally.initialize();
@@ -348,8 +359,10 @@ public class TallyTest
         }
         // System.out.println(String.format("%d uniformly distributed values: skewness %20.15f, kurtosis %20.15f", tally.getN(),
         // tally.getSampleSkewness(), tally.getSampleKurtosis()));
-        assertEquals("skewness should be 0", 0, tally.getSampleSkewness(), 0.0001);
-        assertEquals("kurtosis should be 0", -1.2, tally.getSampleKurtosis(), 0.0001);
+        assertEquals("sample skewness should be 0", 0, tally.getSampleSkewness(), 0.0001);
+        assertEquals("skewness should be 0", 0, tally.getSkewness(), 0.0001);
+        assertEquals("sample kurtosis should be 0", -1.2, tally.getSampleKurtosis(), 0.0001);
+        assertEquals("kurtosis should be 0", -1.2, tally.getKurtosis(), 0.0001);
         tally = new Tally("Tally for TDigestAccumulator test", new TDigestAccumulator(4));
         // Insert values from 0.0 .. 100.0 (step 0.0001)
         for (int step = 0; step <= 1000000; step++)
