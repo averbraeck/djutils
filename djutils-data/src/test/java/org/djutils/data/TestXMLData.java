@@ -39,7 +39,8 @@ public class TestXMLData
     @Test
     public void testreadWriteXML() throws IOException, TextSerializationException, XMLStreamException
     {
-        File tempDataFile = File.createTempFile("testdata", "xml");
+        File tempDataFile = File.createTempFile("testdata", ".xml");
+        tempDataFile.deleteOnExit();
 
         DataColumn<Integer> column1 = new SimpleDataColumn<>("time", "time, rounded to second [s]", int.class);
         DataColumn<Double> column2 = new SimpleDataColumn<>("value", "measured value [m]", double.class);

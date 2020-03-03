@@ -37,7 +37,8 @@ public class TestJSONData
     @Test
     public void testreadWriteJSON() throws IOException, TextSerializationException
     {
-        File tempDataFile = File.createTempFile("testdata", "json");
+        File tempDataFile = File.createTempFile("testdata", ".json");
+        tempDataFile.deleteOnExit();
 
         DataColumn<Integer> column1 = new SimpleDataColumn<>("time", "time, rounded to second [s]", int.class);
         DataColumn<Double> column2 = new SimpleDataColumn<>("value", "measured value [m]", double.class);
