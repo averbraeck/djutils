@@ -111,7 +111,7 @@ public class Tally implements TallyInterface
         synchronized (this.semaphore)
         {
             double sampleMean = getSampleMean();
-            if (Double.isNaN(sampleMean) || Double.valueOf(this.getStdDev()).isNaN())
+            if (Double.isNaN(sampleMean) || Double.valueOf(this.getSampleStDev()).isNaN())
             {
                 return null; // TODO throw something
             }
@@ -167,7 +167,7 @@ public class Tally implements TallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public final double getStdDev()
+    public final double getSampleStDev()
     {
         synchronized (this.semaphore)
         {
@@ -176,6 +176,16 @@ public class Tally implements TallyInterface
                 return Math.sqrt(getSampleVariance());
             }
             return Double.NaN;
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getStDev()
+    {
+        synchronized (this.semaphore)
+        {
+            return Math.sqrt(getVariance());
         }
     }
 
@@ -200,31 +210,58 @@ public class Tally implements TallyInterface
         }
     }
 
-    /**
-     * Return the sample skewness of the ingested data.
-     * @return double; the skewness of the ingested data
-     */
+    /** {@inheritDoc} */
+    @Override
+    public final double getVariance()
+    {
+        synchronized (this.semaphore)
+        {
+            return this.m2 / this.n;
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public final double getSampleSkewness()
     {
         if (this.n > 2)
         {
-            double g1 = this.m3 / this.n / Math.pow(this.m2 / this.n, 1.5);
-            return g1 * Math.sqrt(this.n * (this.n - 1)) / (this.n - 2);
+            return getSkewness() * Math.sqrt(this.n * (this.n - 1)) / (this.n - 2);
         }
         return Double.NaN;
     }
 
-    /**
-     * Return the sample excess kurtosis of the ingested data.
-     * @return double; the skewness of the ingested data
-     */
+    /** {@inheritDoc} */
+    @Override
+    public final double getSkewness()
+    {
+        if (this.n > 1)
+        {
+            return this.m3 / this.n / Math.pow(this.m2 / this.n, 1.5);
+        }
+        return Double.NaN;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public final double getSampleKurtosis()
     {
         if (this.n > 3)
         {
-            double a4 = this.m4 / this.n / (this.m2 / this.n) / (this.m2 / this.n);
-            double g2 = a4 - 3; // convert kurtosis to excess kurtosis
+            double g2 = getKurtosis();
             return 1.0 * (this.n - 1) / (this.n - 2) / (this.n - 3) * ((this.n + 1) * g2 + 6);
+        }
+        return Double.NaN;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getKurtosis()
+    {
+        if (this.n > 2)
+        {
+            double a4 = this.m4 / this.n / (this.m2 / this.n) / (this.m2 / this.n);
+            return a4 - 3; // convert kurtosis to excess kurtosis
         }
         return Double.NaN;
     }

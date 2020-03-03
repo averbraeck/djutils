@@ -1,6 +1,7 @@
 package org.djutils.stats.summarizers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -41,13 +42,18 @@ public class EventBasedTallyTest
         // check the description
         assertTrue(tally.toString().contains(description));
         assertEquals(description, tally.getDescription());
+        assertTrue(tally.toString().startsWith("EventBasedTally"));
+
 
         // now we check the initial values
         assertTrue(Double.valueOf(tally.getMin()).isNaN());
         assertTrue(Double.valueOf(tally.getMax()).isNaN());
         assertTrue(Double.valueOf(tally.getSampleMean()).isNaN());
         assertTrue(Double.valueOf(tally.getSampleVariance()).isNaN());
-        assertTrue(Double.valueOf(tally.getStdDev()).isNaN());
+        assertTrue(Double.valueOf(tally.getVariance()).isNaN());
+        assertTrue(Double.valueOf(tally.getSampleStDev()).isNaN());
+        assertTrue(Double.valueOf(tally.getSkewness()).isNaN());
+        assertTrue(Double.valueOf(tally.getKurtosis()).isNaN());
         assertEquals(0, tally.getSum(), 0);
         assertEquals(0L, tally.getN());
         assertNull(tally.getConfidenceInterval(0.95));
@@ -70,9 +76,21 @@ public class EventBasedTallyTest
         try
         {
             tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.1));
+            assertFalse("mean is now available", Double.isNaN(tally.getSampleMean()));
+            assertTrue("sample variance is not available", Double.isNaN(tally.getSampleVariance()));
+            assertFalse("variance is not available", Double.isNaN(tally.getVariance()));
+            assertTrue("skewness is not available", Double.isNaN(tally.getSkewness()));
             tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.2));
+            assertFalse("sample variance is now available", Double.isNaN(tally.getSampleVariance()));
+            assertTrue("sample skewness is not available", Double.isNaN(tally.getSampleSkewness()));
+            assertFalse("skewness is available", Double.isNaN(tally.getSkewness()));
+            assertTrue("kurtosis is not available", Double.isNaN(tally.getKurtosis()));
             tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.3));
+            assertFalse("skewness is now available", Double.isNaN(tally.getSampleSkewness()));
+            assertFalse("kurtosis is now available", Double.isNaN(tally.getKurtosis()));
+            assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
             tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.4));
+            assertFalse("sample kurtosis is now available", Double.isNaN(tally.getSampleKurtosis()));
             tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.5));
             tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.6));
             tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.7));
@@ -93,7 +111,7 @@ public class EventBasedTallyTest
         assertEquals(16.5, tally.getSum(), 1.0E-6);
         assertEquals(1.5, tally.getSampleMean(), 1.0E-6);
         assertEquals(0.110000, tally.getSampleVariance(), 1.0E-6);
-        assertEquals(0.331662, tally.getStdDev(), 1.0E-6);
+        assertEquals(0.331662, tally.getSampleStDev(), 1.0E-6);
 
         assertEquals(1.304003602, tally.getConfidenceInterval(0.05)[0], 1E-05);
         assertEquals(1.695996398, tally.getConfidenceInterval(0.05)[1], 1E-05);
@@ -161,16 +179,17 @@ public class EventBasedTallyTest
         assertTrue(Math.abs(tally.getSampleMean() - 1.5) < 10E-6);
 
         // Let's compute the standard deviation
-        double variance = 0;
+        double varianceAccumulator = 0;
         for (int i = 0; i < 11; i++)
         {
-            variance = Math.pow(1.5 - (1.0 + i / 10.0), 2) + variance;
+            varianceAccumulator = Math.pow(1.5 - (1.0 + i / 10.0), 2) + varianceAccumulator;
         }
-        variance = variance / 10.0;
-        double stDev = Math.sqrt(variance);
 
-        assertEquals(variance, tally.getSampleVariance(), 1.0E-6);
-        assertEquals(stDev, tally.getStdDev(), 1.0E-6);
+        assertEquals(varianceAccumulator / 10.0, tally.getSampleVariance(), 1.0E-6);
+        assertEquals(Math.sqrt(varianceAccumulator / 10.0), tally.getSampleStDev(), 1.0E-6);
+
+        assertEquals(varianceAccumulator / 11.0, tally.getVariance(), 1.0E-6);
+        assertEquals(Math.sqrt(varianceAccumulator / 11.0), tally.getStDev(), 1.0E-6);
     }
 
     /**
@@ -206,7 +225,7 @@ public class EventBasedTallyTest
         tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 110.0));
         assertEquals("mean of two value", 100.0, tally.getSampleMean(), 0);
         assertEquals("50% quantile", 100.0, tally.getQuantile(0.5), 0);
-        double sigma = tally.getStdDev();
+        double sigma = tally.getSampleStDev();
         double mu = tally.getSampleMean();
         // For loop below makes painfully clear where the getQuantile method fails
         // Values are from last table in https://en.wikipedia.org/wiki/Standard_normal_table
@@ -240,7 +259,7 @@ public class EventBasedTallyTest
             tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
         }
         assertEquals("mean should approximately match", mean, tally.getSampleMean(), stddev / 10);
-        assertEquals("stddev should approximately match", stddev, tally.getStdDev(), stddev / 10);
+        assertEquals("stddev should approximately match", stddev, tally.getSampleStDev(), stddev / 10);
     }
 
     /**
@@ -296,7 +315,7 @@ public class EventBasedTallyTest
     double generateGaussianNoise(final double mu, final double sigma, final Random random)
     {
         final double epsilon = Double.MIN_VALUE;
-        final double two_pi = Math.PI * 2;
+        final double twoPi = Math.PI * 2;
 
         double u1, u2;
         do
@@ -306,7 +325,7 @@ public class EventBasedTallyTest
         }
         while (u1 <= epsilon);
 
-        return mu + sigma * Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(two_pi * u2);
+        return mu + sigma * Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(twoPi * u2);
     }
 
 }

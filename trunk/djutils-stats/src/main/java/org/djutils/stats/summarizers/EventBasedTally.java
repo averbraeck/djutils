@@ -122,9 +122,16 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
 
     /** {@inheritDoc} */
     @Override
-    public final double getStdDev()
+    public final double getSampleStDev()
     {
-        return this.wrappedTally.getStdDev();
+        return this.wrappedTally.getSampleStDev();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getStDev()
+    {
+        return this.wrappedTally.getStDev();
     }
 
     /** {@inheritDoc} */
@@ -139,6 +146,41 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
     public final double getSampleVariance()
     {
         return this.wrappedTally.getSampleVariance();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getVariance()
+    {
+        return this.wrappedTally.getVariance();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getSampleSkewness()
+    {
+        return this.wrappedTally.getSampleSkewness();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getSkewness()
+    {
+        return this.wrappedTally.getSkewness();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getSampleKurtosis()
+    {
+        return this.wrappedTally.getSampleKurtosis();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getKurtosis()
+    {
+        return this.wrappedTally.getKurtosis();
     }
 
     /** {@inheritDoc} */
@@ -176,7 +218,7 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()
     {
-        return this.wrappedTally.toString();
+        return "EventBasedTally [wrappedTally=" + wrappedTally + "]";
     }
 
 }
