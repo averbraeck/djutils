@@ -12,7 +12,7 @@ package org.djutils.stats.summarizers;
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-interface WeightedTallyInterface extends BasicTallyInterface
+public interface WeightedTallyInterface extends BasicTallyInterface
 {
     /**
      * Retrieve the current weighted sample mean of all observations since the initialization.

@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  */
-interface CounterInterface extends Serializable
+public interface CounterInterface extends Serializable
 {
     /**
      * initializes the counter.
