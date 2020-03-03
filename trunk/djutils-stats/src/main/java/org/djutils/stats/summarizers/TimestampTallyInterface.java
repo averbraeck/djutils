@@ -38,16 +38,37 @@ public interface TimestampTallyInterface extends BasicTallyInterface
     double getWeightedSampleMean();
 
     /**
+     * Retrieve the current weighted mean of all observations since the initialization.
+     * @return double; the current weighted mean
+     */
+    default double getWeightedMean()
+    {
+        return getWeightedSampleMean();
+    }
+
+    /**
      * Retrieve the current weighted standard deviation of the observations.
      * @return double; the current weighted standard deviation
      */
-    double getWeightedSampleStdDev();
+    double getWeightedSampleStDev();
+
+    /**
+     * Retrieve the current weighted standard deviation of the observations.
+     * @return double; the current weighted standard deviation
+     */
+    double getWeightedStDev();
 
     /**
      * Retrieve the current weighted variance of the observations.
      * @return double; the current weighted variance of the observations
      */
     double getWeightedSampleVariance();
+
+    /**
+     * Retrieve the current weighted variance of the observations.
+     * @return double; the current weighted variance of the observations
+     */
+    double getWeightedVariance();
 
     /**
      * Retrieve the current weighted sum of the values of the observations.

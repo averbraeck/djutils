@@ -1,6 +1,7 @@
 package org.djutils.stats.summarizers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -36,13 +37,20 @@ public class WeightedTallyTest
         assertTrue(Double.isNaN(wt.getMin()));
         assertTrue(Double.isNaN(wt.getMax()));
         assertTrue(Double.isNaN(wt.getWeightedSampleMean()));
+        assertTrue(Double.isNaN(wt.getWeightedMean()));
         assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
         assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
         assertEquals(0.0, wt.getWeightedSum(), 0.0);
         assertEquals(0L, wt.getN());
 
         wt.ingest(0.1, 1.1);
+        assertEquals(1.1, wt.getWeightedSampleMean(), 0.000001);
+        assertEquals(1.1, wt.getWeightedMean(), 0.000001);
+        assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
+        assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
         wt.ingest(0.1, 1.2);
+        assertFalse(Double.isNaN(wt.getWeightedSampleVariance()));
+        assertFalse(Double.isNaN(wt.getWeightedSampleStDev()));
         wt.ingest(0.1, 1.3);
         wt.ingest(0.1, 1.4);
         wt.ingest(0.1, 1.5);
