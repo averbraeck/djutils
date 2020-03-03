@@ -39,8 +39,10 @@ public class TestTSVData
     @Test
     public void testreadWriteTSV() throws IOException, CsvValidationException, TextSerializationException
     {
-        File tempDataFile = File.createTempFile("testdata", "tsv");
-        File tempMetaDataFile = File.createTempFile("testmetadata", "tsv");
+        File tempDataFile = File.createTempFile("testdata", ".tsv");
+        File tempMetaDataFile = File.createTempFile("testmetadata", ".tsv");
+        tempDataFile.deleteOnExit();
+        tempMetaDataFile.deleteOnExit();
 
         DataColumn<Integer> column1 = new SimpleDataColumn<>("time", "time, rounded to second [s]", int.class);
         DataColumn<Double> column2 = new SimpleDataColumn<>("value", "measured value [m]", double.class);
