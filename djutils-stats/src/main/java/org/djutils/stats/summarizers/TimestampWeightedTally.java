@@ -166,9 +166,16 @@ public class TimestampWeightedTally implements TimestampTallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSampleStdDev()
+    public double getWeightedSampleStDev()
     {
         return this.wrappedWeightedTally.getWeightedSampleStDev();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double getWeightedStDev()
+    {
+        return this.wrappedWeightedTally.getWeightedStDev();
     }
 
     /** {@inheritDoc} */
@@ -176,6 +183,13 @@ public class TimestampWeightedTally implements TimestampTallyInterface
     public double getWeightedSampleVariance()
     {
         return this.wrappedWeightedTally.getWeightedSampleVariance();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double getWeightedVariance()
+    {
+        return this.wrappedWeightedTally.getWeightedVariance();
     }
 
     /** {@inheritDoc} */

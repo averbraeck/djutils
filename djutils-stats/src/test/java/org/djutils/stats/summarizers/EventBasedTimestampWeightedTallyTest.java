@@ -46,8 +46,9 @@ public class EventBasedTimestampWeightedTallyTest
         assertTrue(Double.isNaN(wt.getMin()));
         assertTrue(Double.isNaN(wt.getMax()));
         assertTrue(Double.isNaN(wt.getWeightedSampleMean()));
+        assertTrue(Double.isNaN(wt.getWeightedMean()));
         assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
-        assertTrue(Double.isNaN(wt.getWeightedSampleStdDev()));
+        assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
         assertEquals(0.0, wt.getWeightedSum(), 0.0);
         assertEquals(0L, wt.getN());
 
@@ -75,8 +76,24 @@ public class EventBasedTimestampWeightedTallyTest
 
         // Now we fire some events
         wt.notify(new TimedEvent<Double>(VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.0, 0.0));
+        assertTrue(Double.isNaN(wt.getMin()));
+        assertTrue(Double.isNaN(wt.getMax()));
+        assertTrue(Double.isNaN(wt.getWeightedSampleMean()));
+        assertTrue(Double.isNaN(wt.getWeightedMean()));
+        assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
+        assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
         wt.notify(new TimedEvent<Double>(VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.1, 0.1));
+        assertEquals(1.0, wt.getMin(), 0.000001);
+        assertEquals(1.0, wt.getMax(), 0.000001);
+        assertEquals(1.0, wt.getWeightedSampleMean(), 0.000001);
+        assertEquals(1.0, wt.getWeightedMean(), 0.000001);
+        assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
+        assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
+        assertEquals(0, wt.getWeightedVariance(), 0.000001);
+        assertEquals(0, wt.getWeightedStDev(), 0.0000001);
         wt.notify(new TimedEvent<Double>(VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.2, 0.2));
+        assertFalse(Double.isNaN(wt.getWeightedSampleVariance()));
+        assertFalse(Double.isNaN(wt.getWeightedSampleStDev()));
         wt.notify(new TimedEvent<Double>(VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.3, 0.3));
         wt.notify(new TimedEvent<Double>(VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.4, 0.4));
         wt.notify(new TimedEvent<Double>(VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.5, 0.5));
@@ -108,16 +125,20 @@ public class EventBasedTimestampWeightedTallyTest
         assertEquals(1.5, wt.getWeightedSampleMean(), 1.0E-6);
 
         // Let's compute the standard deviation
-        double variance = 0;
+        double varianceAccumulator = 0;
         for (int i = 0; i < 11; i++)
         {
-            variance += Math.pow(1.5 - (1.0 + i / 10.0), 2);
+            varianceAccumulator += Math.pow(1.5 - (1.0 + i / 10.0), 2);
         }
-        variance = variance / 10.0;
+        double variance = varianceAccumulator / 10.0;
         double stDev = Math.sqrt(variance);
-
         assertEquals(variance, wt.getWeightedSampleVariance(), 1.0E-6);
-        assertEquals(stDev, wt.getWeightedSampleStdDev(), 1.0E-6);
+        assertEquals(stDev, wt.getWeightedSampleStDev(), 1.0E-6);
+        
+        variance = varianceAccumulator / 11.0;
+        stDev = Math.sqrt(variance);
+        assertEquals(variance, wt.getWeightedVariance(), 1.0E-6);
+        assertEquals(stDev, wt.getWeightedStDev(), 1.0E-6);
 
         // Adding something after the active period should not make a change
         wt.notify(new TimedEvent<Double>(VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 10.0, 20.0));
@@ -205,7 +226,7 @@ public class EventBasedTimestampWeightedTallyTest
         wt.endObservations(10.0);
 
         assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedSampleMean(), 0.001);
-        assertEquals(5.82, wt.getWeightedSampleStdDev(), 0.01);
+        assertEquals(5.82, wt.getWeightedSampleStDev(), 0.01);
     }
 
     /** Test the TimestampWeightedTally for Calendar-based timestamps. */
@@ -242,7 +263,7 @@ public class EventBasedTimestampWeightedTallyTest
         double stDev = Math.sqrt(variance);
 
         assertEquals(variance, wt.getWeightedSampleVariance(), 1.0E-6);
-        assertEquals(stDev, wt.getWeightedSampleStdDev(), 1.0E-6);
+        assertEquals(stDev, wt.getWeightedSampleStDev(), 1.0E-6);
     }
 
 }

@@ -177,9 +177,16 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSampleStdDev()
+    public double getWeightedSampleStDev()
     {
-        return this.wrappedTimestampWeightedTally.getWeightedSampleStdDev();
+        return this.wrappedTimestampWeightedTally.getWeightedSampleStDev();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double getWeightedStDev()
+    {
+        return this.wrappedTimestampWeightedTally.getWeightedStDev();
     }
 
     /** {@inheritDoc} */
@@ -187,6 +194,13 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
     public double getWeightedSampleVariance()
     {
         return this.wrappedTimestampWeightedTally.getWeightedSampleVariance();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double getWeightedVariance()
+    {
+        return this.wrappedTimestampWeightedTally.getWeightedVariance();
     }
 
     /** {@inheritDoc} */

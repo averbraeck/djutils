@@ -92,7 +92,7 @@ public class WeightedTally implements WeightedTallyInterface
     {
         synchronized (this.semaphore)
         {
-            if (this.n > 1)
+            if (this.n > 0)
             {
                 return this.weightedMean;
             }
