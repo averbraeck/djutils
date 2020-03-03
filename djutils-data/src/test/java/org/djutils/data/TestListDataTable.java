@@ -37,12 +37,12 @@ public class TestListDataTable
     @Test
     public void testListTable()
     {
-        DataColumn<Integer> column1 = new SimpleDataColumn<>("time", "time, rounded to second [s]", int.class);
+        DataColumn<Integer> column1 = new SimpleDataColumn<>("time", "time rounded to second [s]", int.class);
         DataColumn<Double> column2 = new SimpleDataColumn<>("value", "measured value [m]", double.class);
         DataColumn<String> column3 = new SimpleDataColumn<>("remark", "remark about the measurement", String.class);
 
         assertEquals("time", column1.getId());
-        assertEquals("time, rounded to second [s]", column1.getDescription());
+        assertEquals("time rounded to second [s]", column1.getDescription());
         assertEquals(int.class, column1.getValueType());
 
         List<DataColumn<?>> columns = new ArrayList<>();
@@ -56,7 +56,7 @@ public class TestListDataTable
         assertEquals(3, table.getColumns().size());
 
         assertArrayEquals(new String[] {"time", "value", "remark"}, table.getColumnIds());
-        assertArrayEquals(new String[] {"time, rounded to second [s]", "measured value [m]", "remark about the measurement"},
+        assertArrayEquals(new String[] {"time rounded to second [s]", "measured value [m]", "remark about the measurement"},
                 table.getColumnDescriptions());
         assertArrayEquals(new Class<?>[] {int.class, double.class, String.class}, table.getColumnDataTypes());
         assertArrayEquals(new String[] {"int", "double", "java.lang.String"}, table.getColumnDataTypeStrings());
@@ -86,7 +86,17 @@ public class TestListDataTable
         assertArrayEquals(new String[] {"x", "y"}, txy.getColumnDescriptions());
         assertArrayEquals(new Class<?>[] {double.class, double[][].class}, txy.getColumnDataTypes());
         assertArrayEquals(new String[] {"double", "[[D"}, txy.getColumnDataTypeStrings());
-
+        
+        String tableString = table.toString();
+        assertTrue(tableString.startsWith("ListDataTable"));
+        assertTrue(tableString.contains("tableId"));
+        assertTrue(tableString.contains("tableDescription"));
+        assertTrue(tableString.contains("SimpleDataColumn"));
+        
+        String recordString = table.iterator().next().toString();
+        assertTrue(recordString.startsWith("ListDataTable.ListRecord"));
+        assertTrue(recordString.contains("time = 2"));
+        assertTrue(recordString.contains("value = 5.0"));
     }
 
     /** Test the ListTable, the Column and the Record. */

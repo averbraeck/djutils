@@ -26,7 +26,8 @@ import org.djutils.exceptions.Throw;
 import org.djutils.primitives.Primitive;
 
 /**
- * XMLData takes care of reading and writing of table data in XML format. The class can be used, e.g., as follows:
+ * XMLData takes care of reading and writing of table data in XML format. The reader and writer use a streaming API to avoid
+ * excessive memory use. The class can be used, e.g., as follows:
  * 
  * <pre>
  * DataTable dataTable = new ListDataTable("data", "dataTable", columns);
@@ -368,35 +369,5 @@ public final class XMLData
     public static DataTable readData(final String filename) throws IOException, TextSerializationException, XMLStreamException
     {
         return readData(new FileReader(filename));
-    }
-
-    /**
-     * @param args args
-     * @throws XMLStreamException on error
-     * @throws TextSerializationException on error
-     * @throws IOException on error
-     */
-    public static void main(final String... args) throws IOException, TextSerializationException, XMLStreamException
-    {
-        DataColumn<Integer> column1 = new SimpleDataColumn<>("time", "time, rounded to second [s]", int.class);
-        DataColumn<Double> column2 = new SimpleDataColumn<>("value", "measured value [m]", double.class);
-        DataColumn<String> column3 = new SimpleDataColumn<>("remark", "remark about the measurement", String.class);
-        List<DataColumn<?>> columns = new ArrayList<>();
-        columns.add(column1);
-        columns.add(column2);
-        columns.add(column3);
-        ListDataTable table1 = new ListDataTable("tableId", "tableDescription", columns);
-        table1.addRecord(new Object[] {1, 5.0, "normal"});
-        table1.addRecord(new Object[] {2, 10.0, "normal"});
-        table1.addRecord(new Object[] {3, 15.0, "normal"});
-        table1.addRecord(new Object[] {4, 20.0, "abnormal"});
-        writeData("d:/test.xml", table1);
-
-        DataTable table2 = readData("d:/test.xml");
-        System.out.println(table2);
-        for (DataRecord record : table2)
-        {
-            System.out.println(record);
-        }
     }
 }
