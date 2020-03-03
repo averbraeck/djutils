@@ -225,6 +225,7 @@ public class EventBasedTallyTest
         tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 110.0));
         assertEquals("mean of two value", 100.0, tally.getSampleMean(), 0);
         assertEquals("50% quantile", 100.0, tally.getQuantile(0.5), 0);
+        /*-
         double sigma = tally.getSampleStDev();
         double mu = tally.getSampleMean();
         // For loop below makes painfully clear where the getQuantile method fails
@@ -237,7 +238,8 @@ public class EventBasedTallyTest
                     probability, 1 - probability, x, (x - mu) / sigma));
         }
         // Output shows that the inverse cumulative probability function works fine up to about 8 sigma
-
+         */
+        
         assertEquals("84% is about one sigma", 1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.84), 0.01);
         assertEquals("16% is about minus one sigma", -1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.16), 0.01);
 
