@@ -24,16 +24,25 @@ interface TallyInterface extends BasicTallyInterface
     double ingest(double value);
 
     /**
-     * returns the sum of the values of the observations.
+     * Return the sum of the values of the observations.
      * @return double sum
      */
     double getSum();
 
     /**
-     * Returns the sampleMean of all observations since the initialization.
-     * @return double the sampleMean
+     * Returns the sample mean of all observations since the initialization.
+     * @return double the sample mean
      */
     double getSampleMean();
+    
+    /**
+     * Returns the mean of all observations since the initialization.
+     * @return double the  mean
+     */
+    default double getMean()
+    {
+        return getSampleMean();
+    }
 
     /**
      * Returns the current tally sample standard deviation.

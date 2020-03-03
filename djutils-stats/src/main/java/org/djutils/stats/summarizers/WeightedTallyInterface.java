@@ -15,22 +15,43 @@ package org.djutils.stats.summarizers;
 interface WeightedTallyInterface extends BasicTallyInterface
 {
     /**
-     * Retrieve the current weighted sampleMean of all observations since the initialization.
-     * @return double; the current weighted sampleMean
+     * Retrieve the current weighted sample mean of all observations since the initialization.
+     * @return double; the current weighted sample mean
      */
     double getWeightedSampleMean();
+
+    /**
+     * Retrieve the current weighted mean of all observations since the initialization.
+     * @return double; the current weighted mean
+     */
+    default double getWeightedMean()
+    {
+        return getWeightedSampleMean();
+    }
+
+    /**
+     * Retrieve the current weighted sample standard deviation of the observations.
+     * @return double; the current weighted sample standard deviation
+     */
+    double getWeightedSampleStDev();
 
     /**
      * Retrieve the current weighted standard deviation of the observations.
      * @return double; the current weighted standard deviation
      */
-    double getWeightedSampleStdDev();
+    double getWeightedStDev();
+
+    /**
+     * Retrieve the current weighted sample variance of the observations.
+     * @return double; the current weighted sample variance of the observations
+     */
+    double getWeightedSampleVariance();
 
     /**
      * Retrieve the current weighted variance of the observations.
      * @return double; the current weighted variance of the observations
      */
-    double getWeightedSampleVariance();
+    double getWeightedVariance();
 
     /**
      * Retrieve the current weighted sum of the values of the observations.

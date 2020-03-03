@@ -11,8 +11,7 @@ import org.djutils.exceptions.Throw;
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
- * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
- * <br>
+ * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
@@ -103,7 +102,7 @@ public class WeightedTally implements WeightedTallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSampleStdDev()
+    public double getWeightedSampleStDev()
     {
         synchronized (this.semaphore)
         {
@@ -117,15 +116,35 @@ public class WeightedTally implements WeightedTallyInterface
 
     /** {@inheritDoc} */
     @Override
+    public double getWeightedStDev()
+    {
+        synchronized (this.semaphore)
+        {
+            return Math.sqrt(getWeightedVariance());
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public double getWeightedSampleVariance()
     {
         synchronized (this.semaphore)
         {
             if (this.n > 1)
             {
-                return this.weightTimesVariance / this.sumOfWeights * this.n / (this.n - 1);
+                return getWeightedVariance() * this.n / (this.n - 1);
             }
             return Double.NaN;
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double getWeightedVariance()
+    {
+        synchronized (this.semaphore)
+        {
+            return this.weightTimesVariance / this.sumOfWeights;
         }
     }
 
