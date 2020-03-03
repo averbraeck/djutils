@@ -74,7 +74,7 @@ public interface DataTable extends Iterable<DataRecord>, Identifiable
     }
 
     /**
-     * Return the column data types as a Class<?>[].
+     * Return the column data types as a Class&lt;?&gt;[].
      * @return Class&lt;?&gt;[] the column data types
      */
     default Class<?>[] getColumnDataTypes()
