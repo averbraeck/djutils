@@ -2,6 +2,18 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+   <release version="1.04.12" date="2020-03-03" description="several fixes in djutils-stats">
+      <action dev="pknoppers" type="fix">
+        Renamed getWeightedSampleStdDev to getWeightedSampleStDev in EventBasedTimeStampWeightedTally and 
+        EventBasedTimestampWeightedTally.
+        Added getSampleMean to TimestampTallyInterface.
+        Added getWeightedMean to TimeStampTallyInterface.
+        Added getWeightedStDev and getWeightedVariance to EventBasedTimestampWeightedTally and TimeStampWeightedTally.
+        Fixed error in getWeightedSampleMean in WeightedTally.
+        Augmented unit test to re-achieve 100% coverage.
+      </action>
+   </release>
+
    <release version="1.04.11" date="2020-03-03" description="djutils-data project added; Immutable.of() methods">
       <action dev="wjschakel" type="add">
         The djutils-data project contains classes for sampling, storing and retrieving statistics data.
