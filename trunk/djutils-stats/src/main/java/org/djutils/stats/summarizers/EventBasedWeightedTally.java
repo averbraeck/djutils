@@ -88,28 +88,28 @@ public class EventBasedWeightedTally extends EventProducer implements EventListe
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSampleStDev()
+    public final double getWeightedSampleStDev()
     {
         return this.wrappedWeightedTally.getWeightedSampleStDev();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedStDev()
+    public final double getWeightedStDev()
     {
         return this.wrappedWeightedTally.getWeightedStDev();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSampleVariance()
+    public final double getWeightedSampleVariance()
     {
         return this.wrappedWeightedTally.getWeightedSampleVariance();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedVariance()
+    public final double getWeightedVariance()
     {
         return this.wrappedWeightedTally.getWeightedVariance();
     }

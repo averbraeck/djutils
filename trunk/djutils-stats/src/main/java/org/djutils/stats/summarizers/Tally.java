@@ -268,7 +268,7 @@ public class Tally implements TallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public final void initialize()
+    public void initialize()
     {
         synchronized (this.semaphore)
         {

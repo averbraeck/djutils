@@ -60,12 +60,11 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
     {
         this.wrappedTimestampWeightedTally.initialize();
         fireEvent(INITIALIZED_EVENT);
-
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean isActive()
+    public final boolean isActive()
     {
         return this.wrappedTimestampWeightedTally.isActive();
     }
@@ -142,70 +141,70 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
 
     /** {@inheritDoc} */
     @Override
-    public String getDescription()
+    public final String getDescription()
     {
         return this.wrappedTimestampWeightedTally.getDescription();
     }
 
     /** {@inheritDoc} */
     @Override
-    public long getN()
+    public final long getN()
     {
         return this.wrappedTimestampWeightedTally.getN();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getMax()
+    public final double getMax()
     {
         return this.wrappedTimestampWeightedTally.getMax();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getMin()
+    public final double getMin()
     {
         return this.wrappedTimestampWeightedTally.getMin();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSampleMean()
+    public final double getWeightedSampleMean()
     {
         return this.wrappedTimestampWeightedTally.getWeightedSampleMean();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSampleStDev()
+    public final double getWeightedSampleStDev()
     {
         return this.wrappedTimestampWeightedTally.getWeightedSampleStDev();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedStDev()
+    public final double getWeightedStDev()
     {
         return this.wrappedTimestampWeightedTally.getWeightedStDev();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSampleVariance()
+    public final double getWeightedSampleVariance()
     {
         return this.wrappedTimestampWeightedTally.getWeightedSampleVariance();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedVariance()
+    public final double getWeightedVariance()
     {
         return this.wrappedTimestampWeightedTally.getWeightedVariance();
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getWeightedSum()
+    public final double getWeightedSum()
     {
         return this.wrappedTimestampWeightedTally.getWeightedSum();
     }

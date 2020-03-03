@@ -5,12 +5,14 @@
    <release version="1.04.12" date="2020-03-03" description="several fixes in djutils-stats">
       <action dev="pknoppers" type="fix">
         Renamed getWeightedSampleStdDev to getWeightedSampleStDev in EventBasedTimeStampWeightedTally and 
-        EventBasedTimestampWeightedTally.
-        Added getSampleMean to TimestampTallyInterface.
-        Added getWeightedMean to TimeStampTallyInterface.
-        Added getWeightedStDev and getWeightedVariance to EventBasedTimestampWeightedTally and TimeStampWeightedTally.
-        Fixed error in getWeightedSampleMean in WeightedTally.
-        Augmented unit test to re-achieve 100% coverage.
+        EventBasedTimestampWeightedTally. Added getSampleMean to TimestampTallyInterface. 
+        Added getWeightedMean to TimeStampTallyInterface. Added getWeightedStDev and getWeightedVariance 
+        to EventBasedTimestampWeightedTally and TimeStampWeightedTally. Fixed error in getWeightedSampleMean 
+        in WeightedTally. Augmented unit test to re-achieve 100% coverage.
+      </action>
+      <action dev="averbraeck" type="update">
+        Removed some 'final' qualifiers for methods so they can be extended, e.g. in the dsol project. 
+        Made the various TallyInterfaces public so they can be used outside of the djutils-stats project.
       </action>
    </release>
 
