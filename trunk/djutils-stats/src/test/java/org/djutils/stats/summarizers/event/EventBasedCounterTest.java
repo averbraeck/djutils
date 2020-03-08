@@ -1,4 +1,4 @@
-package org.djutils.stats.summarizers;
+package org.djutils.stats.summarizers.event;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -17,8 +17,7 @@ import org.junit.Test;
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
- * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
- * <br>
+ * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.tbm.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
 public class EventBasedCounterTest
@@ -34,6 +33,7 @@ public class EventBasedCounterTest
         EventBasedCounter counter = new EventBasedCounter(description);
         assertEquals(description, counter.toString());
         assertEquals(description, counter.getDescription());
+        assertEquals(counter, counter.getSourceId());
 
         assertEquals(0L, counter.getN());
         assertEquals(0L, counter.getCount());
@@ -45,20 +45,10 @@ public class EventBasedCounterTest
         counter.initialize();
         assertEquals(0L, counter.getN());
         assertEquals(0L, counter.getCount());
-
-        counter.addListener(new EventListenerInterface()
-        {
-            /** */
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void notify(final EventInterface event)
-            {
-                assertTrue(event.getType().equals(EventBasedCounter.OBSERVATION_ADDED_EVENT));
-                assertTrue("Content of the event has a wrong type, not EventBasedCounter: " + event.getContent().getClass(),
-                        event.getContent() instanceof EventBasedCounter);
-            }
-        }, EventBasedCounter.OBSERVATION_ADDED_EVENT);
+        
+        CounterEventListener cel = new CounterEventListener();
+        counter.addListener(cel, StatisticsEvents.OBSERVATION_ADDED_EVENT);
+        assertEquals(0, cel.getCountEvents());
 
         // test wrong event
         try
@@ -70,6 +60,11 @@ public class EventBasedCounterTest
         {
             // ok, should have given error
         }
+        
+        LoggingEventListener nListener = new LoggingEventListener();
+        counter.addListener(nListener, StatisticsEvents.N_EVENT);
+        LoggingEventListener countListener = new LoggingEventListener();
+        counter.addListener(countListener, StatisticsEvents.COUNT_EVENT);
 
         long value = 0;
         for (int i = 0; i < 100; i++)
@@ -79,5 +74,41 @@ public class EventBasedCounterTest
         }
         assertEquals(100, counter.getN());
         assertEquals(value, counter.getCount());
+        assertEquals(100, cel.getCountEvents());
+        assertEquals(100, nListener.getNumberOfEvents());
+        assertEquals(100, countListener.getNumberOfEvents());
+        assertEquals(counter, nListener.getLastEvent().getSourceId());
+        assertEquals(counter, countListener.getLastEvent().getSourceId());
+        assertEquals(100L, nListener.getLastEvent().getContent());
+        assertEquals(value, countListener.getLastEvent().getContent());
+    }
+
+    /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
+    class CounterEventListener implements EventListenerInterface
+    {
+        /** */
+        private static final long serialVersionUID = 1L;
+
+        /** counter for the event. */
+        private int countEvents = 0;
+
+        @Override
+        public void notify(final EventInterface event)
+        {
+            assertTrue(event.getType().equals(StatisticsEvents.OBSERVATION_ADDED_EVENT));
+            assertTrue("Content of the event has a wrong type, not Long: " + event.getContent().getClass(),
+                    event.getContent() instanceof Long);
+            assertTrue("SourceId of the event has a wrong type, not EventBasedCounter: " + event.getSourceId().getClass(),
+                    event.getSourceId() instanceof EventBasedCounter);
+            this.countEvents++;
+        }
+
+        /**
+         * @return countEvents
+         */
+        public int getCountEvents()
+        {
+            return this.countEvents;
+        }
     }
 }

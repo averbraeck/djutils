@@ -1,4 +1,4 @@
-package org.djutils.stats.summarizers;
+package org.djutils.stats;
 
 import org.djutils.exceptions.Throw;
 

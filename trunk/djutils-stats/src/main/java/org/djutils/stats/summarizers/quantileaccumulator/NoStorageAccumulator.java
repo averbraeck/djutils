@@ -1,6 +1,7 @@
 package org.djutils.stats.summarizers.quantileaccumulator;
 
-import org.djutils.stats.summarizers.DistNormalTable;
+import org.djutils.exceptions.Throw;
+import org.djutils.stats.DistNormalTable;
 import org.djutils.stats.summarizers.Tally;
 
 /**
@@ -15,6 +16,7 @@ public class NoStorageAccumulator implements QuantileAccumulator
     @Override
     public double ingest(final double value)
     {
+        Throw.when(Double.isNaN(value), IllegalArgumentException.class, "accumulator can not accumlate NaN value");
         return value;
     }
 
@@ -22,8 +24,11 @@ public class NoStorageAccumulator implements QuantileAccumulator
     @Override
     public double getQuantile(final Tally tally, final double probability)
     {
-        return DistNormalTable.getInverseCumulativeProbability(tally.getSampleMean(),
-                Math.sqrt(tally.getSampleVariance()), probability);
+        Throw.whenNull(tally, "tally cannot be null");
+        Throw.when(probability < 0 || probability > 1, IllegalArgumentException.class,
+                "probability should be between 0 and 1 (inclusive)");
+        return DistNormalTable.getInverseCumulativeProbability(tally.getSampleMean(), Math.sqrt(tally.getSampleVariance()),
+                probability);
     }
 
     /** {@inheritDoc} */

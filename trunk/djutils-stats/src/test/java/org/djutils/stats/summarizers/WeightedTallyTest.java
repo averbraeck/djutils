@@ -37,7 +37,7 @@ public class WeightedTallyTest
         assertTrue(Double.isNaN(wt.getMin()));
         assertTrue(Double.isNaN(wt.getMax()));
         assertTrue(Double.isNaN(wt.getWeightedSampleMean()));
-        assertTrue(Double.isNaN(wt.getWeightedMean()));
+        assertTrue(Double.isNaN(wt.getWeightedPopulationMean()));
         assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
         assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
         assertEquals(0.0, wt.getWeightedSum(), 0.0);
@@ -45,7 +45,7 @@ public class WeightedTallyTest
 
         wt.ingest(0.1, 1.1);
         assertEquals(1.1, wt.getWeightedSampleMean(), 0.000001);
-        assertEquals(1.1, wt.getWeightedMean(), 0.000001);
+        assertEquals(1.1, wt.getWeightedPopulationMean(), 0.000001);
         assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
         assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
         wt.ingest(0.1, 1.2);
@@ -132,7 +132,7 @@ public class WeightedTallyTest
         wt.ingest(0, 23);
 
         assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedSampleMean(), 0.001);
-        assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedMean(), 0.001);
+        assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedPopulationMean(), 0.001);
         
         assertEquals(5.82, wt.getWeightedSampleStDev(), 0.01);
         // System.out.println("sample variance " + wt.getWeightedSampleVariance());
@@ -141,7 +141,7 @@ public class WeightedTallyTest
         // System.out.println(" variance " + wt.getWeightedVariance());
         // System.out.println(" stdev " + wt.getWeightedStDev());
         // System.out.println(" stdev^2 " + wt.getWeightedStDev() * wt.getWeightedStDev());
-        assertEquals(5.32, wt.getWeightedStDev(), 0.01); // Computed with Excel sheet
-        assertEquals(28.25, wt.getWeightedVariance(), 0.01); // Computed with Excel sheet
+        assertEquals(5.32, wt.getWeightedPopulationStDev(), 0.01); // Computed with Excel sheet
+        assertEquals(28.25, wt.getWeightedPopulationVariance(), 0.01); // Computed with Excel sheet
     }
 }

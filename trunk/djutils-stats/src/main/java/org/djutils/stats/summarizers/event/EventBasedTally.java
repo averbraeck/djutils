@@ -1,11 +1,14 @@
-package org.djutils.stats.summarizers;
+package org.djutils.stats.summarizers.event;
 
 import java.io.Serializable;
 
+import org.djutils.event.Event;
 import org.djutils.event.EventInterface;
 import org.djutils.event.EventListenerInterface;
 import org.djutils.event.EventProducer;
-import org.djutils.event.EventType;
+import org.djutils.stats.ConfidenceInterval;
+import org.djutils.stats.summarizers.Tally;
+import org.djutils.stats.summarizers.TallyInterface;
 import org.djutils.stats.summarizers.quantileaccumulator.NoStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.QuantileAccumulator;
 
@@ -28,12 +31,6 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
 {
     /** */
     private static final long serialVersionUID = 20200228L;
-
-    /** OBSERVATION_ADDED_EVENT is fired whenever an observation is processed. */
-    public static final EventType OBSERVATION_ADDED_EVENT = new EventType("OBSERVATION_ADDED_EVENT");
-
-    /** INITIALIZED_EVENT is fired whenever a Tally is (re-)initialized. */
-    public static final EventType INITIALIZED_EVENT = new EventType("INITIALIZED_EVENT");
 
     /** the wrapped Tally. */
     private final Tally wrappedTally;
@@ -129,9 +126,9 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
 
     /** {@inheritDoc} */
     @Override
-    public final double getStDev()
+    public final double getPopulationStDev()
     {
-        return this.wrappedTally.getStDev();
+        return this.wrappedTally.getPopulationStDev();
     }
 
     /** {@inheritDoc} */
@@ -150,9 +147,9 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
 
     /** {@inheritDoc} */
     @Override
-    public final double getVariance()
+    public final double getPopulationVariance()
     {
-        return this.wrappedTally.getVariance();
+        return this.wrappedTally.getPopulationVariance();
     }
 
     /** {@inheritDoc} */
@@ -164,9 +161,9 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
 
     /** {@inheritDoc} */
     @Override
-    public final double getSkewness()
+    public final double getPopulationSkewness()
     {
-        return this.wrappedTally.getSkewness();
+        return this.wrappedTally.getPopulationSkewness();
     }
 
     /** {@inheritDoc} */
@@ -178,9 +175,23 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
 
     /** {@inheritDoc} */
     @Override
-    public final double getKurtosis()
+    public final double getPopulationKurtosis()
     {
-        return this.wrappedTally.getKurtosis();
+        return this.wrappedTally.getPopulationKurtosis();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getSampleExcessKurtosis()
+    {
+        return this.wrappedTally.getSampleExcessKurtosis();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getPopulationExcessKurtosis()
+    {
+        return this.wrappedTally.getPopulationExcessKurtosis();
     }
 
     /** {@inheritDoc} */
@@ -188,7 +199,7 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
     public void initialize()
     {
         this.wrappedTally.initialize();
-        fireEvent(INITIALIZED_EVENT);
+        fireEvent(new Event(StatisticsEvents.INITIALIZED_EVENT, this, null));
     }
 
     /** {@inheritDoc} */
@@ -209,7 +220,26 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
     public double ingest(final double value)
     {
         this.wrappedTally.ingest(value);
-        this.fireEvent(EventBasedTally.OBSERVATION_ADDED_EVENT, value);
+        if (hasListeners())
+        {
+            fireEvent(new Event(StatisticsEvents.OBSERVATION_ADDED_EVENT, this, value));
+            fireEvent(new Event(StatisticsEvents.N_EVENT, this, getN()));
+            fireEvent(new Event(StatisticsEvents.MIN_EVENT, this, getMin()));
+            fireEvent(new Event(StatisticsEvents.MAX_EVENT, this, getMax()));
+            fireEvent(new Event(StatisticsEvents.POPULATION_MEAN_EVENT, this, getPopulationMean()));
+            fireEvent(new Event(StatisticsEvents.POPULATION_VARIANCE_EVENT, this, getPopulationVariance()));
+            fireEvent(new Event(StatisticsEvents.POPULATION_SKEWNESS_EVENT, this, getPopulationSkewness()));
+            fireEvent(new Event(StatisticsEvents.POPULATION_KURTOSIS_EVENT, this, getPopulationKurtosis()));
+            fireEvent(new Event(StatisticsEvents.POPULATION_EXCESS_KURTOSIS_EVENT, this, getPopulationExcessKurtosis()));
+            fireEvent(new Event(StatisticsEvents.POPULATION_STDEV_EVENT, this, getPopulationStDev()));
+            fireEvent(new Event(StatisticsEvents.SUM_EVENT, this, getSum()));
+            fireEvent(new Event(StatisticsEvents.SAMPLE_MEAN_EVENT, this, getSampleMean()));
+            fireEvent(new Event(StatisticsEvents.SAMPLE_VARIANCE_EVENT, this, getSampleVariance()));
+            fireEvent(new Event(StatisticsEvents.SAMPLE_SKEWNESS_EVENT, this, getSampleSkewness()));
+            fireEvent(new Event(StatisticsEvents.SAMPLE_KURTOSIS_EVENT, this, getSampleKurtosis()));
+            fireEvent(new Event(StatisticsEvents.SAMPLE_EXCESS_KURTOSIS_EVENT, this, getSampleExcessKurtosis()));
+            fireEvent(new Event(StatisticsEvents.SAMPLE_STDEV_EVENT, this, getSampleStDev()));
+        }
         return value;
     }
 

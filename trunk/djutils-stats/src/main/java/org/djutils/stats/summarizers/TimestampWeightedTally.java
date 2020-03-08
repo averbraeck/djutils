@@ -86,16 +86,33 @@ public class TimestampWeightedTally implements TimestampTallyInterface
         endObservations(timestamp.getTimeInMillis());
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Return the last observed value.
+     * @return double; the last observed value
+     */
+    public double getLastValue()
+    {
+        return this.lastValue;
+    }
+
+    /**
+     * Process one observed value.
+     * @param timestamp Calendar; the Calendar object representing the timestamp
+     * @param value double; the value to process
+     * @return double; the value
+     */
     public double ingest(final Calendar timestamp, final double value)
     {
         Throw.whenNull(timestamp, "timestamp object may not be null");
         return ingest(timestamp.getTimeInMillis(), value);
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Process one observed value.
+     * @param timestamp Number; the object representing the timestamp
+     * @param value double; the value to process
+     * @return double; the value
+     */
     public double ingest(final Number timestamp, final double value)
     {
         Throw.whenNull(timestamp, "timestamp object may not be null");
@@ -173,9 +190,9 @@ public class TimestampWeightedTally implements TimestampTallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public final double getWeightedStDev()
+    public final double getWeightedPopulationStDev()
     {
-        return this.wrappedWeightedTally.getWeightedStDev();
+        return this.wrappedWeightedTally.getWeightedPopulationStDev();
     }
 
     /** {@inheritDoc} */
@@ -187,9 +204,9 @@ public class TimestampWeightedTally implements TimestampTallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public final double getWeightedVariance()
+    public final double getWeightedPopulationVariance()
     {
-        return this.wrappedWeightedTally.getWeightedVariance();
+        return this.wrappedWeightedTally.getWeightedPopulationVariance();
     }
 
     /** {@inheritDoc} */

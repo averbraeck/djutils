@@ -1,9 +1,10 @@
-package org.djutils.stats.summarizers;
+package org.djutils.stats;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.djutils.stats.DistNormalTable;
 import org.junit.Test;
 
 /**

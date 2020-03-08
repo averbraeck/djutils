@@ -1,11 +1,13 @@
-package org.djutils.stats.summarizers;
+package org.djutils.stats.summarizers.event;
 
 import java.io.Serializable;
 
+import org.djutils.event.Event;
 import org.djutils.event.EventInterface;
 import org.djutils.event.EventListenerInterface;
 import org.djutils.event.EventProducer;
-import org.djutils.event.EventType;
+import org.djutils.stats.summarizers.Counter;
+import org.djutils.stats.summarizers.CounterInterface;
 
 /**
  * The Counter class defines a statistics event counter. It extends an EventProducer so it can keep listeners informed about new
@@ -24,12 +26,6 @@ public class EventBasedCounter extends EventProducer implements EventListenerInt
 {
     /** */
     private static final long serialVersionUID = 20200228L;
-
-    /** OBSERVATION_ADDED_EVENT is fired whenever an observation is processed. */
-    public static final EventType OBSERVATION_ADDED_EVENT = new EventType("OBSERVATION_ADDED_EVENT");
-
-    /** INITIALIZED_EVENT is fired whenever a Tally is (re-)initialized. */
-    public static final EventType INITIALIZED_EVENT = new EventType("INITIALIZED_EVENT");
 
     /** The wrapped Counter. */
     private final Counter wrappedCounter;
@@ -87,7 +83,9 @@ public class EventBasedCounter extends EventProducer implements EventListenerInt
         this.wrappedCounter.ingest(value);
         if (hasListeners())
         {
-            this.fireEvent(EventBasedCounter.OBSERVATION_ADDED_EVENT, this);
+            fireEvent(new Event(StatisticsEvents.OBSERVATION_ADDED_EVENT, this, value));
+            fireEvent(new Event(StatisticsEvents.N_EVENT, this, getN()));
+            fireEvent(new Event(StatisticsEvents.COUNT_EVENT, this, getCount()));
         }
         return value;
     }
@@ -97,7 +95,7 @@ public class EventBasedCounter extends EventProducer implements EventListenerInt
     public void initialize()
     {
         this.wrappedCounter.initialize();
-        fireEvent(EventBasedCounter.INITIALIZED_EVENT);
+        fireEvent(new Event(StatisticsEvents.INITIALIZED_EVENT, this, null));
     }
 
     /** {@inheritDoc} */

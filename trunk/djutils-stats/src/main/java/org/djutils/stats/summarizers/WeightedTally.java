@@ -116,11 +116,11 @@ public class WeightedTally implements WeightedTallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public final double getWeightedStDev()
+    public final double getWeightedPopulationStDev()
     {
         synchronized (this.semaphore)
         {
-            return Math.sqrt(getWeightedVariance());
+            return Math.sqrt(getWeightedPopulationVariance());
         }
     }
 
@@ -132,7 +132,7 @@ public class WeightedTally implements WeightedTallyInterface
         {
             if (this.n > 1)
             {
-                return getWeightedVariance() * this.n / (this.n - 1);
+                return getWeightedPopulationVariance() * this.n / (this.n - 1);
             }
             return Double.NaN;
         }
@@ -140,7 +140,7 @@ public class WeightedTally implements WeightedTallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public final double getWeightedVariance()
+    public final double getWeightedPopulationVariance()
     {
         synchronized (this.semaphore)
         {
@@ -171,14 +171,18 @@ public class WeightedTally implements WeightedTallyInterface
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Process one observed weighted value.
+     * @param weight double; the weight of the value to process
+     * @param value double; the value to process
+     * @return double; the value
+     */
     public double ingest(final double weight, final double value)
     {
         Throw.when(Double.isNaN(weight), IllegalArgumentException.class, "weight may not be NaN");
         Throw.when(weight < 0, IllegalArgumentException.class, "weight may not be negative");
         Throw.when(Double.isNaN(value), IllegalArgumentException.class, "value may not be NaN");
-        if (0 == weight)
+        if (0.0 == weight)
         {
             return value;
         }
