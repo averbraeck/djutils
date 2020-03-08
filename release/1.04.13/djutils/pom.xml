@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.djutils</groupId>
+    <artifactId>djutils-parent</artifactId>
+    <version>1.04.13</version>
+    <relativePath>../djutils-parent/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>djutils</artifactId>
+
+  <name>DJUTILS - Delft Java Utilities</name>
+  <description>DJUTILS - Delft Java Utilities for DSOL, OTS, DJUNITS, SIM0MQ projects</description>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.tinylog</groupId>
+      <artifactId>tinylog</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+    </dependency>
+
+  </dependencies>
+
+</project>
