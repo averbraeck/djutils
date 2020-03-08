@@ -2,6 +2,30 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+   <release version="1.04.13" date="2020-03-07" description="extra events in djutils-stats; statistics formulas">
+      <action dev="averbraeck" type="update">
+        Changed the package structure of the events a bit by moving the generic classes to the 'stats' package,
+        and the event-based classes to a separate 'summarizers.event' package.
+      </action>
+      <action dev="averbraeck" type="add">
+        Created a generic StatisticsEvents class for the 'OBSERVATION_ADDED_EVENT' and 'STATISTIC_INITIALIZED_EVENT'.
+        Added more specific events for 'WEIGTHED_OBSERVATION_ADDED_EVENT' and 'TIMESTAMPED_OBSERVATION_ADDED_EVENT'.
+      </action>
+      <action dev="averbraeck" type="add">
+        Ensured that specific events about every statistics value can be fired by the EventBased statistics.
+        This can be used to, e.g., create a graph of the observed (weighted) sample mean over time, or to update a
+        specific statistics value on the screen.   
+      </action>
+      <action dev="averbraeck" type="fix">
+        Made a number of small changes to the calculation of the kurtosis and skewness. Separated excess kurtosis
+        from regular kurtosis and added formulas for both.    
+      </action>
+      <action dev="averbraeck" type="update">
+        Added the term 'Population' to the calculation of the (biased) statistics that work on the basis of the
+        full population of values.        
+      </action>
+    </release>
+
    <release version="1.04.12" date="2020-03-03" description="several fixes in djutils-stats">
       <action dev="pknoppers" type="fix">
         Renamed getWeightedSampleStdDev to getWeightedSampleStDev in EventBasedTimeStampWeightedTally and 
