@@ -232,7 +232,7 @@ public class EventBasedTimestampWeightedTallyTest
 
     /** Test the TimestampWeightedTally for Calendar-based timestamps. */
     @Test
-    public void testEventBasedTimestampWeightedTallyCalendar()
+    public void testEBTimestampWeightedTallyCalendarNotify()
     {
         String description = "THIS TIMESTAMP WEIGHTED TALLY IS TESTED";
         EventBasedTimestampWeightedTally wt = new EventBasedTimestampWeightedTally(description);
@@ -242,6 +242,43 @@ public class EventBasedTimestampWeightedTallyTest
         {
             Calendar calendar = new Calendar.Builder().setDate(2000, 2, 2).setTimeOfDay(4, 12, second, 10).build();
             wt.notify(new TimedEvent<Calendar>(VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", index++, calendar));
+        }
+        assertTrue(wt.isActive());
+        wt.endObservations(new Calendar.Builder().setDate(2000, 2, 2).setTimeOfDay(4, 12, 41, 10).build());
+        assertFalse(wt.isActive());
+
+        // Now we check the TimestampWeightedTally
+        assertEquals(20.0, wt.getMax(), 1.0E-6);
+        assertEquals(10.0, wt.getMin(), 1.0E-6);
+        assertEquals(11, wt.getN());
+        assertEquals(1.5 * 10000 * 11, wt.getWeightedSum(), 1.0E-2);
+        assertEquals(15.0, wt.getWeightedSampleMean(), 1.0E-6);
+
+        // Let's compute the standard deviation
+        double variance = 0;
+        for (int i = 0; i < 11; i++)
+        {
+            variance += Math.pow(15.0 - (10 + i), 2);
+        }
+        variance = variance / 10.0; // n - 1
+        double stDev = Math.sqrt(variance);
+
+        assertEquals(variance, wt.getWeightedSampleVariance(), 1.0E-6);
+        assertEquals(stDev, wt.getWeightedSampleStDev(), 1.0E-6);
+    }
+
+    /** Test the TimestampWeightedTally for Calendar-based timestamps with ingest(). */
+    @Test
+    public void testEBTimestampWeightedTallyCalendarIngest()
+    {
+        String description = "THIS TIMESTAMP WEIGHTED TALLY IS TESTED";
+        EventBasedTimestampWeightedTally wt = new EventBasedTimestampWeightedTally(description);
+
+        int index = 10;
+        for (int second = 30; second <= 40; second++)
+        {
+            Calendar calendar = new Calendar.Builder().setDate(2000, 2, 2).setTimeOfDay(4, 12, second, 10).build();
+            wt.ingest(calendar, index++);
         }
         assertTrue(wt.isActive());
         wt.endObservations(new Calendar.Builder().setDate(2000, 2, 2).setTimeOfDay(4, 12, 41, 10).build());

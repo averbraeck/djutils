@@ -154,20 +154,28 @@ public class EventBasedWeightedTally extends EventProducer implements EventListe
         if (hasListeners())
         {
             fireEvent(new Event(StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT, this, new Object[] {weight, value}));
-            fireEvent(new Event(StatisticsEvents.N_EVENT, this, getN()));
-            fireEvent(new Event(StatisticsEvents.MIN_EVENT, this, getMin()));
-            fireEvent(new Event(StatisticsEvents.MAX_EVENT, this, getMax()));
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_MEAN_EVENT, this, getWeightedPopulationMean()));
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_VARIANCE_EVENT, this, getWeightedPopulationVariance()));
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_STDEV_EVENT, this, getWeightedPopulationStDev()));
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_SUM_EVENT, this, getWeightedSum()));
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_MEAN_EVENT, this, getWeightedSampleMean()));
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_VARIANCE_EVENT, this, getWeightedSampleVariance()));
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_STDEV_EVENT, this, getWeightedSampleStDev()));
+            fireEvents();
         }
         return value;
     }
 
+    /**
+     * Method that can be overridden to fire own events or additional events when ingesting an observation.
+     */
+    protected void fireEvents()
+    {
+        fireEvent(new Event(StatisticsEvents.N_EVENT, this, getN()));
+        fireEvent(new Event(StatisticsEvents.MIN_EVENT, this, getMin()));
+        fireEvent(new Event(StatisticsEvents.MAX_EVENT, this, getMax()));
+        fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_MEAN_EVENT, this, getWeightedPopulationMean()));
+        fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_VARIANCE_EVENT, this, getWeightedPopulationVariance()));
+        fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_STDEV_EVENT, this, getWeightedPopulationStDev()));
+        fireEvent(new Event(StatisticsEvents.WEIGHTED_SUM_EVENT, this, getWeightedSum()));
+        fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_MEAN_EVENT, this, getWeightedSampleMean()));
+        fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_VARIANCE_EVENT, this, getWeightedSampleVariance()));
+        fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_STDEV_EVENT, this, getWeightedSampleStDev()));
+    }
+    
     /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:designforextension")

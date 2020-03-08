@@ -2,6 +2,16 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+   <release version="1.04.14" date="2020-03-08" description="timed events for timestamped statistics">
+      <action dev="averbraeck" type="add">
+        The timestamped statistics now fire TimedEvents rather than normal events.
+      </action>
+      <action dev="averbraeck" type="add">
+        In case an class extending one of the EventBased statistics wants to fire its own events, or fire the events
+        in a different way, it can override the protected method 'fireEvents()'.  
+      </action>
+   </release>
+
    <release version="1.04.13" date="2020-03-07" description="extra events in djutils-stats; statistics formulas">
       <action dev="averbraeck" type="update">
         Changed the package structure of the events a bit by moving the generic classes to the 'stats' package,
