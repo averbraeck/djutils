@@ -1,5 +1,6 @@
 package org.djutils.stats.summarizers.quantileaccumulator;
 
+import org.djutils.exceptions.Throw;
 import org.djutils.stats.summarizers.Tally;
 
 import com.tdunning.math.stats.TDigest;
@@ -21,7 +22,7 @@ public class TDigestAccumulator implements QuantileAccumulator
 
     /** The compression used to create the TDigest (required to re-initialize). */
     private final int compression;
-    
+
     /** The compression used by the parameter-less constructor. */
     public static final int DEFAULT_COMPRESSION = 100;
 
@@ -47,6 +48,7 @@ public class TDigestAccumulator implements QuantileAccumulator
     @Override
     public double ingest(final double value)
     {
+        Throw.when(Double.isNaN(value), IllegalArgumentException.class, "accumulator can not accumlate NaN value");
         this.tDigest.add(value);
         return value;
     }
@@ -55,6 +57,9 @@ public class TDigestAccumulator implements QuantileAccumulator
     @Override
     public double getQuantile(final Tally tally, final double probability)
     {
+        Throw.whenNull(tally, "tally cannot be null");
+        Throw.when(probability < 0 || probability > 1, IllegalArgumentException.class,
+                "probability should be between 0 and 1 (inclusive)");
         return this.tDigest.quantile(probability);
     }
 

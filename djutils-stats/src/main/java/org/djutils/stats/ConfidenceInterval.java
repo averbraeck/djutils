@@ -1,4 +1,4 @@
-package org.djutils.stats.summarizers;
+package org.djutils.stats;
 
 /**
  * ConfidenceInterval lists the three type of confidence intervals: two one-sided and one two-sided interval.

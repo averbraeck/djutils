@@ -32,6 +32,7 @@ public class FullStorageAccumulator implements QuantileAccumulator
     @Override
     public double ingest(final double value)
     {
+        Throw.when(Double.isNaN(value), IllegalArgumentException.class, "accumulator can not accumlate NaN value");
         this.accumulator.add(value);
         this.isSorted = false;
         return value;
@@ -41,6 +42,7 @@ public class FullStorageAccumulator implements QuantileAccumulator
     @Override
     public double getQuantile(final Tally tally, final double probability)
     {
+        Throw.whenNull(tally, "tally cannot be null");
         Throw.when(probability < 0 || probability > 1, IllegalArgumentException.class,
                 "Probability should be between 0.0 and 1.0 (inclusive); got {}", probability);
         if (!this.isSorted)

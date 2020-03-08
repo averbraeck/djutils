@@ -1,6 +1,8 @@
 package org.djutils.stats.summarizers;
 
 import org.djutils.exceptions.Throw;
+import org.djutils.stats.ConfidenceInterval;
+import org.djutils.stats.DistNormalTable;
 import org.djutils.stats.summarizers.quantileaccumulator.NoStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.QuantileAccumulator;
 
@@ -30,7 +32,7 @@ public class Tally implements TallyInterface
     /** The summation for the second moment (variance). */
     private double m2 = 0;
 
-    /** The summation for the third moment (skew). */
+    /** The summation for the third moment (skewness). */
     private double m3 = 0;
 
     /** The summation for the fourth moment (kurtosis). */
@@ -122,7 +124,7 @@ public class Tally implements TallyInterface
             }
             double z = DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, level);
             double confidence = z * Math.sqrt(this.getSampleVariance() / this.n);
-            double[] result = { sampleMean - confidence, sampleMean + confidence };
+            double[] result = {sampleMean - confidence, sampleMean + confidence};
             if (side.equals(ConfidenceInterval.LEFT_SIDE_CONFIDENCE))
             {
                 result[1] = sampleMean;
@@ -181,11 +183,11 @@ public class Tally implements TallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public final double getStDev()
+    public final double getPopulationStDev()
     {
         synchronized (this.semaphore)
         {
-            return Math.sqrt(getVariance());
+            return Math.sqrt(getPopulationVariance());
         }
     }
 
@@ -212,11 +214,15 @@ public class Tally implements TallyInterface
 
     /** {@inheritDoc} */
     @Override
-    public final double getVariance()
+    public final double getPopulationVariance()
     {
         synchronized (this.semaphore)
         {
-            return this.m2 / this.n;
+            if (this.n > 0)
+            {
+                return this.m2 / this.n;
+            }
+            return Double.NaN;
         }
     }
 
@@ -226,21 +232,22 @@ public class Tally implements TallyInterface
     {
         if (this.n > 2)
         {
-            return getSkewness() * Math.sqrt(this.n * (this.n - 1)) / (this.n - 2);
+            return getPopulationSkewness() * Math.sqrt(this.n * (this.n - 1)) / (this.n - 2);
         }
         return Double.NaN;
     }
 
     /** {@inheritDoc} */
     @Override
-    public final double getSkewness()
+    public final double getPopulationSkewness()
     {
         if (this.n > 1)
         {
-            return this.m3 / this.n / Math.pow(this.m2 / this.n, 1.5);
+            return (this.m3 / this.n) / Math.pow(getPopulationVariance(), 1.5);
         }
         return Double.NaN;
     }
+
 
     /** {@inheritDoc} */
     @Override
@@ -248,20 +255,43 @@ public class Tally implements TallyInterface
     {
         if (this.n > 3)
         {
-            double g2 = getKurtosis();
-            return 1.0 * (this.n - 1) / (this.n - 2) / (this.n - 3) * ((this.n + 1) * g2 + 6);
+            double sVar = getSampleVariance();
+            return this.m4 / (this.n - 1) / sVar / sVar; 
         }
         return Double.NaN;
     }
 
     /** {@inheritDoc} */
     @Override
-    public final double getKurtosis()
+    public final double getPopulationKurtosis()
     {
         if (this.n > 2)
         {
-            double a4 = this.m4 / this.n / (this.m2 / this.n) / (this.m2 / this.n);
-            return a4 - 3; // convert kurtosis to excess kurtosis
+            return (this.m4 / this.n) / (this.m2 / this.n) / (this.m2 / this.n);
+        }
+        return Double.NaN;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getSampleExcessKurtosis()
+    {
+        if (this.n > 3)
+        {
+            double g2 = getPopulationExcessKurtosis();
+            return (1.0 * (this.n - 1) / (this.n - 2) / (this.n - 3)) * ((this.n + 1) * g2 + 6.0);
+        }
+        return Double.NaN;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getPopulationExcessKurtosis()
+    {
+        if (this.n > 2)
+        {
+            // convert kurtosis to excess kurtosis, shift by -3
+            return getPopulationKurtosis() - 3.0; 
         }
         return Double.NaN;
     }
@@ -284,6 +314,18 @@ public class Tally implements TallyInterface
         }
     }
 
+    /**
+     * Ingest an array of values.
+     * @param values the values to ingest
+     */
+    public void ingest(final double... values)
+    {
+        for (double value : values)
+        {
+            ingest(value);
+        }
+    }
+    
     /** {@inheritDoc} */
     @Override
     public double ingest(final double value)

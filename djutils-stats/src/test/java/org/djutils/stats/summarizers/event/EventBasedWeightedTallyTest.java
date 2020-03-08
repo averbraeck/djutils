@@ -1,4 +1,4 @@
-package org.djutils.stats.summarizers;
+package org.djutils.stats.summarizers.event;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.djutils.event.Event;
+import org.djutils.event.EventInterface;
+import org.djutils.event.EventListenerInterface;
 import org.djutils.event.EventType;
 import org.junit.Test;
 
@@ -16,8 +18,7 @@ import org.junit.Test;
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
- * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
- * <br>
+ * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @since 1.5
  */
@@ -64,8 +65,8 @@ public class EventBasedWeightedTallyTest
         assertEquals(11, wt.getN());
         assertEquals(1.5 * 0.1 * 11, wt.getWeightedSum(), 1.0E-6);
         assertEquals(1.5, wt.getWeightedSampleMean(), 1.0E-6);
-        assertEquals(0.316228, wt.getWeightedStDev(), 1.0E-6); // Computed with Excel sheet
-        assertEquals(0.100000, wt.getWeightedVariance(), 1.0E-6);
+        assertEquals(0.316228, wt.getWeightedPopulationStDev(), 1.0E-6); // Computed with Excel sheet
+        assertEquals(0.100000, wt.getWeightedPopulationVariance(), 1.0E-6);
         assertEquals(0.331662, wt.getWeightedSampleStDev(), 1.0E-6); // Computed with Excel sheet
         assertEquals(0.110000, wt.getWeightedSampleVariance(), 1.0E-6);
 
@@ -189,4 +190,90 @@ public class EventBasedWeightedTallyTest
         assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedSampleMean(), 0.001);
         assertEquals(5.82, wt.getWeightedSampleStDev(), 0.01);
     }
+
+    /**
+     * Test produced events by EventBasedWeightedTally.
+     */
+    @Test
+    public void testWeightedTallyEventProduction()
+    {
+        EventBasedWeightedTally weightedTally = new EventBasedWeightedTally("testTally");
+        assertEquals(weightedTally, weightedTally.getSourceId());
+        WeightedObservationEventListener woel = new WeightedObservationEventListener();
+        weightedTally.addListener(woel, StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT);
+        assertEquals(0, woel.getObservationEvents());
+
+        EventType[] types = new EventType[] {StatisticsEvents.N_EVENT, StatisticsEvents.MIN_EVENT, StatisticsEvents.MAX_EVENT,
+                StatisticsEvents.WEIGHTED_POPULATION_MEAN_EVENT, StatisticsEvents.WEIGHTED_POPULATION_VARIANCE_EVENT,
+                StatisticsEvents.WEIGHTED_POPULATION_STDEV_EVENT, StatisticsEvents.WEIGHTED_SUM_EVENT,
+                StatisticsEvents.WEIGHTED_SAMPLE_MEAN_EVENT, StatisticsEvents.WEIGHTED_SAMPLE_VARIANCE_EVENT,
+                StatisticsEvents.WEIGHTED_SAMPLE_STDEV_EVENT};
+        LoggingEventListener[] listeners = new LoggingEventListener[types.length];
+        for (int i = 0; i < types.length; i++)
+        {
+            listeners[i] = new LoggingEventListener();
+            weightedTally.addListener(listeners[i], types[i]);
+        }
+
+        for (int i = 1; i <= 10; i++)
+        {
+            weightedTally.ingest(1.0 * i, 10.0 * i);
+        }
+
+        assertEquals(10, woel.getObservationEvents());
+
+        // values based on formulas from https://www.itl.nist.gov/div898/software/dataplot/refman2/ch2/weightsd.pdf
+        Object[] expectedValues =
+                new Object[] {10L, 10.0, 100.0, 70.0, 600.0, 24.4949, 3850.0, 70.0, 666.6667, 25.81989};
+        for (int i = 0; i < types.length; i++)
+        {
+            assertEquals("Number of events for listener " + types[i], 10, listeners[i].getNumberOfEvents());
+            assertEquals("Event sourceId for listener " + types[i], weightedTally, listeners[i].getLastEvent().getSourceId());
+            assertEquals("Event type for listener " + types[i], types[i], listeners[i].getLastEvent().getType());
+            if (expectedValues[i] instanceof Long)
+            {
+                assertEquals("Final value for listener " + types[i], expectedValues[i],
+                        listeners[i].getLastEvent().getContent());
+            }
+            else
+            {
+                double e = ((Double) expectedValues[i]).doubleValue();
+                double c = ((Double) listeners[i].getLastEvent().getContent()).doubleValue();
+                assertEquals("Final value for listener " + types[i], e, c, 0.001);
+            }
+        }
+    }
+
+    /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
+    class WeightedObservationEventListener implements EventListenerInterface
+    {
+        /** */
+        private static final long serialVersionUID = 1L;
+
+        /** counter for the event. */
+        private int observationEvents = 0;
+
+        @Override
+        public void notify(final EventInterface event)
+        {
+            assertTrue(event.getType().equals(StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT));
+            assertTrue("Content of the event has a wrong type, not Object[]: " + event.getContent().getClass(),
+                    event.getContent() instanceof Object[]);
+            Object[] c = (Object[]) event.getContent();
+            assertTrue("Content[0] of the event has a wrong type, not double: " + c[0].getClass(), c[0] instanceof Double);
+            assertTrue("Content[1] of the event has a wrong type, not double: " + c[1].getClass(), c[1] instanceof Double);
+            assertTrue("SourceId of the event has a wrong type, not EventBasedWeightedTally: " + event.getSourceId().getClass(),
+                    event.getSourceId() instanceof EventBasedWeightedTally);
+            this.observationEvents++;
+        }
+
+        /**
+         * @return countEvents
+         */
+        public int getObservationEvents()
+        {
+            return this.observationEvents;
+        }
+    }
+
 }

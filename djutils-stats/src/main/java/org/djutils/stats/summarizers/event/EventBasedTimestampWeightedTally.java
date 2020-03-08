@@ -1,13 +1,15 @@
-package org.djutils.stats.summarizers;
+package org.djutils.stats.summarizers.event;
 
 import java.io.Serializable;
 import java.util.Calendar;
 
+import org.djutils.event.Event;
 import org.djutils.event.EventInterface;
 import org.djutils.event.EventListenerInterface;
 import org.djutils.event.EventProducer;
-import org.djutils.event.EventType;
 import org.djutils.event.TimedEvent;
+import org.djutils.stats.summarizers.TimestampTallyInterface;
+import org.djutils.stats.summarizers.TimestampWeightedTally;
 
 /**
  * The TimestampWeightedTally class defines a time-weighted tally based on timestamped data. The difference with a normal
@@ -27,12 +29,6 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
 {
     /** */
     private static final long serialVersionUID = 20200228L;
-
-    /** OBSERVATION_ADDED_EVENT is fired whenever an observation is processed. */
-    public static final EventType OBSERVATION_ADDED_EVENT = new EventType("OBSERVATION_ADDED_EVENT");
-
-    /** INITIALIZED_EVENT is fired whenever a Tally is (re-)initialized. */
-    public static final EventType INITIALIZED_EVENT = new EventType("INITIALIZED_EVENT");
 
     /** the wrapped timestamp weighted tally. */
     private TimestampWeightedTally wrappedTimestampWeightedTally;
@@ -59,7 +55,7 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
     public void initialize()
     {
         this.wrappedTimestampWeightedTally.initialize();
-        fireEvent(INITIALIZED_EVENT);
+        fireEvent(new Event(StatisticsEvents.INITIALIZED_EVENT, this, null));
     }
 
     /** {@inheritDoc} */
@@ -74,6 +70,7 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
     public void endObservations(final Number timestamp)
     {
         this.wrappedTimestampWeightedTally.endObservations(timestamp);
+        fireEvents(timestamp, this.wrappedTimestampWeightedTally.getLastValue());
     }
 
     /** {@inheritDoc} */
@@ -81,6 +78,7 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
     public void endObservations(final Calendar timestamp)
     {
         this.wrappedTimestampWeightedTally.endObservations(timestamp);
+        fireEvents(timestamp, this.wrappedTimestampWeightedTally.getLastValue());
     }
 
     /** {@inheritDoc} */
@@ -121,22 +119,54 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Process one observed value.
+     * @param timestamp Calendar; the Calendar object representing the timestamp
+     * @param value double; the value to process
+     * @return double; the value
+     */
     public double ingest(final Calendar timestamp, final double value)
     {
         this.wrappedTimestampWeightedTally.ingest(timestamp, value);
-        fireEvent(OBSERVATION_ADDED_EVENT, this);
+        fireEvents(timestamp, value);
         return value;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public double ingest(final Number timestampNumber, final double value)
+    /**
+     * Process one observed value.
+     * @param timestamp Number; the object representing the timestamp
+     * @param value double; the value to process
+     * @return double; the value
+     */
+    public double ingest(final Number timestamp, final double value)
     {
-        this.wrappedTimestampWeightedTally.ingest(timestampNumber, value);
-        fireEvent(OBSERVATION_ADDED_EVENT, this);
+        this.wrappedTimestampWeightedTally.ingest(timestamp, value);
+        fireEvents(timestamp, value);
         return value;
+    }
+
+    /**
+     * Fire the events to potential listeners with the timestamp and value.
+     * @param timestamp Object; Number or Calendar timestamp
+     * @param value double; observation value
+     */
+    private void fireEvents(final Object timestamp, final double value)
+    {
+        if (hasListeners())
+        {
+            this.fireEvent(
+                    new Event(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT, this, new Object[] {timestamp, value}));
+            fireEvent(new Event(StatisticsEvents.N_EVENT, this, getN()));
+            fireEvent(new Event(StatisticsEvents.MIN_EVENT, this, getMin()));
+            fireEvent(new Event(StatisticsEvents.MAX_EVENT, this, getMax()));
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_MEAN_EVENT, this, getWeightedPopulationMean()));
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_VARIANCE_EVENT, this, getWeightedPopulationVariance()));
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_STDEV_EVENT, this, getWeightedPopulationStDev()));
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_SUM_EVENT, this, getWeightedSum()));
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_MEAN_EVENT, this, getWeightedSampleMean()));
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_VARIANCE_EVENT, this, getWeightedSampleVariance()));
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_STDEV_EVENT, this, getWeightedSampleStDev()));
+        }
     }
 
     /** {@inheritDoc} */
@@ -183,9 +213,9 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
 
     /** {@inheritDoc} */
     @Override
-    public final double getWeightedStDev()
+    public final double getWeightedPopulationStDev()
     {
-        return this.wrappedTimestampWeightedTally.getWeightedStDev();
+        return this.wrappedTimestampWeightedTally.getWeightedPopulationStDev();
     }
 
     /** {@inheritDoc} */
@@ -197,9 +227,9 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
 
     /** {@inheritDoc} */
     @Override
-    public final double getWeightedVariance()
+    public final double getWeightedPopulationVariance()
     {
-        return this.wrappedTimestampWeightedTally.getWeightedVariance();
+        return this.wrappedTimestampWeightedTally.getWeightedPopulationVariance();
     }
 
     /** {@inheritDoc} */

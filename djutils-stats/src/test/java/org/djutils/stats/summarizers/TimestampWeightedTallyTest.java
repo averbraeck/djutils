@@ -39,7 +39,7 @@ public class TimestampWeightedTallyTest
         assertTrue(Double.isNaN(wt.getMin()));
         assertTrue(Double.isNaN(wt.getMax()));
         assertTrue(Double.isNaN(wt.getWeightedSampleMean()));
-        assertTrue(Double.isNaN(wt.getWeightedMean()));
+        assertTrue(Double.isNaN(wt.getWeightedPopulationMean()));
         assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
         assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
         assertEquals(0.0, wt.getWeightedSum(), 0.0);
@@ -49,18 +49,18 @@ public class TimestampWeightedTallyTest
         assertTrue(Double.isNaN(wt.getMin()));
         assertTrue(Double.isNaN(wt.getMax()));
         assertTrue(Double.isNaN(wt.getWeightedSampleMean()));
-        assertTrue(Double.isNaN(wt.getWeightedMean()));
+        assertTrue(Double.isNaN(wt.getWeightedPopulationMean()));
         assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
         assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
         wt.ingest(0.1, 1.1);
         assertEquals(1.0, wt.getMin(), 0.000001);
         assertEquals(1.0, wt.getMax(), 0.000001);
         assertEquals(1.0, wt.getWeightedSampleMean(), 0.000001);
-        assertEquals(1.0, wt.getWeightedMean(), 0.000001);
+        assertEquals(1.0, wt.getWeightedPopulationMean(), 0.000001);
         assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
         assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
-        assertEquals(0, wt.getWeightedVariance(), 0.000001);
-        assertEquals(0, wt.getWeightedStDev(), 0.0000001);
+        assertEquals(0, wt.getWeightedPopulationVariance(), 0.000001);
+        assertEquals(0, wt.getWeightedPopulationStDev(), 0.0000001);
         wt.ingest(0.2, 1.2);
         assertFalse(Double.isNaN(wt.getWeightedSampleVariance()));
         assertFalse(Double.isNaN(wt.getWeightedSampleStDev()));
@@ -107,8 +107,8 @@ public class TimestampWeightedTallyTest
         
         variance = varianceAccumulator / 11.0;
         stDev = Math.sqrt(variance);
-        assertEquals(variance, wt.getWeightedVariance(), 1.0E-6);
-        assertEquals(stDev, wt.getWeightedStDev(), 1.0E-6);
+        assertEquals(variance, wt.getWeightedPopulationVariance(), 1.0E-6);
+        assertEquals(stDev, wt.getWeightedPopulationStDev(), 1.0E-6);
 
         try
         {

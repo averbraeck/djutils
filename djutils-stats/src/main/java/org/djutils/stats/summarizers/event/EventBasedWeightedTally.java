@@ -1,12 +1,14 @@
-package org.djutils.stats.summarizers;
+package org.djutils.stats.summarizers.event;
 
 import java.io.Serializable;
 
+import org.djutils.event.Event;
 import org.djutils.event.EventInterface;
 import org.djutils.event.EventListenerInterface;
 import org.djutils.event.EventProducer;
-import org.djutils.event.EventType;
 import org.djutils.exceptions.Throw;
+import org.djutils.stats.summarizers.WeightedTally;
+import org.djutils.stats.summarizers.WeightedTallyInterface;
 
 /**
  * The EventBasedWeightedTally class defines a time-weighted tally that can be notified with weights and values using the
@@ -16,8 +18,7 @@ import org.djutils.exceptions.Throw;
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
- * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
- * <br>
+ * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
@@ -25,12 +26,6 @@ public class EventBasedWeightedTally extends EventProducer implements EventListe
 {
     /** */
     private static final long serialVersionUID = 20200228L;
-
-    /** OBSERVATION_ADDED_EVENT is fired whenever an observation is processed. */
-    public static final EventType OBSERVATION_ADDED_EVENT = new EventType("OBSERVATION_ADDED_EVENT");
-
-    /** INITIALIZED_EVENT is fired whenever a Tally is (re-)initialized. */
-    public static final EventType INITIALIZED_EVENT = new EventType("INITIALIZED_EVENT");
 
     /** the wrapped WeightedTally. */
     private final WeightedTally wrappedWeightedTally;
@@ -95,9 +90,9 @@ public class EventBasedWeightedTally extends EventProducer implements EventListe
 
     /** {@inheritDoc} */
     @Override
-    public final double getWeightedStDev()
+    public final double getWeightedPopulationStDev()
     {
-        return this.wrappedWeightedTally.getWeightedStDev();
+        return this.wrappedWeightedTally.getWeightedPopulationStDev();
     }
 
     /** {@inheritDoc} */
@@ -109,9 +104,9 @@ public class EventBasedWeightedTally extends EventProducer implements EventListe
 
     /** {@inheritDoc} */
     @Override
-    public final double getWeightedVariance()
+    public final double getWeightedPopulationVariance()
     {
-        return this.wrappedWeightedTally.getWeightedVariance();
+        return this.wrappedWeightedTally.getWeightedPopulationVariance();
     }
 
     /** {@inheritDoc} */
@@ -126,7 +121,7 @@ public class EventBasedWeightedTally extends EventProducer implements EventListe
     public void initialize()
     {
         this.wrappedWeightedTally.initialize();
-        fireEvent(INITIALIZED_EVENT);
+        fireEvent(new Event(StatisticsEvents.INITIALIZED_EVENT, this, null));
     }
 
     /** {@inheritDoc} */
@@ -147,12 +142,29 @@ public class EventBasedWeightedTally extends EventProducer implements EventListe
         ingest(weight, value);
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Process one observed weighted value.
+     * @param weight double; the weight of the value to process
+     * @param value double; the value to process
+     * @return double; the value
+     */
     public double ingest(final double weight, final double value)
     {
         this.wrappedWeightedTally.ingest(weight, value);
-        this.fireEvent(OBSERVATION_ADDED_EVENT, this);
+        if (hasListeners())
+        {
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT, this, new Object[] {weight, value}));
+            fireEvent(new Event(StatisticsEvents.N_EVENT, this, getN()));
+            fireEvent(new Event(StatisticsEvents.MIN_EVENT, this, getMin()));
+            fireEvent(new Event(StatisticsEvents.MAX_EVENT, this, getMax()));
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_MEAN_EVENT, this, getWeightedPopulationMean()));
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_VARIANCE_EVENT, this, getWeightedPopulationVariance()));
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_STDEV_EVENT, this, getWeightedPopulationStDev()));
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_SUM_EVENT, this, getWeightedSum()));
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_MEAN_EVENT, this, getWeightedSampleMean()));
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_VARIANCE_EVENT, this, getWeightedSampleVariance()));
+            fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_STDEV_EVENT, this, getWeightedSampleStDev()));
+        }
         return value;
     }
 

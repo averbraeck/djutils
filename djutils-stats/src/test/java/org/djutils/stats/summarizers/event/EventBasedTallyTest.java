@@ -1,4 +1,4 @@
-package org.djutils.stats.summarizers;
+package org.djutils.stats.summarizers.event;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -10,7 +10,11 @@ import static org.junit.Assert.fail;
 import java.util.Random;
 
 import org.djutils.event.Event;
+import org.djutils.event.EventInterface;
+import org.djutils.event.EventListenerInterface;
 import org.djutils.event.EventType;
+import org.djutils.stats.ConfidenceInterval;
+import org.djutils.stats.DistNormalTable;
 import org.djutils.stats.summarizers.quantileaccumulator.FullStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.NoStorageAccumulator;
 import org.junit.Test;
@@ -22,9 +26,8 @@ import org.junit.Test;
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
- * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
- * <br>
- * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
+ * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
+ * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
 public class EventBasedTallyTest
@@ -33,6 +36,7 @@ public class EventBasedTallyTest
     private static final EventType VALUE_EVENT = new EventType("VALUE_EVENT");
 
     /** Test the event based tally. */
+    @SuppressWarnings("checkstyle:methodlength")
     @Test
     public void testEventBasedTally()
     {
@@ -44,16 +48,20 @@ public class EventBasedTallyTest
         assertEquals(description, tally.getDescription());
         assertTrue(tally.toString().startsWith("EventBasedTally"));
 
-
         // now we check the initial values
         assertTrue(Double.valueOf(tally.getMin()).isNaN());
         assertTrue(Double.valueOf(tally.getMax()).isNaN());
         assertTrue(Double.valueOf(tally.getSampleMean()).isNaN());
         assertTrue(Double.valueOf(tally.getSampleVariance()).isNaN());
-        assertTrue(Double.valueOf(tally.getVariance()).isNaN());
+        assertTrue(Double.valueOf(tally.getPopulationVariance()).isNaN());
         assertTrue(Double.valueOf(tally.getSampleStDev()).isNaN());
-        assertTrue(Double.valueOf(tally.getSkewness()).isNaN());
-        assertTrue(Double.valueOf(tally.getKurtosis()).isNaN());
+        assertTrue(Double.valueOf(tally.getPopulationStDev()).isNaN());
+        assertTrue(Double.valueOf(tally.getSampleSkewness()).isNaN());
+        assertTrue(Double.valueOf(tally.getPopulationSkewness()).isNaN());
+        assertTrue(Double.valueOf(tally.getSampleKurtosis()).isNaN());
+        assertTrue(Double.valueOf(tally.getPopulationKurtosis()).isNaN());
+        assertTrue(Double.valueOf(tally.getSampleExcessKurtosis()).isNaN());
+        assertTrue(Double.valueOf(tally.getPopulationExcessKurtosis()).isNaN());
         assertEquals(0, tally.getSum(), 0);
         assertEquals(0L, tally.getN());
         assertNull(tally.getConfidenceInterval(0.95));
@@ -78,16 +86,16 @@ public class EventBasedTallyTest
             tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.1));
             assertFalse("mean is now available", Double.isNaN(tally.getSampleMean()));
             assertTrue("sample variance is not available", Double.isNaN(tally.getSampleVariance()));
-            assertFalse("variance is not available", Double.isNaN(tally.getVariance()));
-            assertTrue("skewness is not available", Double.isNaN(tally.getSkewness()));
+            assertFalse("variance is not available", Double.isNaN(tally.getPopulationVariance()));
+            assertTrue("skewness is not available", Double.isNaN(tally.getPopulationSkewness()));
             tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.2));
             assertFalse("sample variance is now available", Double.isNaN(tally.getSampleVariance()));
             assertTrue("sample skewness is not available", Double.isNaN(tally.getSampleSkewness()));
-            assertFalse("skewness is available", Double.isNaN(tally.getSkewness()));
-            assertTrue("kurtosis is not available", Double.isNaN(tally.getKurtosis()));
+            assertFalse("skewness is available", Double.isNaN(tally.getPopulationSkewness()));
+            assertTrue("kurtosis is not available", Double.isNaN(tally.getPopulationKurtosis()));
             tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.3));
             assertFalse("skewness is now available", Double.isNaN(tally.getSampleSkewness()));
-            assertFalse("kurtosis is now available", Double.isNaN(tally.getKurtosis()));
+            assertFalse("kurtosis is now available", Double.isNaN(tally.getPopulationKurtosis()));
             assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
             tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.4));
             assertFalse("sample kurtosis is now available", Double.isNaN(tally.getSampleKurtosis()));
@@ -146,7 +154,7 @@ public class EventBasedTallyTest
         assertEquals(1.567448975, tally.getConfidenceInterval(0.25, ConfidenceInterval.RIGHT_SIDE_CONFIDENCE)[1], 1E-05);
         assertEquals(1.500000000, tally.getConfidenceInterval(0.40, ConfidenceInterval.RIGHT_SIDE_CONFIDENCE)[0], 1E-05);
         assertEquals(1.525334710, tally.getConfidenceInterval(0.40, ConfidenceInterval.RIGHT_SIDE_CONFIDENCE)[1], 1E-05);
-        
+
         // we check the input of the confidence interval
         try
         {
@@ -188,8 +196,62 @@ public class EventBasedTallyTest
         assertEquals(varianceAccumulator / 10.0, tally.getSampleVariance(), 1.0E-6);
         assertEquals(Math.sqrt(varianceAccumulator / 10.0), tally.getSampleStDev(), 1.0E-6);
 
-        assertEquals(varianceAccumulator / 11.0, tally.getVariance(), 1.0E-6);
-        assertEquals(Math.sqrt(varianceAccumulator / 11.0), tally.getStDev(), 1.0E-6);
+        assertEquals(varianceAccumulator / 11.0, tally.getPopulationVariance(), 1.0E-6);
+        assertEquals(Math.sqrt(varianceAccumulator / 11.0), tally.getPopulationStDev(), 1.0E-6);
+    }
+
+    /**
+     * Test produced events by EventBasedTally.
+     */
+    @Test
+    public void testTallyEventProduction()
+    {
+        EventBasedTally tally = new EventBasedTally("testTally");
+        assertEquals(tally, tally.getSourceId());
+        ObservationEventListener oel = new ObservationEventListener();
+        tally.addListener(oel, StatisticsEvents.OBSERVATION_ADDED_EVENT);
+        assertEquals(0, oel.getObservationEvents());
+
+        EventType[] types = new EventType[] {StatisticsEvents.N_EVENT, StatisticsEvents.MIN_EVENT, StatisticsEvents.MAX_EVENT,
+                StatisticsEvents.POPULATION_MEAN_EVENT, StatisticsEvents.POPULATION_VARIANCE_EVENT,
+                StatisticsEvents.POPULATION_SKEWNESS_EVENT, StatisticsEvents.POPULATION_KURTOSIS_EVENT,
+                StatisticsEvents.POPULATION_STDEV_EVENT, StatisticsEvents.SUM_EVENT, StatisticsEvents.SAMPLE_MEAN_EVENT,
+                StatisticsEvents.SAMPLE_VARIANCE_EVENT, StatisticsEvents.SAMPLE_SKEWNESS_EVENT,
+                StatisticsEvents.SAMPLE_KURTOSIS_EVENT, StatisticsEvents.SAMPLE_STDEV_EVENT};
+        LoggingEventListener[] listeners = new LoggingEventListener[types.length];
+        for (int i = 0; i < types.length; i++)
+        {
+            listeners[i] = new LoggingEventListener();
+            tally.addListener(listeners[i], types[i]);
+        }
+
+        for (int i = 1; i <= 10; i++)
+        {
+            tally.ingest(10.0 * i);
+        }
+
+        assertEquals(10, oel.getObservationEvents());
+        
+        // values from: https://atozmath.com/StatsUG.aspx
+        Object[] expectedValues =
+                new Object[] {10L, 10.0, 100.0, 55.0, 825.0, 0.0, 1.7758, 28.7228, 550.0, 55.0, 916.6667, 0.0, 1.5982, 30.2765};
+        for (int i = 0; i < types.length; i++)
+        {
+            assertEquals("Number of events for listener " + types[i], 10, listeners[i].getNumberOfEvents());
+            assertEquals("Event sourceId for listener " + types[i], tally, listeners[i].getLastEvent().getSourceId());
+            assertEquals("Event type for listener " + types[i], types[i], listeners[i].getLastEvent().getType());
+            if (expectedValues[i] instanceof Long)
+            {
+                assertEquals("Final value for listener " + types[i], expectedValues[i],
+                        listeners[i].getLastEvent().getContent());
+            }
+            else
+            {
+                double e = ((Double) expectedValues[i]).doubleValue();
+                double c = ((Double) listeners[i].getLastEvent().getContent()).doubleValue();
+                assertEquals("Final value for listener " + types[i], e, c, 0.001);
+            }
+        }
     }
 
     /**
@@ -225,6 +287,7 @@ public class EventBasedTallyTest
         tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 110.0));
         assertEquals("mean of two value", 100.0, tally.getSampleMean(), 0);
         assertEquals("50% quantile", 100.0, tally.getQuantile(0.5), 0);
+
         /*-
         double sigma = tally.getSampleStDev();
         double mu = tally.getSampleMean();
@@ -239,7 +302,7 @@ public class EventBasedTallyTest
         }
         // Output shows that the inverse cumulative probability function works fine up to about 8 sigma
          */
-        
+
         assertEquals("84% is about one sigma", 1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.84), 0.01);
         assertEquals("16% is about minus one sigma", -1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.16), 0.01);
 
@@ -328,6 +391,35 @@ public class EventBasedTallyTest
         while (u1 <= epsilon);
 
         return mu + sigma * Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(twoPi * u2);
+    }
+
+    /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
+    class ObservationEventListener implements EventListenerInterface
+    {
+        /** */
+        private static final long serialVersionUID = 1L;
+
+        /** counter for the event. */
+        private int observationEvents = 0;
+
+        @Override
+        public void notify(final EventInterface event)
+        {
+            assertTrue(event.getType().equals(StatisticsEvents.OBSERVATION_ADDED_EVENT));
+            assertTrue("Content of the event has a wrong type, not DOuble: " + event.getContent().getClass(),
+                    event.getContent() instanceof Double);
+            assertTrue("SourceId of the event has a wrong type, not EventBasedTally: " + event.getSourceId().getClass(),
+                    event.getSourceId() instanceof EventBasedTally);
+            this.observationEvents++;
+        }
+
+        /**
+         * @return countEvents
+         */
+        public int getObservationEvents()
+        {
+            return this.observationEvents;
+        }
     }
 
 }

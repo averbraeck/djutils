@@ -24,7 +24,7 @@ public interface WeightedTallyInterface extends BasicTallyInterface
      * Retrieve the current weighted mean of all observations since the initialization.
      * @return double; the current weighted mean
      */
-    default double getWeightedMean()
+    default double getWeightedPopulationMean()
     {
         return getWeightedSampleMean();
     }
@@ -39,7 +39,7 @@ public interface WeightedTallyInterface extends BasicTallyInterface
      * Retrieve the current weighted standard deviation of the observations.
      * @return double; the current weighted standard deviation
      */
-    double getWeightedStDev();
+    double getWeightedPopulationStDev();
 
     /**
      * Retrieve the current weighted sample variance of the observations.
@@ -51,20 +51,12 @@ public interface WeightedTallyInterface extends BasicTallyInterface
      * Retrieve the current weighted variance of the observations.
      * @return double; the current weighted variance of the observations
      */
-    double getWeightedVariance();
+    double getWeightedPopulationVariance();
 
     /**
      * Retrieve the current weighted sum of the values of the observations.
      * @return double; the current weighted sum of the values of the observations
      */
     double getWeightedSum();
-
-    /**
-     * Process one observed weighted value.
-     * @param weight double; the weight of the value to process
-     * @param value double; the value to process
-     * @return double; the value
-     */
-    double ingest(double weight, double value);
 
 }
