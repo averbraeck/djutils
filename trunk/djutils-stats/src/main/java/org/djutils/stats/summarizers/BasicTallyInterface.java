@@ -13,7 +13,6 @@ import java.io.Serializable;
  * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
  * <br>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
- * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
 public interface BasicTallyInterface extends Serializable
