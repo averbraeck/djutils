@@ -26,19 +26,19 @@ public interface TallyInterface extends BasicTallyInterface
 
     /**
      * Return the sum of the values of the observations.
-     * @return double sum
+     * @return double; sum
      */
     double getSum();
 
     /**
      * Returns the sample mean of all observations since the initialization.
-     * @return double the sample mean
+     * @return double; the sample mean
      */
     double getSampleMean();
 
     /**
      * Returns the population mean of all observations since the initialization.
-     * @return double the population mean
+     * @return double; the population mean
      */
     default double getPopulationMean()
     {
@@ -48,14 +48,14 @@ public interface TallyInterface extends BasicTallyInterface
     /**
      * Returns the current (unbiased) sample standard deviation of all observations since the initialization. The sample
      * standard deviation is defined as the square root of the sample variance.
-     * @return double the sample standard deviation
+     * @return double; the sample standard deviation
      */
     double getSampleStDev();
 
     /**
      * Returns the current (biased) population standard deviation of all observations since the initialization. The population
      * standard deviation is defined as the square root of the population variance.
-     * @return double the population standard deviation
+     * @return double; the population standard deviation
      */
     double getPopulationStDev();
 
@@ -147,7 +147,7 @@ public interface TallyInterface extends BasicTallyInterface
      * returns the confidence interval on either side of the mean.
      * @param alpha double; Alpha is the significance level used to compute the confidence level. The confidence level equals
      *            100*(1 - alpha)%, or in other words, an alpha of 0.05 indicates a 95 percent confidence level.
-     * @return double[] the confidence interval of this tally
+     * @return double[]; the confidence interval of this tally
      * @throws IllegalArgumentException when alpha is less than 0 or larger than 1
      */
     double[] getConfidenceInterval(double alpha);
@@ -157,7 +157,7 @@ public interface TallyInterface extends BasicTallyInterface
      * @param alpha double; Alpha is the significance level used to compute the confidence level. The confidence level equals
      *            100*(1 - alpha)%, or in other words, an alpha of 0.05 indicates a 95 percent confidence level.
      * @param side short; the side of the confidence interval with respect to the mean
-     * @return double[] the confidence interval of this tally
+     * @return double[]; the confidence interval of this tally
      * @throws IllegalArgumentException when alpha is less than 0 or larger than 1
      * @throws NullPointerException when side is null
      */

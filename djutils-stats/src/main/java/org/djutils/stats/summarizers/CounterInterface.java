@@ -17,7 +17,7 @@ import java.io.Serializable;
 public interface CounterInterface extends Serializable
 {
     /**
-     * initializes the counter.
+     * Initializes the counter.
      */
     void initialize();
 
@@ -29,20 +29,20 @@ public interface CounterInterface extends Serializable
     long ingest(long value);
 
     /**
-     * returns the description of the counter.
-     * @return String the description
+     * Returns the description of the counter.
+     * @return String; the description
      */
     String getDescription();
 
     /**
      * Returns the current counter value.
-     * @return long the counter value
+     * @return long; the counter value
      */
     long getCount();
     
     /**
      * Returns the current number of observations.
-     * @return long the number of observations
+     * @return long; the number of observations
      */
     long getN();
 
