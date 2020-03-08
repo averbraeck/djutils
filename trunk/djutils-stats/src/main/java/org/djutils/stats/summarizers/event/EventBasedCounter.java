@@ -84,12 +84,20 @@ public class EventBasedCounter extends EventProducer implements EventListenerInt
         if (hasListeners())
         {
             fireEvent(new Event(StatisticsEvents.OBSERVATION_ADDED_EVENT, this, value));
-            fireEvent(new Event(StatisticsEvents.N_EVENT, this, getN()));
-            fireEvent(new Event(StatisticsEvents.COUNT_EVENT, this, getCount()));
+            fireEvents();
         }
         return value;
     }
 
+    /**
+     * Method that can be overridden to fire own events or additional events when ingesting an observation.
+     */
+    protected void fireEvents()
+    {
+        fireEvent(new Event(StatisticsEvents.N_EVENT, this, getN()));
+        fireEvent(new Event(StatisticsEvents.COUNT_EVENT, this, getCount()));
+    }
+    
     /** {@inheritDoc} */
     @Override
     public void initialize()

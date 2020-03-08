@@ -70,7 +70,7 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
     public void endObservations(final Number timestamp)
     {
         this.wrappedTimestampWeightedTally.endObservations(timestamp);
-        fireEvents(timestamp, this.wrappedTimestampWeightedTally.getLastValue());
+        fireEvents(timestamp.doubleValue(), this.wrappedTimestampWeightedTally.getLastValue());
     }
 
     /** {@inheritDoc} */
@@ -78,7 +78,7 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
     public void endObservations(final Calendar timestamp)
     {
         this.wrappedTimestampWeightedTally.endObservations(timestamp);
-        fireEvents(timestamp, this.wrappedTimestampWeightedTally.getLastValue());
+        fireEvents(timestamp.getTimeInMillis(), this.wrappedTimestampWeightedTally.getLastValue());
     }
 
     /** {@inheritDoc} */
@@ -101,11 +101,11 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
             Object timestamp = timedEvent.getTimeStamp();
             if (timestamp instanceof Number)
             {
-                ingest((Number) timestamp, value);
+                ingest(((Number) timestamp).doubleValue(), value);
             }
             else if (timestamp instanceof Calendar)
             {
-                ingest((Calendar) timestamp, value);
+                ingest(((Calendar) timestamp).getTimeInMillis(), value);
             }
             else
             {
@@ -134,11 +134,12 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
 
     /**
      * Process one observed value.
-     * @param timestamp Number; the object representing the timestamp
+     * @param <T> a type for the timestamp that extends Number and is Comparable, e.g., a Double, a Long, or a djunits Time
+     * @param timestamp T; the object representing the timestamp
      * @param value double; the value to process
      * @return double; the value
      */
-    public double ingest(final Number timestamp, final double value)
+    public <T extends Number & Comparable<T>> double ingest(final T timestamp, final double value)
     {
         this.wrappedTimestampWeightedTally.ingest(timestamp, value);
         fireEvents(timestamp, value);
@@ -147,26 +148,41 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
 
     /**
      * Fire the events to potential listeners with the timestamp and value.
-     * @param timestamp Object; Number or Calendar timestamp
+     * @param <T> a type for the timestamp that is Serializable and Comparable
+     * @param timestamp T; Number or Calendar timestamp
      * @param value double; observation value
      */
-    private void fireEvents(final Object timestamp, final double value)
+    private <T extends Serializable & Comparable<T>> void fireEvents(final T timestamp, final double value)
     {
         if (hasListeners())
         {
             this.fireEvent(
                     new Event(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT, this, new Object[] {timestamp, value}));
-            fireEvent(new Event(StatisticsEvents.N_EVENT, this, getN()));
-            fireEvent(new Event(StatisticsEvents.MIN_EVENT, this, getMin()));
-            fireEvent(new Event(StatisticsEvents.MAX_EVENT, this, getMax()));
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_MEAN_EVENT, this, getWeightedPopulationMean()));
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_VARIANCE_EVENT, this, getWeightedPopulationVariance()));
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_STDEV_EVENT, this, getWeightedPopulationStDev()));
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_SUM_EVENT, this, getWeightedSum()));
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_MEAN_EVENT, this, getWeightedSampleMean()));
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_VARIANCE_EVENT, this, getWeightedSampleVariance()));
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_STDEV_EVENT, this, getWeightedSampleStDev()));
+            fireEvents(timestamp);
         }
+    }
+
+    /**
+     * Method that can be overridden to fire own events or additional events when ingesting an observation.
+     * @param <T> a type for the timestamp that is Serializable and Comparable
+     * @param timestamp T; the timestamp to use in the TimedEvents
+     */
+    protected <T extends Serializable & Comparable<T>> void fireEvents(final T timestamp)
+    {
+        fireEvent(new TimedEvent<T>(StatisticsEvents.N_EVENT, this, getN(), timestamp));
+        fireEvent(new TimedEvent<T>(StatisticsEvents.MIN_EVENT, this, getMin(), timestamp));
+        fireEvent(new TimedEvent<T>(StatisticsEvents.MAX_EVENT, this, getMax(), timestamp));
+        fireEvent(new TimedEvent<T>(StatisticsEvents.WEIGHTED_POPULATION_MEAN_EVENT, this, getWeightedPopulationMean(),
+                timestamp));
+        fireEvent(new TimedEvent<T>(StatisticsEvents.WEIGHTED_POPULATION_VARIANCE_EVENT, this, getWeightedPopulationVariance(),
+                timestamp));
+        fireEvent(new TimedEvent<T>(StatisticsEvents.WEIGHTED_POPULATION_STDEV_EVENT, this, getWeightedPopulationStDev(),
+                timestamp));
+        fireEvent(new TimedEvent<T>(StatisticsEvents.WEIGHTED_SUM_EVENT, this, getWeightedSum(), timestamp));
+        fireEvent(new TimedEvent<T>(StatisticsEvents.WEIGHTED_SAMPLE_MEAN_EVENT, this, getWeightedSampleMean(), timestamp));
+        fireEvent(new TimedEvent<T>(StatisticsEvents.WEIGHTED_SAMPLE_VARIANCE_EVENT, this, getWeightedSampleVariance(),
+                timestamp));
+        fireEvent(new TimedEvent<T>(StatisticsEvents.WEIGHTED_SAMPLE_STDEV_EVENT, this, getWeightedSampleStDev(), timestamp));
     }
 
     /** {@inheritDoc} */

@@ -223,24 +223,32 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
         if (hasListeners())
         {
             fireEvent(new Event(StatisticsEvents.OBSERVATION_ADDED_EVENT, this, value));
-            fireEvent(new Event(StatisticsEvents.N_EVENT, this, getN()));
-            fireEvent(new Event(StatisticsEvents.MIN_EVENT, this, getMin()));
-            fireEvent(new Event(StatisticsEvents.MAX_EVENT, this, getMax()));
-            fireEvent(new Event(StatisticsEvents.POPULATION_MEAN_EVENT, this, getPopulationMean()));
-            fireEvent(new Event(StatisticsEvents.POPULATION_VARIANCE_EVENT, this, getPopulationVariance()));
-            fireEvent(new Event(StatisticsEvents.POPULATION_SKEWNESS_EVENT, this, getPopulationSkewness()));
-            fireEvent(new Event(StatisticsEvents.POPULATION_KURTOSIS_EVENT, this, getPopulationKurtosis()));
-            fireEvent(new Event(StatisticsEvents.POPULATION_EXCESS_KURTOSIS_EVENT, this, getPopulationExcessKurtosis()));
-            fireEvent(new Event(StatisticsEvents.POPULATION_STDEV_EVENT, this, getPopulationStDev()));
-            fireEvent(new Event(StatisticsEvents.SUM_EVENT, this, getSum()));
-            fireEvent(new Event(StatisticsEvents.SAMPLE_MEAN_EVENT, this, getSampleMean()));
-            fireEvent(new Event(StatisticsEvents.SAMPLE_VARIANCE_EVENT, this, getSampleVariance()));
-            fireEvent(new Event(StatisticsEvents.SAMPLE_SKEWNESS_EVENT, this, getSampleSkewness()));
-            fireEvent(new Event(StatisticsEvents.SAMPLE_KURTOSIS_EVENT, this, getSampleKurtosis()));
-            fireEvent(new Event(StatisticsEvents.SAMPLE_EXCESS_KURTOSIS_EVENT, this, getSampleExcessKurtosis()));
-            fireEvent(new Event(StatisticsEvents.SAMPLE_STDEV_EVENT, this, getSampleStDev()));
+            fireEvents();
         }
         return value;
+    }
+
+    /**
+     * Method that can be overridden to fire own events or additional events when ingesting an observation.
+     */
+    protected void fireEvents()
+    {
+        fireEvent(new Event(StatisticsEvents.N_EVENT, this, getN()));
+        fireEvent(new Event(StatisticsEvents.MIN_EVENT, this, getMin()));
+        fireEvent(new Event(StatisticsEvents.MAX_EVENT, this, getMax()));
+        fireEvent(new Event(StatisticsEvents.POPULATION_MEAN_EVENT, this, getPopulationMean()));
+        fireEvent(new Event(StatisticsEvents.POPULATION_VARIANCE_EVENT, this, getPopulationVariance()));
+        fireEvent(new Event(StatisticsEvents.POPULATION_SKEWNESS_EVENT, this, getPopulationSkewness()));
+        fireEvent(new Event(StatisticsEvents.POPULATION_KURTOSIS_EVENT, this, getPopulationKurtosis()));
+        fireEvent(new Event(StatisticsEvents.POPULATION_EXCESS_KURTOSIS_EVENT, this, getPopulationExcessKurtosis()));
+        fireEvent(new Event(StatisticsEvents.POPULATION_STDEV_EVENT, this, getPopulationStDev()));
+        fireEvent(new Event(StatisticsEvents.SUM_EVENT, this, getSum()));
+        fireEvent(new Event(StatisticsEvents.SAMPLE_MEAN_EVENT, this, getSampleMean()));
+        fireEvent(new Event(StatisticsEvents.SAMPLE_VARIANCE_EVENT, this, getSampleVariance()));
+        fireEvent(new Event(StatisticsEvents.SAMPLE_SKEWNESS_EVENT, this, getSampleSkewness()));
+        fireEvent(new Event(StatisticsEvents.SAMPLE_KURTOSIS_EVENT, this, getSampleKurtosis()));
+        fireEvent(new Event(StatisticsEvents.SAMPLE_EXCESS_KURTOSIS_EVENT, this, getSampleExcessKurtosis()));
+        fireEvent(new Event(StatisticsEvents.SAMPLE_STDEV_EVENT, this, getSampleStDev()));
     }
 
     /** {@inheritDoc} */
