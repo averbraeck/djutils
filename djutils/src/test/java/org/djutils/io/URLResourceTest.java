@@ -13,6 +13,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
@@ -84,7 +86,7 @@ public class URLResourceTest
         lines = Files.readAllLines(Paths.get(url.toURI()));
         assertEquals(3, lines.size());
         assertEquals("ghi", lines.get(2));
-        
+
         url = null;
         lines = null;
 
@@ -103,7 +105,7 @@ public class URLResourceTest
     public final void resourceAsStreamTest() throws IOException, URISyntaxException
     {
         InputStream stream = URLResource.getResourceAsStream("/org/djutils-test-resources/test.txt");
-        byte[] barr = stream.readAllBytes();
+        byte[] barr = readAllBytes(stream);
         stream.close();
         assertEquals('a', barr[0]);
 
@@ -167,4 +169,78 @@ public class URLResourceTest
         fis.close();
     }
 
+    /**
+     * Copied from Java 13 to handle readAllBytes in Java 8.
+     * @param stream the input stream to read the bytes from
+     * @return the byte array
+     * @throws IOException on I/O error
+     */
+    private byte[] readAllBytes(final InputStream stream) throws IOException
+    {
+        List<byte[]> bufs = null;
+        byte[] result = null;
+        int total = 0;
+        int remaining = Integer.MAX_VALUE;
+        int n;
+        do
+        {
+            byte[] buf = new byte[Math.min(remaining, 8192)];
+            int nread = 0;
+
+            // read to EOF which may read more or less than buffer size
+            while ((n = stream.read(buf, nread, Math.min(buf.length - nread, remaining))) > 0)
+            {
+                nread += n;
+                remaining -= n;
+            }
+
+            if (nread > 0)
+            {
+                if (Integer.MAX_VALUE - 8 - total < nread)
+                {
+                    throw new OutOfMemoryError("Required array size too large");
+                }
+                total += nread;
+                if (result == null)
+                {
+                    result = buf;
+                }
+                else
+                {
+                    if (bufs == null)
+                    {
+                        bufs = new ArrayList<>();
+                        bufs.add(result);
+                    }
+                    bufs.add(buf);
+                }
+            }
+            // if the last call to read returned -1 or the number of bytes
+            // requested have been read then break
+        }
+        while (n >= 0 && remaining > 0);
+
+        if (bufs == null)
+        {
+            if (result == null)
+            {
+                return new byte[0];
+            }
+            return result.length == total ? result : Arrays.copyOf(result, total);
+        }
+
+        result = new byte[total];
+        int offset = 0;
+        remaining = total;
+        for (byte[] b : bufs)
+        {
+            int count = Math.min(b.length, remaining);
+            System.arraycopy(b, 0, result, offset, count);
+            offset += count;
+            remaining -= count;
+        }
+
+        return result;
+
+    }
 }
