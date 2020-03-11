@@ -2,6 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+   <release version="1.04.15" date="2020-03-XX" description="Java-8 compatibility">
+      <action dev="averbraeck" type="fix">
+       Unit tests of djutils are made compatible again with Java-8. Several functions of Java-9 and Java-11 were used.
+      </action>
+   </release>
+
    <release version="1.04.14" date="2020-03-08" description="timed events for timestamped statistics">
       <action dev="averbraeck" type="add">
         The timestamped statistics now fire TimedEvents rather than normal events.
