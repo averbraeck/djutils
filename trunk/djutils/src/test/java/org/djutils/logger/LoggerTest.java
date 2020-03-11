@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.EnumSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 
@@ -459,12 +460,12 @@ public class LoggerTest
         LogCategory one = new LogCategory("ONE");
         LogCategory two = new LogCategory("TWO");
         LogCategory three = new LogCategory("THREE");
-        Set<LogCategory> set0 = Set.of();
-        Set<LogCategory> set1 = Set.of(one);
-        Set<LogCategory> set12 = Set.of(one, two);
-        Set<LogCategory> set123 = Set.of(one, two, three);
-        Set<LogCategory> set23 = Set.of(two, three);
-        Set<LogCategory> set3 = Set.of(three);
+        Set<LogCategory> set0 = setOf();
+        Set<LogCategory> set1 = setOf(one);
+        Set<LogCategory> set12 = setOf(one, two);
+        Set<LogCategory> set123 = setOf(one, two, three);
+        Set<LogCategory> set23 = setOf(two, three);
+        Set<LogCategory> set3 = setOf(three);
 
         CategoryLogger.setLogCategories();
         CategoryLogger.always().info(message);
@@ -736,6 +737,23 @@ public class LoggerTest
             this.result = null;
         }
 
+    }
+
+    /**
+     * For Java before java 9: return a set of the given members.
+     * @param <T> the set member type
+     * @param members the members to add
+     * @return the set with the members
+     */
+    @SuppressWarnings("unchecked")
+    private <T> Set<T> setOf(final T... members)
+    {
+        Set<T> result = new LinkedHashSet<T>();
+        for (T member : members)
+        {
+            result.add(member);
+        }
+        return result;
     }
 
 }
