@@ -103,7 +103,7 @@ public final class DistNormalTable
         return mu + CUMULATIVE_NORMAL_PROBABILITIES_TABLE_RANGE * interpolatedPivot / tableSize * sigma;
     }
 
-    /** CUMULATIVE_NORMAL_PROBABILITIES table runs from 0 * sigma to CUMULATIVE_NORMAL_PROBABILITIES_TABLE_RANGE * sigma */
+    /** CUMULATIVE_NORMAL_PROBABILITIES table runs from 0 * sigma to CUMULATIVE_NORMAL_PROBABILITIES_TABLE_RANGE * sigma. */
     public static final double CUMULATIVE_NORMAL_PROBABILITIES_TABLE_RANGE = 10.0;
 
     /**
