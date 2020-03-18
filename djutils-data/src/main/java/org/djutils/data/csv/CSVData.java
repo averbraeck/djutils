@@ -140,7 +140,7 @@ public final class CSVData
     }
 
     /**
-     * Read the data from the csv-file into the data table. Use the metadata to reconstruct the data table.
+     * Read the data from the CSV-file into the data table. Use the metadata to reconstruct the data table.
      * @param reader Reader; the reader that can read the data, e.g. from a file
      * @param metaReader Reader; the writer for the metadata
      * @return dataTable the data table reconstructed from the meta data and filled with the data
@@ -244,7 +244,7 @@ public final class CSVData
     }
 
     /**
-     * Read the data from the csv-file into the data table. Use the metadata to reconstruct the data table.
+     * Read the data from the CSV-file into the data table. Use the metadata to reconstruct the data table.
      * @param reader Reader; the reader that can read the data, e.g. from a file
      * @param metaReader Reader; the writer for the metadata
      * @return dataTable the data table reconstructed from the meta data and filled with the data
@@ -260,7 +260,7 @@ public final class CSVData
     }
 
     /**
-     * Read the data from the csv-file into the data table. Use the metadata to reconstruct the data table.
+     * Read the data from the CSV-file into the data table. Use the metadata to reconstruct the data table.
      * @param filename String; the file name to read the data from
      * @param metaFilename String; the file name to read the metadata from
      * @return dataTable the data table reconstructed from the meta data and filled with the data
