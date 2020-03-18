@@ -182,7 +182,7 @@ public final class XMLData
     }
 
     /**
-     * Read the data from the csv-file into the data table. Use the metadata to reconstruct the data table.
+     * Read the data from the XML-file into the data table. Use the metadata to reconstruct the data table.
      * @param reader Reader; the reader that can read the data, e.g. from a file
      * @return dataTable the data table reconstructed from the meta data and filled with the data
      * @throws IOException on I/O error when reading the data
@@ -359,7 +359,7 @@ public final class XMLData
     }
 
     /**
-     * Read the data from the csv-file into the data table. Use the metadata to reconstruct the data table.
+     * Read the data from the XML-file into the data table. Use the metadata to reconstruct the data table.
      * @param filename String; the file name to read the data from
      * @return dataTable the data table reconstructed from the meta data and filled with the data
      * @throws IOException on I/O error when reading the data
