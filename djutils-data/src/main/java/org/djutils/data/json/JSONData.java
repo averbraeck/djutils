@@ -89,7 +89,7 @@ public final class JSONData
     }
 
     /**
-     * Write the data from the data table in JSON format. The writer is closed after finishing the writing of the data.
+     * Write the data from the data table in JSON format.
      * @param writer Writer; the writer that writes the data, e.g. to a file
      * @param dataTable the data table to write
      * @throws IOException on I/O error when writing the data
@@ -97,59 +97,68 @@ public final class JSONData
      */
     public static void writeData(final Writer writer, final DataTable dataTable) throws IOException, TextSerializationException
     {
-        JsonWriter jw = new JsonWriter(writer);
-        jw.setIndent("  ");
-
-        // write the table metadata
-        jw.beginObject();
-        jw.name("table").beginObject();
-        jw.name("id").value(dataTable.getId());
-        jw.name("description").value(dataTable.getDescription());
-        jw.name("class").value(dataTable.getClass().getName());
-        jw.name("columns").beginArray();
-        int index = 0;
-        for (DataColumn<?> column : dataTable.getColumns())
+        JsonWriter jw = null;
+        try
         {
+            jw = new JsonWriter(writer);
+            jw.setIndent("  ");
+
+            // write the table metadata
             jw.beginObject();
-            jw.name("nr").value(index++);
-            jw.name("id").value(column.getId());
-            jw.name("description").value(column.getDescription());
-            jw.name("type").value(column.getValueType().getName());
-            jw.endObject();
-        }
-        jw.endArray(); // columns
-        jw.endObject(); // table
+            jw.name("table").beginObject();
+            jw.name("id").value(dataTable.getId());
+            jw.name("description").value(dataTable.getDescription());
+            jw.name("class").value(dataTable.getClass().getName());
+            jw.name("columns").beginArray();
+            int index = 0;
+            for (DataColumn<?> column : dataTable.getColumns())
+            {
+                jw.beginObject();
+                jw.name("nr").value(index++);
+                jw.name("id").value(column.getId());
+                jw.name("description").value(column.getDescription());
+                jw.name("type").value(column.getValueType().getName());
+                jw.endObject();
+            }
+            jw.endArray(); // columns
+            jw.endObject(); // table
 
-        // initialize the serializers
-        TextSerializer<?>[] serializers = new TextSerializer[dataTable.getNumberOfColumns()];
-        for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
-        {
-            DataColumn<?> column = dataTable.getColumns().get(i);
-            serializers[i] = TextSerializer.resolve(column.getValueType());
-        }
-
-        // write the data
-        jw.name("data").beginArray();
-
-        // write the records
-        for (DataRecord record : dataTable)
-        {
-            Object[] values = record.getValues();
-            jw.beginArray();
-            jw.setIndent("");
+            // initialize the serializers
+            TextSerializer<?>[] serializers = new TextSerializer[dataTable.getNumberOfColumns()];
             for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
             {
-                jw.beginObject().name(String.valueOf(i)).value(serializers[i].serialize(values[i])).endObject();
+                DataColumn<?> column = dataTable.getColumns().get(i);
+                serializers[i] = TextSerializer.resolve(column.getValueType());
             }
-            jw.endArray(); // record
-            jw.setIndent("  ");
-        }
 
-        // end JSON document
-        jw.endArray(); // data array
-        jw.endObject(); // data
-        jw.close();
-        writer.close();
+            // write the data
+            jw.name("data").beginArray();
+
+            // write the records
+            for (DataRecord record : dataTable)
+            {
+                Object[] values = record.getValues();
+                jw.beginArray();
+                jw.setIndent("");
+                for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
+                {
+                    jw.beginObject().name(String.valueOf(i)).value(serializers[i].serialize(values[i])).endObject();
+                }
+                jw.endArray(); // record
+                jw.setIndent("  ");
+            }
+
+            // end JSON document
+            jw.endArray(); // data array
+            jw.endObject(); // data
+        }
+        finally
+        {
+            if (null != jw)
+            {
+                jw.close();
+            }
+        }
     }
 
     /**
@@ -162,7 +171,19 @@ public final class JSONData
     public static void writeData(final String filename, final DataTable dataTable)
             throws IOException, TextSerializationException
     {
-        writeData(new FileWriter(filename), dataTable);
+        FileWriter fw = null;
+        try
+        {
+            fw = new FileWriter(filename);
+            writeData(fw, dataTable);
+        }
+        finally
+        {
+            if (null != fw)
+            {
+                fw.close();
+            }
+        }
     }
 
     /**
@@ -174,94 +195,100 @@ public final class JSONData
      */
     public static DataTable readData(final Reader reader) throws IOException, TextSerializationException
     {
-        // read the metadata and reconstruct the data table
-        JsonReader jr = new JsonReader(reader);
-        jr.beginObject();
-        readName(jr, "table");
-        jr.beginObject();
-        String[] tableProperties = new String[3];
-        tableProperties[0] = readValue(jr, "id");
-        tableProperties[1] = readValue(jr, "description");
-        tableProperties[2] = readValue(jr, "class");
-        Throw.when(!tableProperties[2].endsWith("ListDataTable"), IOException.class,
-                "Currently, this method can only recreate a ListDataTable");
-
-        // column metadata
-        List<DataColumn<?>> columns = new ArrayList<>();
-        int index = 0;
-        readName(jr, "columns");
-        jr.beginArray();
-        while (jr.peek().equals(JsonToken.BEGIN_OBJECT))
+        JsonReader jr = null;
+        try
         {
-            String[] columnProperties = new String[4];
+            // read the metadata and reconstruct the data table
+            jr = new JsonReader(reader);
             jr.beginObject();
-            columnProperties[0] = readValue(jr, "nr");
-            columnProperties[1] = readValue(jr, "id");
-            columnProperties[2] = readValue(jr, "description");
-            columnProperties[3] = readValue(jr, "type");
-            jr.endObject();
+            readName(jr, "table");
+            jr.beginObject();
+            String[] tableProperties = new String[3];
+            tableProperties[0] = readValue(jr, "id");
+            tableProperties[1] = readValue(jr, "description");
+            tableProperties[2] = readValue(jr, "class");
+            Throw.when(!tableProperties[2].endsWith("ListDataTable"), IOException.class,
+                    "Currently, this method can only recreate a ListDataTable");
 
-            if (Integer.valueOf(columnProperties[0]).intValue() != index)
-            {
-                throw new IOException("column nr not ok");
-            }
-            String type = columnProperties[3];
-            Class<?> valueClass = Primitive.forName(type);
-            if (valueClass == null)
-            {
-                try
-                {
-                    valueClass = Class.forName(type);
-                }
-                catch (ClassNotFoundException exception)
-                {
-                    jr.close();
-                    reader.close();
-                    throw new IOException("Could not find class " + type, exception);
-                }
-            }
-            @SuppressWarnings({"rawtypes", "unchecked"})
-            DataColumn<?> column = new SimpleDataColumn(columnProperties[1], columnProperties[2], valueClass);
-            columns.add(column);
-            index++;
-        }
-        jr.endArray(); // columns
-        jr.endObject(); // table
-
-        ListDataTable dataTable = new ListDataTable(tableProperties[0], tableProperties[1], columns);
-
-        // obtain the serializers
-        TextSerializer<?>[] serializers = new TextSerializer[dataTable.getNumberOfColumns()];
-        for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
-        {
-            DataColumn<?> column = dataTable.getColumns().get(i);
-            serializers[i] = TextSerializer.resolve(column.getValueType());
-        }
-
-        // read the data file records
-        readName(jr, "data");
-        jr.beginArray();
-        while (jr.peek().equals(JsonToken.BEGIN_ARRAY))
-        {
-            Object[] values = new Object[columns.size()];
+            // column metadata
+            List<DataColumn<?>> columns = new ArrayList<>();
+            int index = 0;
+            readName(jr, "columns");
             jr.beginArray();
+            while (jr.peek().equals(JsonToken.BEGIN_OBJECT))
+            {
+                String[] columnProperties = new String[4];
+                jr.beginObject();
+                columnProperties[0] = readValue(jr, "nr");
+                columnProperties[1] = readValue(jr, "id");
+                columnProperties[2] = readValue(jr, "description");
+                columnProperties[3] = readValue(jr, "type");
+                jr.endObject();
+
+                if (Integer.valueOf(columnProperties[0]).intValue() != index)
+                {
+                    throw new IOException("column nr not ok");
+                }
+                String type = columnProperties[3];
+                Class<?> valueClass = Primitive.forName(type);
+                if (valueClass == null)
+                {
+                    try
+                    {
+                        valueClass = Class.forName(type);
+                    }
+                    catch (ClassNotFoundException exception)
+                    {
+                        throw new IOException("Could not find class " + type, exception);
+                    }
+                }
+                @SuppressWarnings({ "rawtypes", "unchecked" })
+                DataColumn<?> column = new SimpleDataColumn(columnProperties[1], columnProperties[2], valueClass);
+                columns.add(column);
+                index++;
+            }
+            jr.endArray(); // columns
+            jr.endObject(); // table
+
+            ListDataTable dataTable = new ListDataTable(tableProperties[0], tableProperties[1], columns);
+
+            // obtain the serializers
+            TextSerializer<?>[] serializers = new TextSerializer[dataTable.getNumberOfColumns()];
             for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
             {
-                jr.beginObject();
-                values[i] = serializers[i].deserialize(readValue(jr, "" + i));
-                jr.endObject();
+                DataColumn<?> column = dataTable.getColumns().get(i);
+                serializers[i] = TextSerializer.resolve(column.getValueType());
             }
-            jr.endArray(); // record
-            dataTable.addRecord(values);
+
+            // read the data file records
+            readName(jr, "data");
+            jr.beginArray();
+            while (jr.peek().equals(JsonToken.BEGIN_ARRAY))
+            {
+                Object[] values = new Object[columns.size()];
+                jr.beginArray();
+                for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
+                {
+                    jr.beginObject();
+                    values[i] = serializers[i].deserialize(readValue(jr, "" + i));
+                    jr.endObject();
+                }
+                jr.endArray(); // record
+                dataTable.addRecord(values);
+            }
+
+            // end JSON document
+            jr.endArray(); // data array
+            jr.endObject(); // data
+            return dataTable;
         }
-
-        // end JSON document
-        jr.endArray(); // data array
-        jr.endObject(); // data
-        jr.close();
-        reader.close();
-
-        return dataTable;
+        finally
+        {
+            if (null != jr)
+            {
+                jr.close();
+            }
+        }
     }
 
     /**
@@ -301,4 +328,5 @@ public final class JSONData
     {
         return readData(new FileReader(filename));
     }
+    
 }

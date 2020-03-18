@@ -57,7 +57,7 @@ public final class CSVData
      * Write the data from the data table in CSV format. The writer writes the data, whereas the metaWriter writes the metadata.
      * The metadata consists of a CSV file with three columns: the id, the description, and the class. The first row after the
      * header contains the id, description, and class of the data table itself. The second and further rows contain information
-     * about the columns of the data table. The writers are closed after finishing the writing of the data.
+     * about the columns of the data table.
      * @param writer Writer; the writer that writes the data, e.g. to a file
      * @param metaWriter Writer; the writer for the metadata
      * @param dataTable the data table to write
@@ -71,47 +71,61 @@ public final class CSVData
     public static void writeData(final Writer writer, final Writer metaWriter, final DataTable dataTable, final char separator,
             final char quotechar, final char escapechar, final String lineEnd) throws IOException, TextSerializationException
     {
-        // write the metadata file
-        CSVWriter csvMetaWriter = new CSVWriter(metaWriter, separator, quotechar, escapechar, lineEnd);
-        csvMetaWriter.writeNext(new String[] {"id", "description", "className"});
-        csvMetaWriter.writeNext(new String[] {dataTable.getId(), dataTable.getDescription(), dataTable.getClass().getName()});
-        for (DataColumn<?> column : dataTable.getColumns())
+        // Write the metadata file
+        CSVWriter csvMetaWriter = null;
+        CSVWriter csvWriter = null;
+        try
         {
-            csvMetaWriter.writeNext(new String[] {column.getId(), column.getDescription(), column.getValueType().getName()});
-        }
-        csvMetaWriter.close();
-        metaWriter.close();
+            csvMetaWriter = new CSVWriter(metaWriter, separator, quotechar, escapechar, lineEnd);
+            csvMetaWriter.writeNext(new String[] { "id", "description", "className" });
+            csvMetaWriter
+                    .writeNext(new String[] { dataTable.getId(), dataTable.getDescription(), dataTable.getClass().getName() });
+            for (DataColumn<?> column : dataTable.getColumns())
+            {
+                csvMetaWriter
+                        .writeNext(new String[] { column.getId(), column.getDescription(), column.getValueType().getName() });
+            }
 
-        // initialize the serializers
-        TextSerializer<?>[] serializers = new TextSerializer[dataTable.getNumberOfColumns()];
-        for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
-        {
-            DataColumn<?> column = dataTable.getColumns().get(i);
-            serializers[i] = TextSerializer.resolve(column.getValueType());
-        }
-
-        // write the data file
-        CSVWriter csvWriter = new CSVWriter(writer, separator, quotechar, escapechar, lineEnd);
-        csvWriter.writeNext(dataTable.getColumnIds());
-        String[] textFields = new String[dataTable.getNumberOfColumns()];
-        for (DataRecord record : dataTable)
-        {
-            Object[] values = record.getValues();
+            // Assemble the serializer array
+            TextSerializer<?>[] serializers = new TextSerializer[dataTable.getNumberOfColumns()];
             for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
             {
-                textFields[i] = serializers[i].serialize(values[i]);
+                DataColumn<?> column = dataTable.getColumns().get(i);
+                serializers[i] = TextSerializer.resolve(column.getValueType());
             }
-            csvWriter.writeNext(textFields);
+
+            // Write the data file
+            csvWriter = new CSVWriter(writer, separator, quotechar, escapechar, lineEnd);
+            csvWriter.writeNext(dataTable.getColumnIds());
+            String[] textFields = new String[dataTable.getNumberOfColumns()];
+            for (DataRecord record : dataTable)
+            {
+                Object[] values = record.getValues();
+                for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
+                {
+                    textFields[i] = serializers[i].serialize(values[i]);
+                }
+                csvWriter.writeNext(textFields);
+            }
         }
-        csvWriter.close();
-        writer.close();
+        finally
+        {
+            if (null != csvMetaWriter)
+            {
+                csvMetaWriter.close();
+            }
+            if (null != csvWriter)
+            {
+                csvWriter.close();
+            }
+        }
     }
 
     /**
      * Write the data from the data table in CSV format. The writer writes the data, whereas the metaWriter writes the metadata.
      * The metadata consists of a CSV file with three columns: the id, the description, and the class. The first row after the
      * header contains the id, description, and class of the data table itself. The second and further rows contain information
-     * about the columns of the data table. The writers are closed after finishing the writing of the data.
+     * about the columns of the data table.
      * @param writer Writer; the writer that writes the data, e.g. to a file
      * @param metaWriter Writer; the writer for the metadata
      * @param dataTable the data table to write
@@ -136,7 +150,25 @@ public final class CSVData
     public static void writeData(final String filename, final String metaFilename, final DataTable dataTable)
             throws IOException, TextSerializationException
     {
-        writeData(new FileWriter(filename), new FileWriter(metaFilename), dataTable);
+        FileWriter fw = null;
+        FileWriter mfw = null;
+        try
+        {
+            fw = new FileWriter(filename);
+            mfw = new FileWriter(metaFilename);
+            writeData(fw, mfw, dataTable);
+        }
+        finally
+        {
+            if (null != fw)
+            {
+                fw.close(); // May have already been closed when the CSV writer was closed, but multiple close is harmless
+            }
+            if (null != mfw)
+            {
+                mfw.close();
+            }
+        }
     }
 
     /**
@@ -155,92 +187,101 @@ public final class CSVData
     public static DataTable readData(final Reader reader, final Reader metaReader, final char separator, final char quotechar,
             final char escapechar, final String lineEnd) throws IOException, CsvValidationException, TextSerializationException
     {
-        // read the metadata file and reconstruct the data table
-        CSVReader csvMetaReader = new CSVReaderBuilder(metaReader).withCSVParser(
-                new CSVParserBuilder().withSeparator(separator).withQuoteChar(quotechar).withEscapeChar(escapechar).build())
-                .build();
-        List<DataColumn<?>> columns = new ArrayList<>();
-        String[] header = csvMetaReader.readNext();
-        Throw.when(
-                header.length != 3 || !"id".equals(header[0]) || !"description".equals(header[1])
-                        || !"className".equals(header[2]),
-                IOException.class, "header of the metafile does not contain 'id, description, className' as fields");
-
-        // table metadata
-        String[] tableLine = csvMetaReader.readNext();
-        Throw.when(tableLine == null, IOException.class, "no table information in the metafile");
-        Throw.when(tableLine.length != 3, IOException.class, "table data in the metafile does not contain 3 fields");
-        Throw.when(!tableLine[2].endsWith("ListDataTable"), IOException.class,
-                "Currently, this method can only recreate a ListDataTable");
-
-        // column metadata
-        String[] line = csvMetaReader.readNext();
-        while (line != null)
+        CSVReader csvMetaReader = null;
+        CSVReader csvReader = null;
+        try
         {
-            Throw.when(line.length != 3, IOException.class, "column data in the metafile does not contain 3 fields");
-            String type = line[2];
-            Class<?> valueClass = Primitive.forName(type);
-            if (valueClass == null)
+            // Read the metadata file and reconstruct the data table
+            csvMetaReader = new CSVReaderBuilder(metaReader).withCSVParser(
+                    new CSVParserBuilder().withSeparator(separator).withQuoteChar(quotechar).withEscapeChar(escapechar).build())
+                    .build();
+            List<DataColumn<?>> columns = new ArrayList<>();
+            String[] header = csvMetaReader.readNext();
+            Throw.when(
+                    header.length != 3 || !"id".equals(header[0]) || !"description".equals(header[1])
+                            || !"className".equals(header[2]),
+                    IOException.class, "header of the metafile does not contain 'id, description, className' as fields");
+
+            // table metadata
+            String[] tableLine = csvMetaReader.readNext();
+            Throw.when(tableLine == null, IOException.class, "no table information in the metafile");
+            Throw.when(tableLine.length != 3, IOException.class, "table data in the metafile does not contain 3 fields");
+            Throw.when(!tableLine[2].endsWith("ListDataTable"), IOException.class,
+                    "Currently, this method can only recreate a ListDataTable");
+
+            // column metadata
+            String[] line = csvMetaReader.readNext();
+            while (line != null)
             {
-                try
+                Throw.when(line.length != 3, IOException.class, "column data in the metafile does not contain 3 fields");
+                String type = line[2];
+                Class<?> valueClass = Primitive.forName(type);
+                if (valueClass == null)
                 {
-                    valueClass = Class.forName(type);
+                    try
+                    {
+                        valueClass = Class.forName(type);
+                    }
+                    catch (ClassNotFoundException exception)
+                    {
+                        throw new IOException("Could not find class " + type, exception);
+                    }
                 }
-                catch (ClassNotFoundException exception)
-                {
-                    csvMetaReader.close();
-                    metaReader.close();
-                    throw new IOException("Could not find class " + type, exception);
-                }
+                @SuppressWarnings({ "rawtypes", "unchecked" })
+                DataColumn<?> column = new SimpleDataColumn(line[0], line[1], valueClass);
+                columns.add(column);
+                line = csvMetaReader.readNext();
             }
-            @SuppressWarnings({"rawtypes", "unchecked"})
-            DataColumn<?> column = new SimpleDataColumn(line[0], line[1], valueClass);
-            columns.add(column);
-            line = csvMetaReader.readNext();
-        }
 
-        // create DataTable and close files
-        ListDataTable dataTable = new ListDataTable(tableLine[0], tableLine[1], columns);
-        csvMetaReader.close();
-        metaReader.close();
+            // create DataTable
+            ListDataTable dataTable = new ListDataTable(tableLine[0], tableLine[1], columns);
 
-        // obtain the serializers
-        TextSerializer<?>[] serializers = new TextSerializer[dataTable.getNumberOfColumns()];
-        for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
-        {
-            DataColumn<?> column = dataTable.getColumns().get(i);
-            serializers[i] = TextSerializer.resolve(column.getValueType());
-        }
-
-        // read the data file header
-        CSVReader csvReader = new CSVReaderBuilder(reader).withCSVParser(
-                new CSVParserBuilder().withSeparator(separator).withQuoteChar(quotechar).withEscapeChar(escapechar).build())
-                .build();
-        header = csvReader.readNext();
-        Throw.when(header.length != columns.size(), IOException.class,
-                "Number of columns in the data file does not match column metadata size");
-        for (int i = 0; i < header.length; i++)
-        {
-            Throw.when(!header[i].equals(columns.get(i).getId()), IOException.class,
-                    "Header for column %d in the data file does not match column metadata info", i);
-        }
-
-        // read the data file records
-        String[] data = csvReader.readNext();
-        while (data != null)
-        {
-            Object[] values = new Object[columns.size()];
-            for (int i = 0; i < values.length; i++)
+            // Assemble the serializer array
+            TextSerializer<?>[] serializers = new TextSerializer[dataTable.getNumberOfColumns()];
+            for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
             {
-                values[i] = serializers[i].deserialize(data[i]);
+                DataColumn<?> column = dataTable.getColumns().get(i);
+                serializers[i] = TextSerializer.resolve(column.getValueType());
             }
-            dataTable.addRecord(values);
-            data = csvReader.readNext();
-        }
-        csvReader.close();
-        reader.close();
 
-        return dataTable;
+            // Read the data file header
+            csvReader = new CSVReaderBuilder(reader).withCSVParser(
+                    new CSVParserBuilder().withSeparator(separator).withQuoteChar(quotechar).withEscapeChar(escapechar).build())
+                    .build();
+            header = csvReader.readNext();
+            Throw.when(header.length != columns.size(), IOException.class,
+                    "Number of columns in the data file does not match column metadata size");
+            for (int i = 0; i < header.length; i++)
+            {
+                Throw.when(!header[i].equals(columns.get(i).getId()), IOException.class,
+                        "Header for column %d in the data file does not match column metadata info", i);
+            }
+
+            // Read the data file records
+            String[] data = csvReader.readNext();
+            while (data != null)
+            {
+                Object[] values = new Object[columns.size()];
+                for (int i = 0; i < values.length; i++)
+                {
+                    values[i] = serializers[i].deserialize(data[i]);
+                }
+                dataTable.addRecord(values);
+                data = csvReader.readNext();
+            }
+            return dataTable;
+        }
+        finally
+        {
+            if (null != csvMetaReader)
+            {
+                csvMetaReader.close();
+            }
+            if (null != csvReader)
+            {
+                csvReader.close();
+            }
+        }
     }
 
     /**
@@ -271,7 +312,25 @@ public final class CSVData
     public static DataTable readData(final String filename, final String metaFilename)
             throws IOException, CsvValidationException, TextSerializationException
     {
-        return readData(new FileReader(filename), new FileReader(metaFilename));
+        FileReader fr = null;
+        FileReader mfr = null;
+        try
+        {
+            fr = new FileReader(filename);
+            mfr = new FileReader(metaFilename);
+            return readData(fr, mfr);
+        }
+        finally
+        {
+            if (null != fr)
+            {
+                fr.close(); // May have already been closed when the CSV reader was closed, but multiple close is harmless
+            }
+            if (null != mfr)
+            {
+                mfr.close();
+            }
+        }
     }
 
 }

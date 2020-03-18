@@ -45,7 +45,7 @@ public final class TSVData
      * Write the data from the data table in TSV format. The writer writes the data, whereas the metaWriter writes the metadata.
      * The metadata consists of a TSV file with three columns: the id, the description, and the class. The first row after the
      * header contains the id, description, and class of the data table itself. The second and further rows contain information
-     * about the columns of the data table. The writers are closed after finishing the writing of the data.
+     * about the columns of the data table.
      * @param writer Writer; the writer that writes the data, e.g. to a file
      * @param metaWriter Writer; the writer for the metadata
      * @param dataTable the data table to write
@@ -69,7 +69,25 @@ public final class TSVData
     public static void writeData(final String filename, final String metaFilename, final DataTable dataTable)
             throws IOException, TextSerializationException
     {
-        writeData(new FileWriter(filename), new FileWriter(metaFilename), dataTable);
+        FileWriter fw = null;
+        FileWriter mfw = null;
+        try
+        {
+            fw = new FileWriter(filename);
+            mfw = new FileWriter(metaFilename);
+            writeData(fw, mfw, dataTable);
+        }
+        finally
+        {
+            if (null != fw)
+            {
+                fw.close();
+            }
+            if (null != mfw)
+            {
+                mfw.close();
+            }
+        }
     }
 
     /**
@@ -99,7 +117,25 @@ public final class TSVData
     public static DataTable readData(final String filename, final String metaFilename)
             throws IOException, CsvValidationException, TextSerializationException
     {
-        return readData(new FileReader(filename), new FileReader(metaFilename));
+        FileReader fr = null;
+        FileReader mfr = null;
+        try
+        {
+            fr = new FileReader(filename);
+            mfr = new FileReader(metaFilename);
+            return readData(fr, mfr);
+        }
+        finally
+        {
+            if (null != fr)
+            {
+                fr.close();
+            }
+            if (null != mfr)
+            {
+                mfr.close();
+            }
+        }
     }
 
 }
