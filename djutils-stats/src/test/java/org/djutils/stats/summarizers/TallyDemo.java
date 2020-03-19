@@ -36,23 +36,25 @@ public final class TallyDemo
         {
             tally.ingest(random.nextDouble());
         }
-        System.out.println("minimum:                    " + tally.getMin());
-        System.out.println("maximum:                    " + tally.getMax());
-        System.out.println("count:                      " + tally.getN());
-        System.out.println("sum:                        " + tally.getSum());
-        System.out.println("sample mean:                " + tally.getSampleMean());
-        System.out.println("sample variance:            " + tally.getSampleVariance());
-        System.out.println("sample skewness:            " + tally.getSampleSkewness());
-        System.out.println("sample kurtosis:            " + tally.getSampleKurtosis());
-        System.out.println("sample excess kurtosis:     " + tally.getSampleExcessKurtosis());
-        System.out.println("population mean:            " + tally.getPopulationMean());
-        System.out.println("population variance:        " + tally.getPopulationVariance());
-        System.out.println("population skewness:        " + tally.getPopulationSkewness());
-        System.out.println("population kurtosis:        " + tally.getPopulationKurtosis());
-        System.out.println("population excess kurtosis: " + tally.getPopulationExcessKurtosis());
-        System.out.println("first quartile:             " + tally.getQuantile(0.25));
-        System.out.println("median:                     " + tally.getQuantile(0.5));
-        System.out.println("third quartile:             " + tally.getQuantile(0.75));
+        System.out.println("minimum:                       " + tally.getMin());
+        System.out.println("maximum:                       " + tally.getMax());
+        System.out.println("count:                         " + tally.getN());
+        System.out.println("sum:                           " + tally.getSum());
+        System.out.println("sample mean:                   " + tally.getSampleMean());
+        System.out.println("sample variance:               " + tally.getSampleVariance());
+        System.out.println("sample standard deviation:     " + tally.getSampleStDev());
+        System.out.println("sample skewness:               " + tally.getSampleSkewness());
+        System.out.println("sample kurtosis:               " + tally.getSampleKurtosis());
+        System.out.println("sample excess kurtosis:        " + tally.getSampleExcessKurtosis());
+        System.out.println("population mean:               " + tally.getPopulationMean());
+        System.out.println("population variance:           " + tally.getPopulationVariance());
+        System.out.println("population standard deviation: " + tally.getPopulationStDev());
+        System.out.println("population skewness:           " + tally.getPopulationSkewness());
+        System.out.println("population kurtosis:           " + tally.getPopulationKurtosis());
+        System.out.println("population excess kurtosis:    " + tally.getPopulationExcessKurtosis());
+        System.out.println("first quartile:                " + tally.getQuantile(0.25));
+        System.out.println("median:                        " + tally.getQuantile(0.5));
+        System.out.println("third quartile:                " + tally.getQuantile(0.75));
 
         System.out.println();
         tally = new Tally("Example tally with full storage accumulator", new FullStorageAccumulator());
@@ -61,23 +63,25 @@ public final class TallyDemo
         {
             tally.ingest(random.nextDouble());
         }
-        System.out.println("minimum:                    " + tally.getMin());
-        System.out.println("maximum:                    " + tally.getMax());
-        System.out.println("count:                      " + tally.getN());
-        System.out.println("sum:                        " + tally.getSum());
-        System.out.println("sample mean:                " + tally.getSampleMean());
-        System.out.println("sample variance:            " + tally.getSampleVariance());
-        System.out.println("sample skewness:            " + tally.getSampleSkewness());
-        System.out.println("sample kurtosis:            " + tally.getSampleKurtosis());
-        System.out.println("sample excess kurtosis:     " + tally.getSampleExcessKurtosis());
-        System.out.println("population mean:            " + tally.getPopulationMean());
-        System.out.println("population variance:        " + tally.getPopulationVariance());
-        System.out.println("population skewness:        " + tally.getPopulationSkewness());
-        System.out.println("population kurtosis:        " + tally.getPopulationKurtosis());
-        System.out.println("population excess kurtosis: " + tally.getPopulationExcessKurtosis());
-        System.out.println("first quartile:             " + tally.getQuantile(0.25));
-        System.out.println("median:                     " + tally.getQuantile(0.5));
-        System.out.println("third quartile:             " + tally.getQuantile(0.75));
+        System.out.println("minimum:                       " + tally.getMin());
+        System.out.println("maximum:                       " + tally.getMax());
+        System.out.println("count:                         " + tally.getN());
+        System.out.println("sum:                           " + tally.getSum());
+        System.out.println("sample mean:                   " + tally.getSampleMean());
+        System.out.println("sample variance:               " + tally.getSampleVariance());
+        System.out.println("sample standard deviation:     " + tally.getSampleStDev());
+        System.out.println("sample skewness:               " + tally.getSampleSkewness());
+        System.out.println("sample kurtosis:               " + tally.getSampleKurtosis());
+        System.out.println("sample excess kurtosis:        " + tally.getSampleExcessKurtosis());
+        System.out.println("population mean:               " + tally.getPopulationMean());
+        System.out.println("population variance:           " + tally.getPopulationVariance());
+        System.out.println("population standard deviation: " + tally.getPopulationStDev());
+        System.out.println("population skewness:           " + tally.getPopulationSkewness());
+        System.out.println("population kurtosis:           " + tally.getPopulationKurtosis());
+        System.out.println("population excess kurtosis:    " + tally.getPopulationExcessKurtosis());
+        System.out.println("first quartile:                " + tally.getQuantile(0.25));
+        System.out.println("median:                        " + tally.getQuantile(0.5));
+        System.out.println("third quartile:                " + tally.getQuantile(0.75));
 
         System.out.println();
         tally = new Tally("Example tally with TDigest accumulator", new TDigestAccumulator());
@@ -86,23 +90,25 @@ public final class TallyDemo
         {
             tally.ingest(random.nextDouble());
         }
-        System.out.println("minimum:                    " + tally.getMin());
-        System.out.println("maximum:                    " + tally.getMax());
-        System.out.println("count:                      " + tally.getN());
-        System.out.println("sum:                        " + tally.getSum());
-        System.out.println("sample mean:                " + tally.getSampleMean());
-        System.out.println("sample variance:            " + tally.getSampleVariance());
-        System.out.println("sample skewness:            " + tally.getSampleSkewness());
-        System.out.println("sample kurtosis:            " + tally.getSampleKurtosis());
-        System.out.println("sample excess kurtosis:     " + tally.getSampleExcessKurtosis());
-        System.out.println("population mean:            " + tally.getPopulationMean());
-        System.out.println("population variance:        " + tally.getPopulationVariance());
-        System.out.println("population skewness:        " + tally.getPopulationSkewness());
-        System.out.println("population kurtosis:        " + tally.getPopulationKurtosis());
-        System.out.println("population excess kurtosis: " + tally.getPopulationExcessKurtosis());
-        System.out.println("first quartile:             " + tally.getQuantile(0.25));
-        System.out.println("median:                     " + tally.getQuantile(0.5));
-        System.out.println("third quartile:             " + tally.getQuantile(0.75));
+        System.out.println("minimum:                       " + tally.getMin());
+        System.out.println("maximum:                       " + tally.getMax());
+        System.out.println("count:                         " + tally.getN());
+        System.out.println("sum:                           " + tally.getSum());
+        System.out.println("sample mean:                   " + tally.getSampleMean());
+        System.out.println("sample variance:               " + tally.getSampleVariance());
+        System.out.println("sample standard deviation:     " + tally.getSampleStDev());
+        System.out.println("sample skewness:               " + tally.getSampleSkewness());
+        System.out.println("sample kurtosis:               " + tally.getSampleKurtosis());
+        System.out.println("sample excess kurtosis:        " + tally.getSampleExcessKurtosis());
+        System.out.println("population mean:               " + tally.getPopulationMean());
+        System.out.println("population variance:           " + tally.getPopulationVariance());
+        System.out.println("population standard deviation: " + tally.getPopulationStDev());
+        System.out.println("population skewness:           " + tally.getPopulationSkewness());
+        System.out.println("population kurtosis:           " + tally.getPopulationKurtosis());
+        System.out.println("population excess kurtosis:    " + tally.getPopulationExcessKurtosis());
+        System.out.println("first quartile:                " + tally.getQuantile(0.25));
+        System.out.println("median:                        " + tally.getQuantile(0.5));
+        System.out.println("third quartile:                " + tally.getQuantile(0.75));
 
         System.out.println();
         tally = new Tally("Example tally with TDigest accumulator with higher precision", new TDigestAccumulator(1000));
@@ -111,23 +117,25 @@ public final class TallyDemo
         {
             tally.ingest(random.nextDouble());
         }
-        System.out.println("minimum:                    " + tally.getMin());
-        System.out.println("maximum:                    " + tally.getMax());
-        System.out.println("count:                      " + tally.getN());
-        System.out.println("sum:                        " + tally.getSum());
-        System.out.println("sample mean:                " + tally.getSampleMean());
-        System.out.println("sample variance:            " + tally.getSampleVariance());
-        System.out.println("sample skewness:            " + tally.getSampleSkewness());
-        System.out.println("sample kurtosis:            " + tally.getSampleKurtosis());
-        System.out.println("sample excess kurtosis:     " + tally.getSampleExcessKurtosis());
-        System.out.println("population mean:            " + tally.getPopulationMean());
-        System.out.println("population variance:        " + tally.getPopulationVariance());
-        System.out.println("population skewness:        " + tally.getPopulationSkewness());
-        System.out.println("population kurtosis:        " + tally.getPopulationKurtosis());
-        System.out.println("population excess kurtosis: " + tally.getPopulationExcessKurtosis());
-        System.out.println("first quartile:             " + tally.getQuantile(0.25));
-        System.out.println("median:                     " + tally.getQuantile(0.5));
-        System.out.println("third quartile:             " + tally.getQuantile(0.75));
+        System.out.println("minimum:                       " + tally.getMin());
+        System.out.println("maximum:                       " + tally.getMax());
+        System.out.println("count:                         " + tally.getN());
+        System.out.println("sum:                           " + tally.getSum());
+        System.out.println("sample mean:                   " + tally.getSampleMean());
+        System.out.println("sample variance:               " + tally.getSampleVariance());
+        System.out.println("sample standard deviation:     " + tally.getSampleStDev());
+        System.out.println("sample skewness:               " + tally.getSampleSkewness());
+        System.out.println("sample kurtosis:               " + tally.getSampleKurtosis());
+        System.out.println("sample excess kurtosis:        " + tally.getSampleExcessKurtosis());
+        System.out.println("population mean:               " + tally.getPopulationMean());
+        System.out.println("population variance:           " + tally.getPopulationVariance());
+        System.out.println("population standard deviation: " + tally.getPopulationStDev());
+        System.out.println("population skewness:           " + tally.getPopulationSkewness());
+        System.out.println("population kurtosis:           " + tally.getPopulationKurtosis());
+        System.out.println("population excess kurtosis:    " + tally.getPopulationExcessKurtosis());
+        System.out.println("first quartile:                " + tally.getQuantile(0.25));
+        System.out.println("median:                        " + tally.getQuantile(0.5));
+        System.out.println("third quartile:                " + tally.getQuantile(0.75));
 
     }
 
