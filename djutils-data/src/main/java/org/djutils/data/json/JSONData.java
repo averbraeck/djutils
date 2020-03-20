@@ -326,7 +326,19 @@ public final class JSONData
      */
     public static DataTable readData(final String filename) throws IOException, TextSerializationException
     {
-        return readData(new FileReader(filename));
+        FileReader fr = null;
+        try
+        {
+            fr = new FileReader(filename);
+            return readData(fr);
+        }
+        finally
+        {
+            if (null != fr)
+            {
+                fr.close();
+            }
+        }
     }
     
 }
