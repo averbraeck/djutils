@@ -46,7 +46,7 @@ public class DoubleScalarSerializer<U extends Unit<U>, S extends DoubleScalarInt
      * the scalar including the unit. So, the String "org.djunits.value.vdouble.scalar.Length#12.5 km" will be deserialized into
      * a Length of 12500 m with LengthUnit.KILOMETER as the display unit. The method caches the valueOf(String) method for
      * repeated use.
-     * @param text text; the text to deserialize
+     * @param text String; the text to deserialize
      * @return S; the reconstructed scalar
      */
     @SuppressWarnings("unchecked")
