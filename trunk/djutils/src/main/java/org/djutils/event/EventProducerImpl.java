@@ -47,7 +47,6 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      */
     public EventProducerImpl(final EventProducerInterface embeddingEventProducer)
     {
-        super();
         this.embeddingEventProducer = embeddingEventProducer;
     }
 

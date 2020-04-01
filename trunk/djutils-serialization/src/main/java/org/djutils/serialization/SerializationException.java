@@ -21,7 +21,6 @@ public class SerializationException extends Exception
      */
     public SerializationException()
     {
-        super();
     }
 
     /**
