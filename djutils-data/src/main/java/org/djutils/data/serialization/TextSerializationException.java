@@ -23,7 +23,6 @@ public class TextSerializationException extends Exception
      */
     public TextSerializationException()
     {
-        super();
     }
 
     /**

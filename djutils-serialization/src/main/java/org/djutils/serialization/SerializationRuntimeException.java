@@ -21,7 +21,6 @@ public class SerializationRuntimeException extends RuntimeException
      */
     public SerializationRuntimeException()
     {
-        super();
     }
 
     /**
