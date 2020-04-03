@@ -60,6 +60,15 @@ public final class EventType implements Serializable
     }
 
     /**
+     * Construct a new EventType with no meta data.
+     * @param name String; the name of the new eventType. Two values are not appreciated: null and the empty string.
+     */
+    public EventType(final String name)
+    {
+        this(name, null);
+    }
+
+    /**
      * Return the event type name.
      * @return String; the event type name
      */
