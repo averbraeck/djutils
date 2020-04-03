@@ -46,7 +46,7 @@ public class MetaData
      * Retrieve the name of this MetaData object.
      * @return String; the name of this MetaData object
      */
-    String getName()
+    public String getName()
     {
         return this.name;
     }
@@ -55,7 +55,7 @@ public class MetaData
      * Retrieve the description of this MetaData object.
      * @return String; the description of this MetaData object
      */
-    String getDescription()
+    public String getDescription()
     {
         return this.description;
     }
@@ -64,7 +64,7 @@ public class MetaData
      * Retrieve the length of described Object array.
      * @return int; the length of the described Object array
      */
-    int size()
+    public int size()
     {
         return this.objectDescriptors.length;
     }
@@ -74,7 +74,7 @@ public class MetaData
      * @param index int; index of the element in the Object array
      * @return String; name of the argument
      */
-    String getFieldName(final int index)
+    public String getFieldName(final int index)
     {
         return this.objectDescriptors[index].getName();
     }
@@ -84,7 +84,7 @@ public class MetaData
      * @param index int; index of the element in the Object array
      * @return String; description of the argument
      */
-    String getFieldDescription(final int index)
+    public String getFieldDescription(final int index)
     {
         return this.objectDescriptors[index].getDescription();
     }
@@ -94,7 +94,7 @@ public class MetaData
      * @param index int; index of the element in the Object array
      * @return Class&lt;?&gt;; java class of the element
      */
-    Class<?> getFieldClass(final int index)
+    public Class<?> getFieldClass(final int index)
     {
         return this.objectDescriptors[index].getObjectClass();
     }

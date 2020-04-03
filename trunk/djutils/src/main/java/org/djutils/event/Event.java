@@ -2,6 +2,8 @@ package org.djutils.event;
 
 import java.io.Serializable;
 
+import org.djutils.metadata.MetaData;
+
 /**
  * The Event class forms the reference implementation for the EventInterface. Because events are often sent over the network,
  * the interface demands that source of the event and its content are serializable. It is the responsibility of the programmer,
@@ -42,6 +44,18 @@ public class Event implements EventInterface
         this.type = type;
         this.sourceId = sourceId;
         this.content = content;
+        if (null != this.type)
+        {
+            MetaData metaData = type.getMetaData();
+            if (null != metaData)
+            {
+                if ((null != content) && !(content instanceof Object[]))
+                {
+                    throw new ClassCastException("incompatible payload");
+                }
+                metaData.verifyComposition((Object[]) content);
+            }
+        }
     }
 
     /** {@inheritDoc} */
