@@ -38,7 +38,7 @@ public class MetaDataTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             new ObjectDescriptor("name", null, Integer.class);
@@ -48,7 +48,7 @@ public class MetaDataTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             new ObjectDescriptor("name", "description", null);
@@ -58,7 +58,7 @@ public class MetaDataTest
         {
             // Ignore expected exception
         }
-        
+
         assertTrue("toString returns something descriptive", objectDescriptor.toString().startsWith("ObjectDescriptor"));
     }
 
@@ -205,7 +205,7 @@ public class MetaDataTest
 
         try
         {
-            new MetaData("name", "description", null);
+            new MetaData("name", "description", (ObjectDescriptor[]) null);
             fail("null objectDescriptors should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -213,6 +213,83 @@ public class MetaDataTest
             // Ignore expected exception
         }
 
+        try
+        {
+            new MetaData("name", "description", (ObjectDescriptor) null);
+            fail("null objectDescriptors should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        metaData = new MetaData("name", "description", new ObjectDescriptor("integer", "integers only please", Integer.class));
+        assertEquals("name", "name", metaData.getName());
+        assertEquals("description", "description", metaData.getDescription());
+        assertEquals("check name of object descriptor", "integer", metaData.getFieldName(0));
+        assertEquals("check description of object descriptor", "integers only please", metaData.getFieldDescription(0));
+        assertEquals("check class of object descriptor", Integer.class, metaData.getFieldClass(0));
+        assertEquals("size should be 0", 0, metaData.size());
+        try
+        {
+            metaData.getFieldName(-1);
+            fail("Bad index should have thrown an IndexOutOfBoundsException");
+        }
+        catch (IndexOutOfBoundsException ioobe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            metaData.getFieldName(1);
+            fail("Bad index should have thrown an IndexOutOfBoundsException");
+        }
+        catch (IndexOutOfBoundsException ioobe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            metaData.getFieldDescription(-1);
+            fail("Bad index should have thrown an IndexOutOfBoundsException");
+        }
+        catch (IndexOutOfBoundsException ioobe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            metaData.getFieldDescription(1);
+            fail("Bad index should have thrown an IndexOutOfBoundsException");
+        }
+        catch (IndexOutOfBoundsException ioobe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            metaData.getFieldClass(-1);
+            fail("Bad index should have thrown an IndexOutOfBoundsException");
+        }
+        catch (IndexOutOfBoundsException ioobe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            metaData.getFieldClass(1);
+            fail("Bad index should have thrown an IndexOutOfBoundsException");
+        }
+        catch (IndexOutOfBoundsException ioobe)
+        {
+            // Ignore expected exception
+        }
+        
         metaData = new MetaData("name", "description", new ObjectDescriptor[] {});
         metaData.verifyComposition(null); // this null is allowed
         metaData.verifyComposition(new Object[] {}); // empty Object array is too
