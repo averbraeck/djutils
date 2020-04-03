@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-   <release version="1.04.15" date="2020-04-XX" description="Java-8 compatibility">
+   <release version="1.04.15" date="2020-04-03" description="Metadata and Java-8 compatibility">
       <action dev="pknoppers" type="add">
        Added package metadata. Events can now verify their payload using the metadata. Specification of metadata is done in
        the constructor of EventType. For now a null pointer is permitted for the MetaData argument, but that is only during
