@@ -24,11 +24,14 @@ public class MetaData
     /** The field descriptors. */
     private final ObjectDescriptor[] objectDescriptors;
 
+    /** The single field descriptor. */
+    private final ObjectDescriptor objectDescriptor;
+
     /**
-     * Construct a new MetaData object.
+     * Construct a new MetaData object that can check an array of Object.
      * @param name String; name of the new MetaData object
      * @param description String; description of the new MetaData object
-     * @param objectDescriptors ObjectDescriptor[]; array of FieldDescriptor. This constructor does <b>not</b> make a deep copy
+     * @param objectDescriptors ObjectDescriptor[]; array of ObjectDescriptor. This constructor does <b>not</b> make a deep copy
      *            of this array; subsequent modification of the contents of the provided <code>objectDescriptors</code> array
      *            will affect the behavior of the MetaData object.
      */
@@ -40,6 +43,24 @@ public class MetaData
         this.name = name;
         this.description = description;
         this.objectDescriptors = objectDescriptors;
+        this.objectDescriptor = null;
+    }
+
+    /**
+     * Construct a new MetaData object that can check a single Object..
+     * @param name String; name of the new MetaData object
+     * @param description String; description of the new MetaData object
+     * @param objectDescriptor ObjectDescriptor; the descriptor for the object that the new MetaData object will accept as valid
+     */
+    public MetaData(final String name, final String description, final ObjectDescriptor objectDescriptor)
+    {
+        Throw.whenNull(name, "name may not be null");
+        Throw.whenNull(description, "description may not be null");
+        Throw.whenNull(objectDescriptor, "objectDescriptor may not be null");
+        this.name = name;
+        this.description = description;
+        this.objectDescriptors = null;
+        this.objectDescriptor = objectDescriptor;
     }
 
     /**
@@ -62,41 +83,61 @@ public class MetaData
 
     /**
      * Retrieve the length of described Object array.
-     * @return int; the length of the described Object array
+     * @return int; the length of the described Object array; returns 0 if this MetaDataObject is not set up to validate an
+     *         array of Object.
      */
     public int size()
     {
-        return this.objectDescriptors.length;
+        return null == this.objectDescriptors ? 0 : this.objectDescriptors.length;
     }
 
     /**
      * Retrieve the name of one element in the Object array.
-     * @param index int; index of the element in the Object array
+     * @param index int; index of the element in the Object array (must be 0 if this MetaData object is not set up to validate
+     *            an array of Object)
      * @return String; name of the argument
      */
     public String getFieldName(final int index)
     {
-        return this.objectDescriptors[index].getName();
+        return getObjectDescriptor(index).getName();
     }
 
     /**
      * Retrieve the description of one element in the Object array.
-     * @param index int; index of the element in the Object array
+     * @param index int; index of the element in the Object array (must be 0 if this MetaData object is not set up to validate
+     *            an array of Object)
      * @return String; description of the argument
      */
     public String getFieldDescription(final int index)
     {
-        return this.objectDescriptors[index].getDescription();
+        return getObjectDescriptor(index).getDescription();
     }
 
     /**
      * Retrieve the java class of one element in the Object array.
-     * @param index int; index of the element in the Object array
+     * @param index int; index of the element in the Object array (must be 0 if this MetaData object is not set up to validate
+     *            an array of Object)
      * @return Class&lt;?&gt;; java class of the element
      */
     public Class<?> getFieldClass(final int index)
     {
-        return this.objectDescriptors[index].getObjectClass();
+        return getObjectDescriptor(index).getObjectClass();
+    }
+
+    /**
+     * Select one of the ObjectDescriptors.
+     * @param index int; index of the ObjectDescriptor (must be 0 in case this MetaData object is not set up to validate an
+     *            array of Object)
+     * @return ObjectDescriptor; the selected ObjectDescriptor
+     */
+    private ObjectDescriptor getObjectDescriptor(final int index)
+    {
+        if (null == this.objectDescriptors)
+        {
+            Throw.when(index != 0, IndexOutOfBoundsException.class, "Index must be 0");
+            return this.objectDescriptor;
+        }
+        return this.objectDescriptors[index];
     }
 
     /**
