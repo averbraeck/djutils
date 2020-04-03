@@ -2,6 +2,8 @@ package org.djutils.event;
 
 import java.io.Serializable;
 
+import org.djutils.metadata.MetaData;
+
 /**
  * The EventType is a masker used for the subscription to asynchronous events. Eventtypes are used by EventProducers to show
  * which events they potentially fire. EventTypes should be defined as static final fields. In order to prevent name clashes for
@@ -37,11 +39,15 @@ public final class EventType implements Serializable
      */
     private final String definingClassName;
 
+    /** Meta data (describes the payload). */
+    private final MetaData metaData;
+
     /**
      * Construct a new EventType.
-     * @param name String; the name of this eventType. Two values are not appreciated: null and the empty string.
+     * @param name String; the name of the new eventType. Two values are not appreciated: null and the empty string.
+     * @param metaData MetaData; describes the payload of events of the new EventType; can be null (for now; i.e., temporarily)
      */
-    public EventType(final String name)
+    public EventType(final String name, final MetaData metaData)
     {
         if (name == null || name.equals(""))
         {
@@ -50,6 +56,7 @@ public final class EventType implements Serializable
         this.name = name;
         StackTraceElement[] steArray = new Throwable().getStackTrace();
         this.definingClassName = steArray[1].getClassName();
+        this.metaData = null;
     }
 
     /**
@@ -59,6 +66,15 @@ public final class EventType implements Serializable
     public String getName()
     {
         return this.name;
+    }
+    
+    /**
+     * Retrieve the MetaData that describes the payload of events if this EventType.
+     * @return MetaData; describes the payload of events of this EventType
+     */
+    public MetaData getMetaData()
+    {
+        return this.metaData;
     }
 
     /** {@inheritDoc} */

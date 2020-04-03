@@ -30,7 +30,7 @@ public class EventProducingIterator<T> extends EventProducer implements Iterator
     private static final long serialVersionUID = 20191230L;
 
     /** OBJECT_REMOVED_EVENT is fired on removal of entries. */
-    public static final EventType OBJECT_REMOVED_EVENT = new EventType("OBJECT_REMOVED_EVENT");
+    public static final EventType OBJECT_REMOVED_EVENT = new EventType("OBJECT_REMOVED_EVENT", null);
 
     /** our parent iterator. */
     private Iterator<T> parent = null;

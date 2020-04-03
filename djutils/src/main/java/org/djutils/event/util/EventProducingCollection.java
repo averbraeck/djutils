@@ -34,13 +34,13 @@ public class EventProducingCollection<T> extends EventProducer implements EventL
     private static final long serialVersionUID = 20191230L;
 
     /** OBJECT_ADDED_EVENT is fired on new entries. */
-    public static final EventType OBJECT_ADDED_EVENT = new EventType("OBJECT_ADDED_EVENT");
+    public static final EventType OBJECT_ADDED_EVENT = new EventType("OBJECT_ADDED_EVENT", null);
 
     /** OBJECT_REMOVED_EVENT is fired on removel of entries. */
-    public static final EventType OBJECT_REMOVED_EVENT = new EventType("OBJECT_REMOVED_EVENT");
+    public static final EventType OBJECT_REMOVED_EVENT = new EventType("OBJECT_REMOVED_EVENT", null);
 
     /** OBJECT_CHANGED_EVENT is fired on change of one or more entries. */
-    public static final EventType OBJECT_CHANGED_EVENT = new EventType("OBJECT_CHANGED_EVENT");
+    public static final EventType OBJECT_CHANGED_EVENT = new EventType("OBJECT_CHANGED_EVENT", null);
 
     /** the parent collection. */
     private Collection<T> parent = null;

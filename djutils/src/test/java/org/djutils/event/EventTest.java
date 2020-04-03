@@ -29,12 +29,12 @@ public class EventTest
     @Test
     public void testEventType()
     {
-        EventType eventType = new EventType("TEST_TYPE");
+        EventType eventType = new EventType("TEST_TYPE", null);
         assertEquals(eventType, eventType);
         Object content = new SerializableObject();
         assertNotEquals(eventType, content);
         assertNotEquals(eventType, null);
-        assertNotEquals(eventType, new EventType("TEST_TYPE2"));
+        assertNotEquals(eventType, new EventType("TEST_TYPE2", null));
         assertEquals(eventType.getName(), "TEST_TYPE");
         assertEquals(eventType.toString(), "TEST_TYPE");
         Try.testFail(new Try.Execution()
@@ -42,7 +42,7 @@ public class EventTest
             @Override
             public void execute() throws Throwable
             {
-                new EventType("");
+                new EventType("", null);
             }
         });
         Try.testFail(new Try.Execution()
@@ -50,7 +50,7 @@ public class EventTest
             @Override
             public void execute() throws Throwable
             {
-                new EventType(null);
+                new EventType(null, null);
             }
         });
     }
@@ -63,8 +63,8 @@ public class EventTest
     {
         Serializable source = "source_id";
         Serializable source2 = new SerializableObject();
-        EventType eventType = new EventType("TEST_TYPE");
-        EventType eventType2 = new EventType("TEST_TYPE2");
+        EventType eventType = new EventType("TEST_TYPE", null);
+        EventType eventType2 = new EventType("TEST_TYPE2", null);
         Serializable content = new SerializableObject();
         Serializable content2 = new SerializableObject();
         EventInterface event = new Event(eventType, source, content);
@@ -116,8 +116,8 @@ public class EventTest
     {
         Serializable source = "timed_source_id";
         Serializable source2 = new SerializableObject();
-        EventType eventType = new EventType("TEST_TYPE");
-        EventType eventType2 = new EventType("TEST_TYPE2");
+        EventType eventType = new EventType("TEST_TYPE", null);
+        EventType eventType2 = new EventType("TEST_TYPE2", null);
         Serializable content = new SerializableObject();
         Serializable content2 = new SerializableObject();
         long time = 123L;

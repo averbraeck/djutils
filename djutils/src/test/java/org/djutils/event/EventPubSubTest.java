@@ -40,7 +40,7 @@ public class EventPubSubTest
     {
         TestEventProducer producer = new TestEventProducer();
         TestEventListener listener = new TestEventListener();
-        EventType eventType = new EventType("TEST_TYPE");
+        EventType eventType = new EventType("TEST_TYPE", null);
 
         assertFalse(producer.hasListeners());
         assertEquals(0, producer.numberOfListeners(eventType));
@@ -155,7 +155,7 @@ public class EventPubSubTest
     {
         TestEventProducer producer = new TestEventProducer();
         TestTimedEventListener<Double> listener = new TestTimedEventListener<>();
-        EventType eventType = new EventType("TEST_TYPE");
+        EventType eventType = new EventType("TEST_TYPE", null);
 
         boolean addListenerOK = producer.addListener(listener, eventType);
         assertTrue(addListenerOK);
@@ -359,18 +359,18 @@ public class EventPubSubTest
         private static final long serialVersionUID = 20191230L;
 
         /** */
-        public static final EventType PRODUCER_EVENT_1 = new EventType("PRODUCER_EVENT_1");
+        public static final EventType PRODUCER_EVENT_1 = new EventType("PRODUCER_EVENT_1", null);
 
         /** */
-        public static final EventType PRODUCER_EVENT_2 = new EventType("PRODUCER_EVENT_2");
+        public static final EventType PRODUCER_EVENT_2 = new EventType("PRODUCER_EVENT_2", null);
 
         /** this should be okay. */
         @SuppressWarnings("unused")
-        private static final EventType PRODUCER_EVENT_3 = new EventType("PRODUCER_EVENT_1");
+        private static final EventType PRODUCER_EVENT_3 = new EventType("PRODUCER_EVENT_1", null);
 
         /** this should be okay. */
         @SuppressWarnings("unused")
-        private static final EventType PRODUCER_EVENT_4 = new EventType("PRODUCER_EVENT_1");
+        private static final EventType PRODUCER_EVENT_4 = new EventType("PRODUCER_EVENT_1", null);
 
         /** {@inheritDoc} */
         @Override
@@ -387,10 +387,10 @@ public class EventPubSubTest
         private static final long serialVersionUID = 20191230L;
 
         /** */
-        public static final EventType PRODUCER_EVENT_1 = new EventType("PRODUCER_EVENT_1");
+        public static final EventType PRODUCER_EVENT_1 = new EventType("PRODUCER_EVENT_1", null);
 
         /** duplicate static non-private EventType should give error on class construction. */
-        public static final EventType PRODUCER_EVENT_2 = new EventType("PRODUCER_EVENT_1");
+        public static final EventType PRODUCER_EVENT_2 = new EventType("PRODUCER_EVENT_1", null);
 
         /** {@inheritDoc} */
         @Override

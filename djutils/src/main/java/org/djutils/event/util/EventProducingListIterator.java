@@ -28,10 +28,10 @@ public class EventProducingListIterator<T> extends EventProducingIterator<T> imp
     private static final long serialVersionUID = 20191230L;
 
     /** OBJECT_ADDED_EVENT is fired on adding of entries. */
-    public static final EventType OBJECT_ADDED_EVENT = new EventType("OBJECT_ADDED_EVENT");
+    public static final EventType OBJECT_ADDED_EVENT = new EventType("OBJECT_ADDED_EVENT", null);
 
     /** OBJECT_CHANGED_EVENT is fired on changing of entries. */
-    public static final EventType OBJECT_CHANGED_EVENT = new EventType("OBJECT_CHANGED_EVENT");
+    public static final EventType OBJECT_CHANGED_EVENT = new EventType("OBJECT_CHANGED_EVENT", null);
 
     /**
      * constructs a new EventProducingListIterator, embedding the parent ListIterator.
