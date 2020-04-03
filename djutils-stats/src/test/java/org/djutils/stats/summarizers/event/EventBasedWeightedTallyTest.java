@@ -25,7 +25,7 @@ import org.junit.Test;
 public class EventBasedWeightedTallyTest
 {
     /** an event to fire. */
-    private static final EventType VALUE_EVENT = new EventType("VALUE_EVENT");
+    private static final EventType VALUE_EVENT = new EventType("VALUE_EVENT", null);
 
     /** Test the EventBasedWeightedTally. */
     @Test
