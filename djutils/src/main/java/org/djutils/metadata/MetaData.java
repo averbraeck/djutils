@@ -163,6 +163,19 @@ public class MetaData
         }
     }
 
+    /**
+     * Verify that an Object has the prescribed composition.
+     * @param object Object; the Object to verify.
+     */
+    public final void verifyComposition(final Object object)
+    {
+        if (!(getFieldClass(0).isAssignableFrom(object.getClass())))
+        {
+            throw new ClassCastException(
+                    String.format("object (%s) cannot be used for %s", object, getFieldClass(0).getName()));
+        }
+    }
+
     /** {@inheritDoc} */
     @Override
     public String toString()
