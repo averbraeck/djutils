@@ -30,7 +30,7 @@ public class ObjectDescriptor
      * @param description String; description of the object
      * @param objectClass Class&lt;?&gt;; class of the object
      */
-    ObjectDescriptor(final String name, final String description, final Class<?> objectClass)
+    public ObjectDescriptor(final String name, final String description, final Class<?> objectClass)
     {
         Throw.whenNull(name, "name may not be null");
         Throw.whenNull(description, "description may not be null");

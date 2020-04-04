@@ -51,9 +51,12 @@ public class Event implements EventInterface
             {
                 if ((null != content) && !(content instanceof Object[]))
                 {
-                    throw new ClassCastException("incompatible payload");
+                    metaData.verifyComposition(content);
                 }
-                metaData.verifyComposition((Object[]) content);
+                else
+                {
+                    metaData.verifyComposition((Object[]) content);
+                }
             }
         }
     }

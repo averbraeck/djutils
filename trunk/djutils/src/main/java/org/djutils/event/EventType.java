@@ -56,7 +56,7 @@ public final class EventType implements Serializable
         this.name = name;
         StackTraceElement[] steArray = new Throwable().getStackTrace();
         this.definingClassName = steArray[1].getClassName();
-        this.metaData = null;
+        this.metaData = metaData;
     }
 
     /**
