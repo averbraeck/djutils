@@ -77,10 +77,10 @@ public class MetaDataTest
         assertEquals("size", 2, metaData.size());
         assertEquals("name of element 0", "string", metaData.getFieldName(0));
         assertEquals("name of element 1", "length", metaData.getFieldName(1));
-        assertEquals("description of element 0", "the string", metaData.getFieldDescription(0));
-        assertEquals("description of element 1", "the length", metaData.getFieldDescription(1));
-        assertEquals("class of element 0", String.class, metaData.getFieldClass(0));
-        assertEquals("class of element 1", Double.class, metaData.getFieldClass(1));
+        assertEquals("description of element 0", "the string", metaData.getObjectDescription(0));
+        assertEquals("description of element 1", "the length", metaData.getObjectDescription(1));
+        assertEquals("class of element 0", String.class, metaData.getObjectClass(0));
+        assertEquals("class of element 1", Double.class, metaData.getObjectClass(1));
         assertTrue("toString returns something descriptive", metaData.toString().startsWith("MetaData"));
         metaData.verifyComposition(new Object[] { "TestString", 123.456 });
         try
@@ -145,7 +145,7 @@ public class MetaDataTest
 
         try
         {
-            metaData.getFieldDescription(-1);
+            metaData.getObjectDescription(-1);
             fail("Bad index should have thrown an IndexOutOfBoundsException");
         }
         catch (IndexOutOfBoundsException ioobe)
@@ -155,7 +155,7 @@ public class MetaDataTest
 
         try
         {
-            metaData.getFieldDescription(2);
+            metaData.getObjectDescription(2);
             fail("Bad index should have thrown an IndexOutOfBoundsException");
         }
         catch (IndexOutOfBoundsException ioobe)
@@ -165,7 +165,7 @@ public class MetaDataTest
 
         try
         {
-            metaData.getFieldClass(-1);
+            metaData.getObjectClass(-1);
             fail("Bad index should have thrown an IndexOutOfBoundsException");
         }
         catch (IndexOutOfBoundsException ioobe)
@@ -175,7 +175,7 @@ public class MetaDataTest
 
         try
         {
-            metaData.getFieldClass(2);
+            metaData.getObjectClass(2);
             fail("Bad index should have thrown an IndexOutOfBoundsException");
         }
         catch (IndexOutOfBoundsException ioobe)
@@ -227,8 +227,8 @@ public class MetaDataTest
         assertEquals("name", "name", metaData.getName());
         assertEquals("description", "description", metaData.getDescription());
         assertEquals("check name of object descriptor", "integer", metaData.getFieldName(0));
-        assertEquals("check description of object descriptor", "integers only please", metaData.getFieldDescription(0));
-        assertEquals("check class of object descriptor", Integer.class, metaData.getFieldClass(0));
+        assertEquals("check description of object descriptor", "integers only please", metaData.getObjectDescription(0));
+        assertEquals("check class of object descriptor", Integer.class, metaData.getObjectClass(0));
         assertEquals("size should be 0", 0, metaData.size());
         try
         {
@@ -252,7 +252,7 @@ public class MetaDataTest
 
         try
         {
-            metaData.getFieldDescription(-1);
+            metaData.getObjectDescription(-1);
             fail("Bad index should have thrown an IndexOutOfBoundsException");
         }
         catch (IndexOutOfBoundsException ioobe)
@@ -262,7 +262,7 @@ public class MetaDataTest
 
         try
         {
-            metaData.getFieldDescription(1);
+            metaData.getObjectDescription(1);
             fail("Bad index should have thrown an IndexOutOfBoundsException");
         }
         catch (IndexOutOfBoundsException ioobe)
@@ -272,7 +272,7 @@ public class MetaDataTest
 
         try
         {
-            metaData.getFieldClass(-1);
+            metaData.getObjectClass(-1);
             fail("Bad index should have thrown an IndexOutOfBoundsException");
         }
         catch (IndexOutOfBoundsException ioobe)
@@ -282,7 +282,7 @@ public class MetaDataTest
 
         try
         {
-            metaData.getFieldClass(1);
+            metaData.getObjectClass(1);
             fail("Bad index should have thrown an IndexOutOfBoundsException");
         }
         catch (IndexOutOfBoundsException ioobe)
@@ -297,7 +297,7 @@ public class MetaDataTest
         metaData = new MetaData("name", "description", new ObjectDescriptor("n", "d", Integer.class));
         assertEquals("name", "name", metaData.getName());
         assertEquals("description", "description", metaData.getDescription());
-        assertEquals("class", Integer.class, metaData.getFieldClass(0));
+        assertEquals("class", Integer.class, metaData.getObjectClass(0));
         metaData.verifyComposition(123);
         try
         {
