@@ -108,7 +108,7 @@ public class MetaData
      *            an array of Object)
      * @return String; description of the argument
      */
-    public String getFieldDescription(final int index)
+    public String getObjectDescription(final int index)
     {
         return getObjectDescriptor(index).getDescription();
     }
@@ -119,7 +119,7 @@ public class MetaData
      *            an array of Object)
      * @return Class&lt;?&gt;; java class of the element
      */
-    public Class<?> getFieldClass(final int index)
+    public Class<?> getObjectClass(final int index)
     {
         return getObjectDescriptor(index).getObjectClass();
     }
@@ -155,10 +155,11 @@ public class MetaData
         Throw.when(objectArray.length != size(), IndexOutOfBoundsException.class, "objectArray has wrong length");
         for (int index = 0; index < objectArray.length; index++)
         {
-            if (!(getFieldClass(index).isAssignableFrom(objectArray[index].getClass())))
+            Object object = objectArray[index];
+            if ((null != object) && (!(getObjectClass(index).isAssignableFrom(object.getClass()))))
             {
                 throw new ClassCastException(String.format("objectArray[%d] (%s) cannot be used for %s", index,
-                        objectArray[index], getFieldClass(index).getName()));
+                        objectArray[index], getObjectClass(index).getName()));
             }
         }
     }
@@ -169,10 +170,11 @@ public class MetaData
      */
     public final void verifyComposition(final Object object)
     {
-        if (!(getFieldClass(0).isAssignableFrom(object.getClass())))
+        Class<?> objectClass = getObjectClass(0);
+        if (!(objectClass.isAssignableFrom(object.getClass())))
         {
             throw new ClassCastException(
-                    String.format("object (%s) cannot be used for %s", object, getFieldClass(0).getName()));
+                    String.format("object (%s) cannot be used for %s", object, objectClass.getName()));
         }
     }
 
