@@ -293,7 +293,21 @@ public class MetaDataTest
         metaData = new MetaData("name", "description", new ObjectDescriptor[] {});
         metaData.verifyComposition(null); // this null is allowed
         metaData.verifyComposition(new Object[] {}); // empty Object array is too
-
+        
+        metaData = new MetaData("name", "description", new ObjectDescriptor("n", "d", Integer.class));
+        assertEquals("name", "name", metaData.getName());
+        assertEquals("description", "description", metaData.getDescription());
+        assertEquals("class", Integer.class, metaData.getFieldClass(0));
+        metaData.verifyComposition(123);
+        try
+        {
+            metaData.verifyComposition("wrong");
+            fail("Wrong class should have thrown a ClassCastException");
+        }
+        catch (ClassCastException cce)
+        {
+            // Ignore expected exception
+        }
     }
 
 }
