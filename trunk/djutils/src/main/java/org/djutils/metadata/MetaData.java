@@ -21,7 +21,7 @@ public class MetaData
     /** Description of this MetaData object. */
     private final String description;
 
-    /** The field descriptors. */
+    /** The array of object descriptors. */
     private final ObjectDescriptor[] objectDescriptors;
 
     /** The single field descriptor. */
@@ -130,7 +130,7 @@ public class MetaData
      *            array of Object)
      * @return ObjectDescriptor; the selected ObjectDescriptor
      */
-    private ObjectDescriptor getObjectDescriptor(final int index)
+    public ObjectDescriptor getObjectDescriptor(final int index)
     {
         if (null == this.objectDescriptors)
         {
