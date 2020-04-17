@@ -72,6 +72,7 @@ public class SerialDataDecoder implements Decoder
         this.endianUtil = endianUtil;
     }
 
+    /** {@inheritDoc} */
     @Override
     public final String getResult()
     {
@@ -80,12 +81,14 @@ public class SerialDataDecoder implements Decoder
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public final int getMaximumWidth()
     {
         return 80;
     }
 
+    /** {@inheritDoc} */
     @Override
     public final boolean append(final int address, final byte theByte) throws IOException
     {
@@ -480,6 +483,7 @@ public class SerialDataDecoder implements Decoder
         this.nextDataElementByte = 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public final boolean ignoreForIdenticalOutputCheck()
     {
