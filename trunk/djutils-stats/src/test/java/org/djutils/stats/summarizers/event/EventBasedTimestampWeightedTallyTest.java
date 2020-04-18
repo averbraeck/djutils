@@ -29,7 +29,7 @@ import org.junit.Test;
 public class EventBasedTimestampWeightedTallyTest
 {
     /** an event to fire. */
-    private static final EventType VALUE_EVENT = new EventType("VALUE_EVENT", null);
+    private static final EventType VALUE_EVENT = new EventType("VALUE_EVENT", EventType.NO_META_DATA);
 
     /** Test the EventBasedTimestampWeightedTally. */
     @Test

@@ -33,7 +33,7 @@ import org.junit.Test;
 public class EventBasedTallyTest
 {
     /** an event to fire. */
-    private static final EventType VALUE_EVENT = new EventType("VALUE_EVENT", null);
+    private static final EventType VALUE_EVENT = new EventType("VALUE_EVENT", EventType.NO_META_DATA);
 
     /** Test the event based tally. */
     @SuppressWarnings("checkstyle:methodlength")
