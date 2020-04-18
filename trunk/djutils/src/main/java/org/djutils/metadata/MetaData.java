@@ -1,7 +1,9 @@
 package org.djutils.metadata;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
+import org.djutils.event.EventType;
 import org.djutils.exceptions.Throw;
 
 /**
@@ -13,8 +15,11 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class MetaData
+public class MetaData implements Serializable
 {
+    /** ... */
+    private static final long serialVersionUID = 20200417L;
+
     /** Name of this MetaData object. */
     private final String name;
 
@@ -26,6 +31,9 @@ public class MetaData
 
     /** The single field descriptor. */
     private final ObjectDescriptor objectDescriptor;
+    
+    /** MetaData object that indicates no data is expected. */
+    public static final MetaData EMPTY = new MetaData("No data", "No data", new ObjectDescriptor[0]);
 
     /**
      * Construct a new MetaData object that can check an array of Object.
@@ -152,7 +160,12 @@ public class MetaData
             return;
         }
         Throw.whenNull(objectArray, "objectArray may not be null");
-        Throw.when(objectArray.length != size(), IndexOutOfBoundsException.class, "objectArray has wrong length");
+        if (this.equals(EventType.NO_META_DATA))
+        {
+            return;
+        }
+        Throw.when(objectArray.length != size(), IndexOutOfBoundsException.class,
+                "objectArray for \"%s\" has wrong length (expected %d, got %d)", this.name, size(), objectArray.length);
         for (int index = 0; index < objectArray.length; index++)
         {
             Object object = objectArray[index];
@@ -173,8 +186,7 @@ public class MetaData
         Class<?> objectClass = getObjectClass(0);
         if (!(objectClass.isAssignableFrom(object.getClass())))
         {
-            throw new ClassCastException(
-                    String.format("object (%s) cannot be used for %s", object, objectClass.getName()));
+            throw new ClassCastException(String.format("object (%s) cannot be used for %s", object, objectClass.getName()));
         }
     }
 

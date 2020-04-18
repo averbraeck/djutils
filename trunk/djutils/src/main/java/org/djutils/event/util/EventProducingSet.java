@@ -12,6 +12,8 @@ import org.djutils.event.EventType;
 import org.djutils.event.IdProvider;
 import org.djutils.event.ref.ReferenceType;
 import org.djutils.exceptions.Throw;
+import org.djutils.metadata.MetaData;
+import org.djutils.metadata.ObjectDescriptor;
 
 /**
  * The Event producing set provides a set to which one can subscribe interest in entry changes. This class does not keep track
@@ -35,13 +37,19 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
     private static final long serialVersionUID = 20191230L;
 
     /** OBJECT_ADDED_EVENT is fired on new entries. */
-    public static final EventType OBJECT_ADDED_EVENT = new EventType("OBJECT_ADDED_EVENT", null);
+    public static final EventType OBJECT_ADDED_EVENT =
+            new EventType("OBJECT_ADDED_EVENT", new MetaData("Size of the set after add", "Size of the set",
+                    new ObjectDescriptor("Size of the set after add", "Size of the set", Integer.class)));
 
     /** OBJECT_REMOVED_EVENT is fired on removal of entries. */
-    public static final EventType OBJECT_REMOVED_EVENT = new EventType("OBJECT_REMOVED_EVENT", null);
+    public static final EventType OBJECT_REMOVED_EVENT =
+            new EventType("OBJECT_REMOVED_EVENT", new MetaData("Size of the set after remove", "Size of the set",
+                    new ObjectDescriptor("Size of the set after remove", "Size of the set", Integer.class)));
 
     /** OBJECT_CHANGED_EVENT is fired on change of one or more entries. */
-    public static final EventType OBJECT_CHANGED_EVENT = new EventType("OBJECT_CHANGED_EVENT", null);
+    public static final EventType OBJECT_CHANGED_EVENT =
+            new EventType("OBJECT_CHANGED_EVENT", new MetaData("Size of the set after change", "Size of the set",
+                    new ObjectDescriptor("Size of the set after change", "Size of the set", Integer.class)));
 
     /** the parent set. */
     private Set<E> parent = null;

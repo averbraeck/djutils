@@ -180,7 +180,7 @@ public class RemoteEventPubSubTest
         try
         {
             TestTimedRemoteEventListener<Double> timedListener = new TestTimedRemoteEventListener<>("timedListener");
-            EventType eventType = new EventType("TEST_TYPE", null);
+            EventType eventType = new EventType("TEST_TYPE", EventType.NO_META_DATA);
 
             boolean addListenerOK = producer.addListener(timedListener, eventType);
             assertTrue(addListenerOK);
@@ -411,10 +411,10 @@ public class RemoteEventPubSubTest
         private static final long serialVersionUID = 20191230L;
 
         /** */
-        public static final EventType REMOTE_EVENT_1 = new EventType("REMOTE_EVENT_1", null);
+        public static final EventType REMOTE_EVENT_1 = new EventType("REMOTE_EVENT_1", EventType.NO_META_DATA);
 
         /** */
-        public static final EventType REMOTE_EVENT_2 = new EventType("REMOTE_EVENT_2", null);
+        public static final EventType REMOTE_EVENT_2 = new EventType("REMOTE_EVENT_2", EventType.NO_META_DATA);
 
         /**
          * Construct a RemoteEventProducer.

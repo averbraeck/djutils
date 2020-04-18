@@ -5,6 +5,7 @@ import java.util.ListIterator;
 
 import org.djutils.event.EventType;
 import org.djutils.event.IdProvider;
+import org.djutils.metadata.MetaData;
 
 /**
  * EventProducingListIterator provides an iterator embedding the ListIterator, which fires an event when an object has been
@@ -28,10 +29,10 @@ public class EventProducingListIterator<T> extends EventProducingIterator<T> imp
     private static final long serialVersionUID = 20191230L;
 
     /** OBJECT_ADDED_EVENT is fired on adding of entries. */
-    public static final EventType OBJECT_ADDED_EVENT = new EventType("OBJECT_ADDED_EVENT", null);
+    public static final EventType OBJECT_ADDED_EVENT = new EventType("OBJECT_ADDED_EVENT", MetaData.EMPTY);
 
     /** OBJECT_CHANGED_EVENT is fired on changing of entries. */
-    public static final EventType OBJECT_CHANGED_EVENT = new EventType("OBJECT_CHANGED_EVENT", null);
+    public static final EventType OBJECT_CHANGED_EVENT = new EventType("OBJECT_CHANGED_EVENT", MetaData.EMPTY);
 
     /**
      * constructs a new EventProducingListIterator, embedding the parent ListIterator.

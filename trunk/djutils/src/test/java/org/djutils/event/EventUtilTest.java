@@ -509,7 +509,8 @@ public class EventUtilTest
         assertEquals("abc", replaced);
         assertEquals("epm", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingMap.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
-        assertNull(listener.getReceivedEvent().getContent());
+        //assertNull(listener.getReceivedEvent().getContent()); // Changed 2020/04/17 PK
+        assertEquals("payload is now the unchanged size of the map", 1, listener.getReceivedEvent().getContent());
         assertNull(epm.get(2));
         assertEquals("def", epm.get(1));
         assertEquals(1, epm.size());
@@ -545,7 +546,8 @@ public class EventUtilTest
         assertEquals(5, epm.size());
         epm.putAll(addMap);
         assertEquals(EventProducingMap.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
-        assertNull(listener.getReceivedEvent().getContent());
+        // assertNull(listener.getReceivedEvent().getContent()); // Changed 2020/04/17 PK
+        assertEquals("payload is now the unchanged size of the map", 5, listener.getReceivedEvent().getContent());
         listener.setExpectingNotification(false);
         epm.putAll(new LinkedHashMap<>());
         assertEquals(5, epm.size());

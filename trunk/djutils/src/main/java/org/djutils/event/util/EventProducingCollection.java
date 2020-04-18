@@ -11,6 +11,8 @@ import org.djutils.event.EventType;
 import org.djutils.event.IdProvider;
 import org.djutils.event.ref.ReferenceType;
 import org.djutils.exceptions.Throw;
+import org.djutils.metadata.MetaData;
+import org.djutils.metadata.ObjectDescriptor;
 
 /**
  * The Event producing collection provides a set to which one can subscribe interest in entry changes. This class does not keep
@@ -26,7 +28,7 @@ import org.djutils.exceptions.Throw;
  * </p>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @param <T> The type t od the eventproducing list.
+ * @param <T> The type of the event producing Collection.
  */
 public class EventProducingCollection<T> extends EventProducer implements EventListenerInterface, Collection<T>
 {
@@ -34,13 +36,19 @@ public class EventProducingCollection<T> extends EventProducer implements EventL
     private static final long serialVersionUID = 20191230L;
 
     /** OBJECT_ADDED_EVENT is fired on new entries. */
-    public static final EventType OBJECT_ADDED_EVENT = new EventType("OBJECT_ADDED_EVENT", null);
+    public static final EventType OBJECT_ADDED_EVENT =
+            new EventType("OBJECT_ADDED_EVENT", new MetaData("Size of the collection after add", "Size of the collection",
+                    new ObjectDescriptor("Size of the collection after add", "Size of the collection", Integer.class)));
 
-    /** OBJECT_REMOVED_EVENT is fired on removel of entries. */
-    public static final EventType OBJECT_REMOVED_EVENT = new EventType("OBJECT_REMOVED_EVENT", null);
+    /** OBJECT_REMOVED_EVENT is fired on removal of entries. */
+    public static final EventType OBJECT_REMOVED_EVENT =
+            new EventType("OBJECT_REMOVED_EVENT", new MetaData("Size of the collection after remove", "Size of the collection",
+                    new ObjectDescriptor("Size of the collection after remove", "Size of the collection", Integer.class)));
 
     /** OBJECT_CHANGED_EVENT is fired on change of one or more entries. */
-    public static final EventType OBJECT_CHANGED_EVENT = new EventType("OBJECT_CHANGED_EVENT", null);
+    public static final EventType OBJECT_CHANGED_EVENT =
+            new EventType("OBJECT_CHANGED_EVENT", new MetaData("Size of the collection after change", "Size of the collection",
+                    new ObjectDescriptor("Size of the collection after change", "Size of the collection", Integer.class)));
 
     /** the parent collection. */
     private Collection<T> parent = null;
