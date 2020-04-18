@@ -23,7 +23,7 @@ import org.junit.Test;
 public class EventBasedCounterTest
 {
     /** the event to fire. */
-    private static final EventType COUNT_EVENT = new EventType("CountEvent", null);
+    private static final EventType COUNT_EVENT = new EventType("CountEvent", EventType.NO_META_DATA);
 
     /** Test the counter. */
     @Test
