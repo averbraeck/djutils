@@ -2,7 +2,9 @@ package org.djutils.event;
 
 import java.io.Serializable;
 
+import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
+import org.djutils.metadata.ObjectDescriptor;
 
 /**
  * The EventType is a masker used for the subscription to asynchronous events. Eventtypes are used by EventProducers to show
@@ -45,27 +47,32 @@ public final class EventType implements Serializable
     /**
      * Construct a new EventType.
      * @param name String; the name of the new eventType. Two values are not appreciated: null and the empty string.
-     * @param metaData MetaData; describes the payload of events of the new EventType; can be null (for now; i.e., temporarily)
+     * @param metaData MetaData; describes the payload of events of the new EventType;
      */
     public EventType(final String name, final MetaData metaData)
     {
-        if (name == null || name.equals(""))
-        {
-            throw new IllegalArgumentException("EventType name == null || EventType name == \"\"");
-        }
+        Throw.when(name == null || name.equals(""), IllegalArgumentException.class,
+                "EventType name == null || EventType name == \"\"");
+        Throw.whenNull(metaData,
+                "Meta data may not be null (but you could provide the NO_META_DATA value if the payload will be varying)");
         this.name = name;
         StackTraceElement[] steArray = new Throwable().getStackTrace();
         this.definingClassName = steArray[1].getClassName();
         this.metaData = metaData;
     }
 
+    /** Meta data object to use when none is available. Please do not use this, except when the payload is varying. */
+    public static final MetaData NO_META_DATA = new MetaData("No descriptive meta data provided", "Any payload is accepted",
+            new ObjectDescriptor("No descriptive meta data provided", "Any payload is accepted", Object.class));
+
     /**
      * Construct a new EventType with no meta data.
      * @param name String; the name of the new eventType. Two values are not appreciated: null and the empty string.
      */
+    @Deprecated
     public EventType(final String name)
     {
-        this(name, null);
+        this(name, NO_META_DATA);
     }
 
     /**
@@ -76,7 +83,7 @@ public final class EventType implements Serializable
     {
         return this.name;
     }
-    
+
     /**
      * Retrieve the MetaData that describes the payload of events if this EventType.
      * @return MetaData; describes the payload of events of this EventType

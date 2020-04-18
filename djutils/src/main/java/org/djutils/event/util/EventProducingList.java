@@ -12,6 +12,8 @@ import org.djutils.event.EventType;
 import org.djutils.event.IdProvider;
 import org.djutils.event.ref.ReferenceType;
 import org.djutils.exceptions.Throw;
+import org.djutils.metadata.MetaData;
+import org.djutils.metadata.ObjectDescriptor;
 
 /**
  * The Event producing list provides a list to which one can subscribe interest in entry changes. This class does not keep track
@@ -35,13 +37,19 @@ public class EventProducingList<E> extends EventProducer implements EventListene
     private static final long serialVersionUID = 20191230L;
 
     /** OBJECT_ADDED_EVENT is fired on new entries. */
-    public static final EventType OBJECT_ADDED_EVENT = new EventType("OBJECT_ADDED_EVENT", null);
+    public static final EventType OBJECT_ADDED_EVENT =
+            new EventType("OBJECT_ADDED_EVENT", new MetaData("Size of the list after add", "Size of the list",
+                    new ObjectDescriptor("Size of the list after add", "Size of the list", Integer.class)));
 
-    /** OBJECT_REMOVED_EVENT is fired on removel of entries. */
-    public static final EventType OBJECT_REMOVED_EVENT = new EventType("OBJECT_REMOVED_EVENT", null);
+    /** OBJECT_REMOVED_EVENT is fired on removal of entries. */
+    public static final EventType OBJECT_REMOVED_EVENT =
+            new EventType("OBJECT_REMOVED_EVENT", new MetaData("Size of the list after remove", "Size of the list",
+                    new ObjectDescriptor("Size of the list after remove", "Size of the list", Integer.class)));
 
     /** OBJECT_CHANGED_EVENT is fired on change of one or more entries. */
-    public static final EventType OBJECT_CHANGED_EVENT = new EventType("OBJECT_CHANGED_EVENT", null);
+    public static final EventType OBJECT_CHANGED_EVENT =
+            new EventType("OBJECT_CHANGED_EVENT", new MetaData("Size of the list after change", "Size of the list",
+                    new ObjectDescriptor("Size of the list after change", "Size of the list", Integer.class)));
 
     /** the parent list. */
     private List<E> parent = null;
@@ -233,7 +241,7 @@ public class EventProducingList<E> extends EventProducer implements EventListene
         }
         else if (event.getType().equals(EventProducingListIterator.OBJECT_CHANGED_EVENT))
         {
-            this.fireEvent(OBJECT_CHANGED_EVENT, null);
+            this.fireEvent(OBJECT_CHANGED_EVENT, this.parent.size());
         }
     }
 
@@ -294,7 +302,7 @@ public class EventProducingList<E> extends EventProducer implements EventListene
     public E set(final int index, final E element)
     {
         E result = this.parent.set(index, element);
-        this.fireEvent(OBJECT_CHANGED_EVENT, null);
+        this.fireEvent(OBJECT_CHANGED_EVENT, this.parent.size());
         return result;
     }
 

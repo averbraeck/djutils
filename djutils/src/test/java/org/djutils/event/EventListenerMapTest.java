@@ -53,8 +53,8 @@ public class EventListenerMapTest implements Serializable
     @Test
     public void testEventListenerMap()
     {
-        EventType eventType1 = new EventType("EVENT_TYPE1", null);
-        EventType eventType2 = new EventType("EVENT_TYPE2", null);
+        EventType eventType1 = new EventType("EVENT_TYPE1", EventType.NO_META_DATA);
+        EventType eventType2 = new EventType("EVENT_TYPE2", EventType.NO_META_DATA);
         EventListenerInterface el1 = new TestEventListener();
         Reference<EventListenerInterface> sref1 = new StrongReference<>(el1);
         EventListenerInterface el2 = new TestEventListener();
@@ -90,12 +90,12 @@ public class EventListenerMapTest implements Serializable
         assertEquals(2, keySet.size());
         assertTrue(keySet.contains(eventType1));
         assertTrue(keySet.contains(eventType2));
-        assertFalse(keySet.contains(new EventType("EVENT_TYPE3", null)));
+        assertFalse(keySet.contains(new EventType("EVENT_TYPE3", EventType.NO_META_DATA)));
 
         // test containsKey()
         assertTrue(elm.containsKey(eventType1));
         assertTrue(elm.containsKey(eventType2));
-        assertFalse(elm.containsKey(new EventType("EVENT_TYPE3", null)));
+        assertFalse(elm.containsKey(new EventType("EVENT_TYPE3", EventType.NO_META_DATA)));
 
         // test containsValue() for Reference and Listener
         assertTrue(elm.containsValue(el1));
@@ -165,7 +165,7 @@ public class EventListenerMapTest implements Serializable
         // test readObject() and writeObject() with one RemoteEventListener (that should not be copied)
         try
         {
-            EventType remoteEventType = new EventType("REMOTE_EVENT_TYPE", null);
+            EventType remoteEventType = new EventType("REMOTE_EVENT_TYPE", EventType.NO_META_DATA);
             List<Reference<EventListenerInterface>> remoteList = new ArrayList<>();
             TestRemoteEventListener remoteEventListener = new TestRemoteEventListener();
             remoteList.add(new WeakReference<EventListenerInterface>(remoteEventListener));
@@ -209,7 +209,7 @@ public class EventListenerMapTest implements Serializable
         getList = elm.get(eventType1);
         assertEquals(2, elm.size());
         assertEquals(1, getList.size());
-        getList = elm.get(new EventType("EVENT_TYPE3", null));
+        getList = elm.get(new EventType("EVENT_TYPE3", EventType.NO_META_DATA));
         assertNull(getList);
 
         // test remove() and see if the underlying and copied data structures remain unaffected

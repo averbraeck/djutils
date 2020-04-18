@@ -2,6 +2,18 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+   <release version="1.04.18" date="2020-04-17" description="Metadata fixes">
+      <action dev="pknoppers" type="fix">
+      MetaData and ObjectDescriptor are now serializable.
+      EventType constructor with no metaData argument is now deprecated. The constructor with a metadata argument no longer
+      takes a null pointer for that argument.
+      There is a NO_META_DATA value that can be used in case no meta data can be provided. This should only be used in case 
+      the payload has a varying composition, but it can also be abused in case the program writer is too lazy to provide 
+      decent meta data (as is the case in many of our unit tests).
+      EventProducing collections now put the (unchanged) size of the collection in the OBJECT_CHANGED_EVENT events.
+      </action>
+   </release>
+
    <release version="1.04.17" date="2020-04-06" description="Metadata fixes">
       <action dev="pknoppers" type="fix">
        MetaData now permits null pointers for the arguments that it verifies. Renamed some methods (Field is now Object).
