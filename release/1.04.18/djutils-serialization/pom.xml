@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.djutils</groupId>
+    <artifactId>djutils-parent</artifactId>
+    <version>1.04.18</version>
+    <relativePath>../djutils-parent/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>djutils-serialization</artifactId>
+
+  <name>DJUTILS serialization of data structures</name>
+  <description>DJUTILS serialization of data structures</description>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.djutils</groupId>
+      <artifactId>djutils</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.djunits</groupId>
+      <artifactId>djunits</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+    </dependency>
+
+  </dependencies>
+
+</project>
