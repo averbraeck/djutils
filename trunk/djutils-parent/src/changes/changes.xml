@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-   <release version="1.04.18" date="2020-04-17" description="Metadata fixes">
+   <release version="1.04.18" date="2020-04-18" description="Metadata fixes">
       <action dev="pknoppers" type="fix">
       MetaData and ObjectDescriptor are now serializable.
       EventType constructor with no metaData argument is now deprecated. The constructor with a metadata argument no longer
