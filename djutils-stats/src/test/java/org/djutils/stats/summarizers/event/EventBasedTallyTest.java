@@ -13,6 +13,7 @@ import org.djutils.event.Event;
 import org.djutils.event.EventInterface;
 import org.djutils.event.EventListenerInterface;
 import org.djutils.event.EventType;
+import org.djutils.metadata.MetaData;
 import org.djutils.stats.ConfidenceInterval;
 import org.djutils.stats.DistNormalTable;
 import org.djutils.stats.summarizers.quantileaccumulator.FullStorageAccumulator;
@@ -33,7 +34,7 @@ import org.junit.Test;
 public class EventBasedTallyTest
 {
     /** an event to fire. */
-    private static final EventType VALUE_EVENT = new EventType("VALUE_EVENT", EventType.NO_META_DATA);
+    private static final EventType VALUE_EVENT = new EventType("VALUE_EVENT", MetaData.NO_META_DATA);
 
     /** Test the event based tally. */
     @SuppressWarnings("checkstyle:methodlength")

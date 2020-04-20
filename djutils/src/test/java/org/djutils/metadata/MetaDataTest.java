@@ -1,6 +1,7 @@
 package org.djutils.metadata;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -29,12 +30,30 @@ public class MetaDataTest
         assertEquals("name", "name", objectDescriptor.getName());
         assertEquals("description", "description", objectDescriptor.getDescription());
         assertEquals("class", Integer.class, objectDescriptor.getObjectClass());
+        assertEquals(objectDescriptor, objectDescriptor);
+        assertEquals(objectDescriptor.hashCode(), objectDescriptor.hashCode());
+        assertEquals(objectDescriptor, new ObjectDescriptor("name", "description", Integer.class));
+        assertNotEquals(objectDescriptor, null);
+        assertNotEquals(objectDescriptor, new Object());
+        assertNotEquals(objectDescriptor, new ObjectDescriptor("x", "description", Integer.class));
+        assertNotEquals(objectDescriptor, new ObjectDescriptor("name", "x", Integer.class));
+        assertNotEquals(objectDescriptor, new ObjectDescriptor("name", "description", Double.class));
         try
         {
             new ObjectDescriptor(null, "description", Integer.class);
             fail("null name should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new ObjectDescriptor("", "description", Integer.class);
+            fail("empty name should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException npe)
         {
             // Ignore expected exception
         }
@@ -66,6 +85,7 @@ public class MetaDataTest
      * Test the MetaData class.
      */
     @Test
+    @SuppressWarnings("checkstyle:methodlength")
     public void testMetaData()
     {
         // Construct a MetaData object that specifies a String and a Double.
@@ -81,8 +101,24 @@ public class MetaDataTest
         assertEquals("description of element 1", "the length", metaData.getObjectDescription(1));
         assertEquals("class of element 0", String.class, metaData.getObjectClass(0));
         assertEquals("class of element 1", Double.class, metaData.getObjectClass(1));
+        
+        ObjectDescriptor[] descriptors = metaData.getObjectDescriptors();
+        assertEquals(2, descriptors.length);
+        assertEquals(new ObjectDescriptor("string", "the string", String.class), descriptors[0]);
+        MetaData metaData2 = new MetaData("meta data name", "meta data description",
+                new ObjectDescriptor[] { new ObjectDescriptor("string", "the string", String.class),
+                        new ObjectDescriptor("length", "the length", Double.class) });
+        assertEquals(metaData, metaData2);
+        assertEquals(metaData.hashCode(), metaData2.hashCode());
+        assertNotEquals(metaData, null);
+        assertNotEquals(metaData, new Object());
+        assertNotEquals(metaData, new MetaData("x", "x", new ObjectDescriptor[0]));
+        assertNotEquals(metaData, new MetaData("meta data name", "x", new ObjectDescriptor[0]));
+        assertNotEquals(metaData, new MetaData("meta data name", "meta data description", new ObjectDescriptor[0]));
+        
         assertTrue("toString returns something descriptive", metaData.toString().startsWith("MetaData"));
         metaData.verifyComposition(new Object[] { "TestString", 123.456 });
+        metaData.verifyComposition(new Object[] { null, 123.456 });
         try
         {
             metaData.verifyComposition(new Object[] { "TestString" }); // too short
@@ -229,7 +265,7 @@ public class MetaDataTest
         assertEquals("check name of object descriptor", "integer", metaData.getFieldName(0));
         assertEquals("check description of object descriptor", "integers only please", metaData.getObjectDescription(0));
         assertEquals("check class of object descriptor", Integer.class, metaData.getObjectClass(0));
-        assertEquals("size should be 0", 0, metaData.size());
+        assertEquals("size should be 1", 1, metaData.size());
         try
         {
             metaData.getFieldName(-1);
@@ -309,6 +345,25 @@ public class MetaDataTest
             // Ignore expected exception
         }
         
+        try
+        {
+            metaData = new MetaData("", "description", new ObjectDescriptor[] {});
+            fail("Empty name should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException cce)
+        {
+            // Ignore expected exception
+        }
+  
+        try
+        {
+            metaData = new MetaData("", "description", new ObjectDescriptor("name", "desc", String.class));
+            fail("Empty name should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException cce)
+        {
+            // Ignore expected exception
+        }
     }
 
 }

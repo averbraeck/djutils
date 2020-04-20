@@ -3,7 +3,6 @@ package org.djutils.metadata;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import org.djutils.event.EventType;
 import org.djutils.exceptions.Throw;
 
 /**
@@ -29,15 +28,16 @@ public class MetaData implements Serializable
     /** The array of object descriptors. */
     private final ObjectDescriptor[] objectDescriptors;
 
-    /** The single field descriptor. */
-    private final ObjectDescriptor objectDescriptor;
-    
     /** MetaData object that indicates no data is expected. */
     public static final MetaData EMPTY = new MetaData("No data", "No data", new ObjectDescriptor[0]);
 
+    /** Meta data object to use when none is available. Please do not use this, except when the payload is varying. */
+    public static final MetaData NO_META_DATA = new MetaData("No descriptive meta data provided", "Any payload is accepted",
+            new ObjectDescriptor("No descriptive meta data provided", "Any payload is accepted", Object.class));
+
     /**
      * Construct a new MetaData object that can check an array of Object.
-     * @param name String; name of the new MetaData object
+     * @param name String; name of the new MetaData object, which cannot be null or the empty string
      * @param description String; description of the new MetaData object
      * @param objectDescriptors ObjectDescriptor[]; array of ObjectDescriptor. This constructor does <b>not</b> make a deep copy
      *            of this array; subsequent modification of the contents of the provided <code>objectDescriptors</code> array
@@ -46,29 +46,29 @@ public class MetaData implements Serializable
     public MetaData(final String name, final String description, final ObjectDescriptor[] objectDescriptors)
     {
         Throw.whenNull(name, "name may not be null");
+        Throw.when(name.length() == 0, IllegalArgumentException.class, "name cannot be the empty string");
         Throw.whenNull(description, "description may not be null");
         Throw.whenNull(objectDescriptors, "objectDescriptors may not be null");
         this.name = name;
         this.description = description;
         this.objectDescriptors = objectDescriptors;
-        this.objectDescriptor = null;
     }
 
     /**
      * Construct a new MetaData object that can check a single Object..
-     * @param name String; name of the new MetaData object
+     * @param name String; name of the new MetaData object, which cannot be null or the empty string
      * @param description String; description of the new MetaData object
      * @param objectDescriptor ObjectDescriptor; the descriptor for the object that the new MetaData object will accept as valid
      */
     public MetaData(final String name, final String description, final ObjectDescriptor objectDescriptor)
     {
         Throw.whenNull(name, "name may not be null");
+        Throw.when(name.length() == 0, IllegalArgumentException.class, "name cannot be the empty string");
         Throw.whenNull(description, "description may not be null");
         Throw.whenNull(objectDescriptor, "objectDescriptor may not be null");
         this.name = name;
         this.description = description;
-        this.objectDescriptors = null;
-        this.objectDescriptor = objectDescriptor;
+        this.objectDescriptors = new ObjectDescriptor[] {objectDescriptor};
     }
 
     /**
@@ -96,7 +96,16 @@ public class MetaData implements Serializable
      */
     public int size()
     {
-        return null == this.objectDescriptors ? 0 : this.objectDescriptors.length;
+        return this.objectDescriptors.length;
+    }
+
+    /**
+     * Returns a safe copy of the object descriptors. As the object descriptors are immutable objects, they are not cloned.
+     * @return ObjectDescriptor[]; a safe copy of the object descriptors
+     */
+    public ObjectDescriptor[] getObjectDescriptors()
+    {
+        return this.objectDescriptors.clone();
     }
 
     /**
@@ -140,11 +149,8 @@ public class MetaData implements Serializable
      */
     public ObjectDescriptor getObjectDescriptor(final int index)
     {
-        if (null == this.objectDescriptors)
-        {
-            Throw.when(index != 0, IndexOutOfBoundsException.class, "Index must be 0");
-            return this.objectDescriptor;
-        }
+        Throw.when(index < 0 || index >= this.objectDescriptors.length, IndexOutOfBoundsException.class,
+                "Index < 0 or index >= number of object descriptors");
         return this.objectDescriptors[index];
     }
 
@@ -152,18 +158,21 @@ public class MetaData implements Serializable
      * Verify that an Object array has the prescribed composition.
      * @param objectArray Object[]; the Object array to verify. If the array is supposed to have 0 length, a null pointer is
      *            deemed OK.
+     * @throws NullPointerException when the object array is null and the size of the object descriptors array is not 0 or 1
+     * @throws IndexOutOfBoundsException when size of the object descriptors array is not equal to the size of the object array
+     * @throws ClassCastException when one of the objects is of the wrong class
      */
     public final void verifyComposition(final Object[] objectArray)
     {
-        if (size() == 0 && objectArray == null)
+        if ((size() == 0 || size() == 1) && objectArray == null)
+        {
+            return;
+        }
+        if (this.equals(NO_META_DATA)) // anything goes
         {
             return;
         }
         Throw.whenNull(objectArray, "objectArray may not be null");
-        if (this.equals(EventType.NO_META_DATA))
-        {
-            return;
-        }
         Throw.when(objectArray.length != size(), IndexOutOfBoundsException.class,
                 "objectArray for \"%s\" has wrong length (expected %d, got %d)", this.name, size(), objectArray.length);
         for (int index = 0; index < objectArray.length; index++)
@@ -178,16 +187,58 @@ public class MetaData implements Serializable
     }
 
     /**
-     * Verify that an Object has the prescribed composition.
+     * Verify that an Object has the prescribed composition. In order for one object to fit the metadata, the array of expected
+     * objects needs to have a length of 1.
      * @param object Object; the Object to verify.
+     * @throws IndexOutOfBoundsException when size of the object descriptors array is not 1
+     * @throws ClassCastException when the object is of the wrong class
      */
     public final void verifyComposition(final Object object)
     {
+        Throw.when(this.objectDescriptors.length != 1, IndexOutOfBoundsException.class,
+                "Testng single object, but length of the object descriptors array is %d", this.objectDescriptors.length);
+        if (this.equals(NO_META_DATA)) // anything goes
+        {
+            return;
+        }
         Class<?> objectClass = getObjectClass(0);
         if (!(objectClass.isAssignableFrom(object.getClass())))
         {
             throw new ClassCastException(String.format("object (%s) cannot be used for %s", object, objectClass.getName()));
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.description.hashCode();
+        result = prime * result + this.name.hashCode();
+        result = prime * result + Arrays.hashCode(this.objectDescriptors);
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @SuppressWarnings("checkstyle:needbraces")
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        MetaData other = (MetaData) obj;
+        if (!this.name.equals(other.name))
+            return false;
+        if (!this.description.equals(other.description))
+            return false;
+        if (!Arrays.equals(this.objectDescriptors, other.objectDescriptors))
+            return false;
+        return true;
     }
 
     /** {@inheritDoc} */

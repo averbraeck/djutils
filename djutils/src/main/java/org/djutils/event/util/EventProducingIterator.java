@@ -7,6 +7,7 @@ import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
 import org.djutils.event.IdProvider;
 import org.djutils.exceptions.Throw;
+import org.djutils.metadata.MetaData;
 
 /**
  * The EventProducingIterator provides an iterator embedding the Iterator, which fires an event when an object has been removed.
@@ -30,7 +31,7 @@ public class EventProducingIterator<T> extends EventProducer implements Iterator
     private static final long serialVersionUID = 20191230L;
 
     /** OBJECT_REMOVED_EVENT is fired on removal of entries. */
-    public static final EventType OBJECT_REMOVED_EVENT = new EventType("OBJECT_REMOVED_EVENT", EventType.NO_META_DATA);
+    public static final EventType OBJECT_REMOVED_EVENT = new EventType("OBJECT_REMOVED_EVENT", MetaData.NO_META_DATA);
 
     /** our parent iterator. */
     private Iterator<T> parent = null;

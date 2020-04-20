@@ -8,6 +8,7 @@ import org.djutils.event.Event;
 import org.djutils.event.EventInterface;
 import org.djutils.event.EventListenerInterface;
 import org.djutils.event.EventType;
+import org.djutils.metadata.MetaData;
 import org.junit.Test;
 
 /**
@@ -23,7 +24,7 @@ import org.junit.Test;
 public class EventBasedCounterTest
 {
     /** the event to fire. */
-    private static final EventType COUNT_EVENT = new EventType("CountEvent", EventType.NO_META_DATA);
+    private static final EventType COUNT_EVENT = new EventType("CountEvent", MetaData.NO_META_DATA);
 
     /** Test the counter. */
     @Test

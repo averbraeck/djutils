@@ -2,29 +2,45 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-   <release version="1.04.18" date="2020-04-18" description="Metadata fixes">
+   <release version="1.04.19" date="2020-04-19" description="Metadata and ObjectDescriptor updates">
+      <action dev="averbraeck" type="add">
+        An extra EventType constructor has been added to not have to duplicate the event type name in the
+        metaData object. 
+      </action>
+      <action dev="averbraeck" type="add">
+        MetaData and ObjectDescriptor have equals() and hashCode() methods.
+      </action>
+      <action dev="averbraeck" type="add">
+        MetaData has a getObjectDescriptors() method that returns a clone of the object descriptors.
+      </action>
+      <action dev="averbraeck" type="update">
+        The NO_META_DATA static constant has been moved to the MetaData class.
+      </action>
+   </release>
+
+   <release version="1.04.18" date="2020-04-18" description="Metadata expansions and fixes">
       <action dev="pknoppers" type="fix">
-      MetaData and ObjectDescriptor are now serializable.
-      EventType constructor with no metaData argument is now deprecated. The constructor with a metadata argument no longer
-      takes a null pointer for that argument.
-      There is a NO_META_DATA value that can be used in case no meta data can be provided. This should only be used in case 
-      the payload has a varying composition, but it can also be abused in case the program writer is too lazy to provide 
-      decent meta data (as is the case in many of our unit tests).
-      EventProducing collections now put the (unchanged) size of the collection in the OBJECT_CHANGED_EVENT events.
+        MetaData and ObjectDescriptor are now serializable.
+        EventType constructor with no metaData argument is now deprecated. The constructor with a metadata argument no longer
+        takes a null pointer for that argument.
+        There is a NO_META_DATA value that can be used in case no meta data can be provided. This should only be used in case 
+        the payload has a varying composition, but it can also be abused in case the program writer is too lazy to provide 
+        decent meta data (as is the case in many of our unit tests).
+        EventProducing collections now put the (unchanged) size of the collection in the OBJECT_CHANGED_EVENT events.
       </action>
    </release>
 
    <release version="1.04.17" date="2020-04-06" description="Metadata fixes">
       <action dev="pknoppers" type="fix">
-       MetaData now permits null pointers for the arguments that it verifies. Renamed some methods (Field is now Object).
+        MetaData now permits null pointers for the arguments that it verifies. Renamed some methods (Field is now Object).
       </action>
    </release>
 
    <release version="1.04.16" date="2020-04-06" description="Metadata fixes and expanded use">
       <action dev="pknoppers" type="fix">
-       MetaData was not 100% correct in the previous version. Some methods were not public (and should have been). Metadata can
-       now also handle single object payload (not requiring an Object[]).
-       The stats package now uses MetaData verification of the payload of the events.
+        MetaData was not 100% correct in the previous version. Some methods were not public (and should have been). Metadata can
+        now also handle single object payload (not requiring an Object[]).
+        The stats package now uses MetaData verification of the payload of the events.
       </action>
    </release>
 
