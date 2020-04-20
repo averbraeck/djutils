@@ -13,6 +13,7 @@ import org.djutils.event.EventInterface;
 import org.djutils.event.EventListenerInterface;
 import org.djutils.event.EventType;
 import org.djutils.event.TimedEvent;
+import org.djutils.metadata.MetaData;
 import org.junit.Test;
 
 /**
@@ -29,7 +30,7 @@ import org.junit.Test;
 public class EventBasedTimestampWeightedTallyTest
 {
     /** an event to fire. */
-    private static final EventType VALUE_EVENT = new EventType("VALUE_EVENT", EventType.NO_META_DATA);
+    private static final EventType VALUE_EVENT = new EventType("VALUE_EVENT", MetaData.NO_META_DATA);
 
     /** Test the EventBasedTimestampWeightedTally. */
     @Test

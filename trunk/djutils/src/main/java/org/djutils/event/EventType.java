@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
-import org.djutils.metadata.ObjectDescriptor;
 
 /**
  * The EventType is a masker used for the subscription to asynchronous events. Eventtypes are used by EventProducers to show
@@ -61,9 +60,14 @@ public final class EventType implements Serializable
         this.metaData = metaData;
     }
 
-    /** Meta data object to use when none is available. Please do not use this, except when the payload is varying. */
-    public static final MetaData NO_META_DATA = new MetaData("No descriptive meta data provided", "Any payload is accepted",
-            new ObjectDescriptor("No descriptive meta data provided", "Any payload is accepted", Object.class));
+    /**
+     * Construct a new EventType. The name of the metadata will function as the name of the event.
+     * @param metaData MetaData; describes the payload of events of the new EventType;
+     */
+    public EventType(final MetaData metaData)
+    {
+        this(metaData == null ? null : metaData.getName(), metaData);
+    }
 
     /**
      * Construct a new EventType with no meta data.
@@ -72,7 +76,7 @@ public final class EventType implements Serializable
     @Deprecated
     public EventType(final String name)
     {
-        this(name, NO_META_DATA);
+        this(name, MetaData.NO_META_DATA);
     }
 
     /**

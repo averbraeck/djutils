@@ -101,7 +101,7 @@ public class EventBasedWeightedTallyTest
             wt.notify(new Event(VALUE_EVENT, "EventBasedWeightedTallyTest", "123"));
             fail("non Object[] content should have thrown an exception");
         }
-        catch (ClassCastException iae)
+        catch (IndexOutOfBoundsException iobe)
         {
             // Ignore expected exception
         }

@@ -37,6 +37,7 @@ public class ObjectDescriptor implements Serializable
     public ObjectDescriptor(final String name, final String description, final Class<?> objectClass)
     {
         Throw.whenNull(name, "name may not be null");
+        Throw.when(name.length() == 0, IllegalArgumentException.class, "empty name is not allowed");
         Throw.whenNull(description, "description may not be null");
         Throw.whenNull(objectClass, "objectClass may not be null");
         this.name = name;
@@ -69,6 +70,39 @@ public class ObjectDescriptor implements Serializable
     public Class<?> getObjectClass()
     {
         return this.objectClass;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.description.hashCode();
+        result = prime * result + this.name.hashCode();
+        result = prime * result + this.objectClass.getName().hashCode();
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @SuppressWarnings("checkstyle:needbraces")
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ObjectDescriptor other = (ObjectDescriptor) obj;
+        if (!this.description.equals(other.description))
+            return false;
+        if (!this.name.equals(other.name))
+            return false;
+        if (!this.objectClass.equals(other.objectClass))
+            return false;
+        return true;
     }
 
     /** {@inheritDoc} */
