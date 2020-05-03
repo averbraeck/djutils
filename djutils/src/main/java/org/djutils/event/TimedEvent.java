@@ -27,7 +27,7 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
     private final T timeStamp;
 
     /**
-     * Construct a new timed event.
+     * Construct a new timed event, where compliance with the metadata is verified.
      * @param type EventType; the eventType of the event.
      * @param sourceId Serializable; the source of the event.
      * @param content Serializable; the content of the event.
@@ -35,7 +35,21 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
      */
     public TimedEvent(final EventType type, final Serializable sourceId, final Serializable content, final T timeStamp)
     {
-        super(type, sourceId, content);
+        this(type, sourceId, content, timeStamp, true);
+    }
+
+    /**
+     * Construct a new timed event, with a choice to verify compliance with metadata.
+     * @param type EventType; the eventType of the event.
+     * @param sourceId Serializable; the source of the event.
+     * @param content Serializable; the content of the event.
+     * @param timeStamp T; the timeStamp.
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
+     */
+    public TimedEvent(final EventType type, final Serializable sourceId, final Serializable content, final T timeStamp,
+            final boolean verifyMetaData)
+    {
+        super(type, sourceId, content, verifyMetaData);
         this.timeStamp = timeStamp;
     }
 
@@ -91,5 +105,5 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
     {
         return super.toString().split("]")[0] + ";" + this.getTimeStamp() + "]";
     }
-    
+
 }

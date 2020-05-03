@@ -17,6 +17,7 @@ import org.djutils.event.ref.Reference;
 import org.djutils.event.ref.ReferenceType;
 import org.djutils.exceptions.Try;
 import org.djutils.metadata.MetaData;
+import org.djutils.metadata.ObjectDescriptor;
 import org.junit.Test;
 
 /**
@@ -70,8 +71,14 @@ public class EventPubSubTest
         listener.setExpectedObject(Byte.valueOf((byte) 87));
         producer.fireEvent(eventType, (byte) 87);
 
+        listener.setExpectedObject(Character.valueOf('a'));
+        producer.fireEvent(eventType, 'a');
+
         listener.setExpectedObject(Short.valueOf((short) -234));
         producer.fireEvent(eventType, (short) -234);
+
+        listener.setExpectedObject(Float.valueOf(458.9f));
+        producer.fireEvent(eventType, 458.9f);
 
         listener.setExpectedObject(Double.valueOf(123.456d));
         producer.fireEvent(eventType, 123.456d);
@@ -149,6 +156,153 @@ public class EventPubSubTest
     }
 
     /**
+     * Test the EventProducer and EventListener for verified / unverified events.
+     */
+    @Test
+    public void testEventVerificationPubSub()
+    {
+        TestEventProducer producer = new TestEventProducer();
+        TestEventListener listener = new TestEventListener();
+        EventType eventType = new EventType("STRING_TYPE",
+                new MetaData("STRING", "string", new ObjectDescriptor("String", "string", String.class)));
+
+        boolean addListenerOK = producer.addListener(listener, eventType);
+        assertTrue(addListenerOK);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Boolean.valueOf(true));
+                producer.fireEvent(eventType, true);
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Byte.valueOf((byte) 87));
+                producer.fireEvent(eventType, (byte) 87);
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Character.valueOf('a'));
+                producer.fireEvent(eventType, 'a');
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Short.valueOf((short) -234));
+                producer.fireEvent(eventType, (short) -234);
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Float.valueOf(458.9f));
+                producer.fireEvent(eventType, 458.9f);
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Double.valueOf(123.456d));
+                producer.fireEvent(eventType, 123.456d);
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Integer.valueOf(12345));
+                producer.fireEvent(eventType, 12345);
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Long.valueOf(123456L));
+                producer.fireEvent(eventType, 123456L);
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(new String[] {"a", "b"});
+                producer.fireEvent(eventType, new String[] {"a", "b"});
+            }
+        }, "expected IndexOutOfBoundsException", IndexOutOfBoundsException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Double.valueOf(1.2));
+                producer.fireEvent(eventType, Double.valueOf(1.2));
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        listener.setExpectedObject(Boolean.valueOf(true));
+        producer.fireUnverifiedEvent(eventType, true);
+
+        listener.setExpectedObject(Byte.valueOf((byte) 87));
+        producer.fireUnverifiedEvent(eventType, (byte) 87);
+
+        listener.setExpectedObject(Character.valueOf('a'));
+        producer.fireUnverifiedEvent(eventType, 'a');
+
+        listener.setExpectedObject(Short.valueOf((short) -234));
+        producer.fireUnverifiedEvent(eventType, (short) -234);
+
+        listener.setExpectedObject(Float.valueOf(458.9f));
+        producer.fireUnverifiedEvent(eventType, 458.9f);
+
+        listener.setExpectedObject(Double.valueOf(123.456d));
+        producer.fireUnverifiedEvent(eventType, 123.456d);
+
+        listener.setExpectedObject(Integer.valueOf(12345));
+        producer.fireUnverifiedEvent(eventType, 12345);
+
+        listener.setExpectedObject(Long.valueOf(123456L));
+        producer.fireUnverifiedEvent(eventType, 123456L);
+
+        listener.setExpectedObject(new String[] {"a", "b"});
+        producer.fireUnverifiedEvent(eventType, new String[] {"a", "b"});
+
+        listener.setExpectedObject(Double.valueOf(1.2));
+        producer.fireUnverifiedEvent(eventType, Double.valueOf(1.2));
+
+        producer.removeAllListeners();
+    }
+
+    /**
      * Test the EventProducer and EventListener for TimedEvents.
      */
     @Test
@@ -180,9 +334,17 @@ public class EventPubSubTest
         producer.fireTimedEvent(eventType, (byte) 87, Double.valueOf(12.04d));
         assertEquals(12.04d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
+        listener.setExpectedObject(Character.valueOf('X'));
+        producer.fireTimedEvent(eventType, 'X', Double.valueOf(12.14d));
+        assertEquals(12.14d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
         listener.setExpectedObject(Short.valueOf((short) -234));
         producer.fireTimedEvent(eventType, (short) -234, Double.valueOf(12.05d));
         assertEquals(12.05d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
+        listener.setExpectedObject(Float.valueOf(246.8f));
+        producer.fireTimedEvent(eventType, 246.8f, Double.valueOf(12.15d));
+        assertEquals(12.15d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Double.valueOf(123.456d));
         producer.fireTimedEvent(eventType, 123.456d, Double.valueOf(12.06d));
@@ -199,6 +361,165 @@ public class EventPubSubTest
         listener.setExpectedObject(null);
         producer.fireTimedEvent(eventType, null, Double.valueOf(12.09d));
         assertEquals(12.09d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
+        producer.removeAllListeners();
+    }
+
+    /**
+     * Test the EventProducer and EventListener for verified / unverified timed events.
+     */
+    @Test
+    public void testTimedEventVerificationPubSub()
+    {
+        TestEventProducer producer = new TestEventProducer();
+        TestTimedEventListener<Double> listener = new TestTimedEventListener<>();
+        EventType eventType = new EventType("STRING_TYPE",
+                new MetaData("STRING", "string", new ObjectDescriptor("String", "string", String.class)));
+
+        boolean addListenerOK = producer.addListener(listener, eventType);
+        assertTrue(addListenerOK);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Boolean.valueOf(true));
+                producer.fireTimedEvent(eventType, true, Double.valueOf(12.01d));
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Byte.valueOf((byte) 87));
+                producer.fireTimedEvent(eventType, (byte) 87, Double.valueOf(12.02d));
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Character.valueOf('a'));
+                producer.fireTimedEvent(eventType, 'a', Double.valueOf(12.03d));
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Short.valueOf((short) -234));
+                producer.fireTimedEvent(eventType, (short) -234, Double.valueOf(12.04d));
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Float.valueOf(458.9f));
+                producer.fireTimedEvent(eventType, 458.9f, Double.valueOf(12.05d));
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Double.valueOf(123.456d));
+                producer.fireTimedEvent(eventType, 123.456d, Double.valueOf(12.06d));
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Integer.valueOf(12345));
+                producer.fireTimedEvent(eventType, 12345, Double.valueOf(12.07d));
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Long.valueOf(123456L));
+                producer.fireTimedEvent(eventType, 123456L, Double.valueOf(12.08d));
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(new String[] {"a", "b"});
+                producer.fireTimedEvent(eventType, new String[] {"a", "b"}, Double.valueOf(12.09d));
+            }
+        }, "expected IndexOutOfBoundsException", IndexOutOfBoundsException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                listener.setExpectedObject(Double.valueOf(1.2));
+                producer.fireTimedEvent(eventType, Double.valueOf(1.2), Double.valueOf(12.10d));
+            }
+        }, "expected ClassCastException", ClassCastException.class);
+
+        listener.setExpectedObject(Boolean.valueOf(true));
+        producer.fireUnverifiedTimedEvent(eventType, true, Double.valueOf(12.01d));
+        assertEquals(12.01d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
+        listener.setExpectedObject(Byte.valueOf((byte) 87));
+        producer.fireUnverifiedTimedEvent(eventType, (byte) 87, Double.valueOf(12.02d));
+        assertEquals(12.02d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
+        listener.setExpectedObject(Character.valueOf('a'));
+        producer.fireUnverifiedTimedEvent(eventType, 'a', Double.valueOf(12.03d));
+        assertEquals(12.03d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
+        listener.setExpectedObject(Short.valueOf((short) -234));
+        producer.fireUnverifiedTimedEvent(eventType, (short) -234, Double.valueOf(12.04d));
+        assertEquals(12.04d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
+        listener.setExpectedObject(Float.valueOf(458.9f));
+        producer.fireUnverifiedTimedEvent(eventType, 458.9f, Double.valueOf(12.05d));
+        assertEquals(12.05d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
+        listener.setExpectedObject(Double.valueOf(123.456d));
+        producer.fireUnverifiedTimedEvent(eventType, 123.456d, Double.valueOf(12.06d));
+        assertEquals(12.06d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
+        listener.setExpectedObject(Integer.valueOf(12345));
+        producer.fireUnverifiedTimedEvent(eventType, 12345, Double.valueOf(12.07d));
+        assertEquals(12.07d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
+        listener.setExpectedObject(Long.valueOf(123456L));
+        producer.fireUnverifiedTimedEvent(eventType, 123456L, Double.valueOf(12.08d));
+        assertEquals(12.08d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
+        listener.setExpectedObject(new String[] {"a", "b"});
+        producer.fireUnverifiedTimedEvent(eventType, new String[] {"a", "b"}, Double.valueOf(12.09d));
+        assertEquals(12.09d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
+        listener.setExpectedObject(Double.valueOf(1.2));
+        producer.fireUnverifiedTimedEvent(eventType, Double.valueOf(1.2), Double.valueOf(12.10d));
+        assertEquals(12.10d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
+        producer.removeAllListeners();
     }
 
     /**
@@ -351,6 +672,8 @@ public class EventPubSubTest
         producer.fireEvent(TestEventProducer.PRODUCER_EVENT_1, 34);
         assertFalse(producer.hasListeners());
         assertEquals(0, producer.numberOfListeners(TestEventProducer.PRODUCER_EVENT_1));
+
+        producer.removeAllListeners();
     }
 
     /** */
@@ -449,7 +772,21 @@ public class EventPubSubTest
                 fail("Received event " + event + " unexpectedly");
             }
             this.receivedEvent = event;
-            assertEquals(this.expectedObject, event.getContent());
+            if (this.expectedObject != null && event.getContent() != null && this.expectedObject.getClass().isArray()
+                    && event.getContent().getClass().isArray())
+            {
+                Object[] e = (Object[]) this.expectedObject;
+                Object[] r = (Object[]) event.getContent();
+                assertEquals(e.length, r.length);
+                for (int i = 0; i < e.length; i++)
+                {
+                    assertEquals(e[i], r[i]);
+                }
+            }
+            else
+            {
+                assertEquals(this.expectedObject, event.getContent());
+            }
         }
 
     }
@@ -510,7 +847,21 @@ public class EventPubSubTest
                 fail("Received event " + event + " is not a TimedEvent");
             }
             this.receivedEvent = (TimedEvent<C>) event;
-            assertEquals(this.expectedObject, event.getContent());
+            if (this.expectedObject != null && event.getContent() != null && this.expectedObject.getClass().isArray()
+                    && event.getContent().getClass().isArray())
+            {
+                Object[] e = (Object[]) this.expectedObject;
+                Object[] r = (Object[]) event.getContent();
+                assertEquals(e.length, r.length);
+                for (int i = 0; i < e.length; i++)
+                {
+                    assertEquals(e[i], r[i]);
+                }
+            }
+            else
+            {
+                assertEquals(this.expectedObject, event.getContent());
+            }
         }
 
     }

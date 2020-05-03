@@ -2,6 +2,22 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+   <release version="1.04.20" date="2020-05-03" description="Added float and char payload for the fireEvent method">
+      <action dev="averbraeck" type="add">
+        The float and char primitive types were missing as allowed payloads for the fireEvent and fireTimedEvent methods. 
+        Methods have been added to the classes EventProducer, EventProducerImpl and RemoteEventProducer. 
+      </action>
+      <action dev="averbraeck" type="add">
+        It is now possible to turn off verification of the fields of each individual event, which can be useful for
+        high-frequency events. The method to verify uses the isAssignableFrom(...) method that could be quite 
+        expensive. The fireEvent methods in EventProducerImpl have an extra boolean for verification (true by default).  
+      </action>
+      <action dev="averbraeck" type="add">
+        The EventProducer, EventProducerImpl and RemoteEventProducer got extra methods to be able to fire
+        unverified events as well. 
+      </action>
+   </release>
+   
    <release version="1.04.19" date="2020-04-19" description="Metadata and ObjectDescriptor updates">
       <action dev="averbraeck" type="add">
         An extra EventType constructor has been added to not have to duplicate the event type name in the

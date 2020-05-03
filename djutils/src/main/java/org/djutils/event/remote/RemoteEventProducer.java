@@ -113,216 +113,6 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
     }
 
     /**
-     * Transmit an event to all interested listeners.
-     * @param event EventInterface; the event
-     * @return EventInterface; the event (for method chaining)
-     * @throws RemoteException on network failure
-     */
-    protected synchronized EventInterface fireEvent(final EventInterface event) throws RemoteException
-    {
-        return this.eventProducerImpl.fireEvent(event);
-    }
-
-    /**
-     * Transmit an event with a serializable object as payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value Serializable; the object sent with the event
-     * @return Serializable; the payload
-     * @throws RemoteException on network failure
-     */
-    protected Serializable fireEvent(final EventType eventType, final Serializable value) throws RemoteException
-    {
-        return this.eventProducerImpl.fireEvent(eventType, value);
-    }
-
-    /**
-     * Transmit an event with no payload object to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @throws RemoteException on network failure
-     */
-    protected void fireEvent(final EventType eventType) throws RemoteException
-    {
-        this.eventProducerImpl.fireEvent(eventType);
-    }
-
-    /**
-     * Transmit a time-stamped event with a Serializable object (payload) to all interested listeners.
-     * @param eventType EventType; the eventType of the event.
-     * @param value Serializable; the payload sent with the event
-     * @param time C; a time stamp for the event
-     * @return Serializable; the payload
-     * @param <C> the comparable type to indicate the time when the event is fired
-     * @throws RemoteException on network failure
-     */
-    protected <C extends Comparable<C> & Serializable> Serializable fireTimedEvent(final EventType eventType,
-            final Serializable value, final C time) throws RemoteException
-    {
-        return this.eventProducerImpl.fireTimedEvent(eventType, value, time);
-    }
-
-    /**
-     * Transmit an event with a one byte payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value byte; the payload
-     * @return byte; the payload
-     * @throws RemoteException on network failure
-     */
-    protected byte fireEvent(final EventType eventType, final byte value) throws RemoteException
-    {
-        return this.eventProducerImpl.fireEvent(eventType, value);
-    }
-
-    /**
-     * Transmit a time-stamped event with a one byte payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value byte; the payload
-     * @param time C; a time stamp for the event
-     * @param <C> the comparable type to indicate the time when the event is fired
-     * @return byte; the payload
-     * @throws RemoteException on network failure
-     */
-    protected <C extends Comparable<C> & Serializable> byte fireTimedEvent(final EventType eventType, final byte value,
-            final C time) throws RemoteException
-    {
-        return this.eventProducerImpl.fireTimedEvent(eventType, value, time);
-    }
-
-    /**
-     * Transmit an event with a boolean payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value boolean; the payload
-     * @return boolean; the payload
-     * @throws RemoteException on network failure
-     */
-    protected boolean fireEvent(final EventType eventType, final boolean value) throws RemoteException
-    {
-        return this.eventProducerImpl.fireEvent(eventType, value);
-    }
-
-    /**
-     * Transmit a time-stamped event with a boolean payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value boolean; the payload
-     * @param time C; a time stamp for the event
-     * @param <C> the comparable type to indicate the time when the event is fired
-     * @return boolean; the payload
-     * @throws RemoteException on network failure
-     */
-    protected <C extends Comparable<C> & Serializable> boolean fireTimedEvent(final EventType eventType, final boolean value,
-            final C time) throws RemoteException
-    {
-        return this.eventProducerImpl.fireTimedEvent(eventType, value, time);
-    }
-
-    /**
-     * Transmit an event with a double value payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value double; the payload
-     * @return double; the payload
-     * @throws RemoteException on network failure
-     */
-    protected double fireEvent(final EventType eventType, final double value) throws RemoteException
-    {
-        return this.eventProducerImpl.fireEvent(eventType, value);
-    }
-
-    /**
-     * Transmit a time-stamped event with a double value payload to interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value double; the payload
-     * @param time C; a time stamp for the event
-     * @param <C> the comparable type to indicate the time when the event is fired
-     * @return double; the payload
-     * @throws RemoteException on network failure
-     */
-    protected <C extends Comparable<C> & Serializable> double fireTimedEvent(final EventType eventType, final double value,
-            final C time) throws RemoteException
-    {
-        return this.eventProducerImpl.fireTimedEvent(eventType, value, time);
-    }
-
-    /**
-     * Transmit an event with an integer payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value int; the payload
-     * @return int; the payload
-     * @throws RemoteException on network failure
-     */
-    protected int fireEvent(final EventType eventType, final int value) throws RemoteException
-    {
-        return this.eventProducerImpl.fireEvent(eventType, value);
-    }
-
-    /**
-     * Transmit a time-stamped event with an integer payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value int; the payload
-     * @param time C; a time stamp for the event
-     * @param <C> the comparable type to indicate the time when the event is fired
-     * @return int; the payload
-     * @throws RemoteException on network failure
-     */
-    protected <C extends Comparable<C> & Serializable> int fireTimedEvent(final EventType eventType, final int value,
-            final C time) throws RemoteException
-    {
-        return this.eventProducerImpl.fireTimedEvent(eventType, value, time);
-    }
-
-    /**
-     * Transmit an event with a long payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value long; the payload
-     * @return long; the payload
-     * @throws RemoteException on network failure
-     */
-    protected long fireEvent(final EventType eventType, final long value) throws RemoteException
-    {
-        return this.eventProducerImpl.fireEvent(eventType, value);
-    }
-
-    /**
-     * Transmit a time-stamped event with a long payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value long; the payload
-     * @param time C; a time stamp for the event
-     * @param <C> the comparable type to indicate the time when the event is fired
-     * @return long; the payload
-     * @throws RemoteException on network failure
-     */
-    protected <C extends Comparable<C> & Serializable> long fireTimedEvent(final EventType eventType, final long value,
-            final C time) throws RemoteException
-    {
-        return this.eventProducerImpl.fireTimedEvent(eventType, value, time);
-    }
-
-    /**
-     * Transmit an event with a short payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value short; the payload
-     * @return short; the payload
-     * @throws RemoteException on network failure
-     */
-    protected short fireEvent(final EventType eventType, final short value) throws RemoteException
-    {
-        return this.eventProducerImpl.fireEvent(eventType, value);
-    }
-
-    /**
-     * Transmit a time-stamped event with a short payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value short; the payload
-     * @param time C; a time stamp for the event
-     * @param <C> the comparable type to indicate the time when the event is fired
-     * @return short; the payload
-     * @throws RemoteException on network failure
-     */
-    protected <C extends Comparable<C> & Serializable> short fireTimedEvent(final EventType eventType, final short value,
-            final C time) throws RemoteException
-    {
-        return this.eventProducerImpl.fireTimedEvent(eventType, value, time);
-    }
-
-    /**
      * Remove all the listeners from this event producer.
      * @return int; the number of removed event types
      * @throws RemoteException on network failure
@@ -384,6 +174,531 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
     protected List<Reference<EventListenerInterface>> getListenerReferences(final EventType eventType)
     {
         return this.eventProducerImpl.getListenerReferences(eventType);
+    }
+
+    /* ********************************************************************************************************* */
+    /* ******************** FIREEVENT AND FIRETIMEDEVENT WITH METADATA VERIFICATION ************************** */
+    /* ********************************************************************************************************* */
+
+    /**
+     * Transmit an event to all interested listeners.
+     * @param event EventInterface; the event
+     * @return EventInterface; the event (for method chaining)
+     * @throws RemoteException on network failure
+     */
+    protected synchronized EventInterface fireEvent(final EventInterface event) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(event);
+    }
+
+    /**
+     * Transmit an event with a serializable object as payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value Serializable; the object sent with the event
+     * @return Serializable; the payload
+     * @throws RemoteException on network failure
+     */
+    protected Serializable fireEvent(final EventType eventType, final Serializable value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, true);
+    }
+
+    /**
+     * Transmit an event with no payload object to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @throws RemoteException on network failure
+     */
+    protected void fireEvent(final EventType eventType) throws RemoteException
+    {
+        this.eventProducerImpl.fireEvent(eventType, true);
+    }
+
+    /**
+     * Transmit a time-stamped event with a Serializable object (payload) to all interested listeners.
+     * @param eventType EventType; the eventType of the event.
+     * @param value Serializable; the payload sent with the event
+     * @param time C; a time stamp for the event
+     * @return Serializable; the payload
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> Serializable fireTimedEvent(final EventType eventType,
+            final Serializable value, final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
+    }
+
+    /**
+     * Transmit an event with a one byte payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value byte; the payload
+     * @return byte; the payload
+     * @throws RemoteException on network failure
+     */
+    protected byte fireEvent(final EventType eventType, final byte value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, true);
+    }
+
+    /**
+     * Transmit a time-stamped event with a one byte payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value byte; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return byte; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> byte fireTimedEvent(final EventType eventType, final byte value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
+    }
+
+    /**
+     * Transmit an event with a one char payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value char; the payload
+     * @return char; the payload
+     * @throws RemoteException on network failure
+     */
+    protected char fireEvent(final EventType eventType, final char value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, true);
+    }
+
+    /**
+     * Transmit a time-stamped event with a one char payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value char; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return char; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> char fireTimedEvent(final EventType eventType, final char value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
+    }
+
+    /**
+     * Transmit an event with a boolean payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value boolean; the payload
+     * @return boolean; the payload
+     * @throws RemoteException on network failure
+     */
+    protected boolean fireEvent(final EventType eventType, final boolean value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, true);
+    }
+
+    /**
+     * Transmit a time-stamped event with a boolean payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value boolean; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return boolean; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> boolean fireTimedEvent(final EventType eventType, final boolean value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
+    }
+
+    /**
+     * Transmit an event with a double value payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value double; the payload
+     * @return double; the payload
+     * @throws RemoteException on network failure
+     */
+    protected double fireEvent(final EventType eventType, final double value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, true);
+    }
+
+    /**
+     * Transmit a time-stamped event with a double value payload to interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value double; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return double; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> double fireTimedEvent(final EventType eventType, final double value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
+    }
+
+    /**
+     * Transmit an event with an integer payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value int; the payload
+     * @return int; the payload
+     * @throws RemoteException on network failure
+     */
+    protected int fireEvent(final EventType eventType, final int value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, true);
+    }
+
+    /**
+     * Transmit a time-stamped event with an integer payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value int; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return int; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> int fireTimedEvent(final EventType eventType, final int value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
+    }
+
+    /**
+     * Transmit an event with a long payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value long; the payload
+     * @return long; the payload
+     * @throws RemoteException on network failure
+     */
+    protected long fireEvent(final EventType eventType, final long value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, true);
+    }
+
+    /**
+     * Transmit a time-stamped event with a long payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value long; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return long; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> long fireTimedEvent(final EventType eventType, final long value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
+    }
+
+    /**
+     * Transmit an event with a short payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value short; the payload
+     * @return short; the payload
+     * @throws RemoteException on network failure
+     */
+    protected short fireEvent(final EventType eventType, final short value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, true);
+    }
+
+    /**
+     * Transmit a time-stamped event with a short payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value short; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return short; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> short fireTimedEvent(final EventType eventType, final short value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
+    }
+
+    /**
+     * Transmit an event with a float payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value float; the payload
+     * @return float; the payload
+     * @throws RemoteException on network failure
+     */
+    protected float fireEvent(final EventType eventType, final float value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, true);
+    }
+
+    /**
+     * Transmit a time-stamped event with a float payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value float; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return float; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> float fireTimedEvent(final EventType eventType, final float value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
+    }
+
+    /* ********************************************************************************************************* */
+    /* ******************* FIREEVENT AND FIRETIMEDEVENT WITHOUT METADATA VERIFICATION ************************ */
+    /* ********************************************************************************************************* */
+
+    /**
+     * Transmit an event that is not verified with a serializable object as payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value Serializable; the object sent with the event
+     * @return Serializable; the payload
+     * @throws RemoteException on network failure
+     */
+    protected Serializable fireUnverifiedEvent(final EventType eventType, final Serializable value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, false);
+    }
+
+    /**
+     * Transmit an event that is not verified with no payload object to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @throws RemoteException on network failure
+     */
+    protected void fireUnverifiedEvent(final EventType eventType) throws RemoteException
+    {
+        this.eventProducerImpl.fireEvent(eventType, false);
+    }
+
+    /**
+     * Transmit a time-stamped event that is not verified with a Serializable object (payload) to all interested listeners.
+     * @param eventType EventType; the eventType of the event.
+     * @param value Serializable; the payload sent with the event
+     * @param time C; a time stamp for the event
+     * @return Serializable; the payload
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> Serializable fireUnverifiedTimedEvent(final EventType eventType,
+            final Serializable value, final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
+    }
+
+    /**
+     * Transmit an event that is not verified with a one byte payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value byte; the payload
+     * @return byte; the payload
+     * @throws RemoteException on network failure
+     */
+    protected byte fireUnverifiedEvent(final EventType eventType, final byte value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, false);
+    }
+
+    /**
+     * Transmit a time-stamped event that is not verified with a one byte payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value byte; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return byte; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> byte fireUnverifiedTimedEvent(final EventType eventType,
+            final byte value, final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
+    }
+
+    /**
+     * Transmit an event that is not verified with a one char payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value char; the payload
+     * @return char; the payload
+     * @throws RemoteException on network failure
+     */
+    protected char fireUnverifiedEvent(final EventType eventType, final char value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, false);
+    }
+
+    /**
+     * Transmit a time-stamped event that is not verified with a one char payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value char; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return char; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> char fireUnverifiedTimedEvent(final EventType eventType,
+            final char value, final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
+    }
+
+    /**
+     * Transmit an event that is not verified with a boolean payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value boolean; the payload
+     * @return boolean; the payload
+     * @throws RemoteException on network failure
+     */
+    protected boolean fireUnverifiedEvent(final EventType eventType, final boolean value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, false);
+    }
+
+    /**
+     * Transmit a time-stamped event that is not verified with a boolean payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value boolean; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return boolean; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> boolean fireUnverifiedTimedEvent(final EventType eventType,
+            final boolean value, final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
+    }
+
+    /**
+     * Transmit an event that is not verified with a double value payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value double; the payload
+     * @return double; the payload
+     * @throws RemoteException on network failure
+     */
+    protected double fireUnverifiedEvent(final EventType eventType, final double value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, false);
+    }
+
+    /**
+     * Transmit a time-stamped event that is not verified with a double value payload to interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value double; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return double; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> double fireUnverifiedTimedEvent(final EventType eventType,
+            final double value, final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
+    }
+
+    /**
+     * Transmit an event that is not verified with an integer payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value int; the payload
+     * @return int; the payload
+     * @throws RemoteException on network failure
+     */
+    protected int fireUnverifiedEvent(final EventType eventType, final int value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, false);
+    }
+
+    /**
+     * Transmit a time-stamped event that is not verified with an integer payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value int; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return int; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> int fireUnverifiedTimedEvent(final EventType eventType, final int value,
+            final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
+    }
+
+    /**
+     * Transmit an event that is not verified with a long payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value long; the payload
+     * @return long; the payload
+     * @throws RemoteException on network failure
+     */
+    protected long fireUnverifiedEvent(final EventType eventType, final long value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, false);
+    }
+
+    /**
+     * Transmit a time-stamped event that is not verified with a long payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value long; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return long; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> long fireUnverifiedTimedEvent(final EventType eventType,
+            final long value, final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
+    }
+
+    /**
+     * Transmit an event that is not verified with a short payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value short; the payload
+     * @return short; the payload
+     * @throws RemoteException on network failure
+     */
+    protected short fireUnverifiedEvent(final EventType eventType, final short value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, false);
+    }
+
+    /**
+     * Transmit a time-stamped event that is not verified with a short payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value short; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return short; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> short fireUnverifiedTimedEvent(final EventType eventType,
+            final short value, final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
+    }
+
+    /**
+     * Transmit an event that is not verified with a float payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value float; the payload
+     * @return float; the payload
+     * @throws RemoteException on network failure
+     */
+    protected float fireUnverifiedEvent(final EventType eventType, final float value) throws RemoteException
+    {
+        return this.eventProducerImpl.fireEvent(eventType, value, false);
+    }
+
+    /**
+     * Transmit a time-stamped event that is not verified with a float payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value float; the payload
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return float; the payload
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> float fireUnverifiedTimedEvent(final EventType eventType,
+            final float value, final C time) throws RemoteException
+    {
+        return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
     }
 
 }
