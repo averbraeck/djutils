@@ -34,17 +34,29 @@ public class Event implements EventInterface
     private final Serializable sourceId;
 
     /**
-     * Construct a new Event.
+     * Construct a new Event, where compliance with the metadata is verified.
      * @param type EventType; the name of the Event.
      * @param sourceId Serializable; the source id of the sender
      * @param content Serializable; the content of the event
      */
     public Event(final EventType type, final Serializable sourceId, final Serializable content)
     {
+        this(type, sourceId, content, true);
+    }
+
+    /**
+     * Construct a new Event, with a choice to verify compliance with metadata.
+     * @param type EventType; the name of the Event.
+     * @param sourceId Serializable; the source id of the sender
+     * @param content Serializable; the content of the event
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
+     */
+    public Event(final EventType type, final Serializable sourceId, final Serializable content, final boolean verifyMetaData)
+    {
         this.type = type;
         this.sourceId = sourceId;
         this.content = content;
-        if (null != this.type)
+        if (verifyMetaData && null != this.type)
         {
             MetaData metaData = type.getMetaData();
             if (null != metaData)

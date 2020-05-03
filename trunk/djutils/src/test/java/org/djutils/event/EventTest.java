@@ -78,7 +78,7 @@ public class EventTest
                 new EventType((MetaData) null);
             }
         }, "Constructing EventType with null metadata should have failed");
-        
+
         new Event(eventType, "source", 5);
         new Event(eventType, "source", null);
         Try.testFail(new Try.Execution()
@@ -89,7 +89,8 @@ public class EventTest
                 new Event(eventType, "source", 1.2);
             }
         }, "Constructing Integer Event with double content should have failed");
-        
+        new Event(eventType, "source", 1.2, false); // but without checking it should succeed
+
         EventType eventType2 = new EventType(MetaData.EMPTY);
         assertEquals(eventType2, eventType2);
         assertNotEquals(eventType, eventType2);
@@ -102,7 +103,7 @@ public class EventTest
         assertEquals(eventType2.getMetaData().getDescription(), "No data");
         assertEquals(eventType2.toString(), "No data");
         assertEquals(1, eventType.getMetaData().getObjectDescriptors().length);
-        
+
         new Event(eventType2, "source", null);
         Try.testFail(new Try.Execution()
         {
@@ -275,6 +276,19 @@ public class EventTest
         assertTrue(event.compareTo(event) == 0);
         assertTrue(event.compareTo(event2) < 0);
         assertTrue(event2.compareTo(event) > 0);
+
+        MetaData metaData =
+                new MetaData("INT_EVENT", "event with integer payload", new ObjectDescriptor("int", "integer", Integer.class));
+        EventType intEventType = new EventType(metaData);
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                new TimedEvent<Double>(intEventType, "source", 1.2, 3.4);
+            }
+        }, "Constructing Integer TimedEvent with double content should have failed");
+        new TimedEvent<Double>(intEventType, "source", 1.2, 3.4, false); // but without checking it should succeed
     }
 
     /** Serializable object class. */

@@ -16,9 +16,8 @@ import org.djutils.event.ref.WeakReference;
 import org.djutils.exceptions.Throw;
 
 /**
- * The EventProducerImpl forms the reference implementation of the EventProducerInterface, and acts as a "helper" class for the
- * different types of EvenProducer implementations. The storage of the listeners is done in a Map with the EventType as the key,
- * and a List of References (weak or strong) to the Listeners.
+ * The EventProducer forms the reference implementation of the EventProducerInterface. The storage of the listeners is done in a
+ * Map with the EventType as the key, and a List of References (weak or strong) to the Listeners.
  * <p>
  * Copyright (c) 2002-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -195,21 +194,23 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * Transmit an event with a serializable object as payload to all interested listeners.
      * @param eventType EventType; the eventType of the event
      * @param value Serializable; the object sent with the event
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return Serializable; the payload
      */
-    public Serializable fireEvent(final EventType eventType, final Serializable value)
+    public Serializable fireEvent(final EventType eventType, final Serializable value, final boolean verifyMetaData)
     {
-        this.fireEvent(new Event(eventType, getSourceId(), value));
+        this.fireEvent(new Event(eventType, getSourceId(), value, verifyMetaData));
         return value;
     }
 
     /**
      * Transmit an event with no payload object to all interested listeners.
      * @param eventType EventType; the eventType of the event
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      */
-    public void fireEvent(final EventType eventType)
+    public void fireEvent(final EventType eventType, final boolean verifyMetaData)
     {
-        this.fireEvent(new Event(eventType, getSourceId(), null));
+        this.fireEvent(new Event(eventType, getSourceId(), null, verifyMetaData));
     }
 
     /**
@@ -217,14 +218,15 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * @param eventType EventType; the eventType of the event.
      * @param value Serializable; the payload sent with the event
      * @param time C; a time stamp for the event
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return Serializable; the payload
      * @param <C> the comparable type to indicate the time when the event is fired
      */
     public <C extends Comparable<C> & Serializable> Serializable fireTimedEvent(final EventType eventType,
-            final Serializable value, final C time)
+            final Serializable value, final C time, final boolean verifyMetaData)
     {
         Throw.whenNull(time, "time may not be null");
-        this.fireEvent(new TimedEvent<C>(eventType, getSourceId(), value, time));
+        this.fireEvent(new TimedEvent<C>(eventType, getSourceId(), value, time, verifyMetaData));
         return value;
     }
 
@@ -232,11 +234,12 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * Transmit an event with a one byte payload to all interested listeners.
      * @param eventType EventType; the eventType of the event
      * @param value byte; the payload
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return byte; the payload
      */
-    public byte fireEvent(final EventType eventType, final byte value)
+    public byte fireEvent(final EventType eventType, final byte value, final boolean verifyMetaData)
     {
-        this.fireEvent(eventType, Byte.valueOf(value));
+        this.fireEvent(eventType, Byte.valueOf(value), verifyMetaData);
         return value;
     }
 
@@ -245,13 +248,43 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * @param eventType EventType; the eventType of the event
      * @param value byte; the payload
      * @param time C; a time stamp for the event
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return byte; the payload
      */
     public <C extends Comparable<C> & Serializable> byte fireTimedEvent(final EventType eventType, final byte value,
-            final C time)
+            final C time, final boolean verifyMetaData)
     {
-        this.fireTimedEvent(eventType, Byte.valueOf(value), time);
+        this.fireTimedEvent(eventType, Byte.valueOf(value), time, verifyMetaData);
+        return value;
+    }
+
+    /**
+     * Transmit an event with a one char payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value char; the payload
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
+     * @return char; the payload
+     */
+    public char fireEvent(final EventType eventType, final char value, final boolean verifyMetaData)
+    {
+        this.fireEvent(eventType, Character.valueOf(value), verifyMetaData);
+        return value;
+    }
+
+    /**
+     * Transmit a time-stamped event with a one char payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value char; the payload
+     * @param time C; a time stamp for the event
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return char; the payload
+     */
+    public <C extends Comparable<C> & Serializable> char fireTimedEvent(final EventType eventType, final char value,
+            final C time, final boolean verifyMetaData)
+    {
+        this.fireTimedEvent(eventType, Character.valueOf(value), time, verifyMetaData);
         return value;
     }
 
@@ -259,11 +292,12 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * Transmit an event with a boolean payload to all interested listeners.
      * @param eventType EventType; the eventType of the event
      * @param value boolean; the payload
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return boolean; the payload
      */
-    public boolean fireEvent(final EventType eventType, final boolean value)
+    public boolean fireEvent(final EventType eventType, final boolean value, final boolean verifyMetaData)
     {
-        this.fireEvent(eventType, Boolean.valueOf(value));
+        this.fireEvent(eventType, Boolean.valueOf(value), verifyMetaData);
         return value;
     }
 
@@ -272,13 +306,14 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * @param eventType EventType; the eventType of the event
      * @param value boolean; the payload
      * @param time C; a time stamp for the event
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return boolean; the payload
      */
     public <C extends Comparable<C> & Serializable> boolean fireTimedEvent(final EventType eventType, final boolean value,
-            final C time)
+            final C time, final boolean verifyMetaData)
     {
-        fireTimedEvent(eventType, Boolean.valueOf(value), time);
+        fireTimedEvent(eventType, Boolean.valueOf(value), time, verifyMetaData);
         return value;
     }
 
@@ -286,11 +321,12 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * Transmit an event with a double value payload to all interested listeners.
      * @param eventType EventType; the eventType of the event
      * @param value double; the payload
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return double; the payload
      */
-    public double fireEvent(final EventType eventType, final double value)
+    public double fireEvent(final EventType eventType, final double value, final boolean verifyMetaData)
     {
-        this.fireEvent(eventType, Double.valueOf(value));
+        this.fireEvent(eventType, Double.valueOf(value), verifyMetaData);
         return value;
     }
 
@@ -299,13 +335,14 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * @param eventType EventType; the eventType of the event
      * @param value double; the payload
      * @param time C; a time stamp for the event
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return double; the payload
      */
     public <C extends Comparable<C> & Serializable> double fireTimedEvent(final EventType eventType, final double value,
-            final C time)
+            final C time, final boolean verifyMetaData)
     {
-        this.fireTimedEvent(eventType, Double.valueOf(value), time);
+        this.fireTimedEvent(eventType, Double.valueOf(value), time, verifyMetaData);
         return value;
     }
 
@@ -313,11 +350,12 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * Transmit an event with an integer payload to all interested listeners.
      * @param eventType EventType; the eventType of the event
      * @param value int; the payload
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return int; the payload
      */
-    public int fireEvent(final EventType eventType, final int value)
+    public int fireEvent(final EventType eventType, final int value, final boolean verifyMetaData)
     {
-        this.fireEvent(eventType, Integer.valueOf(value));
+        this.fireEvent(eventType, Integer.valueOf(value), verifyMetaData);
         return value;
     }
 
@@ -326,12 +364,14 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * @param eventType EventType; the eventType of the event
      * @param value int; the payload
      * @param time C; a time stamp for the event
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return int; the payload
      */
-    public <C extends Comparable<C> & Serializable> int fireTimedEvent(final EventType eventType, final int value, final C time)
+    public <C extends Comparable<C> & Serializable> int fireTimedEvent(final EventType eventType, final int value, final C time,
+            final boolean verifyMetaData)
     {
-        this.fireTimedEvent(eventType, Integer.valueOf(value), time);
+        this.fireTimedEvent(eventType, Integer.valueOf(value), time, verifyMetaData);
         return value;
     }
 
@@ -339,11 +379,12 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * Transmit an event with a long payload to all interested listeners.
      * @param eventType EventType; the eventType of the event
      * @param value long; the payload
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return long; the payload
      */
-    public long fireEvent(final EventType eventType, final long value)
+    public long fireEvent(final EventType eventType, final long value, final boolean verifyMetaData)
     {
-        this.fireEvent(eventType, Long.valueOf(value));
+        this.fireEvent(eventType, Long.valueOf(value), verifyMetaData);
         return value;
     }
 
@@ -352,13 +393,14 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * @param eventType EventType; the eventType of the event
      * @param value long; the payload
      * @param time C; a time stamp for the event
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return long; the payload
      */
     public <C extends Comparable<C> & Serializable> long fireTimedEvent(final EventType eventType, final long value,
-            final C time)
+            final C time, final boolean verifyMetaData)
     {
-        this.fireTimedEvent(eventType, Long.valueOf(value), time);
+        this.fireTimedEvent(eventType, Long.valueOf(value), time, verifyMetaData);
         return value;
     }
 
@@ -366,11 +408,12 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * Transmit an event with a short payload to all interested listeners.
      * @param eventType EventType; the eventType of the event
      * @param value short; the payload
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return short; the payload
      */
-    public short fireEvent(final EventType eventType, final short value)
+    public short fireEvent(final EventType eventType, final short value, final boolean verifyMetaData)
     {
-        this.fireEvent(eventType, Short.valueOf(value));
+        this.fireEvent(eventType, Short.valueOf(value), verifyMetaData);
         return value;
     }
 
@@ -379,13 +422,43 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * @param eventType EventType; the eventType of the event
      * @param value short; the payload
      * @param time C; a time stamp for the event
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return short; the payload
      */
     public <C extends Comparable<C> & Serializable> short fireTimedEvent(final EventType eventType, final short value,
-            final C time)
+            final C time, final boolean verifyMetaData)
     {
-        this.fireTimedEvent(eventType, Short.valueOf(value), time);
+        this.fireTimedEvent(eventType, Short.valueOf(value), time, verifyMetaData);
+        return value;
+    }
+
+    /**
+     * Transmit an event with a float value payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value float; the payload
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
+     * @return float; the payload
+     */
+    public float fireEvent(final EventType eventType, final float value, final boolean verifyMetaData)
+    {
+        this.fireEvent(eventType, Float.valueOf(value), verifyMetaData);
+        return value;
+    }
+
+    /**
+     * Transmit a time-stamped event with a float value payload to interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value float; the payload
+     * @param time C; a time stamp for the event
+     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @return float; the payload
+     */
+    public <C extends Comparable<C> & Serializable> float fireTimedEvent(final EventType eventType, final float value,
+            final C time, final boolean verifyMetaData)
+    {
+        this.fireTimedEvent(eventType, Float.valueOf(value), time, verifyMetaData);
         return value;
     }
 
