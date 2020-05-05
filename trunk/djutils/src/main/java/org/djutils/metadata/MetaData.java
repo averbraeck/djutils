@@ -43,32 +43,19 @@ public class MetaData implements Serializable
      *            of this array; subsequent modification of the contents of the provided <code>objectDescriptors</code> array
      *            will affect the behavior of the MetaData object.
      */
-    public MetaData(final String name, final String description, final ObjectDescriptor[] objectDescriptors)
+    public MetaData(final String name, final String description, final ObjectDescriptor... objectDescriptors)
     {
         Throw.whenNull(name, "name may not be null");
         Throw.when(name.length() == 0, IllegalArgumentException.class, "name cannot be the empty string");
         Throw.whenNull(description, "description may not be null");
-        Throw.whenNull(objectDescriptors, "objectDescriptors may not be null");
+        for (int i = 0; i < objectDescriptors.length; i++)
+        {
+            ObjectDescriptor objectDescriptor = objectDescriptors[i];
+            Throw.whenNull(objectDescriptor, "objectDescriptor %d may not be null", i);
+        }
         this.name = name;
         this.description = description;
         this.objectDescriptors = objectDescriptors;
-    }
-
-    /**
-     * Construct a new MetaData object that can check a single Object..
-     * @param name String; name of the new MetaData object, which cannot be null or the empty string
-     * @param description String; description of the new MetaData object
-     * @param objectDescriptor ObjectDescriptor; the descriptor for the object that the new MetaData object will accept as valid
-     */
-    public MetaData(final String name, final String description, final ObjectDescriptor objectDescriptor)
-    {
-        Throw.whenNull(name, "name may not be null");
-        Throw.when(name.length() == 0, IllegalArgumentException.class, "name cannot be the empty string");
-        Throw.whenNull(description, "description may not be null");
-        Throw.whenNull(objectDescriptor, "objectDescriptor may not be null");
-        this.name = name;
-        this.description = description;
-        this.objectDescriptors = new ObjectDescriptor[] {objectDescriptor};
     }
 
     /**
