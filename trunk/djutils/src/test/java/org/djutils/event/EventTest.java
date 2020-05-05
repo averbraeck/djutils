@@ -26,7 +26,6 @@ import org.junit.Test;
  */
 public class EventTest
 {
-
     /**
      * Test the NO_META_DATA object.
      */
@@ -61,6 +60,7 @@ public class EventTest
                 new MetaData("INT_EVENT", "event with integer payload", new ObjectDescriptor("int", "integer", Integer.class));
         EventType eventType = new EventType(metaData);
         assertEquals(eventType, eventType);
+        assertEquals(Event.class, eventType.getValidEventType());
         Object content = new SerializableObject();
         assertNotEquals(eventType, content);
         assertNotEquals(eventType, null);
@@ -113,7 +113,6 @@ public class EventTest
                 new Event(eventType2, "source", 1.2);
             }
         }, "Constructing EMPTY Event with double content should have failed");
-
     }
 
     /**
@@ -125,12 +124,16 @@ public class EventTest
     {
         EventType eventType = new EventType("TEST_TYPE", MetaData.NO_META_DATA);
         assertEquals(eventType, eventType);
+        assertEquals(Event.class, eventType.getValidEventType());
         Object content = new SerializableObject();
         assertNotEquals(eventType, content);
         assertNotEquals(eventType, null);
         assertNotEquals(eventType, new EventType("TEST_TYPE2", MetaData.NO_META_DATA));
         assertEquals(eventType.getName(), "TEST_TYPE");
         assertEquals(eventType.toString(), "TEST_TYPE");
+        TimedEventType timedEventType = new TimedEventType("TEST_TYPE", MetaData.NO_META_DATA);
+        assertEquals(TimedEvent.class, timedEventType.getValidEventType());
+
         Try.testFail(new Try.Execution()
         {
             @Override
@@ -144,7 +147,7 @@ public class EventTest
             @Override
             public void execute() throws Throwable
             {
-                new EventType(null, null);
+                new EventType((String) null, (MetaData) null);
             }
         });
 
@@ -153,6 +156,7 @@ public class EventTest
         assertEquals("Deprecated constructor uses NO_META_DATA for the meta data", MetaData.NO_META_DATA,
                 eventType.getMetaData());
         assertEquals("Name is correctly used", "event with unspecified meta data", eventType.getName());
+        assertEquals(Event.class, eventType.getValidEventType());
     }
 
     /**
@@ -216,70 +220,71 @@ public class EventTest
     {
         Serializable source = "timed_source_id";
         Serializable source2 = new SerializableObject();
-        EventType eventType = new EventType("TEST_TYPE", MetaData.NO_META_DATA);
-        EventType eventType2 = new EventType("TEST_TYPE2", MetaData.NO_META_DATA);
+        TimedEventType timedEventType = new TimedEventType("TEST_TYPE", MetaData.NO_META_DATA);
+        TimedEventType timedEventType2 = new TimedEventType("TEST_TYPE2", MetaData.NO_META_DATA);
         Serializable content = new SerializableObject();
         Serializable content2 = new SerializableObject();
         long time = 123L;
         long time2 = 456L;
-        TimedEvent<Long> event = new TimedEvent<>(eventType, source, content, time);
-        TimedEvent<Long> event2 = new TimedEvent<>(eventType2, source2, content2, time2);
-        assertEquals(content, event.getContent());
-        assertEquals(source, event.getSourceId());
-        assertEquals(eventType, event.getType());
-        assertEquals(time, event.getTimeStamp().longValue());
+        TimedEvent<Long> timedEvent = new TimedEvent<>(timedEventType, source, content, time);
+        TimedEvent<Long> timedEvent2 = new TimedEvent<>(timedEventType2, source2, content2, time2);
+        assertEquals(content, timedEvent.getContent());
+        assertEquals(source, timedEvent.getSourceId());
+        assertEquals(timedEventType, timedEvent.getType());
+        assertEquals(time, timedEvent.getTimeStamp().longValue());
 
-        assertEquals(event, event);
-        assertEquals(new TimedEvent<Long>(eventType, source, content, time), event);
-        assertNotEquals(event, source);
-        assertNotEquals(event, null);
+        assertEquals(timedEvent, timedEvent);
+        assertEquals(new TimedEvent<Long>(timedEventType, source, content, time), timedEvent);
+        assertNotEquals(timedEvent, source);
+        assertNotEquals(timedEvent, null);
 
-        assertNotEquals(event, new TimedEvent<Long>(eventType2, source, content, time));
-        assertNotEquals(event, new TimedEvent<Long>(eventType, source2, content, time));
-        assertNotEquals(event, new TimedEvent<Long>(eventType, source, content2, time));
-        assertNotEquals(event, new TimedEvent<Long>(eventType, source, content, time2));
+        assertNotEquals(timedEvent, new TimedEvent<Long>(timedEventType2, source, content, time));
+        assertNotEquals(timedEvent, new TimedEvent<Long>(timedEventType, source2, content, time));
+        assertNotEquals(timedEvent, new TimedEvent<Long>(timedEventType, source, content2, time));
+        assertNotEquals(timedEvent, new TimedEvent<Long>(timedEventType, source, content, time2));
 
-        assertNotEquals(event, new TimedEvent<Long>(null, source, content, time));
-        assertNotEquals(event, new TimedEvent<Long>(eventType, null, content, time));
-        assertNotEquals(event, new TimedEvent<Long>(eventType, source, null, time));
-        assertNotEquals(event, new TimedEvent<Long>(eventType, source, content, null));
+        assertNotEquals(timedEvent, new TimedEvent<Long>(null, source, content, time));
+        assertNotEquals(timedEvent, new TimedEvent<Long>(timedEventType, null, content, time));
+        assertNotEquals(timedEvent, new TimedEvent<Long>(timedEventType, source, null, time));
+        assertNotEquals(timedEvent, new TimedEvent<Long>(timedEventType, source, content, null));
 
-        assertNotEquals(new TimedEvent<Long>(null, source, content, time), event);
-        assertNotEquals(new TimedEvent<Long>(eventType, null, content, time), event);
-        assertNotEquals(new TimedEvent<Long>(eventType, source, null, time), event);
-        assertNotEquals(new TimedEvent<Long>(eventType, source, content, null), event);
+        assertNotEquals(new TimedEvent<Long>(null, source, content, time), timedEvent);
+        assertNotEquals(new TimedEvent<Long>(timedEventType, null, content, time), timedEvent);
+        assertNotEquals(new TimedEvent<Long>(timedEventType, source, null, time), timedEvent);
+        assertNotEquals(new TimedEvent<Long>(timedEventType, source, content, null), timedEvent);
 
         assertEquals(new TimedEvent<Long>(null, source, content, time), new TimedEvent<Long>(null, source, content, time));
-        assertEquals(new TimedEvent<Long>(eventType, null, content, time),
-                new TimedEvent<Long>(eventType, null, content, time));
-        assertEquals(new TimedEvent<Long>(eventType, source, null, time), new TimedEvent<Long>(eventType, source, null, time));
-        assertEquals(new TimedEvent<Long>(eventType, source, content, null),
-                new TimedEvent<Long>(eventType, source, content, null));
+        assertEquals(new TimedEvent<Long>(timedEventType, null, content, time),
+                new TimedEvent<Long>(timedEventType, null, content, time));
+        assertEquals(new TimedEvent<Long>(timedEventType, source, null, time),
+                new TimedEvent<Long>(timedEventType, source, null, time));
+        assertEquals(new TimedEvent<Long>(timedEventType, source, content, null),
+                new TimedEvent<Long>(timedEventType, source, content, null));
 
-        assertEquals(event.hashCode(), event.hashCode());
-        assertEquals(event.hashCode(), new TimedEvent<Long>(eventType, source, content, time).hashCode());
-        assertNotEquals(event.hashCode(), source.hashCode());
+        assertEquals(timedEvent.hashCode(), timedEvent.hashCode());
+        assertEquals(timedEvent.hashCode(), new TimedEvent<Long>(timedEventType, source, content, time).hashCode());
+        assertNotEquals(timedEvent.hashCode(), source.hashCode());
 
-        assertNotEquals(event.hashCode(), new TimedEvent<Long>(eventType2, source, content, time).hashCode());
-        assertNotEquals(event.hashCode(), new TimedEvent<Long>(eventType, source2, content, time).hashCode());
-        assertNotEquals(event.hashCode(), new TimedEvent<Long>(eventType, source, content2, time).hashCode());
-        assertNotEquals(event.hashCode(), new TimedEvent<Long>(eventType, source, content, time2).hashCode());
+        assertNotEquals(timedEvent.hashCode(), new TimedEvent<Long>(timedEventType2, source, content, time).hashCode());
+        assertNotEquals(timedEvent.hashCode(), new TimedEvent<Long>(timedEventType, source2, content, time).hashCode());
+        assertNotEquals(timedEvent.hashCode(), new TimedEvent<Long>(timedEventType, source, content2, time).hashCode());
+        assertNotEquals(timedEvent.hashCode(), new TimedEvent<Long>(timedEventType, source, content, time2).hashCode());
 
-        assertNotEquals(event.hashCode(), new TimedEvent<Long>(null, source, content, time).hashCode());
-        assertNotEquals(event.hashCode(), new TimedEvent<Long>(eventType, null, content, time).hashCode());
-        assertNotEquals(event.hashCode(), new TimedEvent<Long>(eventType, source, null, time).hashCode());
-        assertNotEquals(event.hashCode(), new TimedEvent<Long>(eventType, source, content, null).hashCode());
+        assertNotEquals(timedEvent.hashCode(), new TimedEvent<Long>(null, source, content, time).hashCode());
+        assertNotEquals(timedEvent.hashCode(), new TimedEvent<Long>(timedEventType, null, content, time).hashCode());
+        assertNotEquals(timedEvent.hashCode(), new TimedEvent<Long>(timedEventType, source, null, time).hashCode());
+        assertNotEquals(timedEvent.hashCode(), new TimedEvent<Long>(timedEventType, source, content, null).hashCode());
 
-        assertTrue(event.toString().contains("TEST_TYPE"));
-        assertTrue(event.toString().contains("123"));
+        assertTrue(timedEvent.toString().contains("TEST_TYPE"));
+        assertTrue(timedEvent.toString().contains("123"));
 
-        assertTrue(event.compareTo(event) == 0);
-        assertTrue(event.compareTo(event2) < 0);
-        assertTrue(event2.compareTo(event) > 0);
+        assertTrue(timedEvent.compareTo(timedEvent) == 0);
+        assertTrue(timedEvent.compareTo(timedEvent2) < 0);
+        assertTrue(timedEvent2.compareTo(timedEvent) > 0);
 
         MetaData metaData =
                 new MetaData("INT_EVENT", "event with integer payload", new ObjectDescriptor("int", "integer", Integer.class));
-        EventType intEventType = new EventType(metaData);
+        TimedEventType intEventType = new TimedEventType(metaData);
         Try.testFail(new Try.Execution()
         {
             @Override

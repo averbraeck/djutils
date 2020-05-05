@@ -18,7 +18,7 @@ import java.io.Serializable;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <T> the Comparable type that represents time
  */
-public class TimedEvent<T extends Comparable<T> & Serializable> extends Event implements Comparable<TimedEvent<T>>
+public class TimedEvent<T extends Comparable<T> & Serializable> extends AbstractEvent implements Comparable<TimedEvent<T>>
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140826L;
@@ -28,25 +28,25 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
 
     /**
      * Construct a new timed event, where compliance with the metadata is verified.
-     * @param type EventType; the eventType of the event.
+     * @param type TimedEventType; the eventType of the event.
      * @param sourceId Serializable; the source of the event.
      * @param content Serializable; the content of the event.
      * @param timeStamp T; the timeStamp.
      */
-    public TimedEvent(final EventType type, final Serializable sourceId, final Serializable content, final T timeStamp)
+    public TimedEvent(final TimedEventType type, final Serializable sourceId, final Serializable content, final T timeStamp)
     {
         this(type, sourceId, content, timeStamp, true);
     }
 
     /**
      * Construct a new timed event, with a choice to verify compliance with metadata.
-     * @param type EventType; the eventType of the event.
+     * @param type TimedEventType; the eventType of the event.
      * @param sourceId Serializable; the source of the event.
      * @param content Serializable; the content of the event.
      * @param timeStamp T; the timeStamp.
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      */
-    public TimedEvent(final EventType type, final Serializable sourceId, final Serializable content, final T timeStamp,
+    public TimedEvent(final TimedEventType type, final Serializable sourceId, final Serializable content, final T timeStamp,
             final boolean verifyMetaData)
     {
         super(type, sourceId, content, verifyMetaData);
@@ -60,6 +60,13 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
     public T getTimeStamp()
     {
         return this.timeStamp;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public TimedEventType getType()
+    {
+        return (TimedEventType) super.getType();
     }
 
     /** {@inheritDoc} */
@@ -103,7 +110,8 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
     @Override
     public String toString()
     {
-        return super.toString().split("]")[0] + ";" + this.getTimeStamp() + "]";
+        return "[" + this.getClass().getName() + ";" + this.getType() + ";" + this.getSourceId() + ";" + this.getContent() + ";"
+                + this.getTimeStamp() + "]";
     }
 
 }
