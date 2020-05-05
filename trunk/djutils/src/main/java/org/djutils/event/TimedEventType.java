@@ -3,7 +3,7 @@ package org.djutils.event;
 import org.djutils.metadata.MetaData;
 
 /**
- * The TimedEventType is the description of a topic used for the subscription to asynchronous events with a timestamp. Event
+ * The TimedEventType is the description of a topic used for the subscription to asynchronous events with a time stamp. Event
  * types are used by EventProducers to show which events they potentially fire. EventTypes are typically defined as static final
  * fields. This class only accepts when the producer fires events of type TimedEvent, and not a generic Event or subclass of
  * TimedEvent. <br>
@@ -21,8 +21,8 @@ public class TimedEventType extends AbstractEventType
     private static final long serialVersionUID = 20200505L;
 
     /**
-     * Construct a new EventType. Only events of the type TimedEvent, and no classes of Event or subclasses of TimedEvent, can
-     * be used to fire events of this type. This means that firing an ordinary Event using this EventType will result in an
+     * Construct a new TimedEventType. Only events of the type TimedEvent, but not classes of Event or subclasses of TimedEvent,
+     * can be used to fire events of this type. This means that firing an ordinary Event using this EventType will result in an
      * error.
      * @param name String; the name of the new eventType. Two values are not appreciated: null and the empty string.
      * @param metaData MetaData; describes the payload of events of the new EventType;
@@ -33,8 +33,8 @@ public class TimedEventType extends AbstractEventType
     }
 
     /**
-     * Construct a new EventType. The name of the metadata will function as the name of the event. Only events of the type
-     * TimedEvent, and no classes of Event or subclasses of TimedEvent, can be used to fire events of this type. This means that
+     * Construct a new TimedEventType. The name of the metadata will function as the name of the event. Only events of the type
+     * TimedEvent, but not classes of Event or subclasses of TimedEvent, can be used to fire events of this type. This means that
      * firing an ordinary Event using this EventType will result in an error.
      * @param metaData MetaData; describes the payload of events of the new EventType;
      */
@@ -44,7 +44,7 @@ public class TimedEventType extends AbstractEventType
     }
 
     /**
-     * Construct a new TimedEventType with no meta data. Only events of the type TimedEvent, and no classes of Event or
+     * Construct a new TimedEventType with no meta data. Only events of the type TimedEvent, but not classes of Event or
      * subclasses of TimedEvent, can be used to fire events of this type. This means that firing an ordinary Event using this
      * EventType will result in an error.
      * @param name String; the name of the new eventType. Two values are not appreciated: null and the empty string.
@@ -54,4 +54,5 @@ public class TimedEventType extends AbstractEventType
     {
         super(name, MetaData.NO_META_DATA, TimedEvent.class);
     }
+    
 }

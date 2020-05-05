@@ -58,4 +58,5 @@ public class Event extends AbstractEvent
         return "[" + this.getClass().getName() + ";" + this.getType() + ";" + this.getSourceId() + ";" + this.getContent()
                 + "]";
     }
+    
 }
