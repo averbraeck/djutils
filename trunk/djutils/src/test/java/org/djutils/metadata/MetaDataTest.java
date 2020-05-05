@@ -90,8 +90,8 @@ public class MetaDataTest
     {
         // Construct a MetaData object that specifies a String and a Double.
         MetaData metaData = new MetaData("meta data name", "meta data description",
-                new ObjectDescriptor[] { new ObjectDescriptor("string", "the string", String.class),
-                        new ObjectDescriptor("length", "the length", Double.class) });
+                new ObjectDescriptor("string", "the string", String.class),
+                new ObjectDescriptor("length", "the length", Double.class));
         assertEquals("name", "meta data name", metaData.getName());
         assertEquals("description", "meta data description", metaData.getDescription());
         assertEquals("size", 2, metaData.size());
@@ -106,8 +106,8 @@ public class MetaDataTest
         assertEquals(2, descriptors.length);
         assertEquals(new ObjectDescriptor("string", "the string", String.class), descriptors[0]);
         MetaData metaData2 = new MetaData("meta data name", "meta data description",
-                new ObjectDescriptor[] { new ObjectDescriptor("string", "the string", String.class),
-                        new ObjectDescriptor("length", "the length", Double.class) });
+                new ObjectDescriptor[] {new ObjectDescriptor("string", "the string", String.class),
+                        new ObjectDescriptor("length", "the length", Double.class)});
         assertEquals(metaData, metaData2);
         assertEquals(metaData.hashCode(), metaData2.hashCode());
         assertNotEquals(metaData, null);
@@ -117,11 +117,11 @@ public class MetaDataTest
         assertNotEquals(metaData, new MetaData("meta data name", "meta data description", new ObjectDescriptor[0]));
 
         assertTrue("toString returns something descriptive", metaData.toString().startsWith("MetaData"));
-        metaData.verifyComposition(new Object[] { "TestString", 123.456 });
-        metaData.verifyComposition(new Object[] { null, 123.456 });
+        metaData.verifyComposition(new Object[] {"TestString", 123.456});
+        metaData.verifyComposition(new Object[] {null, 123.456});
         try
         {
-            metaData.verifyComposition(new Object[] { "TestString" }); // too short
+            metaData.verifyComposition(new Object[] {"TestString"}); // too short
             fail("Too short array should have thrown an IndexOutOfBoundsException");
         }
         catch (IndexOutOfBoundsException ioobe)
@@ -131,7 +131,7 @@ public class MetaDataTest
 
         try
         {
-            metaData.verifyComposition(new Object[] { "TestString", 123.456, "too many" }); // too long
+            metaData.verifyComposition(new Object[] {"TestString", 123.456, "too many"}); // too long
             fail("Too long array should have thrown an IndexOutOfBoundsException");
         }
         catch (IndexOutOfBoundsException ioobe)
@@ -141,7 +141,7 @@ public class MetaDataTest
 
         try
         {
-            metaData.verifyComposition(new Object[] { 234.678, 123.456 }); // element 0 not a String
+            metaData.verifyComposition(new Object[] {234.678, 123.456}); // element 0 not a String
             fail("Wrong class should have thrown an ClassCastException");
         }
         catch (ClassCastException cce)
@@ -151,7 +151,7 @@ public class MetaDataTest
 
         try
         {
-            metaData.verifyComposition(new Object[] { "TestString", "wrong class" }); // element 1 not a Double
+            metaData.verifyComposition(new Object[] {"TestString", "wrong class"}); // element 1 not a Double
             fail("Wrong class should have thrown an IndexOutOfBoundsException");
         }
         catch (ClassCastException cce)
@@ -253,6 +253,17 @@ public class MetaDataTest
         {
             new MetaData("name", "description", (ObjectDescriptor) null);
             fail("null objectDescriptors should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new MetaData("name", "description", new ObjectDescriptor("string", "the string", String.class),
+                    new ObjectDescriptor("length", "the length", Double.class), (ObjectDescriptor) null);
+            fail("null objectDescriptor as part of array should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
         {
