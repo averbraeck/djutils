@@ -5,12 +5,12 @@ import java.io.Serializable;
 import org.djutils.metadata.MetaData;
 
 /**
- * The EventType is the description of a topic used for the subscription to asynchronous events. Event types are used by
+ * The EventTypeInteface is the description of a topic used for the subscription to asynchronous events. Event types are used by
  * EventProducers to show which events they potentially fire. EventTypes are typically defined as static final fields. In order
  * to prevent name clashes for the EventType, the full name of the class from which the EventType was defined (usually in the
  * &lt;clinit&gt;) is added to the equals() and hashCode() methods of the EventType. In that way, EventTypes that are the same
- * will be unique, but EventTypes with just the same name but defined in different classes will be different. This is the
- * abstract class that can be tailored to any event type. <br>
+ * will be unique, but implementations of EventTypeInterface that have the same name but are defined in different classes will
+ * be different. This is the interface that all event types must implement. <br>
  * <br>
  * Note: the reason why this is important is because <b>remote events</b> that use EventTypes can have <i>multiple versions</i>
  * of the same public static final EventType: one the is defined in the client, and one that is defined via the network. These
@@ -45,4 +45,5 @@ public interface EventTypeInterface extends Serializable
      * @return Class&lt;EventTypeInterface&gt;;; the class of valid events of this event type
      */
     Class<? extends EventInterface> getValidEventType();
+    
 }

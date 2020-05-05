@@ -195,7 +195,7 @@ public final class EventListenerMap implements Serializable
      */
     public List<Reference<EventListenerInterface>> remove(final EventTypeInterface key)
     {
-        Throw.whenNull(key, "Cannot use remove for a null EventType key");
+        Throw.whenNull(key, "Cannot use remove for a null EventTypeInterface key");
         return this.map.remove(key);
     }
 
