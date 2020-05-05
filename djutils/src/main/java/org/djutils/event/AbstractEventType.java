@@ -72,7 +72,6 @@ public abstract class AbstractEventType implements EventTypeInterface
             }
         }
         Throw.whenNull(this.definingClassName, "no defining class name found that is not an EventType");
-        System.out.println(this.definingClassName);
         this.metaData = metaData;
     }
 
