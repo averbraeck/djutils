@@ -101,7 +101,7 @@ public class MetaDataTest
         assertEquals("description of element 1", "the length", metaData.getObjectDescription(1));
         assertEquals("class of element 0", String.class, metaData.getObjectClass(0));
         assertEquals("class of element 1", Double.class, metaData.getObjectClass(1));
-        
+
         ObjectDescriptor[] descriptors = metaData.getObjectDescriptors();
         assertEquals(2, descriptors.length);
         assertEquals(new ObjectDescriptor("string", "the string", String.class), descriptors[0]);
@@ -115,7 +115,7 @@ public class MetaDataTest
         assertNotEquals(metaData, new MetaData("x", "x", new ObjectDescriptor[0]));
         assertNotEquals(metaData, new MetaData("meta data name", "x", new ObjectDescriptor[0]));
         assertNotEquals(metaData, new MetaData("meta data name", "meta data description", new ObjectDescriptor[0]));
-        
+
         assertTrue("toString returns something descriptive", metaData.toString().startsWith("MetaData"));
         metaData.verifyComposition(new Object[] { "TestString", 123.456 });
         metaData.verifyComposition(new Object[] { null, 123.456 });
@@ -325,11 +325,11 @@ public class MetaDataTest
         {
             // Ignore expected exception
         }
-        
+
         metaData = new MetaData("name", "description", new ObjectDescriptor[] {});
         metaData.verifyComposition(null); // this null is allowed
         metaData.verifyComposition(new Object[] {}); // empty Object array is too
-        
+
         metaData = new MetaData("name", "description", new ObjectDescriptor("n", "d", Integer.class));
         assertEquals("name", "name", metaData.getName());
         assertEquals("description", "description", metaData.getDescription());
@@ -344,26 +344,44 @@ public class MetaDataTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
-            metaData = new MetaData("", "description", new ObjectDescriptor[] {});
+            new MetaData("", "description", new ObjectDescriptor[] {});
             fail("Empty name should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException cce)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
-  
+
         try
         {
-            metaData = new MetaData("", "description", new ObjectDescriptor("name", "desc", String.class));
+            new MetaData("", "description", new ObjectDescriptor("name", "desc", String.class));
             fail("Empty name should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException cce)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
+
+        MetaData.EMPTY.verifyComposition(null);
+        MetaData.EMPTY.verifyComposition(new Object[0]);
+        try
+        {
+            MetaData.EMPTY.verifyComposition("wrong");
+            fail("Should have thrown an IndexOutOfBoundsException");
+        }
+        catch (IndexOutOfBoundsException ioobe)
+        {
+            // Ignore expected exception
+        }
+
+        MetaData.NO_META_DATA.verifyComposition(null);
+        MetaData.NO_META_DATA.verifyComposition(new Object[0]);
+        MetaData.NO_META_DATA.verifyComposition("OK");
+        MetaData.NO_META_DATA.verifyComposition(new Object[] { "OK", "Anything goes", 123f });
+
     }
 
 }
