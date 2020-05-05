@@ -2,8 +2,6 @@ package org.djutils.event;
 
 import java.io.Serializable;
 
-import org.djutils.metadata.MetaData;
-
 /**
  * The Event class forms the reference implementation for the EventInterface. Because events are often sent over the network,
  * the interface demands that source of the event and its content are serializable. It is the responsibility of the programmer,
@@ -16,22 +14,12 @@ import org.djutils.metadata.MetaData;
  * originally part of the DSOL project, see <a href="https://simulation.tudelft.nl/dsol/manual" target="_blank">
  * https://simulation.tudelft.nl/dsol/manual</a>.
  * </p>
- * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class Event implements EventInterface
+public class Event extends AbstractEvent
 {
-    /** The default serial version UID for serializable classes. */
-    private static final long serialVersionUID = 20140826L;
-
-    /** The type of the event. */
-    private final EventType type;
-
-    /** The content of the event. */
-    private final Serializable content;
-
-    /** The source id of an event. */
-    private final Serializable sourceId;
+    /** */
+    private static final long serialVersionUID = 20200505L;
 
     /**
      * Construct a new Event, where compliance with the metadata is verified.
@@ -41,7 +29,7 @@ public class Event implements EventInterface
      */
     public Event(final EventType type, final Serializable sourceId, final Serializable content)
     {
-        this(type, sourceId, content, true);
+        super(type, sourceId, content);
     }
 
     /**
@@ -53,45 +41,14 @@ public class Event implements EventInterface
      */
     public Event(final EventType type, final Serializable sourceId, final Serializable content, final boolean verifyMetaData)
     {
-        this.type = type;
-        this.sourceId = sourceId;
-        this.content = content;
-        if (verifyMetaData && null != this.type)
-        {
-            MetaData metaData = type.getMetaData();
-            if (null != metaData)
-            {
-                if ((null != content) && !(content instanceof Object[]))
-                {
-                    metaData.verifyComposition(content);
-                }
-                else
-                {
-                    metaData.verifyComposition((Object[]) content);
-                }
-            }
-        }
+        super(type, sourceId, content, verifyMetaData);
     }
 
     /** {@inheritDoc} */
     @Override
-    public final Serializable getSourceId()
+    public EventType getType()
     {
-        return this.sourceId;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final Serializable getContent()
-    {
-        return this.content;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final EventType getType()
-    {
-        return this.type;
+        return (EventType) super.getType();
     }
 
     /** {@inheritDoc} */
@@ -101,53 +58,4 @@ public class Event implements EventInterface
         return "[" + this.getClass().getName() + ";" + this.getType() + ";" + this.getSourceId() + ";" + this.getContent()
                 + "]";
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.content == null) ? 0 : this.content.hashCode());
-        result = prime * result + ((this.sourceId == null) ? 0 : this.sourceId.hashCode());
-        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
-        return result;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @SuppressWarnings("checkstyle:needbraces")
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Event other = (Event) obj;
-        if (this.content == null)
-        {
-            if (other.content != null)
-                return false;
-        }
-        else if (!this.content.equals(other.content))
-            return false;
-        if (this.sourceId == null)
-        {
-            if (other.sourceId != null)
-                return false;
-        }
-        else if (!this.sourceId.equals(other.sourceId))
-            return false;
-        if (this.type == null)
-        {
-            if (other.type != null)
-                return false;
-        }
-        else if (!this.type.equals(other.type))
-            return false;
-        return true;
-    }
-
 }

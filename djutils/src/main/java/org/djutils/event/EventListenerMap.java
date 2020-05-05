@@ -38,7 +38,8 @@ public final class EventListenerMap implements Serializable
     private static final long serialVersionUID = 20140830L;
 
     /** The hasMap we map on. */
-    private Map<EventType, List<Reference<EventListenerInterface>>> map = Collections.synchronizedMap(new LinkedHashMap<>());
+    private Map<EventTypeInterface, List<Reference<EventListenerInterface>>> map =
+            Collections.synchronizedMap(new LinkedHashMap<>());
 
     /**
      * Return the size of the EventListenerMap, i.e. the number of EventTypes that are registered.
@@ -71,7 +72,7 @@ public final class EventListenerMap implements Serializable
      * @param eventType EventType; the EventType key to search for
      * @return boolean; whether the EventListenerMap contains the EventType as a key
      */
-    public boolean containsKey(final EventType eventType)
+    public boolean containsKey(final EventTypeInterface eventType)
     {
         Throw.whenNull(eventType, "Cannot search for a null EventType");
         return this.map.containsKey(eventType);
@@ -144,71 +145,72 @@ public final class EventListenerMap implements Serializable
     public void putAll(final EventListenerMap m)
     {
         Throw.whenNull(m, "Cannot use putAll for a null map");
-        for (Map.Entry<EventType, List<Reference<EventListenerInterface>>> entry : m.entrySet())
+        for (Map.Entry<EventTypeInterface, List<Reference<EventListenerInterface>>> entry : m.entrySet())
         {
             put(entry.getKey(), new ArrayList<>(entry.getValue()));
         }
     }
 
     /**
-     * Returns the Set of Entry types holding pairs of a key (EventType) and a value (List of references to EventListeners for
-     * that EventType). Note: this is a map with the real values, so not a safe copy. This entrySet can be used to change the
-     * underlying map.
-     * @return Set&lt;Map.Entry&lt;EventType, List&lt;Reference&lt;EventListenerInterface&gt;&gt;&gt;&gt;;the Set of Entry types
-     *         holding pairs of a key (EventType) and a value (List of references to EventListeners for that EventType). Note:
-     *         this is <b>not</b> a safe copy!
+     * Returns the Set of Entry types holding pairs of a key (EventTypeInterface) and a value (List of references to
+     * EventListeners for that EventTypeInterface). Note: this is a map with the real values, so not a safe copy. This entrySet
+     * can be used to change the underlying map.
+     * @return Set&lt;Map.Entry&lt;EventTypeInterface, List&lt;Reference&lt;EventListenerInterface&gt;&gt;&gt;&gt;;the Set of
+     *         Entry types holding pairs of a key (EventTypeInterface) and a value (List of references to EventListeners for that
+     *         EventTypeInterface). Note: this is <b>not</b> a safe copy!
      */
-    public Set<Map.Entry<EventType, List<Reference<EventListenerInterface>>>> entrySet()
+    public Set<Map.Entry<EventTypeInterface, List<Reference<EventListenerInterface>>>> entrySet()
     {
         return this.map.entrySet();
     }
 
     /**
-     * Returns a safe copy of the Set of EventTypes for which listeners are registered.
-     * @return Set&lt;EventType&gt;; a safe copy of the Set of EventType keys for which listeners are registered
+     * Returns a safe copy of the Set of EventTypeInterfaces for which listeners are registered.
+     * @return Set&lt;EventTypeInterface&gt;; a safe copy of the Set of EventTypeInterface keys for which listeners are registered
      */
-    public Set<EventType> keySet()
+    public Set<EventTypeInterface> keySet()
     {
-        return new LinkedHashSet<EventType>(this.map.keySet());
+        return new LinkedHashSet<EventTypeInterface>(this.map.keySet());
     }
 
     /**
-     * Returns the original List of references to EventListeners for the given EventType. Note: this is <b>not</b> a safe copy,
-     * so the list is backed by the original data structure and will change when listeners are added or removed. The method will
-     * return null when the EventType is not found.
-     * @param key EventType; the eventType to look up the listeners for
+     * Returns the original List of references to EventListeners for the given EventTypeInterface. Note: this is <b>not</b> a
+     * safe copy, so the list is backed by the original data structure and will change when listeners are added or removed. The
+     * method will return null when the EventTypeInterface is not found.
+     * @param key EventTypeInterface; the eventType to look up the listeners for
      * @return List&lt;Reference&lt;EventListenerInterface&gt;; the List of references to EventListeners for the given
-     *         EventType, or null when the EventType is not found. Note: this is <b>not</b> a safe copy.
+     *         EventTypeInterface, or null when the EventTypeInterface is not found. Note: this is <b>not</b> a safe copy.
      */
-    public List<Reference<EventListenerInterface>> get(final EventType key)
+    public List<Reference<EventListenerInterface>> get(final EventTypeInterface key)
     {
         Throw.whenNull(key, "Cannot use get for a null EventType key");
         return this.map.get(key);
     }
 
     /**
-     * Remove the List of references to EventListeners for the given EventType.
-     * @param key EventType; the eventType to remove the listeners for
+     * Remove the List of references to EventListeners for the given EventTypeInterface.
+     * @param key EventTypeInterface; the eventType to remove the listeners for
      * @return List&lt;Reference&lt;EventListenerInterface&gt;&gt;; the removed List of references to EventListeners for the
-     *         given EventType
+     *         given EventTypeInterface
      */
-    public List<Reference<EventListenerInterface>> remove(final EventType key)
+    public List<Reference<EventListenerInterface>> remove(final EventTypeInterface key)
     {
         Throw.whenNull(key, "Cannot use remove for a null EventType key");
         return this.map.remove(key);
     }
 
     /**
-     * Add the List of references to EventListeners for the given EventType to the underlying Map. A safe copy will be added, so
-     * the original list will not be affected when listeners are removed or added, nor will the underlying map be affected when
-     * the provided list is changed.
-     * @param key EventType; the eventType to store the listeners for
+     * Add the List of references to EventListeners for the given EventTypeInterface to the underlying Map. A safe copy will be
+     * added, so the original list will not be affected when listeners are removed or added, nor will the underlying map be
+     * affected when the provided list is changed.
+     * @param key EventTypeInterface; the eventType to store the listeners for
      * @param value List&lt;Reference&lt;EventListenerInterface&gt;&gt;; the references to EventListeners to store for the given
-     *            EventType
+     *            EventTypeInterface
      * @return List&lt;Reference&lt;EventListenerInterface&gt;; the previous List of references to EventListeners for the given
-     *         EventType, or null when there was no previous mapping
+     *         EventTypeInterface, or null when there was no previous mapping
      */
-    public List<Reference<EventListenerInterface>> put(final EventType key, final List<Reference<EventListenerInterface>> value)
+    public List<Reference<EventListenerInterface>> put(final EventTypeInterface key,
+            final List<Reference<EventListenerInterface>> value)
     {
         Throw.whenNull(key, "Cannot use put with a null EventType key");
         Throw.whenNull(value, "Cannot use put with a null List as value");
@@ -216,20 +218,20 @@ public final class EventListenerMap implements Serializable
     }
 
     /**
-     * Write the EventListenerMap to a stream. RemoteEventListeners are not written, as they are fully dependent on the state
-     * of the network, which might not be the same when the EventListenerMap is read back. Weak references and strong references
+     * Write the EventListenerMap to a stream. RemoteEventListeners are not written, as they are fully dependent on the state of
+     * the network, which might not be the same when the EventListenerMap is read back. Weak references and strong references
      * are both written to the stream.
      * @param out ObjectOutputStream; the output stream
      * @throws IOException on IOException
      */
     private synchronized void writeObject(final ObjectOutputStream out) throws IOException
     {
-        Map<EventType, List<Reference<EventListenerInterface>>> outMap = new LinkedHashMap<>();
-        for (Map.Entry<EventType, List<Reference<EventListenerInterface>>> entry : this.map.entrySet())
+        Map<EventTypeInterface, List<Reference<EventListenerInterface>>> outMap = new LinkedHashMap<>();
+        for (Map.Entry<EventTypeInterface, List<Reference<EventListenerInterface>>> entry : this.map.entrySet())
         {
             outMap.put(entry.getKey(), new ArrayList<>(entry.getValue()));
         }
-        for (Entry<EventType, List<Reference<EventListenerInterface>>> entry : this.map.entrySet())
+        for (Entry<EventTypeInterface, List<Reference<EventListenerInterface>>> entry : this.map.entrySet())
         {
             for (Reference<EventListenerInterface> reference : entry.getValue())
             {
@@ -255,7 +257,7 @@ public final class EventListenerMap implements Serializable
     @SuppressWarnings("unchecked")
     private void readObject(final java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
     {
-        this.map = (LinkedHashMap<EventType, List<Reference<EventListenerInterface>>>) in.readObject();
+        this.map = (LinkedHashMap<EventTypeInterface, List<Reference<EventListenerInterface>>>) in.readObject();
     }
-    
+
 }

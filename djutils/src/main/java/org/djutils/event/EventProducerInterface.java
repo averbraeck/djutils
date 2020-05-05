@@ -44,39 +44,39 @@ public interface EventProducerInterface
     /**
      * Add a listener as strong reference to the BEGINNING of a queue of listeners.
      * @param listener EventListenerInterface; the listener which is interested at events of eventType
-     * @param eventType EventType; the events of interest
+     * @param eventType EventTypeInterface; the events of interest
      * @return the success of adding the listener. If a listener was already added false is returned
      * @throws RemoteException If a network connection failure occurs.
      */
-    boolean addListener(EventListenerInterface listener, EventType eventType) throws RemoteException;
+    boolean addListener(EventListenerInterface listener, EventTypeInterface eventType) throws RemoteException;
 
     /**
      * Add a listener to the BEGINNING of a queue of listeners.
      * @param listener EventListenerInterface; the listener which is interested at events of eventType
-     * @param eventType EventType; the events of interest
+     * @param eventType EventTypeInterface; the events of interest
      * @param referenceType ReferenceType; whether the listener is added as a strong or as a weak reference
      * @return the success of adding the listener. If a listener was already added false is returned
      * @throws RemoteException If a network connection failure occurs.
      * @see org.djutils.event.ref.WeakReference
      */
-    boolean addListener(EventListenerInterface listener, EventType eventType, ReferenceType referenceType)
+    boolean addListener(EventListenerInterface listener, EventTypeInterface eventType, ReferenceType referenceType)
             throws RemoteException;
 
     /**
      * Add a listener as strong reference to the specified position of a queue of listeners.
      * @param listener EventListenerInterface; the listener which is interested at events of eventType
-     * @param eventType EventType; the events of interest
+     * @param eventType EventTypeInterface; the events of interest
      * @param position int; the position of the listener in the queue
      * @return the success of adding the listener. If a listener was already added, or an illegal position is provided false is
      *         returned
      * @throws RemoteException If a network connection failure occurs.
      */
-    boolean addListener(EventListenerInterface listener, EventType eventType, int position) throws RemoteException;
+    boolean addListener(EventListenerInterface listener, EventTypeInterface eventType, int position) throws RemoteException;
 
     /**
      * Add a listener to the specified position of a queue of listeners.
      * @param listener EventListenerInterface; which is interested at certain events
-     * @param eventType EventType; the events of interest
+     * @param eventType EventTypeInterface; the events of interest
      * @param position int; the position of the listener in the queue
      * @param referenceType ReferenceType; whether the listener is added as a strong or as a weak reference
      * @return the success of adding the listener. If a listener was already added or an illegal position is provided false is
@@ -84,17 +84,17 @@ public interface EventProducerInterface
      * @throws RemoteException If a network connection failure occurs.
      * @see org.djutils.event.ref.WeakReference
      */
-    boolean addListener(EventListenerInterface listener, EventType eventType, int position, ReferenceType referenceType)
+    boolean addListener(EventListenerInterface listener, EventTypeInterface eventType, int position, ReferenceType referenceType)
             throws RemoteException;
 
     /**
      * Remove the subscription of a listener for a specific event.
      * @param listener EventListenerInterface; which is no longer interested
-     * @param eventType EventType; the event which is of no interest any more
+     * @param eventType EventTypeInterface; the event which is of no interest any more
      * @return the success of removing the listener. If a listener was not subscribed false is returned
      * @throws RemoteException If a network connection failure occurs.
      */
-    boolean removeListener(EventListenerInterface listener, EventType eventType) throws RemoteException;
+    boolean removeListener(EventListenerInterface listener, EventTypeInterface eventType) throws RemoteException;
 
     /**
      * Return whether the EventProducer has listeners.
@@ -104,18 +104,18 @@ public interface EventProducerInterface
     boolean hasListeners() throws RemoteException;
 
     /**
-     * Return the number of listeners for the provided EventType.
-     * @param eventType EventType; the event type to return the number of listeners for
+     * Return the number of listeners for the provided EventTypeInterface.
+     * @param eventType EventTypeInterface; the event type to return the number of listeners for
      * @return boolean; whether the EventProducer has listeners or not
      * @throws RemoteException If a network connection failure occurs.
      */
-    int numberOfListeners(EventType eventType) throws RemoteException;
+    int numberOfListeners(EventTypeInterface eventType) throws RemoteException;
 
     /**
-     * Return the EventTypes for which the EventProducer has listeners.
-     * @return Set&lt;EventType&gt;; the EventTypes for which the EventProducer has registered listeners
+     * Return the EventTypeInterfaces for which the EventProducer has listeners.
+     * @return Set&lt;EventTypeInterface&gt;; the EventTypeInterfaces for which the EventProducer has registered listeners
      * @throws RemoteException If a network connection failure occurs.
      */
-    Set<EventType> getEventTypesWithListeners() throws RemoteException;
+    Set<EventTypeInterface> getEventTypesWithListeners() throws RemoteException;
 
 }

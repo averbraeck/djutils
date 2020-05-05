@@ -87,7 +87,7 @@ public class EventListenerMapTest implements Serializable
         assertEquals(2, elm.size());
 
         // test keySet()
-        Set<EventType> keySet = elm.keySet();
+        Set<EventTypeInterface> keySet = elm.keySet();
         assertEquals(2, keySet.size());
         assertTrue(keySet.contains(eventType1));
         assertTrue(keySet.contains(eventType2));
@@ -118,7 +118,7 @@ public class EventListenerMapTest implements Serializable
         assertTrue((v1.size() == 1 && v2.size() == 2) || (v1.size() == 2 && v2.size() == 1));
 
         // test entrySet()
-        Set<Map.Entry<EventType, List<Reference<EventListenerInterface>>>> entrySet = elm.entrySet();
+        Set<Map.Entry<EventTypeInterface, List<Reference<EventListenerInterface>>>> entrySet = elm.entrySet();
         assertEquals(2, entrySet.size());
 
         // test putAll()

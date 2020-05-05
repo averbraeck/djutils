@@ -2,6 +2,21 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+   <release version="1.05.01" date="2020-05-05" description="EventType and TimedEventType separated">
+      <action dev="averbraeck" type="add">
+        The EventType and TimedEventType are now two SEPARATE classes, both extending from AbstractEventType and
+        implementing the EventTypeInterface. This allows for the fireTimedEvent(...) methods to ONLY accept
+        TimedEvents of type TimedEventType. A TimedEvent is not a subclass anymore of Event. This breaks
+        compatibility, but ensures a much stricter compliance to the fact that TimedEvents and ordinary Events
+        are different and have a different signature. 
+      </action>
+      <action dev="averbraeck" type="add">
+        The AbstractEventType constructor accepts an optional argument specifying the valid Event type for the event to be
+        fired. As an example: when a TimedEvent is expected, the fire(Event) method of an EventProducer should fail 
+        when the argument is not a TimedEvent or a subclass of TimedEvent. 
+      </action>
+   </release>
+  
    <release version="1.04.21" date="2020-05-05" description="MetaData construction with varargs">
       <action dev="averbraeck" type="update">
         The MetaData constructor has changed to a varargs parameter for the object descriptors, making it easier to

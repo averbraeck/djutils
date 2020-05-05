@@ -8,10 +8,13 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Set;
 
-import org.djutils.event.EventInterface;
+import org.djutils.event.EventTypeInterface;
+import org.djutils.event.Event;
 import org.djutils.event.EventListenerInterface;
 import org.djutils.event.EventProducerImpl;
 import org.djutils.event.EventType;
+import org.djutils.event.TimedEvent;
+import org.djutils.event.TimedEventType;
 import org.djutils.event.ref.Reference;
 import org.djutils.event.ref.ReferenceType;
 import org.djutils.rmi.RMIObject;
@@ -82,7 +85,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /** {@inheritDoc} */
     @Override
-    public final synchronized boolean addListener(final EventListenerInterface listener, final EventType eventType)
+    public final synchronized boolean addListener(final EventListenerInterface listener, final EventTypeInterface eventType)
             throws RemoteException
     {
         return this.eventProducerImpl.addListener(listener, eventType);
@@ -90,7 +93,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /** {@inheritDoc} */
     @Override
-    public final synchronized boolean addListener(final EventListenerInterface listener, final EventType eventType,
+    public final synchronized boolean addListener(final EventListenerInterface listener, final EventTypeInterface eventType,
             final ReferenceType referenceType) throws RemoteException
     {
         return this.eventProducerImpl.addListener(listener, eventType, referenceType);
@@ -98,7 +101,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /** {@inheritDoc} */
     @Override
-    public final synchronized boolean addListener(final EventListenerInterface listener, final EventType eventType,
+    public final synchronized boolean addListener(final EventListenerInterface listener, final EventTypeInterface eventType,
             final int position) throws RemoteException
     {
         return this.eventProducerImpl.addListener(listener, eventType, position);
@@ -106,7 +109,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /** {@inheritDoc} */
     @Override
-    public final synchronized boolean addListener(final EventListenerInterface listener, final EventType eventType,
+    public final synchronized boolean addListener(final EventListenerInterface listener, final EventTypeInterface eventType,
             final int position, final ReferenceType referenceType) throws RemoteException
     {
         return this.eventProducerImpl.addListener(listener, eventType, position, referenceType);
@@ -136,7 +139,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /** {@inheritDoc} */
     @Override
-    public final synchronized boolean removeListener(final EventListenerInterface listener, final EventType eventType)
+    public final synchronized boolean removeListener(final EventListenerInterface listener, final EventTypeInterface eventType)
             throws RemoteException
     {
         return this.eventProducerImpl.removeListener(listener, eventType);
@@ -151,14 +154,14 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /** {@inheritDoc} */
     @Override
-    public synchronized int numberOfListeners(final EventType eventType) throws RemoteException
+    public synchronized int numberOfListeners(final EventTypeInterface eventType) throws RemoteException
     {
         return this.eventProducerImpl.numberOfListeners(eventType);
     }
 
     /** {@inheritDoc} */
     @Override
-    public synchronized Set<EventType> getEventTypesWithListeners() throws RemoteException
+    public synchronized Set<EventTypeInterface> getEventTypesWithListeners() throws RemoteException
     {
         return this.eventProducerImpl.getEventTypesWithListeners();
     }
@@ -167,11 +170,11 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * Return a safe copy of the list of (strong or weak) references to the registered listeners for the provided event type, or
      * an empty list when nothing is registered for this event type. The method never returns a null pointer, so it is safe to
      * use the result directly in an iterator. The references to the listeners are the original references, so not safe copies.
-     * @param eventType EventType; the event type to look up the listeners for
+     * @param eventType EventTypeInterface; the event type to look up the listeners for
      * @return List&lt;Reference&lt;EventListenerInterface&gt;&gt;; the list of references to the listeners for this event type,
      *         or an empty list when the event type is not registered
      */
-    protected List<Reference<EventListenerInterface>> getListenerReferences(final EventType eventType)
+    protected List<Reference<EventListenerInterface>> getListenerReferences(final EventTypeInterface eventType)
     {
         return this.eventProducerImpl.getListenerReferences(eventType);
     }
@@ -183,12 +186,22 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
     /**
      * Transmit an event to all interested listeners.
      * @param event EventInterface; the event
-     * @return EventInterface; the event (for method chaining)
      * @throws RemoteException on network failure
      */
-    protected synchronized EventInterface fireEvent(final EventInterface event) throws RemoteException
+    protected synchronized void fireEvent(final Event event) throws RemoteException
     {
-        return this.eventProducerImpl.fireEvent(event);
+        this.eventProducerImpl.fireEvent(event, true);
+    }
+
+    /**
+     * Transmit a timed event to all interested listeners.
+     * @param event TimedEvent; the timed event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> void fireTimedEvent(final TimedEvent<C> event) throws RemoteException
+    {
+        this.eventProducerImpl.fireTimedEvent(event, true);
     }
 
     /**
@@ -222,7 +235,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @param <C> the comparable type to indicate the time when the event is fired
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> Serializable fireTimedEvent(final EventType eventType,
+    protected <C extends Comparable<C> & Serializable> Serializable fireTimedEvent(final TimedEventType eventType,
             final Serializable value, final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
@@ -249,7 +262,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return byte; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> byte fireTimedEvent(final EventType eventType, final byte value,
+    protected <C extends Comparable<C> & Serializable> byte fireTimedEvent(final TimedEventType eventType, final byte value,
             final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
@@ -276,7 +289,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return char; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> char fireTimedEvent(final EventType eventType, final char value,
+    protected <C extends Comparable<C> & Serializable> char fireTimedEvent(final TimedEventType eventType, final char value,
             final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
@@ -303,8 +316,8 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return boolean; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> boolean fireTimedEvent(final EventType eventType, final boolean value,
-            final C time) throws RemoteException
+    protected <C extends Comparable<C> & Serializable> boolean fireTimedEvent(final TimedEventType eventType,
+            final boolean value, final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
     }
@@ -330,7 +343,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return double; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> double fireTimedEvent(final EventType eventType, final double value,
+    protected <C extends Comparable<C> & Serializable> double fireTimedEvent(final TimedEventType eventType, final double value,
             final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
@@ -357,7 +370,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return int; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> int fireTimedEvent(final EventType eventType, final int value,
+    protected <C extends Comparable<C> & Serializable> int fireTimedEvent(final TimedEventType eventType, final int value,
             final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
@@ -384,7 +397,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return long; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> long fireTimedEvent(final EventType eventType, final long value,
+    protected <C extends Comparable<C> & Serializable> long fireTimedEvent(final TimedEventType eventType, final long value,
             final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
@@ -411,7 +424,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return short; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> short fireTimedEvent(final EventType eventType, final short value,
+    protected <C extends Comparable<C> & Serializable> short fireTimedEvent(final TimedEventType eventType, final short value,
             final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
@@ -438,7 +451,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return float; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> float fireTimedEvent(final EventType eventType, final float value,
+    protected <C extends Comparable<C> & Serializable> float fireTimedEvent(final TimedEventType eventType, final float value,
             final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
@@ -447,6 +460,51 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
     /* ********************************************************************************************************* */
     /* ******************* FIREEVENT AND FIRETIMEDEVENT WITHOUT METADATA VERIFICATION ************************ */
     /* ********************************************************************************************************* */
+
+    /**
+     * Transmit an event to all interested listeners.
+     * @param event EventInterface; the event
+     * @throws RemoteException on network failure
+     */
+    protected void fireUnverifiedEvent(final Event event) throws RemoteException
+    {
+        this.eventProducerImpl.fireEvent(event, false);
+    }
+
+    /**
+     * Transmit a timed event to all interested listeners.
+     * @param event TimedEvent; the timed event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final TimedEvent<C> event)
+            throws RemoteException
+    {
+        this.eventProducerImpl.fireTimedEvent(event, false);
+    }
+
+    /**
+     * Transmit an event that is not verified with no payload object to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @throws RemoteException on network failure
+     */
+    protected void fireUnverifiedEvent(final EventType eventType) throws RemoteException
+    {
+        this.eventProducerImpl.fireEvent(eventType, false);
+    }
+
+    /**
+     * Transmit a timed event that is not verified with no payload object to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @throws RemoteException on network failure
+     */
+    protected <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final TimedEventType eventType,
+            final C time) throws RemoteException
+    {
+        this.eventProducerImpl.fireTimedEvent(eventType, time, false);
+    }
 
     /**
      * Transmit an event that is not verified with a serializable object as payload to all interested listeners.
@@ -461,16 +519,6 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
     }
 
     /**
-     * Transmit an event that is not verified with no payload object to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @throws RemoteException on network failure
-     */
-    protected void fireUnverifiedEvent(final EventType eventType) throws RemoteException
-    {
-        this.eventProducerImpl.fireEvent(eventType, false);
-    }
-
-    /**
      * Transmit a time-stamped event that is not verified with a Serializable object (payload) to all interested listeners.
      * @param eventType EventType; the eventType of the event.
      * @param value Serializable; the payload sent with the event
@@ -479,7 +527,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @param <C> the comparable type to indicate the time when the event is fired
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> Serializable fireUnverifiedTimedEvent(final EventType eventType,
+    protected <C extends Comparable<C> & Serializable> Serializable fireUnverifiedTimedEvent(final TimedEventType eventType,
             final Serializable value, final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
@@ -506,7 +554,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return byte; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> byte fireUnverifiedTimedEvent(final EventType eventType,
+    protected <C extends Comparable<C> & Serializable> byte fireUnverifiedTimedEvent(final TimedEventType eventType,
             final byte value, final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
@@ -533,7 +581,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return char; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> char fireUnverifiedTimedEvent(final EventType eventType,
+    protected <C extends Comparable<C> & Serializable> char fireUnverifiedTimedEvent(final TimedEventType eventType,
             final char value, final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
@@ -560,7 +608,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return boolean; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> boolean fireUnverifiedTimedEvent(final EventType eventType,
+    protected <C extends Comparable<C> & Serializable> boolean fireUnverifiedTimedEvent(final TimedEventType eventType,
             final boolean value, final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
@@ -587,7 +635,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return double; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> double fireUnverifiedTimedEvent(final EventType eventType,
+    protected <C extends Comparable<C> & Serializable> double fireUnverifiedTimedEvent(final TimedEventType eventType,
             final double value, final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
@@ -614,8 +662,8 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return int; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> int fireUnverifiedTimedEvent(final EventType eventType, final int value,
-            final C time) throws RemoteException
+    protected <C extends Comparable<C> & Serializable> int fireUnverifiedTimedEvent(final TimedEventType eventType,
+            final int value, final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
     }
@@ -641,7 +689,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return long; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> long fireUnverifiedTimedEvent(final EventType eventType,
+    protected <C extends Comparable<C> & Serializable> long fireUnverifiedTimedEvent(final TimedEventType eventType,
             final long value, final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
@@ -668,7 +716,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return short; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> short fireUnverifiedTimedEvent(final EventType eventType,
+    protected <C extends Comparable<C> & Serializable> short fireUnverifiedTimedEvent(final TimedEventType eventType,
             final short value, final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
@@ -695,7 +743,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * @return float; the payload
      * @throws RemoteException on network failure
      */
-    protected <C extends Comparable<C> & Serializable> float fireUnverifiedTimedEvent(final EventType eventType,
+    protected <C extends Comparable<C> & Serializable> float fireUnverifiedTimedEvent(final TimedEventType eventType,
             final float value, final C time) throws RemoteException
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);

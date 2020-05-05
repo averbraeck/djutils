@@ -43,6 +43,7 @@ public class EventPubSubTest
         TestEventProducer producer = new TestEventProducer();
         TestEventListener listener = new TestEventListener();
         EventType eventType = new EventType("TEST_TYPE", MetaData.NO_META_DATA);
+        TimedEventType timedEventType = new TimedEventType("TIMED_TEST_TYPE", MetaData.NO_META_DATA);
 
         assertFalse(producer.hasListeners());
         assertEquals(0, producer.numberOfListeners(eventType));
@@ -135,12 +136,12 @@ public class EventPubSubTest
         producer.fireEvent(TestEventProducer.PRODUCER_EVENT_1, 234.567d);
         assertEquals(TestEventProducer.PRODUCER_EVENT_1, listener.getReceivedEvent().getType());
         TestTimedEventListener<Double> timedListener = new TestTimedEventListener<>();
-        addListenerOK = producer.addListener(timedListener, eventType);
+        addListenerOK = producer.addListener(timedListener, timedEventType);
         assertTrue(addListenerOK);
         timedListener.setExpectingNotification(true);
         timedListener.setExpectedObject(Double.valueOf(12.34d));
         listener.setExpectedObject(Double.valueOf(12.34d));
-        producer.fireEvent(new TimedEvent<Double>(eventType, producer, Double.valueOf(12.34d), 12.01d));
+        producer.fireTimedEvent(new TimedEvent<Double>(timedEventType, producer, Double.valueOf(12.34d), 12.01d));
         assertEquals(12.01, timedListener.getReceivedEvent().getTimeStamp(), 0.001);
 
         nrRemovedListeners = producer.removeAllListeners(TestEventListener.class);
@@ -148,7 +149,7 @@ public class EventPubSubTest
         listener.setExpectingNotification(false);
         timedListener.setExpectingNotification(true);
         timedListener.setExpectedObject(Byte.valueOf((byte) 87));
-        producer.fireTimedEvent(eventType, (byte) 87, Double.valueOf(13.02d));
+        producer.fireTimedEvent(timedEventType, (byte) 87, Double.valueOf(13.02d));
         assertEquals(13.02, timedListener.getReceivedEvent().getTimeStamp(), 0.001);
 
         nrRemovedListeners = producer.removeAllListeners();
@@ -269,6 +270,9 @@ public class EventPubSubTest
             }
         }, "expected ClassCastException", ClassCastException.class);
 
+        listener.setExpectedObject("abc");
+        producer.fireUnverifiedEvent(new Event(eventType, producer, "abc"));
+
         listener.setExpectedObject(Boolean.valueOf(true));
         producer.fireUnverifiedEvent(eventType, true);
 
@@ -299,6 +303,9 @@ public class EventPubSubTest
         listener.setExpectedObject(Double.valueOf(1.2));
         producer.fireUnverifiedEvent(eventType, Double.valueOf(1.2));
 
+        listener.setExpectedObject(null);
+        producer.fireUnverifiedEvent(eventType);
+
         producer.removeAllListeners();
     }
 
@@ -310,57 +317,65 @@ public class EventPubSubTest
     {
         TestEventProducer producer = new TestEventProducer();
         TestTimedEventListener<Double> listener = new TestTimedEventListener<>();
-        EventType eventType = new EventType("TEST_TYPE", MetaData.NO_META_DATA);
+        TimedEventType timedEventType = new TimedEventType("TIMED_TEST_TYPE", MetaData.NO_META_DATA);
 
-        boolean addListenerOK = producer.addListener(listener, eventType);
+        boolean addListenerOK = producer.addListener(listener, timedEventType);
         assertTrue(addListenerOK);
 
         String string = "abc123";
         listener.setExpectedObject(string);
-        producer.fireEvent(new TimedEvent<Double>(eventType, producer, string, 12.01d));
+        producer.fireTimedEvent(new TimedEvent<Double>(timedEventType, producer, string, 12.01d));
         assertEquals(string, listener.getReceivedEvent().getContent());
-        assertEquals(eventType, listener.getReceivedEvent().getType());
+        assertEquals(timedEventType, listener.getReceivedEvent().getType());
         assertEquals(producer, listener.getReceivedEvent().getSourceId());
         assertEquals(12.01d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Boolean.valueOf(true));
-        producer.fireTimedEvent(eventType, true, Double.valueOf(12.02d));
+        producer.fireTimedEvent(timedEventType, true, Double.valueOf(12.02d));
         assertEquals(12.02d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
         listener.setExpectedObject(Boolean.valueOf(false));
-        producer.fireTimedEvent(eventType, false, Double.valueOf(12.03d));
+        producer.fireTimedEvent(timedEventType, false, Double.valueOf(12.03d));
         assertEquals(12.03d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Byte.valueOf((byte) 87));
-        producer.fireTimedEvent(eventType, (byte) 87, Double.valueOf(12.04d));
+        producer.fireTimedEvent(timedEventType, (byte) 87, Double.valueOf(12.04d));
         assertEquals(12.04d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Character.valueOf('X'));
-        producer.fireTimedEvent(eventType, 'X', Double.valueOf(12.14d));
+        producer.fireTimedEvent(timedEventType, 'X', Double.valueOf(12.14d));
         assertEquals(12.14d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Short.valueOf((short) -234));
-        producer.fireTimedEvent(eventType, (short) -234, Double.valueOf(12.05d));
+        producer.fireTimedEvent(timedEventType, (short) -234, Double.valueOf(12.05d));
         assertEquals(12.05d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Float.valueOf(246.8f));
-        producer.fireTimedEvent(eventType, 246.8f, Double.valueOf(12.15d));
+        producer.fireTimedEvent(timedEventType, 246.8f, Double.valueOf(12.15d));
         assertEquals(12.15d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Double.valueOf(123.456d));
-        producer.fireTimedEvent(eventType, 123.456d, Double.valueOf(12.06d));
+        producer.fireTimedEvent(timedEventType, 123.456d, Double.valueOf(12.06d));
         assertEquals(12.06d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Integer.valueOf(12345));
-        producer.fireTimedEvent(eventType, 12345, Double.valueOf(12.07d));
+        producer.fireTimedEvent(timedEventType, 12345, Double.valueOf(12.07d));
         assertEquals(12.07d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Long.valueOf(123456L));
-        producer.fireTimedEvent(eventType, 123456L, Double.valueOf(12.08d));
+        producer.fireTimedEvent(timedEventType, 123456L, Double.valueOf(12.08d));
         assertEquals(12.08d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(null);
-        producer.fireTimedEvent(eventType, null, Double.valueOf(12.09d));
+        producer.fireTimedEvent(timedEventType, null, Double.valueOf(12.09d));
         assertEquals(12.09d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
+        listener.setExpectedObject("abc");
+        producer.fireUnverifiedTimedEvent(new TimedEvent<Double>(timedEventType, producer, "abc", Double.valueOf(12.10d)));
+        assertEquals(12.10d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
+
+        listener.setExpectedObject(null);
+        producer.fireUnverifiedTimedEvent(timedEventType, Double.valueOf(12.11d));
+        assertEquals(12.11d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         producer.removeAllListeners();
     }
@@ -369,14 +384,15 @@ public class EventPubSubTest
      * Test the EventProducer and EventListener for verified / unverified timed events.
      */
     @Test
+    @SuppressWarnings("checkstyle:methodlength")
     public void testTimedEventVerificationPubSub()
     {
         TestEventProducer producer = new TestEventProducer();
         TestTimedEventListener<Double> listener = new TestTimedEventListener<>();
-        EventType eventType = new EventType("STRING_TYPE",
+        TimedEventType timedEventType = new TimedEventType("TIMED_STRING_TYPE",
                 new MetaData("STRING", "string", new ObjectDescriptor("String", "string", String.class)));
 
-        boolean addListenerOK = producer.addListener(listener, eventType);
+        boolean addListenerOK = producer.addListener(listener, timedEventType);
         assertTrue(addListenerOK);
 
         Try.testFail(new Try.Execution()
@@ -385,7 +401,7 @@ public class EventPubSubTest
             public void execute() throws Throwable
             {
                 listener.setExpectedObject(Boolean.valueOf(true));
-                producer.fireTimedEvent(eventType, true, Double.valueOf(12.01d));
+                producer.fireTimedEvent(timedEventType, true, Double.valueOf(12.01d));
             }
         }, "expected ClassCastException", ClassCastException.class);
 
@@ -395,7 +411,7 @@ public class EventPubSubTest
             public void execute() throws Throwable
             {
                 listener.setExpectedObject(Byte.valueOf((byte) 87));
-                producer.fireTimedEvent(eventType, (byte) 87, Double.valueOf(12.02d));
+                producer.fireTimedEvent(timedEventType, (byte) 87, Double.valueOf(12.02d));
             }
         }, "expected ClassCastException", ClassCastException.class);
 
@@ -405,7 +421,7 @@ public class EventPubSubTest
             public void execute() throws Throwable
             {
                 listener.setExpectedObject(Character.valueOf('a'));
-                producer.fireTimedEvent(eventType, 'a', Double.valueOf(12.03d));
+                producer.fireTimedEvent(timedEventType, 'a', Double.valueOf(12.03d));
             }
         }, "expected ClassCastException", ClassCastException.class);
 
@@ -415,7 +431,7 @@ public class EventPubSubTest
             public void execute() throws Throwable
             {
                 listener.setExpectedObject(Short.valueOf((short) -234));
-                producer.fireTimedEvent(eventType, (short) -234, Double.valueOf(12.04d));
+                producer.fireTimedEvent(timedEventType, (short) -234, Double.valueOf(12.04d));
             }
         }, "expected ClassCastException", ClassCastException.class);
 
@@ -425,7 +441,7 @@ public class EventPubSubTest
             public void execute() throws Throwable
             {
                 listener.setExpectedObject(Float.valueOf(458.9f));
-                producer.fireTimedEvent(eventType, 458.9f, Double.valueOf(12.05d));
+                producer.fireTimedEvent(timedEventType, 458.9f, Double.valueOf(12.05d));
             }
         }, "expected ClassCastException", ClassCastException.class);
 
@@ -435,7 +451,7 @@ public class EventPubSubTest
             public void execute() throws Throwable
             {
                 listener.setExpectedObject(Double.valueOf(123.456d));
-                producer.fireTimedEvent(eventType, 123.456d, Double.valueOf(12.06d));
+                producer.fireTimedEvent(timedEventType, 123.456d, Double.valueOf(12.06d));
             }
         }, "expected ClassCastException", ClassCastException.class);
 
@@ -445,7 +461,7 @@ public class EventPubSubTest
             public void execute() throws Throwable
             {
                 listener.setExpectedObject(Integer.valueOf(12345));
-                producer.fireTimedEvent(eventType, 12345, Double.valueOf(12.07d));
+                producer.fireTimedEvent(timedEventType, 12345, Double.valueOf(12.07d));
             }
         }, "expected ClassCastException", ClassCastException.class);
 
@@ -455,7 +471,7 @@ public class EventPubSubTest
             public void execute() throws Throwable
             {
                 listener.setExpectedObject(Long.valueOf(123456L));
-                producer.fireTimedEvent(eventType, 123456L, Double.valueOf(12.08d));
+                producer.fireTimedEvent(timedEventType, 123456L, Double.valueOf(12.08d));
             }
         }, "expected ClassCastException", ClassCastException.class);
 
@@ -465,7 +481,7 @@ public class EventPubSubTest
             public void execute() throws Throwable
             {
                 listener.setExpectedObject(new String[] {"a", "b"});
-                producer.fireTimedEvent(eventType, new String[] {"a", "b"}, Double.valueOf(12.09d));
+                producer.fireTimedEvent(timedEventType, new String[] {"a", "b"}, Double.valueOf(12.09d));
             }
         }, "expected IndexOutOfBoundsException", IndexOutOfBoundsException.class);
 
@@ -475,48 +491,48 @@ public class EventPubSubTest
             public void execute() throws Throwable
             {
                 listener.setExpectedObject(Double.valueOf(1.2));
-                producer.fireTimedEvent(eventType, Double.valueOf(1.2), Double.valueOf(12.10d));
+                producer.fireTimedEvent(timedEventType, Double.valueOf(1.2), Double.valueOf(12.10d));
             }
         }, "expected ClassCastException", ClassCastException.class);
 
         listener.setExpectedObject(Boolean.valueOf(true));
-        producer.fireUnverifiedTimedEvent(eventType, true, Double.valueOf(12.01d));
+        producer.fireUnverifiedTimedEvent(timedEventType, true, Double.valueOf(12.01d));
         assertEquals(12.01d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Byte.valueOf((byte) 87));
-        producer.fireUnverifiedTimedEvent(eventType, (byte) 87, Double.valueOf(12.02d));
+        producer.fireUnverifiedTimedEvent(timedEventType, (byte) 87, Double.valueOf(12.02d));
         assertEquals(12.02d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Character.valueOf('a'));
-        producer.fireUnverifiedTimedEvent(eventType, 'a', Double.valueOf(12.03d));
+        producer.fireUnverifiedTimedEvent(timedEventType, 'a', Double.valueOf(12.03d));
         assertEquals(12.03d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Short.valueOf((short) -234));
-        producer.fireUnverifiedTimedEvent(eventType, (short) -234, Double.valueOf(12.04d));
+        producer.fireUnverifiedTimedEvent(timedEventType, (short) -234, Double.valueOf(12.04d));
         assertEquals(12.04d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Float.valueOf(458.9f));
-        producer.fireUnverifiedTimedEvent(eventType, 458.9f, Double.valueOf(12.05d));
+        producer.fireUnverifiedTimedEvent(timedEventType, 458.9f, Double.valueOf(12.05d));
         assertEquals(12.05d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Double.valueOf(123.456d));
-        producer.fireUnverifiedTimedEvent(eventType, 123.456d, Double.valueOf(12.06d));
+        producer.fireUnverifiedTimedEvent(timedEventType, 123.456d, Double.valueOf(12.06d));
         assertEquals(12.06d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Integer.valueOf(12345));
-        producer.fireUnverifiedTimedEvent(eventType, 12345, Double.valueOf(12.07d));
+        producer.fireUnverifiedTimedEvent(timedEventType, 12345, Double.valueOf(12.07d));
         assertEquals(12.07d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Long.valueOf(123456L));
-        producer.fireUnverifiedTimedEvent(eventType, 123456L, Double.valueOf(12.08d));
+        producer.fireUnverifiedTimedEvent(timedEventType, 123456L, Double.valueOf(12.08d));
         assertEquals(12.08d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(new String[] {"a", "b"});
-        producer.fireUnverifiedTimedEvent(eventType, new String[] {"a", "b"}, Double.valueOf(12.09d));
+        producer.fireUnverifiedTimedEvent(timedEventType, new String[] {"a", "b"}, Double.valueOf(12.09d));
         assertEquals(12.09d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(Double.valueOf(1.2));
-        producer.fireUnverifiedTimedEvent(eventType, Double.valueOf(1.2), Double.valueOf(12.10d));
+        producer.fireUnverifiedTimedEvent(timedEventType, Double.valueOf(1.2), Double.valueOf(12.10d));
         assertEquals(12.10d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         producer.removeAllListeners();
