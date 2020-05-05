@@ -2,6 +2,17 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+   <release version="1.04.21" date="2020-05-05" description="MetaData construction with varargs">
+      <action dev="averbraeck" type="update">
+        The MetaData constructor has changed to a varargs parameter for the object descriptors, making it easier to
+        construct metaData objects with zero or one descriptor. The construction with new ObjectDescriptor[] {...}
+        of course remains possible. 
+      </action>
+      <action dev="averbraeck" type="fix">
+        The MetaData constructor now fires a NullPointerException if one of the ObjectDescriptors is null. 
+      </action>
+   </release>
+  
    <release version="1.04.20" date="2020-05-03" description="Added float and char payload for the fireEvent method">
       <action dev="averbraeck" type="add">
         The float and char primitive types were missing as allowed payloads for the fireEvent and fireTimedEvent methods. 
