@@ -2,6 +2,14 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+   <release version="1.05.02" date="2020-05-16" description="Changed CSVReader/Writer">
+      <action dev="averbraeck" type="update">
+        The OpenCSV package had over 5 MB of imports, such as commons-lang3, commons-text, commons-beanutils,
+        commons-collections, commons-collections4, and commons-logging. Instead, the very small and faster
+        fastcsv package has been used, which has no further dependencies and is only 16 kB.
+      </action>
+   </release>
+   
    <release version="1.05.01" date="2020-05-05" description="EventType and TimedEventType separated">
       <action dev="averbraeck" type="add">
         The EventType and TimedEventType are now two SEPARATE classes, both extending from AbstractEventType and

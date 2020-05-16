@@ -15,8 +15,6 @@ import org.djutils.data.csv.CSVData;
 import org.djutils.data.serialization.TextSerializationException;
 import org.junit.Test;
 
-import com.opencsv.exceptions.CsvValidationException;
-
 /**
  * TestCSVData tests writing and reading of a CSV file, and checks that all data is read back correctly into the DataTable. <br>
  * <br>
@@ -33,11 +31,10 @@ public class TestCSVData
     /**
      * test reading and writing of a CSV file.
      * @throws IOException on error
-     * @throws CsvValidationException on CSV error
      * @throws TextSerializationException on unknown data type for (de)serialization
      */
     @Test
-    public void testreadWriteCSV() throws IOException, CsvValidationException, TextSerializationException
+    public void testreadWriteCSV() throws IOException, TextSerializationException
     {
         File tempDataFile = File.createTempFile("testdata", ".csv");
         File tempMetaDataFile = File.createTempFile("testmetadata", ".csv");
@@ -67,7 +64,7 @@ public class TestCSVData
         assertArrayEquals(table1.getColumnDescriptions(), table2.getColumnDescriptions());
         assertArrayEquals(table1.getColumnDataTypes(), table2.getColumnDataTypes());
         assertArrayEquals(table1.getColumnDataTypeStrings(), table2.getColumnDataTypeStrings());
-        
+
         Iterator<DataRecord> it1 = table1.iterator();
         Iterator<DataRecord> it2 = table2.iterator();
         while (it1.hasNext() && it2.hasNext())

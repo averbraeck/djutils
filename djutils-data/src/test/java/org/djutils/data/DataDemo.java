@@ -18,8 +18,6 @@ import org.djutils.data.json.JSONData;
 import org.djutils.data.serialization.TextSerializationException;
 import org.djutils.data.xml.XMLData;
 
-import com.opencsv.exceptions.CsvValidationException;
-
 /**
  * DataDemo.java demonstration code used in the GRAV documentation. <br>
  * <br>
@@ -47,10 +45,9 @@ public final class DataDemo
      * @throws TextSerializationException ...
      * @throws IOException ...
      * @throws XMLStreamException ...
-     * @throws CsvValidationException ...
      */
     public static void main(final String[] args)
-            throws IOException, TextSerializationException, XMLStreamException, CsvValidationException
+            throws IOException, TextSerializationException, XMLStreamException
     {
         System.out.println("Example using java basic types");
         example1();
@@ -63,9 +60,8 @@ public final class DataDemo
      * @throws TextSerializationException ...
      * @throws IOException ...
      * @throws XMLStreamException ...
-     * @throws CsvValidationException ...
      */
-    public static void example1() throws IOException, TextSerializationException, XMLStreamException, CsvValidationException
+    public static void example1() throws IOException, TextSerializationException, XMLStreamException
     {
         DataColumn<Integer> timeStamp = new SimpleDataColumn<>("timeStamp", "time rounded to nearest second", int.class);
         DataColumn<Double> temperature = new SimpleDataColumn<>("temperature", "engine temperature in Celcius", double.class);
