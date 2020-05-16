@@ -15,8 +15,6 @@ import org.djutils.data.csv.TSVData;
 import org.djutils.data.serialization.TextSerializationException;
 import org.junit.Test;
 
-import com.opencsv.exceptions.CsvValidationException;
-
 /**
  * TestTSVData tests writing and reading of a TSV file, and checks that all data is read back correctly into the DataTable. <br>
  * <br>
@@ -33,11 +31,10 @@ public class TestTSVData
     /**
      * test reading and writing of a TSV file.
      * @throws IOException on error
-     * @throws CsvValidationException on TSV error
      * @throws TextSerializationException on unknown data type for (de)serialization
      */
     @Test
-    public void testreadWriteTSV() throws IOException, CsvValidationException, TextSerializationException
+    public void testreadWriteTSV() throws IOException, TextSerializationException
     {
         File tempDataFile = File.createTempFile("testdata", ".tsv");
         File tempMetaDataFile = File.createTempFile("testmetadata", ".tsv");

@@ -9,9 +9,6 @@ import java.io.Writer;
 import org.djutils.data.DataTable;
 import org.djutils.data.serialization.TextSerializationException;
 
-import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
-
 /**
  * TSVData takes care of reading and writing of table data in Tab-Separated-Value format. The class can be used, e.g., as
  * follows:
@@ -55,7 +52,7 @@ public final class TSVData
     public static void writeData(final Writer writer, final Writer metaWriter, final DataTable dataTable)
             throws IOException, TextSerializationException
     {
-        CSVData.writeData(writer, metaWriter, dataTable, '\t', '\u0000', '\\', ICSVWriter.DEFAULT_LINE_END);
+        CSVData.writeData(writer, metaWriter, dataTable, '\t', '\u0000', '\\', "\n");
     }
 
     /**
@@ -96,13 +93,12 @@ public final class TSVData
      * @param metaReader Reader; the writer for the metadata
      * @return dataTable the data table reconstructed from the meta data and filled with the data
      * @throws IOException on I/O error when reading the data
-     * @throws CsvValidationException when the TSV data was not formatted right
      * @throws TextSerializationException on unknown data type for serialization
      */
     public static DataTable readData(final Reader reader, final Reader metaReader)
-            throws IOException, CsvValidationException, TextSerializationException
+            throws IOException, TextSerializationException
     {
-        return CSVData.readData(reader, metaReader, '\t', '\u0000', '\\', ICSVWriter.DEFAULT_LINE_END);
+        return CSVData.readData(reader, metaReader, '\t', '\u0000', '\\', "\n");
     }
 
     /**
@@ -111,11 +107,10 @@ public final class TSVData
      * @param metaFilename String; the file name to read the metadata from
      * @return dataTable the data table reconstructed from the meta data and filled with the data
      * @throws IOException on I/O error when reading the data
-     * @throws CsvValidationException when the TSV data was not formatted right
      * @throws TextSerializationException on unknown data type for serialization
      */
     public static DataTable readData(final String filename, final String metaFilename)
-            throws IOException, CsvValidationException, TextSerializationException
+            throws IOException, TextSerializationException
     {
         FileReader fr = null;
         FileReader mfr = null;

@@ -32,8 +32,8 @@
     </dependency>
 
     <dependency>
-      <groupId>com.opencsv</groupId>
-      <artifactId>opencsv</artifactId>
+      <groupId>de.siegmar</groupId>
+      <artifactId>fastcsv</artifactId>
     </dependency>
 
     <dependency>
