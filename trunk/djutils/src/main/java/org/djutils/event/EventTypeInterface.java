@@ -42,7 +42,7 @@ public interface EventTypeInterface extends Serializable
 
     /**
      * Retrieve the event type that defines valid events of this EventType, e.g., to indicate a TimedEvent is expected.
-     * @return Class&lt;EventTypeInterface&gt;;; the class of valid events of this event type
+     * @return Class&lt;EventTypeInterface&gt;; the class of valid events of this event type
      */
     Class<? extends EventInterface> getValidEventType();
     
