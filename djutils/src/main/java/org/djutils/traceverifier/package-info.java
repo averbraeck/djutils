@@ -13,4 +13,4 @@
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-package traceverifier;
+package org.djutils.traceverifier;
