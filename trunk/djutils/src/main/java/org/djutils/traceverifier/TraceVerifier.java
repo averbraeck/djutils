@@ -1,4 +1,4 @@
-package traceverifier;
+package org.djutils.traceverifier;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
