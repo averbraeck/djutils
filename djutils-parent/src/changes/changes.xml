@@ -2,7 +2,19 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-   <release version="1.05.02" date="2020-05-16" description="Changed CSVReader/Writer">
+   <release version="1.05.03" date="2020-07-27" description="TraceVerifier added">
+      <action dev="pknoppers" type="add">
+        The TraceVerifier creates or verifies a file containing a series of traced events. When the file does not exist, it 
+        is created and each traced event is written to the file. If the file does exist, it is read and each traced event is 
+        compared to the corresponding event in the file. On a mismatch a RuntimeException is thrown. To use, create a 
+        TraceVerifier object in the class that is to be traced. In a method where you expect a fixed sequence of events, but
+        suspect that this may not be true ()due to, e.g., a race condition), add a call to the sample method of the TraceVerifier.
+        Then run the program repeatedly. The first run will create the trace file, all subsequent runs will compare what happens
+        to the contents of the trace file.
+      </action>
+   </release>
+  
+  <release version="1.05.02" date="2020-05-16" description="Changed CSVReader/Writer">
       <action dev="averbraeck" type="update">
         The OpenCSV package had over 5 MB of imports, such as commons-lang3, commons-text, commons-beanutils,
         commons-collections, commons-collections4, and commons-logging. Instead, the very small and faster
