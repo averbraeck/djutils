@@ -205,7 +205,7 @@ public final class Profile
         }
         return builder.append("-").append(line).append("-\n").toString();
     }
-    
+
     /**
      * Return statistics of one sampler (which must have identified itself with a name).
      * @param name String; name that was used in <code>start</code> and <code>end</code> calls.
@@ -252,7 +252,7 @@ public final class Profile
     {
         Profile.printInterval = printInterval;
     }
-    
+
     /**
      * Remove all collected statistics. Does not reset the print interval, or the time of last print.
      */
@@ -261,7 +261,7 @@ public final class Profile
         INFOS.clear();
         LINES.clear();
     }
-    
+
     /**
      * Reset the collected running time values of all observed methods and method fragments.
      */
@@ -319,7 +319,7 @@ public final class Profile
         {
             this.name = name;
         }
-        
+
         /**
          * Reset all collected running time values of this ProfileInfo object.
          */

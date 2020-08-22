@@ -48,5 +48,5 @@ public interface EventInterface extends Serializable
      * @return EventTypeInterface; the type of the event
      */
     EventTypeInterface getType();
-    
+
 }

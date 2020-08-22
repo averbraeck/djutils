@@ -11,13 +11,12 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * Test the TraceVerifier class.
- * <br><br>
+ * Test the TraceVerifier class. <br>
+ * <br>
  * Copyright (c) 2020-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
- * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
- * <br>
+ * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>. <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
@@ -45,10 +44,10 @@ public class TraceVerifierTest
         {
             // Ignore expected exception
         }
-        
+
         // System.out.println("testdir is " + this.testDir.getRoot());
         String traceFileName = this.testDir.getRoot().getCanonicalPath() + File.separator + "traceFile.txt";
-        
+
         TraceVerifier tv = new TraceVerifier(traceFileName);
         assertTrue("toString returns something descriptive", tv.toString().startsWith("TraceVerifier"));
         // Trace some things
@@ -56,29 +55,32 @@ public class TraceVerifierTest
         tv.sample("sample 2", "state 2");
         tv.sample("sample 3", "state 3");
         tv.close();
-        
-        tv = new TraceVerifier(traceFileName);  // Now it should be open for verify
+
+        tv = new TraceVerifier(traceFileName); // Now it should be open for verify
         try
         {
             tv.sample("sample 1", "not state 1");
+            fail("tv.sample(...) should have raised an exception");
         }
-        catch (RuntimeException re)
+        catch (TraceVerifierException re)
         {
-            System.out.println(re);
-            // TODO verify payload of exception
+            // exception expected
+            assertTrue("Got wrong message: " + re.getMessage() + " of exception " + re.getClass(),
+                    re.getMessage().startsWith("Discrepancy found"));
         }
         try
         {
             tv.sample("not sample 2", "state 2");
+            fail("tv.sample(...) should have raised an exception");
         }
-        catch (RuntimeException re)
+        catch (TraceVerifierException re)
         {
-            System.out.println(re);
-            // TODO verify payload of exception
+            // exception expected
+            assertTrue("Got wrong message: " + re.getMessage() + " of exception " + re.getClass(),
+                    re.getMessage().startsWith("Discrepancy found"));
         }
         tv.sample("sample 3", "state 3");
         tv.close();
     }
-    
-}
 
+}

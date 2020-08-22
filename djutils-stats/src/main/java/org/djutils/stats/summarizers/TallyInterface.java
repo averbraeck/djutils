@@ -156,7 +156,7 @@ public interface TallyInterface extends BasicTallyInterface
      * returns the confidence interval based of the mean.
      * @param alpha double; Alpha is the significance level used to compute the confidence level. The confidence level equals
      *            100*(1 - alpha)%, or in other words, an alpha of 0.05 indicates a 95 percent confidence level.
-     * @param side short; the side of the confidence interval with respect to the mean
+ * @param side ConfidenceInterval; the side of the confidence interval with respect to the mean
      * @return double[]; the confidence interval of this tally
      * @throws IllegalArgumentException when alpha is less than 0 or larger than 1
      * @throws NullPointerException when side is null

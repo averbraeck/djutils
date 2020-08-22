@@ -110,8 +110,7 @@ public interface ImmutableSet<E> extends ImmutableCollection<E>
      * @param v4 E; value 4
      * @return ImmutableSet&lt;K, V&gt;; an ImmutableSet with 4 entries, backed by a LinkedHashSet
      */
-    static <E> ImmutableSet<E> of(final E v1, final E v2, final E v3, 
-            final E v4)
+    static <E> ImmutableSet<E> of(final E v1, final E v2, final E v3, final E v4)
     {
         LinkedHashSet<E> set = new LinkedHashSet<>();
         set.add(v1);
@@ -129,12 +128,11 @@ public interface ImmutableSet<E> extends ImmutableCollection<E>
      * @param v3 E; value 3
      * @param v4 E; value 4
      * @param v5 E; value 5
-     * @param vn V[]; values 6 and beyond
+ * @param vn E...; values 6 and beyond
      * @return ImmutableSet&lt;K, V&gt;; an ImmutableSet with 5 or more entries, backed by a LinkedHashSet
      */
     @SuppressWarnings("unchecked")
-    static <E> ImmutableSet<E> of(final E v1, final E v2, final E v3, 
-            final E v4, final E v5, final E... vn)
+    static <E> ImmutableSet<E> of(final E v1, final E v2, final E v3, final E v4, final E v5, final E... vn)
     {
         LinkedHashSet<E> set = new LinkedHashSet<>();
         set.add(v1);

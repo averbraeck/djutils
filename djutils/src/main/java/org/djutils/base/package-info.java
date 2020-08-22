@@ -1,5 +1,5 @@
 /**
- * The djutils.base package contains a number of very generic classes / interfaces such as the Identifiable interface.  
+ * The djutils.base package contains a number of very generic classes / interfaces such as the Identifiable interface.
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://opentrafficsim.org/docs/current/license.html">OpenTrafficSim License</a>.

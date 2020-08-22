@@ -79,7 +79,7 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
 
     /**
      * Constructs a new EventProducingSet.
-     * @param parent Set&lt;T&gt;; the parent set.
+ * @param parent Set&lt;E&gt;; the parent set.
      * @param sourceIdProvider IdProvider; the function that produces the id by which the EventProducer can be identified by the
      *            EventListener
      */

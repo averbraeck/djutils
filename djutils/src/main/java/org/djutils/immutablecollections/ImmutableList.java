@@ -155,8 +155,7 @@ public interface ImmutableList<E> extends ImmutableCollection<E>
      * @param v4 E; value 4
      * @return ImmutableList&lt;K, V&gt;; an ImmutableList with 4 entries, backed by a ArrayList
      */
-    static <E> ImmutableList<E> of(final E v1, final E v2, final E v3, 
-            final E v4)
+    static <E> ImmutableList<E> of(final E v1, final E v2, final E v3, final E v4)
     {
         ArrayList<E> list = new ArrayList<>();
         list.add(v1);
@@ -174,12 +173,11 @@ public interface ImmutableList<E> extends ImmutableCollection<E>
      * @param v3 E; value 3
      * @param v4 E; value 4
      * @param v5 E; value 5
-     * @param vn V[]; values 6 and beyond
+ * @param vn E...; values 6 and beyond
      * @return ImmutableList&lt;K, V&gt;; an ImmutableList with 5 or more entries, backed by a ArrayList
      */
     @SuppressWarnings("unchecked")
-    static <E> ImmutableList<E> of(final E v1, final E v2, final E v3, 
-            final E v4, final E v5, final E... vn)
+    static <E> ImmutableList<E> of(final E v1, final E v2, final E v3, final E v4, final E v5, final E... vn)
     {
         ArrayList<E> list = new ArrayList<>();
         list.add(v1);

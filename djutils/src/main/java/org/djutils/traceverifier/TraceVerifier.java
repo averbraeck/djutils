@@ -62,6 +62,7 @@ public class TraceVerifier implements Closeable
      * @param description String; some kind of description of the sample (usually some kind of time stamp).
      * @param state String; summary of the state of the process that is sampled.
      * @throws IOException when reading or writing fails
+     * @throws TraceVerifierException on detection of a sample discrepancy
      */
     public void sample(final String description, final String state) throws IOException
     {
@@ -78,9 +79,12 @@ public class TraceVerifier implements Closeable
             {
                 indexOfFirstDifference++;
             }
-            String format = String.format("Discrepancy found.\n%%-8.8s: \"%%s\"\n%%-8.8s: \"%%s\"\n%%-8.8s:  %%%d.%ds^",
-                    indexOfFirstDifference, indexOfFirstDifference);
-            throw new RuntimeException(String.format(format, "Got", got, "Expected", expected, "1st diff", ""));
+            String format =
+                    indexOfFirstDifference == 0 ? "Discrepancy found.\n%%-8.8s: \"%%s\"\n%%-8.8s: \"%%s\"\n%%-8.8s:  %%s^"
+                            : String.format("Discrepancy found.\n%%-8.8s: \"%%s\"\n%%-8.8s: \"%%s\"\n%%-8.8s:  %%%d.%ds^",
+                                    indexOfFirstDifference, indexOfFirstDifference);
+            String error = String.format(format, "Got", got, "Expected", expected, "1st diff", "");
+            throw new TraceVerifierException(error);
         }
         BufferedWriter writer = new BufferedWriter(new FileWriter(this.outputFileName, true));
         writer.append(got);

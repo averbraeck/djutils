@@ -15,7 +15,7 @@ import org.djutils.metadata.MetaData;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class TimedEventType extends AbstractEventType
+public class TimedEventType extends AbstractEventType implements TimedEventTypeInterface
 {
     /** */
     private static final long serialVersionUID = 20200505L;
@@ -34,8 +34,8 @@ public class TimedEventType extends AbstractEventType
 
     /**
      * Construct a new TimedEventType. The name of the metadata will function as the name of the event. Only events of the type
-     * TimedEvent, but not classes of Event or subclasses of TimedEvent, can be used to fire events of this type. This means that
-     * firing an ordinary Event using this EventType will result in an error.
+     * TimedEvent, but not classes of Event or subclasses of TimedEvent, can be used to fire events of this type. This means
+     * that firing an ordinary Event using this EventType will result in an error.
      * @param metaData MetaData; describes the payload of events of the new EventType;
      */
     public TimedEventType(final MetaData metaData)
@@ -54,5 +54,5 @@ public class TimedEventType extends AbstractEventType
     {
         super(name, MetaData.NO_META_DATA, TimedEvent.class);
     }
-    
+
 }

@@ -425,7 +425,7 @@ public interface ImmutableMap<K, V> extends Serializable
         private final Entry<K, V> wrappedEntry;
 
         /**
-         * @param wrappedEntry the wrapped entry
+ * @param wrappedEntry Entry&lt;K,V&gt;; the wrapped entry
          */
         public ImmutableEntry(final Entry<K, V> wrappedEntry)
         {
@@ -529,7 +529,7 @@ public interface ImmutableMap<K, V> extends Serializable
          * The returned comparator is serializable if the specified comparator is also serializable.
          * @param <K> the type of the map keys
          * @param <V> the type of the map values
-         * @param cmp the key {@link Comparator}
+ * @param cmp Comparator&lt;? super K&gt;; the key {@link Comparator}
          * @return a comparator that compares {@link ImmutableMap.ImmutableEntry} by the key.
          * @since 1.8
          */
@@ -547,7 +547,7 @@ public interface ImmutableMap<K, V> extends Serializable
          * The returned comparator is serializable if the specified comparator is also serializable.
          * @param <K> the type of the map keys
          * @param <V> the type of the map values
-         * @param cmp the value {@link Comparator}
+ * @param cmp Comparator&lt;? super V&gt;; the value {@link Comparator}
          * @return a comparator that compares {@link ImmutableMap.ImmutableEntry} by the value.
          * @since 1.8
          */

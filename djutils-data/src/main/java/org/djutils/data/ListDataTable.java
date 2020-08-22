@@ -44,7 +44,7 @@ public class ListDataTable extends AbstractDataTable
      * Constructor with a regular collection.
      * @param id String; id
      * @param description String; description
-     * @param columns Collection&lt;Column&lt;?&gt;&gt;; columns
+ * @param columns Collection&lt;DataColumn&lt;?&gt;&gt;; columns
      */
     public ListDataTable(final String id, final String description, final Collection<DataColumn<?>> columns)
     {
@@ -55,7 +55,7 @@ public class ListDataTable extends AbstractDataTable
      * Constructor with an immutable list.
      * @param id String; id
      * @param description String; description
-     * @param columns ImmutableList&lt;Column&lt;?&gt;&gt;; columns
+ * @param columns ImmutableList&lt;DataColumn&lt;?&gt;&gt;; columns
      */
     public ListDataTable(final String id, final String description, final ImmutableList<DataColumn<?>> columns)
     {
@@ -105,7 +105,7 @@ public class ListDataTable extends AbstractDataTable
 
     /**
      * Adds a record to the table, based on a map with columns and values.
-     * @param data Map&lt;String, Object&gt;; data with values given per column
+ * @param data Map&lt;DataColumn&lt;?&gt;, Object&gt;; data with values given per column
      * @throws IllegalArgumentException when the size or data types in the data map do not comply to the columns
      * @throws NullPointerException when data is null
      */
@@ -117,7 +117,7 @@ public class ListDataTable extends AbstractDataTable
 
     /**
      * Adds a record to the table, based on an immutable map with columns and values.
-     * @param data Map&lt;String, Object&gt;; data with values given per column
+ * @param data ImmutableMap&lt;DataColumn&lt;?&gt;, Object&gt;; data with values given per column
      * @throws IllegalArgumentException when the size or data types in the data map do not comply to the columns
      * @throws NullPointerException when data is null
      */
@@ -154,7 +154,7 @@ public class ListDataTable extends AbstractDataTable
 
     /**
      * Adds a record to the table, based on an immutable map with column ids and values.
-     * @param data Map&lt;String, Object&gt;; data with values given per column id
+ * @param data ImmutableMap&lt;String, Object&gt;; data with values given per column id
      * @throws IllegalArgumentException when the size or data types in the data map do not comply to the columns
      * @throws NullPointerException when data is null
      */

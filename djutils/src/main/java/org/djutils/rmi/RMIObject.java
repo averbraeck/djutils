@@ -53,7 +53,7 @@ public abstract class RMIObject extends UnicastRemoteObject
      * AccessException to be fired.
      * @param host String; the host where the RMI registry resides or will be created. Creation is only possible on localhost.
      * @param port int; the port where the RMI registry can be found or will be created
-     * @param bindingKey the key under which this object will be bound in the RMI registry
+ * @param bindingKey String; the key under which this object will be bound in the RMI registry
      * @throws RemoteException when there is a problem with the RMI registry
      * @throws AlreadyBoundException when there is already another object bound to the bindingKey
      * @throws NullPointerException when host, path, or bindingKey is null
@@ -71,7 +71,7 @@ public abstract class RMIObject extends UnicastRemoteObject
      * AccessException to be fired.
      * @param host String; the host where the RMI registry resides or will be created. Creation is only possible on localhost.
      * @param port int; the port where the RMI registry can be found or will be created
-     * @param bindingKey the key under which this object will be bound in the RMI registry
+ * @param bindingKey String; the key under which this object will be bound in the RMI registry
      * @throws RemoteException when there is a problem with the RMI registry
      * @throws AlreadyBoundException when there is already another object bound to the bindingKey
      * @throws AccessException when there is an attempt to create a registry on a remote host

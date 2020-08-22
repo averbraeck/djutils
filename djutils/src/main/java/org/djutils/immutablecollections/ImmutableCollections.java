@@ -61,7 +61,7 @@ public final class ImmutableCollections
     /**
      * Search the immutable list for the specified object using the binary search algorithm. The list must be ordered according
      * to the natural ordering of its elements.
-     * @param il ImmutableList&lt;?&gt;; the list (must be ordered according to the natural ordering of <code>T</code>
+ * @param il ImmutableList&lt;? extends Comparable&lt;? super T&gt;&gt;; the list (must be ordered according to the natural ordering of &lt;code&gt;T&lt;/code&gt;
      * @param key T; the element to search for.
      * @return int; if <code>key</code> is present in the list, the index of <code>key</code>, or, when <code>key</code> is not
      *         present in the list <code>(-(<i>insertion point</i>) - 1)</code> where <code>insertion point</code> is the index
@@ -76,7 +76,7 @@ public final class ImmutableCollections
     /**
      * Search the immutable list for the specified object using the binary search algorithm. The list must be ordered according
      * to the comparator.
-     * @param il ImmutableList&lt;?&gt;; the list (must be ordered according to the <code>comparator</code>
+ * @param il ImmutableList&lt;? extends T&gt;; the list (must be ordered according to the &lt;code&gt;comparator&lt;/code&gt;
      * @param key T; the element to search for.
      * @param comparator Comparator&lt;? super T&gt;; a comparator for <code>T</code>
      * @return int; if <code>key</code> is present in the list, the index of <code>key</code>, or, when <code>key</code> is not
@@ -91,8 +91,8 @@ public final class ImmutableCollections
 
     /**
      * Determine if two immutable collections have no common members.
-     * @param ic1 ImmutableCollection&lt;?&gt; one immutable collection
-     * @param ic2 ImmutableCollection&lt;?&gt; another immutable collection
+ * @param ic1 ImmutableCollection&lt;?&gt;; ImmutableCollection&lt;?&gt; one immutable collection
+ * @param ic2 ImmutableCollection&lt;?&gt;; ImmutableCollection&lt;?&gt; another immutable collection
      * @return boolean; true if the collections have no common members; false if the collections have at least one member in
      *         common
      */
@@ -103,8 +103,8 @@ public final class ImmutableCollections
 
     /**
      * Determine if an immutable collection and a (non immutable) collection have no common members.
-     * @param ic1 ImmutableCollection&lt;?&gt; an immutable collection
-     * @param c2 Collection&lt;?&gt; a (mutable) collection
+ * @param ic1 ImmutableCollection&lt;?&gt;; ImmutableCollection&lt;?&gt; an immutable collection
+ * @param c2 Collection&lt;?&gt;; Collection&lt;?&gt; a (mutable) collection
      * @return boolean; true if the collections have no common members; false if the collections have at least one member in
      *         common
      */
@@ -115,8 +115,8 @@ public final class ImmutableCollections
 
     /**
      * Determine if an immutable collection and a (non immutable) collection have no common members.
-     * @param c1 Collection&lt;?&gt; a (mutable) collection
-     * @param ic2 ImmutableCollection&lt;?&gt; an immutable collection
+ * @param c1 Collection&lt;?&gt;; Collection&lt;?&gt; a (mutable) collection
+ * @param ic2 ImmutableCollection&lt;?&gt;; ImmutableCollection&lt;?&gt; an immutable collection
      * @return boolean; true if the collections have no common members; false if the collections have at least one member in
      *         common
      */
@@ -255,7 +255,7 @@ public final class ImmutableCollections
 
     /**
      * Return the number of occurrences of an object in an immutable collection.
-     * @param ic ImmutableCollection; the immutable collection
+ * @param ic ImmutableCollection&lt;?&gt;; the immutable collection
      * @param o Object; the object to count the number occurrences of
      * @return int; the number of occurrences of <code>o</code> in <code>ic</code>
      */

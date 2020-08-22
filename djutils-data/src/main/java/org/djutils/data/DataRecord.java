@@ -15,7 +15,7 @@ public interface DataRecord
     
     /**
      * Returns the column value of this record.
-     * @param column Column&lt;T&gt;; column
+ * @param column DataColumn&lt;T&gt;; column
      * @param <T> value type
      * @return T; the column value in this record
      */
