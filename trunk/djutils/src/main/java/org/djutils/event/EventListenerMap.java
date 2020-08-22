@@ -69,7 +69,7 @@ public final class EventListenerMap implements Serializable
 
     /**
      * Return whether the EventListenerMap contains the EventType as a key.
-     * @param eventType EventType; the EventType key to search for
+     * @param eventType EventTypeInterface; the EventType key to search for
      * @return boolean; whether the EventListenerMap contains the EventType as a key
      */
     public boolean containsKey(final EventTypeInterface eventType)
@@ -101,7 +101,7 @@ public final class EventListenerMap implements Serializable
 
     /**
      * Returns whether the EventListenerMap contains the reference to the eventListener as one of the subscribers.
-     * @param reference EventListenerInterface; the reference pointer an EventListener to search for
+ * @param reference Reference&lt;EventListenerInterface&gt;; the reference pointer an EventListener to search for
      * @return boolean; true if the EventListenerMap contains the reference to the eventListener as one of the subscribers;
      *         false otherwise
      */
@@ -156,8 +156,8 @@ public final class EventListenerMap implements Serializable
      * EventListeners for that EventTypeInterface). Note: this is a map with the real values, so not a safe copy. This entrySet
      * can be used to change the underlying map.
      * @return Set&lt;Map.Entry&lt;EventTypeInterface, List&lt;Reference&lt;EventListenerInterface&gt;&gt;&gt;&gt;;the Set of
-     *         Entry types holding pairs of a key (EventTypeInterface) and a value (List of references to EventListeners for that
-     *         EventTypeInterface). Note: this is <b>not</b> a safe copy!
+     *         Entry types holding pairs of a key (EventTypeInterface) and a value (List of references to EventListeners for
+     *         that EventTypeInterface). Note: this is <b>not</b> a safe copy!
      */
     public Set<Map.Entry<EventTypeInterface, List<Reference<EventListenerInterface>>>> entrySet()
     {
@@ -166,7 +166,8 @@ public final class EventListenerMap implements Serializable
 
     /**
      * Returns a safe copy of the Set of EventTypeInterfaces for which listeners are registered.
-     * @return Set&lt;EventTypeInterface&gt;; a safe copy of the Set of EventTypeInterface keys for which listeners are registered
+     * @return Set&lt;EventTypeInterface&gt;; a safe copy of the Set of EventTypeInterface keys for which listeners are
+     *         registered
      */
     public Set<EventTypeInterface> keySet()
     {

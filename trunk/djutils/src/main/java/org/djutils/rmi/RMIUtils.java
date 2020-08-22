@@ -91,7 +91,7 @@ public final class RMIUtils
     /**
      * Bind an object in the RMI registry.
      * @param registry Registry; the RMI registry where the object will be bound using the key
-     * @param bindingKey the key under which the object will be bound in the RMI registry
+ * @param bindingKey String; the key under which the object will be bound in the RMI registry
      * @param object Remote; the object that will be bound
      * @throws RemoteException when there is a problem with the RMI registry
      * @throws AlreadyBoundException when there is already another object bound to the bindingKey
@@ -119,7 +119,7 @@ public final class RMIUtils
     /**
      * Unbind an object from the RMI registry.
      * @param registry Registry; the RMI registry where the object will be bound using the key
-     * @param bindingKey the key under which the object will be bound in the RMI registry
+ * @param bindingKey String; the key under which the object will be bound in the RMI registry
      * @throws RemoteException when there is a problem with the RMI registry
      * @throws NotBoundException when there is no object bound to the bindingKey
      * @throws NullPointerException when registry or bindingKey is null
@@ -144,7 +144,7 @@ public final class RMIUtils
     /**
      * Rebind an object to an existing string in the RMI registry.
      * @param registry Registry; the RMI registry where the object will be bound using the key
-     * @param bindingKey the (existing) key under which the new object will be bound in the RMI registry
+ * @param bindingKey String; the (existing) key under which the new object will be bound in the RMI registry
      * @param newObject Remote; the new object that will be bound
      * @throws RemoteException when there is a problem with the RMI registry
      * @throws NullPointerException when registry, bindingKey or newObject is null
@@ -170,7 +170,7 @@ public final class RMIUtils
     /**
      * Lookup an object in the RMI registry.
      * @param registry Registry; the RMI registry in which the object will be looked up using the key
-     * @param bindingKey the key under which the object should be registered in the RMI registry
+ * @param bindingKey String; the key under which the object should be registered in the RMI registry
      * @return Remote; the remote object that bound to the key in the RMI registry
      * @throws RemoteException when there is a problem with the RMI registry
      * @throws NotBoundException when there is no object bound to the bindingKey

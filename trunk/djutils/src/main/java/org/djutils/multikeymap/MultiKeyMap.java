@@ -66,10 +66,10 @@ public class MultiKeyMap<T>
     {
         return getValue(null, Arrays.asList(keys));
     }
-    
+
     /**
      * Retrieve a sub map.
-     * @param keys  Object...; the key objects (must be at least one item shorter than the full depth)
+     * @param keys Object...; the key objects (must be at least one item shorter than the full depth)
      * @return MultiKeyMap&lt;T&gt;; the sub map
      */
     public MultiKeyMap<T> getSubMap(final Object... keys)
@@ -95,7 +95,7 @@ public class MultiKeyMap<T>
 
     /**
      * Select and verify the type of the last key.
-     * @param keys Object...; the keys
+ * @param keys List&lt;Object&gt;; the keys
      * @return Object; the last element of keys
      */
     private Object getFinalKey(final List<Object> keys)
@@ -208,9 +208,9 @@ public class MultiKeyMap<T>
     public Object clear(final Object... keys)
     {
         return clear(Arrays.asList(keys));
-        
+
     }
-    
+
     /**
      * Clear the mapping for a key combination.
      * @param keys List&lt;Object&gt;; key combination to clear the map for

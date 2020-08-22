@@ -144,50 +144,50 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
      * Transmit an event to all interested listeners.
      * @param event EventInterface; the event
      */
-    protected void fireEvent(final Event event)
+    protected void fireEvent(final EventInterface event)
     {
         this.eventProducerImpl.fireEvent(event, true);
     }
 
     /**
      * Transmit a timed event to all interested listeners.
-     * @param event TimedEvent; the timed event
+     * @param event TimedEventInterface&lt;C&gt;; the timed event
      * @param <C> the comparable type to indicate the time when the event is fired
      */
-    protected <C extends Comparable<C> & Serializable> void fireTimedEvent(final TimedEvent<C> event)
+    protected <C extends Comparable<C> & Serializable> void fireTimedEvent(final TimedEventInterface<C> event)
     {
         this.eventProducerImpl.fireTimedEvent(event, true);
     }
 
     /**
      * Transmit an event with a serializable object as payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value Serializable; the object sent with the event
      * @return Serializable; the payload
      */
-    protected Serializable fireEvent(final EventType eventType, final Serializable value)
+    protected Serializable fireEvent(final EventTypeInterface eventType, final Serializable value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, true);
     }
 
     /**
      * Transmit an event with no payload object to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      */
-    protected void fireEvent(final EventType eventType)
+    protected void fireEvent(final EventTypeInterface eventType)
     {
         this.eventProducerImpl.fireEvent(eventType, true);
     }
 
     /**
      * Transmit a time-stamped event with a Serializable object (payload) to all interested listeners.
-     * @param eventType EventType; the eventType of the event.
+     * @param eventType TimedEventTypeInterface; the eventType of the event.
      * @param value Serializable; the payload sent with the event
      * @param time C; a time stamp for the event
      * @return Serializable; the payload
      * @param <C> the comparable type to indicate the time when the event is fired
      */
-    protected <C extends Comparable<C> & Serializable> Serializable fireTimedEvent(final TimedEventType eventType,
+    protected <C extends Comparable<C> & Serializable> Serializable fireTimedEvent(final TimedEventTypeInterface eventType,
             final Serializable value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
@@ -195,74 +195,74 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
 
     /**
      * Transmit an event with a one byte payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value byte; the payload
      * @return byte; the payload
      */
-    protected byte fireEvent(final EventType eventType, final byte value)
+    protected byte fireEvent(final EventTypeInterface eventType, final byte value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, true);
     }
 
     /**
      * Transmit a time-stamped event with a one byte payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value byte; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return byte; the payload
      */
-    protected <C extends Comparable<C> & Serializable> byte fireTimedEvent(final TimedEventType eventType, final byte value,
-            final C time)
+    protected <C extends Comparable<C> & Serializable> byte fireTimedEvent(final TimedEventTypeInterface eventType,
+            final byte value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
     }
 
     /**
      * Transmit an event with a one char payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value char; the payload
      * @return char; the payload
      */
-    protected char fireEvent(final EventType eventType, final char value)
+    protected char fireEvent(final EventTypeInterface eventType, final char value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, true);
     }
 
     /**
      * Transmit a time-stamped event with a one char payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value char; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return char; the payload
      */
-    protected <C extends Comparable<C> & Serializable> char fireTimedEvent(final TimedEventType eventType, final char value,
-            final C time)
+    protected <C extends Comparable<C> & Serializable> char fireTimedEvent(final TimedEventTypeInterface eventType,
+            final char value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
     }
 
     /**
      * Transmit an event with a boolean payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value boolean; the payload
      * @return boolean; the payload
      */
-    protected boolean fireEvent(final EventType eventType, final boolean value)
+    protected boolean fireEvent(final EventTypeInterface eventType, final boolean value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, true);
     }
 
     /**
      * Transmit a time-stamped event with a boolean payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value boolean; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return boolean; the payload
      */
-    protected <C extends Comparable<C> & Serializable> boolean fireTimedEvent(final TimedEventType eventType,
+    protected <C extends Comparable<C> & Serializable> boolean fireTimedEvent(final TimedEventTypeInterface eventType,
             final boolean value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
@@ -270,125 +270,125 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
 
     /**
      * Transmit an event with a double value payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value double; the payload
      * @return double; the payload
      */
-    protected double fireEvent(final EventType eventType, final double value)
+    protected double fireEvent(final EventTypeInterface eventType, final double value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, true);
     }
 
     /**
      * Transmit a time-stamped event with a double value payload to interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value double; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return double; the payload
      */
-    protected <C extends Comparable<C> & Serializable> double fireTimedEvent(final TimedEventType eventType, final double value,
-            final C time)
+    protected <C extends Comparable<C> & Serializable> double fireTimedEvent(final TimedEventTypeInterface eventType,
+            final double value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
     }
 
     /**
      * Transmit an event with an integer payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value int; the payload
      * @return int; the payload
      */
-    protected int fireEvent(final EventType eventType, final int value)
+    protected int fireEvent(final EventTypeInterface eventType, final int value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, true);
     }
 
     /**
      * Transmit a time-stamped event with an integer payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value int; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return int; the payload
      */
-    protected <C extends Comparable<C> & Serializable> int fireTimedEvent(final TimedEventType eventType, final int value,
-            final C time)
+    protected <C extends Comparable<C> & Serializable> int fireTimedEvent(final TimedEventTypeInterface eventType,
+            final int value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
     }
 
     /**
      * Transmit an event with a long payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value long; the payload
      * @return long; the payload
      */
-    protected long fireEvent(final EventType eventType, final long value)
+    protected long fireEvent(final EventTypeInterface eventType, final long value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, true);
     }
 
     /**
      * Transmit a time-stamped event with a long payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value long; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return long; the payload
      */
-    protected <C extends Comparable<C> & Serializable> long fireTimedEvent(final TimedEventType eventType, final long value,
-            final C time)
+    protected <C extends Comparable<C> & Serializable> long fireTimedEvent(final TimedEventTypeInterface eventType,
+            final long value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
     }
 
     /**
      * Transmit an event with a short payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value short; the payload
      * @return short; the payload
      */
-    protected short fireEvent(final EventType eventType, final short value)
+    protected short fireEvent(final EventTypeInterface eventType, final short value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, true);
     }
 
     /**
      * Transmit a time-stamped event with a short payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value short; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return short; the payload
      */
-    protected <C extends Comparable<C> & Serializable> short fireTimedEvent(final TimedEventType eventType, final short value,
-            final C time)
+    protected <C extends Comparable<C> & Serializable> short fireTimedEvent(final TimedEventTypeInterface eventType,
+            final short value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
     }
 
     /**
      * Transmit an event with a float payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value float; the payload
      * @return float; the payload
      */
-    protected float fireEvent(final EventType eventType, final float value)
+    protected float fireEvent(final EventTypeInterface eventType, final float value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, true);
     }
 
     /**
      * Transmit a time-stamped event with a float payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value float; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return float; the payload
      */
-    protected <C extends Comparable<C> & Serializable> float fireTimedEvent(final TimedEventType eventType, final float value,
-            final C time)
+    protected <C extends Comparable<C> & Serializable> float fireTimedEvent(final TimedEventTypeInterface eventType,
+            final float value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, true);
     }
@@ -401,48 +401,48 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
      * Transmit an event to all interested listeners.
      * @param event EventInterface; the event
      */
-    protected void fireUnverifiedEvent(final Event event)
+    protected void fireUnverifiedEvent(final EventInterface event)
     {
         this.eventProducerImpl.fireEvent(event, false);
     }
 
     /**
      * Transmit a timed event to all interested listeners.
-     * @param event TimedEvent; the timed event
+     * @param event TimedEventInterface&lt;C&gt;; the timed event
      * @param <C> the comparable type to indicate the time when the event is fired
      */
-    protected <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final TimedEvent<C> event)
+    protected <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final TimedEventInterface<C> event)
     {
         this.eventProducerImpl.fireTimedEvent(event, false);
     }
 
     /**
      * Transmit an event that is not verified with a serializable object as payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value Serializable; the object sent with the event
      * @return Serializable; the payload
      */
-    protected Serializable fireUnverifiedEvent(final EventType eventType, final Serializable value)
+    protected Serializable fireUnverifiedEvent(final EventTypeInterface eventType, final Serializable value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, false);
     }
 
     /**
      * Transmit an event that is not verified with no payload object to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      */
-    protected void fireUnverifiedEvent(final EventType eventType)
+    protected void fireUnverifiedEvent(final EventTypeInterface eventType)
     {
         this.eventProducerImpl.fireEvent(eventType, false);
     }
 
     /**
      * Transmit a timed event that is not verified with no payload object to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      */
-    protected <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final TimedEventType eventType,
+    protected <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final TimedEventTypeInterface eventType,
             final C time)
     {
         this.eventProducerImpl.fireTimedEvent(eventType, time, false);
@@ -450,38 +450,38 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
 
     /**
      * Transmit a time-stamped event that is not verified with a Serializable object (payload) to all interested listeners.
-     * @param eventType EventType; the eventType of the event.
+     * @param eventType TimedEventTypeInterface; the eventType of the event.
      * @param value Serializable; the payload sent with the event
      * @param time C; a time stamp for the event
      * @return Serializable; the payload
      * @param <C> the comparable type to indicate the time when the event is fired
      */
-    protected <C extends Comparable<C> & Serializable> Serializable fireUnverifiedTimedEvent(final TimedEventType eventType,
-            final Serializable value, final C time)
+    protected <C extends Comparable<C> & Serializable> Serializable fireUnverifiedTimedEvent(
+            final TimedEventTypeInterface eventType, final Serializable value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
     }
 
     /**
      * Transmit an event that is not verified with a one byte payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value byte; the payload
      * @return byte; the payload
      */
-    protected byte fireUnverifiedEvent(final EventType eventType, final byte value)
+    protected byte fireUnverifiedEvent(final EventTypeInterface eventType, final byte value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, false);
     }
 
     /**
      * Transmit a time-stamped event that is not verified with a one byte payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value byte; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return byte; the payload
      */
-    protected <C extends Comparable<C> & Serializable> byte fireUnverifiedTimedEvent(final TimedEventType eventType,
+    protected <C extends Comparable<C> & Serializable> byte fireUnverifiedTimedEvent(final TimedEventTypeInterface eventType,
             final byte value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
@@ -489,24 +489,24 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
 
     /**
      * Transmit an event that is not verified with a one char payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value char; the payload
      * @return char; the payload
      */
-    protected char fireUnverifiedEvent(final EventType eventType, final char value)
+    protected char fireUnverifiedEvent(final EventTypeInterface eventType, final char value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, false);
     }
 
     /**
      * Transmit a time-stamped event that is not verified with a one char payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value char; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return char; the payload
      */
-    protected <C extends Comparable<C> & Serializable> char fireUnverifiedTimedEvent(final TimedEventType eventType,
+    protected <C extends Comparable<C> & Serializable> char fireUnverifiedTimedEvent(final TimedEventTypeInterface eventType,
             final char value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
@@ -514,24 +514,24 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
 
     /**
      * Transmit an event that is not verified with a boolean payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value boolean; the payload
      * @return boolean; the payload
      */
-    protected boolean fireUnverifiedEvent(final EventType eventType, final boolean value)
+    protected boolean fireUnverifiedEvent(final EventTypeInterface eventType, final boolean value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, false);
     }
 
     /**
      * Transmit a time-stamped event that is not verified with a boolean payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value boolean; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return boolean; the payload
      */
-    protected <C extends Comparable<C> & Serializable> boolean fireUnverifiedTimedEvent(final TimedEventType eventType,
+    protected <C extends Comparable<C> & Serializable> boolean fireUnverifiedTimedEvent(final TimedEventTypeInterface eventType,
             final boolean value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
@@ -539,24 +539,24 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
 
     /**
      * Transmit an event that is not verified with a double value payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value double; the payload
      * @return double; the payload
      */
-    protected double fireUnverifiedEvent(final EventType eventType, final double value)
+    protected double fireUnverifiedEvent(final EventTypeInterface eventType, final double value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, false);
     }
 
     /**
      * Transmit a time-stamped event that is not verified with a double value payload to interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value double; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return double; the payload
      */
-    protected <C extends Comparable<C> & Serializable> double fireUnverifiedTimedEvent(final TimedEventType eventType,
+    protected <C extends Comparable<C> & Serializable> double fireUnverifiedTimedEvent(final TimedEventTypeInterface eventType,
             final double value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
@@ -564,24 +564,24 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
 
     /**
      * Transmit an event that is not verified with an integer payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value int; the payload
      * @return int; the payload
      */
-    protected int fireUnverifiedEvent(final EventType eventType, final int value)
+    protected int fireUnverifiedEvent(final EventTypeInterface eventType, final int value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, false);
     }
 
     /**
      * Transmit a time-stamped event that is not verified with an integer payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value int; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return int; the payload
      */
-    protected <C extends Comparable<C> & Serializable> int fireUnverifiedTimedEvent(final TimedEventType eventType,
+    protected <C extends Comparable<C> & Serializable> int fireUnverifiedTimedEvent(final TimedEventTypeInterface eventType,
             final int value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
@@ -589,24 +589,24 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
 
     /**
      * Transmit an event that is not verified with a long payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value long; the payload
      * @return long; the payload
      */
-    protected long fireUnverifiedEvent(final EventType eventType, final long value)
+    protected long fireUnverifiedEvent(final EventTypeInterface eventType, final long value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, false);
     }
 
     /**
      * Transmit a time-stamped event that is not verified with a long payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value long; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return long; the payload
      */
-    protected <C extends Comparable<C> & Serializable> long fireUnverifiedTimedEvent(final TimedEventType eventType,
+    protected <C extends Comparable<C> & Serializable> long fireUnverifiedTimedEvent(final TimedEventTypeInterface eventType,
             final long value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
@@ -614,24 +614,24 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
 
     /**
      * Transmit an event that is not verified with a short payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value short; the payload
      * @return short; the payload
      */
-    protected short fireUnverifiedEvent(final EventType eventType, final short value)
+    protected short fireUnverifiedEvent(final EventTypeInterface eventType, final short value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, false);
     }
 
     /**
      * Transmit a time-stamped event that is not verified with a short payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value short; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return short; the payload
      */
-    protected <C extends Comparable<C> & Serializable> short fireUnverifiedTimedEvent(final TimedEventType eventType,
+    protected <C extends Comparable<C> & Serializable> short fireUnverifiedTimedEvent(final TimedEventTypeInterface eventType,
             final short value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);
@@ -639,24 +639,24 @@ public abstract class EventProducer implements EventProducerInterface, Serializa
 
     /**
      * Transmit an event that is not verified with a float payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType EventTypeInterface; the eventType of the event
      * @param value float; the payload
      * @return float; the payload
      */
-    protected float fireUnverifiedEvent(final EventType eventType, final float value)
+    protected float fireUnverifiedEvent(final EventTypeInterface eventType, final float value)
     {
         return this.eventProducerImpl.fireEvent(eventType, value, false);
     }
 
     /**
      * Transmit a time-stamped event that is not verified with a float payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value float; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return float; the payload
      */
-    protected <C extends Comparable<C> & Serializable> float fireUnverifiedTimedEvent(final TimedEventType eventType,
+    protected <C extends Comparable<C> & Serializable> float fireUnverifiedTimedEvent(final TimedEventTypeInterface eventType,
             final float value, final C time)
     {
         return this.eventProducerImpl.fireTimedEvent(eventType, value, time, false);

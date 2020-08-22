@@ -316,7 +316,7 @@ public class Tally implements TallyInterface
 
     /**
      * Ingest an array of values.
-     * @param values the values to ingest
+ * @param values double...; the values to ingest
      */
     public void ingest(final double... values)
     {

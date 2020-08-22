@@ -255,7 +255,7 @@ public final class CliUtil
      * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
      * @param fieldName String; the field for which the defaultValue in &#64;Option should be changed
      * @param propertyName String; the name of the property to change the value of
-     * @param newValue String; the new value of the property
+ * @param newValue Object; the new value of the property
      * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
      * @throws NoSuchFieldException when the field with the name does not exist in the program object
      */
@@ -278,7 +278,7 @@ public final class CliUtil
      * @param program Object; the program for which the options should be changed
      * @param fieldName String; the field for which the defaultValue in &#64;Option should be changed
      * @param propertyName String; the name of the property to change the value of
-     * @param newValue String; the new value of the property
+ * @param newValue Object; the new value of the property
      * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
      * @throws NoSuchFieldException when the field with the name does not exist in the program object
      */
@@ -293,7 +293,7 @@ public final class CliUtil
      * superclass.
      * @param program Object; the program for which the options should be changed
      * @param fieldName String; the field for which the defaultValue in &#64;Option should be changed
-     * @param newDefaultValue Object; the new value of the defaultValue
+ * @param newDefaultValue String; the new value of the defaultValue
      * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
      * @throws NoSuchFieldException when the field with the name does not exist in the program object
      */
@@ -308,7 +308,7 @@ public final class CliUtil
      * superclass.
      * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
      * @param fieldName String; the field for which the defaultValue in &#64;Option should be changed
-     * @param newDefaultValue Object; the new value of the defaultValue
+ * @param newDefaultValue String; the new value of the defaultValue
      * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
      * @throws NoSuchFieldException when the field with the name does not exist in the program object
      */

@@ -32,5 +32,5 @@ public interface EventListenerInterface extends EventListener, Serializable
      * @throws RemoteException If a network connection failure occurs.
      */
     void notify(EventInterface event) throws RemoteException;
-    
+
 }

@@ -84,8 +84,8 @@ public interface EventProducerInterface
      * @throws RemoteException If a network connection failure occurs.
      * @see org.djutils.event.ref.WeakReference
      */
-    boolean addListener(EventListenerInterface listener, EventTypeInterface eventType, int position, ReferenceType referenceType)
-            throws RemoteException;
+    boolean addListener(EventListenerInterface listener, EventTypeInterface eventType, int position,
+            ReferenceType referenceType) throws RemoteException;
 
     /**
      * Remove the subscription of a listener for a specific event.

@@ -30,7 +30,7 @@ public class DoubleScalarSerializer<U extends Unit<U>, S extends DoubleScalarInt
      * Serialize a DoubleScalar value to text in such a way that it can be deserialized with the corresponding deserializer. In
      * this case, it serializes the class name of the Scalar, followed by a hash sign, followed by the printed value of the
      * scalar including the unit. So a Length of 12.5 kilometer will return "org.djunits.value.vdouble.scalar.Length#12.5 km".
-     * @param value S; the scalar to serialize
+ * @param value Object; the scalar to serialize
      * @return String; a string representation of the value that can later be deserialized
      */
     @SuppressWarnings("unchecked")

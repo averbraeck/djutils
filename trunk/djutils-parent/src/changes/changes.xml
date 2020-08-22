@@ -2,6 +2,24 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.05.04" date="2020-08-22" description="EventInterface and EventTypeInterface used in a consequent manner">
+      <action dev="averbraeck" type="update">
+        The EventInterface and Event were used in a mixed way in the event package. Same for EventType and EventTypeInterface.
+        For TimedEvent and TimedEventType, no interfaces were present, leading to a further asymmetry. All event methods
+        now act on the interface, and return interfaces instead of implementations of the Events and EventTypes. 
+      </action>
+      <action dev="averbraeck" type="fix">
+        The TraceVerifier class threw a java.util.FormatFlagsConversionMismatchException for the error string instead
+        of a regular RunTimeException showing the mismatch. This has been repaired. 
+      </action>
+      <action dev="averbraeck" type="add">
+        The TraceVerifier class now throws a TraceVerifierException instead of a generic RunTimeException. 
+      </action>
+      <action dev="averbraeck" type="update">
+        Javadoc comments updated to contain correct types of parameters. 
+      </action>
+    </release>
+    
    <release version="1.05.03" date="2020-07-27" description="TraceVerifier added">
       <action dev="pknoppers" type="add">
         The TraceVerifier creates or verifies a file containing a series of traced events. When the file does not exist, it 

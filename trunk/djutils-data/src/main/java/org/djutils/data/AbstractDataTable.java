@@ -29,7 +29,7 @@ public abstract class AbstractDataTable implements DataTable
      * Constructor for the data table using an ImmutableCollection for the columns.
      * @param id String; id
      * @param description String; description
-     * @param columns ImmutableList&lt;Column&lt;?&gt;&gt;; columns
+ * @param columns ImmutableList&lt;DataColumn&lt;?&gt;&gt;; columns
      * @throws NullPointerException when id, description or columns is null
      * @throws IllegalArgumentException when id is empty or there are zero columns
      */

@@ -39,7 +39,7 @@ public class MetaData implements Serializable
      * Construct a new MetaData object that can check an array of Object.
      * @param name String; name of the new MetaData object, which cannot be null or the empty string
      * @param description String; description of the new MetaData object
-     * @param objectDescriptors ObjectDescriptor[]; array of ObjectDescriptor. This constructor does <b>not</b> make a deep copy
+ * @param objectDescriptors ObjectDescriptor...; array of ObjectDescriptor. This constructor does &lt;b&gt;not&lt;/b&gt; make a deep copy
      *            of this array; subsequent modification of the contents of the provided <code>objectDescriptors</code> array
      *            will affect the behavior of the MetaData object.
      */

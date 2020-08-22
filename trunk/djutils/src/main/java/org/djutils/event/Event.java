@@ -23,32 +23,26 @@ public class Event extends AbstractEvent
 
     /**
      * Construct a new Event, where compliance with the metadata is verified.
-     * @param type EventType; the name of the Event.
+ * @param type EventTypeInterface; the name of the Event.
      * @param sourceId Serializable; the source id of the sender
      * @param content Serializable; the content of the event
      */
-    public Event(final EventType type, final Serializable sourceId, final Serializable content)
+    public Event(final EventTypeInterface type, final Serializable sourceId, final Serializable content)
     {
         super(type, sourceId, content);
     }
 
     /**
      * Construct a new Event, with a choice to verify compliance with metadata.
-     * @param type EventType; the name of the Event.
+ * @param type EventTypeInterface; the name of the Event.
      * @param sourceId Serializable; the source id of the sender
      * @param content Serializable; the content of the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      */
-    public Event(final EventType type, final Serializable sourceId, final Serializable content, final boolean verifyMetaData)
+    public Event(final EventTypeInterface type, final Serializable sourceId, final Serializable content,
+            final boolean verifyMetaData)
     {
         super(type, sourceId, content, verifyMetaData);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public EventType getType()
-    {
-        return (EventType) super.getType();
     }
 
     /** {@inheritDoc} */
@@ -58,5 +52,5 @@ public class Event extends AbstractEvent
         return "[" + this.getClass().getName() + ";" + this.getType() + ";" + this.getSourceId() + ";" + this.getContent()
                 + "]";
     }
-    
+
 }

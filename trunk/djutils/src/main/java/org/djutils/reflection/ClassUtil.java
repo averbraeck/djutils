@@ -59,7 +59,7 @@ public final class ClassUtil
      * Returns all the constructors of a class. Public, package, protected and private constructors are returned. This method
      * returns an array of length 0 if the class object represents an interface, a primitive type, an array class, or void. Note
      * that the constructors of the superclass are not returned as these can never be invoked.
-     * @param clazz Class&lt;?&gt;; the class to resolve the constructors for.
+ * @param clazz Class&lt;T&gt;; the class to resolve the constructors for.
      * @return an array with all constructors
      * @param <T> the class of the constructors
      */
@@ -72,7 +72,7 @@ public final class ClassUtil
     /**
      * Returns a constructor with the given signature, possibly from the cache. When the constructor is resolved for the first
      * time, it will be added to the cache.
-     * @param clazz Class&lt;?&gt;; the class to resolve the constructor for
+ * @param clazz Class&lt;T&gt;; the class to resolve the constructor for
      * @param parameterTypes Class&lt;?&gt;[]; the parameter types of the signature
      * @return the constructor with the given signature, if found
      * @throws NoSuchMethodException if the constructor cannot be resolved
@@ -97,7 +97,7 @@ public final class ClassUtil
      * constructor. So a private constructor will not be invoked, unless the caller class is the class that defines the
      * constructor. For a protected class the superclass and classes in the same package can invoke the constructor, but other
      * classes should not be able to invoke the constructor.
-     * @param clazz Class&lt;?&gt;; the class for which the constructor needs to be
+ * @param clazz Class&lt;T&gt;; the class for which the constructor needs to be
      * @param callerClass Class&lt;?&gt;; the calling class for which the test is carried out whether the constructor is visible
      * @param parameterTypes Class&lt;?&gt;[]; the parameter types for the constructor's signature
      * @return the retrieved constructor
@@ -118,7 +118,7 @@ public final class ClassUtil
 
     /**
      * returns the interface method.
-     * @param clazz Class&lt;?&gt;; the class to start with
+ * @param clazz Class&lt;T&gt;; the class to start with
      * @param parameterTypes Class&lt;?&gt;[]; the parameterTypes
      * @return Constructor
      * @throws NoSuchMethodException if the method cannot be resolved
@@ -155,7 +155,7 @@ public final class ClassUtil
 
     /**
      * returns the constructor.
-     * @param clazz Class&lt;?&gt;; the clazz to start with
+ * @param clazz Class&lt;T&gt;; the clazz to start with
      * @param arguments Object[]; the arguments
      * @return Constructor
      * @throws NoSuchMethodException on lookup failure
@@ -213,7 +213,7 @@ public final class ClassUtil
 
     /**
      * Filters an array methods for signatures that are compatible with a given signature.
-     * @param constructors Constructor&lt;?&gt;[]; which are constructors to be filtered.
+ * @param constructors Constructor&lt;T&gt;[]; which are constructors to be filtered.
      * @param argTypes Class&lt;?&gt;[]; are the constructor's argument types
      * @return Constructor&lt;?&gt;[] An unordered Constructor-array consisting of the elements of 'constructors' that match
      *         with the given signature. An array with 0 elements is returned when no matching Method objects are found.
@@ -340,7 +340,7 @@ public final class ClassUtil
     /**
      * gets all the methods of a class (public, protected, package, and private) and adds the result to the return value.
      * @param clazz Class&lt;?&gt;; the class
-     * @param result Set&lt;Field&gt;; the resulting set
+ * @param result List&lt;Method&gt;; the resulting set
      * @return the set of methods including all methods of the field clazz
      */
     public static List<Method> getAllMethods(final Class<?> clazz, final List<Method> result)
@@ -373,7 +373,7 @@ public final class ClassUtil
      * return value.
      * @param clazz Class&lt;?&gt;; the class
      * @param name String; the name of the method to look up
-     * @param result Set&lt;Field&gt;; the resulting set
+ * @param result List&lt;Method&gt;; the resulting set
      * @return the set of methods including all methods with the given name of the field clazz
      */
     public static List<Method> getAllMethods(final Class<?> clazz, final String name, final List<Method> result)
@@ -721,7 +721,7 @@ public final class ClassUtil
 
     /**
      * Filters an array methods for signatures that are compatible with a given signature.
-     * @param methods Method[]; which are methods to be filtered.
+ * @param methods List&lt;Method&gt;; which are methods to be filtered.
      * @param name String; reflects the method's name, part of the signature
      * @param argTypes Class&lt;?&gt;[]; are the method's argument types
      * @return Method[] An unordered Method-array consisting of the elements of 'methods' that match with the given signature.
@@ -862,7 +862,7 @@ public final class ClassUtil
     /**
      * Determines & returns the most specific method as defined in the Java Language Specification par 15.12. The current
      * algorithm is simple and reliable, but probably slow.
-     * @param methods Method[]; which are the methods to be searched. They are assumed to have the same name and number of
+ * @param methods List&lt;Method&gt;; which are the methods to be searched. They are assumed to have the same name and number of
      *            parameters, as determined by the method matchSignature.
      * @return The most specific method.
      * @throws NoSuchMethodException when no method is found that's more specific than the others.
@@ -1136,7 +1136,7 @@ public final class ClassUtil
         /**
          * Construct a ClassFileDescriptor from a JarEntry.
          * @param jarEntry JarEntry; the JarEntry to use.
-         * @param path the path of the JarEntry
+ * @param path String; the path of the JarEntry
          */
         public ClassFileDescriptor(final JarEntry jarEntry, final String path)
         {
@@ -1149,7 +1149,7 @@ public final class ClassUtil
         /**
          * Construct a ClassFileDescriptor from a ZipEntry.
          * @param zipEntry ZipEntry; the ZipEntry to use.
-         * @param path the path of the ZipEntry
+ * @param path String; the path of the ZipEntry
          */
         public ClassFileDescriptor(final ZipEntry zipEntry, final String path)
         {
