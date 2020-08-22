@@ -249,6 +249,28 @@
             <link>https://tinylog.org/v1/javadoc/</link>
             <link>https://picocli.info/apidocs/</link>
           </links>
+          <offlineLinks>
+            <offlineLink>
+              <url>https://djutils.org/docs/current/djutils/apidocs/</url>
+              <location>${project.build.directory}/../../djutils/target/apidocs</location>
+            </offlineLink>
+            <offlineLink>
+              <url>https://djutils.org/docs/current/djutils-cli/apidocs/</url>
+              <location>${project.build.directory}/../../djutils-cli/target/apidocs</location>
+            </offlineLink>
+            <offlineLink>
+              <url>https://djutils.org/docs/current/djutils-data/apidocs/</url>
+              <location>${project.build.directory}/../../djutils-data/target/apidocs</location>
+            </offlineLink>
+            <offlineLink>
+              <url>https://djutils.org/docs/current/djutils-serialization/apidocs/</url>
+              <location>${project.build.directory}/../../djutils-serialization/target/apidocs</location>
+            </offlineLink>
+            <offlineLink>
+              <url>https://djutils.org/docs/current/djutils-stats/apidocs/</url>
+              <location>${project.build.directory}/../../djutils-stats/target/apidocs</location>
+            </offlineLink>
+          </offlineLinks>
           <minmemory>256m</minmemory>
           <maxmemory>1g</maxmemory>
           <show>package</show>
@@ -398,6 +420,28 @@
             <link>https://tinylog.org/v1/javadoc/</link>
             <link>https://picocli.info/apidocs/</link>
           </links>
+          <offlineLinks>
+            <offlineLink>
+              <url>https://djutils.org/docs/current/djutils/apidocs/</url>
+              <location>${project.build.directory}/../../djutils/target/apidocs</location>
+            </offlineLink>
+            <offlineLink>
+              <url>https://djutils.org/docs/current/djutils-cli/apidocs/</url>
+              <location>${project.build.directory}/../../djutils-cli/target/apidocs</location>
+            </offlineLink>
+            <offlineLink>
+              <url>https://djutils.org/docs/current/djutils-data/apidocs/</url>
+              <location>${project.build.directory}/../../djutils-data/target/apidocs</location>
+            </offlineLink>
+            <offlineLink>
+              <url>https://djutils.org/docs/current/djutils-serialization/apidocs/</url>
+              <location>${project.build.directory}/../../djutils-serialization/target/apidocs</location>
+            </offlineLink>
+            <offlineLink>
+              <url>https://djutils.org/docs/current/djutils-stats/apidocs/</url>
+              <location>${project.build.directory}/../../djutils-stats/target/apidocs</location>
+            </offlineLink>
+          </offlineLinks>
           <minmemory>256m</minmemory>
           <maxmemory>1g</maxmemory>
           <show>package</show>
