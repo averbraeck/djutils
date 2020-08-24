@@ -26,7 +26,7 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
     private final SubTree<T> tree;
 
     /**
-     * Create a new PathQuadTree object (or a sub-tree).
+     * Create a new QuadTree object (or a sub-tree).
      * @param maximumLoad int; number of elements at any level that warrants investigating if the tree can be re-balanced
      * @param minimumSize double; minimum width or height of a sub tree Rectangle (smaller sub tree are never created)
      * @param left double; the lowest X-coordinate that is allowed (inclusive)
