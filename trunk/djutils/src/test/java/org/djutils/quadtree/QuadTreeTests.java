@@ -29,7 +29,7 @@ public class QuadTreeTests
     @Test
     public void testBasics()
     {
-        QuadTree<Bounded> qt = new QuadTree<>(0, 0, 100, 100);
+        QuadTree<Bounded> qt = new QuadTree<>(10, 10.0, 0, 0, 100, 100);
         assertTrue("The toString method returns something descriptive", qt.toString().startsWith("QuadTree"));
         // System.out.println(qt);
         assertEquals("quad tree is empty", 0, qt.size());

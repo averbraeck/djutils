@@ -370,7 +370,7 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
             {
                 return false;
             }
-            return recursiveContains((BoundingBoxed) o, this.boundingBox);
+            return recursiveContains((BoundingBoxed) o, ((BoundingBoxed) o).getBoundingRectangle());
         }
 
         /** {@inheritDoc} */
