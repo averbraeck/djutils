@@ -2,6 +2,22 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.00" date="2020-08-XX" description="Projects for drawing and graphs added">
+      <action dev="averbraeck" type="add">
+        Added projects for drawing in swing and html5: djutils-draw, djutils-draw-swing, and djutils-draw-web. 
+        Added projects for drawing data providers: djtils-draw-shape, djtils-draw-osm, djtils-draw-autocad and
+        djtils-draw-geotools. Added a project to visually introspect the data providing Java objects on the screen:
+        djtils-draw-introspection. 
+      </action>
+      <action dev="averbraeck" type="add">
+        Added projects for drawing graphs in swing and html5: djutils-graph, djutils-graph-swing, and djutils-graph-web. 
+        Added a project for a graph data providers: djtils-graph-jfree to plot data from jfreechart data providers. 
+      </action>
+      <action dev="averbraeck" type="add">
+        Added a class AngleUtil to normalize angles around zero or around pi in the package org.djutils.base.  
+      </action>
+    </release>
+  
     <release version="1.05.04" date="2020-08-22" description="EventInterface and EventTypeInterface used in a consequent manner">
       <action dev="averbraeck" type="update">
         The EventInterface and Event were used in a mixed way in the event package. Same for EventType and EventTypeInterface.
