@@ -29,13 +29,13 @@ public class BoundingRectangle implements Serializable
     /** the lower bound for x, or NaN for an empty bounding box. */
     private final double minX;
 
-    /** the lower bound for y, or NaN for an empty bounding box. */
+    /** the lower bound for y, or NaN for an empty bounding rectangle. */
     private final double minY;
 
-    /** the upper bound for x, or NaN for an empty bounding box. */
+    /** the upper bound for x, or NaN for an empty bounding rectangle. */
     private final double maxX;
 
-    /** the upper bound for y, or NaN for an empty bounding box. */
+    /** the upper bound for y, or NaN for an empty bounding rectangle. */
     private final double maxY;
 
     /** the empty bounding rectangle for reuse. Since boundingRectangles are immmutable, only one instance is needed. */
@@ -54,11 +54,11 @@ public class BoundingRectangle implements Serializable
 
     /**
      * Create a bounding rectangle by providing its lower and upper bounds.
-     * @param minX double; the lower bound for x, or NaN for an empty bounding box
-     * @param maxX double; the upper bound for x, or NaN for an empty bounding box
-     * @param minY double; the lower bound for y, or NaN for an empty bounding box
-     * @param maxY double; the upper bound for y, or NaN for an empty bounding box
-     * @throws IllegalArgumentException when lower bounds are larger than upper boundingBox
+     * @param minX double; the lower bound for x, or NaN for an empty bounding rectangle
+     * @param maxX double; the upper bound for x, or NaN for an empty bounding rectangle
+     * @param minY double; the lower bound for y, or NaN for an empty bounding rectangle
+     * @param maxY double; the upper bound for y, or NaN for an empty bounding rectangle
+     * @throws IllegalArgumentException when lower bounds are larger than upper boundingRectangle
      */
     public BoundingRectangle(final double minX, final double maxX, final double minY, final double maxY)
     {
@@ -148,17 +148,39 @@ public class BoundingRectangle implements Serializable
         this(area.getBoundaryArray());
     }
 
+    /**
+     * Check if the bounding rectangle contains a point. Contains returns false when the point is on the border of the
+     * rectangle.
+     * @param point Point; the point
+     * @return boolean; whether the bounding rectangle contains the point
+     * @throws NullPointerException when point is null
+     */
     public boolean contains(final Point point)
     {
         Throw.whenNull(point, "point cannot be null");
         return contains(point.getX(), point.getY());
     }
 
+    /**
+     * Check if the bounding rectangle contains a point. Contains returns false when the point is on the border of the
+     * rectangle.
+     * @param x double; the x-coordinate of the point
+     * @param y double; the y-coordinate of the point
+     * @return boolean; whether the bounding rectangle contains the point with the given coordinates
+     */
     public boolean contains(final double x, final double y)
     {
         return x > this.minX && x < this.maxX && y > this.minY && y < this.maxY;
     }
 
+    /**
+     * Check if the bounding rectangle contains another bounding rectangle. Contains returns false when one of the edges of the
+     * other bounding rectangle is overlapping with the border of this bounding rectangle.
+     * @param boundingRectangle BoundingRectangle; the bounding rectangle for which to check if it is completely contained
+     *            within this bounding rectangle
+     * @return boolean; whether the bounding rectangle contains the provided bounding rectangle
+     * @throws NullPointerException when boundingRectangle is null
+     */
     public boolean contains(final BoundingRectangle boundingRectangle)
     {
         Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
@@ -166,33 +188,71 @@ public class BoundingRectangle implements Serializable
                 && contains(boundingRectangle.maxX, boundingRectangle.maxY);
     }
 
+    /**
+     * Return the centroid of this bounding rectangle.
+     * @return Point; the centroid of this bounding rectangle
+     */
     public Point centroid()
     {
         return new Point2d((this.maxX - this.minX) / 2.0, (this.maxY - this.minY) / 2.0);
     }
 
+    /**
+     * Check if the bounding rectangle contains a point. Covers returns true when the point is on the border of the rectangle.
+     * @param point Point; the point
+     * @return boolean; whether the bounding rectangle contains the point, including the borders
+     * @throws NullPointerException when point is null
+     */
     public boolean covers(final Point point)
     {
         Throw.whenNull(point, "point cannot be null");
         return covers(point.getX(), point.getY());
     }
 
+    /**
+     * Check if the bounding rectangle contains a point. Covers returns true when the point is on the border of the rectangle.
+     * @param x double; the x-coordinate of the point
+     * @param y double; the y-coordinate of the point
+     * @return boolean; whether the bounding rectangle contains the point with the given coordinates, including the borders
+     */
     public boolean covers(final double x, final double y)
     {
         return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY;
     }
 
+    /**
+     * Check if the bounding rectangle contains another bounding rectangle. Covers returns true when one of the edges of the
+     * other bounding rectangle is overlapping with the border of this bounding rectangle.
+     * @param boundingRectangle BoundingRectangle; the bounding rectangle for which to check if it is contained within this
+     *            bounding rectangle
+     * @return boolean; whether the bounding rectangle contains the provided bounding rectangle, including overlapping borders
+     * @throws NullPointerException when boundingRectangle is null
+     */
     public boolean covers(final BoundingRectangle boundingRectangle)
     {
         Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
         return covers(boundingRectangle.minX, boundingRectangle.minY) && covers(boundingRectangle.maxX, boundingRectangle.maxY);
     }
 
+    /**
+     * Return whether this bounding rectangle is disjoint from another bounding rectangle. Touching at the edge is seen as
+     * disjoint.
+     * @param boundingRectangle BoundingRectangle; the other bounding rectangle
+     * @return boolean; whether this bounding rectangle is disjoint from another bounding rectangle
+     * @throws NullPointerException when boundingRectangle is null
+     */
     public boolean disjoint(final BoundingRectangle boundingRectangle)
     {
         return !intersects(boundingRectangle);
     }
 
+    /**
+     * Return whether this bounding rectangle intersects with another bounding rectangle. Touching at the edge is not seen as
+     * intersecting.
+     * @param boundingRectangle BoundingRectangle; the other bounding rectangle
+     * @return boolean; whether this bounding rectangle intersects with another bounding rectangle
+     * @throws NullPointerException when boundingRectangle is null
+     */
     public boolean intersects(final BoundingRectangle boundingRectangle)
     {
         Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
@@ -200,6 +260,14 @@ public class BoundingRectangle implements Serializable
                 || boundingRectangle.maxY < this.minY);
     }
 
+    /**
+     * Return the intersecting bounding rectangle of this bounding rectangle and another bounding rectangle. Touching at the
+     * edge is not seen as intersecting. In case there is no intersection, the empty bounding rectangle is returned.
+     * @param boundingRectangle BoundingRectangle; the other bounding rectangle
+     * @return BoundingRectangle; the intersecting bounding rectangle of this bounding rectangle and another bounding rectangle
+     *         or the empty bounding rectangle in case there is no intersection
+     * @throws NullPointerException when boundingRectangle is null
+     */
     public BoundingRectangle intersection(final BoundingRectangle boundingRectangle)
     {
         Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
@@ -223,6 +291,10 @@ public class BoundingRectangle implements Serializable
         return Double.isNaN(this.minX) || Double.isNaN(this.maxX) || Double.isNaN(this.minY) || Double.isNaN(this.maxY);
     }
 
+    /**
+     * Return the rectangle as an AWT Rectangle2D.
+     * @return Rectangle2D; the rectangle as an AWT Rectangle2D
+     */
     public Rectangle2D toRectangle2D()
     {
         return new Rectangle2D.Double(this.minX, this.minY, this.maxX - this.minX, this.maxY - this.minY);
@@ -264,16 +336,28 @@ public class BoundingRectangle implements Serializable
         return this.maxY;
     }
 
+    /**
+     * Return the width of the bounding rectangle (x-direction).
+     * @return double; the width of the bounding rectangle
+     */
     public double getWidth()
     {
         return getMaxX() - getMinX();
     }
 
+    /**
+     * Return the height of the bounding rectangle (y-direction).
+     * @return double; the height of the bounding rectangle
+     */
     public double getHeight()
     {
         return getMaxY() - getMinY();
     }
 
+    /**
+     * Return the area of the bounding rectangle.
+     * @return double; the area of the bounding rectangle
+     */
     public double getArea()
     {
         return getWidth() * getHeight();
