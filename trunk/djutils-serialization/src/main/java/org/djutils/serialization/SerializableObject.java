@@ -6,7 +6,7 @@ import java.util.List;
  * Interface that must be implemented by objects that can be serialized.
  * <p>
  * Copyright (c) 2019-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
- * BSD-style license. See <a href="https://opentrafficsim.org/node/13">OpenTrafficSim License</a>.
+ * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * <p>
  * @version $Revision$, $LastChangedDate$, by $Author$, <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
