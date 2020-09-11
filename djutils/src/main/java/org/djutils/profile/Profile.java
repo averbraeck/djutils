@@ -18,7 +18,7 @@ import org.djutils.exceptions.Throw;
  * this can be changed by calling the <code>setPrintInterval method</code>.
  * <p>
  * Copyright (c) 2013-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
- * BSD-style license. See <a href="http://opentrafficsim.org/node/13">OpenTrafficSim License</a>.
+ * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * <p>
  * @version $Revision$, $LastChangedDate$, by $Author$, initial version 27 jan. 2018 <br>
  * @author <a href="http://www.tbm.tudelft.nl/averbraeck">Alexander Verbraeck</a>
@@ -278,7 +278,7 @@ public final class Profile
      * <p>
      * Copyright (c) 2013-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved.
      * <br>
-     * BSD-style license. See <a href="http://opentrafficsim.org/node/13">OpenTrafficSim License</a>.
+     * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
      * <p>
      * @version $Revision$, $LastChangedDate$, by $Author$, initial version 27 jan. 2018 <br>
      * @author <a href="http://www.tbm.tudelft.nl/averbraeck">Alexander Verbraeck</a>
