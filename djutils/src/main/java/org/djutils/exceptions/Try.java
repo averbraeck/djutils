@@ -55,6 +55,7 @@ import org.djutils.reflection.ClassUtil;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
+ * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
 public final class Try
 {
