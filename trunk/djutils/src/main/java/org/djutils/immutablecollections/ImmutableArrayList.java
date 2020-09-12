@@ -15,7 +15,6 @@ import java.util.List;
  * $, initial version May 7, 2016 <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
- * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <E> the type of content of this List
  */
 public class ImmutableArrayList<E> extends ImmutableAbstractList<E>

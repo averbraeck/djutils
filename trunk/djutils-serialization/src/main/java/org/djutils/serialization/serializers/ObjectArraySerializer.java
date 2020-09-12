@@ -14,7 +14,6 @@ import org.djutils.serialization.SerializationException;
  * @version $Revision$, $LastChangedDate$, by $Author$, <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
- * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <E> class of the element object
  */
 public abstract class ObjectArraySerializer<E extends Object> extends ArrayOrMatrixSerializer<E[], E>

@@ -20,7 +20,6 @@ import org.djutils.serialization.serializers.Serializer;
  * @version $Revision$, $LastChangedDate$, by $Author$, initial version Jan 3, 2019 <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
- * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
 public class SerialDataDecoder implements Decoder
 {

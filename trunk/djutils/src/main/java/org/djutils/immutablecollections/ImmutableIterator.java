@@ -13,7 +13,6 @@ import java.util.Iterator;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
- * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <E> the element type
  */
 public class ImmutableIterator<E> implements Iterator<E>

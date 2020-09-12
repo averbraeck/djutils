@@ -11,7 +11,6 @@ import java.util.List;
  * @version $Revision$, $LastChangedDate$, by $Author$, <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
- * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <T> type of object that implements this interface
  */
 public interface SerializableObject<T>

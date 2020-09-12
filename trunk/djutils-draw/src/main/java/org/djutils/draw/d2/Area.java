@@ -1,5 +1,7 @@
 package org.djutils.draw.d2;
 
+import java.io.Serializable;
+
 import org.djutils.draw.d0.Point;
 
 /**
@@ -11,7 +13,7 @@ import org.djutils.draw.d0.Point;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public interface Area
+public interface Area extends Serializable
 {
     /**
      * Return the points of the this line as an array.

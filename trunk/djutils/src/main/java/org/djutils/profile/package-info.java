@@ -7,6 +7,5 @@
  * @version $Revision$, $LastChangedDate$, by $Author$, initial version 27 jan. 2018 <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
- * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
 package org.djutils.profile;

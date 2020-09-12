@@ -20,7 +20,6 @@ import org.djutils.exceptions.Throw;
  * @version $Revision$, $LastChangedDate$, by $Author$, initial version Oct 26, 2018 <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
- * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <MT> mean type
  * @param <V> value type
  * @param <W> weight type
