@@ -1,5 +1,8 @@
 package org.djutils.draw.d1;
 
+import java.io.Serializable;
+
+import org.djutils.draw.Locatable;
 import org.djutils.draw.d0.Point;
 
 /**
@@ -11,7 +14,7 @@ import org.djutils.draw.d0.Point;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public interface Line
+public interface Line extends Locatable, Serializable
 {
     /**
      * Return the points of this line as an array.

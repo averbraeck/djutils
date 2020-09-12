@@ -21,7 +21,6 @@ import org.junit.Test;
  * @version $Revision$, $LastChangedDate$, by $Author$, initial version Oct 26, 2018 <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
- * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
 public class MeansTests
 {

@@ -1,5 +1,6 @@
 package org.djutils.draw.d3;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +14,8 @@ import org.djutils.draw.d1.Line;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
- * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
-public class Volume3d
+public class Volume3d implements Serializable
 {
     /**
      * Return the lines making up the wireframe of this object.
@@ -28,4 +28,3 @@ public class Volume3d
     }
 
 }
-

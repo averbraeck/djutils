@@ -10,7 +10,6 @@ import org.djutils.base.Identifiable;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
- * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <T> type of value
  */
 public interface DataColumn<T> extends Identifiable

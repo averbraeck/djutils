@@ -26,7 +26,6 @@ import org.djutils.primitives.Primitive;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
- * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
 public class ListDataTable extends AbstractDataTable
 {

@@ -9,7 +9,6 @@ package org.djutils.serialization.serializers;
  * @version $Revision$, $LastChangedDate$, by $Author$, <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
- * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  * @param <T> class
  */
 public abstract class BasicSerializer<T extends Object> implements Serializer<T>

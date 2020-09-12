@@ -55,7 +55,6 @@ import org.djutils.reflection.ClassUtil;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
- * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
 public final class Try
 {
@@ -915,8 +914,7 @@ public final class Try
      * @version $Revision$, $LastChangedDate$, by $Author$, initial version 31 jan. 2018 <br>
      * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
      * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
-     * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
-     * @param <V> value type
+         * @param <V> value type
      */
     @FunctionalInterface
     public interface Assignment<V>
@@ -943,8 +941,7 @@ public final class Try
      * @version $Revision$, $LastChangedDate$, by $Author$, initial version 31 jan. 2018 <br>
      * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
      * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
-     * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
-     */
+         */
     @FunctionalInterface
     public interface Execution
     {
