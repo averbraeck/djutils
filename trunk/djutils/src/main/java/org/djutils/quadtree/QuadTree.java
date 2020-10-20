@@ -1,5 +1,6 @@
 package org.djutils.quadtree;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -14,16 +15,22 @@ import org.djutils.exceptions.Throw;
  * @author <a href="http://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @param <T> Type of object stored in this quad tree
  */
-public class QuadTree<T extends BoundingBoxed> implements Collection<T>
+public class QuadTree<T extends Envelope> implements Collection<T>, Serializable
 {
-    /** Maximum number of line strings in one cell. Should probably configurable. */
+    /** ... */
+    private static final long serialVersionUID = 20200904L;
+
+    /** Maximum number of payload objects in one cell.*/
     private final int maximumLoad;
 
-    /** Minimum width and height of a QuadTree bounding box. */
+    /** Minimum width and height of a SubTree bounding box. */
     private final double minimumSize;
 
-    /** The actual quad tree. */
+    /** The actual top level quad tree. */
     private final SubTree<T> tree;
+
+    /** Count the number of sub trees created. */
+    private int totalSubTrees = 0;
 
     /**
      * Create a new QuadTree object (or a sub-tree).
@@ -73,25 +80,27 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
     @Override
     public boolean isEmpty()
     {
-        return this.tree.isEmpty();
+        return this.tree.size() == 0;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean contains(final Object o)
     {
-        if (!(o instanceof BoundingBoxed))
+        if (!(o instanceof Envelope))
         {
             return false;
         }
-        return this.tree.recursiveContains((BoundingBoxed) o, ((BoundingBoxed) o).getBoundingRectangle());
+        @SuppressWarnings("unchecked")
+        T t = (T) o;
+        return this.tree.recursiveContains(new RectangleAndPayload<T>(t.getBoundingRectangle(), t));
     }
 
     /** {@inheritDoc} */
     @Override
     public Iterator<T> iterator()
     {
-        return this.tree.iterator();
+        return iterator(this.tree.getBoundingBox());
     }
 
     /**
@@ -102,14 +111,14 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
      */
     public Iterator<T> iterator(final Rectangle searchArea)
     {
-        return this.tree.recursiveCollect(searchArea).iterator();
+        return collect(searchArea).iterator();
     }
 
     /** {@inheritDoc} */
     @Override
     public Object[] toArray()
     {
-        return this.tree.recursiveCollect(this.tree.getBoundingBox()).toArray();
+        return collect(this.tree.getBoundingBox()).toArray();
     }
 
     /** {@inheritDoc} */
@@ -117,46 +126,74 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
     @Override
     public <T> T[] toArray(final T[] a)
     {
-        return this.tree.toArray(a);
+        return collect(this.tree.getBoundingBox()).toArray(a);
+    }
+
+    /**
+     * Construct a set containing all payload elements within a specified area.
+     * @param searchArea Rectangle; the search area
+     * @return Set&lt;T&gt;; the set containing all payload elements whose bounding areas intersect the specified area
+     */
+    private Set<T> collect(final Rectangle searchArea)
+    {
+        Iterator<RectangleAndPayload<T>> iterator = this.tree.recursiveCollect(searchArea).iterator();
+        Set<T> result = new LinkedHashSet<>();
+        while (iterator.hasNext())
+        {
+            result.add(iterator.next().getPayload());
+        }
+        return result;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean add(final T e)
     {
-        return this.tree.add(e);
+        return this.tree.add(new RectangleAndPayload<T>(e.getBoundingRectangle(), e));
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean remove(final Object o)
     {
-        if (!(o instanceof BoundingBoxed))
+        if (!(o instanceof Envelope))
         {
             return false;
         }
-        return this.tree.remove(o);
+        @SuppressWarnings("unchecked")
+        T t = (T) o;
+        return this.tree.remove(new RectangleAndPayload<T>(t.getBoundingRectangle(), t));
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean containsAll(final Collection<?> c)
     {
-        return this.tree.containsAll(c);
+        return collect(this.tree.getBoundingBox()).containsAll(c);
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean addAll(final Collection<? extends T> c)
     {
-        return this.tree.addAll(c);
+        boolean result = false;
+        for (T t : c)
+        {
+            result |= add(t);
+        }
+        return result;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean removeAll(final Collection<?> c)
     {
-        return this.tree.removeAll(c);
+        boolean result = false;
+        for (Object o : c)
+        {
+            result |= remove(o);
+        }
+        return result;
     }
 
     /** {@inheritDoc} */
@@ -171,6 +208,23 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
     public void clear()
     {
         this.tree.clear();
+    }
+
+    /**
+     * Increment the number of sub trees created.
+     */
+    void incrementSubTreeCount()
+    {
+        this.totalSubTrees++;
+    }
+
+    /**
+     * Return the total number of sub trees.
+     * @return int; the total number of sub trees
+     */
+    public int getSubTreeCount()
+    {
+        return this.totalSubTrees;
     }
 
     /** {@inheritDoc} */
@@ -206,8 +260,11 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
      * @param <T> Type of object stored in this quad tree
      */
     @SuppressWarnings("hiding")
-    class SubTree<T extends BoundingBoxed> implements Collection<T>
+    class SubTree<T extends Envelope> implements Serializable
     {
+        /** ... */
+        private static final long serialVersionUID = 20200904L;
+
         /** Root of the quad tree. */
         private final QuadTree<T> root;
 
@@ -217,23 +274,11 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
         /** Current number of objects in this quad tree. Includes all children, counting each object exactly once. */
         private int size = 0;
 
-        /** South West child of this node. */
-        private SubTree<T> southWestChild = null;
-
-        /** South East child of this node. */
-        private SubTree<T> southEastChild = null;
-
-        /** North West child of this node. */
-        private SubTree<T> northWestChild = null;
-
-        /** North East child of this node. */
-        private SubTree<T> northEastChild = null;
-
         /** If the four children have been allocated, this array will be non-null and contain the four children. */
         private SubTree<T>[] children = null;
 
         /** Elements stored at this node. */
-        private Set<T> elements = new LinkedHashSet<>();
+        private Set<RectangleAndPayload<T>> elements = null;
 
         /**
          * Construct a new sub tree.
@@ -244,6 +289,7 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
         {
             this.root = root;
             this.boundingBox = boundingBox;
+            root.incrementSubTreeCount();
         }
 
         /**
@@ -255,27 +301,29 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
             return this.boundingBox;
         }
 
-        /** {@inheritDoc} */
-        @Override
+        /**
+         * Return the number of objects stored in and under this SubTree.
+         * @return int; the number of objects stored in and under this SubTree
+         */
         public int size()
         {
             return this.size;
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public boolean isEmpty()
-        {
-            return this.size == 0;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public boolean add(final T e)
+        /**
+         * Add a RectangleAndPayload to this SubTree.
+         * @param e T; the object to add
+         * @return boolean; true if this SubTree was changed (object was added); false if this SubTree did not change
+         */
+        public boolean add(final RectangleAndPayload<T> e)
         {
             if (contains(e))
             {
                 return false;
+            }
+            if (this.elements == null)
+            {
+                this.elements = new LinkedHashSet<>();
             }
             this.elements.add(e);
             this.size++;
@@ -283,20 +331,23 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
             return true;
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public boolean remove(final Object o)
+        /**
+         * Remove a RectangleAndPayload from this SubTree.
+         * @param o RectangleAndPayload&lt;T&gt;; the object to remove
+         * @return boolean; true if this SubTree was changed (object was removed); false if this SubTree did not change
+         */
+        public boolean remove(final RectangleAndPayload<T> o)
         {
             if (this.elements.remove(o))
             {
                 this.size--;
-                return true;
+                return true; // The object cannot be also present in any of the sub trees
             }
+            // Try all of the sub trees
             boolean result = false;
-            BoundingBoxed bb = (BoundingBoxed) o;
-            Rectangle rectangle = bb.getBoundingRectangle();
             if (this.children != null)
             {
+                Rectangle rectangle = o.getRectangle();
                 for (SubTree<T> child : this.children)
                 {
                     if (!child.boundingBox.intersects(rectangle))
@@ -316,8 +367,9 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
             return result;
         }
 
-        /** {@inheritDoc} */
-        @Override
+        /**
+         * Delete all objects stored in this SubTree.
+         */
         public void clear()
         {
             this.elements.clear();
@@ -325,97 +377,34 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
             this.size = 0;
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public boolean addAll(final Collection<? extends T> c)
+        /**
+         * Determine if this SubTree contains a specific object.
+         * @param o RectangleAndPayload; the object to search
+         * @return boolean; true if this SubTree contains the object
+         */
+        public boolean contains(final RectangleAndPayload<T> o)
         {
-            boolean result = false;
-            for (T candidate : c)
-            {
-                if (add(candidate))
-                {
-                    result = true;
-                }
-            }
-            return result;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public boolean removeAll(final Collection<?> c)
-        {
-            boolean result = false;
-            for (Object candidate : c)
-            {
-                if (remove(candidate))
-                {
-                    result = true;
-                }
-            }
-            return result;
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public boolean retainAll(final Collection<?> c)
-        {
-            throw new RuntimeException("Not (yet) implemented");
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public boolean contains(final Object o)
-        {
-            if (!(o instanceof BoundingBoxed))
+            if (this.elements == null)
             {
                 return false;
             }
-            return recursiveContains((BoundingBoxed) o, ((BoundingBoxed) o).getBoundingRectangle());
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public Iterator<T> iterator()
-        {
-            return recursiveCollect(this.boundingBox).iterator();
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public Object[] toArray()
-        {
-            return recursiveCollect(this.boundingBox).toArray();
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public <T> T[] toArray(final T[] a)
-        {
-            return recursiveCollect(this.boundingBox).toArray(a);
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public boolean containsAll(final Collection<?> c)
-        {
-            return recursiveCollect(this.boundingBox).containsAll(c); // Can be very expensive
+            return recursiveContains(o);
         }
 
         /**
          * Recursively search for a particular object.
-         * @param b BoundingBoxed; the object to search for
-         * @param rect Rectangle2D.Double the bounding box of the object
+         * @param o RectangleAndPayload&lt;T&gt;; the object to search for
          * @return boolean; true if this quad tree contains the object; false if this quad tree does not contain the object
          */
-        boolean recursiveContains(final BoundingBoxed b, final Rectangle rect)
+        boolean recursiveContains(final RectangleAndPayload<T> o)
         {
-            if (!this.boundingBox.intersects(rect))
+            if ((!this.boundingBox.intersects(o.getRectangle())) || (this.elements == null))
             {
                 return false; // This is the time saver
             }
-            for (T element : this.elements)
+            for (RectangleAndPayload<T> element : this.elements)
             {
-                if (element.equals(b))
+                if (element.equals(o))
                 {
                     return true;
                 }
@@ -426,7 +415,7 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
             }
             for (SubTree<T> child : this.children)
             {
-                if (child.recursiveContains(b, rect))
+                if (child.recursiveContains(o))
                 {
                     return true;
                 }
@@ -436,21 +425,24 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
 
         /**
          * Recursively collect all elements that intersect the given rectangle.
-         * @param rectangle Rectangle2D.Double; the rectangle
-         * @return Set&lt;T&gt; all stored elements that intersect the given rectangle
+         * @param rectangle Rectangle; the rectangle
+         * @return Set&lt;RectangleAndPayload&lt;T&gt;&gt;; all stored elements that intersect the given rectangle
          */
-        public Set<T> recursiveCollect(final Rectangle rectangle)
+        public Set<RectangleAndPayload<T>> recursiveCollect(final Rectangle rectangle)
         {
-            Set<T> result = new LinkedHashSet<>();
+            Set<RectangleAndPayload<T>> result = new LinkedHashSet<>();
             if (!this.boundingBox.intersects(rectangle))
             {
                 return result; // This is the time saver
             }
-            for (T element : this.elements)
+            if (this.elements != null)
             {
-                if (element.getBoundingRectangle().intersects(rectangle) && element.intersects(rectangle))
+                for (RectangleAndPayload<T> element : this.elements)
                 {
-                    result.add(element);
+                    if (element.getRectangle().intersects(rectangle))
+                    {
+                        result.add(element);
+                    }
                 }
             }
             if (this.children != null)
@@ -478,14 +470,18 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
             double cX = (this.boundingBox.getLeft() + this.boundingBox.getRight()) / 2;
             double cY = (this.boundingBox.getBottom() + this.boundingBox.getTop()) / 2;
             int canMove = 0;
+            /*-
             for (T e : this.elements)
             {
+                // This criterion is not good
                 if (!e.getBoundingRectangle().contains(this.boundingBox))
                 {
                     canMove++;
                 }
             }
-            if (canMove == 0 || canMove < this.root.getMaxLoad() / 2 && this.children == null)
+            */
+            canMove = this.elements.size();
+            if (canMove == 0 || canMove < this.root.getMaxLoad() /* / 2 */ && this.children == null)
             {
                 // System.out.println("reBalance: not moving " + canMove + " of " + this.elements.size());
                 return;
@@ -493,33 +489,27 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
             // System.out.println("At start of reBalance of " + this.toString(1));
             if (this.children == null)
             {
-                this.southWestChild = new SubTree<T>(this.root,
-                        new Rectangle(this.boundingBox.getLeft(), this.boundingBox.getBottom(), cX, cY));
-                this.southEastChild = new SubTree<T>(this.root,
-                        new Rectangle(cX, this.boundingBox.getBottom(), this.boundingBox.getRight(), cY));
-                this.northWestChild =
-                        new SubTree<T>(this.root, new Rectangle(this.boundingBox.getLeft(), cY, cX, this.boundingBox.getTop()));
-                this.northEastChild = new SubTree<T>(this.root,
-                        new Rectangle(cX, cY, this.boundingBox.getRight(), this.boundingBox.getTop()));
-                this.children =
-                        new SubTree[] { this.southWestChild, this.southEastChild, this.northWestChild, this.northEastChild };
-                // for (SubTree<T> sub : this.children)
-                // {
-                // System.out.println("new child " + sub);
-                // }
+                this.children = new SubTree[] {
+                        new SubTree<T>(this.root,
+                                new Rectangle(this.boundingBox.getLeft(), this.boundingBox.getBottom(), cX, cY)),
+                        new SubTree<T>(this.root,
+                                new Rectangle(cX, this.boundingBox.getBottom(), this.boundingBox.getRight(), cY)),
+                        new SubTree<T>(this.root, new Rectangle(this.boundingBox.getLeft(), cY, cX, this.boundingBox.getTop())),
+                        new SubTree<T>(this.root,
+                                new Rectangle(cX, cY, this.boundingBox.getRight(), this.boundingBox.getTop())) };
             }
-            Iterator<T> iterator = this.elements.iterator();
+            Iterator<RectangleAndPayload<T>> iterator = this.elements.iterator();
             while (iterator.hasNext())
             {
-                T e = iterator.next();
-                if (e.getBoundingRectangle().contains(this.boundingBox))
+                RectangleAndPayload<T> e = iterator.next();
+                if (e.getRectangle().contains(this.boundingBox))
                 {
                     continue;
                 }
                 boolean added = false;
                 for (SubTree<T> child : this.children)
                 {
-                    if (e.getBoundingRectangle().intersects(child.boundingBox))
+                    if (e.getRectangle().intersects(child.boundingBox))
                     {
                         added |= child.add(e);
                     }
@@ -541,7 +531,7 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
         public String toString()
         {
             return "SubTree [boundingBox=" + this.boundingBox + ", size=" + this.size + ", children=" + this.children
-                    + ", elements.size=" + this.elements.size() + "]";
+                    + (this.elements == null ? "elements=null" : ", elements.size=" + this.elements.size()) + "]";
         }
 
         /**
@@ -554,10 +544,10 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
             if (expandDepth > 0)
             {
                 return "SubTree [boundingBox=" + this.boundingBox + ", size=" + this.size + ", children="
-                        + (this.children != null ? "[SW:" + this.southWestChild.toString(expandDepth - 1) + ", SE:"
-                                + this.southEastChild.toString(expandDepth - 1) + ", NW:"
-                                + this.northWestChild.toString(expandDepth - 1) + ", NE:"
-                                + this.northEastChild.toString(expandDepth - 1) + "]" : "null")
+                        + (this.children != null ? "[SW:" + this.children[0].toString(expandDepth - 1) + ", SE:"
+                                + this.children[1].toString(expandDepth - 1) + ", NW:"
+                                + this.children[2].toString(expandDepth - 1) + ", NE:"
+                                + this.children[3].toString(expandDepth - 1) + "]" : "null")
                         + ", elements.size=" + this.elements.size() + "]";
             }
             else
@@ -581,7 +571,7 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
             result.append(this.boundingBox);
             result.append("\n");
             String subIndent = indent + "    ";
-            Iterator<T> iterator = this.elements.iterator();
+            Iterator<RectangleAndPayload<T>> iterator = this.elements.iterator();
             for (int i = 0; i < this.elements.size(); i++)
             {
                 result.append(subIndent);
@@ -595,23 +585,130 @@ public class QuadTree<T extends BoundingBoxed> implements Collection<T>
                 result.append(subIndent);
                 result.append("SW");
                 result.append("\n");
-                result.append(this.southWestChild.dump(subIndent));
+                result.append(this.children[0].dump(subIndent));
                 result.append(subIndent);
                 result.append("SE");
                 result.append("\n");
-                result.append(this.southEastChild.dump(subIndent));
+                result.append(this.children[1].dump(subIndent));
                 result.append(subIndent);
                 result.append("NW");
                 result.append("\n");
-                result.append(this.northWestChild.dump(subIndent));
+                result.append(this.children[2].dump(subIndent));
                 result.append(subIndent);
                 result.append("NE");
                 result.append("\n");
-                result.append(this.northEastChild.dump(subIndent));
+                result.append(this.children[3].dump(subIndent));
             }
             return result.toString();
         }
 
+    }
+
+}
+
+/**
+ * Container for a Rectangle and a payload.
+ * @param <T> Object; the payload
+ */
+class RectangleAndPayload<T extends Object> implements Serializable
+{
+    /** ... */
+    private static final long serialVersionUID = 20200904L;
+
+    /** The bounding rectangle. */
+    private final Rectangle rectangle;
+
+    /** The payload. */
+    private final T payload;
+
+    /**
+     * Construct a new RectangleAndPayload object.
+     * @param rectangle Rectangle; the bounding rectangle of the payload
+     * @param payload T; the payload
+     */
+    RectangleAndPayload(final Rectangle rectangle, final T payload)
+    {
+        this.rectangle = rectangle;
+        this.payload = payload;
+    }
+    
+    /**
+     * Retrieve the bounding rectangle.
+     * @return Rectangle; the bounding rectangle
+     */
+    public Rectangle getRectangle()
+    {
+        return this.rectangle;
+    }
+
+    /**
+     * Retrieve the payload.
+     * @return T; the payload
+     */
+    public T getPayload()
+    {
+        return this.payload;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "RectangleAndPayload [rectangle=" + this.rectangle + ", payload=" + this.payload + "]";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.payload == null) ? 0 : this.payload.hashCode());
+        result = prime * result + ((this.rectangle == null) ? 0 : this.rectangle.hashCode());
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        @SuppressWarnings("rawtypes")
+        RectangleAndPayload other = (RectangleAndPayload) obj;
+        if (this.payload == null)
+        {
+            if (other.payload != null)
+            {
+                return false;
+            }
+        }
+        else if (!this.payload.equals(other.payload))
+        {
+            return false;
+        }
+        if (this.rectangle == null)
+        {
+            if (other.rectangle != null)
+            {
+                return false;
+            }
+        }
+        else if (!this.rectangle.equals(other.rectangle))
+        {
+            return false;
+        }
+        return true;
     }
 
 }

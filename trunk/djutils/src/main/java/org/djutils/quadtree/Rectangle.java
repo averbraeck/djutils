@@ -1,5 +1,7 @@
 package org.djutils.quadtree;
 
+import java.io.Serializable;
+
 import org.djutils.exceptions.Throw;
 
 /**
@@ -16,8 +18,11 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Rectangle
+public class Rectangle implements Serializable
 {
+    /** ... */
+    private static final long serialVersionUID = 20200904L;
+
     /** Left boundary (inclusive). */
     private final double left;
 

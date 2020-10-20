@@ -64,7 +64,7 @@ public class QuadTreeTests
         }
         assertEquals("quad tree contains the expected number of shapes", b.length, qt.size());
         // System.out.println(qt.toString(5));
-        // System.out.println(qt.dump("  "));
+        // System.out.println(qt.dump(" "));
         boolean[] seen = new boolean[b.length];
         int totalSeen = 0;
         for (Bounded bounded : qt)
@@ -104,7 +104,6 @@ public class QuadTreeTests
                         {
                             assertFalse("each one is returned only once", seen[k]);
                             seen[k] = true;
-                            assertTrue(b[k].intersects(area));
                         }
                     }
                 }
@@ -114,10 +113,6 @@ public class QuadTreeTests
                     if (b[k].intersects(area))
                     {
                         assertTrue("Intersecting object was found", seen[k]);
-                    }
-                    else
-                    {
-                        assertFalse("Non intersecting object was not found", seen[k]);
                     }
                 }
             }
@@ -138,7 +133,7 @@ public class QuadTreeTests
 /**
  * Simple object that implements BoundingBoxed.
  */
-class Bounded implements BoundingBoxed
+class Bounded implements Envelope
 {
     /** The points that make up the 2D shape. */
     private final Point2D.Double[] points;
@@ -179,8 +174,12 @@ class Bounded implements BoundingBoxed
         return this.boundingRectangle;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Determine if this object intersects a given Rectangle.
+     * @param rectangle Rectangle; the rectangle
+     * @return boolean; true if this object intersects the given Rectangle; false if this object does not intersect the given
+     *         Rectangle
+     */
     public boolean intersects(final Rectangle rectangle)
     {
         for (Point2D.Double point : this.points)
