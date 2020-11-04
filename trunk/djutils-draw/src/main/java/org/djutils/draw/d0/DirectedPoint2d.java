@@ -21,11 +21,11 @@ public class DirectedPoint2d extends Point2d implements DirectedPoint
     /** */
     private static final long serialVersionUID = 20200828L;
 
-    /** the counter-clockwise rotation around the point in radians. */
+    /** The counter-clockwise rotation around the point in radians. */
     private final double rotZ;
 
     /**
-     * Create an immutable directed point with an x and y coordinate, and a direction, stored with double precision.
+     * Construct an immutable directed point with an x and y coordinate, and a direction, stored with double precision.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param rotZ double; the counter-clockwise rotation around the point in radians
@@ -37,7 +37,7 @@ public class DirectedPoint2d extends Point2d implements DirectedPoint
     }
 
     /**
-     * Create an immutable directed point with an x and y coordinate, and a direction, stored with double precision.
+     * Construct an immutable directed point with an x and y coordinate, and a direction, stored with double precision.
      * @param xy double[2]; the x and y coordinate
      * @param rotZ double; the counter-clockwise rotation around the point in radians
      * @throws NullPointerException when xy is null
@@ -50,7 +50,7 @@ public class DirectedPoint2d extends Point2d implements DirectedPoint
     }
 
     /**
-     * Create an immutable directed point from an AWT Point2D, and a direction, stored with double precision.
+     * Construct an immutable directed point from an AWT Point2D, and a direction, stored with double precision.
      * @param point Point2D; an AWT Point2D
      * @param rotZ double; the counter-clockwise rotation around the point in radians
      */
@@ -61,7 +61,7 @@ public class DirectedPoint2d extends Point2d implements DirectedPoint
     }
 
     /**
-     * Create an immutable directed point with a direction from another Point, stored with double precision.
+     * Construct an immutable directed point with a direction from another Point, stored with double precision.
      * @param point Point; a point with or without rotation
      * @param rotZ double; the counter-clockwise rotation around the point in radians
      */
@@ -72,7 +72,8 @@ public class DirectedPoint2d extends Point2d implements DirectedPoint
     }
 
     /**
-     * Return a new point with a translation by the provided delta-x and delta-y. Leave the rotation unchanged.
+     * Return a new DirectedPoint2d with a translation by the provided delta-x and delta-y from <code>this</code>
+     * DirectedPoint2D. The rotation of the new DirectedPoint2d is equal to the rotation of this DirectedPoint2d.
      * @param dx double; the horizontal translation
      * @param dy double; the vertical translation
      * @return DirectedPoint2d; a new point with the translated coordinates and an unchanged rotation
@@ -84,7 +85,8 @@ public class DirectedPoint2d extends Point2d implements DirectedPoint
     }
 
     /**
-     * Return a new point with the coordinates of this point scaled by the provided factor. Leave the rotation unchanged.
+     * Return a new directedPoint2d with the coordinates of this point scaled by the provided factor. The rotation of the new
+     * DirectedPoint2d is equal to the rotation of this DirectedPoint2d.
      * @param factor double; the scale factor
      * @return DirectedPoint2d; a new point with the coordinates of this point scaled by the provided factor and an unchanged
      *         rotation
@@ -96,8 +98,8 @@ public class DirectedPoint2d extends Point2d implements DirectedPoint
     }
 
     /**
-     * Return a new point with negated coordinate values. Add 180 degrees (pi radians) to the rotation.
-     * @return DirectedPoint2d; a new point with negated coordinate values and a rotation in the opposite direction
+     * Return a new DirectedPoint2d with negated coordinate values. Add 180 degrees (pi radians) to the rotation.
+     * @return DirectedPoint2d; a new DirectedPoint2d with negated coordinate values and a rotation in the opposite direction
      */
     @Override
     public DirectedPoint2d neg()
@@ -106,7 +108,7 @@ public class DirectedPoint2d extends Point2d implements DirectedPoint
     }
 
     /**
-     * Return a new point with absolute coordinate values. Leave the rotation unchanged.
+     * Return a new DirectedPoint2d with absolute coordinate values. Leave the rotation unchanged.
      * @return DirectedPoint2d; a new point with absolute coordinate values and an unchanged rotation
      */
     @Override
@@ -116,7 +118,7 @@ public class DirectedPoint2d extends Point2d implements DirectedPoint
     }
 
     /**
-     * Return the point with a length of 1 to the origin. Leave the rotation unchanged.
+     * Return the DirectedPoint2d with a length of 1 to the origin. Leave the rotation unchanged.
      * @return DirectedPoint2d; the normalized point and an unchanged rotation
      */
     @Override
@@ -149,18 +151,21 @@ public class DirectedPoint2d extends Point2d implements DirectedPoint
         return new DirectedPoint2d(getX(), getY(), AngleUtil.normalizeAroundZero(getRotZ() + deltaRotZ));
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getRotX()
     {
         return 0.0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getRotY()
     {
         return 0.0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getRotZ()
     {

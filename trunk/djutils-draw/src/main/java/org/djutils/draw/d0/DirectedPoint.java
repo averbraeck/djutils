@@ -37,8 +37,10 @@ public interface DirectedPoint extends Point
      * than zero or larger than 1. In that case the interpolation turns into an extrapolation. The rotations along the x, y, and
      * z-axes are also interpolated or extrapolated in a clockwise fashion and normalized between -&pi; and &pi;.
      * @param point DirectedPoint; the other point
-     * @param fraction double; the factor for interpolation between p1 and p2. When fraction is between 0 and 1, it is an
-     *            interpolation, otherwise an extrapolation
+     * @param fraction double; the factor for interpolation between <code>this</code> DirectedPoint and <code>point</code>. When
+     *            fraction is between 0 and 1, it is an interpolation, otherwise an extrapolation. When <code>fraction</code> is
+     *            0 this method returns <code>this</code> ; when <code>fraction</code> is 1 this method returns the
+     *            <code>point</code> parameter
      * @return DirectedPoint; the point that is "fraction" away on the line between this point and the given point
      * @throws NullPointerException when point is null
      */
@@ -51,8 +53,9 @@ public interface DirectedPoint extends Point
      * @param p1 DirectedPoint; the first point
      * @param p2 DirectedPoint; the second point
      * @param fraction double; the factor for interpolation between p1 and p2. When fraction is between 0 and 1, it is an
-     *            interpolation, otherwise an extrapolation
-     * @return Point; the point that is "fraction" away on the line between p1 and p2
+     *            interpolation, otherwise an extrapolation. When <code>fraction</code> is 0 this method returns the
+     *            <code>p1</code> parameter; when <code>fraction</code> is 1 this method returns the <code>p2</code> parameter
+     * @return DirectedPoint; the point that is "fraction" away on the line between p1 and p2
      * @throws NullPointerException when p1 or p2 is null
      */
     static DirectedPoint interpolate(final DirectedPoint p1, final DirectedPoint p2, final double fraction)
@@ -70,8 +73,8 @@ public interface DirectedPoint extends Point
     DirectedPoint rotate(double deltaRotZ);
 
     /**
-     * Return a new 3d point with an in-place rotation by the provided deltaRotX, deltaRotY, and deltaRotZ. The resulting
-     * rotations will be normalized between -&pi; and &pi;.
+     * Return a new DirectedPoint3d point with an in-place rotation by the provided deltaRotX, deltaRotY, and deltaRotZ. The
+     * resulting rotations will be normalized between -&pi; and &pi;.
      * @param deltaRotX double; the rotation around the x-axis
      * @param deltaRotY double; the rotation around the y-axis
      * @param deltaRotZ double; the rotation around the z-axis
@@ -84,8 +87,8 @@ public interface DirectedPoint extends Point
     }
 
     /**
-     * A comparison with another directed point that returns true of each of the coordinates is less than epsilonCoordinate
-     * apart, and the rotations are (normalized) less that epsilonRotation apart.
+     * Compare this DirectedPoint with another DirectedPoint and return true of each of the coordinates is less than
+     * epsilonCoordinate apart, and the rotations are (normalized) less that epsilonRotation apart.
      * @param point DirectedPoint; the point to compare with
      * @param epsilonCoordinate double; the upper bound of difference for one of the coordinates
      * @param epsilonRotation double; the upper bound of difference for one of the rotations
