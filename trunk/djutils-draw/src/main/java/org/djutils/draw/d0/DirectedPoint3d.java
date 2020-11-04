@@ -94,11 +94,11 @@ public class DirectedPoint3d extends Point3d implements DirectedPoint
     }
 
     /**
-     * Create an immutable point with x, y, and z coordinates, stored with double precision, and no rotation.
+     * Create an immutable point with x, y, and z coordinates, stored with double precision, and 3D rotation.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param z double; the z coordinate
-     * @param rotation double[3]; the rotation around the x,y,z-axis with the point as the center
+     * @param rotation double[3]; the rotation around the x,y,z-axes with the point as the center
      * @throws NullPointerException when rotation is null
      * @throws IllegalArgumentException when the dimension of delta is not 3
      */
