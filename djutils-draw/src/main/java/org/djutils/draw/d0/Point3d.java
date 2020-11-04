@@ -20,17 +20,17 @@ public class Point3d implements Point
     /** */
     private static final long serialVersionUID = 20200828L;
 
-    /** the x-coordinate. */
+    /** The x-coordinate. */
     private final double x;
 
-    /** the y-coordinate. */
+    /** The y-coordinate. */
     private final double y;
 
-    /** the z-coordinate. */
+    /** The z-coordinate. */
     private final double z;
 
     /**
-     * Create an immutable point with x, y, and z coordinates, stored with double precision.
+     * Create a new Point3d with x, y, and z coordinates, stored with double precision.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param z double; the z coordinate
@@ -43,7 +43,7 @@ public class Point3d implements Point
     }
 
     /**
-     * Create an immutable point with x, y, and z coordinates, stored with double precision.
+     * Create a new Point3d with x, y, and z coordinates, stored with double precision.
      * @param xyz double[3]; the x, y and z coordinates
      * @throws NullPointerException when xyx is null
      * @throws IllegalArgumentException when the dimension of xyx is not 3
@@ -58,7 +58,7 @@ public class Point3d implements Point
     }
 
     /**
-     * Create an immutable point with x, y coordinates, stored with double precision, where the z-coordinate is 0.
+     * Create a new Point3d with x, y coordinates, stored with double precision, where the z-coordinate is 0.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @return Point3d; the new immutable point with z=0
@@ -69,7 +69,7 @@ public class Point3d implements Point
     }
 
     /**
-     * Create an immutable point with x, y, and z coordinates, from an AWT Point2D, where z will be 0.
+     * Create a new Point3d with x, y, and z coordinates, from an AWT Point2D, where z will be 0.
      * @param point Point2D; an AWT Point2D
      * @return Point3d; the new immutable point with z=0
      * @throws NullPointerException when point is null
@@ -81,7 +81,7 @@ public class Point3d implements Point
     }
 
     /**
-     * Create an immutable point with x, y, and z coordinates, from a Point2d, where z will be 0.
+     * Create a new Point3d with x, y, and z coordinates, from a Point2d, where z will be 0.
      * @param point Point2d; a 2-dimensional point
      * @return Point3d; the new immutable point with z=0
      * @throws NullPointerException when point is null

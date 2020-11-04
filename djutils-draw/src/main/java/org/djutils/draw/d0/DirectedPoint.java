@@ -4,7 +4,8 @@ import org.djutils.base.AngleUtil;
 import org.djutils.exceptions.Throw;
 
 /**
- * DirectedPoint.java.
+ * DirectedPoint.java. A DirectedPoint combines a location (a point in 3D space) and a direction (as rotations around the x, y,
+ * and z-axes).
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -15,22 +16,22 @@ import org.djutils.exceptions.Throw;
 public interface DirectedPoint extends Point
 {
     /**
-     * Return the rotation around the x-axis in radians, which will be 0.0 for a DirectedPoint2d.
+     * Return the direction as a rotation around the x-axis in radians, which will be 0.0 for a DirectedPoint2d.
      * @return double; the rotation around the x-axis in radians
      */
-    public double getRotX();
+    public double getDirX();
 
     /**
-     * Return the rotation around the y-axis in radians, which will be 0.0 for a DirectedPoint2d.
+     * Return the direction as a rotation around the y-axis in radians, which will be 0.0 for a DirectedPoint2d.
      * @return double; the rotation around the y-axis in radians
      */
-    public double getRotY();
+    public double getDirY();
 
     /**
-     * Return the rotation around the z-axis in radians.
+     * Return the direction as a rotation around the z-axis in radians.
      * @return double; the rotation around the z-axis in radians
      */
-    public double getRotZ();
+    public double getDirZ();
 
     /**
      * Interpolate the coordinates and rotation between this point and the given point. It is allowed for fraction to be less
@@ -48,7 +49,7 @@ public interface DirectedPoint extends Point
 
     /**
      * Interpolate between two points with a fraction. It is allowed for fraction to be less than zero or larger than 1. In that
-     * case the interpolation turns into an extrapolation. The rotations along the x, y, and z-axes are also interpolated or
+     * case the interpolation turns into an extrapolation. The directions around the x, y, and z-axes are also interpolated or
      * extrapolated in a clockwise fashion and normalized between -&pi; and &pi;.
      * @param p1 DirectedPoint; the first point
      * @param p2 DirectedPoint; the second point
@@ -75,20 +76,20 @@ public interface DirectedPoint extends Point
     /**
      * Return a new DirectedPoint3d point with an in-place rotation by the provided deltaRotX, deltaRotY, and deltaRotZ. The
      * resulting rotations will be normalized between -&pi; and &pi;.
-     * @param deltaRotX double; the rotation around the x-axis
-     * @param deltaRotY double; the rotation around the y-axis
-     * @param deltaRotZ double; the rotation around the z-axis
+     * @param rotateX double; the rotation around the x-axis
+     * @param rotateY double; the rotation around the y-axis
+     * @param rotateZ double; the rotation around the z-axis
      * @return DirectedPoint3d; a new point with the same coordinates and applied rotations
      */
-    default DirectedPoint3d rotate(double deltaRotX, double deltaRotY, double deltaRotZ)
+    default DirectedPoint3d rotate(double rotateX, double rotateY, double rotateZ)
     {
-        return new DirectedPoint3d(getX(), getY(), getZ(), AngleUtil.normalizeAroundZero(getRotX() + deltaRotX),
-                AngleUtil.normalizeAroundZero(getRotY() + deltaRotY), AngleUtil.normalizeAroundZero(getRotZ() + deltaRotZ));
+        return new DirectedPoint3d(getX(), getY(), getZ(), AngleUtil.normalizeAroundZero(getDirX() + rotateX),
+                AngleUtil.normalizeAroundZero(getDirY() + rotateY), AngleUtil.normalizeAroundZero(getDirZ() + rotateZ));
     }
 
     /**
      * Compare this DirectedPoint with another DirectedPoint and return true of each of the coordinates is less than
-     * epsilonCoordinate apart, and the rotations are (normalized) less that epsilonRotation apart.
+     * epsilonCoordinate apart, and the direction components are (normalized) less that epsilonRotation apart.
      * @param point DirectedPoint; the point to compare with
      * @param epsilonCoordinate double; the upper bound of difference for one of the coordinates
      * @param epsilonRotation double; the upper bound of difference for one of the rotations
@@ -104,21 +105,33 @@ public interface DirectedPoint extends Point
             return false;
         }
 
-        double diff = AngleUtil.normalizeAroundZero(getRotX() - point.getRotX());
+        double diff = AngleUtil.normalizeAroundZero(getDirX() - point.getDirX());
         if (Double.isNaN(diff))
+        {
             return false;
+        }
         if ((diff < 0 ? -diff : diff) > epsilonRotation)
+        {
             return false;
-        diff = AngleUtil.normalizeAroundZero(getRotY() - point.getRotY());
+        }
+        diff = AngleUtil.normalizeAroundZero(getDirY() - point.getDirY());
         if (Double.isNaN(diff))
+        {
             return false;
+        }
         if ((diff < 0 ? -diff : diff) > epsilonRotation)
+        {
             return false;
-        diff = AngleUtil.normalizeAroundZero(getRotZ() - point.getRotZ());
+        }
+        diff = AngleUtil.normalizeAroundZero(getDirZ() - point.getDirZ());
         if (Double.isNaN(diff))
+        {
             return false;
+        }
         if ((diff < 0 ? -diff : diff) > epsilonRotation)
+        {
             return false;
+        }
 
         return true;
     }

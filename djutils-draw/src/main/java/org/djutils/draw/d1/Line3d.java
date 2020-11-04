@@ -15,7 +15,7 @@ import org.djutils.draw.d0.Point3d;
 import org.djutils.logger.CategoryLogger;
 
 /**
- * Line3d.java.
+ * Line3d.java. Implementation of Line for 3D space.
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -58,15 +58,16 @@ public class Line3d implements Line
         {
             throw new DrawException("Degenerate Line3d; has " + points.length + " point" + (points.length != 1 ? "s" : ""));
         }
-        double minX = Double.POSITIVE_INFINITY;
-        double minY = Double.POSITIVE_INFINITY;
-        double minZ = Double.POSITIVE_INFINITY;
-        double maxX = Double.NEGATIVE_INFINITY;
-        double maxY = Double.NEGATIVE_INFINITY;
-        double maxZ = Double.NEGATIVE_INFINITY;
+        double minX = points[0].getX();
+        double minY = points[0].getY();
+        double minZ = points[0].getZ();
+        ;
+        double maxX = points[0].getX();
+        double maxY = points[0].getY();
+        double maxZ = points[0].getZ();
         this.lengthIndexedLine = new double[points.length];
         this.lengthIndexedLine[0] = 0.0;
-        for (int i = 0; i < points.length; i++)
+        for (int i = 1; i < points.length; i++)
         {
             Point3d point = points[i];
             minX = Math.min(minX, point.getX());
@@ -75,17 +76,14 @@ public class Line3d implements Line
             maxX = Math.max(maxX, point.getX());
             maxY = Math.max(maxY, point.getY());
             maxZ = Math.max(maxZ, point.getZ());
-            if (i > 0)
+            if (points[i - 1].getX() == point.getX() && points[i - 1].getY() == point.getY()
+                    && points[i - 1].getZ() == point.getZ())
             {
-                if (points[i - 1].getX() == point.getX() && points[i - 1].getY() == point.getY()
-                        && points[i - 1].getZ() == point.getZ())
-                {
-                    throw new DrawException("Degenerate Line3d; point " + (i - 1) + " has the same x, y and z as point " + i);
-                }
-                this.lengthIndexedLine[i] = this.lengthIndexedLine[i - 1] + points[i - 1].distance(point);
+                throw new DrawException("Degenerate Line3d; point " + (i - 1) + " has the same x, y and z as point " + i);
             }
+            this.lengthIndexedLine[i] = this.lengthIndexedLine[i - 1] + points[i - 1].distance(point);
         }
-        this.points = points;
+        this.points = points; // XXX Absolutely no need to make a deep copy of this one?
         this.length = this.lengthIndexedLine[this.lengthIndexedLine.length - 1];
         this.centroid = new DirectedPoint3d((maxX + minX) / 2, (maxY + minY) / 2, (maxZ + minZ) / 2);
         double deltaX = maxX - minX;
@@ -124,31 +122,30 @@ public class Line3d implements Line
      */
     private static Point3d[] path2DtoArray(final Path2D path)
     {
-        List<Point3d> pl = new ArrayList<>();
+        List<Point3d> result = new ArrayList<>();
         for (PathIterator pi = path.getPathIterator(null); !pi.isDone(); pi.next())
         {
             double[] p = new double[6];
             int segType = pi.currentSegment(p);
             if (segType == PathIterator.SEG_MOVETO || segType == PathIterator.SEG_LINETO)
             {
-                pl.add(new Point3d(p[0], p[1], 0.0));
+                result.add(new Point3d(p[0], p[1], 0.0));
             }
             else if (segType == PathIterator.SEG_CLOSE)
             {
-                if (!pl.get(0).equals(pl.get(pl.size() - 1)))
+                if (!result.get(0).equals(result.get(result.size() - 1)))
                 {
-                    pl.add(new Point3d(pl.get(0).getX(), pl.get(0).getY(), 0.0));
+                    result.add(new Point3d(result.get(0).getX(), result.get(0).getY(), 0.0));
                 }
                 break;
             }
         }
-        return pl.toArray(new Point3d[pl.size() - 1]);
-
+        return result.toArray(new Point3d[result.size() - 1]);
     }
 
     /**
-     * Construct a line that is equal to this line except for segments that are shorter than the <cite>noiseLevel</cite>. The
-     * result is guaranteed to start with the first point of this line and end with the last point of this line.
+     * Construct a new Line3d that is equal to this line except for segments that are shorter than the <cite>noiseLevel</cite>.
+     * The result is guaranteed to start with the first point of this line and end with the last point of this line.
      * @param noiseLevel double; the minimum segment length that is <b>not</b> removed
      * @return Line3d; the filtered line
      */
@@ -240,7 +237,7 @@ public class Line3d implements Line
      * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
      * @param line1 Line3d; first line
      * @param line2 Line3d; second line
-     * @return Line3d
+     * @return Line3d; the concatenation of the two lines
      * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
      */
     public static Line3d concatenate(final double tolerance, final Line3d line1, final Line3d line2) throws DrawException
@@ -269,7 +266,7 @@ public class Line3d implements Line
      * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
      * @param lines Line3d...; Line3d... one or more Line3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
      *            the first of the second, etc.
-     * @return Line3d
+     * @return Line3d; the concatenation of the lines
      * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
      */
     public static Line3d concatenate(final double tolerance, final Line3d... lines) throws DrawException
@@ -432,7 +429,7 @@ public class Line3d implements Line
     }
 
     /**
-     * Create an Line3d, while cleaning repeating successive points.
+     * Create a new Line3d, filtering out repeating successive points.
      * @param points Point3d...; the coordinates of the line as Point3d
      * @return the line
      * @throws DrawException when number of points &lt; 2
@@ -447,7 +444,7 @@ public class Line3d implements Line
     }
 
     /**
-     * Create an Line3d, while cleaning repeating successive points.
+     * Create an Line3d, while filtering out repeating successive points.
      * @param pointList List&lt;Point3d&gt;; list of the coordinates of the line as Point3d; any duplicate points in this list
      *            are removed (this method may modify the provided list)
      * @return Line3d; the line
@@ -455,6 +452,7 @@ public class Line3d implements Line
      */
     public static Line3d createAndCleanLine3d(final List<Point3d> pointList) throws DrawException
     {
+        // TODO avoid modifying the input list.
         // clean successive equal points
         int i = 1;
         while (i < pointList.size())
@@ -481,7 +479,7 @@ public class Line3d implements Line
     }
 
     /**
-     * Return the first point of this Line3d.
+     * Return the first Point of this Line3d.
      * @return the first point on the line
      */
     public final Point3d getFirst()
@@ -490,7 +488,7 @@ public class Line3d implements Line
     }
 
     /**
-     * Return the last point of this Line3d.
+     * Return the last Point of this Line3d.
      * @return the last point on the line
      */
     public final Point3d getLast()
@@ -499,9 +497,9 @@ public class Line3d implements Line
     }
 
     /**
-     * Return one point of this Line3d.
+     * Return one Point of this Line3d.
      * @param i int; the index of the point to retrieve
-     * @return OTSPoint3d; the i-th point of the line
+     * @return OTSPoint3d; the i<sup>th</sup> point of the line
      * @throws DrawException when i &lt; 0 or i &gt; the number of points
      */
     public final Point3d get(final int i) throws DrawException
@@ -516,8 +514,7 @@ public class Line3d implements Line
     /**
      * Get the location at a position on the line, with its direction. Position can be below 0 or more than the line length. In
      * that case, the position will be extrapolated in the direction of the line at its start or end.
-     * @param position double; the position on the line for which to calculate the point on, before, of after the line, in SI
-     *            units
+     * @param position double; the position on the line for which to calculate the point on, before, or after the line
      * @return a directed point
      */
     public final DirectedPoint3d getLocationExtended(final double position)
@@ -534,7 +531,7 @@ public class Line3d implements Line
             }
         }
 
-        // position before start point -- extrapolate
+        // position before start point -- extrapolate using direction from first point to second point of this Line3d
         if (position < 0.0)
         {
             double len = position;
@@ -546,7 +543,8 @@ public class Line3d implements Line
                     Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
         }
 
-        // position beyond end point -- extrapolate
+        // position beyond end point -- extrapolate using the direction from the before last point to the last point of this
+        // Line3d
         int n1 = this.lengthIndexedLine.length - 1;
         int n2 = this.lengthIndexedLine.length - 2;
         double len = position - getLength();
@@ -571,7 +569,7 @@ public class Line3d implements Line
     /**
      * Get the location at a fraction of the line, with its direction. Fraction should be between 0.0 and 1.0.
      * @param fraction double; the fraction for which to calculate the point on the line
-     * @return a directed point
+     * @return DirectedPoint3d
      * @throws DrawException when fraction less than 0.0 or more than 1.0.
      */
     public final DirectedPoint3d getLocationFraction(final double fraction) throws DrawException
@@ -587,7 +585,7 @@ public class Line3d implements Line
      * Get the location at a fraction of the line, with its direction. Fraction should be between 0.0 and 1.0.
      * @param fraction double; the fraction for which to calculate the point on the line
      * @param tolerance double; the delta from 0.0 and 1.0 that will be forgiven
-     * @return a directed point
+     * @return DirectedPoint3d
      * @throws DrawException when fraction less than 0.0 or more than 1.0.
      */
     public final DirectedPoint3d getLocationFraction(final double fraction, final double tolerance) throws DrawException
@@ -604,7 +602,7 @@ public class Line3d implements Line
     /**
      * Get the location at a fraction of the line (or outside the line), with its direction.
      * @param fraction double; the fraction for which to calculate the point on the line
-     * @return a directed point
+     * @return DirectedPoint3d
      */
     public final DirectedPoint3d getLocationFractionExtended(final double fraction)
     {
@@ -612,8 +610,8 @@ public class Line3d implements Line
     }
 
     /**
-     * Return the length of this OTSLine3D as a double value in SI units. (Assumes that the coordinates of the points
-     * constituting this line are expressed in meters.)
+     * Return the length of this OTSLine3D as a double value. (If the coordinates of the points constituting this line are
+     * expressed in meters, the returned length will be in meters.)
      * @return the length of the line in SI units
      */
     public final double getLength()
@@ -623,7 +621,7 @@ public class Line3d implements Line
 
     /**
      * Binary search for a position on the line.
-     * @param pos double; the position to look for.
+     * @param pos double; the position to look for
      * @return the index below the position; the position is between points[index] and points[index+1]
      * @throws DrawException when index could not be found
      */
@@ -704,7 +702,7 @@ public class Line3d implements Line
     /**
      * Truncate a line at the given length (less than the length of the line, and larger than zero) and return a new line.
      * @param lengthSI double; the location where to truncate the line
-     * @return a new Line3d truncated at the exact position where line.getLength() == lengthSI
+     * @return a new Line3d that follows this line, but ends at the position where line.getLength() == lengthSI
      * @throws DrawException when position less than 0.0 or more than line length.
      */
     public final Line3d truncate(final double lengthSI) throws DrawException
@@ -853,6 +851,7 @@ public class Line3d implements Line
     public Point3d[] getPointArray()
     {
         return this.points;
+        // XXX This enables the caller to modify our immutable Point array. 
     }
 
     /** {@inheritDoc} */
@@ -876,7 +875,7 @@ public class Line3d implements Line
 
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings({"checkstyle:designforextension", "checkstyle:needbraces"})
+    @SuppressWarnings({ "checkstyle:designforextension", "checkstyle:needbraces" })
     public boolean equals(final Object obj)
     {
         if (this == obj)
