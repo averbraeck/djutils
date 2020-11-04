@@ -26,7 +26,7 @@ public abstract class ObjectMatrixSerializer<E extends Object> extends ArrayOrMa
      * Construct a new ObjectMatrixSerializer.
      * @param type byte; the field type (returned by the <code>fieldType</code> method)
      * @param dataSize int; the number of bytes needed to encode one additional array element
- * @param dataClass Class&lt;E&gt;; class of the single object that needs to be serialized
+     * @param dataClass Class&lt;E&gt;; class of the single object that needs to be serialized
      * @param dataClassName String; returned by the dataClassName method
      */
     public ObjectMatrixSerializer(final byte type, final int dataSize, final Class<E> dataClass, final String dataClassName)

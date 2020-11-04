@@ -59,7 +59,7 @@ public final class CSVData
      * about the columns of the data table.
      * @param writer Writer; the writer that writes the data, e.g. to a file
      * @param metaWriter Writer; the writer for the metadata
- * @param dataTable DataTable; the data table to write
+     * @param dataTable DataTable; the data table to write
      * @param separator char; the delimiter to use for separating entries
      * @param quotechar char; the character to use for quoted elements
      * @param escapechar char; the character to use for escaping quotechars or escapechars
@@ -123,7 +123,7 @@ public final class CSVData
      * about the columns of the data table.
      * @param writer Writer; the writer that writes the data, e.g. to a file
      * @param metaWriter Writer; the writer for the metadata
- * @param dataTable DataTable; the data table to write
+     * @param dataTable DataTable; the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -137,7 +137,7 @@ public final class CSVData
      * Write the data from the data table in CSV format.
      * @param filename String; the file name to write the data to
      * @param metaFilename String; the file name to write the metadata to
- * @param dataTable DataTable; the data table to write
+     * @param dataTable DataTable; the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */

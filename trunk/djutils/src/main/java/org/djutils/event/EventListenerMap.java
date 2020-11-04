@@ -101,7 +101,7 @@ public final class EventListenerMap implements Serializable
 
     /**
      * Returns whether the EventListenerMap contains the reference to the eventListener as one of the subscribers.
- * @param reference Reference&lt;EventListenerInterface&gt;; the reference pointer an EventListener to search for
+     * @param reference Reference&lt;EventListenerInterface&gt;; the reference pointer an EventListener to search for
      * @return boolean; true if the EventListenerMap contains the reference to the eventListener as one of the subscribers;
      *         false otherwise
      */

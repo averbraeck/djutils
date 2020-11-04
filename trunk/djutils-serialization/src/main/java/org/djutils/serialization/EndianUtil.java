@@ -74,8 +74,8 @@ public final class EndianUtil
 
     /**
      * Decode a short.
- * @param message byte[]; the ZeroMQ byte array to decode
- * @param pointer int; the first byte to consider
+     * @param message byte[]; the ZeroMQ byte array to decode
+     * @param pointer int; the first byte to consider
      * @return the short value
      */
     public short decodeShort(final byte[] message, final int pointer)
@@ -92,8 +92,8 @@ public final class EndianUtil
 
     /**
      * Decode a int.
- * @param message byte[]; the ZeroMQ byte array to decode
- * @param pointer int; the first byte to consider
+     * @param message byte[]; the ZeroMQ byte array to decode
+     * @param pointer int; the first byte to consider
      * @return the integer value
      */
     public int decodeInt(final byte[] message, final int pointer)
@@ -112,8 +112,8 @@ public final class EndianUtil
 
     /**
      * Decode a long.
- * @param message byte[]; the ZeroMQ byte array to decode
- * @param pointer int; the first byte to consider
+     * @param message byte[]; the ZeroMQ byte array to decode
+     * @param pointer int; the first byte to consider
      * @return the long value
      */
     public long decodeLong(final byte[] message, final int pointer)
@@ -136,8 +136,8 @@ public final class EndianUtil
 
     /**
      * Decode a float.
- * @param message byte[]; the ZeroMQ byte array to decode
- * @param pointer int; the first byte to consider
+     * @param message byte[]; the ZeroMQ byte array to decode
+     * @param pointer int; the first byte to consider
      * @return the float value
      */
     public float decodeFloat(final byte[] message, final int pointer)
@@ -148,8 +148,8 @@ public final class EndianUtil
 
     /**
      * Decode a double.
- * @param message byte[]; the ZeroMQ byte array to decode
- * @param pointer int; the first byte to consider
+     * @param message byte[]; the ZeroMQ byte array to decode
+     * @param pointer int; the first byte to consider
      * @return the double value
      */
     public double decodeDouble(final byte[] message, final int pointer)
@@ -160,8 +160,8 @@ public final class EndianUtil
 
     /**
      * Decode a char (16 bits).
- * @param message byte[]; the ZeroMQ byte array to decode
- * @param pointer int; the first byte to consider
+     * @param message byte[]; the ZeroMQ byte array to decode
+     * @param pointer int; the first byte to consider
      * @return the short value
      */
     public char decodeChar(final byte[] message, final int pointer)
@@ -171,8 +171,8 @@ public final class EndianUtil
 
     /**
      * Decode a String including the length int from the message byte array.
- * @param message byte[]; the message byte array
- * @param pointer int; the start position in the array
+     * @param message byte[]; the message byte array
+     * @param pointer int; the start position in the array
      * @return the Java String at position pointer
      * @throws SerializationException when the bytes cannot be parsed as UTF8
      */
@@ -196,8 +196,8 @@ public final class EndianUtil
 
     /**
      * Decode a String including the length int from the message byte array.
- * @param message byte[]; the message byte array
- * @param pointer int; the start position in the array
+     * @param message byte[]; the message byte array
+     * @param pointer int; the start position in the array
      * @return the Java String at position pointer
      */
     public String decodeUTF16String(final byte[] message, final int pointer)
@@ -213,9 +213,9 @@ public final class EndianUtil
 
     /**
      * Encode a short into a message buffer.
- * @param v short; the variable to encode
- * @param message byte[]; the message buffer to encode the variable into
- * @param pointer int; the pointer to start writing
+     * @param v short; the variable to encode
+     * @param message byte[]; the message buffer to encode the variable into
+     * @param pointer int; the pointer to start writing
      * @return the new pointer after writing
      */
     public int encodeShort(final short v, final byte[] message, final int pointer)
@@ -236,9 +236,9 @@ public final class EndianUtil
 
     /**
      * Encode a char (16 bits) into a message buffer.
- * @param v char; the variable to encode
- * @param message byte[]; the message buffer to encode the variable into
- * @param pointer int; the pointer to start writing
+     * @param v char; the variable to encode
+     * @param message byte[]; the message buffer to encode the variable into
+     * @param pointer int; the pointer to start writing
      * @return the new pointer after writing
      */
     public int encodeChar(final char v, final byte[] message, final int pointer)
@@ -248,9 +248,9 @@ public final class EndianUtil
 
     /**
      * Encode a int into a message buffer.
- * @param v int; the variable to encode
- * @param message byte[]; the message buffer to encode the variable into
- * @param pointer int; the pointer to start writing
+     * @param v int; the variable to encode
+     * @param message byte[]; the message buffer to encode the variable into
+     * @param pointer int; the pointer to start writing
      */
     public void encodeInt(final int v, final byte[] message, final int pointer)
     {
@@ -273,9 +273,9 @@ public final class EndianUtil
 
     /**
      * Encode a long into a message buffer.
- * @param v long; the variable to encode
- * @param message byte[]; the message buffer to encode the variable into
- * @param pointer int; the pointer to start writing
+     * @param v long; the variable to encode
+     * @param message byte[]; the message buffer to encode the variable into
+     * @param pointer int; the pointer to start writing
      * @return the new pointer after writing
      */
     public int encodeLong(final long v, final byte[] message, final int pointer)
@@ -308,9 +308,9 @@ public final class EndianUtil
 
     /**
      * Encode a float into a message buffer.
- * @param v float; the variable to encode
- * @param message byte[]; the message buffer to encode the variable into
- * @param pointer int; the pointer to start writing
+     * @param v float; the variable to encode
+     * @param message byte[]; the message buffer to encode the variable into
+     * @param pointer int; the pointer to start writing
      */
     public void encodeFloat(final float v, final byte[] message, final int pointer)
     {
@@ -320,9 +320,9 @@ public final class EndianUtil
 
     /**
      * Encode a double into a message buffer.
- * @param v double; the variable to encode
- * @param message byte[]; the message buffer to encode the variable into
- * @param pointer int; the pointer to start writing
+     * @param v double; the variable to encode
+     * @param message byte[]; the message buffer to encode the variable into
+     * @param pointer int; the pointer to start writing
      * @return the new pointer after writing
      */
     public int encodeDouble(final double v, final byte[] message, final int pointer)

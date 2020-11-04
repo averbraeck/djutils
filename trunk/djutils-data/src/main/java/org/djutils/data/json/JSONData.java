@@ -91,7 +91,7 @@ public final class JSONData
     /**
      * Write the data from the data table in JSON format.
      * @param writer Writer; the writer that writes the data, e.g. to a file
- * @param dataTable DataTable; the data table to write
+     * @param dataTable DataTable; the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -164,7 +164,7 @@ public final class JSONData
     /**
      * Write the data from the data table in JSON format.
      * @param filename String; the file name to write the data to
- * @param dataTable DataTable; the data table to write
+     * @param dataTable DataTable; the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -242,7 +242,7 @@ public final class JSONData
                         throw new IOException("Could not find class " + type, exception);
                     }
                 }
-                @SuppressWarnings({ "rawtypes", "unchecked" })
+                @SuppressWarnings({"rawtypes", "unchecked"})
                 DataColumn<?> column = new SimpleDataColumn(columnProperties[1], columnProperties[2], valueClass);
                 columns.add(column);
                 index++;
@@ -293,8 +293,8 @@ public final class JSONData
 
     /**
      * Read a name - value pair from the JSON file where name has to match the given tag name.
- * @param jr JsonReader; the JSON stream reader
- * @param tag String; the tag to retrieve
+     * @param jr JsonReader; the JSON stream reader
+     * @param tag String; the tag to retrieve
      * @return the value belonging to the tag
      * @throws IllegalFormatException when the next element in the file did not contain the right tag
      * @throws IOException when reading from the stream raises an exception
@@ -307,8 +307,8 @@ public final class JSONData
 
     /**
      * Read a name -from the JSON file where name has to match the given tag name.
- * @param jr JsonReader; the JSON stream reader
- * @param tag String; the tag to retrieve
+     * @param jr JsonReader; the JSON stream reader
+     * @param tag String; the tag to retrieve
      * @throws IllegalFormatException when the next element in the file did not contain the right tag
      * @throws IOException when reading from the stream raises an exception
      */
@@ -340,5 +340,5 @@ public final class JSONData
             }
         }
     }
-    
+
 }

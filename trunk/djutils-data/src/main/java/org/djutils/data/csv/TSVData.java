@@ -45,7 +45,7 @@ public final class TSVData
      * about the columns of the data table.
      * @param writer Writer; the writer that writes the data, e.g. to a file
      * @param metaWriter Writer; the writer for the metadata
- * @param dataTable DataTable; the data table to write
+     * @param dataTable DataTable; the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -59,7 +59,7 @@ public final class TSVData
      * Write the data from the data table in TSV format.
      * @param filename String; the file name to write the data to
      * @param metaFilename String; the file name to write the metadata to
- * @param dataTable DataTable; the data table to write
+     * @param dataTable DataTable; the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */

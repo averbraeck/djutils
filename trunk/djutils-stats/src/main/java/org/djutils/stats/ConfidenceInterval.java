@@ -19,4 +19,3 @@ public enum ConfidenceInterval
     /** RIGTH_SIDE_CONFIDENCE refers to the right side confidence. */
     RIGHT_SIDE_CONFIDENCE;
 }
-

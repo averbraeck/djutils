@@ -8,8 +8,7 @@ import org.djutils.exceptions.Throw;
 import org.djutils.stats.summarizers.Tally;
 
 /**
- * Quantile accumulator that stores all values and computes exact (within a few ULP) results.
- * <br>
+ * Quantile accumulator that stores all values and computes exact (within a few ULP) results. <br>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
 public class FullStorageAccumulator implements QuantileAccumulator

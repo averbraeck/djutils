@@ -37,8 +37,8 @@ public class Line3d implements Line
     /** The cached length. */
     private final double length;
 
-    /** The cached centroid. */
-    private final DirectedPoint3d centroid;
+    /** The cached centroid for the Locatable interface. */
+    private final Point3d centroid;
 
     /** Bounding rectangle of this Line3d. */
     private final BoundingRectangle boundingRectangle;
@@ -202,7 +202,6 @@ public class Line3d implements Line
         }
         if (list.size() == 2 && list.get(0).equals(list.get(1)))
         {
-            // CategoryLogger.always().debug("Fixing up degenerate noiseFilteredLine by inserting an intermediate point");
             // Find something to insert along the way
             for (int index = 1; index < this.size() - 1; index++)
             {
@@ -275,7 +274,6 @@ public class Line3d implements Line
      */
     public static Line3d concatenate(final double tolerance, final Line3d... lines) throws DrawException
     {
-        // CategoryLogger.trace(Cat.CORE, "Concatenating " + lines.length + " lines.");
         if (0 == lines.length)
         {
             throw new DrawException("Empty argument list");
@@ -366,7 +364,6 @@ public class Line3d implements Line
         double segmentLength = 0;
         int index = 0;
         List<Point3d> pointList = new ArrayList<>();
-        // CategoryLogger.trace(Cat.CORE, "interval " + start + ".." + end);
         while (start > cumulativeLength)
         {
             Point3d fromPoint = this.points[index];

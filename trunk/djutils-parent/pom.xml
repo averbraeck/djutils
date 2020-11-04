@@ -70,17 +70,18 @@
     <maven.install.version>3.0.0-M1</maven.install.version>
     <maven.source.version>3.2.1</maven.source.version>
     <maven.javadoc.version>3.2.0</maven.javadoc.version>
+    <maven.resources.version>3.2.0</maven.resources.version>
     <maven.checkstyle.version>3.1.1</maven.checkstyle.version>
     <checkstyle.version>8.35</checkstyle.version>
     <maven.surefire.version>3.0.0-M5</maven.surefire.version>
     <maven.surefire-report.version>3.0.0-M5</maven.surefire-report.version>
     <maven.failsafe.version>3.0.0-M5</maven.failsafe.version>
-    <maven.jacoco.version>0.8.5</maven.jacoco.version>
+    <maven.jacoco.version>0.8.6</maven.jacoco.version>
+    <maven.spotbugs.version>4.1.4</maven.spotbugs.version>
+    <spotbugs.version>4.1.4</spotbugs.version>
     <maven.project-info-reports.version>3.1.0</maven.project-info-reports.version>
     <maven.jxr.version>3.0.0</maven.jxr.version>
     <maven.taglist.version>2.4</maven.taglist.version>
-    <maven.spotbugs.version>3.1.12.2</maven.spotbugs.version>
-    <spotbugs.version>4.0.4</spotbugs.version>
     <maven.pmd.version>3.13.0</maven.pmd.version>
     <maven.changes.version>2.12.1</maven.changes.version>
     <wagon.maven.version>2.0.0</wagon.maven.version>
@@ -135,6 +136,15 @@
         <configuration>
           <source>${jdk.version}</source>
           <target>${jdk.version}</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>${maven.resources.version}</version>
+        <configuration>
+          <encoding>${project.encoding}</encoding>
         </configuration>
       </plugin>
 
@@ -255,8 +265,8 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven.javadoc.version}</version>
         <configuration>
-          <source>8</source>
           <links>
+            <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
             <link>https://download.java.net/media/java3d/javadoc/1.5.1/</link>
             <link>https://tinylog.org/v1/javadoc/</link>
             <link>https://picocli.info/apidocs/</link>
@@ -282,11 +292,20 @@
               <url>https://djutils.org/docs/current/djutils-stats/apidocs/</url>
               <location>${project.build.directory}/../../djutils-stats/target/apidocs</location>
             </offlineLink>
+            <offlineLink>
+              <url>https://djutils.org/docs/current/djutils-stats/apidocs/</url>
+              <location>${project.build.directory}/../../djutils-draw/target/apidocs</location>
+            </offlineLink>
+            <offlineLink>
+              <url>https://djutils.org/docs/current/djutils-stats/apidocs/</url>
+              <location>${project.build.directory}/../../djutils-draw-swing/target/apidocs</location>
+            </offlineLink>
           </offlineLinks>
           <minmemory>256m</minmemory>
           <maxmemory>1g</maxmemory>
           <show>package</show>
-          <detectJavaApiLink>true</detectJavaApiLink>
+          <detectJavaApiLink>false</detectJavaApiLink>
+          <detectLinks>true</detectLinks>
         </configuration>
         <executions>
           <execution>
@@ -426,8 +445,8 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven.javadoc.version}</version>
         <configuration>
-          <source>8</source>
           <links>
+            <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
             <link>https://download.java.net/media/java3d/javadoc/1.5.1/</link>
             <link>https://tinylog.org/v1/javadoc/</link>
             <link>https://picocli.info/apidocs/</link>
@@ -453,11 +472,20 @@
               <url>https://djutils.org/docs/current/djutils-stats/apidocs/</url>
               <location>${project.build.directory}/../../djutils-stats/target/apidocs</location>
             </offlineLink>
+            <offlineLink>
+              <url>https://djutils.org/docs/current/djutils-stats/apidocs/</url>
+              <location>${project.build.directory}/../../djutils-draw/target/apidocs</location>
+            </offlineLink>
+            <offlineLink>
+              <url>https://djutils.org/docs/current/djutils-stats/apidocs/</url>
+              <location>${project.build.directory}/../../djutils-draw-swing/target/apidocs</location>
+            </offlineLink>
           </offlineLinks>
           <minmemory>256m</minmemory>
           <maxmemory>1g</maxmemory>
           <show>package</show>
-          <detectJavaApiLink>true</detectJavaApiLink>
+          <detectJavaApiLink>false</detectJavaApiLink>
+          <detectLinks>true</detectLinks>
         </configuration>
 
         <reportSets>
@@ -631,6 +659,36 @@
       <dependency>
         <groupId>org.djutils</groupId>
         <artifactId>djutils</artifactId>
+        <version>${djutils.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.djutils</groupId>
+        <artifactId>djutils-draw</artifactId>
+        <version>${djutils.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.djutils</groupId>
+        <artifactId>djutils-cli</artifactId>
+        <version>${djutils.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.djutils</groupId>
+        <artifactId>djutils-data</artifactId>
+        <version>${djutils.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.djutils</groupId>
+        <artifactId>djutils-serialization</artifactId>
+        <version>${djutils.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.djutils</groupId>
+        <artifactId>djutils-stats</artifactId>
         <version>${djutils.version}</version>
       </dependency>
 

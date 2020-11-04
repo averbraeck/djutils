@@ -95,7 +95,7 @@ public class MultiKeyMap<T>
 
     /**
      * Select and verify the type of the last key.
- * @param keys List&lt;Object&gt;; the keys
+     * @param keys List&lt;Object&gt;; the keys
      * @return Object; the last element of keys
      */
     private Object getFinalKey(final List<Object> keys)

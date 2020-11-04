@@ -9,8 +9,8 @@
 
   <artifactId>djutils-draw</artifactId>
 
-  <name>DJUTILS - Delft Java Utilities</name>
-  <description>DJUTILS - Delft Java Utilities for DSOL, OTS, DJUNITS, SIM0MQ projects</description>
+  <name>DJUTILS - Drawing and animation primitives</name>
+  <description>DJUTILS - Delft Java Utilities Drawing and animation primitives</description>
 
   <dependencies>
 

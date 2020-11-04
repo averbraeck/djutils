@@ -23,7 +23,7 @@ public class Event extends AbstractEvent
 
     /**
      * Construct a new Event, where compliance with the metadata is verified.
- * @param type EventTypeInterface; the name of the Event.
+     * @param type EventTypeInterface; the name of the Event.
      * @param sourceId Serializable; the source id of the sender
      * @param content Serializable; the content of the event
      */
@@ -34,7 +34,7 @@ public class Event extends AbstractEvent
 
     /**
      * Construct a new Event, with a choice to verify compliance with metadata.
- * @param type EventTypeInterface; the name of the Event.
+     * @param type EventTypeInterface; the name of the Event.
      * @param sourceId Serializable; the source id of the sender
      * @param content Serializable; the content of the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not

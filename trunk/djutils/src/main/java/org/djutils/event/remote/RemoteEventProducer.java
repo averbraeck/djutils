@@ -46,7 +46,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
      * Any attempt to do so will cause an AccessException to be fired.
      * @param host String; the host where the RMI registry resides or will be created. Creation is only possible on localhost.
      * @param port int; the port where the RMI registry can be found or will be created
- * @param bindingKey String; the key under which this object will be bound in the RMI registry
+     * @param bindingKey String; the key under which this object will be bound in the RMI registry
      * @throws RemoteException when there is a problem with the RMI registry
      * @throws AlreadyBoundException when there is already another object bound to the bindingKey
      * @throws NullPointerException when host, path, or bindingKey is null
@@ -495,7 +495,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /**
      * Transmit a timed event that is not verified with no payload object to all interested listeners.
- * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      * @throws RemoteException on network failure
@@ -521,7 +521,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /**
      * Transmit a time-stamped event that is not verified with a Serializable object (payload) to all interested listeners.
- * @param eventType TimedEventTypeInterface; the eventType of the event.
+     * @param eventType TimedEventTypeInterface; the eventType of the event.
      * @param value Serializable; the payload sent with the event
      * @param time C; a time stamp for the event
      * @return Serializable; the payload
@@ -548,7 +548,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /**
      * Transmit a time-stamped event that is not verified with a one byte payload to all interested listeners.
- * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value byte; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
@@ -575,7 +575,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /**
      * Transmit a time-stamped event that is not verified with a one char payload to all interested listeners.
- * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value char; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
@@ -602,7 +602,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /**
      * Transmit a time-stamped event that is not verified with a boolean payload to all interested listeners.
- * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value boolean; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
@@ -629,7 +629,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /**
      * Transmit a time-stamped event that is not verified with a double value payload to interested listeners.
- * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value double; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
@@ -656,7 +656,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /**
      * Transmit a time-stamped event that is not verified with an integer payload to all interested listeners.
- * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value int; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
@@ -683,7 +683,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /**
      * Transmit a time-stamped event that is not verified with a long payload to all interested listeners.
- * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value long; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
@@ -710,7 +710,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /**
      * Transmit a time-stamped event that is not verified with a short payload to all interested listeners.
- * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value short; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
@@ -737,7 +737,7 @@ public abstract class RemoteEventProducer extends RMIObject implements RemoteEve
 
     /**
      * Transmit a time-stamped event that is not verified with a float payload to all interested listeners.
- * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventTypeInterface; the eventType of the event
      * @param value float; the payload
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired

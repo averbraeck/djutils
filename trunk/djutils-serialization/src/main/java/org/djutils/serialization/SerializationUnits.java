@@ -238,12 +238,12 @@ public class SerializationUnits implements Serializable
             "AngularAcceleration", "AngularAcceleration", "[rad/s^2]");
 
     /** AngularVelocity unit type with code 43. */
-    public static final SerializationUnits ANGULARVELOCITY = new SerializationUnits(43, AngularVelocityUnit.class,
-            "AngularVelocity", "AngularVelocity", "[rad/s]");
+    public static final SerializationUnits ANGULARVELOCITY =
+            new SerializationUnits(43, AngularVelocityUnit.class, "AngularVelocity", "AngularVelocity", "[rad/s]");
 
     /** AngularAcceleration unit type with code 44. */
-    public static final SerializationUnits MOMENTUM = new SerializationUnits(44, MomentumUnit.class,
-            "Momentum", "Momentum", "[rad/s^2]");
+    public static final SerializationUnits MOMENTUM =
+            new SerializationUnits(44, MomentumUnit.class, "Momentum", "Momentum", "[rad/s^2]");
 
     /** The code of the unit as a byte. */
     private final byte code;
@@ -388,7 +388,7 @@ public class SerializationUnits implements Serializable
 
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings({ "checkstyle:designforextension", "needbraces" })
+    @SuppressWarnings({"checkstyle:designforextension", "needbraces"})
     public boolean equals(final Object obj)
     {
         if (this == obj)

@@ -29,7 +29,7 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Abstract
 
     /**
      * Construct a new timed event, where compliance with the metadata is verified.
- * @param type TimedEventTypeInterface; the eventType of the event.
+     * @param type TimedEventTypeInterface; the eventType of the event.
      * @param sourceId Serializable; the source of the event.
      * @param content Serializable; the content of the event.
      * @param timeStamp T; the timeStamp.
@@ -42,7 +42,7 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Abstract
 
     /**
      * Construct a new timed event, with a choice to verify compliance with metadata.
- * @param type TimedEventTypeInterface; the eventType of the event.
+     * @param type TimedEventTypeInterface; the eventType of the event.
      * @param sourceId Serializable; the source of the event.
      * @param content Serializable; the content of the event.
      * @param timeStamp T; the timeStamp.

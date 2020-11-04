@@ -57,9 +57,9 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
 
     /**
      * Code a unit, including MoneyUnits.
- * @param unit U; the unit to code in the byte array
- * @param message byte[]; the byte array
- * @param pointer Pointer; the start pointer in the byte array
+     * @param unit U; the unit to code in the byte array
+     * @param message byte[]; the byte array
+     * @param pointer Pointer; the start pointer in the byte array
      * @param endianUtil EndianUtil; encoder to use for multi-byte values
      */
     protected void encodeUnit(final U unit, final byte[] message, final Pointer pointer, final EndianUtil endianUtil)

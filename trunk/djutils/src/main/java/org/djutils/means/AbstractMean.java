@@ -177,9 +177,9 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
     /**
      * Adds each value (obtained by calling the <code>values</code> function on each object in a Collection) with a weight
      * (obtained by calling the <code> weights</code> function on the same object from the Collection).
- * @param collection Collection&lt;S&gt;; collection of source objects
- * @param values Function&lt;S, V&gt;; values
- * @param weights Function&lt;S, W&gt;; weights
+     * @param collection Collection&lt;S&gt;; collection of source objects
+     * @param values Function&lt;S, V&gt;; values
+     * @param weights Function&lt;S, W&gt;; weights
      * @param <S> type of source object
      * @return this AbstractMean&lt;MT, V, W&gt;; for method chaining
      */
@@ -195,7 +195,7 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
 
     /**
      * Add values with weight 1.
- * @param values Iterable&lt;V&gt;; the values to add
+     * @param values Iterable&lt;V&gt;; the values to add
      * @return this AbstractMean&lt;MT, V, W&gt;; for method chaining
      */
     public final AbstractMean<MT, V, W> add(final Iterable<V> values)

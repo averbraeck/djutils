@@ -36,7 +36,7 @@ public class EventProducingListIterator<T> extends EventProducingIterator<T> imp
 
     /**
      * constructs a new EventProducingListIterator, embedding the parent ListIterator.
- * @param parent ListIterator&lt;T&gt;; embedded iterator.
+     * @param parent ListIterator&lt;T&gt;; embedded iterator.
      * @param sourceId Serializable; the id by which the EventProducer can be identified by the EventListener
      */
     public EventProducingListIterator(final ListIterator<T> parent, final Serializable sourceId)
@@ -46,7 +46,7 @@ public class EventProducingListIterator<T> extends EventProducingIterator<T> imp
 
     /**
      * Constructs a new EventProducingListIterator, embedding the parent iterator.
- * @param parent ListIterator&lt;T&gt;; the parent set.
+     * @param parent ListIterator&lt;T&gt;; the parent set.
      * @param sourceIdProvider IdProvider; the function that produces the id by which the EventProducer can be identified by the
      *            EventListener
      */
