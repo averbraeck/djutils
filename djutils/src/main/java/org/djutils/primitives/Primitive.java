@@ -349,8 +349,8 @@ public final class Primitive
      * Integer i = new Number(4) will not work). This method also takes into account primitive types, so when firstClass is
      * Number, and secondClass is int, the result is true, or when the firstClass is int, and the second class is Integer /
      * firstClass is Integer and secondClass is int, the result will also be true.
- * @param firstClass Class&lt;?&gt;; the class to which secondClass should be assignable
- * @param secondClass Class&lt;?&gt;; the class from which firstClass should be assignable
+     * @param firstClass Class&lt;?&gt;; the class to which secondClass should be assignable
+     * @param secondClass Class&lt;?&gt;; the class from which firstClass should be assignable
      * @return firstClass.isAssignableFrom(secondClass) taking into acount primitive types
      */
     public static boolean isPrimitiveAssignableFrom(final Class<?> firstClass, final Class<?> secondClass)

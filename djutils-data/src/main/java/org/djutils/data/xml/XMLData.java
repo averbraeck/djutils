@@ -80,7 +80,7 @@ public final class XMLData
     /**
      * Write the data from the data table in XML format.
      * @param writer Writer; the writer that writes the data, e.g. to a file
- * @param dataTable DataTable; the data table to write
+     * @param dataTable DataTable; the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      * @throws XMLStreamException on XML write error
@@ -179,7 +179,7 @@ public final class XMLData
     /**
      * Write the data from the data table in XML format.
      * @param filename String; the file name to write the data to
- * @param dataTable DataTable; the data table to write
+     * @param dataTable DataTable; the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      * @throws XMLStreamException on XML write error
@@ -251,7 +251,7 @@ public final class XMLData
                         throw new IOException("Could not find class " + type, exception);
                     }
                 }
-                @SuppressWarnings({ "rawtypes", "unchecked" })
+                @SuppressWarnings({"rawtypes", "unchecked"})
                 DataColumn<?> column = new SimpleDataColumn(columnProperties[1], columnProperties[2], valueClass);
                 columns.add(column);
                 index++;
@@ -296,8 +296,8 @@ public final class XMLData
 
     /**
      * Read from the XML file until a START_ELEMENT with the id equal to the provided tag is encountered.
- * @param xmlr XMLStreamReader; the XML stream reader
- * @param tag String; the tag to retrieve
+     * @param xmlr XMLStreamReader; the XML stream reader
+     * @param tag String; the tag to retrieve
      * @throws XMLStreamException on error reading from the XML stream
      * @throws IOException when the stream ended without finding the tag
      */
@@ -321,9 +321,9 @@ public final class XMLData
      * Read from the XML file until a START_ELEMENT with the id equal to the provided tag is encountered, or until the
      * stopEndTag is reached. This can be used to get the starting tag in a repeat group. When the starting tag is found, the
      * method returns true. When the end tag of the repeat group is found, false is returned.
- * @param xmlr XMLStreamReader; the XML stream reader
- * @param tag String; the tag to retrieve, usually a tag in a repeat group
- * @param stopEndTag String; the tag to indicate the end of the repeat group
+     * @param xmlr XMLStreamReader; the XML stream reader
+     * @param tag String; the tag to retrieve, usually a tag in a repeat group
+     * @param stopEndTag String; the tag to indicate the end of the repeat group
      * @return true when the tag in the repeat group was found; false when the stop tag was found
      * @throws XMLStreamException on error reading from the XML stream
      * @throws IOException when the stream ended without finding the tag or the stop tag
@@ -355,8 +355,8 @@ public final class XMLData
     /**
      * Read the attributes into an array and return the array. The position of each attribute is indicated by the vararg
      * parameter 'attributes'.
- * @param xmlr XMLStreamReader; the XML stream reader
- * @param attributes String...; the attributes that are expected
+     * @param xmlr XMLStreamReader; the XML stream reader
+     * @param attributes String...; the attributes that are expected
      * @return the array of atribute values, in the order of the vararg parameter 'attributes'
      * @throws XMLStreamException on error reading from the XML stream
      * @throws IOException when the current element does not contain the right (number of) attributes
@@ -408,5 +408,5 @@ public final class XMLData
             }
         }
     }
-    
+
 }

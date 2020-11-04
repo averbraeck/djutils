@@ -31,7 +31,7 @@ public abstract class RemoteEventListener extends RMIObject implements RemoteEve
      * Any attempt to do so will cause an AccessException to be fired.
      * @param host String; the host where the RMI registry resides or will be created. Creation is only possible on localhost.
      * @param port int; the port where the RMI registry can be found or will be created
- * @param bindingKey String; the key under which this object will be bound in the RMI registry
+     * @param bindingKey String; the key under which this object will be bound in the RMI registry
      * @throws RemoteException when there is a problem with the RMI registry
      * @throws AlreadyBoundException when there is already another object bound to the bindingKey
      * @throws NullPointerException when host, path, or bindingKey is null

@@ -248,7 +248,6 @@ public class Tally implements TallyInterface
         return Double.NaN;
     }
 
-
     /** {@inheritDoc} */
     @Override
     public final double getSampleKurtosis()
@@ -256,7 +255,7 @@ public class Tally implements TallyInterface
         if (this.n > 3)
         {
             double sVar = getSampleVariance();
-            return this.m4 / (this.n - 1) / sVar / sVar; 
+            return this.m4 / (this.n - 1) / sVar / sVar;
         }
         return Double.NaN;
     }
@@ -291,7 +290,7 @@ public class Tally implements TallyInterface
         if (this.n > 2)
         {
             // convert kurtosis to excess kurtosis, shift by -3
-            return getPopulationKurtosis() - 3.0; 
+            return getPopulationKurtosis() - 3.0;
         }
         return Double.NaN;
     }
@@ -316,7 +315,7 @@ public class Tally implements TallyInterface
 
     /**
      * Ingest an array of values.
- * @param values double...; the values to ingest
+     * @param values double...; the values to ingest
      */
     public void ingest(final double... values)
     {
@@ -325,7 +324,7 @@ public class Tally implements TallyInterface
             ingest(value);
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public double ingest(final double value)

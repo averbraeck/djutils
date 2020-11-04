@@ -20,7 +20,7 @@ public interface TextSerializer<T>
 {
     /**
      * Serialize a value to text in such a way that it can be deserialized with the corresponding deserializer.
- * @param value Object; the value to serialize
+     * @param value Object; the value to serialize
      * @return String; a string representation of the value that can later be deserialized
      */
     String serialize(Object value);

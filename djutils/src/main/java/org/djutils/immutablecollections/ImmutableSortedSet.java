@@ -206,7 +206,7 @@ public interface ImmutableSortedSet<E> extends ImmutableSet<E>
      * @param v3 E; value 3
      * @param v4 E; value 4
      * @param v5 E; value 5
- * @param vn E...; values 6 and beyond
+     * @param vn E...; values 6 and beyond
      * @return ImmutableSortedSet&lt;K, V&gt;; an ImmutableSortedSet with 5 or more entries, backed by a TreeSet
      */
     @SuppressWarnings("unchecked")

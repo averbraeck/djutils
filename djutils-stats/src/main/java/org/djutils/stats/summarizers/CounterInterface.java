@@ -9,8 +9,7 @@ import java.io.Serializable;
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
- * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
- * <br>
+ * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  */
@@ -39,7 +38,7 @@ public interface CounterInterface extends Serializable
      * @return long; the counter value
      */
     long getCount();
-    
+
     /**
      * Returns the current number of observations.
      * @return long; the number of observations

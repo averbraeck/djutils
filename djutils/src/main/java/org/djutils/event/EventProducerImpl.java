@@ -198,7 +198,7 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit a time-stamped event to all interested listeners.
- * @param event TimedEventInterface&lt;C&gt;; the event
+     * @param event TimedEventInterface&lt;C&gt;; the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      */
@@ -220,7 +220,7 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit a time-stamped event with a no payload object to all interested listeners.
- * @param eventType TimedEventTypeInterface; the eventType of the event.
+     * @param eventType TimedEventTypeInterface; the eventType of the event.
      * @param time C; a time stamp for the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
@@ -247,7 +247,7 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit a time-stamped event with a Serializable object (payload) to all interested listeners.
- * @param eventType TimedEventTypeInterface; the eventType of the event.
+     * @param eventType TimedEventTypeInterface; the eventType of the event.
      * @param value Serializable; the payload sent with the event
      * @param time C; a time stamp for the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not

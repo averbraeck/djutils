@@ -1409,7 +1409,7 @@ public final class TypedMessage
     /**
      * Encode the object array into a byte[] message. Use UTF8 for the characters and for the String.
      * @param endianUtil EndianUtil; encoder to use for multi-byte values
- * @param content Object...; the objects to encode
+     * @param content Object...; the objects to encode
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
@@ -1421,7 +1421,7 @@ public final class TypedMessage
     /**
      * Encode the object array into a byte[] message. Use UTF16 for the characters and for the String.
      * @param endianUtil EndianUtil; encoder for multi-byte values
- * @param content Object...; the objects to encode
+     * @param content Object...; the objects to encode
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
@@ -1495,7 +1495,7 @@ public final class TypedMessage
      * Build the list of serializers corresponding to the data in an Object array.
      * @param utf8 boolean; if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters
      *            and Strings
- * @param content Object...; the objects for which the serializers must be returned
+     * @param content Object...; the objects for which the serializers must be returned
      * @return Serializer[]; array filled with the serializers needed for the objects in the Object array
      * @throws SerializationException when an object in <code>content</code> cannot be serialized
      */
@@ -1513,9 +1513,9 @@ public final class TypedMessage
 
     /**
      * Encode the object array into a Big Endian message.
- * @param utf8 boolean; whether to encode String fields and characters in utf8 or not
+     * @param utf8 boolean; whether to encode String fields and characters in utf8 or not
      * @param endianUtil EndianUtil; encoder for multi-byte values
- * @param content Object...; the objects to encode
+     * @param content Object...; the objects to encode
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
@@ -1548,7 +1548,7 @@ public final class TypedMessage
 
     /**
      * Decode the message into an object array, constructing Java Primitive data arrays and matrices where possible.
- * @param buffer byte[]; the byte array to decode
+     * @param buffer byte[]; the byte array to decode
      * @param endianUtil EndianUtil; decoder for multi-byte values
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
@@ -1561,7 +1561,7 @@ public final class TypedMessage
 
     /**
      * Decode the message into an object array, constructing Java Object arrays and matrices where possible.
- * @param buffer byte[]; the byte array to decode
+     * @param buffer byte[]; the byte array to decode
      * @param endianUtil EndianUtil; decoder for multi-byte values
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
@@ -1574,7 +1574,7 @@ public final class TypedMessage
 
     /**
      * Decode the message into an object array.
- * @param buffer byte[]; the byte array to decode
+     * @param buffer byte[]; the byte array to decode
      * @param decoderMap Map&lt;Byte, Serializer&lt;?&gt;&gt;; the map with decoders to use
      * @param endianUtil EndianUtil; decoder for multi-byte values
      * @return an array of objects of the right type

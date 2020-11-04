@@ -175,7 +175,7 @@ public class EventBasedWeightedTally extends EventProducer implements EventListe
         fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_VARIANCE_EVENT, this, getWeightedSampleVariance()));
         fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_STDEV_EVENT, this, getWeightedSampleStDev()));
     }
-    
+
     /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:designforextension")

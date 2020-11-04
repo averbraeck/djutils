@@ -25,7 +25,7 @@ public abstract class ObjectArraySerializer<E extends Object> extends ArrayOrMat
      * Construct a new ObjectArraySerializer.
      * @param type byte; the field type (returned by the <code>fieldType</code> method)
      * @param dataSize int; the number of bytes needed to encode one additional array element
- * @param sample E; sample object (can be zero length array).
+     * @param sample E; sample object (can be zero length array).
      * @param dataClassName String; returned by the dataClassName method
      */
     public ObjectArraySerializer(final byte type, final int dataSize, final E sample, final String dataClassName)

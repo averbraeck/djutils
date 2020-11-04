@@ -1919,7 +1919,7 @@ public class DisplayType implements Serializable
             new DisplayType(SerializationUnits.RADIOACTIVITY, 10, RadioActivityUnit.RUTHERFORD, "RUTHERFORD", "Rd");
 
     /* ============================================= ANGULARACCELERATION =============================================== */
-    
+
     /** AngularAcceleration.RADIAN_PER_SECOND_2 unit type with code 0. */
     public static final DisplayType ANGULARACCELERATION_RADIAN_PER_SECOND_2 =
             new DisplayType(SerializationUnits.ANGULARACCELERATION, 0, AngularAccelerationUnit.RADIAN_PER_SECOND_SQUARED,
@@ -1956,7 +1956,7 @@ public class DisplayType implements Serializable
             "CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED", "cds/s2");
 
     /* =============================================== ANGULARVELOCITY ================================================= */
-    
+
     /** AngularVelocity.RADIAN_PER_SECOND unit type with code 0. */
     public static final DisplayType ANGULARVELOCITY_RADIAN_PER_SECOND = new DisplayType(SerializationUnits.ANGULARACCELERATION,
             0, AngularVelocityUnit.RADIAN_PER_SECOND, "RADIAN_PER_SECOND", "rad/s");
@@ -1988,9 +1988,9 @@ public class DisplayType implements Serializable
     public static final DisplayType ANGULARVELOCITY_CENTESIMAL_ARCSECOND_PER_SECOND =
             new DisplayType(SerializationUnits.ANGULARACCELERATION, 6, AngularVelocityUnit.CENTESIMAL_ARCSECOND_PER_SECOND,
                     "CENTESIMAL_ARCSECOND_PER_SECOND", "cds/s");
-    
+
     /* ================================================== MOMENTUM ===================================================== */
-    
+
     /** Momentum.KILOGRAM_METER_PER_SECOND unit type with code 0. */
     public static final DisplayType KILOGRAM_METER_PER_SECOND = new DisplayType(SerializationUnits.ANGULARACCELERATION, 0,
             MomentumUnit.KILOGRAM_METER_PER_SECOND, "KILOGRAM_METER_PER_SECOND", "kgm/s");
@@ -1998,11 +1998,11 @@ public class DisplayType implements Serializable
     /* ================================================== END TYPES ==================================================== */
 
     /**
- * @param unitType SerializationUnits; the corresponding 0MQ unit type
- * @param code int; the code of the unit provided as an int
- * @param djunitsType U; the djunits data type
- * @param name String; the unit name
- * @param abbreviation String; the unit abbreviation
+     * @param unitType SerializationUnits; the corresponding 0MQ unit type
+     * @param code int; the code of the unit provided as an int
+     * @param djunitsType U; the djunits data type
+     * @param name String; the unit name
+     * @param abbreviation String; the unit abbreviation
      * @param <U> the unit
      */
     public <U extends Unit<U>> DisplayType(final SerializationUnits unitType, final int code, final U djunitsType,
@@ -2032,8 +2032,8 @@ public class DisplayType implements Serializable
 
     /**
      * Return the display type belonging to the display code.
- * @param unitType SerializationUnits; the unit type to search for
- * @param code Integer; the code to search for.
+     * @param unitType SerializationUnits; the unit type to search for
+     * @param code Integer; the code to search for.
      * @return the unit type, or null if not found.
      */
     public static DisplayType getDisplayType(final SerializationUnits unitType, final Integer code)
@@ -2044,8 +2044,8 @@ public class DisplayType implements Serializable
 
     /**
      * Return the display type belonging to the display code.
- * @param unitTypeCode byte; the unit type to search for
- * @param code int; the code to search for.
+     * @param unitTypeCode byte; the unit type to search for
+     * @param code int; the code to search for.
      * @return the unit type, or null if not found.
      */
     public static DisplayType getDisplayType(final byte unitTypeCode, final int code)
@@ -2057,8 +2057,8 @@ public class DisplayType implements Serializable
 
     /**
      * Return the unit belonging to the display code.
- * @param unitTypeCode byte; the unit type to search for
- * @param code int; the code to search for.
+     * @param unitTypeCode byte; the unit type to search for
+     * @param code int; the code to search for.
      * @return the unit type, or null if not found.
      */
     public static Unit<?> getUnit(final byte unitTypeCode, final int code)
@@ -2070,8 +2070,8 @@ public class DisplayType implements Serializable
 
     /**
      * Return the unit belonging to the display code.
- * @param unitType SerializationUnits; the unit type to search for
- * @param code int; the code to search for.
+     * @param unitType SerializationUnits; the unit type to search for
+     * @param code int; the code to search for.
      * @return the unit type, or null if not found.
      */
     public static Unit<?> getUnit(final SerializationUnits unitType, final int code)
@@ -2090,7 +2090,7 @@ public class DisplayType implements Serializable
 
     /**
      * Return the unit type belonging to the unit class.
- * @param unit U; the unit to search for.
+     * @param unit U; the unit to search for.
      * @return the unit type, or null if not found.
      * @param <U> the unit
      */
@@ -2101,7 +2101,7 @@ public class DisplayType implements Serializable
 
     /**
      * Return the display code belonging to the unit class.
- * @param unit U; the unit to search for.
+     * @param unit U; the unit to search for.
      * @return the unit type, or null if not found.
      * @param <U> the unit
      */
@@ -2114,7 +2114,7 @@ public class DisplayType implements Serializable
 
     /**
      * Return the display code belonging to the unit class.
- * @param unit U; the unit to search for.
+     * @param unit U; the unit to search for.
      * @return the unit type, or null if not found.
      * @param <U> the unit
      */
