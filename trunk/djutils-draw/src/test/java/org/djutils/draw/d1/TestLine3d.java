@@ -345,7 +345,7 @@ public class TestLine3d
             Point3d p = new Point3d(dp.getX(), dp.getY(), dp.getZ());
             assertEquals("locationExtended(0) returns approximately expected point", 0, expectedPoint.distance(p), 0.1);
         }
-        assertEquals("z-rotation at 0", expectedZRotation, dp.getRotZ(), 0.001);
+        assertEquals("z-rotation at 0", expectedZRotation, dp.getDirZ(), 0.001);
     }
 
     /**

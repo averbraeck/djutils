@@ -36,7 +36,7 @@ public interface Point extends Serializable
     double getZ();
 
     /**
-     * Return a new point with a translation by the provided delta-x and delta-y.
+     * Return a new Point with a translation by the provided delta-x and delta-y.
      * @param dx double; the horizontal translation
      * @param dy double; the vertical translation
      * @return Point; a new point with the translated coordinates
@@ -44,7 +44,7 @@ public interface Point extends Serializable
     Point translate(double dx, double dy);
 
     /**
-     * Return a new 3d point with a translation by the provided delta-x, delta-y, and delta-z.
+     * Return a new Point3d with a translation by the provided delta-x, delta-y, and delta-z.
      * @param dx double; the translation in the x-direction
      * @param dy double; the translation in the y-direction
      * @param dz double; the translation in the z-direction
@@ -56,26 +56,26 @@ public interface Point extends Serializable
     }
 
     /**
-     * Return a new point with the coordinates of this point scaled by the provided factor.
+     * Return a new Point with the coordinates of this point scaled by the provided factor.
      * @param factor double; the scale factor
      * @return Point; a new point with the coordinates of this point scaled by the provided factor
      */
     Point scale(double factor);
 
     /**
-     * Return a new point with negated coordinate values.
+     * Return a new Point with negated coordinate values.
      * @return Point; a new point with negated coordinate values
      */
     Point neg();
 
     /**
-     * Return a new point with absolute coordinate values.
+     * Return a new Point with absolute coordinate values.
      * @return Point; a new point with absolute coordinate values
      */
     Point abs();
 
     /**
-     * Return the point with a length of 1 to the origin.
+     * Return a new Point with a distance of 1 to the origin.
      * @return Point; the normalized point
      * @throws DrawRuntimeException when point is the origin, and no length can be established for scaling
      */
@@ -92,9 +92,9 @@ public interface Point extends Serializable
 
     /**
      * Return the direction to another point, in radians, ignoring the z-coordinate.
-     * @param point Point3d; the other point
+     * @param point Point; the other point
      * @return double; the direction of the projection of the point in the x-y plane to another point, in radians
-     * @throws NullPointerException when point is null
+     * @throws NullPointerException when <code>point</code> is null
      */
     default double horizontalDirection(final Point point)
     {
@@ -103,12 +103,13 @@ public interface Point extends Serializable
     }
 
     /**
-     * Interpolate towards another point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
+     * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
      * that case the interpolation turns into an extrapolation.
      * @param point Point; the other point
-     * @param fraction the factor for interpolation towards the other point. When fraction is between 0 and 1, it is an
-     *            interpolation, otherwise an extrapolation
-     * @return Point; the point that is "fraction" away on the line between this point and the other point
+     * @param fraction the factor for interpolation towards the other point. When <code>fraction</code> is between 0 and 1, it
+     *            is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code> Point is
+     *            returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
+     * @return Point; the point that is <code>fraction</code> away on the line between this point and the other point
      * @throws NullPointerException when point is null
      */
     Point interpolate(Point point, double fraction);
@@ -118,9 +119,10 @@ public interface Point extends Serializable
      * case the interpolation turns into an extrapolation.
      * @param p1 Point; the first point
      * @param p2 Point; the second point
-     * @param fraction the factor for interpolation between p1 and p2. When fraction is between 0 and 1, it is an interpolation,
-     *            otherwise an extrapolation
-     * @return Point; the point that is "fraction" away on the line between p1 and p2
+     * @param fraction the factor for interpolation between p1 and p2. When <code>fraction</code> is between 0 and 1, it is an
+     *            interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>p1</code> is returned; if
+     *            <code>fraction</code> is 1, the <code>p2</code> is returned
+     * @return Point; the point that is <code>fraction</code> away on the line between p1 and p2
      * @throws NullPointerException when p1 or p2 is null
      */
     static Point interpolate(final Point p1, final Point p2, final double fraction)
@@ -250,19 +252,31 @@ public interface Point extends Serializable
         Throw.whenNull(point, "point cannot be null");
         double diff = getX() - point.getX();
         if (Double.isNaN(diff))
+        {
             return false;
+        }
         if ((diff < 0 ? -diff : diff) > epsilon)
+        {
             return false;
+        }
         diff = getY() - point.getY();
         if (Double.isNaN(diff))
+        {
             return false;
+        }
         if ((diff < 0 ? -diff : diff) > epsilon)
+        {
             return false;
+        }
         diff = getZ() - point.getZ();
         if (Double.isNaN(diff))
+        {
             return false;
+        }
         if ((diff < 0 ? -diff : diff) > epsilon)
+        {
             return false;
+        }
         return true;
     }
 

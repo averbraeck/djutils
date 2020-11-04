@@ -133,7 +133,7 @@ public class DirectedPoint2d extends Point2d implements DirectedPoint
     @Override
     public DirectedPoint3d translate(final double dx, final double dy, final double dz)
     {
-        return new DirectedPoint3d(super.translate(dx, dy, dz), getRotX(), getRotY(), getRotZ());
+        return new DirectedPoint3d(super.translate(dx, dy, dz), getDirX(), getDirY(), getDirZ());
     }
 
     /** {@inheritDoc} */
@@ -141,33 +141,33 @@ public class DirectedPoint2d extends Point2d implements DirectedPoint
     public DirectedPoint2d interpolate(final DirectedPoint point, final double fraction)
     {
         return new DirectedPoint2d(super.interpolate(point, fraction),
-                AngleUtil.interpolateClockwise(this.rotZ, point.getRotZ(), fraction));
+                AngleUtil.interpolateClockwise(this.rotZ, point.getDirZ(), fraction));
     }
 
     /** {@inheritDoc} */
     @Override
     public DirectedPoint2d rotate(final double deltaRotZ)
     {
-        return new DirectedPoint2d(getX(), getY(), AngleUtil.normalizeAroundZero(getRotZ() + deltaRotZ));
+        return new DirectedPoint2d(getX(), getY(), AngleUtil.normalizeAroundZero(getDirZ() + deltaRotZ));
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getRotX()
+    public double getDirX()
     {
         return 0.0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getRotY()
+    public double getDirY()
     {
         return 0.0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getRotZ()
+    public double getDirZ()
     {
         return this.rotZ;
     }

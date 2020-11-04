@@ -6,7 +6,7 @@ import org.djutils.draw.Locatable;
 import org.djutils.draw.d0.Point;
 
 /**
- * Line.java.
+ * Line is the interface for Line2d and Line3d implementations.
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.

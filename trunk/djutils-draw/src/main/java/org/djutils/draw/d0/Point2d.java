@@ -6,7 +6,7 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Throw;
 
 /**
- * A Point2d is an immutable point with an x and y coordinate, stored with double precision. It differs from many Point
+ * A Point2d is an immutable Point with an x and y coordinate, stored with double precision. It differs from many Point
  * implementations by being immutable.
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
@@ -20,14 +20,14 @@ public class Point2d implements Point
     /** */
     private static final long serialVersionUID = 20200828L;
 
-    /** the x-coordinate. */
+    /** The x-coordinate. */
     private final double x;
 
-    /** the y-coordinate. */
+    /** The y-coordinate. */
     private final double y;
 
     /**
-     * Create an immutable point with just an x and y coordinate, stored with double precision.
+     * Create a new Point with just an x and y coordinate, stored with double precision.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      */
@@ -38,7 +38,7 @@ public class Point2d implements Point
     }
 
     /**
-     * Create an immutable point with just an x and y coordinate, stored with double precision.
+     * Create a new Point with just an x and y coordinate, stored with double precision.
      * @param xy double[2]; the x and y coordinate
      * @throws NullPointerException when xy is null
      * @throws IllegalArgumentException when the dimension of xy is not 2

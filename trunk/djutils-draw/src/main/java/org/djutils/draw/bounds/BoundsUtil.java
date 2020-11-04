@@ -69,9 +69,9 @@ public final class BoundsUtil
     {
         // First rotate around 0,0,0, then translate
         Transform3d transformation = new Transform3d();
-        transformation.rotZ(point.getRotZ());
-        transformation.rotY(point.getRotY());
-        transformation.rotX(point.getRotX());
+        transformation.rotZ(point.getDirZ());
+        transformation.rotY(point.getDirY());
+        transformation.rotX(point.getDirX());
         transformation.translate(point);
         return transformation.transform(boundingBox);
     }
