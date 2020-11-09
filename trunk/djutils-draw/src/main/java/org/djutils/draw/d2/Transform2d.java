@@ -17,7 +17,7 @@ import org.djutils.draw.d0.Point2d;
  */
 public class Transform2d
 {
-    /** the 3x3 transformation matrix, initialized as the Identity matrix. */
+    /** The 3x3 transformation matrix, initialized as the Identity matrix. */
     double[] mat = new double[] {1, 0, 0, 0, 1, 0, 0, 0, 1};
 
     /**

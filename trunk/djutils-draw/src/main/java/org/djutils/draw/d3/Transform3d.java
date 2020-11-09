@@ -17,7 +17,7 @@ import org.djutils.draw.d0.Point3d;
  */
 public class Transform3d
 {
-    /** the 4x4 transformation matrix, initialized as the Identity matrix. */
+    /** The 4x4 transformation matrix, initialized as the Identity matrix. */
     double[] mat = new double[] {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 
     /**
