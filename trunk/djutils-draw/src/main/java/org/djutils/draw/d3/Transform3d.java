@@ -174,7 +174,7 @@ public class Transform3d
     }
 
     /**
-     * The xy-shear leaves the xy-coordinate plain for z=0 untouched. Coordinates on z=1 are translated by a vector (sx, sy, 0).
+     * The xy-shear leaves the xy-coordinate plane for z=0 untouched. Coordinates on z=1 are translated by a vector (sx, sy, 0).
      * Coordinates for points with other z-values are translated by a vector (z.sx, z.sy, 0), where z is the z-coordinate of the
      * point.
      * @param sx double; the shear factor in the x-direction for z=1
