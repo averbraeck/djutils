@@ -18,7 +18,7 @@ import org.djutils.draw.d0.Point2d;
 public class Transform2d
 {
     /** The 3x3 transformation matrix, initialized as the Identity matrix. */
-    double[] mat = new double[] {1, 0, 0, 0, 1, 0, 0, 0, 1};
+    double[] mat = new double[] { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
 
     /**
      * Multiply a 3x3 matrix (stored as a 9-value array by row) with a 4-value vector.
@@ -83,7 +83,7 @@ public class Transform2d
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] {1, 0, tx, 0, 1, ty, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { 1, 0, tx, 0, 1, ty, 0, 0, 1 });
         return this;
     }
 
@@ -98,7 +98,7 @@ public class Transform2d
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] {1, 0, point.getX(), 0, 1, point.getY(), 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { 1, 0, point.getX(), 0, 1, point.getY(), 0, 0, 1 });
         return this;
     }
 
@@ -114,7 +114,7 @@ public class Transform2d
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] {sx, 0, 0, 0, sy, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { sx, 0, 0, 0, sy, 0, 0, 0, 1 });
         return this;
     }
 
@@ -131,13 +131,14 @@ public class Transform2d
         }
         double c = Math.cos(angle);
         double s = Math.sin(angle);
-        this.mat = mulMatMat(this.mat, new double[] {c, -s, 0, s, c, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { c, -s, 0, s, c, 0, 0, 0, 1 });
         return this;
     }
 
     /**
-     * The shear leaves the xy-coordinate plain for z=0 untouched. An x-coordinate with a value of 1 is translated by sx, and an
-     * x-coordinate with another value is translated by x.sx. The same holds for y and sy.
+     * The 2d shear leaves the xy-coordinate plane for z=0 untouched. An x-coordinate with a value of 1 is translated by sx, and
+     * an x-coordinate with another value is translated by x*sx. Similarly, a y-coordinate with a value of 1 is translated by xy
+     * and a y-coordinate with another value is translated by y*sy.
      * @param sx double; the shear factor in the x-direction
      * @param sy double; the shear factor in the y-direction
      * @return Transform2d; the new transformation matrix after applying this transform
@@ -148,7 +149,7 @@ public class Transform2d
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] {1, sx, 0, sy, 1, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { 1, sx, 0, sy, 1, 0, 0, 0, 1 });
         return this;
     }
 
@@ -158,7 +159,7 @@ public class Transform2d
      */
     public Transform2d reflectX()
     {
-        this.mat = mulMatMat(this.mat, new double[] {-1, 0, 0, 0, 1, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { -1, 0, 0, 0, 1, 0, 0, 0, 1 });
         return this;
     }
 
@@ -168,7 +169,7 @@ public class Transform2d
      */
     public Transform2d reflectY()
     {
-        this.mat = mulMatMat(this.mat, new double[] {1, 0, 0, 0, -1, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { 1, 0, 0, 0, -1, 0, 0, 0, 1 });
         return this;
     }
 
@@ -191,7 +192,7 @@ public class Transform2d
      */
     public Point2d transform(final Point2d point)
     {
-        return new Point2d(mulMatVec2(this.mat, new double[] {point.getX(), point.getY()}));
+        return new Point2d(mulMatVec2(this.mat, new double[] { point.getX(), point.getY() }));
     }
 
     /**
