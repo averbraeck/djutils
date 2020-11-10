@@ -153,7 +153,7 @@ public class Transform2dTest
                     }
                 }
             }
-            // Translate defined with a double[]
+            // Rotate (using dx as angle)
             t = new Transform2d();
             t.rotate(dx);
             double sine = Math.sin(dx);
@@ -163,11 +163,11 @@ public class Transform2dTest
                 for (double py : offsets)
                 {
                     Point p = t.transform(new Point2d(px, py));
-                    assertEquals("transformed x matches", px * cosine - py * sine, p.getX(), 0.001);
-                    assertEquals("transformed y matches", py * cosine + px * sine, p.getY(), 0.001);
+                    assertEquals("rotated x matches", px * cosine - py * sine, p.getX(), 0.001);
+                    assertEquals("rotated y matches", py * cosine + px * sine, p.getY(), 0.001);
                     double[] result = t.transform(new double[] { px, py });
-                    assertEquals("transformed x matches", px * cosine - py * sine, result[0], 0.001);
-                    assertEquals("transformed y matches", py * cosine + px * sine, result[1], 0.001);
+                    assertEquals("rotated x matches", px * cosine - py * sine, result[0], 0.001);
+                    assertEquals("rotated y matches", py * cosine + px * sine, result[1], 0.001);
                 }
             }
         }
