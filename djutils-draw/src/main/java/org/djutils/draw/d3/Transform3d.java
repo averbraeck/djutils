@@ -1,5 +1,7 @@
 package org.djutils.draw.d3;
 
+import java.util.Arrays;
+
 import org.djutils.draw.bounds.BoundingBox;
 import org.djutils.draw.d0.Point;
 import org.djutils.draw.d0.Point3d;
@@ -18,7 +20,7 @@ import org.djutils.draw.d0.Point3d;
 public class Transform3d
 {
     /** The 4x4 transformation matrix, initialized as the Identity matrix. */
-    double[] mat = new double[] {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+    double[] mat = new double[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 
     /**
      * Multiply a 4x4 matrix (stored as a 16-value array by row) with a 4-value vector.
@@ -85,7 +87,7 @@ public class Transform3d
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] {1, 0, 0, tx, 0, 1, 0, ty, 0, 0, 1, tz, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { 1, 0, 0, tx, 0, 1, 0, ty, 0, 0, 1, tz, 0, 0, 0, 1 });
         return this;
     }
 
@@ -101,7 +103,7 @@ public class Transform3d
             return this;
         }
         this.mat = mulMatMat(this.mat,
-                new double[] {1, 0, 0, point.getX(), 0, 1, 0, point.getY(), 0, 0, 1, point.getZ(), 0, 0, 0, 1});
+                new double[] { 1, 0, 0, point.getX(), 0, 1, 0, point.getY(), 0, 0, 1, point.getZ(), 0, 0, 0, 1 });
         return this;
     }
 
@@ -118,7 +120,7 @@ public class Transform3d
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] {sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1 });
         return this;
     }
 
@@ -135,7 +137,7 @@ public class Transform3d
         }
         double c = Math.cos(angle);
         double s = Math.sin(angle);
-        this.mat = mulMatMat(this.mat, new double[] {1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { 1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0, 0, 0, 0, 1 });
         return this;
     }
 
@@ -152,7 +154,7 @@ public class Transform3d
         }
         double c = Math.cos(angle);
         double s = Math.sin(angle);
-        this.mat = mulMatMat(this.mat, new double[] {c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0, 0, 0, 0, 1 });
         return this;
     }
 
@@ -169,7 +171,7 @@ public class Transform3d
         }
         double c = Math.cos(angle);
         double s = Math.sin(angle);
-        this.mat = mulMatMat(this.mat, new double[] {c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 });
         return this;
     }
 
@@ -187,7 +189,7 @@ public class Transform3d
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] {1, 0, sx, 0, 0, 1, sy, 0, 0, 0, 1, 0, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { 1, 0, sx, 0, 0, 1, sy, 0, 0, 0, 1, 0, 0, 0, 0, 1 });
         return this;
     }
 
@@ -205,7 +207,7 @@ public class Transform3d
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] {1, 0, 0, 0, sy, 1, 0, 0, sz, 0, 1, 0, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { 1, 0, 0, 0, sy, 1, 0, 0, sz, 0, 1, 0, 0, 0, 0, 1 });
         return this;
     }
 
@@ -223,7 +225,7 @@ public class Transform3d
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] {1, sx, 0, 0, 0, 1, 0, 0, 0, sz, 1, 0, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { 1, sx, 0, 0, 0, 1, 0, 0, 0, sz, 1, 0, 0, 0, 0, 1 });
         return this;
     }
 
@@ -233,7 +235,7 @@ public class Transform3d
      */
     public Transform3d reflectX()
     {
-        this.mat = mulMatMat(this.mat, new double[] {-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 });
         return this;
     }
 
@@ -243,7 +245,7 @@ public class Transform3d
      */
     public Transform3d reflectY()
     {
-        this.mat = mulMatMat(this.mat, new double[] {1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 });
         return this;
     }
 
@@ -253,7 +255,7 @@ public class Transform3d
      */
     public Transform3d reflectZ()
     {
-        this.mat = mulMatMat(this.mat, new double[] {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1});
+        this.mat = mulMatMat(this.mat, new double[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1 });
         return this;
     }
 
@@ -275,7 +277,7 @@ public class Transform3d
      */
     public Point3d transform(final Point3d point)
     {
-        return new Point3d(mulMatVec3(this.mat, new double[] {point.getX(), point.getY(), point.getZ()}));
+        return new Point3d(mulMatVec3(this.mat, new double[] { point.getX(), point.getY(), point.getZ() }));
     }
 
     /**
@@ -287,20 +289,22 @@ public class Transform3d
      */
     public BoundingBox transform(final BoundingBox boundingBox)
     {
-        Point3d[] corners = new Point3d[8];
-        corners[0] = new Point3d(boundingBox.getMinX(), boundingBox.getMinY(), boundingBox.getMinZ());
-        corners[1] = new Point3d(boundingBox.getMinX(), boundingBox.getMinY(), boundingBox.getMaxZ());
-        corners[2] = new Point3d(boundingBox.getMinX(), boundingBox.getMaxY(), boundingBox.getMinZ());
-        corners[3] = new Point3d(boundingBox.getMinX(), boundingBox.getMaxY(), boundingBox.getMaxZ());
-        corners[4] = new Point3d(boundingBox.getMaxX(), boundingBox.getMinY(), boundingBox.getMinZ());
-        corners[5] = new Point3d(boundingBox.getMaxX(), boundingBox.getMinY(), boundingBox.getMaxZ());
-        corners[6] = new Point3d(boundingBox.getMaxX(), boundingBox.getMaxY(), boundingBox.getMinZ());
-        corners[7] = new Point3d(boundingBox.getMaxX(), boundingBox.getMaxY(), boundingBox.getMaxZ());
-        for (int i = 0; i < 8; i++)
-        {
-            corners[i] = transform(corners[i]);
-        }
-        return new BoundingBox(corners);
+        return new BoundingBox(
+                new Point3d[] { transform(new Point3d(boundingBox.getMinX(), boundingBox.getMinY(), boundingBox.getMinZ())),
+                        transform(new Point3d(boundingBox.getMinX(), boundingBox.getMinY(), boundingBox.getMaxZ())),
+                        transform(new Point3d(boundingBox.getMinX(), boundingBox.getMaxY(), boundingBox.getMinZ())),
+                        transform(new Point3d(boundingBox.getMinX(), boundingBox.getMaxY(), boundingBox.getMaxZ())),
+                        transform(new Point3d(boundingBox.getMaxX(), boundingBox.getMinY(), boundingBox.getMinZ())),
+                        transform(new Point3d(boundingBox.getMaxX(), boundingBox.getMinY(), boundingBox.getMaxZ())),
+                        transform(new Point3d(boundingBox.getMaxX(), boundingBox.getMaxY(), boundingBox.getMinZ())),
+                        transform(new Point3d(boundingBox.getMaxX(), boundingBox.getMaxY(), boundingBox.getMaxZ())) });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "Transform3d [mat=" + Arrays.toString(mat) + "]";
     }
 
 }

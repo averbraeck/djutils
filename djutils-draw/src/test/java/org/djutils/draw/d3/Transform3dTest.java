@@ -1,10 +1,11 @@
 package org.djutils.draw.d3;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.djutils.draw.bounds.BoundingBox;
 import org.djutils.draw.d0.Point;
-import org.djutils.draw.d0.Point2d;
 import org.djutils.draw.d0.Point3d;
 import org.junit.Test;
 
@@ -81,68 +82,68 @@ public class Transform3dTest
     }
 
     /**
-     * Test the translate, scale, rotate, shear, reflectX and reflectY methods.
+     * Test the translate, scale, rotate, shear and reflect methods.
      */
     @Test
-    public void testTranslateScaleRotateAndShear()
+    public void testTranslateScaleRotateShearAndReflect()
     {
         Transform3d t;
-        // Test time grows (explodes) with the 4th power of the length of offsets.
-        double[] offsets = new double[] { -100000, -100, -3, -1, -0.1, 0, 0.1, 1, 3, 100, 100000 };
-        for (double dx : offsets)
+        // Test time grows (explodes) with the 6th power of the length of values.
+        double[] values = new double[] { -100000, -100, -3, -1, -0.1, 0, 0.1, 1, 3, 100, 100000 };
+        for (double dx : values)
         {
-            for (double dy : offsets)
+            for (double dy : values)
             {
-                for (double dz : offsets)
+                for (double dz : values)
                 {
                     // Translate defined with a double[]
                     t = new Transform3d();
                     t.translate(dx, dy, dz);
-                    for (double px : offsets)
+                    for (double px : values)
                     {
-                        for (double py : offsets)
+                        for (double py : values)
                         {
-                            for (double pz : offsets)
+                            for (double pz : values)
                             {
                                 Point p = t.transform(new Point3d(px, py, pz));
-                                assertEquals("transformed x matches", px + dx, p.getX(), 0.001);
-                                assertEquals("transformed y matches", py + dy, p.getY(), 0.001);
-                                assertEquals("transformed z matches", pz + dz, p.getZ(), 0.001);
+                                assertEquals("translated x matches", px + dx, p.getX(), 0.001);
+                                assertEquals("translated y matches", py + dy, p.getY(), 0.001);
+                                assertEquals("translated z matches", pz + dz, p.getZ(), 0.001);
                                 double[] result = t.transform(new double[] { px, py, pz });
-                                assertEquals("transformed x matches", px + dx, result[0], 0.001);
-                                assertEquals("transformed y matches", py + dy, result[1], 0.001);
-                                assertEquals("transformed z matches", pz + dz, result[2], 0.001);
+                                assertEquals("translated x matches", px + dx, result[0], 0.001);
+                                assertEquals("translated y matches", py + dy, result[1], 0.001);
+                                assertEquals("translated z matches", pz + dz, result[2], 0.001);
                             }
                         }
                     }
                     // Translate defined with a Point
                     t = new Transform3d();
                     t.translate(new Point3d(dx, dy, dz));
-                    for (double px : offsets)
+                    for (double px : values)
                     {
-                        for (double py : offsets)
+                        for (double py : values)
                         {
-                            for (double pz : offsets)
+                            for (double pz : values)
                             {
                                 Point p = t.transform(new Point3d(px, py, pz));
-                                assertEquals("transformed x matches", px + dx, p.getX(), 0.001);
-                                assertEquals("transformed y matches", py + dy, p.getY(), 0.001);
-                                assertEquals("transformed z matches", pz + dz, p.getZ(), 0.001);
+                                assertEquals("translated x matches", px + dx, p.getX(), 0.001);
+                                assertEquals("translated y matches", py + dy, p.getY(), 0.001);
+                                assertEquals("translated z matches", pz + dz, p.getZ(), 0.001);
                                 double[] result = t.transform(new double[] { px, py, pz });
-                                assertEquals("transformed x matches", px + dx, result[0], 0.001);
-                                assertEquals("transformed y matches", py + dy, result[1], 0.001);
-                                assertEquals("transformed z matches", pz + dz, result[2], 0.001);
+                                assertEquals("translated x matches", px + dx, result[0], 0.001);
+                                assertEquals("translated y matches", py + dy, result[1], 0.001);
+                                assertEquals("translated z matches", pz + dz, result[2], 0.001);
                             }
                         }
                     }
                     // Scale
                     t = new Transform3d();
                     t.scale(dx, dy, dz);
-                    for (double px : offsets)
+                    for (double px : values)
                     {
-                        for (double py : offsets)
+                        for (double py : values)
                         {
-                            for (double pz : offsets)
+                            for (double pz : values)
                             {
                                 Point p = t.transform(new Point3d(px, py, pz));
                                 assertEquals("scaled x matches", px * dx, p.getX(), 0.001);
@@ -158,11 +159,11 @@ public class Transform3dTest
                     // ShearXY
                     t = new Transform3d();
                     t.shearXY(dx, dy);
-                    for (double px : offsets)
+                    for (double px : values)
                     {
-                        for (double py : offsets)
+                        for (double py : values)
                         {
-                            for (double pz : offsets)
+                            for (double pz : values)
                             {
                                 Point p = t.transform(new Point3d(px, py, pz));
                                 assertEquals("sheared x matches", px + pz * dx, p.getX(), 0.001);
@@ -178,11 +179,11 @@ public class Transform3dTest
                     // ShearXZ
                     t = new Transform3d();
                     t.shearXZ(dx, dz);
-                    for (double px : offsets)
+                    for (double px : values)
                     {
-                        for (double py : offsets)
+                        for (double py : values)
                         {
-                            for (double pz : offsets)
+                            for (double pz : values)
                             {
                                 Point p = t.transform(new Point3d(px, py, pz));
                                 assertEquals("sheared x matches", px + py * dx, p.getX(), 0.001);
@@ -198,11 +199,11 @@ public class Transform3dTest
                     // ShearYZ
                     t = new Transform3d();
                     t.shearYZ(dy, dz);
-                    for (double px : offsets)
+                    for (double px : values)
                     {
-                        for (double py : offsets)
+                        for (double py : values)
                         {
-                            for (double pz : offsets)
+                            for (double pz : values)
                             {
                                 Point p = t.transform(new Point3d(px, py, pz));
                                 assertEquals("sheared x matches", px, p.getX(), 0.001);
@@ -221,11 +222,11 @@ public class Transform3dTest
                 t.rotZ(dx);
                 double sine = Math.sin(dx);
                 double cosine = Math.cos(dx);
-                for (double px : offsets)
+                for (double px : values)
                 {
-                    for (double py : offsets)
+                    for (double py : values)
                     {
-                        for (double pz : offsets)
+                        for (double pz : values)
                         {
                             Point p = t.transform(new Point3d(px, py, pz));
                             assertEquals("rotated x matches", px * cosine - py * sine, p.getX(), 0.001);
@@ -243,11 +244,11 @@ public class Transform3dTest
                 t.rotX(dx);
                 sine = Math.sin(dx);
                 cosine = Math.cos(dx);
-                for (double px : offsets)
+                for (double px : values)
                 {
-                    for (double py : offsets)
+                    for (double py : values)
                     {
-                        for (double pz : offsets)
+                        for (double pz : values)
                         {
                             Point p = t.transform(new Point3d(px, py, pz));
                             assertEquals("rotated x matches", px, p.getX(), 0.001);
@@ -265,11 +266,11 @@ public class Transform3dTest
                 t.rotY(dx);
                 sine = Math.sin(dx);
                 cosine = Math.cos(dx);
-                for (double px : offsets)
+                for (double px : values)
                 {
-                    for (double py : offsets)
+                    for (double py : values)
                     {
-                        for (double pz : offsets)
+                        for (double pz : values)
                         {
                             Point p = t.transform(new Point3d(px, py, pz));
                             assertEquals("rotated x matches", px * cosine + pz * sine, p.getX(), 0.001);
@@ -287,11 +288,11 @@ public class Transform3dTest
         // ReflectX
         t = new Transform3d();
         t.reflectX();
-        for (double px : offsets)
+        for (double px : values)
         {
-            for (double py : offsets)
+            for (double py : values)
             {
-                for (double pz : offsets)
+                for (double pz : values)
                 {
                     Point p = t.transform(new Point3d(px, py, pz));
                     assertEquals("x-reflected x matches", -px, p.getX(), 0.001);
@@ -307,11 +308,11 @@ public class Transform3dTest
         // ReflectY
         t = new Transform3d();
         t.reflectY();
-        for (double px : offsets)
+        for (double px : values)
         {
-            for (double py : offsets)
+            for (double py : values)
             {
-                for (double pz : offsets)
+                for (double pz : values)
                 {
                     Point p = t.transform(new Point3d(px, py, pz));
                     assertEquals("y-reflected x matches", px, p.getX(), 0.001);
@@ -327,11 +328,11 @@ public class Transform3dTest
         // ReflectZ
         t = new Transform3d();
         t.reflectZ();
-        for (double px : offsets)
+        for (double px : values)
         {
-            for (double py : offsets)
+            for (double py : values)
             {
-                for (double pz : offsets)
+                for (double pz : values)
                 {
                     Point p = t.transform(new Point3d(px, py, pz));
                     assertEquals("z-reflected x matches", px, p.getX(), 0.001);
@@ -344,6 +345,157 @@ public class Transform3dTest
                 }
             }
         }
+    }
+
+    /**
+     * Test the transform method.
+     */
+    @Test
+    public void transformTest()
+    {
+        Transform3d reflectionX = new Transform3d().reflectX();
+        Transform3d reflectionY = new Transform3d().reflectY();
+        Transform3d reflectionZ = new Transform3d().reflectZ();
+        // Test time explodes with the 6th power of the length of this array
+        double[] values = new double[] { -30, 0, 0.07, 25 };
+        for (double translateX : values)
+        {
+            for (double translateY : values)
+            {
+                for (double translateZ : values)
+                {
+                    Transform3d translation = new Transform3d().translate(translateX, translateY, translateZ);
+                    for (double scaleX : values)
+                    {
+                        for (double scaleY : values)
+                        {
+                            for (double scaleZ : values)
+                            {
+                                Transform3d scaling = new Transform3d().scale(scaleX, scaleY, scaleZ);
+                                for (double angle : new double[] { -2, 0, 0.5 })
+                                {
+                                    Transform3d rotationX = new Transform3d().rotX(angle);
+                                    Transform3d rotationY = new Transform3d().rotY(angle);
+                                    Transform3d rotationZ = new Transform3d().rotZ(angle);
+                                    for (double shearA : values)
+                                    {
+                                        for (double shearB : values)
+                                        {
+                                            Transform3d t = new Transform3d().translate(translateX, translateY, translateZ)
+                                                    .scale(scaleX, scaleY, scaleZ).rotZ(angle).shearXY(shearA, shearB);
+                                            Transform3d shearXY = new Transform3d().shearXY(shearA, shearB);
+                                            Transform3d tReflectX =
+                                                    new Transform3d().reflectX().translate(translateX, translateY, translateZ)
+                                                            .scale(scaleX, scaleY, scaleZ).rotY(angle).shearYZ(shearA, shearB);
+                                            Transform3d shearYZ = new Transform3d().shearYZ(shearA, shearB);
+                                            Transform3d tReflectY =
+                                                    new Transform3d().reflectY().translate(translateX, translateY, translateZ)
+                                                            .scale(scaleX, scaleY, scaleZ).rotZ(angle).shearXZ(shearA, shearB);
+                                            Transform3d shearXZ = new Transform3d().shearXZ(shearA, shearB);
+                                            Transform3d tReflectZ =
+                                                    new Transform3d().reflectZ().translate(translateX, translateY, translateZ)
+                                                            .scale(scaleX, scaleY, scaleZ).rotX(angle).shearXY(shearA, shearB);
+                                            for (double px : values)
+                                            {
+                                                for (double py : values)
+                                                {
+                                                    for (double pz : values)
+                                                    {
+                                                        Point3d p = new Point3d(px, py, pz);
+                                                        Point3d tp = t.transform(p);
+                                                        Point3d chainP = translation.transform(
+                                                                scaling.transform(rotationZ.transform(shearXY.transform(p))));
+                                                        assertEquals("X", chainP.getX(), tp.getX(), 0.0000001);
+                                                        assertEquals("Y", chainP.getY(), tp.getY(), 0.0000001);
+                                                        assertEquals("Z", chainP.getZ(), tp.getZ(), 0.0000001);
+                                                        tp = tReflectX.transform(p);
+                                                        Point3d chainPReflectX = reflectionX.transform(translation.transform(
+                                                                scaling.transform(rotationY.transform(shearYZ.transform(p)))));
+                                                        assertEquals("RX X", chainPReflectX.getX(), tp.getX(), 0.0000001);
+                                                        assertEquals("RX Y", chainPReflectX.getY(), tp.getY(), 0.0000001);
+                                                        assertEquals("RX Z", chainPReflectX.getZ(), tp.getZ(), 0.0000001);
+                                                        tp = tReflectY.transform(p);
+                                                        Point3d chainPReflectY = reflectionY.transform(translation.transform(
+                                                                scaling.transform(rotationZ.transform(shearXZ.transform(p)))));
+                                                        assertEquals("RY X", chainPReflectY.getX(), tp.getX(), 0.0000001);
+                                                        assertEquals("RY Y", chainPReflectY.getY(), tp.getY(), 0.0000001);
+                                                        assertEquals("RY Z", chainPReflectY.getZ(), tp.getZ(), 0.0000001);
+                                                        tp = tReflectZ.transform(p);
+                                                        Point3d chainPReflectZ = reflectionZ.transform(translation.transform(
+                                                                scaling.transform(rotationX.transform(shearXY.transform(p)))));
+                                                        assertEquals("RZ X", chainPReflectZ.getX(), tp.getX(), 0.0000001);
+                                                        assertEquals("RZ Y", chainPReflectZ.getY(), tp.getY(), 0.0000001);
+                                                        assertEquals("RZ Z", chainPReflectZ.getZ(), tp.getZ(), 0.0000001);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Test transformation of a bounding box.
+     */
+    @Test
+    public void transformBoundingBoxTest()
+    {
+        double[] values = new double[] { -100, 0.1, 0, 0.1, 100 };
+        double[] sizes = new double[] { 0, 10, 100 };
+        Transform3d t = new Transform3d().rotX(0.4).rotZ(0.8).rotY(-1.2).reflectX().scale(0.5, 1.5, 2.5).shearXY(2, 3)
+                .translate(123, 456, 789);
+        // System.out.println(t);
+        for (double x : values)
+        {
+            for (double y : values)
+            {
+                for (double z : values)
+                {
+                    for (double xSize : sizes)
+                    {
+                        for (double ySize : sizes)
+                        {
+                            for (double zSize : sizes)
+                            {
+                                BoundingBox bb = new BoundingBox(x, x + xSize, y, y + ySize, z, z + zSize);
+                                Point3d[] points = new Point3d[] { new Point3d(x, y, z), new Point3d(x + xSize, y, z),
+                                        new Point3d(x, y + ySize, z), new Point3d(x + xSize, y + ySize, z),
+                                        new Point3d(x, y, z + zSize), new Point3d(x + xSize, y, z + zSize),
+                                        new Point3d(x, y + ySize, z + zSize), new Point3d(x + xSize, y + ySize, z + zSize) };
+                                Point3d[] transformedPoints = new Point3d[8];
+                                for (int i = 0; i < points.length; i++)
+                                {
+                                    transformedPoints[i] = t.transform(points[i]);
+                                }
+                                BoundingBox expected = new BoundingBox(transformedPoints);
+                                BoundingBox got = t.transform(bb);
+                                assertEquals("bb minX", expected.getMinX(), got.getMinX(), 0.0001);
+                                assertEquals("bb maxX", expected.getMaxX(), got.getMaxX(), 0.0001);
+                                assertEquals("bb minY", expected.getMinY(), got.getMinY(), 0.0001);
+                                assertEquals("bb maxY", expected.getMaxY(), got.getMaxY(), 0.0001);
+                                assertEquals("bb minZ", expected.getMinZ(), got.getMinZ(), 0.0001);
+                                assertEquals("bb maxZ", expected.getMaxZ(), got.getMaxZ(), 0.0001);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     * Check that toString returns something descriptive.
+     */
+    @Test
+    public void toStringTest()
+    {
+        assertTrue("toString returns something descriptive", new Transform3d().toString().startsWith("Transform3d "));
     }
 
 }
