@@ -1,5 +1,7 @@
 package org.djutils.draw.d2;
 
+import java.util.Arrays;
+
 import org.djutils.draw.bounds.BoundingRectangle;
 import org.djutils.draw.d0.Point;
 import org.djutils.draw.d0.Point2d;
@@ -123,7 +125,7 @@ public class Transform2d
      * @param angle double; the angle to rotate the coordinates with with around the origin
      * @return Transform2d; the new transformation matrix after applying this transform
      */
-    public Transform2d rotate(final double angle)
+    public Transform2d rotation(final double angle)
     {
         if (angle == 0.0)
         {
@@ -204,16 +206,18 @@ public class Transform2d
      */
     public BoundingRectangle transform(final BoundingRectangle boundingRectangle)
     {
-        Point2d[] corners = new Point2d[8];
-        corners[0] = new Point2d(boundingRectangle.getMinX(), boundingRectangle.getMinY());
-        corners[1] = new Point2d(boundingRectangle.getMinX(), boundingRectangle.getMaxY());
-        corners[2] = new Point2d(boundingRectangle.getMaxX(), boundingRectangle.getMinY());
-        corners[3] = new Point2d(boundingRectangle.getMaxX(), boundingRectangle.getMaxY());
-        for (int i = 0; i < 4; i++)
-        {
-            corners[i] = transform(corners[i]);
-        }
-        return new BoundingRectangle(corners);
+        return new BoundingRectangle(
+                new Point2d[] { transform(new Point2d(boundingRectangle.getMinX(), boundingRectangle.getMinY())),
+                        transform(new Point2d(boundingRectangle.getMinX(), boundingRectangle.getMaxY())),
+                        transform(new Point2d(boundingRectangle.getMaxX(), boundingRectangle.getMinY())),
+                        transform(new Point2d(boundingRectangle.getMaxX(), boundingRectangle.getMaxY())) });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "Transform2d [mat=" + Arrays.toString(mat) + "]";
     }
 
 }

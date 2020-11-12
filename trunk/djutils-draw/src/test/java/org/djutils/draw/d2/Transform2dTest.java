@@ -1,8 +1,10 @@
 package org.djutils.draw.d2;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.djutils.draw.bounds.BoundingRectangle;
 import org.djutils.draw.d0.Point;
 import org.djutils.draw.d0.Point2d;
 import org.junit.Test;
@@ -80,39 +82,39 @@ public class Transform2dTest
     }
 
     /**
-     * Test the translate, scale, rotate, shear, reflectX and reflectY methods.
+     * Test the translate, scale, rotate, shear and reflect methods.
      */
     @Test
-    public void testTranslateScaleRotateAndShear()
+    public void testTranslateScaleRotateShearAndReflect()
     {
         Transform2d t;
-        // Test time grows (explodes) with the 4th power of the length of offsets.
-        double[] offsets = new double[] { -100000, -100, -10, -3, -1, -0.3, -0.1, 0, 0.1, 0.3, 1, 3, 10, 100, 100000 };
-        for (double dx : offsets)
+        // Test time grows (explodes) with the 4th power of the length of values.
+        double[] values = new double[] { -100000, -100, -10, -3, -1, -0.3, -0.1, 0, 0.1, 0.3, 1, 3, 10, 100, 100000 };
+        for (double dx : values)
         {
-            for (double dy : offsets)
+            for (double dy : values)
             {
                 // Translate defined with a double[]
                 t = new Transform2d();
                 t.translate(dx, dy);
-                for (double px : offsets)
+                for (double px : values)
                 {
-                    for (double py : offsets)
+                    for (double py : values)
                     {
                         Point p = t.transform(new Point2d(px, py));
-                        assertEquals("transformed x matches", px + dx, p.getX(), 0.001);
-                        assertEquals("transformed y matches", py + dy, p.getY(), 0.001);
+                        assertEquals("translated x matches", px + dx, p.getX(), 0.001);
+                        assertEquals("translated y matches", py + dy, p.getY(), 0.001);
                         double[] result = t.transform(new double[] { px, py });
-                        assertEquals("transformed x matches", px + dx, result[0], 0.001);
-                        assertEquals("transformed y matches", py + dy, result[1], 0.001);
+                        assertEquals("translated x matches", px + dx, result[0], 0.001);
+                        assertEquals("translated y matches", py + dy, result[1], 0.001);
                     }
                 }
                 // Translate defined with a Point
                 t = new Transform2d();
                 t.translate(new Point2d(dx, dy));
-                for (double px : offsets)
+                for (double px : values)
                 {
-                    for (double py : offsets)
+                    for (double py : values)
                     {
                         Point p = t.transform(new Point2d(px, py));
                         assertEquals("transformed x matches", px + dx, p.getX(), 0.001);
@@ -125,9 +127,9 @@ public class Transform2dTest
                 // Scale
                 t = new Transform2d();
                 t.scale(dx, dy);
-                for (double px : offsets)
+                for (double px : values)
                 {
-                    for (double py : offsets)
+                    for (double py : values)
                     {
                         Point p = t.transform(new Point2d(px, py));
                         assertEquals("scaled x matches", px * dx, p.getX(), 0.001);
@@ -140,9 +142,9 @@ public class Transform2dTest
                 // Shear
                 t = new Transform2d();
                 t.shear(dx, dy);
-                for (double px : offsets)
+                for (double px : values)
                 {
-                    for (double py : offsets)
+                    for (double py : values)
                     {
                         Point p = t.transform(new Point2d(px, py));
                         assertEquals("sheared x matches", px + py * dx, p.getX(), 0.001);
@@ -155,12 +157,12 @@ public class Transform2dTest
             }
             // Rotate (using dx as angle)
             t = new Transform2d();
-            t.rotate(dx);
+            t.rotation(dx);
             double sine = Math.sin(dx);
             double cosine = Math.cos(dx);
-            for (double px : offsets)
+            for (double px : values)
             {
-                for (double py : offsets)
+                for (double py : values)
                 {
                     Point p = t.transform(new Point2d(px, py));
                     assertEquals("rotated x matches", px * cosine - py * sine, p.getX(), 0.001);
@@ -174,9 +176,9 @@ public class Transform2dTest
         // ReflectX
         t = new Transform2d();
         t.reflectX();
-        for (double px : offsets)
+        for (double px : values)
         {
-            for (double py : offsets)
+            for (double py : values)
             {
                 Point p = t.transform(new Point2d(px, py));
                 assertEquals("x-reflected x matches", -px, p.getX(), 0.001);
@@ -189,9 +191,9 @@ public class Transform2dTest
         // ReflectY
         t = new Transform2d();
         t.reflectY();
-        for (double px : offsets)
+        for (double px : values)
         {
-            for (double py : offsets)
+            for (double py : values)
             {
                 Point p = t.transform(new Point2d(px, py));
                 assertEquals("y-reflected x matches", px, p.getX(), 0.001);
@@ -201,6 +203,116 @@ public class Transform2dTest
                 assertEquals("y-reflected y  matches", -py, result[1], 0.001);
             }
         }
+    }
+
+    /**
+     * Test the transform method.
+     */
+    @Test
+    public void transformTest()
+    {
+        Transform2d reflectionX = new Transform2d().reflectX();
+        Transform2d reflectionY = new Transform2d().reflectY();
+        // Test time explodes with the 6th power of the length of this array
+        double[] values = new double[] { -100, -0.1, 0, 0.01, 1, 100 };
+        for (double translateX : values)
+        {
+            for (double translateY : values)
+            {
+                Transform2d translation = new Transform2d().translate(translateX, translateY);
+                for (double scaleX : values)
+                {
+                    for (double scaleY : values)
+                    {
+                        Transform2d scaling = new Transform2d().scale(scaleX, scaleY);
+                        for (double angle : new double[] { -2, 0, 0.5 })
+                        {
+                            Transform2d rotation = new Transform2d().rotation(angle);
+                            for (double shearX : values)
+                            {
+                                for (double shearY : values)
+                                {
+                                    Transform2d t = new Transform2d().translate(translateX, translateY).scale(scaleX, scaleY)
+                                            .rotation(angle).shear(shearX, shearY);
+                                    Transform2d tReflectX = new Transform2d().reflectX().translate(translateX, translateY)
+                                            .scale(scaleX, scaleY).rotation(angle).shear(shearX, shearY);
+                                    Transform2d tReflectY = new Transform2d().reflectY().translate(translateX, translateY)
+                                            .scale(scaleX, scaleY).rotation(angle).shear(shearX, shearY);
+                                    Transform2d shearing = new Transform2d().shear(shearX, shearY);
+                                    for (double px : values)
+                                    {
+                                        for (double py : values)
+                                        {
+                                            Point2d p = new Point2d(px, py);
+                                            Point2d tp = t.transform(p);
+                                            Point2d chainP = translation
+                                                    .transform(scaling.transform(rotation.transform(shearing.transform(p))));
+                                            assertEquals("X", chainP.getX(), tp.getX(), 0.0000001);
+                                            assertEquals("Y", chainP.getY(), tp.getY(), 0.0000001);
+                                            tp = tReflectX.transform(p);
+                                            Point2d chainPReflectX = reflectionX.transform(chainP);
+                                            assertEquals("RX X", chainPReflectX.getX(), tp.getX(), 0.0000001);
+                                            assertEquals("RX Y", chainPReflectX.getY(), tp.getY(), 0.0000001);
+                                            tp = tReflectY.transform(p);
+                                            Point2d chainPReflectY = reflectionY.transform(chainP);
+                                            assertEquals("RY X", chainPReflectY.getX(), tp.getX(), 0.0000001);
+                                            assertEquals("RY Y", chainPReflectY.getY(), tp.getY(), 0.0000001);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Test transformation of a bounding rectangle.
+     */
+    @Test
+    public void transformBoundingRectangleTest()
+    {
+        double[] values = new double[] { -100, 0.1, 0, 0.1, 100 };
+        double[] sizes = new double[] { 0, 10, 100 };
+        Transform2d t = new Transform2d().rotation(0.4).reflectX().scale(0.5, 1.5).shear(2, 3).translate(123, 456);
+        // System.out.println(t);
+        for (double x : values)
+        {
+            for (double y : values)
+            {
+                for (double xSize : sizes)
+                {
+                    for (double ySize : sizes)
+                    {
+                        BoundingRectangle bb = new BoundingRectangle(x, x + xSize, y, y + ySize);
+                        Point2d[] points = new Point2d[] { new Point2d(x, y), new Point2d(x + xSize, y),
+                                new Point2d(x, y + ySize), new Point2d(x + xSize, y + ySize) };
+                        Point2d[] transformedPoints = new Point2d[4];
+                        for (int i = 0; i < points.length; i++)
+                        {
+                            transformedPoints[i] = t.transform(points[i]);
+                        }
+                        BoundingRectangle expected = new BoundingRectangle(transformedPoints);
+                        BoundingRectangle got = t.transform(bb);
+                        assertEquals("bb minX", expected.getMinX(), got.getMinX(), 0.0001);
+                        assertEquals("bb maxX", expected.getMaxX(), got.getMaxX(), 0.0001);
+                        assertEquals("bb minY", expected.getMinY(), got.getMinY(), 0.0001);
+                        assertEquals("bb maxY", expected.getMaxY(), got.getMaxY(), 0.0001);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Check that toString returns something descriptive.
+     */
+    @Test
+    public void toStringTest()
+    {
+        assertTrue("toString returns something descriptive", new Transform2d().toString().startsWith("Transform2d "));
     }
 
 }
