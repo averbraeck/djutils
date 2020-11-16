@@ -126,6 +126,33 @@ public class TestLine3d
             }
         }
     }
+    
+    /**
+     * Test construction of a Line3d from a Path2D with SEG_CLOSE.
+     * @throws DrawException
+     */
+    @Test
+    public void testPathWithClose() throws DrawException
+    {
+        Path2D path = new Path2D.Double();
+        path.moveTo(1, 2);
+        path.lineTo(4,  5);
+        path.lineTo(4,  8);
+        path.closePath();
+        Line3d line = new Line3d(path);
+        assertEquals("line has 4 points", 4, line.size());
+        assertEquals("first point equals last point", line.getFirst(), line.getLast());
+        // Now the case that the path was already closed
+        path = new Path2D.Double();
+        path.moveTo(1, 2);
+        path.lineTo(4,  5);
+        path.lineTo(1,  2);
+        path.closePath();
+        line = new Line3d(path);
+        assertEquals("line has 4 points", 3, line.size());
+        assertEquals("first point equals last point", line.getFirst(), line.getLast());
+        
+    }
 
     /**
      * Test all the constructors of Point3d.

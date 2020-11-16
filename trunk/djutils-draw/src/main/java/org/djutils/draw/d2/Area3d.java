@@ -1,7 +1,7 @@
 package org.djutils.draw.d2;
 
 /**
- * Polygon3d.java.
+ * Area3d.java.
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.

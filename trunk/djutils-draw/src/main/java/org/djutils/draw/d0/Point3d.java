@@ -34,9 +34,12 @@ public class Point3d implements Point
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param z double; the z coordinate
+     * @throws IllegalArgumentException when a coordinate is NaN
      */
-    public Point3d(final double x, final double y, final double z)
+    public Point3d(final double x, final double y, final double z) throws IllegalArgumentException
     {
+        Throw.when(Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z), IllegalArgumentException.class,
+                "Coordinates must be numbers (not NaN)");
         this.x = x;
         this.y = y;
         this.z = z;
@@ -46,12 +49,14 @@ public class Point3d implements Point
      * Create a new Point3d with x, y, and z coordinates, stored with double precision.
      * @param xyz double[3]; the x, y and z coordinates
      * @throws NullPointerException when xyx is null
-     * @throws IllegalArgumentException when the dimension of xyx is not 3
+     * @throws IllegalArgumentException when the dimension of xyx is not 3, or any coordinate is NaN
      */
     public Point3d(final double[] xyz) throws IllegalArgumentException
     {
         Throw.whenNull(xyz, "xyz-point cannot be null");
         Throw.when(xyz.length != 3, IllegalArgumentException.class, "Dimension of xyz-point should be 3");
+        Throw.when(Double.isNaN(xyz[0]) || Double.isNaN(xyz[1]) || Double.isNaN(xyz[2]), IllegalArgumentException.class,
+                "Coordinates must be numbers (not NaN)");
         this.x = xyz[0];
         this.y = xyz[1];
         this.z = xyz[2];
@@ -62,9 +67,11 @@ public class Point3d implements Point
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @return Point3d; the new immutable point with z=0
+     * @throws IllegalArgumentException when x or y is NaN
      */
-    public static Point3d instantiateXY(final double x, final double y)
+    public static Point3d instantiateXY(final double x, final double y) throws IllegalArgumentException
     {
+        Throw.when(Double.isNaN(x) || Double.isNaN(y), IllegalArgumentException.class, "Coordinates must be numbers (not NaN)");
         return new Point3d(x, y, 0.0);
     }
 
@@ -73,10 +80,13 @@ public class Point3d implements Point
      * @param point Point2D; an AWT Point2D
      * @return Point3d; the new immutable point with z=0
      * @throws NullPointerException when point is null
+     * @throws IllegalArgumentException when a coordinate of point is NaN
      */
-    public static Point3d instantiateXY(final Point2D point)
+    public static Point3d instantiateXY(final Point2D point) throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(point, "point cannot be null");
+        Throw.when(Double.isNaN(point.getX()) || Double.isNaN(point.getY()), IllegalArgumentException.class,
+                "Coordinates must be numbers (not NaN)");
         return new Point3d(point.getX(), point.getY(), 0.0);
     }
 
@@ -94,15 +104,17 @@ public class Point3d implements Point
 
     /** {@inheritDoc} */
     @Override
-    public Point3d translate(final double dx, final double dy)
+    public Point3d translate(final double dx, final double dy) throws IllegalArgumentException
     {
+        Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class, "dx and dy must be numbers (not NaN)");
         return new Point3d(this.x + dx, this.y + dy, this.z);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Point3d scale(final double factor)
+    public Point3d scale(final double factor) throws IllegalArgumentException
     {
+        Throw.when(Double.isNaN(factor), IllegalArgumentException.class, "factor must be a number (not NaN)");
         return new Point3d(this.x * factor, this.y * factor, this.z * factor);
     }
 
@@ -134,6 +146,7 @@ public class Point3d implements Point
     public Point3d interpolate(final Point point, final double fraction)
     {
         Throw.whenNull(point, "point cannot be null");
+        Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
         return new Point3d((1.0 - fraction) * this.x + fraction * point.getX(),
                 (1.0 - fraction) * this.y + fraction * point.getY(), (1.0 - fraction) * this.z + fraction * point.getZ());
 
@@ -154,7 +167,7 @@ public class Point3d implements Point
     @Override
     public double[] toArray()
     {
-        return new double[] {this.x, this.y, this.z};
+        return new double[] { this.x, this.y, this.z };
     }
 
     /** {@inheritDoc} */

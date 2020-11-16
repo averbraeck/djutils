@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.awt.geom.Point2D;
 
@@ -39,14 +40,37 @@ public class DirectedPoint2dTest
         assertEquals(0.0, p.getDirX(), 1E-6);
         assertEquals(0.0, p.getDirY(), 1E-6);
         assertEquals(3.1415926, p.getDirZ(), 1E-6);
-        DirectedPoint2d pNaN = new DirectedPoint2d(Double.NaN, Double.NaN, Double.NaN);
-        assertNotNull(pNaN);
-        assertTrue(Double.isNaN(pNaN.getX()));
-        assertTrue(Double.isNaN(pNaN.getY()));
-        assertEquals(0.0, p.getZ(), 1E-6);
-        assertEquals(0.0, p.getDirX(), 1E-6);
-        assertEquals(0.0, p.getDirY(), 1E-6);
-        assertTrue(Double.isNaN(pNaN.getDirZ()));
+        
+        try
+        {
+            new DirectedPoint2d(Double.NaN, 0, 0);
+            fail("NaN coordinate should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+        
+        try
+        {
+            new DirectedPoint2d(0, Double.NaN, 0);
+            fail("NaN coordinate should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+        
+        try
+        {
+            new DirectedPoint2d(0, 0, Double.NaN);
+            fail("NaN coordinate should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+        
         double[] p2Arr = new double[] {5.0, 6.0};
         p = new DirectedPoint2d(p2Arr, Math.PI / 2.0);
         assertEquals(5.0, p.getX(), 1E-6);
@@ -163,17 +187,6 @@ public class DirectedPoint2dTest
         assertTrue(p3.epsilonEquals(p, 0.09, 0.009));
         assertFalse(p.epsilonEquals(p3, 0.0009, 0.0009));
         assertFalse(p3.epsilonEquals(p, 0.0009, 0.0009));
-
-        // NaN
-        assertFalse(p.epsilonEquals(new DirectedPoint3d(Double.NaN, 20.0, 0.0), 0.1, 0.001));
-        assertFalse(p.epsilonEquals(new DirectedPoint3d(10.0, Double.NaN, 0.0), 0.1, 0.001));
-        assertFalse(p.epsilonEquals(new DirectedPoint3d(10.0, 20.0, Double.NaN), 0.1, 0.001));
-        assertFalse(new DirectedPoint3d(Double.NaN, 20.0, 0.0).epsilonEquals(p, 0.1, 0.001));
-        assertFalse(new DirectedPoint3d(10.0, Double.NaN, 0.0).epsilonEquals(p, 0.1, 0.001));
-        assertFalse(new DirectedPoint3d(10.0, 20.0, Double.NaN).epsilonEquals(p, 0.1, 0.001));
-        assertFalse(new DirectedPoint3d(10.0, 20.0, 0.0, Double.NaN, 0.0, 0.0).epsilonEquals(p, 0.1, 0.001));
-        assertFalse(new DirectedPoint3d(10.0, 20.0, 0.0, 0.0, Double.NaN, 0.0).epsilonEquals(p, 0.1, 0.001));
-        assertFalse(new DirectedPoint3d(10.0, 20.0, 0.0, 0.0, 0.0, Double.NaN).epsilonEquals(p, 0.1, 0.001));
     }
 
     /**

@@ -21,5 +21,6 @@ public interface Line extends Locatable, Serializable
      * @return Point[]; the points of this line as an array
      */
     Point[] getPointArray();
+    
 }
 
