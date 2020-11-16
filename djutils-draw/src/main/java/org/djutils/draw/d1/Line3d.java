@@ -42,6 +42,7 @@ public class Line3d implements Line
 
     /** Bounding rectangle of this Line3d. */
     private final BoundingRectangle boundingRectangle;
+    // TODO Peter thinks that the Line3d need not store the bounding rectangle. Can be quickly derived from bounding box.
 
     /** Bounding box of this Line3d around the centroid. */
     private final BoundingBox bounds;

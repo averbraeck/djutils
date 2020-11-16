@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.awt.geom.Point2D;
 
@@ -36,11 +37,37 @@ public class Point3dTest
         assertEquals(10.0, p.getX(), 1E-6);
         assertEquals(-20.0, p.getY(), 1E-6);
         assertEquals(16.0, p.getZ(), 1E-6);
-        Point3d pNaN = new Point3d(Double.NaN, Double.NaN, Double.NaN);
-        assertNotNull(pNaN);
-        assertTrue(Double.isNaN(pNaN.getX()));
-        assertTrue(Double.isNaN(pNaN.getY()));
-        assertTrue(Double.isNaN(pNaN.getZ()));
+        
+        try
+        {
+            new Point3d(Double.NaN, 0, 0);
+            fail("NaN should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+        
+        try
+        {
+            new Point3d(0, Double.NaN, 0);
+            fail("NaN should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+        
+        try
+        {
+            new Point3d(0, 0, Double.NaN);
+            fail("NaN should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+        
         double[] p3Arr = new double[] {5.0, 6.0, 7.0};
         p = new Point3d(p3Arr);
         assertEquals(5.0, p.getX(), 1E-6);
@@ -143,12 +170,6 @@ public class Point3dTest
         assertTrue(p3.epsilonEquals(p, 0.09));
         assertFalse(p.epsilonEquals(p3, 0.0009));
         assertFalse(p3.epsilonEquals(p, 0.0009));
-        assertFalse(p.epsilonEquals(new Point3d(Double.NaN, 20.0, 0.0), 0.1));
-        assertFalse(p.epsilonEquals(new Point3d(10.0, Double.NaN, 0.0), 0.1));
-        assertFalse(p.epsilonEquals(new Point3d(10.0, 20.0, Double.NaN), 0.1));
-        assertFalse(new Point3d(Double.NaN, 20.0, 0.0).epsilonEquals(p, 0.1));
-        assertFalse(new Point3d(10.0, Double.NaN, 0.0).epsilonEquals(p, 0.1));
-        assertFalse(new Point3d(10.0, 20.0, Double.NaN).epsilonEquals(p, 0.1));
     }
 
     /**
@@ -185,6 +206,26 @@ public class Point3dTest
         assertEquals(7.0, p3d.getX(), 1E-6);
         assertEquals(2.0, p3d.getY(), 1E-6);
         assertEquals(3.5, p3d.getZ(), 1E-6);
+        
+        try
+        {
+            p.translate(Double.NaN, 1.0);
+            fail("NaN translation should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            p.translate(1.0,  Double.NaN);
+            fail("NaN translation should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
 
         // interpolate
         Point3d p1 = new Point3d(1.0, 1.0, 1.0);

@@ -26,20 +26,20 @@ public class BoundingRectangle implements Serializable
     /** */
     private static final long serialVersionUID = 20200829L;
 
-    /** the lower bound for x, or NaN for an empty bounding box. */
+    /** The lower bound for x, or NaN for an empty bounding box. */
     private final double minX;
 
-    /** the lower bound for y, or NaN for an empty bounding rectangle. */
+    /** The lower bound for y, or NaN for an empty bounding rectangle. */
     private final double minY;
 
-    /** the upper bound for x, or NaN for an empty bounding rectangle. */
+    /** The upper bound for x, or NaN for an empty bounding rectangle. */
     private final double maxX;
 
-    /** the upper bound for y, or NaN for an empty bounding rectangle. */
+    /** The upper bound for y, or NaN for an empty bounding rectangle. */
     private final double maxY;
 
-    /** the empty bounding rectangle for reuse. Since boundingRectangles are immmutable, only one instance is needed. */
-    public static final BoundingRectangle EMPTY_ENVELOPE = new BoundingRectangle();
+    /** The empty bounding rectangle for reuse. Since boundingRectangles are immmutable, only one instance is needed. */
+    public static final BoundingRectangle EMPTY_BOUNDING_RECTANGLE = new BoundingRectangle();
 
     /**
      * Create an empty bounding rectangle, with NaN for all bounds.
@@ -53,15 +53,18 @@ public class BoundingRectangle implements Serializable
     }
 
     /**
-     * Create a bounding rectangle by providing its lower and upper bounds.
+     * Construct a bounding rectangle by providing its lower and upper bounds.
      * @param minX double; the lower bound for x, or NaN for an empty bounding rectangle
      * @param maxX double; the upper bound for x, or NaN for an empty bounding rectangle
      * @param minY double; the lower bound for y, or NaN for an empty bounding rectangle
      * @param maxY double; the upper bound for y, or NaN for an empty bounding rectangle
-     * @throws IllegalArgumentException when lower bounds are larger than upper boundingRectangle
+     * @throws IllegalArgumentException when lower bounds are larger than upper boundingRectangle, or any of the bounds is NaN
      */
     public BoundingRectangle(final double minX, final double maxX, final double minY, final double maxY)
+            throws IllegalArgumentException
     {
+        Throw.when(Double.isNaN(minX) || Double.isNaN(maxX) || Double.isNaN(minY) || Double.isNaN(maxY),
+                IllegalArgumentException.class, "bounds must be numbers (not NaN)");
         Throw.when(minX > maxX || minY > maxY, IllegalArgumentException.class,
                 "lower bound for a dimension should be less than or equal to its upper bound");
         this.minX = minX;
@@ -71,27 +74,55 @@ public class BoundingRectangle implements Serializable
     }
 
     /**
-     * Create a bounding rectangle from an array of points, finding the lowest and highest x, y, and z coordinates.
-     * @param points Point[]; the array of points to construct a bounding rectangle from
+     * Constructs a new BoundingRectangle around (0, 0).
+     * @param deltaX double; the deltaX value around the origin
+     * @param deltaY double; the deltaY value around the origin
+     * @throws IllegalArgumentException when one of the delta values is less than zero
      */
-    public BoundingRectangle(final Point[] points)
+    public BoundingRectangle(final double deltaX, final double deltaY)
     {
+        Throw.when(deltaX < 0.0 || deltaY < 0.0, IllegalArgumentException.class, "delta values sould be >= 0");
+        Throw.when(Double.isNaN(deltaX) || Double.isNaN(deltaY), IllegalArgumentException.class, "Nan value not permitted");
+        this.minX = -0.5 * deltaX;
+        this.maxX = 0.5 * deltaX;
+        this.minY = -0.5 * deltaY;
+        this.maxY = 0.5 * deltaY;
+    }
+
+    /**
+     * Construct a bounding rectangle from an array of points, finding the lowest and highest x, y, and z coordinates.
+     * @param points Point[]; the array of points to construct a bounding rectangle from
+     * @throws NullPointerException when points is null
+     * @throws IllegalArgumentException when zero points are provided
+     */
+    public BoundingRectangle(final Point[] points) throws NullPointerException, IllegalArgumentException
+    {
+        Throw.whenNull(points, "points may not be null");
+        Throw.when(points.length == 0, IllegalArgumentException.class, "must have at least one point");
         double tempMinX = Double.POSITIVE_INFINITY;
         double tempMinY = Double.POSITIVE_INFINITY;
-        double tempMaxX = -Double.NEGATIVE_INFINITY;
-        double tempMaxY = -Double.NEGATIVE_INFINITY;
+        double tempMaxX = Double.NEGATIVE_INFINITY;
+        double tempMaxY = Double.NEGATIVE_INFINITY;
         for (Point point : points)
         {
             double x = point.getX();
             double y = point.getY();
             if (x < tempMinX)
+            {
                 tempMinX = x;
-            else if (x > tempMaxX)
+            }
+            if (x > tempMaxX)
+            {
                 tempMaxX = x;
+            }
             if (y < tempMinY)
+            {
                 tempMinY = y;
-            else if (y > tempMaxY)
+            }
+            if (y > tempMaxY)
+            {
                 tempMaxY = y;
+            }
         }
         this.minX = tempMinX;
         this.minY = tempMinY;
@@ -100,27 +131,39 @@ public class BoundingRectangle implements Serializable
     }
 
     /**
-     * Create a bounding rectangle from a collection of points, finding the lowest and highest x, y, and z coordinates.
+     * Construct a bounding rectangle from a collection of points, finding the lowest and highest x, y, and z coordinates.
      * @param points Collection&lt;Point&gt;; the collection of points to construct a bounding rectangle from
+     * @throws NullPointerException when points is null
+     * @throws IllegalArgumentException when zero points are provided
      */
-    public BoundingRectangle(final Collection<Point> points)
+    public BoundingRectangle(final Collection<Point> points) throws NullPointerException, IllegalArgumentException
     {
+        Throw.whenNull(points, "points may not be null");
+        Throw.when(points.isEmpty(), IllegalArgumentException.class, "must have at least one point");
         double tempMinX = Double.POSITIVE_INFINITY;
         double tempMinY = Double.POSITIVE_INFINITY;
-        double tempMaxX = -Double.NEGATIVE_INFINITY;
-        double tempMaxY = -Double.NEGATIVE_INFINITY;
+        double tempMaxX = Double.NEGATIVE_INFINITY;
+        double tempMaxY = Double.NEGATIVE_INFINITY;
         for (Point point : points)
         {
             double x = point.getX();
             double y = point.getY();
             if (x < tempMinX)
+            {
                 tempMinX = x;
-            else if (x > tempMaxX)
+            }
+            if (x > tempMaxX)
+            {
                 tempMaxX = x;
+            }
             if (y < tempMinY)
+            {
                 tempMinY = y;
-            else if (y > tempMaxY)
+            }
+            if (y > tempMaxY)
+            {
                 tempMaxY = y;
+            }
         }
         this.minX = tempMinX;
         this.minY = tempMinY;
@@ -133,9 +176,9 @@ public class BoundingRectangle implements Serializable
      * @param line Line; the line
      * @throws NullPointerException when line is null
      */
-    public BoundingRectangle(final Line line)
+    public BoundingRectangle(final Line line) throws NullPointerException
     {
-        this(line.getPointArray());
+        this(Throw.whenNull(line, "line may not be null").getPointArray());
     }
 
     /**
@@ -143,9 +186,9 @@ public class BoundingRectangle implements Serializable
      * @param area Area; the area
      * @throws NullPointerException when area is null
      */
-    public BoundingRectangle(final Area area)
+    public BoundingRectangle(final Area area) throws NullPointerException
     {
-        this(area.getBoundaryArray());
+        this(Throw.whenNull(area, "area may not be null").getBoundaryArray());
     }
 
     /**
@@ -170,7 +213,7 @@ public class BoundingRectangle implements Serializable
      */
     public boolean contains(final double x, final double y)
     {
-        return x > this.minX && x < this.maxX && y > this.minY && y < this.maxY;
+        return (!isEmpty()) && x > this.minX && x < this.maxX && y > this.minY && y < this.maxY;
     }
 
     /**
@@ -181,19 +224,21 @@ public class BoundingRectangle implements Serializable
      * @return boolean; whether the bounding rectangle contains the provided bounding rectangle
      * @throws NullPointerException when boundingRectangle is null
      */
-    public boolean contains(final BoundingRectangle boundingRectangle)
+    public boolean contains(final BoundingRectangle boundingRectangle) throws NullPointerException
     {
         Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
-        return contains(boundingRectangle.minX, boundingRectangle.minY)
+        return (!boundingRectangle.isEmpty()) && contains(boundingRectangle.minX, boundingRectangle.minY)
                 && contains(boundingRectangle.maxX, boundingRectangle.maxY);
     }
 
     /**
      * Return the centroid of this bounding rectangle.
      * @return Point; the centroid of this bounding rectangle
+     * @throws NullPointerException when this BoundingRectanble is the EMPTY_BOUNDING_RECTANGLE
      */
     public Point centroid()
     {
+        Throw.when(isEmpty(), NullPointerException.class, "The empty BoundingRectangle has no centroid");
         return new Point2d((this.maxX - this.minX) / 2.0, (this.maxY - this.minY) / 2.0);
     }
 
@@ -217,7 +262,7 @@ public class BoundingRectangle implements Serializable
      */
     public boolean covers(final double x, final double y)
     {
-        return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY;
+        return (!isEmpty()) && x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY;
     }
 
     /**
@@ -256,8 +301,27 @@ public class BoundingRectangle implements Serializable
     public boolean intersects(final BoundingRectangle boundingRectangle)
     {
         Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
-        return !(boundingRectangle.minX > this.maxX || boundingRectangle.maxX < this.minX || boundingRectangle.minY > this.maxY
+        return !(isEmpty() || boundingRectangle.isEmpty() || boundingRectangle.minX > this.maxX
+                || boundingRectangle.maxX < this.minX || boundingRectangle.minY > this.maxY
                 || boundingRectangle.maxY < this.minY);
+    }
+
+    /**
+     * Return the extent of this bounding box in the x-direction.
+     * @return double; the extent of this bounding box in the x-direction, or NaN if this is the EMPTY_BOUNDING_BOX
+     */
+    public double getDeltaX()
+    {
+        return getMaxX() - getMinX();
+    }
+
+    /**
+     * Return the extent of this bounding box in the y-direction.
+     * @return double; the extent of this bounding box in the y-direction, or NaN if this is the EMPTY_BOUNDING_BOX
+     */
+    public double getDeltaY()
+    {
+        return getMaxY() - getMinY();
     }
 
     /**
@@ -273,7 +337,7 @@ public class BoundingRectangle implements Serializable
         Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
         if (isEmpty() || boundingRectangle.isEmpty() || !intersects(boundingRectangle))
         {
-            return EMPTY_ENVELOPE;
+            return EMPTY_BOUNDING_RECTANGLE;
         }
         double tempMinX = this.minX > boundingRectangle.minX ? this.minX : boundingRectangle.minX;
         double tempMinY = this.minY > boundingRectangle.minY ? this.minY : boundingRectangle.minY;
@@ -288,7 +352,7 @@ public class BoundingRectangle implements Serializable
      */
     public boolean isEmpty()
     {
-        return Double.isNaN(this.minX) || Double.isNaN(this.maxX) || Double.isNaN(this.minY) || Double.isNaN(this.maxY);
+        return this == EMPTY_BOUNDING_RECTANGLE;
     }
 
     /**
@@ -302,7 +366,7 @@ public class BoundingRectangle implements Serializable
 
     /**
      * Return the lower bound for x, or NaN for an empty boundingRectangle
-     * @return double; the lower bound for x, or NaN for an empty boundingRectangle
+     * @return double; the lower bound for x, or NaN for the EMPTY_BOUNDING_RECTANGLE
      */
     public double getMinX()
     {
@@ -311,7 +375,7 @@ public class BoundingRectangle implements Serializable
 
     /**
      * Return the upper bound for x, or NaN for an empty boundingRectangle
-     * @return double; the upper bound for x, or NaN for an empty boundingRectangle
+     * @return double; the upper bound for x, or NaN for the EMPTY_BOUNDING_RECTANGLE
      */
     public double getMaxX()
     {
@@ -320,7 +384,7 @@ public class BoundingRectangle implements Serializable
 
     /**
      * Return the lower bound for y, or NaN for an empty boundingRectangle
-     * @return double; the lower bound for y, or NaN for an empty boundingRectangle
+     * @return double; the lower bound for y, or NaN for the EMPTY_BOUNDING_RECTANGLE
      */
     public double getMinY()
     {
@@ -329,7 +393,7 @@ public class BoundingRectangle implements Serializable
 
     /**
      * Return the upper bound for y, or NaN for an empty boundingRectangle
-     * @return double; the upper bound for y, or NaN for an empty boundingRectangle
+     * @return double; the upper bound for y, or NaN for the EMPTY_BOUNDING_RECTANGLE
      */
     public double getMaxY()
     {
@@ -338,7 +402,7 @@ public class BoundingRectangle implements Serializable
 
     /**
      * Return the width of the bounding rectangle (x-direction).
-     * @return double; the width of the bounding rectangle
+     * @return double; the width of the bounding rectangle or NaN for the EMPTY_BOUNDING_RECTANGLE
      */
     public double getWidth()
     {
@@ -347,7 +411,7 @@ public class BoundingRectangle implements Serializable
 
     /**
      * Return the height of the bounding rectangle (y-direction).
-     * @return double; the height of the bounding rectangle
+     * @return double; the height of the bounding rectangle or NaN for the EMPTY_BOUNDING_RECTANGLE
      */
     public double getHeight()
     {
@@ -356,7 +420,7 @@ public class BoundingRectangle implements Serializable
 
     /**
      * Return the area of the bounding rectangle.
-     * @return double; the area of the bounding rectangle
+     * @return double; the area of the bounding rectangle or NaN for the EMPTY_BOUNDING_RECTANGLE
      */
     public double getArea()
     {
@@ -367,7 +431,7 @@ public class BoundingRectangle implements Serializable
     @Override
     public String toString()
     {
-        return "Envelope[x[" + this.minX + " : " + this.maxX + "], y[" + this.minY + " : " + this.maxY + "]]";
+        return "BoundingRectangle [x[" + this.minX + " : " + this.maxX + "], y[" + this.minY + " : " + this.maxY + "]]";
     }
 
     /** {@inheritDoc} */

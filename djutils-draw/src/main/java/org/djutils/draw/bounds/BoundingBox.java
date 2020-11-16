@@ -24,25 +24,25 @@ public class BoundingBox implements Serializable
     /** */
     private static final long serialVersionUID = 2020829L;
 
-    /** the lower bound for x, or NaN for an empty bounding box. */
+    /** The lower bound for x, or NaN for an empty bounding box. */
     private final double minX;
 
-    /** the lower bound for y, or NaN for an empty bounding box. */
+    /** The lower bound for y, or NaN for an empty bounding box. */
     private final double minY;
 
-    /** the lower bound for z, or NaN for an empty bounding box. */
+    /** The lower bound for z, or NaN for an empty bounding box. */
     private final double minZ;
 
-    /** the upper bound for x, or NaN for an empty bounding box. */
+    /** The upper bound for x, or NaN for an empty bounding box. */
     private final double maxX;
 
-    /** the upper bound for y, or NaN for an empty bounding box. */
+    /** The upper bound for y, or NaN for an empty bounding box. */
     private final double maxY;
 
-    /** the upper bound for z, or NaN for an empty bounding box. */
+    /** The upper bound for z, or NaN for an empty bounding box. */
     private final double maxZ;
 
-    /** the empty bounding box for reuse. Since bounding boxes are immmutable, only one instance is needed. */
+    /** The empty bounding box for reuse. Since bounding boxes are immutable, only one instance is needed. */
     public static final BoundingBox EMPTY_BOUNDING_BOX = new BoundingBox();
 
     /**
@@ -59,20 +59,22 @@ public class BoundingBox implements Serializable
     }
 
     /**
-     * Create a bounding box by providing all lower and upper bounds.
+     * Construct a bounding box by providing all lower and upper bounds.
      * @param minX double; the lower bound for x, or NaN for an empty bounding box
      * @param maxX double; the upper bound for x, or NaN for an empty bounding box
      * @param minY double; the lower bound for y, or NaN for an empty bounding box
      * @param maxY double; the upper bound for y, or NaN for an empty bounding box
      * @param minZ double; the lower bound for z, or NaN for an empty bounding box
      * @param maxZ double; the upper bound for z, or NaN for an empty bounding box
-     * @throws IllegalArgumentException when lower bounds are larger than upper boundingBox
+     * @throws IllegalArgumentException when lower bounds are larger than upper boundingBox or any bound is NaN
      */
     public BoundingBox(final double minX, final double maxX, final double minY, final double maxY, final double minZ,
             final double maxZ)
     {
         Throw.when(minX > maxX || minY > maxY || minZ > maxZ, IllegalArgumentException.class,
                 "lower bound for a dimension should be less than or equal to its upper bound");
+        Throw.when(Double.isNaN(minX) || Double.isNaN(maxX) || Double.isNaN(minY) || Double.isNaN(maxY) || Double.isNaN(minZ)
+                || Double.isNaN(maxZ), IllegalArgumentException.class, "Nan boundary value not permitted");
         this.minX = minX;
         this.minY = minY;
         this.minZ = minZ;
@@ -82,7 +84,7 @@ public class BoundingBox implements Serializable
     }
 
     /**
-     * constructs a new BoundingBox around (0, 0, 0).
+     * Constructs a new BoundingBox around (0, 0, 0).
      * @param deltaX double; the deltaX value around the origin
      * @param deltaY double; the deltaY value around the origin
      * @param deltaZ double; the deltaZ value around the origin
@@ -91,6 +93,8 @@ public class BoundingBox implements Serializable
     public BoundingBox(final double deltaX, final double deltaY, final double deltaZ)
     {
         Throw.when(deltaX < 0.0 || deltaY < 0.0 || deltaZ < 0.0, IllegalArgumentException.class, "delta values sould be >= 0");
+        Throw.when(Double.isNaN(deltaX) || Double.isNaN(deltaY) || Double.isNaN(deltaZ), IllegalArgumentException.class,
+                "Nan value not permitted");
         this.minX = -0.5 * deltaX;
         this.maxX = 0.5 * deltaX;
         this.minY = -0.5 * deltaY;
@@ -100,34 +104,57 @@ public class BoundingBox implements Serializable
     }
 
     /**
-     * Create a bounding box from an array of points, finding the lowest and highest x, y, and z coordinates.
+     * Report if this BoundingBox is the special EMPTY_BOUNDING_BOX object.
+     * @return boolean; true if this BoundingBox is the EMPTY_BOUNDING_BOX object; false if this BoundingBox is not the
+     *         EMPTY_BOUNDING_BOX object
+     */
+    public boolean isEmpty()
+    {
+        return this == EMPTY_BOUNDING_BOX;
+    }
+
+    /**
+     * Construct a bounding box from an array of points, finding the lowest and highest x, y, and z coordinates.
      * @param points Point[]; the array of points to construct a bounding box from
      */
     public BoundingBox(final Point[] points)
     {
+        Throw.when(points.length == 0, IllegalArgumentException.class, "points may not be empty");
         double tempMinX = Double.POSITIVE_INFINITY;
         double tempMinY = Double.POSITIVE_INFINITY;
-        double tempMaxX = -Double.NEGATIVE_INFINITY;
-        double tempMaxY = -Double.NEGATIVE_INFINITY;
-        double tempMinZ = -Double.NEGATIVE_INFINITY;
-        double tempMaxZ = -Double.NEGATIVE_INFINITY;
+        double tempMinZ = Double.POSITIVE_INFINITY;
+        double tempMaxX = Double.NEGATIVE_INFINITY;
+        double tempMaxY = Double.NEGATIVE_INFINITY;
+        double tempMaxZ = Double.NEGATIVE_INFINITY;
         for (Point point : points)
         {
             double x = point.getX();
             double y = point.getY();
             double z = point.getZ();
             if (x < tempMinX)
+            {
                 tempMinX = x;
-            else if (x > tempMaxX)
+            }
+            if (x > tempMaxX)
+            {
                 tempMaxX = x;
+            }
             if (y < tempMinY)
+            {
                 tempMinY = y;
-            else if (y > tempMaxY)
+            }
+            if (y > tempMaxY)
+            {
                 tempMaxY = y;
+            }
             if (z < tempMinZ)
+            {
                 tempMinZ = z;
-            else if (z > tempMaxZ)
+            }
+            if (z > tempMaxZ)
+            {
                 tempMaxZ = z;
+            }
         }
         this.minX = tempMinX;
         this.minY = tempMinY;
@@ -138,34 +165,47 @@ public class BoundingBox implements Serializable
     }
 
     /**
-     * Create a bounding box from a collection of points, finding the lowest and highest x, y, and z coordinates.
+     * Construct a bounding box from a collection of points, finding the lowest and highest x, y, and z coordinates.
      * @param points Collection&lt;Point&gt;; the collection of points to construct a bounding box from
      */
     public BoundingBox(final Collection<Point> points)
     {
+        Throw.when(points.size() == 0, IllegalArgumentException.class, "points may not be empty");
         double tempMinX = Double.POSITIVE_INFINITY;
         double tempMinY = Double.POSITIVE_INFINITY;
-        double tempMaxX = -Double.NEGATIVE_INFINITY;
-        double tempMaxY = -Double.NEGATIVE_INFINITY;
-        double tempMinZ = -Double.NEGATIVE_INFINITY;
-        double tempMaxZ = -Double.NEGATIVE_INFINITY;
+        double tempMinZ = Double.POSITIVE_INFINITY;
+        double tempMaxX = Double.NEGATIVE_INFINITY;
+        double tempMaxY = Double.NEGATIVE_INFINITY;
+        double tempMaxZ = Double.NEGATIVE_INFINITY;
         for (Point point : points)
         {
             double x = point.getX();
             double y = point.getY();
             double z = point.getZ();
             if (x < tempMinX)
+            {
                 tempMinX = x;
-            else if (x > tempMaxX)
+            }
+            if (x > tempMaxX)
+            {
                 tempMaxX = x;
+            }
             if (y < tempMinY)
+            {
                 tempMinY = y;
-            else if (y > tempMaxY)
+            }
+            if (y > tempMaxY)
+            {
                 tempMaxY = y;
+            }
             if (z < tempMinZ)
+            {
                 tempMinZ = z;
-            else if (z > tempMaxZ)
+            }
+            if (z > tempMaxZ)
+            {
                 tempMaxZ = z;
+            }
         }
         this.minX = tempMinX;
         this.minY = tempMinY;
@@ -182,7 +222,7 @@ public class BoundingBox implements Serializable
      */
     public BoundingBox(final Line line)
     {
-        this(line.getPointArray());
+        this(Throw.whenNull(line, "line cannot be null").getPointArray());
     }
 
     /**
@@ -192,7 +232,7 @@ public class BoundingBox implements Serializable
      */
     public BoundingBox(final Area area)
     {
-        this(area.getBoundaryArray());
+        this(Throw.whenNull(area, "area cannot be null").getBoundaryArray());
     }
 
     /**
@@ -205,10 +245,10 @@ public class BoundingBox implements Serializable
         Throw.whenNull(volume, "volume cannot be null");
         double tempMinX = Double.POSITIVE_INFINITY;
         double tempMinY = Double.POSITIVE_INFINITY;
-        double tempMaxX = -Double.NEGATIVE_INFINITY;
-        double tempMaxY = -Double.NEGATIVE_INFINITY;
-        double tempMinZ = -Double.NEGATIVE_INFINITY;
-        double tempMaxZ = -Double.NEGATIVE_INFINITY;
+        double tempMinZ = Double.POSITIVE_INFINITY;
+        double tempMaxX = Double.NEGATIVE_INFINITY;
+        double tempMaxY = Double.NEGATIVE_INFINITY;
+        double tempMaxZ = Double.NEGATIVE_INFINITY;
         for (Line line : volume.getWireframeLines())
         {
             for (Point point : line.getPointArray())
@@ -216,18 +256,32 @@ public class BoundingBox implements Serializable
                 double x = point.getX();
                 double y = point.getY();
                 double z = point.getZ();
+                Throw.when(Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z), IllegalArgumentException.class,
+                        "NaN value not permitted");
                 if (x < tempMinX)
+                {
                     tempMinX = x;
-                else if (x > tempMaxX)
+                }
+                if (x > tempMaxX)
+                {
                     tempMaxX = x;
+                }
                 if (y < tempMinY)
+                {
                     tempMinY = y;
-                else if (y > tempMaxY)
+                }
+                if (y > tempMaxY)
+                {
                     tempMaxY = y;
+                }
                 if (z < tempMinZ)
+                {
                     tempMinZ = z;
-                else if (z > tempMaxZ)
+                }
+                if (z > tempMaxZ)
+                {
                     tempMaxZ = z;
+                }
             }
         }
         this.minX = tempMinX;
@@ -239,29 +293,19 @@ public class BoundingBox implements Serializable
     }
 
     /**
-     * Return whether the box is empty (indicated by one or more bounds containing NaN).
-     * @return boolean; whether the box is empty
-     */
-    public boolean isEmpty()
-    {
-        return Double.isNaN(this.getMinX()) || Double.isNaN(this.getMaxX()) || Double.isNaN(this.getMinY())
-                || Double.isNaN(this.getMaxY()) || Double.isNaN(this.getMinZ()) || Double.isNaN(this.getMaxZ());
-    }
-
-    /**
      * Check if the bounding box contains a point. Contains returns false when the point is on the border of the box.
      * @param x double; the x-coordinate of the point
      * @param y double; the y-coordinate of the point
      * @param z double; the z-coordinate of the point
      * @return boolean; whether the bounding box contains the point with the given coordinates
+     * @throws IllegalArgumentException when any of the coordinates is NaN
      */
-    public boolean contains(final double x, final double y, final double z)
+    public boolean contains(final double x, final double y, final double z) throws IllegalArgumentException
     {
-        if (isEmpty())
-        {
-            return false;
-        }
-        return x > this.minX && x < this.maxX && y > this.minY && y < this.maxY && z > this.minZ && z < this.maxZ;
+        Throw.when(Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z), IllegalArgumentException.class,
+                "coordinates must be numbers (not NaN)");
+        return (!isEmpty()) && x > this.minX && x < this.maxX && y > this.minY && y < this.maxY && z > this.minZ
+                && z < this.maxZ;
     }
 
     /**
@@ -273,11 +317,7 @@ public class BoundingBox implements Serializable
     public boolean contains(final Point point)
     {
         Throw.whenNull(point, "point cannot be null");
-        if (isEmpty())
-        {
-            return false;
-        }
-        return contains(point.getX(), point.getY(), point.getZ());
+        return (!isEmpty()) && contains(point.getX(), point.getY(), point.getZ());
     }
 
     /**
@@ -291,10 +331,6 @@ public class BoundingBox implements Serializable
     public boolean contains(final BoundingBox boundingBox)
     {
         Throw.whenNull(boundingBox, "boundingBox cannot be null");
-        if (isEmpty() || boundingBox.isEmpty())
-        {
-            return false;
-        }
         return contains(boundingBox.getMinX(), boundingBox.getMinY(), boundingBox.getMinZ())
                 && contains(boundingBox.getMaxX(), boundingBox.getMaxY(), boundingBox.getMaxZ());
     }
@@ -302,13 +338,11 @@ public class BoundingBox implements Serializable
     /**
      * Return the centroid of this bounding box.
      * @return Point; the centroid of this bounding box
+     * @throws NullPointerException when this BoundingBox is the EMPTY_BOUNDING_BOX
      */
-    public Point centroid()
+    public Point centroid() throws NullPointerException
     {
-        if (isEmpty())
-        {
-            return new Point3d(Double.NaN, Double.NaN, Double.NaN);
-        }
+        Throw.when(isEmpty(), NullPointerException.class, "The empty BoundingBox has no centroid");
         return new Point3d((this.getMaxX() - this.getMinX()) / 2.0, (this.getMaxY() - this.getMinY()) / 2.0,
                 (this.getMaxZ() - this.getMinZ()) / 2.0);
     }
@@ -319,14 +353,14 @@ public class BoundingBox implements Serializable
      * @param y double; the y-coordinate of the point
      * @param z double; the z-coordinate of the point
      * @return boolean; whether the bounding box contains the point with the given coordinates, including the borders
+     * @throws IllegalArgumentException when any of the coordinates is NaN
      */
-    public boolean covers(final double x, final double y, final double z)
+    public boolean covers(final double x, final double y, final double z) throws IllegalArgumentException
     {
-        if (isEmpty())
-        {
-            return false;
-        }
-        return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY && z >= this.minZ && z <= this.maxZ;
+        Throw.when(Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z), IllegalArgumentException.class,
+                "coordinates must be numbers (not NaN)");
+        return (!this.isEmpty()) && x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY && z >= this.minZ
+                && z <= this.maxZ;
     }
 
     /**
@@ -338,10 +372,6 @@ public class BoundingBox implements Serializable
     public boolean covers(final Point point)
     {
         Throw.whenNull(point, "point cannot be null");
-        if (isEmpty())
-        {
-            return false;
-        }
         return covers(point.getX(), point.getY(), point.getZ());
     }
 
@@ -372,8 +402,9 @@ public class BoundingBox implements Serializable
     public boolean intersects(final BoundingBox boundingBox)
     {
         Throw.whenNull(boundingBox, "boundingBox cannot be null");
-        return !(boundingBox.minX > this.maxX || boundingBox.maxX < this.minX || boundingBox.minY > this.maxY
-                || boundingBox.maxY < this.minY || boundingBox.minZ > this.maxZ || boundingBox.maxZ < this.minZ);
+        return !(isEmpty() || boundingBox.isEmpty() || boundingBox.minX > this.maxX || boundingBox.maxX < this.minX
+                || boundingBox.minY > this.maxY || boundingBox.maxY < this.minY || boundingBox.minZ > this.maxZ
+                || boundingBox.maxZ < this.minZ);
     }
 
     /**
@@ -387,7 +418,7 @@ public class BoundingBox implements Serializable
     public BoundingBox intersection(final BoundingBox boundingBox)
     {
         Throw.whenNull(boundingBox, "boundingBox cannot be null");
-        if (isEmpty() || boundingBox.isEmpty() || disjoint(boundingBox))
+        if (disjoint(boundingBox))
         {
             return EMPTY_BOUNDING_BOX;
         }
@@ -409,16 +440,18 @@ public class BoundingBox implements Serializable
 
     /**
      * Return the 2d envelope of this BoundingBox.
-     * @return Envelope; the 2d envelope of this bounding box 
+     * @return Envelope; the 2d envelope of this bounding box
+     * @throws NullPointerException when this is the EMPTY_BOUNDING_BOX
      */
-    public BoundingRectangle envelope()
+    public BoundingRectangle envelope() throws NullPointerException
     {
+        Throw.when(isEmpty(), NullPointerException.class, "The empty BoundingBox has not envelope");
         return new BoundingRectangle(this.minX, this.maxX, this.minY, this.maxY);
     }
-    
+
     /**
      * Return the extent of this bounding box in the x-direction.
-     * @return double; the extent of this bounding box in the x-direction
+     * @return double; the extent of this bounding box in the x-direction, or NaN if this is the EMPTY_BOUNDING_BOX
      */
     public double getDeltaX()
     {
@@ -427,7 +460,7 @@ public class BoundingBox implements Serializable
 
     /**
      * Return the extent of this bounding box in the y-direction.
-     * @return double; the extent of this bounding box in the y-direction
+     * @return double; the extent of this bounding box in the y-direction, or NaN if this is the EMPTY_BOUNDING_BOX
      */
     public double getDeltaY()
     {
@@ -436,7 +469,7 @@ public class BoundingBox implements Serializable
 
     /**
      * Return the extent of this bounding box in the z-direction.
-     * @return double; the extent of this bounding box in the z-direction
+     * @return double; the extent of this bounding box in the z-direction, or NaN if this is the EMPTY_BOUNDING_BOX
      */
     public double getDeltaZ()
     {
@@ -445,7 +478,7 @@ public class BoundingBox implements Serializable
 
     /**
      * Return the volume of this bounding box.
-     * @return double; the volume of this bounding box
+     * @return double; the volume of this bounding box, or NaN if this is the EMPTY_BOUNDING_BOX
      */
     public double getVolume()
     {
@@ -454,7 +487,7 @@ public class BoundingBox implements Serializable
 
     /**
      * Return the lower bound for x, or NaN for an empty bounding box
-     * @return double; the lower bound for x, or NaN for an empty bounding box
+     * @return double; the lower bound for x, or NaN for the EMPTY_BOUNDING_BOX
      */
     public double getMinX()
     {
@@ -463,7 +496,7 @@ public class BoundingBox implements Serializable
 
     /**
      * Return the upper bound for x, or NaN for an empty bounding box
-     * @return double; the upper bound for x, or NaN for an empty bounding box
+     * @return double; the upper bound for x, or NaN for the EMPTY_BOUNDING_BOX
      */
     public double getMaxX()
     {
@@ -472,7 +505,7 @@ public class BoundingBox implements Serializable
 
     /**
      * Return the lower bound for y, or NaN for an empty bounding box
-     * @return double; the lower bound for y, or NaN for an empty bounding box
+     * @return double; the lower bound for y, or NaN for the EMPTY_BOUNDING_BOX
      */
     public double getMinY()
     {
@@ -481,7 +514,7 @@ public class BoundingBox implements Serializable
 
     /**
      * Return the upper bound for y, or NaN for an empty bounding box
-     * @return double; the upper bound for y, or NaN for an empty bounding box
+     * @return double; the upper bound for y, or NaN for the EMPTY_BOUNDING_BOX
      */
     public double getMaxY()
     {
@@ -490,7 +523,7 @@ public class BoundingBox implements Serializable
 
     /**
      * Return the lower bound for z, or NaN for an empty bounding box
-     * @return double; the lower bound for z, or NaN for an empty bounding box
+     * @return double; the lower bound for z, or NaN for the EMPTY_BOUNDING_BOX
      */
     public double getMinZ()
     {
@@ -499,7 +532,7 @@ public class BoundingBox implements Serializable
 
     /**
      * Return the upper bound for z, or NaN for an empty bounding box
-     * @return double; the upper bound for z, or NaN for an empty bounding box
+     * @return double; the upper bound for z, or NaN for the EMPTY_BOUNDING_BOX
      */
     public double getMaxZ()
     {
@@ -510,7 +543,7 @@ public class BoundingBox implements Serializable
     @Override
     public String toString()
     {
-        return "BoundingBoz[x[" + this.minX + " : " + this.maxX + "], y[" + this.minY + " : " + this.maxY + "], z[" + this.minZ
+        return "BoundingBox [x[" + this.minX + " : " + this.maxX + "], y[" + this.minY + " : " + this.maxY + "], z[" + this.minZ
                 + " : " + this.maxZ + "]]";
     }
 

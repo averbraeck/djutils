@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.awt.geom.Point2D;
 
@@ -39,7 +40,7 @@ public class DirectedPoint3dTest
         assertEquals(0.0, p.getDirY(), 1E-6);
         assertEquals(0.0, p.getDirZ(), 1E-6);
 
-        p = new DirectedPoint3d(new double[] {-18.7, 3.4, 5.6});
+        p = new DirectedPoint3d(new double[] { -18.7, 3.4, 5.6 });
         assertNotNull(p);
         assertEquals(-18.7, p.getX(), 1E-6);
         assertEquals(3.4, p.getY(), 1E-6);
@@ -57,17 +58,38 @@ public class DirectedPoint3dTest
         assertEquals(-0.2, p.getDirY(), 1E-6);
         assertEquals(3.1415926, p.getDirZ(), 1E-6);
 
-        DirectedPoint3d pNaN = new DirectedPoint3d(Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN, Double.NaN);
-        assertNotNull(pNaN);
-        assertTrue(Double.isNaN(pNaN.getX()));
-        assertTrue(Double.isNaN(pNaN.getY()));
-        assertTrue(Double.isNaN(pNaN.getZ()));
-        assertTrue(Double.isNaN(pNaN.getDirX()));
-        assertTrue(Double.isNaN(pNaN.getDirY()));
-        assertTrue(Double.isNaN(pNaN.getDirZ()));
+        try
+        {
+            new DirectedPoint3d(0, 0, 0, Double.NaN, 0, 0);
+            fail("NaN rotation should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
 
-        double[] p3Arr = new double[] {5.0, 6.0, 7.0};
-        double[] rotArr = new double[] {0.1, -0.2, 0.3};
+        try
+        {
+            new DirectedPoint3d(0, 0, 0, 0, Double.NaN, 0);
+            fail("NaN rotation should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new DirectedPoint3d(0, 0, 0, 0, 0, Double.NaN);
+            fail("NaN rotation should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        double[] p3Arr = new double[] { 5.0, 6.0, 7.0 };
+        double[] rotArr = new double[] { 0.1, -0.2, 0.3 };
         p = new DirectedPoint3d(5.0, 6.0, 7.0, rotArr);
         assertEquals(5.0, p.getX(), 1E-6);
         assertEquals(6.0, p.getY(), 1E-6);
@@ -143,7 +165,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(0.1, 0.2, 0.3, new double[] {0.1, 0.2});
+                new DirectedPoint3d(0.1, 0.2, 0.3, new double[] { 0.1, 0.2 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -152,7 +174,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(0.1, 0.2, 0.3, new double[] {0.1, 0.2, 0.3, 0.4});
+                new DirectedPoint3d(0.1, 0.2, 0.3, new double[] { 0.1, 0.2, 0.3, 0.4 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -170,7 +192,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(new double[] {0.1, 0.2});
+                new DirectedPoint3d(new double[] { 0.1, 0.2 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -179,7 +201,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(new double[] {0.1, 0.2, 0.3, 0.4});
+                new DirectedPoint3d(new double[] { 0.1, 0.2, 0.3, 0.4 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -188,7 +210,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(new double[] {1, 2, 3}, new double[] {0.1, 0.2});
+                new DirectedPoint3d(new double[] { 1, 2, 3 }, new double[] { 0.1, 0.2 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -197,7 +219,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(new double[] {1, 2, 3}, new double[] {0.1, 0.2, 0.3, 0.4});
+                new DirectedPoint3d(new double[] { 1, 2, 3 }, new double[] { 0.1, 0.2, 0.3, 0.4 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -267,17 +289,6 @@ public class DirectedPoint3dTest
         assertTrue(p3.epsilonEquals(p, 0.09, 0.009));
         assertFalse(p.epsilonEquals(p3, 0.0009, 0.0009));
         assertFalse(p3.epsilonEquals(p, 0.0009, 0.0009));
-
-        // NaN
-        assertFalse(p.epsilonEquals(new DirectedPoint3d(Double.NaN, 20.0, 0.0), 0.1, 0.001));
-        assertFalse(p.epsilonEquals(new DirectedPoint3d(10.0, Double.NaN, 0.0), 0.1, 0.001));
-        assertFalse(p.epsilonEquals(new DirectedPoint3d(10.0, 20.0, Double.NaN), 0.1, 0.001));
-        assertFalse(new DirectedPoint3d(Double.NaN, 20.0, 0.0).epsilonEquals(p, 0.1, 0.001));
-        assertFalse(new DirectedPoint3d(10.0, Double.NaN, 0.0).epsilonEquals(p, 0.1, 0.001));
-        assertFalse(new DirectedPoint3d(10.0, 20.0, Double.NaN).epsilonEquals(p, 0.1, 0.001));
-        assertFalse(new DirectedPoint3d(10.0, 20.0, 0.0, Double.NaN, 0.0, 0.0).epsilonEquals(p, 0.1, 0.001));
-        assertFalse(new DirectedPoint3d(10.0, 20.0, 0.0, 0.0, Double.NaN, 0.0).epsilonEquals(p, 0.1, 0.001));
-        assertFalse(new DirectedPoint3d(10.0, 20.0, 0.0, 0.0, 0.0, Double.NaN).epsilonEquals(p, 0.1, 0.001));
     }
 
     /**

@@ -73,6 +73,8 @@ public class DirectedPoint3d extends Point3d implements DirectedPoint
             final double dirZ)
     {
         super(x, y, z);
+        Throw.when(Double.isNaN(dirX) || Double.isNaN(dirY) || Double.isNaN(dirZ), IllegalArgumentException.class,
+                "Rotation must be a number (not NaN)");
         this.dirX = dirX;
         this.dirY = dirY;
         this.dirZ = dirZ;

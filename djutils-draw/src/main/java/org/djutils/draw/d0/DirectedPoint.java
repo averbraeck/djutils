@@ -44,8 +44,10 @@ public interface DirectedPoint extends Point
      *            <code>point</code> parameter
      * @return DirectedPoint; the point that is "fraction" away on the line between this point and the given point
      * @throws NullPointerException when point is null
+     * @throws IllegalArgumentException when fraction is NaN
      */
-    DirectedPoint interpolate(final DirectedPoint point, final double fraction);
+    DirectedPoint interpolate(final DirectedPoint point, final double fraction)
+            throws NullPointerException, IllegalArgumentException;
 
     /**
      * Interpolate between two points with a fraction. It is allowed for fraction to be less than zero or larger than 1. In that
@@ -58,8 +60,10 @@ public interface DirectedPoint extends Point
      *            <code>p1</code> parameter; when <code>fraction</code> is 1 this method returns the <code>p2</code> parameter
      * @return DirectedPoint; the point that is "fraction" away on the line between p1 and p2
      * @throws NullPointerException when p1 or p2 is null
+     * @throws IllegalArgumentException when fraction is NaN
      */
     static DirectedPoint interpolate(final DirectedPoint p1, final DirectedPoint p2, final double fraction)
+            throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(p1, "p1 cannot be null");
         return p1.interpolate(p2, fraction);
@@ -70,8 +74,9 @@ public interface DirectedPoint extends Point
      * be normalized between -&pi; and &pi;.
      * @param deltaRotZ double; the rotation around the z-axis
      * @return DirectedPoint; a new point with the same coordinates and applied rotation
+     * @throws IllegalArgumentException when deltaRotZ is NaN
      */
-    DirectedPoint rotate(double deltaRotZ);
+    DirectedPoint rotate(double deltaRotZ) throws IllegalArgumentException;
 
     /**
      * Return a new DirectedPoint3d point with an in-place rotation by the provided deltaRotX, deltaRotY, and deltaRotZ. The
@@ -80,9 +85,12 @@ public interface DirectedPoint extends Point
      * @param rotateY double; the rotation around the y-axis
      * @param rotateZ double; the rotation around the z-axis
      * @return DirectedPoint3d; a new point with the same coordinates and applied rotations
+     * @throws IllegalArgumentException when any of the rotations is NaN
      */
-    default DirectedPoint3d rotate(double rotateX, double rotateY, double rotateZ)
+    default DirectedPoint3d rotate(double rotateX, double rotateY, double rotateZ) throws IllegalArgumentException
     {
+        Throw.when(Double.isNaN(rotateX) || Double.isNaN(rotateY) || Double.isNaN(rotateZ), IllegalArgumentException.class,
+                "Rotation must be a number (not NaN)");
         return new DirectedPoint3d(getX(), getY(), getZ(), AngleUtil.normalizeAroundZero(getDirX() + rotateX),
                 AngleUtil.normalizeAroundZero(getDirY() + rotateY), AngleUtil.normalizeAroundZero(getDirZ() + rotateZ));
     }
@@ -96,38 +104,30 @@ public interface DirectedPoint extends Point
      * @return boolean; true if x, y, and z are less than epsilonCoordinate apart, and rotX, rotY and rotZ are less than
      *         epsilonRotation apart, otherwise false
      * @throws NullPointerException when point is null
+     * @throws IllegalArgumentException epsilonCoordinate or epsilonRotation is NaN
      */
     default boolean epsilonEquals(final DirectedPoint point, final double epsilonCoordinate, final double epsilonRotation)
+            throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(point, "point cannot be null");
+        Throw.when(Double.isNaN(epsilonCoordinate) || Double.isNaN(epsilonRotation), IllegalArgumentException.class,
+                "epsilonCoordinate and epsilonRotation must be numbers (not NaN)");
         if (!epsilonEquals(point, epsilonCoordinate))
         {
             return false;
         }
 
         double diff = AngleUtil.normalizeAroundZero(getDirX() - point.getDirX());
-        if (Double.isNaN(diff))
-        {
-            return false;
-        }
         if ((diff < 0 ? -diff : diff) > epsilonRotation)
         {
             return false;
         }
         diff = AngleUtil.normalizeAroundZero(getDirY() - point.getDirY());
-        if (Double.isNaN(diff))
-        {
-            return false;
-        }
         if ((diff < 0 ? -diff : diff) > epsilonRotation)
         {
             return false;
         }
         diff = AngleUtil.normalizeAroundZero(getDirZ() - point.getDirZ());
-        if (Double.isNaN(diff))
-        {
-            return false;
-        }
         if ((diff < 0 ? -diff : diff) > epsilonRotation)
         {
             return false;

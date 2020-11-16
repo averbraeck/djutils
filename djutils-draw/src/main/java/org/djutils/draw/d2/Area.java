@@ -16,9 +16,10 @@ import org.djutils.draw.d0.Point;
 public interface Area extends Serializable
 {
     /**
-     * Return the points of the this line as an array.
-     * @return Point[]; the points of this line as an array
+     * Return the points of the this area as an array.
+     * @return Point[]; the points of this area as an array
      */
     Point[] getBoundaryArray();
+    
 }
 

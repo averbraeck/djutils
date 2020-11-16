@@ -30,9 +30,11 @@ public class Point2d implements Point
      * Create a new Point with just an x and y coordinate, stored with double precision.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
+     * @throws IllegalArgumentException when x or y is NaN
      */
     public Point2d(final double x, final double y)
     {
+        Throw.when(Double.isNaN(x) || Double.isNaN(y), IllegalArgumentException.class, "Coordinate must be a number (not NaN)");
         this.x = x;
         this.y = y;
     }
@@ -41,12 +43,14 @@ public class Point2d implements Point
      * Create a new Point with just an x and y coordinate, stored with double precision.
      * @param xy double[2]; the x and y coordinate
      * @throws NullPointerException when xy is null
-     * @throws IllegalArgumentException when the dimension of xy is not 2
+     * @throws IllegalArgumentException when the dimension of xy is not 2, or a coordinate is NaN
      */
     public Point2d(final double[] xy) throws IllegalArgumentException
     {
         Throw.whenNull(xy, "xy-point cannot be null");
         Throw.when(xy.length != 2, IllegalArgumentException.class, "Dimension of xy-point should be 2");
+        Throw.when(Double.isNaN(xy[0]) || Double.isNaN(xy[1]), IllegalArgumentException.class,
+                "Coordinate must be a number (not NaN)");
         this.x = xy[0];
         this.y = xy[1];
     }
@@ -59,6 +63,8 @@ public class Point2d implements Point
     public Point2d(final Point2D point)
     {
         Throw.whenNull(point, "point cannot be null");
+        Throw.when(Double.isNaN(point.getX()) || Double.isNaN(point.getY()), IllegalArgumentException.class,
+                "Coordinate must be a number (not NaN)");
         this.x = point.getX();
         this.y = point.getY();
     }
@@ -67,6 +73,7 @@ public class Point2d implements Point
     @Override
     public Point2d translate(final double dx, final double dy)
     {
+        Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class, "translation may not be NaN");
         return new Point2d(this.x + dx, this.y + dy);
     }
 
@@ -74,6 +81,7 @@ public class Point2d implements Point
     @Override
     public Point2d scale(final double factor)
     {
+        Throw.when(Double.isNaN(factor), IllegalArgumentException.class, "factor must be a number (not NaN)");
         return new Point2d(this.x * factor, this.y * factor);
     }
 
@@ -105,6 +113,7 @@ public class Point2d implements Point
     public Point2d interpolate(final Point point, final double fraction)
     {
         Throw.whenNull(point, "point cannot be null");
+        Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
         return new Point2d((1.0 - fraction) * this.x + fraction * point.getX(),
                 (1.0 - fraction) * this.y + fraction * point.getY());
     }
@@ -123,7 +132,7 @@ public class Point2d implements Point
     @Override
     public double[] toArray()
     {
-        return new double[] {this.x, this.y};
+        return new double[] { this.x, this.y };
     }
 
     /** {@inheritDoc} */

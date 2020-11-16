@@ -40,8 +40,9 @@ public interface Point extends Serializable
      * @param dx double; the horizontal translation
      * @param dy double; the vertical translation
      * @return Point; a new point with the translated coordinates
+     * @throws IllegalArgumentException when dx, or dy is NaN
      */
-    Point translate(double dx, double dy);
+    Point translate(double dx, double dy) throws IllegalArgumentException;
 
     /**
      * Return a new Point3d with a translation by the provided delta-x, delta-y, and delta-z.
@@ -49,9 +50,12 @@ public interface Point extends Serializable
      * @param dy double; the translation in the y-direction
      * @param dz double; the translation in the z-direction
      * @return Point3d; a new point with the translated coordinates
+     * @throws IllegalArgumentException when dx, dy, or dz is NaN
      */
-    default Point3d translate(double dx, double dy, double dz)
+    default Point3d translate(double dx, double dy, double dz) throws IllegalArgumentException
     {
+        Throw.when(Double.isNaN(dx) || Double.isNaN(dy) || Double.isNaN(dz), IllegalArgumentException.class,
+                "dx, dy and dz must be numbers (not NaN)");
         return new Point3d(getX() + dx, getY() + dy, getZ() + dz);
     }
 
@@ -59,8 +63,9 @@ public interface Point extends Serializable
      * Return a new Point with the coordinates of this point scaled by the provided factor.
      * @param factor double; the scale factor
      * @return Point; a new point with the coordinates of this point scaled by the provided factor
+     * @throws IllegalArgumentException when factor is NaN
      */
-    Point scale(double factor);
+    Point scale(double factor) throws IllegalArgumentException;
 
     /**
      * Return a new Point with negated coordinate values.
@@ -96,7 +101,7 @@ public interface Point extends Serializable
      * @return double; the direction of the projection of the point in the x-y plane to another point, in radians
      * @throws NullPointerException when <code>point</code> is null
      */
-    default double horizontalDirection(final Point point)
+    default double horizontalDirection(final Point point) throws NullPointerException
     {
         Throw.whenNull(point, "point cannot be null");
         return Math.atan2(point.getY() - getY(), point.getX() - getX());
@@ -111,8 +116,9 @@ public interface Point extends Serializable
      *            returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
      * @return Point; the point that is <code>fraction</code> away on the line between this point and the other point
      * @throws NullPointerException when point is null
+     * @throws IllegalArgumentException when fraction is NaN
      */
-    Point interpolate(Point point, double fraction);
+    Point interpolate(Point point, double fraction) throws NullPointerException, IllegalArgumentException;
 
     /**
      * Interpolate between two points with a fraction. It is allowed for fraction to be less than zero or larger than 1. In that
@@ -124,8 +130,10 @@ public interface Point extends Serializable
      *            <code>fraction</code> is 1, the <code>p2</code> is returned
      * @return Point; the point that is <code>fraction</code> away on the line between p1 and p2
      * @throws NullPointerException when p1 or p2 is null
+     * @throws IllegalArgumentException when fraction is NaN
      */
     static Point interpolate(final Point p1, final Point p2, final double fraction)
+            throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(p1, "p1 cannot be null");
         return p1.interpolate(p2, fraction);
@@ -137,7 +145,7 @@ public interface Point extends Serializable
      * @return double; the squared distance between this point and the other point
      * @throws NullPointerException when point is null
      */
-    double distanceSquared(Point point);
+    double distanceSquared(Point point) throws NullPointerException;
 
     /**
      * Return the squared distance between two points.
@@ -158,8 +166,9 @@ public interface Point extends Serializable
      * @return double; the Euclidean distance between this point and the other point
      * @throws NullPointerException when point is null
      */
-    default double distance(final Point point)
+    default double distance(final Point point) throws NullPointerException
     {
+        Throw.whenNull(point, "point cannot be null");
         return Math.sqrt(distanceSquared(this, point));
     }
 
@@ -170,7 +179,7 @@ public interface Point extends Serializable
      * @return double; the Euclidean distance between the two points
      * @throws NullPointerException when p1 or p2 is null
      */
-    static double distance(final Point p1, final Point p2)
+    static double distance(final Point p1, final Point p2) throws NullPointerException
     {
         return Math.sqrt(distanceSquared(p1, p2));
     }
@@ -251,28 +260,16 @@ public interface Point extends Serializable
     {
         Throw.whenNull(point, "point cannot be null");
         double diff = getX() - point.getX();
-        if (Double.isNaN(diff))
-        {
-            return false;
-        }
         if ((diff < 0 ? -diff : diff) > epsilon)
         {
             return false;
         }
         diff = getY() - point.getY();
-        if (Double.isNaN(diff))
-        {
-            return false;
-        }
         if ((diff < 0 ? -diff : diff) > epsilon)
         {
             return false;
         }
         diff = getZ() - point.getZ();
-        if (Double.isNaN(diff))
-        {
-            return false;
-        }
         if ((diff < 0 ? -diff : diff) > epsilon)
         {
             return false;
