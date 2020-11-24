@@ -19,7 +19,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class BoundingBox implements Serializable
+public class Bounds3d implements Serializable
 {
     /** */
     private static final long serialVersionUID = 2020829L;
@@ -43,12 +43,12 @@ public class BoundingBox implements Serializable
     private final double maxZ;
 
     /** The empty bounding box for reuse. Since bounding boxes are immutable, only one instance is needed. */
-    public static final BoundingBox EMPTY_BOUNDING_BOX = new BoundingBox();
+    public static final Bounds3d EMPTY_BOUNDING_BOX = new Bounds3d();
 
     /**
      * Create an empty bounding box, with NaN for all bounds.
      */
-    private BoundingBox()
+    private Bounds3d()
     {
         this.minX = Double.NaN;
         this.maxX = Double.NaN;
@@ -68,7 +68,7 @@ public class BoundingBox implements Serializable
      * @param maxZ double; the upper bound for z, or NaN for an empty bounding box
      * @throws IllegalArgumentException when lower bounds are larger than upper boundingBox or any bound is NaN
      */
-    public BoundingBox(final double minX, final double maxX, final double minY, final double maxY, final double minZ,
+    public Bounds3d(final double minX, final double maxX, final double minY, final double maxY, final double minZ,
             final double maxZ)
     {
         Throw.when(minX > maxX || minY > maxY || minZ > maxZ, IllegalArgumentException.class,
@@ -90,7 +90,7 @@ public class BoundingBox implements Serializable
      * @param deltaZ double; the deltaZ value around the origin
      * @throws IllegalArgumentException when one of the delta values is less than zero
      */
-    public BoundingBox(final double deltaX, final double deltaY, final double deltaZ)
+    public Bounds3d(final double deltaX, final double deltaY, final double deltaZ)
     {
         Throw.when(deltaX < 0.0 || deltaY < 0.0 || deltaZ < 0.0, IllegalArgumentException.class, "delta values sould be >= 0");
         Throw.when(Double.isNaN(deltaX) || Double.isNaN(deltaY) || Double.isNaN(deltaZ), IllegalArgumentException.class,
@@ -117,7 +117,7 @@ public class BoundingBox implements Serializable
      * Construct a bounding box from an array of points, finding the lowest and highest x, y, and z coordinates.
      * @param points Point[]; the array of points to construct a bounding box from
      */
-    public BoundingBox(final Point[] points)
+    public Bounds3d(final Point[] points)
     {
         Throw.when(points.length == 0, IllegalArgumentException.class, "points may not be empty");
         double tempMinX = Double.POSITIVE_INFINITY;
@@ -168,7 +168,7 @@ public class BoundingBox implements Serializable
      * Construct a bounding box from a collection of points, finding the lowest and highest x, y, and z coordinates.
      * @param points Collection&lt;Point&gt;; the collection of points to construct a bounding box from
      */
-    public BoundingBox(final Collection<Point> points)
+    public Bounds3d(final Collection<Point> points)
     {
         Throw.when(points.size() == 0, IllegalArgumentException.class, "points may not be empty");
         double tempMinX = Double.POSITIVE_INFINITY;
@@ -220,7 +220,7 @@ public class BoundingBox implements Serializable
      * @param line Line; the line
      * @throws NullPointerException when line is null
      */
-    public BoundingBox(final Line line)
+    public Bounds3d(final Line line)
     {
         this(Throw.whenNull(line, "line cannot be null").getPointArray());
     }
@@ -230,7 +230,7 @@ public class BoundingBox implements Serializable
      * @param area Area; the area
      * @throws NullPointerException when area is null
      */
-    public BoundingBox(final Area area)
+    public Bounds3d(final Area area)
     {
         this(Throw.whenNull(area, "area cannot be null").getBoundaryArray());
     }
@@ -240,7 +240,7 @@ public class BoundingBox implements Serializable
      * @param volume Volume3d; the volume
      * @throws NullPointerException when volume is null
      */
-    public BoundingBox(final Volume3d volume)
+    public Bounds3d(final Volume3d volume)
     {
         Throw.whenNull(volume, "volume cannot be null");
         double tempMinX = Double.POSITIVE_INFINITY;
@@ -328,7 +328,7 @@ public class BoundingBox implements Serializable
      * @return boolean; whether the bounding box contains the provided bounding box
      * @throws NullPointerException when boundingBox is null
      */
-    public boolean contains(final BoundingBox boundingBox)
+    public boolean contains(final Bounds3d boundingBox)
     {
         Throw.whenNull(boundingBox, "boundingBox cannot be null");
         return contains(boundingBox.getMinX(), boundingBox.getMinY(), boundingBox.getMinZ())
@@ -382,7 +382,7 @@ public class BoundingBox implements Serializable
      * @return boolean; whether the bounding box contains the provided bounding box, including overlapping borders
      * @throws NullPointerException when boundingBox is null
      */
-    public boolean covers(final BoundingBox boundingBox)
+    public boolean covers(final Bounds3d boundingBox)
     {
         Throw.whenNull(boundingBox, "boundingBox cannot be null");
         if (isEmpty() || boundingBox.isEmpty())
@@ -399,7 +399,7 @@ public class BoundingBox implements Serializable
      * @return boolean; whether this bounding box intersects with another bounding box
      * @throws NullPointerException when boundingBox is null
      */
-    public boolean intersects(final BoundingBox boundingBox)
+    public boolean intersects(final Bounds3d boundingBox)
     {
         Throw.whenNull(boundingBox, "boundingBox cannot be null");
         return !(isEmpty() || boundingBox.isEmpty() || boundingBox.minX > this.maxX || boundingBox.maxX < this.minX
@@ -415,14 +415,14 @@ public class BoundingBox implements Serializable
      *         box in case there is no intersection
      * @throws NullPointerException when boundingBox is null
      */
-    public BoundingBox intersection(final BoundingBox boundingBox)
+    public Bounds3d intersection(final Bounds3d boundingBox)
     {
         Throw.whenNull(boundingBox, "boundingBox cannot be null");
         if (disjoint(boundingBox))
         {
             return EMPTY_BOUNDING_BOX;
         }
-        return new BoundingBox(Math.max(this.minX, boundingBox.minX), Math.min(this.maxX, boundingBox.maxX),
+        return new Bounds3d(Math.max(this.minX, boundingBox.minX), Math.min(this.maxX, boundingBox.maxX),
                 Math.max(this.minY, boundingBox.minY), Math.min(this.maxY, boundingBox.maxY),
                 Math.max(this.minZ, boundingBox.minZ), Math.min(this.maxZ, boundingBox.maxZ));
     }
@@ -433,7 +433,7 @@ public class BoundingBox implements Serializable
      * @return boolean; whether this bounding box is disjoint from another bounding box
      * @throws NullPointerException when boundingBox is null
      */
-    public boolean disjoint(BoundingBox boundingBox)
+    public boolean disjoint(Bounds3d boundingBox)
     {
         return !intersects(boundingBox);
     }
@@ -443,10 +443,10 @@ public class BoundingBox implements Serializable
      * @return Envelope; the 2d envelope of this bounding box
      * @throws NullPointerException when this is the EMPTY_BOUNDING_BOX
      */
-    public BoundingRectangle envelope() throws NullPointerException
+    public Bounds2d envelope() throws NullPointerException
     {
         Throw.when(isEmpty(), NullPointerException.class, "The empty BoundingBox has not envelope");
-        return new BoundingRectangle(this.minX, this.maxX, this.minY, this.maxY);
+        return new Bounds2d(this.minX, this.maxX, this.minY, this.maxY);
     }
 
     /**
@@ -579,7 +579,7 @@ public class BoundingBox implements Serializable
             return false;
         if (getClass() != obj.getClass())
             return false;
-        BoundingBox other = (BoundingBox) obj;
+        Bounds3d other = (Bounds3d) obj;
         if (Double.doubleToLongBits(this.maxX) != Double.doubleToLongBits(other.maxX))
             return false;
         if (Double.doubleToLongBits(this.maxY) != Double.doubleToLongBits(other.maxY))

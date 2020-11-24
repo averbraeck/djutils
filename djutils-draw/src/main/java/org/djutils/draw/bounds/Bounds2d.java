@@ -21,7 +21,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class BoundingRectangle implements Serializable
+public class Bounds2d implements Serializable
 {
     /** */
     private static final long serialVersionUID = 20200829L;
@@ -39,12 +39,12 @@ public class BoundingRectangle implements Serializable
     private final double maxY;
 
     /** The empty bounding rectangle for reuse. Since boundingRectangles are immmutable, only one instance is needed. */
-    public static final BoundingRectangle EMPTY_BOUNDING_RECTANGLE = new BoundingRectangle();
+    public static final Bounds2d EMPTY_BOUNDING_RECTANGLE = new Bounds2d();
 
     /**
      * Create an empty bounding rectangle, with NaN for all bounds.
      */
-    private BoundingRectangle()
+    private Bounds2d()
     {
         this.minX = Double.NaN;
         this.minY = Double.NaN;
@@ -60,7 +60,7 @@ public class BoundingRectangle implements Serializable
      * @param maxY double; the upper bound for y, or NaN for an empty bounding rectangle
      * @throws IllegalArgumentException when lower bounds are larger than upper boundingRectangle, or any of the bounds is NaN
      */
-    public BoundingRectangle(final double minX, final double maxX, final double minY, final double maxY)
+    public Bounds2d(final double minX, final double maxX, final double minY, final double maxY)
             throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(minX) || Double.isNaN(maxX) || Double.isNaN(minY) || Double.isNaN(maxY),
@@ -79,7 +79,7 @@ public class BoundingRectangle implements Serializable
      * @param deltaY double; the deltaY value around the origin
      * @throws IllegalArgumentException when one of the delta values is less than zero
      */
-    public BoundingRectangle(final double deltaX, final double deltaY)
+    public Bounds2d(final double deltaX, final double deltaY)
     {
         Throw.when(deltaX < 0.0 || deltaY < 0.0, IllegalArgumentException.class, "delta values sould be >= 0");
         Throw.when(Double.isNaN(deltaX) || Double.isNaN(deltaY), IllegalArgumentException.class, "Nan value not permitted");
@@ -95,7 +95,7 @@ public class BoundingRectangle implements Serializable
      * @throws NullPointerException when points is null
      * @throws IllegalArgumentException when zero points are provided
      */
-    public BoundingRectangle(final Point[] points) throws NullPointerException, IllegalArgumentException
+    public Bounds2d(final Point[] points) throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(points, "points may not be null");
         Throw.when(points.length == 0, IllegalArgumentException.class, "must have at least one point");
@@ -136,7 +136,7 @@ public class BoundingRectangle implements Serializable
      * @throws NullPointerException when points is null
      * @throws IllegalArgumentException when zero points are provided
      */
-    public BoundingRectangle(final Collection<Point> points) throws NullPointerException, IllegalArgumentException
+    public Bounds2d(final Collection<Point> points) throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(points, "points may not be null");
         Throw.when(points.isEmpty(), IllegalArgumentException.class, "must have at least one point");
@@ -176,7 +176,7 @@ public class BoundingRectangle implements Serializable
      * @param line Line; the line
      * @throws NullPointerException when line is null
      */
-    public BoundingRectangle(final Line line) throws NullPointerException
+    public Bounds2d(final Line line) throws NullPointerException
     {
         this(Throw.whenNull(line, "line may not be null").getPointArray());
     }
@@ -186,7 +186,7 @@ public class BoundingRectangle implements Serializable
      * @param area Area; the area
      * @throws NullPointerException when area is null
      */
-    public BoundingRectangle(final Area area) throws NullPointerException
+    public Bounds2d(final Area area) throws NullPointerException
     {
         this(Throw.whenNull(area, "area may not be null").getBoundaryArray());
     }
@@ -224,7 +224,7 @@ public class BoundingRectangle implements Serializable
      * @return boolean; whether the bounding rectangle contains the provided bounding rectangle
      * @throws NullPointerException when boundingRectangle is null
      */
-    public boolean contains(final BoundingRectangle boundingRectangle) throws NullPointerException
+    public boolean contains(final Bounds2d boundingRectangle) throws NullPointerException
     {
         Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
         return (!boundingRectangle.isEmpty()) && contains(boundingRectangle.minX, boundingRectangle.minY)
@@ -273,7 +273,7 @@ public class BoundingRectangle implements Serializable
      * @return boolean; whether the bounding rectangle contains the provided bounding rectangle, including overlapping borders
      * @throws NullPointerException when boundingRectangle is null
      */
-    public boolean covers(final BoundingRectangle boundingRectangle)
+    public boolean covers(final Bounds2d boundingRectangle)
     {
         Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
         return covers(boundingRectangle.minX, boundingRectangle.minY) && covers(boundingRectangle.maxX, boundingRectangle.maxY);
@@ -286,7 +286,7 @@ public class BoundingRectangle implements Serializable
      * @return boolean; whether this bounding rectangle is disjoint from another bounding rectangle
      * @throws NullPointerException when boundingRectangle is null
      */
-    public boolean disjoint(final BoundingRectangle boundingRectangle)
+    public boolean disjoint(final Bounds2d boundingRectangle)
     {
         return !intersects(boundingRectangle);
     }
@@ -298,7 +298,7 @@ public class BoundingRectangle implements Serializable
      * @return boolean; whether this bounding rectangle intersects with another bounding rectangle
      * @throws NullPointerException when boundingRectangle is null
      */
-    public boolean intersects(final BoundingRectangle boundingRectangle)
+    public boolean intersects(final Bounds2d boundingRectangle)
     {
         Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
         return !(isEmpty() || boundingRectangle.isEmpty() || boundingRectangle.minX > this.maxX
@@ -332,7 +332,7 @@ public class BoundingRectangle implements Serializable
      *         or the empty bounding rectangle in case there is no intersection
      * @throws NullPointerException when boundingRectangle is null
      */
-    public BoundingRectangle intersection(final BoundingRectangle boundingRectangle)
+    public Bounds2d intersection(final Bounds2d boundingRectangle)
     {
         Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
         if (isEmpty() || boundingRectangle.isEmpty() || !intersects(boundingRectangle))
@@ -343,7 +343,7 @@ public class BoundingRectangle implements Serializable
         double tempMinY = this.minY > boundingRectangle.minY ? this.minY : boundingRectangle.minY;
         double tempMaxX = this.maxX < boundingRectangle.maxX ? this.maxX : boundingRectangle.maxX;
         double tempMaxY = this.maxY < boundingRectangle.maxY ? this.maxY : boundingRectangle.maxY;
-        return new BoundingRectangle(tempMinX, tempMaxX, tempMinY, tempMaxY);
+        return new Bounds2d(tempMinX, tempMaxX, tempMinY, tempMaxY);
     }
 
     /**
@@ -462,7 +462,7 @@ public class BoundingRectangle implements Serializable
             return false;
         if (getClass() != obj.getClass())
             return false;
-        BoundingRectangle other = (BoundingRectangle) obj;
+        Bounds2d other = (Bounds2d) obj;
         if (Double.doubleToLongBits(this.maxX) != Double.doubleToLongBits(other.maxX))
             return false;
         if (Double.doubleToLongBits(this.maxY) != Double.doubleToLongBits(other.maxY))
