@@ -3,6 +3,7 @@ package org.djutils.draw.surface;
 import java.util.Arrays;
 
 import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.point.Point;
 import org.djutils.draw.point.Point2d;
 
 /**
