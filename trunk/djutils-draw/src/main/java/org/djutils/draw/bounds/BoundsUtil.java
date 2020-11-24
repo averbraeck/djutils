@@ -45,15 +45,15 @@ public final class BoundsUtil
      * @param zValue double; the zValue as the 'height' for which the bounds intersection is calculated
      * @return BoundingRectangle; the resulting rectangle of the intersection
      */
-    public static BoundingRectangle zIntersect(final DirectedPoint center, final BoundingBox boundingBox, final double zValue)
+    public static Bounds2d zIntersect(final DirectedPoint center, final Bounds3d boundingBox, final double zValue)
     {
-        BoundingBox box = transform(boundingBox, center);
+        Bounds3d box = transform(boundingBox, center);
         Point3d lower = new Point3d(box.getMinX(), box.getMinY(), zValue);
         if (!box.contains(lower))
         {
             return null;
         }
-        return new BoundingRectangle(lower.getX(), lower.getY(), box.getMaxX(), box.getMaxY());
+        return new Bounds2d(lower.getX(), lower.getY(), box.getMaxX(), box.getMaxY());
     }
 
     /**
@@ -63,7 +63,7 @@ public final class BoundsUtil
      * @param boundingBox BoundingBox; the bounds that need to be rotated and translated
      * @return the bounds after rotation and translation
      */
-    public static BoundingBox transform(final BoundingBox boundingBox, final DirectedPoint point)
+    public static Bounds3d transform(final Bounds3d boundingBox, final DirectedPoint point)
     {
         // First rotate around 0,0,0, then translate
         Transform3d transformation = new Transform3d();
@@ -85,7 +85,7 @@ public final class BoundsUtil
      *            relative to the center.
      * @return whether or not the point is in the bounds
      */
-    public static boolean contains(final DirectedPoint center, final BoundingBox boundingBox, final Point3d point)
+    public static boolean contains(final DirectedPoint center, final Bounds3d boundingBox, final Point3d point)
     {
         return transform(boundingBox, center).contains(point);
     }
