@@ -2,7 +2,7 @@ package org.djutils.draw;
 
 import java.rmi.RemoteException;
 
-import org.djutils.draw.bounds.BoundingBox;
+import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.d0.DirectedPoint;
 
 /**
@@ -30,5 +30,5 @@ public interface Locatable
      * @return BoundingBox with this.getLocation() as center of the box.
      * @throws RemoteException on network failure
      */
-    BoundingBox getBounds() throws RemoteException;
+    Bounds3d getBounds() throws RemoteException;
 }
