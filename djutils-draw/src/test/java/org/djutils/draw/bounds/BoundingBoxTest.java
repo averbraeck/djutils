@@ -29,7 +29,7 @@ public class BoundingBoxTest
     /**
      * Test the bounding box constructor.
      * @throws DrawException if that happens uncaught; this test has failed
-     * @throws IllegalArgumentException 
+     * @throws IllegalArgumentException on unexpected error
      */
     @Test
     public void constructorTest() throws IllegalArgumentException, DrawException
