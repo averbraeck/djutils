@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.djutils.draw.DrawException;
-import org.djutils.draw.d0.DirectedPoint3d;
-import org.djutils.draw.d0.Point3d;
+import org.djutils.draw.point.DirectedPoint3d;
+import org.djutils.draw.point.Point3d;
 import org.junit.Test;
 
 /**

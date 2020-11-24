@@ -8,8 +8,8 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.djutils.draw.d0.Point;
-import org.djutils.draw.d0.Point2d;
+import org.djutils.draw.point.Point;
+import org.djutils.draw.point.Point2d;
 import org.junit.Test;
 
 /**

@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.djutils.draw.DrawException;
-import org.djutils.draw.d0.Point;
-import org.djutils.draw.d0.Point3d;
-import org.djutils.draw.d1.Line3d;
+import org.djutils.draw.line.Line3d;
+import org.djutils.draw.point.Point;
+import org.djutils.draw.point.Point3d;
 import org.junit.Test;
 
 /**
