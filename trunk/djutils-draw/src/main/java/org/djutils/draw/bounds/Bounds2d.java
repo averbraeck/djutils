@@ -4,14 +4,14 @@ import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.djutils.draw.d0.Point;
-import org.djutils.draw.d0.Point2d;
-import org.djutils.draw.d1.Line;
-import org.djutils.draw.d2.Area;
+import org.djutils.draw.line.Line;
+import org.djutils.draw.point.Point;
+import org.djutils.draw.point.Point2d;
+import org.djutils.draw.surface.Area;
 import org.djutils.exceptions.Throw;
 
 /**
- * ABoundingRectangle contains the rectangular 2D bounds of an object, ignoring the z-coordinate. The bounding rectangle is
+ * ABounds2d contains the rectangular 2D bounds of an object, ignoring the z-coordinate. The bounding rectangle is
  * implemented as an immutable object. An empty version to denote, e.g., a non-intersection, can be created with the empty
  * constructor. The boundary values will be NaN in that case.
  * <p>
@@ -74,7 +74,7 @@ public class Bounds2d implements Serializable
     }
 
     /**
-     * Constructs a new BoundingRectangle around (0, 0).
+     * Constructs a new Bounds2d around (0, 0).
      * @param deltaX double; the deltaX value around the origin
      * @param deltaY double; the deltaY value around the origin
      * @throws IllegalArgumentException when one of the delta values is less than zero
@@ -219,7 +219,7 @@ public class Bounds2d implements Serializable
     /**
      * Check if the bounding rectangle contains another bounding rectangle. Contains returns false when one of the edges of the
      * other bounding rectangle is overlapping with the border of this bounding rectangle.
-     * @param boundingRectangle BoundingRectangle; the bounding rectangle for which to check if it is completely contained
+     * @param boundingRectangle Bounds2d; the bounding rectangle for which to check if it is completely contained
      *            within this bounding rectangle
      * @return boolean; whether the bounding rectangle contains the provided bounding rectangle
      * @throws NullPointerException when boundingRectangle is null
@@ -238,7 +238,7 @@ public class Bounds2d implements Serializable
      */
     public Point centroid()
     {
-        Throw.when(isEmpty(), NullPointerException.class, "The empty BoundingRectangle has no centroid");
+        Throw.when(isEmpty(), NullPointerException.class, "The empty Bounds2d has no centroid");
         return new Point2d((this.maxX - this.minX) / 2.0, (this.maxY - this.minY) / 2.0);
     }
 
@@ -268,7 +268,7 @@ public class Bounds2d implements Serializable
     /**
      * Check if the bounding rectangle contains another bounding rectangle. Covers returns true when one of the edges of the
      * other bounding rectangle is overlapping with the border of this bounding rectangle.
-     * @param boundingRectangle BoundingRectangle; the bounding rectangle for which to check if it is contained within this
+     * @param boundingRectangle Bounds2d; the bounding rectangle for which to check if it is contained within this
      *            bounding rectangle
      * @return boolean; whether the bounding rectangle contains the provided bounding rectangle, including overlapping borders
      * @throws NullPointerException when boundingRectangle is null
@@ -282,7 +282,7 @@ public class Bounds2d implements Serializable
     /**
      * Return whether this bounding rectangle is disjoint from another bounding rectangle. Touching at the edge is seen as
      * disjoint.
-     * @param boundingRectangle BoundingRectangle; the other bounding rectangle
+     * @param boundingRectangle Bounds2d; the other bounding rectangle
      * @return boolean; whether this bounding rectangle is disjoint from another bounding rectangle
      * @throws NullPointerException when boundingRectangle is null
      */
@@ -294,7 +294,7 @@ public class Bounds2d implements Serializable
     /**
      * Return whether this bounding rectangle intersects with another bounding rectangle. Touching at the edge is not seen as
      * intersecting.
-     * @param boundingRectangle BoundingRectangle; the other bounding rectangle
+     * @param boundingRectangle Bounds2d; the other bounding rectangle
      * @return boolean; whether this bounding rectangle intersects with another bounding rectangle
      * @throws NullPointerException when boundingRectangle is null
      */
@@ -327,8 +327,8 @@ public class Bounds2d implements Serializable
     /**
      * Return the intersecting bounding rectangle of this bounding rectangle and another bounding rectangle. Touching at the
      * edge is not seen as intersecting. In case there is no intersection, the empty bounding rectangle is returned.
-     * @param boundingRectangle BoundingRectangle; the other bounding rectangle
-     * @return BoundingRectangle; the intersecting bounding rectangle of this bounding rectangle and another bounding rectangle
+     * @param boundingRectangle Bounds2d; the other bounding rectangle
+     * @return Bounds2d; the intersecting bounding rectangle of this bounding rectangle and another bounding rectangle
      *         or the empty bounding rectangle in case there is no intersection
      * @throws NullPointerException when boundingRectangle is null
      */
@@ -431,7 +431,7 @@ public class Bounds2d implements Serializable
     @Override
     public String toString()
     {
-        return "BoundingRectangle [x[" + this.minX + " : " + this.maxX + "], y[" + this.minY + " : " + this.maxY + "]]";
+        return "Bounds2d [x[" + this.minX + " : " + this.maxX + "], y[" + this.minY + " : " + this.maxY + "]]";
     }
 
     /** {@inheritDoc} */

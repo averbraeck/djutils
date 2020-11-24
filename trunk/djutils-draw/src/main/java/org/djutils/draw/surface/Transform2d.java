@@ -1,10 +1,9 @@
-package org.djutils.draw.d2;
+package org.djutils.draw.surface;
 
 import java.util.Arrays;
 
-import org.djutils.draw.bounds.BoundingRectangle;
-import org.djutils.draw.d0.Point;
-import org.djutils.draw.d0.Point2d;
+import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.point.Point2d;
 
 /**
  * Transform2d contains a MUTABLE transformation object that can transform points (x,y) based on e.g, rotation and translation.
@@ -198,15 +197,15 @@ public class Transform2d
     }
 
     /**
-     * Apply the stored transform on the provided BoundingRectangle and return a new BoundingRectangle with the bounds of the
+     * Apply the stored transform on the provided Bounds2d and return a new Bounds2d with the bounds of the
      * transformed coordinates. All 4 corner points have to be transformed, since we do not know which of the 4 points will
      * result in the lowest and highest x and y coordinates.
-     * @param boundingRectangle BoundingRectangle; the bounds to be transformed
-     * @return BoundingRectangle; the new bounds based on the transformed coordinates
+     * @param boundingRectangle Bounds2d; the bounds to be transformed
+     * @return Bounds2d; the new bounds based on the transformed coordinates
      */
-    public BoundingRectangle transform(final BoundingRectangle boundingRectangle)
+    public Bounds2d transform(final Bounds2d boundingRectangle)
     {
-        return new BoundingRectangle(
+        return new Bounds2d(
                 new Point2d[] { transform(new Point2d(boundingRectangle.getMinX(), boundingRectangle.getMinY())),
                         transform(new Point2d(boundingRectangle.getMinX(), boundingRectangle.getMaxY())),
                         transform(new Point2d(boundingRectangle.getMaxX(), boundingRectangle.getMinY())),

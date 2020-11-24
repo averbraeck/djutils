@@ -1,10 +1,10 @@
-package org.djutils.draw.d3;
+package org.djutils.draw.volume;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.djutils.draw.bounds.BoundingBox;
+import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.d0.Point;
 import org.djutils.draw.d0.Point3d;
 import org.junit.Test;
@@ -444,7 +444,7 @@ public class Transform3dTest
      * Test transformation of a bounding box.
      */
     @Test
-    public void transformBoundingBoxTest()
+    public void transformBounds3dTest()
     {
         double[] values = new double[] { -100, 0.1, 0, 0.1, 100 };
         double[] sizes = new double[] { 0, 10, 100 };
@@ -463,7 +463,7 @@ public class Transform3dTest
                         {
                             for (double zSize : sizes)
                             {
-                                BoundingBox bb = new BoundingBox(x, x + xSize, y, y + ySize, z, z + zSize);
+                                Bounds3d bb = new Bounds3d(x, x + xSize, y, y + ySize, z, z + zSize);
                                 Point3d[] points = new Point3d[] { new Point3d(x, y, z), new Point3d(x + xSize, y, z),
                                         new Point3d(x, y + ySize, z), new Point3d(x + xSize, y + ySize, z),
                                         new Point3d(x, y, z + zSize), new Point3d(x + xSize, y, z + zSize),
@@ -473,8 +473,8 @@ public class Transform3dTest
                                 {
                                     transformedPoints[i] = t.transform(points[i]);
                                 }
-                                BoundingBox expected = new BoundingBox(transformedPoints);
-                                BoundingBox got = t.transform(bb);
+                                Bounds3d expected = new Bounds3d(transformedPoints);
+                                Bounds3d got = t.transform(bb);
                                 assertEquals("bb minX", expected.getMinX(), got.getMinX(), 0.0001);
                                 assertEquals("bb maxX", expected.getMaxX(), got.getMaxX(), 0.0001);
                                 assertEquals("bb minY", expected.getMinY(), got.getMinY(), 0.0001);

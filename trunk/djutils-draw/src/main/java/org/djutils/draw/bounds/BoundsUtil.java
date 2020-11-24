@@ -1,8 +1,8 @@
 package org.djutils.draw.bounds;
 
-import org.djutils.draw.d0.DirectedPoint;
-import org.djutils.draw.d0.Point3d;
-import org.djutils.draw.d3.Transform3d;
+import org.djutils.draw.point.DirectedPoint;
+import org.djutils.draw.point.Point3d;
+import org.djutils.draw.volume.Transform3d;
 
 /**
  * A Bounds utility class to help with finding intersections between bounds, to make transformations, and to see if a point lies
@@ -43,7 +43,7 @@ public final class BoundsUtil
      *            the center</b> that is provided
      * @param center DirectedPoint; the point relative to which the bounds need to be calculated
      * @param zValue double; the zValue as the 'height' for which the bounds intersection is calculated
-     * @return BoundingRectangle; the resulting rectangle of the intersection
+     * @return Bounds2d; the resulting rectangle of the intersection
      */
     public static Bounds2d zIntersect(final DirectedPoint center, final Bounds3d boundingBox, final double zValue)
     {
@@ -60,7 +60,7 @@ public final class BoundsUtil
      * Rotates and translates a bound relative to a directed point. Often this point will be the given center point for the
      * animation.
      * @param point DirectedPoint; the point relative to which the bounds need to be transformed
-     * @param boundingBox BoundingBox; the bounds that need to be rotated and translated
+     * @param boundingBox Bounds3d; the bounds that need to be rotated and translated
      * @return the bounds after rotation and translation
      */
     public static Bounds3d transform(final Bounds3d boundingBox, final DirectedPoint point)
@@ -80,7 +80,7 @@ public final class BoundsUtil
      * Location of an animated object, and the bounds indicate the outer values of its animation without translation and
      * rotation (as if center is 0,0,0) and has no direction (rotX, rotY and rotZ are 0.0).
      * @param center DirectedPoint; the 'center' of the bounds.
-     * @param boundingBox BoundingBox; the bounds relative to 0,0,0
+     * @param boundingBox Bounds3d; the bounds relative to 0,0,0
      * @param point Point3d; the point that might be in or out of the bounds after they have been rotated and translated
      *            relative to the center.
      * @return whether or not the point is in the bounds

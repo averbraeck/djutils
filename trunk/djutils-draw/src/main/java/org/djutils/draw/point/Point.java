@@ -1,4 +1,4 @@
-package org.djutils.draw.d0;
+package org.djutils.draw.point;
 
 import java.awt.geom.Point2D;
 import java.io.Serializable;

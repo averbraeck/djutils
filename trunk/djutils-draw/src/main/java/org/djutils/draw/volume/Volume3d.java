@@ -1,10 +1,10 @@
-package org.djutils.draw.d3;
+package org.djutils.draw.volume;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.djutils.draw.d1.Line;
+import org.djutils.draw.line.Line;
 
 /**
  * Volume3d.java.

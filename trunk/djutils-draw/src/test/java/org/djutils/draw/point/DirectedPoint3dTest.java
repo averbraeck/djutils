@@ -1,4 +1,4 @@
-package org.djutils.draw.d0;
+package org.djutils.draw.point;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;

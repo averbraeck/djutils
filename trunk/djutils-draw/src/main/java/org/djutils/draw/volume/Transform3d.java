@@ -1,10 +1,10 @@
-package org.djutils.draw.d3;
+package org.djutils.draw.volume;
 
 import java.util.Arrays;
 
-import org.djutils.draw.bounds.BoundingBox;
-import org.djutils.draw.d0.Point;
-import org.djutils.draw.d0.Point3d;
+import org.djutils.draw.bounds.Bounds3d;
+import org.djutils.draw.point.Point;
+import org.djutils.draw.point.Point3d;
 
 /**
  * Transform3d contains a MUTABLE transformation object that can transform points (x,y,z) based on e.g, rotation and
@@ -281,15 +281,15 @@ public class Transform3d
     }
 
     /**
-     * Apply the stored transform on the provided BoundingBox and return a new BoundingBox with the bounds of the transformed
+     * Apply the stored transform on the provided Bounds3d and return a new Bounds3d with the bounds of the transformed
      * coordinates. All 8 corner points have to be transformed, since we do not know which of the 8 points will result in the
      * lowest and highest x, y, and z coordinates.
-     * @param boundingBox BoundingBox; the bounds to be transformed
-     * @return BoundingBox; the new bounds based on the transformed coordinates
+     * @param boundingBox Bounds3d; the bounds to be transformed
+     * @return Bounds3d; the new bounds based on the transformed coordinates
      */
-    public BoundingBox transform(final BoundingBox boundingBox)
+    public Bounds3d transform(final Bounds3d boundingBox)
     {
-        return new BoundingBox(
+        return new Bounds3d(
                 new Point3d[] { transform(new Point3d(boundingBox.getMinX(), boundingBox.getMinY(), boundingBox.getMinZ())),
                         transform(new Point3d(boundingBox.getMinX(), boundingBox.getMinY(), boundingBox.getMaxZ())),
                         transform(new Point3d(boundingBox.getMinX(), boundingBox.getMaxY(), boundingBox.getMinZ())),

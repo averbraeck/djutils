@@ -1,4 +1,4 @@
-package org.djutils.draw.d1;
+package org.djutils.draw.line;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
@@ -8,10 +8,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.djutils.draw.DrawException;
-import org.djutils.draw.bounds.BoundingBox;
-import org.djutils.draw.bounds.BoundingRectangle;
-import org.djutils.draw.d0.DirectedPoint3d;
-import org.djutils.draw.d0.Point3d;
+import org.djutils.draw.bounds.Bounds3d;
+import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.point.DirectedPoint3d;
+import org.djutils.draw.point.Point3d;
 import org.djutils.logger.CategoryLogger;
 
 /**
@@ -41,11 +41,11 @@ public class Line3d implements Line
     private final Point3d centroid;
 
     /** Bounding rectangle of this Line3d. */
-    private final BoundingRectangle boundingRectangle;
+    private final Bounds2d boundingRectangle;
     // TODO Peter thinks that the Line3d need not store the bounding rectangle. Can be quickly derived from bounding box.
 
     /** Bounding box of this Line3d around the centroid. */
-    private final BoundingBox bounds;
+    private final Bounds3d bounds;
 
     /**
      * Construct a new Line3d and initialize its length indexed line, bounds, centroid and length.
@@ -90,8 +90,8 @@ public class Line3d implements Line
         double deltaX = maxX - minX;
         double deltaY = maxY - minY;
         double deltaZ = maxZ - minZ;
-        this.bounds = new BoundingBox(-deltaX / 2.0, deltaX / 2, -deltaY / 2.0, deltaY / 2, -deltaZ / 2.0, deltaZ / 2);
-        this.boundingRectangle = new BoundingRectangle(minX, maxX, minY, maxY);
+        this.bounds = new Bounds3d(-deltaX / 2.0, deltaX / 2, -deltaY / 2.0, deltaY / 2, -deltaZ / 2.0, deltaZ / 2);
+        this.boundingRectangle = new Bounds2d(minX, maxX, minY, maxY);
     }
 
     /**
@@ -826,9 +826,9 @@ public class Line3d implements Line
 
     /**
      * Get the bounding rectangle of this Line3d.
-     * @return BoundingRectangle; the bounding rectangle of this Line3d
+     * @return Bounds2d; the bounding rectangle of this Line3d
      */
-    public final BoundingRectangle getBoundingRectangle()
+    public final Bounds2d getBounds2d()
     {
         return this.boundingRectangle;
     }
@@ -842,7 +842,7 @@ public class Line3d implements Line
 
     /** {@inheritDoc} */
     @Override
-    public BoundingBox getBounds() throws RemoteException
+    public Bounds3d getBounds() throws RemoteException
     {
         return this.bounds;
     }

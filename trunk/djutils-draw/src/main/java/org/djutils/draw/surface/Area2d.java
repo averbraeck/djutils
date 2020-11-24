@@ -1,4 +1,4 @@
-package org.djutils.draw.d2;
+package org.djutils.draw.surface;
 
 /**
  * Area2d.java.

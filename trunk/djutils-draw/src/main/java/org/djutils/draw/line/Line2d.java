@@ -1,4 +1,4 @@
-package org.djutils.draw.d1;
+package org.djutils.draw.line;
 
 /**
  * Line2d.java.
