@@ -129,7 +129,7 @@ public class TestLine3d
     
     /**
      * Test construction of a Line3d from a Path2D with SEG_CLOSE.
-     * @throws DrawException
+     * @throws DrawException on unexpected error
      */
     @Test
     public void testPathWithClose() throws DrawException
