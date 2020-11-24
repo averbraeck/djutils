@@ -5,8 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.djutils.draw.bounds.Bounds2d;
-import org.djutils.draw.d0.Point;
-import org.djutils.draw.d0.Point2d;
+import org.djutils.draw.point.Point2d;
 import org.junit.Test;
 
 /**
