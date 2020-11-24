@@ -1,7 +1,5 @@
 package org.djutils.draw.bounds;
 
-import java.awt.geom.Rectangle2D;
-
 import org.djutils.draw.d0.DirectedPoint;
 import org.djutils.draw.d0.Point3d;
 import org.djutils.draw.d3.Transform3d;
@@ -91,4 +89,5 @@ public final class BoundsUtil
     {
         return transform(boundingBox, center).contains(point);
     }
+    
 }
