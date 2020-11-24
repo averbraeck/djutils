@@ -1,8 +1,8 @@
-package org.djutils.draw.d2;
+package org.djutils.draw.surface;
 
 import java.io.Serializable;
 
-import org.djutils.draw.d0.Point;
+import org.djutils.draw.point.Point;
 
 /**
  * Area.java.

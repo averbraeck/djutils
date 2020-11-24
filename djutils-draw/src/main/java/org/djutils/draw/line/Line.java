@@ -1,9 +1,9 @@
-package org.djutils.draw.d1;
+package org.djutils.draw.line;
 
 import java.io.Serializable;
 
 import org.djutils.draw.Locatable;
-import org.djutils.draw.d0.Point;
+import org.djutils.draw.point.Point;
 
 /**
  * Line is the interface for Line2d and Line3d implementations.

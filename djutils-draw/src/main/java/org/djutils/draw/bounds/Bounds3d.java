@@ -3,15 +3,15 @@ package org.djutils.draw.bounds;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.djutils.draw.d0.Point;
-import org.djutils.draw.d0.Point3d;
-import org.djutils.draw.d1.Line;
-import org.djutils.draw.d2.Area;
-import org.djutils.draw.d3.Volume3d;
+import org.djutils.draw.line.Line;
+import org.djutils.draw.point.Point;
+import org.djutils.draw.point.Point3d;
+import org.djutils.draw.surface.Area;
+import org.djutils.draw.volume.Volume3d;
 import org.djutils.exceptions.Throw;
 
 /**
- * BoundingBox is the generic class for the 3D extent of an object to determine whether it must be drawn or not.
+ * Bounds3d is the generic class for the 3D extent of an object to determine whether it must be drawn or not.
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -84,7 +84,7 @@ public class Bounds3d implements Serializable
     }
 
     /**
-     * Constructs a new BoundingBox around (0, 0, 0).
+     * Constructs a new Bounds3d around (0, 0, 0).
      * @param deltaX double; the deltaX value around the origin
      * @param deltaY double; the deltaY value around the origin
      * @param deltaZ double; the deltaZ value around the origin
@@ -104,8 +104,8 @@ public class Bounds3d implements Serializable
     }
 
     /**
-     * Report if this BoundingBox is the special EMPTY_BOUNDING_BOX object.
-     * @return boolean; true if this BoundingBox is the EMPTY_BOUNDING_BOX object; false if this BoundingBox is not the
+     * Report if this Bounds3d is the special EMPTY_BOUNDING_BOX object.
+     * @return boolean; true if this Bounds3d is the EMPTY_BOUNDING_BOX object; false if this Bounds3d is not the
      *         EMPTY_BOUNDING_BOX object
      */
     public boolean isEmpty()
@@ -323,7 +323,7 @@ public class Bounds3d implements Serializable
     /**
      * Check if the bounding box contains another bounding box. Contains returns false when one of the edges of the other
      * bounding box is overlapping with the border of this bounding box.
-     * @param boundingBox BoundingBox; the bounding box for which to check if it is completely contained within this bounding
+     * @param boundingBox Bounds3d; the bounding box for which to check if it is completely contained within this bounding
      *            box
      * @return boolean; whether the bounding box contains the provided bounding box
      * @throws NullPointerException when boundingBox is null
@@ -338,11 +338,11 @@ public class Bounds3d implements Serializable
     /**
      * Return the centroid of this bounding box.
      * @return Point; the centroid of this bounding box
-     * @throws NullPointerException when this BoundingBox is the EMPTY_BOUNDING_BOX
+     * @throws NullPointerException when this Bounds3d is the EMPTY_BOUNDING_BOX
      */
     public Point centroid() throws NullPointerException
     {
-        Throw.when(isEmpty(), NullPointerException.class, "The empty BoundingBox has no centroid");
+        Throw.when(isEmpty(), NullPointerException.class, "The empty Bounds3d has no centroid");
         return new Point3d((this.getMaxX() - this.getMinX()) / 2.0, (this.getMaxY() - this.getMinY()) / 2.0,
                 (this.getMaxZ() - this.getMinZ()) / 2.0);
     }
@@ -378,7 +378,7 @@ public class Bounds3d implements Serializable
     /**
      * Check if the bounding box contains another bounding box. Covers returns true when one of the edges of the other bounding
      * box is overlapping with the border of this bounding box.
-     * @param boundingBox BoundingBox; the bounding box for which to check if it is contained within this bounding box
+     * @param boundingBox Bounds3d; the bounding box for which to check if it is contained within this bounding box
      * @return boolean; whether the bounding box contains the provided bounding box, including overlapping borders
      * @throws NullPointerException when boundingBox is null
      */
@@ -395,7 +395,7 @@ public class Bounds3d implements Serializable
 
     /**
      * Return whether this bounding box intersects with another bounding box. Touching at the edge is not seen as intersecting.
-     * @param boundingBox BoundingBox; the other bounding box
+     * @param boundingBox Bounds3d; the other bounding box
      * @return boolean; whether this bounding box intersects with another bounding box
      * @throws NullPointerException when boundingBox is null
      */
@@ -410,8 +410,8 @@ public class Bounds3d implements Serializable
     /**
      * Return the intersecting bounding box of this bounding box and another bounding box. Touching at the edge is not seen as
      * intersecting. In case there is no intersection, the empty bounding box is returned.
-     * @param boundingBox BoundingBox; the other bounding box
-     * @return BoundingBox; the intersecting bounding box of this bounding box and another bounding box or the empty bounding
+     * @param boundingBox Bounds3d; the other bounding box
+     * @return Bounds3d; the intersecting bounding box of this bounding box and another bounding box or the empty bounding
      *         box in case there is no intersection
      * @throws NullPointerException when boundingBox is null
      */
@@ -429,7 +429,7 @@ public class Bounds3d implements Serializable
 
     /**
      * Return whether this bounding box is disjoint from another bounding box. Touching at the edge is seen as disjoint.
-     * @param boundingBox BoundingBox; the other bounding box
+     * @param boundingBox Bounds3d; the other bounding box
      * @return boolean; whether this bounding box is disjoint from another bounding box
      * @throws NullPointerException when boundingBox is null
      */
@@ -439,13 +439,13 @@ public class Bounds3d implements Serializable
     }
 
     /**
-     * Return the 2d envelope of this BoundingBox.
+     * Return the 2d envelope of this Bounds3d.
      * @return Envelope; the 2d envelope of this bounding box
      * @throws NullPointerException when this is the EMPTY_BOUNDING_BOX
      */
     public Bounds2d envelope() throws NullPointerException
     {
-        Throw.when(isEmpty(), NullPointerException.class, "The empty BoundingBox has not envelope");
+        Throw.when(isEmpty(), NullPointerException.class, "The empty Bounds3d has not envelope");
         return new Bounds2d(this.minX, this.maxX, this.minY, this.maxY);
     }
 
@@ -543,7 +543,7 @@ public class Bounds3d implements Serializable
     @Override
     public String toString()
     {
-        return "BoundingBox [x[" + this.minX + " : " + this.maxX + "], y[" + this.minY + " : " + this.maxY + "], z[" + this.minZ
+        return "Bounds3d [x[" + this.minX + " : " + this.maxX + "], y[" + this.minY + " : " + this.maxY + "], z[" + this.minZ
                 + " : " + this.maxZ + "]]";
     }
 

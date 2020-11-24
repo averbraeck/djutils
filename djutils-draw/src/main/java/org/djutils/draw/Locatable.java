@@ -3,7 +3,7 @@ package org.djutils.draw;
 import java.rmi.RemoteException;
 
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.d0.DirectedPoint;
+import org.djutils.draw.point.DirectedPoint;
 
 /**
  * The Locatable interface enforces implementation of information on position, direction and bounds of an object. Objects can
@@ -27,7 +27,7 @@ public interface Locatable
 
     /**
      * returns the bounds of the locatable object. The bounds is the not rotated bounds around [0;0;0]
-     * @return BoundingBox with this.getLocation() as center of the box.
+     * @return Bounds3d with this.getLocation() as center of the box.
      * @throws RemoteException on network failure
      */
     Bounds3d getBounds() throws RemoteException;

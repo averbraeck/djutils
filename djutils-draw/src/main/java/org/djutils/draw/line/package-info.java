@@ -7,4 +7,4 @@
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-package org.djutils.draw.d1;
+package org.djutils.draw.line;

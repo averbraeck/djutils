@@ -1,10 +1,10 @@
-package org.djutils.draw.d2;
+package org.djutils.draw.surface;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.djutils.draw.bounds.BoundingRectangle;
+import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.d0.Point;
 import org.djutils.draw.d0.Point2d;
 import org.junit.Test;
@@ -272,7 +272,7 @@ public class Transform2dTest
      * Test transformation of a bounding rectangle.
      */
     @Test
-    public void transformBoundingRectangleTest()
+    public void transformBounds2dTest()
     {
         double[] values = new double[] { -100, 0.1, 0, 0.1, 100 };
         double[] sizes = new double[] { 0, 10, 100 };
@@ -286,7 +286,7 @@ public class Transform2dTest
                 {
                     for (double ySize : sizes)
                     {
-                        BoundingRectangle bb = new BoundingRectangle(x, x + xSize, y, y + ySize);
+                        Bounds2d bb = new Bounds2d(x, x + xSize, y, y + ySize);
                         Point2d[] points = new Point2d[] { new Point2d(x, y), new Point2d(x + xSize, y),
                                 new Point2d(x, y + ySize), new Point2d(x + xSize, y + ySize) };
                         Point2d[] transformedPoints = new Point2d[4];
@@ -294,8 +294,8 @@ public class Transform2dTest
                         {
                             transformedPoints[i] = t.transform(points[i]);
                         }
-                        BoundingRectangle expected = new BoundingRectangle(transformedPoints);
-                        BoundingRectangle got = t.transform(bb);
+                        Bounds2d expected = new Bounds2d(transformedPoints);
+                        Bounds2d got = t.transform(bb);
                         assertEquals("bb minX", expected.getMinX(), got.getMinX(), 0.0001);
                         assertEquals("bb maxX", expected.getMaxX(), got.getMaxX(), 0.0001);
                         assertEquals("bb minY", expected.getMinY(), got.getMinY(), 0.0001);

@@ -1,4 +1,4 @@
-package org.djutils.draw.d1;
+package org.djutils.draw.line;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

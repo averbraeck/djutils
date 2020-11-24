@@ -13,7 +13,7 @@ import org.djutils.draw.d0.Point2d;
 import org.junit.Test;
 
 /**
- * BoundingRectangleTest.java.
+ * Bounds2dTest.java.
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -21,7 +21,7 @@ import org.junit.Test;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class BoundingRectangleTest
+public class Bounds2dTest
 {
 
     /**
@@ -32,7 +32,7 @@ public class BoundingRectangleTest
     {
         try
         {
-            new BoundingRectangle(Double.NaN, 0, 0, 0);
+            new Bounds2d(Double.NaN, 0, 0, 0);
             fail("Nan should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -42,7 +42,7 @@ public class BoundingRectangleTest
 
         try
         {
-            new BoundingRectangle(0, Double.NaN, 0, 0);
+            new Bounds2d(0, Double.NaN, 0, 0);
             fail("Nan should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -52,7 +52,7 @@ public class BoundingRectangleTest
 
         try
         {
-            new BoundingRectangle(0, 0, Double.NaN, 0);
+            new Bounds2d(0, 0, Double.NaN, 0);
             fail("Nan should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -62,7 +62,7 @@ public class BoundingRectangleTest
 
         try
         {
-            new BoundingRectangle(0, 0, 0, Double.NaN);
+            new Bounds2d(0, 0, 0, Double.NaN);
             fail("Nan should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -72,7 +72,7 @@ public class BoundingRectangleTest
 
         try
         {
-            new BoundingRectangle(2, -2, 0, 0);
+            new Bounds2d(2, -2, 0, 0);
             fail("Negative x-range should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -82,7 +82,7 @@ public class BoundingRectangleTest
 
         try
         {
-            new BoundingRectangle(0, 0, 2, -2);
+            new Bounds2d(0, 0, 2, -2);
             fail("Negative y-range should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -90,7 +90,7 @@ public class BoundingRectangleTest
             // Ignore expected exception
         }
 
-        BoundingRectangle br = new BoundingRectangle(1, 2, 3, 4);
+        Bounds2d br = new Bounds2d(1, 2, 3, 4);
         assertEquals("minX", 1, br.getMinX(), 0);
         assertEquals("maxX", 2, br.getMaxX(), 0);
         assertEquals("minY", 3, br.getMinY(), 0);
@@ -98,7 +98,7 @@ public class BoundingRectangleTest
 
         try
         {
-            new BoundingRectangle(Double.NaN, 0);
+            new Bounds2d(Double.NaN, 0);
             fail("Nan should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -108,7 +108,7 @@ public class BoundingRectangleTest
 
         try
         {
-            new BoundingRectangle(0, Double.NaN);
+            new Bounds2d(0, Double.NaN);
             fail("Nan should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -118,7 +118,7 @@ public class BoundingRectangleTest
 
         try
         {
-            new BoundingRectangle(-3, 0);
+            new Bounds2d(-3, 0);
             fail("Negative x-range should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -128,7 +128,7 @@ public class BoundingRectangleTest
 
         try
         {
-            new BoundingRectangle(0, -3);
+            new Bounds2d(0, -3);
             fail("Negative y-range should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -136,7 +136,7 @@ public class BoundingRectangleTest
             // Ignore expected exception
         }
 
-        br = new BoundingRectangle(20, 30);
+        br = new Bounds2d(20, 30);
         assertEquals("minX", -10, br.getMinX(), 0);
         assertEquals("maxX", 10, br.getMaxX(), 0);
         assertEquals("minY", -15, br.getMinY(), 0);
@@ -148,7 +148,7 @@ public class BoundingRectangleTest
         Collection<Point> pointCollection = new ArrayList<>();
         try
         {
-            new BoundingBox(pointCollection);
+            new Bounds3d(pointCollection);
             fail("Empty point collection should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -157,39 +157,39 @@ public class BoundingRectangleTest
         }
 
         pointCollection.add(new Point2d(10, 20));
-        br = new BoundingRectangle(pointCollection);
+        br = new Bounds2d(pointCollection);
         assertEquals("minX", 10, br.getMinX(), 0);
         assertEquals("maxX", 10, br.getMaxX(), 0);
         assertEquals("minY", 20, br.getMinY(), 0);
         assertEquals("maxY", 20, br.getMaxY(), 0);
 
         pointCollection.add(new Point2d(-5, -6));
-        br = new BoundingRectangle(pointCollection);
+        br = new Bounds2d(pointCollection);
         assertEquals("minX", -5, br.getMinX(), 0);
         assertEquals("maxX", 10, br.getMaxX(), 0);
         assertEquals("minY", -6, br.getMinY(), 0);
         assertEquals("maxY", 20, br.getMaxY(), 0);
 
-        assertTrue("toString returns something descriptive", br.toString().startsWith("BoundingRectangle "));
+        assertTrue("toString returns something descriptive", br.toString().startsWith("Bounds2d "));
         assertFalse("bounding box is NOT the empty bounding box", br.isEmpty());
 
         pointCollection.add(new Point2d(40, 50));
         // This collection is an ArrayList, so the elements are stored in the order in which they were added
-        br = new BoundingRectangle(pointCollection);
+        br = new Bounds2d(pointCollection);
         assertEquals("minX", -5, br.getMinX(), 0);
         assertEquals("maxX", 40, br.getMaxX(), 0);
         assertEquals("minY", -6, br.getMinY(), 0);
         assertEquals("maxY", 50, br.getMaxY(), 0);
 
-        br = new BoundingRectangle(pointCollection.toArray((new Point2d[0])));
+        br = new Bounds2d(pointCollection.toArray((new Point2d[0])));
         assertEquals("minX", -5, br.getMinX(), 0);
         assertEquals("maxX", 40, br.getMaxX(), 0);
         assertEquals("minY", -6, br.getMinY(), 0);
         assertEquals("maxY", 50, br.getMaxY(), 0);
 
-        BoundingRectangle bb2 = new BoundingRectangle(-100, -90, -100, -90);
-        BoundingRectangle bb3 = br.intersection(bb2);
-        assertEquals("empty bounding box", BoundingRectangle.EMPTY_BOUNDING_RECTANGLE, bb3);
+        Bounds2d bb2 = new Bounds2d(-100, -90, -100, -90);
+        Bounds2d bb3 = br.intersection(bb2);
+        assertEquals("empty bounding box", Bounds2d.EMPTY_BOUNDING_RECTANGLE, bb3);
         assertTrue("empty bounding box", bb3.isEmpty());
         
     }
