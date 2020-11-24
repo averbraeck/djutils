@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.djutils.draw.line.Line;
 import org.djutils.draw.point.Point;
 import org.djutils.draw.point.Point3d;
-import org.djutils.draw.surface.Area;
+import org.djutils.draw.surface.Surface;
 import org.djutils.draw.volume.Volume3d;
 import org.djutils.exceptions.Throw;
 
@@ -230,7 +230,7 @@ public class Bounds3d implements Serializable
      * @param area Area; the area
      * @throws NullPointerException when area is null
      */
-    public Bounds3d(final Area area)
+    public Bounds3d(final Surface area)
     {
         this(Throw.whenNull(area, "area cannot be null").getBoundaryArray());
     }
