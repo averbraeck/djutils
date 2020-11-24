@@ -7,7 +7,7 @@ import java.util.Collection;
 import org.djutils.draw.line.Line;
 import org.djutils.draw.point.Point;
 import org.djutils.draw.point.Point2d;
-import org.djutils.draw.surface.Area;
+import org.djutils.draw.surface.Surface;
 import org.djutils.exceptions.Throw;
 
 /**
@@ -186,7 +186,7 @@ public class Bounds2d implements Serializable
      * @param area Area; the area
      * @throws NullPointerException when area is null
      */
-    public Bounds2d(final Area area) throws NullPointerException
+    public Bounds2d(final Surface area) throws NullPointerException
     {
         this(Throw.whenNull(area, "area may not be null").getBoundaryArray());
     }
