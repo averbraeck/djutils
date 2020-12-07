@@ -115,14 +115,14 @@ public class AngleUtilTest
         assertFalse(AngleUtil.epsilonEquals(pi05, pi15, 1E-6));
         assertTrue(AngleUtil.epsilonEquals(pi - 1E-7, pi + 1E-7, 1E-6));
         assertTrue(AngleUtil.epsilonEquals(pi20 - 1E-7, pi20 + 1E-7, 1E-6));
-        for (double s1 : new double[] {-1E-7, 0.0, 1E-7})
+        for (double s1 : new double[] { -1E-7, 0.0, 1E-7 })
         {
-            for (double s2 : new double[] {-1E-7, 0.0, 1E-7})
+            for (double s2 : new double[] { -1E-7, 0.0, 1E-7 })
             {
                 assertTrue(AngleUtil.epsilonEquals(s1, pi20 + s2, 1E-6));
                 assertTrue(AngleUtil.epsilonEquals(s1, -pi20 + s2, 1E-6));
                 assertTrue(AngleUtil.epsilonEquals(-pi + s1, pi + s2, 1E-6));
-                for (double a : new double[] {0.0, pi05, pi15, pi20})
+                for (double a : new double[] { 0.0, pi05, pi15, pi20 })
                 {
                     assertTrue(AngleUtil.epsilonEquals(a + s1, a + s2, 1E-6));
                 }
@@ -165,4 +165,63 @@ public class AngleUtilTest
         assertEquals(pi / 4, AngleUtil.interpolateClockwise(0.0, pi05, 0.5), 1E-6);
         assertEquals(-0.75 * pi, AngleUtil.interpolateClockwise(pi05, 0.0, 0.5), 1E-6);
     }
+
+    /**
+     * Test the interpolateShortest method.
+     */
+    @Test
+    public void testInterpolateShortest()
+    {
+        for (double angle1 = -15 * Math.PI / 6; angle1 < 50; angle1 += Math.PI / 300)
+        {
+            for (double angle2 = -15 * Math.PI / 6; angle2 < 50; angle2 += Math.PI / 300)
+            {
+                for (double fraction : new double[] { 0, 1, 0.5, 0.1, 0.9 })
+                {
+                    double angleFraction = AngleUtil.interpolateShortest(angle1, angle2, fraction);
+                    double check1 = Math.abs(AngleUtil.normalizeAroundZero(angle1 - angleFraction));
+                    double check2 = Math.abs(AngleUtil.normalizeAroundZero(angleFraction - angle2));
+                    // System.out.println(String.format(
+                    // "angle1 %s, normalized %s, angle2 %s, normalized %s, frac %s, check1 %s, check2 %s, fraction %.1f",
+                    // printAngle(angle1), printAngle(AngleUtil.normalizeAroundZero(angle1)), printAngle(angle2),
+                    // printAngle(AngleUtil.normalizeAroundZero(angle2)), printAngle(angleFraction), printAngle(check1),
+                    // printAngle(check2), fraction));
+                    if (check1 > Math.PI * fraction)
+                    {
+                        AngleUtil.interpolateShortest(angle1, angle2, fraction);
+                    }
+                    assertTrue("diff of normalized is less than Pi * fraction", check1 <= Math.PI * fraction + 0.000001);
+                    assertTrue("diff of normalized complement is less than 2*Pi/3",
+                            check2 <= Math.PI * (1 - fraction) + 0.000001);
+                    if (angle1 != angle2)
+                    {
+                        if (Math.abs(check1) > 0.00001 && Math.abs(check2) > 0.00001)
+                        {
+                            assertEquals("angle should be divided in parts with ratio fraction", fraction / (1 - fraction),
+                                    check1 / check2, 0.0001);
+                        }
+                    }
+                    else
+                    {
+                        assertEquals("if angles are identical; both parts are zero ", 0, check1, 1e-10);
+                        assertEquals("if angles are identical; both parts are zero ", 0, check2, 1e-10);
+                    }
+                }
+            }
+        }
+        // Test extrapolation lightly
+        assertEquals("extrapolate at 2 of 0.2, 0.3", 0.4, AngleUtil.interpolateShortest(0.2, 0.3, 2), 0.00001);
+        assertEquals("extrapolate at 01 of 0.2, 0.3", 0.1, AngleUtil.interpolateShortest(0.2, 0.3, -1), 0.00001);
+    }
+
+    /**
+     * Format an angle.
+     * @param angle double; angle in radians
+     * @return String; fixed width text representation of angle
+     */
+    public static String printAngle(final double angle)
+    {
+        return String.format("%9.6f (%4.0f\u00b0)", angle, Math.toDegrees(angle));
+    }
+
 }

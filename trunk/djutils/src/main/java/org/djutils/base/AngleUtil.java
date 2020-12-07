@@ -12,13 +12,13 @@ package org.djutils.base;
  */
 public final class AngleUtil
 {
-    /** Utility construcor. */
+    /** Utility constructor. */
     private AngleUtil()
     {
         // Utility constructor
     }
 
-    /** the valie 2&pi;. */
+    /** The value 2&pi;. */
     public static final double PI2 = 2.0 * Math.PI;
 
     /**
@@ -83,6 +83,39 @@ public final class AngleUtil
             a2 += PI2;
         }
         return normalizeAroundZero((1.0 - fraction) * a1 + fraction * a2);
+    }
+
+    /**
+     * Interpolate between two angles taking the <i>shortest way</i>.
+     * @param angle1 double; the first angle in radians
+     * @param angle2 double; the second angle in radians
+     * @param fraction double; the fraction for interpolation; 0.5 is halfway, 0.0 returns angle1, 1.0 returns angle2.
+     * @return double; The interpolated angle, normalized around zero. If any input angle is not normalized around zero the
+     *         result will still be normalized, and the exact equality at fraction is 0.0 or 1.0 may not hold. When the
+     *         difference between angle1 and angle2 is very close to an odd multiple of PI, the <i>shortest way</li> between
+     *         those angles is ill-defined. The result of this method reflects this (fundamental) problem.
+     */
+    public static double interpolateShortest(final double angle1, final double angle2, final double fraction)
+    {
+        double result;
+        if (fraction == 1.0)
+        {
+            result = angle2; // Make sure that the promise of the exact result holds
+        }
+        else
+        {
+            double difference = angle2 - angle1;
+            if (difference < -Math.PI)
+            {
+                difference = difference - PI2 * Math.ceil((difference - Math.PI) / PI2);
+            }
+            if (difference > Math.PI)
+            {
+                difference = difference - PI2 * Math.floor((difference + Math.PI) / PI2);
+            }
+            result = angle1 + fraction * difference;
+        }
+        return normalizeAroundZero(result);
     }
 
 }
