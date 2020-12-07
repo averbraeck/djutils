@@ -2,18 +2,17 @@ package org.djutils.draw.bounds;
 
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 
-import org.djutils.draw.line.Line;
-import org.djutils.draw.point.Point;
+import org.djutils.draw.Drawable2d;
 import org.djutils.draw.point.Point2d;
-import org.djutils.draw.surface.Surface;
 import org.djutils.exceptions.Throw;
 
 /**
- * ABounds2d contains the rectangular 2D bounds of an object, ignoring the z-coordinate. The bounding rectangle is
- * implemented as an immutable object. An empty version to denote, e.g., a non-intersection, can be created with the empty
- * constructor. The boundary values will be NaN in that case.
+ * A Bounds2d stores the rectangular 2D bounds of a 2d object, or a collection of 2dobjects. The Bounds2d is an immutable
+ * object.
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -21,52 +20,38 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Bounds2d implements Serializable
+public class Bounds2d implements Serializable, Drawable2d
 {
     /** */
     private static final long serialVersionUID = 20200829L;
 
-    /** The lower bound for x, or NaN for an empty bounding box. */
+    /** The lower bound for x. */
     private final double minX;
 
-    /** The lower bound for y, or NaN for an empty bounding rectangle. */
+    /** The lower bound for y. */
     private final double minY;
 
-    /** The upper bound for x, or NaN for an empty bounding rectangle. */
+    /** The upper bound for x. */
     private final double maxX;
 
-    /** The upper bound for y, or NaN for an empty bounding rectangle. */
+    /** The upper bound for y. */
     private final double maxY;
 
-    /** The empty bounding rectangle for reuse. Since boundingRectangles are immmutable, only one instance is needed. */
-    public static final Bounds2d EMPTY_BOUNDING_RECTANGLE = new Bounds2d();
-
     /**
-     * Create an empty bounding rectangle, with NaN for all bounds.
+     * Construct a Bounds2d by providing its lower and upper bounds in both dimensions.
+     * @param minX double; the lower bound for x
+     * @param maxX double; the upper bound for x
+     * @param minY double; the lower bound for y
+     * @param maxY double; the upper bound for y
+     * @throws IllegalArgumentException when a lower bound is larger than the corresponding upper bound, or any of the bounds is
+     *             NaN
      */
-    private Bounds2d()
-    {
-        this.minX = Double.NaN;
-        this.minY = Double.NaN;
-        this.maxX = Double.NaN;
-        this.maxY = Double.NaN;
-    }
-
-    /**
-     * Construct a bounding rectangle by providing its lower and upper bounds.
-     * @param minX double; the lower bound for x, or NaN for an empty bounding rectangle
-     * @param maxX double; the upper bound for x, or NaN for an empty bounding rectangle
-     * @param minY double; the lower bound for y, or NaN for an empty bounding rectangle
-     * @param maxY double; the upper bound for y, or NaN for an empty bounding rectangle
-     * @throws IllegalArgumentException when lower bounds are larger than upper boundingRectangle, or any of the bounds is NaN
-     */
-    public Bounds2d(final double minX, final double maxX, final double minY, final double maxY)
-            throws IllegalArgumentException
+    public Bounds2d(final double minX, final double maxX, final double minY, final double maxY) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(minX) || Double.isNaN(maxX) || Double.isNaN(minY) || Double.isNaN(maxY),
                 IllegalArgumentException.class, "bounds must be numbers (not NaN)");
         Throw.when(minX > maxX || minY > maxY, IllegalArgumentException.class,
-                "lower bound for a dimension should be less than or equal to its upper bound");
+                "lower bound for each dimension should be less than or equal to its upper bound");
         this.minX = minX;
         this.minY = minY;
         this.maxX = maxX;
@@ -74,241 +59,223 @@ public class Bounds2d implements Serializable
     }
 
     /**
-     * Constructs a new Bounds2d around (0, 0).
+     * Constructs a new Bounds2d around the origin (0, 0).
      * @param deltaX double; the deltaX value around the origin
      * @param deltaY double; the deltaY value around the origin
      * @throws IllegalArgumentException when one of the delta values is less than zero
      */
     public Bounds2d(final double deltaX, final double deltaY)
     {
-        Throw.when(deltaX < 0.0 || deltaY < 0.0, IllegalArgumentException.class, "delta values sould be >= 0");
-        Throw.when(Double.isNaN(deltaX) || Double.isNaN(deltaY), IllegalArgumentException.class, "Nan value not permitted");
-        this.minX = -0.5 * deltaX;
-        this.maxX = 0.5 * deltaX;
-        this.minY = -0.5 * deltaY;
-        this.maxY = 0.5 * deltaY;
+        this(-0.5 * deltaX, 0.5 * deltaX, -0.5 * deltaY, 0.5 * deltaY);
     }
 
     /**
-     * Construct a bounding rectangle from an array of points, finding the lowest and highest x, y, and z coordinates.
-     * @param points Point[]; the array of points to construct a bounding rectangle from
+     * Construct a Bounds2d from some collection of points, finding the lowest and highest x and y coordinates.
+     * @param points Iterator&lt;Point2d&gt;; Iterator that will generate all the points for which to construct a Bounds2d
      * @throws NullPointerException when points is null
-     * @throws IllegalArgumentException when zero points are provided
+     * @throws IllegalArgumentException when the iterator provides zero points
      */
-    public Bounds2d(final Point[] points) throws NullPointerException, IllegalArgumentException
+    public Bounds2d(final Iterator<Point2d> points)
     {
         Throw.whenNull(points, "points may not be null");
-        Throw.when(points.length == 0, IllegalArgumentException.class, "must have at least one point");
-        double tempMinX = Double.POSITIVE_INFINITY;
-        double tempMinY = Double.POSITIVE_INFINITY;
-        double tempMaxX = Double.NEGATIVE_INFINITY;
-        double tempMaxY = Double.NEGATIVE_INFINITY;
-        for (Point point : points)
+        Throw.when(!points.hasNext(), IllegalArgumentException.class, "need at least one point");
+        Point2d point = points.next();
+        double tempMinX = point.getX();
+        double tempMaxX = point.getX();
+        double tempMinY = point.getY();
+        double tempMaxY = point.getY();
+        while (points.hasNext())
         {
-            double x = point.getX();
-            double y = point.getY();
-            if (x < tempMinX)
-            {
-                tempMinX = x;
-            }
-            if (x > tempMaxX)
-            {
-                tempMaxX = x;
-            }
-            if (y < tempMinY)
-            {
-                tempMinY = y;
-            }
-            if (y > tempMaxY)
-            {
-                tempMaxY = y;
-            }
+            point = points.next();
+            tempMinX = Math.min(tempMinX, point.getX());
+            tempMaxX = Math.max(tempMaxX, point.getX());
+            tempMinY = Math.min(tempMinY, point.getY());
+            tempMaxY = Math.max(tempMaxY, point.getY());
         }
         this.minX = tempMinX;
-        this.minY = tempMinY;
         this.maxX = tempMaxX;
+        this.minY = tempMinY;
         this.maxY = tempMaxY;
     }
 
     /**
-     * Construct a bounding rectangle from a collection of points, finding the lowest and highest x, y, and z coordinates.
-     * @param points Collection&lt;Point&gt;; the collection of points to construct a bounding rectangle from
+     * Construct a Bounds2d from an array of Point2d, finding the lowest and highest x and y coordinates.
+     * @param points Point2d[]; the points to construct a Bounds2d from
      * @throws NullPointerException when points is null
      * @throws IllegalArgumentException when zero points are provided
      */
-    public Bounds2d(final Collection<Point> points) throws NullPointerException, IllegalArgumentException
+    public Bounds2d(final Point2d[] points) throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(points, "points may not be null");
-        Throw.when(points.isEmpty(), IllegalArgumentException.class, "must have at least one point");
-        double tempMinX = Double.POSITIVE_INFINITY;
-        double tempMinY = Double.POSITIVE_INFINITY;
-        double tempMaxX = Double.NEGATIVE_INFINITY;
-        double tempMaxY = Double.NEGATIVE_INFINITY;
-        for (Point point : points)
-        {
-            double x = point.getX();
-            double y = point.getY();
-            if (x < tempMinX)
-            {
-                tempMinX = x;
-            }
-            if (x > tempMaxX)
-            {
-                tempMaxX = x;
-            }
-            if (y < tempMinY)
-            {
-                tempMinY = y;
-            }
-            if (y > tempMaxY)
-            {
-                tempMaxY = y;
-            }
-        }
-        this.minX = tempMinX;
-        this.minY = tempMinY;
-        this.maxX = tempMaxX;
-        this.maxY = tempMaxY;
+        this(Arrays.stream(Throw.whenNull(points, "points may not be null")).iterator());
     }
 
     /**
-     * Construct a bounding rectangle based on the coordinates of a line.
-     * @param line Line; the line
-     * @throws NullPointerException when line is null
+     * Construct a Bounds2d for a Drawable2d.
+     * @param drawable2d Drawable2d; any object that implements the Drawable2d interface
+     * @throws NullPointerException when drawable2d is null
      */
-    public Bounds2d(final Line line) throws NullPointerException
+    public Bounds2d(final Drawable2d drawable2d) throws NullPointerException
     {
-        this(Throw.whenNull(line, "line may not be null").getPointArray());
+        this(Throw.whenNull(drawable2d, "drawable2d may not be null").getPoints());
     }
 
     /**
-     * Construct a bounding rectangle based on the coordinates of an area.
-     * @param area Area; the area
-     * @throws NullPointerException when area is null
+     * Construct a Bounds2d from a collection of Point2d, finding the lowest and highest x and y coordinates.
+     * @param points Collection&lt;Point2d&gt;; the collection of points to construct a Bounds2d from
+     * @throws NullPointerException when points is null
+     * @throws IllegalArgumentException when the collection is empty
      */
-    public Bounds2d(final Surface area) throws NullPointerException
+    public Bounds2d(final Collection<Point2d> points)
     {
-        this(Throw.whenNull(area, "area may not be null").getBoundaryArray());
+        this(Throw.whenNull(points, "points may not be null").iterator());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Iterator<Point2d> getPoints()
+    {
+        Point2d[] array = new Point2d[] { new Point2d(getMinX(), getMinY()), new Point2d(getMinX(), getMaxY()),
+                new Point2d(getMaxX(), getMinY()), new Point2d(getMaxX(), getMaxY()) };
+        return Arrays.stream(array).iterator();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int size()
+    {
+        return 4;
     }
 
     /**
-     * Check if the bounding rectangle contains a point. Contains returns false when the point is on the border of the
-     * rectangle.
-     * @param point Point; the point
-     * @return boolean; whether the bounding rectangle contains the point
+     * Check if this Bounds2d contains a given point. Contains considers a point <b>on</b> the border of this Bounds2d to be
+     * outside.
+     * @param point Point2d; the point
+     * @return boolean; true this Bounds2d contains the point; false if this Bounds2d does <b>not</b> contain the point
      * @throws NullPointerException when point is null
      */
-    public boolean contains(final Point point)
+    public boolean contains(final Point2d point)
     {
         Throw.whenNull(point, "point cannot be null");
         return contains(point.getX(), point.getY());
     }
 
     /**
-     * Check if the bounding rectangle contains a point. Contains returns false when the point is on the border of the
-     * rectangle.
+     * Check if this Bounds2d contains a point. Contains considers a point <b>on</b> the border of this Bounds2d to be outside.
      * @param x double; the x-coordinate of the point
      * @param y double; the y-coordinate of the point
-     * @return boolean; whether the bounding rectangle contains the point with the given coordinates
+     * @return boolean; whether this Bounds2d contains the point
+     * @throws IllegalArgumentException when any of the coordinates is NaN
      */
-    public boolean contains(final double x, final double y)
+    public boolean contains(final double x, final double y) throws IllegalArgumentException
     {
-        return (!isEmpty()) && x > this.minX && x < this.maxX && y > this.minY && y < this.maxY;
+        Throw.when(Double.isNaN(x) || Double.isNaN(y), IllegalArgumentException.class, "coordinates must be numbers (not NaN)");
+        return x > this.minX && x < this.maxX && y > this.minY && y < this.maxY;
     }
 
     /**
-     * Check if the bounding rectangle contains another bounding rectangle. Contains returns false when one of the edges of the
-     * other bounding rectangle is overlapping with the border of this bounding rectangle.
-     * @param boundingRectangle Bounds2d; the bounding rectangle for which to check if it is completely contained
-     *            within this bounding rectangle
-     * @return boolean; whether the bounding rectangle contains the provided bounding rectangle
-     * @throws NullPointerException when boundingRectangle is null
+     * Check if this Bounds2d completely contains a Drawable2d.
+     * @param drawable Drawable2d; the object for which to check if it is completely contained within this Bounds2d.
+     * @return boolean; false if any point of the Drawable2d is on or outside one of the borders of this Bounds2d; true when all
+     *         points of the Drawable2d are contained within this Bounds2d.
+     * @throws NullPointerException when drawable2d is null
      */
-    public boolean contains(final Bounds2d boundingRectangle) throws NullPointerException
+    public boolean contains(final Drawable2d drawable) throws NullPointerException
     {
-        Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
-        return (!boundingRectangle.isEmpty()) && contains(boundingRectangle.minX, boundingRectangle.minY)
-                && contains(boundingRectangle.maxX, boundingRectangle.maxY);
+        Throw.whenNull(drawable, "drawable cannot be null");
+        for (Iterator<Point2d> iterator = drawable.getPoints(); iterator.hasNext();)
+        {
+            if (!contains(iterator.next()))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
-     * Return the centroid of this bounding rectangle.
-     * @return Point; the centroid of this bounding rectangle
-     * @throws NullPointerException when this BoundingRectanble is the EMPTY_BOUNDING_RECTANGLE
+     * Check if this Bounds2d contains a point. Covers returns true when the point is on, or within the border of this Bounds2d.
+     * @param x double; the x-coordinate of the point
+     * @param y double; the y-coordinate of the point
+     * @return boolean; whether this Bounds2d, including its borders, contains the point
      */
-    public Point centroid()
+    public boolean covers(final double x, final double y)
     {
-        Throw.when(isEmpty(), NullPointerException.class, "The empty Bounds2d has no centroid");
-        return new Point2d((this.maxX - this.minX) / 2.0, (this.maxY - this.minY) / 2.0);
+        Throw.when(Double.isNaN(x) || Double.isNaN(y), IllegalArgumentException.class, "coordinates must be numbers (not NaN)");
+        return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY;
     }
 
     /**
-     * Check if the bounding rectangle contains a point. Covers returns true when the point is on the border of the rectangle.
+     * Check if this Bounds2d contains a point. Covers returns true when the point is on, or within the border of this Bounds2d.
      * @param point Point; the point
-     * @return boolean; whether the bounding rectangle contains the point, including the borders
+     * @return boolean; whether this Bounds2d, including its borders, contains the point
      * @throws NullPointerException when point is null
      */
-    public boolean covers(final Point point)
+    public boolean covers(final Point2d point)
     {
         Throw.whenNull(point, "point cannot be null");
         return covers(point.getX(), point.getY());
     }
 
     /**
-     * Check if the bounding rectangle contains a point. Covers returns true when the point is on the border of the rectangle.
-     * @param x double; the x-coordinate of the point
-     * @param y double; the y-coordinate of the point
-     * @return boolean; whether the bounding rectangle contains the point with the given coordinates, including the borders
+     * Check if this Bounds2d contains another Bounds2d. Covers returns true when one of the edges of the other Bounds2d
+     * (partly) overlaps a border of this Bounds2d.
+     * @param otherBounds2d Bounds2d; the Bounds2d for which to check if it is contained within this Bounds2d
+     * @return boolean; whether this Bounds2d contains the provided Bounds2d, including overlapping borders
+     * @throws NullPointerException when otherBounds2d is null
      */
-    public boolean covers(final double x, final double y)
+    public boolean covers(final Bounds2d otherBounds2d) throws NullPointerException
     {
-        return (!isEmpty()) && x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY;
+        Throw.whenNull(otherBounds2d, "otherBounds2d cannot be null");
+        return covers(otherBounds2d.minX, otherBounds2d.minY) && covers(otherBounds2d.maxX, otherBounds2d.maxY);
     }
 
     /**
-     * Check if the bounding rectangle contains another bounding rectangle. Covers returns true when one of the edges of the
-     * other bounding rectangle is overlapping with the border of this bounding rectangle.
-     * @param boundingRectangle Bounds2d; the bounding rectangle for which to check if it is contained within this
-     *            bounding rectangle
-     * @return boolean; whether the bounding rectangle contains the provided bounding rectangle, including overlapping borders
-     * @throws NullPointerException when boundingRectangle is null
+     * Return whether this Bounds2d is disjoint from another Bounds2d. Only touching at an edge is considered disjoint.
+     * @param otherBounds2d Bounds2d; the other Bounds2d
+     * @return boolean; whether this Bounds2d is disjoint from another Bounds2d
+     * @throws NullPointerException when bounds2d is null
      */
-    public boolean covers(final Bounds2d boundingRectangle)
+    public boolean disjoint(final Bounds2d otherBounds2d) throws NullPointerException
     {
-        Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
-        return covers(boundingRectangle.minX, boundingRectangle.minY) && covers(boundingRectangle.maxX, boundingRectangle.maxY);
+        Throw.whenNull(otherBounds2d, "otherBounds2d cannot be null");
+        return otherBounds2d.minX >= this.maxX || otherBounds2d.maxX <= this.minX || otherBounds2d.minY >= this.maxY
+                || otherBounds2d.maxY <= this.minY;
     }
 
     /**
-     * Return whether this bounding rectangle is disjoint from another bounding rectangle. Touching at the edge is seen as
-     * disjoint.
-     * @param boundingRectangle Bounds2d; the other bounding rectangle
-     * @return boolean; whether this bounding rectangle is disjoint from another bounding rectangle
-     * @throws NullPointerException when boundingRectangle is null
+     * Return whether this Bounds2d intersects another Bounds2d. Only touching at an edge is not seen as intersecting.
+     * @param otherBounds2d Bounds2d; the other Bounds2d
+     * @return boolean; whether this bounding rectangle intersects the other Bounds2d
+     * @throws NullPointerException when otherBounds2d is null
      */
-    public boolean disjoint(final Bounds2d boundingRectangle)
+    public boolean intersects(final Bounds2d otherBounds2d) throws NullPointerException
     {
-        return !intersects(boundingRectangle);
+        return !disjoint(otherBounds2d);
     }
 
     /**
-     * Return whether this bounding rectangle intersects with another bounding rectangle. Touching at the edge is not seen as
-     * intersecting.
-     * @param boundingRectangle Bounds2d; the other bounding rectangle
-     * @return boolean; whether this bounding rectangle intersects with another bounding rectangle
-     * @throws NullPointerException when boundingRectangle is null
+     * Return the intersecting Bounds2d of this Bounds2d and another Bounds2d. Touching at the edge is not seen as intersecting.
+     * In case there is no intersection, null is returned.
+     * @param otherBounds2d Bounds2d; the other Bounds2d
+     * @return Bounds2d; the intersecting Bounds2d of this Bounds2d and another Bounds2d. Touching at the edge is not seen as
+     *         intersecting. If not intersecting; null is returned
+     * @throws NullPointerException when otherBounds2d is null
      */
-    public boolean intersects(final Bounds2d boundingRectangle)
+    public Bounds2d intersection(final Bounds2d otherBounds2d)
     {
-        Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
-        return !(isEmpty() || boundingRectangle.isEmpty() || boundingRectangle.minX > this.maxX
-                || boundingRectangle.maxX < this.minX || boundingRectangle.minY > this.maxY
-                || boundingRectangle.maxY < this.minY);
+        Throw.whenNull(otherBounds2d, "otherBounds2d cannot be null");
+        if (disjoint(otherBounds2d))
+        {
+            return null;
+        }
+        return new Bounds2d(Math.max(this.getMinX(), otherBounds2d.getMinX()),
+                Math.min(this.getMaxX(), otherBounds2d.getMaxX()), Math.max(this.getMinY(), otherBounds2d.getMinY()),
+                Math.min(this.getMaxY(), otherBounds2d.getMaxY()));
     }
 
     /**
-     * Return the extent of this bounding box in the x-direction.
-     * @return double; the extent of this bounding box in the x-direction, or NaN if this is the EMPTY_BOUNDING_BOX
+     * Return the extent of this Bounds2d in the x-direction.
+     * @return double; the extent of this Bounds2d in the x-direction
      */
     public double getDeltaX()
     {
@@ -316,8 +283,8 @@ public class Bounds2d implements Serializable
     }
 
     /**
-     * Return the extent of this bounding box in the y-direction.
-     * @return double; the extent of this bounding box in the y-direction, or NaN if this is the EMPTY_BOUNDING_BOX
+     * Return the extent of this Bounds2d in the y-direction.
+     * @return double; the extent of this Bounds2d in the y-direction
      */
     public double getDeltaY()
     {
@@ -325,39 +292,8 @@ public class Bounds2d implements Serializable
     }
 
     /**
-     * Return the intersecting bounding rectangle of this bounding rectangle and another bounding rectangle. Touching at the
-     * edge is not seen as intersecting. In case there is no intersection, the empty bounding rectangle is returned.
-     * @param boundingRectangle Bounds2d; the other bounding rectangle
-     * @return Bounds2d; the intersecting bounding rectangle of this bounding rectangle and another bounding rectangle
-     *         or the empty bounding rectangle in case there is no intersection
-     * @throws NullPointerException when boundingRectangle is null
-     */
-    public Bounds2d intersection(final Bounds2d boundingRectangle)
-    {
-        Throw.whenNull(boundingRectangle, "boundingRectangle cannot be null");
-        if (isEmpty() || boundingRectangle.isEmpty() || !intersects(boundingRectangle))
-        {
-            return EMPTY_BOUNDING_RECTANGLE;
-        }
-        double tempMinX = this.minX > boundingRectangle.minX ? this.minX : boundingRectangle.minX;
-        double tempMinY = this.minY > boundingRectangle.minY ? this.minY : boundingRectangle.minY;
-        double tempMaxX = this.maxX < boundingRectangle.maxX ? this.maxX : boundingRectangle.maxX;
-        double tempMaxY = this.maxY < boundingRectangle.maxY ? this.maxY : boundingRectangle.maxY;
-        return new Bounds2d(tempMinX, tempMaxX, tempMinY, tempMaxY);
-    }
-
-    /**
-     * Return whether the boundingRectangle is empty (indicated by one or more bounds containing NaN).
-     * @return boolean; whether the boundingRectangle is empty
-     */
-    public boolean isEmpty()
-    {
-        return this == EMPTY_BOUNDING_RECTANGLE;
-    }
-
-    /**
-     * Return the rectangle as an AWT Rectangle2D.
-     * @return Rectangle2D; the rectangle as an AWT Rectangle2D
+     * Return an AWT Rectangle2D that covers the same area as this Bounds2d.
+     * @return Rectangle2D; the rectangle that covers the same area as this Bounds2d
      */
     public Rectangle2D toRectangle2D()
     {
@@ -365,8 +301,8 @@ public class Bounds2d implements Serializable
     }
 
     /**
-     * Return the lower bound for x, or NaN for an empty boundingRectangle
-     * @return double; the lower bound for x, or NaN for the EMPTY_BOUNDING_RECTANGLE
+     * Return the lower bound for x.
+     * @return double; the lower bound for x
      */
     public double getMinX()
     {
@@ -374,8 +310,8 @@ public class Bounds2d implements Serializable
     }
 
     /**
-     * Return the upper bound for x, or NaN for an empty boundingRectangle
-     * @return double; the upper bound for x, or NaN for the EMPTY_BOUNDING_RECTANGLE
+     * Return the upper bound for x.
+     * @return double; the upper bound for x
      */
     public double getMaxX()
     {
@@ -383,8 +319,8 @@ public class Bounds2d implements Serializable
     }
 
     /**
-     * Return the lower bound for y, or NaN for an empty boundingRectangle
-     * @return double; the lower bound for y, or NaN for the EMPTY_BOUNDING_RECTANGLE
+     * Return the lower bound for y.
+     * @return double; the lower bound for y
      */
     public double getMinY()
     {
@@ -392,8 +328,8 @@ public class Bounds2d implements Serializable
     }
 
     /**
-     * Return the upper bound for y, or NaN for an empty boundingRectangle
-     * @return double; the upper bound for y, or NaN for the EMPTY_BOUNDING_RECTANGLE
+     * Return the upper bound for y.
+     * @return double; the upper bound for y
      */
     public double getMaxY()
     {
@@ -401,30 +337,26 @@ public class Bounds2d implements Serializable
     }
 
     /**
-     * Return the width of the bounding rectangle (x-direction).
-     * @return double; the width of the bounding rectangle or NaN for the EMPTY_BOUNDING_RECTANGLE
-     */
-    public double getWidth()
-    {
-        return getMaxX() - getMinX();
-    }
-
-    /**
-     * Return the height of the bounding rectangle (y-direction).
-     * @return double; the height of the bounding rectangle or NaN for the EMPTY_BOUNDING_RECTANGLE
-     */
-    public double getHeight()
-    {
-        return getMaxY() - getMinY();
-    }
-
-    /**
-     * Return the area of the bounding rectangle.
-     * @return double; the area of the bounding rectangle or NaN for the EMPTY_BOUNDING_RECTANGLE
+     * Return the area of this Bounds2d.
+     * @return double; the area of this Bounds2d
      */
     public double getArea()
     {
-        return getWidth() * getHeight();
+        return getDeltaX() * getDeltaY();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Bounds2d getBounds()
+    {
+        return this;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point2d getLocation()
+    {
+        return new Point2d((this.maxX + this.minX) / 2.0, (this.maxY + this.minY) / 2.0);
     }
 
     /** {@inheritDoc} */

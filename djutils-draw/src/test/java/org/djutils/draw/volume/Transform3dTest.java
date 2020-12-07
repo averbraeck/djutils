@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Arrays;
+
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.Point;
 import org.djutils.draw.point.Point3d;
@@ -105,7 +107,7 @@ public class Transform3dTest
                         {
                             for (double pz : values)
                             {
-                                Point p = t.transform(new Point3d(px, py, pz));
+                                Point3d p = t.transform(new Point3d(px, py, pz));
                                 assertEquals("translated x matches", px + dx, p.getX(), 0.001);
                                 assertEquals("translated y matches", py + dy, p.getY(), 0.001);
                                 assertEquals("translated z matches", pz + dz, p.getZ(), 0.001);
@@ -125,7 +127,7 @@ public class Transform3dTest
                         {
                             for (double pz : values)
                             {
-                                Point p = t.transform(new Point3d(px, py, pz));
+                                Point3d p = t.transform(new Point3d(px, py, pz));
                                 assertEquals("translated x matches", px + dx, p.getX(), 0.001);
                                 assertEquals("translated y matches", py + dy, p.getY(), 0.001);
                                 assertEquals("translated z matches", pz + dz, p.getZ(), 0.001);
@@ -145,7 +147,7 @@ public class Transform3dTest
                         {
                             for (double pz : values)
                             {
-                                Point p = t.transform(new Point3d(px, py, pz));
+                                Point3d p = t.transform(new Point3d(px, py, pz));
                                 assertEquals("scaled x matches", px * dx, p.getX(), 0.001);
                                 assertEquals("scaled y matches", py * dy, p.getY(), 0.001);
                                 assertEquals("scaled z matches", pz * dz, p.getZ(), 0.001);
@@ -165,7 +167,7 @@ public class Transform3dTest
                         {
                             for (double pz : values)
                             {
-                                Point p = t.transform(new Point3d(px, py, pz));
+                                Point3d p = t.transform(new Point3d(px, py, pz));
                                 assertEquals("sheared x matches", px + pz * dx, p.getX(), 0.001);
                                 assertEquals("sheared y matches", py + pz * dy, p.getY(), 0.001);
                                 assertEquals("sheared z matches", pz, p.getZ(), 0.001);
@@ -185,7 +187,7 @@ public class Transform3dTest
                         {
                             for (double pz : values)
                             {
-                                Point p = t.transform(new Point3d(px, py, pz));
+                                Point3d p = t.transform(new Point3d(px, py, pz));
                                 assertEquals("sheared x matches", px + py * dx, p.getX(), 0.001);
                                 assertEquals("sheared y matches", py, p.getY(), 0.001);
                                 assertEquals("sheared z matches", pz + py * dz, p.getZ(), 0.001);
@@ -205,7 +207,7 @@ public class Transform3dTest
                         {
                             for (double pz : values)
                             {
-                                Point p = t.transform(new Point3d(px, py, pz));
+                                Point3d p = t.transform(new Point3d(px, py, pz));
                                 assertEquals("sheared x matches", px, p.getX(), 0.001);
                                 assertEquals("sheared y matches", py + px * dy, p.getY(), 0.001);
                                 assertEquals("sheared z matches", pz + px * dz, p.getZ(), 0.001);
@@ -228,7 +230,7 @@ public class Transform3dTest
                     {
                         for (double pz : values)
                         {
-                            Point p = t.transform(new Point3d(px, py, pz));
+                            Point3d p = t.transform(new Point3d(px, py, pz));
                             assertEquals("rotated x matches", px * cosine - py * sine, p.getX(), 0.001);
                             assertEquals("rotated y matches", py * cosine + px * sine, p.getY(), 0.001);
                             assertEquals("rotated z matches", pz, p.getZ(), 0.001);
@@ -250,7 +252,7 @@ public class Transform3dTest
                     {
                         for (double pz : values)
                         {
-                            Point p = t.transform(new Point3d(px, py, pz));
+                            Point3d p = t.transform(new Point3d(px, py, pz));
                             assertEquals("rotated x matches", px, p.getX(), 0.001);
                             assertEquals("rotated y matches", py * cosine - pz * sine, p.getY(), 0.001);
                             assertEquals("rotated z matches", pz * cosine + py * sine, p.getZ(), 0.001);
@@ -272,7 +274,7 @@ public class Transform3dTest
                     {
                         for (double pz : values)
                         {
-                            Point p = t.transform(new Point3d(px, py, pz));
+                            Point3d p = t.transform(new Point3d(px, py, pz));
                             assertEquals("rotated x matches", px * cosine + pz * sine, p.getX(), 0.001);
                             assertEquals("rotated y matches", py, p.getY(), 0.001);
                             assertEquals("rotated z matches", pz * cosine - px * sine, p.getZ(), 0.001);
@@ -294,7 +296,7 @@ public class Transform3dTest
             {
                 for (double pz : values)
                 {
-                    Point p = t.transform(new Point3d(px, py, pz));
+                    Point3d p = t.transform(new Point3d(px, py, pz));
                     assertEquals("x-reflected x matches", -px, p.getX(), 0.001);
                     assertEquals("x-reflected y matches", py, p.getY(), 0.001);
                     assertEquals("x-reflected z matches", pz, p.getZ(), 0.001);
@@ -314,7 +316,7 @@ public class Transform3dTest
             {
                 for (double pz : values)
                 {
-                    Point p = t.transform(new Point3d(px, py, pz));
+                    Point3d p = t.transform(new Point3d(px, py, pz));
                     assertEquals("y-reflected x matches", px, p.getX(), 0.001);
                     assertEquals("y-reflected y matches", -py, p.getY(), 0.001);
                     assertEquals("y-reflected z matches", pz, p.getZ(), 0.001);
@@ -334,7 +336,7 @@ public class Transform3dTest
             {
                 for (double pz : values)
                 {
-                    Point p = t.transform(new Point3d(px, py, pz));
+                    Point3d p = t.transform(new Point3d(px, py, pz));
                     assertEquals("z-reflected x matches", px, p.getX(), 0.001);
                     assertEquals("z-reflected y matches", py, p.getY(), 0.001);
                     assertEquals("z-reflected z matches", -pz, p.getZ(), 0.001);
@@ -473,8 +475,13 @@ public class Transform3dTest
                                 {
                                     transformedPoints[i] = t.transform(points[i]);
                                 }
-                                Bounds3d expected = new Bounds3d(transformedPoints);
+                                Bounds3d expected = new Bounds3d(Arrays.stream(transformedPoints).iterator());
                                 Bounds3d got = t.transform(bb);
+                                if (!got.equals(expected))
+                                {
+                                    System.err.println("oops");
+                                    t.transform(bb);
+                                }
                                 assertEquals("bb minX", expected.getMinX(), got.getMinX(), 0.0001);
                                 assertEquals("bb maxX", expected.getMaxX(), got.getMaxX(), 0.0001);
                                 assertEquals("bb minY", expected.getMinY(), got.getMinY(), 0.0001);

@@ -1,6 +1,6 @@
 package org.djutils.draw.bounds;
 
-import org.djutils.draw.point.DirectedPoint;
+import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.draw.volume.Transform3d;
 
@@ -45,7 +45,7 @@ public final class BoundsUtil
      * @param zValue double; the zValue as the 'height' for which the bounds intersection is calculated
      * @return Bounds2d; the resulting rectangle of the intersection
      */
-    public static Bounds2d zIntersect(final DirectedPoint center, final Bounds3d boundingBox, final double zValue)
+    public static Bounds2d zIntersect(final DirectedPoint3d center, final Bounds3d boundingBox, final double zValue)
     {
         Bounds3d box = transform(boundingBox, center);
         Point3d lower = new Point3d(box.getMinX(), box.getMinY(), zValue);
@@ -63,7 +63,7 @@ public final class BoundsUtil
      * @param boundingBox Bounds3d; the bounds that need to be rotated and translated
      * @return the bounds after rotation and translation
      */
-    public static Bounds3d transform(final Bounds3d boundingBox, final DirectedPoint point)
+    public static Bounds3d transform(final Bounds3d boundingBox, final DirectedPoint3d point)
     {
         // First rotate around 0,0,0, then translate
         Transform3d transformation = new Transform3d();
@@ -85,7 +85,7 @@ public final class BoundsUtil
      *            relative to the center.
      * @return whether or not the point is in the bounds
      */
-    public static boolean contains(final DirectedPoint center, final Bounds3d boundingBox, final Point3d point)
+    public static boolean contains(final DirectedPoint3d center, final Bounds3d boundingBox, final Point3d point)
     {
         return transform(boundingBox, center).contains(point);
     }
