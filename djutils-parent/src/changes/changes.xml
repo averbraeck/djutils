@@ -2,6 +2,14 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+
+    <release version="1.06.01" date="????-??-??" description="Additional way to interpolate angles">
+      <action dev="pknoppers" type="add">
+        Interpolating (and extrapolating) angles could only be one with clockwise interpolation. A new method interpolateShortest
+        is now available that takes the shortest way around.
+      </action>
+    </release>
+
     <release version="1.06.00" date="2020-08-XX" description="Projects for drawing and graphs added">
       <action dev="averbraeck" type="add">
         Added projects for drawing in swing and html5: djutils-draw, djutils-draw-swing, and djutils-draw-web. 
