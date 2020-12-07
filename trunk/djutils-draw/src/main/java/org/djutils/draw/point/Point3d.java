@@ -1,8 +1,12 @@
 package org.djutils.draw.point;
 
 import java.awt.geom.Point2D;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.Drawable3d;
+import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.exceptions.Throw;
 
 /**
@@ -15,19 +19,10 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Point3d implements Point
+public class Point3d extends AbstractPoint3d implements Drawable3d, Point<Point3d>
 {
     /** */
     private static final long serialVersionUID = 20200828L;
-
-    /** The x-coordinate. */
-    private final double x;
-
-    /** The y-coordinate. */
-    private final double y;
-
-    /** The z-coordinate. */
-    private final double z;
 
     /**
      * Create a new Point3d with x, y, and z coordinates, stored with double precision.
@@ -38,76 +33,85 @@ public class Point3d implements Point
      */
     public Point3d(final double x, final double y, final double z) throws IllegalArgumentException
     {
-        Throw.when(Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z), IllegalArgumentException.class,
-                "Coordinates must be numbers (not NaN)");
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        super(x, y, z);
     }
 
     /**
      * Create a new Point3d with x, y, and z coordinates, stored with double precision.
      * @param xyz double[3]; the x, y and z coordinates
-     * @throws NullPointerException when xyx is null
-     * @throws IllegalArgumentException when the dimension of xyx is not 3, or any coordinate is NaN
+     * @throws NullPointerException when xyz is null
+     * @throws IllegalArgumentException when the length of the xyz array is not 3, or any coordinate is NaN
      */
-    public Point3d(final double[] xyz) throws IllegalArgumentException
+    public Point3d(final double[] xyz) throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(xyz, "xyz-point cannot be null");
-        Throw.when(xyz.length != 3, IllegalArgumentException.class, "Dimension of xyz-point should be 3");
-        Throw.when(Double.isNaN(xyz[0]) || Double.isNaN(xyz[1]) || Double.isNaN(xyz[2]), IllegalArgumentException.class,
-                "Coordinates must be numbers (not NaN)");
-        this.x = xyz[0];
-        this.y = xyz[1];
-        this.z = xyz[2];
+        super(xyz);
     }
 
     /**
-     * Create a new Point3d with x, y coordinates, stored with double precision, where the z-coordinate is 0.
-     * @param x double; the x coordinate
-     * @param y double; the y coordinate
-     * @return Point3d; the new immutable point with z=0
-     * @throws IllegalArgumentException when x or y is NaN
-     */
-    public static Point3d instantiateXY(final double x, final double y) throws IllegalArgumentException
-    {
-        Throw.when(Double.isNaN(x) || Double.isNaN(y), IllegalArgumentException.class, "Coordinates must be numbers (not NaN)");
-        return new Point3d(x, y, 0.0);
-    }
-
-    /**
-     * Create a new Point3d with x, y, and z coordinates, from an AWT Point2D, where z will be 0.
-     * @param point Point2D; an AWT Point2D
-     * @return Point3d; the new immutable point with z=0
+     * Create a new Point3d taking x and y from an AWT Point2D object and z from a double.
+     * @param point Point2D; the AWT Point2D
+     * @param z double; the value for the z coordinate
      * @throws NullPointerException when point is null
-     * @throws IllegalArgumentException when a coordinate of point is NaN
+     * @throws IllegalArgumentException when point has a NaN coordinate, or z is NaN
      */
-    public static Point3d instantiateXY(final Point2D point) throws NullPointerException, IllegalArgumentException
+    public Point3d(final Point2D point, final double z) throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(point, "point cannot be null");
-        Throw.when(Double.isNaN(point.getX()) || Double.isNaN(point.getY()), IllegalArgumentException.class,
-                "Coordinates must be numbers (not NaN)");
-        return new Point3d(point.getX(), point.getY(), 0.0);
+        super(point, z);
     }
 
     /**
-     * Create a new Point3d with x, y, and z coordinates, from a Point2d, where z will be 0.
-     * @param point Point2d; a 2-dimensional point
-     * @return Point3d; the new immutable point with z=0
-     * @throws NullPointerException when point is null
+     * Create a new Point3d taking x and y from a Point2d and taking z from a provided double.
+     * @param point2d Point2d; the existing Point2d
+     * @param z double; the value for the z coordinate
+     * @throws NullPointerException when point2d is null
+     * @throws IllegalArgumentException when the point2d parameter has a NaN coordinate
      */
-    public static Point3d instantiateXY(final Point2d point)
+    public Point3d(final Point2d point2d, final double z) throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(point, "point cannot be null");
-        return new Point3d(point.getX(), point.getY(), 0.0);
+        super(Throw.whenNull(point2d, "point2d cannot be null").getX(), point2d.getY(), z);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Point3d translate(final double dx, final double dy) throws IllegalArgumentException
+    public Iterator<Point3d> getPoints()
     {
-        Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class, "dx and dy must be numbers (not NaN)");
-        return new Point3d(this.x + dx, this.y + dy, this.z);
+        return Arrays.stream(new Point3d[] { this }).iterator();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point2d project() throws DrawRuntimeException
+    {
+        return new Point2d(getX(), getY());
+    }
+
+    /**
+     * Return a new Point with a translation by the provided dx and dy.
+     * @param dx double; the horizontal translation
+     * @param dy double; the vertical translation
+     * @return Point3D; a new point with the translated coordinates
+     * @throws IllegalArgumentException when dx, or dy is NaN
+     */
+    public Point3d translate(double dx, double dy) throws IllegalArgumentException
+    {
+        Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class,
+                "Translation must be number (not NaN)");
+        return new Point3d(getX() + dx, getY() + dy, getZ());
+    }
+
+    /**
+     * Return a new Point3d with a translation by the provided dx, dy and dz.
+     * @param dx double; the x translation
+     * @param dy double; the y translation
+     * @param dz double; the z translation
+     * @return Point3d; a new point with the translated coordinates
+     * @throws IllegalArgumentException when dx, dy, or dz is NaN
+     */
+    public Point3d translate(final double dx, final double dy, final double dz) throws IllegalArgumentException
+    {
+        Throw.when(Double.isNaN(dx) || Double.isNaN(dy) || Double.isNaN(dz), IllegalArgumentException.class,
+                "dx, dy and dz must be numbers (not NaN)");
+        return new Point3d(getX() + dx, getY() + dy, getZ() + dz);
     }
 
     /** {@inheritDoc} */
@@ -115,7 +119,7 @@ public class Point3d implements Point
     public Point3d scale(final double factor) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(factor), IllegalArgumentException.class, "factor must be a number (not NaN)");
-        return new Point3d(this.x * factor, this.y * factor, this.z * factor);
+        return new Point3d(getX() * factor, getY() * factor, getZ() * factor);
     }
 
     /** {@inheritDoc} */
@@ -129,66 +133,66 @@ public class Point3d implements Point
     @Override
     public Point3d abs()
     {
-        return new Point3d(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z));
+        return new Point3d(Math.abs(getX()), Math.abs(getY()), Math.abs(getZ()));
     }
 
     /** {@inheritDoc} */
     @Override
     public Point3d normalize() throws DrawRuntimeException
     {
-        double length = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+        double length = Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
         Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0, 0.0)");
         return this.scale(1.0 / length);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Point3d interpolate(final Point point, final double fraction)
+    public Point3d interpolate(final Point3d point, final double fraction)
     {
         Throw.whenNull(point, "point cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
-        return new Point3d((1.0 - fraction) * this.x + fraction * point.getX(),
-                (1.0 - fraction) * this.y + fraction * point.getY(), (1.0 - fraction) * this.z + fraction * point.getZ());
+        return new Point3d((1.0 - fraction) * getX() + fraction * point.getX(),
+                (1.0 - fraction) * getY() + fraction * point.getY(), (1.0 - fraction) * getZ() + fraction * point.getZ());
 
+    }
+
+    /**
+     * A comparison with another point that returns true of each of the coordinates is less than epsilon apart.
+     * @param other Point; the point to compare with
+     * @param epsilon double; the upper bound of difference for one of the coordinates
+     * @return boolean; true if both x, y and z (if a Point3d) are less than epsilon apart, otherwise false
+     * @throws NullPointerException when point is null
+     */
+    public boolean epsilonEquals(final Point3d other, final double epsilon)
+    {
+        Throw.whenNull(other, "other point cannot be null");
+        if (Math.abs(getX() - other.getX()) > epsilon)
+        {
+            return false;
+        }
+        if (Math.abs(getY() - other.getY()) > epsilon)
+        {
+            return false;
+        }
+        if (Math.abs(getZ() - other.getZ()) > epsilon)
+        {
+            return false;
+        }
+        return true;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double distanceSquared(final Point point)
+    public Bounds3d getBounds()
     {
-        Throw.whenNull(point, "point cannot be null");
-        double dx = this.x - point.getX();
-        double dy = this.y - point.getY();
-        double dz = this.z - point.getZ();
-        return dx * dx + dy * dy + dz * dz;
+        return new Bounds3d(this);
     }
 
     /** {@inheritDoc} */
     @Override
-    public double[] toArray()
+    public Point3d getLocation()
     {
-        return new double[] { this.x, this.y, this.z };
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public double getX()
-    {
-        return this.x;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public double getY()
-    {
-        return this.y;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public double getZ()
-    {
-        return this.z;
+        return this;
     }
 
     /** {@inheritDoc} */
@@ -196,7 +200,7 @@ public class Point3d implements Point
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()
     {
-        return String.format("(%f,%f,%f)", this.x, this.y, this.z);
+        return String.format("(%f,%f,%f)", getX(), getY(), getZ());
     }
 
     /** {@inheritDoc} */
@@ -205,44 +209,7 @@ public class Point3d implements Point
     {
         int digits = fractionDigits < 0 ? 0 : fractionDigits;
         String format = String.format("(%%.%1$df,%%.%1$df,%%.%1$df)", digits);
-        return String.format(format, this.x, this.y, this.z);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        long temp;
-        temp = Double.doubleToLongBits(this.x);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.y);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.z);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        return result;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @SuppressWarnings("checkstyle:needbraces")
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Point3d other = (Point3d) obj;
-        if (Double.doubleToLongBits(this.x) != Double.doubleToLongBits(other.x))
-            return false;
-        if (Double.doubleToLongBits(this.y) != Double.doubleToLongBits(other.y))
-            return false;
-        if (Double.doubleToLongBits(this.z) != Double.doubleToLongBits(other.z))
-            return false;
-        return true;
+        return String.format(format, getX(), getY(), getZ());
     }
 
 }

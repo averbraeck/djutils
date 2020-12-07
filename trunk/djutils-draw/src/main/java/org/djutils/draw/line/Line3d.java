@@ -1,17 +1,20 @@
 package org.djutils.draw.line;
 
-import java.awt.geom.Path2D;
-import java.awt.geom.PathIterator;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.djutils.draw.DrawException;
-import org.djutils.draw.bounds.Bounds3d;
+import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.Drawable2d;
+import org.djutils.draw.Drawable3d;
 import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.DirectedPoint3d;
+import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
+import org.djutils.exceptions.Throw;
 import org.djutils.logger.CategoryLogger;
 
 /**
@@ -23,7 +26,7 @@ import org.djutils.logger.CategoryLogger;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Line3d implements Line
+public class Line3d implements Drawable3d, Line<Point3d>
 {
     /** */
     private static final long serialVersionUID = 20200911L;
@@ -34,66 +37,78 @@ public class Line3d implements Line
     /** The cumulative length of the line at point 'i'. */
     private final double[] lengthIndexedLine;
 
-    /** The cached length. */
+    /** The length. */
     private final double length;
 
-    /** The cached centroid for the Locatable interface. */
-    private final Point3d centroid;
-
-    /** Bounding rectangle of this Line3d. */
-    private final Bounds2d boundingRectangle;
-    // TODO Peter thinks that the Line3d need not store the bounding rectangle. Can be quickly derived from bounding box.
-
-    /** Bounding box of this Line3d around the centroid. */
+    /** Bounding box of this Line3d. */
     private final Bounds3d bounds;
 
     /**
      * Construct a new Line3d and initialize its length indexed line, bounds, centroid and length.
+     * @param copyNeeded boolean; if true; a deep copy of the points array is stored instead of the provided array
      * @param points Point3d...; the array of points to construct this Line3d from.
+     * @throws NullPointerException when iterator is null
      * @throws DrawException when the provided points do not constitute a valid line (too few points or identical adjacent
      *             points)
      */
-    public Line3d(final Point3d... points) throws DrawException
+    private Line3d(final boolean copyNeeded, final Point3d[] points) throws NullPointerException, DrawException
     {
-        if (points.length < 2)
-        {
-            throw new DrawException("Degenerate Line3d; has " + points.length + " point" + (points.length != 1 ? "s" : ""));
-        }
-        double minX = points[0].getX();
-        double minY = points[0].getY();
-        double minZ = points[0].getZ();
-        ;
-        double maxX = points[0].getX();
-        double maxY = points[0].getY();
-        double maxZ = points[0].getZ();
-        this.lengthIndexedLine = new double[points.length];
+        Throw.whenNull(points, "points cannot be null");
+        Throw.when(points.length < 2, DrawException.class, "Need at least two points");
+        this.points = copyNeeded ? Arrays.copyOf(points, points.length): points;
+        Point3d prevPoint = points[0];
+        double minX = prevPoint.getX();
+        double minY = prevPoint.getY();
+        double minZ = prevPoint.getZ();
+        double maxX = prevPoint.getX();
+        double maxY = prevPoint.getY();
+        double maxZ = prevPoint.getZ();
+        this.lengthIndexedLine = new double[this.points.length];
         this.lengthIndexedLine[0] = 0.0;
-        for (int i = 1; i < points.length; i++)
+        for (int i = 1; i < this.points.length; i++)
         {
-            Point3d point = points[i];
+            Point3d point = this.points[i];
             minX = Math.min(minX, point.getX());
             minY = Math.min(minY, point.getY());
             minZ = Math.min(minZ, point.getZ());
             maxX = Math.max(maxX, point.getX());
             maxY = Math.max(maxY, point.getY());
             maxZ = Math.max(maxZ, point.getZ());
-            if (points[i - 1].getX() == point.getX() && points[i - 1].getY() == point.getY()
-                    && points[i - 1].getZ() == point.getZ())
+            if (prevPoint.getX() == point.getX() && prevPoint.getY() == point.getY()
+                    && prevPoint.getZ() == point.getZ())
             {
                 throw new DrawException("Degenerate Line3d; point " + (i - 1) + " has the same x, y and z as point " + i);
             }
-            this.lengthIndexedLine[i] = this.lengthIndexedLine[i - 1] + points[i - 1].distance(point);
-        }
-        this.points = points; // XXX Absolutely no need to make a deep copy of this one?
+            this.lengthIndexedLine[i] = this.lengthIndexedLine[i - 1] + prevPoint.distance(point);
+            prevPoint = point;
+        }   
         this.length = this.lengthIndexedLine[this.lengthIndexedLine.length - 1];
-        this.centroid = new DirectedPoint3d((maxX + minX) / 2, (maxY + minY) / 2, (maxZ + minZ) / 2);
-        double deltaX = maxX - minX;
-        double deltaY = maxY - minY;
-        double deltaZ = maxZ - minZ;
-        this.bounds = new Bounds3d(-deltaX / 2.0, deltaX / 2, -deltaY / 2.0, deltaY / 2, -deltaZ / 2.0, deltaZ / 2);
-        this.boundingRectangle = new Bounds2d(minX, maxX, minY, maxY);
+        this.bounds = new Bounds3d(getPoints());
+    }
+    
+    /**
+     * Construct a new Line3d and initialize its length indexed line, bounds, centroid and length.
+     * @param points Point3d...; the array of points to construct this Line3d from.
+     * @throws NullPointerException when iterator is null
+     * @throws DrawException when the provided points do not constitute a valid line (too few points or identical adjacent
+     *             points)
+     */
+    public Line3d(final Point3d... points) throws NullPointerException, DrawException
+    {
+        this(true, points);
     }
 
+    /**
+     * Construct a new Line3d and initialize its length indexed line, bounds, centroid and length.
+     * @param iterator Iterator&lt;Point3d&gt;; iterator that will provide all points that constitute the new Line3d
+     * @throws NullPointerException when iterator is null
+     * @throws DrawException when the iterator provides too few points, or some adjacent identical points)
+     */
+    public Line3d(final Iterator<Point3d> iterator) throws NullPointerException, DrawException
+    {
+        this(iteratorToList(Throw.whenNull(iterator, "iterator cannot be null")));
+    }
+    
     /**
      * Construct a new Line3d from a List&lt;Point3d&gt;.
      * @param pointList List&lt;Point3d&gt;; the list of points to construct this Line3d from.
@@ -102,46 +117,51 @@ public class Line3d implements Line
      */
     public Line3d(final List<Point3d> pointList) throws DrawException
     {
-        this(pointList.toArray(new Point3d[pointList.size()]));
+        this(false, pointList.toArray(new Point3d[pointList.size()]));
     }
 
     /**
-     * Construct a new OTSShape (closed shape) from a Path2D.
-     * @param path Path2D; the Path2D to construct this Line3d from.
-     * @throws DrawException when the provided points do not constitute a valid line (too few points or identical adjacent
-     *             points)
+     * Build a list from the Point3d objects that an iterator provides.
+     * @param iterator Iterator&lt;Point3d&gt;; the iterator that will provide the points
+     * @return List&lt;Point3d&gt;; a list of the points provided by the iterator
      */
-    public Line3d(final Path2D path) throws DrawException
-    {
-        this(path2DtoArray(path));
-    }
-
-    /**
-     * Convert a path2D to a Point3d[] array to construct the line.
-     * @param path Path2D; the path to convert
-     * @return Point3d[]; an array of points based on MOVETO and LINETO elements of the Path2D
-     */
-    private static Point3d[] path2DtoArray(final Path2D path)
+    private static List<Point3d> iteratorToList(final Iterator<Point3d> iterator)
     {
         List<Point3d> result = new ArrayList<>();
-        for (PathIterator pi = path.getPathIterator(null); !pi.isDone(); pi.next())
+        iterator.forEachRemaining(result::add);
+        return result;
+    }
+        
+    /** {@inheritDoc} */
+    @Override
+    public int size()
+    {
+        return this.points.length;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public final Point3d get(final int i) throws IndexOutOfBoundsException
+    {
+        if (i < 0 || i > size() - 1)
         {
-            double[] p = new double[6];
-            int segType = pi.currentSegment(p);
-            if (segType == PathIterator.SEG_MOVETO || segType == PathIterator.SEG_LINETO)
-            {
-                result.add(new Point3d(p[0], p[1], 0.0));
-            }
-            else if (segType == PathIterator.SEG_CLOSE)
-            {
-                if (!result.get(0).equals(result.get(result.size() - 1)))
-                {
-                    result.add(new Point3d(result.get(0).getX(), result.get(0).getY(), 0.0));
-                }
-                break;
-            }
+            throw new IndexOutOfBoundsException("Line3d.get(i=" + i + "); i<0 or i>=size(), which is " + size());
         }
-        return result.toArray(new Point3d[result.size() - 1]);
+        return this.points[i];
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getLength()
+    {
+        return this.length;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Iterator<Point3d> getPoints()
+    {
+        return Arrays.stream(this.points).iterator();
     }
 
     /**
@@ -303,6 +323,28 @@ public class Line3d implements Line
         return new Line3d(points);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public Drawable2d project() throws DrawRuntimeException
+    {
+        List<Point2d> pointList = new ArrayList<>();
+        Point2d prevPoint = null;
+        for (Point3d point3d : this.points)
+        {
+            Point2d point = point3d.project();
+            if (prevPoint != null)
+            {
+                if (prevPoint.getX() == point.getX() && prevPoint.getY() == point.getY())
+                {
+                    continue;
+                }
+            }
+            pointList.add(point);
+            prevPoint = point;
+        }
+        return new Line2d(pointList);
+    }
+
     /**
      * Construct a new Line3d with all points of this Line3d in reverse order.
      * @return Line3d; the new Line3d
@@ -311,9 +353,9 @@ public class Line3d implements Line
     {
         Point3d[] resultPoints = new Point3d[size()];
         int nextIndex = size();
-        for (Point3d p : getPointArray())
+        for (int index = 0; index < this.size(); index++)
         {
-            resultPoints[--nextIndex] = p;
+            resultPoints[--nextIndex] = this.points[index];
         }
         try
         {
@@ -471,48 +513,6 @@ public class Line3d implements Line
     }
 
     /**
-     * Return the number of points in this Line3d.
-     * @return the number of points on the line
-     */
-    public final int size()
-    {
-        return this.points.length;
-    }
-
-    /**
-     * Return the first Point of this Line3d.
-     * @return the first point on the line
-     */
-    public final Point3d getFirst()
-    {
-        return this.points[0];
-    }
-
-    /**
-     * Return the last Point of this Line3d.
-     * @return the last point on the line
-     */
-    public final Point3d getLast()
-    {
-        return this.points[size() - 1];
-    }
-
-    /**
-     * Return one Point of this Line3d.
-     * @param i int; the index of the point to retrieve
-     * @return OTSPoint3d; the i<sup>th</sup> point of the line
-     * @throws DrawException when i &lt; 0 or i &gt; the number of points
-     */
-    public final Point3d get(final int i) throws DrawException
-    {
-        if (i < 0 || i > size() - 1)
-        {
-            throw new DrawException("Line3d.get(i=" + i + "); i<0 or i>=size(), which is " + size());
-        }
-        return this.points[i];
-    }
-
-    /**
      * Get the location at a position on the line, with its direction. Position can be below 0 or more than the line length. In
      * that case, the position will be extrapolated in the direction of the line at its start or end.
      * @param position double; the position on the line for which to calculate the point on, before, or after the line
@@ -611,16 +611,6 @@ public class Line3d implements Line
     }
 
     /**
-     * Return the length of this OTSLine3D as a double value. (If the coordinates of the points constituting this line are
-     * expressed in meters, the returned length will be in meters.)
-     * @return the length of the line in SI units
-     */
-    public final double getLength()
-    {
-        return this.length;
-    }
-
-    /**
      * Binary search for a position on the line.
      * @param pos double; the position to look for
      * @return the index below the position; the position is between points[index] and points[index+1]
@@ -702,27 +692,27 @@ public class Line3d implements Line
 
     /**
      * Truncate a line at the given length (less than the length of the line, and larger than zero) and return a new line.
-     * @param lengthSI double; the location where to truncate the line
+     * @param position double; the position along the line where to truncate the line
      * @return a new Line3d that follows this line, but ends at the position where line.getLength() == lengthSI
      * @throws DrawException when position less than 0.0 or more than line length.
      */
-    public final Line3d truncate(final double lengthSI) throws DrawException
+    public final Line3d truncate(final double position) throws DrawException
     {
-        if (lengthSI <= 0.0 || lengthSI > getLength())
+        if (position <= 0.0 || position > getLength())
         {
-            throw new DrawException("truncate for line: position <= 0.0 or > line length. Position = " + lengthSI
-                    + " m. Length = " + getLength() + " m.");
+            throw new DrawException("truncate for line: position <= 0.0 or > line length. Position = " + position
+                    + ". Length = " + getLength() + " m.");
         }
 
         // handle special case: position == length
-        if (lengthSI == getLength())
+        if (position == getLength())
         {
-            return new Line3d(getPointArray());
+            return this;
         }
 
         // find the index of the line segment
-        int index = find(lengthSI);
-        double remainder = lengthSI - this.lengthIndexedLine[index];
+        int index = find(position);
+        double remainder = position - this.lengthIndexedLine[index];
         double fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
         Point3d p1 = this.points[index];
         Point3d lastPoint;
@@ -816,43 +806,26 @@ public class Line3d implements Line
     }
 
     /**
-     * Retrieve the centroid of this Line3d.
-     * @return Point3d; the centroid of this Line3d
-     */
-    public final Point3d getCentroid()
-    {
-        return this.centroid;
-    }
-
-    /**
      * Get the bounding rectangle of this Line3d.
      * @return Bounds2d; the bounding rectangle of this Line3d
      */
     public final Bounds2d getBounds2d()
     {
-        return this.boundingRectangle;
+        return this.bounds.project();
     }
 
     /** {@inheritDoc} */
     @Override
-    public DirectedPoint3d getLocation() throws RemoteException
-    {
-        return new DirectedPoint3d(this.centroid.getX(), this.centroid.getY(), this.centroid.getZ());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Bounds3d getBounds() throws RemoteException
+    public Bounds3d getBounds()
     {
         return this.bounds;
     }
 
     /** {@inheritDoc} */
     @Override
-    public Point3d[] getPointArray()
+    public Point3d getLocation()
     {
-        return this.points;
-        // XXX This enables the caller to modify our immutable Point array. 
+        return this.bounds.getLocation();
     }
 
     /** {@inheritDoc} */

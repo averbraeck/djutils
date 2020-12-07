@@ -1,9 +1,9 @@
 package org.djutils.draw.surface;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 import org.djutils.draw.bounds.Bounds2d;
-import org.djutils.draw.point.Point;
 import org.djutils.draw.point.Point2d;
 
 /**
@@ -90,11 +90,11 @@ public class Transform2d
     }
 
     /**
-     * Translate coordinates by a the x and y values contained in a Point.
-     * @param point Point; the point containing the x and y translation values (z is ignored if present)
+     * Translate coordinates by a the x and y values contained in a Point2d.
+     * @param point Point; the point containing the x and y translation values
      * @return Transform2d; the new transformation matrix after applying this transform
      */
-    public Transform2d translate(final Point point)
+    public Transform2d translate(final Point2d point)
     {
         if (point.getX() == 0.0 && point.getY() == 0.0)
         {
@@ -187,8 +187,7 @@ public class Transform2d
     }
 
     /**
-     * Apply the stored transform on the provided point and return a point with the transformed coordinate. For speed reasons,
-     * no checks on correct size of the vector is done.
+     * Apply the stored transform on the provided point and return a point with the transformed coordinate.
      * @param point Point2d; the point to be transformed
      * @return Point2d; a point with the transformed coordinates
      */
@@ -198,26 +197,46 @@ public class Transform2d
     }
 
     /**
-     * Apply the stored transform on the provided Bounds2d and return a new Bounds2d with the bounds of the
-     * transformed coordinates. All 4 corner points have to be transformed, since we do not know which of the 4 points will
-     * result in the lowest and highest x and y coordinates.
+     * Apply the stored transform on the provided point and return a point with the transformed coordinate.
+     * @param pointIterator Point2d; generates the points to be transformed
+     * @return Iterator&lt;Point2d&gt;; an iterator that will generator all transformed points
+     */
+    public Iterator<Point2d> transform(final Iterator<Point2d> pointIterator)
+    {
+        return new Iterator<Point2d>()
+        {
+
+            @Override
+            public boolean hasNext()
+            {
+                return pointIterator.hasNext();
+            }
+
+            @Override
+            public Point2d next()
+            {
+                return transform(pointIterator.next());
+            }
+        };
+    }
+
+    /**
+     * Apply the stored transform on the provided Bounds2d and return a new Bounds2d with the bounds of the transformed
+     * coordinates. All 4 corner points have to be transformed, since we do not know which of the 4 points will result in the
+     * lowest and highest x and y coordinates.
      * @param boundingRectangle Bounds2d; the bounds to be transformed
      * @return Bounds2d; the new bounds based on the transformed coordinates
      */
     public Bounds2d transform(final Bounds2d boundingRectangle)
     {
-        return new Bounds2d(
-                new Point2d[] { transform(new Point2d(boundingRectangle.getMinX(), boundingRectangle.getMinY())),
-                        transform(new Point2d(boundingRectangle.getMinX(), boundingRectangle.getMaxY())),
-                        transform(new Point2d(boundingRectangle.getMaxX(), boundingRectangle.getMinY())),
-                        transform(new Point2d(boundingRectangle.getMaxX(), boundingRectangle.getMaxY())) });
+        return new Bounds2d(transform(boundingRectangle.getPoints()));
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString()
     {
-        return "Transform2d [mat=" + Arrays.toString(mat) + "]";
+        return "Transform2d [mat=" + Arrays.toString(this.mat) + "]";
     }
 
 }

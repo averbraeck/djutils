@@ -1,6 +1,5 @@
 package org.djutils.draw.point;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -11,6 +10,7 @@ import static org.junit.Assert.fail;
 import java.awt.geom.Point2D;
 
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.exceptions.Try;
 import org.junit.Test;
 
@@ -34,9 +34,15 @@ public class Point3dTest
     {
         Point3d p = new Point3d(10.0, -20.0, 16.0);
         assertNotNull(p);
-        assertEquals(10.0, p.getX(), 1E-6);
-        assertEquals(-20.0, p.getY(), 1E-6);
-        assertEquals(16.0, p.getZ(), 1E-6);
+        assertEquals(10.0, p.getX(), 0);
+        assertEquals(-20.0, p.getY(), 0);
+        assertEquals(16.0, p.getZ(), 0);
+        
+        assertEquals("size method returns 1", 1, p.size());
+        
+        Point2d projection = p.project();
+        assertEquals(10.0, projection.getX(), 0);
+        assertEquals(-20.0, projection.getY(), 0);
         
         try
         {
@@ -70,23 +76,9 @@ public class Point3dTest
         
         double[] p3Arr = new double[] {5.0, 6.0, 7.0};
         p = new Point3d(p3Arr);
-        assertEquals(5.0, p.getX(), 1E-6);
-        assertEquals(6.0, p.getY(), 1E-6);
-        assertEquals(7.0, p.getZ(), 1E-6);
-        assertArrayEquals(p3Arr, p.toArray(), 0.001);
-        p = Point3d.instantiateXY(10.0, -20.0);
-        assertEquals(10.0, p.getX(), 1E-6);
-        assertEquals(-20.0, p.getY(), 1E-6);
-        assertEquals(0.0, p.getZ(), 1E-6);
-        p = Point3d.instantiateXY(new Point2d(10.0, -20.0));
-        assertEquals(10.0, p.getX(), 1E-6);
-        assertEquals(-20.0, p.getY(), 1E-6);
-        assertEquals(0.0, p.getZ(), 1E-6);
-        p = Point3d.instantiateXY(new Point2D.Double(10.0, -20.0));
-        assertEquals(10.0, p.getX(), 1E-6);
-        assertEquals(-20.0, p.getY(), 1E-6);
-        assertEquals(0.0, p.getZ(), 1E-6);
-
+        assertEquals(5.0, p.getX(), 0);
+        assertEquals(6.0, p.getY(), 0);
+        assertEquals(7.0, p.getZ(), 0);
         Try.testFail(new Try.Execution()
         {
             @Override
@@ -119,7 +111,16 @@ public class Point3dTest
             @Override
             public void execute() throws Throwable
             {
-                Point3d.instantiateXY((Point2d) null);
+                new Point3d(new double[] {1.0, 2.0, 3.0, 4.0});
+            }
+        }, "Should throw IAE", IllegalArgumentException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                new Point3d((Point2d) null, 0);
             }
         }, "Should throw NPE", NullPointerException.class);
 
@@ -128,9 +129,27 @@ public class Point3dTest
             @Override
             public void execute() throws Throwable
             {
-                Point3d.instantiateXY((Point2D.Double) null);
+                new Point3d((Point2D.Double) null, 0);
             }
         }, "Should throw NPE", NullPointerException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                new Point3d(new Point2D.Double(Double.NaN, 2), 0);
+            }
+        }, "Should throw IAE", IllegalArgumentException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                new Point3d(new Point2D.Double(1, Double.NaN), 0);
+            }
+        }, "Should throw IAE", IllegalArgumentException.class);
 
         // equals and hashCode
         assertTrue(p.equals(p));
@@ -139,7 +158,7 @@ public class Point3dTest
         assertFalse(p.equals(p2d));
         assertFalse(p.equals(null));
         assertNotEquals(p2d.hashCode(), p.hashCode());
-        assertEquals(p, p.translate(0.0, 0.0, 0.0));
+        assertEquals("Translating over 0,0,0 returns p", p, p.translate(0.0, 0.0, 0.0));
         assertNotEquals(p, p.translate(1.0, 0.0, 0.0));
         assertNotEquals(p, p.translate(0.0, 1.0, 0.0));
         assertNotEquals(p, p.translate(0.0, 0.0, 1.0));
@@ -170,6 +189,18 @@ public class Point3dTest
         assertTrue(p3.epsilonEquals(p, 0.09));
         assertFalse(p.epsilonEquals(p3, 0.0009));
         assertFalse(p3.epsilonEquals(p, 0.0009));
+       
+        p2d = new Point2d(123, 456);
+        p3 = new Point3d(p2d, 789);
+        assertEquals("x", 123, p3.getX(), 0);
+        assertEquals("y", 456, p3.getY(), 0);
+        assertEquals("z", 789, p3.getZ(), 0);
+        
+        Point2D p2D = new java.awt.geom.Point2D.Double(123, 456);
+        p3 = new Point3d(p2D, 789);
+        assertEquals("x", 123, p3.getX(), 0);
+        assertEquals("y", 456, p3.getY(), 0);
+        assertEquals("z", 789, p3.getZ(), 0);
     }
 
     /**
@@ -202,14 +233,14 @@ public class Point3dTest
         assertEquals(7.0, p3d.getX(), 1E-6);
         assertEquals(2.0, p3d.getY(), 1E-6);
         assertEquals(4.5, p3d.getZ(), 1E-6);
-        p3d = p.translate(1.0, 1.0);
-        assertEquals(7.0, p3d.getX(), 1E-6);
+        p3d = p.translate(6.0, 1.0);
+        assertEquals(12.0, p3d.getX(), 1E-6);
         assertEquals(2.0, p3d.getY(), 1E-6);
         assertEquals(3.5, p3d.getZ(), 1E-6);
         
         try
         {
-            p.translate(Double.NaN, 1.0);
+            p.translate(Double.NaN, 2.0);
             fail("NaN translation should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -227,12 +258,40 @@ public class Point3dTest
             // Ignore expected exception
         }
 
+        try
+        {
+            p.translate(Double.NaN, 2.0, 3.0);
+            fail("NaN translation should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            p.translate(1.0,  Double.NaN, 3.0);
+            fail("NaN translation should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            p.translate(1.0,  2.0, Double.NaN);
+            fail("NaN translation should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
         // interpolate
         Point3d p1 = new Point3d(1.0, 1.0, 1.0);
         Point3d p2 = new Point3d(5.0, 5.0, 5.0);
-        assertEquals(p1, Point.interpolate(p1, p2, 0.0));
-        assertEquals(p2, Point.interpolate(p1, p2, 1.0));
-        assertEquals(p1, p1.interpolate(p2, 0.0));
+        assertEquals("Interpolate at 0.0 returns this", p1, p1.interpolate(p2, 0.0));
         assertEquals(p2, p2.interpolate(p1, 0.0));
         assertEquals(p1, p1.interpolate(p1, 0.0));
         assertEquals(new Point3d(3.0, 3.0, 3.0), p1.interpolate(p2, 0.5));
@@ -242,10 +301,6 @@ public class Point3dTest
         assertEquals(48.0, p1.distanceSquared(p2), 0.001);
         assertEquals(Math.sqrt(32.0), p1.horizontalDistance(p2), 0.001);
         assertEquals(32.0, p1.horizontalDistanceSquared(p2), 0.001);
-        assertEquals(Math.sqrt(48.0), Point.distance(p2, p1), 0.001);
-        assertEquals(48.0, Point.distanceSquared(p2, p1), 0.001);
-        assertEquals(Math.sqrt(32.0), Point.horizontalDistance(p2, p1), 0.001);
-        assertEquals(32.0, Point.horizontalDistanceSquared(p2, p1), 0.001);
 
         // direction
         assertEquals(Math.toRadians(45.0), p2.horizontalDirection(), 0.001);
@@ -266,7 +321,21 @@ public class Point3dTest
                 new Point3d(0.0, 0.0, 0.0).normalize();
             }
         }, "Should throw DRtE", DrawRuntimeException.class);
+        
+        assertEquals("size of a Point3d is 1", 1, p1.size());
+        Point2d projection = p1.project();
+        assertEquals("projected x", p1.getX(), projection.getX(), 0);
+        assertEquals("projected y", p1.getY(), projection.getY(), 0);
 
+        assertEquals("getLocation returns this", p1, p1.getLocation());
+        
+        Bounds3d bounds = p1.getBounds();
+        assertEquals("Bounds min x", p1.getX(), bounds.getMinX(), 0);
+        assertEquals("Bounds min y", p1.getY(), bounds.getMinY(), 0);
+        assertEquals("Bounds min z", p1.getZ(), bounds.getMinZ(), 0);
+        assertEquals("Bounds max x", p1.getX(), bounds.getMaxX(), 0);
+        assertEquals("Bounds max y", p1.getY(), bounds.getMaxY(), 0);
+        assertEquals("Bounds max z", p1.getZ(), bounds.getMaxZ(), 0);
     }
 
     /**
@@ -309,7 +378,7 @@ public class Point3dTest
             @Override
             public void execute() throws Throwable
             {
-                p1.horizontalDistance(null);
+                p1.horizontalDistance((Point2d) null);
             }
         }, "Should throw NPE", NullPointerException.class);
 
@@ -318,101 +387,7 @@ public class Point3dTest
             @Override
             public void execute() throws Throwable
             {
-                p1.horizontalDistanceSquared(null);
-            }
-        }, "Should throw NPE", NullPointerException.class);
-
-        // statics, 1st arg is null
-
-        Try.testFail(new Try.Execution()
-        {
-            @Override
-            public void execute() throws Throwable
-            {
-                Point.interpolate(null, p1, 0.5);
-            }
-        }, "Should throw NPE", NullPointerException.class);
-
-        Try.testFail(new Try.Execution()
-        {
-            @Override
-            public void execute() throws Throwable
-            {
-                Point.distance(null, p1);
-            }
-        }, "Should throw NPE", NullPointerException.class);
-
-        Try.testFail(new Try.Execution()
-        {
-            @Override
-            public void execute() throws Throwable
-            {
-                Point.distanceSquared(null, p1);
-            }
-        }, "Should throw NPE", NullPointerException.class);
-
-        Try.testFail(new Try.Execution()
-        {
-            @Override
-            public void execute() throws Throwable
-            {
-                Point.horizontalDistance(null, p1);
-            }
-        }, "Should throw NPE", NullPointerException.class);
-
-        Try.testFail(new Try.Execution()
-        {
-            @Override
-            public void execute() throws Throwable
-            {
-                Point.horizontalDistanceSquared(null, p1);
-            }
-        }, "Should throw NPE", NullPointerException.class);
-
-        // statics, 2nd arg is null
-
-        Try.testFail(new Try.Execution()
-        {
-            @Override
-            public void execute() throws Throwable
-            {
-                Point.interpolate(p1, null, 0.5);
-            }
-        }, "Should throw NPE", NullPointerException.class);
-
-        Try.testFail(new Try.Execution()
-        {
-            @Override
-            public void execute() throws Throwable
-            {
-                Point.distance(p1, null);
-            }
-        }, "Should throw NPE", NullPointerException.class);
-
-        Try.testFail(new Try.Execution()
-        {
-            @Override
-            public void execute() throws Throwable
-            {
-                Point.distanceSquared(p1, null);
-            }
-        }, "Should throw NPE", NullPointerException.class);
-
-        Try.testFail(new Try.Execution()
-        {
-            @Override
-            public void execute() throws Throwable
-            {
-                Point.horizontalDistance(p1, null);
-            }
-        }, "Should throw NPE", NullPointerException.class);
-
-        Try.testFail(new Try.Execution()
-        {
-            @Override
-            public void execute() throws Throwable
-            {
-                Point.horizontalDistanceSquared(p1, null);
+                p1.horizontalDistanceSquared((Point3d) null);
             }
         }, "Should throw NPE", NullPointerException.class);
 

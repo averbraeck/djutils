@@ -1,9 +1,10 @@
 package org.djutils.draw.volume;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.point.Point;
+import org.djutils.draw.point.AbstractPoint3d;
 import org.djutils.draw.point.Point3d;
 
 /**
@@ -93,10 +94,10 @@ public class Transform3d
 
     /**
      * Translate coordinates by a the x, y, and z values contained in a Point.
-     * @param point Point; the point containing the x, y, and z translation values
+     * @param point AbstractPoint3d; the point containing the x, y, and z translation values
      * @return Transform3d; the new transformation matrix after applying this transform
      */
-    public Transform3d translate(final Point point)
+    public Transform3d translate(final AbstractPoint3d point)
     {
         if (point.getX() == 0.0 && point.getY() == 0.0 && point.getZ() == 0.0)
         {
@@ -281,6 +282,30 @@ public class Transform3d
     }
 
     /**
+     * Apply the stored transform on the provided point and return a point with the transformed coordinate.
+     * @param pointIterator Point3d; generates the points to be transformed
+     * @return Iterator&lt;Point3d&gt;; an iterator that will generator all transformed points
+     */
+    public Iterator<Point3d> transform(final Iterator<Point3d> pointIterator)
+    {
+        return new Iterator<Point3d>()
+        {
+
+            @Override
+            public boolean hasNext()
+            {
+                return pointIterator.hasNext();
+            }
+
+            @Override
+            public Point3d next()
+            {
+                return transform(pointIterator.next());
+            }
+        };
+    }
+
+    /**
      * Apply the stored transform on the provided Bounds3d and return a new Bounds3d with the bounds of the transformed
      * coordinates. All 8 corner points have to be transformed, since we do not know which of the 8 points will result in the
      * lowest and highest x, y, and z coordinates.
@@ -289,22 +314,14 @@ public class Transform3d
      */
     public Bounds3d transform(final Bounds3d boundingBox)
     {
-        return new Bounds3d(
-                new Point3d[] { transform(new Point3d(boundingBox.getMinX(), boundingBox.getMinY(), boundingBox.getMinZ())),
-                        transform(new Point3d(boundingBox.getMinX(), boundingBox.getMinY(), boundingBox.getMaxZ())),
-                        transform(new Point3d(boundingBox.getMinX(), boundingBox.getMaxY(), boundingBox.getMinZ())),
-                        transform(new Point3d(boundingBox.getMinX(), boundingBox.getMaxY(), boundingBox.getMaxZ())),
-                        transform(new Point3d(boundingBox.getMaxX(), boundingBox.getMinY(), boundingBox.getMinZ())),
-                        transform(new Point3d(boundingBox.getMaxX(), boundingBox.getMinY(), boundingBox.getMaxZ())),
-                        transform(new Point3d(boundingBox.getMaxX(), boundingBox.getMaxY(), boundingBox.getMinZ())),
-                        transform(new Point3d(boundingBox.getMaxX(), boundingBox.getMaxY(), boundingBox.getMaxZ())) });
+        return new Bounds3d(transform(boundingBox.getPoints()));
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString()
     {
-        return "Transform3d [mat=" + Arrays.toString(mat) + "]";
+        return "Transform3d [mat=" + Arrays.toString(this.mat) + "]";
     }
 
 }

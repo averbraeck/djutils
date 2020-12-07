@@ -128,33 +128,6 @@ public class TestLine3d
     }
     
     /**
-     * Test construction of a Line3d from a Path2D with SEG_CLOSE.
-     * @throws DrawException on unexpected error
-     */
-    @Test
-    public void testPathWithClose() throws DrawException
-    {
-        Path2D path = new Path2D.Double();
-        path.moveTo(1, 2);
-        path.lineTo(4,  5);
-        path.lineTo(4,  8);
-        path.closePath();
-        Line3d line = new Line3d(path);
-        assertEquals("line has 4 points", 4, line.size());
-        assertEquals("first point equals last point", line.getFirst(), line.getLast());
-        // Now the case that the path was already closed
-        path = new Path2D.Double();
-        path.moveTo(1, 2);
-        path.lineTo(4,  5);
-        path.lineTo(1,  2);
-        path.closePath();
-        line = new Line3d(path);
-        assertEquals("line has 4 points", 3, line.size());
-        assertEquals("first point equals last point", line.getFirst(), line.getLast());
-        
-    }
-
-    /**
      * Test all the constructors of Point3d.
      * @param points Point3d[]; array of Point3d to test with
      * @throws DrawException should not happen; this test has failed if it does happen
@@ -170,7 +143,7 @@ public class TestLine3d
         Line3d line = new Line3d(list);
         verifyPoints(line, points);
         // Convert it to Point3d[], create another Line3d from that and check that
-        verifyPoints(new Line3d(line.getPointArray()), points);
+        verifyPoints(new Line3d(line.getPoints()), points);
         double length = 0;
         for (int i = 1; i < points.length; i++)
         {
@@ -181,7 +154,6 @@ public class TestLine3d
         assertEquals("length", length, line.getLength(), 10 * Math.ulp(length));
 
         // Construct a Path3D.Double that contains the horizontal moveto or lineto
-        int horizontalMoves = 0;
         Path2D path = new Path2D.Double();
         path.moveTo(points[0].getX(), points[0].getY());
         // System.out.print("path is "); printPath2D(path);
@@ -191,34 +163,6 @@ public class TestLine3d
             if (points[i].getX() != points[i - 1].getX() || points[i].getY() != points[i - 1].getY())
             {
                 path.lineTo(points[i].getX(), points[i].getY());
-                horizontalMoves++;
-            }
-        }
-        try
-        {
-            line = new Line3d(path);
-            if (0 == horizontalMoves)
-            {
-                fail("Construction of Line3d from path with degenerate projection should have failed");
-            }
-            // This new Line3d has z=0 for all points so veryfyPoints won't work
-            assertEquals("number of points should match", horizontalMoves + 1, line.size());
-            int indexInLine = 0;
-            for (int i = 0; i < points.length; i++)
-            {
-                if (i > 0 && (points[i].getX() != points[i - 1].getX() || points[i].getY() != points[i - 1].getY()))
-                {
-                    indexInLine++;
-                }
-                assertEquals("x in line", points[i].getX(), line.get(indexInLine).getX(), 0.001);
-                assertEquals("y in line", points[i].getY(), line.get(indexInLine).getY(), 0.001);
-            }
-        }
-        catch (DrawException e)
-        {
-            if (0 != horizontalMoves)
-            {
-                fail("Construction of Line3d from path with non-degenerate projection should not have failed");
             }
         }
     }
@@ -279,18 +223,19 @@ public class TestLine3d
         try
         {
             line.get(-1);
-            fail("Should have thrown an exception");
+            fail("Should have thrown an IndexOutOfBoundsException");
         }
-        catch (DrawException oe)
+        catch (IndexOutOfBoundsException ioobe)
         {
             // Ignore expected exception
         }
+        
         try
         {
             line.get(2);
-            fail("Should have thrown an exception");
+            fail("Should have thrown an IndexOutOfBoundsException");
         }
-        catch (DrawException oe)
+        catch (IndexOutOfBoundsException ioobe)
         {
             // Ignore expected exception
         }
@@ -387,7 +332,7 @@ public class TestLine3d
         Point3d p1 = new Point3d(40, 50, 60);
         Point3d p2 = new Point3d(90, 70, 90);
         Line3d l = new Line3d(new Point3d[] {p0, p1, p2});
-        DirectedPoint3d dp = l.getLocation();
+        Point3d dp = l.getLocation();
         assertEquals("centroid x", 50, dp.getX(), 0.001);
         assertEquals("centroid y", 45, dp.getY(), 0.001);
         assertEquals("centroid z", 75, dp.getZ(), 0.001);
@@ -863,10 +808,10 @@ public class TestLine3d
             points.add(from);
             line = new Line3d(points);
             filteredLine = line.noiseFilteredLine(0.2);
-            assertEquals("filter returns line of three points", 3, filteredLine.getPointArray().length);
-            assertEquals("first point matches", from, filteredLine.getPointArray()[0]);
-            assertEquals("last point matches", from, filteredLine.getPointArray()[filteredLine.getPointArray().length - 1]);
-            assertNotEquals("intermediate point differs from first point", from, filteredLine.getPointArray()[1]);
+            assertEquals("filter returns line of three points", 3, filteredLine.size());
+            assertEquals("first point matches", from, filteredLine.getFirst());
+            assertEquals("last point matches", from, filteredLine.getLast());
+            assertNotEquals("intermediate point differs from first point", from, filteredLine.get(1));
         }
     }
 
@@ -962,15 +907,16 @@ public class TestLine3d
      * Test the orthogonal projection on a line.
      * @throws DrawException when line construction fails
      */
-    @Test
-    public void testOrthogonalProjection() throws DrawException
-    {
-        Line3d line = new Line3d(new Point3d(0, 0, 0), new Point3d(10, 0, 0), new Point3d(10, 5, 0), new Point3d(0, 10, 0));
-        Point3d p = line.getLocationFraction(line.projectOrthogonal(0, 1));
-        assertTrue(new Point3d(0, 0, 0).epsilonEquals(p, 1E-6));
-        p = line.getLocationFraction(line.projectOrthogonal(4, 1));
-        assertTrue(new Point3d(4, 0, 0).epsilonEquals(p, 1E-6));
-        p = line.getLocationFraction(line.projectOrthogonal(10, 10));
-        assertTrue("point " + p, new Point3d(8, 6, 0).epsilonEquals(p, 1E-6));
-    }
+//    @Test
+//    public void testOrthogonalProjection() throws DrawException
+//    {
+//        Line3d line = new Line3d(new Point3d(0, 0, 0), new Point3d(10, 0, 0), new Point3d(10, 5, 0), new Point3d(0, 10, 0));
+//        Point3d p = line.getLocationFraction(line.projectOrthogonal(0, 1));
+//        assertTrue(new Point3d(0, 0, 0).epsilonEquals(p, 1E-6));
+//        p = line.getLocationFraction(line.projectOrthogonal(4, 1));
+//        assertTrue(new Point3d(4, 0, 0).epsilonEquals(p, 1E-6));
+//        p = line.getLocationFraction(line.projectOrthogonal(10, 10));
+//        assertTrue("point " + p, new Point3d(8, 6, 0).epsilonEquals(p, 1E-6));
+//    }
+
 }

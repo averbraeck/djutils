@@ -4,8 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Arrays;
+
 import org.djutils.draw.bounds.Bounds2d;
-import org.djutils.draw.point.Point;
 import org.djutils.draw.point.Point2d;
 import org.junit.Test;
 
@@ -101,7 +102,7 @@ public class Transform2dTest
                 {
                     for (double py : values)
                     {
-                        Point p = t.transform(new Point2d(px, py));
+                        Point2d p = t.transform(new Point2d(px, py));
                         assertEquals("translated x matches", px + dx, p.getX(), 0.001);
                         assertEquals("translated y matches", py + dy, p.getY(), 0.001);
                         double[] result = t.transform(new double[] { px, py });
@@ -116,7 +117,7 @@ public class Transform2dTest
                 {
                     for (double py : values)
                     {
-                        Point p = t.transform(new Point2d(px, py));
+                        Point2d p = t.transform(new Point2d(px, py));
                         assertEquals("transformed x matches", px + dx, p.getX(), 0.001);
                         assertEquals("transformed y matches", py + dy, p.getY(), 0.001);
                         double[] result = t.transform(new double[] { px, py });
@@ -131,7 +132,7 @@ public class Transform2dTest
                 {
                     for (double py : values)
                     {
-                        Point p = t.transform(new Point2d(px, py));
+                        Point2d p = t.transform(new Point2d(px, py));
                         assertEquals("scaled x matches", px * dx, p.getX(), 0.001);
                         assertEquals("scaled y matches", py * dy, p.getY(), 0.001);
                         double[] result = t.transform(new double[] { px, py });
@@ -146,7 +147,7 @@ public class Transform2dTest
                 {
                     for (double py : values)
                     {
-                        Point p = t.transform(new Point2d(px, py));
+                        Point2d p = t.transform(new Point2d(px, py));
                         assertEquals("sheared x matches", px + py * dx, p.getX(), 0.001);
                         assertEquals("sheared y matches", py + px * dy, p.getY(), 0.001);
                         double[] result = t.transform(new double[] { px, py });
@@ -164,7 +165,7 @@ public class Transform2dTest
             {
                 for (double py : values)
                 {
-                    Point p = t.transform(new Point2d(px, py));
+                    Point2d p = t.transform(new Point2d(px, py));
                     assertEquals("rotated x matches", px * cosine - py * sine, p.getX(), 0.001);
                     assertEquals("rotated y matches", py * cosine + px * sine, p.getY(), 0.001);
                     double[] result = t.transform(new double[] { px, py });
@@ -180,7 +181,7 @@ public class Transform2dTest
         {
             for (double py : values)
             {
-                Point p = t.transform(new Point2d(px, py));
+                Point2d p = t.transform(new Point2d(px, py));
                 assertEquals("x-reflected x matches", -px, p.getX(), 0.001);
                 assertEquals("x-reflected y  matches", py, p.getY(), 0.001);
                 double[] result = t.transform(new double[] { px, py });
@@ -195,7 +196,7 @@ public class Transform2dTest
         {
             for (double py : values)
             {
-                Point p = t.transform(new Point2d(px, py));
+                Point2d p = t.transform(new Point2d(px, py));
                 assertEquals("y-reflected x matches", px, p.getX(), 0.001);
                 assertEquals("y-reflected y  matches", -py, p.getY(), 0.001);
                 double[] result = t.transform(new double[] { px, py });
@@ -294,7 +295,7 @@ public class Transform2dTest
                         {
                             transformedPoints[i] = t.transform(points[i]);
                         }
-                        Bounds2d expected = new Bounds2d(transformedPoints);
+                        Bounds2d expected = new Bounds2d(Arrays.stream(transformedPoints).iterator());
                         Bounds2d got = t.transform(bb);
                         assertEquals("bb minX", expected.getMinX(), got.getMinX(), 0.0001);
                         assertEquals("bb maxX", expected.getMaxX(), got.getMaxX(), 0.0001);

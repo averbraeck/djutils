@@ -1,8 +1,6 @@
 package org.djutils.draw.line;
 
-import java.io.Serializable;
-
-import org.djutils.draw.Locatable;
+import org.djutils.draw.Drawable;
 import org.djutils.draw.point.Point;
 
 /**
@@ -13,14 +11,54 @@ import org.djutils.draw.point.Point;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @param <P> The Point type (2d or 3d)
  */
-public interface Line extends Locatable, Serializable
+public interface Line<P extends Point<P>> extends Drawable<P>
 {
     /**
-     * Return the points of this line as an array.
-     * @return Point[]; the points of this line as an array
+     * Return the length of this line. This is NOT the number of points; it is the sum of the lengths of the segments.
+     * @return double; the length of this line
      */
-    Point[] getPointArray();
-    
-}
+    double getLength();
 
+    /**
+     * Return one of the points of this line.
+     * @param index int; the index of the requested point
+     * @return P; the point at the specified index
+     * @throws IndexOutOfBoundsException when index < 0 or index >= size
+     */
+    P get(int index) throws IndexOutOfBoundsException;
+
+    /**
+     * Return the first point of this line.
+     * @return P; the first point of this line
+     */
+    default P getFirst()
+    {
+        try
+        {
+            return get(0);
+        }
+        catch (IndexOutOfBoundsException ioobe)
+        {
+            throw new RuntimeException("cannot happen");
+        }
+    }
+
+    /**
+     * Return the last point of this line.
+     * @return P; the last point of this line
+     */
+    default P getLast()
+    {
+        try
+        {
+            return get(size() - 1);
+        }
+        catch (IndexOutOfBoundsException ioobe)
+        {
+            throw new RuntimeException("cannot happen");
+        }
+    }
+
+}
