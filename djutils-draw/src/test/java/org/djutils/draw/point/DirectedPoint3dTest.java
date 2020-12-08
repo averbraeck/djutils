@@ -348,8 +348,6 @@ public class DirectedPoint3dTest
         assertEquals("iterator returns p", p, i.next());
         assertFalse("iterator does not have another point", i.hasNext());
 
-        assertEquals("getLocation returns p", p, p.getLocation());
-
         DirectedPoint3d p2 = p.neg();
         assertEquals("negated x", -p.getX(), p2.getX(), 1E-6);
         assertEquals("negated y", -p.getY(), p2.getY(), 1E-6);

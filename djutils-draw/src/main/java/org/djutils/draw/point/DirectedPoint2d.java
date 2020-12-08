@@ -19,7 +19,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class DirectedPoint2d extends AbstractPoint2d implements Directed2d, Point<DirectedPoint2d>
+public class DirectedPoint2d extends Point2d implements Directed2d
 {
     /** */
     private static final long serialVersionUID = 20200828L;
@@ -93,30 +93,16 @@ public class DirectedPoint2d extends AbstractPoint2d implements Directed2d, Poin
         this.dirZ = dirZ;
     }
 
-    /**
-     * Return a new DirectedPoint2d with a translation by the provided delta-x and delta-y from <code>this</code>
-     * DirectedPoint2D. The rotation of the new DirectedPoint2d is equal to the rotation of this DirectedPoint2d.
-     * @param dx double; the horizontal translation
-     * @param dy double; the vertical translation
-     * @return DirectedPoint2d; a new point with the translated coordinates and an unchanged rotation
-     * @throws IllegalArgumentException when dx or dy is NaN
-     */
+    /** {@inheritDoc} */
+    @Override
     public DirectedPoint2d translate(final double dx, final double dy) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class, "translation may not be NaN");
         return new DirectedPoint2d(getX() + dx, getY() + dy, getDirZ());
     }
 
-    /**
-     * Return a new DirectedPoint3d with a translation by the provided delta-x, delta-y and z from <code>this</code>
-     * DirectedPoint2D and the specified z value. The direction of the new DirectedPoint3d is equal to the rotation of this
-     * DirectedPoint2d; i.e. dirX and dirY are set to 0.
-     * @param dx double; the horizontal translation
-     * @param dy double; the vertical translation
-     * @param z double; the vertical position
-     * @return DirectedPoint2d; a new point with the translated coordinates and an unchanged rotation
-     * @throws IllegalArgumentException when dx, dy or z is NaN
-     */
+    /** {@inheritDoc} */
+    @Override
     public DirectedPoint3d translate(final double dx, final double dy, final double z) throws IllegalArgumentException
     {
         return new DirectedPoint3d(getX() + dx, getY() + dy, z, 0, 0, getDirZ());
@@ -153,16 +139,25 @@ public class DirectedPoint2d extends AbstractPoint2d implements Directed2d, Poin
         return this.scale(1.0 / length);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public DirectedPoint2d interpolate(DirectedPoint2d point, double fraction)
+    /** 
+     * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
+     * that case the interpolation turns into an extrapolation. DirZ is interpolated using the interpolateShortest method.
+     * @param otherPoint DirectedPoint2d; the other point
+     * @param fraction the factor for interpolation towards the other point. When <code>fraction</code> is between 0 and 1, it
+     *            is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code> Point is
+     *            returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
+     * @return DirectedPoint2d; a new DirectedPoint2d at the requested fraction
+     * @throws NullPointerException when otherPoint is null
+     * @throws IllegalArgumentException when fraction is NaN
+     */
+    public DirectedPoint2d interpolate(DirectedPoint2d otherPoint, double fraction)
             throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(point, "point cannot be null");
+        Throw.whenNull(otherPoint, "point cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
-        return new DirectedPoint2d((1.0 - fraction) * getX() + fraction * point.getX(),
-                (1.0 - fraction) * getY() + fraction * point.getY(),
-                AngleUtil.interpolateShortest(getDirZ(), point.getDirZ(), fraction));
+        return new DirectedPoint2d((1.0 - fraction) * getX() + fraction * otherPoint.getX(),
+                (1.0 - fraction) * getY() + fraction * otherPoint.getY(),
+                AngleUtil.interpolateShortest(getDirZ(), otherPoint.getDirZ(), fraction));
     }
 
     /**
@@ -187,16 +182,9 @@ public class DirectedPoint2d extends AbstractPoint2d implements Directed2d, Poin
 
     /** {@inheritDoc} */
     @Override
-    public Iterator<DirectedPoint2d> getPoints()
+    public Iterator<? extends DirectedPoint2d> getPoints()
     {
         return Arrays.stream(new DirectedPoint2d[] { this }).iterator();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public DirectedPoint2d getLocation()
-    {
-        return this;
     }
 
     /** {@inheritDoc} */

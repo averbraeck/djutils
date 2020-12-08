@@ -84,7 +84,7 @@ public class Bounds3d implements Serializable, Drawable3d
      * @throws NullPointerException when points is null
      * @throws IllegalArgumentException when zero points are provided
      */
-    public Bounds3d(final Iterator<Point3d> points)
+    public Bounds3d(final Iterator<? extends Point3d> points)
     {
         Throw.whenNull(points, "points may not be null");
         Throw.when(!points.hasNext(), IllegalArgumentException.class, "need at least one point");
@@ -201,7 +201,7 @@ public class Bounds3d implements Serializable, Drawable3d
     public boolean contains(final Drawable3d drawable)
     {
         Throw.whenNull(drawable, "drawable cannot be null");
-        for (Iterator<Point3d> iterator = drawable.getPoints(); iterator.hasNext();)
+        for (Iterator<? extends Point3d> iterator = drawable.getPoints(); iterator.hasNext();)
         {
             if (!contains(iterator.next()))
             {
@@ -402,14 +402,6 @@ public class Bounds3d implements Serializable, Drawable3d
 
     /** {@inheritDoc} */
     @Override
-    public Point3d getLocation()
-    {
-        return new Point3d((this.getMaxX() + this.getMinX()) / 2.0, (this.getMaxY() + this.getMinY()) / 2.0,
-                (this.getMaxZ() + this.getMinZ()) / 2.0);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public String toString()
     {
         return "Bounds3d [x[" + this.minX + " : " + this.maxX + "], y[" + this.minY + " : " + this.maxY + "], z[" + this.minZ
@@ -439,8 +431,9 @@ public class Bounds3d implements Serializable, Drawable3d
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("checkstyle:needbraces")
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object obj)
     {
         if (this == obj)
             return true;

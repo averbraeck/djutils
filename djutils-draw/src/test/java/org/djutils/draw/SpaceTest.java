@@ -1,11 +1,11 @@
-package org.djutils.draw.surface;
+package org.djutils.draw;
 
-import java.io.Serializable;
+import static org.junit.Assert.assertEquals;
 
-import org.djutils.draw.point.Point;
+import org.junit.Test;
 
 /**
- * Area.java.
+ * SpaceTest.java.
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -13,13 +13,15 @@ import org.djutils.draw.point.Point;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public interface Surface extends Serializable
+public class SpaceTest
 {
     /**
-     * Return the points of the this area as an array.
-     * @return Point[]; the points of this area as an array
+     * Test the Space2d and Space3d classes.
      */
-    Point[] getBoundaryArray();
-    
+    @Test
+    public void testSpace()
+    {
+        assertEquals("Space2d has 2 dimensions", 2, new Space2d().getDimensions());
+        assertEquals("Space3d has 3 dimensions", 3, new Space3d().getDimensions());
+    }
 }
-

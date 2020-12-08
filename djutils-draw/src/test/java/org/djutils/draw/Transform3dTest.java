@@ -1,4 +1,4 @@
-package org.djutils.draw.volume;
+package org.djutils.draw;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 
+import org.djutils.draw.Transform3d;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.Point;
 import org.djutils.draw.point.Point3d;

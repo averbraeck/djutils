@@ -12,7 +12,7 @@ import org.djutils.draw.point.Point3d;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public interface Drawable3d extends Drawable<Point3d>
+public interface Drawable3d extends Drawable<Point3d, Space3d>
 {
     /**
      * Retrieve the bounding box of the object.

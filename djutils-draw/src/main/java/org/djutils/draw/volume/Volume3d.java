@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.djutils.draw.line.Line;
+import org.djutils.draw.line.PolyLine;
 
 /**
  * Volume3d.java.
@@ -21,7 +21,7 @@ public class Volume3d implements Serializable
      * Return the lines making up the wireframe of this object.
      * @return List&lt;Line&gt;; the A list of lines making up the wireframe of the object
      */
-    public List<Line> getWireframeLines()
+    public List<PolyLine> getWireframeLines()
     {
         // TODO program
         return new ArrayList<>();

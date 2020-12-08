@@ -1,7 +1,6 @@
 package org.djutils.draw.bounds;
 
 import java.awt.geom.Rectangle2D;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -20,7 +19,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Bounds2d implements Serializable, Drawable2d
+public class Bounds2d implements Drawable2d
 {
     /** */
     private static final long serialVersionUID = 20200829L;
@@ -75,7 +74,7 @@ public class Bounds2d implements Serializable, Drawable2d
      * @throws NullPointerException when points is null
      * @throws IllegalArgumentException when the iterator provides zero points
      */
-    public Bounds2d(final Iterator<Point2d> points)
+    public Bounds2d(final Iterator<? extends Point2d> points)
     {
         Throw.whenNull(points, "points may not be null");
         Throw.when(!points.hasNext(), IllegalArgumentException.class, "need at least one point");
@@ -149,7 +148,7 @@ public class Bounds2d implements Serializable, Drawable2d
     /**
      * Check if this Bounds2d contains a given point. Contains considers a point <b>on</b> the border of this Bounds2d to be
      * outside.
-     * @param point Point2d; the point
+     * @param point Point&lt;Space2d&gt;; the point
      * @return boolean; true this Bounds2d contains the point; false if this Bounds2d does <b>not</b> contain the point
      * @throws NullPointerException when point is null
      */
@@ -182,7 +181,7 @@ public class Bounds2d implements Serializable, Drawable2d
     public boolean contains(final Drawable2d drawable) throws NullPointerException
     {
         Throw.whenNull(drawable, "drawable cannot be null");
-        for (Iterator<Point2d> iterator = drawable.getPoints(); iterator.hasNext();)
+        for (Iterator<? extends Point2d> iterator = drawable.getPoints(); iterator.hasNext();)
         {
             if (!contains(iterator.next()))
             {
@@ -354,13 +353,6 @@ public class Bounds2d implements Serializable, Drawable2d
 
     /** {@inheritDoc} */
     @Override
-    public Point2d getLocation()
-    {
-        return new Point2d((this.maxX + this.minX) / 2.0, (this.maxY + this.minY) / 2.0);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public String toString()
     {
         return "Bounds2d [x[" + this.minX + " : " + this.maxX + "], y[" + this.minY + " : " + this.maxY + "]]";
@@ -385,8 +377,9 @@ public class Bounds2d implements Serializable, Drawable2d
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("checkstyle:needbraces")
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object obj)
     {
         if (this == obj)
             return true;

@@ -1,10 +1,9 @@
-package org.djutils.draw.volume;
+package org.djutils.draw;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.point.AbstractPoint3d;
 import org.djutils.draw.point.Point3d;
 
 /**
@@ -18,7 +17,7 @@ import org.djutils.draw.point.Point3d;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Transform3d
+public class Transform3d implements Cloneable
 {
     /** The 4x4 transformation matrix, initialized as the Identity matrix. */
     double[] mat = new double[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
@@ -97,7 +96,7 @@ public class Transform3d
      * @param point AbstractPoint3d; the point containing the x, y, and z translation values
      * @return Transform3d; the new transformation matrix after applying this transform
      */
-    public Transform3d translate(final AbstractPoint3d point)
+    public Transform3d translate(final Point3d point)
     {
         if (point.getX() == 0.0 && point.getY() == 0.0 && point.getZ() == 0.0)
         {

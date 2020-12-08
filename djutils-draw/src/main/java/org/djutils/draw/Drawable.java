@@ -14,14 +14,15 @@ import org.djutils.draw.point.Point;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @param <P> The point type (2d or 3d)
+ * @param <S> The space type (2d or 3d)
  */
-public interface Drawable<P extends Point<P>> extends Serializable
+public interface Drawable<P extends Point<P, S>, S extends Space> extends Serializable
 {
     /**
      * Retrieve, or generate all points that make up the object.
      * @return Iterable&lt;Point2d&gt;; an iterator that generates all points that make up the object
      */
-    Iterator<P> getPoints();
+    Iterator<? extends P> getPoints();
     
     /**
      * Retrieve the number of points that make up the object.
@@ -29,11 +30,5 @@ public interface Drawable<P extends Point<P>> extends Serializable
      */
     int size();
     
-    /**
-     * Retrieve the location of the object; the median point of the bounding box or bounding rectangle.
-     * @return P; the location of the object
-     */
-    P getLocation();
-
 }
 

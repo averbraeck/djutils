@@ -1,4 +1,4 @@
-package org.djutils.draw.surface;
+package org.djutils.draw;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -17,7 +17,7 @@ import org.djutils.draw.point.Point2d;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Transform2d
+public class Transform2d implements Cloneable
 {
     /** The 3x3 transformation matrix, initialized as the Identity matrix. */
     double[] mat = new double[] { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
