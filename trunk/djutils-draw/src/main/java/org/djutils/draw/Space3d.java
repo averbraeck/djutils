@@ -1,10 +1,7 @@
 package org.djutils.draw;
 
-import org.djutils.draw.bounds.Bounds2d;
-import org.djutils.draw.point.Point2d;
-
 /**
- * Drawable2d.java. Interface that all objects that use 2d coordinates must implement.
+ * Space3d.java.
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -12,12 +9,17 @@ import org.djutils.draw.point.Point2d;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public interface Drawable2d extends Drawable<Point2d, Space2d>
+public class Space3d  implements Space
 {
-    /**
-     * Retrieve the bounding rectangle of the object.
-     * @return Bounds2d; the bounding box of the object
-     */
-    Bounds2d getBounds();
+    /** */
+    private static final long serialVersionUID = 20201208L;
+
+    /** {@inheritDoc} */
+    @Override
+    public int getDimensions()
+    {
+        return 3;
+    }
     
 }
+

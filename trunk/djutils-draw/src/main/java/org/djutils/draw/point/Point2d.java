@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
+import org.djutils.draw.Space2d;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.exceptions.Throw;
 
@@ -19,10 +20,16 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Point2d extends AbstractPoint2d implements Drawable2d, Point<Point2d>
+public class Point2d implements Drawable2d, Point<Point2d, Space2d>
 {
-    /** ... */
-    private static final long serialVersionUID = 20200828L;
+    /** */
+    private static final long serialVersionUID = 20201201L;
+
+    /** The x-coordinate. */
+    private final double x;
+
+    /** The y-coordinate. */
+    private final double y;
 
     /**
      * Create a new Point with just an x and y coordinate, stored with double precision.
@@ -30,35 +37,104 @@ public class Point2d extends AbstractPoint2d implements Drawable2d, Point<Point2
      * @param y double; the y coordinate
      * @throws IllegalArgumentException when x or y is NaN
      */
-    public Point2d(final double x, final double y)
+    public Point2d(final double x, final double y) throws IllegalArgumentException
     {
-        super(x, y);
+        Throw.when(Double.isNaN(x) || Double.isNaN(y), IllegalArgumentException.class, "Coordinate must be a number (not NaN)");
+        this.x = x;
+        this.y = y;
     }
 
     /**
      * Create a new Point with just an x and y coordinate, stored with double precision.
      * @param xy double[2]; the x and y coordinate
      * @throws NullPointerException when xy is null
-     * @throws IllegalArgumentException when the length of the xy array is not 2, or a coordinate is NaN
+     * @throws IllegalArgumentException when the dimension of xy is not 2, or a coordinate is NaN
      */
-    public Point2d(final double[] xy) throws IllegalArgumentException
+    public Point2d(final double[] xy) throws NullPointerException, IllegalArgumentException
     {
-        super(xy);
+        this(checkLengthIsTwo(Throw.whenNull(xy, "xy-point cannot be null"))[0], xy[1]);
     }
 
     /**
      * Create an immutable point with just two values, x and y, stored with double precision from an AWT Point2D
      * @param point Point2D; an AWT Point2D
      * @throws NullPointerException when point is null
+     * @throws IllegalArgumentException when point has a NaN coordinate
      */
-    public Point2d(final Point2D point)
+    public Point2d(final Point2D point) throws NullPointerException, IllegalArgumentException
     {
-        super(point);
+        Throw.whenNull(point, "point cannot be null");
+        Throw.when(Double.isNaN(point.getX()) || Double.isNaN(point.getY()), IllegalArgumentException.class,
+                "Coordinate must be a number (not NaN)");
+        this.x = point.getX();
+        this.y = point.getY();
+    }
+
+    /**
+     * Throw an IllegalArgumentException if the length of the provided array is not two.
+     * @param xy double[]; the provided array
+     * @return double[]; the provided array
+     * @throws IllegalArgumentException when length of xy is not two
+     */
+    private static double[] checkLengthIsTwo(final double[] xy) throws IllegalArgumentException
+    {
+        Throw.when(xy.length != 2, IllegalArgumentException.class, "Length of xy-array must be 2");
+        return xy;
+    }
+
+    /**
+     * Return the x-coordinate.
+     * @return double; the x-coordinate
+     */
+    public final double getX()
+    {
+        return this.x;
+    }
+
+    /**
+     * Return the y-coordinate.
+     * @return double; the y-coordinate
+     */
+    public final double getY()
+    {
+        return this.y;
+    }
+
+    /**
+     * Return the distance to another point.
+     * @param otherPoint Point&lt;?, S&gt;; the other point
+     * @return double; the distance (2d or 3d as applicable) to the other point
+     */
+    public double distance(final Point2d otherPoint)
+    {
+        Throw.whenNull(otherPoint, "point cannot be null");
+        return Math.sqrt(distanceSquared(otherPoint));
+    }
+
+    /**
+     * Return the squared distance between this point and the provided point.
+     * @param otherPoint Point2d; the other point
+     * @return double; the squared distance between this point and the other point
+     * @throws NullPointerException when otherPoint is null
+     */
+    public double distanceSquared(final Point2d otherPoint) throws NullPointerException
+    {
+        Throw.whenNull(otherPoint, "point cannot be null");
+        double dx = getX() - otherPoint.getX();
+        double dy = getY() - otherPoint.getY();
+        return dx * dx + dy * dy;
     }
 
     /** {@inheritDoc} */
     @Override
-    public Iterator<Point2d> getPoints()
+    public int size()
+    {
+        return 1;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Iterator<? extends Point2d> getPoints()
     {
         return Arrays.stream(new Point2d[] { this }).iterator();
     }
@@ -122,8 +198,17 @@ public class Point2d extends AbstractPoint2d implements Drawable2d, Point<Point2
         return this.scale(1.0 / length);
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
+     * that case the interpolation turns into an extrapolation.
+     * @param point P; the other point
+     * @param fraction the factor for interpolation towards the other point. When <code>fraction</code> is between 0 and 1, it
+     *            is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code> Point is
+     *            returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
+     * @return P; the point that is <code>fraction</code> away on the line between this point and the other point
+     * @throws NullPointerException when point is null
+     * @throws IllegalArgumentException when fraction is NaN
+     */
     public Point2d interpolate(final Point2d point, final double fraction)
     {
         Throw.whenNull(point, "point cannot be null");
@@ -160,15 +245,10 @@ public class Point2d extends AbstractPoint2d implements Drawable2d, Point<Point2
         return new Bounds2d(this);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public Point2d getLocation()
-    {
-        return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Return the coordinates as an AWT Point2D.Double object, ignoring a z-position of present.
+     * @return Point2D; the coordinates as an AWT Point2D.Double object
+     */
     public Point2D toPoint2D()
     {
         return new Point2D.Double(getX(), getY());
@@ -188,6 +268,39 @@ public class Point2d extends AbstractPoint2d implements Drawable2d, Point<Point2
     public String toString()
     {
         return String.format("(%f,%f)", getX(), getY());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        long temp;
+        temp = Double.doubleToLongBits(this.x);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(this.y);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @SuppressWarnings("checkstyle:needbraces")
+    @Override
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Point2d other = (Point2d) obj;
+        if (Double.doubleToLongBits(this.x) != Double.doubleToLongBits(other.x))
+            return false;
+        if (Double.doubleToLongBits(this.y) != Double.doubleToLongBits(other.y))
+            return false;
+        return true;
     }
 
 }

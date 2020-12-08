@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.djutils.draw.DrawException;
-import org.djutils.draw.line.Line2d;
+import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.Point2d;
 import org.junit.Test;
 
@@ -208,7 +208,7 @@ public class Bounds2dTest
         assertEquals("minY", -6, br.getMinY(), 0);
         assertEquals("maxY", 50, br.getMaxY(), 0);
 
-        Line2d line = new Line2d(new Point2d(1, 12), new Point2d(3, 12), new Point2d(2, 11));
+        PolyLine2d line = new PolyLine2d(new Point2d(1, 12), new Point2d(3, 12), new Point2d(2, 11));
         br = new Bounds2d(line);
         assertEquals("minX", 1, br.getMinX(), 0);
         assertEquals("minY", 11, br.getMinY(), 0);
@@ -249,7 +249,7 @@ public class Bounds2dTest
     @SuppressWarnings("unlikely-arg-type")
     public void methodTest() throws NullPointerException, IllegalArgumentException, DrawException
     {
-        Line2d l2d = new Line2d(new Point2d(10, 10), new Point2d(30, -20), new Point2d(-40, 100));
+        PolyLine2d l2d = new PolyLine2d(new Point2d(10, 10), new Point2d(30, -20), new Point2d(-40, 100));
         Bounds2d br = new Bounds2d(l2d);
         assertEquals("minX", -40, br.getMinX(), 0);
         assertEquals("maxX", 30, br.getMaxX(), 0);
@@ -279,9 +279,6 @@ public class Bounds2dTest
         assertFalse("boundingbox does not contain itself", br.contains(br));
         Bounds2d br2 = new Bounds2d(br.getMinX() - 0.0001, br.getMaxX() + 0.0001, br.getMinY() - 0.0001, br.getMaxY() + 0.0001);
         assertTrue("Slightly enlarged bounding box contains non-enlarged version", br2.contains(br));
-
-        assertEquals("centroid x", -5, br.getLocation().getX(), 0);
-        assertEquals("centroid y", 40, br.getLocation().getY(), 0);
 
         try
         {

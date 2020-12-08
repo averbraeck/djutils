@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
-import org.djutils.draw.Drawable2d;
 import org.djutils.draw.Drawable3d;
+import org.djutils.draw.Space3d;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.DirectedPoint3d;
@@ -26,7 +26,7 @@ import org.djutils.logger.CategoryLogger;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Line3d implements Drawable3d, Line<Point3d>
+public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Space3d, DirectedPoint3d>
 {
     /** */
     private static final long serialVersionUID = 20200911L;
@@ -48,14 +48,14 @@ public class Line3d implements Drawable3d, Line<Point3d>
      * @param copyNeeded boolean; if true; a deep copy of the points array is stored instead of the provided array
      * @param points Point3d...; the array of points to construct this Line3d from.
      * @throws NullPointerException when iterator is null
-     * @throws DrawException when the provided points do not constitute a valid line (too few points or identical adjacent
-     *             points)
+     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
      */
-    private Line3d(final boolean copyNeeded, final Point3d[] points) throws NullPointerException, DrawException
+    private PolyLine3d(final boolean copyNeeded, final Point3d[] points) throws NullPointerException, DrawRuntimeException
     {
         Throw.whenNull(points, "points cannot be null");
-        Throw.when(points.length < 2, DrawException.class, "Need at least two points");
-        this.points = copyNeeded ? Arrays.copyOf(points, points.length): points;
+        Throw.when(points.length < 2, DrawRuntimeException.class, "Need at least two points");
+        this.points = copyNeeded ? Arrays.copyOf(points, points.length) : points;
         Point3d prevPoint = points[0];
         double minX = prevPoint.getX();
         double minY = prevPoint.getY();
@@ -74,18 +74,17 @@ public class Line3d implements Drawable3d, Line<Point3d>
             maxX = Math.max(maxX, point.getX());
             maxY = Math.max(maxY, point.getY());
             maxZ = Math.max(maxZ, point.getZ());
-            if (prevPoint.getX() == point.getX() && prevPoint.getY() == point.getY()
-                    && prevPoint.getZ() == point.getZ())
+            if (prevPoint.getX() == point.getX() && prevPoint.getY() == point.getY() && prevPoint.getZ() == point.getZ())
             {
-                throw new DrawException("Degenerate Line3d; point " + (i - 1) + " has the same x, y and z as point " + i);
+                throw new DrawRuntimeException("Degenerate Line3d; point " + (i - 1) + " has the same x, y and z as point " + i);
             }
             this.lengthIndexedLine[i] = this.lengthIndexedLine[i - 1] + prevPoint.distance(point);
             prevPoint = point;
-        }   
+        }
         this.length = this.lengthIndexedLine[this.lengthIndexedLine.length - 1];
         this.bounds = new Bounds3d(getPoints());
     }
-    
+
     /**
      * Construct a new Line3d and initialize its length indexed line, bounds, centroid and length.
      * @param points Point3d...; the array of points to construct this Line3d from.
@@ -93,7 +92,7 @@ public class Line3d implements Drawable3d, Line<Point3d>
      * @throws DrawException when the provided points do not constitute a valid line (too few points or identical adjacent
      *             points)
      */
-    public Line3d(final Point3d... points) throws NullPointerException, DrawException
+    public PolyLine3d(final Point3d... points) throws NullPointerException, DrawException
     {
         this(true, points);
     }
@@ -104,20 +103,27 @@ public class Line3d implements Drawable3d, Line<Point3d>
      * @throws NullPointerException when iterator is null
      * @throws DrawException when the iterator provides too few points, or some adjacent identical points)
      */
-    public Line3d(final Iterator<Point3d> iterator) throws NullPointerException, DrawException
+    public PolyLine3d(final Iterator<Point3d> iterator) throws NullPointerException, DrawException
     {
         this(iteratorToList(Throw.whenNull(iterator, "iterator cannot be null")));
     }
-    
+
     /**
      * Construct a new Line3d from a List&lt;Point3d&gt;.
      * @param pointList List&lt;Point3d&gt;; the list of points to construct this Line3d from.
-     * @throws DrawException when the provided points do not constitute a valid line (too few points or identical adjacent
-     *             points)
+     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
      */
-    public Line3d(final List<Point3d> pointList) throws DrawException
+    public PolyLine3d(final List<Point3d> pointList) throws DrawRuntimeException
     {
         this(false, pointList.toArray(new Point3d[pointList.size()]));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public PolyLine3d instantiate(List<Point3d> pointList) throws NullPointerException, DrawRuntimeException
+    {
+        return new PolyLine3d(pointList);
     }
 
     /**
@@ -131,23 +137,26 @@ public class Line3d implements Drawable3d, Line<Point3d>
         iterator.forEachRemaining(result::add);
         return result;
     }
-        
+
     /** {@inheritDoc} */
     @Override
     public int size()
     {
         return this.points.length;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public final Point3d get(final int i) throws IndexOutOfBoundsException
     {
-        if (i < 0 || i > size() - 1)
-        {
-            throw new IndexOutOfBoundsException("Line3d.get(i=" + i + "); i<0 or i>=size(), which is " + size());
-        }
         return this.points[i];
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public final double lengthAtIndex(final int index)
+    {
+        return this.lengthIndexedLine[index];
     }
 
     /** {@inheritDoc} */
@@ -165,12 +174,28 @@ public class Line3d implements Drawable3d, Line<Point3d>
     }
 
     /**
+     * Get the bounding rectangle of this Line3d.
+     * @return Bounds2d; the bounding rectangle of this Line3d
+     */
+    public final Bounds2d getBounds2d()
+    {
+        return this.bounds.project();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Bounds3d getBounds()
+    {
+        return this.bounds;
+    }
+
+    /**
      * Construct a new Line3d that is equal to this line except for segments that are shorter than the <cite>noiseLevel</cite>.
      * The result is guaranteed to start with the first point of this line and end with the last point of this line.
      * @param noiseLevel double; the minimum segment length that is <b>not</b> removed
      * @return Line3d; the filtered line
      */
-    public final Line3d noiseFilteredLine(final double noiseLevel)
+    public final PolyLine3d noiseFilteredLine(final double noiseLevel)
     {
         if (this.size() <= 2)
         {
@@ -232,9 +257,9 @@ public class Line3d implements Drawable3d, Line<Point3d>
         }
         try
         {
-            return new Line3d(list);
+            return new PolyLine3d(list);
         }
-        catch (DrawException exception)
+        catch (DrawRuntimeException exception)
         {
             CategoryLogger.always().error(exception);
             throw new Error(exception);
@@ -248,7 +273,7 @@ public class Line3d implements Drawable3d, Line<Point3d>
      * @return Line3d
      * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
      */
-    public static Line3d concatenate(final Line3d... lines) throws DrawException
+    public static PolyLine3d concatenate(final PolyLine3d... lines) throws DrawException
     {
         return concatenate(0.0, lines);
     }
@@ -261,7 +286,7 @@ public class Line3d implements Drawable3d, Line<Point3d>
      * @return Line3d; the concatenation of the two lines
      * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
      */
-    public static Line3d concatenate(final double tolerance, final Line3d line1, final Line3d line2) throws DrawException
+    public static PolyLine3d concatenate(final double tolerance, final PolyLine3d line1, final PolyLine3d line2) throws DrawException
     {
         if (line1.getLast().distance(line2.getFirst()) > tolerance)
         {
@@ -279,7 +304,7 @@ public class Line3d implements Drawable3d, Line<Point3d>
         {
             points[nextIndex++] = line2.get(j);
         }
-        return new Line3d(points);
+        return new PolyLine3d(points);
     }
 
     /**
@@ -290,7 +315,7 @@ public class Line3d implements Drawable3d, Line<Point3d>
      * @return Line3d; the concatenation of the lines
      * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
      */
-    public static Line3d concatenate(final double tolerance, final Line3d... lines) throws DrawException
+    public static PolyLine3d concatenate(final double tolerance, final PolyLine3d... lines) throws DrawException
     {
         if (0 == lines.length)
         {
@@ -314,18 +339,18 @@ public class Line3d implements Drawable3d, Line<Point3d>
         int nextIndex = 0;
         for (int i = 0; i < lines.length; i++)
         {
-            Line3d line = lines[i];
+            PolyLine3d line = lines[i];
             for (int j = 0 == i ? 0 : 1; j < line.size(); j++)
             {
                 points[nextIndex++] = line.get(j);
             }
         }
-        return new Line3d(points);
+        return new PolyLine3d(points);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Drawable2d project() throws DrawRuntimeException
+    public PolyLine2d project() throws DrawRuntimeException
     {
         List<Point2d> pointList = new ArrayList<>();
         Point2d prevPoint = null;
@@ -342,133 +367,7 @@ public class Line3d implements Drawable3d, Line<Point3d>
             pointList.add(point);
             prevPoint = point;
         }
-        return new Line2d(pointList);
-    }
-
-    /**
-     * Construct a new Line3d with all points of this Line3d in reverse order.
-     * @return Line3d; the new Line3d
-     */
-    public final Line3d reverse()
-    {
-        Point3d[] resultPoints = new Point3d[size()];
-        int nextIndex = size();
-        for (int index = 0; index < this.size(); index++)
-        {
-            resultPoints[--nextIndex] = this.points[index];
-        }
-        try
-        {
-            return new Line3d(resultPoints);
-        }
-        catch (DrawException exception)
-        {
-            // Cannot happen
-            throw new RuntimeException(exception);
-        }
-    }
-
-    /**
-     * Construct a new Line3d covering the indicated fraction of this Line3d.
-     * @param start double; starting point, valid range [0..<cite>end</cite>)
-     * @param end double; ending point, valid range (<cite>start</cite>..1]
-     * @return Line3d; the new Line3d
-     * @throws DrawException when start &gt;= end, or start &lt; 0, or end &gt; 1
-     */
-    public final Line3d extractFractional(final double start, final double end) throws DrawException
-    {
-        if (start < 0 || start >= end || end > 1)
-        {
-            throw new DrawException("Bad interval (start=" + start + ", end=" + end + ", this is " + this.toString() + ")");
-        }
-        return extract(start * this.length, end * this.length);
-    }
-
-    /**
-     * Create a new Line3d that covers a sub-section of this Line3d.
-     * @param start double; length along this Line3d where the sub-section starts, valid range [0..<cite>end</cite>)
-     * @param end double; length along this Line3d where the sub-section ends, valid range
-     *            (<cite>start</cite>..<cite>length</cite> (length is the length of this Line3d)
-     * @return Line3d; the selected sub-section
-     * @throws DrawException when start &gt;= end, or start &lt; 0, or end &gt; length
-     */
-    public final Line3d extract(final double start, final double end) throws DrawException
-    {
-        if (Double.isNaN(start) || Double.isNaN(end) || start < 0 || start >= end || end > getLength())
-        {
-            throw new DrawException(
-                    "Bad interval (" + start + ".." + end + "; length of this Line3d is " + this.getLength() + ")");
-        }
-        double cumulativeLength = 0;
-        double nextCumulativeLength = 0;
-        double segmentLength = 0;
-        int index = 0;
-        List<Point3d> pointList = new ArrayList<>();
-        while (start > cumulativeLength)
-        {
-            Point3d fromPoint = this.points[index];
-            index++;
-            Point3d toPoint = this.points[index];
-            segmentLength = fromPoint.distance(toPoint);
-            cumulativeLength = nextCumulativeLength;
-            nextCumulativeLength = cumulativeLength + segmentLength;
-            if (nextCumulativeLength >= start)
-            {
-                break;
-            }
-        }
-        if (start == nextCumulativeLength)
-        {
-            pointList.add(this.points[index]);
-        }
-        else
-        {
-            pointList.add(this.points[index - 1].interpolate(this.points[index], (start - cumulativeLength) / segmentLength));
-            if (end > nextCumulativeLength)
-            {
-                pointList.add(this.points[index]);
-            }
-        }
-        while (end > nextCumulativeLength)
-        {
-            Point3d fromPoint = this.points[index];
-            index++;
-            if (index >= this.points.length)
-            {
-                break; // rounding error
-            }
-            Point3d toPoint = this.points[index];
-            segmentLength = fromPoint.distance(toPoint);
-            cumulativeLength = nextCumulativeLength;
-            nextCumulativeLength = cumulativeLength + segmentLength;
-            if (nextCumulativeLength >= end)
-            {
-                break;
-            }
-            pointList.add(toPoint);
-        }
-        if (end == nextCumulativeLength)
-        {
-            pointList.add(this.points[index]);
-        }
-        else
-        {
-            Point3d point = this.points[index - 1].interpolate(this.points[index], (end - cumulativeLength) / segmentLength);
-            // can be the same due to rounding
-            if (!point.equals(pointList.get(pointList.size() - 1)))
-            {
-                pointList.add(point);
-            }
-        }
-        try
-        {
-            return new Line3d(pointList);
-        }
-        catch (DrawException exception)
-        {
-            CategoryLogger.always().error(exception, "interval " + start + ".." + end + " too short");
-            throw new DrawException("interval " + start + ".." + end + "too short");
-        }
+        return new PolyLine2d(pointList);
     }
 
     /**
@@ -477,7 +376,7 @@ public class Line3d implements Drawable3d, Line<Point3d>
      * @return the line
      * @throws DrawException when number of points &lt; 2
      */
-    public static Line3d createAndCleanLine3d(final Point3d... points) throws DrawException
+    public static PolyLine3d createAndCleanLine3d(final Point3d... points) throws DrawException
     {
         if (points.length < 2)
         {
@@ -493,7 +392,7 @@ public class Line3d implements Drawable3d, Line<Point3d>
      * @return Line3d; the line
      * @throws DrawException when number of non-equal points &lt; 2
      */
-    public static Line3d createAndCleanLine3d(final List<Point3d> pointList) throws DrawException
+    public static PolyLine3d createAndCleanLine3d(final List<Point3d> pointList) throws DrawException
     {
         // TODO avoid modifying the input list.
         // clean successive equal points
@@ -509,15 +408,11 @@ public class Line3d implements Drawable3d, Line<Point3d>
                 i++;
             }
         }
-        return new Line3d(pointList);
+        return new PolyLine3d(pointList);
     }
 
-    /**
-     * Get the location at a position on the line, with its direction. Position can be below 0 or more than the line length. In
-     * that case, the position will be extrapolated in the direction of the line at its start or end.
-     * @param position double; the position on the line for which to calculate the point on, before, or after the line
-     * @return a directed point
-     */
+    /** {@inheritDoc} */
+    @Override
     public final DirectedPoint3d getLocationExtended(final double position)
     {
         if (position >= 0.0 && position <= getLength())
@@ -567,94 +462,8 @@ public class Line3d implements Drawable3d, Line<Point3d>
                 Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
     }
 
-    /**
-     * Get the location at a fraction of the line, with its direction. Fraction should be between 0.0 and 1.0.
-     * @param fraction double; the fraction for which to calculate the point on the line
-     * @return DirectedPoint3d
-     * @throws DrawException when fraction less than 0.0 or more than 1.0.
-     */
-    public final DirectedPoint3d getLocationFraction(final double fraction) throws DrawException
-    {
-        if (fraction < 0.0 || fraction > 1.0)
-        {
-            throw new DrawException("getLocationFraction for line: fraction < 0.0 or > 1.0. fraction = " + fraction);
-        }
-        return getLocation(fraction * getLength());
-    }
-
-    /**
-     * Get the location at a fraction of the line, with its direction. Fraction should be between 0.0 and 1.0.
-     * @param fraction double; the fraction for which to calculate the point on the line
-     * @param tolerance double; the delta from 0.0 and 1.0 that will be forgiven
-     * @return DirectedPoint3d
-     * @throws DrawException when fraction less than 0.0 or more than 1.0.
-     */
-    public final DirectedPoint3d getLocationFraction(final double fraction, final double tolerance) throws DrawException
-    {
-        if (fraction < -tolerance || fraction > 1.0 + tolerance)
-        {
-            throw new DrawException(
-                    "getLocationFraction for line: fraction < 0.0 - tolerance or > 1.0 + tolerance; fraction = " + fraction);
-        }
-        double f = fraction < 0 ? 0.0 : fraction > 1.0 ? 1.0 : fraction;
-        return getLocation(f * getLength());
-    }
-
-    /**
-     * Get the location at a fraction of the line (or outside the line), with its direction.
-     * @param fraction double; the fraction for which to calculate the point on the line
-     * @return DirectedPoint3d
-     */
-    public final DirectedPoint3d getLocationFractionExtended(final double fraction)
-    {
-        return getLocationExtended(fraction * getLength());
-    }
-
-    /**
-     * Binary search for a position on the line.
-     * @param pos double; the position to look for
-     * @return the index below the position; the position is between points[index] and points[index+1]
-     * @throws DrawException when index could not be found
-     */
-    private int find(final double pos) throws DrawException
-    {
-        if (pos == 0)
-        {
-            return 0;
-        }
-
-        int lo = 0;
-        int hi = this.lengthIndexedLine.length - 1;
-        while (lo <= hi)
-        {
-            if (hi == lo)
-            {
-                return lo;
-            }
-            int mid = lo + (hi - lo) / 2;
-            if (pos < this.lengthIndexedLine[mid])
-            {
-                hi = mid - 1;
-            }
-            else if (pos > this.lengthIndexedLine[mid + 1])
-            {
-                lo = mid + 1;
-            }
-            else
-            {
-                return mid;
-            }
-        }
-        throw new DrawException(
-                "Could not find position " + pos + " on line with length indexes: " + Arrays.toString(this.lengthIndexedLine));
-    }
-
-    /**
-     * Get the location at a position on the line, with its direction. Position should be between 0.0 and line length.
-     * @param position double; the position on the line for which to calculate the point on the line
-     * @return a directed point
-     * @throws DrawException when position less than 0.0 or more than line length.
-     */
+    /** {@inheritDoc} */
+    @Override
     public final DirectedPoint3d getLocation(final double position) throws DrawException
     {
         if (position < 0.0 || position > getLength())
@@ -690,60 +499,8 @@ public class Line3d implements Drawable3d, Line<Point3d>
                 Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
     }
 
-    /**
-     * Truncate a line at the given length (less than the length of the line, and larger than zero) and return a new line.
-     * @param position double; the position along the line where to truncate the line
-     * @return a new Line3d that follows this line, but ends at the position where line.getLength() == lengthSI
-     * @throws DrawException when position less than 0.0 or more than line length.
-     */
-    public final Line3d truncate(final double position) throws DrawException
-    {
-        if (position <= 0.0 || position > getLength())
-        {
-            throw new DrawException("truncate for line: position <= 0.0 or > line length. Position = " + position
-                    + ". Length = " + getLength() + " m.");
-        }
-
-        // handle special case: position == length
-        if (position == getLength())
-        {
-            return this;
-        }
-
-        // find the index of the line segment
-        int index = find(position);
-        double remainder = position - this.lengthIndexedLine[index];
-        double fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
-        Point3d p1 = this.points[index];
-        Point3d lastPoint;
-        if (0.0 == fraction)
-        {
-            index--;
-            lastPoint = p1;
-        }
-        else
-        {
-            Point3d p2 = this.points[index + 1];
-            lastPoint = new Point3d(p1.getX() + fraction * (p2.getX() - p1.getX()),
-                    p1.getY() + fraction * (p2.getY() - p1.getY()), p1.getZ() + fraction * (p2.getZ() - p1.getZ()));
-
-        }
-        Point3d[] coords = new Point3d[index + 2];
-        for (int i = 0; i <= index; i++)
-        {
-            coords[i] = this.points[i];
-        }
-        coords[index + 1] = lastPoint;
-        return new Line3d(coords);
-    }
-
-    /**
-     * Returns the fractional position along this line of the orthogonal projection of point (x, y) on this line. If the point
-     * is not orthogonal to the closest line segment, the nearest point is selected.
-     * @param x double; x-coordinate of point to project
-     * @param y double; y-coordinate of point to project
-     * @return fractional position along this line of the orthogonal projection on this line of a point
-     */
+    /** {@inheritDoc} */
+    @Override
     public final double projectOrthogonal(final double x, final double y)
     {
         // prepare
@@ -805,27 +562,128 @@ public class Line3d implements Drawable3d, Line<Point3d>
         return (this.lengthIndexedLine[minSegment] + segLen * minSegmentFraction) / getLength();
     }
 
-    /**
-     * Get the bounding rectangle of this Line3d.
-     * @return Bounds2d; the bounding rectangle of this Line3d
-     */
-    public final Bounds2d getBounds2d()
+    /** {@inheritDoc} */
+    @Override
+    public PolyLine3d extract(final double start, final double end) throws DrawException
     {
-        return this.bounds.project();
+        if (Double.isNaN(start) || Double.isNaN(end) || start < 0 || start >= end || end > getLength())
+        {
+            throw new DrawException(
+                    "Bad interval (" + start + ".." + end + "; length of this Line3d is " + this.getLength() + ")");
+        }
+        double cumulativeLength = 0;
+        double nextCumulativeLength = 0;
+        double segmentLength = 0;
+        int index = 0;
+        List<Point3d> pointList = new ArrayList<>();
+        while (start > cumulativeLength)
+        {
+            Point3d fromPoint = get(index);
+            index++;
+            Point3d toPoint = get(index);
+            segmentLength = fromPoint.distance(toPoint);
+            cumulativeLength = nextCumulativeLength;
+            nextCumulativeLength = cumulativeLength + segmentLength;
+            if (nextCumulativeLength >= start)
+            {
+                break;
+            }
+        }
+        if (start == nextCumulativeLength)
+        {
+            pointList.add(get(index));
+        }
+        else
+        {
+            pointList.add(get(index - 1).interpolate(get(index), (start - cumulativeLength) / segmentLength));
+            if (end > nextCumulativeLength)
+            {
+                pointList.add(get(index));
+            }
+        }
+        while (end > nextCumulativeLength)
+        {
+            Point3d fromPoint = get(index);
+            index++;
+            if (index >= size())
+            {
+                break; // rounding error
+            }
+            Point3d toPoint = get(index);
+            segmentLength = fromPoint.distance(toPoint);
+            cumulativeLength = nextCumulativeLength;
+            nextCumulativeLength = cumulativeLength + segmentLength;
+            if (nextCumulativeLength >= end)
+            {
+                break;
+            }
+            pointList.add(toPoint);
+        }
+        if (end == nextCumulativeLength)
+        {
+            pointList.add(get(index));
+        }
+        else
+        {
+            Point3d point = get(index - 1).interpolate(get(index), (end - cumulativeLength) / segmentLength);
+            // can be the same due to rounding
+            if (!point.equals(pointList.get(pointList.size() - 1)))
+            {
+                pointList.add(point);
+            }
+        }
+        try
+        {
+            return instantiate(pointList);
+        }
+        catch (DrawRuntimeException exception)
+        {
+            CategoryLogger.always().error(exception, "interval " + start + ".." + end + " too short");
+            throw new DrawException("interval " + start + ".." + end + "too short");
+        }
     }
 
     /** {@inheritDoc} */
     @Override
-    public Bounds3d getBounds()
+    public PolyLine3d truncate(final double position) throws DrawException
     {
-        return this.bounds;
-    }
+        if (position <= 0.0 || position > getLength())
+        {
+            throw new DrawException("truncate for line: position <= 0.0 or > line length. Position = " + position
+                    + ". Length = " + getLength() + " m.");
+        }
 
-    /** {@inheritDoc} */
-    @Override
-    public Point3d getLocation()
-    {
-        return this.bounds.getLocation();
+        // handle special case: position == length
+        if (position == getLength())
+        {
+            return this;
+        }
+
+        // find the index of the line segment
+        int index = find(position);
+        double remainder = position - lengthAtIndex(index);
+        double fraction = remainder / (lengthAtIndex(index + 1) - lengthAtIndex(index));
+        Point3d p1 = get(index);
+        Point3d lastPoint;
+        if (0.0 == fraction)
+        {
+            index--;
+            lastPoint = p1;
+        }
+        else
+        {
+            Point3d p2 = get(index + 1);
+            lastPoint = p1.interpolate(p2, fraction);
+
+        }
+        // FIXME: Cannot create a P[]; will have to do it with a List<P>
+        List<Point3d> coords = new ArrayList<>(index + 2);
+        for (int i = 0; i <= index; i++)
+        {
+            coords.add(get(i));
+        }
+        coords.add(lastPoint);
+        return instantiate(coords);
     }
 
     /** {@inheritDoc} */
@@ -858,7 +716,7 @@ public class Line3d implements Drawable3d, Line<Point3d>
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Line3d other = (Line3d) obj;
+        PolyLine3d other = (PolyLine3d) obj;
         if (!Arrays.equals(this.points, other.points))
             return false;
         return true;

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.djutils.draw.DrawException;
-import org.djutils.draw.line.Line3d;
+import org.djutils.draw.line.PolyLine3d;
 import org.djutils.draw.point.Point3d;
 import org.junit.Test;
 
@@ -281,7 +281,7 @@ public class Bounds3dTest
         Bounds3d bb2 = new Bounds3d(-100, -90, -100, -90, -100, -90);
         assertNull("empty bounding box", bb.intersection(bb2));
 
-        Line3d line = new Line3d(new Point3d(1, 12, 23), new Point3d(3, 12, 21), new Point3d(2, 11, 23));
+        PolyLine3d line = new PolyLine3d(new Point3d(1, 12, 23), new Point3d(3, 12, 21), new Point3d(2, 11, 23));
         bb = new Bounds3d(line);
         assertEquals("minX", 1, bb.getMinX(), 0);
         assertEquals("minY", 11, bb.getMinY(), 0);
@@ -315,7 +315,7 @@ public class Bounds3dTest
     @Test
     public void methodTest() throws NullPointerException, IllegalArgumentException, DrawException
     {
-        Line3d l3d = new Line3d(new Point3d(10, 10, 10), new Point3d(30, -20, 40), new Point3d(-40, 100, 0));
+        PolyLine3d l3d = new PolyLine3d(new Point3d(10, 10, 10), new Point3d(30, -20, 40), new Point3d(-40, 100, 0));
         Bounds3d bb = new Bounds3d(l3d);
         assertEquals("minX", -40, bb.getMinX(), 0);
         assertEquals("maxX", 30, bb.getMaxX(), 0);
@@ -358,10 +358,6 @@ public class Bounds3dTest
         Bounds3d bb2 = new Bounds3d(bb.getMinX() - 0.0001, bb.getMaxX() + 0.0001, bb.getMinY() - 0.0001, bb.getMaxY() + 0.0001,
                 bb.getMinZ() - 0.0001, bb.getMaxZ() + 0.0001);
         assertTrue("Slightly enlarged bounding box contains non-enlarged version", bb2.contains(bb));
-
-        assertEquals("centroid x", -5, bb.getLocation().getX(), 0);
-        assertEquals("centroid y", 40, bb.getLocation().getY(), 0);
-        assertEquals("centroid z", 20, bb.getLocation().getZ(), 0);
 
         try
         {
