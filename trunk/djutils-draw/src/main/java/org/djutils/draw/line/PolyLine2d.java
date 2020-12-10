@@ -109,9 +109,12 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         Point2d[] result = new Point2d[2 + (otherPoints == null ? 0 : otherPoints.length)];
         result[0] = point1;
         result[1] = point2;
-        for (int i = 0; i < otherPoints.length; i++)
+        if (otherPoints != null)
         {
-            result[i + 2] = otherPoints[i];
+            for (int i = 0; i < otherPoints.length; i++)
+            {
+                result[i + 2] = otherPoints[i];
+            }
         }
         return result;
     }
@@ -127,7 +130,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     {
         this(true, checkLengthIsTwoOrMore(Throw.whenNull(points, "points may not be null")));
     }
-    
+
     /**
      * Check that the length of an array of Point2d is at least two.
      * @param points Point2d[]; the array of points to check
@@ -323,15 +326,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         }
         if (list.size() == 2 && list.get(0).equals(list.get(1)))
         {
-            // Find something to insert along the way
-            for (int index = 1; index < this.size() - 1; index++)
-            {
-                if (!this.points[index].equals(list.get(0)))
-                {
-                    list.add(1, this.points[index]);
-                    break;
-                }
-            }
+            // Insert point 1 of this; it MUST be different from point 0; so we don't have to test for anything.
+            list.add(1, this.points[1]);
         }
         try
         {
@@ -339,9 +335,93 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         }
         catch (DrawRuntimeException exception)
         {
+            // Cannot happen
             CategoryLogger.always().error(exception);
             throw new Error(exception);
         }
+    }
+
+    /**
+     * Concatenate several Line2d instances.
+     * @param lines Line2d...; Line2d... one or more Line2d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
+     *            the first of the second, etc.
+     * @return Line2d
+     * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
+     */
+    public static PolyLine2d concatenate(final PolyLine2d... lines) throws DrawException
+    {
+        return concatenate(0.0, lines);
+    }
+
+    /**
+     * Concatenate two Line2d instances. This method is separate for efficiency reasons.
+     * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
+     * @param line1 Line2d; first line
+     * @param line2 Line2d; second line
+     * @return Line2d; the concatenation of the two lines
+     * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
+     */
+    public static PolyLine2d concatenate(final double tolerance, final PolyLine2d line1, final PolyLine2d line2)
+            throws DrawException
+    {
+        if (line1.getLast().distance(line2.getFirst()) > tolerance)
+        {
+            throw new DrawException("Lines are not connected: " + line1.getLast() + " to " + line2.getFirst() + " distance is "
+                    + line1.getLast().distance(line2.getFirst()) + " > " + tolerance);
+        }
+        int size = line1.size() + line2.size() - 1;
+        Point2d[] points = new Point2d[size];
+        int nextIndex = 0;
+        for (int j = 0; j < line1.size(); j++)
+        {
+            points[nextIndex++] = line1.get(j);
+        }
+        for (int j = 1; j < line2.size(); j++)
+        {
+            points[nextIndex++] = line2.get(j);
+        }
+        return new PolyLine2d(false, points);
+    }
+
+    /**
+     * Concatenate several Line2d instances.
+     * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
+     * @param lines Line2d...; Line2d... one or more Line2d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
+     *            the first of the second, etc.
+     * @return Line2d; the concatenation of the lines
+     * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
+     */
+    public static PolyLine2d concatenate(final double tolerance, final PolyLine2d... lines) throws DrawException
+    {
+        if (0 == lines.length)
+        {
+            throw new DrawException("Empty argument list");
+        }
+        else if (1 == lines.length)
+        {
+            return lines[0];
+        }
+        int size = lines[0].size();
+        for (int i = 1; i < lines.length; i++)
+        {
+            if (lines[i - 1].getLast().distance(lines[i].getFirst()) > tolerance)
+            {
+                throw new DrawException("Lines are not connected: " + lines[i - 1].getLast() + " to " + lines[i].getFirst()
+                        + " distance is " + lines[i - 1].getLast().distance(lines[i].getFirst()) + " > " + tolerance);
+            }
+            size += lines[i].size() - 1;
+        }
+        Point2d[] points = new Point2d[size];
+        int nextIndex = 0;
+        for (int i = 0; i < lines.length; i++)
+        {
+            PolyLine2d line = lines[i];
+            for (int j = 0 == i ? 0 : 1; j < line.size(); j++)
+            {
+                points[nextIndex++] = line.get(j);
+            }
+        }
+        return new PolyLine2d(false, points);
     }
 
     /**
@@ -468,8 +548,13 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
                 p1.getY() + fraction * (p2.getY() - p1.getY()), Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Returns the fractional position along this line of the orthogonal projection of point (x, y) on this line. If the point
+     * is not orthogonal to the closest line segment, the nearest point is selected.
+     * @param x double; x-coordinate of point to project
+     * @param y double; y-coordinate of point to project
+     * @return fractional position along this line of the orthogonal projection on this line of a point
+     */
     public final double projectOrthogonal(final double x, final double y)
     {
         // prepare
@@ -657,10 +742,23 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
 
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings("checkstyle:designforextension")
     public String toString()
     {
-        return Arrays.toString(this.points);
+        return "PolyLine2d [points=" + Arrays.toString(this.points) + "]";
+    }
+
+    /**
+     * Convert the 2D projection of this Line2d to something that MS-Excel can plot.
+     * @return excel XY plottable output
+     */
+    public final String toExcel()
+    {
+        StringBuffer s = new StringBuffer();
+        for (Point2d p : this.points)
+        {
+            s.append(p.getX() + "\t" + p.getY() + "\n");
+        }
+        return s.toString();
     }
 
     /** {@inheritDoc} */
@@ -676,7 +774,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     /** {@inheritDoc} */
     @SuppressWarnings({ "checkstyle:designforextension", "checkstyle:needbraces" })
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object obj)
     {
         if (this == obj)
             return true;

@@ -8,7 +8,6 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable;
 import org.djutils.draw.Space;
 import org.djutils.draw.point.Point;
-import org.djutils.logger.CategoryLogger;
 
 /**
  * Line is the interface for Line2d and Line3d implementations.
@@ -193,14 +192,6 @@ public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>
      * @throws DrawException when position less than 0.0 or more than line length.
      */
     L truncate(final double position) throws DrawException;
-    /**
-     * Returns the fractional position along this line of the orthogonal projection of point (x, y) on this line. If the point
-     * is not orthogonal to the closest line segment, the nearest point is selected.
-     * @param x double; x-coordinate of point to project
-     * @param y double; y-coordinate of point to project
-     * @return fractional position along this line of the orthogonal projection on this line of a point
-     */
-    double projectOrthogonal(final double x, final double y);
 
     /**
      * Binary search for a position on the line.
