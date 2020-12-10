@@ -9,7 +9,6 @@ import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.Space3d;
-import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point2d;
@@ -76,7 +75,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
             maxZ = Math.max(maxZ, point.getZ());
             if (prevPoint.getX() == point.getX() && prevPoint.getY() == point.getY() && prevPoint.getZ() == point.getZ())
             {
-                throw new DrawRuntimeException("Degenerate Line3d; point " + (i - 1) + " has the same x, y and z as point " + i);
+                throw new DrawRuntimeException(
+                        "Degenerate Line3d; point " + (i - 1) + " has the same x, y and z as point " + i);
             }
             this.lengthIndexedLine[i] = this.lengthIndexedLine[i - 1] + prevPoint.distance(point);
             prevPoint = point;
@@ -86,15 +86,65 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     }
 
     /**
-     * Construct a new Line3d and initialize its length indexed line, bounds, centroid and length.
-     * @param points Point3d...; the array of points to construct this Line3d from.
+     * Construct a new PolyLine3d from an array of Point3d.
+     * @param point1 Point3d; starting point of the PolyLine3d
+     * @param point2 Point3d; second point of the PolyLine3d
+     * @param otherPoints Point3d...; additional points of the PolyLine3d
      * @throws NullPointerException when iterator is null
-     * @throws DrawException when the provided points do not constitute a valid line (too few points or identical adjacent
-     *             points)
+     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
      */
-    public PolyLine3d(final Point3d... points) throws NullPointerException, DrawException
+    public PolyLine3d(final Point3d point1, final Point3d point2, final Point3d... otherPoints)
+            throws NullPointerException, DrawRuntimeException
     {
-        this(true, points);
+        this(false, spliceArray(point1, point2, otherPoints));
+    }
+
+    /**
+     * Construct an array of Point3d from two points plus an array of Point3d.
+     * @param point1 Point3d; the first point (ends up at index 0 of the result)
+     * @param point2 Point3d; the second point (ends up at index 1 of the result)
+     * @param otherPoints Point3d[]; may be null, may be empty. If non empty, the elements in otherPoints end up at index 2 and
+     *            up in the result
+     * @return Point2d[]; the combined array
+     */
+    private static Point3d[] spliceArray(final Point3d point1, final Point3d point2, final Point3d... otherPoints)
+    {
+        Point3d[] result = new Point3d[2 + (otherPoints == null ? 0 : otherPoints.length)];
+        result[0] = point1;
+        result[1] = point2;
+        if (otherPoints != null)
+        {
+            for (int i = 0; i < otherPoints.length; i++)
+            {
+                result[i + 2] = otherPoints[i];
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Construct a new PolyLine3d from an array of Point3d.
+     * @param points Point3d[]; points of the PolyLine3d
+     * @throws NullPointerException when iterator is null
+     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
+     */
+    public PolyLine3d(final Point3d[] points) throws NullPointerException, DrawRuntimeException
+    {
+        this(true, checkLengthIsTwoOrMore(Throw.whenNull(points, "points may not be null")));
+    }
+
+    /**
+     * Check that the length of an array of Point3d is at least two.
+     * @param points Point3d[]; the array of points to check
+     * @return Point3d[]; points
+     * @throws DrawRuntimeException when the length of points is less than two
+     */
+    private static Point3d[] checkLengthIsTwoOrMore(final Point3d[] points) throws DrawRuntimeException
+    {
+        Throw.when(points.length < 2, DrawRuntimeException.class, "Need at least two points");
+        return points;
     }
 
     /**
@@ -151,7 +201,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     {
         return this.points[i];
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public final double lengthAtIndex(final int index)
@@ -171,15 +221,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     public Iterator<Point3d> getPoints()
     {
         return Arrays.stream(this.points).iterator();
-    }
-
-    /**
-     * Get the bounding rectangle of this Line3d.
-     * @return Bounds2d; the bounding rectangle of this Line3d
-     */
-    public final Bounds2d getBounds2d()
-    {
-        return this.bounds.project();
     }
 
     /** {@inheritDoc} */
@@ -245,15 +286,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         }
         if (list.size() == 2 && list.get(0).equals(list.get(1)))
         {
-            // Find something to insert along the way
-            for (int index = 1; index < this.size() - 1; index++)
-            {
-                if (!this.points[index].equals(list.get(0)))
-                {
-                    list.add(1, this.points[index]);
-                    break;
-                }
-            }
+            // Insert point 1 of this; it MUST be different from point 0; so we don't have to test for anything.
+            list.add(1, this.points[1]);
         }
         try
         {
@@ -286,7 +320,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      * @return Line3d; the concatenation of the two lines
      * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
      */
-    public static PolyLine3d concatenate(final double tolerance, final PolyLine3d line1, final PolyLine3d line2) throws DrawException
+    public static PolyLine3d concatenate(final double tolerance, final PolyLine3d line1, final PolyLine3d line2)
+            throws DrawException
     {
         if (line1.getLast().distance(line2.getFirst()) > tolerance)
         {
@@ -304,7 +339,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         {
             points[nextIndex++] = line2.get(j);
         }
-        return new PolyLine3d(points);
+        return new PolyLine3d(false, points);
     }
 
     /**
@@ -345,7 +380,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
                 points[nextIndex++] = line.get(j);
             }
         }
-        return new PolyLine3d(points);
+        return new PolyLine3d(false, points);
     }
 
     /** {@inheritDoc} */
@@ -501,69 +536,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
 
     /** {@inheritDoc} */
     @Override
-    public final double projectOrthogonal(final double x, final double y)
-    {
-        // prepare
-        double minDistance = Double.POSITIVE_INFINITY;
-        double minSegmentFraction = 0;
-        int minSegment = -1;
-
-        // code based on Line2D.ptSegDistSq(...)
-        for (int i = 0; i < size() - 1; i++)
-        {
-            double dx = this.points[i + 1].getX() - this.points[i].getX();
-            double dy = this.points[i + 1].getY() - this.points[i].getY();
-            // vector relative to (x(i), y(i))
-            double px = x - this.points[i].getX();
-            double py = y - this.points[i].getY();
-            // dot product
-            double dot1 = px * dx + py * dy;
-            double f;
-            double distance;
-            if (dot1 > 0)
-            {
-                // vector relative to (x(i+1), y(i+1))
-                px = dx - px;
-                py = dy - py;
-                // dot product
-                double dot2 = px * dx + py * dy;
-                if (dot2 > 0)
-                {
-                    // projection on line segment
-                    double len2 = dx * dx + dy * dy;
-                    double proj = dot2 * dot2 / len2;
-                    f = dot1 / len2;
-                    distance = px * px + py * py - proj;
-                }
-                else
-                {
-                    // dot<=0 projection 'after' line segment
-                    f = 1;
-                    distance = px * px + py * py;
-                }
-            }
-            else
-            {
-                // dot<=0 projection 'before' line segment
-                f = 0;
-                distance = px * px + py * py;
-            }
-            // check if closer than previous
-            if (distance < minDistance)
-            {
-                minDistance = distance;
-                minSegmentFraction = f;
-                minSegment = i;
-            }
-        }
-
-        // return
-        double segLen = this.lengthIndexedLine[minSegment + 1] - this.lengthIndexedLine[minSegment];
-        return (this.lengthIndexedLine[minSegment] + segLen * minSegmentFraction) / getLength();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public PolyLine3d extract(final double start, final double end) throws DrawException
     {
         if (Double.isNaN(start) || Double.isNaN(end) || start < 0 || start >= end || end > getLength())
@@ -689,20 +661,19 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:designforextension")
-    public String toString()
-    {
-        return Arrays.toString(this.points);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @SuppressWarnings("checkstyle:designforextension")
     public int hashCode()
     {
         final int prime = 31;
         int result = 1;
         result = prime * result + Arrays.hashCode(this.points);
         return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "PolyLine3d [points=" + Arrays.toString(this.points) + "]";
     }
 
     /** {@inheritDoc} */
@@ -720,20 +691,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         if (!Arrays.equals(this.points, other.points))
             return false;
         return true;
-    }
-
-    /**
-     * Convert the 2D projection of this Line3d to something that MS-Excel can plot.
-     * @return excel XY plottable output
-     */
-    public final String toExcel()
-    {
-        StringBuffer s = new StringBuffer();
-        for (Point3d p : this.points)
-        {
-            s.append(p.getX() + "\t" + p.getY() + "\n");
-        }
-        return s.toString();
     }
 
 }
