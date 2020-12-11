@@ -129,7 +129,7 @@ public class TestPolyLine3d
     }
 
     /**
-     * Test all the constructors of Point3d.
+     * Test all the constructors of PolyLine3d.
      * @param points Point3d[]; array of Point3d to test with
      * @throws DrawException should not happen; this test has failed if it does happen
      */
@@ -649,7 +649,8 @@ public class TestPolyLine3d
     {
         Point3d p0 = new Point3d(1.1, 2.21, 3.1);
         Point3d p1 = new Point3d(2.1, 2.22, 3.2);
-        Point3d p2 = new Point3d(3.1, 2.23, 3.3);
+        Point3d p2 = new Point3d(2.1, 2.23, 3.3);
+        Point3d p2x = new Point3d(p2.getX(), p2.getY(), p2.getZ() + 1);
         Point3d p3 = new Point3d(4.1, 2.24, 3.4);
         Point3d p4 = new Point3d(5.1, 2.25, 3.5);
         Point3d p5 = new Point3d(6.1, 2.26, 3.6);
@@ -678,7 +679,27 @@ public class TestPolyLine3d
         assertEquals("point 3 is p2", p3.project(), l2d.get(3));
         assertEquals("point 4 is p1", p4.project(), l2d.get(4));
         assertEquals("point 5 is p0", p5.project(), l2d.get(5));
-        // TODO make project fail
+        
+        l05 = new PolyLine3d(p0, p1, p2, p2x, p3, p4, p5);
+        l2d = l05.project();
+        assertEquals("result has size 6", 6, l2d.size());
+        assertEquals("point 0 is p5", p0.project(), l2d.get(0));
+        assertEquals("point 1 is p4", p1.project(), l2d.get(1));
+        assertEquals("point 2 is p3", p2.project(), l2d.get(2));
+        assertEquals("point 3 is p2", p3.project(), l2d.get(3));
+        assertEquals("point 4 is p1", p4.project(), l2d.get(4));
+        assertEquals("point 5 is p0", p5.project(), l2d.get(5));
+        
+        PolyLine3d l22x = new PolyLine3d(p2, p2x);
+        try
+        {
+            l22x.project();
+            fail("Projecting a line that entirely projects to one point should have thrown an exception");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
     }
 
     /**

@@ -120,8 +120,8 @@ public class TestPolyLine2d
     }
 
     /**
-     * Test all the constructors of Point3d.
-     * @param points Point3d[]; array of Point3d to test with
+     * Test all the constructors of PolyLine2d.
+     * @param points Point2d[]; array of Point2d to test with
      * @throws DrawException should not happen; this test has failed if it does happen
      */
     private void runConstructors(final Point2d[] points) throws DrawException
@@ -189,9 +189,9 @@ public class TestPolyLine2d
             line = new PolyLine2d(path);
             if (0 == horizontalMoves)
             {
-                fail("Construction of Line3d from path with degenerate projection should have failed");
+                fail("Construction of Line2d from path with degenerate projection should have failed");
             }
-            // This new Line3d has z=0 for all points so veryfyPoints won't work
+            // This new Line2d has z=0 for all points so veryfyPoints won't work
             assertEquals("number of points should match", horizontalMoves + 1, line.size());
             int indexInLine = 0;
             for (int i = 0; i < points.length; i++)
@@ -208,13 +208,13 @@ public class TestPolyLine2d
         {
             if (0 != horizontalMoves)
             {
-                fail("Construction of Line3d from path with non-degenerate projection should not have failed");
+                fail("Construction of Line2d from path with non-degenerate projection should not have failed");
             }
         }
     }
 
     /**
-     * Test construction of a Line3d from a Path2D with SEG_CLOSE.
+     * Test construction of a Line2d from a Path2D with SEG_CLOSE.
      * @throws DrawException on unexpected error
      */
     @Test
@@ -657,9 +657,185 @@ public class TestPolyLine2d
     }
 
     /**
-     * Verify that a Line3d contains the same points as an array of Point3d.
-     * @param line Line3d; the OTS line
-     * @param points Point3d[]; the OTSPoint array
+     * Test the concatenate method.
+     * @throws DrawException should not happen; this test has failed if it does happen
+     */
+    @Test
+    public final void concatenateTest() throws DrawException
+    {
+        Point2d p0 = new Point2d(1.1, 2.2);
+        Point2d p1 = new Point2d(2.1, 2.2);
+        Point2d p2 = new Point2d(3.1, 2.2);
+        Point2d p3 = new Point2d(4.1, 2.2);
+        Point2d p4 = new Point2d(5.1, 2.2);
+        Point2d p5 = new Point2d(6.1, 2.2);
+
+        PolyLine2d l0 = new PolyLine2d(p0, p1, p2);
+        PolyLine2d l1 = new PolyLine2d(p2, p3);
+        PolyLine2d l2 = new PolyLine2d(p3, p4, p5);
+        PolyLine2d ll = PolyLine2d.concatenate(l0, l1, l2);
+        assertEquals("size is 6", 6, ll.size());
+        assertEquals("point 0 is p0", p0, ll.get(0));
+        assertEquals("point 1 is p1", p1, ll.get(1));
+        assertEquals("point 2 is p2", p2, ll.get(2));
+        assertEquals("point 3 is p3", p3, ll.get(3));
+        assertEquals("point 4 is p4", p4, ll.get(4));
+        assertEquals("point 5 is p5", p5, ll.get(5));
+
+        ll = PolyLine2d.concatenate(l1);
+        assertEquals("size is 2", 2, ll.size());
+        assertEquals("point 0 is p2", p2, ll.get(0));
+        assertEquals("point 1 is p3", p3, ll.get(1));
+
+        try
+        {
+            PolyLine2d.concatenate(l0, l2);
+            fail("Gap should have throw an exception");
+        }
+        catch (DrawException e)
+        {
+            // Ignore expected exception
+        }
+        try
+        {
+            PolyLine2d.concatenate();
+            fail("concatenate of empty list should have thrown an exception");
+        }
+        catch (DrawException e)
+        {
+            // Ignore expected exception
+        }
+
+        // Test concatenate methods with tolerance
+        PolyLine2d thirdLine = new PolyLine2d(p4, p5);
+        for (double tolerance : new double[] { 0.1, 0.01, 0.001, 0.0001, 0.00001 })
+        {
+            for (double actualError : new double[] { tolerance * 0.9, tolerance * 1.1 })
+            {
+                int maxDirection = 10;
+                for (int direction = 0; direction < maxDirection; direction++)
+                {
+                    double dx = actualError * Math.cos(Math.PI * 2 * direction / maxDirection);
+                    double dy = actualError * Math.sin(Math.PI * 2 * direction / maxDirection);
+                    PolyLine2d otherLine = new PolyLine2d(new Point2d(p2.getX() + dx, p2.getY() + dy), p3, p4);
+                    if (actualError < tolerance)
+                    {
+                        try
+                        {
+                            PolyLine2d.concatenate(tolerance, l0, otherLine);
+                        }
+                        catch (DrawException oge)
+                        {
+                            PolyLine2d.concatenate(tolerance, l0, otherLine);
+                            fail("concatenation with error " + actualError + " and tolerance " + tolerance
+                                    + " should not have failed");
+                        }
+                        try
+                        {
+                            PolyLine2d.concatenate(tolerance, l0, otherLine, thirdLine);
+                        }
+                        catch (DrawException oge)
+                        {
+                            fail("concatenation with error " + actualError + " and tolerance " + tolerance
+                                    + " should not have failed");
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            PolyLine2d.concatenate(tolerance, l0, otherLine);
+                        }
+                        catch (DrawException oge)
+                        {
+                            // Ignore expected exception
+                        }
+                        try
+                        {
+                            PolyLine2d.concatenate(tolerance, l0, otherLine, thirdLine);
+                        }
+                        catch (DrawException oge)
+                        {
+                            // Ignore expected exception
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Test the debugging output methods.
+     */
+    @Test
+    public void testExports()
+    {
+        Point2d[] points =
+                new Point2d[] { new Point2d(123.456, 345.678), new Point2d(234.567, 456.789), new Point2d(-12.345, -34.567) };
+        PolyLine2d pl = new PolyLine2d(points);
+        String[] out = pl.toExcel().split("\\n");
+        assertEquals("Excel output consists of one line per point", points.length, out.length);
+        for (int index = 0; index < points.length; index++)
+        {
+            String[] fields = out[index].split("\\t");
+            assertEquals("each line consists of two fields", 2, fields.length);
+            try
+            {
+                double x = Double.parseDouble(fields[0].trim());
+                assertEquals("x matches", points[index].getX(), x, 0.001);
+            }
+            catch (NumberFormatException nfe)
+            {
+                fail("First field " + fields[0] + " does not parse as a double");
+            }
+            try
+            {
+                double y = Double.parseDouble(fields[1].trim());
+                assertEquals("y matches", points[index].getY(), y, 0.001);
+            }
+            catch (NumberFormatException nfe)
+            {
+                fail("Second field " + fields[1] + " does not parse as a double");
+            }
+        }
+
+        out = pl.toPlot().split(" L");
+        assertEquals("Plotter output consists of one coordinate pair per point", points.length, out.length);
+        for (int index = 0; index < points.length; index++)
+        {
+            String[] fields = out[index].split(",");
+            assertEquals("each line consists of two fields", 2, fields.length);
+            if (index == 0)
+            {
+                assertTrue(fields[0].startsWith("M"));
+                fields[0] = fields[0].substring(1);
+            }
+            try
+            {
+                double x = Double.parseDouble(fields[0].trim());
+                assertEquals("x matches", points[index].getX(), x, 0.001);
+            }
+            catch (NumberFormatException nfe)
+            {
+                fail("First field " + fields[0] + " does not parse as a double");
+            }
+            try
+            {
+                double y = Double.parseDouble(fields[1].trim());
+                assertEquals("y matches", points[index].getY(), y, 0.001);
+            }
+            catch (NumberFormatException nfe)
+            {
+                fail("Second field " + fields[1] + " does not parse as a double");
+            }
+        }
+
+    }
+
+    /**
+     * Verify that a Line2d contains the same points as an array of Point2d.
+     * @param line Line2d; the OTS line
+     * @param points Point2d[]; the OTSPoint array
      * @throws DrawException should not happen; this test has failed if it does happen
      */
     private void verifyPoints(final PolyLine2d line, final Point2d[] points) throws DrawException
