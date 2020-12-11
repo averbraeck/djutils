@@ -431,13 +431,13 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * @return the line
      * @throws DrawException when number of points &lt; 2
      */
-    public static PolyLine2d createAndCleanLine2d(final Point2d... points) throws DrawException
+    public static PolyLine2d createAndCleanPolyLine2d(final Point2d... points) throws DrawException
     {
         if (points.length < 2)
         {
             throw new DrawException("Degenerate Line2d; has " + points.length + " point" + (points.length != 1 ? "s" : ""));
         }
-        return createAndCleanLine2d(new ArrayList<>(Arrays.asList(points)));
+        return createAndCleanPolyLine2d(new ArrayList<>(Arrays.asList(points)));
     }
 
     /**
@@ -447,7 +447,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * @return Line2d; the line
      * @throws DrawException when number of non-equal points &lt; 2
      */
-    public static PolyLine2d createAndCleanLine2d(final List<Point2d> pointList) throws DrawException
+    public static PolyLine2d createAndCleanPolyLine2d(final List<Point2d> pointList) throws DrawException
     {
         // TODO avoid modifying the input list.
         // clean successive equal points
@@ -521,8 +521,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     {
         if (position < 0.0 || position > getLength())
         {
-            throw new DrawException("getLocationSI for line: position < 0.0 or > line length. Position = " + position
-                    + " m. Length = " + getLength() + " m.");
+            throw new DrawException("getLocation for line: position < 0.0 or > line length. Position = " + position
+                    + "; length = " + getLength());
         }
 
         // handle special cases: position == 0.0, or position == length
@@ -547,6 +547,17 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         Point2d p2 = this.points[index + 1];
         return new DirectedPoint2d(p1.getX() + fraction * (p2.getX() - p1.getX()),
                 p1.getY() + fraction * (p2.getY() - p1.getY()), Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
+    }
+
+    /**
+     * Returns the fractional position along this line of the orthogonal projection of a point on this line. If the point is not
+     * orthogonal to the closest line segment, the nearest point is selected.
+     * @param point Point2d; the point to project
+     * @return fractional position along this line of the orthogonal projection on this line of a point
+     */
+    public final double projectOrthogonal(final Point2d point)
+    {
+        return projectOrthogonal(point.getX(), point.getY());
     }
 
     /**
@@ -739,6 +750,270 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         }
         coords.add(lastPoint);
         return instantiate(coords);
+    }
+
+    /** Default precision of approximation of arcs in the offsetLine method. */
+    public static final double DEFAULT_CIRCLE_PRECISION = 0.001;
+
+    /** By default, noise in the reference line of the offsetLine method less than this value is always filtered. */
+    public static double DEFAULT_OFFSET_MINIMUM_FILTER_VALUE = 0.001;
+
+    /** By default, noise in the reference line of the offsetLineMethod greater than this value is never filtered. */
+    public static double DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE = 0.1;
+
+    /**
+     * By default, noise in the reference line of the offsetLineMethod less than <cite>offset / offsetFilterRatio</cite> is
+     * filtered except when the resulting value exceeds <cite>offsetMaximumFilterValue</cite>.
+     */
+    public static double DEFAULT_OFFSET_FILTER_RATIO = 10;
+
+    /** By default, the offsetLineMethod uses this offset precision. */
+    public static double DEFAULT_OFFSET_PRECISION = 0.00001;
+
+    /**
+     * Construct an offset line. This is similar to what geographical specialists call buffering, except that this method only
+     * construct a new line on one side of the reference line and does not add half disks around the end points. This method
+     * tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise in
+     * <cite>this</cite> (the reference line) can cause major artifacts in the offset line. This method calls the underlying
+     * method with default values for circlePrecision (<cite>DEFAULT_OFFSET</cite>), offsetMinimumFilterValue
+     * (<cite>DEFAULT_OFFSET_MINIMUM_FILTER_VALUE</cite>), offsetMaximumFilterValue
+     * (<cite>DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE</cite>), offsetFilterRatio (<cite>DEFAULT_OFFSET_FILTER_RATIO</cite>),
+     * minimumOffset (<cite>DEFAULT_OFFSET_PRECISION</cite>).
+     * @param offset double; the offset; positive values indicate left of the reference line, negative values indicate right of
+     *            the reference line
+     * @return PolyLine2d; a line at the specified offset from the reference line
+     */
+    public PolyLine2d offsetLine(final double offset)
+    {
+        return offsetLine(offset, DEFAULT_CIRCLE_PRECISION, DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
+                DEFAULT_OFFSET_FILTER_RATIO, DEFAULT_OFFSET_PRECISION);
+    }
+
+    /**
+     * Construct an offset line. This is similar to what geographical specialists call buffering, except that this method only
+     * construct a new line on one side of the reference line and does not add half disks around the end points. This method
+     * tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise in
+     * <cite>this</cite> (the reference line) can cause major artifacts in the offset line.
+     * @param offset double; the offset; positive values indicate left of the reference line, negative values indicate right of
+     *            the reference line
+     * @param circlePrecision double; precision of approximation of arcs; the line segments that are used to approximate an arc
+     *            will not deviate from the exact arc by more than this value
+     * @param offsetMinimumFilterValue double; noise in the reference line less than this value is always filtered
+     * @param offsetMaximumFilterValue double; noise in the reference line greater than this value is never filtered
+     * @param offsetFilterRatio double; noise in the reference line less than <cite>offset / offsetFilterRatio</cite> is
+     *            filtered except when the resulting value exceeds <cite>offsetMaximumFilterValue</cite>
+     * @param minimumOffset double; an offset value less than this value is treated as 0.0
+     * @return PolyLine2d; a line at the specified offset from the reference line
+     * @throws IllegalArgumentException when offset is NaN, or circlePrecision, offsetMinimumFilterValue,
+     *             offsetMaximumfilterValue, offsetFilterRatio, or minimumOffset is not positive, or NaN, or
+     *             offsetMinimumFilterValue >= offsetMaximumFilterValue
+     */
+    public PolyLine2d offsetLine(final double offset, final double circlePrecision, final double offsetMinimumFilterValue,
+            final double offsetMaximumFilterValue, final double offsetFilterRatio, final double minimumOffset)
+            throws IllegalArgumentException
+    {
+        Throw.when(Double.isNaN(offset), IllegalArgumentException.class, "Offset may not be NaN");
+        Throw.when(Double.isNaN(circlePrecision) || circlePrecision <= 0, IllegalArgumentException.class,
+                "bad circlePrecision");
+        Throw.when(Double.isNaN(offsetMinimumFilterValue) || offsetMinimumFilterValue <= 0, IllegalArgumentException.class,
+                "bad offsetMinimumFilterValue");
+        Throw.when(Double.isNaN(offsetMaximumFilterValue) || offsetMaximumFilterValue <= 0, IllegalArgumentException.class,
+                "bad offsetMaximumFilterValue");
+        Throw.when(Double.isNaN(offsetFilterRatio) || offsetFilterRatio <= 0, IllegalArgumentException.class,
+                "bad offsetFilterRatio");
+        Throw.when(Double.isNaN(minimumOffset) || minimumOffset <= 0, IllegalArgumentException.class, "bad minimumOffset");
+        Throw.when(offsetMinimumFilterValue >= offsetMaximumFilterValue, IllegalArgumentException.class,
+                "bad offset filter values; minimum must be less than maximum");
+        double bufferOffset = Math.abs(offset);
+        if (bufferOffset < minimumOffset)
+        {
+            return this;
+        }
+
+        PolyLine2d filteredReferenceLine = noiseFilteredLine(
+                Math.max(offsetMinimumFilterValue, Math.min(bufferOffset / offsetFilterRatio, offsetMaximumFilterValue)));
+        List<Point2d> tempPoints = new ArrayList<>();
+        // Make good use of the fact that an OTSLine3D cannot have consecutive duplicate points and has > 1 points
+        Point2d prevPoint = filteredReferenceLine.get(0);
+        Double prevAngle = null;
+        for (int index = 0; index < filteredReferenceLine.size() - 1; index++)
+        {
+            Point2d nextPoint = filteredReferenceLine.get(index + 1);
+            double angle = Math.atan2(nextPoint.getY() - prevPoint.getY(), nextPoint.getX() - prevPoint.getX());
+            Point2d segmentFrom =
+                    new Point2d(prevPoint.getX() - Math.sin(angle) * offset, prevPoint.getY() + Math.cos(angle) * offset);
+            Point2d segmentTo =
+                    new Point2d(nextPoint.getX() - Math.sin(angle) * offset, nextPoint.getY() + Math.cos(angle) * offset);
+            boolean addSegment = true;
+            if (index > 0)
+            {
+                double deltaAngle = angle - prevAngle;
+                if (Math.abs(deltaAngle) > Math.PI)
+                {
+                    deltaAngle -= Math.signum(deltaAngle) * 2 * Math.PI;
+                }
+                if (deltaAngle * offset <= 0)
+                {
+                    // Outside of curve of reference line
+                    // Approximate an arc using straight segments.
+                    // Determine how many segments are needed.
+                    int numSegments = 1;
+                    if (Math.abs(deltaAngle) > Math.PI / 2)
+                    {
+                        numSegments = 2;
+                    }
+                    while (true)
+                    {
+                        double maxError = bufferOffset * (1 - Math.abs(Math.cos(deltaAngle / numSegments / 2)));
+                        if (maxError < circlePrecision)
+                        {
+                            break; // required precision reached
+                        }
+                        numSegments *= 2;
+                    }
+                    Point2d prevArcPoint = tempPoints.get(tempPoints.size() - 1);
+                    // Generate the intermediate points
+                    for (int additionalPoint = 1; additionalPoint < numSegments; additionalPoint++)
+                    {
+                        double intermediateAngle =
+                                (additionalPoint * angle + (numSegments - additionalPoint) * prevAngle) / numSegments;
+                        if (prevAngle * angle < 0 && Math.abs(prevAngle) > Math.PI / 2 && Math.abs(angle) > Math.PI / 2)
+                        {
+                            intermediateAngle += Math.PI;
+                        }
+                        Point2d intermediatePoint = new Point2d(prevPoint.getX() - Math.sin(intermediateAngle) * offset,
+                                prevPoint.getY() + Math.cos(intermediateAngle) * offset);
+                        // Find any intersection points of the new segment and all previous segments
+                        Point2d prevSegFrom = null;
+                        int stopAt = tempPoints.size();
+                        for (int i = 0; i < stopAt; i++)
+                        {
+                            Point2d prevSegTo = tempPoints.get(i);
+                            if (null != prevSegFrom)
+                            {
+                                Point2d prevSegIntersection = Point2d.intersectionOfLineSegments(prevArcPoint,
+                                        intermediatePoint, prevSegFrom, prevSegTo);
+                                if (null != prevSegIntersection && prevSegIntersection.distance(prevArcPoint) > circlePrecision
+                                        && prevSegIntersection.distance(prevSegFrom) > circlePrecision
+                                        && prevSegIntersection.distance(prevSegTo) > circlePrecision)
+                                {
+                                    tempPoints.add(prevSegIntersection);
+                                    // System.out.println(new OTSLine3D(tempPoints).toPlot());
+                                }
+                            }
+                            prevSegFrom = prevSegTo;
+                        }
+                        Point2d nextSegmentIntersection =
+                                Point2d.intersectionOfLineSegments(prevSegFrom, intermediatePoint, segmentFrom, segmentTo);
+                        if (null != nextSegmentIntersection)
+                        {
+                            tempPoints.add(nextSegmentIntersection);
+                            // System.out.println(new OTSLine3D(tempPoints).toPlot());
+                        }
+                        tempPoints.add(intermediatePoint);
+                        // System.out.println(new OTSLine3D(tempPoints).toPlot());
+                        prevArcPoint = intermediatePoint;
+                    }
+                }
+                // Inside of curve of reference line.
+                // Add the intersection point of each previous segment and the next segment
+                Point2d pPoint = null;
+                int currentSize = tempPoints.size(); // PK DO NOT use the "dynamic" limit
+                for (int i = 0; i < currentSize /* tempPoints.size() */; i++)
+                {
+                    Point2d p = tempPoints.get(i);
+                    if (null != pPoint)
+                    {
+                        double pAngle = Math.atan2(p.getY() - pPoint.getY(), p.getX() - pPoint.getX());
+                        double angleDifference = angle - pAngle;
+                        if (Math.abs(angleDifference) > Math.PI)
+                        {
+                            angleDifference -= Math.signum(angleDifference) * 2 * Math.PI;
+                        }
+                        if (Math.abs(angleDifference) > 0)// 0.01)
+                        {
+                            Point2d intersection = Point2d.intersectionOfLineSegments(pPoint, p, segmentFrom, segmentTo);
+                            if (null != intersection)
+                            {
+                                if (tempPoints.size() - 1 == i)
+                                {
+                                    tempPoints.remove(tempPoints.size() - 1);
+                                    segmentFrom = intersection;
+                                }
+                                else
+                                {
+                                    tempPoints.add(intersection);
+                                }
+                                // tempPoints.set(tempPoints.size() - 1, intermediatePoint);
+                                if (tempPoints.size() > 1)
+                                {
+                                    // System.out.println(new OTSLine3D(tempPoints).toPlot());
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // This is where things went very wrong in the TestGeometry demo.
+                            if (i == tempPoints.size() - 1)
+                            {
+                                tempPoints.remove(tempPoints.size() - 1);
+                                segmentFrom = tempPoints.get(tempPoints.size() - 1);
+                                tempPoints.remove(tempPoints.size() - 1);
+                            }
+                        }
+                    }
+                    pPoint = p;
+                }
+            }
+            if (addSegment)
+            {
+                tempPoints.add(segmentFrom);
+                tempPoints.add(segmentTo);
+                prevPoint = nextPoint;
+                prevAngle = angle;
+            }
+        }
+        // Remove points that are closer than the specified offset
+        for (int index = 1; index < tempPoints.size() - 1; index++)
+        {
+            Point2d checkPoint = tempPoints.get(index);
+            prevPoint = null;
+            boolean tooClose = false;
+            boolean somewhereAtCorrectDistance = false;
+            for (int i = 0; i < filteredReferenceLine.size(); i++)
+            {
+                Point2d p = filteredReferenceLine.get(i);
+                if (null != prevPoint)
+                {
+                    Point2d closestPoint = checkPoint.closestPointOnSegment(prevPoint, p);
+                    double distance = closestPoint.distance(checkPoint);
+                    if (distance < bufferOffset - circlePrecision)
+                    {
+                        tooClose = true;
+                        break;
+                    }
+                    else if (distance < bufferOffset + minimumOffset)
+                    {
+                        somewhereAtCorrectDistance = true;
+                    }
+                }
+                prevPoint = p;
+            }
+            if (tooClose || !somewhereAtCorrectDistance)
+            {
+                tempPoints.remove(index);
+                index--;
+            }
+        }
+        try
+        {
+            return PolyLine2d.createAndCleanPolyLine2d(tempPoints);
+        }
+        catch (DrawException exception)
+        {
+            exception.printStackTrace();
+        }
+        return null;
     }
 
     /** {@inheritDoc} */

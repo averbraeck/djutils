@@ -36,9 +36,9 @@ public class Point2dTest
         assertNotNull(p);
         assertEquals(10.0, p.getX(), 1E-6);
         assertEquals(-20.0, p.getY(), 1E-6);
-        
+
         assertEquals("size method returns 1", 1, p.size());
-        
+
         try
         {
             new Point2d(Double.NaN, 0);
@@ -48,7 +48,7 @@ public class Point2dTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             new Point2d(0, Double.NaN);
@@ -58,8 +58,8 @@ public class Point2dTest
         {
             // Ignore expected exception
         }
-        
-        double[] p2Arr = new double[] {5.0, 6.0};
+
+        double[] p2Arr = new double[] { 5.0, 6.0 };
         p = new Point2d(p2Arr);
         assertEquals(5.0, p.getX(), 0);
         assertEquals(6.0, p.getY(), 0);
@@ -92,7 +92,7 @@ public class Point2dTest
             @Override
             public void execute() throws Throwable
             {
-                new Point2d(new double[] {1.0});
+                new Point2d(new double[] { 1.0 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -101,7 +101,7 @@ public class Point2dTest
             @Override
             public void execute() throws Throwable
             {
-                new Point2d(new double[] {1.0, 2.0, 3.0});
+                new Point2d(new double[] { 1.0, 2.0, 3.0 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -198,7 +198,7 @@ public class Point2dTest
 
         try
         {
-            p.translate(1.0,  Double.NaN);
+            p.translate(1.0, Double.NaN);
             fail("NaN translation should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -218,19 +218,19 @@ public class Point2dTest
         assertEquals(Math.sqrt(32.0), p1.distance(p2), 0.001);
         assertEquals(32.0, p1.distanceSquared(p2), 0.001);
         // FIXME
-//        assertEquals(Math.sqrt(32.0), p1.horizontalDistance(p2), 0.001);
-//        assertEquals(32.0, p1.horizontalDistanceSquared(p2), 0.001);
-//
-//        // direction
-//        assertEquals(Math.toRadians(45.0), p2.horizontalDirection(), 0.001);
-//        assertEquals(Math.toRadians(45.0), p1.horizontalDirection(p2), 0.001);
-//        assertEquals(0.0, new Point2d(0.0, 0.0).horizontalDirection(), 0.001);
+        // assertEquals(Math.sqrt(32.0), p1.horizontalDistance(p2), 0.001);
+        // assertEquals(32.0, p1.horizontalDistanceSquared(p2), 0.001);
+        //
+        // // direction
+        // assertEquals(Math.toRadians(45.0), p2.horizontalDirection(), 0.001);
+        // assertEquals(Math.toRadians(45.0), p1.horizontalDirection(p2), 0.001);
+        // assertEquals(0.0, new Point2d(0.0, 0.0).horizontalDirection(), 0.001);
 
         // normalize
         Point2d pn = p2.normalize();
         assertEquals(1.0 / Math.sqrt(2.0), pn.getX(), 0.001);
         assertEquals(1.0 / Math.sqrt(2.0), pn.getY(), 0.001);
-        
+
         Try.testFail(new Try.Execution()
         {
             @Override
@@ -267,7 +267,7 @@ public class Point2dTest
 
         try
         {
-            p1.translate(1.0,  Double.NaN);
+            p1.translate(1.0, Double.NaN);
             fail("NaN translation should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -287,7 +287,7 @@ public class Point2dTest
 
         try
         {
-            p1.translate(1.0,  Double.NaN, 3.0);
+            p1.translate(1.0, Double.NaN, 3.0);
             fail("NaN translation should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -297,7 +297,7 @@ public class Point2dTest
 
         try
         {
-            p1.translate(1.0,  2.0, Double.NaN);
+            p1.translate(1.0, 2.0, Double.NaN);
             fail("NaN translation should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -331,26 +331,6 @@ public class Point2dTest
                 p1.distanceSquared(null);
             }
         }, "Should throw NPE", NullPointerException.class);
-
-        // FIXME
-//        Try.testFail(new Try.Execution()
-//        {
-//            @Override
-//            public void execute() throws Throwable
-//            {
-//                p1.horizontalDistance((Point2d) null);
-//            }
-//        }, "Should throw NPE", NullPointerException.class);
-//
-//        Try.testFail(new Try.Execution()
-//        {
-//            @Override
-//            public void execute() throws Throwable
-//            {
-//                p1.horizontalDistanceSquared((Point3d) null);
-//            }
-//        }, "Should throw NPE", NullPointerException.class);
-
     }
 
 }

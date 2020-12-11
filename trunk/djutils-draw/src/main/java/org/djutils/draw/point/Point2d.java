@@ -246,7 +246,80 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     }
 
     /**
-     * Return the coordinates as an AWT Point2D.Double object, ignoring a z-position of present.
+     * Compute the 2D intersection of two line segments. Both line segments are defined by two points (that should be distinct).
+     * @param line1P1 Point2d; first point of line segment 1
+     * @param line1P2 Point2d; second point of line segment 1
+     * @param line2P1 Point2d; first point of line segment 2
+     * @param line2P2 Point2d; second point of line segment 2
+     * @return Point2d; the intersection of the two lines, or null if the lines are (almost) parallel, or do not intersect
+     */
+    public static Point2d intersectionOfLineSegments(final Point2d line1P1, final Point2d line1P2, final Point2d line2P1,
+            final Point2d line2P2)
+    {
+        double l1p1x = line1P1.getX();
+        double l1p1y = line1P1.getY();
+        double l1p2x = line1P2.getX() - l1p1x;
+        double l1p2y = line1P2.getY() - l1p1y;
+        double l2p1x = line2P1.getX() - l1p1x;
+        double l2p1y = line2P1.getY() - l1p1y;
+        double l2p2x = line2P2.getX() - l1p1x;
+        double l2p2y = line2P2.getY() - l1p1y;
+        double denominator = (l2p2y - l2p1y) * l1p2x - (l2p2x - l2p1x) * l1p2y;
+        if (denominator == 0.0)
+        {
+            return null; // lines are parallel (they might even be on top of each other, but we don't check that)
+        }
+        double uA = ((l2p2x - l2p1x) * (-l2p1y) - (l2p2y - l2p1y) * (-l2p1x)) / denominator;
+        // System.out.println("uA is " + uA);
+        if ((uA < 0.0) || (uA > 1.0))
+        {
+            return null; // intersection outside line 1
+        }
+        double uB = (l1p2y * l2p1x - l1p2x * l2p1y) / denominator;
+        // System.out.println("uB is " + uB);
+        if (uB < 0.0 || uB > 1.0)
+        {
+            return null; // intersection outside line 2
+        }
+        return new Point2d(line1P1.x + uA * l1p2x, line1P1.y + uA * l1p2y);
+    }
+
+    /**
+     * Project a point on a line segment. If the the projected points lies outside the line
+     * segment, the nearest end point of the line segment is returned. Otherwise the returned point lies between the end points
+     * of the line segment. <br>
+     * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
+     * Bourke</a>.
+     * @param segmentPoint1 Point2d; start of line segment
+     * @param segmentPoint2 Point2d; end of line segment
+     * @return Point2d; either <cite>segmentPoint1</cite>, or <cite>segmentPoint2</cite> or a new Point2d that lies somewhere in
+     *         between those two.
+     */
+    public final Point2d closestPointOnSegment(final Point2d segmentPoint1, final Point2d segmentPoint2)
+    {
+        double dX = segmentPoint2.getX() - segmentPoint1.getX();
+        double dY = segmentPoint2.getY() - segmentPoint1.getY();
+        if ((0 == dX) && (0 == dY))
+        {
+            return segmentPoint1;
+        }
+        final double u = ((getX() - segmentPoint1.getX()) * dX + (getY() - segmentPoint1.y) * dY) / (dX * dX + dY * dY);
+        if (u < 0)
+        {
+            return segmentPoint1;
+        }
+        else if (u > 1)
+        {
+            return segmentPoint2;
+        }
+        else
+        {
+            return segmentPoint1.interpolate(segmentPoint2, u);
+        }
+    }
+
+    /**
+     * Return the coordinates as an AWT Point2D.Double object.
      * @return Point2D; the coordinates as an AWT Point2D.Double object
      */
     public Point2D toPoint2D()
