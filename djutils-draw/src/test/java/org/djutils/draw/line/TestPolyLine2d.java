@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.Transform2d;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
@@ -421,26 +422,26 @@ public class TestPolyLine2d
         assertEquals("Filtering a two-point line returns that line", line, filtered);
 
         array = new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4) };
-        line = PolyLine2d.createAndCleanLine2d(array);
+        line = PolyLine2d.createAndCleanPolyLine2d(array);
         assertEquals("cleaned line has 2 points", 2, line.size());
         assertEquals("first point", array[0], line.getFirst());
         assertEquals("last point", array[array.length - 1], line.getLast());
 
         array = new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4), new Point2d(3, 4) };
-        line = PolyLine2d.createAndCleanLine2d(array);
+        line = PolyLine2d.createAndCleanPolyLine2d(array);
         assertEquals("cleaned line has 2 points", 2, line.size());
         assertEquals("first point", array[0], line.getFirst());
         assertEquals("last point", array[array.length - 1], line.getLast());
 
         array = new Point2d[] { new Point2d(0, -1), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4) };
-        line = PolyLine2d.createAndCleanLine2d(array);
+        line = PolyLine2d.createAndCleanPolyLine2d(array);
         assertEquals("cleaned line has 2 points", 3, line.size());
         assertEquals("first point", array[0], line.getFirst());
         assertEquals("last point", array[array.length - 1], line.getLast());
 
         array = new Point2d[] { new Point2d(0, -1), new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2),
                 new Point2d(3, 4) };
-        line = PolyLine2d.createAndCleanLine2d(array);
+        line = PolyLine2d.createAndCleanPolyLine2d(array);
         assertEquals("cleaned line has 3 points", 3, line.size());
         assertEquals("first point", array[0], line.getFirst());
         assertEquals("mid point", array[1], line.get(1));
@@ -448,7 +449,7 @@ public class TestPolyLine2d
 
         try
         {
-            PolyLine2d.createAndCleanLine2d(new Point2d[0]);
+            PolyLine2d.createAndCleanPolyLine2d(new Point2d[0]);
             fail("Too short array should have thrown a DrawException");
         }
         catch (DrawException de)
@@ -458,7 +459,7 @@ public class TestPolyLine2d
 
         try
         {
-            PolyLine2d.createAndCleanLine2d(new Point2d[] { new Point2d(1, 2) });
+            PolyLine2d.createAndCleanPolyLine2d(new Point2d[] { new Point2d(1, 2) });
             fail("Too short array should have thrown a DrawException");
         }
         catch (DrawException de)
@@ -468,7 +469,7 @@ public class TestPolyLine2d
 
         try
         {
-            PolyLine2d.createAndCleanLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(1, 2) });
+            PolyLine2d.createAndCleanPolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(1, 2) });
             fail("All duplicate points in array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -478,7 +479,7 @@ public class TestPolyLine2d
 
         try
         {
-            PolyLine2d.createAndCleanLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2) });
+            PolyLine2d.createAndCleanPolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2) });
             fail("All duplicate points in array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -762,6 +763,208 @@ public class TestPolyLine2d
                 }
             }
         }
+    }
+
+    /**
+     * Test the offsetLine methods.
+     * @throws DrawException when that happens uncaught; this test has failed
+     */
+    @Test
+    public void testOffsetLine() throws DrawException
+    {
+        for (Point2d[] points : new Point2d[][] { { new Point2d(1, 2), new Point2d(3, 50) },
+                { new Point2d(-40, -20), new Point2d(5, -2), new Point2d(3, 50) },
+                { new Point2d(-40, -20), new Point2d(5, -2), new Point2d(3, -50) } })
+        {
+            for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / 360)
+            {
+                Transform2d transform = new Transform2d().rotation(angle);
+                Point2d[] transformed = new Point2d[points.length];
+                for (int index = 0; index < points.length; index++)
+                {
+                    transformed[index] = transform.transform(points[index]);
+                }
+                PolyLine2d line = new PolyLine2d(transformed);
+                // System.out.println("angle " + Math.toDegrees(angle) + " line " + line);
+                try
+                {
+                    line.offsetLine(Double.NaN);
+                    fail("NaN offset should have thrown an IllegalArgumentException");
+                }
+                catch (IllegalArgumentException iae)
+                {
+                    // Ignore expected exception
+                }
+                assertEquals("offset 0 yields the reference line", line, line.offsetLine(0));
+                for (double offset : new double[] { 1, 10, 0.1, -0.1, -10 })
+                {
+                    PolyLine2d offsetLine = line.offsetLine(offset);
+                    if (points.length == 2)
+                    {
+                        assertEquals("two-point line should have a two-point offset line", 2, offsetLine.size());
+                        assertEquals("length of offset line of two-point reference line equals length of reference line",
+                                line.getLength(), offsetLine.getLength(), 0.01);
+                    }
+                    assertEquals("offset at start", Math.abs(offset), line.getFirst().distance(offsetLine.getFirst()), 0.01);
+                    assertEquals("offset at end", Math.abs(offset), line.getLast().distance(offsetLine.getLast()), 0.01);
+                    // Verify that negative offset works in the direction opposite to positive
+                    assertEquals("offset to the left vs to the right differs by twice the offset", Math.abs(2 * offset),
+                            offsetLine.getFirst().distance(line.offsetLine(-offset).getFirst()), 0.001);
+                    // The following four may be false if the offset is not small comparable to the lenght of the first or last
+                    // segment of the line
+                    assertEquals("projection of first point of line onto offset line is (almost) first point of offset line", 0,
+                            offsetLine.getLocation(offsetLine.projectOrthogonal(line.getFirst()) * offsetLine.getLength())
+                                    .distance(offsetLine.getFirst()),
+                            0.01);
+                    double fraction = offsetLine.projectOrthogonal(line.getLast());
+                    assertEquals("fraction should be 1 with maximum error a few ULP", 1, fraction, 0.000001);
+                    if (fraction > 1.0)
+                    {
+                        fraction = 1.0;
+                    }
+                    assertEquals("projection of last point of line onto offset line is (almost) last point of offset line", 0,
+                            offsetLine.getLocation(fraction * offsetLine.getLength()).distance(offsetLine.getLast()), 0.01);
+                    assertEquals("projection of first point of offset line onto line is (almost) first point of line", 0,
+                            line.getLocation(line.projectOrthogonal(offsetLine.getFirst()) * line.getLength())
+                                    .distance(line.getFirst()),
+                            0.01);
+                    fraction = line.projectOrthogonal(offsetLine.getLast());
+                    assertEquals("fraction should be 1 with maximum error a few ULP", 1, fraction, 0.000001);
+                    if (fraction > 1.0)
+                    {
+                        fraction = 1.0;
+                    }
+                    assertEquals("projection of last point of offset line onto line is (almost) last point of line", 0,
+                            line.getLocation(fraction * line.getLength()).distance(line.getLast()), 0.01);
+                }
+            }
+        }
+
+        PolyLine2d line = new PolyLine2d(new Point2d(1, 2), new Point2d(3, 4));
+        try
+        {
+            line.offsetLine(1, 0, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                    PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO,
+                    PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            fail("zero circle precision should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.offsetLine(1, Double.NaN, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                    PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO,
+                    PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            fail("NaN circle precision should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, 0, PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
+                    PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO, PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            fail("zero offsetMinimumFilterValue should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, Double.NaN, PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
+                    PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO, PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            fail("NaN offsetMinimumFilterValue should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
+                    PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO,
+                    PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            fail("offsetMinimumFilterValue not less than offsetMaximumFilterValue should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, 0,
+                    PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO, PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            fail("zero offsetMaximumfilterValue should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, Double.NaN,
+                    PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO, PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            fail("NaN offsetMaximumfilterValue should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                    PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, 0, PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            fail("zero offsetFilterRatio should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                    PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, Double.NaN, PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            fail("NaN offsetFilterRatio should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                    PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO, 0);
+            fail("zero offsetPrecision should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                    PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO, Double.NaN);
+            fail("NaN offsetPrecision should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
     }
 
     /**
