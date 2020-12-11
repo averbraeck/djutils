@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
@@ -748,7 +749,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
-     * Convert the 2D projection of this Line2d to something that MS-Excel can plot.
+     * Convert this PolyLine2d to something that MS-Excel can plot.
      * @return excel XY plottable output
      */
     public final String toExcel()
@@ -759,6 +760,21 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
             s.append(p.getX() + "\t" + p.getY() + "\n");
         }
         return s.toString();
+    }
+
+    /**
+     * Convert this PolyLine3D to Peter's plot format.
+     * @return Peter's format plot output
+     */
+    public final String toPlot()
+    {
+        StringBuffer result = new StringBuffer();
+        for (Point2d p : this.points)
+        {
+            result.append(String.format(Locale.US, "%s%.3f,%.3f", 0 == result.length() ? "M" : " L", p.getX(), p.getY()));
+        }
+        result.append("\n");
+        return result.toString();
     }
 
     /** {@inheritDoc} */
