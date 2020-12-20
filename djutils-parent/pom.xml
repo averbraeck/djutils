@@ -296,10 +296,6 @@
               <url>https://djutils.org/docs/current/djutils-stats/apidocs/</url>
               <location>${project.build.directory}/../../djutils-draw/target/apidocs</location>
             </offlineLink>
-            <offlineLink>
-              <url>https://djutils.org/docs/current/djutils-stats/apidocs/</url>
-              <location>${project.build.directory}/../../djutils-draw-swing/target/apidocs</location>
-            </offlineLink>
           </offlineLinks>
           <minmemory>256m</minmemory>
           <maxmemory>1g</maxmemory>
@@ -475,10 +471,6 @@
             <offlineLink>
               <url>https://djutils.org/docs/current/djutils-stats/apidocs/</url>
               <location>${project.build.directory}/../../djutils-draw/target/apidocs</location>
-            </offlineLink>
-            <offlineLink>
-              <url>https://djutils.org/docs/current/djutils-stats/apidocs/</url>
-              <location>${project.build.directory}/../../djutils-draw-swing/target/apidocs</location>
             </offlineLink>
           </offlineLinks>
           <minmemory>256m</minmemory>
