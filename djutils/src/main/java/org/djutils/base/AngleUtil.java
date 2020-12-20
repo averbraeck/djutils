@@ -92,7 +92,7 @@ public final class AngleUtil
      * @param fraction double; the fraction for interpolation; 0.5 is halfway, 0.0 returns angle1, 1.0 returns angle2.
      * @return double; The interpolated angle, normalized around zero. If any input angle is not normalized around zero the
      *         result will still be normalized, and the exact equality at fraction is 0.0 or 1.0 may not hold. When the
-     *         difference between angle1 and angle2 is very close to an odd multiple of PI, the <i>shortest way</li> between
+     *         difference between angle1 and angle2 is very close to an odd multiple of PI, the <i>shortest way</i> between
      *         those angles is ill-defined. The result of this method reflects this (fundamental) problem.
      */
     public static double interpolateShortest(final double angle1, final double angle2, final double fraction)
