@@ -133,7 +133,6 @@ public final class JSONData
             }
 
             // write the data
-            jw.beginObject();
             jw.name("data").beginArray();
 
             // write the records
@@ -263,7 +262,6 @@ public final class JSONData
             }
 
             // read the data file records
-            jr.beginObject();
             readName(jr, "data");
             jr.beginArray();
             while (jr.peek().equals(JsonToken.BEGIN_ARRAY))
