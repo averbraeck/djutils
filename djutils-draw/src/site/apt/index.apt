@@ -1,36 +1,39 @@
                    --------------------------------
-                   DJUTILS - DATA
+                   DJUTILS - DRAW
                    --------------------------------
-                   March, 2020
+                   December, 2020
                    --------------------------------
                    
-DJUTILS-DATA - Delft Java Utilities
+DJUTILS-DRAW - Delft Java Utilities
 
-	The base DJUTILS-DATA project contains a set of Java classes that can store (measured or generated) data in a structured table
-	and write these tables to XML, JSON, CSV, and TSV. The files can also be read back into a table. 
-	The classes have, amongst others, the following functionalities:
+	The DJUTILS-DRAW project contains a set of drawing primitives for points, directed points, and lines in 2D and 3D. 
+	In addition, code for surfaces and volumes are prepared. Rectangular Bounds in 2D and 3D are part of the project,
+	as well as 2D and 3D affine transformations. The pprject functions as a root for drawing and preparing animations
+	with Swing and on the Web. The classes have, amongst others, the following functionalities:
 
-    * Storing data in a table with structured records.
+    * Points in 2D and 3D (Point2d and Point3d classes).
 
-    * Reading / writing comma-separated files. 
+    * Directed points in 2D and 3D (DirectedPoint2d and DirectedPoint3d classes). 
 
-    * Reading / writing tab-separated files (e.g., to read into Excel). 
+    * PolyLines in 2D and 3D (PolyLine2d and PolyLine3d classes). 
 
-    * Reading / writing XML files using a Stream reader / writer to avoid double memory use.  
+    * Rectangular bounds in 2D and 3D (Bounds2d and Bounds3d classes).  
 
-    * Reading / writing JSON files using a Stream reader / writer to avoid double memory use.  
+    * Affine transforms in 2D and 3D with translation, rotation, shear, and scaling (Transform2d and Transform3d classes).
+    
+    * Preparation for Surface classes (areas) in 2D and 3D and Volumes in 3D (to be added in a later version).
 
     []
 
 ==========
 
-	DJUTILS-DATA has an open source BSD 3-clause license.
+	DJUTILS-DRAW has an open source BSD 3-clause license.
 
-    * Third party components used in DJUTILS-DATA can not have a license that is more restrictive than BSD, Apache, MIT, LGPL, or Eclipse.
+    * Third party components used in DJUTILS-DRAW can not have a license that is more restrictive than BSD, Apache, MIT, LGPL, or Eclipse.
 
-    * DJUTILS-DATA can be incorporated in part or in full in other products for any use (educational, commercial, whatever).
+    * DJUTILS-DRAW can be incorporated in part or in full in other products for any use (educational, commercial, whatever).
 
-    * DJUTILS-DATA may be extended, evolved by anyone into anything else for any purpose.
+    * DJUTILS-DRAW may be extended, evolved by anyone into anything else for any purpose.
     
     []
     
