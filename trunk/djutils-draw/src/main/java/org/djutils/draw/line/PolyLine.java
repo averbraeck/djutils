@@ -43,7 +43,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>
      * Return one of the points of this line.
      * @param index int; the index of the requested point
      * @return P; the point at the specified index
-     * @throws IndexOutOfBoundsException when index < 0 or index >= size
+     * @throws IndexOutOfBoundsException when index &lt; 0 or index &gt;= size
      */
     P get(int index) throws IndexOutOfBoundsException;
 
@@ -83,7 +83,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>
      * Access the internal lengthIndexedLine. Return the cumulative length up to point <code>index</code> of this line
      * @param index int; the index
      * @return double; the cumulative length of this line up to point <code>index</code>
-     * @throws IndexOutOfBoundsException when index < 0 or index >= size()
+     * @throws IndexOutOfBoundsException when index &lt; 0 or index &gt;= size()
      */
     double lengthAtIndex(final int index) throws IndexOutOfBoundsException;
 
