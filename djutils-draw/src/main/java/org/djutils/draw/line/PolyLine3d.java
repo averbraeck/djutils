@@ -17,7 +17,7 @@ import org.djutils.exceptions.Throw;
 import org.djutils.logger.CategoryLogger;
 
 /**
- * Line3d.java. Implementation of Line for 3D space.
+ * Implementation of Line for 3D space.
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.

@@ -19,7 +19,7 @@ import org.djutils.exceptions.Throw;
 import org.djutils.logger.CategoryLogger;
 
 /**
- * Line2d.java.
+ * Implementation of Line for 2D space.
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -806,7 +806,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * @return PolyLine2d; a line at the specified offset from the reference line
      * @throws IllegalArgumentException when offset is NaN, or circlePrecision, offsetMinimumFilterValue,
      *             offsetMaximumfilterValue, offsetFilterRatio, or minimumOffset is not positive, or NaN, or
-     *             offsetMinimumFilterValue >= offsetMaximumFilterValue
+     *             offsetMinimumFilterValue &gt;= offsetMaximumFilterValue
      */
     public PolyLine2d offsetLine(final double offset, final double circlePrecision, final double offsetMinimumFilterValue,
             final double offsetMaximumFilterValue, final double offsetFilterRatio, final double minimumOffset)
