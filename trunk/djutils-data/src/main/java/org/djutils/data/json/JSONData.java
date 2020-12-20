@@ -95,6 +95,7 @@ public final class JSONData
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
+    @SuppressWarnings("resource")
     public static void writeData(final Writer writer, final DataTable dataTable) throws IOException, TextSerializationException
     {
         JsonWriter jw = null;
@@ -132,6 +133,7 @@ public final class JSONData
             }
 
             // write the data
+            jw.beginObject();
             jw.name("data").beginArray();
 
             // write the records
@@ -261,6 +263,7 @@ public final class JSONData
             }
 
             // read the data file records
+            jr.beginObject();
             readName(jr, "data");
             jr.beginArray();
             while (jr.peek().equals(JsonToken.BEGIN_ARRAY))
