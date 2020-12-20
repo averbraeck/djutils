@@ -6,9 +6,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 
-import org.djutils.draw.Transform3d;
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.point.Point;
 import org.djutils.draw.point.Point3d;
 import org.junit.Test;
 

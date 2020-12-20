@@ -2,24 +2,29 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <!-- Later projects for drawing in swing and html5, djutils-draw-swing, and djutils-draw-web. 
+        Added projects for drawing data providers: djtils-draw-shape, djtils-draw-osm, djtils-draw-autocad and
+        djtils-draw-geotools. Added a project to visually introspect the data providing Java objects on the screen:
+        djtils-draw-introspection.
+        
+        Added projects for drawing graphs in swing and html5: djutils-graph, djutils-graph-swing, and djutils-graph-web. 
+        Added a project for a graph data providers: djtils-graph-jfree to plot data from jfreechart data providers. 
+    -->
 
-    <release version="1.06.01" date="????-??-??" description="Additional way to interpolate angles">
+    <release version="1.06.00" date="2020-12-20" description="Additional way to interpolate angles; djutils-draw first version">
+      <action dev="averbraeck" type="fix">
+        Repaired the writing and reading of JSONData in the djutils-data project. A beginObject() method was missing for the data
+        part when reading or writing a JSON string.
+      </action>
       <action dev="pknoppers" type="add">
         Interpolating (and extrapolating) angles could only be one with clockwise interpolation. A new method interpolateShortest
         is now available that takes the shortest way around.
       </action>
-    </release>
-
-    <release version="1.06.00" date="2020-08-XX" description="Projects for drawing and graphs added">
-      <action dev="averbraeck" type="add">
-        Added projects for drawing in swing and html5: djutils-draw, djutils-draw-swing, and djutils-draw-web. 
-        Added projects for drawing data providers: djtils-draw-shape, djtils-draw-osm, djtils-draw-autocad and
-        djtils-draw-geotools. Added a project to visually introspect the data providing Java objects on the screen:
-        djtils-draw-introspection. 
+      <action dev="pknoppers" type="add">
+        Filled most of the classes for Point, PolyLine and Bounds in 2d and 3d in djutils-draw.
       </action>
       <action dev="averbraeck" type="add">
-        Added projects for drawing graphs in swing and html5: djutils-graph, djutils-graph-swing, and djutils-graph-web. 
-        Added a project for a graph data providers: djtils-graph-jfree to plot data from jfreechart data providers. 
+        Added neutral project for drawing: djutils-draw.  
       </action>
       <action dev="averbraeck" type="add">
         Added a class AngleUtil to normalize angles around zero or around pi in the package org.djutils.base.  
