@@ -34,7 +34,7 @@
         <module>../djutils-data</module>
         <module>../djutils-stats</module>
         <module>../djutils-draw</module>
-        <module>../djutils-draw-swing</module>
+        <!-- module>../djutils-draw-swing</module>
         <module>../djutils-draw-web</module>
         <module>../djutils-draw-shape</module>
         <module>../djutils-draw-osm</module>
@@ -44,7 +44,7 @@
         <module>../djutils-graph</module>
         <module>../djutils-graph-swing</module>
         <module>../djutils-graph-web</module>
-        <module>../djutils-graph-jfree</module>
+        <module>../djutils-graph-jfree</module -->
       </modules>
     </profile>
   </profiles>
