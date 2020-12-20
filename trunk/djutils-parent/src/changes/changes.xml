@@ -12,10 +12,6 @@
     -->
 
     <release version="1.06.00" date="2020-12-20" description="Additional way to interpolate angles; djutils-draw first version">
-      <action dev="averbraeck" type="fix">
-        Repaired the writing and reading of JSONData in the djutils-data project. A beginObject() method was missing for the data
-        part when reading or writing a JSON string.
-      </action>
       <action dev="pknoppers" type="add">
         Interpolating (and extrapolating) angles could only be one with clockwise interpolation. A new method interpolateShortest
         is now available that takes the shortest way around.
