@@ -171,7 +171,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
 
     /** {@inheritDoc} */
     @Override
-    public PolyLine3d instantiate(List<Point3d> pointList) throws NullPointerException, DrawRuntimeException
+    public PolyLine3d instantiate(final List<Point3d> pointList) throws NullPointerException, DrawRuntimeException
     {
         return new PolyLine3d(pointList);
     }

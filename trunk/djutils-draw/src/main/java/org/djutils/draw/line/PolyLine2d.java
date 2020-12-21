@@ -168,7 +168,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
 
     /** {@inheritDoc} */
     @Override
-    public PolyLine2d instantiate(List<Point2d> pointList) throws NullPointerException, DrawRuntimeException
+    public PolyLine2d instantiate(final List<Point2d> pointList) throws NullPointerException, DrawRuntimeException
     {
         return new PolyLine2d(pointList);
     }
@@ -756,19 +756,19 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     public static final double DEFAULT_CIRCLE_PRECISION = 0.001;
 
     /** By default, noise in the reference line of the offsetLine method less than this value is always filtered. */
-    public static double DEFAULT_OFFSET_MINIMUM_FILTER_VALUE = 0.001;
+    public static final double DEFAULT_OFFSET_MINIMUM_FILTER_VALUE = 0.001;
 
     /** By default, noise in the reference line of the offsetLineMethod greater than this value is never filtered. */
-    public static double DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE = 0.1;
+    public static final double DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE = 0.1;
 
     /**
      * By default, noise in the reference line of the offsetLineMethod less than <cite>offset / offsetFilterRatio</cite> is
      * filtered except when the resulting value exceeds <cite>offsetMaximumFilterValue</cite>.
      */
-    public static double DEFAULT_OFFSET_FILTER_RATIO = 10;
+    public static final double DEFAULT_OFFSET_FILTER_RATIO = 10;
 
     /** By default, the offsetLineMethod uses this offset precision. */
-    public static double DEFAULT_OFFSET_PRECISION = 0.00001;
+    public static final double DEFAULT_OFFSET_PRECISION = 0.00001;
 
     /**
      * Construct an offset line. This is similar to what geographical specialists call buffering, except that this method only
@@ -785,8 +785,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      */
     public PolyLine2d offsetLine(final double offset)
     {
-        return offsetLine(offset, DEFAULT_CIRCLE_PRECISION, DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
-                DEFAULT_OFFSET_FILTER_RATIO, DEFAULT_OFFSET_PRECISION);
+        return offsetLine(offset, DEFAULT_CIRCLE_PRECISION, DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, DEFAULT_OFFSET_FILTER_RATIO, DEFAULT_OFFSET_PRECISION);
     }
 
     /**
@@ -808,6 +808,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      *             offsetMaximumfilterValue, offsetFilterRatio, or minimumOffset is not positive, or NaN, or
      *             offsetMinimumFilterValue &gt;= offsetMaximumFilterValue
      */
+    @SuppressWarnings("checkstyle:methodlength")
     public PolyLine2d offsetLine(final double offset, final double circlePrecision, final double offsetMinimumFilterValue,
             final double offsetMaximumFilterValue, final double offsetFilterRatio, final double minimumOffset)
             throws IllegalArgumentException
@@ -1063,7 +1064,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings({ "checkstyle:designforextension", "checkstyle:needbraces" })
+    @SuppressWarnings({"checkstyle:designforextension", "checkstyle:needbraces"})
     @Override
     public boolean equals(final Object obj)
     {

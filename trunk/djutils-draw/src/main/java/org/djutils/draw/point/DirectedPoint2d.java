@@ -33,7 +33,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d
      * @param y double; the y coordinate
      * @throws IllegalArgumentException when any coordinate is NaN
      */
-    public DirectedPoint2d(double x, double y) throws IllegalArgumentException
+    public DirectedPoint2d(final double x, final double y) throws IllegalArgumentException
     {
         super(x, y);
         this.dirZ = 0;
@@ -46,7 +46,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d
      * @param dirZ double; the counter-clockwise rotation around the point in radians
      * @throws IllegalArgumentException when any coordinate or dirZ is NaN
      */
-    public DirectedPoint2d(double x, double y, final double dirZ) throws IllegalArgumentException
+    public DirectedPoint2d(final double x, final double y, final double dirZ) throws IllegalArgumentException
     {
         super(x, y);
         Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "rotZ must be a number (not NaN)");
@@ -60,7 +60,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d
      * @throws NullPointerException when xy is null
      * @throws IllegalArgumentException when the dimension of xy is not 2 or any value in xy is NaN or rotZ is NaN
      */
-    public DirectedPoint2d(double[] xy, final double dirZ) throws IllegalArgumentException
+    public DirectedPoint2d(final double[] xy, final double dirZ) throws IllegalArgumentException
     {
         super(xy);
         Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "rotZ must be a number (not NaN)");
@@ -73,7 +73,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d
      * @param dirZ double; the counter-clockwise rotation around the point in radians
      * @throws IllegalArgumentException when any coordinate in point is NaN, or rotZ is NaN
      */
-    public DirectedPoint2d(Point2D point, final double dirZ) throws IllegalArgumentException
+    public DirectedPoint2d(final Point2D point, final double dirZ) throws IllegalArgumentException
     {
         super(point);
         Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "rotZ must be a number (not NaN)");
@@ -139,7 +139,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d
         return this.scale(1.0 / length);
     }
 
-    /** 
+    /**
      * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
      * that case the interpolation turns into an extrapolation. DirZ is interpolated using the interpolateShortest method.
      * @param otherPoint DirectedPoint2d; the other point
@@ -150,7 +150,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d
      * @throws NullPointerException when otherPoint is null
      * @throws IllegalArgumentException when fraction is NaN
      */
-    public DirectedPoint2d interpolate(DirectedPoint2d otherPoint, double fraction)
+    public DirectedPoint2d interpolate(final DirectedPoint2d otherPoint, final double fraction)
             throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(otherPoint, "point cannot be null");
@@ -184,7 +184,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d
     @Override
     public Iterator<? extends DirectedPoint2d> getPoints()
     {
-        return Arrays.stream(new DirectedPoint2d[] { this }).iterator();
+        return Arrays.stream(new DirectedPoint2d[] {this}).iterator();
     }
 
     /** {@inheritDoc} */

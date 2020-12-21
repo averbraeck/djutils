@@ -26,10 +26,12 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     private static final long serialVersionUID = 20201201L;
 
     /** The x-coordinate. */
-    private final double x;
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    public final double x;
 
     /** The y-coordinate. */
-    private final double y;
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    public final double y;
 
     /**
      * Create a new Point with just an x and y coordinate, stored with double precision.
@@ -56,7 +58,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     }
 
     /**
-     * Create an immutable point with just two values, x and y, stored with double precision from an AWT Point2D
+     * Create an immutable point with just two values, x and y, stored with double precision from an AWT Point2D.
      * @param point Point2D; an AWT Point2D
      * @throws NullPointerException when point is null
      * @throws IllegalArgumentException when point has a NaN coordinate
@@ -136,7 +138,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     @Override
     public Iterator<? extends Point2d> getPoints()
     {
-        return Arrays.stream(new Point2d[] { this }).iterator();
+        return Arrays.stream(new Point2d[] {this}).iterator();
     }
 
     /**

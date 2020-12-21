@@ -25,13 +25,13 @@ import org.djutils.draw.point.Point;
 public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>, S extends Space, DP> extends Drawable<P, S>
 {
     /**
-     * Constructor that can be accessed as a method (used to implement default methods in this interface)
+     * Constructor that can be accessed as a method (used to implement default methods in this interface).
      * @param pointList List&lt;P&gt;; a list of points
      * @return L; the new line
      * @throws NullPointerException when pointList is null
      * @throws DrawRuntimeException when pointList has fewer than two points or contains successive duplicate points
      */
-    L instantiate(final List<P> pointList) throws NullPointerException, DrawRuntimeException;
+    L instantiate(List<P> pointList) throws NullPointerException, DrawRuntimeException;
 
     /**
      * Return the length of this line. This is NOT the number of points; it is the sum of the lengths of the segments.
@@ -85,7 +85,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>
      * @return double; the cumulative length of this line up to point <code>index</code>
      * @throws IndexOutOfBoundsException when index &lt; 0 or index &gt;= size()
      */
-    double lengthAtIndex(final int index) throws IndexOutOfBoundsException;
+    double lengthAtIndex(int index) throws IndexOutOfBoundsException;
 
     /**
      * Construct a new Line with all points of this Line in reverse order.
@@ -94,7 +94,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>
     default L reverse()
     {
         List<P> reversedPoints = new ArrayList<>(size());
-        for (int index = size(); --index >= 0; )
+        for (int index = size(); --index >= 0;)
         {
             reversedPoints.add(get(index));
         }
@@ -125,14 +125,15 @@ public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>
      * @return L; the selected sub-section
      * @throws DrawException when start &gt;= end, or start &lt; 0, or end &gt; length
      */
-    L extract(final double start, final double end) throws DrawException;
+    L extract(double start, double end) throws DrawException;
+
     /**
      * Get the location at a position on the line, with its direction. Position should be between 0.0 and line length.
      * @param position double; the position on the line for which to calculate the point on the line
      * @return DP; a directed point
      * @throws DrawException when position less than 0.0 or more than line length.
      */
-    DP getLocation(final double position) throws DrawException;
+    DP getLocation(double position) throws DrawException;
 
     /**
      * Get the location at a position on the line, with its direction. Position can be below 0 or more than the line length. In
@@ -140,7 +141,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>
      * @param position double; the position on the line for which to calculate the point on, before, or after the line
      * @return DP; a directed point
      */
-    DP getLocationExtended(final double position);
+    DP getLocationExtended(double position);
 
     /**
      * Get the location at a fraction of the line, with its direction. Fraction should be between 0.0 and 1.0.
@@ -191,7 +192,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>
      * @return L; a new Line that follows this line, but ends at the position where line.getLength() == lengthSI
      * @throws DrawException when position less than 0.0 or more than line length.
      */
-    L truncate(final double position) throws DrawException;
+    L truncate(double position) throws DrawException;
 
     /**
      * Binary search for a position on the line.
