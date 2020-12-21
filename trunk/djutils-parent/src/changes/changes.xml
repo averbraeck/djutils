@@ -11,6 +11,16 @@
         Added a project for a graph data providers: djtils-graph-jfree to plot data from jfreechart data providers. 
     -->
 
+    <release version="1.06.01" date="2020-12-21" description="Made .x, .y and .z of Point accessible in djutils-draw">
+      <action dev="averbraeck" type="update">
+        Made the fields x, y (and z) accessible in Point2d and Point3d to make code that use the Point look cleaner.
+        The methods getX(), getY() (and getZ()) also stay available.
+      </action>
+      <action dev="averbraeck" type="fix">
+        Turned on checkstyle for the djutils-draw project.
+      </action>
+    </release>
+
     <release version="1.06.00" date="2020-12-20" description="Additional way to interpolate angles; djutils-draw first version">
       <action dev="pknoppers" type="add">
         Interpolating (and extrapolating) angles could only be one with clockwise interpolation. A new method interpolateShortest
