@@ -56,24 +56,24 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         Throw.when(points.length < 2, DrawRuntimeException.class, "Need at least two points");
         this.points = copyNeeded ? Arrays.copyOf(points, points.length) : points;
         Point3d prevPoint = points[0];
-        double minX = prevPoint.getX();
-        double minY = prevPoint.getY();
-        double minZ = prevPoint.getZ();
-        double maxX = prevPoint.getX();
-        double maxY = prevPoint.getY();
-        double maxZ = prevPoint.getZ();
+        double minX = prevPoint.x;
+        double minY = prevPoint.y;
+        double minZ = prevPoint.z;
+        double maxX = prevPoint.x;
+        double maxY = prevPoint.y;
+        double maxZ = prevPoint.z;
         this.lengthIndexedLine = new double[this.points.length];
         this.lengthIndexedLine[0] = 0.0;
         for (int i = 1; i < this.points.length; i++)
         {
             Point3d point = this.points[i];
-            minX = Math.min(minX, point.getX());
-            minY = Math.min(minY, point.getY());
-            minZ = Math.min(minZ, point.getZ());
-            maxX = Math.max(maxX, point.getX());
-            maxY = Math.max(maxY, point.getY());
-            maxZ = Math.max(maxZ, point.getZ());
-            if (prevPoint.getX() == point.getX() && prevPoint.getY() == point.getY() && prevPoint.getZ() == point.getZ())
+            minX = Math.min(minX, point.x);
+            minY = Math.min(minY, point.y);
+            minZ = Math.min(minZ, point.z);
+            maxX = Math.max(maxX, point.x);
+            maxY = Math.max(maxY, point.y);
+            maxZ = Math.max(maxZ, point.z);
+            if (prevPoint.x == point.x && prevPoint.y == point.y && prevPoint.z == point.z)
             {
                 throw new DrawRuntimeException(
                         "Degenerate Line3d; point " + (i - 1) + " has the same x, y and z as point " + i);
@@ -394,7 +394,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
             Point2d point = point3d.project();
             if (prevPoint != null)
             {
-                if (prevPoint.getX() == point.getX() && prevPoint.getY() == point.getY())
+                if (prevPoint.x == point.x && prevPoint.y == point.y)
                 {
                     continue;
                 }
@@ -469,9 +469,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
             double fraction = len / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
             Point3d p1 = this.points[0];
             Point3d p2 = this.points[1];
-            return new DirectedPoint3d(p1.getX() + fraction * (p2.getX() - p1.getX()),
-                    p1.getY() + fraction * (p2.getY() - p1.getY()), p1.getZ() + fraction * (p2.getZ() - p1.getZ()), 0.0, 0.0,
-                    Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
+            return new DirectedPoint3d(p1.x + fraction * (p2.x - p1.x),
+                    p1.y + fraction * (p2.y - p1.y), p1.z + fraction * (p2.z - p1.z), 0.0, 0.0,
+                    Math.atan2(p2.y - p1.y, p2.x - p1.x));
         }
 
         // position beyond end point -- extrapolate using the direction from the before last point to the last point of this
@@ -486,15 +486,15 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
             {
                 CategoryLogger.always().error("lengthIndexedLine of {} is invalid", this);
                 Point3d p = this.points[n1];
-                return new DirectedPoint3d(p.getX(), p.getY(), p.getZ(), 0.0, 0.0, 0.0); // Bogus direction
+                return new DirectedPoint3d(p.x, p.y, p.z, 0.0, 0.0, 0.0); // Bogus direction
             }
             fraction = len / (this.lengthIndexedLine[n1] - this.lengthIndexedLine[n2]);
         }
         Point3d p1 = this.points[n2];
         Point3d p2 = this.points[n1];
-        return new DirectedPoint3d(p2.getX() + fraction * (p2.getX() - p1.getX()),
-                p2.getY() + fraction * (p2.getY() - p1.getY()), p2.getZ() + fraction * (p2.getZ() - p1.getZ()), 0.0, 0.0,
-                Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
+        return new DirectedPoint3d(p2.x + fraction * (p2.x - p1.x),
+                p2.y + fraction * (p2.y - p1.y), p2.z + fraction * (p2.z - p1.z), 0.0, 0.0,
+                Math.atan2(p2.y - p1.y, p2.x - p1.x));
     }
 
     /** {@inheritDoc} */
@@ -512,15 +512,15 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         {
             Point3d p1 = this.points[0];
             Point3d p2 = this.points[1];
-            return new DirectedPoint3d(p1.getX(), p1.getY(), p1.getZ(), 0.0, 0.0,
-                    Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
+            return new DirectedPoint3d(p1.x, p1.y, p1.z, 0.0, 0.0,
+                    Math.atan2(p2.y - p1.y, p2.x - p1.x));
         }
         if (position == getLength())
         {
             Point3d p1 = this.points[this.points.length - 2];
             Point3d p2 = this.points[this.points.length - 1];
-            return new DirectedPoint3d(p2.getX(), p2.getY(), p2.getZ(), 0.0, 0.0,
-                    Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
+            return new DirectedPoint3d(p2.x, p2.y, p2.z, 0.0, 0.0,
+                    Math.atan2(p2.y - p1.y, p2.x - p1.x));
         }
 
         // find the index of the line segment, use binary search
@@ -529,9 +529,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         double fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
         Point3d p1 = this.points[index];
         Point3d p2 = this.points[index + 1];
-        return new DirectedPoint3d(p1.getX() + fraction * (p2.getX() - p1.getX()),
-                p1.getY() + fraction * (p2.getY() - p1.getY()), p1.getZ() + fraction * (p2.getZ() - p1.getZ()), 0.0, 0.0,
-                Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
+        return new DirectedPoint3d(p1.x + fraction * (p2.x - p1.x),
+                p1.y + fraction * (p2.y - p1.y), p1.z + fraction * (p2.z - p1.z), 0.0, 0.0,
+                Math.atan2(p2.y - p1.y, p2.x - p1.x));
     }
 
     /** {@inheritDoc} */

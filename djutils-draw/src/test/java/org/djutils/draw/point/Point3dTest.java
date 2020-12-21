@@ -34,15 +34,15 @@ public class Point3dTest
     {
         Point3d p = new Point3d(10.0, -20.0, 16.0);
         assertNotNull(p);
-        assertEquals(10.0, p.getX(), 0);
-        assertEquals(-20.0, p.getY(), 0);
-        assertEquals(16.0, p.getZ(), 0);
+        assertEquals(10.0, p.x, 0);
+        assertEquals(-20.0, p.y, 0);
+        assertEquals(16.0, p.z, 0);
         
         assertEquals("size method returns 1", 1, p.size());
         
         Point2d projection = p.project();
-        assertEquals(10.0, projection.getX(), 0);
-        assertEquals(-20.0, projection.getY(), 0);
+        assertEquals(10.0, projection.x, 0);
+        assertEquals(-20.0, projection.y, 0);
         
         try
         {
@@ -76,9 +76,9 @@ public class Point3dTest
         
         double[] p3Arr = new double[] {5.0, 6.0, 7.0};
         p = new Point3d(p3Arr);
-        assertEquals(5.0, p.getX(), 0);
-        assertEquals(6.0, p.getY(), 0);
-        assertEquals(7.0, p.getZ(), 0);
+        assertEquals(5.0, p.x, 0);
+        assertEquals(6.0, p.y, 0);
+        assertEquals(7.0, p.z, 0);
         Try.testFail(new Try.Execution()
         {
             @Override
@@ -192,15 +192,15 @@ public class Point3dTest
        
         p2d = new Point2d(123, 456);
         p3 = new Point3d(p2d, 789);
-        assertEquals("x", 123, p3.getX(), 0);
-        assertEquals("y", 456, p3.getY(), 0);
-        assertEquals("z", 789, p3.getZ(), 0);
+        assertEquals("x", 123, p3.x, 0);
+        assertEquals("y", 456, p3.y, 0);
+        assertEquals("z", 789, p3.z, 0);
         
         Point2D p2D = new java.awt.geom.Point2D.Double(123, 456);
         p3 = new Point3d(p2D, 789);
-        assertEquals("x", 123, p3.getX(), 0);
-        assertEquals("y", 456, p3.getY(), 0);
-        assertEquals("z", 789, p3.getZ(), 0);
+        assertEquals("x", 123, p3.x, 0);
+        assertEquals("y", 456, p3.y, 0);
+        assertEquals("z", 789, p3.z, 0);
     }
 
     /**
@@ -210,33 +210,33 @@ public class Point3dTest
     public void testPoint3dOperators()
     {
         Point3d p = new Point3d(-0.1, -0.2, -0.3);
-        assertEquals(0.1, p.abs().getX(), 1E-6);
-        assertEquals(0.2, p.abs().getY(), 1E-6);
-        assertEquals(0.3, p.abs().getZ(), 1E-6);
+        assertEquals(0.1, p.abs().x, 1E-6);
+        assertEquals(0.2, p.abs().y, 1E-6);
+        assertEquals(0.3, p.abs().z, 1E-6);
         p = p.neg();
-        assertEquals(0.1, p.getX(), 1E-6);
-        assertEquals(0.2, p.getY(), 1E-6);
-        assertEquals(0.3, p.getZ(), 1E-6);
+        assertEquals(0.1, p.x, 1E-6);
+        assertEquals(0.2, p.y, 1E-6);
+        assertEquals(0.3, p.z, 1E-6);
         p = p.scale(1.0);
-        assertEquals(0.1, p.getX(), 1E-6);
-        assertEquals(0.2, p.getY(), 1E-6);
-        assertEquals(0.3, p.getZ(), 1E-6);
+        assertEquals(0.1, p.x, 1E-6);
+        assertEquals(0.2, p.y, 1E-6);
+        assertEquals(0.3, p.z, 1E-6);
         p = p.scale(10.0);
-        assertEquals(1.0, p.getX(), 1E-6);
-        assertEquals(2.0, p.getY(), 1E-6);
-        assertEquals(3.0, p.getZ(), 1E-6);
+        assertEquals(1.0, p.x, 1E-6);
+        assertEquals(2.0, p.y, 1E-6);
+        assertEquals(3.0, p.z, 1E-6);
         p = p.translate(5.0, -1.0, 0.5);
-        assertEquals(6.0, p.getX(), 1E-6);
-        assertEquals(1.0, p.getY(), 1E-6);
-        assertEquals(3.5, p.getZ(), 1E-6);
+        assertEquals(6.0, p.x, 1E-6);
+        assertEquals(1.0, p.y, 1E-6);
+        assertEquals(3.5, p.z, 1E-6);
         Point3d p3d = p.translate(1.0, 1.0, 1.0);
-        assertEquals(7.0, p3d.getX(), 1E-6);
-        assertEquals(2.0, p3d.getY(), 1E-6);
-        assertEquals(4.5, p3d.getZ(), 1E-6);
+        assertEquals(7.0, p3d.x, 1E-6);
+        assertEquals(2.0, p3d.y, 1E-6);
+        assertEquals(4.5, p3d.z, 1E-6);
         p3d = p.translate(6.0, 1.0);
-        assertEquals(12.0, p3d.getX(), 1E-6);
-        assertEquals(2.0, p3d.getY(), 1E-6);
-        assertEquals(3.5, p3d.getZ(), 1E-6);
+        assertEquals(12.0, p3d.x, 1E-6);
+        assertEquals(2.0, p3d.y, 1E-6);
+        assertEquals(3.5, p3d.z, 1E-6);
         
         try
         {
@@ -309,9 +309,9 @@ public class Point3dTest
 
         // normalize
         Point3d pn = p2.normalize();
-        assertEquals(1.0 / Math.sqrt(3.0), pn.getX(), 0.001);
-        assertEquals(1.0 / Math.sqrt(3.0), pn.getY(), 0.001);
-        assertEquals(1.0 / Math.sqrt(3.0), pn.getZ(), 0.001);
+        assertEquals(1.0 / Math.sqrt(3.0), pn.x, 0.001);
+        assertEquals(1.0 / Math.sqrt(3.0), pn.y, 0.001);
+        assertEquals(1.0 / Math.sqrt(3.0), pn.z, 0.001);
         
         Try.testFail(new Try.Execution()
         {
@@ -324,16 +324,16 @@ public class Point3dTest
         
         assertEquals("size of a Point3d is 1", 1, p1.size());
         Point2d projection = p1.project();
-        assertEquals("projected x", p1.getX(), projection.getX(), 0);
-        assertEquals("projected y", p1.getY(), projection.getY(), 0);
+        assertEquals("projected x", p1.x, projection.x, 0);
+        assertEquals("projected y", p1.y, projection.y, 0);
 
         Bounds3d bounds = p1.getBounds();
-        assertEquals("Bounds min x", p1.getX(), bounds.getMinX(), 0);
-        assertEquals("Bounds min y", p1.getY(), bounds.getMinY(), 0);
-        assertEquals("Bounds min z", p1.getZ(), bounds.getMinZ(), 0);
-        assertEquals("Bounds max x", p1.getX(), bounds.getMaxX(), 0);
-        assertEquals("Bounds max y", p1.getY(), bounds.getMaxY(), 0);
-        assertEquals("Bounds max z", p1.getZ(), bounds.getMaxZ(), 0);
+        assertEquals("Bounds min x", p1.x, bounds.getMinX(), 0);
+        assertEquals("Bounds min y", p1.y, bounds.getMinY(), 0);
+        assertEquals("Bounds min z", p1.z, bounds.getMinZ(), 0);
+        assertEquals("Bounds max x", p1.x, bounds.getMaxX(), 0);
+        assertEquals("Bounds max y", p1.y, bounds.getMaxY(), 0);
+        assertEquals("Bounds max z", p1.z, bounds.getMaxZ(), 0);
     }
 
     /**

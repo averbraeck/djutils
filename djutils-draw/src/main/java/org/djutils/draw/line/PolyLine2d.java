@@ -58,20 +58,20 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         Throw.when(points.length < 2, DrawRuntimeException.class, "Need at least two points");
         this.points = copyNeeded ? Arrays.copyOf(points, points.length) : points;
         Point2d prevPoint = points[0];
-        double minX = prevPoint.getX();
-        double minY = prevPoint.getY();
-        double maxX = prevPoint.getX();
-        double maxY = prevPoint.getY();
+        double minX = prevPoint.x;
+        double minY = prevPoint.y;
+        double maxX = prevPoint.x;
+        double maxY = prevPoint.y;
         this.lengthIndexedLine = new double[points.length];
         this.lengthIndexedLine[0] = 0.0;
         for (int i = 1; i < points.length; i++)
         {
             Point2d point = points[i];
-            minX = Math.min(minX, point.getX());
-            minY = Math.min(minY, point.getY());
-            maxX = Math.max(maxX, point.getX());
-            maxY = Math.max(maxY, point.getY());
-            if (prevPoint.getX() == point.getX() && prevPoint.getY() == point.getY())
+            minX = Math.min(minX, point.x);
+            minY = Math.min(minY, point.y);
+            maxX = Math.max(maxX, point.x);
+            maxY = Math.max(maxY, point.y);
+            if (prevPoint.x == point.x && prevPoint.y == point.y)
             {
                 throw new DrawRuntimeException("Degenerate Line2d; point " + (i - 1) + " has the same x and y as point " + i);
             }
@@ -489,8 +489,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
             double fraction = len / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
             Point2d p1 = this.points[0];
             Point2d p2 = this.points[1];
-            return new DirectedPoint2d(p1.getX() + fraction * (p2.getX() - p1.getX()),
-                    p1.getY() + fraction * (p2.getY() - p1.getY()), Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
+            return new DirectedPoint2d(p1.x + fraction * (p2.x - p1.x),
+                    p1.y + fraction * (p2.y - p1.y), Math.atan2(p2.y - p1.y, p2.x - p1.x));
         }
 
         // position beyond end point -- extrapolate using the direction from the before last point to the last point of this
@@ -505,14 +505,14 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
             {
                 CategoryLogger.always().error("lengthIndexedLine of {} is invalid", this);
                 Point2d p = this.points[n1];
-                return new DirectedPoint2d(p.getX(), p.getY(), 0.0); // Bogus direction
+                return new DirectedPoint2d(p.x, p.y, 0.0); // Bogus direction
             }
             fraction = len / (this.lengthIndexedLine[n1] - this.lengthIndexedLine[n2]);
         }
         Point2d p1 = this.points[n2];
         Point2d p2 = this.points[n1];
-        return new DirectedPoint2d(p2.getX() + fraction * (p2.getX() - p1.getX()),
-                p2.getY() + fraction * (p2.getY() - p1.getY()), Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
+        return new DirectedPoint2d(p2.x + fraction * (p2.x - p1.x),
+                p2.y + fraction * (p2.y - p1.y), Math.atan2(p2.y - p1.y, p2.x - p1.x));
     }
 
     /** {@inheritDoc} */
@@ -530,13 +530,13 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         {
             Point2d p1 = this.points[0];
             Point2d p2 = this.points[1];
-            return new DirectedPoint2d(p1.getX(), p1.getY(), Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
+            return new DirectedPoint2d(p1.x, p1.y, Math.atan2(p2.y - p1.y, p2.x - p1.x));
         }
         if (position == getLength())
         {
             Point2d p1 = this.points[this.points.length - 2];
             Point2d p2 = this.points[this.points.length - 1];
-            return new DirectedPoint2d(p2.getX(), p2.getY(), Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
+            return new DirectedPoint2d(p2.x, p2.y, Math.atan2(p2.y - p1.y, p2.x - p1.x));
         }
 
         // find the index of the line segment, use binary search
@@ -545,8 +545,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         double fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
         Point2d p1 = this.points[index];
         Point2d p2 = this.points[index + 1];
-        return new DirectedPoint2d(p1.getX() + fraction * (p2.getX() - p1.getX()),
-                p1.getY() + fraction * (p2.getY() - p1.getY()), Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()));
+        return new DirectedPoint2d(p1.x + fraction * (p2.x - p1.x),
+                p1.y + fraction * (p2.y - p1.y), Math.atan2(p2.y - p1.y, p2.x - p1.x));
     }
 
     /**
@@ -557,7 +557,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      */
     public final double projectOrthogonal(final Point2d point)
     {
-        return projectOrthogonal(point.getX(), point.getY());
+        return projectOrthogonal(point.x, point.y);
     }
 
     /**
@@ -577,11 +577,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         // code based on Line2D.ptSegDistSq(...)
         for (int i = 0; i < size() - 1; i++)
         {
-            double dx = this.points[i + 1].getX() - this.points[i].getX();
-            double dy = this.points[i + 1].getY() - this.points[i].getY();
+            double dx = this.points[i + 1].x - this.points[i].x;
+            double dy = this.points[i + 1].y - this.points[i].y;
             // vector relative to (x(i), y(i))
-            double px = x - this.points[i].getX();
-            double py = y - this.points[i].getY();
+            double px = x - this.points[i].x;
+            double py = y - this.points[i].y;
             // dot product
             double dot1 = px * dx + py * dy;
             double f;
@@ -840,11 +840,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         for (int index = 0; index < filteredReferenceLine.size() - 1; index++)
         {
             Point2d nextPoint = filteredReferenceLine.get(index + 1);
-            double angle = Math.atan2(nextPoint.getY() - prevPoint.getY(), nextPoint.getX() - prevPoint.getX());
+            double angle = Math.atan2(nextPoint.y - prevPoint.y, nextPoint.x - prevPoint.x);
             Point2d segmentFrom =
-                    new Point2d(prevPoint.getX() - Math.sin(angle) * offset, prevPoint.getY() + Math.cos(angle) * offset);
+                    new Point2d(prevPoint.x - Math.sin(angle) * offset, prevPoint.y + Math.cos(angle) * offset);
             Point2d segmentTo =
-                    new Point2d(nextPoint.getX() - Math.sin(angle) * offset, nextPoint.getY() + Math.cos(angle) * offset);
+                    new Point2d(nextPoint.x - Math.sin(angle) * offset, nextPoint.y + Math.cos(angle) * offset);
             boolean addSegment = true;
             if (index > 0)
             {
@@ -882,8 +882,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
                         {
                             intermediateAngle += Math.PI;
                         }
-                        Point2d intermediatePoint = new Point2d(prevPoint.getX() - Math.sin(intermediateAngle) * offset,
-                                prevPoint.getY() + Math.cos(intermediateAngle) * offset);
+                        Point2d intermediatePoint = new Point2d(prevPoint.x - Math.sin(intermediateAngle) * offset,
+                                prevPoint.y + Math.cos(intermediateAngle) * offset);
                         // Find any intersection points of the new segment and all previous segments
                         Point2d prevSegFrom = null;
                         int stopAt = tempPoints.size();
@@ -925,7 +925,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
                     Point2d p = tempPoints.get(i);
                     if (null != pPoint)
                     {
-                        double pAngle = Math.atan2(p.getY() - pPoint.getY(), p.getX() - pPoint.getX());
+                        double pAngle = Math.atan2(p.y - pPoint.y, p.x - pPoint.x);
                         double angleDifference = angle - pAngle;
                         if (Math.abs(angleDifference) > Math.PI)
                         {
@@ -1033,7 +1033,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         StringBuffer s = new StringBuffer();
         for (Point2d p : this.points)
         {
-            s.append(p.getX() + "\t" + p.getY() + "\n");
+            s.append(p.x + "\t" + p.y + "\n");
         }
         return s.toString();
     }
@@ -1047,7 +1047,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         StringBuffer result = new StringBuffer();
         for (Point2d p : this.points)
         {
-            result.append(String.format(Locale.US, "%s%.3f,%.3f", 0 == result.length() ? "M" : " L", p.getX(), p.getY()));
+            result.append(String.format(Locale.US, "%s%.3f,%.3f", 0 == result.length() ? "M" : " L", p.x, p.y));
         }
         result.append("\n");
         return result.toString();

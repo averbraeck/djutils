@@ -79,17 +79,17 @@ public class Bounds2d implements Drawable2d
         Throw.whenNull(points, "points may not be null");
         Throw.when(!points.hasNext(), IllegalArgumentException.class, "need at least one point");
         Point2d point = points.next();
-        double tempMinX = point.getX();
-        double tempMaxX = point.getX();
-        double tempMinY = point.getY();
-        double tempMaxY = point.getY();
+        double tempMinX = point.x;
+        double tempMaxX = point.x;
+        double tempMinY = point.y;
+        double tempMaxY = point.y;
         while (points.hasNext())
         {
             point = points.next();
-            tempMinX = Math.min(tempMinX, point.getX());
-            tempMaxX = Math.max(tempMaxX, point.getX());
-            tempMinY = Math.min(tempMinY, point.getY());
-            tempMaxY = Math.max(tempMaxY, point.getY());
+            tempMinX = Math.min(tempMinX, point.x);
+            tempMaxX = Math.max(tempMaxX, point.x);
+            tempMinY = Math.min(tempMinY, point.y);
+            tempMaxY = Math.max(tempMaxY, point.y);
         }
         this.minX = tempMinX;
         this.maxX = tempMaxX;
@@ -155,7 +155,7 @@ public class Bounds2d implements Drawable2d
     public boolean contains(final Point2d point)
     {
         Throw.whenNull(point, "point cannot be null");
-        return contains(point.getX(), point.getY());
+        return contains(point.x, point.y);
     }
 
     /**
@@ -212,7 +212,7 @@ public class Bounds2d implements Drawable2d
     public boolean covers(final Point2d point)
     {
         Throw.whenNull(point, "point cannot be null");
-        return covers(point.getX(), point.getY());
+        return covers(point.x, point.y);
     }
 
     /**

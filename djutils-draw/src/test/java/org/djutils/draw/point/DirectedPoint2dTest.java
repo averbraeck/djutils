@@ -32,19 +32,19 @@ public class DirectedPoint2dTest
     public void testDirectedPoint2dConstruction()
     {
         DirectedPoint2d p = new DirectedPoint2d(10.0, -20.0, Math.PI);
-        assertEquals("x", 10.0, p.getX(), 0);
-        assertEquals("y", -20.0, p.getY(), 0);
+        assertEquals("x", 10.0, p.x, 0);
+        assertEquals("y", -20.0, p.y, 0);
         assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
         
         p = new DirectedPoint2d(10.0, -20.0);
-        assertEquals("x", 10.0, p.getX(), 0);
-        assertEquals("y", -20.0, p.getY(), 0);
+        assertEquals("x", 10.0, p.x, 0);
+        assertEquals("y", -20.0, p.y, 0);
         assertEquals("dirZ", 0, p.getDirZ(), 0);
         
         Point2d p2d = new Point2d(10, -20);
         p = new DirectedPoint2d(p2d, Math.PI);
-        assertEquals("x", 10.0, p.getX(), 0);
-        assertEquals("y", -20.0, p.getY(), 0);
+        assertEquals("x", 10.0, p.x, 0);
+        assertEquals("y", -20.0, p.y, 0);
         assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
         
         try
@@ -79,13 +79,13 @@ public class DirectedPoint2dTest
         
         double[] p2Arr = new double[] {5.0, 6.0};
         p = new DirectedPoint2d(p2Arr, Math.PI / 2.0);
-        assertEquals(5.0, p.getX(), 1E-6);
-        assertEquals(6.0, p.getY(), 1E-6);
+        assertEquals(5.0, p.x, 1E-6);
+        assertEquals(6.0, p.y, 1E-6);
         assertEquals(3.1415926 / 2.0, p.getDirZ(), 1E-6);
         Point2D.Double p2DD = new Point2D.Double(-0.1, -0.2);
         p = new DirectedPoint2d(p2DD, Math.PI / 4.0);
-        assertEquals(-0.1, p.getX(), 1E-6);
-        assertEquals(-0.2, p.getY(), 1E-6);
+        assertEquals(-0.1, p.x, 1E-6);
+        assertEquals(-0.2, p.y, 1E-6);
         assertEquals(p2DD, p.toPoint2D());
         assertEquals(3.1415926 / 4.0, p.getDirZ(), 1E-6);
 
@@ -141,9 +141,9 @@ public class DirectedPoint2dTest
         assertFalse(p.equals(p3d));
         assertFalse(p.equals(null));
         assertNotEquals(p3d.hashCode(), p.hashCode());
-        assertEquals("translated x", p.getX() + 1.0, p3d.getX(), 0.00001);
-        assertEquals("translated y", p.getY() + 2.0, p3d.getY(), 0.00001);
-        assertEquals("translated z", 0 + 3.0, p3d.getZ(), 0.00001);
+        assertEquals("translated x", p.x + 1.0, p3d.x, 0.00001);
+        assertEquals("translated y", p.y + 2.0, p3d.y, 0.00001);
+        assertEquals("translated z", 0 + 3.0, p3d.z, 0.00001);
         assertEquals(Math.PI / 4.0, p.getDirZ(), 1E-6);
         assertTrue(p.equals(p.translate(0.0, 0.0)));
         assertFalse(p.equals(p.translate(1.0, 0.0)));
@@ -195,8 +195,8 @@ public class DirectedPoint2dTest
     {
         DirectedPoint2d p = new DirectedPoint2d(-0.1, -0.2, -Math.PI / 7);
         DirectedPoint2d out = p.abs();
-        assertEquals("x", 0.1, out.getX(), 1E-6);
-        assertEquals("y", 0.2, out.getY(), 1E-6);
+        assertEquals("x", 0.1, out.x, 1E-6);
+        assertEquals("y", 0.2, out.y, 1E-6);
         assertEquals("dirZ", -Math.PI / 7, out.getDirZ(), 1E-6);
         
         Iterator<? extends Point2d> i = p.getPoints();
@@ -205,33 +205,33 @@ public class DirectedPoint2dTest
         assertFalse("iterator does not have another point", i.hasNext());
         
         out = p.neg();
-        assertEquals("neg x", 0.1, out.getX(), 1E-6);
-        assertEquals("neg y", 0.2, out.getY(), 1E-6);
+        assertEquals("neg x", 0.1, out.x, 1E-6);
+        assertEquals("neg y", 0.2, out.y, 1E-6);
         assertEquals("neg dirZ", Math.PI - Math.PI / 7, out.getDirZ(), 1E-6);
         
         out = p.scale(1.0);
-        assertEquals("x", -0.1, out.getX(), 1E-6);
-        assertEquals("y", -0.2, out.getY(), 1E-6);
+        assertEquals("x", -0.1, out.x, 1E-6);
+        assertEquals("y", -0.2, out.y, 1E-6);
         assertEquals("dirZ", -Math.PI / 7, out.getDirZ(), 1E-6);
 
         out = p.scale(10.0);
-        assertEquals("10 x", -1.0, out.getX(), 1E-6);
-        assertEquals("10 y", -2.0, out.getY(), 1E-6);
+        assertEquals("10 x", -1.0, out.x, 1E-6);
+        assertEquals("10 y", -2.0, out.y, 1E-6);
         assertEquals("dirZ", -Math.PI / 7, out.getDirZ(), 1E-6);
 
         out = p.translate(5.0, -1.0);
-        assertEquals("x", 4.9, out.getX(), 1E-6);
-        assertEquals("y", -1.2, out.getY(), 1E-6);
+        assertEquals("x", 4.9, out.x, 1E-6);
+        assertEquals("y", -1.2, out.y, 1E-6);
         assertEquals("dirZ", -Math.PI / 7, out.getDirZ(), 1E-6);
 
         out = p.translate(1.0, 3.0);
-        assertEquals("x", 0.9, out.getX(), 1E-6);
-        assertEquals("y", 2.8, out.getY(), 1E-6);
+        assertEquals("x", 0.9, out.x, 1E-6);
+        assertEquals("y", 2.8, out.y, 1E-6);
         assertEquals("dirZ", -Math.PI / 7, out.getDirZ(), 1E-6);
 
         out = p.rotate(-Math.PI / 4);
-        assertEquals("x", -0.1, out.getX(), 1E-6);
-        assertEquals("y", -0.2, out.getY(), 1E-6);
+        assertEquals("x", -0.1, out.x, 1E-6);
+        assertEquals("y", -0.2, out.y, 1E-6);
         assertEquals("dirZ", -Math.PI / 7 - Math.PI / 4, out.getDirZ(), 1E-6);
 
         // interpolate
@@ -258,8 +258,8 @@ public class DirectedPoint2dTest
 
         // normalize
         DirectedPoint2d pn = p2.normalize();
-        assertEquals(1.0 / Math.sqrt(2.0), pn.getX(), 0.001);
-        assertEquals(1.0 / Math.sqrt(2.0), pn.getY(), 0.001);
+        assertEquals(1.0 / Math.sqrt(2.0), pn.x, 0.001);
+        assertEquals(1.0 / Math.sqrt(2.0), pn.y, 0.001);
 
         Try.testFail(new Try.Execution()
         {

@@ -75,8 +75,8 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     {
         Throw.whenNull(point, "point cannot be null");
         Throw.when(Double.isNaN(z), IllegalArgumentException.class, "Coordinate must be a number (not NaN)");
-        this.x = point.getX();
-        this.y = point.getY();
+        this.x = point.x;
+        this.y = point.y;
         this.z = z;
     }
 
@@ -146,9 +146,9 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     public double distanceSquared(final Point3d otherPoint) throws NullPointerException
     {
         Throw.whenNull(otherPoint, "point cannot be null");
-        double dx = getX() - otherPoint.getX();
-        double dy = getY() - otherPoint.getY();
-        double dz = getZ() - otherPoint.getZ();
+        double dx = getX() - otherPoint.x;
+        double dy = getY() - otherPoint.y;
+        double dz = getZ() - otherPoint.z;
         return dx * dx + dy * dy + dz * dz;
     }
 
@@ -260,8 +260,8 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     {
         Throw.whenNull(point, "point cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
-        return new Point3d((1.0 - fraction) * getX() + fraction * point.getX(),
-                (1.0 - fraction) * getY() + fraction * point.getY(), (1.0 - fraction) * getZ() + fraction * point.getZ());
+        return new Point3d((1.0 - fraction) * getX() + fraction * point.x,
+                (1.0 - fraction) * getY() + fraction * point.y, (1.0 - fraction) * getZ() + fraction * point.z);
 
     }
 
@@ -275,15 +275,15 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     public boolean epsilonEquals(final Point3d other, final double epsilon)
     {
         Throw.whenNull(other, "other point cannot be null");
-        if (Math.abs(getX() - other.getX()) > epsilon)
+        if (Math.abs(getX() - other.x) > epsilon)
         {
             return false;
         }
-        if (Math.abs(getY() - other.getY()) > epsilon)
+        if (Math.abs(getY() - other.y) > epsilon)
         {
             return false;
         }
-        if (Math.abs(getZ() - other.getZ()) > epsilon)
+        if (Math.abs(getZ() - other.z) > epsilon)
         {
             return false;
         }
@@ -315,7 +315,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     final double horizontalDirection(final Point3d point) throws NullPointerException
     {
         Throw.whenNull(point, "point cannot be null");
-        return Math.atan2(point.getY() - getY(), point.getX() - getX());
+        return Math.atan2(point.y - getY(), point.x - getX());
     }
 
     /**
@@ -327,8 +327,8 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     final double horizontalDistanceSquared(final Point3d point)
     {
         Throw.whenNull(point, "point cannot be null");
-        double dx = getX() - point.getX();
-        double dy = getY() - point.getY();
+        double dx = getX() - point.x;
+        double dy = getY() - point.y;
         return dx * dx + dy * dy;
     }
 

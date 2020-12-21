@@ -103,8 +103,8 @@ public class Transform2dTest
                     for (double py : values)
                     {
                         Point2d p = t.transform(new Point2d(px, py));
-                        assertEquals("translated x matches", px + dx, p.getX(), 0.001);
-                        assertEquals("translated y matches", py + dy, p.getY(), 0.001);
+                        assertEquals("translated x matches", px + dx, p.x, 0.001);
+                        assertEquals("translated y matches", py + dy, p.y, 0.001);
                         double[] result = t.transform(new double[] { px, py });
                         assertEquals("translated x matches", px + dx, result[0], 0.001);
                         assertEquals("translated y matches", py + dy, result[1], 0.001);
@@ -118,8 +118,8 @@ public class Transform2dTest
                     for (double py : values)
                     {
                         Point2d p = t.transform(new Point2d(px, py));
-                        assertEquals("transformed x matches", px + dx, p.getX(), 0.001);
-                        assertEquals("transformed y matches", py + dy, p.getY(), 0.001);
+                        assertEquals("transformed x matches", px + dx, p.x, 0.001);
+                        assertEquals("transformed y matches", py + dy, p.y, 0.001);
                         double[] result = t.transform(new double[] { px, py });
                         assertEquals("transformed x matches", px + dx, result[0], 0.001);
                         assertEquals("transformed y matches", py + dy, result[1], 0.001);
@@ -133,8 +133,8 @@ public class Transform2dTest
                     for (double py : values)
                     {
                         Point2d p = t.transform(new Point2d(px, py));
-                        assertEquals("scaled x matches", px * dx, p.getX(), 0.001);
-                        assertEquals("scaled y matches", py * dy, p.getY(), 0.001);
+                        assertEquals("scaled x matches", px * dx, p.x, 0.001);
+                        assertEquals("scaled y matches", py * dy, p.y, 0.001);
                         double[] result = t.transform(new double[] { px, py });
                         assertEquals("scaled x matches", px * dx, result[0], 0.001);
                         assertEquals("scaled y matches", py * dy, result[1], 0.001);
@@ -148,8 +148,8 @@ public class Transform2dTest
                     for (double py : values)
                     {
                         Point2d p = t.transform(new Point2d(px, py));
-                        assertEquals("sheared x matches", px + py * dx, p.getX(), 0.001);
-                        assertEquals("sheared y matches", py + px * dy, p.getY(), 0.001);
+                        assertEquals("sheared x matches", px + py * dx, p.x, 0.001);
+                        assertEquals("sheared y matches", py + px * dy, p.y, 0.001);
                         double[] result = t.transform(new double[] { px, py });
                         assertEquals("sheared x matches", px + py * dx, result[0], 0.001);
                         assertEquals("sheared y matches", py + px * dy, result[1], 0.001);
@@ -166,8 +166,8 @@ public class Transform2dTest
                 for (double py : values)
                 {
                     Point2d p = t.transform(new Point2d(px, py));
-                    assertEquals("rotated x matches", px * cosine - py * sine, p.getX(), 0.001);
-                    assertEquals("rotated y matches", py * cosine + px * sine, p.getY(), 0.001);
+                    assertEquals("rotated x matches", px * cosine - py * sine, p.x, 0.001);
+                    assertEquals("rotated y matches", py * cosine + px * sine, p.y, 0.001);
                     double[] result = t.transform(new double[] { px, py });
                     assertEquals("rotated x matches", px * cosine - py * sine, result[0], 0.001);
                     assertEquals("rotated y matches", py * cosine + px * sine, result[1], 0.001);
@@ -182,8 +182,8 @@ public class Transform2dTest
             for (double py : values)
             {
                 Point2d p = t.transform(new Point2d(px, py));
-                assertEquals("x-reflected x matches", -px, p.getX(), 0.001);
-                assertEquals("x-reflected y  matches", py, p.getY(), 0.001);
+                assertEquals("x-reflected x matches", -px, p.x, 0.001);
+                assertEquals("x-reflected y  matches", py, p.y, 0.001);
                 double[] result = t.transform(new double[] { px, py });
                 assertEquals("x-reflected x  matches", -px, result[0], 0.001);
                 assertEquals("x-reflected y  matches", py, result[1], 0.001);
@@ -197,8 +197,8 @@ public class Transform2dTest
             for (double py : values)
             {
                 Point2d p = t.transform(new Point2d(px, py));
-                assertEquals("y-reflected x matches", px, p.getX(), 0.001);
-                assertEquals("y-reflected y  matches", -py, p.getY(), 0.001);
+                assertEquals("y-reflected x matches", px, p.x, 0.001);
+                assertEquals("y-reflected y  matches", -py, p.y, 0.001);
                 double[] result = t.transform(new double[] { px, py });
                 assertEquals("y-reflected x  matches", px, result[0], 0.001);
                 assertEquals("y-reflected y  matches", -py, result[1], 0.001);
@@ -248,16 +248,16 @@ public class Transform2dTest
                                             Point2d tp = t.transform(p);
                                             Point2d chainP = translation
                                                     .transform(scaling.transform(rotation.transform(shearing.transform(p))));
-                                            assertEquals("X", chainP.getX(), tp.getX(), 0.0000001);
-                                            assertEquals("Y", chainP.getY(), tp.getY(), 0.0000001);
+                                            assertEquals("X", chainP.x, tp.x, 0.0000001);
+                                            assertEquals("Y", chainP.y, tp.y, 0.0000001);
                                             tp = tReflectX.transform(p);
                                             Point2d chainPReflectX = reflectionX.transform(chainP);
-                                            assertEquals("RX X", chainPReflectX.getX(), tp.getX(), 0.0000001);
-                                            assertEquals("RX Y", chainPReflectX.getY(), tp.getY(), 0.0000001);
+                                            assertEquals("RX X", chainPReflectX.x, tp.x, 0.0000001);
+                                            assertEquals("RX Y", chainPReflectX.y, tp.y, 0.0000001);
                                             tp = tReflectY.transform(p);
                                             Point2d chainPReflectY = reflectionY.transform(chainP);
-                                            assertEquals("RY X", chainPReflectY.getX(), tp.getX(), 0.0000001);
-                                            assertEquals("RY Y", chainPReflectY.getY(), tp.getY(), 0.0000001);
+                                            assertEquals("RY X", chainPReflectY.x, tp.x, 0.0000001);
+                                            assertEquals("RY Y", chainPReflectY.y, tp.y, 0.0000001);
                                         }
                                     }
                                 }
