@@ -26,13 +26,16 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     private static final long serialVersionUID = 20201201L;
 
     /** The x-coordinate. */
-    private final double x;
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    public final double x;
 
     /** The y-coordinate. */
-    private final double y;
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    public final double y;
 
     /** The z-coordinate. */
-    private final double z;
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    public final double z;
 
     /**
      * Create a new Point with just an x and y coordinate, stored with double precision.
@@ -189,7 +192,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
      * @return Point3D; a new point with the translated coordinates
      * @throws IllegalArgumentException when dx, or dy is NaN
      */
-    public Point3d translate(double dx, double dy) throws IllegalArgumentException
+    public Point3d translate(final double dx, final double dy) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class,
                 "Translation must be number (not NaN)");

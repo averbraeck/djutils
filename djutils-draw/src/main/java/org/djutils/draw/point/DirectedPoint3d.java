@@ -261,7 +261,8 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @return DirectedPoint3d; a new point with the same coordinates and applied rotations
      * @throws IllegalArgumentException when any of the rotations is NaN
      */
-    public DirectedPoint3d rotate(double rotateX, double rotateY, double rotateZ) throws IllegalArgumentException
+    public DirectedPoint3d rotate(final double rotateX, final double rotateY, final double rotateZ)
+            throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(rotateX) || Double.isNaN(rotateY) || Double.isNaN(rotateZ), IllegalArgumentException.class,
                 "Rotation must be a number (not NaN)");
@@ -294,7 +295,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
     @Override
     public Iterator<DirectedPoint3d> getPoints()
     {
-        return Arrays.stream(new DirectedPoint3d[] { this }).iterator();
+        return Arrays.stream(new DirectedPoint3d[] {this}).iterator();
     }
 
     /** {@inheritDoc} */
