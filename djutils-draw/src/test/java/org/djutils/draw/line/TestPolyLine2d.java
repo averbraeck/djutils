@@ -656,7 +656,7 @@ public class TestPolyLine2d
         assertFalse("line is not equal to a different kind of object", line.equals("unlikely"));
         assertTrue("Line is equal to line from same set of points", line.equals(new PolyLine2d(line.getPoints())));
     }
-
+    
     /**
      * Test the concatenate method.
      * @throws DrawException should not happen; this test has failed if it does happen

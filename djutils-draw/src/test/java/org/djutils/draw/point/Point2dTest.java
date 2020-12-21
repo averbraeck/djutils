@@ -4,13 +4,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.awt.geom.Point2D;
 
+import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.line.PolyLine2d;
 import org.djutils.exceptions.Try;
 import org.junit.Test;
 
@@ -331,6 +334,89 @@ public class Point2dTest
                 p1.distanceSquared(null);
             }
         }, "Should throw NPE", NullPointerException.class);
+    }
+
+    /**
+     * Test the intersectionOfLineSegments method.
+     */
+    @Test
+    public void testIntersectionOfLineSegments()
+    {
+        assertNull("horizontal line intersection with itself returns null",
+                Point2d.intersectionOfLineSegments(new Point2d(1, 2), new Point2d(4, 2), new Point2d(1, 2), new Point2d(4, 2)));
+        assertNull("horizontal line intersection with itself returns null", Point2d
+                .intersectionOfLineSegments(new Point2d(1, 2), new Point2d(1, 10), new Point2d(1, 2), new Point2d(1, 10)));
+        assertEquals("Intersection is at (2,2)", new Point2d(2, 2), Point2d.intersectionOfLineSegments(new Point2d(1, 1),
+                new Point2d(6, 6), new Point2d(4, 2), new Point2d(-2, 2)));
+        // Check all four ways that two non-parallel lines can miss each other
+        assertNull("line two passes before start of line one", Point2d.intersectionOfLineSegments(new Point2d(1, 1),
+                new Point2d(5, 5), new Point2d(0, -3), new Point2d(10, 0)));
+        assertNull("line two passes before after end of line one", Point2d.intersectionOfLineSegments(new Point2d(1, 1),
+                new Point2d(5, 5), new Point2d(0, 20), new Point2d(100, 30)));
+        assertNull("line one passes before start of line two", Point2d.intersectionOfLineSegments(new Point2d(1, 1),
+                new Point2d(5, 5), new Point2d(5, 3), new Point2d(10, 2)));
+        assertNull("line one passes after end of line two", Point2d.intersectionOfLineSegments(new Point2d(1, 1),
+                new Point2d(5, 5), new Point2d(-10, 3), new Point2d(0, 2)));
+    }
+
+    /**
+     * Test the closestPointOnSegment method.
+     * @throws DrawException if that happens uncaught; this test has failed
+     */
+    @Test
+    public void testClosestPointOnSegment() throws DrawException
+    {
+        Point2d p1 = new Point2d(-2, 3);
+        for (Point2d p2 : new Point2d[] { new Point2d(7, 4)/* angled */, new Point2d(-3, 6) /* also angled */,
+                new Point2d(-2, -5) /* vertical */, new Point2d(8, 3)/* horizontal */ })
+        {
+            PolyLine2d line = new PolyLine2d(p1, p2);
+            for (double x = -10; x <= 10; x += 0.5)
+            {
+                for (double y = -10; y <= 10; y += 0.5)
+                {
+                    Point2d p = new Point2d(x, y);
+                    Point2d result = p.closestPointOnSegment(p1, p2);
+                    // Figure out the correct result using a totally different method (binary search over the line segment)
+                    double fraction = 0.5;
+                    double step = 0.25;
+                    Point2d approximation = line.getLocationFraction(fraction);
+                    double distance = approximation.distance(p);
+                    // 10 iterations should get us to within one thousandth
+                    for (int iteration = 0; iteration < 10; iteration++)
+                    {
+                        // Try stepping up
+                        double upFraction = fraction + step;
+                        Point2d upApproximation = line.getLocationFraction(upFraction);
+                        double upDistance = upApproximation.distance(p);
+                        if (upDistance < distance)
+                        {
+                            distance = upDistance;
+                            fraction = upFraction;
+                            approximation = upApproximation;
+                        }
+                        else
+                        {
+                            // Try stepping down
+                            double downFraction = fraction - step;
+                            Point2d downApproximation = line.getLocationFraction(downFraction);
+                            double downDistance = downApproximation.distance(p);
+                            if (downDistance < distance)
+                            {
+                                distance = downDistance;
+                                fraction = downFraction;
+                                approximation = downApproximation;
+                            }
+                        }
+                        step /= 2;
+                    }
+                    assertEquals("distance should be less than one thousandth of line length", 0,
+                            approximation.distance(result), line.getLength() / 1000);
+                    assertEquals("zero length line segment should always return start point", p1,
+                            p.closestPointOnSegment(p1, p1));
+                }
+            }
+        }
     }
 
 }
