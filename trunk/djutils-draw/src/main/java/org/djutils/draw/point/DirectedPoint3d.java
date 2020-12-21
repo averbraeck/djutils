@@ -117,7 +117,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
     public DirectedPoint3d(final Point3d point, final double dirX, final double dirY, final double dirZ)
             throws IllegalArgumentException
     {
-        super(point.getX(), point.getY(), point.getZ());
+        super(point.x, point.y, point.z);
         Throw.when(Double.isNaN(dirX) || Double.isNaN(dirY) || Double.isNaN(dirZ), IllegalArgumentException.class,
                 "Direction must be a number (not NaN)");
         this.dirX = dirX;
@@ -176,14 +176,14 @@ public class DirectedPoint3d extends Point3d implements Directed3d
     {
         Throw.when(Double.isNaN(dx) || Double.isNaN(dy) || Double.isNaN(dz), IllegalArgumentException.class,
                 "Translation may not be NaN");
-        return new DirectedPoint3d(this.getX() + dx, this.getY() + dy, this.getZ() + dz, this.dirX, this.dirY, this.dirZ);
+        return new DirectedPoint3d(this.x + dx, this.y + dy, this.z + dz, this.dirX, this.dirY, this.dirZ);
     }
 
     /** {@inheritDoc} */
     @Override
     public DirectedPoint3d scale(final double factor) throws IllegalArgumentException
     {
-        return new DirectedPoint3d(this.getX() * factor, this.getY() * factor, this.getZ() * factor, this.dirX, this.dirY,
+        return new DirectedPoint3d(this.x * factor, this.y * factor, this.z * factor, this.dirX, this.dirY,
                 this.dirZ);
     }
 
@@ -191,7 +191,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
     @Override
     public DirectedPoint3d neg()
     {
-        return new DirectedPoint3d(-this.getX(), -this.getY(), -this.getZ(), AngleUtil.normalizeAroundZero(this.dirX + Math.PI),
+        return new DirectedPoint3d(-this.x, -this.y, -this.z, AngleUtil.normalizeAroundZero(this.dirX + Math.PI),
                 AngleUtil.normalizeAroundZero(this.dirY + Math.PI), AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
     }
 
@@ -199,7 +199,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
     @Override
     public DirectedPoint3d abs()
     {
-        return new DirectedPoint3d(Math.abs(this.getX()), Math.abs(this.getY()), Math.abs(this.getZ()), this.dirX, this.dirY,
+        return new DirectedPoint3d(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z), this.dirX, this.dirY,
                 this.dirZ);
     }
 
@@ -209,7 +209,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
     {
         double length = Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
         Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0, 0.0)");
-        return new DirectedPoint3d(this.getX() / length, this.getY() / length, this.getZ() / length, this.dirX, this.dirY,
+        return new DirectedPoint3d(this.x / length, this.y / length, this.z / length, this.dirX, this.dirY,
                 this.dirZ);
     }
 
@@ -230,9 +230,9 @@ public class DirectedPoint3d extends Point3d implements Directed3d
     {
         Throw.whenNull(otherPoint, "point cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
-        return new DirectedPoint3d((1.0 - fraction) * getX() + fraction * otherPoint.getX(),
-                (1.0 - fraction) * getY() + fraction * otherPoint.getY(),
-                (1.0 - fraction) * getZ() + fraction * otherPoint.getZ(),
+        return new DirectedPoint3d((1.0 - fraction) * getX() + fraction * otherPoint.x,
+                (1.0 - fraction) * getY() + fraction * otherPoint.y,
+                (1.0 - fraction) * getZ() + fraction * otherPoint.z,
                 AngleUtil.interpolateShortest(getDirX(), otherPoint.getDirX(), fraction),
                 AngleUtil.interpolateShortest(getDirY(), otherPoint.getDirY(), fraction),
                 AngleUtil.interpolateShortest(getDirZ(), otherPoint.getDirZ(), fraction));
@@ -302,7 +302,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
     @Override
     public String toString()
     {
-        return String.format("[(%f,%f,%f), rot=(%f,%f,%f)]", this.getX(), this.getY(), this.getZ(), this.dirX, this.dirY,
+        return String.format("[(%f,%f,%f), rot=(%f,%f,%f)]", this.x, this.y, this.z, this.dirX, this.dirY,
                 this.dirZ);
     }
 
@@ -312,7 +312,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
     {
         int digits = fractionDigits < 0 ? 0 : fractionDigits;
         String format = String.format("[(%%.%1$df,%%.%1$df,%%.%1$df), rot=(%%.%1$df,%%.%1$df,%%.%1$df)]", digits);
-        return String.format(format, this.getX(), this.getY(), this.getZ(), this.dirX, this.dirY, this.dirZ);
+        return String.format(format, this.x, this.y, this.z, this.dirX, this.dirY, this.dirZ);
     }
 
     /**
@@ -329,15 +329,15 @@ public class DirectedPoint3d extends Point3d implements Directed3d
     public boolean epsilonEquals(final DirectedPoint3d other, final double epsilonCoordinate, final double epsilonRotation)
     {
         Throw.whenNull(other, "other point cannot be null");
-        if (Math.abs(getX() - other.getX()) > epsilonCoordinate)
+        if (Math.abs(getX() - other.x) > epsilonCoordinate)
         {
             return false;
         }
-        if (Math.abs(getY() - other.getY()) > epsilonCoordinate)
+        if (Math.abs(getY() - other.y) > epsilonCoordinate)
         {
             return false;
         }
-        if (Math.abs(getZ() - other.getZ()) > epsilonCoordinate)
+        if (Math.abs(getZ() - other.z) > epsilonCoordinate)
         {
             return false;
         }

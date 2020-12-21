@@ -31,34 +31,34 @@ public class DirectedPoint3dTest
     public void testDirectedPoint3dConstruction()
     {
         DirectedPoint3d p = new DirectedPoint3d(10.0, -20.0, 5.2);
-        assertEquals("x", 10.0, p.getX(), 1E-6);
-        assertEquals("y", -20.0, p.getY(), 1E-6);
-        assertEquals("z", 5.2, p.getZ(), 1E-6);
+        assertEquals("x", 10.0, p.x, 1E-6);
+        assertEquals("y", -20.0, p.y, 1E-6);
+        assertEquals("z", 5.2, p.z, 1E-6);
         assertEquals("dirX", 0.0, p.getDirX(), 1E-6);
         assertEquals("dirY", 0.0, p.getDirY(), 1E-6);
         assertEquals("dirZ", 0.0, p.getDirZ(), 1E-6);
 
         p = new DirectedPoint3d(new double[] { -18.7, 3.4, 5.6 });
-        assertEquals("x", -18.7, p.getX(), 1E-6);
-        assertEquals("y", 3.4, p.getY(), 1E-6);
-        assertEquals("z", 5.6, p.getZ(), 1E-6);
+        assertEquals("x", -18.7, p.x, 1E-6);
+        assertEquals("y", 3.4, p.y, 1E-6);
+        assertEquals("z", 5.6, p.z, 1E-6);
         assertEquals("dirX", 0.0, p.getDirX(), 1E-6);
         assertEquals("dirY", 0.0, p.getDirY(), 1E-6);
         assertEquals("dirZ", 0.0, p.getDirZ(), 1E-6);
 
         p = new DirectedPoint3d(10.0, -20.0, 5.2, 0.1, -0.2, Math.PI);
-        assertEquals("x", 10.0, p.getX(), 1E-6);
-        assertEquals("y", -20.0, p.getY(), 1E-6);
-        assertEquals("z", 5.2, p.getZ(), 1E-6);
+        assertEquals("x", 10.0, p.x, 1E-6);
+        assertEquals("y", -20.0, p.y, 1E-6);
+        assertEquals("z", 5.2, p.z, 1E-6);
         assertEquals("dirX", 0.1, p.getDirX(), 1E-6);
         assertEquals("dirY", -0.2, p.getDirY(), 1E-6);
         assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
 
         p = new DirectedPoint3d(new double[] { -18.7, 3.4, 5.6 }, 0.1, -0.2, Math.PI);
         {
-            assertEquals("x", -18.7, p.getX(), 1E-6);
-            assertEquals("y", 3.4, p.getY(), 1E-6);
-            assertEquals("z", 5.6, p.getZ(), 1E-6);
+            assertEquals("x", -18.7, p.x, 1E-6);
+            assertEquals("y", 3.4, p.y, 1E-6);
+            assertEquals("z", 5.6, p.z, 1E-6);
             assertEquals("dirX", 0.1, p.getDirX(), 1E-6);
             assertEquals("dirY", -0.2, p.getDirY(), 1E-6);
             assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
@@ -66,9 +66,9 @@ public class DirectedPoint3dTest
 
         p = new DirectedPoint3d(new Point3d(new double[] { -18.7, 3.4, 5.6 }), 0.1, -0.2, Math.PI);
         {
-            assertEquals("x", -18.7, p.getX(), 1E-6);
-            assertEquals("y", 3.4, p.getY(), 1E-6);
-            assertEquals("z", 5.6, p.getZ(), 1E-6);
+            assertEquals("x", -18.7, p.x, 1E-6);
+            assertEquals("y", 3.4, p.y, 1E-6);
+            assertEquals("z", 5.6, p.z, 1E-6);
             assertEquals("dirX", 0.1, p.getDirX(), 1E-6);
             assertEquals("dirY", -0.2, p.getDirY(), 1E-6);
             assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
@@ -167,17 +167,17 @@ public class DirectedPoint3dTest
         double[] p3Arr = new double[] { 5.0, 6.0, 7.0 };
         double[] rotArr = new double[] { 0.1, -0.2, 0.3 };
         p = new DirectedPoint3d(5.0, 6.0, 7.0, rotArr);
-        assertEquals("x", 5.0, p.getX(), 0);
-        assertEquals("y", 6.0, p.getY(), 0);
-        assertEquals("z", 7.0, p.getZ(), 0);
+        assertEquals("x", 5.0, p.x, 0);
+        assertEquals("y", 6.0, p.y, 0);
+        assertEquals("z", 7.0, p.z, 0);
         assertEquals("dirX", 0.1, p.getDirX(), 1E-6);
         assertEquals("dirY", -0.2, p.getDirY(), 1E-6);
         assertEquals("dirZ", 0.3, p.getDirZ(), 1E-6);
 
         p = new DirectedPoint3d(p3Arr, rotArr);
-        assertEquals("x", 5.0, p.getX(), 0);
-        assertEquals("y", 6.0, p.getY(), 0);
-        assertEquals("z", 7.0, p.getZ(), 0);
+        assertEquals("x", 5.0, p.x, 0);
+        assertEquals("y", 6.0, p.y, 0);
+        assertEquals("z", 7.0, p.z, 0);
         assertEquals("dirX", 0.1, p.getDirX(), 1E-6);
         assertEquals("dirY", -0.2, p.getDirY(), 1E-6);
         assertEquals("dirZ", 0.3, p.getDirZ(), 1E-6);
@@ -335,9 +335,9 @@ public class DirectedPoint3dTest
     public void testDirectedPoint3dOperators()
     {
         DirectedPoint3d p = new DirectedPoint3d(-0.1, -0.2, -0.3, Math.PI / 4, -Math.PI / 4, Math.PI / 2);
-        assertEquals(0.1, p.abs().getX(), 1E-6);
-        assertEquals(0.2, p.abs().getY(), 1E-6);
-        assertEquals(0.3, p.abs().getZ(), 1E-6);
+        assertEquals(0.1, p.abs().x, 1E-6);
+        assertEquals(0.2, p.abs().y, 1E-6);
+        assertEquals(0.3, p.abs().z, 1E-6);
         assertEquals(Math.PI / 4, p.abs().getDirX(), 1E-6);
         assertEquals(-Math.PI / 4, p.abs().getDirY(), 1E-6);
         assertEquals(Math.PI / 2, p.abs().getDirZ(), 1E-6);
@@ -348,25 +348,25 @@ public class DirectedPoint3dTest
         assertFalse("iterator does not have another point", i.hasNext());
 
         DirectedPoint3d p2 = p.neg();
-        assertEquals("negated x", -p.getX(), p2.getX(), 1E-6);
-        assertEquals("negated y", -p.getY(), p2.getY(), 1E-6);
-        assertEquals("negated z", -p.getZ(), p2.getZ(), 1E-6);
+        assertEquals("negated x", -p.x, p2.x, 1E-6);
+        assertEquals("negated y", -p.y, p2.y, 1E-6);
+        assertEquals("negated z", -p.z, p2.z, 1E-6);
         assertEquals("negated dirX", AngleUtil.normalizeAroundZero(p.getDirX() + Math.PI), p2.getDirX(), 1E-6);
         assertEquals("negated dirY", AngleUtil.normalizeAroundZero(p.getDirY() + Math.PI), p2.getDirY(), 1E-6);
         assertEquals("negated dirZ", AngleUtil.normalizeAroundZero(p.getDirZ() + Math.PI), p2.getDirZ(), 1E-6);
 
         p2 = p.scale(1.0);
-        assertEquals("unity scaled x", p.getX(), p2.getX(), 0);
-        assertEquals("unity scaled y", p.getY(), p2.getY(), 0);
-        assertEquals("unity scaled z", p.getZ(), p2.getZ(), 0);
+        assertEquals("unity scaled x", p.x, p2.x, 0);
+        assertEquals("unity scaled y", p.y, p2.y, 0);
+        assertEquals("unity scaled z", p.z, p2.z, 0);
         assertEquals("unity scaled dirX", p.getDirX(), p2.getDirX(), 0);
         assertEquals("unity scaled dirY", p.getDirY(), p2.getDirY(), 0);
         assertEquals("unity scaled dirZ", p.getDirZ(), p2.getDirZ(), 0);
 
         p2 = p.scale(10.0);
-        assertEquals("10 scaled x", 10 * p.getX(), p2.getX(), 1E-6);
-        assertEquals("10 scaled y", 10 * p.getY(), p2.getY(), 1E-6);
-        assertEquals("10 scaled z", 10 * p.getZ(), p2.getZ(), 1E-6);
+        assertEquals("10 scaled x", 10 * p.x, p2.x, 1E-6);
+        assertEquals("10 scaled y", 10 * p.y, p2.y, 1E-6);
+        assertEquals("10 scaled z", 10 * p.z, p2.z, 1E-6);
         assertEquals("10 scaled dirX", p.getDirX(), p2.getDirX(), 0);
         assertEquals("10 scaled dirY", p.getDirY(), p2.getDirY(), 0);
         assertEquals("10 scaled dirZ", p.getDirZ(), p2.getDirZ(), 0);
@@ -422,33 +422,33 @@ public class DirectedPoint3dTest
         }
 
         p2 = p.translate(5.0, -1.0, 2.0);
-        assertEquals("translated x", p.getX() + 5.0, p2.getX(), 1E-6);
-        assertEquals("translated y", p.getY() - 1.0, p2.getY(), 1E-6);
-        assertEquals("translated z", p.getZ() + 2.0, p2.getZ(), 1E-6);
+        assertEquals("translated x", p.x + 5.0, p2.x, 1E-6);
+        assertEquals("translated y", p.y - 1.0, p2.y, 1E-6);
+        assertEquals("translated z", p.z + 2.0, p2.z, 1E-6);
         assertEquals("translated dirX", p.getDirX(), p2.getDirX(), 1E-6);
         assertEquals("translated dirY", p.getDirY(), p2.getDirY(), 1E-6);
         assertEquals("translated dirZ", p.getDirZ(), p2.getDirZ(), 1E-6);
 
         p2 = p.translate(5.0, -1.0);
-        assertEquals("translated x", p.getX() + 5.0, p2.getX(), 1E-6);
-        assertEquals("translated y", p.getY() - 1.0, p2.getY(), 1E-6);
-        assertEquals("not translated z", p.getZ(), p2.getZ(), 1E-6);
+        assertEquals("translated x", p.x + 5.0, p2.x, 1E-6);
+        assertEquals("translated y", p.y - 1.0, p2.y, 1E-6);
+        assertEquals("not translated z", p.z, p2.z, 1E-6);
         assertEquals("translated dirX", p.getDirX(), p2.getDirX(), 1E-6);
         assertEquals("translated dirY", p.getDirY(), p2.getDirY(), 1E-6);
         assertEquals("translated dirZ", p.getDirZ(), p2.getDirZ(), 1E-6);
 
         p2 = p.rotate(15 * Math.PI / 4, -Math.PI / 4, Math.PI);
-        assertEquals("rotated x", p.getX(), p2.getX(), 1E-6);
-        assertEquals("rotated y", p.getY(), p2.getY(), 1E-6);
-        assertEquals("rotated z", p.getZ(), p2.getZ(), 1E-6);
+        assertEquals("rotated x", p.x, p2.x, 1E-6);
+        assertEquals("rotated y", p.y, p2.y, 1E-6);
+        assertEquals("rotated z", p.z, p2.z, 1E-6);
         assertEquals("rotated dirX", AngleUtil.normalizeAroundZero(p.getDirX() + 15 * Math.PI / 4), p2.getDirX(), 1E-6);
         assertEquals("rotated dirY", AngleUtil.normalizeAroundZero(p.getDirY() - Math.PI / 4), p2.getDirY(), 1E-6);
         assertEquals("rotated dirZ", AngleUtil.normalizeAroundZero(p.getDirZ() + Math.PI), p2.getDirZ(), 1E-6);
 
         p2 = p.rotate(17 * Math.PI / 4);
-        assertEquals("rotated x", p.getX(), p2.getX(), 1E-6);
-        assertEquals("rotated y", p.getY(), p2.getY(), 1E-6);
-        assertEquals("rotated z", p.getZ(), p2.getZ(), 1E-6);
+        assertEquals("rotated x", p.x, p2.x, 1E-6);
+        assertEquals("rotated y", p.y, p2.y, 1E-6);
+        assertEquals("rotated z", p.z, p2.z, 1E-6);
         assertEquals("not rotated dirX", p.getDirX(), p2.getDirX(), 1E-6);
         assertEquals("not rotated dirY", p.getDirY(), p2.getDirY(), 1E-6);
         assertEquals("rotated dirZ", AngleUtil.normalizeAroundZero(p.getDirZ() + 17 * Math.PI / 4), p2.getDirZ(), 1E-6);
@@ -476,15 +476,15 @@ public class DirectedPoint3dTest
 
         // direction
         assertEquals("Horizontal direction", Math.atan2(7, 5), p2.horizontalDirection(), 0.001);
-        assertEquals("Horizontal direction", Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()),
+        assertEquals("Horizontal direction", Math.atan2(p2.y - p1.y, p2.x - p1.x),
                 p1.horizontalDirection(p2), 0.001);
         assertEquals(0.0, new DirectedPoint3d(0.0, 0.0, 0.0).horizontalDirection(), 0.001);
 
         // normalize
         DirectedPoint3d pn = p2.normalize();
-        assertEquals("normalized x", p2.getX() / Math.sqrt(25 + 49 + 81), pn.getX(), 0.001);
-        assertEquals("normalized y", p2.getY() / Math.sqrt(25 + 49 + 81), pn.getY(), 0.001);
-        assertEquals("normalized z", p2.getZ() / Math.sqrt(25 + 49 + 81), pn.getZ(), 0.001);
+        assertEquals("normalized x", p2.x / Math.sqrt(25 + 49 + 81), pn.x, 0.001);
+        assertEquals("normalized y", p2.y / Math.sqrt(25 + 49 + 81), pn.y, 0.001);
+        assertEquals("normalized z", p2.z / Math.sqrt(25 + 49 + 81), pn.z, 0.001);
         assertEquals("normalized dirX", p2.getDirX(), pn.getDirX(), 0);
         assertEquals("normalized dirY", p2.getDirY(), pn.getDirY(), 0);
         assertEquals("normalized dirZ", p2.getDirZ(), pn.getDirZ(), 0);

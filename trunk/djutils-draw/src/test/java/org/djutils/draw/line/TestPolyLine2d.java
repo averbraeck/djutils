@@ -140,8 +140,8 @@ public class TestPolyLine2d
         double length = 0;
         for (int i = 1; i < points.length; i++)
         {
-            length += Math.sqrt(Math.pow(points[i].getX() - points[i - 1].getX(), 2)
-                    + Math.pow(points[i].getY() - points[i - 1].getY(), 2));
+            length += Math.sqrt(Math.pow(points[i].x - points[i - 1].x, 2)
+                    + Math.pow(points[i].y - points[i - 1].y, 2));
             assertEquals("length at index", length, line.lengthAtIndex(i), 0.0001);
         }
         assertEquals("length", length, line.getLength(), 10 * Math.ulp(length));
@@ -174,14 +174,14 @@ public class TestPolyLine2d
 
         int horizontalMoves = 0;
         Path2D path = new Path2D.Double();
-        path.moveTo(points[0].getX(), points[0].getY());
+        path.moveTo(points[0].x, points[0].y);
         // System.out.print("path is "); printPath2D(path);
         for (int i = 1; i < points.length; i++)
         {
             // Path2D is corrupt if same point is added twice in succession
-            if (points[i].getX() != points[i - 1].getX() || points[i].getY() != points[i - 1].getY())
+            if (points[i].x != points[i - 1].x || points[i].y != points[i - 1].y)
             {
-                path.lineTo(points[i].getX(), points[i].getY());
+                path.lineTo(points[i].x, points[i].y);
                 horizontalMoves++;
             }
         }
@@ -197,12 +197,12 @@ public class TestPolyLine2d
             int indexInLine = 0;
             for (int i = 0; i < points.length; i++)
             {
-                if (i > 0 && (points[i].getX() != points[i - 1].getX() || points[i].getY() != points[i - 1].getY()))
+                if (i > 0 && (points[i].x != points[i - 1].x || points[i].y != points[i - 1].y))
                 {
                     indexInLine++;
                 }
-                assertEquals("x in line", points[i].getX(), line.get(indexInLine).getX(), 0.001);
-                assertEquals("y in line", points[i].getY(), line.get(indexInLine).getY(), 0.001);
+                assertEquals("x in line", points[i].x, line.get(indexInLine).x, 0.001);
+                assertEquals("y in line", points[i].y, line.get(indexInLine).y, 0.001);
             }
         }
         catch (DrawException e)
@@ -718,7 +718,7 @@ public class TestPolyLine2d
                 {
                     double dx = actualError * Math.cos(Math.PI * 2 * direction / maxDirection);
                     double dy = actualError * Math.sin(Math.PI * 2 * direction / maxDirection);
-                    PolyLine2d otherLine = new PolyLine2d(new Point2d(p2.getX() + dx, p2.getY() + dy), p3, p4);
+                    PolyLine2d otherLine = new PolyLine2d(new Point2d(p2.x + dx, p2.y + dy), p3, p4);
                     if (actualError < tolerance)
                     {
                         try
@@ -985,7 +985,7 @@ public class TestPolyLine2d
             try
             {
                 double x = Double.parseDouble(fields[0].trim());
-                assertEquals("x matches", points[index].getX(), x, 0.001);
+                assertEquals("x matches", points[index].x, x, 0.001);
             }
             catch (NumberFormatException nfe)
             {
@@ -994,7 +994,7 @@ public class TestPolyLine2d
             try
             {
                 double y = Double.parseDouble(fields[1].trim());
-                assertEquals("y matches", points[index].getY(), y, 0.001);
+                assertEquals("y matches", points[index].y, y, 0.001);
             }
             catch (NumberFormatException nfe)
             {
@@ -1016,7 +1016,7 @@ public class TestPolyLine2d
             try
             {
                 double x = Double.parseDouble(fields[0].trim());
-                assertEquals("x matches", points[index].getX(), x, 0.001);
+                assertEquals("x matches", points[index].x, x, 0.001);
             }
             catch (NumberFormatException nfe)
             {
@@ -1025,7 +1025,7 @@ public class TestPolyLine2d
             try
             {
                 double y = Double.parseDouble(fields[1].trim());
-                assertEquals("y matches", points[index].getY(), y, 0.001);
+                assertEquals("y matches", points[index].y, y, 0.001);
             }
             catch (NumberFormatException nfe)
             {
@@ -1046,8 +1046,8 @@ public class TestPolyLine2d
         assertEquals("Line should have same number of points as point array", line.size(), points.length);
         for (int i = 0; i < points.length; i++)
         {
-            assertEquals("x of point i should match", points[i].getX(), line.get(i).getX(), Math.ulp(points[i].getX()));
-            assertEquals("y of point i should match", points[i].getY(), line.get(i).getY(), Math.ulp(points[i].getY()));
+            assertEquals("x of point i should match", points[i].x, line.get(i).x, Math.ulp(points[i].x));
+            assertEquals("y of point i should match", points[i].y, line.get(i).y, Math.ulp(points[i].y));
         }
     }
 

@@ -89,21 +89,21 @@ public class Bounds3d implements Serializable, Drawable3d
         Throw.whenNull(points, "points may not be null");
         Throw.when(!points.hasNext(), IllegalArgumentException.class, "need at least one point");
         Point3d point = points.next();
-        double tempMinX = point.getX();
-        double tempMaxX = point.getX();
-        double tempMinY = point.getY();
-        double tempMaxY = point.getY();
-        double tempMinZ = point.getZ();
-        double tempMaxZ = point.getZ();
+        double tempMinX = point.x;
+        double tempMaxX = point.x;
+        double tempMinY = point.y;
+        double tempMaxY = point.y;
+        double tempMinZ = point.z;
+        double tempMaxZ = point.z;
         while (points.hasNext())
         {
             point = points.next();
-            tempMinX = Math.min(tempMinX, point.getX());
-            tempMaxX = Math.max(tempMaxX, point.getX());
-            tempMinY = Math.min(tempMinY, point.getY());
-            tempMaxY = Math.max(tempMaxY, point.getY());
-            tempMinZ = Math.min(tempMinZ, point.getZ());
-            tempMaxZ = Math.max(tempMaxZ, point.getZ());
+            tempMinX = Math.min(tempMinX, point.x);
+            tempMaxX = Math.max(tempMaxX, point.x);
+            tempMinY = Math.min(tempMinY, point.y);
+            tempMaxY = Math.max(tempMaxY, point.y);
+            tempMinZ = Math.min(tempMinZ, point.z);
+            tempMaxZ = Math.max(tempMaxZ, point.z);
         }
         this.minX = tempMinX;
         this.maxX = tempMaxX;
@@ -173,7 +173,7 @@ public class Bounds3d implements Serializable, Drawable3d
     public boolean contains(final Point3d point)
     {
         Throw.whenNull(point, "point cannot be null");
-        return contains(point.getX(), point.getY(), point.getZ());
+        return contains(point.x, point.y, point.z);
     }
 
     /**
@@ -242,7 +242,7 @@ public class Bounds3d implements Serializable, Drawable3d
     public boolean covers(final Point3d point)
     {
         Throw.whenNull(point, "point cannot be null");
-        return covers(point.getX(), point.getY(), point.getZ());
+        return covers(point.x, point.y, point.z);
     }
 
     /**

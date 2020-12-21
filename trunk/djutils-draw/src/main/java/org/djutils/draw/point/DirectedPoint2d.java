@@ -88,7 +88,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d
      */
     public DirectedPoint2d(final Point2d point, final double dirZ) throws IllegalArgumentException
     {
-        super(point.getX(), point.getY());
+        super(point.x, point.y);
         Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "rotZ must be a number (not NaN)");
         this.dirZ = dirZ;
     }
@@ -155,8 +155,8 @@ public class DirectedPoint2d extends Point2d implements Directed2d
     {
         Throw.whenNull(otherPoint, "point cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
-        return new DirectedPoint2d((1.0 - fraction) * getX() + fraction * otherPoint.getX(),
-                (1.0 - fraction) * getY() + fraction * otherPoint.getY(),
+        return new DirectedPoint2d((1.0 - fraction) * getX() + fraction * otherPoint.x,
+                (1.0 - fraction) * getY() + fraction * otherPoint.y,
                 AngleUtil.interpolateShortest(getDirZ(), otherPoint.getDirZ(), fraction));
     }
 
@@ -217,11 +217,11 @@ public class DirectedPoint2d extends Point2d implements Directed2d
     public boolean epsilonEquals(final DirectedPoint2d other, final double epsilonCoordinate, final double epsilonRotation)
     {
         Throw.whenNull(other, "other point cannot be null");
-        if (Math.abs(getX() - other.getX()) > epsilonCoordinate)
+        if (Math.abs(getX() - other.x) > epsilonCoordinate)
         {
             return false;
         }
-        if (Math.abs(getY() - other.getY()) > epsilonCoordinate)
+        if (Math.abs(getY() - other.y) > epsilonCoordinate)
         {
             return false;
         }

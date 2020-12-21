@@ -98,12 +98,12 @@ public class Transform3d implements Cloneable
      */
     public Transform3d translate(final Point3d point)
     {
-        if (point.getX() == 0.0 && point.getY() == 0.0 && point.getZ() == 0.0)
+        if (point.x == 0.0 && point.y == 0.0 && point.z == 0.0)
         {
             return this;
         }
         this.mat = mulMatMat(this.mat,
-                new double[] { 1, 0, 0, point.getX(), 0, 1, 0, point.getY(), 0, 0, 1, point.getZ(), 0, 0, 0, 1 });
+                new double[] { 1, 0, 0, point.x, 0, 1, 0, point.y, 0, 0, 1, point.z, 0, 0, 0, 1 });
         return this;
     }
 
@@ -277,7 +277,7 @@ public class Transform3d implements Cloneable
      */
     public Point3d transform(final Point3d point)
     {
-        return new Point3d(mulMatVec3(this.mat, new double[] { point.getX(), point.getY(), point.getZ() }));
+        return new Point3d(mulMatVec3(this.mat, new double[] { point.x, point.y, point.z }));
     }
 
     /**

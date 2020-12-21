@@ -122,8 +122,8 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     public double distanceSquared(final Point2d otherPoint) throws NullPointerException
     {
         Throw.whenNull(otherPoint, "point cannot be null");
-        double dx = getX() - otherPoint.getX();
-        double dy = getY() - otherPoint.getY();
+        double dx = getX() - otherPoint.x;
+        double dy = getY() - otherPoint.y;
         return dx * dx + dy * dy;
     }
 
@@ -215,8 +215,8 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     {
         Throw.whenNull(point, "point cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
-        return new Point2d((1.0 - fraction) * getX() + fraction * point.getX(),
-                (1.0 - fraction) * getY() + fraction * point.getY());
+        return new Point2d((1.0 - fraction) * getX() + fraction * point.x,
+                (1.0 - fraction) * getY() + fraction * point.y);
     }
 
     /**
@@ -229,11 +229,11 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     public boolean epsilonEquals(final Point2d other, final double epsilon)
     {
         Throw.whenNull(other, "other point cannot be null");
-        if (Math.abs(getX() - other.getX()) > epsilon)
+        if (Math.abs(getX() - other.x) > epsilon)
         {
             return false;
         }
-        if (Math.abs(getY() - other.getY()) > epsilon)
+        if (Math.abs(getY() - other.y) > epsilon)
         {
             return false;
         }
@@ -258,14 +258,14 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     public static Point2d intersectionOfLineSegments(final Point2d line1P1, final Point2d line1P2, final Point2d line2P1,
             final Point2d line2P2)
     {
-        double l1p1x = line1P1.getX();
-        double l1p1y = line1P1.getY();
-        double l1p2x = line1P2.getX() - l1p1x;
-        double l1p2y = line1P2.getY() - l1p1y;
-        double l2p1x = line2P1.getX() - l1p1x;
-        double l2p1y = line2P1.getY() - l1p1y;
-        double l2p2x = line2P2.getX() - l1p1x;
-        double l2p2y = line2P2.getY() - l1p1y;
+        double l1p1x = line1P1.x;
+        double l1p1y = line1P1.y;
+        double l1p2x = line1P2.x - l1p1x;
+        double l1p2y = line1P2.y - l1p1y;
+        double l2p1x = line2P1.x - l1p1x;
+        double l2p1y = line2P1.y - l1p1y;
+        double l2p2x = line2P2.x - l1p1x;
+        double l2p2y = line2P2.y - l1p1y;
         double denominator = (l2p2y - l2p1y) * l1p2x - (l2p2x - l2p1x) * l1p2y;
         if (denominator == 0.0)
         {
@@ -299,13 +299,13 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
      */
     public final Point2d closestPointOnSegment(final Point2d segmentPoint1, final Point2d segmentPoint2)
     {
-        double dX = segmentPoint2.getX() - segmentPoint1.getX();
-        double dY = segmentPoint2.getY() - segmentPoint1.getY();
+        double dX = segmentPoint2.x - segmentPoint1.x;
+        double dY = segmentPoint2.y - segmentPoint1.y;
         if ((0 == dX) && (0 == dY))
         {
             return segmentPoint1;
         }
-        final double u = ((getX() - segmentPoint1.getX()) * dX + (getY() - segmentPoint1.y) * dY) / (dX * dX + dY * dY);
+        final double u = ((getX() - segmentPoint1.x) * dX + (getY() - segmentPoint1.y) * dY) / (dX * dX + dY * dY);
         if (u < 0)
         {
             return segmentPoint1;

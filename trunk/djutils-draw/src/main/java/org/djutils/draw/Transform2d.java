@@ -96,11 +96,11 @@ public class Transform2d implements Cloneable
      */
     public Transform2d translate(final Point2d point)
     {
-        if (point.getX() == 0.0 && point.getY() == 0.0)
+        if (point.x == 0.0 && point.y == 0.0)
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] { 1, 0, point.getX(), 0, 1, point.getY(), 0, 0, 1 });
+        this.mat = mulMatMat(this.mat, new double[] { 1, 0, point.x, 0, 1, point.y, 0, 0, 1 });
         return this;
     }
 
@@ -193,7 +193,7 @@ public class Transform2d implements Cloneable
      */
     public Point2d transform(final Point2d point)
     {
-        return new Point2d(mulMatVec2(this.mat, new double[] { point.getX(), point.getY() }));
+        return new Point2d(mulMatVec2(this.mat, new double[] { point.x, point.y }));
     }
 
     /**
