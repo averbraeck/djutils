@@ -281,13 +281,13 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
         {
             return null; // intersection outside line 2
         }
-        return new Point2d(line1P1.x + uA * l1p2x, line1P1.y + uA * l1p2y);
+        return line1P1.interpolate(line1P2, uA);
+        // return new Point2d(line1P1.x + uA * l1p2x, line1P1.y + uA * l1p2y);
     }
 
     /**
-     * Project a point on a line segment. If the the projected points lies outside the line
-     * segment, the nearest end point of the line segment is returned. Otherwise the returned point lies between the end points
-     * of the line segment. <br>
+     * Project a point on a line segment. If the the projected points lies outside the line segment, the nearest end point of
+     * the line segment is returned. Otherwise the returned point lies between the end points of the line segment. <br>
      * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
      * Bourke</a>.
      * @param segmentPoint1 Point2d; start of line segment
