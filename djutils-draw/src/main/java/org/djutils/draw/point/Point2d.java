@@ -138,7 +138,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     @Override
     public Iterator<? extends Point2d> getPoints()
     {
-        return Arrays.stream(new Point2d[] {this}).iterator();
+        return Arrays.stream(new Point2d[] { this }).iterator();
     }
 
     /**
@@ -215,8 +215,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     {
         Throw.whenNull(point, "point cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
-        return new Point2d((1.0 - fraction) * getX() + fraction * point.x,
-                (1.0 - fraction) * getY() + fraction * point.y);
+        return new Point2d((1.0 - fraction) * getX() + fraction * point.x, (1.0 - fraction) * getY() + fraction * point.y);
     }
 
     /**
@@ -248,12 +247,41 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     }
 
     /**
+     * Compute the 2D intersection of two lines. Both lines are defined by two points (that should be distinct).
+     * @param line1P1 Point2d; first point of line 1
+     * @param line1P2 Point2d; second point of line 1
+     * @param line2P1 Point2d; first point of line 2
+     * @param line2P2 Point2d; second point of line 2
+     * @return Point2d; the intersection of the two lines, or null if the lines are (almost) parallel
+     */
+    public static Point2d intersectionOfLines(final Point2d line1P1, final Point2d line1P2, final Point2d line2P1,
+            final Point2d line2P2)
+    {
+        double l1p1x = line1P1.x;
+        double l1p1y = line1P1.y;
+        double l1p2x = line1P2.x - l1p1x;
+        double l1p2y = line1P2.y - l1p1y;
+        double l2p1x = line2P1.x - l1p1x;
+        double l2p1y = line2P1.y - l1p1y;
+        double l2p2x = line2P2.x - l1p1x;
+        double l2p2y = line2P2.y - l1p1y;
+        double denominator = (l2p2y - l2p1y) * l1p2x - (l2p2x - l2p1x) * l1p2y;
+        if (denominator == 0.0)
+        {
+            return null; // lines are parallel (they might even be on top of each other, but we don't check that)
+        }
+        double u = ((l2p2x - l2p1x) * (-l2p1y) - (l2p2y - l2p1y) * (-l2p1x)) / denominator;
+        return line1P1.interpolate(line1P2, u);
+    }
+
+    /**
      * Compute the 2D intersection of two line segments. Both line segments are defined by two points (that should be distinct).
      * @param line1P1 Point2d; first point of line segment 1
      * @param line1P2 Point2d; second point of line segment 1
      * @param line2P1 Point2d; first point of line segment 2
      * @param line2P2 Point2d; second point of line segment 2
-     * @return Point2d; the intersection of the two lines, or null if the lines are (almost) parallel, or do not intersect
+     * @return Point2d; the intersection of the two line segments, or null if the lines are (almost) parallel, or do not
+     *         intersect
      */
     public static Point2d intersectionOfLineSegments(final Point2d line1P1, final Point2d line1P2, final Point2d line2P1,
             final Point2d line2P2)
