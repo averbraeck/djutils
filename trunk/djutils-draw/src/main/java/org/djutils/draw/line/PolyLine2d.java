@@ -945,11 +945,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
                                 {
                                     tempPoints.add(intersection);
                                 }
-                                // tempPoints.set(tempPoints.size() - 1, intermediatePoint);
-                                if (tempPoints.size() > 1)
-                                {
-                                    // System.out.println(new OTSLine3D(tempPoints).toPlot());
-                                }
                             }
                         }
                         else

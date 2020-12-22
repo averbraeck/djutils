@@ -344,8 +344,8 @@ public class Point2dTest
     {
         assertNull("horizontal line intersection with itself returns null",
                 Point2d.intersectionOfLineSegments(new Point2d(1, 2), new Point2d(4, 2), new Point2d(1, 2), new Point2d(4, 2)));
-        assertNull("horizontal line intersection with itself returns null", Point2d
-                .intersectionOfLineSegments(new Point2d(1, 2), new Point2d(1, 10), new Point2d(1, 2), new Point2d(1, 10)));
+        assertNull("vertical line intersection with itself returns null", Point2d.intersectionOfLineSegments(new Point2d(1, 2),
+                new Point2d(1, 10), new Point2d(1, 2), new Point2d(1, 10)));
         assertEquals("Intersection is at (2,2)", new Point2d(2, 2), Point2d.intersectionOfLineSegments(new Point2d(1, 1),
                 new Point2d(6, 6), new Point2d(4, 2), new Point2d(-2, 2)));
         // Check all four ways that two non-parallel lines can miss each other
@@ -357,6 +357,29 @@ public class Point2dTest
                 new Point2d(5, 5), new Point2d(5, 3), new Point2d(10, 2)));
         assertNull("line one passes after end of line two", Point2d.intersectionOfLineSegments(new Point2d(1, 1),
                 new Point2d(5, 5), new Point2d(-10, 3), new Point2d(0, 2)));
+    }
+
+    /**
+     * Test the intersectionOfLines method.
+     */
+    @Test
+    public void testIntersectionOfLines()
+    {
+        assertNull("horizontal line intersection with itself returns null",
+                Point2d.intersectionOfLines(new Point2d(1, 2), new Point2d(4, 2), new Point2d(1, 2), new Point2d(4, 2)));
+        assertNull("vertical line intersection with itself returns null", Point2d.intersectionOfLineSegments(new Point2d(1, 2),
+                new Point2d(1, 10), new Point2d(1, 2), new Point2d(1, 10)));
+        assertEquals("Intersection is at (2,2)", new Point2d(2, 2),
+                Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(6, 6), new Point2d(4, 2), new Point2d(-2, 2)));
+        // Check all four ways that two non-parallel lines can miss each other
+        assertEquals("line two passes before start of line one", new Point2d(-1.5, -1.5),
+                Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(0, -3), new Point2d(10, -13)));
+        assertEquals("line two passes before after end of line one", new Point2d(20, 20), Point2d
+                .intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(0, 20), new Point2d(100, 20)));
+        assertEquals("line one passes before start of line two", new Point2d(4, 4),
+                Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(7, 1), new Point2d(10, -2)));
+        assertEquals("line one passes after end of line two", new Point2d(-3.5, -3.5),
+                Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(-10, 3), new Point2d(0, -7)));
     }
 
     /**
