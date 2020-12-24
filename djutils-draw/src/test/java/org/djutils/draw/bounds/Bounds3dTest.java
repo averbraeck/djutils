@@ -324,6 +324,12 @@ public class Bounds3dTest
         assertEquals("minZ", 0, bb.getMinZ(), 0);
         assertEquals("maxZ", 40, bb.getMaxZ(), 0);
 
+        Point3d midPoint = bb.midPoint();
+        assertEquals("midPoint x", (bb.getMinX() + bb.getMaxX()) / 2, midPoint.x, 0);
+        assertEquals("midPoint y", (bb.getMinY() + bb.getMaxY()) / 2, midPoint.y, 0);
+        assertEquals("midPoint z", (bb.getMinZ() + bb.getMaxZ()) / 2, midPoint.z, 0);
+        assertEquals("midPoint of bounds of point is point", midPoint, new Bounds3d(midPoint).midPoint());
+
         try
         {
             bb.contains(Double.NaN, 0, 0);

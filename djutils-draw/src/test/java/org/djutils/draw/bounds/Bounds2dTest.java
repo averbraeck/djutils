@@ -256,6 +256,11 @@ public class Bounds2dTest
         assertEquals("minY", -20, br.getMinY(), 0);
         assertEquals("maxY", 100, br.getMaxY(), 0);
 
+        Point2d midPoint = br.midPoint();
+        assertEquals("midPoint x", (br.getMinX() + br.getMaxX()) / 2, midPoint.x, 0);
+        assertEquals("midPoint y", (br.getMinY() + br.getMaxY()) / 2, midPoint.y, 0);
+        assertEquals("midPoint of bounds of point is point", midPoint, new Bounds2d(midPoint).midPoint());
+
         try
         {
             br.contains(Double.NaN, 0);
@@ -265,7 +270,7 @@ public class Bounds2dTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             br.contains(0, Double.NaN);
@@ -275,7 +280,7 @@ public class Bounds2dTest
         {
             // Ignore expected exception
         }
-        
+
         assertFalse("boundingbox does not contain itself", br.contains(br));
         Bounds2d br2 = new Bounds2d(br.getMinX() - 0.0001, br.getMaxX() + 0.0001, br.getMinY() - 0.0001, br.getMaxY() + 0.0001);
         assertTrue("Slightly enlarged bounding box contains non-enlarged version", br2.contains(br));
@@ -289,7 +294,7 @@ public class Bounds2dTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             br.covers(Double.NaN, 0);
@@ -299,7 +304,7 @@ public class Bounds2dTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             br.covers(0, Double.NaN);
@@ -309,7 +314,7 @@ public class Bounds2dTest
         {
             // Ignore expected exception
         }
-        
+
         assertTrue("Bounds2d covers itself", br.covers(br));
         assertFalse("Bounds2d does not cover slightly enlarged version of itself", br.covers(br2));
         br2 = new Bounds2d(br.getMinX() + 0.0001, br.getMaxX() + 0.0001, br.getMinY() + 0.0001, br.getMaxY() + 0.0001);
@@ -317,7 +322,7 @@ public class Bounds2dTest
 
         assertFalse("Overlapping Bounds2d is not disjoint", br.disjoint(br2));
         assertTrue("Overlapping Bounds2d is not disjoint", br.intersects(br2));
-        
+
         br2 = new Bounds2d(br.getMinX() + 1000, br.getMaxX() + 1000, br.getMinY() + 1000, br.getMaxY() + 1000);
         assertFalse("No intersection", br.intersects(br2));
         assertTrue("Disjoint", br.disjoint(br2));
