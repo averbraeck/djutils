@@ -336,6 +336,15 @@ public class Bounds2d implements Drawable2d
     }
 
     /**
+     * Return the mid point of this Bounds2d.
+     * @return Point2d; the mid point of this Bounds2d
+     */
+    public Point2d midPoint()
+    {
+        return new Point2d((this.minX + this.maxX) / 2, (this.minY + this.maxY) / 2);
+    }
+
+    /**
      * Return the area of this Bounds2d.
      * @return double; the area of this Bounds2d
      */

@@ -284,11 +284,11 @@ public class Bounds3d implements Serializable, Drawable3d
     }
 
     /**
-     * Return the intersecting Bounds3d of this Bounds3d and another Bounds3d. Touching at the edge is not seen as
-     * intersecting. In case there is no intersection, null is returned.
+     * Return the intersecting Bounds3d of this Bounds3d and another Bounds3d. Touching at the edge is not seen as intersecting.
+     * In case there is no intersection, null is returned.
      * @param otherBounds3d Bounds3d; the other Bounds3d
-     * @return Bounds3d; the intersecting Bounds3d of this Bounds3d and the other Bounds3d or null
-     *         in case there is no intersection
+     * @return Bounds3d; the intersecting Bounds3d of this Bounds3d and the other Bounds3d or null in case there is no
+     *         intersection
      * @throws NullPointerException when otherBounds3d is null
      */
     public Bounds3d intersection(final Bounds3d otherBounds3d)
@@ -391,6 +391,15 @@ public class Bounds3d implements Serializable, Drawable3d
     public double getMaxZ()
     {
         return this.maxZ;
+    }
+
+    /**
+     * Return the mid point of this Bounds3d.
+     * @return Point3d; the mid point of this Bounds3d
+     */
+    public Point3d midPoint()
+    {
+        return new Point3d((this.minX + this.maxX) / 2, (this.minY + this.maxY) / 2, (this.minZ + this.maxZ) / 2);
     }
 
     /** {@inheritDoc} */
