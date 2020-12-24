@@ -6,9 +6,12 @@
       djtils-draw-geotools. Added a project to visually introspect the data providing Java objects on the screen: djtils-draw-introspection. Added projects for drawing graphs in swing and html5: djutils-graph, 
       djutils-graph-swing, and djutils-graph-web. Added a project for a graph data providers: djtils-graph-jfree to plot data from jfreechart data providers. -->
 
-    <release version="1.06.03" date="2020-12-24" description="Added circleIntersections method to djutils-draw">
+    <release version="1.06.03" date="2020-12-24" description="Added circleIntersections and directionTo methods to djutils-draw">
       <action dev="pknoppers" type="add">
         Added circleIntersections to Point2d class.
+      </action>
+      <action dev="pknoppers" type="add">
+        Added directionTo method to Point2d class.
       </action>
     </release>
 
@@ -69,13 +72,16 @@
     <release version="1.05.03" date="2020-07-27" description="TraceVerifier added">
       <action dev="pknoppers" type="add">
         The TraceVerifier creates or verifies a file containing a series of traced events. When the file does not exist, it
-        is created and each traced event is written to the file. If the file does exist, it is read and each traced event is
+        is created and each traced event is written
+        to the file. If the file does exist, it is read and each traced event is
         compared to the corresponding event in the file. On a mismatch a RuntimeException is thrown. To use, create a
         TraceVerifier object in the class that is to be traced. In a method where you expect a fixed sequence of events, but
-        suspect that this may not be true ()due to, e.g., a race condition), add a call to the sample
+        suspect that this may not be true ()due to, e.g., a race condition), add a
+        call to the sample
         method of the TraceVerifier.
         Then run the program repeatedly. The first run will create the trace file, all subsequent runs will compare what happens
-        to the contents of the trace file.
+        to the contents of the
+        trace file.
       </action>
     </release>
 
@@ -121,7 +127,8 @@
     <release version="1.04.20" date="2020-05-03" description="Added float and char payload for the fireEvent method">
       <action dev="averbraeck" type="add">
         The float and char primitive types were missing as allowed payloads for the fireEvent and fireTimedEvent methods.
-        Methods have been added to the classes EventProducer, EventProducerImpl and RemoteEventProducer.
+        Methods have been added to the classes
+        EventProducer, EventProducerImpl and RemoteEventProducer.
       </action>
       <action dev="averbraeck" type="add">
         It is now possible to turn off verification of the fields of each individual event, which can be useful for
@@ -158,9 +165,11 @@
         no longer
         takes a null pointer for that argument.
         There is a NO_META_DATA value that can be used in case no meta data can be provided. This should only be used in case
-        the payload has a varying composition, but it can also be abused in case the program writer is too lazy to provide
+        the payload has a varying
+        composition, but it can also be abused in case the program writer is too lazy to provide
         decent meta data (as is the case in many of our unit tests).
-        EventProducing collections now put the (unchanged) size of the collection in the OBJECT_CHANGED_EVENT events.
+        EventProducing collections now put the
+        (unchanged) size of the collection in the OBJECT_CHANGED_EVENT events.
       </action>
     </release>
 
@@ -182,7 +191,8 @@
     <release version="1.04.15" date="2020-04-03" description="Metadata and Java-8 compatibility">
       <action dev="pknoppers" type="add">
         Added package metadata. Events can now verify their payload using the metadata. Specification of metadata is done in
-        the constructor of EventType. For now a null pointer is permitted for the MetaData argument, but that is only during
+        the constructor of EventType. For now a
+        null pointer is permitted for the MetaData argument, but that is only during
         the transition phase.
       </action>
       <action dev="averbraeck" type="fix">
@@ -231,14 +241,17 @@
     <release version="1.04.12" date="2020-03-03" description="several fixes in djutils-stats">
       <action dev="pknoppers" type="fix">
         Renamed getWeightedSampleStdDev to getWeightedSampleStDev in EventBasedTimeStampWeightedTally and
-        EventBasedTimestampWeightedTally. Added getSampleMean to TimestampTallyInterface.
+        EventBasedTimestampWeightedTally. Added getSampleMean to
+        TimestampTallyInterface.
         Added getWeightedMean to TimeStampTallyInterface. Added getWeightedStDev and getWeightedVariance
-        to EventBasedTimestampWeightedTally and TimeStampWeightedTally. Fixed error in getWeightedSampleMean
+        to EventBasedTimestampWeightedTally and TimeStampWeightedTally. Fixed
+        error in getWeightedSampleMean
         in WeightedTally. Augmented unit test to re-achieve 100% coverage.
       </action>
       <action dev="averbraeck" type="update">
         Removed some 'final' qualifiers for methods so they can be extended, e.g. in the dsol project.
-        Made the various TallyInterfaces public so they can be used outside of the djutils-stats project.
+        Made the various TallyInterfaces public so they can be used
+        outside of the djutils-stats project.
       </action>
     </release>
 
@@ -250,7 +263,8 @@
       </action>
       <action dev="averbraeck" type="add">
         Separate packages to read/write the tables from the djutils-data project have been added for:
-        JSON, XML, and csv/tsv. Specific (de)serializers have been added for primitive types, Number types,
+        JSON, XML, and csv/tsv. Specific (de)serializers have been added
+        for primitive types, Number types,
         String, DoubleScalar types and FloatScalar types.
       </action>
       <action dev="averbraeck" type="add">
@@ -298,11 +312,14 @@
       </action>
       <action dev="averbraeck" type="add">
         In order to prevent name clashes for the EventType, the full name of the class from which the EventType
-        was defined (usually in the clinit method) is added to the equals() and hashCode() methods of the EventType.
+        was defined (usually in the clinit method) is added to
+        the equals() and hashCode() methods of the EventType.
         In that way, EventTypes that are the same will be unique, but EventTypes with just the same name but defined
-        in different classes will be different. The reason why this is important is because remote events that use
+        in different classes will be
+        different. The reason why this is important is because remote events that use
         EventTypes can have multiple versions of the same public static final EventType: one the is defined
-        in the client, and one that is defined via the network. These will have different addresses in memory
+        in the client,
+        and one that is defined via the network. These will have different addresses in memory
         but they share the same class and name info, so equals() will yield true.
       </action>
     </release>
@@ -310,7 +327,8 @@
     <release version="1.04.08" date="2020-02-08" description="EventProducer access to listeners">
       <action dev="averbraeck" type="add">
         Added a protected method to the EventProducer to return a safe copy of the list of (strong or weak)
-        references to the registered listeners for a provided event type, rather than exposing the
+        references to the registered listeners for a provided
+        event type, rather than exposing the
         internal 'listener' object.
       </action>
     </release>
@@ -336,9 +354,11 @@
     <release version="1.04.06" date="2020-02-04" description="CliUtil for subclasses">
       <action dev="averbraeck" type="fix">
         CliUtil in djutils-ext had problems with changing the default option values for subclasses, where the
-        options were defined in a superclass. The key under which the overrides are stored in CliUtil have been
+        options were defined in a superclass. The key under
+        which the overrides are stored in CliUtil have been
         changed to the actual class where the option was defined, both in storing and in retrieving the
-        override. Tests in the TestCLI unit tests check the new behavior.
+        override. Tests in the TestCLI unit tests
+        check the new behavior.
       </action>
     </release>
 
@@ -384,7 +404,8 @@
       </action>
       <action dev="averbraeck" type="update">
         EventProducer is not an abstract class anymore, as it does not contain any unimplemented methods and
-        because it is used as an embedded class in the RemoteEventProducer.
+        because it is used as an embedded class in the
+        RemoteEventProducer.
       </action>
       <action dev="averbraeck" type="update">
         Demanded that the fields of the Event and TimedEvent are serializable, so they can be sent over
@@ -429,10 +450,12 @@
       </action>
       <action dev="averbraeck" type="fix">
         The CliUtil class in djutils-ext used the changeAnnotationValue method from ClassUtil. Instead of changing
-        the internal data structure of the annotations, an override map is now used to store the changes. This also
+        the internal data structure of the annotations, an
+        override map is now used to store the changes. This also
         ensures that the code structure is reentrant: no structural changes have been made to the
         appearance of the
-        loaded code (which the changeAnnotationValue method did in a sense).
+        loaded code (which the
+        changeAnnotationValue method did in a sense).
       </action>
       <action dev="averbraeck" type="add">
         Methods to read the (overridden or original) program version, program name and program description
@@ -469,11 +492,13 @@
       </action>
       <action dev="averbraeck" type="update">
         The event producing collections in the event.util package now only fire events when additions or
-        removals actually took place, not just when the add / remove / put methods are called.
+        removals actually took place, not just when the add / remove
+        / put methods are called.
       </action>
       <action dev="averbraeck" type="add">
         The EventProducingCollection, EventProducingList, EventProducingMap and EventProducingSet in the
-        event.util package also fire events when content in the collections has changed. In that case,
+        event.util package also fire events when content in the
+        collections has changed. In that case,
         a CHANGE_EVENT is fired.
       </action>
       <action dev="averbraeck" type="add">
@@ -555,7 +580,8 @@
       </action>
       <action dev="averbraeck" type="add">
         As a result of moving to DJUNITS-4, several new types have been added to the possible units to use:
-        AbsorbedDose, AmountOfSubstance, CatalyticActivity, ElectricalCapacitance, ElectricalConductance,
+        AbsorbedDose, AmountOfSubstance, CatalyticActivity,
+        ElectricalCapacitance, ElectricalConductance,
         ElectricalInductance, EquivalentDose, Illuminance, LuminousFlux, LuminousIntensity,
         MagneticFluxDensity, MagneticFlux, and RadioActivity.
       </action>
@@ -601,7 +627,8 @@
       </action>
       <action dev="averbraeck" type="update">
         The methods in ClassUtil that deal with visibility from a callerClass now throw an
-        IllegalAccessException when the method/field/constructor is not visible from the callerClass
+        IllegalAccessException when the method/field/constructor is not visible
+        from the callerClass
         and a NoSuchMethodException or NoSuchFieldException when the method/constructor/field
         cannot be found.
       </action>
@@ -657,7 +684,8 @@
     <release version="1.01.02" date="2019-07-02" description="ImmutableLinkedHashMap.values() repaired">
       <action dev="averbraeck" type="fix">
         The ImmutableLinkedHashMap.values() was overriding a non-reproducible values() method from the
-        ImmutableAbstractMap. The ImmutableLinkedHashMap now has its own values() method.
+        ImmutableAbstractMap. The ImmutableLinkedHashMap now has its
+        own values() method.
       </action>
     </release>
 
@@ -668,7 +696,8 @@
       </action>
       <action dev="averbraeck" type="fix">
         The UTF-8 Strings in djutils-serialization have been improved. The UTF-8 String can now handle
-        1-byte, 2-byte, 3-byte and 4-byte characters. The length of the UTF-8 serialized bytes indicates
+        1-byte, 2-byte, 3-byte and 4-byte characters. The length of the
+        UTF-8 serialized bytes indicates
         the number of bytes. The length does not say anything about the number of characters.
       </action>
       <action dev="averbraeck" type="fix">
@@ -750,7 +779,8 @@
     <release version="1.00.00" date="2018-11-17" description="Initial release">
       <action dev="averbraeck" type="add">
         Several classes from other projects that are heavily shared between the projects, but not
-        specific for one of the projects have been transferred to the djutils project.
+        specific for one of the projects have been transferred to the
+        djutils project.
       </action>
     </release>
 
