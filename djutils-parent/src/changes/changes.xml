@@ -6,15 +6,15 @@
       djtils-draw-geotools. Added a project to visually introspect the data providing Java objects on the screen: djtils-draw-introspection. Added projects for drawing graphs in swing and html5: djutils-graph, 
       djutils-graph-swing, and djutils-graph-web. Added a project for a graph data providers: djtils-graph-jfree to plot data from jfreechart data providers. -->
 
-    <release version="1.06.02" date="2020-12-22" description="Added intersectionOfLines method to djutils-draw">
-      <action dev="pknoppers" type="add">
-        Added intersectionOfLines to Point2d class.
-      </action>
-    </release>
-
     <release version="1.06.03" date="2020-12-24" description="Added circleIntersections method to djutils-draw">
       <action dev="pknoppers" type="add">
         Added circleIntersections to Point2d class.
+      </action>
+    </release>
+
+    <release version="1.06.02" date="2020-12-22" description="Added intersectionOfLines method to djutils-draw">
+      <action dev="pknoppers" type="add">
+        Added intersectionOfLines to Point2d class.
       </action>
     </release>
 
