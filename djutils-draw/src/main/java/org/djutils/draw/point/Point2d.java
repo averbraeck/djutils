@@ -397,6 +397,17 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     }
 
     /**
+     * Return the direction to another Point2d.
+     * @param otherPoint Point2d; the other point
+     * @return double; the direction to the other point in Radians (towards infinite X is 0; towards infinite Y is &pi; / 2;
+     *         etc.). If the points are identical; this method returns NaN.
+     */
+    public double directionTo(final Point2d otherPoint)
+    {
+        return Math.atan2(otherPoint.y - this.y, otherPoint.x - this.x);
+    }
+
+    /**
      * Return the coordinates as an AWT Point2D.Double object.
      * @return Point2D; the coordinates as an AWT Point2D.Double object
      */

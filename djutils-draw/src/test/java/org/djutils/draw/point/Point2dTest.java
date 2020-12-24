@@ -559,4 +559,20 @@ public class Point2dTest
         }
     }
 
+    /**
+     * Test the direction method.
+     */
+    @Test
+    public void testDirection()
+    {
+        Point2d reference = new Point2d(5, 8);
+        assertEquals("East", 0, reference.directionTo(new Point2d(reference.x + 10, reference.y)), 0);
+        assertEquals("North", Math.PI / 2, reference.directionTo(new Point2d(reference.x, reference.y + 5)), 0.00001);
+        assertEquals("NorthEast", Math.PI / 4, reference.directionTo(new Point2d(reference.x + 2, reference.y + 2)), 0.00001);
+        assertEquals("West", Math.PI, reference.directionTo(new Point2d(reference.x - 1, reference.y)), 0);
+        assertEquals("South", -Math.PI / 2, reference.directionTo(new Point2d(reference.x, reference.y - 0.5)), 0.00001);
+        assertEquals("SouthWst", -3 * Math.PI / 4, reference.directionTo(new Point2d(reference.x - 0.2, reference.y - 0.2)),
+                0.00001);
+    }
+
 }
