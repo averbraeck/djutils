@@ -1,8 +1,12 @@
 package org.djutils.draw.point;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
+
+import javax.print.attribute.standard.MediaSize.Other;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
@@ -110,7 +114,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     public double distance(final Point2d otherPoint)
     {
         Throw.whenNull(otherPoint, "point cannot be null");
-        return Math.sqrt(distanceSquared(otherPoint));
+        return Math.hypot(otherPoint.x - this.x, otherPoint.y - this.y);
     }
 
     /**
@@ -346,6 +350,52 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
         {
             return segmentPoint1.interpolate(segmentPoint2, u);
         }
+    }
+
+    /**
+     * Return the zero, one or two intersections between two circles. The circles must be different. Derived from pseudo code by
+     * <a href="http://paulbourke.net/geometry/circlesphere/">Paul Bourke</a> and C implementation by
+     * <a href="http://paulbourke.net/geometry/circlesphere/tvoght.c">Tim Voght </a>.
+     * @param center1 Point2d; the center of circle 1
+     * @param radius1 double; the radius of circle 1
+     * @param center2 Point2d; the center of circle 2
+     * @param radius2 double; the radius of circle 2
+     * @return List&lt;Point2d&gt; a list of zero, one or two points
+     * @throws NullPointerException when center1 or center2 is null
+     * @throws DrawRuntimeException when the two circles are identical, or radius1 &lt; 0 or radius2 &lt; 0
+     */
+    public static final List<Point2d> circleIntersections(final Point2d center1, final double radius1, final Point2d center2,
+            final double radius2) throws NullPointerException, DrawRuntimeException
+    {
+        Throw.whenNull(center1, "center1 may not be null");
+        Throw.whenNull(center2, "center2 may not be null");
+        Throw.when(radius1 < 0 || radius2 < 0, DrawRuntimeException.class, "radius may not be less than 0");
+        Throw.when(center1.equals(center2) && radius1 == radius2, DrawRuntimeException.class, "Circles must be different");
+        List<Point2d> result = new ArrayList<>();
+        // dX,dY is the vector from center1 to center2
+        double dX = center2.x - center1.x;
+        double dY = center2.y - center1.y;
+        double distance = Math.hypot(dX, dY);
+        if (distance > radius1 + radius2 || distance < Math.abs(radius1 - radius2))
+        {
+            return result;
+        }
+        double a = (radius1 * radius1 - radius2 * radius2 + distance * distance) / (2 * distance);
+        // x2,y2 is the point where the line through the circle intersections crosses the line through the circle centers
+        double x2 = center1.x + (dX * a / distance);
+        double y2 = center1.y + (dY * a / distance);
+        // h is distance from x2,y2 to each of the solutions
+        double h = Math.sqrt(radius1 * radius1 - a * a);
+        // rX, rY is vector from x2,y2 to the first solution
+        double rX = -dY * (h / distance);
+        double rY = dX * (h / distance);
+        result.add(new Point2d(x2 + rX, y2 + rY));
+        if (h > 0)
+        {
+            // Two distinct solutions; add the second one
+            result.add(new Point2d(x2 - rX, y2 - rY));
+        }
+        return result;
     }
 
     /**

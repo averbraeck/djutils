@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.awt.geom.Point2D;
+import java.util.List;
 
 import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
@@ -374,8 +375,8 @@ public class Point2dTest
         // Check all four ways that two non-parallel lines can miss each other
         assertEquals("line two passes before start of line one", new Point2d(-1.5, -1.5),
                 Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(0, -3), new Point2d(10, -13)));
-        assertEquals("line two passes before after end of line one", new Point2d(20, 20), Point2d
-                .intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(0, 20), new Point2d(100, 20)));
+        assertEquals("line two passes before after end of line one", new Point2d(20, 20),
+                Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(0, 20), new Point2d(100, 20)));
         assertEquals("line one passes before start of line two", new Point2d(4, 4),
                 Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(7, 1), new Point2d(10, -2)));
         assertEquals("line one passes after end of line two", new Point2d(-3.5, -3.5),
@@ -439,6 +440,122 @@ public class Point2dTest
                             p.closestPointOnSegment(p1, p1));
                 }
             }
+        }
+    }
+
+    /**
+     * Test the circleIntersection method.
+     */
+    @Test
+    public void circleIntersectionTest()
+    {
+        for (int x1 = -5; x1 <= 5; x1++)
+        {
+            for (int y1 = -5; y1 <= 5; y1++)
+            {
+                Point2d p1 = new Point2d(x1, y1);
+                for (int r1 = 0; r1 < 5; r1++)
+                {
+                    for (int x2 = -5; x2 <= 5; x2++)
+                    {
+                        for (int y2 = -5; y2 <= 5; y2++)
+                        {
+                            Point2d p2 = new Point2d(x2, y2);
+                            double distance = p1.distance(p2);
+                            for (int r2 = 0; r2 < 5; r2++)
+                            {
+                                if (x1 == x2 && y1 == y2 && r1 == r2)
+                                {
+                                    try
+                                    {
+                                        Point2d.circleIntersections(p1, r1, p2, r2);
+                                        fail("Identical circles should have thrown a DrawRuntimeException");
+                                    }
+                                    catch (DrawRuntimeException dre)
+                                    {
+                                        // Ignore expected exception
+                                    }
+                                }
+                                else
+                                {
+                                    List<Point2d> result = Point2d.circleIntersections(p1, r1, p2, r2);
+                                    // System.out.print("p1=" + p1 + ", r1=" + r1 + ", p2=" + p2 + " r2=" + r2 + ", result=");
+                                    // for (Point2d p : result)
+                                    // {
+                                    // System.out
+                                    // .print(String.format("%s d1=%.3f d2=%.3f ", p, p.distance(p1), p.distance(p2)));
+                                    // }
+                                    // System.out.println("");
+                                    if (distance > r1 + r2 + 0.0001)
+                                    {
+                                        if (result.size() > 0)
+                                        {
+                                            Point2d.circleIntersections(p1, r1, p2, r2);
+                                        }
+                                        assertEquals("There are 0 intersections", 0, result.size());
+                                    }
+                                    if (distance < r1 + r2 - 0.0001 && distance > Math.abs(r2 - r1) + 0.0001)
+                                    {
+                                        if (result.size() != 2)
+                                        {
+                                            Point2d.circleIntersections(p1, r1, p2, r2);
+                                        }
+                                        assertEquals("There are 2 intersections", 2, result.size());
+                                    }
+                                    for (Point2d p : result)
+                                    {
+                                        if (Math.abs(r1 - p.distance(p1)) > 0.1 || Math.abs(r2 - p.distance(p2)) > 0.1)
+                                        {
+                                            Point2d.circleIntersections(p1, r1, p2, r2);
+                                        }
+                                        assertEquals("result is at r1 from p1", r1, p.distance(p1), 0.0001);
+                                        assertEquals("result is at r2 from p2", r2, p.distance(p2), 0.0001);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        try
+        {
+            Point2d.circleIntersections(new Point2d(1, 2), -1, new Point2d(3, 4), 2);
+            fail("negative radius should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Point2d.circleIntersections(new Point2d(1, 2), 5, new Point2d(3, 4), -2);
+            fail("negative radius should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Point2d.circleIntersections(null, 5, new Point2d(3, 4), 2);
+            fail("null for center1 should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Point2d.circleIntersections(new Point2d(3, 4), 5, null, 2);
+            fail("null for center1 should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
         }
     }
 

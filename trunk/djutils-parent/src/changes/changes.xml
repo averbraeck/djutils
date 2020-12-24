@@ -12,6 +12,12 @@
       </action>
     </release>
 
+    <release version="1.06.03" date="2020-12-24" description="Added circleIntersections method to djutils-draw">
+      <action dev="pknoppers" type="add">
+        Added circleIntersections to Point2d class.
+      </action>
+    </release>
+
     <release version="1.06.01" date="2020-12-21" description="Made .x, .y and .z of Point accessible in djutils-draw">
       <action dev="averbraeck" type="update">
         Made the fields x, y (and z) accessible in Point2d and Point3d to make code that use the Point look cleaner.
