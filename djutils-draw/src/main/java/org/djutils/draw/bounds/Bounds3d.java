@@ -265,7 +265,7 @@ public class Bounds3d implements Serializable, Drawable3d
      * @return boolean; whether this Bounds3d is disjoint from another Bounds3d
      * @throws NullPointerException when otherBounds3d is null
      */
-    public boolean disjoint(Bounds3d otherBounds3d)
+    public boolean disjoint(final Bounds3d otherBounds3d)
     {
         Throw.whenNull(otherBounds3d, "otherBounds3d cannot be null");
         return otherBounds3d.minX >= this.maxX || otherBounds3d.maxX <= this.minX || otherBounds3d.minY >= this.maxY
