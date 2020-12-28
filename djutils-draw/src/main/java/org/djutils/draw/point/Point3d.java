@@ -38,7 +38,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     public final double z;
 
     /**
-     * Create a new Point with just an x and y coordinate, stored with double precision.
+     * Create a new Point with just an x, y and z coordinate, stored with double precision.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param z double; the z coordinate
@@ -54,7 +54,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     }
 
     /**
-     * Create a new Point with just an x and y coordinate, stored with double precision.
+     * Create a new Point with just an x, y and z coordinate, stored with double precision.
      * @param xyz double[3]; the x, y and z coordinate
      * @throws NullPointerException when xyz is null
      * @throws IllegalArgumentException when the dimension of xyz is not 3, or a coordinate is NaN
@@ -65,7 +65,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     }
 
     /**
-     * Create an immutable point with just two values, x and y, stored with double precision from a Point2d.
+     * Create an immutable point with just three values, x, y and z, stored with double precision from a Point2d and z.
      * @param point Point2d; a Point2d
      * @param z double; the z coordinate
      * @throws NullPointerException when point is null
@@ -81,7 +81,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     }
 
     /**
-     * Create an immutable point with just two values, x and y, stored with double precision from an AWT Point2D.
+     * Create an immutable point with just three values, x, y and z, stored with double precision from an AWT Point2D and z.
      * @param point Point2D; an AWT Point2D
      * @param z double; the z coordinate
      * @throws NullPointerException when point is null
@@ -260,8 +260,8 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     {
         Throw.whenNull(point, "point cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
-        return new Point3d((1.0 - fraction) * getX() + fraction * point.x,
-                (1.0 - fraction) * getY() + fraction * point.y, (1.0 - fraction) * getZ() + fraction * point.z);
+        return new Point3d((1.0 - fraction) * getX() + fraction * point.x, (1.0 - fraction) * getY() + fraction * point.y,
+                (1.0 - fraction) * getZ() + fraction * point.z);
 
     }
 
@@ -342,7 +342,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     {
         return Math.sqrt(horizontalDistanceSquared(point));
     }
-    
+
     /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:designforextension")
