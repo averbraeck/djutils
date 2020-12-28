@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.djutils.draw.Drawable3d;
+import org.djutils.draw.Space3d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
 
@@ -18,7 +19,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Bounds3d implements Serializable, Drawable3d
+public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Space3d>
 {
     /** */
     private static final long serialVersionUID = 2020829L;
@@ -245,13 +246,8 @@ public class Bounds3d implements Serializable, Drawable3d
         return covers(point.x, point.y, point.z);
     }
 
-    /**
-     * Check if this Bounds3d contains another bounding box. Covers returns true when one of the edges of the other Bounds3d is
-     * overlapping with the border of this Bounds3d.
-     * @param otherBounds3d Bounds3d; the Bounds3d for which to check if it is contained within this Bounds3d
-     * @return boolean; whether this Bounds3d contains the provided Bounds3d, including overlapping borders
-     * @throws NullPointerException when otherBounds3d is null
-     */
+    /** {@inheritDoc} */
+    @Override
     public boolean covers(final Bounds3d otherBounds3d)
     {
         Throw.whenNull(otherBounds3d, "otherBounds3d cannot be null");
@@ -259,12 +255,8 @@ public class Bounds3d implements Serializable, Drawable3d
                 && covers(otherBounds3d.getMaxX(), otherBounds3d.getMaxY(), otherBounds3d.getMaxZ());
     }
 
-    /**
-     * Return whether this Bounds3d is disjoint from another Bounds3d. Touching at the edge is seen as disjoint.
-     * @param otherBounds3d Bounds3d; the other bounding box
-     * @return boolean; whether this Bounds3d is disjoint from another Bounds3d
-     * @throws NullPointerException when otherBounds3d is null
-     */
+    /** {@inheritDoc} */
+    @Override
     public boolean disjoint(final Bounds3d otherBounds3d)
     {
         Throw.whenNull(otherBounds3d, "otherBounds3d cannot be null");
@@ -272,25 +264,15 @@ public class Bounds3d implements Serializable, Drawable3d
                 || otherBounds3d.maxY <= this.minY || otherBounds3d.minZ >= this.maxZ || otherBounds3d.maxZ <= this.minZ;
     }
 
-    /**
-     * Return whether this Bounds3d intersects with another Bounds3d. Touching at the edge is not seen as intersecting.
-     * @param otherBounds3d Bounds3d; the other Bounds3d
-     * @return boolean; whether this Bounds3d intersects with another Bounds3d
-     * @throws NullPointerException when otherBounds3d is null
-     */
+    /** {@inheritDoc} */
+    @Override
     public boolean intersects(final Bounds3d otherBounds3d)
     {
         return !disjoint(otherBounds3d);
     }
 
-    /**
-     * Return the intersecting Bounds3d of this Bounds3d and another Bounds3d. Touching at the edge is not seen as intersecting.
-     * In case there is no intersection, null is returned.
-     * @param otherBounds3d Bounds3d; the other Bounds3d
-     * @return Bounds3d; the intersecting Bounds3d of this Bounds3d and the other Bounds3d or null in case there is no
-     *         intersection
-     * @throws NullPointerException when otherBounds3d is null
-     */
+    /** {@inheritDoc} */
+    @Override
     public Bounds3d intersection(final Bounds3d otherBounds3d)
     {
         Throw.whenNull(otherBounds3d, "otherBounds3d cannot be null");
