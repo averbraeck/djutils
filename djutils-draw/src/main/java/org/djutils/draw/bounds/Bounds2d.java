@@ -6,11 +6,12 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.djutils.draw.Drawable2d;
+import org.djutils.draw.Space2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
 
 /**
- * A Bounds2d stores the rectangular 2D bounds of a 2d object, or a collection of 2dobjects. The Bounds2d is an immutable
+ * A Bounds2d stores the rectangular 2D bounds of a 2d object, or a collection of 2d objects. The Bounds2d is an immutable
  * object.
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
@@ -19,7 +20,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Bounds2d implements Drawable2d
+public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
 {
     /** */
     private static final long serialVersionUID = 20200829L;
@@ -133,8 +134,8 @@ public class Bounds2d implements Drawable2d
     @Override
     public Iterator<Point2d> getPoints()
     {
-        Point2d[] array = new Point2d[] { new Point2d(getMinX(), getMinY()), new Point2d(getMinX(), getMaxY()),
-                new Point2d(getMaxX(), getMinY()), new Point2d(getMaxX(), getMaxY()) };
+        Point2d[] array = new Point2d[] {new Point2d(getMinX(), getMinY()), new Point2d(getMinX(), getMaxY()),
+                new Point2d(getMaxX(), getMinY()), new Point2d(getMaxX(), getMaxY())};
         return Arrays.stream(array).iterator();
     }
 
@@ -215,25 +216,16 @@ public class Bounds2d implements Drawable2d
         return covers(point.x, point.y);
     }
 
-    /**
-     * Check if this Bounds2d contains another Bounds2d. Covers returns true when one of the edges of the other Bounds2d
-     * (partly) overlaps a border of this Bounds2d.
-     * @param otherBounds2d Bounds2d; the Bounds2d for which to check if it is contained within this Bounds2d
-     * @return boolean; whether this Bounds2d contains the provided Bounds2d, including overlapping borders
-     * @throws NullPointerException when otherBounds2d is null
-     */
+    /** {@inheritDoc} */
+    @Override
     public boolean covers(final Bounds2d otherBounds2d) throws NullPointerException
     {
         Throw.whenNull(otherBounds2d, "otherBounds2d cannot be null");
         return covers(otherBounds2d.minX, otherBounds2d.minY) && covers(otherBounds2d.maxX, otherBounds2d.maxY);
     }
 
-    /**
-     * Return whether this Bounds2d is disjoint from another Bounds2d. Only touching at an edge is considered disjoint.
-     * @param otherBounds2d Bounds2d; the other Bounds2d
-     * @return boolean; whether this Bounds2d is disjoint from another Bounds2d
-     * @throws NullPointerException when bounds2d is null
-     */
+    /** {@inheritDoc} */
+    @Override
     public boolean disjoint(final Bounds2d otherBounds2d) throws NullPointerException
     {
         Throw.whenNull(otherBounds2d, "otherBounds2d cannot be null");
@@ -241,25 +233,15 @@ public class Bounds2d implements Drawable2d
                 || otherBounds2d.maxY <= this.minY;
     }
 
-    /**
-     * Return whether this Bounds2d intersects another Bounds2d. Only touching at an edge is not seen as intersecting.
-     * @param otherBounds2d Bounds2d; the other Bounds2d
-     * @return boolean; whether this bounding rectangle intersects the other Bounds2d
-     * @throws NullPointerException when otherBounds2d is null
-     */
+    /** {@inheritDoc} */
+    @Override
     public boolean intersects(final Bounds2d otherBounds2d) throws NullPointerException
     {
         return !disjoint(otherBounds2d);
     }
 
-    /**
-     * Return the intersecting Bounds2d of this Bounds2d and another Bounds2d. Touching at the edge is not seen as intersecting.
-     * In case there is no intersection, null is returned.
-     * @param otherBounds2d Bounds2d; the other Bounds2d
-     * @return Bounds2d; the intersecting Bounds2d of this Bounds2d and another Bounds2d. Touching at the edge is not seen as
-     *         intersecting. If not intersecting; null is returned
-     * @throws NullPointerException when otherBounds2d is null
-     */
+    /** {@inheritDoc} */
+    @Override
     public Bounds2d intersection(final Bounds2d otherBounds2d)
     {
         Throw.whenNull(otherBounds2d, "otherBounds2d cannot be null");
