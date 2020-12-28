@@ -162,7 +162,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>
      * Get the location at a fraction of the line, with its direction. Fraction should be between 0.0 and 1.0.
      * @param fraction double; the fraction for which to calculate the point on the line
      * @param tolerance double; the delta from 0.0 and 1.0 that will be forgiven
-     * @return DirectedPoint3d
+     * @return DirectedPoint3d, or DirectedPoint2d (in accordance with DP, P, L and S)
      * @throws DrawException when fraction less than 0.0 or more than 1.0.
      */
     default DP getLocationFraction(final double fraction, final double tolerance) throws DrawException
@@ -179,7 +179,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>
     /**
      * Get the location at a fraction of the line (or outside the line), with its direction.
      * @param fraction double; the fraction for which to calculate the point on the line
-     * @return DirectedPoint3d
+     * @return DirectedPoint3d, or DirectedPoint2d (in accordance with DP, P, L and S)
      */
     default DP getLocationFractionExtended(final double fraction)
     {
