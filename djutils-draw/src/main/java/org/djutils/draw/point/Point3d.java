@@ -110,19 +110,15 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
         return xyz;
     }
 
-    /**
-     * Return the x-coordinate.
-     * @return double; the x-coordinate
-     */
+    /** {@inheritDoc} */
+    @Override
     public final double getX()
     {
         return this.x;
     }
 
-    /**
-     * Return the y-coordinate.
-     * @return double; the y-coordinate
-     */
+    /** {@inheritDoc} */
+    @Override
     public final double getY()
     {
         return this.y;
@@ -137,12 +133,8 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
         return this.z;
     }
 
-    /**
-     * Return the squared distance between this point and the provided point.
-     * @param otherPoint Point3d; the other point
-     * @return double; the squared distance between this point and the other point
-     * @throws NullPointerException when otherPoint is null
-     */
+    /** {@inheritDoc} */
+    @Override
     public double distanceSquared(final Point3d otherPoint) throws NullPointerException
     {
         Throw.whenNull(otherPoint, "point cannot be null");
@@ -152,12 +144,8 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
         return dx * dx + dy * dy + dz * dz;
     }
 
-    /**
-     * Return the Euclidean distance between this point and the provided point.
-     * @param otherPoint Point3d; the other point
-     * @return double; the Euclidean distance between this point and the other point
-     * @throws NullPointerException when otherPoint is null
-     */
+    /** {@inheritDoc} */
+    @Override
     public double distance(final Point3d otherPoint) throws NullPointerException
     {
         Throw.whenNull(otherPoint, "point cannot be null");
@@ -245,17 +233,8 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
         return this.scale(1.0 / length);
     }
 
-    /**
-     * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
-     * that case the interpolation turns into an extrapolation.
-     * @param point P; the other point
-     * @param fraction the factor for interpolation towards the other point. When <code>fraction</code> is between 0 and 1, it
-     *            is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code> Point is
-     *            returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
-     * @return P; the point that is <code>fraction</code> away on the line between this point and the other point
-     * @throws NullPointerException when point is null
-     * @throws IllegalArgumentException when fraction is NaN
-     */
+    /** {@inheritDoc} */
+    @Override
     public Point3d interpolate(final Point3d point, final double fraction)
     {
         Throw.whenNull(point, "point cannot be null");
@@ -265,13 +244,8 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
 
     }
 
-    /**
-     * A comparison with another point that returns true of each of the coordinates is less than epsilon apart.
-     * @param other Point; the point to compare with
-     * @param epsilon double; the upper bound of difference for one of the coordinates
-     * @return boolean; true if both x, y and z (if a Point3d) are less than epsilon apart, otherwise false
-     * @throws NullPointerException when point is null
-     */
+    /** {@inheritDoc} */
+    @Override
     public boolean epsilonEquals(final Point3d other, final double epsilon)
     {
         Throw.whenNull(other, "other point cannot be null");

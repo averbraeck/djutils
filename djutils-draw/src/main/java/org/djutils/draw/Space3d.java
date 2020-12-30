@@ -1,7 +1,7 @@
 package org.djutils.draw;
 
 /**
- * Space3d.java.
+ * Space2d interface to show that the number of dimensions for the drawable objects is 3.
  * <p>
  * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.

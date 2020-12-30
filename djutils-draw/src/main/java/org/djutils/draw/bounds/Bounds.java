@@ -18,6 +18,48 @@ import org.djutils.draw.Space;
 public interface Bounds<B extends Bounds<B, S>, S extends Space>
 {
     /**
+     * Return the lower bound for x.
+     * @return double; the lower bound for x
+     */
+    double getMinX();
+
+    /**
+     * Return the upper bound for x.
+     * @return double; the upper bound for x
+     */
+    double getMaxX();
+
+    /**
+     * Return the lower bound for y.
+     * @return double; the lower bound for y
+     */
+    double getMinY();
+
+    /**
+     * Return the upper bound for y.
+     * @return double; the upper bound for y
+     */
+    double getMaxY();
+
+    /**
+     * Return the extent of this Bounds2d in the x-direction.
+     * @return double; the extent of this Bounds2d in the x-direction
+     */
+    default double getDeltaX()
+    {
+        return getMaxX() - getMinX();
+    }
+
+    /**
+     * Return the extent of this Bounds2d in the y-direction.
+     * @return double; the extent of this Bounds2d in the y-direction
+     */
+    default double getDeltaY()
+    {
+        return getMaxY() - getMinY();
+    }
+
+    /**
      * Check if this Bounds contains another Bounds. Covers returns true when one of the edges of the other Bounds (partly)
      * overlaps a border of this Bounds.
      * @param otherBounds Bounds; the Bounds for which to check if it is contained within this Bounds

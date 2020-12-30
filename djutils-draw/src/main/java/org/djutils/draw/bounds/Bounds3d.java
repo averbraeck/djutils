@@ -286,24 +286,6 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
     }
 
     /**
-     * Return the extent of this Bounds3d in the x-direction.
-     * @return double; the extent of this Bounds3d in the x-direction
-     */
-    public double getDeltaX()
-    {
-        return getMaxX() - getMinX();
-    }
-
-    /**
-     * Return the extent of this Bounds3d in the y-direction.
-     * @return double; the extent of this Bounds3d in the y-direction
-     */
-    public double getDeltaY()
-    {
-        return getMaxY() - getMinY();
-    }
-
-    /**
      * Return the extent of this Bounds3d in the z-direction.
      * @return double; the extent of this Bounds3d in the z-direction
      */
@@ -321,37 +303,29 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
         return getDeltaX() * getDeltaY() * getDeltaZ();
     }
 
-    /**
-     * Return the lower bound for x.
-     * @return double; the lower bound for x
-     */
+    /** {@inheritDoc} */
+    @Override
     public double getMinX()
     {
         return this.minX;
     }
 
-    /**
-     * Return the upper bound for x.
-     * @return double; the upper bound for x
-     */
+    /** {@inheritDoc} */
+    @Override
     public double getMaxX()
     {
         return this.maxX;
     }
 
-    /**
-     * Return the lower bound for y.
-     * @return double; the lower bound for y
-     */
+    /** {@inheritDoc} */
+    @Override
     public double getMinY()
     {
         return this.minY;
     }
 
-    /**
-     * Return the upper bound for y.
-     * @return double; the upper bound for y
-     */
+    /** {@inheritDoc} */
+    @Override
     public double getMaxY()
     {
         return this.maxY;

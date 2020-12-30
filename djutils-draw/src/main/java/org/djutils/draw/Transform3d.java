@@ -20,7 +20,7 @@ import org.djutils.draw.point.Point3d;
 public class Transform3d implements Cloneable
 {
     /** The 4x4 transformation matrix, initialized as the Identity matrix. */
-    double[] mat = new double[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
+    private double[] mat = new double[] {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 
     /**
      * Multiply a 4x4 matrix (stored as a 16-value array by row) with a 4-value vector.
@@ -28,7 +28,7 @@ public class Transform3d implements Cloneable
      * @param v double[4]; the vector
      * @return double[4]; the result of m x v
      */
-    protected static double[] mulMatVec(double[] m, double[] v)
+    protected static double[] mulMatVec(final double[] m, final double[] v)
     {
         double[] result = new double[4];
         for (int i = 0; i < 4; i++)
@@ -44,7 +44,7 @@ public class Transform3d implements Cloneable
      * @param v double[3]; the vector
      * @return double[3]; the result of m x (v1, v2, v3, 1), with the last value left out
      */
-    protected static double[] mulMatVec3(double[] m, double[] v)
+    protected static double[] mulMatVec3(final double[] m, final double[] v)
     {
         double[] result = new double[3];
         for (int i = 0; i < 3; i++)
@@ -60,7 +60,7 @@ public class Transform3d implements Cloneable
      * @param m2 double[16]; the second matrix
      * @return double[16]; the result of m1 x m2
      */
-    protected static double[] mulMatMat(double[] m1, double[] m2)
+    protected static double[] mulMatMat(final double[] m1, final double[] m2)
     {
         double[] result = new double[16];
         for (int i = 0; i < 4; i++)
@@ -75,6 +75,15 @@ public class Transform3d implements Cloneable
     }
 
     /**
+     * Get a safe copy of the affine transformation matrix.
+     * @return double[]; a safe copy of the affine transformation matrix
+     */
+    public double[] getMat()
+    {
+        return this.mat.clone();
+    }
+    
+    /**
      * Transform coordinates by a vector (tx, ty, tz).
      * @param tx double; the translation value for the x-coordinates
      * @param ty double; the translation value for the y-coordinates
@@ -87,7 +96,7 @@ public class Transform3d implements Cloneable
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] { 1, 0, 0, tx, 0, 1, 0, ty, 0, 0, 1, tz, 0, 0, 0, 1 });
+        this.mat = mulMatMat(this.mat, new double[] {1, 0, 0, tx, 0, 1, 0, ty, 0, 0, 1, tz, 0, 0, 0, 1});
         return this;
     }
 
@@ -102,8 +111,7 @@ public class Transform3d implements Cloneable
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat,
-                new double[] { 1, 0, 0, point.x, 0, 1, 0, point.y, 0, 0, 1, point.z, 0, 0, 0, 1 });
+        this.mat = mulMatMat(this.mat, new double[] {1, 0, 0, point.x, 0, 1, 0, point.y, 0, 0, 1, point.z, 0, 0, 0, 1});
         return this;
     }
 
@@ -120,7 +128,7 @@ public class Transform3d implements Cloneable
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] { sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1 });
+        this.mat = mulMatMat(this.mat, new double[] {sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1});
         return this;
     }
 
@@ -137,7 +145,7 @@ public class Transform3d implements Cloneable
         }
         double c = Math.cos(angle);
         double s = Math.sin(angle);
-        this.mat = mulMatMat(this.mat, new double[] { 1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0, 0, 0, 0, 1 });
+        this.mat = mulMatMat(this.mat, new double[] {1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0, 0, 0, 0, 1});
         return this;
     }
 
@@ -154,7 +162,7 @@ public class Transform3d implements Cloneable
         }
         double c = Math.cos(angle);
         double s = Math.sin(angle);
-        this.mat = mulMatMat(this.mat, new double[] { c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0, 0, 0, 0, 1 });
+        this.mat = mulMatMat(this.mat, new double[] {c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0, 0, 0, 0, 1});
         return this;
     }
 
@@ -171,7 +179,7 @@ public class Transform3d implements Cloneable
         }
         double c = Math.cos(angle);
         double s = Math.sin(angle);
-        this.mat = mulMatMat(this.mat, new double[] { c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 });
+        this.mat = mulMatMat(this.mat, new double[] {c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1});
         return this;
     }
 
@@ -189,7 +197,7 @@ public class Transform3d implements Cloneable
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] { 1, 0, sx, 0, 0, 1, sy, 0, 0, 0, 1, 0, 0, 0, 0, 1 });
+        this.mat = mulMatMat(this.mat, new double[] {1, 0, sx, 0, 0, 1, sy, 0, 0, 0, 1, 0, 0, 0, 0, 1});
         return this;
     }
 
@@ -207,7 +215,7 @@ public class Transform3d implements Cloneable
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] { 1, 0, 0, 0, sy, 1, 0, 0, sz, 0, 1, 0, 0, 0, 0, 1 });
+        this.mat = mulMatMat(this.mat, new double[] {1, 0, 0, 0, sy, 1, 0, 0, sz, 0, 1, 0, 0, 0, 0, 1});
         return this;
     }
 
@@ -225,7 +233,7 @@ public class Transform3d implements Cloneable
         {
             return this;
         }
-        this.mat = mulMatMat(this.mat, new double[] { 1, sx, 0, 0, 0, 1, 0, 0, 0, sz, 1, 0, 0, 0, 0, 1 });
+        this.mat = mulMatMat(this.mat, new double[] {1, sx, 0, 0, 0, 1, 0, 0, 0, sz, 1, 0, 0, 0, 0, 1});
         return this;
     }
 
@@ -235,7 +243,7 @@ public class Transform3d implements Cloneable
      */
     public Transform3d reflectX()
     {
-        this.mat = mulMatMat(this.mat, new double[] { -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 });
+        this.mat = mulMatMat(this.mat, new double[] {-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1});
         return this;
     }
 
@@ -245,7 +253,7 @@ public class Transform3d implements Cloneable
      */
     public Transform3d reflectY()
     {
-        this.mat = mulMatMat(this.mat, new double[] { 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 });
+        this.mat = mulMatMat(this.mat, new double[] {1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1});
         return this;
     }
 
@@ -255,7 +263,7 @@ public class Transform3d implements Cloneable
      */
     public Transform3d reflectZ()
     {
-        this.mat = mulMatMat(this.mat, new double[] { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1 });
+        this.mat = mulMatMat(this.mat, new double[] {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1});
         return this;
     }
 
@@ -277,7 +285,7 @@ public class Transform3d implements Cloneable
      */
     public Point3d transform(final Point3d point)
     {
-        return new Point3d(mulMatVec3(this.mat, new double[] { point.x, point.y, point.z }));
+        return new Point3d(mulMatVec3(this.mat, new double[] {point.x, point.y, point.z}));
     }
 
     /**
