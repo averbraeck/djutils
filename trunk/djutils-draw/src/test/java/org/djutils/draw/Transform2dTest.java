@@ -71,13 +71,13 @@ public class Transform2dTest
     {
         // TODO: decide whether the internal (flattened) matrix should be visible at all, or add a getter
         Transform2d t = new Transform2d();
-        assertEquals("matrix contians 9 values", 9, t.mat.length);
+        assertEquals("matrix contians 9 values", 9, t.getMat().length);
         for (int row = 0; row < 3; row++)
         {
             for (int col = 0; col < 3; col++)
             {
                 int e = row == col ? 1 : 0;
-                assertEquals("Value in identity matrix matches", e, t.mat[3 * row + col], 0);
+                assertEquals("Value in identity matrix matches", e, t.getMat()[3 * row + col], 0);
             }
         }
     }

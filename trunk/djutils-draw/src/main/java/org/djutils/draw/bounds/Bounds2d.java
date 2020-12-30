@@ -255,24 +255,6 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
     }
 
     /**
-     * Return the extent of this Bounds2d in the x-direction.
-     * @return double; the extent of this Bounds2d in the x-direction
-     */
-    public double getDeltaX()
-    {
-        return getMaxX() - getMinX();
-    }
-
-    /**
-     * Return the extent of this Bounds2d in the y-direction.
-     * @return double; the extent of this Bounds2d in the y-direction
-     */
-    public double getDeltaY()
-    {
-        return getMaxY() - getMinY();
-    }
-
-    /**
      * Return an AWT Rectangle2D that covers the same area as this Bounds2d.
      * @return Rectangle2D; the rectangle that covers the same area as this Bounds2d
      */
@@ -281,37 +263,29 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
         return new Rectangle2D.Double(this.minX, this.minY, this.maxX - this.minX, this.maxY - this.minY);
     }
 
-    /**
-     * Return the lower bound for x.
-     * @return double; the lower bound for x
-     */
+    /** {@inheritDoc} */
+    @Override
     public double getMinX()
     {
         return this.minX;
     }
 
-    /**
-     * Return the upper bound for x.
-     * @return double; the upper bound for x
-     */
+    /** {@inheritDoc} */
+    @Override
     public double getMaxX()
     {
         return this.maxX;
     }
 
-    /**
-     * Return the lower bound for y.
-     * @return double; the lower bound for y
-     */
+    /** {@inheritDoc} */
+    @Override
     public double getMinY()
     {
         return this.minY;
     }
 
-    /**
-     * Return the upper bound for y.
-     * @return double; the upper bound for y
-     */
+    /** {@inheritDoc} */
+    @Override
     public double getMaxY()
     {
         return this.maxY;
