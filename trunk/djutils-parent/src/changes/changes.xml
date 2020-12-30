@@ -6,11 +6,23 @@
       djtils-draw-geotools. Added a project to visually introspect the data providing Java objects on the screen: djtils-draw-introspection. Added projects for drawing graphs in swing and html5: djutils-graph, 
       djutils-graph-swing, and djutils-graph-web. Added a project for a graph data providers: djtils-graph-jfree to plot data from jfreechart data providers. -->
 
+    <release version="1.06.05" date="2020-12-29" description="Added methods to Point and Bounds interfaces in djutils-draw">
+      <action dev="averbraeck" type="add">
+        Added getX(), getY(), and several other methods to the Point interface.
+        Added getMinX(), getMinY(), getMaxX(), getMaxY(), and several other methods to the Bounds interface.
+        Added getRotZ() method to the Directed interface.
+        These changes make it easier to use the Point&lt;?, ?&gt; and Bounds&lt;?, ?&gt; interfaces in other projects such as DSOL.
+      </action>
+      <action dev="averbraeck" type="add">
+        Added getter with safe copy of the affine transformation matrix in Transform2d and Transform3d in djutils-draw.
+      </action>
+    </release>
+
     <release version="1.06.04" date="2020-12-28" description="Added midPoint methods to Bounds objects in djutils-draw">
       <action dev="pknoppers" type="add">
         Added midPoint method to Bounds2d and Bounds3d classes.
       </action>
-      <action dev="pknoppers" type="add">
+      <action dev="averbraeck" type="add">
         Added Bounds interface for Bounds2d and Bounds3d classes, to be able to check if an objects is a Bounds.
       </action>
     </release>
