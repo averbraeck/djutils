@@ -19,7 +19,7 @@ import org.djutils.exceptions.Throw;
  * The EventProducer forms the reference implementation of the EventProducerInterface. The storage of the listeners is done in a
  * Map with the EventType as the key, and a List of References (weak or strong) to the Listeners.
  * <p>
- * Copyright (c) 2002-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2002-2021 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>. This class was

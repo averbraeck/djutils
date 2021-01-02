@@ -7,7 +7,7 @@ import org.djutils.draw.Space;
  * minY, maxX and maxY for 2D, and minX, minY, minZ and maxX, maxY and maxZ for 3D. Other bounds such as a BoundingCircle,
  * BoundingSphere or BoundingPolytope could also be defined.
  * <p>
- * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>

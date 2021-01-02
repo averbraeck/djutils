@@ -13,7 +13,7 @@ import org.djutils.exceptions.Throw;
  * The DirectedPoint2d is a point in a 2-dimensional space with a direction vector, which is specified in terms of its
  * counter-clockwise rotation around the point in radians.
  * <p>
- * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
