@@ -6,6 +6,23 @@
       djtils-draw-geotools. Added a project to visually introspect the data providing Java objects on the screen: djtils-draw-introspection. Added projects for drawing graphs in swing and html5: djutils-graph, 
       djutils-graph-swing, and djutils-graph-web. Added a project for a graph data providers: djtils-graph-jfree to plot data from jfreechart data providers. -->
 
+    <release version="1.06.06" date="2021-01-02" description="Fixed ulp-error in time weighed statistics">
+      <action dev="averbraeck" type="fix">
+        Some of the time weighed statistics in djutils-stats indicated wrongly that the next observation was before the previous
+        observation. The problem was in the following statement in TimestampWeightedTally:
+<![CDATA[
+        <br>Throw.when(timestampDouble &lt; (this.elapsedTime + this.startTime), IllegalArgumentException.class,<br>
+                "times not offered in ascending order. Last time was " + (this.elapsedTime + this.startTime)<br>
+                        + ", new timestamp was " + timestampDouble);<br>
+]]>
+        The problem is that the addition can be one ulp off as compared to the timestamp that might have been calculated in
+        another way. It has been repaired by using: timestampDouble &lt; this.lastTimestamp. 
+      </action>
+      <action dev="averbraeck" type="update">
+        Made checkstyle more strict on javadoc to comply with JDK8+ compiler settings.
+      </action>
+    </release>
+    
     <release version="1.06.05" date="2020-12-29" description="Added methods to Point and Bounds interfaces in djutils-draw">
       <action dev="averbraeck" type="add">
         Added getX(), getY(), and several other methods to the Point interface.

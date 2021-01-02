@@ -27,9 +27,6 @@ public class TimestampWeightedTally implements TimestampTallyInterface
     /** startTime defines the time of the first observation. Often equals to 0.0, but can also have other value. */
     private double startTime = Double.NaN;
 
-    /** elapsedTime tracks the time during which we have calculated observations. This excludes the start time. */
-    private double elapsedTime = Double.NaN;
-
     /** lastTimestamp stores the time of the last observation. Stored separately to avoid ulp rounding errors and allow ==. */
     private double lastTimestamp = Double.NaN;
 
@@ -57,7 +54,6 @@ public class TimestampWeightedTally implements TimestampTallyInterface
         {
             this.wrappedWeightedTally.initialize();
             this.startTime = Double.NaN;
-            this.elapsedTime = 0.0;
             this.lastTimestamp = Double.NaN;
             this.lastValue = 0.0;
             this.active = true;
@@ -119,9 +115,9 @@ public class TimestampWeightedTally implements TimestampTallyInterface
         Throw.when(Double.isNaN(value), IllegalArgumentException.class, "value may not be NaN");
         double timestampDouble = timestamp.doubleValue();
         Throw.when(Double.isNaN(timestampDouble), IllegalArgumentException.class, "timestamp may not be NaN");
-        Throw.when(timestampDouble < (this.elapsedTime + this.startTime), IllegalArgumentException.class,
-                "times not offered in ascending order. Last time was " + (this.elapsedTime + this.startTime)
-                        + ", new timestamp was " + timestampDouble);
+        Throw.when(timestampDouble < this.lastTimestamp, IllegalArgumentException.class,
+                "times not offered in ascending order. Last time was " + this.lastTimestamp + ", new timestamp was "
+                        + timestampDouble);
 
         synchronized (this.wrappedWeightedTally.semaphore)
         {
@@ -131,12 +127,10 @@ public class TimestampWeightedTally implements TimestampTallyInterface
                 if (Double.isNaN(this.startTime))
                 {
                     this.startTime = timestampDouble;
-                    this.elapsedTime = 0.0;
                 }
                 else
                 {
-                    double deltaTime = timestampDouble - this.lastTimestamp;
-                    this.elapsedTime += deltaTime;
+                    double deltaTime = Math.max(0.0, timestampDouble - this.lastTimestamp);
                     this.wrappedWeightedTally.ingest(deltaTime, this.lastValue);
                 }
                 this.lastTimestamp = timestampDouble;
