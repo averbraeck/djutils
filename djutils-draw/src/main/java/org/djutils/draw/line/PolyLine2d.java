@@ -79,7 +79,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
             prevPoint = point;
         }
         this.length = this.lengthIndexedLine[this.lengthIndexedLine.length - 1];
-        this.bounds = new Bounds2d(getPoints());
+        this.bounds = new Bounds2d(minX, maxX, minY, maxY);
     }
 
     /**

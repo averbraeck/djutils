@@ -82,7 +82,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
             prevPoint = point;
         }
         this.length = this.lengthIndexedLine[this.lengthIndexedLine.length - 1];
-        this.bounds = new Bounds3d(getPoints());
+        this.bounds = new Bounds3d(minX, maxX, minY, maxY, minZ, maxZ);
     }
 
     /**
