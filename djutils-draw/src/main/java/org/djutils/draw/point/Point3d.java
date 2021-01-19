@@ -7,6 +7,7 @@ import java.util.Iterator;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.Space3d;
+import org.djutils.draw.Transform3d;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.exceptions.Throw;
 
@@ -269,6 +270,62 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     public Bounds3d getBounds()
     {
         return new Bounds3d(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final Point3d closestPointOnSegment(final Point3d segmentPoint1, final Point3d segmentPoint2)
+    {
+        double dX = segmentPoint2.x - segmentPoint1.x;
+        double dY = segmentPoint2.y - segmentPoint1.y;
+        double dZ = segmentPoint2.z - segmentPoint1.z;
+        if (0 == dX && 0 == dY && 0 == dZ)
+        {
+            return segmentPoint1;
+        }
+        final double u = ((this.x - segmentPoint1.x) * dX + (this.y - segmentPoint1.y) * dY + (this.z - segmentPoint1.z) * dZ)
+                / (dX * dX + dY * dY + dZ * dZ);
+        if (u < 0)
+        {
+            return segmentPoint1;
+        }
+        else if (u > 1)
+        {
+            return segmentPoint2;
+        }
+        else
+        {
+            return segmentPoint1.interpolate(segmentPoint2, u);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final Point3d closestPointOnLine(final Point3d linePoint1, final Point3d linePoint2) throws DrawRuntimeException
+    {
+        double dX = linePoint2.x - linePoint1.x;
+        double dY = linePoint2.y - linePoint1.y;
+        double dZ = linePoint2.z - linePoint1.z;
+        Throw.when(dX == 0 && dY == 0 && dZ == 0, DrawRuntimeException.class, "line points are at same location");
+        final double u = ((this.x - linePoint1.x) * dX + (this.y - linePoint1.y) * dY + (this.z - linePoint1.z) * dZ)
+                / (dX * dX + dY * dY + dZ * dZ);
+        return linePoint1.interpolate(linePoint2, u);
+    }
+
+    /** Unit vector for transformations in createControlPoints. */
+    private static final Point3d UNIT_VECTOR3D = new Point3d(1, 0, 0);
+
+    /**
+     * Closest point on a line defined by a DirectedPoint3d.
+     * @param directedPoint DirectedPoint3d; a point through which the line passes in the direction
+     * @return Point3d; the point on the line that is closest to this
+     */
+    public final Point3d closestPointOnLine(final DirectedPoint3d directedPoint)
+    {
+        // TODO this is wrong
+        Point3d additionalPoint = new Transform3d().translate(directedPoint).rotZ(directedPoint.getDirZ())
+                .rotY(directedPoint.getDirY()).rotX(directedPoint.getDirX()).transform(UNIT_VECTOR3D);
+        return closestPointOnLine(directedPoint, additionalPoint);
     }
 
     /**

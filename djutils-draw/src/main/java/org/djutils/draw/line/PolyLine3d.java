@@ -506,7 +506,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
             throw new DrawException("getLocationSI for line: position < 0.0 or > line length. Position = " + position
                     + " m. Length = " + getLength() + " m.");
         }
-
         // handle special cases: position == 0.0, or position == length
         if (position == 0.0)
         {
