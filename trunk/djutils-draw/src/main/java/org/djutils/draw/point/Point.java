@@ -87,6 +87,29 @@ public interface Point<P extends Point<P, S>, S extends Space> extends Drawable<
     P interpolate(P point, double fraction);
 
     /**
+     * Project a point on a line segment. If the the projected points lies outside the line segment, the nearest end point of
+     * the line segment is returned. Otherwise the returned point lies between the end points of the line segment. <br>
+     * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
+     * Bourke</a>.
+     * @param segmentPoint1 P; start of line segment
+     * @param segmentPoint2 P; end of line segment
+     * @return P; either <cite>segmentPoint1</cite>, or <cite>segmentPoint2</cite> or a new Point2d that lies somewhere in
+     *         between those two.
+     */
+    P closestPointOnSegment(P segmentPoint1, P segmentPoint2);
+
+    /**
+     * Project a point on a line. <br>
+     * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
+     * Bourke</a>.
+     * @param linePoint1 P; point on the line
+     * @param linePoint2 P; another point on the line
+     * @return Point2d; a point on the line that goes through <cite>linePoint1</cite> and <cite>linePoint2</cite>
+     * @throws DrawRuntimeException when <cite>linePoint1</cite> is at the same location as <cite>linePoint2</cite>
+     */
+    P closestPointOnLine(P linePoint1, P linePoint2) throws DrawRuntimeException;
+    
+    /**
      * A comparison with another point that returns true of each of the coordinates is less than epsilon apart.
      * @param other P; the point to compare with
      * @param epsilon double; the upper bound of difference for one of the coordinates

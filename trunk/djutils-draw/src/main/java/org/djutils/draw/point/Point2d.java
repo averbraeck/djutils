@@ -292,25 +292,17 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
         // return new Point2d(line1P1.x + uA * l1p2x, line1P1.y + uA * l1p2y);
     }
 
-    /**
-     * Project a point on a line segment. If the the projected points lies outside the line segment, the nearest end point of
-     * the line segment is returned. Otherwise the returned point lies between the end points of the line segment. <br>
-     * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
-     * Bourke</a>.
-     * @param segmentPoint1 Point2d; start of line segment
-     * @param segmentPoint2 Point2d; end of line segment
-     * @return Point2d; either <cite>segmentPoint1</cite>, or <cite>segmentPoint2</cite> or a new Point2d that lies somewhere in
-     *         between those two.
-     */
+    /** {@inheritDoc} */
+    @Override
     public final Point2d closestPointOnSegment(final Point2d segmentPoint1, final Point2d segmentPoint2)
     {
         double dX = segmentPoint2.x - segmentPoint1.x;
         double dY = segmentPoint2.y - segmentPoint1.y;
-        if ((0 == dX) && (0 == dY))
+        if (0 == dX && 0 == dY)
         {
             return segmentPoint1;
         }
-        final double u = ((getX() - segmentPoint1.x) * dX + (getY() - segmentPoint1.y) * dY) / (dX * dX + dY * dY);
+        final double u = ((this.x - segmentPoint1.x) * dX + (this.y - segmentPoint1.y) * dY) / (dX * dX + dY * dY);
         if (u < 0)
         {
             return segmentPoint1;
@@ -323,6 +315,30 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
         {
             return segmentPoint1.interpolate(segmentPoint2, u);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final Point2d closestPointOnLine(final Point2d linePoint1, final Point2d linePoint2) throws DrawRuntimeException
+    {
+        double dX = linePoint2.x - linePoint1.x;
+        double dY = linePoint2.y - linePoint1.y;
+        Throw.when(dX == 0 && dY == 0, DrawRuntimeException.class, "line points are at same location");
+        final double u = ((this.x - linePoint1.x) * dX + (this.y - linePoint1.y) * dY) / (dX * dX + dY * dY);
+        return linePoint1.interpolate(linePoint2, u);
+    }
+    
+    /**
+     * Closest point on a line defined by a DirectedPoint2d.
+     * @param directedPoint DirectedPoint2d; a point through which the line passes in the direction
+     * @return Point2d; the point on the line that is closest to this
+     */
+    public final Point2d closestPointOnLine(final DirectedPoint2d directedPoint)
+    {
+        double dX = Math.cos(directedPoint.getDirZ());
+        double dY = Math.sin(directedPoint.getDirZ());
+        final double u = ((this.x - directedPoint.x) * dX + (this.y - directedPoint.y) * dY) / (dX * dX + dY * dY);
+        return directedPoint.interpolate(new Point2d(directedPoint.x + dX, directedPoint.y + dY), u);
     }
 
     /**

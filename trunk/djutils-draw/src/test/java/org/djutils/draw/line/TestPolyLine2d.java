@@ -140,8 +140,7 @@ public class TestPolyLine2d
         double length = 0;
         for (int i = 1; i < points.length; i++)
         {
-            length += Math.sqrt(Math.pow(points[i].x - points[i - 1].x, 2)
-                    + Math.pow(points[i].y - points[i - 1].y, 2));
+            length += Math.sqrt(Math.pow(points[i].x - points[i - 1].x, 2) + Math.pow(points[i].y - points[i - 1].y, 2));
             assertEquals("length at index", length, line.lengthAtIndex(i), 0.0001);
         }
         assertEquals("length", length, line.getLength(), 10 * Math.ulp(length));
@@ -656,7 +655,7 @@ public class TestPolyLine2d
         assertFalse("line is not equal to a different kind of object", line.equals("unlikely"));
         assertTrue("Line is equal to line from same set of points", line.equals(new PolyLine2d(line.getPoints())));
     }
-    
+
     /**
      * Test the concatenate method.
      * @throws DrawException should not happen; this test has failed if it does happen
@@ -965,6 +964,202 @@ public class TestPolyLine2d
             // Ignore expected exception
         }
 
+    }
+
+    /**
+     * Test the projectDirectedPoint method.
+     * @throws DrawException cannot happen
+     */
+    @Test
+    public void testProjectDirectedPointTransition() throws DrawException
+    {
+        List<Point2d> innerDesignLinePoints = new ArrayList<>();
+        List<Point2d> outerDesignLinePoints = new ArrayList<>();
+        // Approximate a quarter circle with radius 5
+        double innerRadius = 5;
+        // Approximate a quarter circle with radius 8
+        double outerRadius = 8;
+        for (int degree = 0; degree <= 90; degree++)
+        {
+            innerDesignLinePoints.add(new Point2d(innerRadius * Math.sin(Math.toRadians(degree)),
+                    innerRadius * Math.cos(Math.toRadians(degree))));
+            outerDesignLinePoints.add(new Point2d(outerRadius * Math.sin(Math.toRadians(degree)),
+                    outerRadius * Math.cos(Math.toRadians(degree))));
+        }
+        PolyLine2d innerDesignLine = new PolyLine2d(innerDesignLinePoints);
+        PolyLine2d outerDesignLine = new PolyLine2d(outerDesignLinePoints);
+        List<Point2d> transitionLinePoints = new ArrayList<>();
+        int degree = 0;
+        Point2d prevPoint = innerDesignLinePoints.get(0);
+        while (degree < 10)
+        {
+            double x = innerRadius * Math.sin(Math.toRadians(degree));
+            double y = innerRadius * Math.cos(Math.toRadians(degree));
+            double direction = prevPoint.directionTo(new Point2d(x, y));
+            DirectedPoint2d dp = new DirectedPoint2d(x, y, direction);
+            transitionLinePoints.add(dp);
+            prevPoint = dp;
+            degree++;
+        }
+        while (degree <= 80)
+        {
+            double phase = Math.PI * (degree - 10) / 70;
+            double radius = innerRadius + (outerRadius - innerRadius) * (1 - Math.cos(phase) / 2 - 0.5);
+            double x = radius * Math.sin(Math.toRadians(degree));
+            double y = radius * Math.cos(Math.toRadians(degree));
+            double direction = prevPoint.directionTo(new Point2d(x, y));
+            DirectedPoint2d dp = new DirectedPoint2d(x, y, direction);
+            transitionLinePoints.add(dp);
+            prevPoint = dp;
+            degree++;
+        }
+        while (degree < 90)
+        {
+            double x = outerRadius * Math.sin(Math.toRadians(degree));
+            double y = outerRadius * Math.cos(Math.toRadians(degree));
+            double direction = prevPoint.directionTo(new Point2d(x, y));
+            DirectedPoint2d dp = new DirectedPoint2d(x, y, direction);
+            transitionLinePoints.add(dp);
+            prevPoint = dp;
+            degree++;
+        }
+        PolyLine2d transitionLine = new PolyLine2d(transitionLinePoints);
+        System.out.print("inner design line: " + innerDesignLine.toPlot());
+        System.out.print("outer design line: " + outerDesignLine.toPlot());
+        System.out.print("transition line:   " + transitionLine.toPlot());
+        List<Point2d> projections = new ArrayList<>();
+        for (Iterator<Point2d> iterator = transitionLine.getPoints(); iterator.hasNext();)
+        {
+            Point2d p = iterator.next();
+            if (p instanceof DirectedPoint2d)
+            {
+                DirectedPoint2d dp = (DirectedPoint2d) p;
+                Point2d transitionLinePoint = new Point2d(dp.x, dp.y);
+                projections.add(transitionLinePoint);
+                double location = innerDesignLine.projectDirectedPoint(dp);
+                if (!Double.isNaN(location))
+                {
+                    Point2d projection = innerDesignLine.getLocation(location);
+                    projections.add(new Point2d(projection.x, projection.y));
+                    projections.add(transitionLinePoint);
+                }
+                location = outerDesignLine.projectDirectedPoint(dp);
+                if (!Double.isNaN(location))
+                {
+                    Point2d projection = outerDesignLine.getLocation(location);
+                    projections.add(new Point2d(projection.x, projection.y));
+                    projections.add(transitionLinePoint);
+                }
+            }
+        }
+        System.out.print("cosine projections: " + PolyLine2d.createAndCleanPolyLine2d(projections).toPlot());
+        DirectedPoint2d from = new DirectedPoint2d(outerDesignLine.get(10).x, outerDesignLine.get(10).y,
+                outerDesignLine.get(10).directionTo(outerDesignLine.get(11)));
+        DirectedPoint2d to = new DirectedPoint2d(innerDesignLine.get(80).x, innerDesignLine.get(80).y,
+                innerDesignLine.get(80).directionTo(innerDesignLine.get(81)));
+        transitionLine = Bezier.cubic(from, to);
+        System.out.print("Bezier: " + transitionLine.toPlot());
+        projections = new ArrayList<>();
+        Point2d prev = null;
+        for (Iterator<Point2d> iterator = transitionLine.getPoints(); iterator.hasNext();)
+        {
+            Point2d p = iterator.next();
+            if (prev != null)
+            {
+                DirectedPoint2d dp = new DirectedPoint2d(prev, prev.directionTo(p));
+                Point2d transitionLinePoint = new Point2d(dp.x, dp.y);
+                projections.add(transitionLinePoint);
+                double location = innerDesignLine.projectDirectedPoint(dp);
+                if (!Double.isNaN(location))
+                {
+                    Point2d projection = innerDesignLine.getLocation(location);
+                    projections.add(new Point2d(projection.x, projection.y));
+                    projections.add(transitionLinePoint);
+                }
+                location = outerDesignLine.projectDirectedPoint(dp);
+                if (!Double.isNaN(location))
+                {
+                    Point2d projection = outerDesignLine.getLocation(location);
+                    projections.add(new Point2d(projection.x, projection.y));
+                    projections.add(transitionLinePoint);
+                }
+            }
+            prev = p;
+        }
+        System.out.print("Bezier projections: " + PolyLine2d.createAndCleanPolyLine2d(projections).toPlot());
+    }
+
+    /**
+     * Test the projectDirectedPoint method.
+     */
+    @Test
+    public void testProjectDirectedPoint()
+    {
+        PolyLine2d reference = new PolyLine2d(new Point2d(0, 1), new Point2d(5, 1), new Point2d(10, 6), new Point2d(20, 6));
+        System.out.print("reference line is " + reference.toPlot());
+        PolyLine2d offsetLine = reference.offsetLine(-10);
+        // Now we have a line with a somewhat smooth 45 degree curve around (5, 1) with radius 10
+        System.out.print("offset line is " + offsetLine.toPlot());
+        double slope = 0.25;
+        double slopeAngle = Math.atan2(slope, 1);
+        double prevProjection = -100;
+        List<Point2d> projections = new ArrayList<>();
+        for (double x = -0.5; x < 19; x += 0.25)
+        {
+            double y = -5 + x * slope;
+            DirectedPoint2d dp = new DirectedPoint2d(x, y, slopeAngle);
+            projections.add(dp);
+            double projectionLocation = offsetLine.projectDirectedPoint(dp);
+            if (Double.isNaN(projectionLocation))
+            {
+                System.out.println("x " + x + " gives NaN result");
+                continue;
+            }
+            try
+            {
+                Point2d projectedPoint = offsetLine.getLocation(projectionLocation);
+                // System.out.println(String.format("DirectedPoint %s projects on line at %.3f. which is at %s", dp,
+                // projectionLocation, projectedPoint));
+                projections.add(projectedPoint);
+                projections.add(dp); // And back to dp
+            }
+            catch (DrawException e)
+            {
+                e.printStackTrace();
+            }
+            assertTrue("projection increases monotonous", projectionLocation > prevProjection);
+            prevProjection = projectionLocation;
+        }
+        System.out.print("projections: " + new PolyLine2d(projections).toPlot());
+        projections.clear();
+        prevProjection = -100;
+        for (double x = 1.5; x < 21; x += 0.25)
+        {
+            double y = -15 + x * slope;
+            DirectedPoint2d dp = new DirectedPoint2d(x, y, slopeAngle);
+            double projectionLocation = offsetLine.projectDirectedPoint(dp);
+            if (Double.isNaN(projectionLocation))
+            {
+                System.out.println("x " + x + " gives NaN result");
+                continue;
+            }
+            try
+            {
+                projections.add(dp);
+                Point2d projectedPoint = offsetLine.getLocation(projectionLocation);
+                // System.out.println(String.format("DirectedPoint %s projects on line at %.3f. which is at %s", dp,
+                // projectionLocation, projectedPoint));
+                projections.add(projectedPoint);
+                projections.add(dp); // And back to dp
+            }
+            catch (DrawException e)
+            {
+                e.printStackTrace();
+            }
+            assertTrue("projection increases monotonous", projectionLocation > prevProjection);
+            prevProjection = projectionLocation;
+        }
+        System.out.print("projections: " + new PolyLine2d(projections).toPlot());
     }
 
     /**

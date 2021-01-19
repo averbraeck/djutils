@@ -494,7 +494,7 @@ public class Transform3dTest
             }
         }
     }
-    
+
     /**
      * Check that toString returns something descriptive.
      */
@@ -502,6 +502,31 @@ public class Transform3dTest
     public void toStringTest()
     {
         assertTrue("toString returns something descriptive", new Transform3d().toString().startsWith("Transform3d "));
+    }
+
+    /**
+     * Check what transform does to a unit vector.
+     * @param args String[]; not used
+     */
+    public static void main(final String[] args)
+    {
+        Point3d unitVector = new Point3d(1, 0, 0);
+        double rotX = Math.toRadians(-55);
+        double rotY = Math.toRadians(-65);
+        double rotZ = Math.toRadians(-175);
+        Transform3d transform = new Transform3d();
+        transform.rotZ(rotZ);
+        System.out.println(transform.transform(unitVector));
+        transform.rotY(rotY);
+        System.out.println(transform.transform(unitVector));
+        transform.rotX(rotX);
+        Point3d rotated = transform.transform(unitVector);
+        System.out.println(rotated);
+        System.out.println("dirZ: " + Math.toDegrees(Math.atan2(rotated.y, rotated.x)));
+        System.out.println(
+                "dirY: " + Math.toDegrees(Math.atan2(-rotated.z, Math.sqrt(rotated.x * rotated.x + rotated.y * rotated.y)))
+                        + " == " + Math.toDegrees(Math.atan2(-rotated.z, Math.hypot(rotated.x, rotated.y))));
+
     }
 
 }

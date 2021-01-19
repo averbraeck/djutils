@@ -489,8 +489,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
             double fraction = len / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
             Point2d p1 = this.points[0];
             Point2d p2 = this.points[1];
-            return new DirectedPoint2d(p1.x + fraction * (p2.x - p1.x),
-                    p1.y + fraction * (p2.y - p1.y), Math.atan2(p2.y - p1.y, p2.x - p1.x));
+            return new DirectedPoint2d(p1.x + fraction * (p2.x - p1.x), p1.y + fraction * (p2.y - p1.y),
+                    Math.atan2(p2.y - p1.y, p2.x - p1.x));
         }
 
         // position beyond end point -- extrapolate using the direction from the before last point to the last point of this
@@ -511,8 +511,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         }
         Point2d p1 = this.points[n2];
         Point2d p2 = this.points[n1];
-        return new DirectedPoint2d(p2.x + fraction * (p2.x - p1.x),
-                p2.y + fraction * (p2.y - p1.y), Math.atan2(p2.y - p1.y, p2.x - p1.x));
+        return new DirectedPoint2d(p2.x + fraction * (p2.x - p1.x), p2.y + fraction * (p2.y - p1.y),
+                Math.atan2(p2.y - p1.y, p2.x - p1.x));
     }
 
     /** {@inheritDoc} */
@@ -545,8 +545,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         double fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
         Point2d p1 = this.points[index];
         Point2d p2 = this.points[index + 1];
-        return new DirectedPoint2d(p1.x + fraction * (p2.x - p1.x),
-                p1.y + fraction * (p2.y - p1.y), Math.atan2(p2.y - p1.y, p2.x - p1.x));
+        return new DirectedPoint2d(p1.x + fraction * (p2.x - p1.x), p1.y + fraction * (p2.y - p1.y),
+                Math.atan2(p2.y - p1.y, p2.x - p1.x));
     }
 
     /**
@@ -841,10 +841,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         {
             Point2d nextPoint = filteredReferenceLine.get(index + 1);
             double angle = Math.atan2(nextPoint.y - prevPoint.y, nextPoint.x - prevPoint.x);
-            Point2d segmentFrom =
-                    new Point2d(prevPoint.x - Math.sin(angle) * offset, prevPoint.y + Math.cos(angle) * offset);
-            Point2d segmentTo =
-                    new Point2d(nextPoint.x - Math.sin(angle) * offset, nextPoint.y + Math.cos(angle) * offset);
+            Point2d segmentFrom = new Point2d(prevPoint.x - Math.sin(angle) * offset, prevPoint.y + Math.cos(angle) * offset);
+            Point2d segmentTo = new Point2d(nextPoint.x - Math.sin(angle) * offset, nextPoint.y + Math.cos(angle) * offset);
             boolean addSegment = true;
             if (index > 0)
             {
@@ -1012,6 +1010,50 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         return null;
     }
 
+    /**
+     * Find a location on this PolyLine2d that is a reasonable projection of a DirectedPoint on this line. The result (if not
+     * NaN) lies on a line perpendicular to the direction of the DirectedPoint and on some segment of this PolyLine. This method
+     * attempts to give continuous results for continuous changes of the DirectedPoint that must be projected. There are cases
+     * where this is simply impossible, or the optimal result is ambiguous. In these cases this method will return something
+     * that is hopefully good enough.
+     * @param directedPoint DirectedPoint2d; the DirectedPoint
+     * @return double; length along this PolyLine (some value between 0 and the length of this PolyLine) where directedPoint
+     *         projects, or NaN if there is no solution
+     * @throws NullPointerException when directedPoint is null
+     */
+    public double projectDirectedPoint(final DirectedPoint2d directedPoint) throws NullPointerException
+    {
+        Throw.whenNull(directedPoint, "directedPoint may not be null");
+        double bestDistance = Double.POSITIVE_INFINITY;
+        double positionAtBestDistance = Double.NaN;
+        Point2d prevPoint = null;
+        // Define the line that is perpendicular to directedPoint, passing through directedPoint
+        Point2d perpendicular = directedPoint.translate(-Math.sin(directedPoint.getDirZ()), Math.cos(directedPoint.getDirZ()));
+        double cumulativeDistance = 0;
+        for (Point2d nextPoint : this.points)
+        {
+            if (null != prevPoint)
+            {
+                double segmentLength = prevPoint.distance(nextPoint);
+                Point2d intersection = Point2d.intersectionOfLines(directedPoint, perpendicular, prevPoint, nextPoint);
+                double distanceToPrevPoint = intersection.distance(prevPoint);
+                if (distanceToPrevPoint <= segmentLength && intersection.distance(nextPoint) <= segmentLength)
+                {
+                    // Intersection is on the segment
+                    double thisDistance = intersection.distance(directedPoint);
+                    if (thisDistance < bestDistance)
+                    {
+                        positionAtBestDistance = cumulativeDistance + distanceToPrevPoint;
+                        bestDistance = thisDistance;
+                    }
+                }
+                cumulativeDistance += segmentLength;
+            }
+            prevPoint = nextPoint;
+        }
+        return positionAtBestDistance;
+    }
+
     /** {@inheritDoc} */
     @Override
     public String toString()
@@ -1059,7 +1101,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings({"checkstyle:designforextension", "checkstyle:needbraces"})
+    @SuppressWarnings({ "checkstyle:designforextension", "checkstyle:needbraces" })
     @Override
     public boolean equals(final Object obj)
     {
