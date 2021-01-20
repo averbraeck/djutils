@@ -40,7 +40,7 @@ public final class AngleUtil
      */
     public static double normalizeAroundZero(final double angle)
     {
-        return angle - PI2 * Math.floor((angle + Math.PI) / PI2);
+        return angle + PI2 * Math.floor((-angle + Math.PI) / PI2);
     }
 
     /**
