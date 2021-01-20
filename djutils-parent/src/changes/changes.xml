@@ -6,6 +6,14 @@
       djtils-draw-geotools. Added a project to visually introspect the data providing Java objects on the screen: djtils-draw-introspection. Added projects for drawing graphs in swing and html5: djutils-graph, 
       djutils-graph-swing, and djutils-graph-web. Added a project for a graph data providers: djtils-graph-jfree to plot data from jfreechart data providers. -->
 
+    <release version="1.06.07" date="2021-01-20" description="Fixed rounding problem in AngleUtil">
+      <action dev="pknoppers" type="fix">
+        AngleUtil.normalizeAroundZero mapped Math.PI to -Math.PI. The fix ensures that Math.PI is mapped to Math.PI
+        (and -Math.PI is now mapped to Math.PI).
+        This implementation makes slightly more sense considering that Math.cos(Math.PI) > 0.
+      </action>
+    </release>
+    
     <release version="1.06.06" date="2021-01-02" description="Fixed ulp-error in time weighed statistics">
       <action dev="averbraeck" type="fix">
         Some of the time weighed statistics in djutils-stats indicated wrongly that the next observation was before the previous
