@@ -7,8 +7,8 @@ import java.util.Iterator;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.Space3d;
-import org.djutils.draw.Transform3d;
 import org.djutils.draw.bounds.Bounds3d;
+import org.djutils.draw.line.Ray3d;
 import org.djutils.exceptions.Throw;
 
 /**
@@ -312,20 +312,20 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
         return linePoint1.interpolate(linePoint2, u);
     }
 
-    /** Unit vector for transformations in createControlPoints. */
-    private static final Point3d UNIT_VECTOR3D = new Point3d(1, 0, 0);
-
     /**
-     * Closest point on a line defined by a DirectedPoint3d.
-     * @param directedPoint DirectedPoint3d; a point through which the line passes in the direction
+     * Closest point on a ray.
+     * @param ray Ray3d; a point through which the line passes in the direction
      * @return Point3d; the point on the line that is closest to this
      */
-    public final Point3d closestPointOnLine(final DirectedPoint3d directedPoint)
+    public final Point3d closestPointOnLine(final Ray3d ray)
     {
-        // TODO this is wrong
-        Point3d additionalPoint = new Transform3d().translate(directedPoint).rotZ(directedPoint.getDirZ())
-                .rotY(directedPoint.getDirY()).rotX(directedPoint.getDirX()).transform(UNIT_VECTOR3D);
-        return closestPointOnLine(directedPoint, additionalPoint);
+        double sinTheta = Math.sin(ray.theta);
+        double dX = Math.cos(ray.phi) * sinTheta;
+        double dY = Math.sin(ray.phi) * sinTheta;
+        double dZ = Math.cos(ray.theta);
+        final double u =
+                ((this.x - ray.x) * dX + (this.y - ray.y) * dY + (this.z - ray.z) * dZ) / (dX * dX + dY * dY * dZ * dZ);
+        return ray.interpolate(new Point3d(ray.x + dX, ray.y + dY, ray.z + dZ), Math.max(0, u));
     }
 
     /**

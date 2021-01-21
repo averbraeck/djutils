@@ -22,7 +22,7 @@ import org.junit.Test;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class DirectedPoint2dTest
+public class OrientedPoint2dTest
 {
     /**
      * Test the DirectedPoint2d construction methods.
@@ -31,25 +31,25 @@ public class DirectedPoint2dTest
     @Test
     public void testDirectedPoint2dConstruction()
     {
-        DirectedPoint2d p = new DirectedPoint2d(10.0, -20.0, Math.PI);
+        OrientedPoint2d p = new OrientedPoint2d(10.0, -20.0, Math.PI);
         assertEquals("x", 10.0, p.x, 0);
         assertEquals("y", -20.0, p.y, 0);
         assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
         
-        p = new DirectedPoint2d(10.0, -20.0);
+        p = new OrientedPoint2d(10.0, -20.0);
         assertEquals("x", 10.0, p.x, 0);
         assertEquals("y", -20.0, p.y, 0);
         assertEquals("dirZ", 0, p.getDirZ(), 0);
         
         Point2d p2d = new Point2d(10, -20);
-        p = new DirectedPoint2d(p2d, Math.PI);
+        p = new OrientedPoint2d(p2d, Math.PI);
         assertEquals("x", 10.0, p.x, 0);
         assertEquals("y", -20.0, p.y, 0);
         assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
         
         try
         {
-            new DirectedPoint2d(Double.NaN, 0, 0);
+            new OrientedPoint2d(Double.NaN, 0, 0);
             fail("NaN coordinate should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -59,7 +59,7 @@ public class DirectedPoint2dTest
         
         try
         {
-            new DirectedPoint2d(0, Double.NaN, 0);
+            new OrientedPoint2d(0, Double.NaN, 0);
             fail("NaN coordinate should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -69,7 +69,7 @@ public class DirectedPoint2dTest
         
         try
         {
-            new DirectedPoint2d(0, 0, Double.NaN);
+            new OrientedPoint2d(0, 0, Double.NaN);
             fail("NaN coordinate should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -78,12 +78,12 @@ public class DirectedPoint2dTest
         }
         
         double[] p2Arr = new double[] {5.0, 6.0};
-        p = new DirectedPoint2d(p2Arr, Math.PI / 2.0);
+        p = new OrientedPoint2d(p2Arr, Math.PI / 2.0);
         assertEquals(5.0, p.x, 1E-6);
         assertEquals(6.0, p.y, 1E-6);
         assertEquals(3.1415926 / 2.0, p.getDirZ(), 1E-6);
         Point2D.Double p2DD = new Point2D.Double(-0.1, -0.2);
-        p = new DirectedPoint2d(p2DD, Math.PI / 4.0);
+        p = new OrientedPoint2d(p2DD, Math.PI / 4.0);
         assertEquals(-0.1, p.x, 1E-6);
         assertEquals(-0.2, p.y, 1E-6);
         assertEquals(p2DD, p.toPoint2D());
@@ -94,7 +94,7 @@ public class DirectedPoint2dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint2d((Point2D.Double) null, 0.0);
+                new OrientedPoint2d((Point2D.Double) null, 0.0);
             }
         }, "Should throw NPE", NullPointerException.class);
 
@@ -103,7 +103,7 @@ public class DirectedPoint2dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint2d((Point2D.Double) null, Math.PI);
+                new OrientedPoint2d((Point2D.Double) null, Math.PI);
             }
         }, "Should throw NPE", NullPointerException.class);
 
@@ -112,7 +112,7 @@ public class DirectedPoint2dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint2d(new double[] {}, Math.PI / 2.0);
+                new OrientedPoint2d(new double[] {}, Math.PI / 2.0);
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -121,7 +121,7 @@ public class DirectedPoint2dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint2d(new double[] {1.0}, Math.PI / 4.0);
+                new OrientedPoint2d(new double[] {1.0}, Math.PI / 4.0);
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -130,14 +130,14 @@ public class DirectedPoint2dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint2d(new double[] {1.0, 2.0, 3.0}, Math.PI);
+                new OrientedPoint2d(new double[] {1.0, 2.0, 3.0}, Math.PI);
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
         // equals and hashCode
         assertTrue(p.equals(p));
         assertEquals(p.hashCode(), p.hashCode());
-        DirectedPoint3d p3d = p.translate(1.0, 2.0, 3.0);
+        OrientedPoint3d p3d = p.translate(1.0, 2.0, 3.0);
         assertFalse(p.equals(p3d));
         assertFalse(p.equals(null));
         assertNotEquals(p3d.hashCode(), p.hashCode());
@@ -151,15 +151,15 @@ public class DirectedPoint2dTest
         assertFalse(p.equals(p.rotate(0.1)));
 
         // toString
-        p = new DirectedPoint2d(10.0, 20.0, Math.PI);
+        p = new OrientedPoint2d(10.0, 20.0, Math.PI);
         assertEquals("[(10.000000,20.000000), rot=3.141593]", p.toString());
         assertEquals("[(10.0,20.0), rot=3.1]", p.toString(1));
         assertEquals("[(10,20), rot=3]", p.toString(0));
         assertEquals("[(10,20), rot=3]", p.toString(-1));
         
         // epsilonEquals
-        DirectedPoint3d p3 = p.translate(0.001, 0.0, 0.0);
-        DirectedPoint3d ref = p.translate(0, 0, 0);
+        OrientedPoint3d p3 = p.translate(0.001, 0.0, 0.0);
+        OrientedPoint3d ref = p.translate(0, 0, 0);
         assertTrue(ref.epsilonEquals(p3, 0.09, 0.001));
         assertTrue(p3.epsilonEquals(ref, 0.09, 0.001));
         assertFalse(ref.epsilonEquals(p3, 0.0009, 0.001));
@@ -169,7 +169,7 @@ public class DirectedPoint2dTest
         assertTrue(p3.epsilonEquals(ref, 0.09, 0.001));
         assertFalse(ref.epsilonEquals(p3, 0.0009, 0.001));
         assertFalse(p3.epsilonEquals(ref, 0.0009, 0.001));
-        DirectedPoint2d p2 = p.translate(0.001,  0.0);
+        OrientedPoint2d p2 = p.translate(0.001,  0.0);
         assertTrue("all", p.epsilonEquals(p2, 0.09, 0.001));
         assertFalse("dx", p.epsilonEquals(p2, 0.0009, 0.001));
         p2 = p.translate(0.0, 0.001);
@@ -180,7 +180,7 @@ public class DirectedPoint2dTest
         assertTrue(p3.epsilonEquals(ref, 0.09, 0.001));
         assertFalse(ref.epsilonEquals(p3, 0.0009, 0.001));
         assertFalse(p3.epsilonEquals(ref, 0.0009, 0.001));
-        DirectedPoint2d dp2 = p.rotate(0.001);
+        OrientedPoint2d dp2 = p.rotate(0.001);
         assertTrue(p.epsilonEquals(dp2, 0.09, 0.009));
         assertTrue(dp2.epsilonEquals(p, 0.09, 0.009));
         assertFalse(p.epsilonEquals(dp2, 0.0009, 0.0009));
@@ -193,8 +193,8 @@ public class DirectedPoint2dTest
     @Test
     public void testDirectedPoint2dOperators()
     {
-        DirectedPoint2d p = new DirectedPoint2d(-0.1, -0.2, -Math.PI / 7);
-        DirectedPoint2d out = p.abs();
+        OrientedPoint2d p = new OrientedPoint2d(-0.1, -0.2, -Math.PI / 7);
+        OrientedPoint2d out = p.abs();
         assertEquals("x", 0.1, out.x, 1E-6);
         assertEquals("y", 0.2, out.y, 1E-6);
         assertEquals("dirZ", -Math.PI / 7, out.getDirZ(), 1E-6);
@@ -235,14 +235,14 @@ public class DirectedPoint2dTest
         assertEquals("dirZ", -Math.PI / 7 - Math.PI / 4, out.getDirZ(), 1E-6);
 
         // interpolate
-        DirectedPoint2d p1 = new DirectedPoint2d(1.0, 1.0, 0.0);
-        DirectedPoint2d p2 = new DirectedPoint2d(5.0, 5.0, Math.PI / 2.0);
+        OrientedPoint2d p1 = new OrientedPoint2d(1.0, 1.0, 0.0);
+        OrientedPoint2d p2 = new OrientedPoint2d(5.0, 5.0, Math.PI / 2.0);
         assertEquals("p1 interpolated to p2 at 0", p1, p1.interpolate(p2, 0.0));
         assertEquals("p1 interpolated to p2 at 1", p2, p1.interpolate(p2, 1.0));
         assertEquals("p2 interpolated to p1 at 0", p2, p2.interpolate(p1, 0.0));
         assertEquals("p2 interpolated to p1 at 1", p1, p2.interpolate(p1, 1.0));
         assertEquals("p1 interpolated to itself at 0", p1, p1.interpolate(p1, 0.0));
-        assertEquals("interpolated at halfway", new DirectedPoint2d(3.0, 3.0, Math.PI / 4.0), p1.interpolate(p2, 0.5));
+        assertEquals("interpolated at halfway", new OrientedPoint2d(3.0, 3.0, Math.PI / 4.0), p1.interpolate(p2, 0.5));
 
         // distance
         assertEquals(Math.sqrt(32.0), p1.distance(p2), 0.001);
@@ -257,7 +257,7 @@ public class DirectedPoint2dTest
 //        assertEquals(0.0, new DirectedPoint2d(0.0, 0.0, Math.PI / 4.0).horizontalDirection(), 0.001);
 
         // normalize
-        DirectedPoint2d pn = p2.normalize();
+        OrientedPoint2d pn = p2.normalize();
         assertEquals(1.0 / Math.sqrt(2.0), pn.x, 0.001);
         assertEquals(1.0 / Math.sqrt(2.0), pn.y, 0.001);
 
@@ -266,7 +266,7 @@ public class DirectedPoint2dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint2d(0.0, 0.0, Math.PI / 4.0).normalize();
+                new OrientedPoint2d(0.0, 0.0, Math.PI / 4.0).normalize();
             }
         }, "Should throw DRtE", DrawRuntimeException.class);
 
@@ -323,7 +323,7 @@ public class DirectedPoint2dTest
     @Test
     public void testDirectedPoint2dOperatorsNPE()
     {
-        final DirectedPoint2d p1 = new DirectedPoint2d(1.0, 1.0, Math.PI / 4.0);
+        final OrientedPoint2d p1 = new OrientedPoint2d(1.0, 1.0, Math.PI / 4.0);
 
         Try.testFail(new Try.Execution()
         {

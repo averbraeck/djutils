@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import org.djutils.base.AngleUtil;
-import org.djutils.draw.Directed3d;
+import org.djutils.draw.Oriented3d;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Throw;
 
@@ -20,7 +20,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class DirectedPoint3d extends Point3d implements Directed3d
+public class OrientedPoint3d extends Point3d implements Oriented3d
 {
     /** */
     private static final long serialVersionUID = 20200828L;
@@ -41,7 +41,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @param z double; the z coordinate
      * @throws IllegalArgumentException when x, y, or z is NaN
      */
-    public DirectedPoint3d(final double x, final double y, final double z) throws IllegalArgumentException
+    public OrientedPoint3d(final double x, final double y, final double z) throws IllegalArgumentException
     {
         super(x, y, z);
         this.dirX = 0.0;
@@ -59,7 +59,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @param dirZ double; the direction as rotation around the z-axis with the point as the center
      * @throws IllegalArgumentException when x, y, z, dirX, dirY, or dirZ is NaN
      */
-    public DirectedPoint3d(final double x, final double y, final double z, final double dirX, final double dirY,
+    public OrientedPoint3d(final double x, final double y, final double z, final double dirX, final double dirY,
             final double dirZ) throws IllegalArgumentException
     {
         super(x, y, z);
@@ -77,7 +77,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @throws IllegalArgumentException when the length of the xyx array is not 3, or contains a NaN value, or dirX, dirY, or
      *             dirZ is NaN
      */
-    public DirectedPoint3d(final double[] xyz) throws NullPointerException, IllegalArgumentException
+    public OrientedPoint3d(final double[] xyz) throws NullPointerException, IllegalArgumentException
     {
         super(xyz);
         this.dirX = 0.0;
@@ -95,7 +95,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @throws IllegalArgumentException when the length of the xyx array is not 3, or contains a NaN value, or dirX, dirY, or
      *             dirZ is NaN
      */
-    public DirectedPoint3d(final double[] xyz, final double dirX, final double dirY, final double dirZ)
+    public OrientedPoint3d(final double[] xyz, final double dirX, final double dirY, final double dirZ)
             throws NullPointerException, IllegalArgumentException
     {
         super(xyz);
@@ -114,7 +114,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @param dirZ double; the direction as rotation around the z-axis with the point as the center
      * @throws IllegalArgumentException when dirX, dirY, or dirZ is NaN
      */
-    public DirectedPoint3d(final Point3d point, final double dirX, final double dirY, final double dirZ)
+    public OrientedPoint3d(final Point3d point, final double dirX, final double dirY, final double dirZ)
             throws IllegalArgumentException
     {
         super(point.x, point.y, point.z);
@@ -134,7 +134,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @throws NullPointerException when <code>rotation</code> is null
      * @throws IllegalArgumentException when the length of the <code>direction</code> array is not 3
      */
-    public DirectedPoint3d(final double x, final double y, final double z, final double[] direction)
+    public OrientedPoint3d(final double x, final double y, final double z, final double[] direction)
             throws NullPointerException, IllegalArgumentException
     {
         super(x, y, z);
@@ -152,7 +152,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @throws NullPointerException when xyx or direction is null
      * @throws IllegalArgumentException when the length of the xyx array or the length of the direction array is not 3
      */
-    public DirectedPoint3d(final double[] xyz, final double[] direction) throws NullPointerException, IllegalArgumentException
+    public OrientedPoint3d(final double[] xyz, final double[] direction) throws NullPointerException, IllegalArgumentException
     {
         super(xyz);
         Throw.whenNull(direction, "direction cannot be null");
@@ -164,53 +164,50 @@ public class DirectedPoint3d extends Point3d implements Directed3d
 
     /** {@inheritDoc} */
     @Override
-    public DirectedPoint3d translate(final double dx, final double dy) throws IllegalArgumentException
+    public OrientedPoint3d translate(final double dx, final double dy) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class, "translation may not be NaN");
-        return new DirectedPoint3d(getX() + dx, getY() + dy, getZ(), getDirX(), getDirY(), getDirZ());
+        return new OrientedPoint3d(getX() + dx, getY() + dy, getZ(), getDirX(), getDirY(), getDirZ());
     }
 
     /** {@inheritDoc} */
     @Override
-    public DirectedPoint3d translate(final double dx, final double dy, final double dz) throws IllegalArgumentException
+    public OrientedPoint3d translate(final double dx, final double dy, final double dz) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(dx) || Double.isNaN(dy) || Double.isNaN(dz), IllegalArgumentException.class,
                 "Translation may not be NaN");
-        return new DirectedPoint3d(this.x + dx, this.y + dy, this.z + dz, this.dirX, this.dirY, this.dirZ);
+        return new OrientedPoint3d(this.x + dx, this.y + dy, this.z + dz, this.dirX, this.dirY, this.dirZ);
     }
 
     /** {@inheritDoc} */
     @Override
-    public DirectedPoint3d scale(final double factor) throws IllegalArgumentException
+    public OrientedPoint3d scale(final double factor) throws IllegalArgumentException
     {
-        return new DirectedPoint3d(this.x * factor, this.y * factor, this.z * factor, this.dirX, this.dirY,
-                this.dirZ);
+        return new OrientedPoint3d(this.x * factor, this.y * factor, this.z * factor, this.dirX, this.dirY, this.dirZ);
     }
 
     /** {@inheritDoc} */
     @Override
-    public DirectedPoint3d neg()
+    public OrientedPoint3d neg()
     {
-        return new DirectedPoint3d(-this.x, -this.y, -this.z, AngleUtil.normalizeAroundZero(this.dirX + Math.PI),
+        return new OrientedPoint3d(-this.x, -this.y, -this.z, AngleUtil.normalizeAroundZero(this.dirX + Math.PI),
                 AngleUtil.normalizeAroundZero(this.dirY + Math.PI), AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
     }
 
     /** {@inheritDoc} */
     @Override
-    public DirectedPoint3d abs()
+    public OrientedPoint3d abs()
     {
-        return new DirectedPoint3d(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z), this.dirX, this.dirY,
-                this.dirZ);
+        return new OrientedPoint3d(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z), this.dirX, this.dirY, this.dirZ);
     }
 
     /** {@inheritDoc} */
     @Override
-    public DirectedPoint3d normalize() throws DrawRuntimeException
+    public OrientedPoint3d normalize() throws DrawRuntimeException
     {
         double length = Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
         Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0, 0.0)");
-        return new DirectedPoint3d(this.x / length, this.y / length, this.z / length, this.dirX, this.dirY,
-                this.dirZ);
+        return new OrientedPoint3d(this.x / length, this.y / length, this.z / length, this.dirX, this.dirY, this.dirZ);
     }
 
     /**
@@ -225,14 +222,13 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @throws NullPointerException when otherPoint is null
      * @throws IllegalArgumentException when fraction is NaN
      */
-    public DirectedPoint3d interpolate(final DirectedPoint3d otherPoint, final double fraction)
+    public OrientedPoint3d interpolate(final OrientedPoint3d otherPoint, final double fraction)
             throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(otherPoint, "point cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
-        return new DirectedPoint3d((1.0 - fraction) * getX() + fraction * otherPoint.x,
-                (1.0 - fraction) * getY() + fraction * otherPoint.y,
-                (1.0 - fraction) * getZ() + fraction * otherPoint.z,
+        return new OrientedPoint3d((1.0 - fraction) * getX() + fraction * otherPoint.x,
+                (1.0 - fraction) * getY() + fraction * otherPoint.y, (1.0 - fraction) * getZ() + fraction * otherPoint.z,
                 AngleUtil.interpolateShortest(getDirX(), otherPoint.getDirX(), fraction),
                 AngleUtil.interpolateShortest(getDirY(), otherPoint.getDirY(), fraction),
                 AngleUtil.interpolateShortest(getDirZ(), otherPoint.getDirZ(), fraction));
@@ -245,10 +241,10 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @return DirectedPoint3d; a new point with the same coordinates, dirX and dirY and modified dirZ
      * @throws IllegalArgumentException when rotateZ is NaN
      */
-    public DirectedPoint3d rotate(final double rotateZ) throws IllegalArgumentException
+    public OrientedPoint3d rotate(final double rotateZ) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(rotateZ), IllegalArgumentException.class, "deltaDirZ must be a number (not NaN)");
-        return new DirectedPoint3d(getX(), getY(), getZ(), getDirX(), getDirY(),
+        return new OrientedPoint3d(getX(), getY(), getZ(), getDirX(), getDirY(),
                 AngleUtil.normalizeAroundZero(getDirZ() + rotateZ));
     }
 
@@ -261,12 +257,12 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @return DirectedPoint3d; a new point with the same coordinates and applied rotations
      * @throws IllegalArgumentException when any of the rotations is NaN
      */
-    public DirectedPoint3d rotate(final double rotateX, final double rotateY, final double rotateZ)
+    public OrientedPoint3d rotate(final double rotateX, final double rotateY, final double rotateZ)
             throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(rotateX) || Double.isNaN(rotateY) || Double.isNaN(rotateZ), IllegalArgumentException.class,
                 "Rotation must be a number (not NaN)");
-        return new DirectedPoint3d(getX(), getY(), getZ(), AngleUtil.normalizeAroundZero(getDirX() + rotateX),
+        return new OrientedPoint3d(getX(), getY(), getZ(), AngleUtil.normalizeAroundZero(getDirX() + rotateX),
                 AngleUtil.normalizeAroundZero(getDirY() + rotateY), AngleUtil.normalizeAroundZero(getDirZ() + rotateZ));
     }
 
@@ -293,17 +289,16 @@ public class DirectedPoint3d extends Point3d implements Directed3d
 
     /** {@inheritDoc} */
     @Override
-    public Iterator<DirectedPoint3d> getPoints()
+    public Iterator<OrientedPoint3d> getPoints()
     {
-        return Arrays.stream(new DirectedPoint3d[] {this}).iterator();
+        return Arrays.stream(new OrientedPoint3d[] { this }).iterator();
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString()
     {
-        return String.format("[(%f,%f,%f), rot=(%f,%f,%f)]", this.x, this.y, this.z, this.dirX, this.dirY,
-                this.dirZ);
+        return String.format("[(%f,%f,%f), rot=(%f,%f,%f)]", this.x, this.y, this.z, this.dirX, this.dirY, this.dirZ);
     }
 
     /** {@inheritDoc} */
@@ -316,7 +311,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
     }
 
     /**
-     * Compare this DirectedPoint3d with another DirectedPoint2d and return true of each of the coordinates is less than
+     * Compare this DirectedPoint3d with another DirectedPoint2d and return true when each of the coordinates is less than
      * epsilonCoordinate apart, and the direction components are (normalized) less that epsilonRotation apart.
      * @param other DirectedPoint3d; the point to compare with
      * @param epsilonCoordinate double; the upper bound of difference for one of the coordinates
@@ -326,30 +321,31 @@ public class DirectedPoint3d extends Point3d implements Directed3d
      * @throws NullPointerException when point is null
      * @throws IllegalArgumentException epsilonCoordinate or epsilonRotation is NaN
      */
-    public boolean epsilonEquals(final DirectedPoint3d other, final double epsilonCoordinate, final double epsilonRotation)
+    public boolean epsilonEquals(final OrientedPoint3d other, final double epsilonCoordinate, final double epsilonRotation)
+            throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(other, "other point cannot be null");
-        if (Math.abs(getX() - other.x) > epsilonCoordinate)
+        if (Math.abs(this.x - other.x) > epsilonCoordinate)
         {
             return false;
         }
-        if (Math.abs(getY() - other.y) > epsilonCoordinate)
+        if (Math.abs(this.y - other.y) > epsilonCoordinate)
         {
             return false;
         }
-        if (Math.abs(getZ() - other.z) > epsilonCoordinate)
+        if (Math.abs(this.z - other.z) > epsilonCoordinate)
         {
             return false;
         }
-        if (Math.abs(AngleUtil.normalizeAroundZero(getDirX() - other.getDirX())) > epsilonRotation)
+        if (Math.abs(AngleUtil.normalizeAroundZero(this.dirX - other.dirX)) > epsilonRotation)
         {
             return false;
         }
-        if (Math.abs(AngleUtil.normalizeAroundZero(getDirY() - other.getDirY())) > epsilonRotation)
+        if (Math.abs(AngleUtil.normalizeAroundZero(this.dirY - other.dirY)) > epsilonRotation)
         {
             return false;
         }
-        if (Math.abs(AngleUtil.normalizeAroundZero(getDirZ() - other.getDirZ())) > epsilonRotation)
+        if (Math.abs(AngleUtil.normalizeAroundZero(this.dirZ - other.dirZ)) > epsilonRotation)
         {
             return false;
         }
@@ -381,7 +377,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d
             return true;
         if (!super.equals(obj))
             return false;
-        DirectedPoint3d other = (DirectedPoint3d) obj;
+        OrientedPoint3d other = (OrientedPoint3d) obj;
         if (Double.doubleToLongBits(this.dirX) != Double.doubleToLongBits(other.dirX))
             return false;
         if (Double.doubleToLongBits(this.dirY) != Double.doubleToLongBits(other.dirY))

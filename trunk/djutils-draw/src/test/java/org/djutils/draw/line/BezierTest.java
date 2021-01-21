@@ -6,8 +6,6 @@ import static org.junit.Assert.fail;
 
 import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
-import org.djutils.draw.point.DirectedPoint2d;
-import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.junit.Test;
@@ -68,8 +66,8 @@ public class BezierTest
             {
                 for (boolean weighted : new boolean[] { false, true })
                 {
-                    DirectedPoint2d start = new DirectedPoint2d(from.x, from.y, Math.PI / 2);
-                    DirectedPoint2d end = new DirectedPoint2d(to.x, to.y, Math.PI);
+                    Ray2d start = new Ray2d(from.x, from.y, Math.PI / 2);
+                    Ray2d end = new Ray2d(to.x, to.y, Math.PI);
                     PolyLine2d line = 1.0 == shape ? Bezier.cubic(n, start, end) : Bezier.cubic(n, start, end, shape, weighted);
                     for (int i = 1; i < line.size() - 1; i++)
                     {
@@ -82,7 +80,7 @@ public class BezierTest
         }
         // Pity that the value 64 is private in the Bezier class.
         assertEquals("Number of points is 64", 64, Bezier
-                .cubic(new DirectedPoint2d(from.x, from.y, Math.PI / 2), new DirectedPoint2d(to.x, to.y, -Math.PI / 2)).size());
+                .cubic(new Ray2d(from.x, from.y, Math.PI / 2), new Ray2d(to.x, to.y, -Math.PI / 2)).size());
         assertEquals("Number of points is 64", 64, Bezier.bezier(from, control1, control2, to).size());
         control1 = new Point2d(5, 0);
         control2 = new Point2d(0, 5);
@@ -100,7 +98,7 @@ public class BezierTest
         for (int n : new int[] { 2, 3, 4, 100 })
         {
             PolyLine2d line =
-                    Bezier.cubic(n, new DirectedPoint2d(from.x, from.y, Math.PI), new DirectedPoint2d(to.x, to.y, Math.PI / 2));
+                    Bezier.cubic(n, new Ray2d(from.x, from.y, Math.PI), new Ray2d(to.x, to.y, Math.PI / 2));
             for (int i = 1; i < line.size() - 1; i++)
             {
                 Point2d p = line.get(i);
@@ -123,15 +121,15 @@ public class BezierTest
             System.out.print("epsilonPosition " + epsilonPosition + " yields " + line.toPlot());
             for (int percent = 0; percent <= 100; percent++)
             {
-                DirectedPoint2d dp = reference.getLocationFraction(percent / 100.0);
-                double position = line.projectDirectedPoint(dp);
+                Ray2d ray = reference.getLocationFraction(percent / 100.0);
+                double position = line.projectRay(ray);
                 Point2d pointAtPosition = line.getLocation(position);
-                double positionError = dp.distance(pointAtPosition);
+                double positionError = ray.distance(pointAtPosition);
                 System.out.print(String.format(" %.3f", positionError));
                 if (positionError >= epsilonPosition)
                 {
                     System.out.println();
-                    System.out.println("percent " + percent + ", dp " + dp + " projected to " + pointAtPosition
+                    System.out.println("percent " + percent + ", on " + ray + " projected to " + pointAtPosition
                             + " positionError " + positionError);
                 }
                 assertTrue("Actual error " + positionError + " exceeds epsilon " + epsilonPosition,
@@ -184,8 +182,8 @@ public class BezierTest
             {
                 for (boolean weighted : new boolean[] { false, true })
                 {
-                    DirectedPoint3d start = new DirectedPoint3d(from.x, from.y, from.z, Math.PI / 2, -Math.PI / 2, Math.PI);
-                    DirectedPoint3d end = new DirectedPoint3d(to.x, to.y, to.z, Math.PI, 0, Math.PI / 2);
+                    Ray3d start = new Ray3d(from.x, from.y, from.z, Math.PI / 2, Math.PI / 3);
+                    Ray3d end = new Ray3d(to.x, to.y, to.z, Math.PI, 0);
                     PolyLine3d line = 1.0 == shape ? Bezier.cubic(n, start, end) : Bezier.cubic(n, start, end, shape, weighted);
                     for (int i = 1; i < line.size() - 1; i++)
                     {
@@ -200,8 +198,8 @@ public class BezierTest
         }
         // Pity that the value 64 is private in the Bezier class.
         assertEquals("Number of points is 64", 64,
-                Bezier.cubic(new DirectedPoint3d(from.x, from.y, from.z, Math.PI / 2, -Math.PI / 2, 0),
-                        new DirectedPoint3d(to.x, to.y, to.z, Math.PI, 0, -Math.PI / 2)).size());
+                Bezier.cubic(new Ray3d(from.x, from.y, from.z, Math.PI / 2, -Math.PI / 2, 0),
+                        new Ray3d(to.x, to.y, to.z, Math.PI, 0, -Math.PI / 2)).size());
         assertEquals("Number of points is 64", 64, Bezier.bezier(from, control1, control2, to).size());
         control1 = new Point3d(5, 0, 10);
         control2 = new Point3d(0, 5, 20);
@@ -225,8 +223,8 @@ public class BezierTest
         }
         for (int n : new int[] { 2, 3, 4, 100 })
         {
-            PolyLine3d line = Bezier.cubic(n, new DirectedPoint3d(from.x, from.y, from.z, Math.PI / 2, Math.PI / 2, Math.PI),
-                    new DirectedPoint3d(to.x, to.y, to.z, 0, 0, Math.PI / 2));
+            PolyLine3d line = Bezier.cubic(n, new Ray3d(from.x, from.y, from.z, Math.PI / 2, Math.PI / 2, Math.PI),
+                    new Ray3d(to.x, to.y, to.z, 0, 0, Math.PI / 2));
             for (int i = 0; i < line.size() - 1; i++)
             {
                 Point3d p = line.get(i);
@@ -244,14 +242,14 @@ public class BezierTest
     @Test
     public void testExceptions2d()
     {
-        DirectedPoint2d dp1 = new DirectedPoint2d(2, 3, 4);
-        DirectedPoint2d dp2 = new DirectedPoint2d(2, 3, 5);
-        DirectedPoint2d dp3 = new DirectedPoint2d(4, 5, 6);
+        Ray2d ray1 = new Ray2d(2, 3, 4);
+        Ray2d ray2 = new Ray2d(2, 3, 5);
+        Ray2d ray3 = new Ray2d(4, 5, 6);
         Point2d cp1 = new Point2d(2.5, 13.5);
         Point2d cp2 = new Point2d(3.5, 14.5);
         try
         {
-            Bezier.cubic(null, dp2);
+            Bezier.cubic(null, ray2);
             fail("null should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -261,7 +259,7 @@ public class BezierTest
 
         try
         {
-            Bezier.cubic(dp1, null);
+            Bezier.cubic(ray1, null);
             fail("null should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -271,7 +269,7 @@ public class BezierTest
 
         try
         {
-            Bezier.cubic(dp1, dp2);
+            Bezier.cubic(ray1, ray2);
             fail("Coinciding start and end points should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -281,7 +279,7 @@ public class BezierTest
 
         try
         {
-            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, dp1, dp3, -1);
+            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, ray1, ray3, -1);
             fail("Illegal shape value should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -291,7 +289,7 @@ public class BezierTest
 
         try
         {
-            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, dp1, dp3, Double.NaN);
+            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, ray1, ray3, Double.NaN);
             fail("Illegal shape value should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -301,7 +299,7 @@ public class BezierTest
 
         try
         {
-            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, dp1, dp3, Double.POSITIVE_INFINITY);
+            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, ray1, ray3, Double.POSITIVE_INFINITY);
             fail("Illegal shape value should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -309,17 +307,17 @@ public class BezierTest
             // Ignore expected exception
         }
 
-        PolyLine2d result = Bezier.bezier(2, dp1, dp3); // Should succeed
+        PolyLine2d result = Bezier.bezier(2, ray1, ray3); // Should succeed
         assertEquals("size should be 2", 2, result.size());
-        assertEquals("start of result is at start", 0, dp1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, dp3.distanceSquared(result.getLast()), 0);
-        result = Bezier.bezier(dp1, dp3); // Should succeed
+        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
+        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
+        result = Bezier.bezier(ray1, ray3); // Should succeed
         assertEquals("size should be default", Bezier.DEFAULT_BEZIER_SIZE, result.size());
-        assertEquals("start of result is at start", 0, dp1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, dp3.distanceSquared(result.getLast()), 0);
+        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
+        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
         try
         {
-            Bezier.bezier(1, dp1, dp3);
+            Bezier.bezier(1, ray1, ray3);
             fail("size smaller than 2 should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -329,7 +327,7 @@ public class BezierTest
 
         try
         {
-            Bezier.bezier(dp1);
+            Bezier.bezier(ray1);
             fail("cannot make a Bezier from only one point; should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -337,18 +335,18 @@ public class BezierTest
             // Ignore expected exception
         }
 
-        result = Bezier.cubic(2, dp1, cp1, cp2, dp3);
+        result = Bezier.cubic(2, ray1, cp1, cp2, ray3);
         assertEquals("size should be 2", 2, result.size());
-        assertEquals("start of result is at start", 0, dp1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, dp3.distanceSquared(result.getLast()), 0);
-        result = Bezier.cubic(4, dp1, cp1, cp2, dp3);
+        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
+        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
+        result = Bezier.cubic(4, ray1, cp1, cp2, ray3);
         assertEquals("size should be 4", 4, result.size());
-        assertEquals("start of result is at start", 0, dp1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, dp3.distanceSquared(result.getLast()), 0);
+        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
+        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
 
         try
         {
-            Bezier.cubic(1, dp1, cp1, cp2, dp3);
+            Bezier.cubic(1, ray1, cp1, cp2, ray3);
             fail("Cannot construct a Bezier approximation that has only one point");
         }
         catch (DrawRuntimeException dre)
@@ -364,14 +362,14 @@ public class BezierTest
     @Test
     public void testExceptions3d()
     {
-        DirectedPoint3d dp1 = new DirectedPoint3d(2, 3, 4, 5, 6, 7);
-        DirectedPoint3d dp2 = new DirectedPoint3d(2, 3, 4, 7, 9, 11);
-        DirectedPoint3d dp3 = new DirectedPoint3d(4, 5, 6, 1, 2, 3);
+        Ray3d ray1 = new Ray3d(2, 3, 4, 5, 6, 7);
+        Ray3d ray2 = new Ray3d(2, 3, 4, 7, 9, 11);
+        Ray3d ray3 = new Ray3d(4, 5, 6, 1, 2, 3);
         Point3d cp1 = new Point3d(2.5, 13.5, 7);
         Point3d cp2 = new Point3d(3.5, 14.5, 9);
         try
         {
-            Bezier.cubic(null, dp2);
+            Bezier.cubic(null, ray2);
             fail("null should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -381,7 +379,7 @@ public class BezierTest
 
         try
         {
-            Bezier.cubic(dp1, null);
+            Bezier.cubic(ray1, null);
             fail("null should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -391,7 +389,7 @@ public class BezierTest
 
         try
         {
-            Bezier.cubic(dp1, dp2);
+            Bezier.cubic(ray1, ray2);
             fail("Coinciding start and end points should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -401,7 +399,7 @@ public class BezierTest
 
         try
         {
-            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, dp1, dp3, -1);
+            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, ray1, ray3, -1);
             fail("Illegal shape value should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -411,7 +409,7 @@ public class BezierTest
 
         try
         {
-            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, dp1, dp3, Double.NaN);
+            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, ray1, ray3, Double.NaN);
             fail("Illegal shape value should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -421,7 +419,7 @@ public class BezierTest
 
         try
         {
-            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, dp1, dp3, Double.POSITIVE_INFINITY);
+            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, ray1, ray3, Double.POSITIVE_INFINITY);
             fail("Illegal shape value should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -429,17 +427,17 @@ public class BezierTest
             // Ignore expected exception
         }
 
-        PolyLine3d result = Bezier.bezier(2, dp1, dp3); // Should succeed
+        PolyLine3d result = Bezier.bezier(2, ray1, ray3); // Should succeed
         assertEquals("size should be 2", 2, result.size());
-        assertEquals("start of result is at start", 0, dp1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, dp3.distanceSquared(result.getLast()), 0);
-        result = Bezier.bezier(dp1, dp3); // Should succeed
+        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
+        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
+        result = Bezier.bezier(ray1, ray3); // Should succeed
         assertEquals("size should be default", Bezier.DEFAULT_BEZIER_SIZE, result.size());
-        assertEquals("start of result is at start", 0, dp1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, dp3.distanceSquared(result.getLast()), 0);
+        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
+        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
         try
         {
-            Bezier.bezier(1, dp1, dp3);
+            Bezier.bezier(1, ray1, ray3);
             fail("size smaller than 2 should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -449,7 +447,7 @@ public class BezierTest
 
         try
         {
-            Bezier.bezier(dp1);
+            Bezier.bezier(ray1);
             fail("cannot make a Bezier from only one point; should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -457,18 +455,18 @@ public class BezierTest
             // Ignore expected exception
         }
 
-        result = Bezier.cubic(2, dp1, cp1, cp2, dp3);
+        result = Bezier.cubic(2, ray1, cp1, cp2, ray3);
         assertEquals("size should be 2", 2, result.size());
-        assertEquals("start of result is at start", 0, dp1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, dp3.distanceSquared(result.getLast()), 0);
-        result = Bezier.cubic(4, dp1, cp1, cp2, dp3);
+        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
+        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
+        result = Bezier.cubic(4, ray1, cp1, cp2, ray3);
         assertEquals("size should be 4", 4, result.size());
-        assertEquals("start of result is at start", 0, dp1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, dp3.distanceSquared(result.getLast()), 0);
+        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
+        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
 
         try
         {
-            Bezier.cubic(1, dp1, cp1, cp2, dp3);
+            Bezier.cubic(1, ray1, cp1, cp2, ray3);
             fail("Cannot construct a Bezier approximation that has only one point");
         }
         catch (DrawRuntimeException dre)

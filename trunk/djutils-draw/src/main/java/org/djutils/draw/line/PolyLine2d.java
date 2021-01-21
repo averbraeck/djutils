@@ -13,7 +13,6 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.Space2d;
 import org.djutils.draw.bounds.Bounds2d;
-import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
 import org.djutils.logger.CategoryLogger;
@@ -27,7 +26,7 @@ import org.djutils.logger.CategoryLogger;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Space2d, DirectedPoint2d>
+public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Space2d, Ray2d>
 {
     /** */
     private static final long serialVersionUID = 20200911L;
@@ -468,7 +467,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
 
     /** {@inheritDoc} */
     @Override
-    public final DirectedPoint2d getLocationExtended(final double position)
+    public final Ray2d getLocationExtended(final double position)
     {
         if (position >= 0.0 && position <= getLength())
         {
@@ -489,8 +488,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
             double fraction = len / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
             Point2d p1 = this.points[0];
             Point2d p2 = this.points[1];
-            return new DirectedPoint2d(p1.x + fraction * (p2.x - p1.x), p1.y + fraction * (p2.y - p1.y),
-                    Math.atan2(p2.y - p1.y, p2.x - p1.x));
+            return new Ray2d(p1.x + fraction * (p2.x - p1.x), p1.y + fraction * (p2.y - p1.y), p2);
         }
 
         // position beyond end point -- extrapolate using the direction from the before last point to the last point of this
@@ -505,19 +503,18 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
             {
                 CategoryLogger.always().error("lengthIndexedLine of {} is invalid", this);
                 Point2d p = this.points[n1];
-                return new DirectedPoint2d(p.x, p.y, 0.0); // Bogus direction
+                return new Ray2d(p.x, p.y, 0.0); // Bogus direction
             }
             fraction = len / (this.lengthIndexedLine[n1] - this.lengthIndexedLine[n2]);
         }
         Point2d p1 = this.points[n2];
         Point2d p2 = this.points[n1];
-        return new DirectedPoint2d(p2.x + fraction * (p2.x - p1.x), p2.y + fraction * (p2.y - p1.y),
-                Math.atan2(p2.y - p1.y, p2.x - p1.x));
+        return new Ray2d(p2.x + fraction * (p2.x - p1.x), p2.y + fraction * (p2.y - p1.y), p1.directionTo(p2));
     }
 
     /** {@inheritDoc} */
     @Override
-    public final DirectedPoint2d getLocation(final double position) throws DrawException
+    public final Ray2d getLocation(final double position) throws DrawException
     {
         if (position < 0.0 || position > getLength())
         {
@@ -530,13 +527,13 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         {
             Point2d p1 = this.points[0];
             Point2d p2 = this.points[1];
-            return new DirectedPoint2d(p1.x, p1.y, Math.atan2(p2.y - p1.y, p2.x - p1.x));
+            return new Ray2d(p1.x, p1.y, p2);
         }
         if (position == getLength())
         {
             Point2d p1 = this.points[this.points.length - 2];
             Point2d p2 = this.points[this.points.length - 1];
-            return new DirectedPoint2d(p2.x, p2.y, Math.atan2(p2.y - p1.y, p2.x - p1.x));
+            return new Ray2d(p2.x, p2.y, p1.directionTo(p2));
         }
 
         // find the index of the line segment, use binary search
@@ -545,8 +542,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         double fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
         Point2d p1 = this.points[index];
         Point2d p2 = this.points[index + 1];
-        return new DirectedPoint2d(p1.x + fraction * (p2.x - p1.x), p1.y + fraction * (p2.y - p1.y),
-                Math.atan2(p2.y - p1.y, p2.x - p1.x));
+        return new Ray2d(p1.x + fraction * (p2.x - p1.x), p1.y + fraction * (p2.y - p1.y), p1.directionTo(p2));
     }
 
     /**
@@ -1016,31 +1012,31 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * attempts to give continuous results for continuous changes of the DirectedPoint that must be projected. There are cases
      * where this is simply impossible, or the optimal result is ambiguous. In these cases this method will return something
      * that is hopefully good enough.
-     * @param directedPoint DirectedPoint2d; the DirectedPoint
+     * @param orientedPoint DirectedPoint2d; the DirectedPoint
      * @return double; length along this PolyLine (some value between 0 and the length of this PolyLine) where directedPoint
      *         projects, or NaN if there is no solution
      * @throws NullPointerException when directedPoint is null
      */
-    public double projectDirectedPoint(final DirectedPoint2d directedPoint) throws NullPointerException
+    public double projectRay(final Ray2d orientedPoint) throws NullPointerException
     {
-        Throw.whenNull(directedPoint, "directedPoint may not be null");
+        Throw.whenNull(orientedPoint, "directedPoint may not be null");
         double bestDistance = Double.POSITIVE_INFINITY;
         double positionAtBestDistance = Double.NaN;
         Point2d prevPoint = null;
         // Define the line that is perpendicular to directedPoint, passing through directedPoint
-        Point2d perpendicular = directedPoint.translate(-Math.sin(directedPoint.getDirZ()), Math.cos(directedPoint.getDirZ()));
+        Point2d perpendicular = orientedPoint.translate(-Math.sin(orientedPoint.phi), Math.cos(orientedPoint.phi));
         double cumulativeDistance = 0;
         for (Point2d nextPoint : this.points)
         {
             if (null != prevPoint)
             {
                 double segmentLength = prevPoint.distance(nextPoint);
-                Point2d intersection = Point2d.intersectionOfLines(directedPoint, perpendicular, prevPoint, nextPoint);
+                Point2d intersection = Point2d.intersectionOfLines(orientedPoint, perpendicular, prevPoint, nextPoint);
                 double distanceToPrevPoint = intersection.distance(prevPoint);
                 if (distanceToPrevPoint <= segmentLength && intersection.distance(nextPoint) <= segmentLength)
                 {
                     // Intersection is on the segment
-                    double thisDistance = intersection.distance(directedPoint);
+                    double thisDistance = intersection.distance(orientedPoint);
                     if (thisDistance < bestDistance)
                     {
                         positionAtBestDistance = cumulativeDistance + distanceToPrevPoint;
