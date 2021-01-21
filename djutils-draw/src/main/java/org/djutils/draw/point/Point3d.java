@@ -279,7 +279,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
         double dX = segmentPoint2.x - segmentPoint1.x;
         double dY = segmentPoint2.y - segmentPoint1.y;
         double dZ = segmentPoint2.z - segmentPoint1.z;
-        if (0 == dX && 0 == dY && 0 == dZ)
+        if (0 == dX && 0 == dY && 0 == dZ) // The points may be equal (unlike in Segment3d)
         {
             return segmentPoint1;
         }

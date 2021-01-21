@@ -1,6 +1,8 @@
 package org.djutils.draw.line;
 
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.Space;
+import org.djutils.draw.point.Point;
 import org.djutils.exceptions.Throw;
 
 /**
@@ -12,9 +14,23 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @param <R> The Ray type (2d or 3d)
+ * @param <P> The Point type (2d, or 3d)
+ * @param <S> The Space type
  */
-public interface Ray<R extends Ray<R>>
+public interface Ray<R extends Ray<R, P, S>, P extends Point<P, S>, S extends Space>
 {
+    /**
+     * Get the finite end point of this Ray.
+     * @return P; the finite end point of this Ray
+     */
+    P getStartPoint();
+
+    /**
+     * Retrieve the angle from the positive X axis direction in radians.
+     * @return double; the angle from the positive X axis direction in radians
+     */
+    double getPhi();
+
     /**
      * Get the location at a position on the line, with its direction. Position must be a positive, finite value
      * @param position double; the position on the line for which to calculate the point on the line
@@ -23,8 +39,7 @@ public interface Ray<R extends Ray<R>>
      */
     default R getLocation(double position) throws DrawRuntimeException
     {
-        Throw.when(Double.isNaN(position) || position < 0, DrawRuntimeException.class,
-                "position must be finite and positive");
+        Throw.when(Double.isNaN(position) || position < 0, DrawRuntimeException.class, "position must be finite and positive");
         return getLocationExtended(position);
     }
 
@@ -35,6 +50,17 @@ public interface Ray<R extends Ray<R>>
      * @throws DrawRuntimeException when position infinite, or NaN.
      */
     R getLocationExtended(double position) throws DrawRuntimeException;
+
+    /**
+     * Project a Point on a Segment. If the the projected points lies outside the ray, the start point of the ray is returned.
+     * Otherwise the closest point on the ray is returned. <br>
+     * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
+     * Bourke</a>.
+     * @param point P; the point to project onto the segment
+     * @return P; either the start point, or the end point of the segment or a Point2d that lies somewhere in between those two.
+     * @throws NullPointerException when point is null
+     */
+    P closestPointOnRay(P point) throws NullPointerException;
 
     /**
      * Compare this Ray2d with another Ray3d and return true when each of the coordinates is less than epsilonCoordinate apart,

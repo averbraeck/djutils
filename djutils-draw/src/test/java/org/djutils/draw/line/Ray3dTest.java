@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.Point3d;
@@ -171,6 +170,10 @@ public class Ray3dTest
         assertEquals(description + " phi", expectedPhi, ray.phi, 0.0001);
         assertEquals(description + " getTheta", expectedTheta, ray.getTheta(), 0.0001);
         assertEquals(description + " theta", expectedTheta, ray.theta, 0.0001);
+        Point3d startPoint = ray.getStartPoint();
+        assertEquals(description + " getStartPoint x", expectedX, startPoint.x, 0.0001);
+        assertEquals(description + " getStartPoint y", expectedY, startPoint.y, 0.0001);
+        assertEquals(description + " getStartPoint z", expectedZ, startPoint.z, 0.0001);
     }
 
     /**
@@ -263,6 +266,36 @@ public class Ray3dTest
             // Ignore expected exception
         }
 
+        try
+        {
+            new Ray3d(1, 2, 3, 1, 0.5).getLocation(-1);
+            fail("Negative position should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new Ray3d(1, 2, 3, 1, 0.5).getLocation(Double.POSITIVE_INFINITY);
+            fail("Infited position should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new Ray3d(1, 2, 3, 1, 0.5).getLocation(Double.NEGATIVE_INFINITY);
+            fail("Infinte position should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
         for (double phi : new double[] { 0, 1, 2, 3, 4, 5, -1, -2, Math.PI })
         {
             for (double theta : new double[] { 0, 1, 2, 3, 4, 5, -1, -2, Math.PI })
@@ -293,14 +326,61 @@ public class Ray3dTest
     }
 
     /**
+     * Test the closestPointOnRay method.
+     */
+    @Test
+    public void testClosestPoint()
+    {
+        Ray3d ray = new Ray3d(1, 2, 3, 0.4, 0.5);
+        try
+        {
+            ray.closestPointOnLine(null);
+            fail("Null for point should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        Point3d result = ray.closestPointOnRay(new Point3d(1, 2, 0));
+        assertEquals("result is start point", ray.x, result.x, 0);
+        assertEquals("result is start point", ray.y, result.y, 0);
+        assertEquals("result is start point", ray.z, result.z, 0);
+        result = ray.closestPointOnRay(new Point3d(1, 2, 0));
+        assertEquals("result is start point", ray.x, result.x, 0);
+        assertEquals("result is start point", ray.y, result.y, 0);
+        assertEquals("result is start point", ray.z, result.z, 0);
+        result = ray.closestPointOnRay(new Point3d(0, 2, 3));
+        assertEquals("result is start point", ray.x, result.x, 0);
+        assertEquals("result is start point", ray.y, result.y, 0);
+        assertEquals("result is start point", ray.z, result.z, 0);
+        result = ray.closestPointOnRay(new Point3d(1, 2, 3));
+        assertEquals("result is start point", ray.x, result.x, 0);
+        assertEquals("result is start point", ray.y, result.y, 0);
+        assertEquals("result is start point", ray.z, result.z, 0);
+
+        Point3d projectingPoint = new Point3d(10, 10, 10);
+        result = ray.closestPointOnRay(projectingPoint); // Projects at a point along the ray
+        double distance = result.distance(ray.getStartPoint());
+        assertTrue("distance from start is > 0", distance > 0);
+        // Check that points on the ray slightly closer to start point or slightly further are indeed further from
+        // projectingPoint
+        assertTrue("Point on ray closer than result is further from projectingPoint",
+                ray.getLocation(distance - 0.1).distance(projectingPoint) < distance);
+        assertTrue("Point on ray further than result is further from projectingPoint",
+                ray.getLocation(distance + 0.1).distance(projectingPoint) < distance);
+    }
+
+    /**
      * Test the epsilonEquals method.
      */
     @Test
     public void epsilonEqualsTest()
     {
+        Ray3d ray = new Ray3d(1, 2, 3, 0.5, -0.5);
         try
         {
-            new Ray2d(1, 2, 3).epsilonEquals((Ray2d) null, 1, 1);
+            ray.epsilonEquals((Ray3d) null, 1, 1);
             fail("Null pointer should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -310,7 +390,7 @@ public class Ray3dTest
 
         try
         {
-            new Ray2d(1, 2, 3).epsilonEquals(new Ray2d(3, 4, 5), -0.1, 1);
+            ray.epsilonEquals(ray, -0.1, 1);
             fail("Negative epsilonCoordinate should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException npe)
@@ -320,7 +400,7 @@ public class Ray3dTest
 
         try
         {
-            new Ray2d(1, 2, 3).epsilonEquals(new Ray2d(3, 4, 5), 1, -0.1);
+            ray.epsilonEquals(ray, 1, -0.1);
             fail("Negative epsilonDirection should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException npe)
@@ -330,7 +410,7 @@ public class Ray3dTest
 
         try
         {
-            new Ray2d(1, 2, 3).epsilonEquals(new Ray2d(3, 4, 5), Double.NaN, 1);
+            ray.epsilonEquals(ray, Double.NaN, 1);
             fail("NaN epsilonCoordinate should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException npe)
@@ -340,7 +420,7 @@ public class Ray3dTest
 
         try
         {
-            new Ray2d(1, 2, 3).epsilonEquals(new Ray2d(3, 4, 5), 1, Double.NaN);
+            ray.epsilonEquals(ray, 1, Double.NaN);
             fail("NaN epsilonDirection should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException npe)
@@ -348,29 +428,33 @@ public class Ray3dTest
             // Ignore expected exception
         }
 
-        Ray2d ray = new Ray2d(1, 2, -1);
         double[] deltas = new double[] { 0.0, -0.125, 0.125, -1, 1 }; // Use values that can be represented exactly in a double
         for (double dX : deltas)
         {
             for (double dY : deltas)
             {
-                for (double dPhi : deltas)
+                for (double dZ : deltas)
                 {
-                    Ray2d other = new Ray2d(ray.x + dX, ray.y + dY, ray.phi + dPhi);
-                    for (double epsilon : new double[] { 0, 0.125, 0.5, 0.9, 1.0, 1.1 })
+                    for (double dPhi : deltas)
                     {
-                        System.out.println(String.format("dX=%f, dY=%f, dPhi=%f, epsilon=%f", dX, dY, dPhi, epsilon));
-                        boolean result = ray.epsilonEquals(other, epsilon, Double.POSITIVE_INFINITY);
-                        boolean expected = Math.abs(dX) <= epsilon && Math.abs(dY) <= epsilon;
-                        assertEquals("result of epsilonEquals checking x, y, z", expected, result);
-
-                        result = ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
-                        expected = Math.abs(dPhi) <= epsilon;
-                        if (result != expected)
+                        for (double dTheta : deltas)
                         {
-                            ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
+                            for (double epsilon : new double[] { 0, 0.125, 0.5, 0.9, 1.0, 1.1 })
+                            {
+                                Ray3d other = new Ray3d(ray.x + dX, ray.y + dY, ray.z + dZ, ray.phi + dPhi, ray.theta + dTheta);
+                                // System.out.println(String.format("dX=%f, dY=%f, dZ=%f, dPhi=%f, dTheta=%f, epsilon=%f", dX,
+                                // dY,
+                                // dZ, dPhi, dTheta, epsilon));
+                                boolean result = ray.epsilonEquals(other, epsilon, Double.POSITIVE_INFINITY);
+                                boolean expected =
+                                        Math.abs(dX) <= epsilon && Math.abs(dY) <= epsilon && Math.abs(dZ) <= epsilon;
+                                assertEquals("result of epsilonEquals checking x, y, z", expected, result);
+
+                                result = ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
+                                expected = Math.abs(dPhi) <= epsilon && Math.abs(dTheta) <= epsilon;
+                                assertEquals("result of epsilonEquals checking phi and theta", expected, result);
+                            }
                         }
-                        assertEquals("result of epsilonEquals checking phi", expected, result);
                     }
                 }
             }
