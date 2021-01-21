@@ -10,6 +10,7 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.Space2d;
 import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.line.Ray2d;
 import org.djutils.exceptions.Throw;
 
 /**
@@ -329,16 +330,16 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     }
     
     /**
-     * Closest point on a line defined by a DirectedPoint2d.
-     * @param directedPoint DirectedPoint2d; a point through which the line passes in the direction
-     * @return Point2d; the point on the line that is closest to this
+     * Closest point on a ray.
+     * @param ray Ray2d; the ray
+     * @return Point2d; the point on the ray that is closest to this
      */
-    public final Point2d closestPointOnLine(final DirectedPoint2d directedPoint)
+    public final Point2d closestPointOnLine(final Ray2d ray)
     {
-        double dX = Math.cos(directedPoint.getDirZ());
-        double dY = Math.sin(directedPoint.getDirZ());
-        final double u = ((this.x - directedPoint.x) * dX + (this.y - directedPoint.y) * dY) / (dX * dX + dY * dY);
-        return directedPoint.interpolate(new Point2d(directedPoint.x + dX, directedPoint.y + dY), u);
+        double dX = Math.cos(ray.phi);
+        double dY = Math.sin(ray.phi);
+        final double u = ((this.x - ray.x) * dX + (this.y - ray.y) * dY) / (dX * dX + dY * dY);
+        return ray.interpolate(new Point2d(ray.x + dX, ray.y + dY), Math.max(0, u));
     }
 
     /**

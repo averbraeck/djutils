@@ -15,7 +15,7 @@ import java.util.List;
 import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.point.DirectedPoint3d;
+import org.djutils.draw.point.OrientedPoint3d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.junit.Test;
@@ -29,7 +29,7 @@ import org.junit.Test;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class TestPolyLine3d
+public class PolyLine3dTest
 {
     /**
      * Test the constructors of PolyLine3d.
@@ -449,7 +449,7 @@ public class TestPolyLine3d
      * @param expectedPoint Point3d; the expected location (or null if location should not be checked)
      * @param expectedZRotation double; the expected Z rotation
      */
-    private void checkDirectedPoint3d(final DirectedPoint3d dp, final Point3d expectedPoint, final double expectedZRotation)
+    private void checkDirectedPoint3d(final OrientedPoint3d dp, final Point3d expectedPoint, final double expectedZRotation)
     {
         if (null != expectedPoint)
         {

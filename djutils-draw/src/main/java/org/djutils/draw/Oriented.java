@@ -8,18 +8,18 @@ package org.djutils.draw;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
- * @param <D> The Directed type (2d or 3d)
+ * @param <O> The Oriented type (2d or 3d)
  */
-public interface Directed<D extends Directed<D>>
+public interface Oriented<O extends Oriented<O>>
 {
     /**
      * Return a new DirectedPoint2d with negated coordinate values. Add 180 degrees (pi radians) to the rotation(s).
      * @return D; a new D with negated coordinate values and a rotation in the opposite direction
      */
-    D neg();
+    O neg();
 
     /**
-     * Return the direction as a rotation around the z-axis in radians.
+     * Return the rotation around the z-axis in radians.
      * @return double; the rotation around the z-axis in radians
      */
     double getDirZ();

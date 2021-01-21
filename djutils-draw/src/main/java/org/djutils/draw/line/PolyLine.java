@@ -20,9 +20,10 @@ import org.djutils.draw.point.Point;
  * @param <L> the Line type (2d or 3d)
  * @param <P> The Point type (2d or 3d)
  * @param <S> The Space type (2d, or 3d)
- * @param <DP> The matching DirectedPoint type (2d or 3d)
+ * @param <R> The matching Ray type (2d or 3d)
+ * 
  */
-public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>, S extends Space, DP> extends Drawable<P, S>
+public interface PolyLine<L extends PolyLine<L, P, S, R>, P extends Point<P, S>, S extends Space, R> extends Drawable<P, S>
 {
     /**
      * Constructor that can be accessed as a method (used to implement default methods in this interface).
@@ -130,26 +131,26 @@ public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>
     /**
      * Get the location at a position on the line, with its direction. Position should be between 0.0 and line length.
      * @param position double; the position on the line for which to calculate the point on the line
-     * @return DP; a directed point
+     * @return OP; an oriented point
      * @throws DrawException when position less than 0.0 or more than line length.
      */
-    DP getLocation(double position) throws DrawException;
+    R getLocation(double position) throws DrawException;
 
     /**
      * Get the location at a position on the line, with its direction. Position can be below 0 or more than the line length. In
      * that case, the position will be extrapolated in the direction of the line at its start or end.
      * @param position double; the position on the line for which to calculate the point on, before, or after the line
-     * @return DP; a directed point
+     * @return OP; an oriented point
      */
-    DP getLocationExtended(double position);
+    R getLocationExtended(double position);
 
     /**
      * Get the location at a fraction of the line, with its direction. Fraction should be between 0.0 and 1.0.
      * @param fraction double; the fraction for which to calculate the point on the line
-     * @return DP; a directed point
+     * @return OP; an oriented point
      * @throws DrawException when fraction less than 0.0 or more than 1.0.
      */
-    default DP getLocationFraction(final double fraction) throws DrawException
+    default R getLocationFraction(final double fraction) throws DrawException
     {
         if (fraction < 0.0 || fraction > 1.0)
         {
@@ -162,10 +163,10 @@ public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>
      * Get the location at a fraction of the line, with its direction. Fraction should be between 0.0 and 1.0.
      * @param fraction double; the fraction for which to calculate the point on the line
      * @param tolerance double; the delta from 0.0 and 1.0 that will be forgiven
-     * @return DirectedPoint3d, or DirectedPoint2d (in accordance with DP, P, L and S)
+     * @return OrientedPoint3d, or OrientedPoint2d (in accordance with OP, P, L and S)
      * @throws DrawException when fraction less than 0.0 or more than 1.0.
      */
-    default DP getLocationFraction(final double fraction, final double tolerance) throws DrawException
+    default R getLocationFraction(final double fraction, final double tolerance) throws DrawException
     {
         if (fraction < -tolerance || fraction > 1.0 + tolerance)
         {
@@ -179,9 +180,9 @@ public interface PolyLine<L extends PolyLine<L, P, S, DP>, P extends Point<P, S>
     /**
      * Get the location at a fraction of the line (or outside the line), with its direction.
      * @param fraction double; the fraction for which to calculate the point on the line
-     * @return DirectedPoint3d, or DirectedPoint2d (in accordance with DP, P, L and S)
+     * @return OrientedPoint3d, or OrientedPoint2d (in accordance with OP, P, L and S)
      */
-    default DP getLocationFractionExtended(final double fraction)
+    default R getLocationFractionExtended(final double fraction)
     {
         return getLocationExtended(fraction * getLength());
     }

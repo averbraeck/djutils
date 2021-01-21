@@ -9,16 +9,16 @@ package org.djutils.draw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public interface Directed3d extends Directed2d
+public interface Oriented3d extends Oriented2d
 {
     /**
-     * Return the direction as a rotation around the x-axis in radians.
+     * Return the rotation around the x-axis in radians.
      * @return double; the rotation around the x-axis in radians
      */
     double getDirX();
 
     /**
-     * Return the direction as a rotation around the y-axis in radians.
+     * Return the rotation around the y-axis in radians.
      * @return double; the rotation around the y-axis in radians
      */
     double getDirY();

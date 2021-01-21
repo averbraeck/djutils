@@ -10,7 +10,7 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.Space3d;
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.point.DirectedPoint3d;
+import org.djutils.draw.point.OrientedPoint3d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
@@ -25,7 +25,7 @@ import org.djutils.logger.CategoryLogger;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Space3d, DirectedPoint3d>
+public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Space3d, OrientedPoint3d>
 {
     /** */
     private static final long serialVersionUID = 20200911L;
@@ -448,7 +448,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
 
     /** {@inheritDoc} */
     @Override
-    public final DirectedPoint3d getLocationExtended(final double position)
+    public final OrientedPoint3d getLocationExtended(final double position)
     {
         if (position >= 0.0 && position <= getLength())
         {
@@ -469,7 +469,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
             double fraction = len / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
             Point3d p1 = this.points[0];
             Point3d p2 = this.points[1];
-            return new DirectedPoint3d(p1.x + fraction * (p2.x - p1.x),
+            return new OrientedPoint3d(p1.x + fraction * (p2.x - p1.x),
                     p1.y + fraction * (p2.y - p1.y), p1.z + fraction * (p2.z - p1.z), 0.0, 0.0,
                     Math.atan2(p2.y - p1.y, p2.x - p1.x));
         }
@@ -486,20 +486,20 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
             {
                 CategoryLogger.always().error("lengthIndexedLine of {} is invalid", this);
                 Point3d p = this.points[n1];
-                return new DirectedPoint3d(p.x, p.y, p.z, 0.0, 0.0, 0.0); // Bogus direction
+                return new OrientedPoint3d(p.x, p.y, p.z, 0.0, 0.0, 0.0); // Bogus direction
             }
             fraction = len / (this.lengthIndexedLine[n1] - this.lengthIndexedLine[n2]);
         }
         Point3d p1 = this.points[n2];
         Point3d p2 = this.points[n1];
-        return new DirectedPoint3d(p2.x + fraction * (p2.x - p1.x),
+        return new OrientedPoint3d(p2.x + fraction * (p2.x - p1.x),
                 p2.y + fraction * (p2.y - p1.y), p2.z + fraction * (p2.z - p1.z), 0.0, 0.0,
                 Math.atan2(p2.y - p1.y, p2.x - p1.x));
     }
 
     /** {@inheritDoc} */
     @Override
-    public final DirectedPoint3d getLocation(final double position) throws DrawException
+    public final OrientedPoint3d getLocation(final double position) throws DrawException
     {
         if (position < 0.0 || position > getLength())
         {
@@ -511,14 +511,14 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         {
             Point3d p1 = this.points[0];
             Point3d p2 = this.points[1];
-            return new DirectedPoint3d(p1.x, p1.y, p1.z, 0.0, 0.0,
+            return new OrientedPoint3d(p1.x, p1.y, p1.z, 0.0, 0.0,
                     Math.atan2(p2.y - p1.y, p2.x - p1.x));
         }
         if (position == getLength())
         {
             Point3d p1 = this.points[this.points.length - 2];
             Point3d p2 = this.points[this.points.length - 1];
-            return new DirectedPoint3d(p2.x, p2.y, p2.z, 0.0, 0.0,
+            return new OrientedPoint3d(p2.x, p2.y, p2.z, 0.0, 0.0,
                     Math.atan2(p2.y - p1.y, p2.x - p1.x));
         }
 
@@ -528,7 +528,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         double fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
         Point3d p1 = this.points[index];
         Point3d p2 = this.points[index + 1];
-        return new DirectedPoint3d(p1.x + fraction * (p2.x - p1.x),
+        return new OrientedPoint3d(p1.x + fraction * (p2.x - p1.x),
                 p1.y + fraction * (p2.y - p1.y), p1.z + fraction * (p2.z - p1.z), 0.0, 0.0,
                 Math.atan2(p2.y - p1.y, p2.x - p1.x));
     }

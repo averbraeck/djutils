@@ -9,7 +9,7 @@ package org.djutils.draw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public interface Directed2d extends Directed<Directed2d>
+public interface Oriented2d extends Oriented<Oriented2d>
 {
     // no other methods defined for now
 }

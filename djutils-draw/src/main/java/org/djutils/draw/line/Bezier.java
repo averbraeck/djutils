@@ -8,8 +8,6 @@ import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Transform2d;
 import org.djutils.draw.Transform3d;
-import org.djutils.draw.point.DirectedPoint2d;
-import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
@@ -95,16 +93,16 @@ public final class Bezier
 
     /**
      * Approximate a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
-     * start and end.
+     * start and end. TODO change start and end to Ray3d
      * @param size int; the number of points of the B&eacute;zier curve
-     * @param start DirectedPoint2d; the directed start point of the B&eacute;zier curve
-     * @param end DirectedPoint2d; the directed end point of the B&eacute;zier curve
+     * @param start Ray2d; the start point and start direction of the B&eacute;zier curve
+     * @param end Ray2d; the end point and end direction of the B&eacute;zier curve
      * @return PolyLine2d; an approximation of a cubic B&eacute;zier curve between start and end, using the directions of those
      *         points at start and end
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine2d cubic(final int size, final DirectedPoint2d start, final DirectedPoint2d end)
+    public static PolyLine2d cubic(final int size, final Ray2d start, final Ray2d end)
             throws DrawRuntimeException
     {
         return cubic(size, start, end, 1.0);
@@ -114,14 +112,14 @@ public final class Bezier
      * Approximate a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
      * start and end with specified precision.
      * @param epsilon double; the precision.
-     * @param start DirectedPoint2d; the directed start point of the B&eacute;zier curve
-     * @param end DirectedPoint2d; the directed end point of the B&eacute;zier curve
+     * @param start Ray2d; the start point and start direction of the B&eacute;zier curve
+     * @param end Ray2d; the end point and end direction of the B&eacute;zier curve
      * @return PolyLine2d; an approximation of a cubic B&eacute;zier curve between start and end, using the directions of those
      *         points at start and end
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine2d cubic(final double epsilon, final DirectedPoint2d start, final DirectedPoint2d end)
+    public static PolyLine2d cubic(final double epsilon, final Ray2d start, final Ray2d end)
             throws DrawRuntimeException
     {
         return cubic(epsilon, start, end, 1.0);
@@ -131,8 +129,8 @@ public final class Bezier
      * Approximate a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
      * start and end.
      * @param size int; the number of points for the B&eacute;zier curve
-     * @param start DirectedPoint2d; the directed start point of the B&eacute;zier curve
-     * @param end DirectedPoint2d; the directed end point of the B&eacute;zier curve
+     * @param start Ray2d; the start point and start direction of the B&eacute;zier curve
+     * @param end Ray2d; the end point and end direction of the B&eacute;zier curve
      * @param shape shape factor; 1 = control points at half the distance between start and end, &gt; 1 results in a pointier
      *            shape, &lt; 1 results in a flatter shape, value should be above 0 and finite
      * @return PolyLine2d; an approximation of a cubic B&eacute;zier curve between start and end, using the directions of those
@@ -140,7 +138,7 @@ public final class Bezier
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine2d cubic(final int size, final DirectedPoint2d start, final DirectedPoint2d end, final double shape)
+    public static PolyLine2d cubic(final int size, final Ray2d start, final Ray2d end, final double shape)
             throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(shape) || Double.isInfinite(shape) || shape <= 0, DrawRuntimeException.class,
@@ -152,8 +150,8 @@ public final class Bezier
      * Approximate a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
      * start and end with specified precision.
      * @param epsilon double; the precision.
-     * @param start DirectedPoint2d; the directed start point of the B&eacute;zier curve
-     * @param end DirectedPoint2d; the directed end point of the B&eacute;zier curve
+     * @param start Ray2d; the start point and start direction of the B&eacute;zier curve
+     * @param end Ray2d; the end point and end direction of the B&eacute;zier curve
      * @param shape shape factor; 1 = control points at half the distance between start and end, &gt; 1 results in a pointier
      *            shape, &lt; 1 results in a flatter shape, value should be above 0 and finite
      * @return PolyLine2d; an approximation of a cubic B&eacute;zier curve between start and end, using the directions of those
@@ -161,7 +159,7 @@ public final class Bezier
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine2d cubic(final double epsilon, final DirectedPoint2d start, final DirectedPoint2d end,
+    public static PolyLine2d cubic(final double epsilon, final Ray2d start, final Ray2d end,
             final double shape) throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(shape) || Double.isInfinite(shape) || shape <= 0, DrawRuntimeException.class,
@@ -173,8 +171,8 @@ public final class Bezier
      * Approximate a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
      * start and end.
      * @param size int; the number of points for the B&eacute;zier curve
-     * @param start DirectedPoint2d; the directed start point of the B&eacute;zier curve
-     * @param end DirectedPoint2d; the directed end point of the B&eacute;zier curve
+     * @param start Ray2d; the start point and start direction of the B&eacute;zier curve
+     * @param end Ray2d; the end point and end direction of the B&eacute;zier curve
      * @param shape shape factor; 1 = control points at half the distance between start and end, &gt; 1 results in a pointier
      *            shape, &lt; 1 results in a flatter shape, value should be above 0, finite and not NaN
      * @param weighted boolean; control point distance relates to distance to projected point on extended line from other end
@@ -184,7 +182,7 @@ public final class Bezier
      * @throws DrawRuntimeException in case size is less than 2, start is at the same location as end, shape is invalid, or the
      *             B&eacute;zier curve could not be constructed
      */
-    public static PolyLine2d cubic(final int size, final DirectedPoint2d start, final DirectedPoint2d end, final double shape,
+    public static PolyLine2d cubic(final int size, final Ray2d start, final Ray2d end, final double shape,
             final boolean weighted) throws NullPointerException, DrawRuntimeException
     {
         Point2d[] points = createControlPoints(start, end, shape, weighted);
@@ -195,8 +193,8 @@ public final class Bezier
      * Approximate a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
      * start and end with specified precision.
      * @param epsilon double; the precision.
-     * @param start DirectedPoint2d; the directed start point of the B&eacute;zier curve
-     * @param end DirectedPoint2d; the directed end point of the B&eacute;zier curve
+     * @param start Ray2d; the start point and start direction of the B&eacute;zier curve
+     * @param end Ray2d; the end point and end direction of the B&eacute;zier curve
      * @param shape shape factor; 1 = control points at half the distance between start and end, &gt; 1 results in a pointier
      *            shape, &lt; 1 results in a flatter shape, value should be above 0, finite and not NaN
      * @param weighted boolean; control point distance relates to distance to projected point on extended line from other end
@@ -206,7 +204,7 @@ public final class Bezier
      * @throws DrawRuntimeException in case size is less than 2, start is at the same location as end, shape is invalid, or the
      *             B&eacute;zier curve could not be constructed
      */
-    public static PolyLine2d cubic(final double epsilon, final DirectedPoint2d start, final DirectedPoint2d end,
+    public static PolyLine2d cubic(final double epsilon, final Ray2d start, final Ray2d end,
             final double shape, final boolean weighted) throws NullPointerException, DrawRuntimeException
     {
         Point2d[] points = createControlPoints(start, end, shape, weighted);
@@ -217,15 +215,15 @@ public final class Bezier
     private static final Point2d UNIT_VECTOR2D = new Point2d(1, 0);
 
     /**
-     * Create control points for a cubic B&eacute;zier curve defined by two DirectedPoints.
-     * @param start DirectedPoint2d; the start point (and direction)
-     * @param end DirectedPoint2d; the end point (and direction)
+     * Create control points for a cubic B&eacute;zier curve defined by two Rays.
+     * @param start Ray2d; the start point (and direction)
+     * @param end Ray2d; the end point (and direction)
      * @param shape double; the shape; higher values put the generated control points further away from end and result in a
      *            pointier B&eacute;zier curve
      * @param weighted boolean;
      * @return Point2d[]; an array of four Point2d elements: start, the first control point, the second control point, end.
      */
-    private static Point2d[] createControlPoints(final DirectedPoint2d start, final DirectedPoint2d end, final double shape,
+    private static Point2d[] createControlPoints(final Ray2d start, final Ray2d end, final double shape,
             final boolean weighted)
     {
         Throw.whenNull(start, "start point may not be null");
@@ -246,19 +244,19 @@ public final class Bezier
             double dEnd = end.distance(end.closestPointOnLine(start));
             double wStart = dStart / (dStart + dEnd);
             double wEnd = dEnd / (dStart + dEnd);
-            control1 = new Transform2d().translate(start).rotation(start.getDirZ()).scale(distance * wStart, distance * wStart)
+            control1 = new Transform2d().translate(start).rotation(start.phi).scale(distance * wStart, distance * wStart)
                     .transform(UNIT_VECTOR2D);
             // - (minus) as the angle is where the line leaves, i.e. from shape point to end
-            control2 = new Transform2d().translate(end).rotation(end.getDirZ() + Math.PI)
+            control2 = new Transform2d().translate(end).rotation(end.phi + Math.PI)
                     .scale(distance * wEnd, distance * wEnd).transform(UNIT_VECTOR2D);
         }
         else
         {
             // each control point is half the distance between the end-points away from the respective end point
             double distance = shape * start.distance(end) / 2.0;
-            control1 = new Transform2d().translate(start).rotation(start.getDirZ()).scale(distance, distance)
+            control1 = new Transform2d().translate(start).rotation(start.phi).scale(distance, distance)
                     .transform(UNIT_VECTOR2D);
-            control2 = new Transform2d().translate(end).rotation(end.getDirZ() + Math.PI).scale(distance, distance)
+            control2 = new Transform2d().translate(end).rotation(end.phi + Math.PI).scale(distance, distance)
                     .transform(UNIT_VECTOR2D);
         }
         return new Point2d[] { start, control1, control2, end };
@@ -267,14 +265,14 @@ public final class Bezier
     /**
      * Approximate a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
      * start and end. The size of the constructed curve is <code>DEFAULT_BEZIER_SIZE</code>.
-     * @param start DirectedPoint2d; the directed start point of the B&eacute;zier curve
-     * @param end DirectedPoint2d; the directed end point of the B&eacute;zier curve
+     * @param start Ray2d; the start point and start direction of the B&eacute;zier curve
+     * @param end Ray2d; the end point and end direction of the B&eacute;zier curve
      * @return PolyLine2d; an approximation of a cubic B&eacute;zier curve between start and end, following the directions of
      *         those points at start and end
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine2d cubic(final DirectedPoint2d start, final DirectedPoint2d end) throws DrawRuntimeException
+    public static PolyLine2d cubic(final Ray2d start, final Ray2d end) throws DrawRuntimeException
     {
         return cubic(DEFAULT_BEZIER_SIZE, start, end);
     }
@@ -467,14 +465,14 @@ public final class Bezier
      * Approximate a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
      * start and end.
      * @param size int; the number of points for the B&eacute;zier curve
-     * @param start DirectedPoint3d; the directed start point of the B&eacute;zier curve
-     * @param end DirectedPoint3d; the directed end point of the B&eacute;zier curve
+     * @param start Ray3d; the start point and start direction of the B&eacute;zier curve
+     * @param end Ray3d; the end point and end direction of the B&eacute;zier curve
      * @return PolyLine2d; an approximation of a cubic B&eacute;zier curve between start and end, with the two provided control
      *         points
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine3d cubic(final int size, final DirectedPoint3d start, final DirectedPoint3d end)
+    public static PolyLine3d cubic(final int size, final Ray3d start, final Ray3d end)
             throws DrawRuntimeException
     {
         return cubic(size, start, end, 1.0);
@@ -484,14 +482,14 @@ public final class Bezier
      * Approximate a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
      * start and end with specified precision.
      * @param epsilon double; the precision.
-     * @param start DirectedPoint3d; the directed start point of the B&eacute;zier curve
-     * @param end DirectedPoint3d; the directed end point of the B&eacute;zier curve
+     * @param start Ray3d; the start point and start direction of the B&eacute;zier curve
+     * @param end Ray3d; the end point and end direction of the B&eacute;zier curve
      * @return PolyLine2d; an approximation of a cubic B&eacute;zier curve between start and end, with the two provided control
      *         points
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine3d cubic(final double epsilon, final DirectedPoint3d start, final DirectedPoint3d end)
+    public static PolyLine3d cubic(final double epsilon, final Ray3d start, final Ray3d end)
             throws DrawRuntimeException
     {
         return cubic(epsilon, start, end, 1.0);
@@ -501,15 +499,15 @@ public final class Bezier
      * Approximate a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
      * start and end.
      * @param size int; the number of points for the B&eacute;zier curve
-     * @param start DirectedPoint3d; the directed start point of the B&eacute;zier curve
-     * @param end DirectedPoint3d; the directed end point of the B&eacute;zier curve
+     * @param start Ray3d; the start point and start direction of the B&eacute;zier curve
+     * @param end Ray3d; the end point and end direction of the B&eacute;zier curve
      * @param shape shape factor; 1 = control points at half the distance between start and end, &gt; 1 results in a pointier
      *            shape, &lt; 1 results in a flatter shape, value should be above 0 and finite
      * @return a cubic B&eacute;zier curve between start and end, with the two determined control points
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine3d cubic(final int size, final DirectedPoint3d start, final DirectedPoint3d end, final double shape)
+    public static PolyLine3d cubic(final int size, final Ray3d start, final Ray3d end, final double shape)
             throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(shape) || Double.isInfinite(shape) || shape <= 0, DrawRuntimeException.class,
@@ -521,15 +519,15 @@ public final class Bezier
      * Approximate a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
      * start and end with specified precision.
      * @param epsilon double; the precision.
-     * @param start DirectedPoint3d; the directed start point of the B&eacute;zier curve
-     * @param end DirectedPoint3d; the directed end point of the B&eacute;zier curve
+     * @param start Ray3d; the start point and start direction of the B&eacute;zier curve
+     * @param end Ray3d; the end point and end direction of the B&eacute;zier curve
      * @param shape shape factor; 1 = control points at half the distance between start and end, &gt; 1 results in a pointier
      *            shape, &lt; 1 results in a flatter shape, value should be above 0 and finite
      * @return a cubic B&eacute;zier curve between start and end, with the two determined control points
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine3d cubic(final double epsilon, final DirectedPoint3d start, final DirectedPoint3d end,
+    public static PolyLine3d cubic(final double epsilon, final Ray3d start, final Ray3d end,
             final double shape) throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(shape) || Double.isInfinite(shape) || shape <= 0, DrawRuntimeException.class,
@@ -541,8 +539,8 @@ public final class Bezier
      * Approximate a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
      * start and end. The z-value is interpolated in a linear way.
      * @param size int; the number of points for the B&eacute;zier curve
-     * @param start DirectedPoint3d; the directed start point of the B&eacute;zier curve
-     * @param end DirectedPoint3d; the directed end point of the B&eacute;zier curve
+     * @param start Ray3d; the start point and start direction of the B&eacute;zier curve
+     * @param end Ray3d; the end point and end direction of the B&eacute;zier curve
      * @param shape shape factor; 1 = control points at half the distance between start and end, &gt; 1 results in a pointier
      *            shape, &lt; 1 results in a flatter shape, value should be above 0
      * @param weighted boolean; control point distance relates to distance to projected point on extended line from other end
@@ -551,7 +549,7 @@ public final class Bezier
      * @throws DrawRuntimeException in case size is less than 2, start is at the same location as end, shape is invalid, or the
      *             B&eacute;zier curve could not be constructed
      */
-    public static PolyLine3d cubic(final int size, final DirectedPoint3d start, final DirectedPoint3d end, final double shape,
+    public static PolyLine3d cubic(final int size, final Ray3d start, final Ray3d end, final double shape,
             final boolean weighted) throws NullPointerException, DrawRuntimeException
     {
         Point3d[] points = createControlPoints(start, end, shape, weighted);
@@ -562,8 +560,8 @@ public final class Bezier
      * Approximate a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
      * start and end with specified precision.
      * @param epsilon double; the precision.
-     * @param start DirectedPoint3d; the directed start point of the B&eacute;zier curve
-     * @param end DirectedPoint3d; the directed end point of the B&eacute;zier curve
+     * @param start Ray3d; the start point and start direction of the B&eacute;zier curve
+     * @param end Ray3d; the end point and end direction of the B&eacute;zier curve
      * @param shape shape factor; 1 = control points at half the distance between start and end, &gt; 1 results in a pointier
      *            shape, &lt; 1 results in a flatter shape, value should be above 0, finite and not NaN
      * @param weighted boolean; control point distance relates to distance to projected point on extended line from other end
@@ -573,7 +571,7 @@ public final class Bezier
      * @throws DrawRuntimeException in case size is less than 2, start is at the same location as end, shape is invalid, or the
      *             B&eacute;zier curve could not be constructed
      */
-    public static PolyLine3d cubic(final double epsilon, final DirectedPoint3d start, final DirectedPoint3d end,
+    public static PolyLine3d cubic(final double epsilon, final Ray3d start, final Ray3d end,
             final double shape, final boolean weighted) throws NullPointerException, DrawRuntimeException
     {
         Point3d[] points = createControlPoints(start, end, shape, weighted);
@@ -584,15 +582,15 @@ public final class Bezier
     private static final Point3d UNIT_VECTOR3D = new Point3d(1, 0, 0);
 
     /**
-     * Create control points for a cubic B&eacute;zier curve defined by two DirectedPoints.
-     * @param start DirectedPoint3d; the start point (and direction)
-     * @param end DirectedPoint3d; the end point (and direction)
+     * Create control points for a cubic B&eacute;zier curve defined by two Rays.
+     * @param start Ray3d; the start point (and direction)
+     * @param end Ray3d; the end point (and direction)
      * @param shape double; the shape; higher values put the generated control points further away from end and result in a
      *            pointier B&eacute;zier curve
      * @param weighted boolean;
      * @return Point3d[]; an array of four Point3d elements: start, the first control point, the second control point, end.
      */
-    private static Point3d[] createControlPoints(final DirectedPoint3d start, final DirectedPoint3d end, final double shape,
+    private static Point3d[] createControlPoints(final Ray3d start, final Ray3d end, final double shape,
             final boolean weighted)
     {
         Throw.whenNull(start, "start point may not be null");
@@ -613,21 +611,15 @@ public final class Bezier
             double dEnd = end.distance(end.closestPointOnLine(start));
             double wStart = dStart / (dStart + dEnd);
             double wEnd = dEnd / (dStart + dEnd);
-            control1 = new Transform3d().translate(start).rotZ(start.getDirZ()).rotY(start.getDirY()).rotX(start.getDirX())
-                    .scale(distance * wStart, distance * wStart, distance * wStart).transform(UNIT_VECTOR3D);
-            // - (minus) as the angle is where the line leaves, i.e. from shape point to end
-            control2 = new Transform3d().translate(end).rotZ(end.getDirZ() + Math.PI).rotY(end.getDirY() + Math.PI)
-                    .rotX(end.getDirX() + Math.PI).scale(distance * wEnd, distance * wEnd, distance * wEnd)
-                    .transform(UNIT_VECTOR3D);
+            control1 = start.getLocation(distance * wStart);
+            control2 = end.getLocationExtended(-distance * wEnd);
         }
         else
         {
             // each control point is half the distance between the end-points away from the respective end point
             double distance = shape * start.distance(end) / 2.0;
-            control1 = new Transform3d().translate(start).rotZ(start.getDirZ()).rotY(start.getDirY()).rotX(start.getDirX())
-                    .scale(distance, distance, distance).transform(UNIT_VECTOR3D);
-            control2 = new Transform3d().translate(end).rotZ(end.getDirZ() + Math.PI).rotY(end.getDirY() + Math.PI)
-                    .rotX(end.getDirX() + Math.PI).scale(distance, distance, distance).transform(UNIT_VECTOR3D);
+            control1 = start.getLocation(distance);
+            control2 = end.getLocationExtended(-distance);
         }
         return new Point3d[] { start, control1, control2, end };
     }
@@ -635,14 +627,14 @@ public final class Bezier
     /**
      * Construct a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
      * start and end. The z-value is interpolated in a linear way. The size of the constructed curve is
-     * <code>DEFAULT_BEZIER_SIZE</code>.
-     * @param start DirectedPoint3d; the directed start point of the B&eacute;zier curve
-     * @param end DirectedPoint3d; the directed end point of the B&eacute;zier curve
+     * <code>DEFAULT_BEZIER_SIZE</code>. TODO change start en end to Ray3d
+     * @param start Ray3d; the start point and orientation of the B&eacute;zier curve
+     * @param end Ray3d; the end point and orientation of the B&eacute;zier curve
      * @return a cubic B&eacute;zier curve between start and end, with the two provided control points
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine3d cubic(final DirectedPoint3d start, final DirectedPoint3d end) throws DrawRuntimeException
+    public static PolyLine3d cubic(final Ray3d start, final Ray3d end) throws DrawRuntimeException
     {
         return cubic(DEFAULT_BEZIER_SIZE, start, end);
     }

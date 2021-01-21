@@ -22,7 +22,7 @@ import org.junit.Test;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class DirectedPoint3dTest
+public class OrientedPoint3dTest
 {
     /**
      * Test the DirectedPoint3d construction methods.
@@ -30,7 +30,7 @@ public class DirectedPoint3dTest
     @Test
     public void testDirectedPoint3dConstruction()
     {
-        DirectedPoint3d p = new DirectedPoint3d(10.0, -20.0, 5.2);
+        OrientedPoint3d p = new OrientedPoint3d(10.0, -20.0, 5.2);
         assertEquals("x", 10.0, p.x, 1E-6);
         assertEquals("y", -20.0, p.y, 1E-6);
         assertEquals("z", 5.2, p.z, 1E-6);
@@ -38,7 +38,7 @@ public class DirectedPoint3dTest
         assertEquals("dirY", 0.0, p.getDirY(), 1E-6);
         assertEquals("dirZ", 0.0, p.getDirZ(), 1E-6);
 
-        p = new DirectedPoint3d(new double[] { -18.7, 3.4, 5.6 });
+        p = new OrientedPoint3d(new double[] { -18.7, 3.4, 5.6 });
         assertEquals("x", -18.7, p.x, 1E-6);
         assertEquals("y", 3.4, p.y, 1E-6);
         assertEquals("z", 5.6, p.z, 1E-6);
@@ -46,7 +46,7 @@ public class DirectedPoint3dTest
         assertEquals("dirY", 0.0, p.getDirY(), 1E-6);
         assertEquals("dirZ", 0.0, p.getDirZ(), 1E-6);
 
-        p = new DirectedPoint3d(10.0, -20.0, 5.2, 0.1, -0.2, Math.PI);
+        p = new OrientedPoint3d(10.0, -20.0, 5.2, 0.1, -0.2, Math.PI);
         assertEquals("x", 10.0, p.x, 1E-6);
         assertEquals("y", -20.0, p.y, 1E-6);
         assertEquals("z", 5.2, p.z, 1E-6);
@@ -54,7 +54,7 @@ public class DirectedPoint3dTest
         assertEquals("dirY", -0.2, p.getDirY(), 1E-6);
         assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
 
-        p = new DirectedPoint3d(new double[] { -18.7, 3.4, 5.6 }, 0.1, -0.2, Math.PI);
+        p = new OrientedPoint3d(new double[] { -18.7, 3.4, 5.6 }, 0.1, -0.2, Math.PI);
         {
             assertEquals("x", -18.7, p.x, 1E-6);
             assertEquals("y", 3.4, p.y, 1E-6);
@@ -64,7 +64,7 @@ public class DirectedPoint3dTest
             assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
         }
 
-        p = new DirectedPoint3d(new Point3d(new double[] { -18.7, 3.4, 5.6 }), 0.1, -0.2, Math.PI);
+        p = new OrientedPoint3d(new Point3d(new double[] { -18.7, 3.4, 5.6 }), 0.1, -0.2, Math.PI);
         {
             assertEquals("x", -18.7, p.x, 1E-6);
             assertEquals("y", 3.4, p.y, 1E-6);
@@ -76,7 +76,7 @@ public class DirectedPoint3dTest
 
         try
         {
-            new DirectedPoint3d(0, 0, 0, Double.NaN, 0, 0);
+            new OrientedPoint3d(0, 0, 0, Double.NaN, 0, 0);
             fail("NaN rotation should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -86,7 +86,7 @@ public class DirectedPoint3dTest
 
         try
         {
-            new DirectedPoint3d(0, 0, 0, 0, Double.NaN, 0);
+            new OrientedPoint3d(0, 0, 0, 0, Double.NaN, 0);
             fail("NaN rotation should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -96,7 +96,7 @@ public class DirectedPoint3dTest
 
         try
         {
-            new DirectedPoint3d(0, 0, 0, 0, 0, Double.NaN);
+            new OrientedPoint3d(0, 0, 0, 0, 0, Double.NaN);
             fail("NaN rotation should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -106,7 +106,7 @@ public class DirectedPoint3dTest
 
         try
         {
-            new DirectedPoint3d(new double[3], Double.NaN, 0, 0);
+            new OrientedPoint3d(new double[3], Double.NaN, 0, 0);
             fail("NaN rotation should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -116,7 +116,7 @@ public class DirectedPoint3dTest
 
         try
         {
-            new DirectedPoint3d(new double[3], 0, Double.NaN, 0);
+            new OrientedPoint3d(new double[3], 0, Double.NaN, 0);
             fail("NaN rotation should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -126,7 +126,7 @@ public class DirectedPoint3dTest
 
         try
         {
-            new DirectedPoint3d(new double[3], 0, 0, Double.NaN);
+            new OrientedPoint3d(new double[3], 0, 0, Double.NaN);
             fail("NaN rotation should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -136,7 +136,7 @@ public class DirectedPoint3dTest
 
         try
         {
-            new DirectedPoint3d(new Point3d(1, 2, 3), Double.NaN, 0, 0);
+            new OrientedPoint3d(new Point3d(1, 2, 3), Double.NaN, 0, 0);
             fail("NaN rotation should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -146,7 +146,7 @@ public class DirectedPoint3dTest
 
         try
         {
-            new DirectedPoint3d(new Point3d(1, 2, 3), 0, Double.NaN, 0);
+            new OrientedPoint3d(new Point3d(1, 2, 3), 0, Double.NaN, 0);
             fail("NaN rotation should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -156,7 +156,7 @@ public class DirectedPoint3dTest
 
         try
         {
-            new DirectedPoint3d(new Point3d(1, 2, 3), 0, 0, Double.NaN);
+            new OrientedPoint3d(new Point3d(1, 2, 3), 0, 0, Double.NaN);
             fail("NaN rotation should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -166,7 +166,7 @@ public class DirectedPoint3dTest
 
         double[] p3Arr = new double[] { 5.0, 6.0, 7.0 };
         double[] rotArr = new double[] { 0.1, -0.2, 0.3 };
-        p = new DirectedPoint3d(5.0, 6.0, 7.0, rotArr);
+        p = new OrientedPoint3d(5.0, 6.0, 7.0, rotArr);
         assertEquals("x", 5.0, p.x, 0);
         assertEquals("y", 6.0, p.y, 0);
         assertEquals("z", 7.0, p.z, 0);
@@ -174,7 +174,7 @@ public class DirectedPoint3dTest
         assertEquals("dirY", -0.2, p.getDirY(), 1E-6);
         assertEquals("dirZ", 0.3, p.getDirZ(), 1E-6);
 
-        p = new DirectedPoint3d(p3Arr, rotArr);
+        p = new OrientedPoint3d(p3Arr, rotArr);
         assertEquals("x", 5.0, p.x, 0);
         assertEquals("y", 6.0, p.y, 0);
         assertEquals("z", 7.0, p.z, 0);
@@ -187,7 +187,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(0.1, 0.2, 0.3, new double[] {});
+                new OrientedPoint3d(0.1, 0.2, 0.3, new double[] {});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -196,7 +196,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(0.1, 0.2, 0.3, new double[] { 0.1, 0.2 });
+                new OrientedPoint3d(0.1, 0.2, 0.3, new double[] { 0.1, 0.2 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -205,7 +205,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(0.1, 0.2, 0.3, new double[] { 0.1, 0.2, 0.3, 0.4 });
+                new OrientedPoint3d(0.1, 0.2, 0.3, new double[] { 0.1, 0.2, 0.3, 0.4 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -214,7 +214,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(new double[] {});
+                new OrientedPoint3d(new double[] {});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -223,7 +223,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(new double[] { 0.1, 0.2 });
+                new OrientedPoint3d(new double[] { 0.1, 0.2 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -232,7 +232,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(new double[] { 0.1, 0.2, 0.3, 0.4 });
+                new OrientedPoint3d(new double[] { 0.1, 0.2, 0.3, 0.4 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -241,7 +241,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(new double[] { 1, 2, 3 }, new double[] { 0.1, 0.2 });
+                new OrientedPoint3d(new double[] { 1, 2, 3 }, new double[] { 0.1, 0.2 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -250,7 +250,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(new double[] { 1, 2, 3 }, new double[] { 0.1, 0.2, 0.3, 0.4 });
+                new OrientedPoint3d(new double[] { 1, 2, 3 }, new double[] { 0.1, 0.2, 0.3, 0.4 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -264,7 +264,7 @@ public class DirectedPoint3dTest
     public void testDirectedPointEquals()
     {
         // equals and hashCode
-        DirectedPoint3d p = new DirectedPoint3d(10.0, 20.0, 30.0, 0.1, 0.2, 0.3);
+        OrientedPoint3d p = new OrientedPoint3d(10.0, 20.0, 30.0, 0.1, 0.2, 0.3);
         assertTrue(p.equals(p));
         assertEquals(p.hashCode(), p.hashCode());
         assertFalse(p.equals(new Point2d(10.0, 20.0)));
@@ -281,7 +281,7 @@ public class DirectedPoint3dTest
         assertFalse(p.equals(p.rotate(0.0, 0.0, 0.1)));
 
         // toString
-        p = new DirectedPoint3d(10.0, 20.0, 30.0, 0.1, 0.2, 0.3);
+        p = new OrientedPoint3d(10.0, 20.0, 30.0, 0.1, 0.2, 0.3);
         assertEquals("[(10.000000,20.000000,30.000000), rot=(0.100000,0.200000,0.300000)]", p.toString());
         assertEquals("[(10.0,20.0,30.0), rot=(0.1,0.2,0.3)]", p.toString(1));
         assertEquals("[(10,20,30), rot=(0,0,0)]", p.toString(0));
@@ -291,7 +291,7 @@ public class DirectedPoint3dTest
         assertTrue(p.epsilonEquals(p, 0.1, 999));
         assertTrue(p.epsilonEquals(p, 0.001, 999));
         assertTrue(p.epsilonEquals(p, 0.0, 999));
-        DirectedPoint3d p3 = p.translate(0.001, 0.0, 0.0);
+        OrientedPoint3d p3 = p.translate(0.001, 0.0, 0.0);
         assertTrue(p.epsilonEquals(p3, 0.09, 0.001));
         assertTrue(p3.epsilonEquals(p, 0.09, 0.001));
         assertFalse(p.epsilonEquals(p3, 0.0009, 0.001));
@@ -334,7 +334,7 @@ public class DirectedPoint3dTest
     @Test
     public void testDirectedPoint3dOperators()
     {
-        DirectedPoint3d p = new DirectedPoint3d(-0.1, -0.2, -0.3, Math.PI / 4, -Math.PI / 4, Math.PI / 2);
+        OrientedPoint3d p = new OrientedPoint3d(-0.1, -0.2, -0.3, Math.PI / 4, -Math.PI / 4, Math.PI / 2);
         assertEquals(0.1, p.abs().x, 1E-6);
         assertEquals(0.2, p.abs().y, 1E-6);
         assertEquals(0.3, p.abs().z, 1E-6);
@@ -342,12 +342,12 @@ public class DirectedPoint3dTest
         assertEquals(-Math.PI / 4, p.abs().getDirY(), 1E-6);
         assertEquals(Math.PI / 2, p.abs().getDirZ(), 1E-6);
 
-        Iterator<DirectedPoint3d> i = p.getPoints();
+        Iterator<OrientedPoint3d> i = p.getPoints();
         assertTrue("iterator has one point", i.hasNext());
         assertEquals("iterator returns p", p, i.next());
         assertFalse("iterator does not have another point", i.hasNext());
 
-        DirectedPoint3d p2 = p.neg();
+        OrientedPoint3d p2 = p.neg();
         assertEquals("negated x", -p.x, p2.x, 1E-6);
         assertEquals("negated y", -p.y, p2.y, 1E-6);
         assertEquals("negated z", -p.z, p2.z, 1E-6);
@@ -454,19 +454,19 @@ public class DirectedPoint3dTest
         assertEquals("rotated dirZ", AngleUtil.normalizeAroundZero(p.getDirZ() + 17 * Math.PI / 4), p2.getDirZ(), 1E-6);
 
         // interpolate
-        DirectedPoint3d p1 = new DirectedPoint3d(1.0, 2.0, 3.0, 0.2, 0.3, 0.4);
-        p2 = new DirectedPoint3d(5.0, 7.0, 9.0, 0.4, 0.5, 0.6);
+        OrientedPoint3d p1 = new OrientedPoint3d(1.0, 2.0, 3.0, 0.2, 0.3, 0.4);
+        p2 = new OrientedPoint3d(5.0, 7.0, 9.0, 0.4, 0.5, 0.6);
         assertEquals("p1 interpolated to p2 at 0", p1, p1.interpolate(p2, 0.0));
         assertEquals("p1 interpolated to p2 at 1", p2, p1.interpolate(p2, 1.0));
         assertEquals("p2 interpolated to p1 at 0", p2, p2.interpolate(p1, 0.0));
         assertEquals("p2 interpolated to p1 at 1", p1, p2.interpolate(p1, 1.0));
         assertEquals("p1 interpolated to itself at 0", p1, p1.interpolate(p1, 0.0));
         assertTrue("p1 interpolated to p2 at 0.5",
-                new DirectedPoint3d(3.0, 4.5, 6.0, 0.3, 0.4, 0.5).epsilonEquals(p1.interpolate(p2, 0.5), 1E-6, 1E-6));
+                new OrientedPoint3d(3.0, 4.5, 6.0, 0.3, 0.4, 0.5).epsilonEquals(p1.interpolate(p2, 0.5), 1E-6, 1E-6));
         assertTrue("p1 extrapolated to p2 at 2",
-                new DirectedPoint3d(9.0, 12.0, 15.0, 0.6, 0.7, 0.8).epsilonEquals(p1.interpolate(p2, 2), 1E-6, 1E-6));
+                new OrientedPoint3d(9.0, 12.0, 15.0, 0.6, 0.7, 0.8).epsilonEquals(p1.interpolate(p2, 2), 1E-6, 1E-6));
         assertTrue("p1 extrapolated to p2 at -1",
-                new DirectedPoint3d(-3.0, -3.0, -3.0, 0.0, 0.1, 0.2).epsilonEquals(p1.interpolate(p2, -1), 1E-6, 1E-6));
+                new OrientedPoint3d(-3.0, -3.0, -3.0, 0.0, 0.1, 0.2).epsilonEquals(p1.interpolate(p2, -1), 1E-6, 1E-6));
 
         // distance
         assertEquals("Distance", Math.sqrt(16 + 25 + 36), p1.distance(p2), 0.001);
@@ -478,10 +478,10 @@ public class DirectedPoint3dTest
         assertEquals("Horizontal direction", Math.atan2(7, 5), p2.horizontalDirection(), 0.001);
         assertEquals("Horizontal direction", Math.atan2(p2.y - p1.y, p2.x - p1.x),
                 p1.horizontalDirection(p2), 0.001);
-        assertEquals(0.0, new DirectedPoint3d(0.0, 0.0, 0.0).horizontalDirection(), 0.001);
+        assertEquals(0.0, new OrientedPoint3d(0.0, 0.0, 0.0).horizontalDirection(), 0.001);
 
         // normalize
-        DirectedPoint3d pn = p2.normalize();
+        OrientedPoint3d pn = p2.normalize();
         assertEquals("normalized x", p2.x / Math.sqrt(25 + 49 + 81), pn.x, 0.001);
         assertEquals("normalized y", p2.y / Math.sqrt(25 + 49 + 81), pn.y, 0.001);
         assertEquals("normalized z", p2.z / Math.sqrt(25 + 49 + 81), pn.z, 0.001);
@@ -494,7 +494,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new DirectedPoint3d(0.0, 0.0, 0.0, Math.PI / 4.0, Math.PI / 4.0, Math.PI / 4.0).normalize();
+                new OrientedPoint3d(0.0, 0.0, 0.0, Math.PI / 4.0, Math.PI / 4.0, Math.PI / 4.0).normalize();
             }
         }, "Should throw DRtE", DrawRuntimeException.class);
 
@@ -578,7 +578,7 @@ public class DirectedPoint3dTest
     @Test
     public void testDirectedPoint3dOperatorsNPE()
     {
-        final DirectedPoint3d p1 = new DirectedPoint3d(1.0, 1.0, Math.PI / 4.0);
+        final OrientedPoint3d p1 = new OrientedPoint3d(1.0, 1.0, Math.PI / 4.0);
 
         Try.testFail(new Try.Execution()
         {
@@ -612,7 +612,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                p1.horizontalDistance((DirectedPoint3d) null);
+                p1.horizontalDistance((OrientedPoint3d) null);
             }
         }, "Should throw NPE", NullPointerException.class);
 
@@ -621,7 +621,7 @@ public class DirectedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                p1.horizontalDistanceSquared((DirectedPoint3d) null);
+                p1.horizontalDistanceSquared((OrientedPoint3d) null);
             }
         }, "Should throw NPE", NullPointerException.class);
 
