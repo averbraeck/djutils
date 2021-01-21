@@ -3,6 +3,7 @@ package org.djutils.draw.line;
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
+import org.djutils.draw.Space2d;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
@@ -17,7 +18,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d>
+public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Space2d>
 {
     /** ... */
     private static final long serialVersionUID = 20210119L;
@@ -108,10 +109,8 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d>
                 Throw.whenNull(throughPoint, "throughPoint may not be null").x, throughPoint.y);
     }
 
-    /**
-     * Retrieve the angle from the positive X axis direction in radians.
-     * @return double; the angle from the positive X axis direction in radians
-     */
+    /** {@inheritDoc} */
+    @Override
     public final double getPhi()
     {
         return this.phi;
@@ -119,10 +118,16 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d>
 
     /** {@inheritDoc} */
     @Override
+    public Point2d getStartPoint()
+    {
+        return new Point2d(this.x, this.y);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Bounds2d getBounds()
     {
         double normalizedPhi = AngleUtil.normalizeAroundZero(this.phi);
-        System.out.println("phi=" + this.phi + ", normalizedPhi=" + normalizedPhi);
         boolean toPositiveX = Math.abs(normalizedPhi) <= Math.PI / 2; // Math.cos(Math.PI) is > 0 due to finite precision
         return new Bounds2d(toPositiveX ? this.x : Double.NEGATIVE_INFINITY, toPositiveX ? Double.POSITIVE_INFINITY : this.x,
                 normalizedPhi >= 0 ? this.y : Double.NEGATIVE_INFINITY, normalizedPhi <= 0 ? this.y : Double.POSITIVE_INFINITY);
@@ -132,8 +137,24 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d>
     @Override
     public Ray2d getLocationExtended(final double position) throws DrawRuntimeException
     {
-        Throw.when(Double.isNaN(position), DrawRuntimeException.class, "position must be finite");
+        Throw.when(Double.isNaN(position) || Double.isInfinite(position), DrawRuntimeException.class,
+                "position must be finite");
         return new Ray2d(this.x + Math.cos(this.phi) * position, this.y + Math.sin(this.phi) * position, this.phi);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point2d closestPointOnRay(final Point2d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        double dX = Math.cos(this.phi);
+        double dY = Math.sin(this.phi);
+        final double u = (point.x - this.x) * dX + (point.y - this.y) * dY;
+        if (u <= 0)
+        {
+            return getStartPoint();
+        }
+        return new Point2d(this.x + u * dX, this.y + u * dY);
     }
 
     /** {@inheritDoc} */

@@ -299,7 +299,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     {
         double dX = segmentPoint2.x - segmentPoint1.x;
         double dY = segmentPoint2.y - segmentPoint1.y;
-        if (0 == dX && 0 == dY)
+        if (0 == dX && 0 == dY) // The points may be equal (unlike in Segment2d)
         {
             return segmentPoint1;
         }
@@ -328,7 +328,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
         final double u = ((this.x - linePoint1.x) * dX + (this.y - linePoint1.y) * dY) / (dX * dX + dY * dY);
         return linePoint1.interpolate(linePoint2, u);
     }
-    
+
     /**
      * Closest point on a ray.
      * @param ray Ray2d; the ray

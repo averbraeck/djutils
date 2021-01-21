@@ -1,9 +1,9 @@
 package org.djutils.draw.line;
 
 import org.djutils.base.AngleUtil;
-import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
+import org.djutils.draw.Space3d;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
@@ -18,7 +18,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d>
+public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Space3d>
 {
     /** ... */
     private static final long serialVersionUID = 20210119L;
@@ -125,10 +125,8 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d>
                 Throw.whenNull(throughPoint, "throughPoint may not be null").x, throughPoint.y, throughPoint.z);
     }
 
-    /**
-     * Retrieve the angle from the positive X axis direction in radians.
-     * @return double; the angle from the positive X axis direction in radians
-     */
+    /** {@inheritDoc} */
+    @Override
     public final double getPhi()
     {
         return this.phi;
@@ -145,9 +143,34 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d>
 
     /** {@inheritDoc} */
     @Override
+    public Point3d getStartPoint()
+    {
+        return new Point3d(this.x, this.y, this.z);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point3d closestPointOnRay(final Point3d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        double sinTheta = Math.sin(this.theta);
+        double dX = Math.cos(this.phi) * sinTheta;
+        double dY = Math.sin(this.phi) * sinTheta;
+        double dZ = Math.cos(this.theta);
+        final double u = (point.x - this.x) * dX + (point.y - this.y) * dY + (point.z - this.z) * dZ;
+        if (u <= 0)
+        {
+            return getStartPoint();
+        }
+        return new Point3d(this.x + u * dX, this.y + u * dY, this.z + u * dZ);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Ray3d getLocationExtended(final double position) throws DrawRuntimeException
     {
-        Throw.when(Double.isNaN(position), DrawRuntimeException.class, "position must be finite");
+        Throw.when(Double.isNaN(position) || Double.isInfinite(position), DrawRuntimeException.class,
+                "position must be finite");
         double sinTheta = Math.sin(this.theta);
         double dX = Math.cos(this.phi) * sinTheta;
         double dY = Math.sin(this.phi) * sinTheta;
@@ -191,6 +214,10 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d>
             return false;
         }
         if (Math.abs(AngleUtil.normalizeAroundZero(this.phi - other.phi)) > epsilonRotation)
+        {
+            return false;
+        }
+        if (Math.abs(AngleUtil.normalizeAroundZero(this.theta - other.theta)) > epsilonRotation)
         {
             return false;
         }
