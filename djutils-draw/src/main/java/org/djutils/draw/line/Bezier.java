@@ -81,7 +81,7 @@ public final class Bezier
      * @param end Point2D; the end point of the B&eacute;zier curve
      * @return PolyLine2d; an approximation of a cubic B&eacute;zier curve between start and end, using the two provided control
      *         points
-     * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
+     * @throws DrawRuntimeException in case the number of points is less than 2, or the B&eacute;zier curve could not be
      *             constructed
      */
     public static PolyLine2d cubic(final double epsilon, final Point2d start, final Point2d control1, final Point2d control2,
@@ -101,8 +101,7 @@ public final class Bezier
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine2d cubic(final int size, final Ray2d start, final Ray2d end)
-            throws DrawRuntimeException
+    public static PolyLine2d cubic(final int size, final Ray2d start, final Ray2d end) throws DrawRuntimeException
     {
         return cubic(size, start, end, 1.0);
     }
@@ -118,8 +117,7 @@ public final class Bezier
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine2d cubic(final double epsilon, final Ray2d start, final Ray2d end)
-            throws DrawRuntimeException
+    public static PolyLine2d cubic(final double epsilon, final Ray2d start, final Ray2d end) throws DrawRuntimeException
     {
         return cubic(epsilon, start, end, 1.0);
     }
@@ -158,8 +156,8 @@ public final class Bezier
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine2d cubic(final double epsilon, final Ray2d start, final Ray2d end,
-            final double shape) throws DrawRuntimeException
+    public static PolyLine2d cubic(final double epsilon, final Ray2d start, final Ray2d end, final double shape)
+            throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(shape) || Double.isInfinite(shape) || shape <= 0, DrawRuntimeException.class,
                 "shape must be a finite, positive value");
@@ -200,11 +198,10 @@ public final class Bezier
      * @return PolyLine2d; an approximation of a cubic B&eacute;zier curve between start and end, with the two determined
      *         control points
      * @throws NullPointerException when start or end is null
-     * @throws DrawRuntimeException in case size is less than 2, start is at the same location as end, shape is invalid, or the
-     *             B&eacute;zier curve could not be constructed
+     * @throws DrawRuntimeException in case size is less than 2, start is at the same location as end, shape is invalid
      */
-    public static PolyLine2d cubic(final double epsilon, final Ray2d start, final Ray2d end,
-            final double shape, final boolean weighted) throws NullPointerException, DrawRuntimeException
+    public static PolyLine2d cubic(final double epsilon, final Ray2d start, final Ray2d end, final double shape,
+            final boolean weighted) throws NullPointerException, DrawRuntimeException
     {
         Point2d[] points = createControlPoints(start, end, shape, weighted);
         return cubic(epsilon, points[0], points[1], points[2], points[3]);
@@ -221,9 +218,10 @@ public final class Bezier
      *            pointier B&eacute;zier curve
      * @param weighted boolean;
      * @return Point2d[]; an array of four Point2d elements: start, the first control point, the second control point, end.
+     * @throws DrawRuntimeException when shape is invalid
      */
-    private static Point2d[] createControlPoints(final Ray2d start, final Ray2d end, final double shape,
-            final boolean weighted)
+    private static Point2d[] createControlPoints(final Ray2d start, final Ray2d end, final double shape, final boolean weighted)
+            throws DrawRuntimeException
     {
         Throw.whenNull(start, "start point may not be null");
         Throw.whenNull(end, "end point may not be null");
@@ -246,17 +244,17 @@ public final class Bezier
             control1 = new Transform2d().translate(start).rotation(start.phi).scale(distance * wStart, distance * wStart)
                     .transform(UNIT_VECTOR2D);
             // - (minus) as the angle is where the line leaves, i.e. from shape point to end
-            control2 = new Transform2d().translate(end).rotation(end.phi + Math.PI)
-                    .scale(distance * wEnd, distance * wEnd).transform(UNIT_VECTOR2D);
+            control2 = new Transform2d().translate(end).rotation(end.phi + Math.PI).scale(distance * wEnd, distance * wEnd)
+                    .transform(UNIT_VECTOR2D);
         }
         else
         {
             // each control point is half the distance between the end-points away from the respective end point
             double distance = shape * start.distance(end) / 2.0;
-            control1 = new Transform2d().translate(start).rotation(start.phi).scale(distance, distance)
-                    .transform(UNIT_VECTOR2D);
-            control2 = new Transform2d().translate(end).rotation(end.phi + Math.PI).scale(distance, distance)
-                    .transform(UNIT_VECTOR2D);
+            control1 = start.getLocation(distance);
+            // new Transform2d().translate(start).rotation(start.phi).scale(distance, distance).transform(UNIT_VECTOR2D);
+            control2 = end.getLocationExtended(-distance);
+            // new Transform2d().translate(end).rotation(end.phi + Math.PI).scale(distance, distance).transform(UNIT_VECTOR2D);
         }
         return new Point2d[] { start, control1, control2, end };
     }
@@ -369,46 +367,43 @@ public final class Bezier
         {
             Double nextT = entry.getKey();
             Point2d nextPoint = entry.getValue();
-            if (null != prevPoint)
+            double medianT = (prevT + nextT) / 2;
+            double x = Bn(medianT, px);
+            double y = Bn(medianT, py);
+            Point2d medianPoint = new Point2d(x, y);
+            Point2d projectedPoint = medianPoint.closestPointOnSegment(prevPoint, nextPoint);
+            double errorPosition = medianPoint.distance(projectedPoint);
+            if (errorPosition >= epsilon)
             {
-                double medianT = (prevT + nextT) / 2;
-                double x = Bn(medianT, px);
-                double y = Bn(medianT, py);
-                Point2d medianPoint = new Point2d(x, y);
-                Point2d projectedPoint = medianPoint.closestPointOnSegment(prevPoint, nextPoint);
-                double errorPosition = medianPoint.distance(projectedPoint);
-                if (errorPosition >= epsilon)
+                // We need to insert another point
+                result.put(medianT, medianPoint);
+                continue;
+            }
+            if (prevPoint.distance(nextPoint) > epsilon)
+            {
+                // Check for an inflection point by creating additional points at one quarter and three quarters. If these
+                // are on opposite sides of the line from prevPoint to nextPoint; there must be an inflection point.
+                // https://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
+                double quarterT = (prevT + medianT) / 2;
+                double quarterX = Bn(quarterT, px);
+                double quarterY = Bn(quarterT, py);
+                int sign1 = (int) Math.signum((nextPoint.x - prevPoint.x) * (quarterY - prevPoint.y)
+                        - (nextPoint.y - prevPoint.y) * (quarterX - prevPoint.x));
+                double threeQuarterT = (nextT + medianT) / 2;
+                double threeQuarterX = Bn(threeQuarterT, px);
+                double threeQuarterY = Bn(threeQuarterT, py);
+                int sign2 = (int) Math.signum((nextPoint.x - prevPoint.x) * (threeQuarterY - prevPoint.y)
+                        - (nextPoint.y - prevPoint.y) * (threeQuarterX - prevPoint.x));
+                if (sign1 != sign2)
                 {
-                    // We need to insert another point
+                    // There is an inflection point
+                    System.out.println("Detected inflection point between " + prevPoint + " and " + nextPoint);
+                    // Inserting the halfway point should take care of this
                     result.put(medianT, medianPoint);
                     continue;
                 }
-                if (prevPoint.distance(nextPoint) > epsilon)
-                {
-                    // Check for an inflection point by creating additional points at one quarter and three quarters. If these
-                    // are on opposite sides of the line from prevPoint to nextPoint; there must be an inflection point.
-                    // https://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
-                    double quarterT = (prevT + medianT) / 2;
-                    double quarterX = Bn(quarterT, px);
-                    double quarterY = Bn(quarterT, py);
-                    int sign1 = (int) Math.signum((nextPoint.x - prevPoint.x) * (quarterY - prevPoint.y)
-                            - (nextPoint.y - prevPoint.y) * (quarterX - prevPoint.x));
-                    double threeQuarterT = (nextT + medianT) / 2;
-                    double threeQuarterX = Bn(threeQuarterT, px);
-                    double threeQuarterY = Bn(threeQuarterT, py);
-                    int sign2 = (int) Math.signum((nextPoint.x - prevPoint.x) * (threeQuarterY - prevPoint.y)
-                            - (nextPoint.y - prevPoint.y) * (threeQuarterX - prevPoint.x));
-                    if (sign1 != sign2)
-                    {
-                        // There is an inflection point
-                        System.out.println("Detected inflection point between " + prevPoint + " and " + nextPoint);
-                        // Inserting the halfway point should take care of this
-                        result.put(medianT, medianPoint);
-                        continue;
-                    }
-                }
-                // TODO check angles
             }
+            // TODO check angles
             prevT = nextT;
             prevPoint = nextPoint;
         }
@@ -471,8 +466,7 @@ public final class Bezier
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine3d cubic(final int size, final Ray3d start, final Ray3d end)
-            throws DrawRuntimeException
+    public static PolyLine3d cubic(final int size, final Ray3d start, final Ray3d end) throws DrawRuntimeException
     {
         return cubic(size, start, end, 1.0);
     }
@@ -488,8 +482,7 @@ public final class Bezier
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine3d cubic(final double epsilon, final Ray3d start, final Ray3d end)
-            throws DrawRuntimeException
+    public static PolyLine3d cubic(final double epsilon, final Ray3d start, final Ray3d end) throws DrawRuntimeException
     {
         return cubic(epsilon, start, end, 1.0);
     }
@@ -526,8 +519,8 @@ public final class Bezier
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
      *             constructed
      */
-    public static PolyLine3d cubic(final double epsilon, final Ray3d start, final Ray3d end,
-            final double shape) throws DrawRuntimeException
+    public static PolyLine3d cubic(final double epsilon, final Ray3d start, final Ray3d end, final double shape)
+            throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(shape) || Double.isInfinite(shape) || shape <= 0, DrawRuntimeException.class,
                 "shape must be a finite, positive value");
@@ -570,8 +563,8 @@ public final class Bezier
      * @throws DrawRuntimeException in case size is less than 2, start is at the same location as end, shape is invalid, or the
      *             B&eacute;zier curve could not be constructed
      */
-    public static PolyLine3d cubic(final double epsilon, final Ray3d start, final Ray3d end,
-            final double shape, final boolean weighted) throws NullPointerException, DrawRuntimeException
+    public static PolyLine3d cubic(final double epsilon, final Ray3d start, final Ray3d end, final double shape,
+            final boolean weighted) throws NullPointerException, DrawRuntimeException
     {
         Point3d[] points = createControlPoints(start, end, shape, weighted);
         return cubic(epsilon, points[0], points[1], points[2], points[3]);
@@ -586,8 +579,7 @@ public final class Bezier
      * @param weighted boolean;
      * @return Point3d[]; an array of four Point3d elements: start, the first control point, the second control point, end.
      */
-    private static Point3d[] createControlPoints(final Ray3d start, final Ray3d end, final double shape,
-            final boolean weighted)
+    private static Point3d[] createControlPoints(final Ray3d start, final Ray3d end, final double shape, final boolean weighted)
     {
         Throw.whenNull(start, "start point may not be null");
         Throw.whenNull(end, "end point may not be null");
@@ -749,47 +741,44 @@ public final class Bezier
         {
             Double nextT = entry.getKey();
             Point3d nextPoint = entry.getValue();
-            if (null != prevPoint)
+            double medianT = (prevT + nextT) / 2;
+            double x = Bn(medianT, px);
+            double y = Bn(medianT, py);
+            double z = Bn(medianT, pz);
+            Point3d medianPoint = new Point3d(x, y, z);
+            Point3d projectedPoint = medianPoint.closestPointOnSegment(prevPoint, nextPoint);
+            double errorPosition = medianPoint.distance(projectedPoint);
+            if (errorPosition >= epsilon)
             {
-                double medianT = (prevT + nextT) / 2;
-                double x = Bn(medianT, px);
-                double y = Bn(medianT, py);
-                double z = Bn(medianT, pz);
-                Point3d medianPoint = new Point3d(x, y, z);
-                Point3d projectedPoint = medianPoint.closestPointOnSegment(prevPoint, nextPoint);
-                double errorPosition = medianPoint.distance(projectedPoint);
-                if (errorPosition >= epsilon)
+                // We need to insert another point
+                result.put(medianT, medianPoint);
+                continue;
+            }
+            if (prevPoint.distance(nextPoint) > epsilon)
+            {
+                // Check for an inflection point by creating additional points at one quarter and three quarters. If these
+                // are on opposite sides of the line from prevPoint to nextPoint; there must be an inflection point.
+                // https://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
+                double quarterT = (prevT + medianT) / 2;
+                double quarterX = Bn(quarterT, px);
+                double quarterY = Bn(quarterT, py);
+                int sign1 = (int) Math.signum((nextPoint.x - prevPoint.x) * (quarterY - prevPoint.y)
+                        - (nextPoint.y - prevPoint.y) * (quarterX - prevPoint.x));
+                double threeQuarterT = (nextT + medianT) / 2;
+                double threeQuarterX = Bn(threeQuarterT, px);
+                double threeQuarterY = Bn(threeQuarterT, py);
+                int sign2 = (int) Math.signum((nextPoint.x - prevPoint.x) * (threeQuarterY - prevPoint.y)
+                        - (nextPoint.y - prevPoint.y) * (threeQuarterX - prevPoint.x));
+                if (sign1 != sign2)
                 {
-                    // We need to insert another point
+                    // There is an inflection point
+                    System.out.println("Detected inflection point between " + prevPoint + " and " + nextPoint);
+                    // Inserting the halfway point should take care of this
                     result.put(medianT, medianPoint);
                     continue;
                 }
-                if (prevPoint.distance(nextPoint) > epsilon)
-                {
-                    // Check for an inflection point by creating additional points at one quarter and three quarters. If these
-                    // are on opposite sides of the line from prevPoint to nextPoint; there must be an inflection point.
-                    // https://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
-                    double quarterT = (prevT + medianT) / 2;
-                    double quarterX = Bn(quarterT, px);
-                    double quarterY = Bn(quarterT, py);
-                    int sign1 = (int) Math.signum((nextPoint.x - prevPoint.x) * (quarterY - prevPoint.y)
-                            - (nextPoint.y - prevPoint.y) * (quarterX - prevPoint.x));
-                    double threeQuarterT = (nextT + medianT) / 2;
-                    double threeQuarterX = Bn(threeQuarterT, px);
-                    double threeQuarterY = Bn(threeQuarterT, py);
-                    int sign2 = (int) Math.signum((nextPoint.x - prevPoint.x) * (threeQuarterY - prevPoint.y)
-                            - (nextPoint.y - prevPoint.y) * (threeQuarterX - prevPoint.x));
-                    if (sign1 != sign2)
-                    {
-                        // There is an inflection point
-                        System.out.println("Detected inflection point between " + prevPoint + " and " + nextPoint);
-                        // Inserting the halfway point should take care of this
-                        result.put(medianT, medianPoint);
-                        continue;
-                    }
-                }
-                // TODO check angles
             }
+            // TODO check angles
             prevT = nextT;
             prevPoint = nextPoint;
         }

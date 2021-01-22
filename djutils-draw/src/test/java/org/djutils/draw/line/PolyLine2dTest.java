@@ -1022,9 +1022,9 @@ public class PolyLine2dTest
             degree++;
         }
         PolyLine2d transitionLine = new PolyLine2d(transitionLinePoints);
-        System.out.print("inner design line: " + innerDesignLine.toPlot());
-        System.out.print("outer design line: " + outerDesignLine.toPlot());
-        System.out.print("transition line:   " + transitionLine.toPlot());
+        // System.out.print("inner design line: " + innerDesignLine.toPlot());
+        // System.out.print("outer design line: " + outerDesignLine.toPlot());
+        // System.out.print("transition line: " + transitionLine.toPlot());
         List<Point2d> projections = new ArrayList<>();
         for (Iterator<Point2d> iterator = transitionLine.getPoints(); iterator.hasNext();)
         {
@@ -1050,13 +1050,13 @@ public class PolyLine2dTest
                 }
             }
         }
-        System.out.print("cosine projections: " + PolyLine2d.createAndCleanPolyLine2d(projections).toPlot());
+        // System.out.print("cosine projections: " + PolyLine2d.createAndCleanPolyLine2d(projections).toPlot());
         Ray2d from = new Ray2d(outerDesignLine.get(10).x, outerDesignLine.get(10).y,
                 outerDesignLine.get(10).directionTo(outerDesignLine.get(11)));
         Ray2d to = new Ray2d(innerDesignLine.get(80).x, innerDesignLine.get(80).y,
                 innerDesignLine.get(80).directionTo(innerDesignLine.get(81)));
         transitionLine = Bezier.cubic(from, to);
-        System.out.print("Bezier: " + transitionLine.toPlot());
+        // System.out.print("Bezier: " + transitionLine.toPlot());
         projections = new ArrayList<>();
         Point2d prev = null;
         for (Iterator<Point2d> iterator = transitionLine.getPoints(); iterator.hasNext();)
@@ -1084,7 +1084,7 @@ public class PolyLine2dTest
             }
             prev = p;
         }
-        System.out.print("Bezier projections: " + PolyLine2d.createAndCleanPolyLine2d(projections).toPlot());
+        // System.out.print("Bezier projections: " + PolyLine2d.createAndCleanPolyLine2d(projections).toPlot());
     }
 
     /**
