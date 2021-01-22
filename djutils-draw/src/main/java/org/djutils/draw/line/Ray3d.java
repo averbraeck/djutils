@@ -167,6 +167,13 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public Ray3d neg()
+    {
+        return new Ray3d(-this.x, -this.y, -this.z, this.phi + Math.PI, this.theta + Math.PI);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Ray3d getLocationExtended(final double position) throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(position) || Double.isInfinite(position), DrawRuntimeException.class,

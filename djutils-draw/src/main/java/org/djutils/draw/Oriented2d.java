@@ -8,8 +8,9 @@ package org.djutils.draw;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @param <O> the Oriented type
  */
-public interface Oriented2d extends Oriented<Oriented2d>
+public interface Oriented2d<O extends Oriented<O>> extends Oriented<O>
 {
     // no other methods defined for now
 }

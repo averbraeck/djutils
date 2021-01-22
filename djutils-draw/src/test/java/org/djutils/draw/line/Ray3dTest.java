@@ -174,6 +174,12 @@ public class Ray3dTest
         assertEquals(description + " getStartPoint x", expectedX, startPoint.x, 0.0001);
         assertEquals(description + " getStartPoint y", expectedY, startPoint.y, 0.0001);
         assertEquals(description + " getStartPoint z", expectedZ, startPoint.z, 0.0001);
+        Ray3d negated = ray.neg();
+        assertEquals(description + " neg x", -expectedX, negated.x, 0.0001);
+        assertEquals(description + " neg y", -expectedY, negated.y, 0.0001);
+        assertEquals(description + " neg z", -expectedZ, negated.z, 0.0001);
+        assertEquals(description + " neg phi", expectedPhi + Math.PI, negated.phi, 0.0001);
+        assertEquals(description + " neg theta", expectedTheta + Math.PI, negated.theta, 0.0001);
     }
 
     /**

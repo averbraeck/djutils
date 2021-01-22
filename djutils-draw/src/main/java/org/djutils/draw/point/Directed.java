@@ -1,28 +1,22 @@
-package org.djutils.draw;
+package org.djutils.draw.point;
 
 /**
- * Directed is an interface to indicate an object has a direction.
+ * Directed.java.
  * <p>
- * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
- * @param <O> The Oriented type (2d or 3d)
+ * @param <D> the Directed type
  */
-public interface Oriented<O extends Oriented<O>>
+public interface Directed<D extends Directed<D>>
 {
     /**
      * Return a new O with negated coordinate values. Adds 180 degrees (pi radians) to the rotation(s).
      * @return D; a new D with negated coordinate values and a rotation in the opposite direction
      */
-    O neg();
-
-    /**
-     * Return the rotation around the z-axis in radians.
-     * @return double; the rotation around the z-axis in radians
-     */
-    double getDirZ();
+    D neg();
 
     /**
      * Compare this O with another O with specified tolerances in the coordinates and the angles.
@@ -36,7 +30,8 @@ public interface Oriented<O extends Oriented<O>>
      * @throws NullPointerException when point is null
      * @throws IllegalArgumentException epsilonCoordinate or epsilonRotation is NaN or negative
      */
-    boolean epsilonEquals(O other, double epsilonCoordinate, double epsilonDirection)
+    boolean epsilonEquals(D other, double epsilonCoordinate, double epsilonDirection)
             throws NullPointerException, IllegalArgumentException;
 
 }
+

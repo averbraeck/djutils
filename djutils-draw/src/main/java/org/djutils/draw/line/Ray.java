@@ -2,6 +2,7 @@ package org.djutils.draw.line;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Space;
+import org.djutils.draw.point.Directed;
 import org.djutils.draw.point.Point;
 import org.djutils.exceptions.Throw;
 
@@ -17,7 +18,7 @@ import org.djutils.exceptions.Throw;
  * @param <P> The Point type (2d, or 3d)
  * @param <S> The Space type
  */
-public interface Ray<R extends Ray<R, P, S>, P extends Point<P, S>, S extends Space>
+public interface Ray<R extends Ray<R, P, S>, P extends Point<P, S>, S extends Space> extends Directed<R>
 {
     /**
      * Get the finite end point of this Ray.
@@ -61,19 +62,5 @@ public interface Ray<R extends Ray<R, P, S>, P extends Point<P, S>, S extends Sp
      * @throws NullPointerException when point is null
      */
     P closestPointOnRay(P point) throws NullPointerException;
-
-    /**
-     * Compare this Ray2d with another Ray3d and return true when each of the coordinates is less than epsilonCoordinate apart,
-     * and the directions (normalized) differ less than epsilonRotation.
-     * @param other Ray2d; the point to compare with
-     * @param epsilonCoordinate double; the upper bound of difference for one of the coordinates
-     * @param epsilonDirection double; the upper bound of difference for the direction(s)
-     * @return boolean; true if the locations are less than epsilonCoordinate apart, and the phi differs less than
-     *         epsilonRotation and, for 3d theta differs less than epsilonRotation apart, otherwise false
-     * @throws NullPointerException when point is null
-     * @throws IllegalArgumentException epsilonCoordinate or epsilonDirection is NaN or < 0
-     */
-    boolean epsilonEquals(R other, double epsilonCoordinate, double epsilonDirection)
-            throws NullPointerException, IllegalArgumentException;
 
 }

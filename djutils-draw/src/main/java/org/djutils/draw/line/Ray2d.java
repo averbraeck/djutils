@@ -135,6 +135,13 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public Ray2d neg()
+    {
+        return new Ray2d(-this.x, -this.y, this.phi + Math.PI);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Ray2d getLocationExtended(final double position) throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(position) || Double.isInfinite(position), DrawRuntimeException.class,
@@ -159,8 +166,8 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Sp
 
     /** {@inheritDoc} */
     @Override
-    public boolean epsilonEquals(final Ray2d other, final double epsilonCoordinate, final double epsilonDirection)
-            throws NullPointerException, IllegalArgumentException
+    public boolean epsilonEquals(final Ray2d other, final double epsilonCoordinate,
+            final double epsilonDirection) throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(other, "other point may not be null");
         Throw.when(
