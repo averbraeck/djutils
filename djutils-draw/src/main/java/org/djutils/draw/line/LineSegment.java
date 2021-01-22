@@ -20,7 +20,7 @@ import org.djutils.exceptions.Throw;
  * @param <R> The ray type (2d or 3d)
  * @param <S> The space type (2d or 3d)
  */
-public interface Segment<P extends Point<P, S>, R extends Ray<R, P, S>, S extends Space> extends Drawable<P, S>, Serializable
+public interface LineSegment<P extends Point<P, S>, R extends Ray<R, P, S>, S extends Space> extends Drawable<P, S>, Serializable
 {
     /**
      * Get the start point of this Segment.
