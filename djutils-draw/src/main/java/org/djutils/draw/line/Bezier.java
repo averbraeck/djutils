@@ -577,9 +577,6 @@ public final class Bezier
         return cubic(epsilon, points[0], points[1], points[2], points[3]);
     }
 
-    /** Unit vector for transformations in createControlPoints. */
-    private static final Point3d UNIT_VECTOR3D = new Point3d(1, 0, 0);
-
     /**
      * Create control points for a cubic B&eacute;zier curve defined by two Rays.
      * @param start Ray3d; the start point (and direction)
