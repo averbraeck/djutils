@@ -145,6 +145,10 @@ public class Ray2dTest
         Point2d startPoint = ray.getStartPoint();
         assertEquals(description + " getStartPoint x", expectedX, startPoint.x, 0.0001);
         assertEquals(description + " getStartPoint y", expectedY, startPoint.y, 0.0001);
+        Ray2d negated = ray.neg();
+        assertEquals(description + " neg x", -expectedX, negated.x, 0.0001);
+        assertEquals(description + " neg y", -expectedY, negated.y, 0.0001);
+        assertEquals(description + " neg phi", expectedPhi + Math.PI, negated.phi, 0.0001);
     }
 
     /**

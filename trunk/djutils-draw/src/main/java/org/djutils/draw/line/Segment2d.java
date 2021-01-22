@@ -19,7 +19,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Segment2d implements Drawable2d, Segment<Point2d, Space2d>
+public class Segment2d implements Drawable2d, Segment<Point2d, Ray2d, Space2d>
 {
     /** ... */
     private static final long serialVersionUID = 20210121L;
@@ -71,9 +71,9 @@ public class Segment2d implements Drawable2d, Segment<Point2d, Space2d>
     }
 
     /**
-     * Construct a new Segment2d from a Point2d and two coordinates.
-     * @param fromX double; the x-coordinate of the end point
-     * @param fromY double; the y-coordinate of the end point
+     * Construct a new Segment2d from two coordinates and a Point2d.
+     * @param fromX double; the x-coordinate of the start point
+     * @param fromY double; the y-coordinate of the start point
      * @param to Point2d; the end point
      * @throws NullPointerException when to is null
      * @throws DrawRuntimeException when to has the exact coordinates fromX, fromY
@@ -112,6 +112,13 @@ public class Segment2d implements Drawable2d, Segment<Point2d, Space2d>
 
     /** {@inheritDoc} */
     @Override
+    public double getLength()
+    {
+        return Math.hypot(this.toX - this.fromX, this.toY - this.fromY);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Iterator<? extends Point2d> getPoints()
     {
         return Arrays.stream(new Point2d[] { getStartPoint(), getEndPoint() }).iterator();
@@ -134,6 +141,18 @@ public class Segment2d implements Drawable2d, Segment<Point2d, Space2d>
 
     /** {@inheritDoc} */
     @Override
+    public Ray2d getLocationExtended(final double position) throws DrawRuntimeException
+    {
+        Throw.when(Double.isNaN(position) || Double.isInfinite(position), DrawRuntimeException.class,
+                "position must be finite");
+        double dX = this.toX - this.fromX;
+        double dY = this.toY - this.fromY;
+        double length = Math.hypot(dX, dY);
+        return new Ray2d(this.fromX + position * dX / length, this.fromY + position * dY / length, Math.atan2(dY, dX));
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Point2d closestPointOnSegment(final Point2d point)
     {
         double dX = this.toX - this.fromX;
@@ -149,7 +168,7 @@ public class Segment2d implements Drawable2d, Segment<Point2d, Space2d>
         }
         else
         {
-            return new Point2d((1.0 - u) * this.fromX + u * point.x, (1.0 - u) * this.fromY + u * this.toY);
+            return new Point2d((1.0 - u) * this.fromX + u * this.toX, (1.0 - u) * this.fromY + u * this.toY);
         }
     }
 

@@ -7,7 +7,6 @@ import java.util.TreeMap;
 import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Transform2d;
-import org.djutils.draw.Transform3d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;

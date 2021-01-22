@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import org.djutils.base.AngleUtil;
-import org.djutils.draw.Oriented3d;
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.Oriented3d;
 import org.djutils.exceptions.Throw;
 
 /**
@@ -20,7 +20,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class OrientedPoint3d extends Point3d implements Oriented3d
+public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint3d>
 {
     /** */
     private static final long serialVersionUID = 20200828L;
@@ -310,17 +310,8 @@ public class OrientedPoint3d extends Point3d implements Oriented3d
         return String.format(format, this.x, this.y, this.z, this.dirX, this.dirY, this.dirZ);
     }
 
-    /**
-     * Compare this DirectedPoint3d with another DirectedPoint2d and return true when each of the coordinates is less than
-     * epsilonCoordinate apart, and the direction components are (normalized) less that epsilonRotation apart.
-     * @param other DirectedPoint3d; the point to compare with
-     * @param epsilonCoordinate double; the upper bound of difference for one of the coordinates
-     * @param epsilonRotation double; the upper bound of difference for one of the rotations
-     * @return boolean; true if x, y, and z are less than epsilonCoordinate apart, and rotX, rotY and rotZ are less than
-     *         epsilonRotation apart, otherwise false
-     * @throws NullPointerException when point is null
-     * @throws IllegalArgumentException epsilonCoordinate or epsilonRotation is NaN
-     */
+    /** {@inheritDoc} */
+    @Override
     public boolean epsilonEquals(final OrientedPoint3d other, final double epsilonCoordinate, final double epsilonRotation)
             throws NullPointerException, IllegalArgumentException
     {
