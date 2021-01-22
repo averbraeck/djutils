@@ -19,7 +19,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Segment2d implements Drawable2d, Segment<Point2d, Ray2d, Space2d>
+public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Space2d>
 {
     /** ... */
     private static final long serialVersionUID = 20210121L;
@@ -48,7 +48,7 @@ public class Segment2d implements Drawable2d, Segment<Point2d, Ray2d, Space2d>
      * @param toY double; the y-coordinate of the end point
      * @throws DrawRuntimeException when (fromX,fromY) is equals to (toX,toY)
      */
-    public Segment2d(final double fromX, final double fromY, final double toX, final double toY) throws DrawRuntimeException
+    public LineSegment2d(final double fromX, final double fromY, final double toX, final double toY) throws DrawRuntimeException
     {
         Throw.when(fromX == toX && fromY == toY, DrawRuntimeException.class, "From and to may not be equal");
         this.fromX = fromX;
@@ -65,7 +65,7 @@ public class Segment2d implements Drawable2d, Segment<Point2d, Ray2d, Space2d>
      * @throws NullPointerException when from is null
      * @throws DrawRuntimeException when from has the exact coordinates toX, toY
      */
-    public Segment2d(final Point2d from, final double toX, final double toY) throws NullPointerException, DrawRuntimeException
+    public LineSegment2d(final Point2d from, final double toX, final double toY) throws NullPointerException, DrawRuntimeException
     {
         this(Throw.whenNull(from, "from point may not be null").x, from.y, toX, toY);
     }
@@ -78,7 +78,7 @@ public class Segment2d implements Drawable2d, Segment<Point2d, Ray2d, Space2d>
      * @throws NullPointerException when to is null
      * @throws DrawRuntimeException when to has the exact coordinates fromX, fromY
      */
-    public Segment2d(final double fromX, final double fromY, final Point2d to) throws NullPointerException, DrawRuntimeException
+    public LineSegment2d(final double fromX, final double fromY, final Point2d to) throws NullPointerException, DrawRuntimeException
     {
         this(fromX, fromY, Throw.whenNull(to, "to point may not be null").x, to.y);
     }
@@ -90,7 +90,7 @@ public class Segment2d implements Drawable2d, Segment<Point2d, Ray2d, Space2d>
      * @throws NullPointerException when from is null
      * @throws DrawRuntimeException when from has the exact coordinates toX, toY
      */
-    public Segment2d(final Point2d from, final Point2d to) throws NullPointerException, DrawRuntimeException
+    public LineSegment2d(final Point2d from, final Point2d to) throws NullPointerException, DrawRuntimeException
     {
         this(Throw.whenNull(from, "from point may not be null").x, from.y, Throw.whenNull(to, "to point may not be null").x,
                 to.y);

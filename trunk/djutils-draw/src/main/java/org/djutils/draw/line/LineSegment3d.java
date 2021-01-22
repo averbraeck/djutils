@@ -19,7 +19,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Segment3d implements Drawable3d, Segment<Point3d, Ray3d, Space3d>
+public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d, Space3d>
 {
     /** ... */
     private static final long serialVersionUID = 20210121L;
@@ -58,7 +58,7 @@ public class Segment3d implements Drawable3d, Segment<Point3d, Ray3d, Space3d>
      * @param toZ double; the z-coordinate of the end point
      * @throws DrawRuntimeException when (fromX,fromY) is equals to (toX,toY)
      */
-    public Segment3d(final double fromX, final double fromY, final double fromZ, final double toX, final double toY,
+    public LineSegment3d(final double fromX, final double fromY, final double fromZ, final double toX, final double toY,
             final double toZ) throws DrawRuntimeException
     {
         Throw.when(fromX == toX && fromY == toY && fromZ == toZ, DrawRuntimeException.class, "From and to may not be equal");
@@ -79,7 +79,7 @@ public class Segment3d implements Drawable3d, Segment<Point3d, Ray3d, Space3d>
      * @throws NullPointerException when from is null
      * @throws DrawRuntimeException when from has the exact coordinates toX, toY
      */
-    public Segment3d(final Point3d from, final double toX, final double toY, final double toZ)
+    public LineSegment3d(final Point3d from, final double toX, final double toY, final double toZ)
             throws NullPointerException, DrawRuntimeException
     {
         this(Throw.whenNull(from, "from point may not be null").x, from.y, from.z, toX, toY, toZ);
@@ -94,7 +94,7 @@ public class Segment3d implements Drawable3d, Segment<Point3d, Ray3d, Space3d>
      * @throws NullPointerException when to is null
      * @throws DrawRuntimeException when to has the exact coordinates fromX, fromY
      */
-    public Segment3d(final double fromX, final double fromY, final double fromZ, final Point3d to)
+    public LineSegment3d(final double fromX, final double fromY, final double fromZ, final Point3d to)
             throws NullPointerException, DrawRuntimeException
     {
         this(fromX, fromY, fromZ, Throw.whenNull(to, "to point may not be null").x, to.y, to.z);
@@ -107,7 +107,7 @@ public class Segment3d implements Drawable3d, Segment<Point3d, Ray3d, Space3d>
      * @throws NullPointerException when from is null
      * @throws DrawRuntimeException when from has the exact coordinates toX, toY
      */
-    public Segment3d(final Point3d from, final Point3d to) throws NullPointerException, DrawRuntimeException
+    public LineSegment3d(final Point3d from, final Point3d to) throws NullPointerException, DrawRuntimeException
     {
         this(Throw.whenNull(from, "from point may not be null").x, from.y, from.z,
                 Throw.whenNull(to, "to point may not be null").x, to.y, to.z);
@@ -162,9 +162,9 @@ public class Segment3d implements Drawable3d, Segment<Point3d, Ray3d, Space3d>
 
     /** {@inheritDoc} */
     @Override
-    public Segment2d project() throws DrawRuntimeException
+    public LineSegment2d project() throws DrawRuntimeException
     {
-        return new Segment2d(this.fromX, this.fromY, this.toX, this.toY);
+        return new LineSegment2d(this.fromX, this.fromY, this.toX, this.toY);
     }
 
     /** {@inheritDoc} */
