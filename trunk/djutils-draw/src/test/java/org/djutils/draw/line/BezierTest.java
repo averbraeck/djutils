@@ -79,8 +79,8 @@ public class BezierTest
             }
         }
         // Pity that the value 64 is private in the Bezier class.
-        assertEquals("Number of points is 64", 64, Bezier
-                .cubic(new Ray2d(from.x, from.y, Math.PI / 2), new Ray2d(to.x, to.y, -Math.PI / 2)).size());
+        assertEquals("Number of points is 64", 64,
+                Bezier.cubic(new Ray2d(from.x, from.y, Math.PI / 2), new Ray2d(to.x, to.y, -Math.PI / 2)).size());
         assertEquals("Number of points is 64", 64, Bezier.bezier(from, control1, control2, to).size());
         control1 = new Point2d(5, 0);
         control2 = new Point2d(0, 5);
@@ -97,8 +97,7 @@ public class BezierTest
         }
         for (int n : new int[] { 2, 3, 4, 100 })
         {
-            PolyLine2d line =
-                    Bezier.cubic(n, new Ray2d(from.x, from.y, Math.PI), new Ray2d(to.x, to.y, Math.PI / 2));
+            PolyLine2d line = Bezier.cubic(n, new Ray2d(from.x, from.y, Math.PI), new Ray2d(to.x, to.y, Math.PI / 2));
             for (int i = 1; i < line.size() - 1; i++)
             {
                 Point2d p = line.get(i);
@@ -109,33 +108,207 @@ public class BezierTest
 
         Point2d start = new Point2d(1, 1);
         Point2d c1 = new Point2d(11, 1);
-        //Point2d c3 = new Point2d(5, 1);
+        // Point2d c3 = new Point2d(5, 1);
         Point2d c2 = new Point2d(1, 11);
         Point2d end = new Point2d(11, 11);
+        double autoDistance = start.distance(end) / 2;
+        Point2d c1Auto = new Point2d(start.x + autoDistance, start.y);
+        Point2d c2Auto = new Point2d(end.x - autoDistance, end.y);
         // Should produce a right leaning S shape; something between a slash and an S
         PolyLine2d reference = Bezier.bezier(256, start, c1, c2, end);
-        System.out.print("ref " + reference.toPlot());
+        PolyLine2d referenceAuto = Bezier.bezier(256, start, c1Auto, c2Auto, end);
+        // System.out.print("ref " + reference.toPlot());
+        Ray2d startRay = new Ray2d(start, start.directionTo(c1));
+        Ray2d endRay = new Ray2d(end, c2.directionTo(end));
         for (double epsilonPosition : new double[] { 3, 1, 0.1, 0.05, 0.02 })
         {
+            // System.out.println("epsilonPosition " + epsilonPosition);
             PolyLine2d line = Bezier.bezier(epsilonPosition, start, c1, c2, end);
-            System.out.print("epsilonPosition " + epsilonPosition + " yields " + line.toPlot());
-            for (int percent = 0; percent <= 100; percent++)
+            // System.out.print("epsilonPosition " + epsilonPosition + " yields " + line.toPlot());
+            // for (int percent = 0; percent <= 100; percent++)
+            // {
+            // Ray2d ray = reference.getLocationFraction(percent / 100.0);
+            // double position = line.projectRay(ray);
+            // Point2d pointAtPosition = line.getLocation(position);
+            // double positionError = ray.distance(pointAtPosition);
+            // System.out.print(String.format(" %.3f", positionError));
+            // if (positionError >= epsilonPosition)
+            // {
+            // System.out.println();
+            // System.out.println("percent " + percent + ", on " + ray + " projected to " + pointAtPosition
+            // + " positionError " + positionError);
+            // }
+            // assertTrue("Actual error " + positionError + " exceeds epsilon " + epsilonPosition,
+            // positionError < epsilonPosition);
+            // }
+            // System.out.println();
+            compareBeziers("bezier with 2 explicit control points", reference, line, 100, epsilonPosition);
+            line = Bezier.cubic(epsilonPosition, start, c1, c2, end);
+            compareBeziers("cubic with 2 explicit control points", reference, line, 100, epsilonPosition);
+            line = Bezier.cubic(epsilonPosition, startRay, endRay);
+            compareBeziers("cubic with automatic control points", referenceAuto, line, 100, epsilonPosition);
+        }
+
+        try
+        {
+            Bezier.cubic(0.1, startRay, endRay, 0, true);
+            fail("Illegal shape value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Bezier.cubic(0.1, startRay, endRay, 0);
+            fail("Illegal shape value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Bezier.cubic(0.1, startRay, endRay, -1);
+            fail("Illegal shape value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Bezier.cubic(0.1, startRay, endRay, -1, true);
+            fail("Illegal shape value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Bezier.cubic(0.1, startRay, endRay, Double.NaN, true);
+            fail("Illegal shape value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Bezier.cubic(0.1, startRay, endRay, Double.NaN);
+            fail("Illegal shape value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Bezier.cubic(0.1, startRay, endRay, Double.POSITIVE_INFINITY);
+            fail("Illegal shape value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Bezier.cubic(0.1, startRay, endRay, Double.POSITIVE_INFINITY, true);
+            fail("Illegal shape value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Bezier.bezier(0.1, new Point2d[] { start });
+            fail("Too few points have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Bezier.bezier(0.1, new Point2d[] { });
+            fail("Too few points have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Bezier.bezier(0, start, c1, c2, end);
+            fail("illegal epsilon have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Bezier.bezier(-0.1, start, c1, c2, end);
+            fail("illegal epsilon have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Bezier.bezier(Double.NaN, start, c1, c2, end);
+            fail("illegal epsilon have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+    }
+
+    /**
+     * Compare B&eacute;zier curve approximations.
+     * @param description String; description of the test
+     * @param reference PolyLine2d; reference B&eacute;zier curve approximation
+     * @param candidate PolyLine2d; candidate B&eacute;zier curve approximation
+     * @param numberOfPoints int; number of point to compare the curves at, minus one; this method checks at 0% and at 100%
+     * @param epsilon double; upper limit of the distance between the two curves
+     * @throws DrawException if that happens uncaught; a test has failed
+     */
+    public void compareBeziers(final String description, final PolyLine2d reference, final PolyLine2d candidate,
+            final int numberOfPoints, final double epsilon) throws DrawException
+    {
+        for (int step = 0; step <= numberOfPoints; step++)
+        {
+            double fraction = 1.0 * step / numberOfPoints;
+            Ray2d ray = reference.getLocationFraction(fraction);
+            double position = candidate.projectRay(ray);
+            Point2d pointAtPosition = candidate.getLocation(position);
+            double positionError = ray.distance(pointAtPosition);
+            if (positionError >= epsilon)
             {
-                Ray2d ray = reference.getLocationFraction(percent / 100.0);
-                double position = line.projectRay(ray);
-                Point2d pointAtPosition = line.getLocation(position);
-                double positionError = ray.distance(pointAtPosition);
-                System.out.print(String.format(" %.3f", positionError));
-                if (positionError >= epsilonPosition)
-                {
-                    System.out.println();
-                    System.out.println("percent " + percent + ", on " + ray + " projected to " + pointAtPosition
-                            + " positionError " + positionError);
-                }
-                assertTrue("Actual error " + positionError + " exceeds epsilon " + epsilonPosition,
-                        positionError < epsilonPosition);
+                System.out.println("fraction " + fraction + ", on " + ray + " projected to " + pointAtPosition
+                        + " positionError " + positionError);
+                System.out.print("connection: " + new PolyLine2d(ray, pointAtPosition).toPlot());
+                System.out.print("reference: " + reference.toPlot());
+                System.out.print("candidate: " + candidate.toPlot());
             }
-            System.out.println();
+            assertTrue(description + " actual error is less than epsilon ", positionError < epsilon);
         }
     }
 
@@ -197,9 +370,8 @@ public class BezierTest
             }
         }
         // Pity that the value 64 is private in the Bezier class.
-        assertEquals("Number of points is 64", 64,
-                Bezier.cubic(new Ray3d(from.x, from.y, from.z, Math.PI / 2, -Math.PI / 2, 0),
-                        new Ray3d(to.x, to.y, to.z, Math.PI, 0, -Math.PI / 2)).size());
+        assertEquals("Number of points is 64", 64, Bezier.cubic(new Ray3d(from.x, from.y, from.z, Math.PI / 2, -Math.PI / 2, 0),
+                new Ray3d(to.x, to.y, to.z, Math.PI, 0, -Math.PI / 2)).size());
         assertEquals("Number of points is 64", 64, Bezier.bezier(from, control1, control2, to).size());
         control1 = new Point3d(5, 0, 10);
         control2 = new Point3d(0, 5, 20);
