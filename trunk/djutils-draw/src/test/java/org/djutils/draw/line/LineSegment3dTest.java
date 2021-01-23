@@ -57,52 +57,52 @@ public class LineSegment3dTest
      * Check that a segment has all the right values.
      * @param description String; description of the test
      * @param segment Segment3d; the segment
-     * @param expectedFromX double; the expected x value for the start of the segment
-     * @param expectedFromY double; the expected y value for the start of the segment
-     * @param expectedFromZ double; the expected z value for the start of the segment
-     * @param expectedToX double; the expected x value for the end of the segment
-     * @param expectedToY double; the expected y value for the end of the segment
-     * @param expectedToZ double; the expected y value for the end of the segment
+     * @param expectedStartX double; the expected x value for the start of the segment
+     * @param expectedStartY double; the expected y value for the start of the segment
+     * @param expectedStartZ double; the expected z value for the start of the segment
+     * @param expectedEndX double; the expected x value for the end of the segment
+     * @param expectedEndY double; the expected y value for the end of the segment
+     * @param expectedEndZ double; the expected y value for the end of the segment
      */
-    public void verifySegment(final String description, final LineSegment3d segment, final double expectedFromX,
-            final double expectedFromY, final double expectedFromZ, final double expectedToX, final double expectedToY,
-            final double expectedToZ)
+    public void verifySegment(final String description, final LineSegment3d segment, final double expectedStartX,
+            final double expectedStartY, final double expectedStartZ, final double expectedEndX, final double expectedEndY,
+            final double expectedEndZ)
     {
-        assertEquals(description + " fromX", expectedFromX, segment.fromX, 0.0001);
-        assertEquals(description + " fromY", expectedFromY, segment.fromY, 0.0001);
-        assertEquals(description + " fromZ", expectedFromZ, segment.fromZ, 0.0001);
-        assertEquals(description + " toX", expectedToX, segment.toX, 0.0001);
-        assertEquals(description + " toY", expectedToY, segment.toY, 0.0001);
-        assertEquals(description + " toZ", expectedToZ, segment.toZ, 0.0001);
-        assertEquals(description + " getStartPoint x", expectedFromX, segment.getStartPoint().x, 0.0001);
-        assertEquals(description + " getStartPoint y", expectedFromY, segment.getStartPoint().y, 0.0001);
-        assertEquals(description + " getStartPoint z", expectedFromZ, segment.getStartPoint().z, 0.0001);
-        assertEquals(description + " getEndPoint x", expectedToX, segment.getEndPoint().x, 0.0001);
-        assertEquals(description + " getEndPoint y", expectedToY, segment.getEndPoint().y, 0.0001);
-        assertEquals(description + " getEndPoint z", expectedToZ, segment.getEndPoint().z, 0.0001);
-        assertEquals(description + " length",
-                Math.hypot(Math.hypot(expectedToX - expectedFromX, expectedToY - expectedFromY), expectedToZ - expectedFromZ),
+        assertEquals(description + " startX", expectedStartX, segment.startX, 0.0001);
+        assertEquals(description + " startY", expectedStartY, segment.startY, 0.0001);
+        assertEquals(description + " startZ", expectedStartZ, segment.startZ, 0.0001);
+        assertEquals(description + " toX", expectedEndX, segment.endX, 0.0001);
+        assertEquals(description + " endY", expectedEndY, segment.endY, 0.0001);
+        assertEquals(description + " endZ", expectedEndZ, segment.endZ, 0.0001);
+        assertEquals(description + " getStartPoint x", expectedStartX, segment.getStartPoint().x, 0.0001);
+        assertEquals(description + " getStartPoint y", expectedStartY, segment.getStartPoint().y, 0.0001);
+        assertEquals(description + " getStartPoint z", expectedStartZ, segment.getStartPoint().z, 0.0001);
+        assertEquals(description + " getEndPoint x", expectedEndX, segment.getEndPoint().x, 0.0001);
+        assertEquals(description + " getEndPoint y", expectedEndY, segment.getEndPoint().y, 0.0001);
+        assertEquals(description + " getEndPoint z", expectedEndZ, segment.getEndPoint().z, 0.0001);
+        assertEquals(description + " length", Math
+                .hypot(Math.hypot(expectedEndX - expectedStartX, expectedEndY - expectedStartY), expectedEndZ - expectedStartZ),
                 segment.getLength(), 0.0001);
         assertEquals(description + " size is 2", 2, segment.size());
         Iterator<? extends Point3d> iterator = segment.getPoints();
         assertTrue(description + " iterator has data", iterator.hasNext());
         Point3d point = iterator.next();
-        assertEquals(description + " iterator first point x", expectedFromX, point.x, 0.0001);
-        assertEquals(description + " iterator first point y", expectedFromY, point.y, 0.0001);
-        assertEquals(description + " iterator first point z", expectedFromZ, point.z, 0.0001);
+        assertEquals(description + " iterator first point x", expectedStartX, point.x, 0.0001);
+        assertEquals(description + " iterator first point y", expectedStartY, point.y, 0.0001);
+        assertEquals(description + " iterator first point z", expectedStartZ, point.z, 0.0001);
         assertTrue(description + " iterator has more data", iterator.hasNext());
         point = iterator.next();
-        assertEquals(description + " iterator second point x", expectedToX, point.x, 0.0001);
-        assertEquals(description + " iterator second point y", expectedToY, point.y, 0.0001);
-        assertEquals(description + " iterator second point z", expectedToZ, point.z, 0.0001);
+        assertEquals(description + " iterator second point x", expectedEndX, point.x, 0.0001);
+        assertEquals(description + " iterator second point y", expectedEndY, point.y, 0.0001);
+        assertEquals(description + " iterator second point z", expectedEndZ, point.z, 0.0001);
         assertFalse(description + " iterator has no more data", iterator.hasNext());
         Bounds3d bounds = segment.getBounds();
-        assertEquals(description + " bounds minX", Math.min(expectedFromX, expectedToX), bounds.getMinX(), 0.0001);
-        assertEquals(description + " bounds maxX", Math.max(expectedFromX, expectedToX), bounds.getMaxX(), 0.0001);
-        assertEquals(description + " bounds minY", Math.min(expectedFromY, expectedToY), bounds.getMinY(), 0.0001);
-        assertEquals(description + " bounds maxY", Math.max(expectedFromY, expectedToY), bounds.getMaxY(), 0.0001);
-        assertEquals(description + " bounds minZ", Math.min(expectedFromZ, expectedToZ), bounds.getMinZ(), 0.0001);
-        assertEquals(description + " bounds maxZ", Math.max(expectedFromZ, expectedToZ), bounds.getMaxZ(), 0.0001);
+        assertEquals(description + " bounds minX", Math.min(expectedStartX, expectedEndX), bounds.getMinX(), 0.0001);
+        assertEquals(description + " bounds maxX", Math.max(expectedStartX, expectedEndX), bounds.getMaxX(), 0.0001);
+        assertEquals(description + " bounds minY", Math.min(expectedStartY, expectedEndY), bounds.getMinY(), 0.0001);
+        assertEquals(description + " bounds maxY", Math.max(expectedStartY, expectedEndY), bounds.getMaxY(), 0.0001);
+        assertEquals(description + " bounds minZ", Math.min(expectedStartZ, expectedEndZ), bounds.getMinZ(), 0.0001);
+        assertEquals(description + " bounds maxZ", Math.max(expectedStartZ, expectedEndZ), bounds.getMaxZ(), 0.0001);
         assertTrue(description + " toString returns something descriptive", segment.toString().startsWith("Segment3d"));
     }
 
@@ -195,17 +195,17 @@ public class LineSegment3dTest
         }
 
         Point3d result = segment.closestPointOnSegment(new Point3d(1, 2, 0));
-        assertEquals("result is start point", segment.fromX, result.x, 0);
-        assertEquals("result is start point", segment.fromY, result.y, 0);
+        assertEquals("result is start point", segment.startX, result.x, 0);
+        assertEquals("result is start point", segment.startY, result.y, 0);
         result = segment.closestPointOnSegment(new Point3d(1, 0, 3));
-        assertEquals("result is start point", segment.fromX, result.x, 0);
-        assertEquals("result is start point", segment.fromY, result.y, 0);
+        assertEquals("result is start point", segment.startX, result.x, 0);
+        assertEquals("result is start point", segment.startY, result.y, 0);
         result = segment.closestPointOnSegment(new Point3d(0, 2, 3));
-        assertEquals("result is start point", segment.fromX, result.x, 0);
-        assertEquals("result is start point", segment.fromY, result.y, 0);
+        assertEquals("result is start point", segment.startX, result.x, 0);
+        assertEquals("result is start point", segment.startY, result.y, 0);
         result = segment.closestPointOnSegment(new Point3d(1, 2, 3));
-        assertEquals("result is start point", segment.fromX, result.x, 0);
-        assertEquals("result is start point", segment.fromY, result.y, 0);
+        assertEquals("result is start point", segment.startX, result.x, 0);
+        assertEquals("result is start point", segment.startY, result.y, 0);
 
         Point3d projectingPoint = new Point3d(10, 10, 10);
         result = segment.closestPointOnSegment(projectingPoint); // Projects at a point along the segment
@@ -220,17 +220,17 @@ public class LineSegment3dTest
         assertEquals("projecting the projection yields the projection", 0, doubleProjected.distance(result), 0.0001);
 
         result = segment.closestPointOnSegment(new Point3d(21, 10, 15));
-        assertEquals("result is end point", segment.toX, result.x, 0);
-        assertEquals("result is end point", segment.toY, result.y, 0);
+        assertEquals("result is end point", segment.endX, result.x, 0);
+        assertEquals("result is end point", segment.endY, result.y, 0);
         result = segment.closestPointOnSegment(new Point3d(20, 11, 15));
-        assertEquals("result is end point", segment.toX, result.x, 0);
-        assertEquals("result is end point", segment.toY, result.y, 0);
+        assertEquals("result is end point", segment.endX, result.x, 0);
+        assertEquals("result is end point", segment.endY, result.y, 0);
         result = segment.closestPointOnSegment(new Point3d(20, 10, 16));
-        assertEquals("result is end point", segment.toX, result.x, 0);
-        assertEquals("result is end point", segment.toY, result.y, 0);
+        assertEquals("result is end point", segment.endX, result.x, 0);
+        assertEquals("result is end point", segment.endY, result.y, 0);
         result = segment.closestPointOnSegment(new Point3d(20, 10, 15));
-        assertEquals("result is end point", segment.toX, result.x, 0);
-        assertEquals("result is end point", segment.toY, result.y, 0);
+        assertEquals("result is end point", segment.endX, result.x, 0);
+        assertEquals("result is end point", segment.endY, result.y, 0);
     }
 
 }
