@@ -1,4 +1,4 @@
-package org.djutils.draw.point;
+package org.djutils.draw;
 
 /**
  * Directed is the interface to specify a Direction (a vector pointing in a direction without a length).

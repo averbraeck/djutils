@@ -1,8 +1,8 @@
 package org.djutils.draw.line;
 
+import org.djutils.draw.Directed;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Space;
-import org.djutils.draw.point.Directed;
 import org.djutils.draw.point.Point;
 import org.djutils.exceptions.Throw;
 
