@@ -1,7 +1,7 @@
 package org.djutils.draw.point;
 
 /**
- * Directed.java.
+ * Directed is the interface to specify a Direction (a vector pointing in a direction without a length).
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -19,7 +19,7 @@ public interface Directed<D extends Directed<D>>
     D neg();
 
     /**
-     * Compare this O with another O with specified tolerances in the coordinates and the angles.
+     * Compare this Directed with another Directed with specified tolerances in the coordinates and the angles.
      * @param other D; the point to compare with
      * @param epsilonCoordinate double; the upper bound of difference for one of the coordinates; use Double.POSITIVE_INFINITY
      *            if you do not want to check the coordinates

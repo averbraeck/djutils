@@ -9,7 +9,7 @@ import org.djutils.draw.point.Point;
 import org.djutils.exceptions.Throw;
 
 /**
- * LineSegment2d is the interface for a line segment bound by 2 end points. A line segment stores the order in which it has been
+ * LineSegment is the interface for a line segment bound by 2 end points. A line segment stores the order in which it has been
  * created, so the end points are known as 'start' and 'end'.
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
