@@ -209,6 +209,55 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        long temp;
+        temp = Double.doubleToLongBits(this.endX);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(this.endY);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(this.endZ);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(this.startX);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(this.startY);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(this.startZ);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @SuppressWarnings("checkstyle:needbraces")
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        LineSegment3d other = (LineSegment3d) obj;
+        if (Double.doubleToLongBits(this.endX) != Double.doubleToLongBits(other.endX))
+            return false;
+        if (Double.doubleToLongBits(this.endY) != Double.doubleToLongBits(other.endY))
+            return false;
+        if (Double.doubleToLongBits(this.endZ) != Double.doubleToLongBits(other.endZ))
+            return false;
+        if (Double.doubleToLongBits(this.startX) != Double.doubleToLongBits(other.startX))
+            return false;
+        if (Double.doubleToLongBits(this.startY) != Double.doubleToLongBits(other.startY))
+            return false;
+        if (Double.doubleToLongBits(this.startZ) != Double.doubleToLongBits(other.startZ))
+            return false;
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public String toString()
     {
         return "Segment3d [startX=" + this.startX + ", startY=" + this.startY + ", startZ=" + this.startZ + ", endX="

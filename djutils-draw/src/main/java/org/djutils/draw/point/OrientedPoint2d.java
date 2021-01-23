@@ -10,7 +10,7 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Throw;
 
 /**
- * The OrientedPoint2d is a point in a 2-dimensional space with a direction vector, which is specified in terms of its
+ * The OrientedPoint2d is a point in a 2-dimensional space with an orientation vector, which is specified in terms of its
  * counter-clockwise rotation around the point in radians.
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>

@@ -232,6 +232,39 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = super.hashCode();
+        long temp;
+        temp = Double.doubleToLongBits(this.phi);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(this.theta);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @SuppressWarnings("checkstyle:needbraces")
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Ray3d other = (Ray3d) obj;
+        if (Double.doubleToLongBits(this.phi) != Double.doubleToLongBits(other.phi))
+            return false;
+        if (Double.doubleToLongBits(this.theta) != Double.doubleToLongBits(other.theta))
+            return false;
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public String toString()
     {
         return "Ray3d [x=" + this.x + " y=" + this.y + " z=" + this.z + " phi=" + this.phi + " theta=" + this.theta + "]";

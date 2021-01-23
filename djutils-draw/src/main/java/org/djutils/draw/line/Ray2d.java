@@ -190,6 +190,35 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = super.hashCode();
+        long temp;
+        temp = Double.doubleToLongBits(this.phi);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @SuppressWarnings("checkstyle:needbraces")
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Ray2d other = (Ray2d) obj;
+        if (Double.doubleToLongBits(this.phi) != Double.doubleToLongBits(other.phi))
+            return false;
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public String toString()
     {
         return "Ray2d [x=" + this.x + " y=" + this.y + " phi=" + this.phi + "]";

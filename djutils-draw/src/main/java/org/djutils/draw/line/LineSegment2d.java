@@ -11,7 +11,7 @@ import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
 
 /**
- * LineSegment2d is a line segment bound by 2 end points in 2D-space. A line segment sendres the order in which it has been
+ * LineSegment2d is a line segment bound by 2 end points in 2D-space. A line segment stores the order in which it has been
  * created, so the end points are known as 'start' and 'end'.
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
@@ -174,6 +174,47 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
         {
             return new Point2d((1.0 - u) * this.startX + u * this.endX, (1.0 - u) * this.startY + u * this.endY);
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        long temp;
+        temp = Double.doubleToLongBits(this.endX);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(this.endY);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(this.startX);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(this.startY);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @SuppressWarnings("checkstyle:needbraces")
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        LineSegment2d other = (LineSegment2d) obj;
+        if (Double.doubleToLongBits(this.endX) != Double.doubleToLongBits(other.endX))
+            return false;
+        if (Double.doubleToLongBits(this.endY) != Double.doubleToLongBits(other.endY))
+            return false;
+        if (Double.doubleToLongBits(this.startX) != Double.doubleToLongBits(other.startX))
+            return false;
+        if (Double.doubleToLongBits(this.startY) != Double.doubleToLongBits(other.startY))
+            return false;
+        return true;
     }
 
     /** {@inheritDoc} */
