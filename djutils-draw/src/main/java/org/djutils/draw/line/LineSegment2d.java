@@ -11,7 +11,8 @@ import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
 
 /**
- * Segment2d.java.
+ * LineSegment2d is a line segment bound by 2 end points in 2D-space. A line segment sendres the order in which it has been
+ * created, so the end points are known as 'start' and 'end'.
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -21,102 +22,103 @@ import org.djutils.exceptions.Throw;
  */
 public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Space2d>
 {
-    /** ... */
+    /** */
     private static final long serialVersionUID = 20210121L;
 
     /** The start x-coordinate. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
-    public final double fromX;
+    public final double startX;
 
     /** The start y-coordinate. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
-    public final double fromY;
+    public final double startY;
 
     /** The end x-coordinate. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
-    public final double toX;
+    public final double endX;
 
     /** The end y-coordinate. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
-    public final double toY;
+    public final double endY;
 
     /**
-     * Construct a new Segment2d from four coordinates.
-     * @param fromX double; the x-coordinate of the start point
-     * @param fromY double; the y-coordinate of the start point
-     * @param toX double; the x-coordinate of the end point
-     * @param toY double; the y-coordinate of the end point
-     * @throws DrawRuntimeException when (fromX,fromY) is equals to (toX,toY)
+     * Construct a new LineSegment2d start four coordinates.
+     * @param startX double; the x-coordinate of the start point
+     * @param startY double; the y-coordinate of the start point
+     * @param endX double; the x-coordinate of the end point
+     * @param endY double; the y-coordinate of the end point
+     * @throws DrawRuntimeException when (startX,startY) is equals end (endX,endY)
      */
-    public LineSegment2d(final double fromX, final double fromY, final double toX, final double toY) throws DrawRuntimeException
+    public LineSegment2d(final double startX, final double startY, final double endX, final double endY)
+            throws DrawRuntimeException
     {
-        Throw.when(fromX == toX && fromY == toY, DrawRuntimeException.class, "From and to may not be equal");
-        this.fromX = fromX;
-        this.fromY = fromY;
-        this.toX = toX;
-        this.toY = toY;
+        Throw.when(startX == endX && startY == endY, DrawRuntimeException.class, "Start and end may not be equal");
+        this.startX = startX;
+        this.startY = startY;
+        this.endX = endX;
+        this.endY = endY;
     }
 
     /**
-     * Construct a new Segment2d from a Point2d and two coordinates.
-     * @param from Point2d; the start point
-     * @param toX double; the x-coordinate of the end point
-     * @param toY double; the y-coordinate of the end point
-     * @throws NullPointerException when from is null
-     * @throws DrawRuntimeException when from has the exact coordinates toX, toY
+     * Construct a new LineSegment2d start a Point2d and two coordinates.
+     * @param start Point2d; the start point
+     * @param endX double; the x-coordinate of the end point
+     * @param endY double; the y-coordinate of the end point
+     * @throws NullPointerException when start is null
+     * @throws DrawRuntimeException when start has the exact coordinates endX, endY
      */
-    public LineSegment2d(final Point2d from, final double toX, final double toY)
+    public LineSegment2d(final Point2d start, final double endX, final double endY)
             throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(from, "from point may not be null").x, from.y, toX, toY);
+        this(Throw.whenNull(start, "start point may not be null").x, start.y, endX, endY);
     }
 
     /**
-     * Construct a new Segment2d from two coordinates and a Point2d.
-     * @param fromX double; the x-coordinate of the start point
-     * @param fromY double; the y-coordinate of the start point
-     * @param to Point2d; the end point
-     * @throws NullPointerException when to is null
-     * @throws DrawRuntimeException when to has the exact coordinates fromX, fromY
+     * Construct a new LineSegment2d start two coordinates and a Point2d.
+     * @param startX double; the x-coordinate of the start point
+     * @param startY double; the y-coordinate of the start point
+     * @param end Point2d; the end point
+     * @throws NullPointerException when end is null
+     * @throws DrawRuntimeException when end has the exact coordinates startX, startY
      */
-    public LineSegment2d(final double fromX, final double fromY, final Point2d to)
+    public LineSegment2d(final double startX, final double startY, final Point2d end)
             throws NullPointerException, DrawRuntimeException
     {
-        this(fromX, fromY, Throw.whenNull(to, "to point may not be null").x, to.y);
+        this(startX, startY, Throw.whenNull(end, "end point may not be null").x, end.y);
     }
 
     /**
-     * Construct a new Segment2d from two Point2d objects.
-     * @param from Point2d; the start point
-     * @param to Point2d; the end point
-     * @throws NullPointerException when from is null
-     * @throws DrawRuntimeException when from has the exact coordinates toX, toY
+     * Construct a new LineSegment2d start two Point2d objects.
+     * @param start Point2d; the start point
+     * @param end Point2d; the end point
+     * @throws NullPointerException when start is null
+     * @throws DrawRuntimeException when start has the exact coordinates endX, endY
      */
-    public LineSegment2d(final Point2d from, final Point2d to) throws NullPointerException, DrawRuntimeException
+    public LineSegment2d(final Point2d start, final Point2d end) throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(from, "from point may not be null").x, from.y, Throw.whenNull(to, "to point may not be null").x,
-                to.y);
+        this(Throw.whenNull(start, "start point may not be null").x, start.y,
+                Throw.whenNull(end, "end point may not be null").x, end.y);
     }
 
     /** {@inheritDoc} */
     @Override
     public Point2d getStartPoint()
     {
-        return new Point2d(this.fromX, this.fromY);
+        return new Point2d(this.startX, this.startY);
     }
 
     /** {@inheritDoc} */
     @Override
     public Point2d getEndPoint()
     {
-        return new Point2d(this.toX, this.toY);
+        return new Point2d(this.endX, this.endY);
     }
 
     /** {@inheritDoc} */
     @Override
     public double getLength()
     {
-        return Math.hypot(this.toX - this.fromX, this.toY - this.fromY);
+        return Math.hypot(this.endX - this.startX, this.endY - this.startY);
     }
 
     /** {@inheritDoc} */
@@ -137,8 +139,8 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
     @Override
     public Bounds2d getBounds()
     {
-        return new Bounds2d(Math.min(this.fromX, this.toX), Math.max(this.fromX, this.toX), Math.min(this.fromY, this.toY),
-                Math.max(this.fromY, this.toY));
+        return new Bounds2d(Math.min(this.startX, this.endX), Math.max(this.startX, this.endX),
+                Math.min(this.startY, this.endY), Math.max(this.startY, this.endY));
     }
 
     /** {@inheritDoc} */
@@ -147,19 +149,19 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
     {
         Throw.when(Double.isNaN(position) || Double.isInfinite(position), DrawRuntimeException.class,
                 "position must be finite");
-        double dX = this.toX - this.fromX;
-        double dY = this.toY - this.fromY;
+        double dX = this.endX - this.startX;
+        double dY = this.endY - this.startY;
         double length = Math.hypot(dX, dY);
-        return new Ray2d(this.fromX + position * dX / length, this.fromY + position * dY / length, Math.atan2(dY, dX));
+        return new Ray2d(this.startX + position * dX / length, this.startY + position * dY / length, Math.atan2(dY, dX));
     }
 
     /** {@inheritDoc} */
     @Override
     public Point2d closestPointOnSegment(final Point2d point)
     {
-        double dX = this.toX - this.fromX;
-        double dY = this.toY - this.fromY;
-        final double u = ((point.x - this.fromX) * dX + (point.y - this.fromY) * dY) / (dX * dX + dY * dY);
+        double dX = this.endX - this.startX;
+        double dY = this.endY - this.startY;
+        final double u = ((point.x - this.startX) * dX + (point.y - this.startY) * dY) / (dX * dX + dY * dY);
         if (u < 0)
         {
             return getStartPoint();
@@ -170,7 +172,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
         }
         else
         {
-            return new Point2d((1.0 - u) * this.fromX + u * this.toX, (1.0 - u) * this.fromY + u * this.toY);
+            return new Point2d((1.0 - u) * this.startX + u * this.endX, (1.0 - u) * this.startY + u * this.endY);
         }
     }
 
@@ -178,7 +180,8 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
     @Override
     public String toString()
     {
-        return "Segment2d [fromX=" + this.fromX + ", fromY=" + this.fromY + ", toX=" + this.toX + ", toY=" + this.toY + "]";
+        return "Segment2d [startX=" + this.startX + ", startY=" + this.startY + ", endX=" + this.endX + ", endY=" + this.endY
+                + "]";
     }
 
 }

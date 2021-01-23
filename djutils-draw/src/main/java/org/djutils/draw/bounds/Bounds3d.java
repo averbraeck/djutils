@@ -11,7 +11,7 @@ import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
 
 /**
- * Bounds3d is the generic class for the 3D extent of an object to determine whether it must be drawn or not.
+ * Bounds3d is the generic class for the 3D extent of an object. It is an immutable object.
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
