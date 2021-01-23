@@ -142,7 +142,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d, Sp
     @Override
     public Iterator<? extends Point3d> getPoints()
     {
-        return Arrays.stream(new Point3d[] { getStartPoint(), getEndPoint() }).iterator();
+        return Arrays.stream(new Point3d[] {getStartPoint(), getEndPoint()}).iterator();
     }
 
     /** {@inheritDoc} */

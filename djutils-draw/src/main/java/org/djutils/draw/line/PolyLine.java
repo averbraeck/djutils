@@ -21,7 +21,6 @@ import org.djutils.draw.point.Point;
  * @param <P> The Point type (2d or 3d)
  * @param <S> The Space type (2d, or 3d)
  * @param <R> The matching Ray type (2d or 3d)
- * 
  */
 public interface PolyLine<L extends PolyLine<L, P, S, R>, P extends Point<P, S>, S extends Space, R> extends Drawable<P, S>
 {

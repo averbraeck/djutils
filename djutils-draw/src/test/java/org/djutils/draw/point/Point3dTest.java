@@ -76,7 +76,7 @@ public class Point3dTest
             // Ignore expected exception
         }
 
-        double[] p3Arr = new double[] { 5.0, 6.0, 7.0 };
+        double[] p3Arr = new double[] {5.0, 6.0, 7.0};
         p = new Point3d(p3Arr);
         assertEquals(5.0, p.x, 0);
         assertEquals(6.0, p.y, 0);
@@ -95,7 +95,7 @@ public class Point3dTest
             @Override
             public void execute() throws Throwable
             {
-                new Point3d(new double[] { 1.0 });
+                new Point3d(new double[] {1.0});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -104,7 +104,7 @@ public class Point3dTest
             @Override
             public void execute() throws Throwable
             {
-                new Point3d(new double[] { 1.0, 2.0 });
+                new Point3d(new double[] {1.0, 2.0});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -113,7 +113,7 @@ public class Point3dTest
             @Override
             public void execute() throws Throwable
             {
-                new Point3d(new double[] { 1.0, 2.0, 3.0, 4.0 });
+                new Point3d(new double[] {1.0, 2.0, 3.0, 4.0});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -402,7 +402,7 @@ public class Point3dTest
     public void testClosestPointOnSegment() throws DrawException
     {
         Point3d p1 = new Point3d(-2, 3, 5);
-        for (Point3d p2 : new Point3d[] { new Point3d(7, 4, -5)/* angled */, new Point3d(-3, 6, 5) /* also angled */,
+        for (Point3d p2 : new Point3d[] {new Point3d(7, 4, -5)/* angled */, new Point3d(-3, 6, 5) /* also angled */,
                 new Point3d(-2, -5, 5) /* vertical */, new Point3d(8, 3, 5)/* horizontal */, new Point3d(-2, 3, 1)/* z */ })
         {
             PolyLine3d line = new PolyLine3d(p1, p2);

@@ -46,7 +46,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     /**
      * Construct a new Line2D from an array of Point2d.
      * @param copyNeeded boolean; if true; a deep copy of the points array is stored instead of the provided array
-     * @param points Point2d...; the array of points to construct this Line2d from.
+     * @param points Point2d[]; the array of points to construct this Line2d from.
      * @throws NullPointerException when iterator is null
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
@@ -100,7 +100,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * Construct an array of Point2d from two points plus an array of Point2d.
      * @param point1 Point2d; the first point (ends up at index 0 of the result)
      * @param point2 Point2d; the second point (ends up at index 1 of the result)
-     * @param otherPoints Point2d[]; may be null, may be empty. If non empty, the elements in otherPoints end up at index 2 and
+     * @param otherPoints Point2d...; may be null, may be empty. If non empty, the elements in otherPoints end up at index 2 and
      *            up in the result
      * @return Point2d[]; the combined array
      */
@@ -343,8 +343,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
 
     /**
      * Concatenate several Line2d instances.
-     * @param lines Line2d...; Line2d... one or more Line2d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
-     *            the first of the second, etc.
+     * @param lines PolyLine2d...; Line2d... one or more Line2d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
+     *            match the first of the second, etc.
      * @return Line2d
      * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
      */
@@ -356,8 +356,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     /**
      * Concatenate two Line2d instances. This method is separate for efficiency reasons.
      * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
-     * @param line1 Line2d; first line
-     * @param line2 Line2d; second line
+     * @param line1 PolyLine2d; first line
+     * @param line2 PolyLine2d; second line
      * @return Line2d; the concatenation of the two lines
      * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
      */
@@ -386,8 +386,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     /**
      * Concatenate several Line2d instances.
      * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
-     * @param lines Line2d...; Line2d... one or more Line2d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
-     *            the first of the second, etc.
+     * @param lines PolyLine2d...; Line2d... one or more Line2d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
+     *            match the first of the second, etc.
      * @return Line2d; the concatenation of the lines
      * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
      */
@@ -1012,7 +1012,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * attempts to give continuous results for continuous changes of the DirectedPoint that must be projected. There are cases
      * where this is simply impossible, or the optimal result is ambiguous. In these cases this method will return something
      * that is hopefully good enough.
-     * @param orientedPoint DirectedPoint2d; the DirectedPoint
+     * @param orientedPoint Ray2d; the DirectedPoint
      * @return double; length along this PolyLine (some value between 0 and the length of this PolyLine) where directedPoint
      *         projects, or NaN if there is no solution
      * @throws NullPointerException when directedPoint is null
@@ -1097,7 +1097,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings({ "checkstyle:designforextension", "checkstyle:needbraces" })
+    @SuppressWarnings({"checkstyle:designforextension", "checkstyle:needbraces"})
     @Override
     public boolean equals(final Object obj)
     {

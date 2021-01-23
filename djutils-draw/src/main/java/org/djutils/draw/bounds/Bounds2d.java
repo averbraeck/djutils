@@ -71,7 +71,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
 
     /**
      * Construct a Bounds2d from some collection of points, finding the lowest and highest x and y coordinates.
-     * @param points Iterator&lt;Point2d&gt;; Iterator that will generate all the points for which to construct a Bounds2d
+     * @param points Iterator&lt;? extends Point2d&gt;; Iterator that will generate all the points for which to construct a
+     *            Bounds2d
      * @throws NullPointerException when points is null
      * @throws IllegalArgumentException when the iterator provides zero points
      */
@@ -149,7 +150,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
     /**
      * Check if this Bounds2d contains a given point. Contains considers a point <b>on</b> the border of this Bounds2d to be
      * outside.
-     * @param point Point&lt;Space2d&gt;; the point
+     * @param point Point2d; the point
      * @return boolean; true this Bounds2d contains the point; false if this Bounds2d does <b>not</b> contain the point
      * @throws NullPointerException when point is null
      */
@@ -206,7 +207,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
 
     /**
      * Check if this Bounds2d contains a point. Covers returns true when the point is on, or within the border of this Bounds2d.
-     * @param point Point; the point
+     * @param point Point2d; the point
      * @return boolean; whether this Bounds2d, including its borders, contains the point
      * @throws NullPointerException when point is null
      */

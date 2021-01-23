@@ -509,7 +509,7 @@ public class EventUtilTest
         assertEquals("abc", replaced);
         assertEquals("epm", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingMap.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
-        //assertNull(listener.getReceivedEvent().getContent()); // Changed 2020/04/17 PK
+        // assertNull(listener.getReceivedEvent().getContent()); // Changed 2020/04/17 PK
         assertEquals("payload is now the unchanged size of the map", 1, listener.getReceivedEvent().getContent());
         assertNull(epm.get(2));
         assertEquals("def", epm.get(1));

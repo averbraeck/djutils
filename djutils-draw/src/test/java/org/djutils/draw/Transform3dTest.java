@@ -27,10 +27,10 @@ public class Transform3dTest
     @Test
     public void testMatrixMultiplication()
     {
-        double[] mA = new double[] { 5, 7, 9, 10, 2, 3, 3, 8, 8, 10, 2, 3, 3, 3, 4, 8 };
-        double[] mB = new double[] { 3, 10, 12, 18, 12, 1, 4, 9, 9, 10, 12, 2, 3, 12, 4, 10 };
+        double[] mA = new double[] {5, 7, 9, 10, 2, 3, 3, 8, 8, 10, 2, 3, 3, 3, 4, 8};
+        double[] mB = new double[] {3, 10, 12, 18, 12, 1, 4, 9, 9, 10, 12, 2, 3, 12, 4, 10};
         double[] mAmB = Transform3d.mulMatMat(mA, mB);
-        double[] expected = new double[] { 210, 267, 236, 271, 93, 149, 104, 149, 171, 146, 172, 268, 105, 169, 128, 169 };
+        double[] expected = new double[] {210, 267, 236, 271, 93, 149, 104, 149, 171, 146, 172, 268, 105, 169, 128, 169};
         for (int i = 0; i < 16; i++)
         {
             if (mAmB[i] != expected[i])
@@ -39,10 +39,10 @@ public class Transform3dTest
             }
         }
 
-        double[] m = new double[] { 1, 0, 2, 0, 0, 3, 0, 4, 0, 0, 5, 0, 6, 0, 0, 7 };
-        double[] v = new double[] { 2, 5, 1, 8 };
+        double[] m = new double[] {1, 0, 2, 0, 0, 3, 0, 4, 0, 0, 5, 0, 6, 0, 0, 7};
+        double[] v = new double[] {2, 5, 1, 8};
         double[] mv = Transform3d.mulMatVec(m, v);
-        double[] ev = new double[] { 4, 47, 5, 68 };
+        double[] ev = new double[] {4, 47, 5, 68};
         for (int i = 0; i < 4; i++)
         {
             if (mv[i] != ev[i])
@@ -51,9 +51,9 @@ public class Transform3dTest
             }
         }
 
-        v = new double[] { 1, 2, 3 };
+        v = new double[] {1, 2, 3};
         mv = Transform3d.mulMatVec3(m, v);
-        ev = new double[] { 7, 10, 15 };
+        ev = new double[] {7, 10, 15};
         for (int i = 0; i < 3; i++)
         {
             if (mv[i] != ev[i])
@@ -90,7 +90,7 @@ public class Transform3dTest
     {
         Transform3d t;
         // Test time grows (explodes) with the 6th power of the length of values.
-        double[] values = new double[] { -100000, -100, -3, -1, -0.1, 0, 0.1, 1, 3, 100, 100000 };
+        double[] values = new double[] {-100000, -100, -3, -1, -0.1, 0, 0.1, 1, 3, 100, 100000};
         for (double dx : values)
         {
             for (double dy : values)
@@ -110,7 +110,7 @@ public class Transform3dTest
                                 assertEquals("translated x matches", px + dx, p.x, 0.001);
                                 assertEquals("translated y matches", py + dy, p.y, 0.001);
                                 assertEquals("translated z matches", pz + dz, p.z, 0.001);
-                                double[] result = t.transform(new double[] { px, py, pz });
+                                double[] result = t.transform(new double[] {px, py, pz});
                                 assertEquals("translated x matches", px + dx, result[0], 0.001);
                                 assertEquals("translated y matches", py + dy, result[1], 0.001);
                                 assertEquals("translated z matches", pz + dz, result[2], 0.001);
@@ -130,7 +130,7 @@ public class Transform3dTest
                                 assertEquals("translated x matches", px + dx, p.x, 0.001);
                                 assertEquals("translated y matches", py + dy, p.y, 0.001);
                                 assertEquals("translated z matches", pz + dz, p.z, 0.001);
-                                double[] result = t.transform(new double[] { px, py, pz });
+                                double[] result = t.transform(new double[] {px, py, pz});
                                 assertEquals("translated x matches", px + dx, result[0], 0.001);
                                 assertEquals("translated y matches", py + dy, result[1], 0.001);
                                 assertEquals("translated z matches", pz + dz, result[2], 0.001);
@@ -150,7 +150,7 @@ public class Transform3dTest
                                 assertEquals("scaled x matches", px * dx, p.x, 0.001);
                                 assertEquals("scaled y matches", py * dy, p.y, 0.001);
                                 assertEquals("scaled z matches", pz * dz, p.z, 0.001);
-                                double[] result = t.transform(new double[] { px, py, pz });
+                                double[] result = t.transform(new double[] {px, py, pz});
                                 assertEquals("scaled x matches", px * dx, result[0], 0.001);
                                 assertEquals("scaled y matches", py * dy, result[1], 0.001);
                                 assertEquals("scaled z matches", pz * dz, result[2], 0.001);
@@ -170,7 +170,7 @@ public class Transform3dTest
                                 assertEquals("sheared x matches", px + pz * dx, p.x, 0.001);
                                 assertEquals("sheared y matches", py + pz * dy, p.y, 0.001);
                                 assertEquals("sheared z matches", pz, p.z, 0.001);
-                                double[] result = t.transform(new double[] { px, py, pz });
+                                double[] result = t.transform(new double[] {px, py, pz});
                                 assertEquals("sheared x matches", px + pz * dx, result[0], 0.001);
                                 assertEquals("sheared y matches", py + pz * dy, result[1], 0.001);
                                 assertEquals("sheared z matches", pz, result[2], 0.001);
@@ -190,7 +190,7 @@ public class Transform3dTest
                                 assertEquals("sheared x matches", px + py * dx, p.x, 0.001);
                                 assertEquals("sheared y matches", py, p.y, 0.001);
                                 assertEquals("sheared z matches", pz + py * dz, p.z, 0.001);
-                                double[] result = t.transform(new double[] { px, py, pz });
+                                double[] result = t.transform(new double[] {px, py, pz});
                                 assertEquals("sheared x matches", px + py * dx, result[0], 0.001);
                                 assertEquals("sheared y matches", py, result[1], 0.001);
                                 assertEquals("sheared z matches", pz + py * dz, result[2], 0.001);
@@ -210,7 +210,7 @@ public class Transform3dTest
                                 assertEquals("sheared x matches", px, p.x, 0.001);
                                 assertEquals("sheared y matches", py + px * dy, p.y, 0.001);
                                 assertEquals("sheared z matches", pz + px * dz, p.z, 0.001);
-                                double[] result = t.transform(new double[] { px, py, pz });
+                                double[] result = t.transform(new double[] {px, py, pz});
                                 assertEquals("sheared x matches", px, result[0], 0.001);
                                 assertEquals("sheared y matches", py + px * dy, result[1], 0.001);
                                 assertEquals("sheared z matches", pz + px * dz, result[2], 0.001);
@@ -233,7 +233,7 @@ public class Transform3dTest
                             assertEquals("rotated x matches", px * cosine - py * sine, p.x, 0.001);
                             assertEquals("rotated y matches", py * cosine + px * sine, p.y, 0.001);
                             assertEquals("rotated z matches", pz, p.z, 0.001);
-                            double[] result = t.transform(new double[] { px, py, pz });
+                            double[] result = t.transform(new double[] {px, py, pz});
                             assertEquals("rotated x matches", px * cosine - py * sine, result[0], 0.001);
                             assertEquals("rotated z matches", py * cosine + px * sine, result[1], 0.001);
                             assertEquals("rotated z matches", pz, result[2], 0.001);
@@ -255,7 +255,7 @@ public class Transform3dTest
                             assertEquals("rotated x matches", px, p.x, 0.001);
                             assertEquals("rotated y matches", py * cosine - pz * sine, p.y, 0.001);
                             assertEquals("rotated z matches", pz * cosine + py * sine, p.z, 0.001);
-                            double[] result = t.transform(new double[] { px, py, pz });
+                            double[] result = t.transform(new double[] {px, py, pz});
                             assertEquals("rotated x matches", px, result[0], 0.001);
                             assertEquals("rotated z matches", py * cosine - pz * sine, result[1], 0.001);
                             assertEquals("rotated z matches", pz * cosine + py * sine, result[2], 0.001);
@@ -277,7 +277,7 @@ public class Transform3dTest
                             assertEquals("rotated x matches", px * cosine + pz * sine, p.x, 0.001);
                             assertEquals("rotated y matches", py, p.y, 0.001);
                             assertEquals("rotated z matches", pz * cosine - px * sine, p.z, 0.001);
-                            double[] result = t.transform(new double[] { px, py, pz });
+                            double[] result = t.transform(new double[] {px, py, pz});
                             assertEquals("rotated x matches", px * cosine + pz * sine, result[0], 0.001);
                             assertEquals("rotated z matches", py, result[1], 0.001);
                             assertEquals("rotated z matches", pz * cosine - px * sine, result[2], 0.001);
@@ -299,7 +299,7 @@ public class Transform3dTest
                     assertEquals("x-reflected x matches", -px, p.x, 0.001);
                     assertEquals("x-reflected y matches", py, p.y, 0.001);
                     assertEquals("x-reflected z matches", pz, p.z, 0.001);
-                    double[] result = t.transform(new double[] { px, py, pz });
+                    double[] result = t.transform(new double[] {px, py, pz});
                     assertEquals("x-reflected x matches", -px, result[0], 0.001);
                     assertEquals("x-reflected y matches", py, result[1], 0.001);
                     assertEquals("x-reflected z matches", pz, result[2], 0.001);
@@ -319,7 +319,7 @@ public class Transform3dTest
                     assertEquals("y-reflected x matches", px, p.x, 0.001);
                     assertEquals("y-reflected y matches", -py, p.y, 0.001);
                     assertEquals("y-reflected z matches", pz, p.z, 0.001);
-                    double[] result = t.transform(new double[] { px, py, pz });
+                    double[] result = t.transform(new double[] {px, py, pz});
                     assertEquals("y-reflected x matches", px, result[0], 0.001);
                     assertEquals("y-reflected y matches", -py, result[1], 0.001);
                     assertEquals("y-reflected z matches", pz, result[2], 0.001);
@@ -339,7 +339,7 @@ public class Transform3dTest
                     assertEquals("z-reflected x matches", px, p.x, 0.001);
                     assertEquals("z-reflected y matches", py, p.y, 0.001);
                     assertEquals("z-reflected z matches", -pz, p.z, 0.001);
-                    double[] result = t.transform(new double[] { px, py, pz });
+                    double[] result = t.transform(new double[] {px, py, pz});
                     assertEquals("z-reflected x matches", px, result[0], 0.001);
                     assertEquals("z-reflected y matches", py, result[1], 0.001);
                     assertEquals("z-reflected z matches", -pz, result[2], 0.001);
@@ -358,7 +358,7 @@ public class Transform3dTest
         Transform3d reflectionY = new Transform3d().reflectY();
         Transform3d reflectionZ = new Transform3d().reflectZ();
         // Test time explodes with the 6th power of the length of this array
-        double[] values = new double[] { -30, 0, 0.07, 25 };
+        double[] values = new double[] {-30, 0, 0.07, 25};
         for (double translateX : values)
         {
             for (double translateY : values)
@@ -373,7 +373,7 @@ public class Transform3dTest
                             for (double scaleZ : values)
                             {
                                 Transform3d scaling = new Transform3d().scale(scaleX, scaleY, scaleZ);
-                                for (double angle : new double[] { -2, 0, 0.5 })
+                                for (double angle : new double[] {-2, 0, 0.5})
                                 {
                                     Transform3d rotationX = new Transform3d().rotX(angle);
                                     Transform3d rotationY = new Transform3d().rotY(angle);
@@ -447,8 +447,8 @@ public class Transform3dTest
     @Test
     public void transformBounds3dTest()
     {
-        double[] values = new double[] { -100, 0.1, 0, 0.1, 100 };
-        double[] sizes = new double[] { 0, 10, 100 };
+        double[] values = new double[] {-100, 0.1, 0, 0.1, 100};
+        double[] sizes = new double[] {0, 10, 100};
         Transform3d t = new Transform3d().rotX(0.4).rotZ(0.8).rotY(-1.2).reflectX().scale(0.5, 1.5, 2.5).shearXY(2, 3)
                 .translate(123, 456, 789);
         // System.out.println(t);
@@ -465,10 +465,10 @@ public class Transform3dTest
                             for (double zSize : sizes)
                             {
                                 Bounds3d bb = new Bounds3d(x, x + xSize, y, y + ySize, z, z + zSize);
-                                Point3d[] points = new Point3d[] { new Point3d(x, y, z), new Point3d(x + xSize, y, z),
+                                Point3d[] points = new Point3d[] {new Point3d(x, y, z), new Point3d(x + xSize, y, z),
                                         new Point3d(x, y + ySize, z), new Point3d(x + xSize, y + ySize, z),
                                         new Point3d(x, y, z + zSize), new Point3d(x + xSize, y, z + zSize),
-                                        new Point3d(x, y + ySize, z + zSize), new Point3d(x + xSize, y + ySize, z + zSize) };
+                                        new Point3d(x, y + ySize, z + zSize), new Point3d(x + xSize, y + ySize, z + zSize)};
                                 Point3d[] transformedPoints = new Point3d[8];
                                 for (int i = 0; i < points.length; i++)
                                 {

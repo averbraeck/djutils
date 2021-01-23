@@ -20,7 +20,7 @@ public class QuadTree<T extends Envelope> implements Collection<T>, Serializable
     /** ... */
     private static final long serialVersionUID = 20200904L;
 
-    /** Maximum number of payload objects in one cell.*/
+    /** Maximum number of payload objects in one cell. */
     private final int maximumLoad;
 
     /** Minimum width and height of a SubTree bounding box. */
@@ -282,7 +282,7 @@ public class QuadTree<T extends Envelope> implements Collection<T>, Serializable
 
         /**
          * Construct a new sub tree.
-         * @param root QuadTree; the root
+         * @param root QuadTree&lt;T&gt;; the root
          * @param boundingBox Rectangle; the bounding box of the new sub tree
          */
         SubTree(final QuadTree<T> root, final Rectangle boundingBox)
@@ -312,7 +312,7 @@ public class QuadTree<T extends Envelope> implements Collection<T>, Serializable
 
         /**
          * Add a RectangleAndPayload to this SubTree.
-         * @param e T; the object to add
+         * @param e RectangleAndPayload&lt;T&gt;; the object to add
          * @return boolean; true if this SubTree was changed (object was added); false if this SubTree did not change
          */
         public boolean add(final RectangleAndPayload<T> e)
@@ -379,7 +379,7 @@ public class QuadTree<T extends Envelope> implements Collection<T>, Serializable
 
         /**
          * Determine if this SubTree contains a specific object.
-         * @param o RectangleAndPayload; the object to search
+         * @param o RectangleAndPayload&lt;T&gt;; the object to search
          * @return boolean; true if this SubTree contains the object
          */
         public boolean contains(final RectangleAndPayload<T> o)
@@ -496,7 +496,7 @@ public class QuadTree<T extends Envelope> implements Collection<T>, Serializable
                                 new Rectangle(cX, this.boundingBox.getBottom(), this.boundingBox.getRight(), cY)),
                         new SubTree<T>(this.root, new Rectangle(this.boundingBox.getLeft(), cY, cX, this.boundingBox.getTop())),
                         new SubTree<T>(this.root,
-                                new Rectangle(cX, cY, this.boundingBox.getRight(), this.boundingBox.getTop())) };
+                                new Rectangle(cX, cY, this.boundingBox.getRight(), this.boundingBox.getTop()))};
             }
             Iterator<RectangleAndPayload<T>> iterator = this.elements.iterator();
             while (iterator.hasNext())
@@ -631,7 +631,7 @@ class RectangleAndPayload<T extends Object> implements Serializable
         this.rectangle = rectangle;
         this.payload = payload;
     }
-    
+
     /**
      * Retrieve the bounding rectangle.
      * @return Rectangle; the bounding rectangle

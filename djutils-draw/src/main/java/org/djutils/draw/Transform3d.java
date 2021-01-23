@@ -24,8 +24,8 @@ public class Transform3d implements Cloneable
 
     /**
      * Multiply a 4x4 matrix (stored as a 16-value array by row) with a 4-value vector.
-     * @param m double[16]; the matrix
-     * @param v double[4]; the vector
+     * @param m double[]; the matrix
+     * @param v double[]; the vector
      * @return double[4]; the result of m x v
      */
     protected static double[] mulMatVec(final double[] m, final double[] v)
@@ -40,8 +40,8 @@ public class Transform3d implements Cloneable
 
     /**
      * Multiply a 4x4 matrix (stored as a 16-value array by row) with a 3-value vector and a 1 for the 4th value.
-     * @param m double[16]; the matrix
-     * @param v double[3]; the vector
+     * @param m double[]; the matrix
+     * @param v double[]; the vector
      * @return double[3]; the result of m x (v1, v2, v3, 1), with the last value left out
      */
     protected static double[] mulMatVec3(final double[] m, final double[] v)
@@ -56,8 +56,8 @@ public class Transform3d implements Cloneable
 
     /**
      * Multiply a 4x4 matrix (stored as a 16-value array by row) with another 4x4-matrix.
-     * @param m1 double[16]; the first matrix
-     * @param m2 double[16]; the second matrix
+     * @param m1 double[]; the first matrix
+     * @param m2 double[]; the second matrix
      * @return double[16]; the result of m1 x m2
      */
     protected static double[] mulMatMat(final double[] m1, final double[] m2)
@@ -82,7 +82,7 @@ public class Transform3d implements Cloneable
     {
         return this.mat.clone();
     }
-    
+
     /**
      * Transform coordinates by a vector (tx, ty, tz).
      * @param tx double; the translation value for the x-coordinates
@@ -102,7 +102,7 @@ public class Transform3d implements Cloneable
 
     /**
      * Translate coordinates by a the x, y, and z values contained in a Point.
-     * @param point AbstractPoint3d; the point containing the x, y, and z translation values
+     * @param point Point3d; the point containing the x, y, and z translation values
      * @return Transform3d; the new transformation matrix after applying this transform
      */
     public Transform3d translate(final Point3d point)
@@ -270,7 +270,7 @@ public class Transform3d implements Cloneable
     /**
      * Apply the stored transform on the xyz-vector and return the transformed vector. For speed reasons, no checks on correct
      * size of the vector is done.
-     * @param xyz double[3] the provided vector
+     * @param xyz double[]; double[3] the provided vector
      * @return double[3]; the transformed vector
      */
     public double[] transform(final double[] xyz)
@@ -290,7 +290,7 @@ public class Transform3d implements Cloneable
 
     /**
      * Apply the stored transform on the provided point and return a point with the transformed coordinate.
-     * @param pointIterator Point3d; generates the points to be transformed
+     * @param pointIterator Iterator&lt;Point3d&gt;; generates the points to be transformed
      * @return Iterator&lt;Point3d&gt;; an iterator that will generator all transformed points
      */
     public Iterator<Point3d> transform(final Iterator<Point3d> pointIterator)

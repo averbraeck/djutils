@@ -72,7 +72,7 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
 
     /**
      * Create an immutable directed point with x, y, and z coordinates, stored with double precision, and direction 0,0,0.
-     * @param xyz double[3]; the x, y and z coordinates
+     * @param xyz double[]; the x, y and z coordinates
      * @throws NullPointerException when xyx is null
      * @throws IllegalArgumentException when the length of the xyx array is not 3, or contains a NaN value, or dirX, dirY, or
      *             dirZ is NaN
@@ -87,7 +87,7 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
 
     /**
      * Create an immutable directed point with x, y, and z coordinates, stored with double precision, and direction 0,0,0.
-     * @param xyz double[3]; the x, y and z coordinates
+     * @param xyz double[]; the x, y and z coordinates
      * @param dirX double; the direction as rotation around the x-axis with the point as the center
      * @param dirY double; the direction as rotation around the y-axis with the point as the center
      * @param dirZ double; the direction as rotation around the z-axis with the point as the center
@@ -108,7 +108,7 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
 
     /**
      * Create an immutable directed point from another point, stored with double precision and specified direction.
-     * @param point Point; the point from which this OrientedPoint3d will be instantiated
+     * @param point Point3d; the point from which this OrientedPoint3d will be instantiated
      * @param dirX double; the direction as rotation around the x-axis with the point as the center
      * @param dirY double; the direction as rotation around the y-axis with the point as the center
      * @param dirZ double; the direction as rotation around the z-axis with the point as the center
@@ -130,7 +130,7 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param z double; the z coordinate
-     * @param direction double[3]; the direction as rotations around the x,y,z-axes with the point as the center
+     * @param direction double[]; the direction as rotations around the x,y,z-axes with the point as the center
      * @throws NullPointerException when <code>rotation</code> is null
      * @throws IllegalArgumentException when the length of the <code>direction</code> array is not 3
      */
@@ -147,8 +147,8 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
 
     /**
      * Create an immutable point with x, y, and z coordinates, stored with double precision, and direction.
-     * @param xyz double[3]; the x, y and z coordinates
-     * @param direction double[3]; the rotation around the x,y,z-axis with the point as the center
+     * @param xyz double[]; the x, y and z coordinates
+     * @param direction double[]; the rotation around the x,y,z-axis with the point as the center
      * @throws NullPointerException when xyx or direction is null
      * @throws IllegalArgumentException when the length of the xyx array or the length of the direction array is not 3
      */
@@ -215,9 +215,9 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
      * that case the interpolation turns into an extrapolation. DirX, dirY and dirZ are interpolated using the
      * interpolateShortest method.
      * @param otherPoint OrientedPoint3d; the other point
-     * @param fraction the factor for interpolation towards the other point. When <code>fraction</code> is between 0 and 1, it
-     *            is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code> Point is
-     *            returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
+     * @param fraction double; the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
+     *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
+     *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
      * @return OrientedPoint3d; a new OrientedPoint3d at the requested fraction
      * @throws NullPointerException when otherPoint is null
      * @throws IllegalArgumentException when fraction is NaN
@@ -291,7 +291,7 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     @Override
     public Iterator<OrientedPoint3d> getPoints()
     {
-        return Arrays.stream(new OrientedPoint3d[] { this }).iterator();
+        return Arrays.stream(new OrientedPoint3d[] {this}).iterator();
     }
 
     /** {@inheritDoc} */

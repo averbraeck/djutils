@@ -41,7 +41,7 @@ public class TestImmutableVector
         vector = new Vector<Integer>(intVector);
         ImmutableVector<Integer> ial = new ImmutableVector<Integer>(vector);
         testIntVector(vector, new ImmutableVector<Integer>(ial), Immutable.COPY);
-        
+
         // Verify that the ImmutableIterator throws an exception when the remove method is called.
         ImmutableIterator<Integer> ii = ial.iterator();
         ii.next();

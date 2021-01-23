@@ -34,7 +34,7 @@ public class LineSegment2dTest
         verifySegment("Segment from two coordinates and a Point2d", new LineSegment2d(1, 2, new Point2d(3, 4)), 1, 2, 3, 4);
         verifySegment("Segment from a Point2d and two coordinates", new LineSegment2d(new Point2d(1, 2), 3, 4), 1, 2, 3, 4);
         verifySegment("Segment from two Point2d objects", new LineSegment2d(new Point2d(1, 2), new Point2d(3, 4)), 1, 2, 3, 4);
-        
+
         try
         {
             new LineSegment2d(1, 2, 1, 2);
@@ -44,7 +44,7 @@ public class LineSegment2dTest
         {
             // Ignore expected exception
         }
-        
+
         new LineSegment2d(1, 2, 1, 3);
         new LineSegment2d(1, 2, 0, 2);
     }
@@ -129,7 +129,7 @@ public class LineSegment2dTest
             // Ignore expected exception
         }
 
-        for (double position : new double[] { -3, -0.5, 0, 1, 10, 100 })
+        for (double position : new double[] {-3, -0.5, 0, 1, 10, 100})
         {
             if (position < 0 || position > segment.getLength())
             {
@@ -194,7 +194,7 @@ public class LineSegment2dTest
         // Angle startPoint-result-test-projectingPoint should be 90 degrees
         double angle = segment.getStartPoint().directionTo(segment.getEndPoint()) - result.directionTo(projectingPoint);
         assertEquals("angle should be about 90 degrees", Math.PI / 2, Math.abs(AngleUtil.normalizeAroundZero(angle)), 0.0001);
-        
+
         result = segment.closestPointOnSegment(new Point2d(21, 10));
         assertEquals("result is end point", segment.toX, result.x, 0);
         assertEquals("result is end point", segment.toY, result.y, 0);

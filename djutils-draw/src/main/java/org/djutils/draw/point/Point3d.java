@@ -56,7 +56,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
 
     /**
      * Create a new Point with just an x, y and z coordinate, stored with double precision.
-     * @param xyz double[3]; the x, y and z coordinate
+     * @param xyz double[]; the x, y and z coordinate
      * @throws NullPointerException when xyz is null
      * @throws IllegalArgumentException when the dimension of xyz is not 3, or a coordinate is NaN
      */
@@ -164,7 +164,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     @Override
     public Iterator<? extends Point3d> getPoints()
     {
-        return Arrays.stream(new Point3d[] { this }).iterator();
+        return Arrays.stream(new Point3d[] {this}).iterator();
     }
 
     /** {@inheritDoc} */
@@ -339,7 +339,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
 
     /**
      * Return the direction to another point, in radians, ignoring the z-coordinate.
-     * @param point Point&lt;?&gt;; the other point
+     * @param point Point3d; the other point
      * @return double; the direction of the projection of the point in the x-y plane to another point, in radians
      * @throws NullPointerException when <code>point</code> is null
      */
@@ -351,7 +351,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
 
     /**
      * Return the squared distance between the coordinates of this point and the provided point, ignoring the z-coordinate.
-     * @param point Point2d; the other point
+     * @param point Point3d; the other point
      * @return double; the squared distance between this point and the other point, ignoring the z-coordinate
      * @throws NullPointerException when point is null
      */
@@ -365,7 +365,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
 
     /**
      * Return the Euclidean distance between this point and the provided point, ignoring the z-coordinate.
-     * @param point Point2d; the other point
+     * @param point Point3d; the other point
      * @return double; the Euclidean distance between this point and the other point, ignoring the z-coordinate
      * @throws NullPointerException when point is null
      */

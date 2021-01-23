@@ -60,7 +60,7 @@ public interface Point<P extends Point<P, S>, S extends Space> extends Drawable<
 
     /**
      * Return the distance to another point.
-     * @param otherPoint P the other point
+     * @param otherPoint P; P the other point
      * @return double; the distance (2d or 3d as applicable) to the other point
      */
     double distance(P otherPoint);
@@ -77,9 +77,9 @@ public interface Point<P extends Point<P, S>, S extends Space> extends Drawable<
      * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
      * that case the interpolation turns into an extrapolation.
      * @param point P; the other point
-     * @param fraction the factor for interpolation towards the other point. When <code>fraction</code> is between 0 and 1, it
-     *            is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code> Point is
-     *            returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
+     * @param fraction double; the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
+     *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
+     *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
      * @return P; the point that is <code>fraction</code> away on the line between this point and the other point
      * @throws NullPointerException when point is null
      * @throws IllegalArgumentException when fraction is NaN
@@ -108,7 +108,7 @@ public interface Point<P extends Point<P, S>, S extends Space> extends Drawable<
      * @throws DrawRuntimeException when <cite>linePoint1</cite> is at the same location as <cite>linePoint2</cite>
      */
     P closestPointOnLine(P linePoint1, P linePoint2) throws DrawRuntimeException;
-    
+
     /**
      * A comparison with another point that returns true of each of the coordinates is less than epsilon apart.
      * @param other P; the point to compare with

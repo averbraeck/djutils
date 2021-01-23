@@ -36,7 +36,7 @@ public class TestImmutableTreeSet
     @Test
     public final void testTreeSet()
     {
-        Set<Integer> intSet = new TreeSet<>(Arrays.asList(new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }));
+        Set<Integer> intSet = new TreeSet<>(Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
         NavigableSet<Integer> sortedSet = new TreeSet<Integer>(intSet);
         testIntSet(sortedSet, new ImmutableTreeSet<Integer>(sortedSet, Immutable.WRAP), Immutable.WRAP);
         sortedSet = new TreeSet<Integer>(intSet);
@@ -48,7 +48,7 @@ public class TestImmutableTreeSet
         testIntSet(sortedSet, new ImmutableTreeSet<Integer>(ihs), Immutable.COPY);
 
         sortedSet = new TreeSet<Integer>(intSet);
-        List<Integer> il = Arrays.asList(new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
+        List<Integer> il = Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
         testIntSet(sortedSet, new ImmutableTreeSet<Integer>(il), Immutable.COPY);
         ImmutableTreeSet<Integer> its = new ImmutableTreeSet<Integer>(sortedSet);
         Assert.assertTrue("toString returns something descriptive", its.toString().startsWith("ImmutableTreeSet ["));
@@ -118,7 +118,7 @@ public class TestImmutableTreeSet
     @Test
     public void testComparator()
     {
-        Integer[] values = new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        Integer[] values = new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         Set<Integer> intSet = new TreeSet<>(Arrays.asList(values));
         NavigableSet<Integer> sortedSet = new TreeSet<Integer>(intSet);
         assertNull("Sorted set uses default compare; not an explicit comparator", sortedSet.comparator());
@@ -294,7 +294,7 @@ public class TestImmutableTreeSet
             prev = value;
         }
         assertFalse("7 must not have been returned", seen7);
-        
+
         headSet = its.headSet(7, true);
         prev = null;
         seen7 = false;
@@ -312,7 +312,7 @@ public class TestImmutableTreeSet
             prev = value;
         }
         assertTrue("7 must have been returned", seen7);
-        
+
         headSet = its.headSet(7, false);
         prev = null;
         seen7 = false;
@@ -330,7 +330,7 @@ public class TestImmutableTreeSet
             prev = value;
         }
         assertFalse("7 must not have been returned", seen7);
-        
+
         ImmutableSortedSet<Integer> tailSet = its.tailSet(3);
         prev = null;
         seen3 = false;
@@ -348,7 +348,7 @@ public class TestImmutableTreeSet
             prev = value;
         }
         assertTrue("3 must have been returned", seen3);
-        
+
         tailSet = its.tailSet(3, true);
         prev = null;
         seen3 = false;
@@ -366,7 +366,7 @@ public class TestImmutableTreeSet
             prev = value;
         }
         assertTrue("3 must have been returned", seen3);
-        
+
         tailSet = its.tailSet(3, false);
         prev = null;
         seen3 = false;
@@ -384,7 +384,7 @@ public class TestImmutableTreeSet
             prev = value;
         }
         assertFalse("3 must not have been returned", seen3);
-        
+
         for (int index = 0; index < values.length; index++)
         {
             Integer lower = its.lower(values[index]);

@@ -14,4 +14,3 @@ public interface Oriented2d<O extends Oriented<O>> extends Oriented<O>
 {
     // no other methods defined for now
 }
-

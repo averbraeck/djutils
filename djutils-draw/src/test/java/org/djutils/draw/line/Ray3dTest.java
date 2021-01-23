@@ -302,12 +302,12 @@ public class Ray3dTest
             // Ignore expected exception
         }
 
-        for (double phi : new double[] { 0, 1, 2, 3, 4, 5, -1, -2, Math.PI })
+        for (double phi : new double[] {0, 1, 2, 3, 4, 5, -1, -2, Math.PI})
         {
-            for (double theta : new double[] { 0, 1, 2, 3, 4, 5, -1, -2, Math.PI })
+            for (double theta : new double[] {0, 1, 2, 3, 4, 5, -1, -2, Math.PI})
             {
                 Ray3d ray = new Ray3d(1, 2, 3, phi, theta);
-                for (double position : new double[] { 0, 10, 0.1, -2 })
+                for (double position : new double[] {0, 10, 0.1, -2})
                 {
                     Ray3d result = ray.getLocationExtended(position);
                     assertEquals("result is position distance away from base of ray", Math.abs(position), ray.distance(result),
@@ -434,7 +434,7 @@ public class Ray3dTest
             // Ignore expected exception
         }
 
-        double[] deltas = new double[] { 0.0, -0.125, 0.125, -1, 1 }; // Use values that can be represented exactly in a double
+        double[] deltas = new double[] {0.0, -0.125, 0.125, -1, 1}; // Use values that can be represented exactly in a double
         for (double dX : deltas)
         {
             for (double dY : deltas)
@@ -445,7 +445,7 @@ public class Ray3dTest
                     {
                         for (double dTheta : deltas)
                         {
-                            for (double epsilon : new double[] { 0, 0.125, 0.5, 0.9, 1.0, 1.1 })
+                            for (double epsilon : new double[] {0, 0.125, 0.5, 0.9, 1.0, 1.1})
                             {
                                 Ray3d other = new Ray3d(ray.x + dX, ray.y + dY, ray.z + dZ, ray.phi + dPhi, ray.theta + dTheta);
                                 // System.out.println(String.format("dX=%f, dY=%f, dZ=%f, dPhi=%f, dTheta=%f, epsilon=%f", dX,

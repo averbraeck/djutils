@@ -36,7 +36,7 @@ public class BezierTest
         Point2d control1 = new Point2d(20, 0);
         Point2d control2 = new Point2d(00, 20);
         Point2d to = new Point2d(0, 10);
-        for (int n : new int[] { 2, 3, 4, 100 })
+        for (int n : new int[] {2, 3, 4, 100})
         {
             PolyLine2d line = Bezier.cubic(n, from, control1, control2, to);
             assertTrue("result has n points", line.size() == n);
@@ -60,11 +60,11 @@ public class BezierTest
                 // Ignore expected exception
             }
         }
-        for (int n : new int[] { 2, 3, 4, 100 })
+        for (int n : new int[] {2, 3, 4, 100})
         {
-            for (double shape : new double[] { 0.5, 1.0, 2.0 })
+            for (double shape : new double[] {0.5, 1.0, 2.0})
             {
-                for (boolean weighted : new boolean[] { false, true })
+                for (boolean weighted : new boolean[] {false, true})
                 {
                     Ray2d start = new Ray2d(from.x, from.y, Math.PI / 2);
                     Ray2d end = new Ray2d(to.x, to.y, Math.PI);
@@ -84,7 +84,7 @@ public class BezierTest
         assertEquals("Number of points is 64", 64, Bezier.bezier(from, control1, control2, to).size());
         control1 = new Point2d(5, 0);
         control2 = new Point2d(0, 5);
-        for (int n : new int[] { 2, 3, 4, 100 })
+        for (int n : new int[] {2, 3, 4, 100})
         {
             PolyLine2d line = Bezier.cubic(n, from, control1, control2, to);
             for (int i = 1; i < line.size() - 1; i++)
@@ -95,7 +95,7 @@ public class BezierTest
                 assertTrue("y of intermediate point has reasonable value", p.y > 0 && p.y < 10);
             }
         }
-        for (int n : new int[] { 2, 3, 4, 100 })
+        for (int n : new int[] {2, 3, 4, 100})
         {
             PolyLine2d line = Bezier.cubic(n, new Ray2d(from.x, from.y, Math.PI), new Ray2d(to.x, to.y, Math.PI / 2));
             for (int i = 1; i < line.size() - 1; i++)
@@ -120,7 +120,7 @@ public class BezierTest
         // System.out.print("ref " + reference.toPlot());
         Ray2d startRay = new Ray2d(start, start.directionTo(c1));
         Ray2d endRay = new Ray2d(end, c2.directionTo(end));
-        for (double epsilonPosition : new double[] { 3, 1, 0.1, 0.05, 0.02 })
+        for (double epsilonPosition : new double[] {3, 1, 0.1, 0.05, 0.02})
         {
             // System.out.println("epsilonPosition " + epsilonPosition);
             PolyLine2d line = Bezier.bezier(epsilonPosition, start, c1, c2, end);
@@ -231,7 +231,7 @@ public class BezierTest
 
         try
         {
-            Bezier.bezier(0.1, new Point2d[] { start });
+            Bezier.bezier(0.1, new Point2d[] {start});
             fail("Too few points have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -241,7 +241,7 @@ public class BezierTest
 
         try
         {
-            Bezier.bezier(0.1, new Point2d[] { });
+            Bezier.bezier(0.1, new Point2d[] {});
             fail("Too few points have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -323,7 +323,7 @@ public class BezierTest
         Point3d control1 = new Point3d(20, 0, 10);
         Point3d control2 = new Point3d(0, 20, 20);
         Point3d to = new Point3d(0, 10, 30);
-        for (int n : new int[] { 2, 3, 4, 100 })
+        for (int n : new int[] {2, 3, 4, 100})
         {
             PolyLine3d line = Bezier.cubic(n, from, control1, control2, to);
             assertTrue("result has n points", line.size() == n);
@@ -349,11 +349,11 @@ public class BezierTest
                 // Ignore expected exception
             }
         }
-        for (int n : new int[] { 2, 3, 4, 100 })
+        for (int n : new int[] {2, 3, 4, 100})
         {
-            for (double shape : new double[] { 0.5, 1.0, 2.0 })
+            for (double shape : new double[] {0.5, 1.0, 2.0})
             {
-                for (boolean weighted : new boolean[] { false, true })
+                for (boolean weighted : new boolean[] {false, true})
                 {
                     Ray3d start = new Ray3d(from.x, from.y, from.z, Math.PI / 2, Math.PI / 3);
                     Ray3d end = new Ray3d(to.x, to.y, to.z, Math.PI, 0);
@@ -375,7 +375,7 @@ public class BezierTest
         assertEquals("Number of points is 64", 64, Bezier.bezier(from, control1, control2, to).size());
         control1 = new Point3d(5, 0, 10);
         control2 = new Point3d(0, 5, 20);
-        for (int n : new int[] { 2, 3, 4, 100 })
+        for (int n : new int[] {2, 3, 4, 100})
         {
             PolyLine3d line = Bezier.cubic(n, from, control1, control2, to);
             assertEquals("from x", from.x, line.getFirst().x, 0);
@@ -393,7 +393,7 @@ public class BezierTest
                 assertTrue("z of intermediate point has reasonable value", p.z > -10 && p.z < 30);
             }
         }
-        for (int n : new int[] { 2, 3, 4, 100 })
+        for (int n : new int[] {2, 3, 4, 100})
         {
             PolyLine3d line = Bezier.cubic(n, new Ray3d(from.x, from.y, from.z, Math.PI / 2, Math.PI / 2, Math.PI),
                     new Ray3d(to.x, to.y, to.z, 0, 0, Math.PI / 2));

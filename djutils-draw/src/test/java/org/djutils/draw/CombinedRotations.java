@@ -20,7 +20,7 @@ public final class CombinedRotations
     {
         // Cannot be instantiated
     }
-    
+
     /**
      * Demonstrate all combinations of 90 degree rotations.
      * @param args String[]; the command line arguments (not used)
@@ -28,7 +28,7 @@ public final class CombinedRotations
     public static void main(final String[] args)
     {
         Point3d unitVector = new Point3d(1, 0, 0);
-        double[] rotations = new double[] { 0, Math.PI / 2, Math.PI, -Math.PI / 2 };
+        double[] rotations = new double[] {0, Math.PI / 2, Math.PI, -Math.PI / 2};
         for (double rotX : rotations)
         {
             for (double rotY : rotations)

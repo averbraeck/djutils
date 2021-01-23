@@ -65,7 +65,8 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
      * @throws NullPointerException when from is null
      * @throws DrawRuntimeException when from has the exact coordinates toX, toY
      */
-    public LineSegment2d(final Point2d from, final double toX, final double toY) throws NullPointerException, DrawRuntimeException
+    public LineSegment2d(final Point2d from, final double toX, final double toY)
+            throws NullPointerException, DrawRuntimeException
     {
         this(Throw.whenNull(from, "from point may not be null").x, from.y, toX, toY);
     }
@@ -78,7 +79,8 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
      * @throws NullPointerException when to is null
      * @throws DrawRuntimeException when to has the exact coordinates fromX, fromY
      */
-    public LineSegment2d(final double fromX, final double fromY, final Point2d to) throws NullPointerException, DrawRuntimeException
+    public LineSegment2d(final double fromX, final double fromY, final Point2d to)
+            throws NullPointerException, DrawRuntimeException
     {
         this(fromX, fromY, Throw.whenNull(to, "to point may not be null").x, to.y);
     }
@@ -121,7 +123,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
     @Override
     public Iterator<? extends Point2d> getPoints()
     {
-        return Arrays.stream(new Point2d[] { getStartPoint(), getEndPoint() }).iterator();
+        return Arrays.stream(new Point2d[] {getStartPoint(), getEndPoint()}).iterator();
     }
 
     /** {@inheritDoc} */
