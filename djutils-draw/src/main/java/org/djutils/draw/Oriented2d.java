@@ -1,7 +1,7 @@
 package org.djutils.draw;
 
 /**
- * Directed2d is an interface to indicate an object has a direction in two dimensions.
+ * Oriented2d is an interface to indicate an object has a direction in two dimensions.
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.

@@ -14,7 +14,7 @@ import org.djutils.exceptions.Try;
 import org.junit.Test;
 
 /**
- * DirectedPoint2dTest.java.
+ * OrientedPoint2dTest.java.
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -25,11 +25,11 @@ import org.junit.Test;
 public class OrientedPoint2dTest
 {
     /**
-     * Test the DirectedPoint2d construction methods.
+     * Test the OrientedPoint2d construction methods.
      */
     @SuppressWarnings("unlikely-arg-type")
     @Test
-    public void testDirectedPoint2dConstruction()
+    public void testOrientedPoint2dConstruction()
     {
         OrientedPoint2d p = new OrientedPoint2d(10.0, -20.0, Math.PI);
         assertEquals("x", 10.0, p.x, 0);
@@ -188,10 +188,10 @@ public class OrientedPoint2dTest
     }
 
     /**
-     * Test the DirectedPoint2d operators.
+     * Test the OrientedPoint2d operators.
      */
     @Test
-    public void testDirectedPoint2dOperators()
+    public void testOrientedPoint2dOperators()
     {
         OrientedPoint2d p = new OrientedPoint2d(-0.1, -0.2, -Math.PI / 7);
         OrientedPoint2d out = p.abs();
@@ -254,7 +254,7 @@ public class OrientedPoint2dTest
         // direction
 //        assertEquals(Math.toRadians(45.0), p2.horizontalDirection(), 0.001);
 //        assertEquals(Math.toRadians(45.0), p1.horizontalDirection(p2), 0.001);
-//        assertEquals(0.0, new DirectedPoint2d(0.0, 0.0, Math.PI / 4.0).horizontalDirection(), 0.001);
+//        assertEquals(0.0, new OrientedPoint2d(0.0, 0.0, Math.PI / 4.0).horizontalDirection(), 0.001);
 
         // normalize
         OrientedPoint2d pn = p2.normalize();
@@ -318,10 +318,10 @@ public class OrientedPoint2dTest
     }
 
     /**
-     * Test the DirectedPoint2d operators for NPE.
+     * Test the OrientedPoint2d operators for NPE.
      */
     @Test
-    public void testDirectedPoint2dOperatorsNPE()
+    public void testOrientedPoint2dOperatorsNPE()
     {
         final OrientedPoint2d p1 = new OrientedPoint2d(1.0, 1.0, Math.PI / 4.0);
 

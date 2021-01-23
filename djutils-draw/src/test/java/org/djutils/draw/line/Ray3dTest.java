@@ -170,7 +170,7 @@ public class Ray3dTest
         assertEquals(description + " phi", expectedPhi, ray.phi, 0.0001);
         assertEquals(description + " getTheta", expectedTheta, ray.getTheta(), 0.0001);
         assertEquals(description + " theta", expectedTheta, ray.theta, 0.0001);
-        Point3d startPoint = ray.getStartPoint();
+        Point3d startPoint = ray.getEndPoint();
         assertEquals(description + " getStartPoint x", expectedX, startPoint.x, 0.0001);
         assertEquals(description + " getStartPoint y", expectedY, startPoint.y, 0.0001);
         assertEquals(description + " getStartPoint z", expectedZ, startPoint.z, 0.0001);
@@ -367,7 +367,7 @@ public class Ray3dTest
 
         Point3d projectingPoint = new Point3d(10, 10, 10);
         result = ray.closestPointOnRay(projectingPoint); // Projects at a point along the ray
-        double distance = result.distance(ray.getStartPoint());
+        double distance = result.distance(ray.getEndPoint());
         assertTrue("distance from start is > 0", distance > 0);
         // Check that points on the ray slightly closer to start point or slightly further are indeed further from
         // projectingPoint

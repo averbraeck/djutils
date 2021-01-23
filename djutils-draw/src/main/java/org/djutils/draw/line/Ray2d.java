@@ -9,10 +9,9 @@ import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
 
 /**
- * Ray2d.java. A ray is a half-line; it has one end point with non-infinite coordinates; the other end point is infinitely far
- * away.
+ * Ray2d is a half-line; it has one end point with non-infinite coordinates; the other end point is infinitely far away.
  * <p>
- * Copyright (c) 2020-2020 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
@@ -20,7 +19,7 @@ import org.djutils.exceptions.Throw;
  */
 public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Space2d>
 {
-    /** ... */
+    /** */
     private static final long serialVersionUID = 20210119L;
 
     /** Phi; the angle from the positive X axis direction in radians. */
@@ -118,7 +117,7 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Sp
 
     /** {@inheritDoc} */
     @Override
-    public Point2d getStartPoint()
+    public Point2d getEndPoint()
     {
         return new Point2d(this.x, this.y);
     }
@@ -159,15 +158,15 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Sp
         final double u = (point.x - this.x) * dX + (point.y - this.y) * dY;
         if (u <= 0)
         {
-            return getStartPoint();
+            return getEndPoint();
         }
         return new Point2d(this.x + u * dX, this.y + u * dY);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean epsilonEquals(final Ray2d other, final double epsilonCoordinate,
-            final double epsilonDirection) throws NullPointerException, IllegalArgumentException
+    public boolean epsilonEquals(final Ray2d other, final double epsilonCoordinate, final double epsilonDirection)
+            throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(other, "other point may not be null");
         Throw.when(
