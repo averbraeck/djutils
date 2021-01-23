@@ -61,7 +61,7 @@ public class Polygon2d extends PolyLine2d
 
     /**
      * Subtract the overlap with another Polygon2d from this Polygon2d and return the result as a new Polygon2d.
-     * @param otherPolygon the other Polygon2d
+     * @param otherPolygon Polygon2d; the other Polygon2d
      * @return Polygon2d; the asymmetrical difference; or null if there otherPolygon completely covers this Polygon2d
      */
     public Polygon2d difference(final Polygon2d otherPolygon)

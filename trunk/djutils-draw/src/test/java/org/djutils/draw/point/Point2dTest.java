@@ -63,7 +63,7 @@ public class Point2dTest
             // Ignore expected exception
         }
 
-        double[] p2Arr = new double[] { 5.0, 6.0 };
+        double[] p2Arr = new double[] {5.0, 6.0};
         p = new Point2d(p2Arr);
         assertEquals(5.0, p.x, 0);
         assertEquals(6.0, p.y, 0);
@@ -96,7 +96,7 @@ public class Point2dTest
             @Override
             public void execute() throws Throwable
             {
-                new Point2d(new double[] { 1.0 });
+                new Point2d(new double[] {1.0});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -105,7 +105,7 @@ public class Point2dTest
             @Override
             public void execute() throws Throwable
             {
-                new Point2d(new double[] { 1.0, 2.0, 3.0 });
+                new Point2d(new double[] {1.0, 2.0, 3.0});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -391,7 +391,7 @@ public class Point2dTest
     public void testClosestPointOnSegment() throws DrawException
     {
         Point2d p1 = new Point2d(-2, 3);
-        for (Point2d p2 : new Point2d[] { new Point2d(7, 4)/* angled */, new Point2d(-3, 6) /* also angled */,
+        for (Point2d p2 : new Point2d[] {new Point2d(7, 4)/* angled */, new Point2d(-3, 6) /* also angled */,
                 new Point2d(-2, -5) /* vertical */, new Point2d(8, 3)/* horizontal */ })
         {
             PolyLine2d line = new PolyLine2d(p1, p2);

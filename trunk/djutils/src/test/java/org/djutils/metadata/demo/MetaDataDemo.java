@@ -69,12 +69,12 @@ public final class MetaDataDemo
     {
         MetaData objectArray = new MetaData("Payload is object array",
                 "Payload is an object array of 3 objects; a String, a Double and an Integer",
-                new ObjectDescriptor[] { new ObjectDescriptor("String", "String", String.class),
+                new ObjectDescriptor[] {new ObjectDescriptor("String", "String", String.class),
                         new ObjectDescriptor("Double", "Double", Double.class),
-                        new ObjectDescriptor("Integer", "Integer", Integer.class) });
-        Object[] payload = new Object[] { "This is the string", 123.456, 987 };
+                        new ObjectDescriptor("Integer", "Integer", Integer.class)});
+        Object[] payload = new Object[] {"This is the string", 123.456, 987};
         objectArray.verifyComposition(payload); // OK
-        payload = new Object[] { "String", "123.456", 987L };
+        payload = new Object[] {"String", "123.456", 987L};
         objectArray.verifyComposition(payload); // Throws ClassCastException
     }
 

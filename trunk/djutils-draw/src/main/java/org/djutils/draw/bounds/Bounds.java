@@ -62,7 +62,7 @@ public interface Bounds<B extends Bounds<B, S>, S extends Space>
     /**
      * Check if this Bounds contains another Bounds. Covers returns true when one of the edges of the other Bounds (partly)
      * overlaps a border of this Bounds.
-     * @param otherBounds Bounds; the Bounds for which to check if it is contained within this Bounds
+     * @param otherBounds B; the Bounds for which to check if it is contained within this Bounds
      * @return boolean; whether this Bounds contains the provided Bounds, including overlapping borders
      * @throws NullPointerException when otherBounds is null
      */
@@ -70,7 +70,7 @@ public interface Bounds<B extends Bounds<B, S>, S extends Space>
 
     /**
      * Return whether this Bounds is disjoint from another Bounds. Only touching at an edge is considered disjoint.
-     * @param otherBounds Bounds; the other Bounds
+     * @param otherBounds B; the other Bounds
      * @return boolean; whether this Bounds is disjoint from another Bounds
      * @throws NullPointerException when bounds is null
      */
@@ -78,7 +78,7 @@ public interface Bounds<B extends Bounds<B, S>, S extends Space>
 
     /**
      * Return whether this Bounds intersects another Bounds. Only touching at an edge is not seen as intersecting.
-     * @param otherBounds Bounds; the other Bounds
+     * @param otherBounds B; the other Bounds
      * @return boolean; whether this bounding rectangle intersects the other Bounds
      * @throws NullPointerException when otherBounds is null
      */
@@ -87,7 +87,7 @@ public interface Bounds<B extends Bounds<B, S>, S extends Space>
     /**
      * Return the intersecting Bounds of this Bounds and another Bounds. Touching at the edge is not seen as intersecting. In
      * case there is no intersection, null is returned.
-     * @param otherBounds Bounds; the other Bounds
+     * @param otherBounds B; the other Bounds
      * @return Bounds; the intersecting Bounds of this Bounds and another Bounds. Touching at the edge is not seen as
      *         intersecting. If not intersecting; null is returned
      * @throws NullPointerException when otherBounds is null

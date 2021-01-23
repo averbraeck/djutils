@@ -55,7 +55,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
 
     /**
      * Construct an immutable directed point with an x and y coordinate, and a direction, stored with double precision.
-     * @param xy double[2]; the x and y coordinate
+     * @param xy double[]; the x and y coordinate
      * @param dirZ double; the counter-clockwise rotation around the point in radians
      * @throws NullPointerException when xy is null
      * @throws IllegalArgumentException when the dimension of xy is not 2 or any value in xy is NaN or rotZ is NaN
@@ -82,7 +82,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
 
     /**
      * Construct an immutable directed point with a direction from another Point, stored with double precision.
-     * @param point Point; a point with or without rotation
+     * @param point Point2d; a point with or without rotation
      * @param dirZ double; the counter-clockwise rotation around the point in radians
      * @throws IllegalArgumentException when rotZ is NaN
      */
@@ -143,9 +143,9 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
      * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
      * that case the interpolation turns into an extrapolation. DirZ is interpolated using the interpolateShortest method.
      * @param otherPoint OrientedPoint2d; the other point
-     * @param fraction the factor for interpolation towards the other point. When <code>fraction</code> is between 0 and 1, it
-     *            is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code> Point is
-     *            returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
+     * @param fraction double; the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
+     *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
+     *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
      * @return OrientedPoint2d; a new OrientedPoint2d at the requested fraction
      * @throws NullPointerException when otherPoint is null
      * @throws IllegalArgumentException when fraction is NaN
@@ -184,7 +184,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     @Override
     public Iterator<? extends OrientedPoint2d> getPoints()
     {
-        return Arrays.stream(new OrientedPoint2d[] { this }).iterator();
+        return Arrays.stream(new OrientedPoint2d[] {this}).iterator();
     }
 
     /** {@inheritDoc} */

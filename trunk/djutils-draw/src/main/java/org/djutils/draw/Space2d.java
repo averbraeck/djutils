@@ -23,4 +23,3 @@ public class Space2d implements Space
     }
 
 }
-

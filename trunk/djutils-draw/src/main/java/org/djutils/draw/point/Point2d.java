@@ -51,7 +51,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
 
     /**
      * Create a new Point with just an x and y coordinate, stored with double precision.
-     * @param xy double[2]; the x and y coordinate
+     * @param xy double[]; the x and y coordinate
      * @throws NullPointerException when xy is null
      * @throws IllegalArgumentException when the dimension of xy is not 2, or a coordinate is NaN
      */
@@ -130,7 +130,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     @Override
     public Iterator<? extends Point2d> getPoints()
     {
-        return Arrays.stream(new Point2d[] { this }).iterator();
+        return Arrays.stream(new Point2d[] {this}).iterator();
     }
 
     /**

@@ -24,8 +24,8 @@ public class Transform2d implements Cloneable
 
     /**
      * Multiply a 3x3 matrix (stored as a 9-value array by row) with a 4-value vector.
-     * @param m double[9]; the matrix
-     * @param v double[3]; the vector
+     * @param m double[]; the matrix
+     * @param v double[]; the vector
      * @return double[3]; the result of m x v
      */
     protected static double[] mulMatVec(final double[] m, final double[] v)
@@ -40,8 +40,8 @@ public class Transform2d implements Cloneable
 
     /**
      * Multiply a 3x3 matrix (stored as a 9-value array by row) with a 3-value vector and a 1 for the 3rd value.
-     * @param m double[9]; the matrix
-     * @param v double[2]; the vector
+     * @param m double[]; the matrix
+     * @param v double[]; the vector
      * @return double[2]; the result of m x (v1, v2, 1), with the last value left out
      */
     protected static double[] mulMatVec2(final double[] m, final double[] v)
@@ -56,8 +56,8 @@ public class Transform2d implements Cloneable
 
     /**
      * Multiply a 3x3 matrix (stored as a 9-value array by row) with another 3x3-matrix.
-     * @param m1 double[9]; the first matrix
-     * @param m2 double[9]; the second matrix
+     * @param m1 double[]; the first matrix
+     * @param m2 double[]; the second matrix
      * @return double[9]; the result of m1 x m2
      */
     protected static double[] mulMatMat(final double[] m1, final double[] m2)
@@ -81,7 +81,7 @@ public class Transform2d implements Cloneable
     {
         return this.mat.clone();
     }
-    
+
     /**
      * Transform coordinates by a vector (tx, ty).
      * @param tx double; the translation value for the x-coordinates
@@ -100,7 +100,7 @@ public class Transform2d implements Cloneable
 
     /**
      * Translate coordinates by a the x and y values contained in a Point2d.
-     * @param point Point; the point containing the x and y translation values
+     * @param point Point2d; the point containing the x and y translation values
      * @return Transform2d; the new transformation matrix after applying this transform
      */
     public Transform2d translate(final Point2d point)
@@ -187,7 +187,7 @@ public class Transform2d implements Cloneable
     /**
      * Apply the stored transform on the xy-vector and return the transformed vector. For speed reasons, no checks on correct
      * size of the vector is done.
-     * @param xy double[2] the provided vector
+     * @param xy double[]; double[2] the provided vector
      * @return double[2]; the transformed vector
      */
     public double[] transform(final double[] xy)
@@ -207,7 +207,7 @@ public class Transform2d implements Cloneable
 
     /**
      * Apply the stored transform on the provided point and return a point with the transformed coordinate.
-     * @param pointIterator Point2d; generates the points to be transformed
+     * @param pointIterator Iterator&lt;Point2d&gt;; generates the points to be transformed
      * @return Iterator&lt;Point2d&gt;; an iterator that will generator all transformed points
      */
     public Iterator<Point2d> transform(final Iterator<Point2d> pointIterator)

@@ -45,7 +45,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     /**
      * Construct a new Line3d and initialize its length indexed line, bounds, centroid and length.
      * @param copyNeeded boolean; if true; a deep copy of the points array is stored instead of the provided array
-     * @param points Point3d...; the array of points to construct this Line3d from.
+     * @param points Point3d[]; the array of points to construct this Line3d from.
      * @throws NullPointerException when iterator is null
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
@@ -104,7 +104,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      * Construct an array of Point3d from two points plus an array of Point3d.
      * @param point1 Point3d; the first point (ends up at index 0 of the result)
      * @param point2 Point3d; the second point (ends up at index 1 of the result)
-     * @param otherPoints Point3d[]; may be null, may be empty. If non empty, the elements in otherPoints end up at index 2 and
+     * @param otherPoints Point3d...; may be null, may be empty. If non empty, the elements in otherPoints end up at index 2 and
      *            up in the result
      * @return Point2d[]; the combined array
      */
@@ -302,8 +302,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
 
     /**
      * Concatenate several Line3d instances.
-     * @param lines Line3d...; Line3d... one or more Line3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
-     *            the first of the second, etc.
+     * @param lines PolyLine3d...; Line3d... one or more Line3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
+     *            match the first of the second, etc.
      * @return Line3d
      * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
      */
@@ -315,8 +315,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     /**
      * Concatenate two Line3d instances. This method is separate for efficiency reasons.
      * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
-     * @param line1 Line3d; first line
-     * @param line2 Line3d; second line
+     * @param line1 PolyLine3d; first line
+     * @param line2 PolyLine3d; second line
      * @return Line3d; the concatenation of the two lines
      * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
      */
@@ -345,8 +345,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     /**
      * Concatenate several Line3d instances.
      * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
-     * @param lines Line3d...; Line3d... one or more Line3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
-     *            the first of the second, etc.
+     * @param lines PolyLine3d...; Line3d... one or more Line3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
+     *            match the first of the second, etc.
      * @return Line3d; the concatenation of the lines
      * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
      */
@@ -469,9 +469,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
             double fraction = len / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
             Point3d p1 = this.points[0];
             Point3d p2 = this.points[1];
-            return new OrientedPoint3d(p1.x + fraction * (p2.x - p1.x),
-                    p1.y + fraction * (p2.y - p1.y), p1.z + fraction * (p2.z - p1.z), 0.0, 0.0,
-                    Math.atan2(p2.y - p1.y, p2.x - p1.x));
+            return new OrientedPoint3d(p1.x + fraction * (p2.x - p1.x), p1.y + fraction * (p2.y - p1.y),
+                    p1.z + fraction * (p2.z - p1.z), 0.0, 0.0, Math.atan2(p2.y - p1.y, p2.x - p1.x));
         }
 
         // position beyond end point -- extrapolate using the direction from the before last point to the last point of this
@@ -492,9 +491,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         }
         Point3d p1 = this.points[n2];
         Point3d p2 = this.points[n1];
-        return new OrientedPoint3d(p2.x + fraction * (p2.x - p1.x),
-                p2.y + fraction * (p2.y - p1.y), p2.z + fraction * (p2.z - p1.z), 0.0, 0.0,
-                Math.atan2(p2.y - p1.y, p2.x - p1.x));
+        return new OrientedPoint3d(p2.x + fraction * (p2.x - p1.x), p2.y + fraction * (p2.y - p1.y),
+                p2.z + fraction * (p2.z - p1.z), 0.0, 0.0, Math.atan2(p2.y - p1.y, p2.x - p1.x));
     }
 
     /** {@inheritDoc} */
@@ -511,15 +509,13 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         {
             Point3d p1 = this.points[0];
             Point3d p2 = this.points[1];
-            return new OrientedPoint3d(p1.x, p1.y, p1.z, 0.0, 0.0,
-                    Math.atan2(p2.y - p1.y, p2.x - p1.x));
+            return new OrientedPoint3d(p1.x, p1.y, p1.z, 0.0, 0.0, Math.atan2(p2.y - p1.y, p2.x - p1.x));
         }
         if (position == getLength())
         {
             Point3d p1 = this.points[this.points.length - 2];
             Point3d p2 = this.points[this.points.length - 1];
-            return new OrientedPoint3d(p2.x, p2.y, p2.z, 0.0, 0.0,
-                    Math.atan2(p2.y - p1.y, p2.x - p1.x));
+            return new OrientedPoint3d(p2.x, p2.y, p2.z, 0.0, 0.0, Math.atan2(p2.y - p1.y, p2.x - p1.x));
         }
 
         // find the index of the line segment, use binary search
@@ -528,9 +524,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         double fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
         Point3d p1 = this.points[index];
         Point3d p2 = this.points[index + 1];
-        return new OrientedPoint3d(p1.x + fraction * (p2.x - p1.x),
-                p1.y + fraction * (p2.y - p1.y), p1.z + fraction * (p2.z - p1.z), 0.0, 0.0,
-                Math.atan2(p2.y - p1.y, p2.x - p1.x));
+        return new OrientedPoint3d(p1.x + fraction * (p2.x - p1.x), p1.y + fraction * (p2.y - p1.y),
+                p1.z + fraction * (p2.z - p1.z), 0.0, 0.0, Math.atan2(p2.y - p1.y, p2.x - p1.x));
     }
 
     /** {@inheritDoc} */
@@ -677,7 +672,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
 
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings({ "checkstyle:designforextension", "checkstyle:needbraces" })
+    @SuppressWarnings({"checkstyle:designforextension", "checkstyle:needbraces"})
     public boolean equals(final Object obj)
     {
         if (this == obj)

@@ -340,7 +340,7 @@ public class Bounds2dTest
             // Ignore expected exception
         }
 
-        double[] shifts = new double[] { -200, -5, 0, 5, 200 };
+        double[] shifts = new double[] {-200, -5, 0, 5, 200};
         for (double dx : shifts)
         {
             for (double dy : shifts)

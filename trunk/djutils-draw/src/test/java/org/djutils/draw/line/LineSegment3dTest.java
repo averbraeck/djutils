@@ -30,12 +30,12 @@ public class LineSegment3dTest
     public void constructorTest()
     {
         verifySegment("Segment from four coordinates", new LineSegment3d(1, 2, 3, 4, 5, 6), 1, 2, 3, 4, 5, 6);
-        verifySegment("Segment from two coordinates and a Point3d", new LineSegment3d(1, 2, 3, new Point3d(4, 5, 6)), 1, 2, 3, 4, 5,
-                6);
-        verifySegment("Segment from a Point3d and two coordinates", new LineSegment3d(new Point3d(1, 2, 3), 4, 5, 6), 1, 2, 3, 4, 5,
-                6);
-        verifySegment("Segment from two Point3d objects", new LineSegment3d(new Point3d(1, 2, 3), new Point3d(4, 5, 6)), 1, 2, 3, 4,
-                5, 6);
+        verifySegment("Segment from two coordinates and a Point3d", new LineSegment3d(1, 2, 3, new Point3d(4, 5, 6)), 1, 2, 3,
+                4, 5, 6);
+        verifySegment("Segment from a Point3d and two coordinates", new LineSegment3d(new Point3d(1, 2, 3), 4, 5, 6), 1, 2, 3,
+                4, 5, 6);
+        verifySegment("Segment from two Point3d objects", new LineSegment3d(new Point3d(1, 2, 3), new Point3d(4, 5, 6)), 1, 2,
+                3, 4, 5, 6);
 
         try
         {
@@ -46,7 +46,7 @@ public class LineSegment3dTest
         {
             // Ignore expected exception
         }
-        
+
         new LineSegment3d(1, 2, 3, 1, 2, 4);
         new LineSegment3d(1, 2, 3, 1, 3, 3);
         new LineSegment3d(1, 2, 3, 2, 2, 3);
@@ -145,7 +145,7 @@ public class LineSegment3dTest
             // Ignore expected exception
         }
 
-        for (double position : new double[] { -3, -0.5, 0, 1, 10, 100 })
+        for (double position : new double[] {-3, -0.5, 0, 1, 10, 100})
         {
             if (position < 0 || position > segment.getLength())
             {

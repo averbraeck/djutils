@@ -19,5 +19,5 @@ public interface Drawable2d extends Drawable<Point2d, Space2d>
      * @return Bounds2d; the bounding box of the object
      */
     Bounds2d getBounds();
-    
+
 }

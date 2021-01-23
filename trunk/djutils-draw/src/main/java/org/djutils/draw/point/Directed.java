@@ -20,7 +20,7 @@ public interface Directed<D extends Directed<D>>
 
     /**
      * Compare this O with another O with specified tolerances in the coordinates and the angles.
-     * @param other DirectedPoint2d; the point to compare with
+     * @param other D; the point to compare with
      * @param epsilonCoordinate double; the upper bound of difference for one of the coordinates; use Double.POSITIVE_INFINITY
      *            if you do not want to check the coordinates
      * @param epsilonDirection double; the upper bound of difference for the direction(s); use Double.POSITIVE_INFINITY if you
@@ -34,4 +34,3 @@ public interface Directed<D extends Directed<D>>
             throws NullPointerException, IllegalArgumentException;
 
 }
-

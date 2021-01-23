@@ -81,7 +81,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
 
     /**
      * Construct a Bounds3d from some collection of points, finding the lowest and highest x and y coordinates.
-     * @param points Point2d[]; the array of points to construct a Bounds3d from
+     * @param points Iterator&lt;? extends Point3d&gt;; the array of points to construct a Bounds3d from
      * @throws NullPointerException when points is null
      * @throws IllegalArgumentException when zero points are provided
      */
@@ -151,10 +151,10 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
     public Iterator<Point3d> getPoints()
     {
         Point3d[] array =
-                new Point3d[] { new Point3d(getMinX(), getMinY(), getMinZ()), new Point3d(getMinX(), getMinY(), getMaxZ()),
+                new Point3d[] {new Point3d(getMinX(), getMinY(), getMinZ()), new Point3d(getMinX(), getMinY(), getMaxZ()),
                         new Point3d(getMinX(), getMaxY(), getMinZ()), new Point3d(getMinX(), getMaxY(), getMaxZ()),
                         new Point3d(getMaxX(), getMinY(), getMinZ()), new Point3d(getMaxX(), getMinY(), getMaxZ()),
-                        new Point3d(getMaxX(), getMaxY(), getMinZ()), new Point3d(getMaxX(), getMaxY(), getMaxZ()) };
+                        new Point3d(getMaxX(), getMaxY(), getMinZ()), new Point3d(getMaxX(), getMaxY(), getMaxZ())};
         return Arrays.stream(array).iterator();
     }
 

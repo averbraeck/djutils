@@ -72,9 +72,9 @@ public class ProfileTest
         // warm up
         delay(100000);
         Profile.reset();
-        for (long sleepTime : new long[] { 100000, 1000000, 10000000 })
+        for (long sleepTime : new long[] {100000, 1000000, 10000000})
         {
-            for (int calls : new int[] { 1, 5, 10 })
+            for (int calls : new int[] {1, 5, 10})
             {
                 Profile.clear();
                 System.out.print("sleep time " + sleepTime + "; calls " + calls + ": iterations:");
@@ -149,7 +149,7 @@ public class ProfileTest
         Profile.end("delay");
         return iteration;
     }
-    
+
     /**
      * Test handling of inappropriate calling sequences.
      */
@@ -167,7 +167,7 @@ public class ProfileTest
         {
             // Ignore expected exception
         }
-        
+
         startOnly();
         try
         {
@@ -178,7 +178,7 @@ public class ProfileTest
         {
             // Ignore expected exception
         }
-        
+
         Profile.start();
         Profile.end();
         try
@@ -190,9 +190,9 @@ public class ProfileTest
         {
             // Ignore expected exception
         }
-        
+
         assertNull("statistics for method that never called Profile.start should return null", Profile.statistics("Naaahhhh"));
-        
+
         try
         {
             Profile.statistics(null);
@@ -203,7 +203,7 @@ public class ProfileTest
             // Ignore expected exception
         }
     }
-    
+
     /**
      * Calls start, but not end.
      */
@@ -211,5 +211,5 @@ public class ProfileTest
     {
         Profile.start();
     }
-    
+
 }

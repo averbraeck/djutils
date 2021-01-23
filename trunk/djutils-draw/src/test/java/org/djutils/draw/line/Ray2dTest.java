@@ -262,10 +262,10 @@ public class Ray2dTest
             // Ignore expected exception
         }
 
-        for (double phi : new double[] { 0, 1, 2, 3, 4, 5, -1, -2, Math.PI })
+        for (double phi : new double[] {0, 1, 2, 3, 4, 5, -1, -2, Math.PI})
         {
             Ray2d ray = new Ray2d(1, 2, phi);
-            for (double position : new double[] { 0, 10, 0.1, -2 })
+            for (double position : new double[] {0, 10, 0.1, -2})
             {
                 Ray2d result = ray.getLocationExtended(position);
                 assertEquals("result is position distance away from base of ray", Math.abs(position), ray.distance(result),
@@ -286,7 +286,7 @@ public class Ray2dTest
             }
         }
     }
-    
+
     /**
      * Test the closestPointOnRay method.
      */
@@ -303,7 +303,7 @@ public class Ray2dTest
         {
             // Ignore expected exception
         }
-        
+
         Point2d result = ray.closestPointOnRay(new Point2d(1, 0));
         assertEquals("result is start point", ray.x, result.x, 0);
         assertEquals("result is start point", ray.y, result.y, 0);
@@ -313,7 +313,7 @@ public class Ray2dTest
         result = ray.closestPointOnRay(new Point2d(1, 2));
         assertEquals("result is start point", ray.x, result.x, 0);
         assertEquals("result is start point", ray.y, result.y, 0);
-        
+
         Point2d projectingPoint = new Point2d(10, 10);
         result = ray.closestPointOnRay(projectingPoint); // Projects at a point along the ray
         double distance = result.distance(ray.getEndPoint());
@@ -339,7 +339,7 @@ public class Ray2dTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             ray.epsilonEquals(ray, -0.1, 1);
@@ -349,7 +349,7 @@ public class Ray2dTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             ray.epsilonEquals(ray, 1, -0.1);
@@ -359,7 +359,7 @@ public class Ray2dTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             ray.epsilonEquals(ray, Double.NaN, 1);
@@ -369,7 +369,7 @@ public class Ray2dTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             ray.epsilonEquals(ray, 1, Double.NaN);
@@ -379,8 +379,8 @@ public class Ray2dTest
         {
             // Ignore expected exception
         }
-        
-        double[] deltas = new double[] { 0.0, -0.125, 0.125, -1, 1 }; // Use values that can be represented exactly in a double
+
+        double[] deltas = new double[] {0.0, -0.125, 0.125, -1, 1}; // Use values that can be represented exactly in a double
         for (double dX : deltas)
         {
             for (double dY : deltas)
@@ -388,7 +388,7 @@ public class Ray2dTest
                 for (double dPhi : deltas)
                 {
                     Ray2d other = new Ray2d(ray.x + dX, ray.y + dY, ray.phi + dPhi);
-                    for (double epsilon : new double[] { 0, 0.125, 0.5, 0.9, 1.0, 1.1 })
+                    for (double epsilon : new double[] {0, 0.125, 0.5, 0.9, 1.0, 1.1})
                     {
                         // System.out.println(String.format("dX=%f, dY=%f, dPhi=%f, epsilon=%f", dX, dY, dPhi, epsilon));
                         boolean result = ray.epsilonEquals(other, epsilon, Double.POSITIVE_INFINITY);

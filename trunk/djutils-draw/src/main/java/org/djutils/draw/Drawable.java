@@ -23,12 +23,11 @@ public interface Drawable<P extends Point<P, S>, S extends Space> extends Serial
      * @return Iterable&lt;Point2d&gt;; an iterator that generates all points that make up the object
      */
     Iterator<? extends P> getPoints();
-    
+
     /**
      * Retrieve the number of points that make up the object.
      * @return int; the number of points that make up the object
      */
     int size();
-    
-}
 
+}

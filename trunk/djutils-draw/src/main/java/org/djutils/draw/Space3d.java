@@ -9,7 +9,7 @@ package org.djutils.draw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Space3d  implements Space
+public class Space3d implements Space
 {
     /** */
     private static final long serialVersionUID = 20201208L;
@@ -20,6 +20,5 @@ public class Space3d  implements Space
     {
         return 3;
     }
-    
-}
 
+}

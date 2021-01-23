@@ -19,4 +19,3 @@ public interface Space extends Serializable
      */
     int getDimensions();
 }
-

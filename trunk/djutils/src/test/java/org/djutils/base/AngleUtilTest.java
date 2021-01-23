@@ -115,14 +115,14 @@ public class AngleUtilTest
         assertFalse(AngleUtil.epsilonEquals(pi05, pi15, 1E-6));
         assertTrue(AngleUtil.epsilonEquals(pi - 1E-7, pi + 1E-7, 1E-6));
         assertTrue(AngleUtil.epsilonEquals(pi20 - 1E-7, pi20 + 1E-7, 1E-6));
-        for (double s1 : new double[] { -1E-7, 0.0, 1E-7 })
+        for (double s1 : new double[] {-1E-7, 0.0, 1E-7})
         {
-            for (double s2 : new double[] { -1E-7, 0.0, 1E-7 })
+            for (double s2 : new double[] {-1E-7, 0.0, 1E-7})
             {
                 assertTrue(AngleUtil.epsilonEquals(s1, pi20 + s2, 1E-6));
                 assertTrue(AngleUtil.epsilonEquals(s1, -pi20 + s2, 1E-6));
                 assertTrue(AngleUtil.epsilonEquals(-pi + s1, pi + s2, 1E-6));
-                for (double a : new double[] { 0.0, pi05, pi15, pi20 })
+                for (double a : new double[] {0.0, pi05, pi15, pi20})
                 {
                     assertTrue(AngleUtil.epsilonEquals(a + s1, a + s2, 1E-6));
                 }
@@ -176,7 +176,7 @@ public class AngleUtilTest
         {
             for (double angle2 = -15 * Math.PI / 6; angle2 < 50; angle2 += Math.PI / 300)
             {
-                for (double fraction : new double[] { 0, 1, 0.5, 0.1, 0.9 })
+                for (double fraction : new double[] {0, 1, 0.5, 0.1, 0.9})
                 {
                     double angleFraction = AngleUtil.interpolateShortest(angle1, angle2, fraction);
                     double check1 = Math.abs(AngleUtil.normalizeAroundZero(angle1 - angleFraction));

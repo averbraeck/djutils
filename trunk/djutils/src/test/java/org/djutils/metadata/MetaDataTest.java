@@ -391,7 +391,7 @@ public class MetaDataTest
         MetaData.NO_META_DATA.verifyComposition(null);
         MetaData.NO_META_DATA.verifyComposition(new Object[0]);
         MetaData.NO_META_DATA.verifyComposition("OK");
-        MetaData.NO_META_DATA.verifyComposition(new Object[] { "OK", "Anything goes", 123f });
+        MetaData.NO_META_DATA.verifyComposition(new Object[] {"OK", "Anything goes", 123f});
 
     }
 

@@ -15,7 +15,7 @@ public final class ImmutableCollectionsDemo
     {
         // Do not instantiate
     }
-    
+
     /**
      * Demo code.
      * @param args String[]; not used
@@ -34,7 +34,7 @@ public final class ImmutableCollectionsDemo
         System.out.println("immutable hash set with copy:  " + immutableHashSetWithCopy); // Contains two Strings
         System.out.println("immutable hash set that wraps: " + immutablehashSetThatWraps); // Contains three Strings
         ImmutableIterator<String> immutableIterator = immutableHashSetWithCopy.iterator(); // Create an Iterator
-        while (immutableIterator.hasNext()) // Iterate over the immutable hash set 
+        while (immutableIterator.hasNext()) // Iterate over the immutable hash set
         {
             String string = immutableIterator.next();
             System.out.println("string is " + string);
@@ -45,5 +45,5 @@ public final class ImmutableCollectionsDemo
         // immutableHashSetWithCopy.remove("String 2"); // does not compile; there is no add method
         // immutableHashSetThatWraps.remove("String 2"); // does not compile; there is no add method
     }
-    
+
 }

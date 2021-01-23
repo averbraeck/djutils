@@ -19,7 +19,7 @@ public interface Drawable3d extends Drawable<Point3d, Space3d>
      * @return Bounds3d; the bounding box of the object
      */
     Bounds3d getBounds();
-    
+
     /**
      * Project the object onto the z=0 plane.
      * @return Drawable2d; the projected object

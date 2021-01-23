@@ -158,7 +158,7 @@ public class TestMultiKeyMap
         assertEquals("dummy2 is still there", "dummy2", mkm.get("2", 23.456));
         mkm.clear();
         assertEquals("result of clear at top level clears the entire map", 0, mkm.getKeys().size());
-        
+
         assertTrue("toString returns something descriptive", mkm.toString().startsWith("MultiKeyMap ["));
     }
 }

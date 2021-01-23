@@ -35,9 +35,9 @@ public final class Bezier
     public static final int DEFAULT_BEZIER_SIZE = 64;
 
     /** Cached factorial values. */
-    private static long[] fact = new long[] { 1L, 1L, 2L, 6L, 24L, 120L, 720L, 5040L, 40320L, 362880L, 3628800L, 39916800L,
+    private static long[] fact = new long[] {1L, 1L, 2L, 6L, 24L, 120L, 720L, 5040L, 40320L, 362880L, 3628800L, 39916800L,
             479001600L, 6227020800L, 87178291200L, 1307674368000L, 20922789888000L, 355687428096000L, 6402373705728000L,
-            121645100408832000L, 2432902008176640000L };
+            121645100408832000L, 2432902008176640000L};
 
     /** Utility class. */
     private Bezier()
@@ -48,10 +48,10 @@ public final class Bezier
     /**
      * Approximate a cubic B&eacute;zier curve from start to end with two control points.
      * @param size int; the number of points of the B&eacute;zier curve
-     * @param start Point2D; the start point of the B&eacute;zier curve
-     * @param control1 Point2D; the first control point
-     * @param control2 Point2D; the second control point
-     * @param end Point2D; the end point of the B&eacute;zier curve
+     * @param start Point2d; the start point of the B&eacute;zier curve
+     * @param control1 Point2d; the first control point
+     * @param control2 Point2d; the second control point
+     * @param end Point2d; the end point of the B&eacute;zier curve
      * @return PolyLine2d; an approximation of a cubic B&eacute;zier curve between start and end, using the two provided control
      *         points
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
@@ -75,10 +75,10 @@ public final class Bezier
     /**
      * Approximate a cubic B&eacute;zier curve from start to end with two control points with a specified precision.
      * @param epsilon double; the precision.
-     * @param start Point2D; the start point of the B&eacute;zier curve
-     * @param control1 Point2D; the first control point
-     * @param control2 Point2D; the second control point
-     * @param end Point2D; the end point of the B&eacute;zier curve
+     * @param start Point2d; the start point of the B&eacute;zier curve
+     * @param control1 Point2d; the first control point
+     * @param control2 Point2d; the second control point
+     * @param end Point2d; the end point of the B&eacute;zier curve
      * @return PolyLine2d; an approximation of a cubic B&eacute;zier curve between start and end, using the two provided control
      *         points
      * @throws DrawRuntimeException in case the number of points is less than 2, or the B&eacute;zier curve could not be
@@ -256,7 +256,7 @@ public final class Bezier
             control2 = end.getLocationExtended(-distance);
             // new Transform2d().translate(end).rotation(end.phi + Math.PI).scale(distance, distance).transform(UNIT_VECTOR2D);
         }
-        return new Point2d[] { start, control1, control2, end };
+        return new Point2d[] {start, control1, control2, end};
     }
 
     /**
@@ -277,7 +277,7 @@ public final class Bezier
     /**
      * Approximate a B&eacute;zier curve of degree n.
      * @param size int; the number of points for the B&eacute;zier curve to be constructed
-     * @param points Point2D...; the points of the curve, where the first and last are begin and end point, and the intermediate
+     * @param points Point2d...; the points of the curve, where the first and last are begin and end point, and the intermediate
      *            ones are control points. There should be at least two points.
      * @return PolyLine2d; an approximation of a cubic B&eacute;zier curve between start and end, using the provided control
      *         points
@@ -311,7 +311,7 @@ public final class Bezier
 
     /**
      * Approximate a B&eacute;zier curve of degree n using <code>DEFAULT_BEZIER_SIZE</code> points.
-     * @param points Point2D...; the points of the curve, where the first and last are begin and end point, and the intermediate
+     * @param points Point2d...; the points of the curve, where the first and last are begin and end point, and the intermediate
      *            ones are control points. There should be at least two points.
      * @return PolyLine2d; an approximation of a cubic B&eacute;zier curve between start and end, using the provided control
      *         points
@@ -422,10 +422,10 @@ public final class Bezier
     /**
      * Approximate a cubic B&eacute;zier curve from start to end with two control points.
      * @param size int; the number of points for the B&eacute;zier curve
-     * @param start Point3D; the start point of the B&eacute;zier curve
-     * @param control1 Point3D; the first control point
-     * @param control2 Point3D; the second control point
-     * @param end Point3D; the end point of the B&eacute;zier curve
+     * @param start Point3d; the start point of the B&eacute;zier curve
+     * @param control1 Point3d; the first control point
+     * @param control2 Point3d; the second control point
+     * @param end Point3d; the end point of the B&eacute;zier curve
      * @return PolyLine3d; an approximation of a cubic B&eacute;zier curve between start and end, with the two provided control
      *         points
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
@@ -440,10 +440,10 @@ public final class Bezier
     /**
      * Approximate a cubic B&eacute;zier curve from start to end with two control points with a specified precision.
      * @param epsilon double; the precision.
-     * @param start Point3D; the start point of the B&eacute;zier curve
-     * @param control1 Point3D; the first control point
-     * @param control2 Point3D; the second control point
-     * @param end Point3D; the end point of the B&eacute;zier curve
+     * @param start Point3d; the start point of the B&eacute;zier curve
+     * @param control1 Point3d; the first control point
+     * @param control2 Point3d; the second control point
+     * @param end Point3d; the end point of the B&eacute;zier curve
      * @return PolyLine3d; an approximation of a cubic B&eacute;zier curve between start and end, with the two provided control
      *         points
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
@@ -609,7 +609,7 @@ public final class Bezier
             control1 = start.getLocation(distance);
             control2 = end.getLocationExtended(-distance);
         }
-        return new Point3d[] { start, control1, control2, end };
+        return new Point3d[] {start, control1, control2, end};
     }
 
     /**
@@ -651,7 +651,7 @@ public final class Bezier
     /**
      * Construct a B&eacute;zier curve of degree n.
      * @param size int; the number of points for the B&eacute;zier curve to be constructed
-     * @param points Point3D...; the points of the curve, where the first and last are begin and end point, and the intermediate
+     * @param points Point3d...; the points of the curve, where the first and last are begin and end point, and the intermediate
      *            ones are control points. There should be at least two points.
      * @return the B&eacute;zier value B(t) of degree n, where n is the number of points in the array
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be
@@ -684,7 +684,7 @@ public final class Bezier
 
     /**
      * Approximate a B&eacute;zier curve of degree n using <code>DEFAULT_BEZIER_SIZE</code> points.
-     * @param points Point3D...; the points of the curve, where the first and last are begin and end point, and the intermediate
+     * @param points Point3d...; the points of the curve, where the first and last are begin and end point, and the intermediate
      *            ones are control points. There should be at least two points.
      * @return the B&eacute;zier value B(t) of degree n, where n is the number of points in the array
      * @throws DrawRuntimeException in case the number of points is less than 2 or the B&eacute;zier curve could not be

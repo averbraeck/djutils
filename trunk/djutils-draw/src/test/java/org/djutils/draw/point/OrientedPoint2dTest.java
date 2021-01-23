@@ -35,18 +35,18 @@ public class OrientedPoint2dTest
         assertEquals("x", 10.0, p.x, 0);
         assertEquals("y", -20.0, p.y, 0);
         assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
-        
+
         p = new OrientedPoint2d(10.0, -20.0);
         assertEquals("x", 10.0, p.x, 0);
         assertEquals("y", -20.0, p.y, 0);
         assertEquals("dirZ", 0, p.getDirZ(), 0);
-        
+
         Point2d p2d = new Point2d(10, -20);
         p = new OrientedPoint2d(p2d, Math.PI);
         assertEquals("x", 10.0, p.x, 0);
         assertEquals("y", -20.0, p.y, 0);
         assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
-        
+
         try
         {
             new OrientedPoint2d(Double.NaN, 0, 0);
@@ -56,7 +56,7 @@ public class OrientedPoint2dTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             new OrientedPoint2d(0, Double.NaN, 0);
@@ -66,7 +66,7 @@ public class OrientedPoint2dTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             new OrientedPoint2d(0, 0, Double.NaN);
@@ -76,7 +76,7 @@ public class OrientedPoint2dTest
         {
             // Ignore expected exception
         }
-        
+
         double[] p2Arr = new double[] {5.0, 6.0};
         p = new OrientedPoint2d(p2Arr, Math.PI / 2.0);
         assertEquals(5.0, p.x, 1E-6);
@@ -156,7 +156,7 @@ public class OrientedPoint2dTest
         assertEquals("[(10.0,20.0), rot=3.1]", p.toString(1));
         assertEquals("[(10,20), rot=3]", p.toString(0));
         assertEquals("[(10,20), rot=3]", p.toString(-1));
-        
+
         // epsilonEquals
         OrientedPoint3d p3 = p.translate(0.001, 0.0, 0.0);
         OrientedPoint3d ref = p.translate(0, 0, 0);
@@ -169,7 +169,7 @@ public class OrientedPoint2dTest
         assertTrue(p3.epsilonEquals(ref, 0.09, 0.001));
         assertFalse(ref.epsilonEquals(p3, 0.0009, 0.001));
         assertFalse(p3.epsilonEquals(ref, 0.0009, 0.001));
-        OrientedPoint2d p2 = p.translate(0.001,  0.0);
+        OrientedPoint2d p2 = p.translate(0.001, 0.0);
         assertTrue("all", p.epsilonEquals(p2, 0.09, 0.001));
         assertFalse("dx", p.epsilonEquals(p2, 0.0009, 0.001));
         p2 = p.translate(0.0, 0.001);
@@ -198,17 +198,17 @@ public class OrientedPoint2dTest
         assertEquals("x", 0.1, out.x, 1E-6);
         assertEquals("y", 0.2, out.y, 1E-6);
         assertEquals("dirZ", -Math.PI / 7, out.getDirZ(), 1E-6);
-        
+
         Iterator<? extends Point2d> i = p.getPoints();
         assertTrue("iterator has one point", i.hasNext());
         assertEquals("iterator returns p", p, i.next());
         assertFalse("iterator does not have another point", i.hasNext());
-        
+
         out = p.neg();
         assertEquals("neg x", 0.1, out.x, 1E-6);
         assertEquals("neg y", 0.2, out.y, 1E-6);
         assertEquals("neg dirZ", Math.PI - Math.PI / 7, out.getDirZ(), 1E-6);
-        
+
         out = p.scale(1.0);
         assertEquals("x", -0.1, out.x, 1E-6);
         assertEquals("y", -0.2, out.y, 1E-6);
@@ -248,13 +248,13 @@ public class OrientedPoint2dTest
         assertEquals(Math.sqrt(32.0), p1.distance(p2), 0.001);
         assertEquals(32.0, p1.distanceSquared(p2), 0.001);
         // FIXME
-//        assertEquals(Math.sqrt(32.0), p1.horizontalDistance(p2), 0.001);
-//        assertEquals(32.0, p1.horizontalDistanceSquared(p2), 0.001);
+        // assertEquals(Math.sqrt(32.0), p1.horizontalDistance(p2), 0.001);
+        // assertEquals(32.0, p1.horizontalDistanceSquared(p2), 0.001);
 
         // direction
-//        assertEquals(Math.toRadians(45.0), p2.horizontalDirection(), 0.001);
-//        assertEquals(Math.toRadians(45.0), p1.horizontalDirection(p2), 0.001);
-//        assertEquals(0.0, new OrientedPoint2d(0.0, 0.0, Math.PI / 4.0).horizontalDirection(), 0.001);
+        // assertEquals(Math.toRadians(45.0), p2.horizontalDirection(), 0.001);
+        // assertEquals(Math.toRadians(45.0), p1.horizontalDirection(p2), 0.001);
+        // assertEquals(0.0, new OrientedPoint2d(0.0, 0.0, Math.PI / 4.0).horizontalDirection(), 0.001);
 
         // normalize
         OrientedPoint2d pn = p2.normalize();
@@ -353,23 +353,23 @@ public class OrientedPoint2dTest
         }, "Should throw NPE", NullPointerException.class);
 
         // FIXME
-//        Try.testFail(new Try.Execution()
-//        {
-//            @Override
-//            public void execute() throws Throwable
-//            {
-//                p1.horizontalDistance((Point2d) null);
-//            }
-//        }, "Should throw NPE", NullPointerException.class);
-//
-//        Try.testFail(new Try.Execution()
-//        {
-//            @Override
-//            public void execute() throws Throwable
-//            {
-//                p1.horizontalDistanceSquared((Point3d) null);
-//            }
-//        }, "Should throw NPE", NullPointerException.class);
+        // Try.testFail(new Try.Execution()
+        // {
+        // @Override
+        // public void execute() throws Throwable
+        // {
+        // p1.horizontalDistance((Point2d) null);
+        // }
+        // }, "Should throw NPE", NullPointerException.class);
+        //
+        // Try.testFail(new Try.Execution()
+        // {
+        // @Override
+        // public void execute() throws Throwable
+        // {
+        // p1.horizontalDistanceSquared((Point3d) null);
+        // }
+        // }, "Should throw NPE", NullPointerException.class);
 
     }
 
