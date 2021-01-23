@@ -10,7 +10,7 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Throw;
 
 /**
- * The DirectedPoint2d is a point in a 2-dimensional space with a direction vector, which is specified in terms of its
+ * The OrientedPoint2d is a point in a 2-dimensional space with a direction vector, which is specified in terms of its
  * counter-clockwise rotation around the point in radians.
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
@@ -142,11 +142,11 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     /**
      * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
      * that case the interpolation turns into an extrapolation. DirZ is interpolated using the interpolateShortest method.
-     * @param otherPoint DirectedPoint2d; the other point
+     * @param otherPoint OrientedPoint2d; the other point
      * @param fraction the factor for interpolation towards the other point. When <code>fraction</code> is between 0 and 1, it
      *            is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code> Point is
      *            returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
-     * @return DirectedPoint2d; a new DirectedPoint2d at the requested fraction
+     * @return OrientedPoint2d; a new OrientedPoint2d at the requested fraction
      * @throws NullPointerException when otherPoint is null
      * @throws IllegalArgumentException when fraction is NaN
      */
@@ -161,10 +161,10 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     }
 
     /**
-     * Return a new DirectedPoint with an in-place rotation around the z-axis by the provided delta. The resulting rotation will
+     * Return a new OrientedPoint with an in-place rotation around the z-axis by the provided delta. The resulting rotation will
      * be normalized between -&pi; and &pi;.
      * @param rotateZ double; the rotation around the z-axis
-     * @return DirectedPoint; a new point with the same coordinates and applied rotation
+     * @return OrientedPoint; a new point with the same coordinates and applied rotation
      * @throws IllegalArgumentException when deltaRotZ is NaN
      */
     public OrientedPoint2d rotate(final double rotateZ) throws IllegalArgumentException

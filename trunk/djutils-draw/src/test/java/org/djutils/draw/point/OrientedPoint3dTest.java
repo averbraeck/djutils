@@ -14,7 +14,7 @@ import org.djutils.exceptions.Try;
 import org.junit.Test;
 
 /**
- * DirectedPoint3dTest.java.
+ * OrientedPoint3dTest.java.
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -25,10 +25,10 @@ import org.junit.Test;
 public class OrientedPoint3dTest
 {
     /**
-     * Test the DirectedPoint3d construction methods.
+     * Test the OrientedPoint3d construction methods.
      */
     @Test
-    public void testDirectedPoint3dConstruction()
+    public void testOrientedPoint3dConstruction()
     {
         OrientedPoint3d p = new OrientedPoint3d(10.0, -20.0, 5.2);
         assertEquals("x", 10.0, p.x, 1E-6);
@@ -257,11 +257,11 @@ public class OrientedPoint3dTest
     }
 
     /**
-     * Test the DirectedPoint3d construction methods.
+     * Test the OrientedPoint3d construction methods.
      */
     @SuppressWarnings("unlikely-arg-type")
     @Test
-    public void testDirectedPointEquals()
+    public void testOrientedPointEquals()
     {
         // equals and hashCode
         OrientedPoint3d p = new OrientedPoint3d(10.0, 20.0, 30.0, 0.1, 0.2, 0.3);
@@ -329,10 +329,10 @@ public class OrientedPoint3dTest
     }
 
     /**
-     * Test the DirectedPoint3d operators.
+     * Test the OrientedPoint3d operators.
      */
     @Test
-    public void testDirectedPoint3dOperators()
+    public void testOrientedPoint3dOperators()
     {
         OrientedPoint3d p = new OrientedPoint3d(-0.1, -0.2, -0.3, Math.PI / 4, -Math.PI / 4, Math.PI / 2);
         assertEquals(0.1, p.abs().x, 1E-6);
@@ -573,10 +573,10 @@ public class OrientedPoint3dTest
     }
 
     /**
-     * Test the DirectedPoint3d operators for NPE.
+     * Test the OrientedPoint3d operators for NPE.
      */
     @Test
-    public void testDirectedPoint3dOperatorsNPE()
+    public void testOrientedPoint3dOperatorsNPE()
     {
         final OrientedPoint3d p1 = new OrientedPoint3d(1.0, 1.0, Math.PI / 4.0);
 

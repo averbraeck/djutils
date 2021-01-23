@@ -9,7 +9,7 @@ import org.djutils.draw.Oriented3d;
 import org.djutils.exceptions.Throw;
 
 /**
- * A DirectedPoint3d is an immutable directed point with an x, y, and z coordinate, stored with double precision. It differs
+ * A OrientedPoint3d is an immutable directed point with an x, y, and z coordinate, stored with double precision. It differs
  * from many Point implementations by being immutable. The direction is a vector from the point, where its direction is
  * specified by the rotation around the x, y, and z-axis. A number of constructors and methods are provided for cases where only
  * the rotation around the z-axis is of importance.
@@ -108,7 +108,7 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
 
     /**
      * Create an immutable directed point from another point, stored with double precision and specified direction.
-     * @param point Point; the point from which this DirectedPoint3d will be instantiated
+     * @param point Point; the point from which this OrientedPoint3d will be instantiated
      * @param dirX double; the direction as rotation around the x-axis with the point as the center
      * @param dirY double; the direction as rotation around the y-axis with the point as the center
      * @param dirZ double; the direction as rotation around the z-axis with the point as the center
@@ -214,11 +214,11 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
      * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
      * that case the interpolation turns into an extrapolation. DirX, dirY and dirZ are interpolated using the
      * interpolateShortest method.
-     * @param otherPoint DirectedPoint3d; the other point
+     * @param otherPoint OrientedPoint3d; the other point
      * @param fraction the factor for interpolation towards the other point. When <code>fraction</code> is between 0 and 1, it
      *            is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code> Point is
      *            returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
-     * @return DirectedPoint3d; a new DirectedPoint3d at the requested fraction
+     * @return OrientedPoint3d; a new OrientedPoint3d at the requested fraction
      * @throws NullPointerException when otherPoint is null
      * @throws IllegalArgumentException when fraction is NaN
      */
@@ -235,10 +235,10 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     }
 
     /**
-     * Return a new DirectedPoint with an in-place rotation around the z-axis by the provided delta. The resulting rotation will
+     * Return a new OrientedPoint with an in-place rotation around the z-axis by the provided delta. The resulting rotation will
      * be normalized between -&pi; and &pi;.
      * @param rotateZ double; the rotation around the z-axis
-     * @return DirectedPoint3d; a new point with the same coordinates, dirX and dirY and modified dirZ
+     * @return OrientedPoint3d; a new point with the same coordinates, dirX and dirY and modified dirZ
      * @throws IllegalArgumentException when rotateZ is NaN
      */
     public OrientedPoint3d rotate(final double rotateZ) throws IllegalArgumentException
@@ -249,12 +249,12 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     }
 
     /**
-     * Return a new DirectedPoint3d point with an in-place rotation by the provided rotateX, rotateY, and rotateZ. The resulting
+     * Return a new OrientedPoint3d point with an in-place rotation by the provided rotateX, rotateY, and rotateZ. The resulting
      * rotations will be normalized between -&pi; and &pi;.
      * @param rotateX double; the rotation around the x-axis
      * @param rotateY double; the rotation around the y-axis
      * @param rotateZ double; the rotation around the z-axis
-     * @return DirectedPoint3d; a new point with the same coordinates and applied rotations
+     * @return OrientedPoint3d; a new point with the same coordinates and applied rotations
      * @throws IllegalArgumentException when any of the rotations is NaN
      */
     public OrientedPoint3d rotate(final double rotateX, final double rotateY, final double rotateZ)

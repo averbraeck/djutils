@@ -1,7 +1,7 @@
 package org.djutils.draw;
 
 /**
- * Directed is an interface to indicate an object has a direction.
+ * Oriented is an interface to indicate an object has a direction.
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -13,8 +13,8 @@ package org.djutils.draw;
 public interface Oriented<O extends Oriented<O>>
 {
     /**
-     * Return a new O with negated coordinate values. Adds 180 degrees (pi radians) to the rotation(s).
-     * @return D; a new D with negated coordinate values and a rotation in the opposite direction
+     * Return a new Oriented with negated coordinate values. Adds 180 degrees (pi radians) to the rotation(s).
+     * @return D; a new Oriented with negated coordinate values and a rotation in the opposite direction
      */
     O neg();
 
@@ -25,8 +25,8 @@ public interface Oriented<O extends Oriented<O>>
     double getDirZ();
 
     /**
-     * Compare this O with another O with specified tolerances in the coordinates and the angles.
-     * @param other DirectedPoint2d; the point to compare with
+     * Compare this Oriented with another Oriented with specified tolerances in the coordinates and the angles.
+     * @param other O; the point to compare with
      * @param epsilonCoordinate double; the upper bound of difference for one of the coordinates; use Double.POSITIVE_INFINITY
      *            if you do not want to check the coordinates
      * @param epsilonDirection double; the upper bound of difference for the direction(s); use Double.POSITIVE_INFINITY if you

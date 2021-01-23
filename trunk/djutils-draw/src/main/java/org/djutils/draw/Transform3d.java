@@ -326,6 +326,33 @@ public class Transform3d implements Cloneable
 
     /** {@inheritDoc} */
     @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.hashCode(this.mat);
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @SuppressWarnings("checkstyle:needbraces")
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Transform3d other = (Transform3d) obj;
+        if (!Arrays.equals(this.mat, other.mat))
+            return false;
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public String toString()
     {
         return "Transform3d [mat=" + Arrays.toString(this.mat) + "]";

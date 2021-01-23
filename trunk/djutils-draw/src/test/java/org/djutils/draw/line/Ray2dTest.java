@@ -142,7 +142,7 @@ public class Ray2dTest
         assertEquals(description + " y", expectedY, ray.y, 0.0001);
         assertEquals(description + " getPhi", expectedPhi, ray.getPhi(), 0.0001);
         assertEquals(description + " phi", expectedPhi, ray.phi, 0.0001);
-        Point2d startPoint = ray.getStartPoint();
+        Point2d startPoint = ray.getEndPoint();
         assertEquals(description + " getStartPoint x", expectedX, startPoint.x, 0.0001);
         assertEquals(description + " getStartPoint y", expectedY, startPoint.y, 0.0001);
         Ray2d negated = ray.neg();
@@ -316,7 +316,7 @@ public class Ray2dTest
         
         Point2d projectingPoint = new Point2d(10, 10);
         result = ray.closestPointOnRay(projectingPoint); // Projects at a point along the ray
-        double distance = result.distance(ray.getStartPoint());
+        double distance = result.distance(ray.getEndPoint());
         assertTrue("distance from start is > 0", distance > 0);
         // Angle startPoint-result-test-projectingPoint should be 90 degrees
         double angle = ray.getPhi() - result.directionTo(projectingPoint);
