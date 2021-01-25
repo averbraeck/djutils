@@ -38,7 +38,7 @@ public class PolyLine3dTest
     @Test
     public final void constructorsTest() throws DrawException
     {
-        double[] values = {-999, 0, 99, 9999}; // Keep this list short; execution time grows with 9th power of length
+        double[] values = { -999, 0, 99, 9999 }; // Keep this list short; execution time grows with 9th power of length
         Point3d[] points = new Point3d[0]; // Empty array
         try
         {
@@ -248,7 +248,7 @@ public class PolyLine3dTest
     @Test
     public void testConstructors() throws DrawRuntimeException, DrawException
     {
-        runConstructors(new Point3d[] {new Point3d(1.2, 3.4, 5.5), new Point3d(2.3, 4.5, 6.6), new Point3d(3.4, 5.6, 7.7)});
+        runConstructors(new Point3d[] { new Point3d(1.2, 3.4, 5.5), new Point3d(2.3, 4.5, 6.6), new Point3d(3.4, 5.6, 7.7) });
         try
         {
             new PolyLine3d((List<Point3d>) null);
@@ -310,7 +310,7 @@ public class PolyLine3dTest
 
         try
         {
-            new PolyLine3d(new Point3d[] {new Point3d(1, 2, 3)});
+            new PolyLine3d(new Point3d[] { new Point3d(1, 2, 3) });
             fail("single point should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -320,7 +320,7 @@ public class PolyLine3dTest
 
         try
         {
-            new PolyLine3d(new Point3d[] {new Point3d(1, 2, 3), new Point3d(1, 2, 3)});
+            new PolyLine3d(new Point3d[] { new Point3d(1, 2, 3), new Point3d(1, 2, 3) });
             fail("duplicate point should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -330,7 +330,7 @@ public class PolyLine3dTest
 
         try
         {
-            new PolyLine3d(new Point3d[] {new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(3, 4, 5)});
+            new PolyLine3d(new Point3d[] { new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(3, 4, 5) });
             fail("duplicate point should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -340,8 +340,8 @@ public class PolyLine3dTest
 
         try
         {
-            new PolyLine3d(
-                    new Point3d[] {new Point3d(-1, -2, -3), new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(3, 4, 5)});
+            new PolyLine3d(new Point3d[] { new Point3d(-1, -2, -3), new Point3d(1, 2, 3), new Point3d(1, 2, 3),
+                    new Point3d(3, 4, 5) });
             fail("duplicate point should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -357,7 +357,7 @@ public class PolyLine3dTest
     @Test
     public final void exceptionTest() throws DrawException
     {
-        PolyLine3d line = new PolyLine3d(new Point3d[] {new Point3d(1, 2, 3), new Point3d(4, 5, 6)});
+        PolyLine3d line = new PolyLine3d(new Point3d[] { new Point3d(1, 2, 3), new Point3d(4, 5, 6) });
         try
         {
             line.get(-1);
@@ -389,15 +389,19 @@ public class PolyLine3dTest
         Point3d p0 = new Point3d(10, 20, 30);
         Point3d p1 = new Point3d(40, 50, 60);
         Point3d p2 = new Point3d(90, 80, 70);
-        PolyLine3d l = new PolyLine3d(new Point3d[] {p0, p1, p2});
-        checkGetLocation(l, -10, null, Math.atan2(p1.y - p0.y, p1.x - p0.x));
-        checkGetLocation(l, -0.0001, p0, Math.atan2(p1.y - p0.y, p1.x - p0.x));
-        checkGetLocation(l, 0, p0, Math.atan2(p1.y - p0.y, p1.x - p0.x));
-        checkGetLocation(l, 0.0001, p0, Math.atan2(p1.y - p0.y, p1.x - p0.x));
-        checkGetLocation(l, 0.9999, p2, Math.atan2(p2.y - p1.y, p2.x - p1.x));
-        checkGetLocation(l, 1, p2, Math.atan2(p2.y - p1.y, p2.x - p1.x));
-        checkGetLocation(l, 1.0001, p2, Math.atan2(p2.y - p1.y, p2.x - p1.x));
-        checkGetLocation(l, 10, null, Math.atan2(p2.y - p1.y, p2.x - p1.x));
+        PolyLine3d polyLine = new PolyLine3d(new Point3d[] { p0, p1, p2 });
+        double expectedPhi1 = Math.atan2(p1.y - p0.y, p1.x - p0.x);
+        double expectedTheta1 = Math.atan2(p1.z - p0.z, Math.hypot(p1.x - p0.x, p1.y - p0.y));
+        checkGetLocation(polyLine, -10, null, expectedPhi1, expectedTheta1);
+        checkGetLocation(polyLine, -0.0001, p0, expectedPhi1, expectedTheta1);
+        checkGetLocation(polyLine, 0, p0, expectedPhi1, expectedTheta1);
+        checkGetLocation(polyLine, 0.0001, p0, expectedPhi1, expectedTheta1);
+        double expectedPhi2 = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+        double expectedTheta2 = Math.atan2(p2.z - p1.z, Math.hypot(p2.x - p1.x, p2.y - p1.y));
+        checkGetLocation(polyLine, 0.9999, p2, expectedPhi2, expectedTheta2);
+        checkGetLocation(polyLine, 1.0, p2, expectedPhi2, expectedTheta2);
+        checkGetLocation(polyLine, 1.0001, p2, expectedPhi2, expectedTheta2);
+        checkGetLocation(polyLine, 10, null, expectedPhi2, expectedTheta2);
     }
 
     /**
@@ -405,14 +409,15 @@ public class PolyLine3dTest
      * @param line Line3d; the line
      * @param fraction double; relative position to check
      * @param expectedPoint Point3d; expected location of the result
-     * @param expectedZRotation double; expected Z rotation of the result
+     * @param expectedPhi double; expected angle of the result from the X axis
+     * @param expectedTheta double; expected angle of the result from the Z axis
      * @throws DrawException on failure
      */
     private void checkGetLocation(final PolyLine3d line, final double fraction, final Point3d expectedPoint,
-            final double expectedZRotation) throws DrawException
+            final double expectedPhi, final double expectedTheta) throws DrawException
     {
         double length = line.getLength();
-        checkDirectedPoint3d(line.getLocationExtended(fraction * length), expectedPoint, expectedZRotation);
+        checkRay3d(line.getLocationExtended(fraction * length), expectedPoint, expectedPhi, expectedTheta);
         if (fraction < 0 || fraction > 1)
         {
             try
@@ -436,8 +441,8 @@ public class PolyLine3dTest
         }
         else
         {
-            checkDirectedPoint3d(line.getLocation(fraction * length), expectedPoint, expectedZRotation);
-            checkDirectedPoint3d(line.getLocationFraction(fraction), expectedPoint, expectedZRotation);
+            checkRay3d(line.getLocation(fraction * length), expectedPoint, expectedPhi, expectedTheta);
+            checkRay3d(line.getLocationFraction(fraction), expectedPoint, expectedPhi, expectedTheta);
         }
 
     }
@@ -446,16 +451,18 @@ public class PolyLine3dTest
      * Verify the location and direction of a DirectedPoint3d.
      * @param dp DirectedPoint3d; the DirectedPoint3d that should be verified
      * @param expectedPoint Point3d; the expected location (or null if location should not be checked)
-     * @param expectedZRotation double; the expected Z rotation
+     * @param expectedPhi double; the expected angle from the X axis
+     * @param expectedTheta double; the expected angle from the Z axis
      */
-    private void checkDirectedPoint3d(final OrientedPoint3d dp, final Point3d expectedPoint, final double expectedZRotation)
+    private void checkRay3d(final Ray3d dp, final Point3d expectedPoint, final double expectedPhi, final double expectedTheta)
     {
         if (null != expectedPoint)
         {
             Point3d p = new Point3d(dp.x, dp.y, dp.z);
             assertEquals("locationExtended(0) returns approximately expected point", 0, expectedPoint.distance(p), 0.1);
         }
-        assertEquals("z-rotation at 0", expectedZRotation, dp.getDirZ(), 0.001);
+        assertEquals("Phi (rotation of projection from X axis)", expectedPhi, dp.getPhi(), 0.001);
+        assertEquals("Theta (rotation from Z axis)", expectedTheta, dp.getTheta(), 0.001);
     }
 
     /**
@@ -475,7 +482,7 @@ public class PolyLine3dTest
         {
             // Ignore expected exception
         }
-        tooShort = new Point3d[] {new Point3d(1, 2, 3)};
+        tooShort = new Point3d[] { new Point3d(1, 2, 3) };
         try
         {
             PolyLine3d.createAndCleanLine3d(tooShort);
@@ -487,12 +494,12 @@ public class PolyLine3dTest
         }
         Point3d p0 = new Point3d(1, 2, 3);
         Point3d p1 = new Point3d(4, 5, 6);
-        Point3d[] points = new Point3d[] {p0, p1};
+        Point3d[] points = new Point3d[] { p0, p1 };
         PolyLine3d result = PolyLine3d.createAndCleanLine3d(points);
         assertTrue("first point is p0", p0.equals(result.get(0)));
         assertTrue("second point is p1", p1.equals(result.get(1)));
         Point3d p1Same = new Point3d(4, 5, 6);
-        result = PolyLine3d.createAndCleanLine3d(new Point3d[] {p0, p0, p0, p0, p1Same, p0, p1, p1, p1Same, p1, p1});
+        result = PolyLine3d.createAndCleanLine3d(new Point3d[] { p0, p0, p0, p0, p1Same, p0, p1, p1, p1Same, p1, p1 });
         assertEquals("result should contain 4 points", 4, result.size());
         assertTrue("first point is p0", p0.equals(result.get(0)));
         assertTrue("second point is p1", p1.equals(result.get(1)));
@@ -511,20 +518,20 @@ public class PolyLine3dTest
         Point3d p1 = new Point3d(2.1, 2.2, 3.3);
         Point3d p2 = new Point3d(3.1, 2.2, 3.3);
 
-        PolyLine3d line = new PolyLine3d(new Point3d[] {p0, p1, p2});
+        PolyLine3d line = new PolyLine3d(new Point3d[] { p0, p1, p2 });
         assertTrue("Line3d is equal to itself", line.equals(line));
         assertFalse("Line3d is not equal to null", line.equals(null));
         assertFalse("Line3d is not equals to some other kind of Object", line.equals(new Object()));
-        PolyLine3d line2 = new PolyLine3d(new Point3d[] {p0, p1, p2});
+        PolyLine3d line2 = new PolyLine3d(new Point3d[] { p0, p1, p2 });
         assertTrue("Line3d is equal ot other Line3d that has the exact same list of Point3d", line.equals(line2));
         Point3d p2Same = new Point3d(3.1, 2.2, 3.3);
-        line2 = new PolyLine3d(new Point3d[] {p0, p1, p2Same});
+        line2 = new PolyLine3d(new Point3d[] { p0, p1, p2Same });
         assertTrue("Line3d is equal ot other Line3d that has the exact same list of Point3d; even if some of "
                 + "those point are different instances with the same coordinates", line.equals(line2));
         Point3d p2NotSame = new Point3d(3.1, 2.2, 3.35);
-        line2 = new PolyLine3d(new Point3d[] {p0, p1, p2NotSame});
+        line2 = new PolyLine3d(new Point3d[] { p0, p1, p2NotSame });
         assertFalse("Line3d is not equal ot other Line3d that differs in one coordinate", line.equals(line2));
-        line2 = new PolyLine3d(new Point3d[] {p0, p1, p2, p2NotSame});
+        line2 = new PolyLine3d(new Point3d[] { p0, p1, p2, p2NotSame });
         assertFalse("Line3d is not equal ot other Line3d that has more points (but is identical up to the common length)",
                 line.equals(line2));
         assertFalse("Line3d is not equal ot other Line3d that has fewer points  (but is identical up to the common length)",
@@ -583,9 +590,9 @@ public class PolyLine3dTest
 
         // Test concatenate methods with tolerance
         PolyLine3d thirdLine = new PolyLine3d(p4, p5);
-        for (double tolerance : new double[] {0.1, 0.01, 0.001, 0.0001, 0.00001})
+        for (double tolerance : new double[] { 0.1, 0.01, 0.001, 0.0001, 0.00001 })
         {
-            for (double actualError : new double[] {tolerance * 0.9, tolerance * 1.1})
+            for (double actualError : new double[] { tolerance * 0.9, tolerance * 1.1 })
             {
                 int maxDirection = 10;
                 for (int direction = 0; direction < maxDirection; direction++)
@@ -819,8 +826,8 @@ public class PolyLine3dTest
                 double start = i * l.getLength() / 10;
                 double end = j * l.getLength() / 10;
                 // System.err.println("i=" + i + ", j=" + j);
-                for (PolyLine3d extractedLine : new PolyLine3d[] {l.extract(start, end),
-                        l.extractFractional(1.0 * i / 10, 1.0 * j / 10)})
+                for (PolyLine3d extractedLine : new PolyLine3d[] { l.extract(start, end),
+                        l.extractFractional(1.0 * i / 10, 1.0 * j / 10) })
                 {
                     assertEquals("size of extract is 2", 2, extractedLine.size());
                     assertEquals("x of 0", p0.x + (p1.x - p0.x) * i / 10, extractedLine.get(0).x, 0.0001);
@@ -833,7 +840,7 @@ public class PolyLine3dTest
             }
         }
 
-        for (PolyLine3d line : new PolyLine3d[] {new PolyLine3d(p0, p1, p2), new PolyLine3d(p0, p1, p1a, p1b, p1c, p2)})
+        for (PolyLine3d line : new PolyLine3d[] { new PolyLine3d(p0, p1, p2), new PolyLine3d(p0, p1, p1a, p1b, p1c, p2) })
         {
             for (int i = 0; i < 110; i++)
             {
@@ -852,8 +859,8 @@ public class PolyLine3dTest
                     // System.err.println("first length is " + firstLength);
                     // System.err.println("second length is " + line.getLength());
                     // System.err.println("i=" + i + ", j=" + j);
-                    for (PolyLine3d extractedLine : new PolyLine3d[] {line.extract(start, end),
-                            line.extractFractional(1.0 * i / 110, 1.0 * j / 110)})
+                    for (PolyLine3d extractedLine : new PolyLine3d[] { line.extract(start, end),
+                            line.extractFractional(1.0 * i / 110, 1.0 * j / 110) })
                     {
                         int expectedSize = i < 10 && j > 10 ? line.size() : 2;
                         assertEquals("size is " + expectedSize, expectedSize, extractedLine.size());
@@ -1036,7 +1043,7 @@ public class PolyLine3dTest
     @Test
     public void testToStringHashCodeAndEquals() throws NullPointerException, DrawException
     {
-        PolyLine3d line = new PolyLine3d(new Point3d[] {new Point3d(1, 2, 3), new Point3d(4, 6, 8), new Point3d(8, 9, 10)});
+        PolyLine3d line = new PolyLine3d(new Point3d[] { new Point3d(1, 2, 3), new Point3d(4, 6, 8), new Point3d(8, 9, 10) });
         assertTrue("toString returns something descriptive", line.toString().startsWith("PolyLine3d ["));
 
         // Verify that hashCode. Check that the result depends on the actual coordinates.

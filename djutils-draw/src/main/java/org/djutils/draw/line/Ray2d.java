@@ -190,6 +190,13 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public String toString()
+    {
+        return "Ray2d [x=" + this.x + " y=" + this.y + " phi=" + this.phi + "]";
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public int hashCode()
     {
         final int prime = 31;
@@ -215,13 +222,6 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Sp
         if (Double.doubleToLongBits(this.phi) != Double.doubleToLongBits(other.phi))
             return false;
         return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString()
-    {
-        return "Ray2d [x=" + this.x + " y=" + this.y + " phi=" + this.phi + "]";
     }
 
 }

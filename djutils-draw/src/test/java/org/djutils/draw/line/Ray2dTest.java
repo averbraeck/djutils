@@ -1,12 +1,14 @@
 package org.djutils.draw.line;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.point.OrientedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.junit.Test;
 
@@ -245,7 +247,7 @@ public class Ray2dTest
         try
         {
             new Ray2d(1, 2, 1).getLocation(Double.POSITIVE_INFINITY);
-            fail("Infited position should have thrown a DrawRuntimeException");
+            fail("Infinite position should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
         {
@@ -255,7 +257,37 @@ public class Ray2dTest
         try
         {
             new Ray2d(1, 2, 1).getLocation(Double.NEGATIVE_INFINITY);
-            fail("Infinte position should have thrown a DrawRuntimeException");
+            fail("Infinite position should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new Ray2d(1, 2, 1).getLocationExtended(Double.POSITIVE_INFINITY);
+            fail("Infinite position should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new Ray2d(1, 2, 1).getLocationExtended(Double.NEGATIVE_INFINITY);
+            fail("Infinite position should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new Ray2d(1, 2, 1).getLocationExtended(Double.NaN);
+            fail("NaN position should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
         {
@@ -402,6 +434,26 @@ public class Ray2dTest
                 }
             }
         }
+    }
+    
+    /**
+     * Test the equals and hasCode methods.
+     */
+    @Test
+    public void equalsAndHashCodeTest()
+    {
+        Ray2d ray = new Ray2d(1, 2, 11, 12);
+        assertEquals("equal to itself", ray, ray);
+        assertNotEquals("not equal to null", ray, null);
+        assertNotEquals("not equal to different object with same parent class", ray, new OrientedPoint2d(1, 2));
+        assertNotEquals("not equal to ray with different direction", ray, new Ray2d(1, 2, 11, 10));
+        assertNotEquals("not equal to ray with different start x", ray, new Ray2d(2, 2, 12, 12));
+        assertNotEquals("not equal to ray with different start y", ray, new Ray2d(1, 3, 12, 13));
+        assertEquals("equal to ray with same x, y and direction", ray, new Ray2d(1, 2, 21, 22));
+        
+        assertNotEquals("hashCode depends on x", ray.hashCode(), new Ray2d(2, 2, 12, 12));
+        assertNotEquals("hashCode depends on y", ray.hashCode(), new Ray2d(1, 3, 11, 13));
+        assertNotEquals("hashCode depends on phi", ray.hashCode(), new Ray2d(1, 2, 11, 10));
     }
 
 }

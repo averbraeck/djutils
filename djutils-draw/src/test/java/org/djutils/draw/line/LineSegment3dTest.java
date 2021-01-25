@@ -2,6 +2,7 @@ package org.djutils.draw.line;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -145,7 +146,7 @@ public class LineSegment3dTest
             // Ignore expected exception
         }
 
-        for (double position : new double[] {-3, -0.5, 0, 1, 10, 100})
+        for (double position : new double[] { -3, -0.5, 0, 1, 10, 100 })
         {
             if (position < 0 || position > segment.getLength())
             {
@@ -212,7 +213,7 @@ public class LineSegment3dTest
         double distanceFromStart = result.distance(segment.getStartPoint());
         assertTrue("distance from start is > 0", distanceFromStart > 0);
         double distanceToEnd = result.distance(segment.getEndPoint());
-        System.out.println(segment + " projectingPoint=" + projectingPoint + ", result=" + result);
+        // System.out.println(segment + " projectingPoint=" + projectingPoint + ", result=" + result);
         assertTrue("distance to end point is > 0", distanceToEnd > 0);
         assertEquals("sum of distances is length of segment", segment.getLength(), distanceFromStart + distanceToEnd, 0.0001);
 
@@ -231,6 +232,33 @@ public class LineSegment3dTest
         result = segment.closestPointOnSegment(new Point3d(20, 10, 15));
         assertEquals("result is end point", segment.endX, result.x, 0);
         assertEquals("result is end point", segment.endY, result.y, 0);
+    }
+
+    /**
+     * Test the equals and hasCode methods.
+     */
+    @Test
+    public void equalsAndHashCodeTest()
+    {
+        LineSegment3d segment = new LineSegment3d(1, 2, 3, -3, -4, -5);
+        assertEquals("equal to itself", segment, segment);
+        assertNotEquals("not equal to null", segment, null);
+        assertNotEquals("not equal to a totally different object", segment, "no way");
+        assertNotEquals("not equal to line segment with different start x", segment, new LineSegment3d(2, 2, 3, -3, -4, -5));
+        assertNotEquals("not equal to line segment with different start y", segment, new LineSegment3d(1, 3, 3, -3, -4, -5));
+        assertNotEquals("not equal to line segment with different start z", segment, new LineSegment3d(1, 2, 4, -3, -4, -5));
+        assertNotEquals("not equal to line segment with different end x", segment, new LineSegment3d(1, 2, 3, -4, -4, -5));
+        assertNotEquals("not equal to line segment with different end y", segment, new LineSegment3d(1, 2, 3, -3, -5, -5));
+        assertNotEquals("not equal to line segment with different end y", segment, new LineSegment3d(1, 2, 3, -3, -4, -6));
+        assertEquals("equal to another line segment with same start and end x, y, z", segment,
+                new LineSegment3d(1, 2, 3, -3, -4, -5));
+
+        assertNotEquals("hashCode depends on start x", segment.hashCode(), new LineSegment3d(2, 2, 3, -3, -4, -5));
+        assertNotEquals("hashCode depends on start y", segment.hashCode(), new LineSegment3d(1, 3, 3, -3, -4, -5));
+        assertNotEquals("hashCode depends on start z", segment.hashCode(), new LineSegment3d(1, 3, 4, -3, -4, -5));
+        assertNotEquals("hashCode depends on end x", segment.hashCode(), new LineSegment3d(1, 2, 3, -4, -4, -5));
+        assertNotEquals("hashCode depends on end y", segment.hashCode(), new LineSegment3d(1, 2, 3, -4, -5, -5));
+        assertNotEquals("hashCode depends on end z", segment.hashCode(), new LineSegment3d(1, 2, 3, -4, -5, -6));
     }
 
 }

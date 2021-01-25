@@ -1,11 +1,14 @@
 package org.djutils.draw.line;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
+import org.djutils.draw.point.OrientedPoint2d;
+import org.djutils.draw.point.OrientedPoint3d;
 import org.djutils.draw.point.Point3d;
 import org.junit.Test;
 
@@ -302,12 +305,42 @@ public class Ray3dTest
             // Ignore expected exception
         }
 
-        for (double phi : new double[] {0, 1, 2, 3, 4, 5, -1, -2, Math.PI})
+        try
         {
-            for (double theta : new double[] {0, 1, 2, 3, 4, 5, -1, -2, Math.PI})
+            new Ray3d(1, 2, 3, 1, 0.5).getLocationExtended(Double.POSITIVE_INFINITY);
+            fail("Infinite position should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new Ray3d(1, 2, 3, 1, 0.5).getLocationExtended(Double.NEGATIVE_INFINITY);
+            fail("Infinite position should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new Ray3d(1, 2, 3, 1, 0.5).getLocationExtended(Double.NaN);
+            fail("NaN position should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        for (double phi : new double[] { 0, 1, 2, 3, 4, 5, -1, -2, Math.PI })
+        {
+            for (double theta : new double[] { 0, 1, 2, 3, 4, 5, -1, -2, Math.PI })
             {
                 Ray3d ray = new Ray3d(1, 2, 3, phi, theta);
-                for (double position : new double[] {0, 10, 0.1, -2})
+                for (double position : new double[] { 0, 10, 0.1, -2 })
                 {
                     Ray3d result = ray.getLocationExtended(position);
                     assertEquals("result is position distance away from base of ray", Math.abs(position), ray.distance(result),
@@ -434,7 +467,7 @@ public class Ray3dTest
             // Ignore expected exception
         }
 
-        double[] deltas = new double[] {0.0, -0.125, 0.125, -1, 1}; // Use values that can be represented exactly in a double
+        double[] deltas = new double[] { 0.0, -0.125, 0.125, -1, 1 }; // Use values that can be represented exactly in a double
         for (double dX : deltas)
         {
             for (double dY : deltas)
@@ -445,7 +478,7 @@ public class Ray3dTest
                     {
                         for (double dTheta : deltas)
                         {
-                            for (double epsilon : new double[] {0, 0.125, 0.5, 0.9, 1.0, 1.1})
+                            for (double epsilon : new double[] { 0, 0.125, 0.5, 0.9, 1.0, 1.1 })
                             {
                                 Ray3d other = new Ray3d(ray.x + dX, ray.y + dY, ray.z + dZ, ray.phi + dPhi, ray.theta + dTheta);
                                 // System.out.println(String.format("dX=%f, dY=%f, dZ=%f, dPhi=%f, dTheta=%f, epsilon=%f", dX,
@@ -465,6 +498,29 @@ public class Ray3dTest
                 }
             }
         }
+    }
+
+    /**
+     * Test the equals and hasCode methods.
+     */
+    @Test
+    public void equalsAndHashCodeTest()
+    {
+        Ray3d ray = new Ray3d(1, 2, 3, 11, 12, 13);
+        assertEquals("equal to itself", ray, ray);
+        assertNotEquals("not equal to null", ray, null);
+        assertNotEquals("not equal to different object with same parent class", ray, new OrientedPoint3d(1, 2, 3));
+        assertNotEquals("not equal to ray with different phi", ray, new Ray3d(1, 2, 3, 11, 10, 13));
+        assertNotEquals("not equal to ray with different theta", ray, new Ray3d(1, 2, 3, 11, 12, 10));
+        assertNotEquals("not equal to ray with different start x", ray, new Ray3d(2, 2, 3, 12, 12, 13));
+        assertNotEquals("not equal to ray with different start y", ray, new Ray3d(1, 3, 3, 11, 13, 13));
+        assertEquals("equal to ray with same x, y and direction", ray, new Ray3d(1, 2, 3, 21, 22, 23));
+
+        assertNotEquals("hashCode depends on x", ray.hashCode(), new Ray3d(2, 2, 3, 12, 12, 13));
+        assertNotEquals("hashCode depends on y", ray.hashCode(), new Ray3d(1, 3, 3, 11, 13, 13));
+        assertNotEquals("hashCode depends on y", ray.hashCode(), new Ray3d(1, 2, 4, 11, 12, 14));
+        assertNotEquals("hashCode depends on phi", ray.hashCode(), new Ray3d(1, 2, 3, 11, 10, 13));
+        assertNotEquals("hashCode depends on theta", ray.hashCode(), new Ray3d(1, 2, 3, 11, 12, 10));
     }
 
 }

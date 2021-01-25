@@ -31,8 +31,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     /** */
     private static final long serialVersionUID = 20200911L;
 
-    /** The points of the line. */
-    private final Point2d[] points;
+    /** X-coordinates of the points. */
+    private final double[] x;
+
+    /** Y-coordinates of the points. */
+    private final double[] y;
 
     /** The cumulative length of the line at point 'i'. */
     private final double[] lengthIndexedLine;
@@ -44,41 +47,98 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     private final Bounds2d bounds;
 
     /**
-     * Construct a new Line2D from an array of Point2d.
+     * Construct a new Line2d from an array of double x values and an array of double y values.
      * @param copyNeeded boolean; if true; a deep copy of the points array is stored instead of the provided array
+     * @param x double[]; the x-coordinates of the points
+     * @param y double[]; the y-coordinates of the points
+     * @throws NullPointerException when iterator is null
+     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
+     */
+    PolyLine2d(final boolean copyNeeded, final double[] x, final double[] y) throws NullPointerException, DrawRuntimeException
+    {
+        Throw.whenNull(x, "x array may not be null");
+        Throw.whenNull(y, "y array may not be null");
+        Throw.when(x.length != y.length, DrawRuntimeException.class, "x and y arrays must have same length");
+        Throw.when(x.length < 2, DrawRuntimeException.class, "Need at least two points");
+        this.x = copyNeeded ? Arrays.copyOf(x, x.length) : x;
+        this.y = copyNeeded ? Arrays.copyOf(y, y.length) : y;
+        double minX = x[0];
+        double minY = y[0];
+        double maxX = x[0];
+        double maxY = y[0];
+        this.lengthIndexedLine = new double[x.length];
+        this.lengthIndexedLine[0] = 0.0;
+        for (int i = 1; i < x.length; i++)
+        {
+            minX = Math.min(minX, x[i]);
+            minY = Math.min(minY, y[i]);
+            maxX = Math.max(maxX, x[i]);
+            maxY = Math.max(maxY, y[i]);
+            if (x[i - 1] == x[i] && y[i - 1] == y[i])
+            {
+                throw new DrawRuntimeException(
+                        "Degenerate PolyLine2d; point " + (i - 1) + " has the same x and y as point " + i);
+            }
+            this.lengthIndexedLine[i] = this.lengthIndexedLine[i - 1] + Math.hypot(x[i] - x[i - 1], y[i] - y[i - 1]);
+        }
+        this.length = this.lengthIndexedLine[this.lengthIndexedLine.length - 1];
+        this.bounds = new Bounds2d(minX, maxX, minY, maxY);
+    }
+
+    /**
+     * Construct a new Line2d from an array of Point2d. This constructor makes a deep copy of the parameters.
+     * @param x double[]; the x-coordinates of the points
+     * @param y double[]; the y-coordinates of the points
+     * @throws NullPointerException when iterator is null
+     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
+     */
+    public PolyLine2d(final double[] x, final double[] y) throws NullPointerException, DrawRuntimeException
+    {
+        this(true, x, y);
+    }
+
+    /**
+     * Construct a new Line2d from an array of Point2d.
      * @param points Point2d[]; the array of points to construct this Line2d from.
      * @throws NullPointerException when iterator is null
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
      */
-    private PolyLine2d(final boolean copyNeeded, final Point2d[] points) throws NullPointerException, DrawRuntimeException
+    public PolyLine2d(final Point2d[] points) throws NullPointerException, DrawRuntimeException
     {
-        Throw.whenNull(points, "points may not be null");
-        Throw.when(points.length < 2, DrawRuntimeException.class, "Need at least two points");
-        this.points = copyNeeded ? Arrays.copyOf(points, points.length) : points;
-        Point2d prevPoint = points[0];
-        double minX = prevPoint.x;
-        double minY = prevPoint.y;
-        double maxX = prevPoint.x;
-        double maxY = prevPoint.y;
-        this.lengthIndexedLine = new double[points.length];
-        this.lengthIndexedLine[0] = 0.0;
-        for (int i = 1; i < points.length; i++)
+        this(false, makeX(Throw.whenNull(points, "points may not be null")), makeY(points));
+    }
+
+    /**
+     * Make an array of double and fill it with the x-coordinates of points.
+     * @param points Point2d[]; array of points
+     * @return double[]; array filled with the x-coordinates of points
+     */
+    private static double[] makeX(final Point2d[] points)
+    {
+        double[] xArray = new double[points.length];
+        for (int i = 0; i < points.length; i++)
         {
-            Point2d point = points[i];
-            minX = Math.min(minX, point.x);
-            minY = Math.min(minY, point.y);
-            maxX = Math.max(maxX, point.x);
-            maxY = Math.max(maxY, point.y);
-            if (prevPoint.x == point.x && prevPoint.y == point.y)
-            {
-                throw new DrawRuntimeException("Degenerate Line2d; point " + (i - 1) + " has the same x and y as point " + i);
-            }
-            this.lengthIndexedLine[i] = this.lengthIndexedLine[i - 1] + prevPoint.distance(point);
-            prevPoint = point;
+            xArray[i] = points[i].x;
         }
-        this.length = this.lengthIndexedLine[this.lengthIndexedLine.length - 1];
-        this.bounds = new Bounds2d(minX, maxX, minY, maxY);
+        return xArray;
+    }
+
+    /**
+     * Make an array of double and fill it with the y-coordinates of points.
+     * @param points Point2d[]; array of points
+     * @return double[]; array filled with the y-coordinates of points
+     */
+    private static double[] makeY(final Point2d[] points)
+    {
+        double[] yArray = new double[points.length];
+        for (int i = 0; i < points.length; i++)
+        {
+            yArray[i] = points[i].y;
+        }
+        return yArray;
     }
 
     /**
@@ -93,7 +153,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     public PolyLine2d(final Point2d point1, final Point2d point2, final Point2d... otherPoints)
             throws NullPointerException, DrawRuntimeException
     {
-        this(false, spliceArray(point1, point2, otherPoints));
+        this(spliceArray(point1, point2, otherPoints));
     }
 
     /**
@@ -120,30 +180,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
-     * Construct a new PolyLine2d from an array of Point2d.
-     * @param points Point2d[]; points of the PolyLine2d
-     * @throws NullPointerException when iterator is null
-     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
-     *             adjacent points)
-     */
-    public PolyLine2d(final Point2d[] points) throws NullPointerException, DrawRuntimeException
-    {
-        this(true, checkLengthIsTwoOrMore(Throw.whenNull(points, "points may not be null")));
-    }
-
-    /**
-     * Check that the length of an array of Point2d is at least two.
-     * @param points Point2d[]; the array of points to check
-     * @return Point2d[]; points
-     * @throws DrawRuntimeException when the length of points is less than two
-     */
-    private static Point2d[] checkLengthIsTwoOrMore(final Point2d[] points) throws DrawRuntimeException
-    {
-        Throw.when(points.length < 2, DrawRuntimeException.class, "Need at least two points");
-        return points;
-    }
-
-    /**
      * Construct a new Line2d and initialize its length indexed line, bounds, centroid and length.
      * @param iterator Iterator&lt;Point2d&gt;; iterator that will provide all points that constitute the new Line2d
      * @throws NullPointerException when iterator is null
@@ -162,14 +198,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      */
     public PolyLine2d(final List<Point2d> pointList) throws DrawRuntimeException
     {
-        this(false, pointList.toArray(new Point2d[pointList.size()]));
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PolyLine2d instantiate(final List<Point2d> pointList) throws NullPointerException, DrawRuntimeException
-    {
-        return new PolyLine2d(pointList);
+        this(pointList.toArray(new Point2d[pointList.size()]));
     }
 
     /**
@@ -180,7 +209,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      */
     public PolyLine2d(final Path2D path) throws DrawException
     {
-        this(false, path2DtoArray(path));
+        this(path2DtoArray(path));
     }
 
     /**
@@ -230,16 +259,37 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
 
     /** {@inheritDoc} */
     @Override
+    public PolyLine2d instantiate(final List<Point2d> pointList) throws NullPointerException, DrawRuntimeException
+    {
+        return new PolyLine2d(pointList);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public int size()
     {
-        return this.points.length;
+        return this.x.length;
     }
 
     /** {@inheritDoc} */
     @Override
     public final Point2d get(final int i) throws IndexOutOfBoundsException
     {
-        return this.points[i];
+        return new Point2d(this.x[i], this.y[i]);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getX(final int i) throws IndexOutOfBoundsException
+    {
+        return this.x[i];
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getY(final int i) throws IndexOutOfBoundsException
+    {
+        return this.y[i];
     }
 
     /** {@inheritDoc} */
@@ -260,7 +310,25 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     @Override
     public Iterator<Point2d> getPoints()
     {
-        return Arrays.stream(this.points).iterator();
+        return new Iterator<Point2d>()
+        {
+            private int nextIndex = 0;
+
+            /** {@inheritDoc} */
+            @SuppressWarnings("synthetic-access")
+            @Override
+            public boolean hasNext()
+            {
+                return this.nextIndex < PolyLine2d.this.x.length;
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public Point2d next()
+            {
+                return get(this.nextIndex++);
+            }
+        };
     }
 
     /** {@inheritDoc} */
@@ -283,21 +351,12 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
             return this; // Except for some cached fields; an Line2d is immutable; so safe to return
         }
         Point2d prevPoint = null;
-        List<Point2d> list = null;
+        List<Point2d> list = new ArrayList<>();
         for (int index = 0; index < this.size(); index++)
         {
-            Point2d currentPoint = this.points[index];
+            Point2d currentPoint = get(index);
             if (null != prevPoint && prevPoint.distance(currentPoint) < noiseLevel)
             {
-                if (null == list)
-                {
-                    // Found something to filter; copy this up to (and including) prevPoint
-                    list = new ArrayList<>();
-                    for (int i = 0; i < index; i++)
-                    {
-                        list.add(this.points[i]);
-                    }
-                }
                 if (index == this.size() - 1)
                 {
                     if (list.size() > 1)
@@ -314,20 +373,17 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
                 }
                 continue; // Do not replace prevPoint by currentPoint
             }
-            else if (null != list)
-            {
-                list.add(currentPoint);
-            }
+            list.add(currentPoint);
             prevPoint = currentPoint;
         }
-        if (null == list)
+        if (list.size() == this.x.length)
         {
             return this;
         }
         if (list.size() == 2 && list.get(0).equals(list.get(1)))
         {
             // Insert point 1 of this; it MUST be different from point 0; so we don't have to test for anything.
-            list.add(1, this.points[1]);
+            list.add(1, get(1));
         }
         try
         {
@@ -380,7 +436,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         {
             points[nextIndex++] = line2.get(j);
         }
-        return new PolyLine2d(false, points);
+        return new PolyLine2d(points);
     }
 
     /**
@@ -421,7 +477,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
                 points[nextIndex++] = line.get(j);
             }
         }
-        return new PolyLine2d(false, points);
+        return new PolyLine2d(points);
     }
 
     /**
@@ -484,65 +540,59 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         // position before start point -- extrapolate using direction from first point to second point of this Line2d
         if (position < 0.0)
         {
-            double len = position;
-            double fraction = len / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
-            Point2d p1 = this.points[0];
-            Point2d p2 = this.points[1];
-            return new Ray2d(p1.x + fraction * (p2.x - p1.x), p1.y + fraction * (p2.y - p1.y), p2);
+            double fraction = position / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
+            return new Ray2d(this.x[0] + fraction * (this.x[1] - this.x[0]), this.y[0] + fraction * (this.y[1] - this.y[0]),
+                    this.x[1], this.y[1]);
         }
 
         // position beyond end point -- extrapolate using the direction from the before last point to the last point of this
         // Line2d
-        int n1 = this.lengthIndexedLine.length - 1;
-        int n2 = this.lengthIndexedLine.length - 2;
+        int n1 = this.x.length - 1; // index of last point
+        int n2 = this.x.length - 2; // index of before last point
         double len = position - getLength();
         double fraction = len / (this.lengthIndexedLine[n1] - this.lengthIndexedLine[n2]);
         while (Double.isInfinite(fraction))
         {
+            // Overflow occurred; move n2 back another point; if possible
             if (--n2 < 0)
             {
                 CategoryLogger.always().error("lengthIndexedLine of {} is invalid", this);
-                Point2d p = this.points[n1];
-                return new Ray2d(p.x, p.y, 0.0); // Bogus direction
+                return new Ray2d(this.x[n1], this.y[n1], 0.0); // Bogus direction
             }
             fraction = len / (this.lengthIndexedLine[n1] - this.lengthIndexedLine[n2]);
         }
-        Point2d p1 = this.points[n2];
-        Point2d p2 = this.points[n1];
-        return new Ray2d(p2.x + fraction * (p2.x - p1.x), p2.y + fraction * (p2.y - p1.y), p1.directionTo(p2));
+        return new Ray2d(this.x[n1] + fraction * (this.x[n1] - this.x[n2]), this.y[n1] + fraction * (this.y[n1] - this.y[n2]),
+                Math.atan2(this.y[n1] - this.y[n2], this.x[n1] - this.x[n2]));
     }
 
     /** {@inheritDoc} */
     @Override
     public final Ray2d getLocation(final double position) throws DrawException
     {
+        Throw.when(Double.isNaN(position), DrawException.class, "position may not be NaN");
         if (position < 0.0 || position > getLength())
         {
             throw new DrawException("getLocation for line: position < 0.0 or > line length. Position = " + position
                     + "; length = " + getLength());
         }
-
         // handle special cases: position == 0.0, or position == length
         if (position == 0.0)
         {
-            Point2d p1 = this.points[0];
-            Point2d p2 = this.points[1];
-            return new Ray2d(p1.x, p1.y, p2);
+            return new Ray2d(this.x[0], this.y[0], this.x[1], this.y[1]);
         }
         if (position == getLength())
         {
-            Point2d p1 = this.points[this.points.length - 2];
-            Point2d p2 = this.points[this.points.length - 1];
-            return new Ray2d(p2.x, p2.y, p1.directionTo(p2));
+            return new Ray2d(this.x[this.x.length - 1], this.y[this.x.length - 1],
+                    2 * this.x[this.x.length - 1] - this.x[this.x.length - 2],
+                    2 * this.y[this.x.length - 1] - this.y[this.x.length - 2]);
         }
-
         // find the index of the line segment, use binary search
         int index = find(position);
         double remainder = position - this.lengthIndexedLine[index];
         double fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
-        Point2d p1 = this.points[index];
-        Point2d p2 = this.points[index + 1];
-        return new Ray2d(p1.x + fraction * (p2.x - p1.x), p1.y + fraction * (p2.y - p1.y), p1.directionTo(p2));
+        return new Ray2d(this.x[index] + fraction * (this.x[index + 1] - this.x[index]),
+                this.y[index] + fraction * (this.y[index + 1] - this.y[index]), 2 * this.x[index + 1] - this.x[index],
+                2 * this.y[index + 1] - this.y[index]);
     }
 
     /**
@@ -559,25 +609,24 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     /**
      * Returns the fractional position along this line of the orthogonal projection of point (x, y) on this line. If the point
      * is not orthogonal to the closest line segment, the nearest point is selected.
-     * @param x double; x-coordinate of point to project
-     * @param y double; y-coordinate of point to project
+     * @param xCoordinate double; x-coordinate of point to project
+     * @param yCoordinate double; y-coordinate of point to project
      * @return fractional position along this line of the orthogonal projection on this line of a point
      */
-    public final double projectOrthogonal(final double x, final double y)
+    public final double projectOrthogonal(final double xCoordinate, final double yCoordinate)
     {
         // prepare
         double minDistance = Double.POSITIVE_INFINITY;
         double minSegmentFraction = 0;
         int minSegment = -1;
 
-        // code based on Line2D.ptSegDistSq(...)
         for (int i = 0; i < size() - 1; i++)
         {
-            double dx = this.points[i + 1].x - this.points[i].x;
-            double dy = this.points[i + 1].y - this.points[i].y;
-            // vector relative to (x(i), y(i))
-            double px = x - this.points[i].x;
-            double py = y - this.points[i].y;
+            double dx = this.x[i + 1] - this.x[i];
+            double dy = this.y[i + 1] - this.y[i];
+            // Make all coordinates relative to (x[i], y[i]) to achieve higher precision
+            double px = xCoordinate - this.x[i];
+            double py = yCoordinate - this.y[i];
             // dot product
             double dot1 = px * dx + py * dy;
             double f;
@@ -610,8 +659,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
                 f = 0;
                 distance = px * px + py * py;
             }
-            // check if closer than previous
-            if (distance < minDistance)
+            if (distance < minDistance) // closer than previous best result
             {
                 minDistance = distance;
                 minSegmentFraction = f;
@@ -685,7 +733,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         {
             pointList.add(get(index));
         }
-        else
+        else if (index < this.x.length)
         {
             Point2d point = get(index - 1).interpolate(get(index), (end - cumulativeLength) / segmentLength);
             // can be the same due to rounding
@@ -694,6 +742,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
                 pointList.add(point);
             }
         }
+        // else rounding error
         try
         {
             return instantiate(pointList);
@@ -729,23 +778,24 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         Point2d lastPoint;
         if (0.0 == fraction)
         {
-            index--;
             lastPoint = p1;
         }
         else
         {
             Point2d p2 = get(index + 1);
             lastPoint = p1.interpolate(p2, fraction);
-
+            index++;
         }
-        // FIXME: Cannot create a P[]; will have to do it with a List<P>
-        List<Point2d> coords = new ArrayList<>(index + 2);
-        for (int i = 0; i <= index; i++)
+        double[] truncatedX = new double[index + 1];
+        double[] truncatedY = new double[index + 1];
+        for (int i = 0; i < index; i++)
         {
-            coords.add(get(i));
+            truncatedX[i] = this.x[i];
+            truncatedY[i] = this.y[i];
         }
-        coords.add(lastPoint);
-        return instantiate(coords);
+        truncatedX[index] = lastPoint.x;
+        truncatedY[index] = lastPoint.y;
+        return new PolyLine2d(truncatedX, truncatedY);
     }
 
     /** Default precision of approximation of arcs in the offsetLine method. */
@@ -1007,54 +1057,53 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
-     * Find a location on this PolyLine2d that is a reasonable projection of a DirectedPoint on this line. The result (if not
-     * NaN) lies on a line perpendicular to the direction of the DirectedPoint and on some segment of this PolyLine. This method
-     * attempts to give continuous results for continuous changes of the DirectedPoint that must be projected. There are cases
-     * where this is simply impossible, or the optimal result is ambiguous. In these cases this method will return something
-     * that is hopefully good enough.
-     * @param orientedPoint Ray2d; the DirectedPoint
-     * @return double; length along this PolyLine (some value between 0 and the length of this PolyLine) where directedPoint
-     *         projects, or NaN if there is no solution
+     * Find a location on this PolyLine2d that is a reasonable projection of a Ray on this line. The result (if not NaN) lies on
+     * a line perpendicular to the direction of the DirectedPoint and on some segment of this PolyLine. This method attempts to
+     * give continuous results for continuous changes of the DirectedPoint that must be projected. There are cases where this is
+     * simply impossible, or the optimal result is ambiguous. In these cases this method will return something that is hopefully
+     * good enough.
+     * @param ray Ray2d; the Ray
+     * @return double; length along this PolyLine (some value between 0 and the length of this PolyLine) where ray projects, or
+     *         NaN if there is no solution
      * @throws NullPointerException when directedPoint is null
      */
-    public double projectRay(final Ray2d orientedPoint) throws NullPointerException
+    public double projectRay(final Ray2d ray) throws NullPointerException
     {
-        Throw.whenNull(orientedPoint, "directedPoint may not be null");
+        Throw.whenNull(ray, "ray may not be null");
         double bestDistance = Double.POSITIVE_INFINITY;
         double positionAtBestDistance = Double.NaN;
-        Point2d prevPoint = null;
+        // Point2d prevPoint = null;
         // Define the line that is perpendicular to directedPoint, passing through directedPoint
-        Point2d perpendicular = orientedPoint.translate(-Math.sin(orientedPoint.phi), Math.cos(orientedPoint.phi));
-        double cumulativeDistance = 0;
-        for (Point2d nextPoint : this.points)
+        double perpendicularX = ray.x - Math.sin(ray.phi);
+        double perpendicularY = ray.y + Math.cos(ray.phi);
+        for (int index = 1; index < this.x.length; index++)
         {
-            if (null != prevPoint)
+            double lengthAtEndofSegment = this.lengthAtIndex(index - 1);
+            double segmentLength = this.lengthAtIndex(index) - this.lengthAtIndex(index - 1) + Math.ulp(lengthAtEndofSegment);
+            Point2d intersection = Point2d.intersectionOfLines(ray.x, ray.y, perpendicularX, perpendicularY, this.x[index - 1],
+                    this.y[index - 1], this.x[index], this.y[index]);
+            // FIXME: This is a rather expensive way to test that the intersection is on this segment.
+            double distanceToPrevPoint = Math.hypot(intersection.x - this.x[index - 1], intersection.y - this.y[index - 1]);
+            if (distanceToPrevPoint <= segmentLength
+                    && Math.hypot(intersection.x - this.x[index], intersection.y - this.y[index]) <= segmentLength)
             {
-                double segmentLength = prevPoint.distance(nextPoint);
-                Point2d intersection = Point2d.intersectionOfLines(orientedPoint, perpendicular, prevPoint, nextPoint);
-                double distanceToPrevPoint = intersection.distance(prevPoint);
-                if (distanceToPrevPoint <= segmentLength && intersection.distance(nextPoint) <= segmentLength)
+                // Intersection is on the segment
+                double thisDistance = intersection.distance(ray);
+                if (thisDistance < bestDistance)
                 {
-                    // Intersection is on the segment
-                    double thisDistance = intersection.distance(orientedPoint);
-                    if (thisDistance < bestDistance)
-                    {
-                        positionAtBestDistance = cumulativeDistance + distanceToPrevPoint;
-                        bestDistance = thisDistance;
-                    }
+                    positionAtBestDistance = lengthAtIndex(index - 1) + distanceToPrevPoint;
+                    bestDistance = thisDistance;
                 }
-                cumulativeDistance += segmentLength;
             }
-            prevPoint = nextPoint;
         }
         return positionAtBestDistance;
     }
 
     /** {@inheritDoc} */
     @Override
-    public String toString()
+    public final String toString()
     {
-        return "PolyLine2d [points=" + Arrays.toString(this.points) + "]";
+        return "PolyLine2d [x=" + Arrays.toString(this.x) + ", y=" + Arrays.toString(this.y) + "]";
     }
 
     /**
@@ -1064,9 +1113,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     public final String toExcel()
     {
         StringBuffer s = new StringBuffer();
-        for (Point2d p : this.points)
+        for (int i = 0; i < this.x.length; i++)
         {
-            s.append(p.x + "\t" + p.y + "\n");
+            s.append(this.x[i] + "\t" + this.y[i] + "\n");
         }
         return s.toString();
     }
@@ -1078,9 +1127,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     public final String toPlot()
     {
         StringBuffer result = new StringBuffer();
-        for (Point2d p : this.points)
+        for (int i = 0; i < this.x.length; i++)
         {
-            result.append(String.format(Locale.US, "%s%.3f,%.3f", 0 == result.length() ? "M" : " L", p.x, p.y));
+            result.append(String.format(Locale.US, "%s%.3f,%.3f", 0 == result.length() ? "M" : " L", this.x[i], this.y[i]));
         }
         result.append("\n");
         return result.toString();
@@ -1092,12 +1141,13 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     {
         final int prime = 31;
         int result = 1;
-        result = prime * result + Arrays.hashCode(this.points);
+        result = prime * result + Arrays.hashCode(this.x);
+        result = prime * result + Arrays.hashCode(this.y);
         return result;
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings({"checkstyle:designforextension", "checkstyle:needbraces"})
+    @SuppressWarnings("checkstyle:needbraces")
     @Override
     public boolean equals(final Object obj)
     {
@@ -1108,7 +1158,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         if (getClass() != obj.getClass())
             return false;
         PolyLine2d other = (PolyLine2d) obj;
-        if (!Arrays.equals(this.points, other.points))
+        if (!Arrays.equals(this.x, other.x))
+            return false;
+        if (!Arrays.equals(this.y, other.y))
             return false;
         return true;
     }

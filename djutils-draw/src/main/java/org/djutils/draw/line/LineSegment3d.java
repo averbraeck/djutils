@@ -209,6 +209,14 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public String toString()
+    {
+        return "Segment3d [startX=" + this.startX + ", startY=" + this.startY + ", startZ=" + this.startZ + ", endX="
+                + this.endX + ", endY=" + this.endY + ", endZ=" + this.endZ + "]";
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public int hashCode()
     {
         final int prime = 31;
@@ -254,14 +262,6 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d, Sp
         if (Double.doubleToLongBits(this.startZ) != Double.doubleToLongBits(other.startZ))
             return false;
         return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString()
-    {
-        return "Segment3d [startX=" + this.startX + ", startY=" + this.startY + ", startZ=" + this.startZ + ", endX="
-                + this.endX + ", endY=" + this.endY + ", endZ=" + this.endZ + "]";
     }
 
 }
