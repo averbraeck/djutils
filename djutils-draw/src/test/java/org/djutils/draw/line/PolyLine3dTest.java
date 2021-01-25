@@ -15,7 +15,6 @@ import java.util.List;
 import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.point.OrientedPoint3d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.junit.Test;
@@ -237,6 +236,9 @@ public class PolyLine3dTest
             assertEquals("x of point i should match", points[i].x, line.get(i).x, Math.ulp(points[i].x));
             assertEquals("y of point i should match", points[i].y, line.get(i).y, Math.ulp(points[i].y));
             assertEquals("z of point i should match", points[i].z, line.get(i).z, Math.ulp(points[i].z));
+            assertEquals("x of point i should match", points[i].x, line.getX(i), Math.ulp(points[i].x));
+            assertEquals("y of point i should match", points[i].y, line.getY(i), Math.ulp(points[i].y));
+            assertEquals("z of point i should match", points[i].z, line.getZ(i), Math.ulp(points[i].z));
         }
     }
 
@@ -249,6 +251,67 @@ public class PolyLine3dTest
     public void testConstructors() throws DrawRuntimeException, DrawException
     {
         runConstructors(new Point3d[] { new Point3d(1.2, 3.4, 5.5), new Point3d(2.3, 4.5, 6.6), new Point3d(3.4, 5.6, 7.7) });
+
+        try
+        {
+            new PolyLine3d(new double[] { 1, 2, 3 }, new double[] { 4, 5, 6 }, new double[] { 7, 8 });
+            fail("double arrays of unequal length should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new PolyLine3d(new double[] { 1, 2, 3 }, new double[] { 4, 5 }, new double[] { 7, 8, 9 });
+            fail("double arrays of unequal length should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new PolyLine3d(new double[] { 1, 2 }, new double[] { 4, 5, 6 }, new double[] { 7, 8, 9 });
+            fail("double arrays of unequal length should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new PolyLine3d(null, new double[] { 1, 2 }, new double[] { 3, 4 });
+            fail("null double array should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new PolyLine3d(new double[] { 1, 2 }, null, new double[] { 5, 6 });
+            fail("null double array should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new PolyLine3d(new double[] { 1, 2 }, new double[] { 3, 4 }, null);
+            fail("null double array should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
         try
         {
             new PolyLine3d((List<Point3d>) null);
