@@ -722,23 +722,27 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         Point3d lastPoint;
         if (0.0 == fraction)
         {
-            index--;
             lastPoint = p1;
         }
         else
         {
             Point3d p2 = get(index + 1);
             lastPoint = p1.interpolate(p2, fraction);
-
+            index++;
         }
-        // FIXME: Cannot create a P[]; will have to do it with a List<P>
-        List<Point3d> coords = new ArrayList<>(index + 2);
-        for (int i = 0; i <= index; i++)
+        double[] truncatedX = new double[index + 1];
+        double[] truncatedY = new double[index + 1];
+        double[] truncatedZ = new double[index + 1];
+        for (int i = 0; i < index; i++)
         {
-            coords.add(get(i));
+            truncatedX[i] = this.x[i];
+            truncatedY[i] = this.y[i];
+            truncatedZ[i] = this.z[i];
         }
-        coords.add(lastPoint);
-        return instantiate(coords);
+        truncatedX[index] = lastPoint.x;
+        truncatedY[index] = lastPoint.y;
+        truncatedZ[index] = lastPoint.z;
+        return new PolyLine3d(truncatedX, truncatedY, truncatedZ);
     }
 
     /** {@inheritDoc} */
