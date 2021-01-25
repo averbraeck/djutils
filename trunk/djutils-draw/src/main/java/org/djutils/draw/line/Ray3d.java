@@ -232,6 +232,13 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public String toString()
+    {
+        return "Ray3d [x=" + this.x + " y=" + this.y + " z=" + this.z + " phi=" + this.phi + " theta=" + this.theta + "]";
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public int hashCode()
     {
         final int prime = 31;
@@ -261,13 +268,6 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Sp
         if (Double.doubleToLongBits(this.theta) != Double.doubleToLongBits(other.theta))
             return false;
         return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString()
-    {
-        return "Ray3d [x=" + this.x + " y=" + this.y + " z=" + this.z + " phi=" + this.phi + " theta=" + this.theta + "]";
     }
 
 }

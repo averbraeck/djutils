@@ -46,6 +46,22 @@ public interface PolyLine<L extends PolyLine<L, P, S, R>, P extends Point<P, S>,
      * @throws IndexOutOfBoundsException when index &lt; 0 or index &gt;= size
      */
     P get(int index) throws IndexOutOfBoundsException;
+    
+    /**
+     * Return the x-coordinate of a point of this PolyLine.
+     * @param index int; the index of the requested x-coordinate
+     * @return double; the x-coordinate of the requested point of this PolyLine
+     * @throws IndexOutOfBoundsException
+     */
+    double getX(int index) throws IndexOutOfBoundsException;
+
+    /**
+     * Return the y-coordinate of a point of this PolyLine.
+     * @param index int; the index of the requested y-coordinate
+     * @return double; the y-coordinate of the requested point of this PolyLine
+     * @throws IndexOutOfBoundsException
+     */
+    double getY(int index) throws IndexOutOfBoundsException;
 
     /**
      * Return the first point of this line.
@@ -131,7 +147,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, R>, P extends Point<P, S>,
      * Get the location at a position on the line, with its direction. Position should be between 0.0 and line length.
      * @param position double; the position on the line for which to calculate the point on the line
      * @return OP; an oriented point
-     * @throws DrawException when position less than 0.0 or more than line length.
+     * @throws DrawException when position is NaN, less than 0.0, or more than line length.
      */
     R getLocation(double position) throws DrawException;
 

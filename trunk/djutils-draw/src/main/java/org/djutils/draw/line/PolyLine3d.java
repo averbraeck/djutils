@@ -10,8 +10,6 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.Space3d;
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.point.OrientedPoint3d;
-import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
 import org.djutils.logger.CategoryLogger;
@@ -25,13 +23,19 @@ import org.djutils.logger.CategoryLogger;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Space3d, OrientedPoint3d>
+public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Space3d, Ray3d>
 {
     /** */
     private static final long serialVersionUID = 20200911L;
 
-    /** The points of the line. */
-    private final Point3d[] points;
+    /** X-coordinates of the points. */
+    private final double[] x;
+
+    /** Y-coordinates of the points. */
+    private final double[] y;
+
+    /** Z-coordinates of the points. */
+    private final double[] z;
 
     /** The cumulative length of the line at point 'i'. */
     private final double[] lengthIndexedLine;
@@ -43,46 +47,125 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     private final Bounds3d bounds;
 
     /**
-     * Construct a new Line3d and initialize its length indexed line, bounds, centroid and length.
+     * Construct a new Line3d from an array of double x values, an array of double y values and an array of double z values.
      * @param copyNeeded boolean; if true; a deep copy of the points array is stored instead of the provided array
-     * @param points Point3d[]; the array of points to construct this Line3d from.
+     * @param x double[]; the x-coordinates of the points
+     * @param y double[]; the y-coordinates of the points
+     * @param z double[]; the z-coordinates of the points
      * @throws NullPointerException when iterator is null
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
      */
-    private PolyLine3d(final boolean copyNeeded, final Point3d[] points) throws NullPointerException, DrawRuntimeException
+    private PolyLine3d(final boolean copyNeeded, final double[] x, final double[] y, final double[] z)
+            throws NullPointerException, DrawRuntimeException
     {
-        Throw.whenNull(points, "points cannot be null");
-        Throw.when(points.length < 2, DrawRuntimeException.class, "Need at least two points");
-        this.points = copyNeeded ? Arrays.copyOf(points, points.length) : points;
-        Point3d prevPoint = points[0];
-        double minX = prevPoint.x;
-        double minY = prevPoint.y;
-        double minZ = prevPoint.z;
-        double maxX = prevPoint.x;
-        double maxY = prevPoint.y;
-        double maxZ = prevPoint.z;
-        this.lengthIndexedLine = new double[this.points.length];
+        Throw.whenNull(x, "x array may not be null");
+        Throw.whenNull(y, "y array may not be null");
+        Throw.whenNull(y, "z array may not be null");
+        Throw.when(x.length != y.length || x.length != z.length, DrawRuntimeException.class,
+                "x, y  and z arrays must have same length");
+        Throw.when(x.length < 2, DrawRuntimeException.class, "Need at least two points");
+        this.x = copyNeeded ? Arrays.copyOf(x, x.length) : x;
+        this.y = copyNeeded ? Arrays.copyOf(y, y.length) : y;
+        this.z = copyNeeded ? Arrays.copyOf(z, z.length) : z;
+        double minX = x[0];
+        double minY = y[0];
+        double minZ = z[0];
+        double maxX = x[0];
+        double maxY = y[0];
+        double maxZ = z[0];
+        this.lengthIndexedLine = new double[x.length];
         this.lengthIndexedLine[0] = 0.0;
-        for (int i = 1; i < this.points.length; i++)
+        for (int i = 1; i < x.length; i++)
         {
-            Point3d point = this.points[i];
-            minX = Math.min(minX, point.x);
-            minY = Math.min(minY, point.y);
-            minZ = Math.min(minZ, point.z);
-            maxX = Math.max(maxX, point.x);
-            maxY = Math.max(maxY, point.y);
-            maxZ = Math.max(maxZ, point.z);
-            if (prevPoint.x == point.x && prevPoint.y == point.y && prevPoint.z == point.z)
+            minX = Math.min(minX, x[i]);
+            minY = Math.min(minY, y[i]);
+            minZ = Math.min(minZ, z[i]);
+            maxX = Math.max(maxX, x[i]);
+            maxY = Math.max(maxY, y[i]);
+            maxZ = Math.max(maxZ, z[i]);
+            if (x[i - 1] == x[i] && y[i - 1] == y[i] && (z[i - 1] == z[i]))
             {
                 throw new DrawRuntimeException(
-                        "Degenerate Line3d; point " + (i - 1) + " has the same x, y and z as point " + i);
+                        "Degenerate PolyLine2d; point " + (i - 1) + " has the same x, y and z as point " + i);
             }
-            this.lengthIndexedLine[i] = this.lengthIndexedLine[i - 1] + prevPoint.distance(point);
-            prevPoint = point;
+            // There should be a varargs Math.hypot implementation
+            this.lengthIndexedLine[i] =
+                    this.lengthIndexedLine[i - 1] + Math.hypot(Math.hypot(x[i] - x[i - 1], y[i] - y[i - 1]), z[i] - z[i - 1]);
         }
         this.length = this.lengthIndexedLine[this.lengthIndexedLine.length - 1];
         this.bounds = new Bounds3d(minX, maxX, minY, maxY, minZ, maxZ);
+    }
+
+    /**
+     * Construct a new Line3d from an array of Point2d. This constructor makes a deep copy of the parameters.
+     * @param x double[]; the x-coordinates of the points
+     * @param y double[]; the y-coordinates of the points
+     * @param z double[]; the z-coordinates of the points
+     * @throws NullPointerException when iterator is null
+     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
+     */
+    public PolyLine3d(final double[] x, final double[] y, final double[] z) throws NullPointerException, DrawRuntimeException
+    {
+        this(true, x, y, z);
+    }
+
+    /**
+     * Construct a new Line3d from an array of Point2d.
+     * @param points Point2d[]; the array of points to construct this Line2d from.
+     * @throws NullPointerException when iterator is null
+     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
+     */
+    public PolyLine3d(final Point3d[] points) throws NullPointerException, DrawRuntimeException
+    {
+        this(false, makeX(Throw.whenNull(points, "points may not be null")), makeY(points), makeZ(points));
+    }
+
+    /**
+     * Make an array of double and fill it with the x-coordinates of points.
+     * @param points Point2d[]; array of points
+     * @return double[]; array filled with the x-coordinates of points
+     */
+    private static double[] makeX(final Point3d[] points)
+    {
+        double[] xArray = new double[points.length];
+        for (int i = 0; i < points.length; i++)
+        {
+            xArray[i] = points[i].x;
+        }
+        return xArray;
+    }
+
+    /**
+     * Make an array of double and fill it with the y-coordinates of points.
+     * @param points Point2d[]; array of points
+     * @return double[]; array filled with the y-coordinates of points
+     */
+    private static double[] makeY(final Point3d[] points)
+    {
+        double[] yArray = new double[points.length];
+        for (int i = 0; i < points.length; i++)
+        {
+            yArray[i] = points[i].y;
+        }
+        return yArray;
+    }
+
+    /**
+     * Make an array of double and fill it with the z-coordinates of points.
+     * @param points Point2d[]; array of points
+     * @return double[]; array filled with the z-coordinates of points
+     */
+    private static double[] makeZ(final Point3d[] points)
+    {
+        double[] zArray = new double[points.length];
+        for (int i = 0; i < points.length; i++)
+        {
+            zArray[i] = points[i].z;
+        }
+        return zArray;
     }
 
     /**
@@ -97,7 +180,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     public PolyLine3d(final Point3d point1, final Point3d point2, final Point3d... otherPoints)
             throws NullPointerException, DrawRuntimeException
     {
-        this(false, spliceArray(point1, point2, otherPoints));
+        this(spliceArray(point1, point2, otherPoints));
     }
 
     /**
@@ -124,30 +207,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     }
 
     /**
-     * Construct a new PolyLine3d from an array of Point3d.
-     * @param points Point3d[]; points of the PolyLine3d
-     * @throws NullPointerException when iterator is null
-     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
-     *             adjacent points)
-     */
-    public PolyLine3d(final Point3d[] points) throws NullPointerException, DrawRuntimeException
-    {
-        this(true, checkLengthIsTwoOrMore(Throw.whenNull(points, "points may not be null")));
-    }
-
-    /**
-     * Check that the length of an array of Point3d is at least two.
-     * @param points Point3d[]; the array of points to check
-     * @return Point3d[]; points
-     * @throws DrawRuntimeException when the length of points is less than two
-     */
-    private static Point3d[] checkLengthIsTwoOrMore(final Point3d[] points) throws DrawRuntimeException
-    {
-        Throw.when(points.length < 2, DrawRuntimeException.class, "Need at least two points");
-        return points;
-    }
-
-    /**
      * Construct a new Line3d and initialize its length indexed line, bounds, centroid and length.
      * @param iterator Iterator&lt;Point3d&gt;; iterator that will provide all points that constitute the new Line3d
      * @throws NullPointerException when iterator is null
@@ -166,7 +225,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      */
     public PolyLine3d(final List<Point3d> pointList) throws DrawRuntimeException
     {
-        this(false, pointList.toArray(new Point3d[pointList.size()]));
+        this(pointList.toArray(new Point3d[pointList.size()]));
     }
 
     /** {@inheritDoc} */
@@ -192,14 +251,39 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     @Override
     public int size()
     {
-        return this.points.length;
+        return this.x.length;
     }
 
     /** {@inheritDoc} */
     @Override
     public final Point3d get(final int i) throws IndexOutOfBoundsException
     {
-        return this.points[i];
+        return new Point3d(this.x[i], this.y[i], this.z[i]);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getX(final int i) throws IndexOutOfBoundsException
+    {
+        return this.x[i];
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getY(final int i) throws IndexOutOfBoundsException
+    {
+        return this.y[i];
+    }
+    
+    /**
+     * Return the z-coordinate of a point of this PolyLine.
+     * @param index int; the index of the requested z-coordinate
+     * @return double; the z-coordinate of the requested point of this PolyLine
+     * @throws IndexOutOfBoundsException
+     */
+    public final double getZ(final int index) throws IndexOutOfBoundsException
+    {
+        return this.z[index];
     }
 
     /** {@inheritDoc} */
@@ -220,7 +304,25 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     @Override
     public Iterator<Point3d> getPoints()
     {
-        return Arrays.stream(this.points).iterator();
+        return new Iterator<Point3d>()
+        {
+            private int nextIndex = 0;
+
+            /** {@inheritDoc} */
+            @SuppressWarnings("synthetic-access")
+            @Override
+            public boolean hasNext()
+            {
+                return this.nextIndex < PolyLine3d.this.x.length;
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public Point3d next()
+            {
+                return get(this.nextIndex++);
+            }
+        };
     }
 
     /** {@inheritDoc} */
@@ -240,29 +342,20 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     {
         if (this.size() <= 2)
         {
-            return this; // Except for some cached fields; an Line3d is immutable; so safe to return
+            return this; // Except for some cached fields; an Line2d is immutable; so safe to return
         }
         Point3d prevPoint = null;
-        List<Point3d> list = null;
+        List<Point3d> list = new ArrayList<>();
         for (int index = 0; index < this.size(); index++)
         {
-            Point3d currentPoint = this.points[index];
+            Point3d currentPoint = get(index);
             if (null != prevPoint && prevPoint.distance(currentPoint) < noiseLevel)
             {
-                if (null == list)
-                {
-                    // Found something to filter; copy this up to (and including) prevPoint
-                    list = new ArrayList<>();
-                    for (int i = 0; i < index; i++)
-                    {
-                        list.add(this.points[i]);
-                    }
-                }
                 if (index == this.size() - 1)
                 {
                     if (list.size() > 1)
                     {
-                        // Replace the last point of the result by the last point of this Line3d
+                        // Replace the last point of the result by the last point of this Line2d
                         list.set(list.size() - 1, currentPoint);
                     }
                     else
@@ -274,20 +367,17 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
                 }
                 continue; // Do not replace prevPoint by currentPoint
             }
-            else if (null != list)
-            {
-                list.add(currentPoint);
-            }
+            list.add(currentPoint);
             prevPoint = currentPoint;
         }
-        if (null == list)
+        if (list.size() == this.x.length)
         {
             return this;
         }
         if (list.size() == 2 && list.get(0).equals(list.get(1)))
         {
             // Insert point 1 of this; it MUST be different from point 0; so we don't have to test for anything.
-            list.add(1, this.points[1]);
+            list.add(1, get(1));
         }
         try
         {
@@ -295,6 +385,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         }
         catch (DrawRuntimeException exception)
         {
+            // Cannot happen
             CategoryLogger.always().error(exception);
             throw new Error(exception);
         }
@@ -339,7 +430,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         {
             points[nextIndex++] = line2.get(j);
         }
-        return new PolyLine3d(false, points);
+        return new PolyLine3d(points);
     }
 
     /**
@@ -380,29 +471,31 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
                 points[nextIndex++] = line.get(j);
             }
         }
-        return new PolyLine3d(false, points);
+        return new PolyLine3d(points);
     }
 
     /** {@inheritDoc} */
     @Override
     public PolyLine2d project() throws DrawRuntimeException
     {
-        List<Point2d> pointList = new ArrayList<>();
-        Point2d prevPoint = null;
-        for (Point3d point3d : this.points)
+        double[] projectedX = new double[this.x.length];
+        double[] projectedY = new double[this.x.length];
+        int nextIndex = 0;
+        for (int i = 0; i < this.x.length; i++)
         {
-            Point2d point = point3d.project();
-            if (prevPoint != null)
+            if (i > 0 && this.x[i] == this.x[i - 1] && this.y[i] == this.y[i - 1])
             {
-                if (prevPoint.x == point.x && prevPoint.y == point.y)
-                {
-                    continue;
-                }
+                continue;
             }
-            pointList.add(point);
-            prevPoint = point;
+            projectedX[nextIndex] = this.x[i];
+            projectedY[nextIndex] = this.y[i];
+            nextIndex++;
         }
-        return new PolyLine2d(pointList);
+        if (nextIndex < projectedX.length)
+        {
+            return new PolyLine2d(false, Arrays.copyOf(projectedX, nextIndex), Arrays.copyOf(projectedY, nextIndex));
+        }
+        return new PolyLine2d(false, this.x, this.y); // The x and y arrays are immutable; so we can safely share them
     }
 
     /**
@@ -448,7 +541,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
 
     /** {@inheritDoc} */
     @Override
-    public final OrientedPoint3d getLocationExtended(final double position)
+    public final Ray3d getLocationExtended(final double position)
     {
         if (position >= 0.0 && position <= getLength())
         {
@@ -462,70 +555,65 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
             }
         }
 
-        // position before start point -- extrapolate using direction from first point to second point of this Line3d
+        // position before start point -- extrapolate using direction from first point to second point of this Line2d
         if (position < 0.0)
         {
-            double len = position;
-            double fraction = len / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
-            Point3d p1 = this.points[0];
-            Point3d p2 = this.points[1];
-            return new OrientedPoint3d(p1.x + fraction * (p2.x - p1.x), p1.y + fraction * (p2.y - p1.y),
-                    p1.z + fraction * (p2.z - p1.z), 0.0, 0.0, Math.atan2(p2.y - p1.y, p2.x - p1.x));
+            double fraction = position / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
+            return new Ray3d(this.x[0] + fraction * (this.x[1] - this.x[0]), this.y[0] + fraction * (this.y[1] - this.y[0]),
+                    this.z[0] + fraction * (this.z[1] - this.z[0]), this.x[1], this.y[1], this.z[1]);
         }
 
         // position beyond end point -- extrapolate using the direction from the before last point to the last point of this
-        // Line3d
-        int n1 = this.lengthIndexedLine.length - 1;
-        int n2 = this.lengthIndexedLine.length - 2;
+        // Line2d
+        int n1 = this.x.length - 1; // index of last point
+        int n2 = this.x.length - 2; // index of before last point
         double len = position - getLength();
         double fraction = len / (this.lengthIndexedLine[n1] - this.lengthIndexedLine[n2]);
         while (Double.isInfinite(fraction))
         {
+            // Overflow occurred; move n2 back another point; if possible
             if (--n2 < 0)
             {
                 CategoryLogger.always().error("lengthIndexedLine of {} is invalid", this);
-                Point3d p = this.points[n1];
-                return new OrientedPoint3d(p.x, p.y, p.z, 0.0, 0.0, 0.0); // Bogus direction
+                return new Ray3d(this.x[n1], this.y[n1], this.z[n1], 0.0, 0.0); // Bogus direction
             }
             fraction = len / (this.lengthIndexedLine[n1] - this.lengthIndexedLine[n2]);
         }
-        Point3d p1 = this.points[n2];
-        Point3d p2 = this.points[n1];
-        return new OrientedPoint3d(p2.x + fraction * (p2.x - p1.x), p2.y + fraction * (p2.y - p1.y),
-                p2.z + fraction * (p2.z - p1.z), 0.0, 0.0, Math.atan2(p2.y - p1.y, p2.x - p1.x));
+        return new Ray3d(this.x[n1] + fraction * (this.x[n1] - this.x[n2]), this.y[n1] + fraction * (this.y[n1] - this.y[n2]),
+                this.z[n1] + fraction * (this.z[n1] - this.z[n2]), Math.atan2(this.y[n1] - this.y[n2], this.x[n1] - this.x[n2]),
+                Math.atan2(this.z[n1] - this.z[n2], Math.hypot(this.x[n1] - this.x[n2], this.y[n1] - this.y[n2])));
     }
 
     /** {@inheritDoc} */
     @Override
-    public final OrientedPoint3d getLocation(final double position) throws DrawException
+    public final Ray3d getLocation(final double position) throws DrawException
     {
+        Throw.when(Double.isNaN(position), DrawException.class, "position may not be NaN");
         if (position < 0.0 || position > getLength())
         {
-            throw new DrawException("getLocationSI for line: position < 0.0 or > line length. Position = " + position
-                    + " m. Length = " + getLength() + " m.");
+            throw new DrawException("getLocation for line: position < 0.0 or > line length. Position = " + position
+                    + "; length = " + getLength());
         }
         // handle special cases: position == 0.0, or position == length
         if (position == 0.0)
         {
-            Point3d p1 = this.points[0];
-            Point3d p2 = this.points[1];
-            return new OrientedPoint3d(p1.x, p1.y, p1.z, 0.0, 0.0, Math.atan2(p2.y - p1.y, p2.x - p1.x));
+            return new Ray3d(this.x[0], this.y[0], this.z[0], this.x[1], this.y[1], this.z[1]);
         }
         if (position == getLength())
         {
-            Point3d p1 = this.points[this.points.length - 2];
-            Point3d p2 = this.points[this.points.length - 1];
-            return new OrientedPoint3d(p2.x, p2.y, p2.z, 0.0, 0.0, Math.atan2(p2.y - p1.y, p2.x - p1.x));
+            return new Ray3d(this.x[this.x.length - 1], this.y[this.x.length - 1], this.z[this.x.length - 1],
+                    2 * this.x[this.x.length - 1] - this.x[this.x.length - 2],
+                    2 * this.y[this.x.length - 1] - this.y[this.x.length - 2],
+                    2 * this.z[this.x.length - 1] - this.z[this.x.length - 2]);
         }
-
         // find the index of the line segment, use binary search
         int index = find(position);
         double remainder = position - this.lengthIndexedLine[index];
         double fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
-        Point3d p1 = this.points[index];
-        Point3d p2 = this.points[index + 1];
-        return new OrientedPoint3d(p1.x + fraction * (p2.x - p1.x), p1.y + fraction * (p2.y - p1.y),
-                p1.z + fraction * (p2.z - p1.z), 0.0, 0.0, Math.atan2(p2.y - p1.y, p2.x - p1.x));
+        return new Ray3d(this.x[index] + fraction * (this.x[index + 1] - this.x[index]),
+                this.y[index] + fraction * (this.y[index + 1] - this.y[index]),
+                this.z[index] + fraction * (this.z[index + 1] - this.z[index]), this.x[index + 1], this.y[index + 1],
+                this.z[index + 1]);
     }
 
     /** {@inheritDoc} */
@@ -589,7 +677,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         {
             pointList.add(get(index));
         }
-        else
+        else if (index < this.x.length)
         {
             Point3d point = get(index - 1).interpolate(get(index), (end - cumulativeLength) / segmentLength);
             // can be the same due to rounding
@@ -598,6 +686,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
                 pointList.add(point);
             }
         }
+        // else: rounding error
         try
         {
             return instantiate(pointList);
@@ -654,25 +743,28 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
 
     /** {@inheritDoc} */
     @Override
+    public String toString()
+    {
+        return "PolyLine3d [x=" + Arrays.toString(this.x) + ", y=" + Arrays.toString(this.y) + ", z=" + Arrays.toString(this.z)
+                + "]";
+    }
+
+    /** {@inheritDoc} */
     @SuppressWarnings("checkstyle:designforextension")
+    @Override
     public int hashCode()
     {
         final int prime = 31;
         int result = 1;
-        result = prime * result + Arrays.hashCode(this.points);
+        result = prime * result + Arrays.hashCode(this.x);
+        result = prime * result + Arrays.hashCode(this.y);
+        result = prime * result + Arrays.hashCode(this.z);
         return result;
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings({ "checkstyle:designforextension", "checkstyle:needbraces" })
     @Override
-    public String toString()
-    {
-        return "PolyLine3d [points=" + Arrays.toString(this.points) + "]";
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @SuppressWarnings({"checkstyle:designforextension", "checkstyle:needbraces"})
     public boolean equals(final Object obj)
     {
         if (this == obj)
@@ -682,7 +774,11 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         if (getClass() != obj.getClass())
             return false;
         PolyLine3d other = (PolyLine3d) obj;
-        if (!Arrays.equals(this.points, other.points))
+        if (!Arrays.equals(this.x, other.x))
+            return false;
+        if (!Arrays.equals(this.y, other.y))
+            return false;
+        if (!Arrays.equals(this.z, other.z))
             return false;
         return true;
     }

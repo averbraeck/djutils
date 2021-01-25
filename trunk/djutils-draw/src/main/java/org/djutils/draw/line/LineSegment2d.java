@@ -178,6 +178,14 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public String toString()
+    {
+        return "Segment2d [startX=" + this.startX + ", startY=" + this.startY + ", endX=" + this.endX + ", endY=" + this.endY
+                + "]";
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public int hashCode()
     {
         final int prime = 31;
@@ -215,14 +223,6 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
         if (Double.doubleToLongBits(this.startY) != Double.doubleToLongBits(other.startY))
             return false;
         return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString()
-    {
-        return "Segment2d [startX=" + this.startX + ", startY=" + this.startY + ", endX=" + this.endX + ", endY=" + this.endY
-                + "]";
     }
 
 }
