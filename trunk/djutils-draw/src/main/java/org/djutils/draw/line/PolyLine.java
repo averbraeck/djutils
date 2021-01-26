@@ -51,7 +51,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, R>, P extends Point<P, S>,
      * Return the x-coordinate of a point of this PolyLine.
      * @param index int; the index of the requested x-coordinate
      * @return double; the x-coordinate of the requested point of this PolyLine
-     * @throws IndexOutOfBoundsException
+     * @throws IndexOutOfBoundsException when index &lt; 0 or index &gt;= size()
      */
     double getX(int index) throws IndexOutOfBoundsException;
 
@@ -59,7 +59,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, R>, P extends Point<P, S>,
      * Return the y-coordinate of a point of this PolyLine.
      * @param index int; the index of the requested y-coordinate
      * @return double; the y-coordinate of the requested point of this PolyLine
-     * @throws IndexOutOfBoundsException
+     * @throws IndexOutOfBoundsException when index &lt; 0 or index &gt;= size()
      */
     double getY(int index) throws IndexOutOfBoundsException;
 

@@ -279,7 +279,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      * Return the z-coordinate of a point of this PolyLine.
      * @param index int; the index of the requested z-coordinate
      * @return double; the z-coordinate of the requested point of this PolyLine
-     * @throws IndexOutOfBoundsException
+     * @throws IndexOutOfBoundsException when index &lt; 0 or index &gt;= size()
      */
     public final double getZ(final int index) throws IndexOutOfBoundsException
     {
