@@ -1103,6 +1103,7 @@ public class PolyLine3dTest
      * @throws DrawException when that happens uncaught; this test has failed
      * @throws NullPointerException when that happens uncaught; this test has failed
      */
+    @SuppressWarnings("unlikely-arg-type")
     @Test
     public void testToStringHashCodeAndEquals() throws NullPointerException, DrawException
     {
@@ -1135,6 +1136,14 @@ public class PolyLine3dTest
                 line.equals(new PolyLine2d(new Point2d(123, 456), new Point2d(789, 101112))));
         assertFalse("line is not equal to null", line.equals(null));
         assertFalse("line is not equal to a different kind of object", line.equals("unlikely"));
+        assertEquals("equals verbatim copy", line,
+                new PolyLine3d(new Point3d[] { new Point3d(1, 2, 3), new Point3d(4, 6, 8), new Point3d(8, 9, 10) }));
+        assertNotEquals("equals checks x", line,
+                new PolyLine3d(new Point3d[] { new Point3d(2, 2, 3), new Point3d(4, 6, 8), new Point3d(8, 9, 10) }));
+        assertNotEquals("equals checks y", line,
+                new PolyLine3d(new Point3d[] { new Point3d(1, 2, 3), new Point3d(4, 7, 8), new Point3d(8, 9, 10) }));
+        assertNotEquals("equals checks z", line,
+                new PolyLine3d(new Point3d[] { new Point3d(1, 2, 3), new Point3d(4, 6, 8), new Point3d(8, 9, 11) }));
         assertTrue("Line is equal to line from same set of points", line.equals(new PolyLine3d(line.getPoints())));
 
     }
