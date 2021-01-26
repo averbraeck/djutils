@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import java.util.Arrays;
 
 import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.Point2d;
 import org.junit.Test;
 
@@ -305,6 +306,64 @@ public class Transform2dTest
                 }
             }
         }
+    }
+
+    /**
+     * Reproducible test of multiple transformations on a bounding rectangle.
+     */
+    @Test
+    public void testBoundingRectangle2d()
+    {
+        Bounds2d bounds = new Bounds2d(-4, 4, -4, 4);
+
+        // identical transformation
+        Transform2d transform = new Transform2d();
+        Bounds2d b = transform.transform(bounds);
+        testBounds2d(b, -4, 4, -4, 4);
+
+        // translate x, y
+        transform = new Transform2d();
+        transform.translate(20, 10);
+        b = transform.transform(bounds);
+        testBounds2d(b, 20 - 4, 20 + 4, 10 - 4, 10 + 4);
+
+        // rotate 90 degrees (should be same)
+        transform = new Transform2d();
+        transform.rotation(Math.toRadians(90.0));
+        b = transform.transform(bounds);
+        testBounds2d(b, -4, 4, -4, 4);
+
+        // rotate 45 degrees in the XY-plane
+        transform = new Transform2d();
+        transform.rotation(Math.toRadians(45.0));
+        double d = 4.0 * Math.sqrt(2.0);
+        b = transform.transform(bounds);
+        testBounds2d(b, -d, d, -d, d);
+
+        // rotate 45 degrees in the XY-plane and then translate to (10, 20)
+        // note that to do FIRST rotation and THEN translation, the steps have to be built in the OPPOSITE order
+        // since matrix multiplication operates from RIGHT to LEFT.  
+        transform = new Transform2d();
+        transform.translate(10, 20);
+        transform.rotation(Math.toRadians(45.0));
+        b = transform.transform(bounds);
+        testBounds2d(b, 10 - d, 10 + d, 20 - d, 20 + d);
+    }
+    
+    /**
+     * Check bounds values.
+     * @param b Bounds2d; the box to test
+     * @param minX double; expected value
+     * @param maxX double; expected value
+     * @param minY double; expected value
+     * @param maxY double; expected value
+     */
+    private void testBounds2d(final Bounds2d b, final double minX, final double maxX, final double minY, final double maxY)
+    {
+        assertEquals(minX, b.getMinX(), 0.001);
+        assertEquals(maxX, b.getMaxX(), 0.001);
+        assertEquals(minY, b.getMinY(), 0.001);
+        assertEquals(maxY, b.getMaxY(), 0.001);
     }
 
     /**
