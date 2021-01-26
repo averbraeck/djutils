@@ -92,7 +92,7 @@ public final class Bezier
 
     /**
      * Approximate a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
-     * start and end. TODO change start and end to Ray3d
+     * start and end.
      * @param size int; the number of points of the B&eacute;zier curve
      * @param start Ray2d; the start point and start direction of the B&eacute;zier curve
      * @param end Ray2d; the end point and end direction of the B&eacute;zier curve
@@ -397,7 +397,7 @@ public final class Bezier
                 if (sign1 != sign2)
                 {
                     // There is an inflection point
-                    System.out.println("Detected inflection point between " + prevPoint + " and " + nextPoint);
+                    // System.out.println("Detected inflection point between " + prevPoint + " and " + nextPoint);
                     // Inserting the halfway point should take care of this
                     result.put(medianT, medianPoint);
                     continue;
@@ -615,7 +615,7 @@ public final class Bezier
     /**
      * Construct a cubic B&eacute;zier curve from start to end with two generated control points at half the distance between
      * start and end. The z-value is interpolated in a linear way. The size of the constructed curve is
-     * <code>DEFAULT_BEZIER_SIZE</code>. TODO change start en end to Ray3d
+     * <code>DEFAULT_BEZIER_SIZE</code>.
      * @param start Ray3d; the start point and orientation of the B&eacute;zier curve
      * @param end Ray3d; the end point and orientation of the B&eacute;zier curve
      * @return a cubic B&eacute;zier curve between start and end, with the two provided control points
