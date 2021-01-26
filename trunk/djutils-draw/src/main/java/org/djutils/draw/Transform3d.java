@@ -84,7 +84,8 @@ public class Transform3d implements Cloneable
     }
 
     /**
-     * Transform coordinates by a vector (tx, ty, tz).
+     * Transform coordinates by a vector (tx, ty, tz). Note that to carry out multiple operations, the steps have to be built in
+     * the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @param tx double; the translation value for the x-coordinates
      * @param ty double; the translation value for the y-coordinates
      * @param tz double; the translation value for the z-coordinates
@@ -101,7 +102,8 @@ public class Transform3d implements Cloneable
     }
 
     /**
-     * Translate coordinates by a the x, y, and z values contained in a Point.
+     * Translate coordinates by a the x, y, and z values contained in a Point. Note that to carry out multiple operations, the
+     * steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @param point Point3d; the point containing the x, y, and z translation values
      * @return Transform3d; the new transformation matrix after applying this transform
      */
@@ -116,7 +118,9 @@ public class Transform3d implements Cloneable
     }
 
     /**
-     * Scale all coordinates with a factor for x, y, and z. A scale factor of 1 leaves the coordinate unchanged.
+     * Scale all coordinates with a factor for x, y, and z. A scale factor of 1 leaves the coordinate unchanged. Note that to
+     * carry out multiple operations, the steps have to be built in the OPPOSITE order since matrix multiplication operates from
+     * RIGHT to LEFT.
      * @param sx double; the scale factor for the x-coordinates
      * @param sy double; the scale factor for the y-coordinates
      * @param sz double; the scale factor for the z-coordinates
@@ -133,7 +137,8 @@ public class Transform3d implements Cloneable
     }
 
     /**
-     * The Euler rotation around the x-axis with an angle in radians.
+     * The Euler rotation around the x-axis with an angle in radians. Note that to carry out multiple operations, the steps have
+     * to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @param angle double; the angle to rotate the coordinates with with around the x-axis
      * @return Transform3d; the new transformation matrix after applying this transform
      */
@@ -150,7 +155,8 @@ public class Transform3d implements Cloneable
     }
 
     /**
-     * The Euler rotation around the y-axis with an angle in radians.
+     * The Euler rotation around the y-axis with an angle in radians. Note that to carry out multiple operations, the steps have
+     * to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @param angle double; the angle to rotate the coordinates with with around the y-axis
      * @return Transform3d; the new transformation matrix after applying this transform
      */
@@ -167,7 +173,8 @@ public class Transform3d implements Cloneable
     }
 
     /**
-     * The Euler rotation around the z-axis with an angle in radians.
+     * The Euler rotation around the z-axis with an angle in radians. Note that to carry out multiple operations, the steps have
+     * to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @param angle double; the angle to rotate the coordinates with with around the z-axis
      * @return Transform3d; the new transformation matrix after applying this transform
      */
@@ -186,7 +193,8 @@ public class Transform3d implements Cloneable
     /**
      * The xy-shear leaves the xy-coordinate plane for z=0 untouched. Coordinates on z=1 are translated by a vector (sx, sy, 0).
      * Coordinates for points with other z-values are translated by a vector (z.sx, z.sy, 0), where z is the z-coordinate of the
-     * point.
+     * point. Note that to carry out multiple operations, the steps have to be built in the OPPOSITE order since matrix
+     * multiplication operates from RIGHT to LEFT.
      * @param sx double; the shear factor in the x-direction for z=1
      * @param sy double; the shear factor in the y-direction for z=1
      * @return Transform3d; the new transformation matrix after applying this transform
@@ -204,7 +212,8 @@ public class Transform3d implements Cloneable
     /**
      * The yz-shear leaves the yz-coordinate plain for x=0 untouched. Coordinates on x=1 are translated by a vector (0, sy, sz).
      * Coordinates for points with other x-values are translated by a vector (0, x.sy, x.sz), where x is the x-coordinate of the
-     * point.
+     * point. Note that to carry out multiple operations, the steps have to be built in the OPPOSITE order since matrix
+     * multiplication operates from RIGHT to LEFT.
      * @param sy double; the shear factor in the y-direction for x=1
      * @param sz double; the shear factor in the z-direction for x=1
      * @return Transform3d; the new transformation matrix after applying this transform
@@ -222,7 +231,8 @@ public class Transform3d implements Cloneable
     /**
      * The xz-shear leaves the xz-coordinate plain for y=0 untouched. Coordinates on y=1 are translated by a vector (sx, 0, sz).
      * Coordinates for points with other y-values are translated by a vector (y.sx, 0, y.sz), where y is the y-coordinate of the
-     * point.
+     * point. Note that to carry out multiple operations, the steps have to be built in the OPPOSITE order since matrix
+     * multiplication operates from RIGHT to LEFT.
      * @param sx double; the shear factor in the y-direction for y=1
      * @param sz double; the shear factor in the z-direction for y=1
      * @return Transform3d; the new transformation matrix after applying this transform
@@ -238,7 +248,8 @@ public class Transform3d implements Cloneable
     }
 
     /**
-     * The reflection of the x-coordinate, by mirroring it in the yz-plane (the plane with x=0).
+     * The reflection of the x-coordinate, by mirroring it in the yz-plane (the plane with x=0). Note that to carry out multiple
+     * operations, the steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @return Transform3d; the new transformation matrix after applying this transform
      */
     public Transform3d reflectX()
@@ -248,7 +259,8 @@ public class Transform3d implements Cloneable
     }
 
     /**
-     * The reflection of the y-coordinate, by mirroring it in the xz-plane (the plane with y=0).
+     * The reflection of the y-coordinate, by mirroring it in the xz-plane (the plane with y=0). Note that to carry out multiple
+     * operations, the steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @return Transform3d; the new transformation matrix after applying this transform
      */
     public Transform3d reflectY()
@@ -258,7 +270,8 @@ public class Transform3d implements Cloneable
     }
 
     /**
-     * The reflection of the z-coordinate, by mirroring it in the xy-plane (the plane with z=0).
+     * The reflection of the z-coordinate, by mirroring it in the xy-plane (the plane with z=0). Note that to carry out multiple
+     * operations, the steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @return Transform3d; the new transformation matrix after applying this transform
      */
     public Transform3d reflectZ()

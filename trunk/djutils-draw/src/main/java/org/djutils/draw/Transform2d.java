@@ -83,7 +83,8 @@ public class Transform2d implements Cloneable
     }
 
     /**
-     * Transform coordinates by a vector (tx, ty).
+     * Transform coordinates by a vector (tx, ty). Note that to carry out multiple operations, the steps have to be built in the
+     * OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @param tx double; the translation value for the x-coordinates
      * @param ty double; the translation value for the y-coordinates
      * @return Transform2d; the new transformation matrix after applying this transform
@@ -99,7 +100,8 @@ public class Transform2d implements Cloneable
     }
 
     /**
-     * Translate coordinates by a the x and y values contained in a Point2d.
+     * Translate coordinates by a the x and y values contained in a Point2d. Note that to carry out multiple operations, the
+     * steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @param point Point2d; the point containing the x and y translation values
      * @return Transform2d; the new transformation matrix after applying this transform
      */
@@ -114,7 +116,9 @@ public class Transform2d implements Cloneable
     }
 
     /**
-     * Scale all coordinates with a factor for x, and y. A scale factor of 1 leaves the coordinate unchanged.
+     * Scale all coordinates with a factor for x, and y. A scale factor of 1 leaves the coordinate unchanged. Note that to carry
+     * out multiple operations, the steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT
+     * to LEFT.
      * @param sx double; the scale factor for the x-coordinates
      * @param sy double; the scale factor for the y-coordinates
      * @return Transform2d; the new transformation matrix after applying this transform
@@ -130,7 +134,8 @@ public class Transform2d implements Cloneable
     }
 
     /**
-     * The rotation around the origin with an angle in radians.
+     * The rotation around the origin with an angle in radians. Note that to carry out multiple operations, the steps have to be
+     * built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @param angle double; the angle to rotate the coordinates with with around the origin
      * @return Transform2d; the new transformation matrix after applying this transform
      */
@@ -149,7 +154,8 @@ public class Transform2d implements Cloneable
     /**
      * The 2d shear leaves the xy-coordinate plane for z=0 untouched. An x-coordinate with a value of 1 is translated by sx, and
      * an x-coordinate with another value is translated by x*sx. Similarly, a y-coordinate with a value of 1 is translated by xy
-     * and a y-coordinate with another value is translated by y*sy.
+     * and a y-coordinate with another value is translated by y*sy. Note that to carry out multiple operations, the steps have
+     * to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @param sx double; the shear factor in the x-direction
      * @param sy double; the shear factor in the y-direction
      * @return Transform2d; the new transformation matrix after applying this transform
@@ -165,7 +171,8 @@ public class Transform2d implements Cloneable
     }
 
     /**
-     * The reflection of the x-coordinate, by mirroring it in the yz-plane (the plane with x=0).
+     * The reflection of the x-coordinate, by mirroring it in the yz-plane (the plane with x=0). Note that to carry out multiple
+     * operations, the steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @return Transform2d; the new transformation matrix after applying this transform
      */
     public Transform2d reflectX()
@@ -175,7 +182,8 @@ public class Transform2d implements Cloneable
     }
 
     /**
-     * The reflection of the y-coordinate, by mirroring it in the xz-plane (the plane with y=0).
+     * The reflection of the y-coordinate, by mirroring it in the xz-plane (the plane with y=0). Note that to carry out multiple
+     * operations, the steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @return Transform2d; the new transformation matrix after applying this transform
      */
     public Transform2d reflectY()

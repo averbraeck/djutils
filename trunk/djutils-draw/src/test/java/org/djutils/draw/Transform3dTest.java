@@ -496,6 +496,75 @@ public class Transform3dTest
     }
 
     /**
+     * Reproducible test of multiple transformations on a bounding box.
+     */
+    @Test
+    public void testBoundingBox3d()
+    {
+        Bounds3d bounds = new Bounds3d(-4, 4, -4, 4, -4, 4);
+
+        // identical transformation
+        Transform3d transform = new Transform3d();
+        Bounds3d b = transform.transform(bounds);
+        testBounds3d(b, -4, 4, -4, 4, -4, 4);
+
+        // translate x, y
+        transform = new Transform3d();
+        transform.translate(20, 10, 0);
+        b = transform.transform(bounds);
+        testBounds3d(b, 20 - 4, 20 + 4, 10 - 4, 10 + 4, -4, 4);
+
+        // translate x, y, z
+        transform = new Transform3d();
+        transform.translate(-20, -10, -30);
+        b = transform.transform(bounds);
+        testBounds3d(b, -20 - 4, -20 + 4, -10 - 4, -10 + 4, -30 - 4, -30 + 4);
+
+        // rotate 90 degrees (should be same)
+        transform = new Transform3d();
+        transform.rotZ(Math.toRadians(90.0));
+        b = transform.transform(bounds);
+        testBounds3d(b, -4, 4, -4, 4, -4, 4);
+
+        // rotate 45 degrees in the XY-plane
+        transform = new Transform3d();
+        transform.rotZ(Math.toRadians(45.0));
+        double d = 4.0 * Math.sqrt(2.0);
+        b = transform.transform(bounds);
+        testBounds3d(b, -d, d, -d, d, -4, 4);
+
+        // rotate 45 degrees in the XY-plane and then translate to (10, 20)
+        // note that to do FIRST rotation and THEN translation, the steps have to be built in the OPPOSITE order
+        // since matrix multiplication operates from RIGHT to LEFT.  
+        transform = new Transform3d();
+        transform.translate(10, 20, 0);
+        transform.rotZ(Math.toRadians(45.0));
+        b = transform.transform(bounds);
+        testBounds3d(b, 10 - d, 10 + d, 20 - d, 20 + d, -4, 4);
+    }
+
+    /**
+     * Check bounds values.
+     * @param b Bounds3d; the box to test
+     * @param minX double; expected value
+     * @param maxX double; expected value
+     * @param minY double; expected value
+     * @param maxY double; expected value
+     * @param minZ double; expected value
+     * @param maxZ double; expected value
+     */
+    private void testBounds3d(final Bounds3d b, final double minX, final double maxX, final double minY, final double maxY,
+            final double minZ, final double maxZ)
+    {
+        assertEquals(minX, b.getMinX(), 0.001);
+        assertEquals(maxX, b.getMaxX(), 0.001);
+        assertEquals(minY, b.getMinY(), 0.001);
+        assertEquals(maxY, b.getMaxY(), 0.001);
+        assertEquals(minZ, b.getMinZ(), 0.001);
+        assertEquals(maxZ, b.getMaxZ(), 0.001);
+    }
+
+    /**
      * Check that toString returns something descriptive.
      */
     @Test
