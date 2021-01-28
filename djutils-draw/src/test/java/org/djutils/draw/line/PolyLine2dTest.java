@@ -126,15 +126,15 @@ public class PolyLine2dTest
      */
     private void runConstructors(final Point2d[] points) throws DrawException
     {
-        verifyPoints(new PolyLine2d(points), points);
+        verifyPointsAndSegments(new PolyLine2d(points), points);
         List<Point2d> list = new ArrayList<>();
         for (int i = 0; i < points.length; i++)
         {
             list.add(points[i]);
         }
         PolyLine2d line = new PolyLine2d(list);
-        verifyPoints(line, points);
-        verifyPoints(new PolyLine2d(line.getPoints()), points);
+        verifyPointsAndSegments(line, points);
+        verifyPointsAndSegments(new PolyLine2d(line.getPoints()), points);
         assertEquals("length at index 0", 0.0, line.lengthAtIndex(0), 0);
         double length = 0;
         for (int i = 1; i < points.length; i++)
@@ -260,47 +260,47 @@ public class PolyLine2dTest
     public void testConstructors() throws DrawRuntimeException, DrawException
     {
         runConstructors(new Point2d[] { new Point2d(1.2, 3.4), new Point2d(2.3, 4.5), new Point2d(3.4, 5.6) });
-        
+
         try
         {
-            new PolyLine2d(new double[] {1, 2, 3}, new double[] {4, 5});
+            new PolyLine2d(new double[] { 1, 2, 3 }, new double[] { 4, 5 });
             fail("double arrays of unequal length should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
-        
+
         try
         {
-            new PolyLine2d(new double[] {1, 2}, new double[] {3, 4, 5});
+            new PolyLine2d(new double[] { 1, 2 }, new double[] { 3, 4, 5 });
             fail("double arrays of unequal length should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
-        
+
         try
         {
-            new PolyLine2d(null, new double[] {1, 2});
+            new PolyLine2d(null, new double[] { 1, 2 });
             fail("null double array should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
         {
             // Ignore expected exception
         }
-        
+
         try
         {
-            new PolyLine2d(new double[] {1, 2}, null);
+            new PolyLine2d(new double[] { 1, 2 }, null);
             fail("null double array should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             new PolyLine2d((List<Point2d>) null);
@@ -694,7 +694,8 @@ public class PolyLine2dTest
         assertTrue("Line is equal to line from same set of points", line.equals(new PolyLine2d(line.getPoints())));
         // Make a line that differs only in the very last point
         Point2d[] otherArray = Arrays.copyOf(array, array.length);
-        otherArray[otherArray.length - 1] = new Point2d(otherArray[otherArray.length - 1].x, otherArray[otherArray.length - 1].y + 5);
+        otherArray[otherArray.length - 1] =
+                new Point2d(otherArray[otherArray.length - 1].x, otherArray[otherArray.length - 1].y + 5);
         PolyLine2d other = new PolyLine2d(otherArray);
         assertFalse("PolyLine2d that differs in y of last point is different", line.equals(other));
     }
@@ -1267,7 +1268,6 @@ public class PolyLine2dTest
                 fail("Second field " + fields[1] + " does not parse as a double");
             }
         }
-
     }
 
     /**
@@ -1276,7 +1276,7 @@ public class PolyLine2dTest
      * @param points Point2d[]; the OTSPoint array
      * @throws DrawException should not happen; this test has failed if it does happen
      */
-    private void verifyPoints(final PolyLine2d line, final Point2d[] points) throws DrawException
+    private void verifyPointsAndSegments(final PolyLine2d line, final Point2d[] points) throws DrawException
     {
         assertEquals("Line should have same number of points as point array", line.size(), points.length);
         for (int i = 0; i < points.length; i++)
@@ -1285,6 +1285,37 @@ public class PolyLine2dTest
             assertEquals("y of point i should match", points[i].y, line.get(i).y, Math.ulp(points[i].y));
             assertEquals("x of point i should match", points[i].x, line.getX(i), Math.ulp(points[i].x));
             assertEquals("y of point i should match", points[i].y, line.getY(i), Math.ulp(points[i].y));
+            if (i < points.length - 1)
+            {
+                LineSegment2d segment = line.getSegment(i);
+                assertEquals("begin x of line segment i should match", points[i].x, segment.startX, Math.ulp(points[i].x));
+                assertEquals("begin y of line segment i should match", points[i].y, segment.startY, Math.ulp(points[i].y));
+                assertEquals("end x of line segment i should match", points[i + 1].x, segment.endX, Math.ulp(points[i + 1].x));
+                assertEquals("end y of line segment i should match", points[i + 1].y, segment.endY, Math.ulp(points[i + 1].y));
+            }
+            else
+            {
+                try
+                {
+                    line.getSegment(i);
+                    fail("Too large index should have thrown a DrawRuntimeException");
+                }
+                catch (DrawRuntimeException dre)
+                {
+                    // Ignore expected exception
+                }
+                
+                try
+                {
+                    line.getSegment(-1);
+                    fail("Negative index should have thrown a DrawRuntimeException");
+                }
+                catch (DrawRuntimeException dre)
+                {
+                    // Ignore expected exception
+                }
+
+            }
         }
     }
 

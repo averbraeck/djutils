@@ -239,6 +239,39 @@ public class PolyLine3dTest
             assertEquals("x of point i should match", points[i].x, line.getX(i), Math.ulp(points[i].x));
             assertEquals("y of point i should match", points[i].y, line.getY(i), Math.ulp(points[i].y));
             assertEquals("z of point i should match", points[i].z, line.getZ(i), Math.ulp(points[i].z));
+            if (i < points.length - 1)
+            {
+                LineSegment3d segment = line.getSegment(i);
+                assertEquals("begin x of line segment i should match", points[i].x, segment.startX, Math.ulp(points[i].x));
+                assertEquals("begin y of line segment i should match", points[i].y, segment.startY, Math.ulp(points[i].y));
+                assertEquals("begin z of line segment i should match", points[i].z, segment.startZ, Math.ulp(points[i].z));
+                assertEquals("end x of line segment i should match", points[i + 1].x, segment.endX, Math.ulp(points[i + 1].x));
+                assertEquals("end y of line segment i should match", points[i + 1].y, segment.endY, Math.ulp(points[i + 1].y));
+                assertEquals("end z of line segment i should match", points[i + 1].z, segment.endZ, Math.ulp(points[i + 1].z));
+            }
+            else
+            {
+                try
+                {
+                    line.getSegment(i);
+                    fail("Too large index should have thrown a DrawRuntimeException");
+                }
+                catch (DrawRuntimeException dre)
+                {
+                    // Ignore expected exception
+                }
+
+                try
+                {
+                    line.getSegment(-1);
+                    fail("Negative index should have thrown a DrawRuntimeException");
+                }
+                catch (DrawRuntimeException dre)
+                {
+                    // Ignore expected exception
+                }
+
+            }
         }
     }
 

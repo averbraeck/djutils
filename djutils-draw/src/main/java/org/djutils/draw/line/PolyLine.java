@@ -21,8 +21,10 @@ import org.djutils.draw.point.Point;
  * @param <P> The Point type (2d or 3d)
  * @param <S> The Space type (2d, or 3d)
  * @param <R> The matching Ray type (2d or 3d)
+ * @param <LS> The matching LineSegment type (2d or 3d)
  */
-public interface PolyLine<L extends PolyLine<L, P, S, R>, P extends Point<P, S>, S extends Space, R> extends Drawable<P, S>
+public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P, S>, S extends Space, R extends Ray<R, P, S>,
+        LS extends LineSegment<P, R, S>> extends Drawable<P, S>
 {
     /**
      * Constructor that can be accessed as a method (used to implement default methods in this interface).
@@ -46,7 +48,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, R>, P extends Point<P, S>,
      * @throws IndexOutOfBoundsException when index &lt; 0 or index &gt;= size
      */
     P get(int index) throws IndexOutOfBoundsException;
-    
+
     /**
      * Return the x-coordinate of a point of this PolyLine.
      * @param index int; the index of the requested x-coordinate
@@ -64,7 +66,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, R>, P extends Point<P, S>,
     double getY(int index) throws IndexOutOfBoundsException;
 
     /**
-     * Return the first point of this line.
+     * Return the first point of this PolyLine.
      * @return P; the first point of this line
      */
     default P getFirst()
@@ -80,7 +82,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, R>, P extends Point<P, S>,
     }
 
     /**
-     * Return the last point of this line.
+     * Return the last point of this PolyLine.
      * @return P; the last point of this line
      */
     default P getLast()
@@ -96,6 +98,14 @@ public interface PolyLine<L extends PolyLine<L, P, S, R>, P extends Point<P, S>,
     }
 
     /**
+     * Return one segment of this PolyLine, or Polygon.
+     * @param index int; the rank number of the segment; must be in range 0..Size() - 2 for PolyLine, or 0.. Size() - 1 for
+     *            Polygon.
+     * @return LS; the segment that connects point index to point index + 1
+     */
+    LS getSegment(int index);
+
+    /**
      * Access the internal lengthIndexedLine. Return the cumulative length up to point <code>index</code> of this line
      * @param index int; the index
      * @return double; the cumulative length of this line up to point <code>index</code>
@@ -104,7 +114,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, R>, P extends Point<P, S>,
     double lengthAtIndex(int index) throws IndexOutOfBoundsException;
 
     /**
-     * Construct a new Line with all points of this Line in reverse order.
+     * Construct a new L with all points of this Line in reverse order.
      * @return L; the new Line
      */
     default L reverse()
