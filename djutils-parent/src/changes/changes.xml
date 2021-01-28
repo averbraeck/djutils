@@ -2,6 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.08" date="2021-01-28" description="Polygon2d and Polygon3d added">
+      <action dev="pknoppers" type="add">
+        Closed Polylines aka Polygons in 2d and 3d have been added to djutils-draw.
+      </action>
+    </release>
+    
     <release version="1.06.07" date="2021-01-23" description="Fixed rounding problem in AngleUtil; Ray; OrientedPoint">
       <action dev="pknoppers" type="fix">
         AngleUtil.normalizeAroundZero mapped Math.PI to -Math.PI. The fix ensures that Math.PI is mapped to Math.PI
