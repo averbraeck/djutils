@@ -26,7 +26,7 @@ import org.djutils.logger.CategoryLogger;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Space2d, Ray2d>
+public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Space2d, Ray2d, LineSegment2d>
 {
     /** */
     private static final long serialVersionUID = 20200911L;
@@ -116,7 +116,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * @param points Point2d[]; array of points
      * @return double[]; array filled with the x-coordinates of points
      */
-    private static double[] makeX(final Point2d[] points)
+    static double[] makeX(final Point2d[] points)
     {
         double[] xArray = new double[points.length];
         for (int i = 0; i < points.length; i++)
@@ -131,7 +131,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * @param points Point2d[]; array of points
      * @return double[]; array filled with the y-coordinates of points
      */
-    private static double[] makeY(final Point2d[] points)
+    static double[] makeY(final Point2d[] points)
     {
         double[] yArray = new double[points.length];
         for (int i = 0; i < points.length; i++)
@@ -145,7 +145,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * Construct a new PolyLine2d from an array of Point2d.
      * @param point1 Point2d; starting point of the PolyLine2d
      * @param point2 Point2d; second point of the PolyLine2d
-     * @param otherPoints Point2d...; additional points of the PolyLine2d
+     * @param otherPoints Point2d...; additional points of the PolyLine2d (may be null)
      * @throws NullPointerException when iterator is null
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
@@ -153,7 +153,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     public PolyLine2d(final Point2d point1, final Point2d point2, final Point2d... otherPoints)
             throws NullPointerException, DrawRuntimeException
     {
-        this(spliceArray(point1, point2, otherPoints));
+        this(spliceArray(Throw.whenNull(point1, "point1 may not be null"), Throw.whenNull(point2, "point2 may not be null"),
+                otherPoints));
     }
 
     /**
@@ -250,7 +251,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * @param iterator Iterator&lt;Point2d&gt;; the iterator that will provide the points
      * @return List&lt;Point2d&gt;; a list of the points provided by the iterator
      */
-    private static List<Point2d> iteratorToList(final Iterator<Point2d> iterator)
+    protected static List<Point2d> iteratorToList(final Iterator<Point2d> iterator)
     {
         List<Point2d> result = new ArrayList<>();
         iterator.forEachRemaining(result::add);
@@ -294,6 +295,14 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
 
     /** {@inheritDoc} */
     @Override
+    public LineSegment2d getSegment(final int index)
+    {
+        Throw.when(index < 0 || index >= this.x.length - 1, DrawRuntimeException.class, "index must be in range 0..size() - 1");
+        return new LineSegment2d(this.x[index], this.y[index], this.x[index + 1], this.y[index + 1]);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public final double lengthAtIndex(final int index)
     {
         return this.lengthIndexedLine[index];
@@ -301,7 +310,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
 
     /** {@inheritDoc} */
     @Override
-    public final double getLength()
+    public double getLength()
     {
         return this.length;
     }
@@ -1101,7 +1110,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
 
     /** {@inheritDoc} */
     @Override
-    public final String toString()
+    public String toString()
     {
         return "PolyLine2d [x=" + Arrays.toString(this.x) + ", y=" + Arrays.toString(this.y) + "]";
     }
@@ -1110,7 +1119,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * Convert this PolyLine2d to something that MS-Excel can plot.
      * @return excel XY plottable output
      */
-    public final String toExcel()
+    public String toExcel()
     {
         StringBuffer s = new StringBuffer();
         for (int i = 0; i < this.x.length; i++)
@@ -1124,7 +1133,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * Convert this PolyLine3D to Peter's plot format.
      * @return Peter's format plot output
      */
-    public final String toPlot()
+    public String toPlot()
     {
         StringBuffer result = new StringBuffer();
         for (int i = 0; i < this.x.length; i++)

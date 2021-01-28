@@ -23,7 +23,7 @@ import org.djutils.logger.CategoryLogger;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Space3d, Ray3d>
+public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Space3d, Ray3d, LineSegment3d>
 {
     /** */
     private static final long serialVersionUID = 20200911L;
@@ -274,7 +274,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     {
         return this.y[i];
     }
-    
+
     /**
      * Return the z-coordinate of a point of this PolyLine.
      * @param index int; the index of the requested z-coordinate
@@ -288,6 +288,15 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
 
     /** {@inheritDoc} */
     @Override
+    public LineSegment3d getSegment(final int index)
+    {
+        Throw.when(index < 0 || index >= this.x.length - 1, DrawRuntimeException.class, "index must be in range 0..size() - 1");
+        return new LineSegment3d(this.x[index], this.y[index], this.z[index], this.x[index + 1], this.y[index + 1],
+                this.z[index + 1]);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public final double lengthAtIndex(final int index)
     {
         return this.lengthIndexedLine[index];
@@ -295,7 +304,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
 
     /** {@inheritDoc} */
     @Override
-    public final double getLength()
+    public double getLength()
     {
         return this.length;
     }
