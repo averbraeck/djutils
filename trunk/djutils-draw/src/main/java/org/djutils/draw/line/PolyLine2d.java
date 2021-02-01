@@ -1112,7 +1112,26 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     @Override
     public String toString()
     {
-        return "PolyLine2d [x=" + Arrays.toString(this.x) + ", y=" + Arrays.toString(this.y) + "]";
+        return toString("%f", false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
+    {
+        StringBuilder result = new StringBuilder();
+        if (!doNotIncludeClassName)
+        {
+            result.append("PolyLine2d ");
+        }
+        result.append("[");
+        String format = String.format("%%sx=%1$s, y=%1$s", doubleFormat);
+        for (int index = 0; index < this.x.length; index++)
+        {
+            result.append(String.format(format, index == 0 ? "[" : ", ", this.x[index], this.y[index]));
+        }
+        result.append("]");
+        return result.toString();
     }
 
     /**

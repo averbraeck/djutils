@@ -264,28 +264,28 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     public static Point2d intersectionOfLines(final Point2d line1P1, final Point2d line1P2, final Point2d line2P1,
             final Point2d line2P2)
     {
-//        double l1p1x = line1P1.x;
-//        double l1p1y = line1P1.y;
-//        double l1p2x = line1P2.x - l1p1x;
-//        double l1p2y = line1P2.y - l1p1y;
-//        double l2p1x = line2P1.x - l1p1x;
-//        double l2p1y = line2P1.y - l1p1y;
-//        double l2p2x = line2P2.x - l1p1x;
-//        double l2p2y = line2P2.y - l1p1y;
-//        double denominator = (l2p2y - l2p1y) * l1p2x - (l2p2x - l2p1x) * l1p2y;
-//        if (denominator == 0.0)
-//        {
-//            return null; // lines are parallel (they might even be on top of each other, but we don't check that)
-//        }
-//        double u = ((l2p2x - l2p1x) * (-l2p1y) - (l2p2y - l2p1y) * (-l2p1x)) / denominator;
-//        Point2d oldResult = line1P1.interpolate(line1P2, u);
-//        Point2d newResult =
-//                intersectionOfLines(line1P1.x, line1P1.y, line1P2.x, line1P2.y, line2P1.x, line2P1.y, line2P2.x, line2P2.y);
-//        if (oldResult.distance(newResult) > 0.0001)
-//        {
-//            System.err.println("oops oldResult=" + oldResult + ", newResult=" + newResult);
-//        }
-//        return newResult;
+        // double l1p1x = line1P1.x;
+        // double l1p1y = line1P1.y;
+        // double l1p2x = line1P2.x - l1p1x;
+        // double l1p2y = line1P2.y - l1p1y;
+        // double l2p1x = line2P1.x - l1p1x;
+        // double l2p1y = line2P1.y - l1p1y;
+        // double l2p2x = line2P2.x - l1p1x;
+        // double l2p2y = line2P2.y - l1p1y;
+        // double denominator = (l2p2y - l2p1y) * l1p2x - (l2p2x - l2p1x) * l1p2y;
+        // if (denominator == 0.0)
+        // {
+        // return null; // lines are parallel (they might even be on top of each other, but we don't check that)
+        // }
+        // double u = ((l2p2x - l2p1x) * (-l2p1y) - (l2p2y - l2p1y) * (-l2p1x)) / denominator;
+        // Point2d oldResult = line1P1.interpolate(line1P2, u);
+        // Point2d newResult =
+        // intersectionOfLines(line1P1.x, line1P1.y, line1P2.x, line1P2.y, line2P1.x, line2P1.y, line2P2.x, line2P2.y);
+        // if (oldResult.distance(newResult) > 0.0001)
+        // {
+        // System.err.println("oops oldResult=" + oldResult + ", newResult=" + newResult);
+        // }
+        // return newResult;
         return intersectionOfLines(line1P1.x, line1P1.y, line1P2.x, line1P2.y, line2P1.x, line2P1.y, line2P2.x, line2P2.y);
     }
 
@@ -447,18 +447,17 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
 
     /** {@inheritDoc} */
     @Override
-    public String toString(final int fractionDigits)
+    public String toString()
     {
-        int digits = fractionDigits < 0 ? 0 : fractionDigits;
-        String format = String.format("(%%.%1$df,%%.%1$df)", digits);
-        return String.format(format, getX(), getY());
+        return toString("%f");
     }
 
     /** {@inheritDoc} */
     @Override
-    public String toString()
+    public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
-        return String.format("(%f,%f)", getX(), getY());
+        String format = String.format("%1$s[x=%2$s, y=%2$s]", doNotIncludeClassName ? "" : "Point2d ", doubleFormat);
+        return String.format(format, this.x, this.y);
     }
 
     /** {@inheritDoc} */

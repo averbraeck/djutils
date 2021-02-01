@@ -151,10 +151,10 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
     public Iterator<Point3d> getPoints()
     {
         Point3d[] array =
-                new Point3d[] {new Point3d(getMinX(), getMinY(), getMinZ()), new Point3d(getMinX(), getMinY(), getMaxZ()),
+                new Point3d[] { new Point3d(getMinX(), getMinY(), getMinZ()), new Point3d(getMinX(), getMinY(), getMaxZ()),
                         new Point3d(getMinX(), getMaxY(), getMinZ()), new Point3d(getMinX(), getMaxY(), getMaxZ()),
                         new Point3d(getMaxX(), getMinY(), getMinZ()), new Point3d(getMaxX(), getMinY(), getMaxZ()),
-                        new Point3d(getMaxX(), getMaxY(), getMinZ()), new Point3d(getMaxX(), getMaxY(), getMaxZ())};
+                        new Point3d(getMaxX(), getMaxY(), getMinZ()), new Point3d(getMaxX(), getMaxY(), getMaxZ()) };
         return Arrays.stream(array).iterator();
     }
 
@@ -369,8 +369,16 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
     @Override
     public String toString()
     {
-        return "Bounds3d [x[" + this.minX + " : " + this.maxX + "], y[" + this.minY + " : " + this.maxY + "], z[" + this.minZ
-                + " : " + this.maxZ + "]]";
+        return toString("%f", false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
+    {
+        String format = String.format("%1$s[x[%2$s : %2$s], y[%2$s : %2$s, z[%2$s : %2$s]]",
+                doNotIncludeClassName ? "" : "Bounds3d ", doubleFormat);
+        return String.format(format, this.minX, this.maxX, this.minY, this.maxY, this.minZ, this.maxZ);
     }
 
     /** {@inheritDoc} */

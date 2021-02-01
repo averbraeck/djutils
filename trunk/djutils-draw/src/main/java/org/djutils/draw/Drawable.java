@@ -30,4 +30,42 @@ public interface Drawable<P extends Point<P, S>, S extends Space> extends Serial
      */
     int size();
 
+    /**
+     * Produce a string describing the Drawable using default conversion for the (double) coordinate values. Regrettably, it is
+     * not allowed to provide a default implementation here.
+     * @return String; a string describing the Drawable
+     */
+    @Override
+    String toString();
+
+    /**
+     * Produce a String describing the Drawable.
+     * @param doubleFormat String; a format string (something like "%6.3f") which will be used to render every coordinate value)
+     * @param doNotIncludeClassName boolean; if true; the output of toString is <b>not</b> prefixed by the class name. This is
+     *            useful for concatenating the textual representation of lots of Drawables (e.g. an array, or a List).
+     * @return String; textual representation of the Drawable
+     */
+    String toString(String doubleFormat, boolean doNotIncludeClassName);
+
+    /**
+     * Produce a String describing the Drawable.
+     * @param doubleFormat String; a format string (something like "%6.3f") which will be used to render every coordinate value)
+     * @return String; textual representation of the Drawable
+     */
+    default String toString(final String doubleFormat)
+    {
+        return toString(doubleFormat, false);
+    }
+
+    /**
+     * Produce a String describing the Drawable.
+     * @param doNotIncludeClassName boolean; if true; the output of toString is <b>not</b> prefixed by the class name. This is
+     *            useful for concatenating the textual representation of lots of Drawables (e.g. an array, or a List).
+     * @return String; textual representation of the Drawable
+     */
+    default String toString(final boolean doNotIncludeClassName)
+    {
+        return toString("%f", doNotIncludeClassName);
+    }
+
 }

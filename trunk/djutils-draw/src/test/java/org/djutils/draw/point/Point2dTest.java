@@ -143,10 +143,9 @@ public class Point2dTest
 
         // toString
         p = new Point2d(10.0, 20.0);
-        assertEquals("(10.000000,20.000000)", p.toString());
-        assertEquals("(10.0,20.0)", p.toString(1));
-        assertEquals("(10,20)", p.toString(0));
-        assertEquals("(10,20)", p.toString(-1));
+        assertEquals("Point2d [x=10.000000, y=20.000000]", p.toString());
+        assertEquals("Point2d [x=10.0, y=20.0]", p.toString("%.1f"));
+        assertEquals("[x=10, y=20]", p.toString("%.0f", true));
 
         // epsilonEquals
         assertTrue(p.epsilonEquals(p, 0.1));

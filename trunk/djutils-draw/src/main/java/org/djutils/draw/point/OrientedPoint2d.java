@@ -184,23 +184,23 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     @Override
     public Iterator<? extends OrientedPoint2d> getPoints()
     {
-        return Arrays.stream(new OrientedPoint2d[] {this}).iterator();
+        return Arrays.stream(new OrientedPoint2d[] { this }).iterator();
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString()
     {
-        return String.format("[(%f,%f), rot=%f]", getX(), getY(), getDirZ());
+        return toString("%f", false);
     }
 
     /** {@inheritDoc} */
     @Override
-    public String toString(final int fractionDigits)
+    public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
-        int digits = fractionDigits < 0 ? 0 : fractionDigits;
-        String format = String.format("[(%%.%1$df,%%.%1$df), rot=%%.%1$df]", digits);
-        return String.format(format, getX(), getY(), getDirZ());
+        String format =
+                String.format("%1$s[x=%2$s, y=%2$s, rot=%2$s]", doNotIncludeClassName ? "" : "OrientedPoint2d ", doubleFormat);
+        return String.format(format, this.x, this.y, this.dirZ);
     }
 
     /** {@inheritDoc} */

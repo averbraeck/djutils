@@ -88,7 +88,7 @@ public class LineSegment2dTest
         assertEquals(description + " bounds maxX", Math.max(expectedStartX, expectedEndX), bounds.getMaxX(), 0.0001);
         assertEquals(description + " bounds minY", Math.min(expectedStartY, expectedEndY), bounds.getMinY(), 0.0001);
         assertEquals(description + " bounds maxY", Math.max(expectedStartY, expectedEndY), bounds.getMaxY(), 0.0001);
-        assertTrue(description + " toString returns something descriptive", segment.toString().startsWith("Segment2d"));
+        assertTrue(description + " toString returns something descriptive", segment.toString().startsWith("LineSegment2d "));
     }
 
     /**

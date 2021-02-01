@@ -135,8 +135,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
     @Override
     public Iterator<Point2d> getPoints()
     {
-        Point2d[] array = new Point2d[] {new Point2d(getMinX(), getMinY()), new Point2d(getMinX(), getMaxY()),
-                new Point2d(getMaxX(), getMinY()), new Point2d(getMaxX(), getMaxY())};
+        Point2d[] array = new Point2d[] { new Point2d(getMinX(), getMinY()), new Point2d(getMinX(), getMaxY()),
+                new Point2d(getMaxX(), getMinY()), new Point2d(getMaxX(), getMaxY()) };
         return Arrays.stream(array).iterator();
     }
 
@@ -321,7 +321,16 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
     @Override
     public String toString()
     {
-        return "Bounds2d [x[" + this.minX + " : " + this.maxX + "], y[" + this.minY + " : " + this.maxY + "]]";
+        return toString("%f");
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
+    {
+        String format = String.format("%1$s[x[%2$s : %2$s], y[%2$s : %2$s]]", doNotIncludeClassName ? "" : "Bounds2d ",
+                doubleFormat);
+        return String.format(format, this.minX, this.maxX, this.minY, this.maxY);
     }
 
     /** {@inheritDoc} */

@@ -152,10 +152,10 @@ public class OrientedPoint2dTest
 
         // toString
         p = new OrientedPoint2d(10.0, 20.0, Math.PI);
-        assertEquals("[(10.000000,20.000000), rot=3.141593]", p.toString());
-        assertEquals("[(10.0,20.0), rot=3.1]", p.toString(1));
-        assertEquals("[(10,20), rot=3]", p.toString(0));
-        assertEquals("[(10,20), rot=3]", p.toString(-1));
+        System.out.println(p);
+        assertEquals("OrientedPoint2d [x=10.000000, y=20.000000, rot=3.141593]", p.toString());
+        assertEquals("OrientedPoint2d [x=10.0, y=20.0, rot=3.1]", p.toString("%.1f"));
+        assertEquals("[x=10, y=20, rot=3]", p.toString("%.0f", true));
 
         // epsilonEquals
         OrientedPoint3d p3 = p.translate(0.001, 0.0, 0.0);

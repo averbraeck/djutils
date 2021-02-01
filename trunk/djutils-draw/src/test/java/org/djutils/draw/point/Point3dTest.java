@@ -167,10 +167,9 @@ public class Point3dTest
 
         // toString
         p = new Point3d(10.0, 20.0, 30.0);
-        assertEquals("(10.000000,20.000000,30.000000)", p.toString());
-        assertEquals("(10.0,20.0,30.0)", p.toString(1));
-        assertEquals("(10,20,30)", p.toString(0));
-        assertEquals("(10,20,30)", p.toString(-1));
+        assertEquals("Point3d [x=10.000000, y=20.000000, z=30.000000]", p.toString());
+        assertEquals("Point3d [x=10.0, y=20.0, z=30.0]", p.toString("%.1f"));
+        assertEquals("[x=10, y=20, z=30]", p.toString("%.0f", true));
 
         // epsilonEquals
         assertTrue(p.epsilonEquals(p, 0.1));
