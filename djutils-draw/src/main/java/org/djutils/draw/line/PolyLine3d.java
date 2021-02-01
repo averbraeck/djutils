@@ -128,7 +128,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      * @param points Point2d[]; array of points
      * @return double[]; array filled with the x-coordinates of points
      */
-    private static double[] makeX(final Point3d[] points)
+    static double[] makeX(final Point3d[] points)
     {
         double[] xArray = new double[points.length];
         for (int i = 0; i < points.length; i++)
@@ -143,7 +143,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      * @param points Point2d[]; array of points
      * @return double[]; array filled with the y-coordinates of points
      */
-    private static double[] makeY(final Point3d[] points)
+    static double[] makeY(final Point3d[] points)
     {
         double[] yArray = new double[points.length];
         for (int i = 0; i < points.length; i++)
@@ -158,7 +158,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      * @param points Point2d[]; array of points
      * @return double[]; array filled with the z-coordinates of points
      */
-    private static double[] makeZ(final Point3d[] points)
+    static double[] makeZ(final Point3d[] points)
     {
         double[] zArray = new double[points.length];
         for (int i = 0; i < points.length; i++)
@@ -240,7 +240,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      * @param iterator Iterator&lt;Point3d&gt;; the iterator that will provide the points
      * @return List&lt;Point3d&gt;; a list of the points provided by the iterator
      */
-    private static List<Point3d> iteratorToList(final Iterator<Point3d> iterator)
+    static List<Point3d> iteratorToList(final Iterator<Point3d> iterator)
     {
         List<Point3d> result = new ArrayList<>();
         iterator.forEachRemaining(result::add);
@@ -752,6 +752,20 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         truncatedY[index] = lastPoint.y;
         truncatedZ[index] = lastPoint.z;
         return new PolyLine3d(truncatedX, truncatedY, truncatedZ);
+    }
+
+    /**
+     * Convert this PolyLine2d to something that MS-Excel can plot.
+     * @return excel X/Y/Z plottable output
+     */
+    public String toExcel()
+    {
+        StringBuffer s = new StringBuffer();
+        for (int i = 0; i < size(); i++)
+        {
+            s.append(getX(i) + "\t" + getY(i) + "\t" + getZ(i) + "\n");
+        }
+        return s.toString();
     }
 
     /** {@inheritDoc} */

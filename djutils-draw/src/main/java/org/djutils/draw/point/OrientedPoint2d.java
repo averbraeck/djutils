@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import org.djutils.base.AngleUtil;
-import org.djutils.draw.Oriented2d;
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.Oriented2d;
 import org.djutils.exceptions.Throw;
 
 /**
