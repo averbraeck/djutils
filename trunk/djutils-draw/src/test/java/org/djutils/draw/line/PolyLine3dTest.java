@@ -1132,6 +1132,51 @@ public class PolyLine3dTest
     }
 
     /**
+     * Test the debugging output methods.
+     */
+    @Test
+    public void testExports()
+    {
+        Point3d[] points = new Point3d[] { new Point3d(123.456, 345.678, 901.234), new Point3d(234.567, 456.789, 12.345),
+                new Point3d(-12.345, -34.567, 45.678) };
+        PolyLine3d pl = new PolyLine3d(points);
+        String[] out = pl.toExcel().split("\\n");
+        assertEquals("Excel output consists of one line per point", points.length, out.length);
+        for (int index = 0; index < points.length; index++)
+        {
+            String[] fields = out[index].split("\\t");
+            assertEquals("each line consists of three fields", 3, fields.length);
+            try
+            {
+                double x = Double.parseDouble(fields[0].trim());
+                assertEquals("x matches", points[index].x, x, 0.001);
+            }
+            catch (NumberFormatException nfe)
+            {
+                fail("First field " + fields[0] + " does not parse as a double");
+            }
+            try
+            {
+                double y = Double.parseDouble(fields[1].trim());
+                assertEquals("y matches", points[index].y, y, 0.001);
+            }
+            catch (NumberFormatException nfe)
+            {
+                fail("Second field " + fields[1] + " does not parse as a double");
+            }
+            try
+            {
+                double z = Double.parseDouble(fields[2].trim());
+                assertEquals("z matches", points[index].z, z, 0.001);
+            }
+            catch (NumberFormatException nfe)
+            {
+                fail("Second field " + fields[2] + " does not parse as a double");
+            }
+        }
+    }
+
+    /**
      * Test the hashCode and Equals methods.
      * @throws DrawException when that happens uncaught; this test has failed
      * @throws NullPointerException when that happens uncaught; this test has failed

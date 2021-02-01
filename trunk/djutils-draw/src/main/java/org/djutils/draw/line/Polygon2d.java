@@ -12,7 +12,7 @@ import org.djutils.exceptions.Throw;
 
 /**
  * Polygon2d.java. Closed PolyLine2d. The actual closing point (which is the same as the starting point) is NOT included in the
- * super PolyLine2d.
+ * super PolyLine2d. The constructors automatically remove the last point if it is a at the same location as the first point.
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -238,7 +238,7 @@ public class Polygon2d extends PolyLine2d
         {
             double curPointX = getX(i);
             double curPointY = getY(i);
-            // Combined 4 if statements into one; I trust that the java compile will short-circuit this nicely
+            // Combined 4 if statements into one; I trust that the java compiler will short-circuit this nicely
             if (y > Math.min(prevPointY, curPointY) && y <= Math.max(prevPointY, curPointY)
                     && x <= Math.max(prevPointX, curPointX) && prevPointY != curPointY)
             {

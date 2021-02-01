@@ -551,9 +551,52 @@ public class PolyLine2dTest
             // Ignore expected exception
         }
 
+        try
+        {
+            line.getLocation(-0.1);
+            fail("negative location should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
+        assertEquals("Length of line is 10", 10, length, 0.000001);
+
+        try
+        {
+            line.getLocationFraction(1.1);
+            fail("location beyond length should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.getLocationFraction(-0.1);
+            fail("negative location should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
         for (double position : new double[] { -1, 0, 2.5, 4.9, 5.1, 7.5, 9.9, 10, 11 })
         {
             Ray2d ray = line.getLocationExtended(position);
+            if (position < 5)
+            {
+                Ray2d expected = new Ray2d(array[0].interpolate(array[1], position / 5), Math.atan2(4, 3));
+                assertTrue("interpolated/extrapolated point", expected.epsilonEquals(ray, 0.0001, 0.00001));
+            }
+            else
+            {
+                Ray2d expected = new Ray2d(array[1].interpolate(array[2], (position - 5) / 5), Math.atan2(3, 4));
+                assertTrue("interpolated/extrapolated point", expected.epsilonEquals(ray, 0.0001, 0.00001));
+            }
+            ray = line.getLocationFractionExtended(position / line.getLength());
             if (position < 5)
             {
                 Ray2d expected = new Ray2d(array[0].interpolate(array[1], position / 5), Math.atan2(4, 3));
@@ -590,6 +633,30 @@ public class PolyLine2dTest
                             distance <= actualDistance + 0.000001);
                 }
             }
+        }
+        Point2d toleranceResultPoint = line.getLocationFraction(-0.01, 0.01);
+        assertEquals("tolerance result matches extended fraction result", line.getLocationFraction(0), toleranceResultPoint);
+        toleranceResultPoint = line.getLocationFraction(1.01, 0.01);
+        assertEquals("tolerance result matches extended fraction result", line.getLocationFraction(1), toleranceResultPoint);
+
+        try
+        {
+            line.getLocationFraction(-.011, 0.01);
+            fail("fraction outside tolerance should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.getLocationFraction(1.011, 0.01);
+            fail("fraction outside tolerance should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
         }
 
         // Test the extract and truncate methods
@@ -1304,7 +1371,7 @@ public class PolyLine2dTest
                 {
                     // Ignore expected exception
                 }
-                
+
                 try
                 {
                     line.getSegment(-1);
