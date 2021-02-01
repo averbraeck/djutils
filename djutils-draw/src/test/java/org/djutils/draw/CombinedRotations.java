@@ -39,7 +39,7 @@ public final class CombinedRotations
                     System.out.println(String.format(
                             "rotX=%4.0f, rotY=%4.0f, rotZ=%4.0f, transformed unit vector %s, transformation Matrix %s",
                             Math.toDegrees(rotX), Math.toDegrees(rotY), Math.toDegrees(rotZ),
-                            combinedTransform.transform(unitVector).toString(0), combinedTransform));
+                            combinedTransform.transform(unitVector).toString("%4.0f"), combinedTransform));
                 }
             }
         }

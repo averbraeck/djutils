@@ -291,22 +291,22 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     @Override
     public Iterator<OrientedPoint3d> getPoints()
     {
-        return Arrays.stream(new OrientedPoint3d[] {this}).iterator();
+        return Arrays.stream(new OrientedPoint3d[] { this }).iterator();
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString()
     {
-        return String.format("[(%f,%f,%f), rot=(%f,%f,%f)]", this.x, this.y, this.z, this.dirX, this.dirY, this.dirZ);
+        return toString("%f", false);
     }
 
     /** {@inheritDoc} */
     @Override
-    public String toString(final int fractionDigits)
+    public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
-        int digits = fractionDigits < 0 ? 0 : fractionDigits;
-        String format = String.format("[(%%.%1$df,%%.%1$df,%%.%1$df), rot=(%%.%1$df,%%.%1$df,%%.%1$df)]", digits);
+        String format = String.format("%1$s[x=%2$s, y=%2$s, z=%2$s, rotX=%2$s, rotY=%2$s, rotZ=%2$s]",
+                doNotIncludeClassName ? "" : "OrientedPoint3d ", doubleFormat);
         return String.format(format, this.x, this.y, this.z, this.dirX, this.dirY, this.dirZ);
     }
 

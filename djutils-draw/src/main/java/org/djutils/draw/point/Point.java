@@ -118,18 +118,4 @@ public interface Point<P extends Point<P, S>, S extends Space> extends Drawable<
      */
     boolean epsilonEquals(P other, double epsilon);
 
-    /**
-     * Return a string representation of the point with a certain number of fraction digits for the coordinates.
-     * @param fractionDigits int; the number of fraction digits. Should be 0 or a positive number
-     * @return String; a formatted string with a certain number of fraction digits for the coordinates
-     */
-    String toString(int fractionDigits);
-
-    /**
-     * Return a string representation of the point.
-     * @return String; a formatted string of the point
-     */
-    @Override
-    String toString();
-
 }

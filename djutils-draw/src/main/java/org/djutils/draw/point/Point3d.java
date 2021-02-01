@@ -350,6 +350,18 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     }
 
     /**
+     * Return the direction with respect to the Z axis to another point, in radians. 
+     * @param point Point3d; the other point
+     * @return double; the direction with respect to the Z axis to another point, in radians
+     * @throws NullPointerException when <code>point</code> is null
+     */
+    final double verticalDirection(final Point3d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point cannot be null");
+        return Math.atan2(point.z - getZ(), Math.hypot(point.y - getY(), point.x - getX()));
+    }
+
+    /**
      * Return the squared distance between the coordinates of this point and the provided point, ignoring the z-coordinate.
      * @param point Point3d; the other point
      * @return double; the squared distance between this point and the other point, ignoring the z-coordinate
@@ -379,16 +391,15 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()
     {
-        return String.format("(%f,%f,%f)", getX(), getY(), getZ());
+        return toString("%f");
     }
 
     /** {@inheritDoc} */
     @Override
-    public String toString(final int fractionDigits)
+    public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
-        int digits = fractionDigits < 0 ? 0 : fractionDigits;
-        String format = String.format("(%%.%1$df,%%.%1$df,%%.%1$df)", digits);
-        return String.format(format, getX(), getY(), getZ());
+        String format = String.format("%1$s[x=%2$s, y=%2$s, z=%2$s]", doNotIncludeClassName ? "" : "Point3d ", doubleFormat);
+        return String.format(format, this.x, this.y, this.z);
     }
 
     /** {@inheritDoc} */

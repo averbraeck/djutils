@@ -211,8 +211,16 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d, Sp
     @Override
     public String toString()
     {
-        return "Segment3d [startX=" + this.startX + ", startY=" + this.startY + ", startZ=" + this.startZ + ", endX="
-                + this.endX + ", endY=" + this.endY + ", endZ=" + this.endZ + "]";
+        return toString("%f", false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
+    {
+        String format = String.format("%1$s[startX=%2$s, startY=%2$s, startZ=%2$s - endX=%2%s, endY=%2$s, endZ=%2$s]",
+                doNotIncludeClassName ? "" : "LineSegment3d ", doubleFormat);
+        return String.format(format, this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ);
     }
 
     /** {@inheritDoc} */

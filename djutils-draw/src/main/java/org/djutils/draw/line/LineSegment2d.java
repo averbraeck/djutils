@@ -125,7 +125,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
     @Override
     public Iterator<? extends Point2d> getPoints()
     {
-        return Arrays.stream(new Point2d[] {getStartPoint(), getEndPoint()}).iterator();
+        return Arrays.stream(new Point2d[] { getStartPoint(), getEndPoint() }).iterator();
     }
 
     /** {@inheritDoc} */
@@ -180,8 +180,16 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
     @Override
     public String toString()
     {
-        return "Segment2d [startX=" + this.startX + ", startY=" + this.startY + ", endX=" + this.endX + ", endY=" + this.endY
-                + "]";
+        return toString("%f", false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
+    {
+        String format = String.format("%1$s[startX=%2$s, startY=%2$s - endX=%2%s, endY=%2$s]",
+                doNotIncludeClassName ? "" : "LineSegment2d ", doubleFormat);
+        return String.format(format, this.startX, this.startY, this.endX, this.endY);
     }
 
     /** {@inheritDoc} */
