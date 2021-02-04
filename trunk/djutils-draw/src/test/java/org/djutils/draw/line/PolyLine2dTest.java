@@ -17,6 +17,7 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Transform2d;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.Point2d;
+import org.djutils.draw.point.Point3d;
 import org.junit.Test;
 
 /**
@@ -736,8 +737,6 @@ public class PolyLine2dTest
             // Ignore expected exception
         }
 
-        assertTrue("toString returns something descriptive", line.toString().startsWith("PolyLine2d ["));
-
         // Verify that hashCode. Check that the result depends on the actual coordinates.
         assertNotEquals("hash code takes x coordinate into account",
                 new PolyLine2d(new Point2d(0, 0), new Point2d(1, 1)).hashCode(),
@@ -1184,6 +1183,16 @@ public class PolyLine2dTest
                 double location = innerDesignLine.projectRay(ray);
                 if (!Double.isNaN(location))
                 {
+                    try
+                    {
+                        innerDesignLine.getLocation(location);
+                    }
+                    catch (DrawException de)
+                    {
+                        System.out.println("WTF");
+                        outerDesignLine.projectRay(ray);
+                        // WTF
+                    }
                     Point2d projection = innerDesignLine.getLocation(location);
                     projections.add(new Point2d(projection.x, projection.y));
                     projections.add(transitionLinePoint);
@@ -1191,6 +1200,16 @@ public class PolyLine2dTest
                 location = outerDesignLine.projectRay(ray);
                 if (!Double.isNaN(location))
                 {
+                    try
+                    {
+                        outerDesignLine.getLocation(location);
+                    }
+                    catch (DrawException de)
+                    {
+                        System.out.println("WTF");
+                        outerDesignLine.projectRay(ray);
+                        // WTF
+                    }
                     Point2d projection = outerDesignLine.getLocation(location);
                     projections.add(new Point2d(projection.x, projection.y));
                     projections.add(transitionLinePoint);
@@ -1222,6 +1241,10 @@ public class PolyLine2dTest
             Ray2d ray = new Ray2d(x, y, slopeAngle);
             projections.add(ray);
             double projectionLocation = offsetLine.projectRay(ray);
+            if (Double.isNaN(projectionLocation))
+            {
+                offsetLine.projectRay(ray);
+            }
             assertFalse("There is a projection", Double.isNaN(projectionLocation));
             try
             {
@@ -1384,6 +1407,48 @@ public class PolyLine2dTest
 
             }
         }
+    }
+
+    /**
+     * Test the hashCode and Equals methods.
+     * @throws DrawException when that happens uncaught; this test has failed
+     * @throws NullPointerException when that happens uncaught; this test has failed
+     */
+    @SuppressWarnings("unlikely-arg-type")
+    @Test
+    public void testToStringHashCodeAndEquals() throws NullPointerException, DrawException
+    {
+        PolyLine2d line = new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9) });
+        assertTrue("toString returns something descriptive", line.toString().startsWith("PolyLine2d ["));
+        assertTrue("toString can suppress the class name", line.toString().indexOf(line.toString(true)) > 0);
+
+        // Verify that hashCode. Check that the result depends on the actual coordinates.
+        assertNotEquals("hash code takes x coordinate into account",
+                new PolyLine2d(new Point2d(0, 0), new Point2d(1, 1)).hashCode(),
+                new PolyLine2d(new Point2d(1, 0), new Point2d(1, 1)).hashCode());
+        assertNotEquals("hash code takes y coordinate into account",
+                new PolyLine2d(new Point2d(0, 0), new Point2d(1, 1)).hashCode(),
+                new PolyLine2d(new Point2d(0, 1), new Point2d(1, 1)).hashCode());
+        assertNotEquals("hash code takes x coordinate into account",
+                new PolyLine2d(new Point2d(0, 0), new Point2d(1, 1)).hashCode(),
+                new PolyLine2d(new Point2d(0, 0), new Point2d(2, 1)).hashCode());
+        assertNotEquals("hash code takes y coordinate into account",
+                new PolyLine2d(new Point2d(0, 0), new Point2d(1, 1)).hashCode(),
+                new PolyLine2d(new Point2d(0, 0), new Point2d(1, 2)).hashCode());
+
+        // Verify the equals method.
+        assertTrue("line is equal to itself", line.equals(line));
+        assertFalse("line is not equal to a different line",
+                line.equals(new PolyLine3d(new Point3d(123, 456, 789), new Point3d(789, 101112, 2))));
+        assertFalse("line is not equal to null", line.equals(null));
+        assertFalse("line is not equal to a different kind of object", line.equals("unlikely"));
+        assertEquals("equals verbatim copy", line,
+                new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9) }));
+        assertNotEquals("equals checks x", line,
+                new PolyLine2d(new Point2d[] { new Point2d(2, 2), new Point2d(4, 6), new Point2d(8, 9) }));
+        assertNotEquals("equals checks y", line,
+                new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(4, 7), new Point2d(8, 9) }));
+        assertTrue("Line is equal to line from same set of points", line.equals(new PolyLine2d(line.getPoints())));
     }
 
 }

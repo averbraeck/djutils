@@ -164,7 +164,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     @Override
     public Iterator<? extends Point3d> getPoints()
     {
-        return Arrays.stream(new Point3d[] {this}).iterator();
+        return Arrays.stream(new Point3d[] { this }).iterator();
     }
 
     /** {@inheritDoc} */
@@ -276,55 +276,136 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     @Override
     public final Point3d closestPointOnSegment(final Point3d segmentPoint1, final Point3d segmentPoint2)
     {
-        double dX = segmentPoint2.x - segmentPoint1.x;
-        double dY = segmentPoint2.y - segmentPoint1.y;
-        double dZ = segmentPoint2.z - segmentPoint1.z;
-        if (0 == dX && 0 == dY && 0 == dZ) // The points may be equal (unlike in Segment3d)
+        Throw.whenNull(segmentPoint1, "segmentPoint1 may not be null");
+        Throw.whenNull(segmentPoint2, "segmentPoint2 may not be null");
+        return closestPointOnSegment(segmentPoint1.x, segmentPoint1.y, segmentPoint1.z, segmentPoint2.x, segmentPoint2.y,
+                segmentPoint2.z);
+    }
+
+    /**
+     * Compute the closest point on a line with optional limiting of the result on either end.
+     * @param p1X double; the x coordinate of the first point on the line
+     * @param p1Y double; the y coordinate of the first point on the line
+     * @param p1Z double; the z coordinate of the first point on the line
+     * @param p2X double; the x coordinate of the second point on the line
+     * @param p2Y double; the y coordinate of the second point on the line
+     * @param p2Z double; the z coordinate of the second point on the line
+     * @param lowLimitHandling Boolean; controls handling of results that lie before the first point of the line. If null; this
+     *            method returns null; else if true; this method returns (p1X,p1Y); else (lowLimitHandling is false); this
+     *            method will return the closest point on the line
+     * @param highLimitHandling Boolean; controls the handling of results that lie beyond the second point of the line. If null;
+     *            this method returns null; else if true; this method returns (p2X,p2Y); else (highLimitHandling is false); this
+     *            method will return the closest point on the line
+     * @return Point3d; the closest point on the line after applying the indicated limit handling; so the result can be null
+     * @throws DrawRuntimeException when any of the arguments is NaN
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    public Point3d closestPointOnLine(final double p1X, final double p1Y, final double p1Z, final double p2X, final double p2Y,
+            final double p2Z, final Boolean lowLimitHandling, final Boolean highLimitHandling) throws DrawRuntimeException
+    {
+        double dX = p2X - p1X;
+        double dY = p2Y - p1Y;
+        double dZ = p2Z - p1Z;
+        Throw.when(Double.isNaN(dX) || Double.isNaN(dY) || Double.isNaN(dZ), DrawRuntimeException.class,
+                "NaN values not permitted");
+        if (0 == dX && 0 == dY && 0 == dZ)
         {
-            return segmentPoint1;
+            return new Point3d(p1X, p1Y, p1Z);
         }
-        final double u = ((this.x - segmentPoint1.x) * dX + (this.y - segmentPoint1.y) * dY + (this.z - segmentPoint1.z) * dZ)
-                / (dX * dX + dY * dY + dZ * dZ);
-        if (u < 0)
+        double u = ((this.x - p1X) * dX + (this.y - p1Y) * dY + (this.z - p1Z) * dZ) / (dX * dX + dY * dY + dZ * dZ);
+        if (u < 0.0)
         {
-            return segmentPoint1;
+            if (lowLimitHandling == null)
+            {
+                return null;
+            }
+            if (lowLimitHandling)
+            {
+                u = 0.0;
+            }
         }
-        else if (u > 1)
+        else if (u > 1.0)
         {
-            return segmentPoint2;
+            if (highLimitHandling == null)
+            {
+                return null;
+            }
+            if (highLimitHandling)
+            {
+                u = 1.0;
+            }
         }
-        else
+        if (u == 1.0) // Maximize precision in case u == 1
         {
-            return segmentPoint1.interpolate(segmentPoint2, u);
+            return new Point3d(p2X, p2Y, p2Z);
         }
+        return new Point3d(p1X + u * dX, p1Y + u * dY, p1Z + u * dZ);
+    }
+
+    /**
+     * Project a point on a line segment. If the the projected points lies outside the line segment, the nearest end point of
+     * the line segment is returned. Otherwise the returned point lies between the end points of the line segment. <br>
+     * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
+     * Bourke</a>.
+     * @param p1X double; the x coordinate of the start point of the line segment
+     * @param p1Y double; the y coordinate of the start point of the line segment
+     * @param p1Z double; the z coordinate of the start point of the line segment
+     * @param p2X double; the x coordinate of the end point of the line segment
+     * @param p2Y double; the y coordinate of the end point of the line segment
+     * @param p2Z double; the y coordinate of the end point of the line segment
+     * @return P; either <cite>segmentPoint1</cite>, or <cite>segmentPoint2</cite> or a new Point2d that lies somewhere in
+     *         between those two.
+     * @throws DrawRuntimeException when any of the parameters is NaN
+     */
+    public final Point3d closestPointOnSegment(final double p1X, final double p1Y, final double p1Z, final double p2X,
+            final double p2Y, final double p2Z) throws DrawRuntimeException
+    {
+        return closestPointOnLine(p1X, p1Y, p1Z, p2X, p2Y, p2Z, true, true);
     }
 
     /** {@inheritDoc} */
     @Override
-    public final Point3d closestPointOnLine(final Point3d linePoint1, final Point3d linePoint2) throws DrawRuntimeException
+    public final Point3d closestPointOnLine(final Point3d linePoint1, final Point3d linePoint2)
+            throws NullPointerException, DrawRuntimeException
     {
-        double dX = linePoint2.x - linePoint1.x;
-        double dY = linePoint2.y - linePoint1.y;
-        double dZ = linePoint2.z - linePoint1.z;
-        Throw.when(dX == 0 && dY == 0 && dZ == 0, DrawRuntimeException.class, "line points are at same location");
-        final double u = ((this.x - linePoint1.x) * dX + (this.y - linePoint1.y) * dY + (this.z - linePoint1.z) * dZ)
-                / (dX * dX + dY * dY + dZ * dZ);
-        return linePoint1.interpolate(linePoint2, u);
+        Throw.whenNull(linePoint1, "linePoint1 may not be null");
+        Throw.whenNull(linePoint2, "linePoint2 may not be null");
+        return closestPointOnLine(linePoint1.x, linePoint1.y, linePoint1.z, linePoint2.x, linePoint2.y, linePoint2.z);
+    }
+
+    /**
+     * Project a point on a line. <br>
+     * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
+     * Bourke</a>.
+     * @param p1X double; the x coordinate of a point of the line
+     * @param p1Y double; the y coordinate of a point of the line
+     * @param p1Z double; the z coordinate of a point on the line
+     * @param p2X double; the x coordinate of another point on the line
+     * @param p2Y double; the y coordinate of another point on the line
+     * @param p2Z double; the z coordinate of another point on the line
+     * @return Point3d; a point on the line that goes through the points
+     * @throws DrawRuntimeException when the points on the line are identical
+     */
+    public final Point3d closestPointOnLine(final double p1X, final double p1Y, final double p1Z, final double p2X,
+            final double p2Y, final double p2Z) throws DrawRuntimeException
+    {
+        Throw.when(p1X == p2X && p1Y == p2Y && p1Z == p2Z, DrawRuntimeException.class, "degenerate line not allowed");
+        return closestPointOnLine(p1X, p1Y, p1Z, p2X, p2Y, p2Z, false, false);
     }
 
     /**
      * Closest point on a ray.
      * @param ray Ray3d; a point through which the line passes in the direction
      * @return Point3d; the point on the line that is closest to this
+     * @throws NullPointerException when ray is null
      */
-    public final Point3d closestPointOnLine(final Ray3d ray)
+    public final Point3d closestPointOnLine(final Ray3d ray) throws NullPointerException
     {
         double sinTheta = Math.sin(ray.theta);
         double dX = Math.cos(ray.phi) * sinTheta;
         double dY = Math.sin(ray.phi) * sinTheta;
         double dZ = Math.cos(ray.theta);
-        final double u =
-                ((this.x - ray.x) * dX + (this.y - ray.y) * dY + (this.z - ray.z) * dZ) / (dX * dX + dY * dY * dZ * dZ);
+        final double u = ((this.x - ray.x) * dX + (this.y - ray.y) * dY + (this.z - ray.z) * dZ);
         return ray.interpolate(new Point3d(ray.x + dX, ray.y + dY, ray.z + dZ), Math.max(0, u));
     }
 
@@ -346,11 +427,11 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     final double horizontalDirection(final Point3d point) throws NullPointerException
     {
         Throw.whenNull(point, "point cannot be null");
-        return Math.atan2(point.y - getY(), point.x - getX());
+        return Math.atan2(point.y - this.y, point.x - this.x);
     }
 
     /**
-     * Return the direction with respect to the Z axis to another point, in radians. 
+     * Return the direction with respect to the Z axis to another point, in radians.
      * @param point Point3d; the other point
      * @return double; the direction with respect to the Z axis to another point, in radians
      * @throws NullPointerException when <code>point</code> is null
@@ -358,7 +439,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     final double verticalDirection(final Point3d point) throws NullPointerException
     {
         Throw.whenNull(point, "point cannot be null");
-        return Math.atan2(point.z - getZ(), Math.hypot(point.y - getY(), point.x - getX()));
+        return Math.atan2(Math.hypot(point.y - this.y, point.x - this.x), point.z - this.z);
     }
 
     /**

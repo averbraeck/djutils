@@ -2,12 +2,12 @@ package org.djutils.draw.line;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.point.OrientedPoint2d;
 import org.djutils.draw.point.OrientedPoint3d;
 import org.djutils.draw.point.Point3d;
 import org.junit.Test;
@@ -365,10 +365,10 @@ public class Ray3dTest
     }
 
     /**
-     * Test the closestPointOnRay method.
+     * Test the closestPointOnRay and the projectOrthogonal methods.
      */
     @Test
-    public void testClosestPoint()
+    public void testClosestPointAndProjectOrthogonal()
     {
         Ray3d ray = new Ray3d(1, 2, 3, 0.4, 0.5);
         try
@@ -398,6 +398,16 @@ public class Ray3dTest
         assertEquals("result is start point", ray.y, result.y, 0);
         assertEquals("result is start point", ray.z, result.z, 0);
 
+        assertNull("projection misses the ray", ray.projectOrthogonal(new Point3d(1, 0, 3)));
+        assertNull("projection misses the ray", ray.projectOrthogonal(new Point3d(0, 2, 3)));
+        assertNull("projection misses the ray", ray.projectOrthogonal(new Point3d(1, 2, 2)));
+        assertEquals("projection hits start point of ray", new Point3d(1, 2, 3), ray.projectOrthogonal(new Point3d(1, 2, 3)));
+        assertEquals("extended projection returns same point as projection on sufficiently long line segment", 0,
+                new LineSegment3d(ray.getLocationExtended(-100), ray.getLocation(100))
+                        .closestPointOnSegment(new Point3d(1, 0, -1))
+                        .distance(ray.projectOrthogonalExtended(new Point3d(1, 0, -1))),
+                0.0001);
+
         Point3d projectingPoint = new Point3d(10, 10, 10);
         result = ray.closestPointOnRay(projectingPoint); // Projects at a point along the ray
         double distance = result.distance(ray.getEndPoint());
@@ -408,6 +418,8 @@ public class Ray3dTest
                 ray.getLocation(distance - 0.1).distance(projectingPoint) < distance);
         assertTrue("Point on ray further than result is further from projectingPoint",
                 ray.getLocation(distance + 0.1).distance(projectingPoint) < distance);
+        assertEquals("projectOrthogonalExtended returns same result as long as orthogonal projection exists", 0,
+                result.distance(ray.projectOrthogonalExtended(projectingPoint)), 0.0001);
     }
 
     /**

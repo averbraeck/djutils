@@ -157,23 +157,26 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
 
     /** {@inheritDoc} */
     @Override
-    public Point2d closestPointOnSegment(final Point2d point)
+    public Point2d closestPointOnSegment(final Point2d point) throws NullPointerException
     {
-        double dX = this.endX - this.startX;
-        double dY = this.endY - this.startY;
-        final double u = ((point.x - this.startX) * dX + (point.y - this.startY) * dY) / (dX * dX + dY * dY);
-        if (u < 0)
-        {
-            return getStartPoint();
-        }
-        else if (u > 1)
-        {
-            return getEndPoint();
-        }
-        else
-        {
-            return new Point2d((1.0 - u) * this.startX + u * this.endX, (1.0 - u) * this.startY + u * this.endY);
-        }
+        Throw.whenNull(point, "point may not be null");
+        return point.closestPointOnLine(this.startX, this.startY, this.endX, this.endY, true, true);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point2d projectOrthogonal(final Point2d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        return point.closestPointOnLine(this.startX, this.startY, this.endX, this.endY, null, null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point2d projectOrthogonalExtended(final Point2d point)
+    {
+        Throw.whenNull(point, "point may not be null");
+        return point.closestPointOnLine(this.startX, this.startY, this.endX, this.endY, false, false);
     }
 
     /** {@inheritDoc} */

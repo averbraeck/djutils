@@ -105,6 +105,8 @@ public class LineSegment3dTest
         assertEquals(description + " bounds minZ", Math.min(expectedStartZ, expectedEndZ), bounds.getMinZ(), 0.0001);
         assertEquals(description + " bounds maxZ", Math.max(expectedStartZ, expectedEndZ), bounds.getMaxZ(), 0.0001);
         assertTrue(description + " toString returns something descriptive", segment.toString().startsWith("LineSegment3d "));
+        assertTrue(description + " toString can suppress the class name",
+                segment.toString().indexOf(segment.toString(true)) > 0);
     }
 
     /**

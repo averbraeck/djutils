@@ -89,6 +89,8 @@ public class LineSegment2dTest
         assertEquals(description + " bounds minY", Math.min(expectedStartY, expectedEndY), bounds.getMinY(), 0.0001);
         assertEquals(description + " bounds maxY", Math.max(expectedStartY, expectedEndY), bounds.getMaxY(), 0.0001);
         assertTrue(description + " toString returns something descriptive", segment.toString().startsWith("LineSegment2d "));
+        assertTrue(description + " toString can suppress the class name",
+                segment.toString().indexOf(segment.toString(true)) > 0);
     }
 
     /**
@@ -130,7 +132,7 @@ public class LineSegment2dTest
             // Ignore expected exception
         }
 
-        for (double position : new double[] {-3, -0.5, 0, 1, 10, 100})
+        for (double position : new double[] { -3, -0.5, 0, 1, 10, 100 })
         {
             if (position < 0 || position > segment.getLength())
             {
@@ -222,7 +224,7 @@ public class LineSegment2dTest
         assertNotEquals("not equal to line segment with different end x", segment, new LineSegment2d(1, 2, -4, -4));
         assertNotEquals("not equal to line segment with different end y", segment, new LineSegment2d(1, 2, -3, -5));
         assertEquals("equal to another line segment with same start and end x, y", segment, new LineSegment2d(1, 2, -3, -4));
-        
+
         assertNotEquals("hashCode depends on start x", segment.hashCode(), new LineSegment2d(2, 2, -3, -4));
         assertNotEquals("hashCode depends on start y", segment.hashCode(), new LineSegment2d(1, 3, -3, -4));
         assertNotEquals("hashCode depends on end x", segment.hashCode(), new LineSegment2d(1, 2, -4, -4));

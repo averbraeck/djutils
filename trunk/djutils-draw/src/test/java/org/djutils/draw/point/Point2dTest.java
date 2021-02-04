@@ -14,6 +14,7 @@ import java.util.List;
 import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.line.LineSegment2d;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.exceptions.Try;
 import org.junit.Test;
@@ -63,7 +64,7 @@ public class Point2dTest
             // Ignore expected exception
         }
 
-        double[] p2Arr = new double[] {5.0, 6.0};
+        double[] p2Arr = new double[] { 5.0, 6.0 };
         p = new Point2d(p2Arr);
         assertEquals(5.0, p.x, 0);
         assertEquals(6.0, p.y, 0);
@@ -96,7 +97,7 @@ public class Point2dTest
             @Override
             public void execute() throws Throwable
             {
-                new Point2d(new double[] {1.0});
+                new Point2d(new double[] { 1.0 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -105,7 +106,7 @@ public class Point2dTest
             @Override
             public void execute() throws Throwable
             {
-                new Point2d(new double[] {1.0, 2.0, 3.0});
+                new Point2d(new double[] { 1.0, 2.0, 3.0 });
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -348,6 +349,8 @@ public class Point2dTest
                 new Point2d(1, 10), new Point2d(1, 2), new Point2d(1, 10)));
         assertEquals("Intersection is at (2,2)", new Point2d(2, 2), Point2d.intersectionOfLineSegments(new Point2d(1, 1),
                 new Point2d(6, 6), new Point2d(4, 2), new Point2d(-2, 2)));
+        assertEquals("Intersection is at (2,2)", new Point2d(2, 2),
+                Point2d.intersectionOfLineSegments(1, 1, 6, 6, 4, 2, -2, 2));
         // Check all four ways that two non-parallel lines can miss each other
         assertNull("line two passes before start of line one", Point2d.intersectionOfLineSegments(new Point2d(1, 1),
                 new Point2d(5, 5), new Point2d(0, -3), new Point2d(10, 0)));
@@ -357,6 +360,96 @@ public class Point2dTest
                 new Point2d(5, 5), new Point2d(5, 3), new Point2d(10, 2)));
         assertNull("line one passes after end of line two", Point2d.intersectionOfLineSegments(new Point2d(1, 1),
                 new Point2d(5, 5), new Point2d(-10, 3), new Point2d(0, 2)));
+        assertNull("line two passes before start of line one", Point2d.intersectionOfLineSegments(1, 1, 5, 5, 0, -3, 10, 0));
+        assertNull("line two passes before after end of line one",
+                Point2d.intersectionOfLineSegments(1, 1, 5, 5, 0, 20, 100, 30));
+        assertNull("line one passes before start of line two", Point2d.intersectionOfLineSegments(1, 1, 5, 5, 5, 3, 10, 2));
+        assertNull("line one passes after end of line two", Point2d.intersectionOfLineSegments(1, 1, 5, 5, -10, 3, 0, 2));
+
+        Point2d line1P1 = new Point2d(1, 2);
+        Point2d line1P2 = new Point2d(3, 2);
+        Point2d line2P1 = new Point2d(2, 0);
+        Point2d line2P2 = new Point2d(2, 4);
+        try
+        {
+            Point2d.intersectionOfLines(null, line1P2, line2P1, line2P2);
+            fail("Null parameter should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Point2d.intersectionOfLines(line1P1, null, line2P1, line2P2);
+            fail("Null parameter should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Point2d.intersectionOfLines(line1P1, line1P2, null, line2P2);
+            fail("Null parameter should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Point2d.intersectionOfLines(line1P1, line1P2, line2P1, null);
+            fail("Null parameter should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Point2d.intersectionOfLineSegments(null, line1P2, line2P1, line2P2);
+            fail("Null parameter should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Point2d.intersectionOfLineSegments(line1P1, null, line2P1, line2P2);
+            fail("Null parameter should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Point2d.intersectionOfLineSegments(line1P1, line1P2, null, line2P2);
+            fail("Null parameter should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Point2d.intersectionOfLineSegments(line1P1, line1P2, line2P1, null);
+            fail("Null parameter should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
     }
 
     /**
@@ -367,8 +460,12 @@ public class Point2dTest
     {
         assertNull("horizontal line intersection with itself returns null",
                 Point2d.intersectionOfLines(new Point2d(1, 2), new Point2d(4, 2), new Point2d(1, 2), new Point2d(4, 2)));
+        assertNull("horizontal line intersection with itself returns null",
+                Point2d.intersectionOfLines(1, 2, 4, 2, 1, 2, 4, 2));
         assertNull("vertical line intersection with itself returns null", Point2d.intersectionOfLineSegments(new Point2d(1, 2),
                 new Point2d(1, 10), new Point2d(1, 2), new Point2d(1, 10)));
+        assertNull("vertical line intersection with itself returns null",
+                Point2d.intersectionOfLineSegments(1, 2, 1, 10, 1, 2, 1, 10));
         assertEquals("Intersection is at (2,2)", new Point2d(2, 2),
                 Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(6, 6), new Point2d(4, 2), new Point2d(-2, 2)));
         // Check all four ways that two non-parallel lines can miss each other
@@ -383,14 +480,14 @@ public class Point2dTest
     }
 
     /**
-     * Test the closestPointOnSegment method.
+     * Test the closestPointOnSegment and the closestPointOnLine methods.
      * @throws DrawException if that happens uncaught; this test has failed
      */
     @Test
-    public void testClosestPointOnSegment() throws DrawException
+    public void testClosestPointOnSegmentAndLine() throws DrawException
     {
         Point2d p1 = new Point2d(-2, 3);
-        for (Point2d p2 : new Point2d[] {new Point2d(7, 4)/* angled */, new Point2d(-3, 6) /* also angled */,
+        for (Point2d p2 : new Point2d[] { new Point2d(7, 4)/* angled */, new Point2d(-3, 6) /* also angled */,
                 new Point2d(-2, -5) /* vertical */, new Point2d(8, 3)/* horizontal */ })
         {
             PolyLine2d line = new PolyLine2d(p1, p2);
@@ -399,7 +496,6 @@ public class Point2dTest
                 for (double y = -10; y <= 10; y += 0.5)
                 {
                     Point2d p = new Point2d(x, y);
-                    Point2d result = p.closestPointOnSegment(p1, p2);
                     // Figure out the correct result using a totally different method (binary search over the line segment)
                     double fraction = 0.5;
                     double step = 0.25;
@@ -433,13 +529,192 @@ public class Point2dTest
                         }
                         step /= 2;
                     }
+                    Point2d result = p.closestPointOnSegment(p1, p2);
                     assertEquals("distance should be less than one thousandth of line length", 0,
                             approximation.distance(result), line.getLength() / 1000);
                     assertEquals("zero length line segment should always return start point", p1,
                             p.closestPointOnSegment(p1, p1));
+                    result = p.closestPointOnSegment(p1.x, p1.y, p2.x, p2.y);
+                    assertEquals("distance should be less than one thousandth of line length", 0,
+                            approximation.distance(result), line.getLength() / 1000);
+
+                    if (fraction > 0.001 && fraction < 0.999)
+                    {
+                        result = p.closestPointOnLine(p1, p2);
+                        assertEquals("distance should be less than one thousandth of line length", 0,
+                                approximation.distance(result), line.getLength() / 1000);
+                        result = p.closestPointOnLine(p1, p2);
+                        assertEquals("distance should be less than one thousandth of line length", 0,
+                                approximation.distance(result), line.getLength() / 1000);
+                        result = p.closestPointOnLine(p1.x, p1.y, p2.x, p2.y);
+                        assertEquals("distance should be less than one thousandth of line length", 0,
+                                approximation.distance(result), line.getLength() / 1000);
+                    }
+                    else
+                    {
+                        // extrapolating
+                        double range = Math.max(Math.max(line.getLength(), p.distance(p1)), p.distance(p2));
+                        step = 5.0;
+                        fraction = 0.5;
+                        distance = range;
+                        // 20 iterations should get us to within one thousandth
+                        for (int iteration = 0; iteration < 20; iteration++)
+                        {
+                            // Try stepping up
+                            double upFraction = fraction + step;
+                            Point2d upApproximation = line.getLocationFractionExtended(upFraction);
+                            double upDistance = upApproximation.distance(p);
+                            if (upDistance < distance)
+                            {
+                                distance = upDistance;
+                                fraction = upFraction;
+                                approximation = upApproximation;
+                            }
+                            else
+                            {
+                                // Try stepping down
+                                double downFraction = fraction - step;
+                                Point2d downApproximation = line.getLocationFractionExtended(downFraction);
+                                double downDistance = downApproximation.distance(p);
+                                if (downDistance < distance)
+                                {
+                                    distance = downDistance;
+                                    fraction = downFraction;
+                                    approximation = downApproximation;
+                                }
+                            }
+                            step /= 2;
+                        }
+                        result = p.closestPointOnLine(p1, p2);
+                        assertEquals("distance should be less than one thousandth of range", 0, approximation.distance(result),
+                                range / 1000);
+                        result = p.closestPointOnLine(p1, p2);
+                        assertEquals("distance should be less than one thousandth of range", 0, approximation.distance(result),
+                                range / 1000);
+                        result = p.closestPointOnLine(p1.x, p1.y, p2.x, p2.y);
+                        assertEquals("distance should be less than one thousandth of range", 0, approximation.distance(result),
+                                range / 1000);
+                        if (fraction < -0.001 || fraction > 1.001)
+                        {
+                            assertNull("projectOrthogonal should return null", new LineSegment2d(p1, p2).projectOrthogonal(p));
+                            assertEquals("projectOrthogonalExtended should return same result as closestPointOnLine", result,
+                                    new LineSegment2d(p1, p2).projectOrthogonalExtended(p));
+                        }
+                    }
                 }
             }
         }
+
+        try
+        {
+            p1.closestPointOnLine(null, new Point2d(5, 6));
+            fail("null should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            p1.closestPointOnLine(new Point2d(5, 6), null);
+            fail("null should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            p1.closestPointOnSegment(Double.NaN, 7, 8, 9);
+            fail("NaN value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            p1.closestPointOnSegment(6, Double.NaN, 8, 9);
+            fail("NaN value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            p1.closestPointOnSegment(6, 7, Double.NaN, 9);
+            fail("NaN value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            p1.closestPointOnSegment(6, 7, 8, Double.NaN);
+            fail("NaN value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            p1.closestPointOnLine(Double.NaN, 7, 8, 9);
+            fail("NaN value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            p1.closestPointOnLine(6, Double.NaN, 8, 9);
+            fail("NaN value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            p1.closestPointOnLine(6, 7, Double.NaN, 9);
+            fail("NaN value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            p1.closestPointOnLine(6, 7, 8, Double.NaN);
+            fail("NaN value should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            p1.closestPointOnLine(6, 7, 6, 7);
+            fail("identical points should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
     }
 
     /**

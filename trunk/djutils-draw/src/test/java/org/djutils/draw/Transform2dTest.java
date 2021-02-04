@@ -7,7 +7,6 @@ import static org.junit.Assert.fail;
 import java.util.Arrays;
 
 import org.djutils.draw.bounds.Bounds2d;
-import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.Point2d;
 import org.junit.Test;
 
@@ -28,10 +27,10 @@ public class Transform2dTest
     @Test
     public void testMatrixMultiplication()
     {
-        double[] mA = new double[] {1, 2, 3, 4, 5, 6, 7, 8, 9};
-        double[] mB = new double[] {2, 1, 0, 2, 4, 3, 3, 1, 2};
+        double[] mA = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        double[] mB = new double[] { 2, 1, 0, 2, 4, 3, 3, 1, 2 };
         double[] mAmB = Transform2d.mulMatMat(mA, mB);
-        double[] expected = new double[] {15, 12, 12, 36, 30, 27, 57, 48, 42};
+        double[] expected = new double[] { 15, 12, 12, 36, 30, 27, 57, 48, 42 };
         for (int i = 0; i < 9; i++)
         {
             if (mAmB[i] != expected[i])
@@ -40,10 +39,10 @@ public class Transform2dTest
             }
         }
 
-        double[] m = new double[] {1, 4, 2, 5, 3, 1, 4, 2, 5};
-        double[] v = new double[] {2, 5, 1};
+        double[] m = new double[] { 1, 4, 2, 5, 3, 1, 4, 2, 5 };
+        double[] v = new double[] { 2, 5, 1 };
         double[] mv = Transform2d.mulMatVec(m, v);
-        double[] ev = new double[] {24, 26, 23};
+        double[] ev = new double[] { 24, 26, 23 };
         for (int i = 0; i < 3; i++)
         {
             if (mv[i] != ev[i])
@@ -52,9 +51,9 @@ public class Transform2dTest
             }
         }
 
-        v = new double[] {1, 2};
+        v = new double[] { 1, 2 };
         mv = Transform2d.mulMatVec2(m, v);
-        ev = new double[] {11, 12};
+        ev = new double[] { 11, 12 };
         for (int i = 0; i < 2; i++)
         {
             if (mv[i] != ev[i])
@@ -91,7 +90,7 @@ public class Transform2dTest
     {
         Transform2d t;
         // Test time grows (explodes) with the 4th power of the length of values.
-        double[] values = new double[] {-100000, -100, -10, -3, -1, -0.3, -0.1, 0, 0.1, 0.3, 1, 3, 10, 100, 100000};
+        double[] values = new double[] { -100000, -100, -10, -3, -1, -0.3, -0.1, 0, 0.1, 0.3, 1, 3, 10, 100, 100000 };
         for (double dx : values)
         {
             for (double dy : values)
@@ -106,7 +105,7 @@ public class Transform2dTest
                         Point2d p = t.transform(new Point2d(px, py));
                         assertEquals("translated x matches", px + dx, p.x, 0.001);
                         assertEquals("translated y matches", py + dy, p.y, 0.001);
-                        double[] result = t.transform(new double[] {px, py});
+                        double[] result = t.transform(new double[] { px, py });
                         assertEquals("translated x matches", px + dx, result[0], 0.001);
                         assertEquals("translated y matches", py + dy, result[1], 0.001);
                     }
@@ -121,7 +120,7 @@ public class Transform2dTest
                         Point2d p = t.transform(new Point2d(px, py));
                         assertEquals("transformed x matches", px + dx, p.x, 0.001);
                         assertEquals("transformed y matches", py + dy, p.y, 0.001);
-                        double[] result = t.transform(new double[] {px, py});
+                        double[] result = t.transform(new double[] { px, py });
                         assertEquals("transformed x matches", px + dx, result[0], 0.001);
                         assertEquals("transformed y matches", py + dy, result[1], 0.001);
                     }
@@ -136,7 +135,7 @@ public class Transform2dTest
                         Point2d p = t.transform(new Point2d(px, py));
                         assertEquals("scaled x matches", px * dx, p.x, 0.001);
                         assertEquals("scaled y matches", py * dy, p.y, 0.001);
-                        double[] result = t.transform(new double[] {px, py});
+                        double[] result = t.transform(new double[] { px, py });
                         assertEquals("scaled x matches", px * dx, result[0], 0.001);
                         assertEquals("scaled y matches", py * dy, result[1], 0.001);
                     }
@@ -151,7 +150,7 @@ public class Transform2dTest
                         Point2d p = t.transform(new Point2d(px, py));
                         assertEquals("sheared x matches", px + py * dx, p.x, 0.001);
                         assertEquals("sheared y matches", py + px * dy, p.y, 0.001);
-                        double[] result = t.transform(new double[] {px, py});
+                        double[] result = t.transform(new double[] { px, py });
                         assertEquals("sheared x matches", px + py * dx, result[0], 0.001);
                         assertEquals("sheared y matches", py + px * dy, result[1], 0.001);
                     }
@@ -169,7 +168,7 @@ public class Transform2dTest
                     Point2d p = t.transform(new Point2d(px, py));
                     assertEquals("rotated x matches", px * cosine - py * sine, p.x, 0.001);
                     assertEquals("rotated y matches", py * cosine + px * sine, p.y, 0.001);
-                    double[] result = t.transform(new double[] {px, py});
+                    double[] result = t.transform(new double[] { px, py });
                     assertEquals("rotated x matches", px * cosine - py * sine, result[0], 0.001);
                     assertEquals("rotated y matches", py * cosine + px * sine, result[1], 0.001);
                 }
@@ -185,7 +184,7 @@ public class Transform2dTest
                 Point2d p = t.transform(new Point2d(px, py));
                 assertEquals("x-reflected x matches", -px, p.x, 0.001);
                 assertEquals("x-reflected y  matches", py, p.y, 0.001);
-                double[] result = t.transform(new double[] {px, py});
+                double[] result = t.transform(new double[] { px, py });
                 assertEquals("x-reflected x  matches", -px, result[0], 0.001);
                 assertEquals("x-reflected y  matches", py, result[1], 0.001);
             }
@@ -200,7 +199,7 @@ public class Transform2dTest
                 Point2d p = t.transform(new Point2d(px, py));
                 assertEquals("y-reflected x matches", px, p.x, 0.001);
                 assertEquals("y-reflected y  matches", -py, p.y, 0.001);
-                double[] result = t.transform(new double[] {px, py});
+                double[] result = t.transform(new double[] { px, py });
                 assertEquals("y-reflected x  matches", px, result[0], 0.001);
                 assertEquals("y-reflected y  matches", -py, result[1], 0.001);
             }
@@ -216,7 +215,7 @@ public class Transform2dTest
         Transform2d reflectionX = new Transform2d().reflectX();
         Transform2d reflectionY = new Transform2d().reflectY();
         // Test time explodes with the 6th power of the length of this array
-        double[] values = new double[] {-100, -0.1, 0, 0.01, 1, 100};
+        double[] values = new double[] { -100, -0.1, 0, 0.01, 1, 100 };
         for (double translateX : values)
         {
             for (double translateY : values)
@@ -227,7 +226,7 @@ public class Transform2dTest
                     for (double scaleY : values)
                     {
                         Transform2d scaling = new Transform2d().scale(scaleX, scaleY);
-                        for (double angle : new double[] {-2, 0, 0.5})
+                        for (double angle : new double[] { -2, 0, 0.5 })
                         {
                             Transform2d rotation = new Transform2d().rotation(angle);
                             for (double shearX : values)
@@ -276,8 +275,8 @@ public class Transform2dTest
     @Test
     public void transformBounds2dTest()
     {
-        double[] values = new double[] {-100, 0.1, 0, 0.1, 100};
-        double[] sizes = new double[] {0, 10, 100};
+        double[] values = new double[] { -100, 0.1, 0, 0.1, 100 };
+        double[] sizes = new double[] { 0, 10, 100 };
         Transform2d t = new Transform2d().rotation(0.4).reflectX().scale(0.5, 1.5).shear(2, 3).translate(123, 456);
         // System.out.println(t);
         for (double x : values)
@@ -289,8 +288,8 @@ public class Transform2dTest
                     for (double ySize : sizes)
                     {
                         Bounds2d bb = new Bounds2d(x, x + xSize, y, y + ySize);
-                        Point2d[] points = new Point2d[] {new Point2d(x, y), new Point2d(x + xSize, y),
-                                new Point2d(x, y + ySize), new Point2d(x + xSize, y + ySize)};
+                        Point2d[] points = new Point2d[] { new Point2d(x, y), new Point2d(x + xSize, y),
+                                new Point2d(x, y + ySize), new Point2d(x + xSize, y + ySize) };
                         Point2d[] transformedPoints = new Point2d[4];
                         for (int i = 0; i < points.length; i++)
                         {
@@ -342,14 +341,14 @@ public class Transform2dTest
 
         // rotate 45 degrees in the XY-plane and then translate to (10, 20)
         // note that to do FIRST rotation and THEN translation, the steps have to be built in the OPPOSITE order
-        // since matrix multiplication operates from RIGHT to LEFT.  
+        // since matrix multiplication operates from RIGHT to LEFT.
         transform = new Transform2d();
         transform.translate(10, 20);
         transform.rotation(Math.toRadians(45.0));
         b = transform.transform(bounds);
         testBounds2d(b, 10 - d, 10 + d, 20 - d, 20 + d);
     }
-    
+
     /**
      * Check bounds values.
      * @param b Bounds2d; the box to test

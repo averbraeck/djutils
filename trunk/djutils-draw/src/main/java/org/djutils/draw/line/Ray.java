@@ -18,7 +18,7 @@ import org.djutils.exceptions.Throw;
  * @param <P> The Point type (2d, or 3d)
  * @param <S> The Space type
  */
-public interface Ray<R extends Ray<R, P, S>, P extends Point<P, S>, S extends Space> extends Directed<R>
+public interface Ray<R extends Ray<R, P, S>, P extends Point<P, S>, S extends Space> extends Directed<R>, Project<P, S>
 {
     /**
      * Get the finite end point of this Ray.
