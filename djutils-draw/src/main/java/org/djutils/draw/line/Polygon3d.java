@@ -242,7 +242,22 @@ public class Polygon3d extends PolyLine3d
     @Override
     public final String toString()
     {
-        return "Polygon3d [super=" + super.toString() + "]";
+        return toString("%f", false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
+    {
+        StringBuilder result = new StringBuilder();
+        if (!doNotIncludeClassName)
+        {
+            result.append("Polygon3d ");
+        }
+        result.append("[super=");
+        result.append(super.toString(doubleFormat, false));
+        result.append("]");
+        return result.toString();
     }
 
 }

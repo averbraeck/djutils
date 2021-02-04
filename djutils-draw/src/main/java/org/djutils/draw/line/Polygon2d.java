@@ -220,7 +220,7 @@ public class Polygon2d extends PolyLine2d
      * Determine if a point is inside this Polygon. Returns bogus results for self-intersecting polygons. Derived from
      * http://paulbourke.net/geometry/polygonmesh/
      * @param x double; the x-coordinate of the point
-     * @param y double; the y-coordinate ofthe point
+     * @param y double; the y-coordinate of the point
      * @return boolean; true if the point is inside this polygon, false if the point is outside this polygon. Results are
      *         ill-defined for points on the edges of this Polygon.
      */
@@ -335,7 +335,22 @@ public class Polygon2d extends PolyLine2d
     @Override
     public final String toString()
     {
-        return "Polygon2d [super=" + super.toString() + "]";
+        return toString("%f", false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
+    {
+        StringBuilder result = new StringBuilder();
+        if (!doNotIncludeClassName)
+        {
+            result.append("Polygon2d ");
+        }
+        result.append("[super=");
+        result.append(super.toString(doubleFormat, false));
+        result.append("]");
+        return result.toString();
     }
 
 }
