@@ -1120,7 +1120,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         {
             result.append("PolyLine2d ");
         }
-        result.append("[");
         String format = String.format("%%sx=%1$s, y=%1$s", doubleFormat);
         for (int index = 0; index < this.x.length; index++)
         {

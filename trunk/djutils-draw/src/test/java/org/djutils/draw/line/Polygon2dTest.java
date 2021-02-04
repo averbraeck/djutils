@@ -44,6 +44,7 @@ public class Polygon2dTest
         y = new double[] { 2, 1, 10, 2 };
         polygon = new Polygon2d(x, y); // Last point is duplicate of first point; should be handled gracefully
         assertTrue("toString returns something descriptive", polygon.toString().startsWith("Polygon2d"));
+        assertTrue("toString can suppress the class name", polygon.toString().indexOf(polygon.toString(true)) > 0);
         checkPolygon("constructed from arrays", x, y, polygon, actualSurface, true);
         assertEquals("surface of reversed polygon", -actualSurface, polygon.reverse().surface(), Math.ulp(-actualSurface));
         Polygon2d otherPolygon = new Polygon2d(polygon.get(0), polygon.get(1), polygon.get(2), polygon.get(0));

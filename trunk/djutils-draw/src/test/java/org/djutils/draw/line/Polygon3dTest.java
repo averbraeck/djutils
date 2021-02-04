@@ -49,6 +49,7 @@ public class Polygon3dTest
         z = new double[] { 2, 3, 4, 2 };
         polygon = new Polygon3d(x, y, z); // Last point is duplicate of first point; should be handled gracefully
         assertTrue("toString returns something descriptive", polygon.toString().startsWith("Polygon3d"));
+        assertTrue("toString can suppress the class name", polygon.toString().indexOf(polygon.toString(true)) > 0);
         checkPolygon("constructed from arrays", x, y, z, polygon);
         Polygon3d otherPolygon = new Polygon3d(polygon.get(0), polygon.get(1), polygon.get(2), polygon.get(0));
         assertEquals("polygon constructed from all points of existing polygon with first point duplicated at end is equal "
