@@ -2,6 +2,14 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.09" date="2021-02-04" description="Centralized projection methods, more flexible toString methods">
+      <action dev="pknoppers" type="add">
+        Fixed lots of code duplication that determined the closest point on a line, line segment, or ray.
+        The toString methods now have a systematic way to provide a format argument and to suppress printing the 
+        class name (for extra compact output).
+      </action>
+    </release>
+    
     <release version="1.06.08" date="2021-01-28" description="Polygon2d and Polygon3d added">
       <action dev="pknoppers" type="add">
         Closed Polylines aka Polygons in 2d and 3d have been added to djutils-draw.
