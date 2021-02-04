@@ -22,7 +22,7 @@ import org.djutils.exceptions.Throw;
  * @param <S> The space type (2d or 3d)
  */
 public interface LineSegment<P extends Point<P, S>, R extends Ray<R, P, S>, S extends Space>
-        extends Drawable<P, S>, Serializable
+        extends Drawable<P, S>, Serializable, Project<P, S>
 {
     /**
      * Get the start point of this LineSegment.
@@ -49,8 +49,9 @@ public interface LineSegment<P extends Point<P, S>, R extends Ray<R, P, S>, S ex
      * Bourke</a>.
      * @param point P; the point to project onto the segment
      * @return P; either the start point, or the end point of the segment or a Point2d that lies somewhere in between those two.
+     * @throws NullPointerException when point is null
      */
-    P closestPointOnSegment(P point);
+    P closestPointOnSegment(P point) throws NullPointerException;
 
     /**
      * Create a Ray on a specified point on this LineSegment.

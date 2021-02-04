@@ -225,6 +225,69 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     }
 
     /**
+     * Compute the 2D intersection of two lines. Both lines are defined by two points (that should be distinct).
+     * @param line1P1X double; x-coordinate of start point of line 1
+     * @param line1P1Y double; y-coordinate of start point of line 1
+     * @param line1P2X double; x-coordinate of end point of line 1
+     * @param line1P2Y double; y-coordinate of end point of line 1
+     * @param lowLimitLine1 boolean; if true; the intersection may not lie before the start point of line 1
+     * @param highLimitLine1 boolean; if true; the intersection may not lie beyond the end point of line 1
+     * @param line2P1X double; x-coordinate of start point of line 2
+     * @param line2P1Y double; y-coordinate of start point of line 2
+     * @param line2P2X double; x-coordinate of end point of line 2
+     * @param line2P2Y double; y-coordinate of end point of line 2
+     * @param lowLimitLine2 boolean; if true; the intersection may not lie before the start point of line 2
+     * @param highLimitLine2 boolean; if true; the intersection may not lie beyond the end point of line 2
+     * @return Point2d; the intersection of the two lines, or null if the lines are (almost) parallel, or the intersection point
+     *         lies outside the permitted range
+     * @throws DrawRuntimeException when any of the parameters is NaN
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    public static Point2d intersectionOfLines(final double line1P1X, final double line1P1Y, final double line1P2X,
+            final double line1P2Y, final boolean lowLimitLine1, final boolean highLimitLine1, final double line2P1X,
+            final double line2P1Y, final double line2P2X, final double line2P2Y, final boolean lowLimitLine2,
+            final boolean highLimitLine2) throws DrawRuntimeException
+    {
+        double line1DX = line1P2X - line1P1X;
+        double line1DY = line1P2Y - line1P1Y;
+        double l2p1x = line2P1X - line1P1X;
+        double l2p1y = line2P1Y - line1P1Y;
+        double l2p2x = line2P2X - line1P1X;
+        double l2p2y = line2P2Y - line1P1Y;
+        double denominator = (l2p2y - l2p1y) * line1DX - (l2p2x - l2p1x) * line1DY;
+        Throw.when(Double.isNaN(denominator), DrawRuntimeException.class, "NaN value not permitted");
+        if (denominator == 0.0)
+        {
+            return null; // lines are parallel (they might even be on top of each other, but we don't check that)
+        }
+        double uA = ((l2p2x - l2p1x) * (-l2p1y) - (l2p2y - l2p1y) * (-l2p1x)) / denominator;
+        // System.out.println("uA is " + uA);
+        if (uA < 0.0 && lowLimitLine1 || uA > 1.0 && highLimitLine1)
+        {
+            return null; // intersection outside line 1
+        }
+        double uB = (line1DY * l2p1x - line1DX * l2p1y) / denominator;
+        // System.out.println("uB is " + uB);
+        if (uB < 0.0 && lowLimitLine2 || uB > 1.0 && highLimitLine2)
+        {
+            return null; // intersection outside line 2
+        }
+        if (uA == 1.0) // maximize precision
+        {
+            return new Point2d(line1P2X, line1P2Y);
+        }
+        if (uB == 0.0)
+        {
+            return new Point2d(line2P1X, line2P1Y);
+        }
+        if (uB == 1.0)
+        {
+            return new Point2d(line2P2X, line2P2Y);
+        }
+        return new Point2d(line1P1X + uA * line1DX, line1P1Y + uA * line1DY);
+    }
+
+    /**
      * Compute the 2D intersection of two lines. Both lines are defined by two points (that should be distinct). The lines are
      * considered to be infinitely long; so unless the lines are parallel; there is an intersection.
      * @param l1P1X double; x-coordinate of start point of line segment 1
@@ -236,20 +299,13 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
      * @param l2P2X double; x-coordinate of end point of line segment 2
      * @param l2P2Y double; y-coordinate of end point of line segment 2
      * @return Point2d; the intersection of the two lines, or null if the lines are (almost) parallel
+     * @throws DrawRuntimeException when any of the parameters is NaN
      */
     @SuppressWarnings("checkstyle:parameternumber")
     public static Point2d intersectionOfLines(final double l1P1X, final double l1P1Y, final double l1P2X, final double l1P2Y,
-            final double l2P1X, final double l2P1Y, final double l2P2X, final double l2P2Y)
+            final double l2P1X, final double l2P1Y, final double l2P2X, final double l2P2Y) throws DrawRuntimeException
     {
-        double l1DX = l1P2X - l1P1X;
-        double l1DY = l1P2Y - l1P1Y;
-        double denominator = (l2P2Y - l2P1Y) * l1DX - (l2P2X - l2P1X) * l1DY;
-        if (denominator == 0.0)
-        {
-            return null; // lines are parallel (they might even be on top of each other, but we don't check that)
-        }
-        double u = ((l2P2X - l2P1X) * (l1P1Y - l2P1Y) - (l2P2Y - l2P1Y) * (l1P1X - l2P1X)) / denominator;
-        return new Point2d(l1P1X + u * l1DX, l1P1Y + u * l1DY);
+        return intersectionOfLines(l1P1X, l1P1Y, l1P2X, l1P2Y, false, false, l2P1X, l2P1Y, l2P2X, l2P2Y, false, false);
     }
 
     /**
@@ -260,33 +316,15 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
      * @param line2P1 Point2d; first point of line 2
      * @param line2P2 Point2d; second point of line 2
      * @return Point2d; the intersection of the two lines, or null if the lines are (almost) parallel
+     * @throws NullPointerException when any of the points is null
      */
     public static Point2d intersectionOfLines(final Point2d line1P1, final Point2d line1P2, final Point2d line2P1,
-            final Point2d line2P2)
+            final Point2d line2P2) throws NullPointerException
     {
-        // double l1p1x = line1P1.x;
-        // double l1p1y = line1P1.y;
-        // double l1p2x = line1P2.x - l1p1x;
-        // double l1p2y = line1P2.y - l1p1y;
-        // double l2p1x = line2P1.x - l1p1x;
-        // double l2p1y = line2P1.y - l1p1y;
-        // double l2p2x = line2P2.x - l1p1x;
-        // double l2p2y = line2P2.y - l1p1y;
-        // double denominator = (l2p2y - l2p1y) * l1p2x - (l2p2x - l2p1x) * l1p2y;
-        // if (denominator == 0.0)
-        // {
-        // return null; // lines are parallel (they might even be on top of each other, but we don't check that)
-        // }
-        // double u = ((l2p2x - l2p1x) * (-l2p1y) - (l2p2y - l2p1y) * (-l2p1x)) / denominator;
-        // Point2d oldResult = line1P1.interpolate(line1P2, u);
-        // Point2d newResult =
-        // intersectionOfLines(line1P1.x, line1P1.y, line1P2.x, line1P2.y, line2P1.x, line2P1.y, line2P2.x, line2P2.y);
-        // if (oldResult.distance(newResult) > 0.0001)
-        // {
-        // System.err.println("oops oldResult=" + oldResult + ", newResult=" + newResult);
-        // }
-        // return newResult;
-        return intersectionOfLines(line1P1.x, line1P1.y, line1P2.x, line1P2.y, line2P1.x, line2P1.y, line2P2.x, line2P2.y);
+        Throw.when(line1P1 == null || line1P2 == null || line2P1 == null || line2P2 == null, NullPointerException.class,
+                "Points may not be null");
+        return intersectionOfLines(line1P1.x, line1P1.y, line1P2.x, line1P2.y, false, false, line2P1.x, line2P1.y, line2P2.x,
+                line2P2.y, false, false);
     }
 
     /**
@@ -295,88 +333,162 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
      * @param line1P2 Point2d; second point of line segment 1
      * @param line2P1 Point2d; first point of line segment 2
      * @param line2P2 Point2d; second point of line segment 2
-     * @return Point2d; the intersection of the two line segments, or null if the lines are (almost) parallel, or do not
-     *         intersect
+     * @return Point2d; the intersection of the two line segments, or null if the lines are parallel (within rounding error), or
+     *         do not intersect
+     * @throws NullPointerException when any of the points is null
+     * @throws DrawRuntimeException when any of the line segments is ill-defined (begin point equals end point), or the two line
+     *             segments are parallel or overlapping
      */
     public static Point2d intersectionOfLineSegments(final Point2d line1P1, final Point2d line1P2, final Point2d line2P1,
-            final Point2d line2P2)
+            final Point2d line2P2) throws NullPointerException, DrawRuntimeException
     {
-        double l1p1x = line1P1.x;
-        double l1p1y = line1P1.y;
-        double l1p2x = line1P2.x - l1p1x;
-        double l1p2y = line1P2.y - l1p1y;
-        double l2p1x = line2P1.x - l1p1x;
-        double l2p1y = line2P1.y - l1p1y;
-        double l2p2x = line2P2.x - l1p1x;
-        double l2p2y = line2P2.y - l1p1y;
-        double denominator = (l2p2y - l2p1y) * l1p2x - (l2p2x - l2p1x) * l1p2y;
-        if (denominator == 0.0)
-        {
-            return null; // lines are parallel (they might even be on top of each other, but we don't check that)
-        }
-        double uA = ((l2p2x - l2p1x) * (-l2p1y) - (l2p2y - l2p1y) * (-l2p1x)) / denominator;
-        // System.out.println("uA is " + uA);
-        if ((uA < 0.0) || (uA > 1.0))
-        {
-            return null; // intersection outside line 1
-        }
-        double uB = (l1p2y * l2p1x - l1p2x * l2p1y) / denominator;
-        // System.out.println("uB is " + uB);
-        if (uB < 0.0 || uB > 1.0)
-        {
-            return null; // intersection outside line 2
-        }
-        return line1P1.interpolate(line1P2, uA);
-        // return new Point2d(line1P1.x + uA * l1p2x, line1P1.y + uA * l1p2y);
+        Throw.when(line1P1 == null || line1P2 == null || line2P1 == null || line2P2 == null, NullPointerException.class,
+                "Points may not be null");
+        return intersectionOfLines(line1P1.x, line1P1.y, line1P2.x, line1P2.y, true, true, line2P1.x, line2P1.y, line2P2.x,
+                line2P2.y, true, true);
+    }
+
+    /**
+     * Compute the 2D intersection of two line segments. Both line segments are defined by two points (that should be distinct).
+     * @param line1P1X double; x coordinate of start point of first line segment
+     * @param line1P1Y double; y coordinate of start point of first line segment
+     * @param line1P2X double; x coordinate of end point of first line segment
+     * @param line1P2Y double; y coordinate of end point of first line segment
+     * @param line2P1X double; x coordinate of start point of second line segment
+     * @param line2P1Y double; y coordinate of start point of second line segment
+     * @param line2P2X double; x coordinate of end point of second line segment
+     * @param line2P2Y double; y coordinate of end point of second line segment
+     * @return Point2d; the intersection of the two line segments, or null if the lines are parallel (within rounding error), or
+     *         do not intersect
+     * @throws DrawRuntimeException when any of the values is NaN
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    public static Point2d intersectionOfLineSegments(final double line1P1X, final double line1P1Y, final double line1P2X,
+            final double line1P2Y, final double line2P1X, final double line2P1Y, final double line2P2X, final double line2P2Y)
+            throws DrawRuntimeException
+    {
+        return intersectionOfLines(line1P1X, line1P1Y, line1P2X, line1P2Y, true, true, line2P1X, line2P1Y, line2P2X, line2P2Y,
+                true, true);
     }
 
     /** {@inheritDoc} */
     @Override
-    public final Point2d closestPointOnSegment(final Point2d segmentPoint1, final Point2d segmentPoint2)
+    public Point2d closestPointOnSegment(final Point2d segmentPoint1, final Point2d segmentPoint2)
     {
-        double dX = segmentPoint2.x - segmentPoint1.x;
-        double dY = segmentPoint2.y - segmentPoint1.y;
-        if (0 == dX && 0 == dY) // The points may be equal (unlike in Segment2d)
+        Throw.whenNull(segmentPoint1, "linePoint1 may not be null");
+        Throw.whenNull(segmentPoint2, "linePoint2 may not be null");
+        return closestPointOnSegment(segmentPoint1.getX(), segmentPoint1.getY(), segmentPoint2.getX(), segmentPoint2.getY());
+    }
+
+    /**
+     * Compute the closest point on a line with optional limiting of the result on either end.
+     * @param p1X double; the x coordinate of the first point on the line
+     * @param p1Y double; the y coordinate of the first point on the line
+     * @param p2X double; the x coordinate of the second point on the line
+     * @param p2Y double; the y coordinate of the second point on the line
+     * @param lowLimitHandling Boolean; controls handling of results that lie before the first point of the line. If null; this
+     *            method returns null; else if true; this method returns (p1X,p1Y); else (lowLimitHandling is false); this
+     *            method will return the closest point on the line
+     * @param highLimitHandling Boolean; controls the handling of results that lie beyond the second point of the line. If null;
+     *            this method returns null; else if true; this method returns (p2X,p2Y); else (highLimitHandling is false); this
+     *            method will return the closest point on the line
+     * @return Point2d; the closest point on the line after applying the indicated limit handling; so the result can be null
+     * @throws DrawRuntimeException when any of the arguments is NaN
+     */
+    public Point2d closestPointOnLine(final double p1X, final double p1Y, final double p2X, final double p2Y,
+            final Boolean lowLimitHandling, final Boolean highLimitHandling) throws DrawRuntimeException
+    {
+        double dX = p2X - p1X;
+        double dY = p2Y - p1Y;
+        Throw.when(Double.isNaN(dX) || Double.isNaN(dY), DrawRuntimeException.class, "NaN values not permitted");
+        if (0 == dX && 0 == dY)
         {
-            return segmentPoint1;
+            return new Point2d(p1X, p1Y);
         }
-        final double u = ((this.x - segmentPoint1.x) * dX + (this.y - segmentPoint1.y) * dY) / (dX * dX + dY * dY);
-        if (u < 0)
+        double u = ((this.x - p1X) * dX + (this.y - p1Y) * dY) / (dX * dX + dY * dY);
+        if (u < 0.0)
         {
-            return segmentPoint1;
+            if (lowLimitHandling == null)
+            {
+                return null;
+            }
+            if (lowLimitHandling)
+            {
+                u = 0.0;
+            }
         }
-        else if (u > 1)
+        else if (u > 1.0)
         {
-            return segmentPoint2;
+            if (highLimitHandling == null)
+            {
+                return null;
+            }
+            if (highLimitHandling)
+            {
+                u = 1.0;
+            }
         }
-        else
+        if (u == 1.0) // Maximize precision in case u == 1
         {
-            return segmentPoint1.interpolate(segmentPoint2, u);
+            return new Point2d(p2X, p2Y);
         }
+        return new Point2d(p1X + u * dX, p1Y + u * dY);
+    }
+
+    /**
+     * Project a point on a line segment. If the the projected points lies outside the line segment, the nearest end point of
+     * the line segment is returned. Otherwise the returned point lies between the end points of the line segment. <br>
+     * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
+     * Bourke</a>.
+     * @param p1X double; the x coordinate of the start point of the line segment
+     * @param p1Y double; the y coordinate of the start point of the line segment
+     * @param p2X double; the x coordinate of the end point of the line segment
+     * @param p2Y double; the y coordinate of the end point of the line segment
+     * @return P; either <cite>segmentPoint1</cite>, or <cite>segmentPoint2</cite> or a new Point2d that lies somewhere in
+     *         between those two.
+     */
+    public final Point2d closestPointOnSegment(final double p1X, final double p1Y, final double p2X, final double p2Y)
+    {
+        return closestPointOnLine(p1X, p1Y, p2X, p2Y, true, true);
     }
 
     /** {@inheritDoc} */
     @Override
-    public final Point2d closestPointOnLine(final Point2d linePoint1, final Point2d linePoint2) throws DrawRuntimeException
+    public Point2d closestPointOnLine(final Point2d linePoint1, final Point2d linePoint2)
+            throws NullPointerException, DrawRuntimeException
     {
-        double dX = linePoint2.x - linePoint1.x;
-        double dY = linePoint2.y - linePoint1.y;
-        Throw.when(dX == 0 && dY == 0, DrawRuntimeException.class, "line points are at same location");
-        final double u = ((this.x - linePoint1.x) * dX + (this.y - linePoint1.y) * dY) / (dX * dX + dY * dY);
-        return linePoint1.interpolate(linePoint2, u);
+        Throw.whenNull(linePoint1, "linePoint1 may not be null");
+        Throw.whenNull(linePoint2, "linePoint2 may not be null");
+        return closestPointOnLine(linePoint1.getX(), linePoint1.getY(), linePoint2.getX(), linePoint2.getY());
+    }
+
+    /**
+     * Project a point on a line. <br>
+     * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
+     * Bourke</a>.
+     * @param p1X double; the x coordinate of a point of the line segment
+     * @param p1Y double; the y coordinate of a point of the line segment
+     * @param p2X double; the x coordinate of another point of the line segment
+     * @param p2Y double; the y coordinate of another point of the line segment
+     * @return Point2d; a point on the line that goes through the points
+     * @throws DrawRuntimeException when the points on the line are identical
+     */
+    public final Point2d closestPointOnLine(final double p1X, final double p1Y, final double p2X, final double p2Y)
+            throws DrawRuntimeException
+    {
+        Throw.when(p1X == p2X && p1Y == p2Y, DrawRuntimeException.class, "degenerate line not allowed");
+        return closestPointOnLine(p1X, p1Y, p2X, p2Y, false, false);
     }
 
     /**
      * Closest point on a ray.
      * @param ray Ray2d; the ray
      * @return Point2d; the point on the ray that is closest to this
+     * @throws NullPointerException when ray is null
      */
-    public final Point2d closestPointOnLine(final Ray2d ray)
+    public final Point2d closestPointOnLine(final Ray2d ray) throws NullPointerException
     {
-        double dX = Math.cos(ray.phi);
-        double dY = Math.sin(ray.phi);
-        final double u = ((this.x - ray.x) * dX + (this.y - ray.y) * dY) / (dX * dX + dY * dY);
-        return ray.interpolate(new Point2d(ray.x + dX, ray.y + dY), Math.max(0, u));
+        return closestPointOnLine(ray.x, ray.y, ray.x + Math.cos(ray.phi), ray.y + Math.sin(ray.phi), true, false);
     }
 
     /**

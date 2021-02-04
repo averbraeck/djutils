@@ -149,19 +149,15 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Sp
 
     /** {@inheritDoc} */
     @Override
-    public Point3d closestPointOnRay(final Point3d point) throws NullPointerException
+    public Bounds3d getBounds()
     {
-        Throw.whenNull(point, "point may not be null");
-        double sinTheta = Math.sin(this.theta);
-        double dX = Math.cos(this.phi) * sinTheta;
-        double dY = Math.sin(this.phi) * sinTheta;
-        double dZ = Math.cos(this.theta);
-        final double u = (point.x - this.x) * dX + (point.y - this.y) * dY + (point.z - this.z) * dZ;
-        if (u <= 0)
-        {
-            return getEndPoint();
-        }
-        return new Point3d(this.x + u * dX, this.y + u * dY, this.z + u * dZ);
+        double normalizedPhi = AngleUtil.normalizeAroundZero(this.phi);
+        double normalizedTheta = AngleUtil.normalizeAroundZero(this.theta);
+        boolean toPositiveX = Math.abs(normalizedPhi) <= Math.PI / 2; // Math.cos(Math.PI) is > 0 due to finite precision
+        return new Bounds3d(toPositiveX ? this.x : Double.NEGATIVE_INFINITY, toPositiveX ? Double.POSITIVE_INFINITY : this.x,
+                normalizedPhi >= 0 ? this.y : Double.NEGATIVE_INFINITY, normalizedPhi <= 0 ? this.y : Double.POSITIVE_INFINITY,
+                normalizedTheta >= 0 ? this.z : Double.NEGATIVE_INFINITY,
+                normalizedTheta <= 0 ? this.z : Double.POSITIVE_INFINITY);
     }
 
     /** {@inheritDoc} */
@@ -186,15 +182,32 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Sp
 
     /** {@inheritDoc} */
     @Override
-    public Bounds3d getBounds()
+    public Point3d closestPointOnRay(final Point3d point) throws NullPointerException
     {
-        double normalizedPhi = AngleUtil.normalizeAroundZero(this.phi);
-        double normalizedTheta = AngleUtil.normalizeAroundZero(this.theta);
-        boolean toPositiveX = Math.abs(normalizedPhi) <= Math.PI / 2; // Math.cos(Math.PI) is > 0 due to finite precision
-        return new Bounds3d(toPositiveX ? this.x : Double.NEGATIVE_INFINITY, toPositiveX ? Double.POSITIVE_INFINITY : this.x,
-                normalizedPhi >= 0 ? this.y : Double.NEGATIVE_INFINITY, normalizedPhi <= 0 ? this.y : Double.POSITIVE_INFINITY,
-                normalizedTheta >= 0 ? this.z : Double.NEGATIVE_INFINITY,
-                normalizedTheta <= 0 ? this.z : Double.POSITIVE_INFINITY);
+        Throw.whenNull(point, "point may not be null");
+        double sinTheta = Math.sin(this.theta);
+        return point.closestPointOnLine(this.x, this.y, this.z, this.x + Math.cos(this.phi) * sinTheta,
+                this.y + Math.sin(this.phi) * sinTheta, this.z + Math.cos(this.theta), true, false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point3d projectOrthogonal(final Point3d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        double sinTheta = Math.sin(this.theta);
+        return point.closestPointOnLine(this.x, this.y, this.z, this.x + Math.cos(this.phi) * sinTheta,
+                this.y + Math.sin(this.phi) * sinTheta, this.z + Math.cos(this.theta), null, false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point3d projectOrthogonalExtended(final Point3d point)
+    {
+        Throw.whenNull(point, "point may not be null");
+        double sinTheta = Math.sin(this.theta);
+        return point.closestPointOnLine(getX(), getY(), getZ(), getX() + Math.cos(this.phi) * sinTheta,
+                getY() + Math.sin(this.phi) * sinTheta, getZ() + Math.cos(this.theta), false, false);
     }
 
     /** {@inheritDoc} */

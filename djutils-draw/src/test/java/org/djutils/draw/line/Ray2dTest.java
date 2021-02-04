@@ -2,6 +2,7 @@ package org.djutils.draw.line;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -294,10 +295,10 @@ public class Ray2dTest
             // Ignore expected exception
         }
 
-        for (double phi : new double[] {0, 1, 2, 3, 4, 5, -1, -2, Math.PI})
+        for (double phi : new double[] { 0, 1, 2, 3, 4, 5, -1, -2, Math.PI })
         {
             Ray2d ray = new Ray2d(1, 2, phi);
-            for (double position : new double[] {0, 10, 0.1, -2})
+            for (double position : new double[] { 0, 10, 0.1, -2 })
             {
                 Ray2d result = ray.getLocationExtended(position);
                 assertEquals("result is position distance away from base of ray", Math.abs(position), ray.distance(result),
@@ -320,10 +321,10 @@ public class Ray2dTest
     }
 
     /**
-     * Test the closestPointOnRay method.
+     * Test the closestPointOnRay and the projectOrthogonal methods.
      */
     @Test
-    public void testClosestPoint()
+    public void testClosestPointAndProjectOrthogonal()
     {
         Ray2d ray = new Ray2d(1, 2, 1);
         try
@@ -346,6 +347,14 @@ public class Ray2dTest
         assertEquals("result is start point", ray.x, result.x, 0);
         assertEquals("result is start point", ray.y, result.y, 0);
 
+        assertNull("projection misses the ray", ray.projectOrthogonal(new Point2d(1, 0)));
+        assertNull("projection misses the ray", ray.projectOrthogonal(new Point2d(0, 2)));
+        assertEquals("projection hits start point of ray", new Point2d(1, 2), ray.projectOrthogonal(new Point2d(1, 2)));
+        assertEquals("extended projection returns same point as projection on sufficiently long line segment", 0,
+                new LineSegment2d(ray.getLocationExtended(-100), ray.getLocation(100)).closestPointOnSegment(new Point2d(1, 0))
+                        .distance(ray.projectOrthogonalExtended(new Point2d(1, 0))),
+                0.0001);
+
         Point2d projectingPoint = new Point2d(10, 10);
         result = ray.closestPointOnRay(projectingPoint); // Projects at a point along the ray
         double distance = result.distance(ray.getEndPoint());
@@ -353,6 +362,10 @@ public class Ray2dTest
         // Angle startPoint-result-test-projectingPoint should be 90 degrees
         double angle = ray.getPhi() - result.directionTo(projectingPoint);
         assertEquals("angle should be about 90 degrees", Math.PI / 2, Math.abs(AngleUtil.normalizeAroundZero(angle)), 0.0001);
+        assertEquals("projection hits closest point on the ray", 0, result.distance(ray.projectOrthogonal(projectingPoint)),
+                0.0001);
+        assertEquals("projectOrthogonalExtended returns same result as long as orthogonal projection exists", 0,
+                result.distance(ray.projectOrthogonalExtended(projectingPoint)), 0.0001);
     }
 
     /**
@@ -412,7 +425,7 @@ public class Ray2dTest
             // Ignore expected exception
         }
 
-        double[] deltas = new double[] {0.0, -0.125, 0.125, -1, 1}; // Use values that can be represented exactly in a double
+        double[] deltas = new double[] { 0.0, -0.125, 0.125, -1, 1 }; // Use values that can be represented exactly in a double
         for (double dX : deltas)
         {
             for (double dY : deltas)
@@ -420,7 +433,7 @@ public class Ray2dTest
                 for (double dPhi : deltas)
                 {
                     Ray2d other = new Ray2d(ray.x + dX, ray.y + dY, ray.phi + dPhi);
-                    for (double epsilon : new double[] {0, 0.125, 0.5, 0.9, 1.0, 1.1})
+                    for (double epsilon : new double[] { 0, 0.125, 0.5, 0.9, 1.0, 1.1 })
                     {
                         // System.out.println(String.format("dX=%f, dY=%f, dPhi=%f, epsilon=%f", dX, dY, dPhi, epsilon));
                         boolean result = ray.epsilonEquals(other, epsilon, Double.POSITIVE_INFINITY);
@@ -435,7 +448,7 @@ public class Ray2dTest
             }
         }
     }
-    
+
     /**
      * Test the equals and hasCode methods.
      */
@@ -450,7 +463,7 @@ public class Ray2dTest
         assertNotEquals("not equal to ray with different start x", ray, new Ray2d(2, 2, 12, 12));
         assertNotEquals("not equal to ray with different start y", ray, new Ray2d(1, 3, 12, 13));
         assertEquals("equal to ray with same x, y and direction", ray, new Ray2d(1, 2, 21, 22));
-        
+
         assertNotEquals("hashCode depends on x", ray.hashCode(), new Ray2d(2, 2, 12, 12));
         assertNotEquals("hashCode depends on y", ray.hashCode(), new Ray2d(1, 3, 11, 13));
         assertNotEquals("hashCode depends on phi", ray.hashCode(), new Ray2d(1, 2, 11, 10));

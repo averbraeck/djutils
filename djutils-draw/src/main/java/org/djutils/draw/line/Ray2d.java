@@ -155,12 +155,23 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Sp
         Throw.whenNull(point, "point may not be null");
         double dX = Math.cos(this.phi);
         double dY = Math.sin(this.phi);
-        final double u = (point.x - this.x) * dX + (point.y - this.y) * dY;
-        if (u <= 0)
-        {
-            return getEndPoint();
-        }
-        return new Point2d(this.x + u * dX, this.y + u * dY);
+        return point.closestPointOnLine(this.x, this.y, this.x + dX, this.y + dY, true, false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point2d projectOrthogonal(final Point2d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        return point.closestPointOnLine(this.x, this.y, this.x + Math.cos(this.phi), this.y + Math.sin(this.phi), null, false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point2d projectOrthogonalExtended(final Point2d point)
+    {
+        Throw.whenNull(point, "point may not be null");
+        return point.closestPointOnLine(getX(), getY(), getX() + Math.cos(this.phi), getY() + Math.sin(this.phi), false, false);
     }
 
     /** {@inheritDoc} */

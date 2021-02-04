@@ -188,23 +188,24 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d, Sp
     @Override
     public Point3d closestPointOnSegment(final Point3d point)
     {
-        double dX = this.endX - this.startX;
-        double dY = this.endY - this.startY;
-        double dZ = this.endZ - this.startZ;
-        final double u = ((point.x - this.startX) * dX + (point.y - this.startY) * dY + (point.z - this.startZ) * dZ)
-                / (dX * dX + dY * dY + dZ * dZ);
-        if (u < 0)
-        {
-            return getStartPoint();
-        }
-        else if (u > 1)
-        {
-            return getEndPoint();
-        }
-        else
-        {
-            return new Point3d(this.startX + u * dX, this.startY + u * dY, this.startZ + u * dZ);
-        }
+        Throw.whenNull(point, "point may not be null");
+        return point.closestPointOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ, true, true);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point3d projectOrthogonal(final Point3d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        return point.closestPointOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ, null, null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point3d projectOrthogonalExtended(final Point3d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        return point.closestPointOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ);
     }
 
     /** {@inheritDoc} */

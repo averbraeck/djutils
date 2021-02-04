@@ -1187,6 +1187,7 @@ public class PolyLine3dTest
     {
         PolyLine3d line = new PolyLine3d(new Point3d[] { new Point3d(1, 2, 3), new Point3d(4, 6, 8), new Point3d(8, 9, 10) });
         assertTrue("toString returns something descriptive", line.toString().startsWith("PolyLine3d ["));
+        assertTrue("toString can suppress the class name", line.toString().indexOf(line.toString(true)) > 0);
 
         // Verify that hashCode. Check that the result depends on the actual coordinates.
         assertNotEquals("hash code takes x coordinate into account",
@@ -1204,7 +1205,7 @@ public class PolyLine3dTest
         assertNotEquals("hash code takes y coordinate into account",
                 new PolyLine3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1)).hashCode(),
                 new PolyLine3d(new Point3d(0, 0, 0), new Point3d(1, 2, 1)).hashCode());
-        assertNotEquals("hash code takes y coordinate into account",
+        assertNotEquals("hash code takes z coordinate into account",
                 new PolyLine3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1)).hashCode(),
                 new PolyLine3d(new Point3d(0, 0, 0), new Point3d(1, 1, 2)).hashCode());
 
@@ -1223,6 +1224,6 @@ public class PolyLine3dTest
         assertNotEquals("equals checks z", line,
                 new PolyLine3d(new Point3d[] { new Point3d(1, 2, 3), new Point3d(4, 6, 8), new Point3d(8, 9, 11) }));
         assertTrue("Line is equal to line from same set of points", line.equals(new PolyLine3d(line.getPoints())));
-
     }
+    
 }

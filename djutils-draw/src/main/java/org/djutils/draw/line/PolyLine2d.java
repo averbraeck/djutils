@@ -1087,19 +1087,15 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         double perpendicularY = ray.y + Math.cos(ray.phi);
         for (int index = 1; index < this.x.length; index++)
         {
-            double lengthAtEndofSegment = this.lengthAtIndex(index - 1);
-            double segmentLength = this.lengthAtIndex(index) - this.lengthAtIndex(index - 1) + Math.ulp(lengthAtEndofSegment);
-            Point2d intersection = Point2d.intersectionOfLines(ray.x, ray.y, perpendicularX, perpendicularY, this.x[index - 1],
-                    this.y[index - 1], this.x[index], this.y[index]);
-            // FIXME: This is a rather expensive way to test that the intersection is on this segment.
-            double distanceToPrevPoint = Math.hypot(intersection.x - this.x[index - 1], intersection.y - this.y[index - 1]);
-            if (distanceToPrevPoint <= segmentLength
-                    && Math.hypot(intersection.x - this.x[index], intersection.y - this.y[index]) <= segmentLength)
+            Point2d intersection = Point2d.intersectionOfLines(ray.x, ray.y, perpendicularX, perpendicularY, false, false,
+                    this.x[index - 1], this.y[index - 1], this.x[index], this.y[index], true, true);
+            if (intersection != null) // Intersection is on the segment
             {
-                // Intersection is on the segment
                 double thisDistance = intersection.distance(ray);
                 if (thisDistance < bestDistance)
                 {
+                    double distanceToPrevPoint =
+                            Math.hypot(intersection.x - this.x[index - 1], intersection.y - this.y[index - 1]);
                     positionAtBestDistance = lengthAtIndex(index - 1) + distanceToPrevPoint;
                     bestDistance = thisDistance;
                 }
