@@ -37,6 +37,9 @@ public class OrientedPoint3dTest
         assertEquals("dirX", 0.0, p.getDirX(), 1E-6);
         assertEquals("dirY", 0.0, p.getDirY(), 1E-6);
         assertEquals("dirZ", 0.0, p.getDirZ(), 1E-6);
+        assertEquals("dirX", 0.0, p.dirZ, 1E-6);
+        assertEquals("dirY", 0.0, p.dirY, 1E-6);
+        assertEquals("dirZ", 0.0, p.dirZ, 1E-6);
 
         p = new OrientedPoint3d(new double[] { -18.7, 3.4, 5.6 });
         assertEquals("x", -18.7, p.x, 1E-6);
@@ -55,24 +58,23 @@ public class OrientedPoint3dTest
         assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
 
         p = new OrientedPoint3d(new double[] { -18.7, 3.4, 5.6 }, 0.1, -0.2, Math.PI);
-        {
-            assertEquals("x", -18.7, p.x, 1E-6);
-            assertEquals("y", 3.4, p.y, 1E-6);
-            assertEquals("z", 5.6, p.z, 1E-6);
-            assertEquals("dirX", 0.1, p.getDirX(), 1E-6);
-            assertEquals("dirY", -0.2, p.getDirY(), 1E-6);
-            assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
-        }
+        assertEquals("x", -18.7, p.x, 1E-6);
+        assertEquals("y", 3.4, p.y, 1E-6);
+        assertEquals("z", 5.6, p.z, 1E-6);
+        assertEquals("dirX", 0.1, p.getDirX(), 1E-6);
+        assertEquals("dirY", -0.2, p.getDirY(), 1E-6);
+        assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
+        assertEquals("dirX", 0.1, p.dirX, 1E-6);
+        assertEquals("dirY", -0.2, p.dirY, 1E-6);
+        assertEquals("dirZ", 3.1415926, p.dirZ, 1E-6);
 
         p = new OrientedPoint3d(new Point3d(new double[] { -18.7, 3.4, 5.6 }), 0.1, -0.2, Math.PI);
-        {
-            assertEquals("x", -18.7, p.x, 1E-6);
-            assertEquals("y", 3.4, p.y, 1E-6);
-            assertEquals("z", 5.6, p.z, 1E-6);
-            assertEquals("dirX", 0.1, p.getDirX(), 1E-6);
-            assertEquals("dirY", -0.2, p.getDirY(), 1E-6);
-            assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
-        }
+        assertEquals("x", -18.7, p.x, 1E-6);
+        assertEquals("y", 3.4, p.y, 1E-6);
+        assertEquals("z", 5.6, p.z, 1E-6);
+        assertEquals("dirX", 0.1, p.getDirX(), 1E-6);
+        assertEquals("dirY", -0.2, p.getDirY(), 1E-6);
+        assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
 
         try
         {

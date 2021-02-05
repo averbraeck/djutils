@@ -40,12 +40,14 @@ public class OrientedPoint2dTest
         assertEquals("x", 10.0, p.x, 0);
         assertEquals("y", -20.0, p.y, 0);
         assertEquals("dirZ", 0, p.getDirZ(), 0);
+        assertEquals("dirZ", 0, p.dirZ, 0);
 
         Point2d p2d = new Point2d(10, -20);
         p = new OrientedPoint2d(p2d, Math.PI);
         assertEquals("x", 10.0, p.x, 0);
         assertEquals("y", -20.0, p.y, 0);
         assertEquals("dirZ", 3.1415926, p.getDirZ(), 1E-6);
+        assertEquals("dirZ", 3.1415926, p.dirZ, 1E-6);
 
         try
         {

@@ -2,6 +2,13 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.10" date="2021-02-05" description="Made phi and theta public in the Ray classes">
+      <action dev="pknoppers" type="add">
+        The internal values of theta (Ray3d) and phi (Ray2d and Ray3d) are now public. (Like the rotations in the 
+        OrientedPoint classes). 
+      </action>
+    </release>
+    
     <release version="1.06.09" date="2021-02-04" description="Centralized projection methods, more flexible toString methods">
       <action dev="pknoppers" type="add">
         Fixed lots of code duplication that determined the closest point on a line, line segment, or ray.

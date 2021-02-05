@@ -25,7 +25,8 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     private static final long serialVersionUID = 20200828L;
 
     /** The counter-clockwise rotation around the point in radians. */
-    private final double dirZ;
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    public final double dirZ;
 
     /**
      * Construct an immutable directed point with an x and y coordinate, and a direction, stored with double precision.

@@ -26,13 +26,16 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     private static final long serialVersionUID = 20200828L;
 
     /** The direction as rotation around the x-axis. */
-    private final double dirX;
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    public final double dirX;
 
     /** The direction as rotation around the y-axis. */
-    private final double dirY;
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    public final double dirY;
 
     /** The direction as rotation around the z-axis. */
-    private final double dirZ;
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    public final double dirZ;
 
     /**
      * Create an immutable directed point with x, y, and z coordinates, stored with double precision, and direction 0,0,0.
