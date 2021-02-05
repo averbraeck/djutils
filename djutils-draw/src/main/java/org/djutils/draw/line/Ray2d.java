@@ -141,6 +141,13 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public Ray2d flipped()
+    {
+        return new Ray2d(this.x, this.y, this.phi + Math.PI);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Ray2d getLocationExtended(final double position) throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(position) || Double.isInfinite(position), DrawRuntimeException.class,
