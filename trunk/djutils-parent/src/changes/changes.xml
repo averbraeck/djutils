@@ -3,9 +3,12 @@
   <body>
 
     <release version="1.06.10" date="2021-02-05" description="Made phi and theta public in the Ray classes">
-      <action dev="pknoppers" type="add">
+      <action dev="pknoppers" type="change">
         The internal values of theta (Ray3d) and phi (Ray2d and Ray3d) are now public. (Like the rotations in the 
         OrientedPoint classes). 
+      </action>
+      <action dev="pknoppers" type="add">
+        The Ray classes now implements a flip method that inverts the direction, but does not change the location.
       </action>
     </release>
     

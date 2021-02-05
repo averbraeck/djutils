@@ -152,6 +152,13 @@ public class Ray2dTest
         assertEquals(description + " neg x", -expectedX, negated.x, 0.0001);
         assertEquals(description + " neg y", -expectedY, negated.y, 0.0001);
         assertEquals(description + " neg phi", expectedPhi + Math.PI, negated.phi, 0.0001);
+        Ray2d flipped = ray.flipped();
+        assertEquals(description + " getX", expectedX, flipped.getX(), 0.0001);
+        assertEquals(description + " x", expectedX, flipped.x, 0.0001);
+        assertEquals(description + " getY", expectedY, flipped.getY(), 0.0001);
+        assertEquals(description + " y", expectedY, flipped.y, 0.0001);
+        assertEquals(description + " getPhi", expectedPhi + Math.PI, flipped.getPhi(), 0.0001);
+        assertEquals(description + " phi", expectedPhi + Math.PI, flipped.phi, 0.0001);
     }
 
     /**
