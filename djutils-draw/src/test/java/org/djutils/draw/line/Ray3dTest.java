@@ -183,7 +183,7 @@ public class Ray3dTest
         assertEquals(description + " neg z", -expectedZ, negated.z, 0.0001);
         assertEquals(description + " neg phi", expectedPhi + Math.PI, negated.phi, 0.0001);
         assertEquals(description + " neg theta", expectedTheta + Math.PI, negated.theta, 0.0001);
-        Ray3d flipped = ray.flipped();
+        Ray3d flipped = ray.flip();
         assertEquals(description + " getX", expectedX, flipped.getX(), 0.0001);
         assertEquals(description + " x", expectedX, flipped.x, 0.0001);
         assertEquals(description + " getY", expectedY, flipped.getY(), 0.0001);
