@@ -619,6 +619,13 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         int index = find(position);
         double remainder = position - this.lengthIndexedLine[index];
         double fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
+        if (fraction >= 1.0)
+        {
+            // Rounding problem; move to the next segment.
+            index++;
+            remainder = position - this.lengthIndexedLine[index];
+            fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
+        }
         return new Ray3d(this.x[index] + fraction * (this.x[index + 1] - this.x[index]),
                 this.y[index] + fraction * (this.y[index + 1] - this.y[index]),
                 this.z[index] + fraction * (this.z[index + 1] - this.z[index]), this.x[index + 1], this.y[index + 1],

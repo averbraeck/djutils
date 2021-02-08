@@ -1225,5 +1225,74 @@ public class PolyLine3dTest
                 new PolyLine3d(new Point3d[] { new Point3d(1, 2, 3), new Point3d(4, 6, 8), new Point3d(8, 9, 11) }));
         assertTrue("Line is equal to line from same set of points", line.equals(new PolyLine3d(line.getPoints())));
     }
-    
+
+    /**
+     * Test for a problem that occurred in OTS2.
+     * @throws DrawException when that happens, this test has failed
+     */
+    @Test
+    public void testProjectProblem() throws DrawException
+    {
+        PolyLine3d polyLine3d = new PolyLine3d(new Point3d(1, 1, 2), new Point3d(11, 1, 5), new Point3d(16, 6, 0),
+                new Point3d(21, 6, 0), new Point3d(21, 0, 0));
+        double x = 11;
+        double y = 1;
+        Point2d point = new Point2d(x, y);
+        // The difficult work is done with the line projected on the the Z=0 plane
+        PolyLine2d projectedLine = polyLine3d.project();
+        // Project (x, y) onto each segment of the projected line
+        int bestSegmentIndex = -1;
+        double bestDistance = Double.POSITIVE_INFINITY;
+        double bestSegmentDirection = Double.NaN;
+        Point2d prevPoint = null;
+        // Find the nearest segment
+        for (int index = 0; index < projectedLine.size(); index++)
+        {
+            Point2d nextPoint = projectedLine.get(index);
+            if (null != prevPoint)
+            {
+                Point2d closestOnSegment = point.closestPointOnSegment(prevPoint, nextPoint);
+                double distance = closestOnSegment.distance(point);
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    bestSegmentIndex = index;
+                    bestSegmentDirection = prevPoint.directionTo(nextPoint);
+                }
+            }
+            prevPoint = nextPoint;
+        }
+        // bestSegmentIndex is the index of the point where the best segment ENDS
+        // Make the rays that bisect the angles at the start and end of the segment
+        double prevDirection = projectedLine.get(bestSegmentIndex - 1).directionTo(projectedLine.get(bestSegmentIndex));
+        double nextDirection = bestSegmentIndex < projectedLine.size() - 1
+                ? projectedLine.get(bestSegmentIndex).directionTo(projectedLine.get(bestSegmentIndex + 1))
+                : projectedLine.get(projectedLine.size() - 2).directionTo(projectedLine.getLast());
+        Ray2d prevRay =
+                new Ray2d(projectedLine.get(bestSegmentIndex - 1), (prevDirection + bestSegmentDirection) / 2 + Math.PI / 2);
+        Ray2d nextRay =
+                new Ray2d(projectedLine.get(bestSegmentIndex), (bestSegmentDirection + nextDirection) / 2 + Math.PI / 2);
+        // Project the point onto each ray
+        Point2d prevRayProjection = prevRay.projectOrthogonalExtended(point);
+        Point2d nextRayProjection = nextRay.projectOrthogonalExtended(point);
+        Point2d projectionOnBestSegment =
+                prevRay.interpolate(nextRay, point.distance(prevRayProjection) / prevRayProjection.distance(nextRayProjection));
+        // Find the corresponding fractional location on the input polyLine3d
+        // Find the corresponding segment on the polyLine3d
+        for (int index = 1; index < polyLine3d.size(); index++)
+        {
+            // Comparing double values; but that should work as the coordinates of the rays are exact copies of the x and y
+            // coordinates of the polyLine3d
+            if (polyLine3d.getX(index - 1) == prevRay.x && polyLine3d.getY(index - 1) == prevRay.y
+                    && polyLine3d.getX(index) == nextRay.x && polyLine3d.getY(index) == nextRay.y)
+            {
+                double lengthAtPrevRay = polyLine3d.lengthAtIndex(index - 1);
+                double fraction = (lengthAtPrevRay + prevRay.distance(projectionOnBestSegment) / prevRay.distance(nextRay)
+                        * (polyLine3d.lengthAtIndex(index) - lengthAtPrevRay)) / polyLine3d.getLength();
+
+                polyLine3d.getLocationFraction(fraction); // This operation failed
+            }
+        }
+    }
+
 }
