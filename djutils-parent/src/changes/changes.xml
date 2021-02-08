@@ -2,6 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.11" date="2021-02-08" description="Fixed rounding problem in PolyLine3d.getLocation">
+      <action dev="pknoppers" type="fix">
+        The getLocation method could fail to construct a ray when the position is exactly at one of the points of the line. 
+      </action>
+    </release>
+    
     <release version="1.06.10" date="2021-02-05" description="Made phi and theta public in the Ray classes">
       <action dev="pknoppers" type="change">
         The internal values of theta (Ray3d) and phi (Ray2d and Ray3d) are now public. (Like the rotations in the 
