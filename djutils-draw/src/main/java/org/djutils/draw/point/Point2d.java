@@ -418,10 +418,10 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
      * @param p2X double; the x coordinate of the second point on the line
      * @param p2Y double; the y coordinate of the second point on the line
      * @param lowLimitHandling Boolean; controls handling of results that lie before the first point of the line. If null; this
-     *            method returns NaN; else if true; this method returns 0.0; else (lowLimitHandling is false); this results <
+     *            method returns NaN; else if true; this method returns 0.0; else (lowLimitHandling is false); this results &lt;
      *            0.0 are returned
      * @param highLimitHandling Boolean; controls the handling of results that lie beyond the second point of the line. If null;
-     *            this method returns NaN; else if true; this method returns 1.0; else (highLimitHandling is false); results >
+     *            this method returns NaN; else if true; this method returns 1.0; else (highLimitHandling is false); results &gt;
      *            1.0 are returned
      * @return double; the fractional position of the closest point on the line. Results within the range 0.0 .. 1.0 are always
      *         returned as is.. A result < 0.0 is subject to lowLimitHandling. A result > 1.0 is subject to highLimitHandling
