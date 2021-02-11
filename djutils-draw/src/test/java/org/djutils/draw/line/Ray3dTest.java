@@ -29,33 +29,40 @@ public class Ray3dTest
     @Test
     public void testConstructors()
     {
-        verifyRay("Constructor from x, y, phi", new Ray3d(1, 2, 3, 4, 5), 1, 2, 3, 4, 5);
-        verifyRay("Constructor from Point3d, phi", new Ray3d(new Point3d(0.1, 0.2, 0.3), -0.4, -0.5), 0.1, 0.2, 0.3, -0.4,
-                -0.5);
+        // Verify theta and phi for the six basic directions.
+        verifyRay("positive x", new Ray3d(0, 0, 0, 1, 0, 0), 0, 0, 0, 0, Math.PI / 2);
+        verifyRay("positive y", new Ray3d(0, 0, 0, 0, 1, 0), 0, 0, 0, Math.PI / 2, Math.PI / 2);
+        verifyRay("positive z", new Ray3d(0, 0, 0, 0, 0, 1), 0, 0, 0, 0, 0);
+        verifyRay("negative x", new Ray3d(0, 0, 0, -1, 0, 0), 0, 0, 0, Math.PI, Math.PI / 2);
+        verifyRay("negative y", new Ray3d(0, 0, 0, 0, -1, 0), 0, 0, 0, -Math.PI / 2, Math.PI / 2);
+        verifyRay("negative z", new Ray3d(0, 0, 0, 0, 0, -1), 0, 0, 0, 0, Math.PI);
+        verifyRay("Constructor from x, y, phi, theta", new Ray3d(1, 2, 3, 4, 5), 1, 2, 3, 4, 5);
+        verifyRay("Constructor from Point3d, phi, theta", new Ray3d(new Point3d(0.1, 0.2, 0.3), -0.4, -0.5), 0.1, 0.2, 0.3,
+                -0.4, -0.5);
         verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 4, 6, 15), 1, 2, 3,
-                Math.atan2(4, 3), Math.atan2(12, 5));
+                Math.atan2(4, 3), Math.atan2(5, 12));
         verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 1, 6, 15), 1, 2, 3,
-                Math.atan2(4, 0), Math.atan2(12, 4));
+                Math.atan2(4, 0), Math.atan2(4, 12));
         verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 1, 2, 15), 1, 2, 3,
-                Math.atan2(0, 0), Math.atan2(12, 0));
+                Math.atan2(0, 0), Math.atan2(0, 12));
         verifyRay("Constructor from Point3d, throughX, throughY, throughZ", new Ray3d(new Point3d(1, 2, 3), 4, 6, 15), 1, 2, 3,
-                Math.atan2(4, 3), Math.atan2(12, 5));
+                Math.atan2(4, 3), Math.atan2(5, 12));
         verifyRay("Constructor from Point3d, throughX, throughY, throughZ", new Ray3d(new Point3d(1, 2, 3), 1, 6, 15), 1, 2, 3,
-                Math.atan2(4, 0), Math.atan2(12, 4));
+                Math.atan2(4, 0), Math.atan2(4, 12));
         verifyRay("Constructor from Point3d, throughX, throughY, throughZ", new Ray3d(new Point3d(1, 2, 3), 1, 2, 15), 1, 2, 3,
-                Math.atan2(0, 0), Math.atan2(12, 0));
+                Math.atan2(0, 0), Math.atan2(0, 12));
         verifyRay("Constructor from x, y, z, Point3d", new Ray3d(1, 2, 3, new Point3d(4, 6, 15)), 1, 2, 3, Math.atan2(4, 3),
-                Math.atan2(12, 5));
+                Math.atan2(5, 12));
         verifyRay("Constructor from x, y, z, Point3d", new Ray3d(1, 2, 3, new Point3d(1, 6, 15)), 1, 2, 3, Math.atan2(4, 0),
-                Math.atan2(12, 4));
+                Math.atan2(4, 12));
         verifyRay("Constructor from x, y, z, Point3d", new Ray3d(1, 2, 3, new Point3d(1, 2, 15)), 1, 2, 3, Math.atan2(0, 0),
-                Math.atan2(12, 0));
+                Math.atan2(0, 12));
         verifyRay("Constructor from Point3d, Point3d", new Ray3d(new Point3d(1, 2, 3), new Point3d(4, 6, 15)), 1, 2, 3,
-                Math.atan2(4, 3), Math.atan2(12, 5));
+                Math.atan2(4, 3), Math.atan2(5, 12));
         verifyRay("Constructor from Point3d, Point3d", new Ray3d(new Point3d(1, 2, 3), new Point3d(1, 6, 15)), 1, 2, 3,
-                Math.atan2(4, 0), Math.atan2(12, 4));
+                Math.atan2(4, 0), Math.atan2(4, 12));
         verifyRay("Constructor from Point3d, Point3d", new Ray3d(new Point3d(1, 2, 3), new Point3d(1, 2, 15)), 1, 2, 3,
-                Math.atan2(0, 0), Math.atan2(12, 0));
+                Math.atan2(0, 0), Math.atan2(0, 12));
 
         try
         {
@@ -431,6 +438,46 @@ public class Ray3dTest
                 ray.getLocation(distance + 0.1).distance(projectingPoint) < distance);
         assertEquals("projectOrthogonalExtended returns same result as long as orthogonal projection exists", 0,
                 result.distance(ray.projectOrthogonalExtended(projectingPoint)), 0.0001);
+    }
+
+    /**
+     * Test the project methods.
+     */
+    @Test
+    public void testProject()
+    {
+        Ray3d ray = new Ray3d(1, 2, 3, 20, 10, 5);
+        assertTrue("projects outside", Double.isNaN(ray.projectOrthogonalFractional(new Point3d(1, 1, 1))));
+        assertTrue("projects before start", ray.projectOrthogonalFractionalExtended(new Point3d(1, 1, 1)) < 0);
+        assertEquals("projects at", -new Point3d(1 - 19 - 19, 2 - 8 - 8, 3 - 2 - 2).distance(ray),
+                ray.projectOrthogonalFractionalExtended(new Point3d(1 - 19 - 19 + 8, 2 - 8 - 8 - 19, 3 - 2 - 2)), 0.0001);
+        // Projection of projection is projection
+        for (int x = -2; x < 5; x++)
+        {
+            for (int y = -2; y < 5; y++)
+            {
+                for (int z = -2; z < 5; z++)
+                {
+                    Point3d point = new Point3d(x, y, z);
+                    double fraction = ray.projectOrthogonalFractionalExtended(point);
+                    if (fraction < 0)
+                    {
+                        assertTrue("non extended version yields NaN", Double.isNaN(ray.projectOrthogonalFractional(point)));
+                        assertNull("non extended projectOrthogonal yields null", ray.projectOrthogonal(point));
+                    }
+                    else
+                    {
+                        assertEquals("non extended version yields same", fraction, ray.projectOrthogonalFractional(point),
+                                0.00001);
+                        assertEquals("non extended version yields same as extended version", ray.projectOrthogonal(point),
+                                ray.projectOrthogonalExtended(point));
+                    }
+                    Point3d projected = ray.projectOrthogonalExtended(point);
+                    assertEquals("projecting projected point yields same", fraction,
+                            ray.projectOrthogonalFractionalExtended(projected), 0.00001);
+                }
+            }
+        }
     }
 
     /**

@@ -144,7 +144,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d, Sp
     @Override
     public Iterator<? extends Point3d> getPoints()
     {
-        return Arrays.stream(new Point3d[] {getStartPoint(), getEndPoint()}).iterator();
+        return Arrays.stream(new Point3d[] { getStartPoint(), getEndPoint() }).iterator();
     }
 
     /** {@inheritDoc} */
@@ -206,6 +206,24 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d, Sp
     {
         Throw.whenNull(point, "point may not be null");
         return point.closestPointOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double projectOrthogonalFractional(final Point3d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        return point.fractionalPositionOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ, null,
+                null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double projectOrthogonalFractionalExtended(final Point3d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        return point.fractionalPositionOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ, false,
+                false);
     }
 
     /** {@inheritDoc} */

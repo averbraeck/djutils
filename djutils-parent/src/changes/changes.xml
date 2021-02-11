@@ -2,6 +2,18 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.12" date="2021-02-11" description="Project now implemented in all line types">
+      <action dev="pknoppers" type="add">
+        LineSegment, PolyLine and Ray types now implement the project interface. 
+      </action>
+      <action dev="pknoppers" type="fix">
+        More centralized implementation of code that finds closest point on a line(segment).
+        Replaced lots of getX() calls by this.x; etc. to make debugging easier.
+        Fixes in javadoc where class names were not correct after earlier rename operations.
+        PolyLine3d.createAndCleanLine3d is now named PolyLine3d.createAndCleanPolyLine3d
+      </action>
+    </release>
+    
     <release version="1.06.11" date="2021-02-08" description="Fixed rounding problem in PolyLine3d.getLocation">
       <action dev="pknoppers" type="fix">
         The getLocation method could fail to construct a ray when the position is exactly at one of the points of the line. 

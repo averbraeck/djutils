@@ -370,8 +370,8 @@ public class BezierTest
             }
         }
         // Pity that the value 64 is private in the Bezier class.
-        assertEquals("Number of points is 64", 64, Bezier.cubic(new Ray3d(from.x, from.y, from.z, Math.PI / 2, -Math.PI / 2, 0),
-                new Ray3d(to.x, to.y, to.z, Math.PI, 0, -Math.PI / 2)).size());
+        assertEquals("Number of points is 64", 64, Bezier.cubic(new Ray3d(from.x, from.y, from.z, Math.PI / 2, -Math.PI / 2),
+                new Ray3d(to.x, to.y, to.z, Math.PI, -Math.PI / 2)).size());
         assertEquals("Number of points is 64", 64, Bezier.bezier(from, control1, control2, to).size());
         control1 = new Point3d(5, 0, 10);
         control2 = new Point3d(0, 5, 20);
@@ -384,26 +384,26 @@ public class BezierTest
             assertEquals("to x", to.x, line.getLast().x, 0);
             assertEquals("to y", to.y, line.getLast().y, 0);
             assertEquals("to z", to.z, line.getLast().z, 0);
-            for (int i = 0; i < line.size() - 1; i++)
+            for (int i = 0; i < line.size(); i++)
             {
                 Point3d p = line.get(i);
                 // System.out.println(p);
                 assertTrue("x of intermediate point has reasonable value", p.x > -10 && p.x < 20);
                 assertTrue("y of intermediate point has reasonable value", p.y > -10 && p.y < 30);
-                assertTrue("z of intermediate point has reasonable value", p.z > -10 && p.z < 30);
+                assertTrue("z of intermediate point has reasonable value", p.z > -10 && p.z <= 30);
             }
         }
         for (int n : new int[] {2, 3, 4, 100})
         {
-            PolyLine3d line = Bezier.cubic(n, new Ray3d(from.x, from.y, from.z, Math.PI / 2, Math.PI / 2, Math.PI),
-                    new Ray3d(to.x, to.y, to.z, 0, 0, Math.PI / 2));
-            for (int i = 0; i < line.size() - 1; i++)
+            PolyLine3d line = Bezier.cubic(n, new Ray3d(from.x, from.y, from.z, Math.PI / 2, Math.PI / 2),
+                    new Ray3d(to.x, to.y, to.z, 0, Math.PI / 2));
+            for (int i = 0; i < line.size(); i++)
             {
                 Point3d p = line.get(i);
                 // System.out.println(p);
                 assertTrue("x of intermediate point has reasonable value", p.x > -10 && p.x < 20);
                 assertTrue("y of intermediate point has reasonable value", p.y > -10 && p.y < 30);
-                assertTrue("z of intermediate point has reasonable value", p.z > -10 && p.z < 30);
+                assertTrue("z of intermediate point has reasonable value", p.z > -10 && p.z <= 30);
             }
         }
     }

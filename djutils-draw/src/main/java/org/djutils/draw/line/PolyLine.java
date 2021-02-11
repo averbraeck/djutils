@@ -24,7 +24,7 @@ import org.djutils.draw.point.Point;
  * @param <LS> The matching LineSegment type (2d or 3d)
  */
 public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P, S>, S extends Space, R extends Ray<R, P, S>,
-        LS extends LineSegment<P, R, S>> extends Drawable<P, S>
+        LS extends LineSegment<P, R, S>> extends Drawable<P, S>, Project<P, S>
 {
     /**
      * Constructor that can be accessed as a method (used to implement default methods in this interface).

@@ -477,6 +477,37 @@ public class Point2dTest
                 Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(7, 1), new Point2d(10, -2)));
         assertEquals("line one passes after end of line two", new Point2d(-3.5, -3.5),
                 Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(-10, 3), new Point2d(0, -7)));
+        // Test the various exact hits at begin or end point
+        assertEquals("begin of first is on second", new Point2d(1, 1),
+                Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(2, 1), new Point2d(1, 0), new Point2d(1, 3)));
+        assertEquals("end of first is on second", new Point2d(1, 1),
+                Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(1, 1), new Point2d(1, 0), new Point2d(1, 3)));
+        assertEquals("begin of second is on first", new Point2d(1, 1),
+                Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(2, 1), new Point2d(1, 1), new Point2d(1, 3)));
+        assertEquals("end of second is on first", new Point2d(1, 1),
+                Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(2, 1), new Point2d(1, -1), new Point2d(1, 1)));
+        // Test the various not quite exact hits at begin or end point
+        assertTrue("begin of first is just over second", new Point2d(1, 1).epsilonEquals(
+                Point2d.intersectionOfLines(new Point2d(1.001, 1), new Point2d(2, 1), new Point2d(1, 0), new Point2d(1, 3)),
+                0.0001));
+        assertTrue("end of first is just over second", new Point2d(1, 1).epsilonEquals(
+                Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(0.999, 1), new Point2d(1, 0), new Point2d(1, 3)),
+                0.0001));
+        assertTrue("begin of second is just over first", new Point2d(1, 1).epsilonEquals(
+                Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(2, 1), new Point2d(1, 1.001), new Point2d(1, 3)),
+                0.0001));
+        assertTrue("end of second is just over first", new Point2d(1, 1).epsilonEquals(
+                Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(2, 1), new Point2d(1, -1), new Point2d(1, 0.999)),
+                0.0001));
+        // Test the various close hits at begin or end point
+        assertNull("begin of first is just not on second", Point2d.intersectionOfLineSegments(new Point2d(1.001, 1),
+                new Point2d(2, 1), new Point2d(1, 0), new Point2d(1, 3)));
+        assertNull("end of first is just not on second", Point2d.intersectionOfLineSegments(new Point2d(-1, 1),
+                new Point2d(0.999, 1), new Point2d(1, 0), new Point2d(1, 3)));
+        assertNull("begin of second is just not on first", Point2d.intersectionOfLineSegments(new Point2d(-1, 1),
+                new Point2d(2, 1), new Point2d(1, 1.001), new Point2d(1, 3)));
+        assertNull("end of second is just not on first", Point2d.intersectionOfLineSegments(new Point2d(-1, 1),
+                new Point2d(2, 1), new Point2d(1, -1), new Point2d(1, 0.999)));
     }
 
     /**

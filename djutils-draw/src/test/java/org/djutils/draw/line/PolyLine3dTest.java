@@ -3,6 +3,7 @@ package org.djutils.draw.line;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -10,6 +11,8 @@ import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.djutils.draw.DrawException;
@@ -487,13 +490,13 @@ public class PolyLine3dTest
         Point3d p2 = new Point3d(90, 80, 70);
         PolyLine3d polyLine = new PolyLine3d(new Point3d[] { p0, p1, p2 });
         double expectedPhi1 = Math.atan2(p1.y - p0.y, p1.x - p0.x);
-        double expectedTheta1 = Math.atan2(p1.z - p0.z, Math.hypot(p1.x - p0.x, p1.y - p0.y));
+        double expectedTheta1 = Math.atan2(Math.hypot(p1.x - p0.x, p1.y - p0.y), p1.z - p0.z);
         checkGetLocation(polyLine, -10, null, expectedPhi1, expectedTheta1);
         checkGetLocation(polyLine, -0.0001, p0, expectedPhi1, expectedTheta1);
         checkGetLocation(polyLine, 0, p0, expectedPhi1, expectedTheta1);
         checkGetLocation(polyLine, 0.0001, p0, expectedPhi1, expectedTheta1);
         double expectedPhi2 = Math.atan2(p2.y - p1.y, p2.x - p1.x);
-        double expectedTheta2 = Math.atan2(p2.z - p1.z, Math.hypot(p2.x - p1.x, p2.y - p1.y));
+        double expectedTheta2 = Math.atan2(Math.hypot(p2.x - p1.x, p2.y - p1.y), p2.z - p1.z);
         checkGetLocation(polyLine, 0.9999, p2, expectedPhi2, expectedTheta2);
         checkGetLocation(polyLine, 1.0, p2, expectedPhi2, expectedTheta2);
         checkGetLocation(polyLine, 1.0001, p2, expectedPhi2, expectedTheta2);
@@ -571,7 +574,7 @@ public class PolyLine3dTest
         Point3d[] tooShort = new Point3d[] {};
         try
         {
-            PolyLine3d.createAndCleanLine3d(tooShort);
+            PolyLine3d.createAndCleanPolyLine3d(tooShort);
             fail("Array with no points should have thrown an exception");
         }
         catch (DrawException ne)
@@ -581,7 +584,7 @@ public class PolyLine3dTest
         tooShort = new Point3d[] { new Point3d(1, 2, 3) };
         try
         {
-            PolyLine3d.createAndCleanLine3d(tooShort);
+            PolyLine3d.createAndCleanPolyLine3d(tooShort);
             fail("Array with no points should have thrown an exception");
         }
         catch (DrawException ne)
@@ -591,11 +594,11 @@ public class PolyLine3dTest
         Point3d p0 = new Point3d(1, 2, 3);
         Point3d p1 = new Point3d(4, 5, 6);
         Point3d[] points = new Point3d[] { p0, p1 };
-        PolyLine3d result = PolyLine3d.createAndCleanLine3d(points);
+        PolyLine3d result = PolyLine3d.createAndCleanPolyLine3d(points);
         assertTrue("first point is p0", p0.equals(result.get(0)));
         assertTrue("second point is p1", p1.equals(result.get(1)));
         Point3d p1Same = new Point3d(4, 5, 6);
-        result = PolyLine3d.createAndCleanLine3d(new Point3d[] { p0, p0, p0, p0, p1Same, p0, p1, p1, p1Same, p1, p1 });
+        result = PolyLine3d.createAndCleanPolyLine3d(new Point3d[] { p0, p0, p0, p0, p1Same, p0, p1, p1, p1Same, p1, p1 });
         assertEquals("result should contain 4 points", 4, result.size());
         assertTrue("first point is p0", p0.equals(result.get(0)));
         assertTrue("second point is p1", p1.equals(result.get(1)));
@@ -997,53 +1000,419 @@ public class PolyLine3dTest
     }
 
     /**
-     * Test the noiseFilteredLine method.
+     * Test other methods of PolyLine3d.
      * @throws DrawException should not happen (if it does, this test has failed)
      */
     @Test
-    public final void testFilter() throws DrawException
+    @SuppressWarnings("unlikely-arg-type")
+    public final void testOtherMethods() throws DrawException
     {
-        Point3d from = new Point3d(1, 2, 3);
-        Point3d to = new Point3d(4, 3, 2);
-        for (int steps = 0; steps < 10; steps++)
+        Point3d[] array =
+                new Point3d[] { new Point3d(1, 2, 3), new Point3d(3, 4, 5), new Point3d(3.2, 4.1, 5.1), new Point3d(5, 6, 7) };
+        PolyLine3d line = new PolyLine3d(Arrays.stream(array).iterator());
+        assertEquals("size", array.length, line.size());
+        for (int i = 0; i < array.length; i++)
         {
-            List<Point3d> points = new ArrayList<>(2 + steps);
-            points.add(from);
-            for (int i = 0; i < steps; i++)
-            {
-                points.add(from.interpolate(to, 1.0 * (i + 1) / (steps + 2)));
-            }
-            points.add(to);
-            PolyLine3d line = new PolyLine3d(points);
-            // System.out.println("ref: " + line);
-            double segmentLength = line.getFirst().distance(line.get(1));
-            PolyLine3d filteredLine = line.noiseFilteredLine(segmentLength * 0.9);
-            assertEquals("filtering with a filter that is smaller than any segment should return the original", line.size(),
-                    filteredLine.size());
-            filteredLine = line.noiseFilteredLine(segmentLength * 1.1);
-            int expectedSize = 2 + steps / 2;
-            assertEquals("filtering with a filter slightly larger than each segment should return a line with " + expectedSize
-                    + " points", expectedSize, filteredLine.size());
-            filteredLine = line.noiseFilteredLine(segmentLength * 2.1);
-            // System.out.println("flt: " + filteredLine);
-            expectedSize = 2 + (steps - 1) / 3;
-            assertEquals("filtering with a filter slightly larger than twice the length of each segment should return a "
-                    + "line with " + expectedSize + " points", expectedSize, filteredLine.size());
-            // Special case where start and end point are equal and all intermediate points are within the margin
-            points.clear();
-            points.add(from);
-            for (int i = 1; i < 10; i++)
-            {
-                points.add(new Point3d(from.x + 0.0001 * i, from.y + 0.0001 * i, from.z));
-            }
-            points.add(from);
-            line = new PolyLine3d(points);
-            filteredLine = line.noiseFilteredLine(0.2);
-            assertEquals("filter returns line of three points", 3, filteredLine.size());
-            assertEquals("first point matches", from, filteredLine.getFirst());
-            assertEquals("last point matches", from, filteredLine.getLast());
-            assertNotEquals("intermediate point differs from first point", from, filteredLine.get(1));
+            assertEquals("i-th point", array[i], line.get(i));
         }
+        int nextIndex = 0;
+        for (Iterator<Point3d> iterator = line.getPoints(); iterator.hasNext();)
+        {
+            assertEquals("i-th point from line iterator", array[nextIndex++], iterator.next());
+        }
+        assertEquals("iterator returned all points", array.length, nextIndex);
+
+        PolyLine3d filtered = line.noiseFilteredLine(0.0);
+        assertEquals("filtered with 0 tolerance returns line", line, filtered);
+        filtered = line.noiseFilteredLine(0.01);
+        assertEquals("filtered with very low tolerance returns line", line, filtered);
+        filtered = line.noiseFilteredLine(0.5);
+        assertEquals("size of filtered line is 3", 3, filtered.size());
+        assertEquals("first point of filtered line matches", line.getFirst(), filtered.getFirst());
+        assertEquals("last point of filtered line matches", line.getLast(), filtered.getLast());
+        assertEquals("mid point of filtered line is point 1 of unfiltered line", line.get(1), filtered.get(1));
+        filtered = line.noiseFilteredLine(10);
+        assertEquals("size of filtered line is 2", 2, filtered.size());
+        assertEquals("first point of filtered line matches", line.getFirst(), filtered.getFirst());
+        assertEquals("last point of filtered line matches", line.getLast(), filtered.getLast());
+
+        array = new Point3d[] { new Point3d(1, 2, 3), new Point3d(3, 4, 5), new Point3d(3.2, 4.1, 5.1), new Point3d(1, 2, 3) };
+        line = new PolyLine3d(Arrays.stream(array).iterator());
+        filtered = line.noiseFilteredLine(10);
+        assertEquals("size of filtered line is 3", 3, filtered.size());
+        assertEquals("first point of filtered line matches", line.getFirst(), filtered.getFirst());
+        assertEquals("last point of filtered line matches", line.getLast(), filtered.getLast());
+        assertEquals("mid point of filtered line is point 1 of unfiltered line", line.get(1), filtered.get(1));
+
+        array = new Point3d[] { new Point3d(1, 2, 3), new Point3d(3, 4, 5), new Point3d(1.1, 2.1, 3), new Point3d(1, 2, 3) };
+        line = new PolyLine3d(Arrays.stream(array).iterator());
+        filtered = line.noiseFilteredLine(0.5);
+        assertEquals("size of filtered line is 3", 3, filtered.size());
+        assertEquals("first point of filtered line matches", line.getFirst(), filtered.getFirst());
+        assertEquals("last point of filtered line matches", line.getLast(), filtered.getLast());
+        assertEquals("mid point of filtered line is point 1 of unfiltered line", line.get(1), filtered.get(1));
+
+        array = new Point3d[] { new Point3d(1, 2, 3), new Point3d(3, 4, 5) };
+        line = new PolyLine3d(Arrays.stream(array).iterator());
+        filtered = line.noiseFilteredLine(10);
+        assertEquals("Filtering a two-point line returns that line", line, filtered);
+
+        array = new Point3d[] { new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(3, 4, 5) };
+        line = PolyLine3d.createAndCleanPolyLine3d(array);
+        assertEquals("cleaned line has 2 points", 2, line.size());
+        assertEquals("first point", array[0], line.getFirst());
+        assertEquals("last point", array[array.length - 1], line.getLast());
+
+        array = new Point3d[] { new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(3, 4, 5), new Point3d(3, 4, 5) };
+        line = PolyLine3d.createAndCleanPolyLine3d(array);
+        assertEquals("cleaned line has 2 points", 2, line.size());
+        assertEquals("first point", array[0], line.getFirst());
+        assertEquals("last point", array[array.length - 1], line.getLast());
+
+        array = new Point3d[] { new Point3d(0, -1, 3), new Point3d(1, 2, 4), new Point3d(1, 2, 4), new Point3d(3, 4, 4) };
+        line = PolyLine3d.createAndCleanPolyLine3d(array);
+        assertEquals("cleaned line has 2 points", 3, line.size());
+        assertEquals("first point", array[0], line.getFirst());
+        assertEquals("last point", array[array.length - 1], line.getLast());
+
+        array = new Point3d[] { new Point3d(0, -1, 3), new Point3d(1, 2, 4), new Point3d(1, 2, 4), new Point3d(1, 2, 4),
+                new Point3d(3, 4, 5) };
+        line = PolyLine3d.createAndCleanPolyLine3d(array);
+        assertEquals("cleaned line has 3 points", 3, line.size());
+        assertEquals("first point", array[0], line.getFirst());
+        assertEquals("mid point", array[1], line.get(1));
+        assertEquals("last point", array[array.length - 1], line.getLast());
+
+        try
+        {
+            PolyLine3d.createAndCleanPolyLine3d(new Point3d[0]);
+            fail("Too short array should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            PolyLine3d.createAndCleanPolyLine3d(new Point3d[] { new Point3d(1, 2, 3) });
+            fail("Too short array should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            PolyLine3d.createAndCleanPolyLine3d(new Point3d[] { new Point3d(1, 2, 3), new Point3d(1, 2, 3) });
+            fail("All duplicate points in array should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            PolyLine3d.createAndCleanPolyLine3d(
+                    new Point3d[] { new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(1, 2, 3) });
+            fail("All duplicate points in array should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        array = new Point3d[] { new Point3d(1, 2, 3), new Point3d(4, 6, 9), new Point3d(8, 9, 15) };
+        line = new PolyLine3d(array);
+
+        try
+        {
+            line.getLocation(-0.1);
+            fail("negative location should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
+        double length = line.getLength();
+        assertEquals("Length of line is about 15.6", 15.6, length, 0.1);
+
+        try
+        {
+            line.getLocation(length + 0.1);
+            fail("location beyond length should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.getLocation(-0.1);
+            fail("negative location should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
+        assertEquals("Length of line is 15.6", 15.6, length, 0.1);
+
+        try
+        {
+            line.getLocationFraction(1.1);
+            fail("location beyond length should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.getLocationFraction(-0.1);
+            fail("negative location should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
+        for (double position : new double[] { -1, 0, 2.5, 4.9, 5.1, 7.5, 9.9, 10, 11 })
+        {
+            Ray3d ray = line.getLocationExtended(position);
+            if (position < length / 2)
+            {
+                Ray3d expected =
+                        new Ray3d(array[0].interpolate(array[1], position / (length / 2)), Math.atan2(4, 3), Math.atan2(5, 6));
+                assertTrue("interpolated/extrapolated point", expected.epsilonEquals(ray, 0.0001, 0.00001));
+            }
+            else
+            {
+                Ray3d expected = new Ray3d(array[1].interpolate(array[2], (position - length / 2) / (length / 2)),
+                        Math.atan2(3, 4), Math.atan2(5, 6));
+                assertTrue("interpolated/extrapolated point", expected.epsilonEquals(ray, 0.0001, 0.00001));
+            }
+            ray = line.getLocationFractionExtended(position / line.getLength());
+            if (position < length / 2)
+            {
+                Ray3d expected =
+                        new Ray3d(array[0].interpolate(array[1], position / (length / 2)), Math.atan2(4, 3), Math.atan2(5, 6));
+                assertTrue("interpolated/extrapolated point", expected.epsilonEquals(ray, 0.0001, 0.00001));
+            }
+            else
+            {
+                Ray3d expected = new Ray3d(array[1].interpolate(array[2], (position - length / 2) / (length / 2)),
+                        Math.atan2(3, 4), Math.atan2(5, 6));
+                assertTrue("interpolated/extrapolated point", expected.epsilonEquals(ray, 0.0001, 0.00001));
+            }
+        }
+
+        // Test the projectOrthogonal method
+        array = new Point3d[] { new Point3d(1, 2, 3), new Point3d(4, 6, 8), new Point3d(8, 9, 13) };
+        line = new PolyLine3d(array);
+        // Verify that any projection ends up somewhere on the line
+        for (double x : new double[] { -10, 0, 2, 4, 6, 8, 10, 20 })
+        {
+            for (double y : new double[] { -10, 0, 2, 4, 6, 8, 10, 20 })
+            {
+                for (double z : new double[] { -10, 0, 2, 4, 6, 8, 10, 20 })
+                {
+                    Point3d xyz = new Point3d(x, y, z);
+                    // System.out.println("x=" + x + ", y=" + y + ", z=" + z);
+                    double result = line.projectOrthogonalFractional(xyz);
+                    if (!Double.isNaN(result))
+                    {
+                        assertTrue("result must be >= 0.0", result >= 0);
+                        assertTrue("result must be <= 1.0", result <= 1.0);
+                        // TODO verify that the result is correct
+                    }
+                    else
+                    {
+                        assertNull("point projects outside line", line.projectOrthogonal(xyz));
+                    }
+                    result = line.projectOrthogonalFractionalExtended(xyz);
+                    if (!Double.isNaN(result))
+                    {
+                        Point3d resultPoint = line.getLocationFractionExtended(result);
+                        if (result >= 0 && result <= 1)
+                        {
+                            assertEquals("getLocationFraction returns same as getLocationfractionExtended", resultPoint,
+                                    line.getLocationFraction(result));
+                        }
+                        else
+                        {
+                            try
+                            {
+                                line.getLocationFraction(result);
+                                fail("illegal fraction should have thrown a DrawException");
+                            }
+                            catch (DrawException de)
+                            {
+                                // Ignore expected exception
+                            }
+                            if (result < 0)
+                            {
+                                assertEquals("resultPoint lies on extention of start segment",
+                                        resultPoint.distance(line.get(1)) - resultPoint.distance(line.getFirst()),
+                                        line.getFirst().distance(line.get(1)), 0.0001);
+                            }
+                            else
+                            {
+                                // result > 1
+                                assertEquals("resultPoint lies on extention of end segment",
+                                        resultPoint.distance(line.get(line.size() - 2)) - resultPoint.distance(line.getLast()),
+                                        line.getLast().distance(line.get(line.size() - 2)), 0.0001);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        assertNull("point projects outside extended line", line.projectOrthogonalExtended(xyz));
+                    }
+
+                }
+            }
+        }
+        Point3d toleranceResultPoint = line.getLocationFraction(-0.01, 0.01);
+        assertEquals("tolerance result matches extended fraction result", line.getLocationFraction(0), toleranceResultPoint);
+        toleranceResultPoint = line.getLocationFraction(1.01, 0.01);
+        assertEquals("tolerance result matches extended fraction result", line.getLocationFraction(1), toleranceResultPoint);
+
+        try
+        {
+            line.getLocationFraction(-.011, 0.01);
+            fail("fraction outside tolerance should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.getLocationFraction(1.011, 0.01);
+            fail("fraction outside tolerance should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
+        // Test the extract and truncate methods
+        array = new Point3d[] { new Point3d(1, 2, 3), new Point3d(4, 6, 8), new Point3d(8, 9, 10) };
+        line = new PolyLine3d(array);
+        length = line.getLength();
+        for (double to : new double[] { -10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20 })
+        {
+            if (to <= 0 || to > length)
+            {
+                try
+                {
+                    line.truncate(to);
+                    fail("illegal truncate should have thrown a DrawException");
+                }
+                catch (DrawException de)
+                {
+                    // Ignore expected exception
+                }
+            }
+            else
+            {
+                PolyLine3d truncated = line.truncate(to);
+                assertEquals("truncated line start with start point of line", line.getFirst(), truncated.getFirst());
+                assertEquals("Length of truncated line is truncate position", to, truncated.getLength(), 0.0001);
+            }
+            for (double from : new double[] { -10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20 })
+            {
+                if (from >= to || from < 0 || to > length)
+                {
+                    try
+                    {
+                        line.extract(from, to);
+                        fail("Illegal range should have thrown a DrawException");
+                    }
+                    catch (DrawException de)
+                    {
+                        // Ignore expected exception
+                    }
+                }
+                else
+                {
+                    PolyLine3d fragment = line.extract(from, to);
+                    Point3d fromPoint = line.getLocation(from);
+                    assertTrue("fragment starts at from", fromPoint.epsilonEquals(fragment.getFirst(), 0.00001));
+                    Point3d toPoint = line.getLocation(to);
+                    assertTrue("fragment ends at to", toPoint.epsilonEquals(fragment.getLast(), 0.00001));
+                    assertEquals("Length of fragment", to - from, fragment.getLength(), 0.0001);
+                    if (from == 0)
+                    {
+                        assertEquals("fragment starts at begin of line", line.getFirst(), fragment.getFirst());
+                    }
+                    if (to == length)
+                    {
+                        assertEquals("fragment ends at end of line", line.getLast(), fragment.getLast());
+                    }
+                }
+            }
+        }
+        try
+        {
+            line.extract(Double.NaN, 10.0);
+            fail("NaN value should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            line.extract(0.0, Double.NaN);
+            fail("NaN value should have thrown a DrawException");
+        }
+        catch (DrawException de)
+        {
+            // Ignore expected exception
+        }
+
+        // Verify that hashCode. Check that the result depends on the actual coordinates.
+        assertNotEquals("hash code takes x coordinate of first point into account",
+                new PolyLine3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1)).hashCode(),
+                new PolyLine3d(new Point3d(1, 0, 0), new Point3d(1, 1, 1)).hashCode());
+        assertNotEquals("hash code takes y coordinate of first point into account",
+                new PolyLine3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1)).hashCode(),
+                new PolyLine3d(new Point3d(0, 1, 0), new Point3d(1, 1, 1)).hashCode());
+        assertNotEquals("hash code takes z coordinate of first point into account",
+                new PolyLine3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1)).hashCode(),
+                new PolyLine3d(new Point3d(0, 0, 1), new Point3d(1, 1, 1)).hashCode());
+        assertNotEquals("hash code takes x coordinate of second point into account",
+                new PolyLine3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1)).hashCode(),
+                new PolyLine3d(new Point3d(0, 0, 0), new Point3d(2, 1, 1)).hashCode());
+        assertNotEquals("hash code takes y coordinate of second point into account",
+                new PolyLine3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1)).hashCode(),
+                new PolyLine3d(new Point3d(0, 0, 0), new Point3d(1, 2, 1)).hashCode());
+        assertNotEquals("hash code takes z coordinate of second point into account",
+                new PolyLine3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1)).hashCode(),
+                new PolyLine3d(new Point3d(0, 0, 0), new Point3d(1, 1, 2)).hashCode());
+
+        // Verify the equals method.
+        assertTrue("line is equal to itself", line.equals(line));
+        assertFalse("line is not equal to a different line",
+                line.equals(new PolyLine3d(new Point3d(123, 456, 789), new Point3d(789, 101112, 987))));
+        assertFalse("line is not equal to null", line.equals(null));
+        assertFalse("line is not equal to a different kind of object", line.equals("unlikely"));
+        assertTrue("Line is equal to line from same set of points", line.equals(new PolyLine3d(line.getPoints())));
+        // Make a line that differs only in the very last point
+        Point3d[] otherArray = Arrays.copyOf(array, array.length);
+        otherArray[otherArray.length - 1] = new Point3d(otherArray[otherArray.length - 1].x,
+                otherArray[otherArray.length - 1].y + 5, otherArray[otherArray.length - 1].z);
+        PolyLine3d other = new PolyLine3d(otherArray);
+        assertFalse("PolyLine3d that differs in y of last point is different", line.equals(other));
     }
 
     /**

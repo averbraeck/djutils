@@ -139,9 +139,9 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     public double distanceSquared(final Point3d otherPoint) throws NullPointerException
     {
         Throw.whenNull(otherPoint, "point cannot be null");
-        double dx = getX() - otherPoint.x;
-        double dy = getY() - otherPoint.y;
-        double dz = getZ() - otherPoint.z;
+        double dx = this.x - otherPoint.x;
+        double dy = this.y - otherPoint.y;
+        double dz = this.z - otherPoint.z;
         return dx * dx + dy * dy + dz * dz;
     }
 
@@ -171,7 +171,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     @Override
     public Point2d project() throws DrawRuntimeException
     {
-        return new Point2d(getX(), getY());
+        return new Point2d(this.x, this.y);
     }
 
     /**
@@ -185,7 +185,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     {
         Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class,
                 "Translation must be number (not NaN)");
-        return new Point3d(getX() + dx, getY() + dy, getZ());
+        return new Point3d(this.x + dx, this.y + dy, this.z);
     }
 
     /**
@@ -200,7 +200,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     {
         Throw.when(Double.isNaN(dx) || Double.isNaN(dy) || Double.isNaN(dz), IllegalArgumentException.class,
                 "dx, dy and dz must be numbers (not NaN)");
-        return new Point3d(getX() + dx, getY() + dy, getZ() + dz);
+        return new Point3d(this.x + dx, this.y + dy, this.z + dz);
     }
 
     /** {@inheritDoc} */
@@ -208,7 +208,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     public Point3d scale(final double factor) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(factor), IllegalArgumentException.class, "factor must be a number (not NaN)");
-        return new Point3d(getX() * factor, getY() * factor, getZ() * factor);
+        return new Point3d(this.x * factor, this.y * factor, this.z * factor);
     }
 
     /** {@inheritDoc} */
@@ -222,14 +222,14 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     @Override
     public Point3d abs()
     {
-        return new Point3d(Math.abs(getX()), Math.abs(getY()), Math.abs(getZ()));
+        return new Point3d(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z));
     }
 
     /** {@inheritDoc} */
     @Override
     public Point3d normalize() throws DrawRuntimeException
     {
-        double length = Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
+        double length = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
         Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0, 0.0)");
         return this.scale(1.0 / length);
     }
@@ -240,8 +240,8 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     {
         Throw.whenNull(point, "point cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
-        return new Point3d((1.0 - fraction) * getX() + fraction * point.x, (1.0 - fraction) * getY() + fraction * point.y,
-                (1.0 - fraction) * getZ() + fraction * point.z);
+        return new Point3d((1.0 - fraction) * this.x + fraction * point.x, (1.0 - fraction) * this.y + fraction * point.y,
+                (1.0 - fraction) * this.z + fraction * point.z);
 
     }
 
@@ -250,15 +250,15 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     public boolean epsilonEquals(final Point3d other, final double epsilon)
     {
         Throw.whenNull(other, "other point cannot be null");
-        if (Math.abs(getX() - other.x) > epsilon)
+        if (Math.abs(this.x - other.x) > epsilon)
         {
             return false;
         }
-        if (Math.abs(getY() - other.y) > epsilon)
+        if (Math.abs(this.y - other.y) > epsilon)
         {
             return false;
         }
-        if (Math.abs(getZ() - other.z) > epsilon)
+        if (Math.abs(this.z - other.z) > epsilon)
         {
             return false;
         }
@@ -303,6 +303,42 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     public Point3d closestPointOnLine(final double p1X, final double p1Y, final double p1Z, final double p2X, final double p2Y,
             final double p2Z, final Boolean lowLimitHandling, final Boolean highLimitHandling) throws DrawRuntimeException
     {
+        double fraction = fractionalPositionOnLine(p1X, p1Y, p1Z, p2X, p2Y, p2Z, lowLimitHandling, highLimitHandling);
+        if (Double.isNaN(fraction))
+        {
+            return null;
+        }
+        if (fraction == 1.0)
+        {
+            return new Point3d(p2X, p2Y, p2Z); // Maximize precision in case fraction == 1.0
+        }
+        return new Point3d(p1X + fraction * (p2X - p1X), p1Y + fraction * (p2Y - p1Y), p1Z + fraction * (p2Z - p1Z));
+    }
+
+    /**
+     * Compute the fractional position of the closest point on a line with optional limiting of the result on either end. If the
+     * line has length 0; this method returns 0.0.
+     * @param p1X double; the x coordinate of the first point on the line
+     * @param p1Y double; the y coordinate of the first point on the line
+     * @param p1Z double; the z coordinate of the first point on the line
+     * @param p2X double; the x coordinate of the second point on the line
+     * @param p2Y double; the y coordinate of the second point on the line
+     * @param p2Z double; the z coordinate of the second point on the line
+     * @param lowLimitHandling Boolean; controls handling of results that lie before the first point of the line. If null; this
+     *            method returns NaN; else if true; this method returns 0.0; else (lowLimitHandling is false); this results <
+     *            0.0 are returned
+     * @param highLimitHandling Boolean; controls the handling of results that lie beyond the second point of the line. If null;
+     *            this method returns NaN; else if true; this method returns 1.0; else (highLimitHandling is false); results >
+     *            1.0 are returned
+     * @return double; the fractional position of the closest point on the line. Results within the range 0.0 .. 1.0 are always
+     *         returned as is.. A result < 0.0 is subject to lowLimitHandling. A result > 1.0 is subject to highLimitHandling
+     * @throws DrawRuntimeException when any of the arguments is NaN
+     */
+    @SuppressWarnings("checkstyle:parameternumber")
+    public double fractionalPositionOnLine(final double p1X, final double p1Y, final double p1Z, final double p2X,
+            final double p2Y, final double p2Z, final Boolean lowLimitHandling, final Boolean highLimitHandling)
+            throws DrawRuntimeException
+    {
         double dX = p2X - p1X;
         double dY = p2Y - p1Y;
         double dZ = p2Z - p1Z;
@@ -310,36 +346,32 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
                 "NaN values not permitted");
         if (0 == dX && 0 == dY && 0 == dZ)
         {
-            return new Point3d(p1X, p1Y, p1Z);
+            return 0.0;
         }
-        double u = ((this.x - p1X) * dX + (this.y - p1Y) * dY + (this.z - p1Z) * dZ) / (dX * dX + dY * dY + dZ * dZ);
-        if (u < 0.0)
+        double fraction = ((this.x - p1X) * dX + (this.y - p1Y) * dY + (this.z - p1Z) * dZ) / (dX * dX + dY * dY + dZ * dZ);
+        if (fraction < 0.0)
         {
             if (lowLimitHandling == null)
             {
-                return null;
+                return Double.NaN;
             }
             if (lowLimitHandling)
             {
-                u = 0.0;
+                fraction = 0.0;
             }
         }
-        else if (u > 1.0)
+        else if (fraction > 1.0)
         {
             if (highLimitHandling == null)
             {
-                return null;
+                return Double.NaN;
             }
             if (highLimitHandling)
             {
-                u = 1.0;
+                fraction = 1.0;
             }
         }
-        if (u == 1.0) // Maximize precision in case u == 1
-        {
-            return new Point3d(p2X, p2Y, p2Z);
-        }
-        return new Point3d(p1X + u * dX, p1Y + u * dY, p1Z + u * dZ);
+        return fraction;
     }
 
     /**
@@ -415,7 +447,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
      */
     final double horizontalDirection()
     {
-        return Math.atan2(getY(), getX());
+        return Math.atan2(this.y, this.x);
     }
 
     /**
@@ -451,8 +483,8 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     final double horizontalDistanceSquared(final Point3d point)
     {
         Throw.whenNull(point, "point cannot be null");
-        double dx = getX() - point.x;
-        double dy = getY() - point.y;
+        double dx = this.x - point.x;
+        double dy = this.y - point.y;
         return dx * dx + dy * dy;
     }
 

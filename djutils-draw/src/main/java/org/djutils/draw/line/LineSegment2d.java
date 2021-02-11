@@ -181,6 +181,22 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public double projectOrthogonalFractional(final Point2d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        return point.fractionalPositionOnLine(this.startX, this.startY, this.endX, this.endY, null, null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double projectOrthogonalFractionalExtended(final Point2d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        return point.fractionalPositionOnLine(this.startX, this.startY, this.endX, this.endY, false, false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public String toString()
     {
         return toString("%f", false);

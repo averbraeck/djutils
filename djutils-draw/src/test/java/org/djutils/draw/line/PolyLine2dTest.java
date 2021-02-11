@@ -3,6 +3,7 @@ package org.djutils.draw.line;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -613,26 +614,65 @@ public class PolyLine2dTest
         // Test the projectOrthogonal method
         array = new Point2d[] { new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9) };
         line = new PolyLine2d(array);
+        // System.out.println(line.toPlot());
         // Verify that any projection ends up somewhere on the line
         for (double x : new double[] { -10, 0, 2, 4, 6, 8, 10, 20 })
         {
             for (double y : new double[] { -10, 0, 2, 4, 6, 8, 10, 20 })
             {
                 Point2d xy = new Point2d(x, y);
-                double result = line.projectOrthogonal(x, y);
-                assertTrue("result must be >= 0.0", result >= 0);
-                assertTrue("result must be <= 1.0", result <= 1.0);
-                Point2d resultPoint = line.getLocationFraction(result);
-                double distance = resultPoint.distance(xy);
-                // We should not be able to find a point on the line that is closer to xy than resultPoint
-                // Just walk the line in 100 small steps
-                for (int step = 0; step <= 100; step++)
+                // System.out.println("x=" + x + ", y=" + y);
+                double result = line.projectOrthogonalFractional(xy);
+                if (!Double.isNaN(result))
                 {
-                    Point2d checkPoint = line.getLocationFraction(step / 100.0);
-                    double actualDistance = checkPoint.distance(xy);
-                    assertTrue("No point along the line is closer than resultPoint (except for a rounding error)",
-                            distance <= actualDistance + 0.000001);
+                    assertTrue("result must be >= 0.0", result >= 0);
+                    assertTrue("result must be <= 1.0", result <= 1.0);
+                    // TODO verify that the result is correct
                 }
+                else
+                {
+                    assertNull("point projects outside line", line.projectOrthogonal(xy));
+                }
+                result = line.projectOrthogonalFractionalExtended(xy);
+                if (!Double.isNaN(result))
+                {
+                    Point2d resultPoint = line.getLocationFractionExtended(result);
+                    if (result >= 0 && result <= 1)
+                    {
+                        assertEquals("getLocationFraction returns same as getLocationfractionExtended", resultPoint,
+                                line.getLocationFraction(result));
+                    }
+                    else
+                    {
+                        try
+                        {
+                            line.getLocationFraction(result);
+                            fail("illegal fraction should have thrown a DrawException");
+                        }
+                        catch (DrawException de)
+                        {
+                            // Ignore expected exception
+                        }
+                        if (result < 0)
+                        {
+                            assertEquals("resultPoint lies on extention of start segment",
+                                    resultPoint.distance(line.get(1)) - resultPoint.distance(line.getFirst()),
+                                    line.getFirst().distance(line.get(1)), 0.0001);
+                        }
+                        else
+                        {
+                            // result > 1
+                            assertEquals("resultPoint lies on extention of end segment",
+                                    resultPoint.distance(line.get(line.size() - 2)) - resultPoint.distance(line.getLast()),
+                                    line.getLast().distance(line.get(line.size() - 2)), 0.0001);
+                        }
+                    }
+                }
+                else
+                {
+                    assertNull("point projects outside extended line", line.projectOrthogonalExtended(xy));
+                }
+
             }
         }
         Point2d toleranceResultPoint = line.getLocationFraction(-0.01, 0.01);
@@ -738,16 +778,16 @@ public class PolyLine2dTest
         }
 
         // Verify that hashCode. Check that the result depends on the actual coordinates.
-        assertNotEquals("hash code takes x coordinate into account",
+        assertNotEquals("hash code takes x coordinate of first point into account",
                 new PolyLine2d(new Point2d(0, 0), new Point2d(1, 1)).hashCode(),
                 new PolyLine2d(new Point2d(1, 0), new Point2d(1, 1)).hashCode());
-        assertNotEquals("hash code takes y coordinate into account",
+        assertNotEquals("hash code takes y coordinate of first point into account",
                 new PolyLine2d(new Point2d(0, 0), new Point2d(1, 1)).hashCode(),
                 new PolyLine2d(new Point2d(0, 1), new Point2d(1, 1)).hashCode());
-        assertNotEquals("hash code takes y coordinate into account",
+        assertNotEquals("hash code takes x coordinate of second point into account",
                 new PolyLine2d(new Point2d(0, 0), new Point2d(1, 1)).hashCode(),
                 new PolyLine2d(new Point2d(0, 0), new Point2d(2, 1)).hashCode());
-        assertNotEquals("hash code takes x coordinate into account",
+        assertNotEquals("hash code takes y coordinate of second point into account",
                 new PolyLine2d(new Point2d(0, 0), new Point2d(1, 1)).hashCode(),
                 new PolyLine2d(new Point2d(0, 0), new Point2d(1, 2)).hashCode());
 
@@ -905,10 +945,11 @@ public class PolyLine2dTest
                     // Ignore expected exception
                 }
                 assertEquals("offset 0 yields the reference line", line, line.offsetLine(0));
+                // System.out.print("reference line " + line.toPlot());
                 for (double offset : new double[] { 1, 10, 0.1, -0.1, -10 })
                 {
-                    // System.out.println("angle " + angle + ", offset " + offset);
                     PolyLine2d offsetLine = line.offsetLine(offset);
+                    // System.out.print("angle " + angle + ", offset " + offset + ": " + offsetLine.toPlot());
                     if (points.length == 2)
                     {
                         assertEquals("two-point line should have a two-point offset line", 2, offsetLine.size());
@@ -923,10 +964,11 @@ public class PolyLine2dTest
                     // The following four may be false if the offset is not small comparable to the lenght of the first or last
                     // segment of the line
                     assertEquals("projection of first point of line onto offset line is (almost) first point of offset line", 0,
-                            offsetLine.getLocation(offsetLine.projectOrthogonal(line.getFirst()) * offsetLine.getLength())
+                            offsetLine.getLocationExtended(
+                                    offsetLine.projectOrthogonalFractionalExtended(line.getFirst()) * offsetLine.getLength())
                                     .distance(offsetLine.getFirst()),
                             0.01);
-                    double fraction = offsetLine.projectOrthogonal(line.getLast());
+                    double fraction = offsetLine.projectOrthogonalFractionalExtended(line.getLast());
                     assertEquals("fraction should be 1 with maximum error a few ULP", 1, fraction, 0.000001);
                     if (fraction > 1.0)
                     {
@@ -935,10 +977,11 @@ public class PolyLine2dTest
                     assertEquals("projection of last point of line onto offset line is (almost) last point of offset line", 0,
                             offsetLine.getLocation(fraction * offsetLine.getLength()).distance(offsetLine.getLast()), 0.01);
                     assertEquals("projection of first point of offset line onto line is (almost) first point of line", 0,
-                            line.getLocation(line.projectOrthogonal(offsetLine.getFirst()) * line.getLength())
+                            line.getLocationExtended(
+                                    line.projectOrthogonalFractionalExtended(offsetLine.getFirst()) * line.getLength())
                                     .distance(line.getFirst()),
                             0.01);
-                    fraction = line.projectOrthogonal(offsetLine.getLast());
+                    fraction = line.projectOrthogonalFractionalExtended(offsetLine.getLast());
                     assertEquals("fraction should be 1 with maximum error a few ULP", 1, fraction, 0.000001);
                     if (fraction > 1.0)
                     {
@@ -1227,10 +1270,10 @@ public class PolyLine2dTest
     public void testProjectRay()
     {
         PolyLine2d reference = new PolyLine2d(new Point2d(0, 1), new Point2d(5, 1), new Point2d(10, 6), new Point2d(20, 6));
-        System.out.print("reference line is " + reference.toPlot());
+        // System.out.print("reference line is " + reference.toPlot());
         PolyLine2d offsetLine = reference.offsetLine(-10);
         // Now we have a line with a somewhat smooth 45 degree curve around (5, 1) with radius 10
-        System.out.print("offset line is " + offsetLine.toPlot());
+        // System.out.print("offset line is " + offsetLine.toPlot());
         double slope = 0.25;
         double slopeAngle = Math.atan2(slope, 1);
         double prevProjection = -100;
@@ -1261,7 +1304,7 @@ public class PolyLine2dTest
             assertTrue("projection increases monotonous", projectionLocation > prevProjection);
             prevProjection = projectionLocation;
         }
-        System.out.print("projections: " + new PolyLine2d(projections).toPlot());
+        // System.out.print("projections: " + new PolyLine2d(projections).toPlot());
         projections.clear();
         prevProjection = -100;
         for (double x = 1.5; x < 21; x += 0.25)
@@ -1290,7 +1333,7 @@ public class PolyLine2dTest
             assertTrue("projection increases monotonous", projectionLocation > prevProjection);
             prevProjection = projectionLocation;
         }
-        System.out.print("projections: " + new PolyLine2d(projections).toPlot());
+        // System.out.print("projections: " + new PolyLine2d(projections).toPlot());
     }
 
     /**
