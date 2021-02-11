@@ -490,7 +490,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
-     * Create a new Line2d, filtering out repeating successive points.
+     * Create a new PolyLine2d, filtering out repeating successive points.
      * @param points Point2d...; the coordinates of the line as Point2d
      * @return the line
      * @throws DrawException when number of points &lt; 2
@@ -499,13 +499,13 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     {
         if (points.length < 2)
         {
-            throw new DrawException("Degenerate Line2d; has " + points.length + " point" + (points.length != 1 ? "s" : ""));
+            throw new DrawException("Degenerate PolyLine2d; has " + points.length + " point" + (points.length != 1 ? "s" : ""));
         }
         return createAndCleanPolyLine2d(new ArrayList<>(Arrays.asList(points)));
     }
 
     /**
-     * Create an Line2d, while filtering out repeating successive points.
+     * Create a new PolyLine2d, while filtering out repeating successive points.
      * @param pointList List&lt;Point2d&gt;; list of the coordinates of the line as Point2d; any duplicate points in this list
      *            are removed (this method may modify the provided list)
      * @return Line2d; the line
@@ -605,80 +605,114 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
-     * Returns the fractional position along this line of the orthogonal projection of a point on this line. If the point is not
-     * orthogonal to the closest line segment, the nearest point is selected.
+     * Perform the project orthogonal operation.
      * @param point Point2d; the point to project
-     * @return fractional position along this line of the orthogonal projection on this line of a point
+     * @param limitHandling Boolean; if Null; results outside this PolyLin2de are replaced by Null, if false, results outside
+     *            that interval are returned as is; if true results outside this PolyLine2d are truncated to the first or last
+     *            point of this PolyLine2d and therefore not truly orthogonal
+     * @return Point2d; the orthogonal projection of point on this PolyLine2d
      */
-    public final double projectOrthogonal(final Point2d point)
+    private Point2d projectOrthogonal(final Point2d point, final Boolean limitHandling)
     {
-        return projectOrthogonal(point.x, point.y);
+        Throw.whenNull(point, "point may not be null");
+        double bestDistance = Double.POSITIVE_INFINITY;
+        Point2d result = null;
+        for (int index = 1; index < this.size(); index++)
+        {
+            // You may not write these with a conditional expression.
+            Boolean lowLimitHandling = null;
+            if (index == 1)
+            {
+                lowLimitHandling = limitHandling;
+            }
+            Boolean highLimitHandling = null;
+            if (index == this.size() - 1)
+            {
+                highLimitHandling = limitHandling;
+            }
+            Point2d closestPointOnSegment = point.closestPointOnLine(this.x[index - 1], this.y[index - 1], this.x[index],
+                    this.y[index], lowLimitHandling, highLimitHandling);
+            if (closestPointOnSegment != null)
+            {
+                double distance = point.distance(closestPointOnSegment);
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    result = closestPointOnSegment;
+                }
+            }
+        }
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point2d projectOrthogonal(final Point2d point) throws NullPointerException
+    {
+        return projectOrthogonal(point, null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point2d projectOrthogonalExtended(final Point2d point) throws NullPointerException
+    {
+        return projectOrthogonal(point, false);
     }
 
     /**
-     * Returns the fractional position along this line of the orthogonal projection of point (x, y) on this line. If the point
-     * is not orthogonal to the closest line segment, the nearest point is selected.
-     * @param xCoordinate double; x-coordinate of point to project
-     * @param yCoordinate double; y-coordinate of point to project
-     * @return fractional position along this line of the orthogonal projection on this line of a point
+     * Perform the orthogonal projection operation.
+     * @param point Point2d; the point to project
+     * @param limitHandling Boolean; if Null; results outside the interval 0.0 .. 1.0 are replaced by NaN, if false, results
+     *            outside that interval are returned as is; if true results outside the interval are truncated to the interval
+     *            and therefore not truly orthogonal
+     * @return double; the fractional position on this PolyLine that is closest to point, or NaN
      */
-    public final double projectOrthogonal(final double xCoordinate, final double yCoordinate)
+    private double projectOrthogonalFractional(final Point2d point, final Boolean limitHandling)
     {
-        // prepare
-        double minDistance = Double.POSITIVE_INFINITY;
-        double minSegmentFraction = 0;
-        int minSegment = -1;
-
-        for (int i = 0; i < size() - 1; i++)
+        Throw.whenNull(point, "point may not be null");
+        double bestDistance = Double.POSITIVE_INFINITY;
+        double result = Double.NaN;
+        for (int index = 1; index < this.size(); index++)
         {
-            double dx = this.x[i + 1] - this.x[i];
-            double dy = this.y[i + 1] - this.y[i];
-            // Make all coordinates relative to (x[i], y[i]) to achieve higher precision
-            double px = xCoordinate - this.x[i];
-            double py = yCoordinate - this.y[i];
-            // dot product
-            double dot1 = px * dx + py * dy;
-            double f;
-            double distance;
-            if (dot1 > 0)
+            // You may not write these with a conditional expression.
+            Boolean lowLimitHandling = null;
+            if (index == 1)
             {
-                // vector relative to (x(i+1), y(i+1))
-                px = dx - px;
-                py = dy - py;
-                // dot product
-                double dot2 = px * dx + py * dy;
-                if (dot2 > 0)
-                {
-                    // projection on line segment
-                    double len2 = dx * dx + dy * dy;
-                    double proj = dot2 * dot2 / len2;
-                    f = dot1 / len2;
-                    distance = px * px + py * py - proj;
-                }
-                else
-                {
-                    // dot<=0 projection 'after' line segment
-                    f = 1;
-                    distance = px * px + py * py;
-                }
+                lowLimitHandling = limitHandling;
             }
-            else
+            Boolean highLimitHandling = null;
+            if (index == this.size() - 1)
             {
-                // dot<=0 projection 'before' line segment
-                f = 0;
-                distance = px * px + py * py;
+                highLimitHandling = limitHandling;
             }
-            if (distance < minDistance) // closer than previous best result
+            double fraction = point.fractionalPositionOnLine(this.x[index - 1], this.y[index - 1], this.x[index], this.y[index],
+                    lowLimitHandling, highLimitHandling);
+            if (!Double.isNaN(fraction))
             {
-                minDistance = distance;
-                minSegmentFraction = f;
-                minSegment = i;
+                double distance = Math.hypot(point.x - (this.x[index - 1] + fraction * (this.x[index] - this.x[index - 1])),
+                        point.y - (this.y[index - 1] + fraction * (this.y[index] - this.y[index - 1])));
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    result = lengthAtIndex(index - 1) + fraction * (lengthAtIndex(index) - lengthAtIndex(index - 1));
+                }
             }
         }
+        return result / getLength();
+    }
 
-        // return
-        double segLen = this.lengthIndexedLine[minSegment + 1] - this.lengthIndexedLine[minSegment];
-        return (this.lengthIndexedLine[minSegment] + segLen * minSegmentFraction) / getLength();
+    /** {@inheritDoc} */
+    @Override
+    public final double projectOrthogonalFractional(final Point2d point) throws NullPointerException
+    {
+        return projectOrthogonalFractional(point, null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double projectOrthogonalFractionalExtended(final Point2d point) throws NullPointerException
+    {
+        return projectOrthogonalFractional(point, false);
     }
 
     /** {@inheritDoc} */

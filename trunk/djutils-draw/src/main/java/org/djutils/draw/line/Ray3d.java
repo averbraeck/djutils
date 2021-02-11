@@ -78,7 +78,7 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Sp
         Throw.when(throughX == x && throughY == y && throughZ == z, DrawRuntimeException.class,
                 "the coordinates of the through points must differ from (x, y, z)");
         this.phi = Math.atan2(throughY - y, throughX - x);
-        this.theta = Math.atan2(throughZ - z, Math.hypot(throughX - x, throughY - y));
+        this.theta = Math.atan2(Math.hypot(throughX - x, throughY - y), throughZ - z);
     }
 
     /**
@@ -166,7 +166,7 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Sp
     {
         return new Ray3d(-this.x, -this.y, -this.z, this.phi + Math.PI, this.theta + Math.PI);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public Ray3d flip()
@@ -214,6 +214,26 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Sp
         Throw.whenNull(point, "point may not be null");
         double sinTheta = Math.sin(this.theta);
         return point.closestPointOnLine(getX(), getY(), getZ(), getX() + Math.cos(this.phi) * sinTheta,
+                getY() + Math.sin(this.phi) * sinTheta, getZ() + Math.cos(this.theta), false, false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double projectOrthogonalFractional(final Point3d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        double sinTheta = Math.sin(this.theta);
+        return point.fractionalPositionOnLine(this.x, this.y, this.z, this.x + Math.cos(this.phi) * sinTheta,
+                this.y + Math.sin(this.phi) * sinTheta, this.z + Math.cos(this.theta), null, false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double projectOrthogonalFractionalExtended(final Point3d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        double sinTheta = Math.sin(this.theta);
+        return point.fractionalPositionOnLine(getX(), getY(), getZ(), getX() + Math.cos(this.phi) * sinTheta,
                 getY() + Math.sin(this.phi) * sinTheta, getZ() + Math.cos(this.theta), false, false);
     }
 

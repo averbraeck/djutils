@@ -114,8 +114,8 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     public double distanceSquared(final Point2d otherPoint) throws NullPointerException
     {
         Throw.whenNull(otherPoint, "point cannot be null");
-        double dx = getX() - otherPoint.x;
-        double dy = getY() - otherPoint.y;
+        double dx = this.x - otherPoint.x;
+        double dy = this.y - otherPoint.y;
         return dx * dx + dy * dy;
     }
 
@@ -143,7 +143,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     public Point2d translate(final double dx, final double dy)
     {
         Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class, "translation may not be NaN");
-        return new Point2d(getX() + dx, getY() + dy);
+        return new Point2d(this.x + dx, this.y + dy);
     }
 
     /**
@@ -158,7 +158,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     {
         Throw.when(Double.isNaN(dx) || Double.isNaN(dy) || Double.isNaN(dz), IllegalArgumentException.class,
                 "translation may not be NaN");
-        return new Point3d(getX() + dx, getY() + dy, dz);
+        return new Point3d(this.x + dx, this.y + dy, dz);
     }
 
     /** {@inheritDoc} */
@@ -166,7 +166,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     public Point2d scale(final double factor)
     {
         Throw.when(Double.isNaN(factor), IllegalArgumentException.class, "factor must be a number (not NaN)");
-        return new Point2d(getX() * factor, getY() * factor);
+        return new Point2d(this.x * factor, this.y * factor);
     }
 
     /** {@inheritDoc} */
@@ -180,14 +180,14 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     @Override
     public Point2d abs()
     {
-        return new Point2d(Math.abs(getX()), Math.abs(getY()));
+        return new Point2d(Math.abs(this.x), Math.abs(this.y));
     }
 
     /** {@inheritDoc} */
     @Override
     public Point2d normalize() throws DrawRuntimeException
     {
-        double length = Math.sqrt(getX() * getX() + getY() * getY());
+        double length = Math.sqrt(this.x * this.x + this.y * this.y);
         Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0)");
         return this.scale(1.0 / length);
     }
@@ -198,7 +198,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     {
         Throw.whenNull(point, "point cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
-        return new Point2d((1.0 - fraction) * getX() + fraction * point.x, (1.0 - fraction) * getY() + fraction * point.y);
+        return new Point2d((1.0 - fraction) * this.x + fraction * point.x, (1.0 - fraction) * this.y + fraction * point.y);
     }
 
     /** {@inheritDoc} */
@@ -206,11 +206,11 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     public boolean epsilonEquals(final Point2d other, final double epsilon)
     {
         Throw.whenNull(other, "other point cannot be null");
-        if (Math.abs(getX() - other.x) > epsilon)
+        if (Math.abs(this.x - other.x) > epsilon)
         {
             return false;
         }
-        if (Math.abs(getY() - other.y) > epsilon)
+        if (Math.abs(this.y - other.y) > epsilon)
         {
             return false;
         }
@@ -377,7 +377,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     {
         Throw.whenNull(segmentPoint1, "linePoint1 may not be null");
         Throw.whenNull(segmentPoint2, "linePoint2 may not be null");
-        return closestPointOnSegment(segmentPoint1.getX(), segmentPoint1.getY(), segmentPoint2.getX(), segmentPoint2.getY());
+        return closestPointOnSegment(segmentPoint1.x, segmentPoint1.y, segmentPoint2.x, segmentPoint2.y);
     }
 
     /**
@@ -398,41 +398,69 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     public Point2d closestPointOnLine(final double p1X, final double p1Y, final double p2X, final double p2Y,
             final Boolean lowLimitHandling, final Boolean highLimitHandling) throws DrawRuntimeException
     {
+        double fraction = fractionalPositionOnLine(p1X, p1Y, p2X, p2Y, lowLimitHandling, highLimitHandling);
+        if (Double.isNaN(fraction))
+        {
+            return null;
+        }
+        if (fraction == 1.0)
+        {
+            return new Point2d(p2X, p2Y); // Maximize precision in case fraction == 1.0
+        }
+        return new Point2d(p1X + fraction * (p2X - p1X), p1Y + fraction * (p2Y - p1Y));
+    }
+
+    /**
+     * Compute the fractional position of the closest point on a line with optional limiting of the result on either end. If the
+     * line has length 0; this method returns 0.0.
+     * @param p1X double; the x coordinate of the first point on the line
+     * @param p1Y double; the y coordinate of the first point on the line
+     * @param p2X double; the x coordinate of the second point on the line
+     * @param p2Y double; the y coordinate of the second point on the line
+     * @param lowLimitHandling Boolean; controls handling of results that lie before the first point of the line. If null; this
+     *            method returns NaN; else if true; this method returns 0.0; else (lowLimitHandling is false); this results <
+     *            0.0 are returned
+     * @param highLimitHandling Boolean; controls the handling of results that lie beyond the second point of the line. If null;
+     *            this method returns NaN; else if true; this method returns 1.0; else (highLimitHandling is false); results >
+     *            1.0 are returned
+     * @return double; the fractional position of the closest point on the line. Results within the range 0.0 .. 1.0 are always
+     *         returned as is.. A result < 0.0 is subject to lowLimitHandling. A result > 1.0 is subject to highLimitHandling
+     * @throws DrawRuntimeException when any of the arguments is NaN
+     */
+    public double fractionalPositionOnLine(final double p1X, final double p1Y, final double p2X, final double p2Y,
+            final Boolean lowLimitHandling, final Boolean highLimitHandling) throws DrawRuntimeException
+    {
         double dX = p2X - p1X;
         double dY = p2Y - p1Y;
         Throw.when(Double.isNaN(dX) || Double.isNaN(dY), DrawRuntimeException.class, "NaN values not permitted");
         if (0 == dX && 0 == dY)
         {
-            return new Point2d(p1X, p1Y);
+            return 0.0;
         }
-        double u = ((this.x - p1X) * dX + (this.y - p1Y) * dY) / (dX * dX + dY * dY);
-        if (u < 0.0)
+        double fraction = ((this.x - p1X) * dX + (this.y - p1Y) * dY) / (dX * dX + dY * dY);
+        if (fraction < 0.0)
         {
             if (lowLimitHandling == null)
             {
-                return null;
+                return Double.NaN;
             }
             if (lowLimitHandling)
             {
-                u = 0.0;
+                fraction = 0.0;
             }
         }
-        else if (u > 1.0)
+        else if (fraction > 1.0)
         {
             if (highLimitHandling == null)
             {
-                return null;
+                return Double.NaN;
             }
             if (highLimitHandling)
             {
-                u = 1.0;
+                fraction = 1.0;
             }
         }
-        if (u == 1.0) // Maximize precision in case u == 1
-        {
-            return new Point2d(p2X, p2Y);
-        }
-        return new Point2d(p1X + u * dX, p1Y + u * dY);
+        return fraction;
     }
 
     /**
@@ -459,7 +487,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     {
         Throw.whenNull(linePoint1, "linePoint1 may not be null");
         Throw.whenNull(linePoint2, "linePoint2 may not be null");
-        return closestPointOnLine(linePoint1.getX(), linePoint1.getY(), linePoint2.getX(), linePoint2.getY());
+        return closestPointOnLine(linePoint1.x, linePoint1.y, linePoint2.x, linePoint2.y);
     }
 
     /**
@@ -554,7 +582,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
      */
     public Point2D toPoint2D()
     {
-        return new Point2D.Double(getX(), getY());
+        return new Point2D.Double(this.x, this.y);
     }
 
     /** {@inheritDoc} */

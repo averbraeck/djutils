@@ -11,6 +11,7 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.OrientedPoint2d;
 import org.djutils.draw.point.Point2d;
+import org.djutils.draw.point.Point3d;
 import org.junit.Test;
 
 /**
@@ -373,6 +374,42 @@ public class Ray2dTest
                 0.0001);
         assertEquals("projectOrthogonalExtended returns same result as long as orthogonal projection exists", 0,
                 result.distance(ray.projectOrthogonalExtended(projectingPoint)), 0.0001);
+    }
+
+    /**
+     * Test the project methods.
+     */
+    @Test
+    public void testProject()
+    {
+        Ray2d ray = new Ray2d(1, 2, 20, 10);
+        assertTrue("projects outside", Double.isNaN(ray.projectOrthogonalFractional(new Point2d(1, 1))));
+        assertTrue("projects before start", ray.projectOrthogonalFractionalExtended(new Point2d(1, 1)) < 0);
+        assertEquals("projects at", -new Point2d(1 - 19 - 19, 2 - 8 - 8).distance(ray),
+                ray.projectOrthogonalFractionalExtended(new Point2d(1 - 19 - 19 + 8, 2 - 8 - 8 - 19)), 0.0001);
+        // Projection of projection is projection
+        for (int x = -2; x < 5; x++)
+        {
+            for (int y = -2; y < 5; y++)
+            {
+                Point2d point = new Point2d(x, y);
+                double fraction = ray.projectOrthogonalFractionalExtended(point);
+                if (fraction < 0)
+                {
+                    assertTrue("non extended version yields NaN", Double.isNaN(ray.projectOrthogonalFractional(point)));
+                    assertNull("non extended projectOrthogonal yields null", ray.projectOrthogonal(point));
+                }
+                else
+                {
+                    assertEquals("non extended version yields same", fraction, ray.projectOrthogonalFractional(point), 0.00001);
+                    assertEquals("non extended version yields same as extended version", ray.projectOrthogonal(point),
+                            ray.projectOrthogonalExtended(point));
+                }
+                Point2d projected = ray.projectOrthogonalExtended(point);
+                assertEquals("projecting projected point yields same", fraction,
+                        ray.projectOrthogonalFractionalExtended(projected), 0.00001);
+            }
+        }
     }
 
     /**

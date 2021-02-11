@@ -210,6 +210,25 @@ public class LineSegment2dTest
     }
 
     /**
+     * Test the project methods.
+     */
+    @Test
+    public void testProject()
+    {
+        LineSegment2d segment = new LineSegment2d(1, 2, 20, 10);
+        assertTrue("projects outside", Double.isNaN(segment.projectOrthogonalFractional(new Point2d(1, 1))));
+        assertTrue("projects before start", segment.projectOrthogonalFractionalExtended(new Point2d(1, 1)) < 0);
+        assertEquals("projects at -2", -2,
+                segment.projectOrthogonalFractionalExtended(new Point2d(1 - 19 - 19 + 8, 2 - 8 - 8 - 19)), 0.0001);
+        assertEquals("point near half way (not on segment) project at about half way", 0.5,
+                segment.projectOrthogonalFractional(new Point2d(11, 1)), 0.1);
+        assertTrue("projects outside", Double.isNaN(segment.projectOrthogonalFractional(new Point2d(25, 15))));
+        assertTrue("projects after end", segment.projectOrthogonalFractionalExtended(new Point2d(25, 15)) > 1);
+        assertEquals("projects at 2", 2,
+                segment.projectOrthogonalFractionalExtended(new Point2d(1 + 19 + 19 - 8, 2 + 8 + 8 + 19)), 0.0001);
+    }
+
+    /**
      * Test the equals and hasCode methods.
      */
     @Test

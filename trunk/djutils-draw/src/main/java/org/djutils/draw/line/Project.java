@@ -35,5 +35,25 @@ public interface Project<P extends Point<P, S>, S extends Space>
      * @throws NullPointerException when point is null;
      */
     P projectOrthogonalExtended(P point) throws NullPointerException;
-    
+
+    /**
+     * Project a point onto this object. For PolyLines, there may be multiple valid solutions. In that case the solution that
+     * lies on the closest segment is returned. If there is no valid solution on the closest segment, null is returned.
+     * @param point P; the point
+     * @return double; the fractional position of the projection of the point (may be NaN if no sensible projection is
+     *         possible). If the result is not null; the result lies somewhere on this object.
+     * @throws NullPointerException when point is null;
+     */
+    double projectOrthogonalFractional(P point) throws NullPointerException;
+
+    /**
+     * Project a point onto this object. For PolyLines, there may be multiple valid solutions. In that case the solution that
+     * lies on the closest segment is returned.
+     * @param point P; the point
+     * @return double; the fractional position of the projection of the point. This result cannot be NaN, but it may be outside
+     *         the range 0.0 .. 1.0.
+     * @throws NullPointerException when point is null;
+     */
+    double projectOrthogonalFractionalExtended(P point) throws NullPointerException;
+
 }

@@ -183,6 +183,24 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public double projectOrthogonalFractional(final Point2d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        return point.fractionalPositionOnLine(this.x, this.y, this.x + Math.cos(this.phi), this.y + Math.sin(this.phi), null,
+                false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double projectOrthogonalFractionalExtended(final Point2d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        return point.fractionalPositionOnLine(this.x, this.y, this.x + Math.cos(this.phi), this.y + Math.sin(this.phi), false,
+                false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public boolean epsilonEquals(final Ray2d other, final double epsilonCoordinate, final double epsilonDirection)
             throws NullPointerException, IllegalArgumentException
     {

@@ -508,28 +508,28 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     }
 
     /**
-     * Create a new Line3d, filtering out repeating successive points.
-     * @param points Point3d...; the coordinates of the line as Point3d
+     * Create a new PolyLine3d, filtering out repeating successive points.
+     * @param points Point2d...; the coordinates of the line as Point2d
      * @return the line
      * @throws DrawException when number of points &lt; 2
      */
-    public static PolyLine3d createAndCleanLine3d(final Point3d... points) throws DrawException
+    public static PolyLine3d createAndCleanPolyLine3d(final Point3d... points) throws DrawException
     {
         if (points.length < 2)
         {
-            throw new DrawException("Degenerate Line3d; has " + points.length + " point" + (points.length != 1 ? "s" : ""));
+            throw new DrawException("Degenerate PolyLine2d; has " + points.length + " point" + (points.length != 1 ? "s" : ""));
         }
-        return createAndCleanLine3d(new ArrayList<>(Arrays.asList(points)));
+        return createAndCleanPolyLine3d(new ArrayList<>(Arrays.asList(points)));
     }
 
     /**
-     * Create an Line3d, while filtering out repeating successive points.
+     * Create a new PolyLine3d, while filtering out repeating successive points.
      * @param pointList List&lt;Point3d&gt;; list of the coordinates of the line as Point3d; any duplicate points in this list
      *            are removed (this method may modify the provided list)
      * @return Line3d; the line
      * @throws DrawException when number of non-equal points &lt; 2
      */
-    public static PolyLine3d createAndCleanLine3d(final List<Point3d> pointList) throws DrawException
+    public static PolyLine3d createAndCleanPolyLine3d(final List<Point3d> pointList) throws DrawException
     {
         // TODO avoid modifying the input list.
         // clean successive equal points
@@ -590,7 +590,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         }
         return new Ray3d(this.x[n1] + fraction * (this.x[n1] - this.x[n2]), this.y[n1] + fraction * (this.y[n1] - this.y[n2]),
                 this.z[n1] + fraction * (this.z[n1] - this.z[n2]), Math.atan2(this.y[n1] - this.y[n2], this.x[n1] - this.x[n2]),
-                Math.atan2(this.z[n1] - this.z[n2], Math.hypot(this.x[n1] - this.x[n2], this.y[n1] - this.y[n2])));
+                Math.atan2(Math.hypot(this.x[n1] - this.x[n2], this.y[n1] - this.y[n2]), this.z[n1] - this.z[n2]));
     }
 
     /** {@inheritDoc} */
@@ -630,6 +630,113 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
                 this.y[index] + fraction * (this.y[index + 1] - this.y[index]),
                 this.z[index] + fraction * (this.z[index + 1] - this.z[index]), this.x[index + 1], this.y[index + 1],
                 this.z[index + 1]);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point3d projectOrthogonal(final Point3d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        double bestDistance = Double.POSITIVE_INFINITY;
+        Point3d result = null;
+        for (int index = 1; index < this.size(); index++)
+        {
+            Point3d closestPointOnSegment = point.closestPointOnLine(this.x[index - 1], this.y[index - 1], this.z[index - 1],
+                    this.x[index], this.y[index], this.z[index], null, null);
+            if (closestPointOnSegment != null)
+            {
+                double distance = point.distance(closestPointOnSegment);
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    result = closestPointOnSegment;
+                }
+            }
+        }
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point3d projectOrthogonalExtended(final Point3d point) throws NullPointerException
+    {
+        Throw.whenNull(point, "point may not be null");
+        double bestDistance = Double.POSITIVE_INFINITY;
+        Point3d result = null;
+        for (int index = 1; index < this.size(); index++)
+        {
+            Point3d closestPointOnSegment =
+                    point.closestPointOnLine(this.x[index - 1], this.y[index - 1], this.z[index - 1], this.x[index],
+                            this.y[index], this.z[index], index == 1 ? false : null, index == this.size() - 1 ? false : null);
+            if (closestPointOnSegment != null)
+            {
+                double distance = point.distance(closestPointOnSegment);
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    result = closestPointOnSegment;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Perform the orthogonal projection operation.
+     * @param point Point3d; the point to project
+     * @param limitHandling Boolean; if Null; results outside the interval 0.0 .. 1.0 are replaced by NaN, if false, results
+     *            outside that interval are returned as is; if true results outside the interval are truncated to the interval
+     *            and therefore not truly orthogonal
+     * @return double; the fractional position on this PolyLine that is closest to point, or NaN
+     */
+    private double projectOrthogonalFractional(final Point3d point, final Boolean limitHandling)
+    {
+        Throw.whenNull(point, "point may not be null");
+        double bestDistance = Double.POSITIVE_INFINITY;
+        double result = Double.NaN;
+        for (int index = 1; index < this.size(); index++)
+        {
+            // You may not write these with a conditional expression.
+            Boolean lowLimitHandling = null;
+            if (index == 1)
+            {
+                lowLimitHandling = limitHandling;
+            }
+            Boolean highLimitHandling = null;
+            if (index == this.size() - 1)
+            {
+                highLimitHandling = limitHandling;
+            }
+            double fraction = point.fractionalPositionOnLine(this.x[index - 1], this.y[index - 1], this.z[index - 1],
+                    this.x[index], this.y[index], this.z[index], lowLimitHandling, highLimitHandling);
+            if (!Double.isNaN(fraction))
+            {
+                double distance = Math.hypot(
+                        Math.hypot(point.x - this.x[index - 1] + fraction * (this.x[index] - this.x[index - 1]),
+                                point.y - this.y[index - 1] + fraction * (this.y[index] - this.y[index - 1])),
+                        point.z - this.z[index - 1] + fraction * (this.z[index] - this.z[index - 1]));
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    result = lengthAtIndex(index - 1) + fraction * (lengthAtIndex(index) - lengthAtIndex(index - 1));
+                }
+            }
+        }
+        return result / getLength();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double projectOrthogonalFractional(final Point3d point) throws NullPointerException
+    {
+        return projectOrthogonalFractional(point, null);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double projectOrthogonalFractionalExtended(final Point3d point) throws NullPointerException
+    {
+        return projectOrthogonalFractional(point, false);
     }
 
     /** {@inheritDoc} */
