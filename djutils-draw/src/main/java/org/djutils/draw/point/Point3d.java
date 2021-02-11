@@ -331,7 +331,8 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
      *            this method returns NaN; else if true; this method returns 1.0; else (highLimitHandling is false); results
      *            &gt; 1.0 are returned
      * @return double; the fractional position of the closest point on the line. Results within the range 0.0 .. 1.0 are always
-     *         returned as is.. A result < 0.0 is subject to lowLimitHandling. A result > 1.0 is subject to highLimitHandling
+     *         returned as is.. A result &lt; 0.0 is subject to lowLimitHandling. A result &gt; 1.0 is subject to
+     *         highLimitHandling
      * @throws DrawRuntimeException when any of the arguments is NaN
      */
     @SuppressWarnings("checkstyle:parameternumber")

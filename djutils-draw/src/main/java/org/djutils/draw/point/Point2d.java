@@ -130,7 +130,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     @Override
     public Iterator<? extends Point2d> getPoints()
     {
-        return Arrays.stream(new Point2d[] { this }).iterator();
+        return Arrays.stream(new Point2d[] {this}).iterator();
     }
 
     /**
@@ -421,10 +421,11 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
      *            method returns NaN; else if true; this method returns 0.0; else (lowLimitHandling is false); this results &lt;
      *            0.0 are returned
      * @param highLimitHandling Boolean; controls the handling of results that lie beyond the second point of the line. If null;
-     *            this method returns NaN; else if true; this method returns 1.0; else (highLimitHandling is false); results &gt;
-     *            1.0 are returned
+     *            this method returns NaN; else if true; this method returns 1.0; else (highLimitHandling is false); results
+     *            &gt; 1.0 are returned
      * @return double; the fractional position of the closest point on the line. Results within the range 0.0 .. 1.0 are always
-     *         returned as is.. A result < 0.0 is subject to lowLimitHandling. A result > 1.0 is subject to highLimitHandling
+     *         returned as is.. A result &lt; 0.0 is subject to lowLimitHandling. A result &gt; 1.0 is subject to
+     *         highLimitHandling
      * @throws DrawRuntimeException when any of the arguments is NaN
      */
     public double fractionalPositionOnLine(final double p1X, final double p1Y, final double p2X, final double p2Y,
