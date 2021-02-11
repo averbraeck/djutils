@@ -10,7 +10,8 @@
         More centralized implementation of code that finds closest point on a line(segment).
         Replaced lots of getX() calls by this.x; etc. to make debugging easier.
         Fixes in javadoc where class names were not correct after earlier rename operations.
-        PolyLine3d.createAndCleanLine3d is now named PolyLine3d.createAndCleanPolyLine3d
+        PolyLine3d.createAndCleanLine3d is now named PolyLine3d.createAndCleanPolyLine3d.
+        Fixed error in computation of theta in Ray3d (and corresponding errors in the unit tests).
       </action>
     </release>
     
