@@ -261,6 +261,32 @@ public class LineSegment3dTest
     }
 
     /**
+     * Test the toExcel method.
+     * @throws NumberFormatException if that happens, this test has failed
+     */
+    @Test
+    public void testToExcel() throws NumberFormatException
+    {
+        LineSegment3d segment = new LineSegment3d(1, 2, 3, 20, 10, 5);
+        String result = segment.toExcel();
+        String[] lines = result.split("\n");
+        assertEquals("result is two lines", 2, lines.length);
+        for (int lineNo = 0; lineNo < lines.length; lineNo++)
+        {
+            String[] fields = lines[lineNo].trim().split("\t");
+            assertEquals("Line consists of three fields", 3, fields.length);
+            for (int fieldNo = 0; fieldNo < fields.length; fieldNo++)
+            {
+                double value = Double.parseDouble(fields[fieldNo]);
+                double expectedValue =
+                        lineNo == 0 ? (fieldNo == 0 ? segment.startX : fieldNo == 1 ? segment.startY : segment.startZ)
+                                : (fieldNo == 0 ? segment.endX : fieldNo == 1 ? segment.endY : segment.endZ);
+                assertEquals("field contains the correct value", expectedValue, value, 0.0001);
+            }
+        }
+    }
+
+    /**
      * Test the equals and hasCode methods.
      */
     @Test

@@ -229,6 +229,31 @@ public class LineSegment2dTest
     }
 
     /**
+     * Test the toExcel method.
+     * @throws NumberFormatException if that happens, this test has failed
+     */
+    @Test
+    public void testToExcel() throws NumberFormatException
+    {
+        LineSegment2d segment = new LineSegment2d(1, 2, 20, 10);
+        String result = segment.toExcel();
+        String[] lines = result.split("\n");
+        assertEquals("result is two lines", 2, lines.length);
+        for (int lineNo = 0; lineNo < lines.length; lineNo++)
+        {
+            String[] fields = lines[lineNo].trim().split("\t");
+            assertEquals("Line consists of two fields", 2, fields.length);
+            for (int fieldNo = 0; fieldNo < fields.length; fieldNo++)
+            {
+                double value = Double.parseDouble(fields[fieldNo]);
+                double expectedValue = lineNo == 0 ? (fieldNo == 0 ? segment.startX : segment.startY)
+                        : (fieldNo == 0 ? segment.endX : segment.endY);
+                assertEquals("field contains the correct value", expectedValue, value, 0.0001);
+            }
+        }
+    }
+
+    /**
      * Test the equals and hasCode methods.
      */
     @Test

@@ -2,6 +2,13 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.13" date="2021-02-15" description="Project now implemented in all line types">
+      <action dev="pknoppers" type="fix">
+        Made the projectOrthogonal methods more consistent. There were many cases where the behavior was not logical.
+        The LineSegment classes not implement toExcel; the lineSegment2d class implements toPlot. 
+      </action>
+    </release>
+    
     <release version="1.06.12" date="2021-02-11" description="Project now implemented in all line types">
       <action dev="pknoppers" type="add">
         LineSegment, PolyLine and Ray types now implement the project interface. 
