@@ -101,13 +101,14 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
 
     /**
      * Construct a new Line2d from an array of Point2d.
-     * @param points Point2d[]; the array of points to construct this Line2d from.
-     * @throws NullPointerException when iterator is null
+     * @param points Point2d[]; the array of points to construct this PolyLine2d from.
+     * @throws NullPointerException when the array is null
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
      */
     public PolyLine2d(final Point2d[] points) throws NullPointerException, DrawRuntimeException
     {
+        // TODO: figure out how to do makeX, makeY, makeZ with lambda expressions
         this(false, makeX(Throw.whenNull(points, "points may not be null")), makeY(points));
     }
 
@@ -115,8 +116,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * Make an array of double and fill it with the x-coordinates of points.
      * @param points Point2d[]; array of points
      * @return double[]; array filled with the x-coordinates of points
+     * @throws NullPointerException when points is null, or contains a null value
      */
-    static double[] makeX(final Point2d[] points)
+    static double[] makeX(final Point2d[] points) throws NullPointerException
     {
         double[] xArray = new double[points.length];
         for (int i = 0; i < points.length; i++)
@@ -130,6 +132,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * Make an array of double and fill it with the y-coordinates of points.
      * @param points Point2d[]; array of points
      * @return double[]; array filled with the y-coordinates of points
+     * @throws NullPointerException when points is null, or contains a null value
      */
     static double[] makeY(final Point2d[] points)
     {
@@ -181,7 +184,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
-     * Construct a new Line2d and initialize its length indexed line, bounds, centroid and length.
+     * Construct a new Line2d from an iterator that yields Point2d objects.
      * @param iterator Iterator&lt;Point2d&gt;; iterator that will provide all points that constitute the new Line2d
      * @throws NullPointerException when iterator is null
      * @throws DrawException when the iterator provides too few points, or some adjacent identical points)
@@ -324,11 +327,10 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
             private int nextIndex = 0;
 
             /** {@inheritDoc} */
-            @SuppressWarnings("synthetic-access")
             @Override
             public boolean hasNext()
             {
-                return this.nextIndex < PolyLine2d.this.x.length;
+                return this.nextIndex < size();
             }
 
             /** {@inheritDoc} */
@@ -347,12 +349,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         return this.bounds;
     }
 
-    /**
-     * Construct a new Line2d that is equal to this line except for segments that are shorter than the <cite>noiseLevel</cite>.
-     * The result is guaranteed to start with the first point of this line and end with the last point of this line.
-     * @param noiseLevel double; the minimum segment length that is <b>not</b> removed
-     * @return Line2d; the filtered line
-     */
+    /** {@inheritDoc} */
+    @Override
     public final PolyLine2d noiseFilteredLine(final double noiseLevel)
     {
         if (this.size() <= 2)
@@ -513,7 +511,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      */
     public static PolyLine2d createAndCleanPolyLine2d(final List<Point2d> pointList) throws DrawException
     {
-        // TODO avoid modifying the input list.
+        // TODO rewrite to avoid modifying the input list.
         // clean successive equal points
         int i = 1;
         while (i < pointList.size())
@@ -605,6 +603,79 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
+     * Perform the orthogonal projection operation.
+     * @param point Point2d; the point to project
+     * @param limitHandling Boolean; if Null; results outside the interval 0.0 .. 1.0 are replaced by NaN, if false, results
+     *            outside that interval are returned as is; if true results outside the interval are truncated to the interval
+     *            and therefore not truly orthogonal
+     * @return double; the fractional position on this PolyLine that is closest to point, or NaN
+     */
+    private double projectOrthogonalFractional(final Point2d point, final Boolean limitHandling)
+    {
+        Throw.whenNull(point, "point may not be null");
+        double bestDistance = Double.POSITIVE_INFINITY;
+        double result = Double.NaN;
+        double bestDistanceExtended = Double.POSITIVE_INFINITY;
+        for (int index = 1; index < this.size(); index++)
+        {
+            double fraction = point.fractionalPositionOnLine(this.x[index - 1], this.y[index - 1], this.x[index], this.y[index],
+                    false, false);
+            double distance = Math.hypot(point.x - (this.x[index - 1] + fraction * (this.x[index] - this.x[index - 1])),
+                    point.y - (this.y[index - 1] + fraction * (this.y[index] - this.y[index - 1])));
+            if (distance < bestDistanceExtended && (fraction >= 0.0 && fraction <= 1.0 || (fraction < 0.0 && index == 1)
+                    || fraction > 1.0 && index == this.size() - 1))
+            {
+                bestDistanceExtended = distance;
+            }
+            if (distance < bestDistance && (fraction >= 0.0 || index == 1 && limitHandling != null && !limitHandling)
+                    && (fraction <= 1.0 || index == this.size() - 1 && limitHandling != null && !limitHandling))
+            {
+                bestDistance = distance;
+                result = lengthAtIndex(index - 1) + fraction * (lengthAtIndex(index) - lengthAtIndex(index - 1));
+            }
+            else if (fraction < 0.0 && limitHandling != null && limitHandling)
+            {
+                distance = Math.hypot(point.x - this.x[index - 1], point.y - this.y[index - 1]);
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    result = lengthAtIndex(index - 1);
+                }
+            }
+            else if (index == this.size() - 1 && limitHandling != null && limitHandling)
+            {
+                distance = Math.hypot(point.x - this.x[index], point.y - this.y[index]);
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    result = lengthAtIndex(index);
+                }
+            }
+        }
+        if (bestDistance > bestDistanceExtended && (limitHandling == null || !limitHandling))
+        {
+            return Double.NaN;
+        }
+        return result / getLength();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Point2d closestPointOnPolyLine(final Point2d point)
+    {
+        try
+        {
+            return getLocation(projectOrthogonalFractional(point, true) * getLength());
+        }
+        catch (DrawException e)
+        {
+            // Cannot happen
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
      * Perform the project orthogonal operation.
      * @param point Point2d; the point to project
      * @param limitHandling Boolean; if Null; results outside this PolyLin2de are replaced by Null, if false, results outside
@@ -615,34 +686,12 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     private Point2d projectOrthogonal(final Point2d point, final Boolean limitHandling)
     {
         Throw.whenNull(point, "point may not be null");
-        double bestDistance = Double.POSITIVE_INFINITY;
-        Point2d result = null;
-        for (int index = 1; index < this.size(); index++)
+        double fraction = projectOrthogonalFractional(point, limitHandling);
+        if (Double.isNaN(fraction))
         {
-            // You may not write these with a conditional expression.
-            Boolean lowLimitHandling = null;
-            if (index == 1)
-            {
-                lowLimitHandling = limitHandling;
-            }
-            Boolean highLimitHandling = null;
-            if (index == this.size() - 1)
-            {
-                highLimitHandling = limitHandling;
-            }
-            Point2d closestPointOnSegment = point.closestPointOnLine(this.x[index - 1], this.y[index - 1], this.x[index],
-                    this.y[index], lowLimitHandling, highLimitHandling);
-            if (closestPointOnSegment != null)
-            {
-                double distance = point.distance(closestPointOnSegment);
-                if (distance < bestDistance)
-                {
-                    bestDistance = distance;
-                    result = closestPointOnSegment;
-                }
-            }
+            return null;
         }
-        return result;
+        return getLocationExtended(fraction * getLength());
     }
 
     /** {@inheritDoc} */
@@ -657,48 +706,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     public Point2d projectOrthogonalExtended(final Point2d point) throws NullPointerException
     {
         return projectOrthogonal(point, false);
-    }
-
-    /**
-     * Perform the orthogonal projection operation.
-     * @param point Point2d; the point to project
-     * @param limitHandling Boolean; if Null; results outside the interval 0.0 .. 1.0 are replaced by NaN, if false, results
-     *            outside that interval are returned as is; if true results outside the interval are truncated to the interval
-     *            and therefore not truly orthogonal
-     * @return double; the fractional position on this PolyLine that is closest to point, or NaN
-     */
-    private double projectOrthogonalFractional(final Point2d point, final Boolean limitHandling)
-    {
-        Throw.whenNull(point, "point may not be null");
-        double bestDistance = Double.POSITIVE_INFINITY;
-        double result = Double.NaN;
-        for (int index = 1; index < this.size(); index++)
-        {
-            // You may not write these with a conditional expression.
-            Boolean lowLimitHandling = null;
-            if (index == 1)
-            {
-                lowLimitHandling = limitHandling;
-            }
-            Boolean highLimitHandling = null;
-            if (index == this.size() - 1)
-            {
-                highLimitHandling = limitHandling;
-            }
-            double fraction = point.fractionalPositionOnLine(this.x[index - 1], this.y[index - 1], this.x[index], this.y[index],
-                    lowLimitHandling, highLimitHandling);
-            if (!Double.isNaN(fraction))
-            {
-                double distance = Math.hypot(point.x - (this.x[index - 1] + fraction * (this.x[index] - this.x[index - 1])),
-                        point.y - (this.y[index - 1] + fraction * (this.y[index] - this.y[index - 1])));
-                if (distance < bestDistance)
-                {
-                    bestDistance = distance;
-                    result = lengthAtIndex(index - 1) + fraction * (lengthAtIndex(index) - lengthAtIndex(index - 1));
-                }
-            }
-        }
-        return result / getLength();
     }
 
     /** {@inheritDoc} */
@@ -923,7 +930,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         PolyLine2d filteredReferenceLine = noiseFilteredLine(
                 Math.max(offsetMinimumFilterValue, Math.min(bufferOffset / offsetFilterRatio, offsetMaximumFilterValue)));
         List<Point2d> tempPoints = new ArrayList<>();
-        // Make good use of the fact that an OTSLine3D cannot have consecutive duplicate points and has > 1 points
+        // Make good use of the fact that PolyLine3d cannot have consecutive duplicate points and has > 1 points
         Point2d prevPoint = filteredReferenceLine.get(0);
         Double prevAngle = null;
         for (int index = 0; index < filteredReferenceLine.size() - 1; index++)
@@ -1101,14 +1108,14 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
 
     /**
      * Find a location on this PolyLine2d that is a reasonable projection of a Ray on this line. The result (if not NaN) lies on
-     * a line perpendicular to the direction of the DirectedPoint and on some segment of this PolyLine. This method attempts to
-     * give continuous results for continuous changes of the DirectedPoint that must be projected. There are cases where this is
-     * simply impossible, or the optimal result is ambiguous. In these cases this method will return something that is hopefully
-     * good enough.
+     * a line perpendicular to the direction of the Ray and on some segment of this PolyLine. This method attempts to give
+     * continuous results for continuous changes of the Ray that must be projected. There are cases where this is simply
+     * impossible, or the optimal result is ambiguous. In these cases this method will return something that is hopefully good
+     * enough.
      * @param ray Ray2d; the Ray
      * @return double; length along this PolyLine (some value between 0 and the length of this PolyLine) where ray projects, or
      *         NaN if there is no solution
-     * @throws NullPointerException when directedPoint is null
+     * @throws NullPointerException when ray is null
      */
     public double projectRay(final Ray2d ray) throws NullPointerException
     {
@@ -1163,10 +1170,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         return result.toString();
     }
 
-    /**
-     * Convert this PolyLine2d to something that MS-Excel can plot.
-     * @return excel XY plottable output
-     */
+    /** {@inheritDoc} */
+    @Override
     public String toExcel()
     {
         StringBuffer s = new StringBuffer();

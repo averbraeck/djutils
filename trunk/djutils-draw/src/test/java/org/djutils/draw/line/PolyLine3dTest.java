@@ -3,6 +3,7 @@ package org.djutils.draw.line;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -1212,24 +1213,30 @@ public class PolyLine3dTest
             }
         }
 
-        // Test the projectOrthogonal method
+        // Test the projectOrthogonal methods
         array = new Point3d[] { new Point3d(1, 2, 3), new Point3d(4, 6, 8), new Point3d(8, 9, 13) };
         line = new PolyLine3d(array);
-        // Verify that any projection ends up somewhere on the line
-        for (double x : new double[] { -10, 0, 2, 4, 6, 8, 10, 20 })
+        for (double x = -15; x <= 20; x++)
         {
-            for (double y : new double[] { -10, 0, 2, 4, 6, 8, 10, 20 })
+            for (double y = -15; y <= 20; y++)
             {
-                for (double z : new double[] { -10, 0, 2, 4, 6, 8, 10, 20 })
+                for (double z = -15; z <= 20; z++)
                 {
                     Point3d xyz = new Point3d(x, y, z);
-                    // System.out.println("x=" + x + ", y=" + y + ", z=" + z);
+                    // System.out.println("x=" + x + ", y=" + y);
                     double result = line.projectOrthogonalFractional(xyz);
                     if (!Double.isNaN(result))
                     {
                         assertTrue("result must be >= 0.0", result >= 0);
                         assertTrue("result must be <= 1.0", result <= 1.0);
-                        // TODO verify that the result is correct
+                        Ray3d ray = line.getLocationFraction(result);
+                        Point3d projected = line.projectOrthogonal(xyz);
+                        assertEquals("if fraction is between 0 and 1; projectOrthogonal yiels point at that fraction", ray.x,
+                                projected.x, 00001);
+                        assertEquals("if fraction is between 0 and 1; projectOrthogonal yiels point at that fraction", ray.y,
+                                projected.y, 00001);
+                        assertEquals("if fraction is between 0 and 1; projectOrthogonal yiels point at that fraction", ray.z,
+                                projected.z, 00001);
                     }
                     else
                     {
@@ -1239,8 +1246,10 @@ public class PolyLine3dTest
                     if (!Double.isNaN(result))
                     {
                         Point3d resultPoint = line.getLocationFractionExtended(result);
-                        if (result >= 0 && result <= 1)
+                        if (result >= 0.0 && result <= 1.0)
                         {
+                            Point3d closestPointOnLine = line.closestPointOnPolyLine(xyz);
+                            assertEquals("resultPoint is equal to closestPoint", resultPoint, closestPointOnLine);
                             assertEquals("getLocationFraction returns same as getLocationfractionExtended", resultPoint,
                                     line.getLocationFraction(result));
                         }
@@ -1273,8 +1282,21 @@ public class PolyLine3dTest
                     else
                     {
                         assertNull("point projects outside extended line", line.projectOrthogonalExtended(xyz));
+                        Point3d closestPointOnLine = line.closestPointOnPolyLine(xyz);
+                        assertNotNull("closest point is never null", closestPointOnLine);
+                        boolean found = false;
+                        for (int index = 0; index < line.size(); index++)
+                        {
+                            Point3d linePoint = line.get(index);
+                            if (linePoint.x == closestPointOnLine.x && linePoint.y == closestPointOnLine.y)
+                            {
+                                found = true;
+                            }
+                        }
+                        assertTrue("closestPointOnLine is one of the construction points of the line", found);
                     }
-
+                    Point3d closestPointOnLine = line.closestPointOnPolyLine(xyz);
+                    assertNotNull("closest point is never null", closestPointOnLine);
                 }
             }
         }

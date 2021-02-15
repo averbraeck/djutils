@@ -36,6 +36,14 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
     L instantiate(List<P> pointList) throws NullPointerException, DrawRuntimeException;
 
     /**
+     * Construct a new Line2d that is equal to this line except for segments that are shorter than the <cite>noiseLevel</cite>.
+     * The result is guaranteed to start with the first point of this line and end with the last point of this line.
+     * @param noiseLevel double; the minimum segment length that is <b>not</b> removed
+     * @return Line2d; the filtered line
+     */
+    L noiseFilteredLine(double noiseLevel);
+
+    /**
      * Return the length of this line. This is NOT the number of points; it is the sum of the lengths of the segments.
      * @return double; the length of this line
      */
@@ -154,6 +162,15 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
     L extract(double start, double end) throws DrawException;
 
     /**
+     * Project a Point on this PolyLine. If the the projected points lies outside this PolyLine, the nearest end point of this
+     * PolyLine is returned. Otherwise the returned point lies between the end points of this PolyLine. <br>
+     * @param point P; the point to project onto this PolyLine
+     * @return P; either the start point, or the end point of this PolyLine or a Point that lies somewhere along this PolyLine.
+     * @throws NullPointerException when point is null
+     */
+    P closestPointOnPolyLine(P point) throws NullPointerException;
+
+    /**
      * Get the location at a position on the line, with its direction. Position should be between 0.0 and line length.
      * @param position double; the position on the line for which to calculate the point on the line
      * @return OP; an oriented point
@@ -257,5 +274,11 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
         }
         throw new DrawException("Could not find position " + pos + " on line with length: " + getLength());
     }
+
+    /**
+     * Convert this PolyLine to something that MS-Excel can plot.
+     * @return String MS-excel XY, or XYZ plottable output
+     */
+    String toExcel();
 
 }

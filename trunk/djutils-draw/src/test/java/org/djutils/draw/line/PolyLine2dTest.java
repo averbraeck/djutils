@@ -3,6 +3,7 @@ package org.djutils.draw.line;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -611,14 +612,13 @@ public class PolyLine2dTest
             }
         }
 
-        // Test the projectOrthogonal method
+        // Test the projectOrthogonal methods
         array = new Point2d[] { new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9) };
         line = new PolyLine2d(array);
         // System.out.println(line.toPlot());
-        // Verify that any projection ends up somewhere on the line
-        for (double x : new double[] { -10, 0, 2, 4, 6, 8, 10, 20 })
+        for (double x = -15; x <= 20; x++)
         {
-            for (double y : new double[] { -10, 0, 2, 4, 6, 8, 10, 20 })
+            for (double y = -15; y <= 20; y++)
             {
                 Point2d xy = new Point2d(x, y);
                 // System.out.println("x=" + x + ", y=" + y);
@@ -627,7 +627,12 @@ public class PolyLine2dTest
                 {
                     assertTrue("result must be >= 0.0", result >= 0);
                     assertTrue("result must be <= 1.0", result <= 1.0);
-                    // TODO verify that the result is correct
+                    Ray2d ray = line.getLocationFraction(result);
+                    Point2d projected = line.projectOrthogonal(xy);
+                    assertEquals("if fraction is between 0 and 1; projectOrthogonal yiels point at that fraction", ray.x,
+                            projected.x, 00001);
+                    assertEquals("if fraction is between 0 and 1; projectOrthogonal yiels point at that fraction", ray.y,
+                            projected.y, 00001);
                 }
                 else
                 {
@@ -637,13 +642,31 @@ public class PolyLine2dTest
                 if (!Double.isNaN(result))
                 {
                     Point2d resultPoint = line.getLocationFractionExtended(result);
-                    if (result >= 0 && result <= 1)
+                    if (result >= 0.0 && result <= 1.0)
                     {
+                        Point2d closestPointOnLine = line.closestPointOnPolyLine(xy);
+                        assertEquals("resultPoint is equal to closestPoint", resultPoint, closestPointOnLine);
                         assertEquals("getLocationFraction returns same as getLocationfractionExtended", resultPoint,
                                 line.getLocationFraction(result));
+                        // try
+                        // {
+                        // System.out.print("c1,0,0 " + new LineSegment2d(xy, line.projectOrthogonal(xy)).toPlot());
+                        // }
+                        // catch (DrawRuntimeException dre)
+                        // {
+                        // // Ignore - for now
+                        // }
                     }
                     else
                     {
+                        // try
+                        // {
+                        // System.out.print("c0,0,1 " + new LineSegment2d(xy, line.projectOrthogonalExtended(xy)).toPlot());
+                        // }
+                        // catch (DrawRuntimeException dre)
+                        // {
+                        // // Ignore - for now
+                        // }
                         try
                         {
                             line.getLocationFraction(result);
@@ -671,8 +694,37 @@ public class PolyLine2dTest
                 else
                 {
                     assertNull("point projects outside extended line", line.projectOrthogonalExtended(xy));
+                    Point2d closestPointOnLine = line.closestPointOnPolyLine(xy);
+                    assertNotNull("closest point is never null", closestPointOnLine);
+                    boolean found = false;
+                    for (int index = 0; index < line.size(); index++)
+                    {
+                        Point2d linePoint = line.get(index);
+                        if (linePoint.x == closestPointOnLine.x && linePoint.y == closestPointOnLine.y)
+                        {
+                            found = true;
+                        }
+                    }
+                    assertTrue("closestPointOnLine is one of the construction points of the line", found);
+                    // try
+                    // {
+                    // System.out.print("c0,1,0 " + new LineSegment2d(xy, closestPointOnLine).toPlot());
+                    // }
+                    // catch (DrawRuntimeException dre)
+                    // {
+                    // // Ignore - for now
+                    // }
                 }
-
+                Point2d closestPointOnLine = line.closestPointOnPolyLine(xy);
+                // try
+                // {
+                // System.out.print("c0,1,0 " + new LineSegment2d(xy, closestPointOnLine).toPlot());
+                // }
+                // catch (DrawRuntimeException dre)
+                // {
+                // // Ignore - for now
+                // }
+                assertNotNull("closest point is never null", closestPointOnLine);
             }
         }
         Point2d toleranceResultPoint = line.getLocationFraction(-0.01, 0.01);

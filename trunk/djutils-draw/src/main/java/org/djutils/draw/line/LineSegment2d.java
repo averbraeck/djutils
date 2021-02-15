@@ -2,6 +2,7 @@ package org.djutils.draw.line;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
@@ -209,6 +210,13 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
         String format = String.format("%1$s[startX=%2$s, startY=%2$s - endX=%2%s, endY=%2$s]",
                 doNotIncludeClassName ? "" : "LineSegment2d ", doubleFormat);
         return String.format(format, this.startX, this.startY, this.endX, this.endY);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toExcel()
+    {
+        return this.startX + "\t" + this.startY + "\n" + this.endX + "\t" + this.endY + "\n";
     }
 
     /** {@inheritDoc} */

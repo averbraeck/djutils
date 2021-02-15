@@ -48,7 +48,7 @@ public interface LineSegment<P extends Point<P, S>, R extends Ray<R, P, S>, S ex
      * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
      * Bourke</a>.
      * @param point P; the point to project onto the segment
-     * @return P; either the start point, or the end point of the segment or a Point2d that lies somewhere in between those two.
+     * @return P; either the start point, or the end point of the segment or a Point that lies somewhere in between those two.
      * @throws NullPointerException when point is null
      */
     P closestPointOnSegment(P point) throws NullPointerException;
@@ -73,5 +73,11 @@ public interface LineSegment<P extends Point<P, S>, R extends Ray<R, P, S>, S ex
      * @throws DrawRuntimeException when position is NaN or infinite
      */
     R getLocationExtended(double position) throws DrawRuntimeException;
+
+    /**
+     * Convert this PolyLine to something that MS-Excel can plot.
+     * @return String MS-excel XY, or XYZ plottable output
+     */
+    String toExcel();
 
 }

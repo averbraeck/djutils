@@ -244,6 +244,14 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public String toExcel()
+    {
+        return this.startX + "\t" + this.startY + "\t" + this.startZ + "\n" + this.endX + "\t" + this.endY + "\t" + this.endZ
+                + "\n";
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public int hashCode()
     {
         final int prime = 31;
