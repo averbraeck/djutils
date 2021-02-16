@@ -4,7 +4,7 @@
 
     <release version="1.06.14" date="2021-02-16" description="Rounding error in PolyLine3d">
       <action dev="pknoppers" type="fix">
-        Fixed a problem (that was already fixed in PolyLine2d) in getPosition where the position was an ULP before 
+        Fixed a problem (that was already fixed in PolyLine2d) in getLocation where the position was an ULP before 
         the length of the line, or the position of an intermediate point. 
       </action>
       <action dev="pknoppers" type="fix">
