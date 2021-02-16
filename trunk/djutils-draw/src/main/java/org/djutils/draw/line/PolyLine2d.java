@@ -577,11 +577,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     public final Ray2d getLocation(final double position) throws DrawException
     {
         Throw.when(Double.isNaN(position), DrawException.class, "position may not be NaN");
-        if (position < 0.0 || position > getLength())
-        {
-            throw new DrawException("getLocation for line: position < 0.0 or > line length. Position = " + position
-                    + "; length = " + getLength());
-        }
+        Throw.when(position < 0.0 || position > getLength(), DrawException.class,
+                "getLocation for line: position < 0.0 or > line length. Position = " + position + "; length = " + getLength());
         // handle special cases: position == 0.0, or position == length
         if (position == 0.0)
         {
@@ -597,6 +594,13 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         int index = find(position);
         double remainder = position - this.lengthIndexedLine[index];
         double fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
+        // if (fraction >= 1.0 && index < this.x.length - 1)
+        // {
+        // // Rounding problem; move to the next segment.
+        // index++;
+        // remainder = position - this.lengthIndexedLine[index];
+        // fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
+        // }
         return new Ray2d(this.x[index] + fraction * (this.x[index + 1] - this.x[index]),
                 this.y[index] + fraction * (this.y[index + 1] - this.y[index]), 2 * this.x[index + 1] - this.x[index],
                 2 * this.y[index + 1] - this.y[index]);

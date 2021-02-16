@@ -2,6 +2,15 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.15" date="2021-02-16" description="Rounding error in PolyLine3d">
+      <action dev="pknoppers" type="fix">
+        This is the 2nd attempt at fixing the rounding error in PolyLine3d.
+      </action>
+      <action dev="pknoppers" type="fix">
+        Fixed typo in error message. 
+      </action>
+    </release>
+    
     <release version="1.06.14" date="2021-02-16" description="Rounding error in PolyLine3d">
       <action dev="pknoppers" type="fix">
         Fixed a problem (that was already fixed in PolyLine2d) in getLocation where the position was an ULP before 

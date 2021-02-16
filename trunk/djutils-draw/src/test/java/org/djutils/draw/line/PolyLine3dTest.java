@@ -1693,8 +1693,14 @@ public class PolyLine3dTest
     @Test
     public void testOTS2Problem() throws DrawException
     {
+        // Problem 1
         PolyLine3d line = new PolyLine3d(new Point3d(100, 0, 0), new Point3d(100.1, 0, 0));
         double length = line.getLength();
+        line.getLocation(length - Math.ulp(length));
+
+        // Problem 2
+        line = new PolyLine3d(new Point3d(0, 0, 0), new Point3d(110.1, 0, 0), new Point3d(111, 0, 0));
+        length = line.getLength();
         line.getLocation(length - Math.ulp(length));
     }
 
