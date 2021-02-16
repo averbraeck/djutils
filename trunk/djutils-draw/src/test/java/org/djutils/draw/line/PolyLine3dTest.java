@@ -1695,7 +1695,7 @@ public class PolyLine3dTest
     {
         PolyLine3d line = new PolyLine3d(new Point3d(100, 0, 0), new Point3d(100.1, 0, 0));
         double length = line.getLength();
-        System.out.println(line.getLocation(length - Math.ulp(length)));
+        line.getLocation(length - Math.ulp(length));
     }
 
 }
