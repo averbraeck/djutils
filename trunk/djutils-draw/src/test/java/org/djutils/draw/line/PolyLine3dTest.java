@@ -1686,4 +1686,16 @@ public class PolyLine3dTest
         }
     }
 
+    /**
+     * Problem with limited precision when getting location almost at end.
+     * @throws DrawException when that happens this test has triggered the problem
+     */
+    @Test
+    public void testOTS2Problem() throws DrawException
+    {
+        PolyLine3d line = new PolyLine3d(new Point3d(100, 0, 0), new Point3d(100.1, 0, 0));
+        double length = line.getLength();
+        System.out.println(line.getLocation(length - Math.ulp(length)));
+    }
+
 }
