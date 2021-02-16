@@ -64,7 +64,7 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Sp
     {
         super(x, y);
         Throw.when(throughX == x && throughY == y, DrawRuntimeException.class,
-                "the coordinates of the through points must differ from (x, y)");
+                "the coordinates of the through point must differ from (x, y)");
         this.phi = Math.atan2(throughY - y, throughX - x);
     }
 

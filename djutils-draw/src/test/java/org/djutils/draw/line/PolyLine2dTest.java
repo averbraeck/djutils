@@ -1546,4 +1546,16 @@ public class PolyLine2dTest
         assertTrue("Line is equal to line from same set of points", line.equals(new PolyLine2d(line.getPoints())));
     }
 
+    /**
+     * Problem with limited precision when getting location almost at end.
+     * @throws DrawException when that happens this test has triggered the problem
+     */
+    @Test
+    public void testOTS2Problem() throws DrawException
+    {
+        PolyLine2d line = new PolyLine2d(new Point2d(100, 0), new Point2d(100.1, 0));
+        double length = line.getLength();
+        System.out.println(line.getLocation(length - Math.ulp(length)));
+    }
+
 }

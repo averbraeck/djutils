@@ -630,8 +630,12 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         }
         return new Ray3d(this.x[index] + fraction * (this.x[index + 1] - this.x[index]),
                 this.y[index] + fraction * (this.y[index + 1] - this.y[index]),
-                this.z[index] + fraction * (this.z[index + 1] - this.z[index]), this.x[index + 1], this.y[index + 1],
-                this.z[index + 1]);
+                this.z[index] + fraction * (this.z[index + 1] - this.z[index]), 2 * this.x[index + 1] - this.x[index],
+                2 * this.y[index + 1] - this.y[index], 2 * this.z[index + 1] - this.z[index]);
+        // return new Ray3d(this.x[index] + fraction * (this.x[index + 1] - this.x[index]),
+        // this.y[index] + fraction * (this.y[index + 1] - this.y[index]),
+        // this.z[index] + fraction * (this.z[index + 1] - this.z[index]), this.x[index + 1], this.y[index + 1],
+        // this.z[index + 1]);
     }
 
     /**

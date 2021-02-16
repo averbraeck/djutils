@@ -76,7 +76,7 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Sp
     {
         super(x, y, z);
         Throw.when(throughX == x && throughY == y && throughZ == z, DrawRuntimeException.class,
-                "the coordinates of the through points must differ from (x, y, z)");
+                "the coordinates of the through point must differ from (x, y, z)");
         this.phi = Math.atan2(throughY - y, throughX - x);
         this.theta = Math.atan2(Math.hypot(throughX - x, throughY - y), throughZ - z);
     }
