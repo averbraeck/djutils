@@ -171,7 +171,7 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Sp
     @Override
     public Ray3d flip()
     {
-        return new Ray3d(this.x, this.y, this.z, this.phi + Math.PI, this.theta + Math.PI);
+        return new Ray3d(this.x, this.y, this.z, this.phi + Math.PI, Math.PI - this.theta);
     }
 
     /** {@inheritDoc} */
