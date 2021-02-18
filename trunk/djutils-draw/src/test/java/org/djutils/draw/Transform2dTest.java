@@ -359,10 +359,10 @@ public class Transform2dTest
      */
     private void testBounds2d(final Bounds2d b, final double minX, final double maxX, final double minY, final double maxY)
     {
-        assertEquals(minX, b.getMinX(), 0.001);
-        assertEquals(maxX, b.getMaxX(), 0.001);
-        assertEquals(minY, b.getMinY(), 0.001);
-        assertEquals(maxY, b.getMaxY(), 0.001);
+        assertEquals(minX, b.getAbsoluteMinX(), 0.001);
+        assertEquals(maxX, b.getAbsoluteMaxX(), 0.001);
+        assertEquals(minY, b.getAbsoluteMinY(), 0.001);
+        assertEquals(maxY, b.getAbsoluteMaxY(), 0.001);
     }
 
     /**

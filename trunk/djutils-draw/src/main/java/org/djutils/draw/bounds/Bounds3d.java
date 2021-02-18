@@ -19,52 +19,55 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Space3d>
+public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Point3d, Space3d>
 {
     /** */
     private static final long serialVersionUID = 2020829L;
 
     /** The lower bound for x. */
-    private final double minX;
+    private final double minAbsoluteX;
 
     /** The lower bound for y. */
-    private final double minY;
+    private final double minAbsoluteY;
 
     /** The lower bound for z. */
-    private final double minZ;
+    private final double minAbsoluteZ;
 
     /** The upper bound for x. */
-    private final double maxX;
+    private final double maxAbsoluteX;
 
     /** The upper bound for y. */
-    private final double maxY;
+    private final double maxAbsoluteY;
 
     /** The upper bound for z. */
-    private final double maxZ;
+    private final double maxAbsoluteZ;
 
     /**
      * Construct a Bounds3d by providing all lower and upper bounds.
-     * @param minX double; the lower bound for x
-     * @param maxX double; the upper bound for x
-     * @param minY double; the lower bound for y
-     * @param maxY double; the upper bound for y
-     * @param minZ double; the lower bound for z
-     * @param maxZ double; the upper bound for z
+     * @param minAbsoluteX double; the lower bound for x
+     * @param maxAbsoluteX double; the upper bound for x
+     * @param minAbsoluteY double; the lower bound for y
+     * @param maxAbsoluteY double; the upper bound for y
+     * @param minAbsoluteZ double; the lower bound for z
+     * @param maxAbsoluteZ double; the upper bound for z
      * @throws IllegalArgumentException when lower bounds are larger than upper boundingBox or any bound is NaN
      */
-    public Bounds3d(final double minX, final double maxX, final double minY, final double maxY, final double minZ,
-            final double maxZ)
+    public Bounds3d(final double minAbsoluteX, final double maxAbsoluteX, final double minAbsoluteY, final double maxAbsoluteY,
+            final double minAbsoluteZ, final double maxAbsoluteZ)
     {
-        Throw.when(Double.isNaN(minX) || Double.isNaN(maxX) || Double.isNaN(minY) || Double.isNaN(maxY) || Double.isNaN(minZ)
-                || Double.isNaN(maxZ), IllegalArgumentException.class, "Nan boundary value not permitted");
-        Throw.when(minX > maxX || minY > maxY || minZ > maxZ, IllegalArgumentException.class,
+        Throw.when(
+                Double.isNaN(minAbsoluteX) || Double.isNaN(maxAbsoluteX) || Double.isNaN(minAbsoluteY)
+                        || Double.isNaN(maxAbsoluteY) || Double.isNaN(minAbsoluteZ) || Double.isNaN(maxAbsoluteZ),
+                IllegalArgumentException.class, "Nan boundary value not permitted");
+        Throw.when(minAbsoluteX > maxAbsoluteX || minAbsoluteY > maxAbsoluteY || minAbsoluteZ > maxAbsoluteZ,
+                IllegalArgumentException.class,
                 "lower bound for each dimension should be less than or equal to its upper bound");
-        this.minX = minX;
-        this.minY = minY;
-        this.minZ = minZ;
-        this.maxX = maxX;
-        this.maxY = maxY;
-        this.maxZ = maxZ;
+        this.minAbsoluteX = minAbsoluteX;
+        this.minAbsoluteY = minAbsoluteY;
+        this.minAbsoluteZ = minAbsoluteZ;
+        this.maxAbsoluteX = maxAbsoluteX;
+        this.maxAbsoluteY = maxAbsoluteY;
+        this.maxAbsoluteZ = maxAbsoluteZ;
     }
 
     /**
@@ -106,12 +109,12 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
             tempMinZ = Math.min(tempMinZ, point.z);
             tempMaxZ = Math.max(tempMaxZ, point.z);
         }
-        this.minX = tempMinX;
-        this.maxX = tempMaxX;
-        this.minY = tempMinY;
-        this.maxY = tempMaxY;
-        this.minZ = tempMinZ;
-        this.maxZ = tempMaxZ;
+        this.minAbsoluteX = tempMinX;
+        this.maxAbsoluteX = tempMaxX;
+        this.minAbsoluteY = tempMinY;
+        this.maxAbsoluteY = tempMaxY;
+        this.minAbsoluteZ = tempMinZ;
+        this.maxAbsoluteZ = tempMaxZ;
     }
 
     /**
@@ -150,11 +153,14 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
     @Override
     public Iterator<Point3d> getPoints()
     {
-        Point3d[] array =
-                new Point3d[] { new Point3d(getMinX(), getMinY(), getMinZ()), new Point3d(getMinX(), getMinY(), getMaxZ()),
-                        new Point3d(getMinX(), getMaxY(), getMinZ()), new Point3d(getMinX(), getMaxY(), getMaxZ()),
-                        new Point3d(getMaxX(), getMinY(), getMinZ()), new Point3d(getMaxX(), getMinY(), getMaxZ()),
-                        new Point3d(getMaxX(), getMaxY(), getMinZ()), new Point3d(getMaxX(), getMaxY(), getMaxZ()) };
+        Point3d[] array = new Point3d[] { new Point3d(this.minAbsoluteX, this.minAbsoluteY, this.minAbsoluteZ),
+                new Point3d(this.minAbsoluteX, this.minAbsoluteY, this.maxAbsoluteZ),
+                new Point3d(this.minAbsoluteX, this.maxAbsoluteY, this.minAbsoluteZ),
+                new Point3d(this.minAbsoluteX, this.maxAbsoluteY, this.maxAbsoluteZ),
+                new Point3d(this.maxAbsoluteX, this.minAbsoluteY, this.minAbsoluteZ),
+                new Point3d(this.maxAbsoluteX, this.minAbsoluteY, this.maxAbsoluteZ),
+                new Point3d(this.maxAbsoluteX, this.maxAbsoluteY, this.minAbsoluteZ),
+                new Point3d(this.maxAbsoluteX, this.maxAbsoluteY, this.maxAbsoluteZ) };
         return Arrays.stream(array).iterator();
     }
 
@@ -189,7 +195,8 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
     {
         Throw.when(Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z), IllegalArgumentException.class,
                 "coordinates must be numbers (not NaN)");
-        return x > this.minX && x < this.maxX && y > this.minY && y < this.maxY && z > this.minZ && z < this.maxZ;
+        return x > this.minAbsoluteX && x < this.maxAbsoluteX && y > this.minAbsoluteY && y < this.maxAbsoluteY
+                && z > this.minAbsoluteZ && z < this.maxAbsoluteZ;
     }
 
     /**
@@ -216,7 +223,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
     @Override
     public Bounds2d project()
     {
-        return new Bounds2d(getMinX(), getMaxX(), getMinY(), getMaxY());
+        return new Bounds2d(this.minAbsoluteX, this.maxAbsoluteX, this.minAbsoluteY, this.maxAbsoluteY);
     }
 
     /**
@@ -231,7 +238,8 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
     {
         Throw.when(Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z), IllegalArgumentException.class,
                 "coordinates must be numbers (not NaN)");
-        return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY && z >= this.minZ && z <= this.maxZ;
+        return x >= this.minAbsoluteX && x <= this.maxAbsoluteX && y >= this.minAbsoluteY && y <= this.maxAbsoluteY
+                && z >= this.minAbsoluteZ && z <= this.maxAbsoluteZ;
     }
 
     /**
@@ -251,8 +259,8 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
     public boolean covers(final Bounds3d otherBounds3d)
     {
         Throw.whenNull(otherBounds3d, "otherBounds3d cannot be null");
-        return covers(otherBounds3d.getMinX(), otherBounds3d.getMinY(), otherBounds3d.getMinZ())
-                && covers(otherBounds3d.getMaxX(), otherBounds3d.getMaxY(), otherBounds3d.getMaxZ());
+        return covers(otherBounds3d.minAbsoluteX, otherBounds3d.minAbsoluteY, otherBounds3d.minAbsoluteZ)
+                && covers(otherBounds3d.maxAbsoluteX, otherBounds3d.maxAbsoluteY, otherBounds3d.maxAbsoluteZ);
     }
 
     /** {@inheritDoc} */
@@ -260,8 +268,9 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
     public boolean disjoint(final Bounds3d otherBounds3d)
     {
         Throw.whenNull(otherBounds3d, "otherBounds3d cannot be null");
-        return otherBounds3d.minX >= this.maxX || otherBounds3d.maxX <= this.minX || otherBounds3d.minY >= this.maxY
-                || otherBounds3d.maxY <= this.minY || otherBounds3d.minZ >= this.maxZ || otherBounds3d.maxZ <= this.minZ;
+        return otherBounds3d.minAbsoluteX >= this.maxAbsoluteX || otherBounds3d.maxAbsoluteX <= this.minAbsoluteX
+                || otherBounds3d.minAbsoluteY >= this.maxAbsoluteY || otherBounds3d.maxAbsoluteY <= this.minAbsoluteY
+                || otherBounds3d.minAbsoluteZ >= this.maxAbsoluteZ || otherBounds3d.maxAbsoluteZ <= this.minAbsoluteZ;
     }
 
     /** {@inheritDoc} */
@@ -280,9 +289,12 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
         {
             return null;
         }
-        return new Bounds3d(Math.max(this.minX, otherBounds3d.minX), Math.min(this.maxX, otherBounds3d.maxX),
-                Math.max(this.minY, otherBounds3d.minY), Math.min(this.maxY, otherBounds3d.maxY),
-                Math.max(this.minZ, otherBounds3d.minZ), Math.min(this.maxZ, otherBounds3d.maxZ));
+        return new Bounds3d(Math.max(this.minAbsoluteX, otherBounds3d.minAbsoluteX),
+                Math.min(this.maxAbsoluteX, otherBounds3d.maxAbsoluteX),
+                Math.max(this.minAbsoluteY, otherBounds3d.minAbsoluteY),
+                Math.min(this.maxAbsoluteY, otherBounds3d.maxAbsoluteY),
+                Math.max(this.minAbsoluteZ, otherBounds3d.minAbsoluteZ),
+                Math.min(this.maxAbsoluteZ, otherBounds3d.maxAbsoluteZ));
     }
 
     /**
@@ -291,7 +303,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
      */
     public double getDeltaZ()
     {
-        return getMaxZ() - getMinZ();
+        return getAbsoluteMaxZ() - getAbsoluteMinZ();
     }
 
     /**
@@ -305,57 +317,74 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
 
     /** {@inheritDoc} */
     @Override
-    public double getMinX()
+    public double getAbsoluteMinX()
     {
-        return this.minX;
+        return this.minAbsoluteX;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getMaxX()
+    public double getAbsoluteMaxX()
     {
-        return this.maxX;
+        return this.maxAbsoluteX;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getMinY()
+    public double getAbsoluteMinY()
     {
-        return this.minY;
+        return this.minAbsoluteY;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getMaxY()
+    public double getAbsoluteMaxY()
     {
-        return this.maxY;
+        return this.maxAbsoluteY;
     }
 
     /**
      * Return the lower bound for z.
      * @return double; the lower bound for z
      */
-    public double getMinZ()
+    public double getAbsoluteMinZ()
     {
-        return this.minZ;
+        return this.minAbsoluteZ;
     }
 
     /**
      * Return the upper bound for z.
      * @return double; the upper bound for z
      */
-    public double getMaxZ()
+    public double getAbsoluteMaxZ()
     {
-        return this.maxZ;
+        return this.maxAbsoluteZ;
     }
 
     /**
-     * Return the mid point of this Bounds3d.
-     * @return Point3d; the mid point of this Bounds3d
+     * Return the relative lower bound for z (relative to the centroid).
+     * @return double; the relative lower bound for z
      */
+    public double getMinZ()
+    {
+        return -getDeltaZ() / 2;
+    }
+
+    /**
+     * Return the relative upper bound for z (relative to the centroid).
+     * @return double; the relative upper bound for z
+     */
+    public double getMaxZ()
+    {
+        return getDeltaZ() / 2;
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Point3d midPoint()
     {
-        return new Point3d((this.minX + this.maxX) / 2, (this.minY + this.maxY) / 2, (this.minZ + this.maxZ) / 2);
+        return new Point3d((this.minAbsoluteX + this.maxAbsoluteX) / 2, (this.minAbsoluteY + this.maxAbsoluteY) / 2,
+                (this.minAbsoluteZ + this.maxAbsoluteZ) / 2);
     }
 
     /** {@inheritDoc} */
@@ -376,9 +405,10 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
-        String format = String.format("%1$s[x[%2$s : %2$s], y[%2$s : %2$s, z[%2$s : %2$s]]",
+        String format = String.format("%1$s[absoluteX[%2$s : %2$s], absoluteY[%2$s : %2$s, absoluteZ[%2$s : %2$s]]",
                 doNotIncludeClassName ? "" : "Bounds3d ", doubleFormat);
-        return String.format(format, this.minX, this.maxX, this.minY, this.maxY, this.minZ, this.maxZ);
+        return String.format(format, this.minAbsoluteX, this.maxAbsoluteX, this.minAbsoluteY, this.maxAbsoluteY,
+                this.minAbsoluteZ, this.maxAbsoluteZ);
     }
 
     /** {@inheritDoc} */
@@ -388,17 +418,17 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
         final int prime = 31;
         int result = 1;
         long temp;
-        temp = Double.doubleToLongBits(this.maxX);
+        temp = Double.doubleToLongBits(this.maxAbsoluteX);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.maxY);
+        temp = Double.doubleToLongBits(this.maxAbsoluteY);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.maxZ);
+        temp = Double.doubleToLongBits(this.maxAbsoluteZ);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.minX);
+        temp = Double.doubleToLongBits(this.minAbsoluteX);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.minY);
+        temp = Double.doubleToLongBits(this.minAbsoluteY);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.minZ);
+        temp = Double.doubleToLongBits(this.minAbsoluteZ);
         result = prime * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
@@ -415,17 +445,17 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Spac
         if (getClass() != obj.getClass())
             return false;
         Bounds3d other = (Bounds3d) obj;
-        if (Double.doubleToLongBits(this.maxX) != Double.doubleToLongBits(other.maxX))
+        if (Double.doubleToLongBits(this.maxAbsoluteX) != Double.doubleToLongBits(other.maxAbsoluteX))
             return false;
-        if (Double.doubleToLongBits(this.maxY) != Double.doubleToLongBits(other.maxY))
+        if (Double.doubleToLongBits(this.maxAbsoluteY) != Double.doubleToLongBits(other.maxAbsoluteY))
             return false;
-        if (Double.doubleToLongBits(this.maxZ) != Double.doubleToLongBits(other.maxZ))
+        if (Double.doubleToLongBits(this.maxAbsoluteZ) != Double.doubleToLongBits(other.maxAbsoluteZ))
             return false;
-        if (Double.doubleToLongBits(this.minX) != Double.doubleToLongBits(other.minX))
+        if (Double.doubleToLongBits(this.minAbsoluteX) != Double.doubleToLongBits(other.minAbsoluteX))
             return false;
-        if (Double.doubleToLongBits(this.minY) != Double.doubleToLongBits(other.minY))
+        if (Double.doubleToLongBits(this.minAbsoluteY) != Double.doubleToLongBits(other.minAbsoluteY))
             return false;
-        if (Double.doubleToLongBits(this.minZ) != Double.doubleToLongBits(other.minZ))
+        if (Double.doubleToLongBits(this.minAbsoluteZ) != Double.doubleToLongBits(other.minAbsoluteZ))
             return false;
         return true;
     }

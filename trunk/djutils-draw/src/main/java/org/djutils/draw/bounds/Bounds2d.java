@@ -20,42 +20,43 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
+public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Space2d>
 {
     /** */
     private static final long serialVersionUID = 20200829L;
 
     /** The lower bound for x. */
-    private final double minX;
+    private final double minAbsoluteX;
 
     /** The lower bound for y. */
-    private final double minY;
+    private final double minAbsoluteY;
 
     /** The upper bound for x. */
-    private final double maxX;
+    private final double maxAbsoluteX;
 
     /** The upper bound for y. */
-    private final double maxY;
+    private final double maxAbsoluteY;
 
     /**
      * Construct a Bounds2d by providing its lower and upper bounds in both dimensions.
-     * @param minX double; the lower bound for x
-     * @param maxX double; the upper bound for x
-     * @param minY double; the lower bound for y
-     * @param maxY double; the upper bound for y
+     * @param minAbsoluteX double; the lower bound for x
+     * @param maxAbsoluteX double; the upper bound for x
+     * @param minAbsoluteY double; the lower bound for y
+     * @param maxAbsoluteY double; the upper bound for y
      * @throws IllegalArgumentException when a lower bound is larger than the corresponding upper bound, or any of the bounds is
      *             NaN
      */
-    public Bounds2d(final double minX, final double maxX, final double minY, final double maxY) throws IllegalArgumentException
+    public Bounds2d(final double minAbsoluteX, final double maxAbsoluteX, final double minAbsoluteY, final double maxAbsoluteY)
+            throws IllegalArgumentException
     {
-        Throw.when(Double.isNaN(minX) || Double.isNaN(maxX) || Double.isNaN(minY) || Double.isNaN(maxY),
-                IllegalArgumentException.class, "bounds must be numbers (not NaN)");
-        Throw.when(minX > maxX || minY > maxY, IllegalArgumentException.class,
+        Throw.when(Double.isNaN(minAbsoluteX) || Double.isNaN(maxAbsoluteX) || Double.isNaN(minAbsoluteY)
+                || Double.isNaN(maxAbsoluteY), IllegalArgumentException.class, "bounds must be numbers (not NaN)");
+        Throw.when(minAbsoluteX > maxAbsoluteX || minAbsoluteY > maxAbsoluteY, IllegalArgumentException.class,
                 "lower bound for each dimension should be less than or equal to its upper bound");
-        this.minX = minX;
-        this.minY = minY;
-        this.maxX = maxX;
-        this.maxY = maxY;
+        this.minAbsoluteX = minAbsoluteX;
+        this.minAbsoluteY = minAbsoluteY;
+        this.maxAbsoluteX = maxAbsoluteX;
+        this.maxAbsoluteY = maxAbsoluteY;
     }
 
     /**
@@ -93,10 +94,10 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
             tempMinY = Math.min(tempMinY, point.y);
             tempMaxY = Math.max(tempMaxY, point.y);
         }
-        this.minX = tempMinX;
-        this.maxX = tempMaxX;
-        this.minY = tempMinY;
-        this.maxY = tempMaxY;
+        this.minAbsoluteX = tempMinX;
+        this.maxAbsoluteX = tempMaxX;
+        this.minAbsoluteY = tempMinY;
+        this.maxAbsoluteY = tempMaxY;
     }
 
     /**
@@ -135,8 +136,9 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
     @Override
     public Iterator<Point2d> getPoints()
     {
-        Point2d[] array = new Point2d[] { new Point2d(getMinX(), getMinY()), new Point2d(getMinX(), getMaxY()),
-                new Point2d(getMaxX(), getMinY()), new Point2d(getMaxX(), getMaxY()) };
+        Point2d[] array = new Point2d[] { new Point2d(this.minAbsoluteX, this.minAbsoluteY),
+                new Point2d(this.minAbsoluteX, this.maxAbsoluteY), new Point2d(this.maxAbsoluteX, this.minAbsoluteY),
+                new Point2d(this.maxAbsoluteX, this.maxAbsoluteY) };
         return Arrays.stream(array).iterator();
     }
 
@@ -170,7 +172,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
     public boolean contains(final double x, final double y) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(x) || Double.isNaN(y), IllegalArgumentException.class, "coordinates must be numbers (not NaN)");
-        return x > this.minX && x < this.maxX && y > this.minY && y < this.maxY;
+        return x > this.minAbsoluteX && x < this.maxAbsoluteX && y > this.minAbsoluteY && y < this.maxAbsoluteY;
     }
 
     /**
@@ -202,7 +204,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
     public boolean covers(final double x, final double y)
     {
         Throw.when(Double.isNaN(x) || Double.isNaN(y), IllegalArgumentException.class, "coordinates must be numbers (not NaN)");
-        return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY;
+        return x >= this.minAbsoluteX && x <= this.maxAbsoluteX && y >= this.minAbsoluteY && y <= this.maxAbsoluteY;
     }
 
     /**
@@ -222,7 +224,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
     public boolean covers(final Bounds2d otherBounds2d) throws NullPointerException
     {
         Throw.whenNull(otherBounds2d, "otherBounds2d cannot be null");
-        return covers(otherBounds2d.minX, otherBounds2d.minY) && covers(otherBounds2d.maxX, otherBounds2d.maxY);
+        return covers(otherBounds2d.minAbsoluteX, otherBounds2d.minAbsoluteY)
+                && covers(otherBounds2d.maxAbsoluteX, otherBounds2d.maxAbsoluteY);
     }
 
     /** {@inheritDoc} */
@@ -230,8 +233,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
     public boolean disjoint(final Bounds2d otherBounds2d) throws NullPointerException
     {
         Throw.whenNull(otherBounds2d, "otherBounds2d cannot be null");
-        return otherBounds2d.minX >= this.maxX || otherBounds2d.maxX <= this.minX || otherBounds2d.minY >= this.maxY
-                || otherBounds2d.maxY <= this.minY;
+        return otherBounds2d.minAbsoluteX >= this.maxAbsoluteX || otherBounds2d.maxAbsoluteX <= this.minAbsoluteX
+                || otherBounds2d.minAbsoluteY >= this.maxAbsoluteY || otherBounds2d.maxAbsoluteY <= this.minAbsoluteY;
     }
 
     /** {@inheritDoc} */
@@ -250,9 +253,10 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
         {
             return null;
         }
-        return new Bounds2d(Math.max(this.getMinX(), otherBounds2d.getMinX()),
-                Math.min(this.getMaxX(), otherBounds2d.getMaxX()), Math.max(this.getMinY(), otherBounds2d.getMinY()),
-                Math.min(this.getMaxY(), otherBounds2d.getMaxY()));
+        return new Bounds2d(Math.max(this.minAbsoluteX, otherBounds2d.minAbsoluteX),
+                Math.min(this.maxAbsoluteX, otherBounds2d.maxAbsoluteX),
+                Math.max(this.minAbsoluteY, otherBounds2d.minAbsoluteY),
+                Math.min(this.maxAbsoluteY, otherBounds2d.maxAbsoluteY));
     }
 
     /**
@@ -261,44 +265,43 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
      */
     public Rectangle2D toRectangle2D()
     {
-        return new Rectangle2D.Double(this.minX, this.minY, this.maxX - this.minX, this.maxY - this.minY);
+        return new Rectangle2D.Double(this.minAbsoluteX, this.minAbsoluteY, this.maxAbsoluteX - this.minAbsoluteX,
+                this.maxAbsoluteY - this.minAbsoluteY);
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getMinX()
+    public double getAbsoluteMinX()
     {
-        return this.minX;
+        return this.minAbsoluteX;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getMaxX()
+    public double getAbsoluteMaxX()
     {
-        return this.maxX;
+        return this.maxAbsoluteX;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getMinY()
+    public double getAbsoluteMinY()
     {
-        return this.minY;
+        return this.minAbsoluteY;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getMaxY()
+    public double getAbsoluteMaxY()
     {
-        return this.maxY;
+        return this.maxAbsoluteY;
     }
 
-    /**
-     * Return the mid point of this Bounds2d.
-     * @return Point2d; the mid point of this Bounds2d
-     */
+    /** {@inheritDoc} */
+    @Override
     public Point2d midPoint()
     {
-        return new Point2d((this.minX + this.maxX) / 2, (this.minY + this.maxY) / 2);
+        return new Point2d((this.minAbsoluteX + this.maxAbsoluteX) / 2, (this.minAbsoluteY + this.maxAbsoluteY) / 2);
     }
 
     /**
@@ -328,9 +331,9 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
-        String format = String.format("%1$s[x[%2$s : %2$s], y[%2$s : %2$s]]", doNotIncludeClassName ? "" : "Bounds2d ",
-                doubleFormat);
-        return String.format(format, this.minX, this.maxX, this.minY, this.maxY);
+        String format = String.format("%1$s[absoluteX[%2$s : %2$s], absoluteY[%2$s : %2$s]]",
+                doNotIncludeClassName ? "" : "Bounds2d ", doubleFormat);
+        return String.format(format, this.minAbsoluteX, this.maxAbsoluteX, this.minAbsoluteY, this.maxAbsoluteY);
     }
 
     /** {@inheritDoc} */
@@ -340,13 +343,13 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
         final int prime = 31;
         int result = 1;
         long temp;
-        temp = Double.doubleToLongBits(this.maxX);
+        temp = Double.doubleToLongBits(this.maxAbsoluteX);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.maxY);
+        temp = Double.doubleToLongBits(this.maxAbsoluteY);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.minX);
+        temp = Double.doubleToLongBits(this.minAbsoluteX);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.minY);
+        temp = Double.doubleToLongBits(this.minAbsoluteY);
         result = prime * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
@@ -363,13 +366,13 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Space2d>
         if (getClass() != obj.getClass())
             return false;
         Bounds2d other = (Bounds2d) obj;
-        if (Double.doubleToLongBits(this.maxX) != Double.doubleToLongBits(other.maxX))
+        if (Double.doubleToLongBits(this.maxAbsoluteX) != Double.doubleToLongBits(other.maxAbsoluteX))
             return false;
-        if (Double.doubleToLongBits(this.maxY) != Double.doubleToLongBits(other.maxY))
+        if (Double.doubleToLongBits(this.maxAbsoluteY) != Double.doubleToLongBits(other.maxAbsoluteY))
             return false;
-        if (Double.doubleToLongBits(this.minX) != Double.doubleToLongBits(other.minX))
+        if (Double.doubleToLongBits(this.minAbsoluteX) != Double.doubleToLongBits(other.minAbsoluteX))
             return false;
-        if (Double.doubleToLongBits(this.minY) != Double.doubleToLongBits(other.minY))
+        if (Double.doubleToLongBits(this.minAbsoluteY) != Double.doubleToLongBits(other.minAbsoluteY))
             return false;
         return true;
     }
