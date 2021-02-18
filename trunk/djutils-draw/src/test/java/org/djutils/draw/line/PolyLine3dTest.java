@@ -1702,6 +1702,12 @@ public class PolyLine3dTest
         line = new PolyLine3d(new Point3d(0, 0, 0), new Point3d(110.1, 0, 0), new Point3d(111, 0, 0));
         length = line.getLength();
         line.getLocation(length - Math.ulp(length));
+        
+        // Problem 3
+        List<Point3d> list = new ArrayList<>();
+        list.add(new Point3d(1, 2, 3));
+        list.add(new Ray3d(2, 3, 4, 0, 0));
+        new PolyLine3d(list);
     }
 
 }

@@ -31,10 +31,10 @@ public interface Ray<R extends Ray<R, P, S>, P extends Point<P, S>, S extends Sp
      * @return double; the angle from the positive X axis direction in radians
      */
     double getPhi();
-    
+
     /**
      * Flip the direction of the Ray (creates and returns a new Ray instance).
-     * @return R; Ray at the same location, but with phi (and theta; in case of a Ray3d) incremented by &pi;
+     * @return R; Ray at the same location, but with phi incremented by &pi; and theta (in case of a Ray3d) subtracted from &pi;
      */
     R flip();
 

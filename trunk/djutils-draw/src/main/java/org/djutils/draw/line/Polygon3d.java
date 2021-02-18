@@ -220,6 +220,31 @@ public class Polygon3d extends PolyLine3d
 
     /** {@inheritDoc} */
     @Override
+    public Polygon2d project() throws DrawRuntimeException
+    {
+        double[] projectedX = new double[this.size()];
+        double[] projectedY = new double[this.size()];
+        
+        int nextIndex = 0;
+        for (int i = 0; i < this.size(); i++)
+        {
+            if (i > 0 && getX(i) == getX(i - 1) && getY(i) == getY(i - 1))
+            {
+                continue;
+            }
+            projectedX[nextIndex] = getX(i);
+            projectedY[nextIndex] = getY(i);
+            nextIndex++;
+        }
+        if (nextIndex < projectedX.length)
+        {
+            return new Polygon2d(Arrays.copyOf(projectedX, nextIndex), Arrays.copyOf(projectedY, nextIndex));
+        }
+        return new Polygon2d(projectedX, projectedY);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Polygon3d reverse()
     {
         return new Polygon3d(super.reverse().getPoints());

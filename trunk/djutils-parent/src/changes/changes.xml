@@ -2,6 +2,15 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.16" date="2021-02-18" description="Project error in Polygon3d and error in Ray3d.flip">
+      <action dev="pknoppers" type="fix">
+        Polygon3d must override project, or the result is a PolyLine2d.
+      </action>
+      <action dev="pknoppers" type="fix">
+        Ray3d.flip sets the theta to the complement of the original theta; not increment it by pi.
+      </action>
+    </release>
+    
     <release version="1.06.15" date="2021-02-16" description="Rounding error in PolyLine3d">
       <action dev="pknoppers" type="fix">
         This is the 2nd attempt at fixing the rounding error in PolyLine3d.
