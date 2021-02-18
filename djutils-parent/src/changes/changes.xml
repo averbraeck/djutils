@@ -3,6 +3,10 @@
   <body>
 
     <release version="1.06.16" date="2021-02-18" description="Project error in Polygon3d and error in Ray3d.flip">
+      <action dev="pknoppers" type="change">
+        Bounds now report relative extend with the getMin[XYZ] and getMax[XYZ] methods. This was due to a misunderstanding
+        about how these methods should behave.
+      </action>
       <action dev="pknoppers" type="fix">
         Polygon3d must override project, or the result is a PolyLine2d.
       </action>

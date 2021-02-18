@@ -1,6 +1,7 @@
 package org.djutils.draw.bounds;
 
 import org.djutils.draw.Space;
+import org.djutils.draw.point.Point;
 
 /**
  * Bounds is the generic tagging interface that indicates the bounds for an object, where the simplest implementation is minX,
@@ -13,33 +14,70 @@ import org.djutils.draw.Space;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @param <B> The bounds type
+ * @param <P> The point type
  * @param <S> The space type (2d or 3d)
  */
-public interface Bounds<B extends Bounds<B, S>, S extends Space>
+public interface Bounds<B extends Bounds<B, P, S>, P extends Point<P, S>, S extends Space>
 {
     /**
-     * Return the lower bound for x.
-     * @return double; the lower bound for x
+     * Return the relative lower bound for x (relative to the centroid).
+     * @return double; the relative lower bound for x
      */
-    double getMinX();
+    default double getMinX()
+    {
+        return -getDeltaX() / 2;
+    }
 
     /**
-     * Return the upper bound for x.
-     * @return double; the upper bound for x
+     * Return the relative upper bound for x (relative to the centroid).
+     * @return double; the relative upper bound for x
      */
-    double getMaxX();
+    default double getMaxX()
+    {
+        return getDeltaX() / 2;
+    }
 
     /**
-     * Return the lower bound for y.
-     * @return double; the lower bound for y
+     * Return the relative lower bound for y (relative to the centroid).
+     * @return double; the relative lower bound for y
      */
-    double getMinY();
+    default double getMinY()
+    {
+        return -getDeltaY() / 2;
+    }
 
     /**
-     * Return the upper bound for y.
-     * @return double; the upper bound for y
+     * Return the relative upper bound for y (relative to the centroid).
+     * @return double; the relative upper bound for y
      */
-    double getMaxY();
+    default double getMaxY()
+    {
+        return getDeltaY() / 2;
+    }
+    
+    /**
+     * Return the absolute lower bound for x.
+     * @return double; the absolute lower bound for x
+     */
+    double getAbsoluteMinX();
+
+    /**
+     * Return the absolute upper bound for x.
+     * @return double; the absolute upper bound for x
+     */
+    double getAbsoluteMaxX();
+
+    /**
+     * Return the absolute lower bound for y.
+     * @return double; the absolute lower bound for y
+     */
+    double getAbsoluteMinY();
+
+    /**
+     * Return the absolute upper bound for y.
+     * @return double; the absolute upper bound for y
+     */
+    double getAbsoluteMaxY();
 
     /**
      * Return the extent of this Bounds2d in the x-direction.
@@ -47,7 +85,7 @@ public interface Bounds<B extends Bounds<B, S>, S extends Space>
      */
     default double getDeltaX()
     {
-        return getMaxX() - getMinX();
+        return getAbsoluteMaxX() - getAbsoluteMinX();
     }
 
     /**
@@ -56,9 +94,15 @@ public interface Bounds<B extends Bounds<B, S>, S extends Space>
      */
     default double getDeltaY()
     {
-        return getMaxY() - getMinY();
+        return getAbsoluteMaxY() - getAbsoluteMinY();
     }
 
+    /**
+     * Return the mid point of this Bounds object.
+     * @return P; the mid point of this Bounds object
+     */
+    P midPoint();
+    
     /**
      * Check if this Bounds contains another Bounds. Covers returns true when one of the edges of the other Bounds (partly)
      * overlaps a border of this Bounds.

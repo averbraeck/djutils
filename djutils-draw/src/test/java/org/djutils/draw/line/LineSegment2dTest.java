@@ -84,10 +84,10 @@ public class LineSegment2dTest
         assertEquals(description + " iterator second point y", expectedEndY, point.y, 0.0001);
         assertFalse(description + " iterator has no more data", iterator.hasNext());
         Bounds2d bounds = segment.getBounds();
-        assertEquals(description + " bounds minX", Math.min(expectedStartX, expectedEndX), bounds.getMinX(), 0.0001);
-        assertEquals(description + " bounds maxX", Math.max(expectedStartX, expectedEndX), bounds.getMaxX(), 0.0001);
-        assertEquals(description + " bounds minY", Math.min(expectedStartY, expectedEndY), bounds.getMinY(), 0.0001);
-        assertEquals(description + " bounds maxY", Math.max(expectedStartY, expectedEndY), bounds.getMaxY(), 0.0001);
+        assertEquals(description + " bounds minX", Math.min(expectedStartX, expectedEndX), bounds.getAbsoluteMinX(), 0.0001);
+        assertEquals(description + " bounds maxX", Math.max(expectedStartX, expectedEndX), bounds.getAbsoluteMaxX(), 0.0001);
+        assertEquals(description + " bounds minY", Math.min(expectedStartY, expectedEndY), bounds.getAbsoluteMinY(), 0.0001);
+        assertEquals(description + " bounds maxY", Math.max(expectedStartY, expectedEndY), bounds.getAbsoluteMaxY(), 0.0001);
         assertTrue(description + " toString returns something descriptive", segment.toString().startsWith("LineSegment2d "));
         assertTrue(description + " toString can suppress the class name",
                 segment.toString().indexOf(segment.toString(true)) > 0);

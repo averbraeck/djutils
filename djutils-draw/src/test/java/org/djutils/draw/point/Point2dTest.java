@@ -245,10 +245,10 @@ public class Point2dTest
         }, "Should throw DRtE", DrawRuntimeException.class);
 
         Bounds2d bounds = p1.getBounds();
-        assertEquals("Bounds min x", p1.x, bounds.getMinX(), 0);
-        assertEquals("Bounds min y", p1.y, bounds.getMinY(), 0);
-        assertEquals("Bounds max x", p1.x, bounds.getMaxX(), 0);
-        assertEquals("Bounds max y", p1.y, bounds.getMaxY(), 0);
+        assertEquals("Bounds min x", p1.x, bounds.getAbsoluteMinX(), 0);
+        assertEquals("Bounds min y", p1.y, bounds.getAbsoluteMinY(), 0);
+        assertEquals("Bounds max x", p1.x, bounds.getAbsoluteMaxX(), 0);
+        assertEquals("Bounds max y", p1.y, bounds.getAbsoluteMaxY(), 0);
     }
 
     /**
