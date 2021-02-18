@@ -193,6 +193,10 @@ public class Bounds2dTest
         assertEquals("maxY", 20, br.getMaxY(), 0);
 
         assertTrue("toString returns something descriptive", br.toString().startsWith("Bounds2d "));
+        assertEquals("toString with false argument produces same as toString with no argument", br.toString(),
+                br.toString(false));
+        assertTrue("toString with true argument produces rhs of toString with no argument",
+                br.toString().indexOf(br.toString(true)) > 0);
 
         pointCollection.add(new Point2d(40, 50));
         // This collection is an ArrayList, so the elements are stored in the order in which they were added
@@ -340,7 +344,7 @@ public class Bounds2dTest
             // Ignore expected exception
         }
 
-        double[] shifts = new double[] {-200, -5, 0, 5, 200};
+        double[] shifts = new double[] { -200, -5, 0, 5, 200 };
         for (double dx : shifts)
         {
             for (double dy : shifts)
