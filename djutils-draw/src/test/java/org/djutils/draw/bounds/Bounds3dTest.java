@@ -259,6 +259,10 @@ public class Bounds3dTest
         assertEquals("maxZ", 30, bb.getMaxZ(), 0);
 
         assertTrue("toString returns something descriptive", bb.toString().startsWith("Bounds3d "));
+        assertEquals("toString with false argument produces same as toString with no argument", bb.toString(),
+                bb.toString(false));
+        assertTrue("toString with true argument produces rhs of toString with no argument",
+                bb.toString().indexOf(bb.toString(true)) > 0);
 
         pointCollection.add(new Point3d(40, 50, 60));
         // This collection is an ArrayList, so the elements are stored in the order in which they were added
