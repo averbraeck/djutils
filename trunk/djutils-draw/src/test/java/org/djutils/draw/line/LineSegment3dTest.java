@@ -10,7 +10,6 @@ import java.util.Iterator;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.junit.Test;
 
@@ -99,12 +98,12 @@ public class LineSegment3dTest
         assertEquals(description + " iterator second point z", expectedEndZ, point.z, 0.0001);
         assertFalse(description + " iterator has no more data", iterator.hasNext());
         Bounds3d bounds = segment.getBounds();
-        assertEquals(description + " bounds minX", Math.min(expectedStartX, expectedEndX), bounds.getAbsoluteMinX(), 0.0001);
-        assertEquals(description + " bounds maxX", Math.max(expectedStartX, expectedEndX), bounds.getAbsoluteMaxX(), 0.0001);
-        assertEquals(description + " bounds minY", Math.min(expectedStartY, expectedEndY), bounds.getAbsoluteMinY(), 0.0001);
-        assertEquals(description + " bounds maxY", Math.max(expectedStartY, expectedEndY), bounds.getAbsoluteMaxY(), 0.0001);
-        assertEquals(description + " bounds minZ", Math.min(expectedStartZ, expectedEndZ), bounds.getAbsoluteMinZ(), 0.0001);
-        assertEquals(description + " bounds maxZ", Math.max(expectedStartZ, expectedEndZ), bounds.getAbsoluteMaxZ(), 0.0001);
+        assertEquals(description + " bounds minX", Math.min(expectedStartX, expectedEndX), bounds.getMinX(), 0.0001);
+        assertEquals(description + " bounds maxX", Math.max(expectedStartX, expectedEndX), bounds.getMaxX(), 0.0001);
+        assertEquals(description + " bounds minY", Math.min(expectedStartY, expectedEndY), bounds.getMinY(), 0.0001);
+        assertEquals(description + " bounds maxY", Math.max(expectedStartY, expectedEndY), bounds.getMaxY(), 0.0001);
+        assertEquals(description + " bounds minZ", Math.min(expectedStartZ, expectedEndZ), bounds.getMinZ(), 0.0001);
+        assertEquals(description + " bounds maxZ", Math.max(expectedStartZ, expectedEndZ), bounds.getMaxZ(), 0.0001);
         assertTrue(description + " toString returns something descriptive", segment.toString().startsWith("LineSegment3d "));
         assertTrue(description + " toString can suppress the class name",
                 segment.toString().indexOf(segment.toString(true)) > 0);
@@ -149,7 +148,7 @@ public class LineSegment3dTest
             // Ignore expected exception
         }
 
-        for (double position : new double[] { -3, -0.5, 0, 1, 10, 100 })
+        for (double position : new double[] {-3, -0.5, 0, 1, 10, 100})
         {
             if (position < 0 || position > segment.getLength())
             {

@@ -556,12 +556,12 @@ public class Transform3dTest
     private void testBounds3d(final Bounds3d b, final double minX, final double maxX, final double minY, final double maxY,
             final double minZ, final double maxZ)
     {
-        assertEquals(minX, b.getAbsoluteMinX(), 0.001);
-        assertEquals(maxX, b.getAbsoluteMaxX(), 0.001);
-        assertEquals(minY, b.getAbsoluteMinY(), 0.001);
-        assertEquals(maxY, b.getAbsoluteMaxY(), 0.001);
-        assertEquals(minZ, b.getAbsoluteMinZ(), 0.001);
-        assertEquals(maxZ, b.getAbsoluteMaxZ(), 0.001);
+        assertEquals(minX, b.getMinX(), 0.001);
+        assertEquals(maxX, b.getMaxX(), 0.001);
+        assertEquals(minY, b.getMinY(), 0.001);
+        assertEquals(maxY, b.getMaxY(), 0.001);
+        assertEquals(minZ, b.getMinZ(), 0.001);
+        assertEquals(maxZ, b.getMaxZ(), 0.001);
     }
 
     /**

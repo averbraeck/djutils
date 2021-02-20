@@ -20,64 +20,28 @@ import org.djutils.draw.point.Point;
 public interface Bounds<B extends Bounds<B, P, S>, P extends Point<P, S>, S extends Space>
 {
     /**
-     * Return the relative lower bound for x (relative to the centroid).
-     * @return double; the relative lower bound for x
-     */
-    default double getMinX()
-    {
-        return -getDeltaX() / 2;
-    }
-
-    /**
-     * Return the relative upper bound for x (relative to the centroid).
-     * @return double; the relative upper bound for x
-     */
-    default double getMaxX()
-    {
-        return getDeltaX() / 2;
-    }
-
-    /**
-     * Return the relative lower bound for y (relative to the centroid).
-     * @return double; the relative lower bound for y
-     */
-    default double getMinY()
-    {
-        return -getDeltaY() / 2;
-    }
-
-    /**
-     * Return the relative upper bound for y (relative to the centroid).
-     * @return double; the relative upper bound for y
-     */
-    default double getMaxY()
-    {
-        return getDeltaY() / 2;
-    }
-    
-    /**
      * Return the absolute lower bound for x.
      * @return double; the absolute lower bound for x
      */
-    double getAbsoluteMinX();
+    double getMinX();
 
     /**
      * Return the absolute upper bound for x.
      * @return double; the absolute upper bound for x
      */
-    double getAbsoluteMaxX();
+    double getMaxX();
 
     /**
      * Return the absolute lower bound for y.
      * @return double; the absolute lower bound for y
      */
-    double getAbsoluteMinY();
+    double getMinY();
 
     /**
      * Return the absolute upper bound for y.
      * @return double; the absolute upper bound for y
      */
-    double getAbsoluteMaxY();
+    double getMaxY();
 
     /**
      * Return the extent of this Bounds2d in the x-direction.
@@ -85,7 +49,7 @@ public interface Bounds<B extends Bounds<B, P, S>, P extends Point<P, S>, S exte
      */
     default double getDeltaX()
     {
-        return getAbsoluteMaxX() - getAbsoluteMinX();
+        return getMaxX() - getMinX();
     }
 
     /**
@@ -94,7 +58,7 @@ public interface Bounds<B extends Bounds<B, P, S>, P extends Point<P, S>, S exte
      */
     default double getDeltaY()
     {
-        return getAbsoluteMaxY() - getAbsoluteMinY();
+        return getMaxY() - getMinY();
     }
 
     /**

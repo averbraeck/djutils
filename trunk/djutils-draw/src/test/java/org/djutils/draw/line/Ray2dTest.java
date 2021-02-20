@@ -171,59 +171,59 @@ public class Ray2dTest
         // X direction
         Bounds2d b = new Ray2d(1, 2, 0).getBounds();
         // Angle of 0 is exact; bounds should be infinite in only the positive X direction
-        assertEquals("Bounds minX", 1, b.getAbsoluteMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getAbsoluteMinY(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getAbsoluteMaxX(), 0);
-        assertEquals("Bounds.maxY", 2, b.getAbsoluteMaxY(), 0);
+        assertEquals("Bounds minX", 1, b.getMinX(), 0);
+        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
+        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
+        assertEquals("Bounds.maxY", 2, b.getMaxY(), 0);
 
         // first quadrant
         b = new Ray2d(1, 2, 0.2).getBounds();
-        assertEquals("Bounds minX", 1, b.getAbsoluteMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getAbsoluteMinY(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getAbsoluteMaxX(), 0);
-        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getAbsoluteMaxY(), 0);
+        assertEquals("Bounds minX", 1, b.getMinX(), 0);
+        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
+        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
+        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getMaxY(), 0);
 
         // Math.PI / 2 is in first quadrant due to finite precision of a double
         b = new Ray2d(1, 2, Math.PI / 2).getBounds();
-        assertEquals("Bounds minX", 1, b.getAbsoluteMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getAbsoluteMinY(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getAbsoluteMaxX(), 0);
-        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getAbsoluteMaxY(), 0);
+        assertEquals("Bounds minX", 1, b.getMinX(), 0);
+        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
+        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
+        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getMaxY(), 0);
 
         // second quadrant
         b = new Ray2d(1, 2, 2).getBounds();
-        assertEquals("Bounds minX", Double.NEGATIVE_INFINITY, b.getAbsoluteMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getAbsoluteMinY(), 0);
-        assertEquals("Bounds.maxX", 1, b.getAbsoluteMaxX(), 0);
-        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getAbsoluteMaxY(), 0);
+        assertEquals("Bounds minX", Double.NEGATIVE_INFINITY, b.getMinX(), 0);
+        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
+        assertEquals("Bounds.maxX", 1, b.getMaxX(), 0);
+        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getMaxY(), 0);
 
         // Math.PI is in second quadrant due to finite precision of a double
         b = new Ray2d(1, 2, Math.PI).getBounds();
-        assertEquals("Bounds minX", Double.NEGATIVE_INFINITY, b.getAbsoluteMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getAbsoluteMinY(), 0);
-        assertEquals("Bounds.maxX", 1, b.getAbsoluteMaxX(), 0);
-        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getAbsoluteMaxY(), 0);
+        assertEquals("Bounds minX", Double.NEGATIVE_INFINITY, b.getMinX(), 0);
+        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
+        assertEquals("Bounds.maxX", 1, b.getMaxX(), 0);
+        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getMaxY(), 0);
 
         // third quadrant
         b = new Ray2d(1, 2, 4).getBounds();
-        assertEquals("Bounds minX", Double.NEGATIVE_INFINITY, b.getAbsoluteMinX(), 0);
-        assertEquals("Bounds.minY", Double.NEGATIVE_INFINITY, b.getAbsoluteMinY(), 0);
-        assertEquals("Bounds.maxX", 1, b.getAbsoluteMaxX(), 0);
-        assertEquals("Bounds.maxY", 2, b.getAbsoluteMaxY(), 0);
+        assertEquals("Bounds minX", Double.NEGATIVE_INFINITY, b.getMinX(), 0);
+        assertEquals("Bounds.minY", Double.NEGATIVE_INFINITY, b.getMinY(), 0);
+        assertEquals("Bounds.maxX", 1, b.getMaxX(), 0);
+        assertEquals("Bounds.maxY", 2, b.getMaxY(), 0);
 
         // fourth quadrant
         b = new Ray2d(1, 2, -1).getBounds();
-        assertEquals("Bounds minX", 1, b.getAbsoluteMinX(), 0);
-        assertEquals("Bounds.minY", Double.NEGATIVE_INFINITY, b.getAbsoluteMinY(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getAbsoluteMaxX(), 0);
-        assertEquals("Bounds.maxY", 2, b.getAbsoluteMaxY(), 0);
+        assertEquals("Bounds minX", 1, b.getMinX(), 0);
+        assertEquals("Bounds.minY", Double.NEGATIVE_INFINITY, b.getMinY(), 0);
+        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
+        assertEquals("Bounds.maxY", 2, b.getMaxY(), 0);
 
         // -Math.PI / 2 is in fourth quadrant due to finite precision of a double
         b = new Ray2d(1, 2, -Math.PI / 2).getBounds();
-        assertEquals("Bounds minX", 1, b.getAbsoluteMinX(), 0);
-        assertEquals("Bounds.minY", Double.NEGATIVE_INFINITY, b.getAbsoluteMinY(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getAbsoluteMaxX(), 0);
-        assertEquals("Bounds.maxY", 2, b.getAbsoluteMaxY(), 0);
+        assertEquals("Bounds minX", 1, b.getMinX(), 0);
+        assertEquals("Bounds.minY", Double.NEGATIVE_INFINITY, b.getMinY(), 0);
+        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
+        assertEquals("Bounds.maxY", 2, b.getMaxY(), 0);
 
     }
 
