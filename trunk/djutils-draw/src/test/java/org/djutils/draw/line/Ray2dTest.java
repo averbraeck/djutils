@@ -1,10 +1,14 @@
 package org.djutils.draw.line;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
@@ -161,6 +165,28 @@ public class Ray2dTest
         assertEquals(description + " y", expectedY, flipped.y, 0.0001);
         assertEquals(description + " getPhi", expectedPhi + Math.PI, flipped.getPhi(), 0.0001);
         assertEquals(description + " phi", expectedPhi + Math.PI, flipped.phi, 0.0001);
+        assertEquals(description + " size", 2, ray.size());
+        Iterator<Point2d> iterator = ray.getPoints();
+        // First result of iterator is the finite end point (but this is not a hard promise)
+        assertTrue(iterator.hasNext());
+        Point2d point = iterator.next();
+        assertEquals(description + " iterator first point x", expectedX, point.x, 0.0001);
+        assertEquals(description + " iterator first point y", expectedY, point.y, 0.0001);
+        assertTrue(iterator.hasNext());
+        point = iterator.next();
+        // We only check that the point is infinite in at least one direction; the boundTest covers the rest
+        assertTrue(description + " iterator second point is at infinity",
+                Double.isInfinite(point.x) || Double.isInfinite(point.y));
+        assertFalse(iterator.hasNext());
+        try
+        {
+            iterator.next();
+            fail("Should have thrown a NoSuchElementException");
+        }
+        catch (NoSuchElementException nsee)
+        {
+            // Ignore expected exception
+        }
     }
 
     /**
@@ -170,62 +196,47 @@ public class Ray2dTest
     public void boundsTest()
     {
         // X direction
-        Bounds2d b = new Ray2d(1, 2, 0).getBounds();
         // Angle of 0 is exact; bounds should be infinite in only the positive X direction
-        assertEquals("Bounds minX", 1, b.getMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", 2, b.getMaxY(), 0);
+        verifyBounds(new Ray2d(1, 2, 0).getBounds(), 1, 2, Double.POSITIVE_INFINITY, 2);
 
         // first quadrant
-        b = new Ray2d(1, 2, 0.2).getBounds();
-        assertEquals("Bounds minX", 1, b.getMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getMaxY(), 0);
+        verifyBounds(new Ray2d(1, 2, 0.2).getBounds(), 1, 2, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 
         // Math.PI / 2 is in first quadrant due to finite precision of a double
-        b = new Ray2d(1, 2, Math.PI / 2).getBounds();
-        assertEquals("Bounds minX", 1, b.getMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getMaxY(), 0);
+        verifyBounds(new Ray2d(1, 2, Math.PI / 2).getBounds(), 1, 2, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 
         // second quadrant
-        b = new Ray2d(1, 2, 2).getBounds();
-        assertEquals("Bounds minX", Double.NEGATIVE_INFINITY, b.getMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
-        assertEquals("Bounds.maxX", 1, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getMaxY(), 0);
+        verifyBounds(new Ray2d(1, 2, 2).getBounds(), Double.NEGATIVE_INFINITY, 2, 1, Double.POSITIVE_INFINITY);
 
         // Math.PI is in second quadrant due to finite precision of a double
-        b = new Ray2d(1, 2, Math.PI).getBounds();
-        assertEquals("Bounds minX", Double.NEGATIVE_INFINITY, b.getMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
-        assertEquals("Bounds.maxX", 1, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getMaxY(), 0);
+        verifyBounds(new Ray2d(1, 2, Math.PI).getBounds(), Double.NEGATIVE_INFINITY, 2, 1, Double.POSITIVE_INFINITY);
 
         // third quadrant
-        b = new Ray2d(1, 2, 4).getBounds();
-        assertEquals("Bounds minX", Double.NEGATIVE_INFINITY, b.getMinX(), 0);
-        assertEquals("Bounds.minY", Double.NEGATIVE_INFINITY, b.getMinY(), 0);
-        assertEquals("Bounds.maxX", 1, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", 2, b.getMaxY(), 0);
+        verifyBounds(new Ray2d(1, 2, 4).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 1, 2);
 
         // fourth quadrant
-        b = new Ray2d(1, 2, -1).getBounds();
-        assertEquals("Bounds minX", 1, b.getMinX(), 0);
-        assertEquals("Bounds.minY", Double.NEGATIVE_INFINITY, b.getMinY(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", 2, b.getMaxY(), 0);
+        verifyBounds(new Ray2d(1, 2, -1).getBounds(), 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 2);
 
         // -Math.PI / 2 is in fourth quadrant due to finite precision of a double
-        b = new Ray2d(1, 2, -Math.PI / 2).getBounds();
-        assertEquals("Bounds minX", 1, b.getMinX(), 0);
-        assertEquals("Bounds.minY", Double.NEGATIVE_INFINITY, b.getMinY(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", 2, b.getMaxY(), 0);
+        verifyBounds(new Ray2d(1, 2, -Math.PI / 2).getBounds(), 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 2);
 
+    }
+
+    /**
+     * Verify a Bounds object.
+     * @param bounds Bounds2d; the Bounds object to verify
+     * @param expectedMinX double; the expected minimum x value
+     * @param expectedMinY double; the expected minimum y value
+     * @param expectedMaxX double; the expected maximum x value
+     * @param expectedMaxY double; the expected maximum y value
+     */
+    private void verifyBounds(final Bounds2d bounds, final double expectedMinX, final double expectedMinY,
+            final double expectedMaxX, final double expectedMaxY)
+    {
+        assertEquals("Bounds minX", expectedMinX, bounds.getMinX(), 0.0001);
+        assertEquals("Bounds minY", expectedMinY, bounds.getMinY(), 0.0001);
+        assertEquals("Bounds maxX", expectedMaxX, bounds.getMaxX(), 0.0001);
+        assertEquals("Bounds maxY", expectedMaxY, bounds.getMaxY(), 0.0001);
     }
 
     /**
