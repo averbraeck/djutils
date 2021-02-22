@@ -97,7 +97,7 @@ public interface Bounds<B extends Bounds<B, P, D, S>, P extends Point<P, S>, D e
     boolean covers(P point) throws NullPointerException;
 
     /**
-     * Check if no part of a Drawable is outside this Bounds. Only touching is considered outside.
+     * Check if no part of a Drawable is outside this Bounds. The edges/surfaces of this Bounds are considered inside.
      * @param drawable D; the Drawable for which to check if it is contained within this Bounds
      * @return boolean; whether this Bounds contains the provided Bounds, including overlapping borders
      * @throws NullPointerException when otherBounds is null
