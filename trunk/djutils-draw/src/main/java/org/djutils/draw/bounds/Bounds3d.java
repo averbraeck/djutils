@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.Space3d;
@@ -136,14 +137,114 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     }
 
     /**
-     * Construct a Bounds3d from a collection of Point3d, finding the lowest and highest x and y coordinates.
-     * @param points Collection&lt;Point3d&gt;; the collection of points to construct a Bounds2d from
-     * @throws NullPointerException when points is null
+     * Construct a Bounds3d for several Drawable2d objects.
+     * @param drawable3d Drawable3d...; the Drawable2d objects
+     * @throws NullPointerException when the array is null, or contains a null value
+     * @throws IllegalArgumentException when the length of the array is 0
+     */
+    public Bounds3d(final Drawable3d... drawable3d) throws NullPointerException, IllegalArgumentException
+    {
+        this(new Iterator<Point3d>()
+        {
+            /** Index in the argument array. */
+            private int nextArgument = 0;
+
+            /** Iterator over the Point2d objects in the current Drawable2d. */
+            private Iterator<? extends Point3d> currentIterator = ensureHasOne(drawable3d)[0].getPoints();
+
+            @Override
+            public boolean hasNext()
+            {
+                return this.nextArgument < drawable3d.length - 1 || this.currentIterator.hasNext();
+            }
+
+            @Override
+            public Point3d next()
+            {
+                if (this.currentIterator.hasNext())
+                {
+                    return this.currentIterator.next();
+                }
+                // Move to next Drawable2d
+                this.nextArgument++;
+                this.currentIterator = drawable3d[this.nextArgument].getPoints();
+                return this.currentIterator.next(); // Cannot fail because every Drawable has at least one point
+            }
+        });
+    }
+
+    /**
+     * Verify that the array contains at lease one entry.
+     * @param drawable3dArray Drawable3d[]; array of Drawable2d objects
+     * @return Drawable3d[]; the array
+     * @throws NullPointerException when the array is null
+     * @throws IllegalArgumentException when the array contains 0 elements
+     */
+    static Drawable3d[] ensureHasOne(final Drawable3d[] drawable3dArray) throws NullPointerException, IllegalArgumentException
+    {
+        Throw.whenNull(drawable3dArray, "Array may not be null");
+        Throw.when(drawable3dArray.length == 0, IllegalArgumentException.class, "Array must contain at least one value");
+        return drawable3dArray;
+    }
+
+    /**
+     * Construct a Bounds3d for a Collection of Drawable2d objects.
+     * @param drawableCollection Collection&lt;Drawable2d&gt;; the collection
+     * @throws NullPointerException when the collection is null, or contains null values
      * @throws IllegalArgumentException when the collection is empty
      */
-    public Bounds3d(final Collection<Point3d> points)
+    public Bounds3d(final Collection<Drawable3d> drawableCollection) throws NullPointerException, IllegalArgumentException
     {
-        this(Throw.whenNull(points, "points may not be null").iterator());
+        this(new Iterator<Point3d>()
+        {
+            /** Iterator that iterates over the collection. */
+            private Iterator<Drawable3d> collectionIterator = ensureHasOne(drawableCollection.iterator());
+
+            /** Iterator that generates Point2d objects for the currently selected element of the collection. */
+            private Iterator<? extends Point3d> currentIterator = this.collectionIterator.next().getPoints();
+
+            @Override
+            public boolean hasNext()
+            {
+                if (this.currentIterator == null)
+                {
+                    return false;
+                }
+                return this.currentIterator.hasNext();
+            }
+
+            @Override
+            public Point3d next()
+            {
+                Point3d result = this.currentIterator.next();
+                if (!this.currentIterator.hasNext())
+                {
+                    if (this.collectionIterator.hasNext())
+                    {
+                        this.currentIterator = this.collectionIterator.next().getPoints();
+                    }
+                    else
+                    {
+                        this.currentIterator = null;
+                    }
+                }
+                return result;
+            }
+        });
+    }
+
+    /**
+     * Verify that the iterator has something to return.
+     * @param iterator Iterator&lt;Drawable2d&gt;; the iterator
+     * @return Iterator&lt;Drawable3d&gt;; the iterator
+     * @throws NullPointerException when the iterator is null
+     * @throws IllegalArgumentException when the hasNext method of the iterator returns false
+     */
+    static Iterator<Drawable3d> ensureHasOne(final Iterator<Drawable3d> iterator)
+            throws NullPointerException, IllegalArgumentException
+    {
+        Throw.when(!iterator.hasNext(), IllegalArgumentException.class, "Collection may not be empty");
+        return iterator;
     }
 
     /** {@inheritDoc} */
@@ -376,7 +477,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     {
         String format = String.format("%1$s[absoluteX[%2$s : %2$s], absoluteY[%2$s : %2$s, absoluteZ[%2$s : %2$s]]",
                 doNotIncludeClassName ? "" : "Bounds3d ", doubleFormat);
-        return String.format(format, this.minX, this.maxX, this.minY, this.maxY, this.minZ, this.maxZ);
+        return String.format(Locale.US, format, this.minX, this.maxX, this.minY, this.maxY, this.minZ, this.maxZ);
     }
 
     /** {@inheritDoc} */

@@ -154,7 +154,9 @@ public class Ray3dTest
             // Ignore expected exception
         }
 
-        assertTrue("toString returns something descriptive", new Ray3d(1, 2, 3, 0.2, 0.3).toString().startsWith("Ray3d"));
+        Ray3d ray = new Ray3d(1, 2, 3, 0.2, 0.3);
+        assertTrue("toString returns something descriptive", ray.toString().startsWith("Ray3d"));
+        assertTrue("toString can suppress the class name", ray.toString().indexOf(ray.toString(true)) > 0);
     }
 
     /**
@@ -557,6 +559,16 @@ public class Ray3dTest
                                 boolean result = ray.epsilonEquals(other, epsilon, Double.POSITIVE_INFINITY);
                                 boolean expected =
                                         Math.abs(dX) <= epsilon && Math.abs(dY) <= epsilon && Math.abs(dZ) <= epsilon;
+                                assertEquals("result of epsilonEquals checking x, y, z", expected, result);
+
+                                result = ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
+                                expected = Math.abs(dPhi) <= epsilon && Math.abs(dTheta) <= epsilon;
+                                assertEquals("result of epsilonEquals checking phi and theta", expected, result);
+                                // Create an equivalent alternative ray
+                                other = new Ray3d(ray.x + dX, ray.y + dY, ray.z + dZ, Math.PI + ray.phi + dPhi,
+                                        Math.PI - ray.theta + dTheta);
+                                result = ray.epsilonEquals(other, epsilon, Double.POSITIVE_INFINITY);
+                                expected = Math.abs(dX) <= epsilon && Math.abs(dY) <= epsilon && Math.abs(dZ) <= epsilon;
                                 assertEquals("result of epsilonEquals checking x, y, z", expected, result);
 
                                 result = ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);

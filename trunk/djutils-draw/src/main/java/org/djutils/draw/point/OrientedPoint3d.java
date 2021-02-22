@@ -2,6 +2,7 @@ package org.djutils.draw.point;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
@@ -310,7 +311,7 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     {
         String format = String.format("%1$s[x=%2$s, y=%2$s, z=%2$s, rotX=%2$s, rotY=%2$s, rotZ=%2$s]",
                 doNotIncludeClassName ? "" : "OrientedPoint3d ", doubleFormat);
-        return String.format(format, this.x, this.y, this.z, this.dirX, this.dirY, this.dirZ);
+        return String.format(Locale.US, format, this.x, this.y, this.z, this.dirX, this.dirY, this.dirZ);
     }
 
     /** {@inheritDoc} */

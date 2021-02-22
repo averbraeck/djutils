@@ -3,6 +3,7 @@ package org.djutils.draw.point;
 import java.awt.geom.Point2D;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
@@ -201,7 +202,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     {
         String format =
                 String.format("%1$s[x=%2$s, y=%2$s, rot=%2$s]", doNotIncludeClassName ? "" : "OrientedPoint2d ", doubleFormat);
-        return String.format(format, this.x, this.y, this.dirZ);
+        return String.format(Locale.US, format, this.x, this.y, this.dirZ);
     }
 
     /** {@inheritDoc} */

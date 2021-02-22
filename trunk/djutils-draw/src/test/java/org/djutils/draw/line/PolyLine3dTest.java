@@ -800,7 +800,7 @@ public class PolyLine3dTest
         try
         {
             l22x.project();
-            fail("Projecting a line that entirely projects to one point should have thrown an exception");
+            fail("Projecting a Polyline3d that entirely projects to one point should have thrown an exception");
         }
         catch (DrawRuntimeException dre)
         {

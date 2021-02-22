@@ -2,6 +2,7 @@ package org.djutils.draw.line;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
@@ -239,7 +240,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d, Sp
     {
         String format = String.format("%1$s[startX=%2$s, startY=%2$s, startZ=%2$s - endX=%2%s, endY=%2$s, endZ=%2$s]",
                 doNotIncludeClassName ? "" : "LineSegment3d ", doubleFormat);
-        return String.format(format, this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ);
+        return String.format(Locale.US, format, this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ);
     }
 
     /** {@inheritDoc} */

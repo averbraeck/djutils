@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
@@ -598,7 +599,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
         String format = String.format("%1$s[x=%2$s, y=%2$s]", doNotIncludeClassName ? "" : "Point2d ", doubleFormat);
-        return String.format(format, this.x, this.y);
+        return String.format(Locale.US, format, this.x, this.y);
     }
 
     /** {@inheritDoc} */

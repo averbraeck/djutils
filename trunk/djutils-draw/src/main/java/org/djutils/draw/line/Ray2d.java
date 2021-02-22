@@ -1,5 +1,7 @@
 package org.djutils.draw.line;
 
+import java.util.Locale;
+
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
@@ -228,7 +230,16 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Sp
     @Override
     public String toString()
     {
-        return "Ray2d [x=" + this.x + " y=" + this.y + " phi=" + this.phi + "]";
+        return toString("%f", false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
+    {
+        String format = String.format("%1$s[x=%2$s, y=%2$s - phi=%2%s]",
+                doNotIncludeClassName ? "" : "Ray2d ", doubleFormat);
+        return String.format(Locale.US, format, this.x, this.y, this.phi);
     }
 
     /** {@inheritDoc} */

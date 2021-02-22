@@ -4,6 +4,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.Space2d;
@@ -121,22 +122,122 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Space2d>
     }
 
     /**
-     * Construct a Bounds2d from a collection of Point2d, finding the lowest and highest x and y coordinates.
-     * @param points Collection&lt;Point2d&gt;; the collection of points to construct a Bounds2d from
-     * @throws NullPointerException when points is null
+     * Construct a Bounds2d for several Drawable2d objects.
+     * @param drawable2d Drawable2d...; the Drawable2d objects
+     * @throws NullPointerException when the array is null, or contains a null value
+     * @throws IllegalArgumentException when the length of the array is 0
+     */
+    public Bounds2d(final Drawable2d... drawable2d) throws NullPointerException, IllegalArgumentException
+    {
+        this(new Iterator<Point2d>()
+        {
+            /** Index in the argument array. */
+            private int nextArgument = 0;
+
+            /** Iterator over the Point2d objects in the current Drawable2d. */
+            private Iterator<? extends Point2d> currentIterator = ensureHasOne(drawable2d)[0].getPoints();
+
+            @Override
+            public boolean hasNext()
+            {
+                return this.nextArgument < drawable2d.length - 1 || this.currentIterator.hasNext();
+            }
+
+            @Override
+            public Point2d next()
+            {
+                if (this.currentIterator.hasNext())
+                {
+                    return this.currentIterator.next();
+                }
+                // Move to next Drawable2d
+                this.nextArgument++;
+                this.currentIterator = drawable2d[this.nextArgument].getPoints();
+                return this.currentIterator.next(); // Cannot fail because every Drawable has at least one point
+            }
+        });
+    }
+
+    /**
+     * Verify that the array contains at lease one entry.
+     * @param drawable2dArray Drawable2d[]; array of Drawable2d objects
+     * @return Drawable2d[]; the array
+     * @throws NullPointerException when the array is null
+     * @throws IllegalArgumentException when the array contains 0 elements
+     */
+    static Drawable2d[] ensureHasOne(final Drawable2d[] drawable2dArray) throws NullPointerException, IllegalArgumentException
+    {
+        Throw.whenNull(drawable2dArray, "Array may not be null");
+        Throw.when(drawable2dArray.length == 0, IllegalArgumentException.class, "Array must contain at least one value");
+        return drawable2dArray;
+    }
+
+    /**
+     * Construct a Bounds2d for a Collection of Drawable2d objects.
+     * @param drawableCollection Collection&lt;Drawable2d&gt;; the collection
+     * @throws NullPointerException when the collection is null, or contains null values
      * @throws IllegalArgumentException when the collection is empty
      */
-    public Bounds2d(final Collection<Point2d> points)
+    public Bounds2d(final Collection<Drawable2d> drawableCollection) throws NullPointerException, IllegalArgumentException
     {
-        this(Throw.whenNull(points, "points may not be null").iterator());
+        this(new Iterator<Point2d>()
+        {
+            /** Iterator that iterates over the collection. */
+            private Iterator<Drawable2d> collectionIterator = ensureHasOne(drawableCollection.iterator());
+
+            /** Iterator that generates Point2d objects for the currently selected element of the collection. */
+            private Iterator<? extends Point2d> currentIterator = this.collectionIterator.next().getPoints();
+
+            @Override
+            public boolean hasNext()
+            {
+                if (this.currentIterator == null)
+                {
+                    return false;
+                }
+                return this.currentIterator.hasNext();
+            }
+
+            @Override
+            public Point2d next()
+            {
+                Point2d result = this.currentIterator.next();
+                if (!this.currentIterator.hasNext())
+                {
+                    if (this.collectionIterator.hasNext())
+                    {
+                        this.currentIterator = this.collectionIterator.next().getPoints();
+                    }
+                    else
+                    {
+                        this.currentIterator = null;
+                    }
+                }
+                return result;
+            }
+        });
+    }
+
+    /**
+     * Verify that the iterator has something to return.
+     * @param iterator Iterator&lt;Drawable2d&gt;; the iterator
+     * @return Iterator&lt;Drawable2d&gt;; the iterator
+     * @throws NullPointerException when the iterator is null
+     * @throws IllegalArgumentException when the hasNext method of the iterator returns false
+     */
+    static Iterator<Drawable2d> ensureHasOne(final Iterator<Drawable2d> iterator)
+            throws NullPointerException, IllegalArgumentException
+    {
+        Throw.when(!iterator.hasNext(), IllegalArgumentException.class, "Collection may not be empty");
+        return iterator;
     }
 
     /** {@inheritDoc} */
     @Override
     public Iterator<Point2d> getPoints()
     {
-        Point2d[] array = new Point2d[] {new Point2d(this.minX, this.minY), new Point2d(this.minX, this.maxY),
-                new Point2d(this.maxX, this.minY), new Point2d(this.maxX, this.maxY)};
+        Point2d[] array = new Point2d[] { new Point2d(this.minX, this.minY), new Point2d(this.minX, this.maxY),
+                new Point2d(this.maxX, this.minY), new Point2d(this.maxX, this.maxY) };
         return Arrays.stream(array).iterator();
     }
 
@@ -327,7 +428,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Space2d>
     {
         String format = String.format("%1$s[absoluteX[%2$s : %2$s], absoluteY[%2$s : %2$s]]",
                 doNotIncludeClassName ? "" : "Bounds2d ", doubleFormat);
-        return String.format(format, this.minX, this.maxX, this.minY, this.maxY);
+        return String.format(Locale.US, format, this.minX, this.maxX, this.minY, this.maxY);
     }
 
     /** {@inheritDoc} */

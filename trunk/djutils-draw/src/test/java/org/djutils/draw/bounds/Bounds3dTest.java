@@ -9,8 +9,11 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.djutils.draw.DrawException;
+import org.djutils.draw.Drawable3d;
+import org.djutils.draw.line.LineSegment3d;
 import org.djutils.draw.line.PolyLine3d;
 import org.djutils.draw.point.Point3d;
 import org.junit.Test;
@@ -125,6 +128,16 @@ public class Bounds3dTest
             // Ignore expected exception
         }
 
+        try
+        {
+            new Bounds3d(new Drawable3d[] {});
+            fail("Empty array should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
         Bounds3d bb = new Bounds3d(1, 2, 3, 6, 5, 10);
         assertEquals("minX", 1, bb.getMinX(), 0);
         assertEquals("maxX", 2, bb.getMaxX(), 0);
@@ -229,10 +242,10 @@ public class Bounds3dTest
         assertFalse("covers", bb.covers(0, 0, -20.001));
         assertFalse("covers", bb.covers(0, 0, 20.001));
 
-        Collection<Point3d> pointCollection = new ArrayList<>();
+        Collection<Drawable3d> drawable3dCollection = new ArrayList<>();
         try
         {
-            new Bounds3d(pointCollection);
+            new Bounds3d(drawable3dCollection);
             fail("Empty point collection should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -240,8 +253,8 @@ public class Bounds3dTest
             // Ignore expected exception
         }
 
-        pointCollection.add(new Point3d(10, 20, 30));
-        bb = new Bounds3d(pointCollection);
+        drawable3dCollection.add(new Point3d(10, 20, 30));
+        bb = new Bounds3d(drawable3dCollection);
         assertEquals("minX", 10, bb.getMinX(), 0);
         assertEquals("maxX", 10, bb.getMaxX(), 0);
         assertEquals("minY", 20, bb.getMinY(), 0);
@@ -249,8 +262,8 @@ public class Bounds3dTest
         assertEquals("minZ", 30, bb.getMinZ(), 0);
         assertEquals("maxZ", 30, bb.getMaxZ(), 0);
 
-        pointCollection.add(new Point3d(-5, -6, -7));
-        bb = new Bounds3d(pointCollection);
+        drawable3dCollection.add(new Point3d(-5, -6, -7));
+        bb = new Bounds3d(drawable3dCollection);
         assertEquals("minX", -5, bb.getMinX(), 0);
         assertEquals("maxX", 10, bb.getMaxX(), 0);
         assertEquals("minY", -6, bb.getMinY(), 0);
@@ -258,15 +271,24 @@ public class Bounds3dTest
         assertEquals("minZ", -7, bb.getMinZ(), 0);
         assertEquals("maxZ", 30, bb.getMaxZ(), 0);
 
+        drawable3dCollection.add(new LineSegment3d(20, 30, 40, 40, 50, 60));
+        bb = new Bounds3d(drawable3dCollection);
+        assertEquals("minX", -5, bb.getMinX(), 0);
+        assertEquals("maxX", 40, bb.getMaxX(), 0);
+        assertEquals("minY", -6, bb.getMinY(), 0);
+        assertEquals("maxY", 50, bb.getMaxY(), 0);
+        assertEquals("minZ", -7, bb.getMinZ(), 0);
+        assertEquals("maxZ", 60, bb.getMaxZ(), 0);
+
         assertTrue("toString returns something descriptive", bb.toString().startsWith("Bounds3d "));
         assertEquals("toString with false argument produces same as toString with no argument", bb.toString(),
                 bb.toString(false));
         assertTrue("toString with true argument produces rhs of toString with no argument",
                 bb.toString().indexOf(bb.toString(true)) > 0);
 
-        pointCollection.add(new Point3d(40, 50, 60));
+        drawable3dCollection.add(new Point3d(40, 50, 60));
         // This collection is an ArrayList, so the elements are stored in the order in which they were added
-        bb = new Bounds3d(pointCollection);
+        bb = new Bounds3d(drawable3dCollection);
         assertEquals("minX", -5, bb.getMinX(), 0);
         assertEquals("maxX", 40, bb.getMaxX(), 0);
         assertEquals("minY", -6, bb.getMinY(), 0);
@@ -274,13 +296,24 @@ public class Bounds3dTest
         assertEquals("minZ", -7, bb.getMinZ(), 0);
         assertEquals("maxZ", 60, bb.getMaxZ(), 0);
 
-        bb = new Bounds3d(pointCollection.toArray((new Point3d[0])));
+        bb = new Bounds3d(drawable3dCollection.toArray((new Drawable3d[0])));
         assertEquals("minX", -5, bb.getMinX(), 0);
         assertEquals("maxX", 40, bb.getMaxX(), 0);
         assertEquals("minY", -6, bb.getMinY(), 0);
         assertEquals("maxY", 50, bb.getMaxY(), 0);
         assertEquals("minZ", -7, bb.getMinZ(), 0);
         assertEquals("maxZ", 60, bb.getMaxZ(), 0);
+
+        drawable3dCollection.add(null);
+        try
+        {
+            new Bounds3d(drawable3dCollection);
+            fail("null element in collection should have thrown an NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
 
         Bounds3d bb2 = new Bounds3d(-100, -90, -100, -90, -100, -90);
         assertNull("empty bounding box", bb.intersection(bb2));
@@ -307,7 +340,76 @@ public class Bounds3dTest
         assertFalse("contains does not include boundaries", bb.contains(p3d));
         assertTrue("covers includes boundaries", bb.covers(p3d));
 
+        try
+        {
+            new Bounds3d((Point3d) null);
+            fail("Null parameter should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
         assertEquals("size of a Bounds3d is always 8", 8, bb.size());
+
+        bb = new Bounds3d(line, p3d);
+        assertEquals("minX", 1, bb.getMinX(), 0);
+        assertEquals("minY", 11, bb.getMinY(), 0);
+        assertEquals("maxX", 123, bb.getMaxX(), 0);
+        assertEquals("maxY", 456, bb.getMaxY(), 0);
+        assertEquals("minZ", 21, bb.getMinZ(), 0);
+        assertEquals("maxZ", 789, bb.getMaxZ(), 0);
+
+        bb = new Bounds3d(p3d, line);
+        assertEquals("minX", 1, bb.getMinX(), 0);
+        assertEquals("minY", 11, bb.getMinY(), 0);
+        assertEquals("maxX", 123, bb.getMaxX(), 0);
+        assertEquals("maxY", 456, bb.getMaxY(), 0);
+        assertEquals("minZ", 21, bb.getMinZ(), 0);
+        assertEquals("maxZ", 789, bb.getMaxZ(), 0);
+
+        bb = new Bounds3d(line, line);
+        assertEquals("minX", 1, bb.getMinX(), 0);
+        assertEquals("minY", 11, bb.getMinY(), 0);
+        assertEquals("maxX", 3, bb.getMaxX(), 0);
+        assertEquals("maxY", 12, bb.getMaxY(), 0);
+        assertEquals("minZ", 21, bb.getMinZ(), 0);
+        assertEquals("maxZ", 23, bb.getMaxZ(), 0);
+
+        try
+        {
+            new Bounds3d(line, p3d, null);
+            fail("Null parameter should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new Bounds3d(new Iterator<Point3d>()
+            {
+
+                @Override
+                public boolean hasNext()
+                {
+                    return false;
+                }
+
+                @Override
+                public Point3d next()
+                {
+                    return null;
+                }
+            });
+            fail("iterator that yields zero points should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
     }
 
     /**
@@ -436,7 +538,7 @@ public class Bounds3dTest
             // Ignore expected exception
         }
 
-        double[] shifts = new double[] {-200, -5, 0, 5, 200};
+        double[] shifts = new double[] { -200, -5, 0, 5, 200 };
         for (double dx : shifts)
         {
             for (double dy : shifts)

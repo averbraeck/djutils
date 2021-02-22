@@ -2,13 +2,25 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.18" date="2021-02-22" description="ToString methods, Ray3d epsilonEquals, Bounds from arrays and collections">
+      <action dev="pknoppers" type="fix">
+        All toString methods now format floating point values using Locale.US to ensure use of a consistent radix symbol.
+      </action>
+      <action dev="pknoppers" type="fix">
+        The Ray3d.epsilonEquals method failed to allow a family of alternative ways to express effectively the same Ray3d.
+      </action>
+      <action dev="pknoppers" type="add">
+        Bounds objects can now also be constructed using a varargs constructor or a Collection.
+      </action>
+    </release>
+
     <release version="1.06.17" date="2021-02-20" description="Bounds reverted to original behavior">
       <action dev="averbraeck" type="fix">
         Bounds report absolute extent again with the getMin[XYZ] and getMax[XYZ] methods. getDelta[XYZ]() report
         the relative extent.
       </action>
     </release>
-    
+
     <release version="1.06.16" date="2021-02-18" description="Project error in Polygon3d and error in Ray3d.flip">
       <action dev="pknoppers" type="change">
         Bounds now report relative extend with the getMin[XYZ] and getMax[XYZ] methods.
@@ -20,114 +32,123 @@
         Ray3d.flip sets the theta to the complement of the original theta; not increment it by pi.
       </action>
     </release>
-    
+
     <release version="1.06.15" date="2021-02-16" description="Rounding error in PolyLine3d">
       <action dev="pknoppers" type="fix">
         This is the 2nd attempt at fixing the rounding error in PolyLine3d.
       </action>
       <action dev="pknoppers" type="fix">
-        Fixed typo in error message. 
+        Fixed typo in error message.
       </action>
     </release>
-    
+
     <release version="1.06.14" date="2021-02-16" description="Rounding error in PolyLine3d">
       <action dev="pknoppers" type="fix">
-        Fixed a problem (that was already fixed in PolyLine2d) in getLocation where the position was an ULP before 
-        the length of the line, or the position of an intermediate point. 
+        Fixed a problem (that was already fixed in PolyLine2d) in getLocation where the position was an ULP before
+        the length of the line, or the position of an intermediate point.
       </action>
       <action dev="pknoppers" type="fix">
-        Fixed typo in error message. 
+        Fixed typo in error message.
       </action>
     </release>
-    
+
     <release version="1.06.13" date="2021-02-15" description="Project now implemented in all line types">
       <action dev="pknoppers" type="fix">
         Made the projectOrthogonal methods more consistent. There were many cases where the behavior was not logical.
-        The LineSegment classes not implement toExcel; the lineSegment2d class implements toPlot. 
+        The LineSegment classes not implement toExcel;
+        the lineSegment2d class implements toPlot.
       </action>
     </release>
-    
+
     <release version="1.06.12" date="2021-02-11" description="Project now implemented in all line types">
       <action dev="pknoppers" type="add">
-        LineSegment, PolyLine and Ray types now implement the project interface. 
+        LineSegment, PolyLine and Ray types now implement the project interface.
       </action>
       <action dev="pknoppers" type="fix">
         More centralized implementation of code that finds closest point on a line(segment).
         Replaced lots of getX() calls by this.x; etc. to make debugging easier.
         Fixes in javadoc where class names were not correct after earlier rename operations.
         PolyLine3d.createAndCleanLine3d is now named PolyLine3d.createAndCleanPolyLine3d.
-        Fixed error in computation of theta in Ray3d (and corresponding errors in the unit tests).
+        Fixed error in computation
+        of theta in Ray3d (and corresponding errors in the unit tests).
       </action>
     </release>
-    
+
     <release version="1.06.11" date="2021-02-08" description="Fixed rounding problem in PolyLine3d.getLocation">
       <action dev="pknoppers" type="fix">
-        The getLocation method could fail to construct a ray when the position is exactly at one of the points of the line. 
+        The getLocation method could fail to construct a ray when the position is exactly at one of the points of the line.
       </action>
     </release>
-    
+
     <release version="1.06.10" date="2021-02-05" description="Made phi and theta public in the Ray classes">
       <action dev="pknoppers" type="change">
-        The internal values of theta (Ray3d) and phi (Ray2d and Ray3d) are now public. (Like the rotations in the 
-        OrientedPoint classes). 
+        The internal values of theta (Ray3d) and phi (Ray2d and Ray3d) are now public. (Like the rotations in the
+        OrientedPoint classes).
       </action>
       <action dev="pknoppers" type="add">
         The Ray classes now implements a flip method that inverts the direction, but does not change the location.
       </action>
     </release>
-    
+
     <release version="1.06.09" date="2021-02-04" description="Centralized projection methods, more flexible toString methods">
       <action dev="pknoppers" type="add">
         Fixed lots of code duplication that determined the closest point on a line, line segment, or ray.
-        The toString methods now have a systematic way to provide a format argument and to suppress printing the 
+        The toString methods now have a systematic way to provide a
+        format argument and to suppress printing the
         class name (for extra compact output).
       </action>
     </release>
-    
+
     <release version="1.06.08" date="2021-01-28" description="Polygon2d and Polygon3d added">
       <action dev="pknoppers" type="add">
         Closed Polylines aka Polygons in 2d and 3d have been added to djutils-draw.
       </action>
     </release>
-    
+
     <release version="1.06.07" date="2021-01-23" description="Fixed rounding problem in AngleUtil; Ray; OrientedPoint">
       <action dev="pknoppers" type="fix">
         AngleUtil.normalizeAroundZero mapped Math.PI to -Math.PI. The fix ensures that Math.PI is mapped to Math.PI
         (and -Math.PI is now mapped to Math.PI).
-        This implementation makes slightly more sense considering that Math.cos(Math.PI) > 0.
+        This
+        implementation makes slightly more sense considering that Math.cos(Math.PI) > 0.
       </action>
       <action dev="pknoppers" type="update">
         In djutils-draw, DirectedPoint has been replaced by OrientedPoint since a direction (vector) does not
-        include rotating around the x (or longitudinal) axis. The Oriented interface replaces the Directed
+        include rotating around the x (or longitudinal) axis. The
+        Oriented interface replaces the Directed
         interface.
       </action>
       <action dev="pknoppers" type="add">
         In djutils-draw, in order to indicate different lines, the LineSegment (bound by 2 points), Ray (bound by one point),
-        and Line (stretching infinitely in both directions) have been introduced.  
+        and Line (stretching infinitely in both
+        directions) have been introduced.
       </action>
     </release>
-    
+
     <release version="1.06.06" date="2021-01-02" description="Fixed ulp-error in time weighed statistics">
       <action dev="averbraeck" type="fix">
         Some of the time weighed statistics in djutils-stats indicated wrongly that the next observation was before the previous
-        observation. The problem was in the following statement in TimestampWeightedTally:
+        observation. The problem was in the following statement in
+        TimestampWeightedTally:
 <![CDATA[
         <br>Throw.when(timestampDouble &lt; (this.elapsedTime + this.startTime), IllegalArgumentException.class,<br>
                 "times not offered in ascending order. Last time was " + (this.elapsedTime + this.startTime)<br>
                         + ", new timestamp was " + timestampDouble);<br>
 ]]>
         The problem is that the addition can be one ulp off as compared to the timestamp that might have been calculated in
-        another way. It has been repaired by using: timestampDouble &lt; this.lastTimestamp. 
+        another way. It has been repaired by using: timestampDouble &lt;
+        this.lastTimestamp.
       </action>
       <action dev="averbraeck" type="update">
         Made checkstyle more strict on javadoc to comply with JDK8+ compiler settings.
       </action>
     </release>
-    
+
     <release version="1.06.05" date="2020-12-29" description="Added methods to Point and Bounds interfaces in djutils-draw">
       <action dev="averbraeck" type="add">
         Added getX(), getY(), and several other methods to the Point interface.
-        Added getMinX(), getMinY(), getMaxX(), getMaxY(), and several other methods to the Bounds interface.
+        Added getMinX(), getMinY(), getMaxX(), getMaxY(), and several other methods to the
+        Bounds interface.
         Added getRotZ() method to the Directed interface.
         These changes make it easier to use the Point&lt;?, ?&gt; and Bounds&lt;?, ?&gt; interfaces in other projects such as DSOL.
       </action>

@@ -11,7 +11,6 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.OrientedPoint2d;
 import org.djutils.draw.point.Point2d;
-import org.djutils.draw.point.Point3d;
 import org.junit.Test;
 
 /**
@@ -126,7 +125,9 @@ public class Ray2dTest
             // Ignore expected exception
         }
 
-        assertTrue("toString returns something descriptive", new Ray2d(1, 2, 3).toString().startsWith("Ray2d"));
+        Ray2d ray = new Ray2d(1, 2, 3);
+        assertTrue("toString returns something descriptive", ray.toString().startsWith("Ray2d"));
+        assertTrue("toString can suppress the class name", ray.toString().indexOf(ray.toString(true)) > 0);
     }
 
     /**
