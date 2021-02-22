@@ -1,5 +1,6 @@
 package org.djutils.draw.bounds;
 
+import org.djutils.draw.Drawable;
 import org.djutils.draw.Space;
 import org.djutils.draw.point.Point;
 
@@ -13,11 +14,12 @@ import org.djutils.draw.point.Point;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
- * @param <B> The bounds type
- * @param <P> The point type
+ * @param <B> The bounds type (2d or 3d)
+ * @param <P> The point type (2d or 3d)
+ * @param <D> The Drawable type (2d or 3d)
  * @param <S> The space type (2d or 3d)
  */
-public interface Bounds<B extends Bounds<B, P, S>, P extends Point<P, S>, S extends Space>
+public interface Bounds<B extends Bounds<B, P, D, S>, P extends Point<P, S>, D extends Drawable<P, S>, S extends Space>
 {
     /**
      * Return the absolute lower bound for x.
@@ -66,23 +68,51 @@ public interface Bounds<B extends Bounds<B, P, S>, P extends Point<P, S>, S exte
      * @return P; the mid point of this Bounds object
      */
     P midPoint();
-    
+
     /**
-     * Check if this Bounds contains another Bounds. Covers returns true when one of the edges of the other Bounds (partly)
-     * overlaps a border of this Bounds.
-     * @param otherBounds B; the Bounds for which to check if it is contained within this Bounds
+     * Check if a point is contained in this Bounds.
+     * @param point P; the point
+     * @return boolean; true if the point is within this Bounds; false if the point is not within this Bounds, or on an edge of
+     *         this Bounds
+     * @throws NullPointerException when point is null
+     */
+    boolean contains(P point) throws NullPointerException;
+
+    /**
+     * Check if this Bounds completely contains a Drawable. If any point of the Drawable lies on an edge (2d) or surface (3d) of
+     * this Bounds, this method returns false.
+     * @param drawable D; the object for which to check if it is completely contained within this Bounds.
+     * @return boolean; false if any point of D is on or outside one of the borders of this Bounds; true when all points of D
+     *         are contained within this Bounds.
+     * @throws NullPointerException when drawable2d is null
+     */
+    boolean contains(D drawable) throws NullPointerException;
+
+    /**
+     * Check if this Bounds covers or touches a point.
+     * @param point P; the Point for which to check if it is covered/touched by this Bounds
+     * @return boolean; whether this Bounds covers or touches the point
+     * @throws NullPointerException when point is null
+     */
+    boolean covers(P point) throws NullPointerException;
+
+    /**
+     * Check if no part of a Drawable is outside this Bounds. Only touching is considered outside.
+     * @param drawable D; the Drawable for which to check if it is contained within this Bounds
      * @return boolean; whether this Bounds contains the provided Bounds, including overlapping borders
      * @throws NullPointerException when otherBounds is null
      */
-    boolean covers(B otherBounds) throws NullPointerException;
+    boolean covers(D drawable) throws NullPointerException;
 
     /**
-     * Return whether this Bounds is disjoint from another Bounds. Only touching at an edge is considered disjoint.
-     * @param otherBounds B; the other Bounds
-     * @return boolean; whether this Bounds is disjoint from another Bounds
+     * Return whether a Drawable is disjoint from this Bounds. Only touching at an edge is considered disjoint. A Drawable that
+     * completely surrounds this Drawable is <b>not</b> disjoint.
+     * @param drawable D; the drawable
+     * @return boolean; true if the drawable is disjoint from this Bounds, or only touches an edge; false if any point of the
+     *         drawable is inside this Bounds, or the drawable surrounds this Bounds
      * @throws NullPointerException when bounds is null
      */
-    boolean disjoint(B otherBounds) throws NullPointerException;
+    boolean disjoint(D drawable) throws NullPointerException;
 
     /**
      * Return whether this Bounds intersects another Bounds. Only touching at an edge is not seen as intersecting.

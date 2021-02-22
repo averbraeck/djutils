@@ -21,7 +21,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Space2d>
+public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Drawable2d, Space2d>
 {
     /** */
     private static final long serialVersionUID = 20200829L;
@@ -249,19 +249,6 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Space2d>
     }
 
     /**
-     * Check if this Bounds2d contains a given point. Contains considers a point <b>on</b> the border of this Bounds2d to be
-     * outside.
-     * @param point Point2d; the point
-     * @return boolean; true this Bounds2d contains the point; false if this Bounds2d does <b>not</b> contain the point
-     * @throws NullPointerException when point is null
-     */
-    public boolean contains(final Point2d point)
-    {
-        Throw.whenNull(point, "point cannot be null");
-        return contains(point.x, point.y);
-    }
-
-    /**
      * Check if this Bounds2d contains a point. Contains considers a point <b>on</b> the border of this Bounds2d to be outside.
      * @param x double; the x-coordinate of the point
      * @param y double; the y-coordinate of the point
@@ -274,28 +261,25 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Space2d>
         return x > this.minX && x < this.maxX && y > this.minY && y < this.maxY;
     }
 
-    /**
-     * Check if this Bounds2d completely contains a Drawable2d.
-     * @param drawable Drawable2d; the object for which to check if it is completely contained within this Bounds2d.
-     * @return boolean; false if any point of the Drawable2d is on or outside one of the borders of this Bounds2d; true when all
-     *         points of the Drawable2d are contained within this Bounds2d.
-     * @throws NullPointerException when drawable2d is null
-     */
+    /** {@inheritDoc} */
+    @Override
+    public boolean contains(final Point2d point)
+    {
+        Throw.whenNull(point, "point cannot be null");
+        return contains(point.x, point.y);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public boolean contains(final Drawable2d drawable) throws NullPointerException
     {
         Throw.whenNull(drawable, "drawable cannot be null");
-        for (Iterator<? extends Point2d> iterator = drawable.getPoints(); iterator.hasNext();)
-        {
-            if (!contains(iterator.next()))
-            {
-                return false;
-            }
-        }
-        return true;
+        Bounds2d bounds = drawable.getBounds();
+        return contains(bounds.minX, bounds.minY) && contains(bounds.maxX, bounds.maxY);
     }
 
     /**
-     * Check if this Bounds2d contains a point. Covers returns true when the point is on, or within the border of this Bounds2d.
+     * Check if this Bounds2d covers a point. Covers returns true when the point is on, or inside this Bounds2d.
      * @param x double; the x-coordinate of the point
      * @param y double; the y-coordinate of the point
      * @return boolean; whether this Bounds2d, including its borders, contains the point
@@ -306,12 +290,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Space2d>
         return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY;
     }
 
-    /**
-     * Check if this Bounds2d contains a point. Covers returns true when the point is on, or within the border of this Bounds2d.
-     * @param point Point2d; the point
-     * @return boolean; whether this Bounds2d, including its borders, contains the point
-     * @throws NullPointerException when point is null
-     */
+    /** {@inheritDoc} */
+    @Override
     public boolean covers(final Point2d point)
     {
         Throw.whenNull(point, "point cannot be null");
@@ -320,19 +300,20 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Space2d>
 
     /** {@inheritDoc} */
     @Override
-    public boolean covers(final Bounds2d otherBounds2d) throws NullPointerException
+    public boolean covers(final Drawable2d drawable) throws NullPointerException
     {
-        Throw.whenNull(otherBounds2d, "otherBounds2d cannot be null");
-        return covers(otherBounds2d.minX, otherBounds2d.minY) && covers(otherBounds2d.maxX, otherBounds2d.maxY);
+        Throw.whenNull(drawable, "drawable cannot be null");
+        Bounds2d bounds = drawable.getBounds();
+        return covers(bounds.minX, bounds.minY) && covers(bounds.maxX, bounds.maxY);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean disjoint(final Bounds2d otherBounds2d) throws NullPointerException
+    public boolean disjoint(final Drawable2d drawable) throws NullPointerException
     {
-        Throw.whenNull(otherBounds2d, "otherBounds2d cannot be null");
-        return otherBounds2d.minX >= this.maxX || otherBounds2d.maxX <= this.minX || otherBounds2d.minY >= this.maxY
-                || otherBounds2d.maxY <= this.minY;
+        Throw.whenNull(drawable, "drawable cannot be null");
+        Bounds2d bounds = drawable.getBounds();
+        return bounds.minX >= this.maxX || bounds.maxX <= this.minX || bounds.minY >= this.maxY || bounds.maxY <= this.minY;
     }
 
     /** {@inheritDoc} */
