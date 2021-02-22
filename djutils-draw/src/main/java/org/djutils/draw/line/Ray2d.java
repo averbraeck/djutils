@@ -1,5 +1,7 @@
 package org.djutils.draw.line;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Locale;
 
 import org.djutils.base.AngleUtil;
@@ -126,12 +128,31 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public int size()
+    {
+        return 2;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Iterator<Point2d> getPoints()
+    {
+        double cosPhi = Math.cos(this.phi);
+        double sinPhi = Math.sin(this.phi);
+        Point2d[] array = new Point2d[] { new Point2d(this.x, this.y),
+                new Point2d(cosPhi == 0 ? this.x : cosPhi * Double.POSITIVE_INFINITY,
+                        sinPhi == 0 ? this.y : sinPhi * Double.POSITIVE_INFINITY) };
+        return Arrays.stream(array).iterator();
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Bounds2d getBounds()
     {
-        double normalizedPhi = AngleUtil.normalizeAroundZero(this.phi);
-        boolean toPositiveX = Math.abs(normalizedPhi) <= Math.PI / 2; // Math.cos(Math.PI) is > 0 due to finite precision
-        return new Bounds2d(toPositiveX ? this.x : Double.NEGATIVE_INFINITY, toPositiveX ? Double.POSITIVE_INFINITY : this.x,
-                normalizedPhi >= 0 ? this.y : Double.NEGATIVE_INFINITY, normalizedPhi <= 0 ? this.y : Double.POSITIVE_INFINITY);
+        double cosPhi = Math.cos(this.phi);
+        double sinPhi = Math.sin(this.phi);
+        return new Bounds2d(cosPhi >= 0 ? this.x : Double.NEGATIVE_INFINITY, cosPhi <= 0 ? this.x : Double.POSITIVE_INFINITY,
+                sinPhi >= 0 ? this.y : Double.NEGATIVE_INFINITY, sinPhi <= 0 ? this.y : Double.POSITIVE_INFINITY);
     }
 
     /** {@inheritDoc} */
@@ -237,8 +258,7 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d, Sp
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
-        String format = String.format("%1$s[x=%2$s, y=%2$s - phi=%2%s]",
-                doNotIncludeClassName ? "" : "Ray2d ", doubleFormat);
+        String format = String.format("%1$s[x=%2$s, y=%2$s, phi=%2%s]", doNotIncludeClassName ? "" : "Ray2d ", doubleFormat);
         return String.format(Locale.US, format, this.x, this.y, this.phi);
     }
 

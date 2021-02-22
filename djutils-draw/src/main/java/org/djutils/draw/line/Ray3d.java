@@ -1,5 +1,7 @@
 package org.djutils.draw.line;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Locale;
 
 import org.djutils.base.AngleUtil;
@@ -151,15 +153,39 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Sp
 
     /** {@inheritDoc} */
     @Override
+    public int size()
+    {
+        return 2;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Iterator<Point3d> getPoints()
+    {
+        double sinPhi = Math.sin(this.phi);
+        double cosPhi = Math.cos(this.phi);
+        double sinTheta = Math.sin(this.theta);
+        double cosTheta = Math.cos(this.theta);
+        Point3d[] array = new Point3d[] { new Point3d(this.x, this.y, this.z),
+                new Point3d(cosPhi * sinTheta == 0 ? this.x : cosPhi * sinTheta * Double.POSITIVE_INFINITY,
+                        cosPhi * sinPhi == 0 ? this.y : cosPhi * sinPhi * Double.POSITIVE_INFINITY,
+                        cosTheta == 0 ? this.z : cosTheta * Double.POSITIVE_INFINITY) };
+        return Arrays.stream(array).iterator();
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Bounds3d getBounds()
     {
-        double normalizedPhi = AngleUtil.normalizeAroundZero(this.phi);
-        double normalizedTheta = AngleUtil.normalizeAroundZero(this.theta);
-        boolean toPositiveX = Math.abs(normalizedPhi) <= Math.PI / 2; // Math.cos(Math.PI) is > 0 due to finite precision
-        return new Bounds3d(toPositiveX ? this.x : Double.NEGATIVE_INFINITY, toPositiveX ? Double.POSITIVE_INFINITY : this.x,
-                normalizedPhi >= 0 ? this.y : Double.NEGATIVE_INFINITY, normalizedPhi <= 0 ? this.y : Double.POSITIVE_INFINITY,
-                normalizedTheta >= 0 ? this.z : Double.NEGATIVE_INFINITY,
-                normalizedTheta <= 0 ? this.z : Double.POSITIVE_INFINITY);
+        double sinPhi = Math.sin(this.phi);
+        double cosPhi = Math.cos(this.phi);
+        double sinTheta = Math.sin(this.theta);
+        double cosTheta = Math.cos(this.theta);
+        return new Bounds3d(cosPhi * sinTheta >= 0 ? this.x : Double.NEGATIVE_INFINITY,
+                cosPhi * sinTheta <= 0 ? this.x : Double.POSITIVE_INFINITY,
+                sinPhi * sinTheta >= 0 ? this.y : Double.NEGATIVE_INFINITY,
+                sinPhi * sinTheta <= 0 ? this.y : Double.POSITIVE_INFINITY, cosTheta >= 0 ? this.z : Double.NEGATIVE_INFINITY,
+                cosTheta <= 0 ? this.z : Double.POSITIVE_INFINITY);
     }
 
     /** {@inheritDoc} */
@@ -283,9 +309,9 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Sp
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
-        String format = String.format("%1$s[x=%2$s, y=%2$s - phi=%2$s, theta=%2$s]", doNotIncludeClassName ? "" : "Ray3d ",
+        String format = String.format("%1$s[x=%2$s, y=%2$s, z=%2$s, phi=%2$s, theta=%2$s]", doNotIncludeClassName ? "" : "Ray3d ",
                 doubleFormat);
-        return String.format(Locale.US, format, this.x, this.y, this.phi, this.theta);
+        return String.format(Locale.US, format, this.x, this.y, this.z, this.phi, this.theta);
     }
 
     /** {@inheritDoc} */

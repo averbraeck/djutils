@@ -1,10 +1,14 @@
 package org.djutils.draw.line;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
@@ -203,6 +207,29 @@ public class Ray3dTest
         assertEquals(description + " phi", expectedPhi + Math.PI, flipped.phi, 0.0001);
         assertEquals(description + " getTheta", Math.PI - expectedTheta, flipped.getTheta(), 0.0001);
         assertEquals(description + " theta", Math.PI - expectedTheta, flipped.theta, 0.0001);
+        assertEquals(description + " size", 2, ray.size());
+        Iterator<Point3d> iterator = ray.getPoints();
+        // First result of iterator is the finite end point (but this is not a hard promise)
+        assertTrue(iterator.hasNext());
+        Point3d point = iterator.next();
+        assertEquals(description + " iterator first point x", expectedX, point.x, 0.0001);
+        assertEquals(description + " iterator first point y", expectedY, point.y, 0.0001);
+        assertEquals(description + " iterator first point z", expectedZ, point.z, 0.0001);
+        assertTrue(iterator.hasNext());
+        point = iterator.next();
+        // We only check that the point is infinite in at least one direction; the boundTest covers the rest
+        assertTrue(description + " iterator second point is at infinity",
+                Double.isInfinite(point.x) || Double.isInfinite(point.y) || Double.isInfinite(point.z));
+        assertFalse(iterator.hasNext());
+        try
+        {
+            iterator.next();
+            fail("Should have thrown a NoSuchElementException");
+        }
+        catch (NoSuchElementException nsee)
+        {
+            // Ignore expected exception
+        }
     }
 
     /**
@@ -212,71 +239,111 @@ public class Ray3dTest
     public void boundsTest()
     {
         // X direction
-        Bounds3d b = new Ray3d(1, 2, 3, 0, 0).getBounds();
         // Angle of 0 is exact; bounds should be infinite in only the positive X direction
-        assertEquals("Bounds minX", 1, b.getMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
-        assertEquals("Bounds minZ", 3, b.getMinZ(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", 2, b.getMaxY(), 0);
-        assertEquals("Bounds.maxZ", 3, b.getMinZ(), 0);
+        verifyBounds(new Ray3d(1, 2, 3, 0, 1).getBounds(), 1, 2, 3, Double.POSITIVE_INFINITY, 2, Double.POSITIVE_INFINITY);
+
+        // Z direction
+        // Angle of 0 is exact; bounds should be infinite in only the positive X direction
+        verifyBounds(new Ray3d(1, 2, 3, 0, 0).getBounds(), 1, 2, 3, 1, 2, Double.POSITIVE_INFINITY);
 
         // first quadrant in XY, pointing up (positive Z)
-        b = new Ray3d(1, 2, 3, 0.2, 1.1).getBounds();
-        assertEquals("Bounds minX", 1, b.getMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
-        assertEquals("Bounds.minZ", 3, b.getMinZ(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getMaxY(), 0);
-        assertEquals("Bounds.maxZ", Double.POSITIVE_INFINITY, b.getMaxZ(), 0);
+        verifyBounds(new Ray3d(1, 2, 3, 0.2, 1.1).getBounds(), 1, 2, 3, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY,
+                Double.POSITIVE_INFINITY);
 
         // Math.PI / 2 is in first quadrant due to finite precision of a double
-        b = new Ray3d(1, 2, 3, Math.PI / 2, 0).getBounds();
-        assertEquals("Bounds minX", 1, b.getMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
-        assertEquals("Bounds minZ", 3, b.getMinZ(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getMaxY(), 0);
-        assertEquals("Bounds.maxZ", 3, b.getMinZ(), 0);
+        verifyBounds(new Ray3d(1, 2, 3, Math.PI / 2, 1).getBounds(), 1, 2, 3, Double.POSITIVE_INFINITY,
+                Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 
-        // second quadrant in XY, pointing down (negative Z)
-        b = new Ray3d(1, 2, 3, 2, -1).getBounds();
-        assertEquals("Bounds minX", Double.NEGATIVE_INFINITY, b.getMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
-        assertEquals("Bounds.minZ", Double.NEGATIVE_INFINITY, b.getMinZ(), 0);
-        assertEquals("Bounds.maxX", 1, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getMaxY(), 0);
-        assertEquals("Bounds.maxZ", 3, b.getMaxZ(), 0);
+        // second quadrant in XY, pointing up
+        verifyBounds(new Ray3d(1, 2, 3, 2, 1).getBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
+                Double.POSITIVE_INFINITY);
 
         // Math.PI is in second quadrant due to finite precision of a double
-        b = new Ray3d(1, 2, 3, Math.PI, 0).getBounds();
-        assertEquals("Bounds minX", Double.NEGATIVE_INFINITY, b.getMinX(), 0);
-        assertEquals("Bounds.minY", 2, b.getMinY(), 0);
-        assertEquals("Bounds.maxX", 1, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", Double.POSITIVE_INFINITY, b.getMaxY(), 0);
+        verifyBounds(new Ray3d(1, 2, 3, Math.PI, 1).getBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
+                Double.POSITIVE_INFINITY);
 
         // third quadrant
-        b = new Ray3d(1, 2, 3, 4, 0).getBounds();
-        assertEquals("Bounds minX", Double.NEGATIVE_INFINITY, b.getMinX(), 0);
-        assertEquals("Bounds.minY", Double.NEGATIVE_INFINITY, b.getMinY(), 0);
-        assertEquals("Bounds.maxX", 1, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", 2, b.getMaxY(), 0);
+        verifyBounds(new Ray3d(1, 2, 3, 4, 1).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1, 2,
+                Double.POSITIVE_INFINITY);
 
         // fourth quadrant
-        b = new Ray3d(1, 2, 3, -1, 0).getBounds();
-        assertEquals("Bounds minX", 1, b.getMinX(), 0);
-        assertEquals("Bounds.minY", Double.NEGATIVE_INFINITY, b.getMinY(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", 2, b.getMaxY(), 0);
+        verifyBounds(new Ray3d(1, 2, 3, -1, 1).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
+                Double.POSITIVE_INFINITY);
 
         // -Math.PI / 2 is in fourth quadrant due to finite precision of a double
-        b = new Ray3d(1, 2, 3, -Math.PI / 2, 0).getBounds();
-        assertEquals("Bounds minX", 1, b.getMinX(), 0);
-        assertEquals("Bounds.minY", Double.NEGATIVE_INFINITY, b.getMinY(), 0);
-        assertEquals("Bounds.maxX", Double.POSITIVE_INFINITY, b.getMaxX(), 0);
-        assertEquals("Bounds.maxY", 2, b.getMaxY(), 0);
+        verifyBounds(new Ray3d(1, 2, 3, -Math.PI / 2, 1).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY,
+                2, Double.POSITIVE_INFINITY);
+
+        // first quadrant in XY, pointing down (negative Z)
+        verifyBounds(new Ray3d(1, 2, 3, 0.2, 3).getBounds(), 1, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY,
+                Double.POSITIVE_INFINITY, 3);
+
+        // second quadrant in XY, pointing down
+        verifyBounds(new Ray3d(1, 2, 3, 2, 3).getBounds(), Double.NEGATIVE_INFINITY, 2, Double.NEGATIVE_INFINITY, 1,
+                Double.POSITIVE_INFINITY, 3);
+
+        // Math.PI is in second quadrant due to finite precision of a double
+        verifyBounds(new Ray3d(1, 2, 3, Math.PI, 3).getBounds(), Double.NEGATIVE_INFINITY, 2, Double.NEGATIVE_INFINITY, 1,
+                Double.POSITIVE_INFINITY, 3);
+
+        // third quadrant
+        verifyBounds(new Ray3d(1, 2, 3, 4, 3).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
+                Double.NEGATIVE_INFINITY, 1, 2, 3);
+
+        // fourth quadrant
+        verifyBounds(new Ray3d(1, 2, 3, -1, 3).getBounds(), 1, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
+                Double.POSITIVE_INFINITY, 2, 3);
+
+        // -Math.PI / 2 is in fourth quadrant due to finite precision of a double
+        verifyBounds(new Ray3d(1, 2, 3, -Math.PI / 2, 3).getBounds(), 1, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
+                Double.POSITIVE_INFINITY, 2, 3);
+
+        // first quadrant in XY, pointing up (positive Z)
+        verifyBounds(new Ray3d(1, 2, 3, 0.2, -1.1).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1, 2,
+                Double.POSITIVE_INFINITY);
+
+        // Math.PI / 2 is in first quadrant due to finite precision of a double
+        verifyBounds(new Ray3d(1, 2, 3, Math.PI / 2, -1).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1,
+                2, Double.POSITIVE_INFINITY);
+
+        // second quadrant in XY, pointing up
+        verifyBounds(new Ray3d(1, 2, 3, 2, -1).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
+                Double.POSITIVE_INFINITY);
+
+        // Math.PI is in second quadrant due to finite precision of a double
+        verifyBounds(new Ray3d(1, 2, 3, Math.PI, -1).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
+                Double.POSITIVE_INFINITY);
+
+        // third quadrant
+        verifyBounds(new Ray3d(1, 2, 3, 4, -1).getBounds(), 1, 2, 3, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY,
+                Double.POSITIVE_INFINITY);
+
+        // fourth quadrant
+        verifyBounds(new Ray3d(1, 2, 3, -1, -1).getBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
+                Double.POSITIVE_INFINITY);
 
         // TODO theta values at boundaries and outside of [0..PI/2]
+    }
+
+    /**
+     * Verify a Bounds object.
+     * @param bounds Bounds3d; the Bounds object to verify
+     * @param expectedMinX double; the expected minimum x value
+     * @param expectedMinY double; the expected minimum y value
+     * @param expectedMinZ double; the expected minimum z value
+     * @param expectedMaxX double; the expected maximum x value
+     * @param expectedMaxY double; the expected maximum y value
+     * @param expectedMaxZ double; the expected maximum z value
+     */
+    private void verifyBounds(final Bounds3d bounds, final double expectedMinX, final double expectedMinY,
+            final double expectedMinZ, final double expectedMaxX, final double expectedMaxY, final double expectedMaxZ)
+    {
+        assertEquals("Bounds minX", expectedMinX, bounds.getMinX(), 0.0001);
+        assertEquals("Bounds minY", expectedMinY, bounds.getMinY(), 0.0001);
+        assertEquals("Bounds minZ", expectedMinZ, bounds.getMinZ(), 0.0001);
+        assertEquals("Bounds maxX", expectedMaxX, bounds.getMaxX(), 0.0001);
+        assertEquals("Bounds maxY", expectedMaxY, bounds.getMaxY(), 0.0001);
+        assertEquals("Bounds maxZ", expectedMaxZ, bounds.getMaxZ(), 0.0001);
     }
 
     /**

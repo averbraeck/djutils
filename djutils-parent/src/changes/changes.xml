@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.06.18" date="2021-02-22" description="ToString methods, Ray3d epsilonEquals, Bounds from arrays and collections">
+    <release version="1.06.18" date="2021-02-22" description="ToString methods, Ray3d epsilonEquals getPoints, Bounds from arrays and collections">
       <action dev="pknoppers" type="fix">
         All toString methods now format floating point values using Locale.US to ensure use of a consistent radix symbol.
       </action>
@@ -11,6 +11,12 @@
       </action>
       <action dev="pknoppers" type="add">
         Bounds objects can now also be constructed using a varargs constructor or a Collection.
+      </action>
+      <action dev="pknoppers" type="fix">
+        The toString method of a Ray3d only printed x, and y (not z).
+      </action>
+      <action dev="pknoppers" type="fix">
+        The getPoints of Ray2d and Ray3d returned only one point and did not override size().
       </action>
     </release>
 
