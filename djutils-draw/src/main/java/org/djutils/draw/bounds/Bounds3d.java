@@ -20,7 +20,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Point3d, Space3d>
+public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Point3d, Drawable3d, Space3d>
 {
     /** */
     private static final long serialVersionUID = 2020829L;
@@ -252,10 +252,10 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     public Iterator<Point3d> getPoints()
     {
         Point3d[] array =
-                new Point3d[] {new Point3d(this.minX, this.minY, this.minZ), new Point3d(this.minX, this.minY, this.maxZ),
+                new Point3d[] { new Point3d(this.minX, this.minY, this.minZ), new Point3d(this.minX, this.minY, this.maxZ),
                         new Point3d(this.minX, this.maxY, this.minZ), new Point3d(this.minX, this.maxY, this.maxZ),
                         new Point3d(this.maxX, this.minY, this.minZ), new Point3d(this.maxX, this.minY, this.maxZ),
-                        new Point3d(this.maxX, this.maxY, this.minZ), new Point3d(this.maxX, this.maxY, this.maxZ)};
+                        new Point3d(this.maxX, this.maxY, this.minZ), new Point3d(this.maxX, this.maxY, this.maxZ) };
         return Arrays.stream(array).iterator();
     }
 
@@ -264,18 +264,6 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     public int size()
     {
         return 8;
-    }
-
-    /**
-     * Check if the Bounds3d contains a point. Contains returns false when the point is on the surface of this Bounds3d.
-     * @param point Point3d; the point
-     * @return boolean; whether the bounding box contains the point
-     * @throws NullPointerException when point is null
-     */
-    public boolean contains(final Point3d point)
-    {
-        Throw.whenNull(point, "point cannot be null");
-        return contains(point.x, point.y, point.z);
     }
 
     /**
@@ -293,31 +281,21 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
         return x > this.minX && x < this.maxX && y > this.minY && y < this.maxY && z > this.minZ && z < this.maxZ;
     }
 
-    /**
-     * Check if the Bounds3d contains another Bounds3d. Contains returns false when one of the faces of the other Bounds3d is
-     * overlapping with the face of this Bounds3d.
-     * @param drawable Drawable3d; the Bounds3d for which to check if it is completely contained within this Bounds3d
-     * @return boolean; whether the bounding box contains the provided bounding box
-     * @throws NullPointerException when otherBounds3d is null
-     */
-    public boolean contains(final Drawable3d drawable)
+    /** {@inheritDoc} */
+    @Override
+    public boolean contains(final Point3d point)
     {
-        Throw.whenNull(drawable, "drawable cannot be null");
-        for (Iterator<? extends Point3d> iterator = drawable.getPoints(); iterator.hasNext();)
-        {
-            if (!contains(iterator.next()))
-            {
-                return false;
-            }
-        }
-        return true;
+        Throw.whenNull(point, "point cannot be null");
+        return contains(point.x, point.y, point.z);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Bounds2d project()
+    public boolean contains(final Drawable3d drawable) throws NullPointerException
     {
-        return new Bounds2d(this.minX, this.maxX, this.minY, this.maxY);
+        Throw.whenNull(drawable, "drawable cannot be null");
+        Bounds3d bounds = drawable.getBounds();
+        return contains(bounds.minX, bounds.minY, bounds.minZ) && contains(bounds.maxX, bounds.maxY, bounds.maxZ);
     }
 
     /**
@@ -335,12 +313,8 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
         return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY && z >= this.minZ && z <= this.maxZ;
     }
 
-    /**
-     * Check if this Bounds3d contains a point. Covers returns true when the point is on a face of this Bounds3d.
-     * @param point Point3d; the point
-     * @return boolean; whether the bounding box contains the point, including the faces
-     * @throws NullPointerException when point is null
-     */
+    /** {@inheritDoc} */
+    @Override
     public boolean covers(final Point3d point)
     {
         Throw.whenNull(point, "point cannot be null");
@@ -349,20 +323,21 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /** {@inheritDoc} */
     @Override
-    public boolean covers(final Bounds3d otherBounds3d)
+    public boolean covers(final Drawable3d drawable)
     {
-        Throw.whenNull(otherBounds3d, "otherBounds3d cannot be null");
-        return covers(otherBounds3d.minX, otherBounds3d.minY, otherBounds3d.minZ)
-                && covers(otherBounds3d.maxX, otherBounds3d.maxY, otherBounds3d.maxZ);
+        Throw.whenNull(drawable, "drawable cannot be null");
+        Bounds3d bounds = drawable.getBounds();
+        return covers(bounds.minX, bounds.minY, bounds.minZ) && covers(bounds.maxX, bounds.maxY, bounds.maxZ);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean disjoint(final Bounds3d otherBounds3d)
+    public boolean disjoint(final Drawable3d drawable)
     {
-        Throw.whenNull(otherBounds3d, "otherBounds3d cannot be null");
-        return otherBounds3d.minX >= this.maxX || otherBounds3d.maxX <= this.minX || otherBounds3d.minY >= this.maxY
-                || otherBounds3d.maxY <= this.minY || otherBounds3d.minZ >= this.maxZ || otherBounds3d.maxZ <= this.minZ;
+        Throw.whenNull(drawable, "drawable cannot be null");
+        Bounds3d bounds = drawable.getBounds();
+        return bounds.minX >= this.maxX || bounds.maxX <= this.minX || bounds.minY >= this.maxY || bounds.maxY <= this.minY
+                || bounds.minZ >= this.maxZ || bounds.maxZ <= this.minZ;
     }
 
     /** {@inheritDoc} */
@@ -384,6 +359,13 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
         return new Bounds3d(Math.max(this.minX, otherBounds3d.minX), Math.min(this.maxX, otherBounds3d.maxX),
                 Math.max(this.minY, otherBounds3d.minY), Math.min(this.maxY, otherBounds3d.maxY),
                 Math.max(this.minZ, otherBounds3d.minZ), Math.min(this.maxZ, otherBounds3d.maxZ));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Bounds2d project()
+    {
+        return new Bounds2d(this.minX, this.maxX, this.minY, this.maxY);
     }
 
     /**

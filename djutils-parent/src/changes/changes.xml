@@ -3,6 +3,9 @@
   <body>
 
     <release version="1.06.18" date="2021-02-22" description="ToString methods, Ray3d epsilonEquals getPoints, Bounds from arrays and collections">
+      <action dev="pknoppers" type="add">
+        Bounds are a bit more versatile and more of the functionality is specified in the interface.
+      </action>
       <action dev="pknoppers" type="fix">
         All toString methods now format floating point values using Locale.US to ensure use of a consistent radix symbol.
       </action>
