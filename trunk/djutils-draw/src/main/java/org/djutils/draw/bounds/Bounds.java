@@ -117,7 +117,7 @@ public interface Bounds<B extends Bounds<B, P, D, S>, P extends Point<P, S>, D e
     /**
      * Return whether this Bounds intersects another Bounds. Only touching at an edge is not seen as intersecting.
      * @param otherBounds B; the other Bounds
-     * @return boolean; whether this bounding rectangle intersects the other Bounds
+     * @return boolean; whether this bounding box/rectangle intersects the other Bounds
      * @throws NullPointerException when otherBounds is null
      */
     boolean intersects(B otherBounds);
