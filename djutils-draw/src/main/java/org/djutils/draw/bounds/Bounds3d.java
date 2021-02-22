@@ -457,7 +457,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
-        String format = String.format("%1$s[absoluteX[%2$s : %2$s], absoluteY[%2$s : %2$s, absoluteZ[%2$s : %2$s]]",
+        String format = String.format("%1$s[x[%2$s : %2$s], y[%2$s : %2$s, z[%2$s : %2$s]]",
                 doNotIncludeClassName ? "" : "Bounds3d ", doubleFormat);
         return String.format(Locale.US, format, this.minX, this.maxX, this.minY, this.maxY, this.minZ, this.maxZ);
     }

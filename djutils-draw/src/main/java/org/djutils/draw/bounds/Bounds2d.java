@@ -407,7 +407,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Drawable2
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
-        String format = String.format("%1$s[absoluteX[%2$s : %2$s], absoluteY[%2$s : %2$s]]",
+        String format = String.format("%1$s[x[%2$s : %2$s], y[%2$s : %2$s]]",
                 doNotIncludeClassName ? "" : "Bounds2d ", doubleFormat);
         return String.format(Locale.US, format, this.minX, this.maxX, this.minY, this.maxY);
     }
