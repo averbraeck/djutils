@@ -209,7 +209,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d, Sp
     {
         String format = String.format("%1$s[startX=%2$s, startY=%2$s - endX=%2%s, endY=%2$s]",
                 doNotIncludeClassName ? "" : "LineSegment2d ", doubleFormat);
-        return String.format(format, this.startX, this.startY, this.endX, this.endY);
+        return String.format(Locale.US, format, this.startX, this.startY, this.endX, this.endY);
     }
 
     /** {@inheritDoc} */

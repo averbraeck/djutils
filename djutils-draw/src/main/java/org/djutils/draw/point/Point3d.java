@@ -3,6 +3,7 @@ package org.djutils.draw.point;
 import java.awt.geom.Point2D;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
@@ -513,7 +514,7 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
         String format = String.format("%1$s[x=%2$s, y=%2$s, z=%2$s]", doNotIncludeClassName ? "" : "Point3d ", doubleFormat);
-        return String.format(format, this.x, this.y, this.z);
+        return String.format(Locale.US, format, this.x, this.y, this.z);
     }
 
     /** {@inheritDoc} */

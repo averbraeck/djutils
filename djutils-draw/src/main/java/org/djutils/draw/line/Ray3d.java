@@ -1,5 +1,7 @@
 package org.djutils.draw.line;
 
+import java.util.Locale;
+
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
@@ -259,22 +261,31 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Sp
         {
             return false;
         }
-        if (Math.abs(AngleUtil.normalizeAroundZero(this.phi - other.phi)) > epsilonRotation)
-        {
-            return false;
-        }
-        if (Math.abs(AngleUtil.normalizeAroundZero(this.theta - other.theta)) > epsilonRotation)
+        if ((Math.abs(AngleUtil.normalizeAroundZero(this.phi - other.phi)) > epsilonRotation
+                || Math.abs(AngleUtil.normalizeAroundZero(this.theta - other.theta)) > epsilonRotation)
+                && (Math.abs(AngleUtil.normalizeAroundZero(Math.PI + this.phi - other.phi)) > epsilonRotation
+                        || Math.abs(AngleUtil.normalizeAroundZero(Math.PI - this.theta - other.theta)) > epsilonRotation))
         {
             return false;
         }
         return true;
+        // FIXME this method should return true if the same angle is approximated with inverted theta and phi off by PI
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString()
     {
-        return "Ray3d [x=" + this.x + " y=" + this.y + " z=" + this.z + " phi=" + this.phi + " theta=" + this.theta + "]";
+        return toString("%f", false);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
+    {
+        String format = String.format("%1$s[x=%2$s, y=%2$s - phi=%2$s, theta=%2$s]", doNotIncludeClassName ? "" : "Ray3d ",
+                doubleFormat);
+        return String.format(Locale.US, format, this.x, this.y, this.phi, this.theta);
     }
 
     /** {@inheritDoc} */

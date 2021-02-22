@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.point.Point3d;
 import org.junit.Test;
@@ -255,6 +256,68 @@ public class Polygon3dTest
             // Ignore expected exception
         }
 
+    }
+
+    /**
+     * Test the reverse and project methods.
+     * @throws DrawException should not happen; this test has failed if it does happen
+     */
+    @Test
+    public final void reverseAndProjectTest() throws DrawException
+    {
+        Point3d p0 = new Point3d(1.1, 2.21, 3.1);
+        Point3d p1 = new Point3d(2.1, 2.22, 3.2);
+        Point3d p2 = new Point3d(2.1, 2.23, 3.3);
+        Point3d p2x = new Point3d(p2.x, p2.y, p2.z + 1);
+        Point3d p3 = new Point3d(4.1, 2.24, 3.4);
+        Point3d p4 = new Point3d(5.1, 2.25, 3.5);
+        Point3d p5 = new Point3d(6.1, 2.26, 3.6);
+
+        Polygon3d l01 = new Polygon3d(p0, p1);
+        Polygon3d r = l01.reverse();
+        assertEquals("result has size 2", 2, r.size());
+        assertEquals("point 0 is p1", p1, r.get(0));
+        assertEquals("point 1 is p0", p0, r.get(1));
+
+        Polygon3d l05 = new Polygon3d(p0, p1, p2, p3, p4, p5);
+        r = l05.reverse();
+        assertEquals("result has size 6", 6, r.size());
+        assertEquals("point 0 is p5", p5, r.get(0));
+        assertEquals("point 1 is p4", p4, r.get(1));
+        assertEquals("point 2 is p3", p3, r.get(2));
+        assertEquals("point 3 is p2", p2, r.get(3));
+        assertEquals("point 4 is p1", p1, r.get(4));
+        assertEquals("point 5 is p0", p0, r.get(5));
+
+        PolyLine2d l2d = l05.project();
+        assertEquals("result has size 6", 6, l2d.size());
+        assertEquals("point 0 is p5", p0.project(), l2d.get(0));
+        assertEquals("point 1 is p4", p1.project(), l2d.get(1));
+        assertEquals("point 2 is p3", p2.project(), l2d.get(2));
+        assertEquals("point 3 is p2", p3.project(), l2d.get(3));
+        assertEquals("point 4 is p1", p4.project(), l2d.get(4));
+        assertEquals("point 5 is p0", p5.project(), l2d.get(5));
+
+        l05 = new Polygon3d(p0, p1, p2, p2x, p3, p4, p5);
+        l2d = l05.project();
+        assertEquals("result has size 6", 6, l2d.size());
+        assertEquals("point 0 is p5", p0.project(), l2d.get(0));
+        assertEquals("point 1 is p4", p1.project(), l2d.get(1));
+        assertEquals("point 2 is p3", p2.project(), l2d.get(2));
+        assertEquals("point 3 is p2", p3.project(), l2d.get(3));
+        assertEquals("point 4 is p1", p4.project(), l2d.get(4));
+        assertEquals("point 5 is p0", p5.project(), l2d.get(5));
+
+        Polygon3d l22x = new Polygon3d(p2, p2x);
+        try
+        {
+            l22x.project();
+            fail("Projecting a polygon3d that entirely projects to one point should have thrown an exception");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
     }
 
     /**

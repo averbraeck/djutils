@@ -1,6 +1,7 @@
 package demo;
 
 
+import org.djutils.draw.point.OrientedPoint2d;
 import org.djutils.draw.point.Point2d;
 
 /**
@@ -38,8 +39,11 @@ public final class PointDemos
         System.out.println(awtPoint2DCopy);
         Point2d secondPoint2d = new Point2d(234.56, 345.78);
         System.out.println("Direction to: " + point2d.directionTo(secondPoint2d));
-        System.out.println("Distance: " + point2d.directionTo(secondPoint2d));
+        System.out.println("Distance: " + point2d.distance(secondPoint2d));
+        System.out.println("Distance squared " + point2d.distanceSquared(secondPoint2d));
         System.out.println("Interpolation at fraction 0.3: " + point2d.interpolate(secondPoint2d, 0.3));
+        
+        System.out.println("Almost equals to another Point2d: " + point2d.epsilonEquals(new Point2d(123, 235), 0.5));
         
         System.out.println("The point: " + point2d);
         System.out.println("The point translated over 10, -20: " + point2d.translate(10, -20));
@@ -49,5 +53,7 @@ public final class PointDemos
         System.out.println("The point with absolute values: " + point2d.abs());
         System.out.println("The point negated, then absolute: " + point2d.neg().abs());
         
+        OrientedPoint2d orientedPoint2d = new OrientedPoint2d(123.45, 234.56, -0.2);
+        System.out.println(orientedPoint2d);
     }
 }

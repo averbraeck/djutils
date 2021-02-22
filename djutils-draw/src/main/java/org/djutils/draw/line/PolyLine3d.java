@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
@@ -914,7 +915,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         String format = String.format("%%sx=%1$s, y=%1$s, z=%1$s", doubleFormat);
         for (int index = 0; index < this.x.length; index++)
         {
-            result.append(String.format(format, index == 0 ? "[" : ", ", this.x[index], this.y[index], this.z[index]));
+            result.append(
+                    String.format(Locale.US, format, index == 0 ? "[" : ", ", this.x[index], this.y[index], this.z[index]));
         }
         result.append("]");
         return result.toString();
