@@ -349,7 +349,7 @@ public class Ray2dTest
         Ray2d ray = new Ray2d(1, 2, 1);
         try
         {
-            ray.closestPointOnLine(null);
+            ray.closestPointOnRay(null);
             fail("Null for point should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)

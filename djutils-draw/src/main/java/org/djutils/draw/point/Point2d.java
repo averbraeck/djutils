@@ -511,17 +511,6 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     }
 
     /**
-     * Closest point on a ray.
-     * @param ray Ray2d; the ray
-     * @return Point2d; the point on the ray that is closest to this
-     * @throws NullPointerException when ray is null
-     */
-    public final Point2d closestPointOnLine(final Ray2d ray) throws NullPointerException
-    {
-        return closestPointOnLine(ray.x, ray.y, ray.x + Math.cos(ray.phi), ray.y + Math.sin(ray.phi), true, false);
-    }
-
-    /**
      * Return the zero, one or two intersections between two circles. The circles must be different. Derived from pseudo code by
      * <a href="http://paulbourke.net/geometry/circlesphere/">Paul Bourke</a> and C implementation by
      * <a href="http://paulbourke.net/geometry/circlesphere/tvoght.c">Tim Voght </a>.
