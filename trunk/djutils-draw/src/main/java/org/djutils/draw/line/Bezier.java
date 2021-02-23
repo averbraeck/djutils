@@ -237,8 +237,8 @@ public final class Bezier
             // each control point is 'w' * the distance between the end-points away from the respective end point
             // 'w' is a weight given by the distance from the end point to the extended line of the other end point
             double distance = shape * start.distance(end);
-            double dStart = start.distance(start.closestPointOnLine(end));
-            double dEnd = end.distance(end.closestPointOnLine(start));
+            double dStart = start.distance(end.projectOrthogonalExtended(start));
+            double dEnd = end.distance(start.projectOrthogonalExtended(end));
             double wStart = dStart / (dStart + dEnd);
             double wEnd = dEnd / (dStart + dEnd);
             control1 = new Transform2d().translate(start).rotation(start.phi).scale(distance * wStart, distance * wStart)
@@ -595,8 +595,8 @@ public final class Bezier
             // each control point is 'w' * the distance between the end-points away from the respective end point
             // 'w' is a weight given by the distance from the end point to the extended line of the other end point
             double distance = shape * start.distance(end);
-            double dStart = start.distance(start.closestPointOnLine(end));
-            double dEnd = end.distance(end.closestPointOnLine(start));
+            double dStart = start.distance(end.projectOrthogonalExtended(start));
+            double dEnd = end.distance(start.projectOrthogonalExtended(end));
             double wStart = dStart / (dStart + dEnd);
             double wEnd = dEnd / (dStart + dEnd);
             control1 = start.getLocation(distance * wStart);

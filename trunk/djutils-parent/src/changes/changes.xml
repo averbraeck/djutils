@@ -2,6 +2,18 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.19" date="2021-02-23" description="Javadoc of Ray, Bezier create controlPoints fix">
+      <action dev="pknoppers" type="fix">
+        Javadoc of Ray used wrong wording.
+      </action>
+      <action dev="pknoppers" type="fix">
+        Bezier.createControlPoints wrongly used closestPointOnRay, now uses projectOrthogonalextended.
+      </action>
+      <action dev="pknoppers" type="remove">
+        Removed unneeded methods from Point2d and Point3d classes.
+      </action>
+    </release>
+
     <release version="1.06.18" date="2021-02-22" description="ToString methods, Ray3d epsilonEquals getPoints, Bounds from arrays and collections">
       <action dev="pknoppers" type="add">
         Bounds are a bit more versatile and more of the functionality is specified in the interface.

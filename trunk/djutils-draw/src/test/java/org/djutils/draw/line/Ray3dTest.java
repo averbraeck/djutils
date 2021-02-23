@@ -460,7 +460,7 @@ public class Ray3dTest
         Ray3d ray = new Ray3d(1, 2, 3, 0.4, 0.5);
         try
         {
-            ray.closestPointOnLine(null);
+            ray.closestPointOnRay(null);
             fail("Null for point should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)

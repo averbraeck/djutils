@@ -59,7 +59,7 @@ public interface Ray<R extends Ray<R, P, S>, P extends Point<P, S>, S extends Sp
     R getLocationExtended(double position) throws DrawRuntimeException;
 
     /**
-     * Project a Point on a Segment. If the the projected points lies outside the ray, the start point of the ray is returned.
+     * Project a Point on a Ray. If the the projected points lies outside the ray, the start point of the ray is returned.
      * Otherwise the closest point on the ray is returned. <br>
      * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
      * Bourke</a>.

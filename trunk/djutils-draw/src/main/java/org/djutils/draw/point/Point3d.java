@@ -428,22 +428,6 @@ public class Point3d implements Drawable3d, Point<Point3d, Space3d>
     }
 
     /**
-     * Closest point on a ray.
-     * @param ray Ray3d; a point through which the line passes in the direction
-     * @return Point3d; the point on the line that is closest to this
-     * @throws NullPointerException when ray is null
-     */
-    public final Point3d closestPointOnLine(final Ray3d ray) throws NullPointerException
-    {
-        double sinTheta = Math.sin(ray.theta);
-        double dX = Math.cos(ray.phi) * sinTheta;
-        double dY = Math.sin(ray.phi) * sinTheta;
-        double dZ = Math.cos(ray.theta);
-        final double u = ((this.x - ray.x) * dX + (this.y - ray.y) * dY + (this.z - ray.z) * dZ);
-        return ray.interpolate(new Point3d(ray.x + dX, ray.y + dY, ray.z + dZ), Math.max(0, u));
-    }
-
-    /**
      * Return the direction of the point in radians with respect to the origin, ignoring the z-coordinate.
      * @return double; the direction of the projection of the point in the x-y plane with respect to the origin, in radians
      */
