@@ -1,0 +1,957 @@
+<document xmlns="http://maven.apache.org/changes/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
+  <body>
+
+    <release version="1.06.18" date="2021-02-22" description="ToString methods, Ray3d epsilonEquals getPoints, Bounds from arrays and collections">
+      <action dev="pknoppers" type="add">
+        Bounds are a bit more versatile and more of the functionality is specified in the interface.
+      </action>
+      <action dev="pknoppers" type="fix">
+        All toString methods now format floating point values using Locale.US to ensure use of a consistent radix symbol.
+      </action>
+      <action dev="pknoppers" type="fix">
+        The Ray3d.epsilonEquals method failed to allow a family of alternative ways to express effectively the same Ray3d.
+      </action>
+      <action dev="pknoppers" type="add">
+        Bounds objects can now also be constructed using a varargs constructor or a Collection.
+      </action>
+      <action dev="pknoppers" type="fix">
+        The toString method of a Ray3d only printed x, and y (not z).
+      </action>
+      <action dev="pknoppers" type="fix">
+        The getPoints of Ray2d and Ray3d returned only one point and did not override size().
+      </action>
+    </release>
+
+    <release version="1.06.17" date="2021-02-20" description="Bounds reverted to original behavior">
+      <action dev="averbraeck" type="fix">
+        Bounds report absolute extent again with the getMin[XYZ] and getMax[XYZ] methods. getDelta[XYZ]() report
+        the relative extent.
+      </action>
+    </release>
+
+    <release version="1.06.16" date="2021-02-18" description="Project error in Polygon3d and error in Ray3d.flip">
+      <action dev="pknoppers" type="change">
+        Bounds now report relative extend with the getMin[XYZ] and getMax[XYZ] methods.
+      </action>
+      <action dev="pknoppers" type="fix">
+        Polygon3d must override project, or the result is a PolyLine2d.
+      </action>
+      <action dev="pknoppers" type="fix">
+        Ray3d.flip sets the theta to the complement of the original theta; not increment it by pi.
+      </action>
+    </release>
+
+    <release version="1.06.15" date="2021-02-16" description="Rounding error in PolyLine3d">
+      <action dev="pknoppers" type="fix">
+        This is the 2nd attempt at fixing the rounding error in PolyLine3d.
+      </action>
+      <action dev="pknoppers" type="fix">
+        Fixed typo in error message.
+      </action>
+    </release>
+
+    <release version="1.06.14" date="2021-02-16" description="Rounding error in PolyLine3d">
+      <action dev="pknoppers" type="fix">
+        Fixed a problem (that was already fixed in PolyLine2d) in getLocation where the position was an ULP before
+        the length of the line, or the position of an intermediate point.
+      </action>
+      <action dev="pknoppers" type="fix">
+        Fixed typo in error message.
+      </action>
+    </release>
+
+    <release version="1.06.13" date="2021-02-15" description="Project now implemented in all line types">
+      <action dev="pknoppers" type="fix">
+        Made the projectOrthogonal methods more consistent. There were many cases where the behavior was not logical.
+        The LineSegment classes not implement toExcel;
+        the lineSegment2d class implements toPlot.
+      </action>
+    </release>
+
+    <release version="1.06.12" date="2021-02-11" description="Project now implemented in all line types">
+      <action dev="pknoppers" type="add">
+        LineSegment, PolyLine and Ray types now implement the project interface.
+      </action>
+      <action dev="pknoppers" type="fix">
+        More centralized implementation of code that finds closest point on a line(segment).
+        Replaced lots of getX() calls by this.x; etc. to make debugging easier.
+        Fixes in javadoc where class names were not correct after earlier rename operations.
+        PolyLine3d.createAndCleanLine3d is now named PolyLine3d.createAndCleanPolyLine3d.
+        Fixed error in computation
+        of theta in Ray3d (and corresponding errors in the unit tests).
+      </action>
+    </release>
+
+    <release version="1.06.11" date="2021-02-08" description="Fixed rounding problem in PolyLine3d.getLocation">
+      <action dev="pknoppers" type="fix">
+        The getLocation method could fail to construct a ray when the position is exactly at one of the points of the line.
+      </action>
+    </release>
+
+    <release version="1.06.10" date="2021-02-05" description="Made phi and theta public in the Ray classes">
+      <action dev="pknoppers" type="change">
+        The internal values of theta (Ray3d) and phi (Ray2d and Ray3d) are now public. (Like the rotations in the
+        OrientedPoint classes).
+      </action>
+      <action dev="pknoppers" type="add">
+        The Ray classes now implements a flip method that inverts the direction, but does not change the location.
+      </action>
+    </release>
+
+    <release version="1.06.09" date="2021-02-04" description="Centralized projection methods, more flexible toString methods">
+      <action dev="pknoppers" type="add">
+        Fixed lots of code duplication that determined the closest point on a line, line segment, or ray.
+        The toString methods now have a systematic way to provide a
+        format argument and to suppress printing the
+        class name (for extra compact output).
+      </action>
+    </release>
+
+    <release version="1.06.08" date="2021-01-28" description="Polygon2d and Polygon3d added">
+      <action dev="pknoppers" type="add">
+        Closed Polylines aka Polygons in 2d and 3d have been added to djutils-draw.
+      </action>
+    </release>
+
+    <release version="1.06.07" date="2021-01-23" description="Fixed rounding problem in AngleUtil; Ray; OrientedPoint">
+      <action dev="pknoppers" type="fix">
+        AngleUtil.normalizeAroundZero mapped Math.PI to -Math.PI. The fix ensures that Math.PI is mapped to Math.PI
+        (and -Math.PI is now mapped to Math.PI).
+        This
+        implementation makes slightly more sense considering that Math.cos(Math.PI) > 0.
+      </action>
+      <action dev="pknoppers" type="update">
+        In djutils-draw, DirectedPoint has been replaced by OrientedPoint since a direction (vector) does not
+        include rotating around the x (or longitudinal) axis. The
+        Oriented interface replaces the Directed
+        interface.
+      </action>
+      <action dev="pknoppers" type="add">
+        In djutils-draw, in order to indicate different lines, the LineSegment (bound by 2 points), Ray (bound by one point),
+        and Line (stretching infinitely in both
+        directions) have been introduced.
+      </action>
+    </release>
+
+    <release version="1.06.06" date="2021-01-02" description="Fixed ulp-error in time weighed statistics">
+      <action dev="averbraeck" type="fix">
+        Some of the time weighed statistics in djutils-stats indicated wrongly that the next observation was before the previous
+        observation. The problem was in the following statement in
+        TimestampWeightedTally:
+<![CDATA[
+        <br>Throw.when(timestampDouble &lt; (this.elapsedTime + this.startTime), IllegalArgumentException.class,<br>
+                "times not offered in ascending order. Last time was " + (this.elapsedTime + this.startTime)<br>
+                        + ", new timestamp was " + timestampDouble);<br>
+]]>
+        The problem is that the addition can be one ulp off as compared to the timestamp that might have been calculated in
+        another way. It has been repaired by using: timestampDouble &lt;
+        this.lastTimestamp.
+      </action>
+      <action dev="averbraeck" type="update">
+        Made checkstyle more strict on javadoc to comply with JDK8+ compiler settings.
+      </action>
+    </release>
+
+    <release version="1.06.05" date="2020-12-29" description="Added methods to Point and Bounds interfaces in djutils-draw">
+      <action dev="averbraeck" type="add">
+        Added getX(), getY(), and several other methods to the Point interface.
+        Added getMinX(), getMinY(), getMaxX(), getMaxY(), and several other methods to the
+        Bounds interface.
+        Added getRotZ() method to the Directed interface.
+        These changes make it easier to use the Point&lt;?, ?&gt; and Bounds&lt;?, ?&gt; interfaces in other projects such as DSOL.
+      </action>
+      <action dev="averbraeck" type="add">
+        Added getter with safe copy of the affine transformation matrix in Transform2d and Transform3d in djutils-draw.
+      </action>
+    </release>
+
+    <release version="1.06.04" date="2020-12-28" description="Added midPoint methods to Bounds objects in djutils-draw">
+      <action dev="pknoppers" type="add">
+        Added midPoint method to Bounds2d and Bounds3d classes.
+      </action>
+      <action dev="averbraeck" type="add">
+        Added Bounds interface for Bounds2d and Bounds3d classes, to be able to check if an objects is a Bounds.
+      </action>
+    </release>
+
+    <release version="1.06.03" date="2020-12-24" description="Added circleIntersections and directionTo methods to djutils-draw">
+      <action dev="pknoppers" type="add">
+        Added circleIntersections to Point2d class.
+      </action>
+      <action dev="pknoppers" type="add">
+        Added directionTo method to Point2d class.
+      </action>
+    </release>
+
+    <release version="1.06.02" date="2020-12-22" description="Added intersectionOfLines method to djutils-draw">
+      <action dev="pknoppers" type="add">
+        Added intersectionOfLines to Point2d class.
+      </action>
+    </release>
+
+    <release version="1.06.01" date="2020-12-21" description="Made .x, .y and .z of Point accessible in djutils-draw">
+      <action dev="averbraeck" type="update">
+        Made the fields x, y (and z) accessible in Point2d and Point3d to make code that use the Point look cleaner.
+        The methods getX(), getY() (and getZ()) also stay
+        available.
+      </action>
+      <action dev="averbraeck" type="fix">
+        Turned on checkstyle for the djutils-draw project.
+      </action>
+    </release>
+
+    <release version="1.06.00" date="2020-12-20" description="Additional way to interpolate angles; djutils-draw first version">
+      <action dev="pknoppers" type="add">
+        Interpolating (and extrapolating) angles could only be one with clockwise interpolation. A new method interpolateShortest
+        is now available that takes the
+        shortest way around.
+      </action>
+      <action dev="pknoppers" type="add">
+        Filled most of the classes for Point, PolyLine and Bounds in 2d and 3d in djutils-draw.
+      </action>
+      <action dev="averbraeck" type="add">
+        Added neutral project for drawing: djutils-draw.
+      </action>
+      <action dev="averbraeck" type="add">
+        Added a class AngleUtil to normalize angles around zero or around pi in the package org.djutils.base.
+      </action>
+    </release>
+
+    <release version="1.05.04" date="2020-08-22" description="EventInterface and EventTypeInterface used in a consequent manner">
+      <action dev="averbraeck" type="update">
+        The EventInterface and Event were used in a mixed way in the event package. Same for EventType and EventTypeInterface.
+        For TimedEvent and TimedEventType, no
+        interfaces were present, leading to a further asymmetry. All event methods
+        now act on the interface, and return interfaces instead of implementations of the Events and EventTypes.
+      </action>
+      <action dev="averbraeck" type="fix">
+        The TraceVerifier class threw a java.util.FormatFlagsConversionMismatchException for the error string instead
+        of a regular RunTimeException showing the
+        mismatch. This has been repaired.
+      </action>
+      <action dev="averbraeck" type="add">
+        The TraceVerifier class now throws a TraceVerifierException instead of a generic RunTimeException.
+      </action>
+      <action dev="averbraeck" type="update">
+        Javadoc comments updated to contain correct types of parameters.
+      </action>
+    </release>
+
+    <release version="1.05.03" date="2020-07-27" description="TraceVerifier added">
+      <action dev="pknoppers" type="add">
+        The TraceVerifier creates or verifies a file containing a series of traced events. When the file does not exist, it
+        is created and each traced event is written
+        to the file. If the file does exist, it is read and each traced event is
+        compared to the corresponding event in the file. On a mismatch a RuntimeException is thrown. To use, create a
+        TraceVerifier object in the class that is to be traced. In a method where you expect a fixed sequence of events, but
+        suspect that this may not be true ()due to, e.g., a race condition), add a
+        call to the sample
+        method of the TraceVerifier.
+        Then run the program repeatedly. The first run will create the trace file, all subsequent runs will compare what happens
+        to the contents of the
+        trace file.
+      </action>
+    </release>
+
+    <release version="1.05.02" date="2020-05-16" description="Changed CSVReader/Writer">
+      <action dev="averbraeck" type="update">
+        The OpenCSV package had over 5 MB of imports, such as commons-lang3, commons-text, commons-beanutils,
+        commons-collections, commons-collections4, and
+        commons-logging. Instead, the very small and faster
+        fastcsv package has been used, which has no further dependencies and is only 16 kB.
+      </action>
+    </release>
+
+    <release version="1.05.01" date="2020-05-05" description="EventType and TimedEventType separated">
+      <action dev="averbraeck" type="add">
+        The EventType and TimedEventType are now two SEPARATE classes, both extending from AbstractEventType and
+        implementing the EventTypeInterface. This allows for
+        the fireTimedEvent(...) methods to ONLY accept
+        TimedEvents of type TimedEventType. A TimedEvent is not a subclass anymore of Event. This breaks
+        compatibility, but ensures a much stricter
+        compliance to the fact that TimedEvents and ordinary Events
+        are different and have a different signature.
+      </action>
+      <action dev="averbraeck" type="add">
+        The AbstractEventType constructor accepts an optional argument specifying the valid Event type for the event to be
+        fired. As an example: when a TimedEvent is
+        expected, the fire(Event) method of an EventProducer should fail
+        when the argument is not a TimedEvent or a subclass of TimedEvent.
+      </action>
+    </release>
+
+    <release version="1.04.21" date="2020-05-05" description="MetaData construction with varargs">
+      <action dev="averbraeck" type="update">
+        The MetaData constructor has changed to a varargs parameter for the object descriptors, making it easier to
+        construct metaData objects with zero or one
+        descriptor. The construction with new ObjectDescriptor[] {...}
+        of course remains possible.
+      </action>
+      <action dev="averbraeck" type="fix">
+        The MetaData constructor now fires a NullPointerException if one of the ObjectDescriptors is null.
+      </action>
+    </release>
+
+    <release version="1.04.20" date="2020-05-03" description="Added float and char payload for the fireEvent method">
+      <action dev="averbraeck" type="add">
+        The float and char primitive types were missing as allowed payloads for the fireEvent and fireTimedEvent methods.
+        Methods have been added to the classes
+        EventProducer, EventProducerImpl and RemoteEventProducer.
+      </action>
+      <action dev="averbraeck" type="add">
+        It is now possible to turn off verification of the fields of each individual event, which can be useful for
+        high-frequency events. The method to verify uses
+        the isAssignableFrom(...) method that could be quite
+        expensive. The fireEvent methods in EventProducerImpl have an extra boolean for verification (true by default).
+      </action>
+      <action dev="averbraeck" type="add">
+        The EventProducer, EventProducerImpl and RemoteEventProducer got extra methods to be able to fire
+        unverified events as well.
+      </action>
+    </release>
+
+    <release version="1.04.19" date="2020-04-19" description="Metadata and ObjectDescriptor updates">
+      <action dev="averbraeck" type="add">
+        An extra EventType constructor has been added to not have to duplicate the event type name in the
+        metaData object.
+      </action>
+      <action dev="averbraeck" type="add">
+        MetaData and ObjectDescriptor have equals() and hashCode() methods.
+      </action>
+      <action dev="averbraeck" type="add">
+        MetaData has a getObjectDescriptors() method that returns a clone of the object descriptors.
+      </action>
+      <action dev="averbraeck" type="update">
+        The NO_META_DATA static constant has been moved to the MetaData class.
+      </action>
+    </release>
+
+    <release version="1.04.18" date="2020-04-18" description="Metadata expansions and fixes">
+      <action dev="pknoppers" type="fix">
+        MetaData and ObjectDescriptor are now serializable.
+        EventType constructor with no metaData argument is now deprecated. The constructor with a metadata argument
+        no longer
+        takes a null pointer for that argument.
+        There is a NO_META_DATA value that can be used in case no meta data can be provided. This should only be used in case
+        the payload has a varying
+        composition, but it can also be abused in case the program writer is too lazy to provide
+        decent meta data (as is the case in many of our unit tests).
+        EventProducing collections now put the
+        (unchanged) size of the collection in the OBJECT_CHANGED_EVENT events.
+      </action>
+    </release>
+
+    <release version="1.04.17" date="2020-04-06" description="Metadata fixes">
+      <action dev="pknoppers" type="fix">
+        MetaData now permits null pointers for the arguments that it verifies. Renamed some methods (Field is now Object).
+      </action>
+    </release>
+
+    <release version="1.04.16" date="2020-04-06" description="Metadata fixes and expanded use">
+      <action dev="pknoppers" type="fix">
+        MetaData was not 100% correct in the previous version. Some methods were not public (and should have been). Metadata can
+        now also handle single object payload
+        (not requiring an Object[]).
+        The stats package now uses MetaData verification of the payload of the events.
+      </action>
+    </release>
+
+    <release version="1.04.15" date="2020-04-03" description="Metadata and Java-8 compatibility">
+      <action dev="pknoppers" type="add">
+        Added package metadata. Events can now verify their payload using the metadata. Specification of metadata is done in
+        the constructor of EventType. For now a
+        null pointer is permitted for the MetaData argument, but that is only during
+        the transition phase.
+      </action>
+      <action dev="averbraeck" type="fix">
+        Unit tests of djutils are made compatible again with Java-8. Several functions of Java-9 and Java-11 were used.
+      </action>
+    </release>
+
+    <release version="1.04.14" date="2020-03-08" description="timed events for timestamped statistics">
+      <action dev="averbraeck" type="add">
+        The timestamped statistics now fire TimedEvents rather than normal events.
+      </action>
+      <action dev="averbraeck" type="add">
+        In case an class extending one of the EventBased statistics wants to fire its own events, or fire the events
+        in a different way, it can override the protected
+        method 'fireEvents()'.
+      </action>
+    </release>
+
+    <release version="1.04.13" date="2020-03-07" description="extra events in djutils-stats; statistics formulas">
+      <action dev="averbraeck" type="update">
+        Changed the package structure of the events a bit by moving the generic classes to the 'stats' package,
+        and the event-based classes to a separate
+        'summarizers.event' package.
+      </action>
+      <action dev="averbraeck" type="add">
+        Created a generic StatisticsEvents class for the 'OBSERVATION_ADDED_EVENT' and 'STATISTIC_INITIALIZED_EVENT'.
+        Added more specific events for
+        'WEIGTHED_OBSERVATION_ADDED_EVENT' and 'TIMESTAMPED_OBSERVATION_ADDED_EVENT'.
+      </action>
+      <action dev="averbraeck" type="add">
+        Ensured that specific events about every statistics value can be fired by the EventBased statistics.
+        This can be used to, e.g., create a graph of the observed
+        (weighted) sample mean over time, or to update a
+        specific statistics value on the screen.
+      </action>
+      <action dev="averbraeck" type="fix">
+        Made a number of small changes to the calculation of the kurtosis and skewness. Separated excess kurtosis
+        from regular kurtosis and added formulas for both.
+      </action>
+      <action dev="averbraeck" type="update">
+        Added the term 'Population' to the calculation of the (biased) statistics that work on the basis of the
+        full population of values.
+      </action>
+    </release>
+
+    <release version="1.04.12" date="2020-03-03" description="several fixes in djutils-stats">
+      <action dev="pknoppers" type="fix">
+        Renamed getWeightedSampleStdDev to getWeightedSampleStDev in EventBasedTimeStampWeightedTally and
+        EventBasedTimestampWeightedTally. Added getSampleMean to
+        TimestampTallyInterface.
+        Added getWeightedMean to TimeStampTallyInterface. Added getWeightedStDev and getWeightedVariance
+        to EventBasedTimestampWeightedTally and TimeStampWeightedTally. Fixed
+        error in getWeightedSampleMean
+        in WeightedTally. Augmented unit test to re-achieve 100% coverage.
+      </action>
+      <action dev="averbraeck" type="update">
+        Removed some 'final' qualifiers for methods so they can be extended, e.g. in the dsol project.
+        Made the various TallyInterfaces public so they can be used
+        outside of the djutils-stats project.
+      </action>
+    </release>
+
+    <release version="1.04.11" date="2020-03-03" description="djutils-data project added; Immutable.of() methods">
+      <action dev="wjschakel" type="add">
+        The djutils-data project contains classes for sampling, storing and retrieving statistics data.
+        For now, the main data type is a data table with column heading
+        information and records.
+      </action>
+      <action dev="averbraeck" type="add">
+        Separate packages to read/write the tables from the djutils-data project have been added for:
+        JSON, XML, and csv/tsv. Specific (de)serializers have been added
+        for primitive types, Number types,
+        String, DoubleScalar types and FloatScalar types.
+      </action>
+      <action dev="averbraeck" type="add">
+        static 'of' methods have been added to the Immutable collections, to have an easy instantiation method
+        for the collections. Example: ImmutableMap&lt;Integer,
+        String&gt; map = ImmutableMap.of(1, "value1", 2, "value2");
+        These static methods have been added to: ImmutableList, ImmutableSet, ImmutableSortedSet, ImmutableMap,
+        and ImmutableSortedMap. The
+        maps can take up to 8 key-value parameters, whereas the sets and lists
+        can take an unlimited number.
+      </action>
+      <action dev="pknoppers" type="add">
+        The Tally now has methods to request the skewness and kurtosis of the provided data.
+      </action>
+    </release>
+
+    <release version="1.04.10" date="2020-02-29" description="djutils-stats project added; djutils-parent project for pom">
+      <action dev="pknoppers" type="add">
+        The djutils-stats project contains data summarizers such as the Counter, the Tally, and the WeighedTally.
+        The original classes Counter, Tally and Persistent
+        from dsol-core have been generalized and improved.
+      </action>
+      <action dev="pknoppers" type="add">
+        A class called DistNormalTable has been added to calculate the cumulative values of the cumulative
+        normal distribution. This replaces an older and less precise
+        table from dsol-core. A project called
+        djutils-generator has been added that contains a class to generate this table.
+      </action>
+      <action dev="averbraeck" type="add">
+        For the new classes in djutils-stats, EventBased versions have been created that can receive the data
+        via a notify() method.
+      </action>
+      <action dev="averbraeck" type="add">
+        Because of the increasing number of sub-projects in djutils, a parent pom project has been added called
+        djutils-pom. This project contains all version
+        numbers, dependencies and definitions for the derived
+        djutils projects.
+      </action>
+    </release>
+
+    <release version="1.04.09" date="2020-02-10" description="MultiKeyMap added; EventType equals() and hashCode()">
+      <action dev="pknoppers" type="add">
+        Added the MultiKeyMap to djutils (comes from ots.core.gtu.NestedCache in a less generic form).
+        MultiKeyMap implements a map with multiple keys.
+      </action>
+      <action dev="averbraeck" type="add">
+        In order to prevent name clashes for the EventType, the full name of the class from which the EventType
+        was defined (usually in the clinit method) is added to
+        the equals() and hashCode() methods of the EventType.
+        In that way, EventTypes that are the same will be unique, but EventTypes with just the same name but defined
+        in different classes will be
+        different. The reason why this is important is because remote events that use
+        EventTypes can have multiple versions of the same public static final EventType: one the is defined
+        in the client,
+        and one that is defined via the network. These will have different addresses in memory
+        but they share the same class and name info, so equals() will yield true.
+      </action>
+    </release>
+
+    <release version="1.04.08" date="2020-02-08" description="EventProducer access to listeners">
+      <action dev="averbraeck" type="add">
+        Added a protected method to the EventProducer to return a safe copy of the list of (strong or weak)
+        references to the registered listeners for a provided
+        event type, rather than exposing the
+        internal 'listener' object.
+      </action>
+    </release>
+
+    <release version="1.04.07" date="2020-02-07" description="EventProducerImpl; RemoteEventProducer; Profile class">
+      <action dev="averbraeck" type="update">
+        The EventProducer classes uses a helper class EventProducerImpl to do the real work, to avoid code duplication.
+      </action>
+      <action dev="averbraeck" type="add">
+        The RemoteEventProducer class lacked implementation of the fireEvent and fireTimedEvent protected methods.
+        These have been added and linked to the
+        EventProducerImpl class to do the work.
+      </action>
+      <action dev="pknoppers" type="add">
+        Added the Profile class to DJUTILS (moved it out of the ots-core project). Contains profiler code for methods or
+        parts of methods.
+      </action>
+      <action dev="averbraeck" type="add">
+        More extensive tests of the Try class and the URLResource class added.
+      </action>
+    </release>
+
+    <release version="1.04.06" date="2020-02-04" description="CliUtil for subclasses">
+      <action dev="averbraeck" type="fix">
+        CliUtil in djutils-ext had problems with changing the default option values for subclasses, where the
+        options were defined in a superclass. The key under
+        which the overrides are stored in CliUtil have been
+        changed to the actual class where the option was defined, both in storing and in retrieving the
+        override. Tests in the TestCLI unit tests
+        check the new behavior.
+      </action>
+    </release>
+
+    <release version="1.04.05" date="2020-01-24" description="Comparator immutableTreeset; new units for serialization">
+      <action dev="pknoppers" type="add">
+        Added the three new DJUNITS units AngularAcceleration, AngularVelocity and Momentum to djutils-serialization.
+      </action>
+      <action dev="pknoppers" type="fix">
+        The subSet, headSet and tailSet methods of ImmutableTreeSet would use the default comparator of the data type instead of
+        inheriting the comparator of the
+        underlying set. This bug was discovered while writing thorough unit tests.
+        The documentation of (non-immutable) TreeSet is not clear about whether the subSet and friends should inherit the
+        comparator, but the implementations in the java Collections framework do inherit the comparator.
+      </action>
+    </release>
+
+    <release version="1.04.04" date="2020-01-19" description="EventProducer uses Serializable sourceId">
+      <action dev="averbraeck" type="update">
+        In contrast with earlier implementations of the Event package, a sourceId is sent over the network
+        rather than a pointer to the source itself. This has several advantages:
+<![CDATA[
+        <ol><li>The object extending the EventProducer does not have to be Serializable itself</li>
+        <li>There is no risk that the entire EventProducer object gets serialized (including subclasses) 
+        and is sent over the network</li>
+        <li>The receiver of an event does not get a pointer to the sending object</li>
+        <li>The receiver of an event is still able to identify the sending object</li></ol>
+]]>
+      </action>
+    </release>
+
+    <release version="1.04.03" date="2020-01-17" description="RMIUtils, RMIObject and RemoteEvent updates">
+      <action dev="pknoppers" type="add">
+        New version of generated code in TestCLIUnitConverters.java.
+        New units in CliUnitConverters.
+      </action>
+      <action dev="averbraeck" type="add">
+        The classes RMIUtils and RMIObject have been added to make it easier to work with remote objects.
+      </action>
+      <action dev="averbraeck" type="update">
+        RemoteEventProducer and RemoteEventListener extend RMIObject to select the host and port of the
+        RMI registry. Therewith the remote event handling has become a
+        lot more flexible.
+      </action>
+      <action dev="averbraeck" type="update">
+        EventProducer is not an abstract class anymore, as it does not contain any unimplemented methods and
+        because it is used as an embedded class in the
+        RemoteEventProducer.
+      </action>
+      <action dev="averbraeck" type="update">
+        Demanded that the fields of the Event and TimedEvent are serializable, so they can be sent over
+        the network or stored on disk by serialization.
+      </action>
+    </release>
+
+    <release version="1.04.02" date="2020-01-05" description="EventProducer cleanup; Logger updates">
+      <action dev="pknoppers" type="fix">
+        Removed various redundant synchronized blocks from EventProducer.java (method was already synchronized).
+      </action>
+      <action dev="pknoppers" type="update">
+        More complete nullPointer checks in EventProducer.java; Javadoc cleanup in EventProducer.java
+      </action>
+      <action dev="pknoppers" type="update">
+        Removed the ConditionalLogger from the CategoryLogger and transfered the when(...) functions to
+        both the static Logger and the DelegateLogger class.
+      </action>
+      <action dev="pknoppers" type="fix">
+        DelegateLogger did not consider the LogLevel correctly in deciding whether a message needed to be logged.
+        This has been repaired. Every logging method now
+        first checks whether the indicated log level is
+        included in the log levels that need to be shown.
+      </action>
+      <action dev="pknoppers" type="update">
+        CategoryLogger now has methods for adding and removing Writers, and listing which writers are available.
+      </action>
+      <action dev="pknoppers" type="update">
+        Expanded unit tests for CategoryLogger and EventProducer.
+      </action>
+      <action dev="averbraeck" type="fix">
+        The explicit setting of log level and message formatter on individual writers in the CategoryLogger now works
+        as intended. The setAllLogMessageFormat and
+        setAllLogLevel methods in the CategoryWriter reset the values
+        for each individual Writer, as well as the global standard for next writers to be registered.
+      </action>
+      <action dev="averbraeck" type="fix">
+        ClassUtil had a method called changeAnnotationValue to change the value of an annotation field value. This
+        method made changes to an internal data structure
+        that is not intended to be altered. From Java-13 onwards
+        a warning appears in the console for manipulating this data structure. Therefore the method has been removed.
+      </action>
+      <action dev="averbraeck" type="fix">
+        The CliUtil class in djutils-ext used the changeAnnotationValue method from ClassUtil. Instead of changing
+        the internal data structure of the annotations, an
+        override map is now used to store the changes. This also
+        ensures that the code structure is reentrant: no structural changes have been made to the
+        appearance of the
+        loaded code (which the
+        changeAnnotationValue method did in a sense).
+      </action>
+      <action dev="averbraeck" type="add">
+        Methods to read the (overridden or original) program version, program name and program description
+        in @Command have been added to CliUtil.
+      </action>
+    </release>
+
+    <release version="1.04.01" date="2019-12-31" description="EventProducer serializability">
+      <action dev="averbraeck" type="fix">
+        The EventProducer had a non-transient semaphore object, rendering it non-serializable. The
+        lock has been replaced by a lock on the listeners object instead.
+        The lock has been applied
+        more consistently in the code to avoid ConcurrentModificationExceptions.
+      </action>
+      <action dev="averbraeck" type="update">
+        All Dumper classes in DecoderDumper now use UTF-8 to dump the data, to ensure reproducibility of the
+        code across platforms.
+      </action>
+    </release>
+
+    <release version="1.04.00" date="2019-12-30" description="DSOL Event package added to DJUTILS">
+      <action dev="averbraeck" type="add">
+        The event package for pub/sub, originally the dsol-event package, has been added to DJUTILS and
+        will be removed from the next version of DSOL.
+      </action>
+      <action dev="averbraeck" type="fix">
+        Many open issues in the DSOL event package has been fixed in the port to DJUTILS. Examples are adding
+        equals and hashCode methods for the TimedEvent, better
+        writeObject and readObject methods for the
+        EventListenerMap, repair of the failure to sometimes remove an EventListener from the EventProducer, etc.
+      </action>
+      <action dev="averbraeck" type="add">
+        Almost full unit test coverage has been added to the djunits event package.
+      </action>
+      <action dev="averbraeck" type="update">
+        The event producing collections in the event.util package now only fire events when additions or
+        removals actually took place, not just when the add / remove
+        / put methods are called.
+      </action>
+      <action dev="averbraeck" type="add">
+        The EventProducingCollection, EventProducingList, EventProducingMap and EventProducingSet in the
+        event.util package also fire events when content in the
+        collections has changed. In that case,
+        a CHANGE_EVENT is fired.
+      </action>
+      <action dev="averbraeck" type="add">
+        The events of the event producing collections in the event.util package now have events that carry a
+        payload. The payload is the new number of entries in the
+        collection for the ADD_EVENT and REMOVE_EVENT.
+        The event's content is equal to null for the CHANGE_EVENT.
+      </action>
+      <action dev="averbraeck" type="update">
+        Since the boolean for strong versus weak references in the EventProducer was always unclear (does
+        true mean strong or weak?), it has been replaced by an enum.
+      </action>
+      <action dev="averbraeck" type="update">
+        Several of the underlying data structures of the djutils package have been changed from a HashMap
+        to a LinkedHashMap and from a HashSet to a LinkedHashSet to
+        guarantee reproducibility of results.
+        As an exception the ImmutableHashSet and ImmutableHashMap are still backed by unlinked variants,
+        as they explicitly are not reproducible.
+      </action>
+      <action dev="averbraeck" type="update">
+        DJUNITS updated to 4.01.03.
+      </action>
+      <action dev="averbraeck" type="add">
+        Extensive unit test coverage has been added for the ClassUtil class. Several errors have been repaired,
+        and the signature of a number of methods has changed
+        slightly (getAllMethods returns a List rather than
+        an array, for example).
+      </action>
+    </release>
+
+    <release version="1.03.02" date="2019-10-31" description="SpotBugs instead of FindBugs in Maven">
+      <action dev="averbraeck" type="fix">
+        Ensured that "package-list" exists in apidocs for backward compatibility of javadoc linking.
+      </action>
+      <action dev="averbraeck" type="fix">
+        Replaced FindBugs (which already had a problem supporting Java 8) with SpotBugs
+        (supporting later Java versions as well).
+      </action>
+      <action dev="averbraeck" type="update">
+        DJUNITS updated to 4.01.01.
+      </action>
+      <action dev="averbraeck" type="update">
+        Included jakarta.annotation-api to be compatible with Java 11+.
+      </action>
+      <action dev="averbraeck" type="fix">
+        tt-tag in javadoc replaced by code-tag to be compatible with HTML-5 and Java-11+.
+      </action>
+      <action dev="averbraeck" type="fix">
+        javadoc source version 8 added to pom-file to be compatible with Java-11+.
+      </action>
+    </release>
+
+    <release version="1.03.01" date="2019-10-25" description="Updated DJUTILS to version 4">
+      <action dev="averbraeck" type="update">
+        DJUNITS updated to 4.01.00.
+      </action>
+    </release>
+
+    <release version="1.03.00" date="2019-10-19" description="@Generated annotations in code in djutils-cli">
+      <action dev="averbraeck" type="update">
+        CliUnitConverters in djutils-ext have been regenerated. A @Generated tag has been added to each generated method.
+      </action>
+    </release>
+
+    <release version="1.03.00" date="2019-10-19" description="Little Endian (de)serialization; use of djunits v4">
+      <action dev="averbraeck" type="remove">
+        Little-Endian types have been removed as FieldTypes in djutils-serialization. Instead, messages that
+        need to be decoded can indicate whether they want to
+        (de)code as Little-Endian or Big-Endian.
+        By default, following Java standards, djutils-serialization encodes in Big Endian (network byte order).
+      </action>
+      <action dev="averbraeck" type="update">
+        DJUNITS has been updated to version 4.00.04, bringing major changes to the way vectors and matrices
+        are stored and processed.
+      </action>
+      <action dev="averbraeck" type="remove">
+        As a result of moving to DJUNITS-4, the Money units with their special encoding have been removed
+        temporarily. This also holds for the MoneyPerUnit types.
+      </action>
+      <action dev="averbraeck" type="add">
+        As a result of moving to DJUNITS-4, several new types have been added to the possible units to use:
+        AbsorbedDose, AmountOfSubstance, CatalyticActivity,
+        ElectricalCapacitance, ElectricalConductance,
+        ElectricalInductance, EquivalentDose, Illuminance, LuminousFlux, LuminousIntensity,
+        MagneticFluxDensity, MagneticFlux, and RadioActivity.
+      </action>
+      <action dev="averbraeck" type="update">
+        The package structure for djutils-serialization has been updated. Complex (de)serializers
+        have been coded in their own classes rather than in an inline class.
+      </action>
+    </release>
+
+    <release version="1.02.03" date="2019-09-14" description="CliUtil.execute with CommandLine object; unit tests">
+      <action dev="averbraeck" type="add">
+        CliUtil in djutils-ext now has a method call with a CommandLine object. This enables e.g., the
+        registration of custom parameter converters. An example and
+        test is provided in
+        TestCLIRegisterConverters.java in the test package.
+      </action>
+      <action dev="averbraeck" type="add">
+        Added unit tests for djunits converters for the CLI package. Dimensionless can also parse just a number.
+      </action>
+      <action dev="averbraeck" type="fix">
+        Unit tests with System.exit() were failing in Maven surefire. Surefire documents that System.exit()
+        calls cannot be tested. Therefore a Security Manager has
+        been implemented in the test class ExitHelper
+        for these tests that catches the System.Exit and turns it into an ExitException.
+      </action>
+      <action dev="averbraeck" type="fix">
+        Repaired the code for the ClassFileDescriptor for paths with spaces.
+      </action>
+      <action dev="averbraeck" type="add">
+        Added a unit test to see if folders with spaces can be found for the ClassFileDescriptor.
+      </action>
+      <action dev="averbraeck" type="fix">
+        Repaired a bug for folders with spaces for the ClassFileDescriptor.
+      </action>
+      <action dev="averbraeck" type="add">
+        Added unit tests for ClassUtil.
+      </action>
+      <action dev="averbraeck" type="fix">
+        Repaired a number of bugs and changed some code in ClassUtil. It does not make sense to resolve
+        constructors of superclasses, as only constructors of a class
+        to be instantiated can be called.
+        Therefore all code that deals with constructors in superclasses has been removed.
+      </action>
+      <action dev="averbraeck" type="update">
+        The methods in ClassUtil that deal with visibility from a callerClass now throw an
+        IllegalAccessException when the method/field/constructor is not visible
+        from the callerClass
+        and a NoSuchMethodException or NoSuchFieldException when the method/constructor/field
+        cannot be found.
+      </action>
+    </release>
+
+    <release version="1.02.02" date="2019-08-16" description="Resolving annotations">
+      <action dev="averbraeck" type="add">
+        ClassUtil has resolveAnnotation methods.
+      </action>
+      <action dev="averbraeck" type="add">
+        CliUtil also resolved @Command and @Option annotations in a superclass.
+      </action>
+    </release>
+
+    <release version="1.02.01" date="2019-08-13" description="CLI helper methods, ClassFileDescriptor">
+      <action dev="averbraeck" type="add">
+        ClassUtil got extra methods to retrieve information about a class file, e.g. the last changed date.
+      </action>
+      <action dev="averbraeck" type="fix">
+        CliIUtil has been renamed to the correct CliUtil.
+      </action>
+      <action dev="averbraeck" type="add">
+        Several helper methods have been added to CliUtil to change some of the @Options and
+        @Command settings.
+      </action>
+    </release>
+
+    <release version="1.02.00" date="2019-08-11" description="djutils-ext project added; CLI code">
+      <action dev="averbraeck" type="add">
+        A project for more utility classes that require more dependencies called djutils-ext has been added.
+      </action>
+      <action dev="averbraeck" type="add">
+        Classes for Command Line Interface parsing have been added. The classes are based on picocli.
+      </action>
+      <action dev="averbraeck" type="add">
+        A utility class with converters for DJUTILS command line arguments has been added. With these
+        converters, it is possible to e.g. specify --timeout=30s on the
+        command line and convert the
+        timeout to a DJUNITS Duration scalar.
+      </action>
+    </release>
+
+    <release version="1.01.03" date="2019-07-04" description="byte[][] serialization repaired">
+      <action dev="averbraeck" type="fix">
+        The byte[][] serialization destroyed the underlying data -- this has been repaired.
+      </action>
+      <action dev="averbraeck" type="update">
+        The serializers have all been made strongly typed, avoiding casting. Or actually, the casting has been
+        shifted to the encode method on a higher level.
+      </action>
+    </release>
+
+    <release version="1.01.02" date="2019-07-02" description="ImmutableLinkedHashMap.values() repaired">
+      <action dev="averbraeck" type="fix">
+        The ImmutableLinkedHashMap.values() was overriding a non-reproducible values() method from the
+        ImmutableAbstractMap. The ImmutableLinkedHashMap now has its
+        own values() method.
+      </action>
+    </release>
+
+    <release version="1.01.01" date="2019-07-01" description="ImmutableLinkedHashMap repaired; serialization of UTF-8, UTF-16">
+      <action dev="averbraeck" type="fix">
+        The ImmutableLinkedHashMap returned a non-linked HashSet as EntrySet and as KeySet. This has
+        been repaired.
+      </action>
+      <action dev="averbraeck" type="fix">
+        The UTF-8 Strings in djutils-serialization have been improved. The UTF-8 String can now handle
+        1-byte, 2-byte, 3-byte and 4-byte characters. The length of the
+        UTF-8 serialized bytes indicates
+        the number of bytes. The length does not say anything about the number of characters.
+      </action>
+      <action dev="averbraeck" type="fix">
+        The UTF-16 Strings in djutils-serialization have been improved. The UTF-16 String can now handle
+        2-byte and 4-byte characters. The length of the UTF-16 String
+        indicates the number of 2-byte
+        shorts in the array. The length does not say anything about the number of characters.
+      </action>
+      <action dev="pknoppers" type="fix">
+        The byte array in djutils-serialization has been repaired. The underlying byte array was nulled
+        during serialization.
+      </action>
+      <action dev="pknoppers" type="add">
+        ObjectArraySerializer and ObjectMatrixSerializer added.
+      </action>
+      <action dev="pknoppers" type="add">
+        SerialDataDumper added to provide insight into structure of the serialized data.
+      </action>
+    </release>
+
+    <release version="1.01.00" date="2019-06-21" description="djutils-serialization project added">
+      <action dev="pknoppers" type="add">
+        The djunits-serialization project has been added to serialize and deserialize different classes
+        including djunits scalars, vectors and matrices in a strongly
+        typed manner.
+      </action>
+    </release>
+
+    <release version="1.00.06" date="2019-05-10" description="EntrySets added; caching of keySet, values in Map">
+      <action dev="averbraeck" type="add">
+        EntrySets have been added to the ImmutableMap classes.
+      </action>
+      <action dev="averbraeck" type="update">
+        The keySet(), values() and entrySet() methods cache the results as these are often called.
+      </action>
+    </release>
+
+    <release version="1.00.05" date="2019-02-26" description="ImmutableCollections class added">
+      <action dev="averbraeck" type="add">
+        The ImmutableCollections class has been added, which takes care of those functions of the
+        Collections class that do not update the (immutable) collections
+        that the methods receive
+        as arguments.
+      </action>
+    </release>
+
+    <release version="1.00.04" date="2019-01-29" description="Removed logger Cat class">
+      <action dev="averbraeck" type="remove">
+        Cat class in the logger package belongs in dsol, not in djutils, so removed it.
+      </action>
+    </release>
+
+    <release version="1.00.03" date="2018-12-18" description="DecoderDumper package">
+      <action dev="pknoppers" type="add">
+        The 'decoderdumper' package has been added to the djutils project, extending
+        and replacing HexDump.
+      </action>
+    </release>
+
+    <release version="1.00.02" date="2019-01-17" description="ConditionalLogger, HexDump">
+      <action dev="averbraeck" type="add">
+        The CategoryLogger has been extended with a 'when(condition)' static method.
+        A call like CategoryLogger.when(ok).always().info("Ok"); is now possible.
+      </action>
+      <action dev="pknoppers" type="add">
+        The HexDump class has been added to djutils to create hexadecimal dumps of data.
+      </action>
+      <action dev="averbraeck" type="update">
+        Copyright message changed to 2019.
+      </action>
+    </release>
+
+    <release version="1.00.01" date="2018-12-15" description="Means package">
+      <action dev="pknoppers" type="add">
+        The 'means' package has been added to the djutils project.
+      </action>
+    </release>
+
+    <release version="1.00.00" date="2018-11-17" description="Initial release">
+      <action dev="averbraeck" type="add">
+        Several classes from other projects that are heavily shared between the projects, but not
+        specific for one of the projects have been transferred to the
+        djutils project.
+      </action>
+    </release>
+
+  </body>
+</document>
