@@ -174,9 +174,9 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
      * Get the location at a position on the line, with its direction. Position should be between 0.0 and line length.
      * @param position double; the position on the line for which to calculate the point on the line
      * @return OP; an oriented point
-     * @throws DrawException when position is NaN, less than 0.0, or more than line length.
+     * @throws DrawRuntimeException when position is NaN, less than 0.0, or more than line length.
      */
-    R getLocation(double position) throws DrawException;
+    R getLocation(double position) throws DrawRuntimeException;
 
     /**
      * Get the location at a position on the line, with its direction. Position can be below 0 or more than the line length. In
@@ -190,13 +190,13 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
      * Get the location at a fraction of the line, with its direction. Fraction should be between 0.0 and 1.0.
      * @param fraction double; the fraction for which to calculate the point on the line
      * @return OP; an oriented point
-     * @throws DrawException when fraction less than 0.0 or more than 1.0.
+     * @throws DrawRuntimeException when fraction less than 0.0 or more than 1.0.
      */
-    default R getLocationFraction(final double fraction) throws DrawException
+    default R getLocationFraction(final double fraction) throws DrawRuntimeException
     {
         if (fraction < 0.0 || fraction > 1.0)
         {
-            throw new DrawException("getLocationFraction for line: fraction < 0.0 or > 1.0. fraction = " + fraction);
+            throw new DrawRuntimeException("getLocationFraction for line: fraction < 0.0 or > 1.0. fraction = " + fraction);
         }
         return getLocation(fraction * getLength());
     }
@@ -241,9 +241,9 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
      * Binary search for a position on the line.
      * @param pos double; the position to look for
      * @return the index below the position; the position is between points[index] and points[index+1]
-     * @throws DrawException when index could not be found
+     * @throws DrawRuntimeException when index could not be found
      */
-    default int find(final double pos) throws DrawException
+    default int find(final double pos) throws DrawRuntimeException
     {
         if (pos == 0)
         {
@@ -272,7 +272,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
                 return mid;
             }
         }
-        throw new DrawException("Could not find position " + pos + " on line with length: " + getLength());
+        throw new DrawRuntimeException("Could not find position " + pos + " on line with length: " + getLength());
     }
 
     /**
@@ -280,5 +280,146 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
      * @return String MS-excel XY, or XYZ plottable output
      */
     String toExcel();
+
+    /** Default precision of approximation of arcs in the offsetLine method. */
+    double DEFAULT_CIRCLE_PRECISION = 0.001;
+
+    /** By default, noise in the reference line of the offsetLine method less than this value is always filtered. */
+    double DEFAULT_OFFSET_MINIMUM_FILTER_VALUE = 0.001;
+
+    /** By default, noise in the reference line of the offsetLineMethod greater than this value is never filtered. */
+    double DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE = 0.1;
+
+    /**
+     * By default, noise in the reference line of the offsetLineMethod less than <cite>offset / offsetFilterRatio</cite> is
+     * filtered except when the resulting value exceeds <cite>offsetMaximumFilterValue</cite>.
+     */
+    double DEFAULT_OFFSET_FILTER_RATIO = 10;
+
+    /** By default, the offsetLineMethod uses this offset precision. */
+    double DEFAULT_OFFSET_PRECISION = 0.00001;
+
+    /**
+     * Construct an offset line. This is similar to what geographical specialists call buffering, except that this method only
+     * construct a new line on one side of the reference line and does not add half disks around the end points. This method
+     * tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise in
+     * <cite>this</cite> (the reference line) can cause major artifacts in the offset line. This method calls the underlying
+     * method with default values for circlePrecision (<cite>DEFAULT_OFFSET</cite>), offsetMinimumFilterValue
+     * (<cite>DEFAULT_OFFSET_MINIMUM_FILTER_VALUE</cite>), offsetMaximumFilterValue
+     * (<cite>DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE</cite>), offsetFilterRatio (<cite>DEFAULT_OFFSET_FILTER_RATIO</cite>),
+     * minimumOffset (<cite>DEFAULT_OFFSET_PRECISION</cite>). <br>
+     * In the 3D version the offset is parallel to the X-Y plane.
+     * @param offset double; the offset; positive values indicate left of the reference line, negative values indicate right of
+     *            the reference line
+     * @return PolyLine2d; a line at the specified offset from the reference line
+     * @throws DrawRuntimeException Only if P is PolyLine3d and the line cannot be projected into 2d
+     */
+    default L offsetLine(double offset) throws DrawRuntimeException
+    {
+        return offsetLine(offset, DEFAULT_CIRCLE_PRECISION, DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, DEFAULT_OFFSET_FILTER_RATIO, DEFAULT_OFFSET_PRECISION);
+    }
+
+    /**
+     * Construct an offset line. This is similar to what geographical specialists call buffering, except that this method only
+     * construct a new line on one side of the reference line and does not add half disks around the end points. This method
+     * tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise in
+     * <cite>this</cite> (the reference line) can cause major artifacts in the offset line. <br>
+     * In the 3D version the offset is parallel to the X-Y plane.
+     * @param offset double; the offset; positive values indicate left of the reference line, negative values indicate right of
+     *            the reference line
+     * @param circlePrecision double; precision of approximation of arcs; the line segments that are used to approximate an arc
+     *            will not deviate from the exact arc by more than this value
+     * @param offsetMinimumFilterValue double; noise in the reference line less than this value is always filtered
+     * @param offsetMaximumFilterValue double; noise in the reference line greater than this value is never filtered
+     * @param offsetFilterRatio double; noise in the reference line less than <cite>offset / offsetFilterRatio</cite> is
+     *            filtered except when the resulting value exceeds <cite>offsetMaximumFilterValue</cite>
+     * @param minimumOffset double; an offset value less than this value is treated as 0.0
+     * @return PolyLine2d; a line at the specified offset from the reference line
+     * @throws IllegalArgumentException when offset is NaN, or circlePrecision, offsetMinimumFilterValue,
+     *             offsetMaximumfilterValue, offsetFilterRatio, or minimumOffset is not positive, or NaN, or
+     *             offsetMinimumFilterValue &gt;= offsetMaximumFilterValue
+     * @throws DrawRuntimeException Only if P is PolyLine3d and the line cannot be projected into 2d
+     */
+    L offsetLine(double offset, double circlePrecision, double offsetMinimumFilterValue, double offsetMaximumFilterValue,
+            double offsetFilterRatio, double minimumOffset) throws IllegalArgumentException, DrawRuntimeException;
+
+    /**
+     * Construct an offset line. This is similar to what geographical specialists call buffering, except that this method only
+     * construct a new line on one side of the reference line and does not add half disks around the end points. This method
+     * tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise in
+     * <cite>this</cite> (the reference line) can cause major artifacts in the offset line. This method calls the underlying
+     * method with default values for circlePrecision (<cite>DEFAULT_OFFSET</cite>), offsetMinimumFilterValue
+     * (<cite>DEFAULT_OFFSET_MINIMUM_FILTER_VALUE</cite>), offsetMaximumFilterValue
+     * (<cite>DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE</cite>), offsetFilterRatio (<cite>DEFAULT_OFFSET_FILTER_RATIO</cite>),
+     * minimumOffset (<cite>DEFAULT_OFFSET_PRECISION</cite>). <br>
+     * In the 3D version the offset is parallel to the X-Y plane.
+     * @param offsetAtStart double; the offset at the start of this line; positive values indicate left of the reference line,
+     *            negative values indicate right of the reference line
+     * @param offsetAtEnd double; the offset at the end of this line; positive values indicate left of the reference line,
+     *            negative values indicate right of the reference line
+     * @return PolyLine2d; a line at the specified offset from the reference line
+     * @throws IllegalArgumentException when offset is NaN, or circlePrecision, offsetMinimumFilterValue,
+     *             offsetMaximumfilterValue, offsetFilterRatio, or minimumOffset is not positive, or NaN, or
+     *             offsetMinimumFilterValue &gt;= offsetMaximumFilterValue
+     * @throws DrawRuntimeException Only if P is PolyLine3d and the line cannot be projected into 2d
+     */
+    default L offsetLine(double offsetAtStart, double offsetAtEnd) throws IllegalArgumentException, DrawRuntimeException
+    {
+        return offsetLine(offsetAtStart, offsetAtEnd, DEFAULT_CIRCLE_PRECISION, DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, DEFAULT_OFFSET_FILTER_RATIO, DEFAULT_OFFSET_PRECISION);
+    }
+
+    /**
+     * Construct an offset line. This is similar to what geographical specialists call buffering, except that this method only
+     * construct a new line on one side of the reference line and does not add half disks around the end points. This method
+     * tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise in
+     * <cite>this</cite> (the reference line) can cause major artifacts in the offset line. <br>
+     * In the 3D version the offset is parallel to the X-Y plane.
+     * @param offsetAtStart double; the offset at the start of this line; positive values indicate left of the reference line,
+     *            negative values indicate right of the reference line
+     * @param offsetAtEnd double; the offset at the end of this line; positive values indicate left of the reference line,
+     *            negative values indicate right of the reference line
+     * @param circlePrecision double; precision of approximation of arcs; the line segments that are used to approximate an arc
+     *            will not deviate from the exact arc by more than this value
+     * @param offsetMinimumFilterValue double; noise in the reference line less than this value is always filtered
+     * @param offsetMaximumFilterValue double; noise in the reference line greater than this value is never filtered
+     * @param offsetFilterRatio double; noise in the reference line less than <cite>offset / offsetFilterRatio</cite> is
+     *            filtered except when the resulting value exceeds <cite>offsetMaximumFilterValue</cite>
+     * @param minimumOffset double; an offset value less than this value is treated as 0.0
+     * @return PolyLine2d; a line at the specified offset from the reference line
+     * @throws IllegalArgumentException when offset is NaN, or circlePrecision, offsetMinimumFilterValue,
+     *             offsetMaximumfilterValue, offsetFilterRatio, or minimumOffset is not positive, or NaN, or
+     *             offsetMinimumFilterValue &gt;= offsetMaximumFilterValue
+     * @throws DrawRuntimeException Only if P is PolyLine3d and the line cannot be projected into 2d
+     */
+    L offsetLine(double offsetAtStart, double offsetAtEnd, double circlePrecision, double offsetMinimumFilterValue,
+            double offsetMaximumFilterValue, double offsetFilterRatio, double minimumOffset)
+            throws IllegalArgumentException, DrawRuntimeException;
+
+    /**
+     * Make a transition line from this L to another L using a user specified function.
+     * @param endLine L; the other L
+     * @param transition TransitionFunction; how the results changes from this line to the other line
+     * @return L; a transition between this L and the other L
+     * @throws DrawRuntimeException when construction of some point along the way fails. E.g. when the transition function
+     *             returns NaN.
+     */
+    L transitionLine(L endLine, TransitionFunction transition) throws DrawRuntimeException;
+
+    /**
+     * Interface for transition function.
+     */
+    interface TransitionFunction
+    {
+        /**
+         * Function that returns some value for inputs between 0.0 and 1.0. For a smooth transition, this function should return
+         * 0.0 for input 0.0 and 1.0 for input 1.0 and be continuous and smooth.
+         * @param fraction double; the input for the function
+         * @return double; a ratio between 0.0 and 1.0 (values outside this domain are not an error, but will cause the
+         *         transition line to go outside the range of the reference line and the other line)
+         */
+        double function(double fraction);
+    }
 
 }

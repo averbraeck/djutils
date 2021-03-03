@@ -96,7 +96,8 @@ public class Polygon3d extends PolyLine3d
      */
     public Polygon3d(final Point3d[] points) throws NullPointerException, DrawRuntimeException
     {
-        this(PolyLine3d.makeX(points), PolyLine3d.makeY(points), PolyLine3d.makeZ(points));
+        this(PolyLine3d.makeArray(Throw.whenNull(points, "points may not be null"), p -> p.x),
+                PolyLine3d.makeArray(points, p -> p.y), PolyLine3d.makeArray(points, p -> p.z));
     }
 
     /**
@@ -224,7 +225,7 @@ public class Polygon3d extends PolyLine3d
     {
         double[] projectedX = new double[this.size()];
         double[] projectedY = new double[this.size()];
-        
+
         int nextIndex = 0;
         for (int i = 0; i < this.size(); i++)
         {

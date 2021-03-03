@@ -18,6 +18,7 @@ import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Transform2d;
 import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.line.PolyLine.TransitionFunction;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.junit.Test;
@@ -534,9 +535,9 @@ public class PolyLine2dTest
         try
         {
             line.getLocation(-0.1);
-            fail("negative location should have thrown a DrawException");
+            fail("negative location should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -547,9 +548,9 @@ public class PolyLine2dTest
         try
         {
             line.getLocation(length + 0.1);
-            fail("location beyond length should have thrown a DrawException");
+            fail("location beyond length should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -557,9 +558,9 @@ public class PolyLine2dTest
         try
         {
             line.getLocation(-0.1);
-            fail("negative location should have thrown a DrawException");
+            fail("negative location should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -569,9 +570,9 @@ public class PolyLine2dTest
         try
         {
             line.getLocationFraction(1.1);
-            fail("location beyond length should have thrown a DrawException");
+            fail("location beyond length should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException de)
         {
             // Ignore expected exception
         }
@@ -579,9 +580,9 @@ public class PolyLine2dTest
         try
         {
             line.getLocationFraction(-0.1);
-            fail("negative location should have thrown a DrawException");
+            fail("negative location should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -648,31 +649,15 @@ public class PolyLine2dTest
                         assertEquals("resultPoint is equal to closestPoint", resultPoint, closestPointOnLine);
                         assertEquals("getLocationFraction returns same as getLocationfractionExtended", resultPoint,
                                 line.getLocationFraction(result));
-                        // try
-                        // {
-                        // System.out.print("c1,0,0 " + new LineSegment2d(xy, line.projectOrthogonal(xy)).toPlot());
-                        // }
-                        // catch (DrawRuntimeException dre)
-                        // {
-                        // // Ignore - for now
-                        // }
                     }
                     else
                     {
-                        // try
-                        // {
-                        // System.out.print("c0,0,1 " + new LineSegment2d(xy, line.projectOrthogonalExtended(xy)).toPlot());
-                        // }
-                        // catch (DrawRuntimeException dre)
-                        // {
-                        // // Ignore - for now
-                        // }
                         try
                         {
                             line.getLocationFraction(result);
-                            fail("illegal fraction should have thrown a DrawException");
+                            fail("illegal fraction should have thrown a DrawRuntimeException");
                         }
-                        catch (DrawException de)
+                        catch (DrawRuntimeException dre)
                         {
                             // Ignore expected exception
                         }
@@ -706,24 +691,8 @@ public class PolyLine2dTest
                         }
                     }
                     assertTrue("closestPointOnLine is one of the construction points of the line", found);
-                    // try
-                    // {
-                    // System.out.print("c0,1,0 " + new LineSegment2d(xy, closestPointOnLine).toPlot());
-                    // }
-                    // catch (DrawRuntimeException dre)
-                    // {
-                    // // Ignore - for now
-                    // }
                 }
                 Point2d closestPointOnLine = line.closestPointOnPolyLine(xy);
-                // try
-                // {
-                // System.out.print("c0,1,0 " + new LineSegment2d(xy, closestPointOnLine).toPlot());
-                // }
-                // catch (DrawRuntimeException dre)
-                // {
-                // // Ignore - for now
-                // }
                 assertNotNull("closest point is never null", closestPointOnLine);
             }
         }
@@ -1048,9 +1017,8 @@ public class PolyLine2dTest
         PolyLine2d line = new PolyLine2d(new Point2d(1, 2), new Point2d(3, 4));
         try
         {
-            line.offsetLine(1, 0, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
-                    PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO,
-                    PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            line.offsetLine(1, 0, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
+                    PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
             fail("zero circle precision should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -1060,9 +1028,9 @@ public class PolyLine2dTest
 
         try
         {
-            line.offsetLine(1, Double.NaN, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
-                    PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO,
-                    PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            line.offsetLine(1, Double.NaN, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                    PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO,
+                    PolyLine.DEFAULT_OFFSET_PRECISION);
             fail("NaN circle precision should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -1072,8 +1040,8 @@ public class PolyLine2dTest
 
         try
         {
-            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, 0, PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
-                    PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO, PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, 0, PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
+                    PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
             fail("zero offsetMinimumFilterValue should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -1083,8 +1051,8 @@ public class PolyLine2dTest
 
         try
         {
-            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, Double.NaN, PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
-                    PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO, PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, Double.NaN, PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
+                    PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
             fail("NaN offsetMinimumFilterValue should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -1094,9 +1062,9 @@ public class PolyLine2dTest
 
         try
         {
-            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
-                    PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO,
-                    PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
+                    PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO,
+                    PolyLine.DEFAULT_OFFSET_PRECISION);
             fail("offsetMinimumFilterValue not less than offsetMaximumFilterValue should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -1106,8 +1074,8 @@ public class PolyLine2dTest
 
         try
         {
-            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, 0,
-                    PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO, PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, 0,
+                    PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
             fail("zero offsetMaximumfilterValue should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -1117,8 +1085,8 @@ public class PolyLine2dTest
 
         try
         {
-            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, Double.NaN,
-                    PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO, PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, Double.NaN,
+                    PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
             fail("NaN offsetMaximumfilterValue should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -1128,8 +1096,8 @@ public class PolyLine2dTest
 
         try
         {
-            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
-                    PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, 0, PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                    PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, 0, PolyLine.DEFAULT_OFFSET_PRECISION);
             fail("zero offsetFilterRatio should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -1139,8 +1107,8 @@ public class PolyLine2dTest
 
         try
         {
-            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
-                    PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, Double.NaN, PolyLine2d.DEFAULT_OFFSET_PRECISION);
+            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                    PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, Double.NaN, PolyLine.DEFAULT_OFFSET_PRECISION);
             fail("NaN offsetFilterRatio should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -1150,8 +1118,8 @@ public class PolyLine2dTest
 
         try
         {
-            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
-                    PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO, 0);
+            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                    PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO, 0);
             fail("zero offsetPrecision should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -1161,8 +1129,8 @@ public class PolyLine2dTest
 
         try
         {
-            line.offsetLine(1, PolyLine2d.DEFAULT_CIRCLE_PRECISION, PolyLine2d.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
-                    PolyLine2d.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine2d.DEFAULT_OFFSET_FILTER_RATIO, Double.NaN);
+            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                    PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO, Double.NaN);
             fail("NaN offsetPrecision should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae)
@@ -1278,16 +1246,7 @@ public class PolyLine2dTest
                 double location = innerDesignLine.projectRay(ray);
                 if (!Double.isNaN(location))
                 {
-                    try
-                    {
-                        innerDesignLine.getLocation(location);
-                    }
-                    catch (DrawException de)
-                    {
-                        System.out.println("WTF");
-                        outerDesignLine.projectRay(ray);
-                        // WTF
-                    }
+                    innerDesignLine.getLocation(location);
                     Point2d projection = innerDesignLine.getLocation(location);
                     projections.add(new Point2d(projection.x, projection.y));
                     projections.add(transitionLinePoint);
@@ -1295,16 +1254,7 @@ public class PolyLine2dTest
                 location = outerDesignLine.projectRay(ray);
                 if (!Double.isNaN(location))
                 {
-                    try
-                    {
-                        outerDesignLine.getLocation(location);
-                    }
-                    catch (DrawException de)
-                    {
-                        System.out.println("WTF");
-                        outerDesignLine.projectRay(ray);
-                        // WTF
-                    }
+                    outerDesignLine.getLocation(location);
                     Point2d projection = outerDesignLine.getLocation(location);
                     projections.add(new Point2d(projection.x, projection.y));
                     projections.add(transitionLinePoint);
@@ -1341,18 +1291,11 @@ public class PolyLine2dTest
                 offsetLine.projectRay(ray);
             }
             assertFalse("There is a projection", Double.isNaN(projectionLocation));
-            try
-            {
-                Point2d projectedPoint = offsetLine.getLocation(projectionLocation);
-                // System.out.println(String.format("DirectedPoint %s projects on line at %.3f. which is at %s", ray,
-                // projectionLocation, projectedPoint));
-                projections.add(projectedPoint);
-                projections.add(ray); // And back to ray
-            }
-            catch (DrawException e)
-            {
-                e.printStackTrace();
-            }
+            Point2d projectedPoint = offsetLine.getLocation(projectionLocation);
+            // System.out.println(String.format("DirectedPoint %s projects on line at %.3f. which is at %s", ray,
+            // projectionLocation, projectedPoint));
+            projections.add(projectedPoint);
+            projections.add(ray); // And back to ray
             assertTrue("projection increases monotonous", projectionLocation > prevProjection);
             prevProjection = projectionLocation;
         }
@@ -1369,19 +1312,12 @@ public class PolyLine2dTest
                 System.out.println("x " + x + " gives NaN result");
                 continue;
             }
-            try
-            {
-                projections.add(ray);
-                Point2d projectedPoint = offsetLine.getLocation(projectionLocation);
-                // System.out.println(String.format("DirectedPoint %s projects on line at %.3f. which is at %s", ray,
-                // projectionLocation, projectedPoint));
-                projections.add(projectedPoint);
-                projections.add(ray); // And back to ray
-            }
-            catch (DrawException e)
-            {
-                e.printStackTrace();
-            }
+            projections.add(ray);
+            Point2d projectedPoint = offsetLine.getLocation(projectionLocation);
+            // System.out.println(String.format("DirectedPoint %s projects on line at %.3f. which is at %s", ray,
+            // projectionLocation, projectedPoint));
+            projections.add(projectedPoint);
+            projections.add(ray); // And back to ray
             assertTrue("projection increases monotonous", projectionLocation > prevProjection);
             prevProjection = projectionLocation;
         }
@@ -1502,6 +1438,91 @@ public class PolyLine2dTest
 
             }
         }
+    }
+
+    /**
+     * Test the transitionLine method.
+     */
+    @Test
+    public void testTransitionLine()
+    {
+        // Create a Bezier with a 90 degree change of direction starting in X direction, ending in Y direction
+        PolyLine2d bezier = Bezier.cubic(64, new Ray2d(-5, 0, 0, 0), new Ray2d(0, 5, 0, 7));
+        // System.out.print("c1,0,0" + bezier1.project().toPlot());
+        double length = bezier.getLength();
+        double prevDir = Double.NaN;
+        for (int step = 0; step <= 1000; step++)
+        {
+            double distance = length * step / 1000;
+            Ray2d ray = bezier.getLocation(distance);
+            double direction = Math.toDegrees(ray.phi);
+            if (step > 0)
+            {
+                assertEquals("phi changes very little at step " + step, prevDir, direction, 2);
+            }
+            prevDir = Math.toDegrees(ray.phi);
+        }
+        // Make a gradually transitioning offset line
+        PolyLine2d transitioningOffsetLine = bezier.offsetLine(0, 2);
+        // Verify that this curve is fairly smooth
+        length = transitioningOffsetLine.getLength();
+        prevDir = Double.NaN;
+        for (int step = 0; step <= 1000; step++)
+        {
+            double distance = length * step / 1000;
+            Ray2d ray = transitioningOffsetLine.getLocation(distance);
+            double direction = Math.toDegrees(ray.phi);
+            if (step > 0)
+            {
+                assertEquals("phi changes very little at step " + step, prevDir, direction, 2);
+            }
+            prevDir = Math.toDegrees(ray.phi);
+        }
+        PolyLine2d endLine = bezier.offsetLine(-2);
+        // System.out.print("c0,1,0" + endLine.project().toPlot());
+        TransitionFunction transitionFunction = new TransitionFunction()
+        {
+            @Override
+            public double function(final double fraction)
+            {
+                return 0.5 - Math.cos(fraction * Math.PI) / 2;
+            }
+        };
+        PolyLine2d cosineSmoothTransitioningLine = bezier.transitionLine(endLine, transitionFunction);
+        // System.out.print("c0,0,0" + cosineSmoothTransitioningLine.project().toPlot());
+        length = cosineSmoothTransitioningLine.getLength();
+        prevDir = Double.NaN;
+        for (int step = 0; step <= 1000; step++)
+        {
+            double distance = length * step / 1000;
+            Ray2d ray = cosineSmoothTransitioningLine.getLocation(distance);
+            double direction = Math.toDegrees(ray.phi);
+            if (step > 0)
+            {
+                assertEquals("phi changes very little at step " + step, prevDir, direction, 4);
+            }
+            prevDir = Math.toDegrees(ray.phi);
+        }
+        // System.out.print(
+        // "c0,0,1" + Bezier.cubic(bezier1.getLocationFraction(0), endLine.getLocationFraction(1)).project().toPlot());
+        // Reverse the lines
+        PolyLine2d cosineSmoothTransitioningLine2 =
+                endLine.reverse().transitionLine(bezier.reverse(), transitionFunction).reverse();
+        // Check that those lines are very similar
+        assertEquals("Lengths are equal", cosineSmoothTransitioningLine.getLength(), cosineSmoothTransitioningLine2.getLength(),
+                0.001);
+        for (int step = 0; step <= 1000; step++)
+        {
+            Ray2d ray1 = cosineSmoothTransitioningLine.getLocation(step * cosineSmoothTransitioningLine.getLength() / 1000);
+            Ray2d ray2 = cosineSmoothTransitioningLine2.getLocation(step * cosineSmoothTransitioningLine2.getLength() / 1000);
+            assertEquals("rays are almost equal in x", ray1.x, ray2.x, 0.001);
+            assertEquals("rays are almost equal in y", ray1.y, ray2.y, 0.001);
+            assertEquals("rays are almost equal in phi", ray1.phi, ray2.phi, 0.0001);
+        }
+
+        assertEquals("offset by zero returns original", bezier, bezier.offsetLine(0, 0));
+        assertEquals("offset by constant with two arguments returns same as offset with one argument", bezier.offsetLine(3, 3),
+                bezier.offsetLine(3));
     }
 
     /**

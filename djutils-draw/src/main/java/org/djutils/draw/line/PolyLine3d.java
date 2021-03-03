@@ -5,12 +5,14 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Function;
 
 import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.Space3d;
 import org.djutils.draw.bounds.Bounds3d;
+import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
 import org.djutils.logger.CategoryLogger;
@@ -121,56 +123,24 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      */
     public PolyLine3d(final Point3d[] points) throws NullPointerException, DrawRuntimeException
     {
-        // TODO: figure out how to do makeX, makeY, makeZ with lambda expressions
-        this(false, makeX(Throw.whenNull(points, "points may not be null")), makeY(points), makeZ(points));
+        this(false, makeArray(Throw.whenNull(points, "points may not be null"), p -> p.x), makeArray(points, p -> p.y),
+                makeArray(points, p -> p.z));
     }
 
     /**
-     * Make an array of double and fill it with the x-coordinates of points.
-     * @param points Point2d[]; array of points
-     * @return double[]; array filled with the x-coordinates of points
-     * @throws NullPointerException when points is null, or contains a null value
+     * Make an array of double an fill it with the appropriate coordinate of points.
+     * @param points Point3d[]; array of points
+     * @param getter Function&lt;Point3d, Double&gt;; function that obtains the intended coordinate
+     * @return double[]; array of double filled with the requested coordinate values
      */
-    static double[] makeX(final Point3d[] points) throws NullPointerException
+    protected static double[] makeArray(final Point3d[] points, final Function<Point3d, Double> getter)
     {
-        double[] xArray = new double[points.length];
-        for (int i = 0; i < points.length; i++)
+        double[] array = new double[points.length];
+        for (int index = 0; index < points.length; index++)
         {
-            xArray[i] = points[i].x;
+            array[index] = getter.apply(points[index]);
         }
-        return xArray;
-    }
-
-    /**
-     * Make an array of double and fill it with the y-coordinates of points.
-     * @param points Point2d[]; array of points
-     * @return double[]; array filled with the y-coordinates of points
-     * @throws NullPointerException when points is null, or contains a null value
-     */
-    static double[] makeY(final Point3d[] points) throws NullPointerException
-    {
-        double[] yArray = new double[points.length];
-        for (int i = 0; i < points.length; i++)
-        {
-            yArray[i] = points[i].y;
-        }
-        return yArray;
-    }
-
-    /**
-     * Make an array of double and fill it with the z-coordinates of points.
-     * @param points Point2d[]; array of points
-     * @return double[]; array filled with the z-coordinates of points
-     * @throws NullPointerException when points is null, or contains a null value
-     */
-    static double[] makeZ(final Point3d[] points) throws NullPointerException
-    {
-        double[] zArray = new double[points.length];
-        for (int i = 0; i < points.length; i++)
-        {
-            zArray[i] = points[i].z;
-        }
-        return zArray;
+        return array;
     }
 
     /**
@@ -530,9 +500,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      * @param pointList List&lt;Point3d&gt;; list of the coordinates of the line as Point3d; any duplicate points in this list
      *            are removed (this method may modify the provided list)
      * @return Line3d; the line
-     * @throws DrawException when number of non-equal points &lt; 2
+     * @throws DrawRuntimeException when number of non-equal points &lt; 2
      */
-    public static PolyLine3d createAndCleanPolyLine3d(final List<Point3d> pointList) throws DrawException
+    public static PolyLine3d createAndCleanPolyLine3d(final List<Point3d> pointList) throws DrawRuntimeException
     {
         // TODO rewrite to avoid modifying the input list.
         // clean successive equal points
@@ -561,7 +531,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
             {
                 return getLocation(position);
             }
-            catch (DrawException exception)
+            catch (DrawRuntimeException exception)
             {
                 // cannot happen
             }
@@ -598,10 +568,10 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
 
     /** {@inheritDoc} */
     @Override
-    public final Ray3d getLocation(final double position) throws DrawException
+    public final Ray3d getLocation(final double position) throws DrawRuntimeException
     {
-        Throw.when(Double.isNaN(position), DrawException.class, "position may not be NaN");
-        Throw.when(position < 0.0 || position > getLength(), DrawException.class,
+        Throw.when(Double.isNaN(position), DrawRuntimeException.class, "position may not be NaN");
+        Throw.when(position < 0.0 || position > getLength(), DrawRuntimeException.class,
                 "getLocation for line: position < 0.0 or > line length. Position = " + position + "; length = " + getLength());
         // handle special cases: position == 0.0, or position == length
         if (position == 0.0)
@@ -700,7 +670,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         {
             return getLocation(projectOrthogonalFractional(point, true) * getLength());
         }
-        catch (DrawException e)
+        catch (DrawRuntimeException e)
         {
             // Cannot happen
             e.printStackTrace();
@@ -835,6 +805,109 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
             CategoryLogger.always().error(exception, "interval " + start + ".." + end + " too short");
             throw new DrawException("interval " + start + ".." + end + "too short");
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public PolyLine3d offsetLine(final double offset, final double circlePrecision, final double offsetMinimumFilterValue,
+            final double offsetMaximumFilterValue, final double offsetFilterRatio, final double minimumOffset)
+            throws IllegalArgumentException
+    {
+        PolyLine2d flat = project().offsetLine(offset, circlePrecision, offsetMinimumFilterValue, offsetMaximumFilterValue,
+                offsetFilterRatio, minimumOffset);
+        List<Point3d> points = new ArrayList<>();
+        int start = 0;
+        for (int index = 0; index < flat.size(); index++)
+        {
+            Point2d point2d = flat.get(index);
+            // Find the closest point in reference to point2d; starting at start
+            int bestIndex = start;
+            double bestDistance = Double.POSITIVE_INFINITY;
+            Point3d bestInReference = null;
+            for (int i = start; i < size(); i++)
+            {
+                Point3d pointInReference = get(i);
+                double distance = point2d.distance(pointInReference.project());
+                if (distance < bestDistance)
+                {
+                    bestIndex = i;
+                    bestDistance = distance;
+                    bestInReference = pointInReference;
+                }
+            }
+            points.add(new Point3d(point2d, bestInReference.z));
+            start = bestIndex;
+        }
+        try
+        {
+            return new PolyLine3d(points);
+        }
+        catch (DrawRuntimeException dre) // Cannot happen
+        {
+            dre.printStackTrace();
+            return null;
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public PolyLine3d offsetLine(final double offsetAtStart, final double offsetAtEnd, final double circlePrecision,
+            final double offsetMinimumFilterValue, final double offsetMaximumFilterValue, final double offsetFilterRatio,
+            final double minimumOffset) throws IllegalArgumentException
+    {
+        if (offsetAtStart == offsetAtEnd)
+        {
+            return offsetLine(offsetAtStart, circlePrecision, offsetMinimumFilterValue, offsetMaximumFilterValue,
+                    offsetFilterRatio, minimumOffset);
+        }
+        PolyLine3d atStart = offsetLine(offsetAtStart, circlePrecision, offsetMinimumFilterValue, offsetMaximumFilterValue,
+                offsetFilterRatio, minimumOffset);
+        PolyLine3d atEnd = offsetLine(offsetAtEnd, circlePrecision, offsetMinimumFilterValue, offsetMaximumFilterValue,
+                offsetFilterRatio, minimumOffset);
+        return atStart.transitionLine(atEnd, new TransitionFunction()
+        {
+            @Override
+            public double function(final double fraction)
+            {
+                return fraction;
+            }
+        });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public PolyLine3d transitionLine(final PolyLine3d endLine, final TransitionFunction transition) throws DrawRuntimeException
+    {
+        Throw.whenNull(endLine, "endLine may not be null");
+        Throw.whenNull(transition, "transition may not be null");
+        List<Point3d> pointList = new ArrayList<>();
+        int indexInStart = 0;
+        int indexInEnd = 0;
+        while (indexInStart < this.size() && indexInEnd < endLine.size())
+        {
+            double fractionInStart = lengthAtIndex(indexInStart) / getLength();
+            double fractionInEnd = endLine.lengthAtIndex(indexInEnd) / endLine.getLength();
+            if (fractionInStart < fractionInEnd)
+            {
+                pointList.add(get(indexInStart).interpolate(endLine.getLocation(fractionInStart * endLine.getLength()),
+                        transition.function(fractionInStart)));
+                indexInStart++;
+            }
+            else if (fractionInStart > fractionInEnd)
+            {
+                pointList.add(this.getLocation(fractionInEnd * getLength()).interpolate(endLine.get(indexInEnd),
+                        transition.function(fractionInEnd)));
+                indexInEnd++;
+            }
+            else
+            {
+                pointList.add(this.get(indexInStart).interpolate(endLine.getLocation(fractionInEnd * endLine.getLength()),
+                        transition.function(fractionInStart)));
+                indexInStart++;
+                indexInEnd++;
+            }
+        }
+        return createAndCleanPolyLine3d(pointList);
     }
 
     /** {@inheritDoc} */
