@@ -13,7 +13,6 @@ import java.awt.geom.Point2D;
 import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.line.LineSegment2d;
 import org.djutils.draw.line.LineSegment3d;
 import org.djutils.draw.line.PolyLine3d;
 import org.djutils.exceptions.Try;

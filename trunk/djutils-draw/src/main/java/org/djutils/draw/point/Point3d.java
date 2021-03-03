@@ -9,7 +9,6 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.Space3d;
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.line.Ray3d;
 import org.djutils.exceptions.Throw;
 
 /**

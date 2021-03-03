@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Function;
 
 import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
@@ -108,42 +109,25 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      */
     public PolyLine2d(final Point2d[] points) throws NullPointerException, DrawRuntimeException
     {
-        // TODO: figure out how to do makeX, makeY, makeZ with lambda expressions
-        this(false, makeX(Throw.whenNull(points, "points may not be null")), makeY(points));
+        this(false, makeArray(Throw.whenNull(points, "points may not be null"), p -> p.x), makeArray(points, p -> p.y));
     }
 
     /**
-     * Make an array of double and fill it with the x-coordinates of points.
+     * Make an array of double an fill it with the appropriate coordinate of points.
      * @param points Point2d[]; array of points
-     * @return double[]; array filled with the x-coordinates of points
-     * @throws NullPointerException when points is null, or contains a null value
+     * @param getter Function&lt;Point2d, Double&gt;; function that obtains the intended coordinate
+     * @return double[]; array of double filled with the requested coordinate values
      */
-    static double[] makeX(final Point2d[] points) throws NullPointerException
+    protected static double[] makeArray(final Point2d[] points, final Function<Point2d, Double> getter)
     {
-        double[] xArray = new double[points.length];
-        for (int i = 0; i < points.length; i++)
+        double[] array = new double[points.length];
+        for (int index = 0; index < points.length; index++)
         {
-            xArray[i] = points[i].x;
+            array[index] = getter.apply(points[index]);
         }
-        return xArray;
+        return array;
     }
-
-    /**
-     * Make an array of double and fill it with the y-coordinates of points.
-     * @param points Point2d[]; array of points
-     * @return double[]; array filled with the y-coordinates of points
-     * @throws NullPointerException when points is null, or contains a null value
-     */
-    static double[] makeY(final Point2d[] points)
-    {
-        double[] yArray = new double[points.length];
-        for (int i = 0; i < points.length; i++)
-        {
-            yArray[i] = points[i].y;
-        }
-        return yArray;
-    }
-
+    
     /**
      * Construct a new PolyLine2d from an array of Point2d.
      * @param point1 Point2d; starting point of the PolyLine2d
@@ -507,9 +491,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * @param pointList List&lt;Point2d&gt;; list of the coordinates of the line as Point2d; any duplicate points in this list
      *            are removed (this method may modify the provided list)
      * @return Line2d; the line
-     * @throws DrawException when number of non-equal points &lt; 2
+     * @throws DrawRuntimeException when number of non-equal points &lt; 2
      */
-    public static PolyLine2d createAndCleanPolyLine2d(final List<Point2d> pointList) throws DrawException
+    public static PolyLine2d createAndCleanPolyLine2d(final List<Point2d> pointList) throws DrawRuntimeException
     {
         // TODO rewrite to avoid modifying the input list.
         // clean successive equal points
@@ -538,7 +522,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
             {
                 return getLocation(position);
             }
-            catch (DrawException exception)
+            catch (DrawRuntimeException exception)
             {
                 // cannot happen
             }
@@ -574,10 +558,10 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
 
     /** {@inheritDoc} */
     @Override
-    public final Ray2d getLocation(final double position) throws DrawException
+    public final Ray2d getLocation(final double position) throws DrawRuntimeException
     {
-        Throw.when(Double.isNaN(position), DrawException.class, "position may not be NaN");
-        Throw.when(position < 0.0 || position > getLength(), DrawException.class,
+        Throw.when(Double.isNaN(position), DrawRuntimeException.class, "position may not be NaN");
+        Throw.when(position < 0.0 || position > getLength(), DrawRuntimeException.class,
                 "getLocation for line: position < 0.0 or > line length. Position = " + position + "; length = " + getLength());
         // handle special cases: position == 0.0, or position == length
         if (position == 0.0)
@@ -671,7 +655,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         {
             return getLocation(projectOrthogonalFractional(point, true) * getLength());
         }
-        catch (DrawException e)
+        catch (DrawRuntimeException e)
         {
             // Cannot happen
             e.printStackTrace();
@@ -852,62 +836,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         return new PolyLine2d(truncatedX, truncatedY);
     }
 
-    /** Default precision of approximation of arcs in the offsetLine method. */
-    public static final double DEFAULT_CIRCLE_PRECISION = 0.001;
-
-    /** By default, noise in the reference line of the offsetLine method less than this value is always filtered. */
-    public static final double DEFAULT_OFFSET_MINIMUM_FILTER_VALUE = 0.001;
-
-    /** By default, noise in the reference line of the offsetLineMethod greater than this value is never filtered. */
-    public static final double DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE = 0.1;
-
-    /**
-     * By default, noise in the reference line of the offsetLineMethod less than <cite>offset / offsetFilterRatio</cite> is
-     * filtered except when the resulting value exceeds <cite>offsetMaximumFilterValue</cite>.
-     */
-    public static final double DEFAULT_OFFSET_FILTER_RATIO = 10;
-
-    /** By default, the offsetLineMethod uses this offset precision. */
-    public static final double DEFAULT_OFFSET_PRECISION = 0.00001;
-
-    /**
-     * Construct an offset line. This is similar to what geographical specialists call buffering, except that this method only
-     * construct a new line on one side of the reference line and does not add half disks around the end points. This method
-     * tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise in
-     * <cite>this</cite> (the reference line) can cause major artifacts in the offset line. This method calls the underlying
-     * method with default values for circlePrecision (<cite>DEFAULT_OFFSET</cite>), offsetMinimumFilterValue
-     * (<cite>DEFAULT_OFFSET_MINIMUM_FILTER_VALUE</cite>), offsetMaximumFilterValue
-     * (<cite>DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE</cite>), offsetFilterRatio (<cite>DEFAULT_OFFSET_FILTER_RATIO</cite>),
-     * minimumOffset (<cite>DEFAULT_OFFSET_PRECISION</cite>).
-     * @param offset double; the offset; positive values indicate left of the reference line, negative values indicate right of
-     *            the reference line
-     * @return PolyLine2d; a line at the specified offset from the reference line
-     */
-    public PolyLine2d offsetLine(final double offset)
-    {
-        return offsetLine(offset, DEFAULT_CIRCLE_PRECISION, DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
-                DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, DEFAULT_OFFSET_FILTER_RATIO, DEFAULT_OFFSET_PRECISION);
-    }
-
-    /**
-     * Construct an offset line. This is similar to what geographical specialists call buffering, except that this method only
-     * construct a new line on one side of the reference line and does not add half disks around the end points. This method
-     * tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise in
-     * <cite>this</cite> (the reference line) can cause major artifacts in the offset line.
-     * @param offset double; the offset; positive values indicate left of the reference line, negative values indicate right of
-     *            the reference line
-     * @param circlePrecision double; precision of approximation of arcs; the line segments that are used to approximate an arc
-     *            will not deviate from the exact arc by more than this value
-     * @param offsetMinimumFilterValue double; noise in the reference line less than this value is always filtered
-     * @param offsetMaximumFilterValue double; noise in the reference line greater than this value is never filtered
-     * @param offsetFilterRatio double; noise in the reference line less than <cite>offset / offsetFilterRatio</cite> is
-     *            filtered except when the resulting value exceeds <cite>offsetMaximumFilterValue</cite>
-     * @param minimumOffset double; an offset value less than this value is treated as 0.0
-     * @return PolyLine2d; a line at the specified offset from the reference line
-     * @throws IllegalArgumentException when offset is NaN, or circlePrecision, offsetMinimumFilterValue,
-     *             offsetMaximumfilterValue, offsetFilterRatio, or minimumOffset is not positive, or NaN, or
-     *             offsetMinimumFilterValue &gt;= offsetMaximumFilterValue
-     */
+    /** {@inheritDoc} */
+    @Override
     @SuppressWarnings("checkstyle:methodlength")
     public PolyLine2d offsetLine(final double offset, final double circlePrecision, final double offsetMinimumFilterValue,
             final double offsetMaximumFilterValue, final double offsetFilterRatio, final double minimumOffset)
@@ -1103,11 +1033,72 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         {
             return PolyLine2d.createAndCleanPolyLine2d(tempPoints);
         }
-        catch (DrawException exception)
+        catch (DrawRuntimeException exception)
         {
             exception.printStackTrace();
         }
         return null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public PolyLine2d offsetLine(final double offsetAtStart, final double offsetAtEnd, final double circlePrecision,
+            final double offsetMinimumFilterValue, final double offsetMaximumFilterValue, final double offsetFilterRatio,
+            final double minimumOffset) throws IllegalArgumentException, DrawRuntimeException
+    {
+        if (offsetAtStart == offsetAtEnd)
+        {
+            return offsetLine(offsetAtStart, circlePrecision, offsetMinimumFilterValue, offsetMaximumFilterValue,
+                    offsetFilterRatio, minimumOffset);
+        }
+        PolyLine2d atStart = offsetLine(offsetAtStart, circlePrecision, offsetMinimumFilterValue, offsetMaximumFilterValue,
+                offsetFilterRatio, minimumOffset);
+        PolyLine2d atEnd = offsetLine(offsetAtEnd, circlePrecision, offsetMinimumFilterValue, offsetMaximumFilterValue,
+                offsetFilterRatio, minimumOffset);
+        return atStart.transitionLine(atEnd, new TransitionFunction()
+        {
+            @Override
+            public double function(final double fraction)
+            {
+                return fraction;
+            }
+        });
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public PolyLine2d transitionLine(final PolyLine2d endLine, final TransitionFunction transition) throws DrawRuntimeException
+    {
+        Throw.whenNull(endLine, "endLine may not be null");
+        Throw.whenNull(transition, "transition may not be null");
+        List<Point2d> pointList = new ArrayList<>();
+        int indexInStart = 0;
+        int indexInEnd = 0;
+        while (indexInStart < this.size() && indexInEnd < endLine.size())
+        {
+            double fractionInStart = lengthAtIndex(indexInStart) / getLength();
+            double fractionInEnd = endLine.lengthAtIndex(indexInEnd) / endLine.getLength();
+            if (fractionInStart < fractionInEnd)
+            {
+                pointList.add(get(indexInStart).interpolate(endLine.getLocation(fractionInStart * endLine.getLength()),
+                        transition.function(fractionInStart)));
+                indexInStart++;
+            }
+            else if (fractionInStart > fractionInEnd)
+            {
+                pointList.add(this.getLocation(fractionInEnd * getLength()).interpolate(endLine.get(indexInEnd),
+                        transition.function(fractionInEnd)));
+                indexInEnd++;
+            }
+            else
+            {
+                pointList.add(this.get(indexInStart).interpolate(endLine.getLocation(fractionInEnd * endLine.getLength()),
+                        transition.function(fractionInStart)));
+                indexInStart++;
+                indexInEnd++;
+            }
+        }
+        return createAndCleanPolyLine2d(pointList);
     }
 
     /**

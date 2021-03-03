@@ -75,7 +75,7 @@ public class Polygon2d extends PolyLine2d
      */
     public Polygon2d(final Point2d[] points) throws NullPointerException, DrawRuntimeException
     {
-        this(PolyLine2d.makeX(points), PolyLine2d.makeY(points));
+        this(PolyLine2d.makeArray(points, p -> p.x), PolyLine2d.makeArray(points, p -> p.y));
     }
 
     /**

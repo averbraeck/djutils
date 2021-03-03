@@ -2,6 +2,21 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.20" date="2021-03-03" description="new methods in line package">
+      <action dev="pknoppers" type="change">
+        Many cases where a DrawException was thrown now throw a DrawRuntimException.
+      </action>
+      <action dev="pknoppers" type="add">
+        New method to gradually transition from one PolyLine to another PolyLine: transitionLine.
+      </action>
+      <action dev="pknoppers" type="add">
+        Moved OTS offsetLine methods into PolyLine classes.
+      </action>
+      <action dev="pknoppers" type="change">
+        Lambda approach replaces makeX, makeY, etc. in constructors of PolyLine and Polygon objects.
+      </action>
+    </release>
+
     <release version="1.06.19" date="2021-02-23" description="Javadoc of Ray, Bezier create controlPoints fix">
       <action dev="pknoppers" type="fix">
         Javadoc of Ray used wrong wording.

@@ -19,6 +19,7 @@ import java.util.List;
 import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
+import org.djutils.draw.line.PolyLine.TransitionFunction;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.junit.Test;
@@ -525,16 +526,16 @@ public class PolyLine3dTest
                 line.getLocation(fraction * length);
                 fail("getLocation should have thrown a DrawException");
             }
-            catch (DrawException ne)
+            catch (DrawRuntimeException dre)
             {
                 // Ignore expected exception
             }
             try
             {
                 line.getLocationFraction(fraction);
-                fail("getLocation should have thrown a DrawException");
+                fail("getLocation should have thrown a DrawRuntimeException");
             }
-            catch (DrawException ne)
+            catch (DrawRuntimeException ne)
             {
                 // Ignore expected exception
             }
@@ -1131,9 +1132,9 @@ public class PolyLine3dTest
         try
         {
             line.getLocation(-0.1);
-            fail("negative location should have thrown a DrawException");
+            fail("negative location should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -1144,9 +1145,9 @@ public class PolyLine3dTest
         try
         {
             line.getLocation(length + 0.1);
-            fail("location beyond length should have thrown a DrawException");
+            fail("location beyond length should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -1154,9 +1155,9 @@ public class PolyLine3dTest
         try
         {
             line.getLocation(-0.1);
-            fail("negative location should have thrown a DrawException");
+            fail("negative location should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -1166,9 +1167,9 @@ public class PolyLine3dTest
         try
         {
             line.getLocationFraction(1.1);
-            fail("location beyond length should have thrown a DrawException");
+            fail("location beyond length should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -1176,9 +1177,9 @@ public class PolyLine3dTest
         try
         {
             line.getLocationFraction(-0.1);
-            fail("negative location should have thrown a DrawException");
+            fail("negative location should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -1258,9 +1259,9 @@ public class PolyLine3dTest
                             try
                             {
                                 line.getLocationFraction(result);
-                                fail("illegal fraction should have thrown a DrawException");
+                                fail("illegal fraction should have thrown a DrawRuntimeException");
                             }
-                            catch (DrawException de)
+                            catch (DrawRuntimeException dre)
                             {
                                 // Ignore expected exception
                             }
@@ -1687,6 +1688,106 @@ public class PolyLine3dTest
     }
 
     /**
+     * Test the transitionLine method.
+     */
+    @Test
+    public void testTransitionLine()
+    {
+        // Create a Bezier with a 90 degree change of direction starting in X direction, ending in Y direction
+        PolyLine3d bezier = Bezier.cubic(64, new Ray3d(-5, 0, 2, 0, 0, 2), new Ray3d(0, 5, 2, 0, 7, 2));
+        // System.out.print("c1,0,0" + bezier1.project().toPlot());
+        double length = bezier.getLength();
+        double prevDir = Double.NaN;
+        for (int step = 0; step <= 1000; step++)
+        {
+            double distance = length * step / 1000;
+            Ray3d ray = bezier.getLocation(distance);
+            double direction = Math.toDegrees(ray.phi);
+            if (step > 0)
+            {
+                assertEquals("phi changes very little at step " + step, prevDir, direction, 2);
+            }
+            prevDir = Math.toDegrees(ray.phi);
+        }
+        // Make a gradually transitioning offset line
+        PolyLine3d transitioningOffsetLine = bezier.offsetLine(0, 2);
+        // Verify that this curve is fairly smooth
+        length = transitioningOffsetLine.getLength();
+        prevDir = Double.NaN;
+        for (int step = 0; step <= 1000; step++)
+        {
+            double distance = length * step / 1000;
+            Ray3d ray = transitioningOffsetLine.getLocation(distance);
+            double direction = Math.toDegrees(ray.phi);
+            if (step > 0)
+            {
+                assertEquals("phi changes very little at step " + step, prevDir, direction, 2);
+            }
+            prevDir = Math.toDegrees(ray.phi);
+        }
+        PolyLine3d endLine = bezier.offsetLine(-2);
+        // System.out.print("c0,1,0" + endLine.project().toPlot());
+        TransitionFunction transitionFunction = new TransitionFunction()
+        {
+            @Override
+            public double function(final double fraction)
+            {
+                return 0.5 - Math.cos(fraction * Math.PI) / 2;
+            }
+        };
+        PolyLine3d cosineSmoothTransitioningLine = bezier.transitionLine(endLine, transitionFunction);
+        // System.out.print("c0,0,0" + cosineSmoothTransitioningLine.project().toPlot());
+        length = cosineSmoothTransitioningLine.getLength();
+        prevDir = Double.NaN;
+        for (int step = 0; step <= 1000; step++)
+        {
+            double distance = length * step / 1000;
+            Ray3d ray = cosineSmoothTransitioningLine.getLocation(distance);
+            double direction = Math.toDegrees(ray.phi);
+            if (step > 0)
+            {
+                assertEquals("phi changes very little at step " + step, prevDir, direction, 4);
+            }
+            prevDir = Math.toDegrees(ray.phi);
+        }
+        // System.out.print(
+        // "c0,0,1" + Bezier.cubic(bezier1.getLocationFraction(0), endLine.getLocationFraction(1)).project().toPlot());
+        // Reverse the lines
+        PolyLine3d cosineSmoothTransitioningLine2 =
+                endLine.reverse().transitionLine(bezier.reverse(), transitionFunction).reverse();
+        // Check that those lines are very similar
+        assertEquals("Lengths are equal", cosineSmoothTransitioningLine.getLength(), cosineSmoothTransitioningLine2.getLength(),
+                0.001);
+        for (int step = 0; step <= 1000; step++)
+        {
+            Ray3d ray1 = cosineSmoothTransitioningLine.getLocation(step * cosineSmoothTransitioningLine.getLength() / 1000);
+            Ray3d ray2 = cosineSmoothTransitioningLine2.getLocation(step * cosineSmoothTransitioningLine2.getLength() / 1000);
+            assertEquals("rays are almost equal in x", ray1.x, ray2.x, 0.001);
+            assertEquals("rays are almost equal in y", ray1.y, ray2.y, 0.001);
+            assertEquals("rays are almost equal in z", ray1.z, ray2.z, 0.001);
+            assertEquals("rays are almost equal in phi", ray1.phi, ray2.phi, 0.0001);
+            assertEquals("rays are almost equal in theta", ray1.theta, ray2.theta, 0.0001);
+        }
+
+        assertEquals("offset by zero returns original", bezier, bezier.offsetLine(0, 0));
+        assertEquals("offset by constant with two arguments returns same as offset with one argument", bezier.offsetLine(3, 3),
+                bezier.offsetLine(3));
+    }
+
+    /**
+     * Draw a X marker.
+     * @param x double; x location
+     * @param y double; y location
+     * @return String
+     */
+    public static String marker(final double x, final double y)
+    {
+        final double markerSize = 0.05;
+        return String.format("M%f,%f L%f,%f M%f,%f L%f,%f", x - markerSize / 2, y - markerSize / 2, x + markerSize / 2,
+                y + markerSize / 2, x - markerSize / 2, y + markerSize / 2, x + markerSize / 2, y - markerSize / 2);
+    }
+
+    /**
      * Problem with limited precision when getting location almost at end.
      * @throws DrawException when that happens this test has triggered the problem
      */
@@ -1702,7 +1803,7 @@ public class PolyLine3dTest
         line = new PolyLine3d(new Point3d(0, 0, 0), new Point3d(110.1, 0, 0), new Point3d(111, 0, 0));
         length = line.getLength();
         line.getLocation(length - Math.ulp(length));
-        
+
         // Problem 3
         List<Point3d> list = new ArrayList<>();
         list.add(new Point3d(1, 2, 3));

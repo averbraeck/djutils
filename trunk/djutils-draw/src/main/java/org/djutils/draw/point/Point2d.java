@@ -11,7 +11,6 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.Space2d;
 import org.djutils.draw.bounds.Bounds2d;
-import org.djutils.draw.line.Ray2d;
 import org.djutils.exceptions.Throw;
 
 /**
