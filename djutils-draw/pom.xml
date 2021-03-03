@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.djutils</groupId>
     <artifactId>djutils-parent</artifactId>
-    <version>1.06.19</version>
+    <version>1.06.20</version>
     <relativePath>../djutils-parent/pom.xml</relativePath>
   </parent>
 
