@@ -523,7 +523,7 @@ public class PolyLine3dTest
             try
             {
                 line.getLocation(fraction * length);
-                fail("getLocation should have thrown a DrawException");
+                fail("getLocation should have thrown a DrawRuntimeException");
             }
             catch (DrawRuntimeException dre)
             {
@@ -1487,7 +1487,7 @@ public class PolyLine3dTest
         try
         {
             line.truncate(-0.1);
-            fail("truncate at negative length should have thrown DrawException");
+            fail("truncate at negative length should have thrown DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
         {
@@ -1496,7 +1496,7 @@ public class PolyLine3dTest
         try
         {
             line.truncate(length + 0.1);
-            fail("truncate at length beyond length of line should have thrown DrawException");
+            fail("truncate at length beyond length of line should have thrown DrawExDrawRuntimeExceptionception");
         }
         catch (DrawRuntimeException dre)
         {
