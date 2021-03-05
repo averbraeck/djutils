@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Transform2d;
 import org.djutils.draw.bounds.Bounds2d;
@@ -37,10 +36,10 @@ public class PolyLine2dTest
 
     /**
      * Test the constructors of PolyLine2d.
-     * @throws DrawException on failure
+     * @throws DrawRuntimeException on failure
      */
     @Test
-    public final void constructorsTest() throws DrawException
+    public final void constructorsTest() throws DrawRuntimeException
     {
         double[] values = { -999, 0, 99, 9999 }; // Keep this list short; execution time grows with 6th power of length
         Point2d[] points = new Point2d[0]; // Empty array
@@ -126,9 +125,9 @@ public class PolyLine2dTest
     /**
      * Test all the constructors of PolyLine2d.
      * @param points Point2d[]; array of Point2d to test with
-     * @throws DrawException should not happen; this test has failed if it does happen
+     * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
-    private void runConstructors(final Point2d[] points) throws DrawException
+    private void runConstructors(final Point2d[] points) throws DrawRuntimeException
     {
         verifyPointsAndSegments(new PolyLine2d(points), points);
         List<Point2d> list = new ArrayList<>();
@@ -206,7 +205,7 @@ public class PolyLine2dTest
                 assertEquals("y in line", points[i].y, line.get(indexInLine).y, 0.001);
             }
         }
-        catch (DrawException e)
+        catch (DrawRuntimeException e)
         {
             if (0 != horizontalMoves)
             {
@@ -217,10 +216,10 @@ public class PolyLine2dTest
 
     /**
      * Test construction of a Line2d from a Path2D with SEG_CLOSE.
-     * @throws DrawException on unexpected error
+     * @throws DrawRuntimeException on unexpected error
      */
     @Test
-    public void testPathWithClose() throws DrawException
+    public void testPathWithClose() throws DrawRuntimeException
     {
         Path2D path = new Path2D.Double();
         path.moveTo(1, 2);
@@ -249,7 +248,7 @@ public class PolyLine2dTest
             new PolyLine2d(path);
             fail("unsupported SEG_CUBICTO should have thrown an exception");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -258,10 +257,10 @@ public class PolyLine2dTest
     /**
      * Test all constructors of a Line2d.
      * @throws DrawRuntimeException if that happens uncaught; this test has failed
-     * @throws DrawException if that happens uncaught; this test has failed
+     * @throws DrawRuntimeException if that happens uncaught; this test has failed
      */
     @Test
-    public void testConstructors() throws DrawRuntimeException, DrawException
+    public void testConstructors() throws DrawRuntimeException, DrawRuntimeException
     {
         runConstructors(new Point2d[] { new Point2d(1.2, 3.4), new Point2d(2.3, 4.5), new Point2d(3.4, 5.6) });
 
@@ -407,12 +406,12 @@ public class PolyLine2dTest
 
     /**
      * Test the other methods of PolyLine2d.
-     * @throws DrawException if that happens uncaught; this test has failed
+     * @throws DrawRuntimeException if that happens uncaught; this test has failed
      * @throws NullPointerException if that happens uncaught; this test has failed
      */
     @SuppressWarnings("unlikely-arg-type")
     @Test
-    public void testOtherMethods() throws NullPointerException, DrawException
+    public void testOtherMethods() throws NullPointerException, DrawRuntimeException
     {
         Point2d[] array = new Point2d[] { new Point2d(1, 2), new Point2d(3, 4), new Point2d(3.2, 4.1), new Point2d(5, 6) };
         PolyLine2d line = new PolyLine2d(Arrays.stream(array).iterator());
@@ -492,9 +491,9 @@ public class PolyLine2dTest
         try
         {
             PolyLine2d.createAndCleanPolyLine2d(new Point2d[0]);
-            fail("Too short array should have thrown a DrawException");
+            fail("Too short array should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -502,9 +501,9 @@ public class PolyLine2dTest
         try
         {
             PolyLine2d.createAndCleanPolyLine2d(new Point2d[] { new Point2d(1, 2) });
-            fail("Too short array should have thrown a DrawException");
+            fail("Too short array should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -704,9 +703,9 @@ public class PolyLine2dTest
         try
         {
             line.getLocationFraction(-.011, 0.01);
-            fail("fraction outside tolerance should have thrown a DrawException");
+            fail("fraction outside tolerance should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -714,9 +713,9 @@ public class PolyLine2dTest
         try
         {
             line.getLocationFraction(1.011, 0.01);
-            fail("fraction outside tolerance should have thrown a DrawException");
+            fail("fraction outside tolerance should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -732,9 +731,9 @@ public class PolyLine2dTest
                 try
                 {
                     line.truncate(to);
-                    fail("illegal truncate should have thrown a DrawException");
+                    fail("illegal truncate should have thrown a DrawRuntimeException");
                 }
-                catch (DrawException de)
+                catch (DrawRuntimeException dre)
                 {
                     // Ignore expected exception
                 }
@@ -752,9 +751,9 @@ public class PolyLine2dTest
                     try
                     {
                         line.extract(from, to);
-                        fail("Illegal range should have thrown a DrawException");
+                        fail("Illegal range should have thrown a DrawRuntimeException");
                     }
-                    catch (DrawException de)
+                    catch (DrawRuntimeException dre)
                     {
                         // Ignore expected exception
                     }
@@ -781,9 +780,9 @@ public class PolyLine2dTest
         try
         {
             line.extract(Double.NaN, 10.0);
-            fail("NaN value should have thrown a DrawException");
+            fail("NaN value should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -791,9 +790,9 @@ public class PolyLine2dTest
         try
         {
             line.extract(0.0, Double.NaN);
-            fail("NaN value should have thrown a DrawException");
+            fail("NaN value should have thrown a DrawRuntimeException");
         }
-        catch (DrawException de)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -829,10 +828,10 @@ public class PolyLine2dTest
 
     /**
      * Test the concatenate method.
-     * @throws DrawException should not happen; this test has failed if it does happen
+     * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
     @Test
-    public final void concatenateTest() throws DrawException
+    public final void concatenateTest() throws DrawRuntimeException
     {
         Point2d p0 = new Point2d(1.1, 2.2);
         Point2d p1 = new Point2d(2.1, 2.2);
@@ -861,18 +860,18 @@ public class PolyLine2dTest
         try
         {
             PolyLine2d.concatenate(l0, l2);
-            fail("Gap should have throw an exception");
+            fail("Gap should have throw a DrawRuntimeException");
         }
-        catch (DrawException e)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
         try
         {
             PolyLine2d.concatenate();
-            fail("concatenate of empty list should have thrown an exception");
+            fail("concatenate of empty list should have thrown a DrawRuntimeException");
         }
-        catch (DrawException e)
+        catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
@@ -895,7 +894,7 @@ public class PolyLine2dTest
                         {
                             PolyLine2d.concatenate(tolerance, l0, otherLine);
                         }
-                        catch (DrawException oge)
+                        catch (DrawRuntimeException dre)
                         {
                             PolyLine2d.concatenate(tolerance, l0, otherLine);
                             fail("concatenation with error " + actualError + " and tolerance " + tolerance
@@ -905,7 +904,7 @@ public class PolyLine2dTest
                         {
                             PolyLine2d.concatenate(tolerance, l0, otherLine, thirdLine);
                         }
-                        catch (DrawException oge)
+                        catch (DrawRuntimeException dre)
                         {
                             fail("concatenation with error " + actualError + " and tolerance " + tolerance
                                     + " should not have failed");
@@ -917,7 +916,7 @@ public class PolyLine2dTest
                         {
                             PolyLine2d.concatenate(tolerance, l0, otherLine);
                         }
-                        catch (DrawException oge)
+                        catch (DrawRuntimeException dre)
                         {
                             // Ignore expected exception
                         }
@@ -925,7 +924,7 @@ public class PolyLine2dTest
                         {
                             PolyLine2d.concatenate(tolerance, l0, otherLine, thirdLine);
                         }
-                        catch (DrawException oge)
+                        catch (DrawRuntimeException dre)
                         {
                             // Ignore expected exception
                         }
@@ -937,10 +936,10 @@ public class PolyLine2dTest
 
     /**
      * Test the offsetLine methods.
-     * @throws DrawException when that happens uncaught; this test has failed
+     * @throws DrawRuntimeException when that happens uncaught; this test has failed
      */
     @Test
-    public void testOffsetLine() throws DrawException
+    public void testOffsetLine() throws DrawRuntimeException
     {
         for (Point2d[] points : new Point2d[][] { { new Point2d(1, 2), new Point2d(3, 50) },
                 { new Point2d(-40, -20), new Point2d(5, -2), new Point2d(3, 50) },
@@ -1142,10 +1141,10 @@ public class PolyLine2dTest
 
     /**
      * Test the projectRay method.
-     * @throws DrawException cannot happen
+     * @throws DrawRuntimeException cannot happen
      */
     @Test
-    public void testProjectRayTransition() throws DrawException
+    public void testProjectRayTransition() throws DrawRuntimeException
     {
         List<Point2d> innerDesignLinePoints = new ArrayList<>();
         List<Point2d> outerDesignLinePoints = new ArrayList<>();
@@ -1395,9 +1394,9 @@ public class PolyLine2dTest
      * Verify that a Line2d contains the same points as an array of Point2d.
      * @param line Line2d; the OTS line
      * @param points Point2d[]; the OTSPoint array
-     * @throws DrawException should not happen; this test has failed if it does happen
+     * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
-    private void verifyPointsAndSegments(final PolyLine2d line, final Point2d[] points) throws DrawException
+    private void verifyPointsAndSegments(final PolyLine2d line, final Point2d[] points) throws DrawRuntimeException
     {
         assertEquals("Line should have same number of points as point array", line.size(), points.length);
         for (int i = 0; i < points.length; i++)
@@ -1527,12 +1526,12 @@ public class PolyLine2dTest
 
     /**
      * Test the hashCode and Equals methods.
-     * @throws DrawException when that happens uncaught; this test has failed
+     * @throws DrawRuntimeException when that happens uncaught; this test has failed
      * @throws NullPointerException when that happens uncaught; this test has failed
      */
     @SuppressWarnings("unlikely-arg-type")
     @Test
-    public void testToStringHashCodeAndEquals() throws NullPointerException, DrawException
+    public void testToStringHashCodeAndEquals() throws NullPointerException, DrawRuntimeException
     {
         PolyLine2d line = new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9) });
         assertTrue("toString returns something descriptive", line.toString().startsWith("PolyLine2d ["));
@@ -1569,10 +1568,10 @@ public class PolyLine2dTest
 
     /**
      * Problem with limited precision when getting location almost at end.
-     * @throws DrawException when that happens this test has triggered the problem
+     * @throws DrawRuntimeException when that happens this test has triggered the problem
      */
     @Test
-    public void testOTS2Problem() throws DrawException
+    public void testOTS2Problem() throws DrawRuntimeException
     {
         PolyLine2d line = new PolyLine2d(new Point2d(100, 0), new Point2d(100.1, 0));
         double length = line.getLength();

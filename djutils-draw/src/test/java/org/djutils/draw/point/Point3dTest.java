@@ -10,7 +10,6 @@ import static org.junit.Assert.fail;
 
 import java.awt.geom.Point2D;
 
-import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.line.LineSegment3d;
@@ -400,10 +399,10 @@ public class Point3dTest
 
     /**
      * Test the closestPointOnSegment and the closestPointOnLine methods.
-     * @throws DrawException if that happens uncaught; this test has failed
+     * @throws DrawRuntimeException if that happens uncaught; this test has failed
      */
     @Test
-    public void testClosestPointOnSegmentAndLine() throws DrawException
+    public void testClosestPointOnSegmentAndLine() throws DrawRuntimeException
     {
         Point3d p1 = new Point3d(-2, 3, 5);
         for (Point3d p2 : new Point3d[] { new Point3d(7, 4, -5)/* angled */, new Point3d(-3, 6, 5) /* also angled */,

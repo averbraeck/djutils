@@ -2,6 +2,15 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.21" date="2021-03-05" description="replaced all DrawExceptions by DrawRuntimeExceptions">
+      <action dev="pknoppers" type="change">
+        Replaced all DrawExceptions by DrawRuntimeExceptions.
+      </action>
+      <action dev="pknoppers" type="remove">
+        The DrawException class has been removed
+      </action>
+    </release>
+
     <release version="1.06.20" date="2021-03-03" description="new methods in line package">
       <action dev="pknoppers" type="change">
         Many cases where a DrawException was thrown now throw a DrawRuntimException.

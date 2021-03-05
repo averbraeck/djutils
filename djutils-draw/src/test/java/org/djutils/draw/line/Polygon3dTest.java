@@ -7,7 +7,6 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.point.Point3d;
 import org.junit.Test;
@@ -260,10 +259,10 @@ public class Polygon3dTest
 
     /**
      * Test the reverse and project methods.
-     * @throws DrawException should not happen; this test has failed if it does happen
+     * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
     @Test
-    public final void reverseAndProjectTest() throws DrawException
+    public final void reverseAndProjectTest() throws DrawRuntimeException
     {
         Point3d p0 = new Point3d(1.1, 2.21, 3.1);
         Point3d p1 = new Point3d(2.1, 2.22, 3.2);

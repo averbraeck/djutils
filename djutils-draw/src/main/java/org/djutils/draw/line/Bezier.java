@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
-import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Transform2d;
 import org.djutils.draw.point.Point2d;
@@ -411,7 +410,7 @@ public final class Bezier
         {
             return new PolyLine2d(result.values().iterator());
         }
-        catch (NullPointerException | DrawException e)
+        catch (NullPointerException | DrawRuntimeException e)
         {
             // Cannot happen? Really?
             e.printStackTrace();
@@ -786,7 +785,7 @@ public final class Bezier
         {
             return new PolyLine3d(result.values().iterator());
         }
-        catch (NullPointerException | DrawException e)
+        catch (NullPointerException | DrawRuntimeException e)
         {
             // Cannot happen? Really?
             e.printStackTrace();

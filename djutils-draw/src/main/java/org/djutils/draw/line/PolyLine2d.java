@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
-import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.Space2d;
@@ -127,7 +126,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         }
         return array;
     }
-    
+
     /**
      * Construct a new PolyLine2d from an array of Point2d.
      * @param point1 Point2d; starting point of the PolyLine2d
@@ -171,9 +170,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * Construct a new Line2d from an iterator that yields Point2d objects.
      * @param iterator Iterator&lt;Point2d&gt;; iterator that will provide all points that constitute the new Line2d
      * @throws NullPointerException when iterator is null
-     * @throws DrawException when the iterator provides too few points, or some adjacent identical points)
+     * @throws DrawRuntimeException when the iterator provides too few points, or some adjacent identical points)
      */
-    public PolyLine2d(final Iterator<Point2d> iterator) throws NullPointerException, DrawException
+    public PolyLine2d(final Iterator<Point2d> iterator) throws NullPointerException, DrawRuntimeException
     {
         this(iteratorToList(Throw.whenNull(iterator, "iterator cannot be null")));
     }
@@ -192,10 +191,10 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     /**
      * Construct a new Line2d (closed shape) from a Path2D.
      * @param path Path2D; the Path2D to construct this Line2d from.
-     * @throws DrawException when the provided points do not constitute a valid line (too few points or identical adjacent
-     *             points)
+     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
      */
-    public PolyLine2d(final Path2D path) throws DrawException
+    public PolyLine2d(final Path2D path) throws DrawRuntimeException
     {
         this(path2DtoArray(path));
     }
@@ -204,9 +203,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * Convert a path2D to a Point2d[] array to construct the line.
      * @param path Path2D; the path to convert
      * @return Point2d[]; an array of points based on MOVETO and LINETO elements of the Path2D
-     * @throws DrawException when the pathIterator of the path returns an unsupported command
+     * @throws DrawRuntimeException when the pathIterator of the path returns an unsupported command
      */
-    private static Point2d[] path2DtoArray(final Path2D path) throws DrawException
+    private static Point2d[] path2DtoArray(final Path2D path) throws DrawRuntimeException
     {
         List<Point2d> result = new ArrayList<>();
         for (PathIterator pi = path.getPathIterator(null); !pi.isDone(); pi.next())
@@ -227,7 +226,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
             }
             else
             {
-                throw new DrawException("path2DtoArray only handles SEG_MOVETO, SEG_LINETO and SEG_CLOSE");
+                throw new DrawRuntimeException("path2DtoArray only handles SEG_MOVETO, SEG_LINETO and SEG_CLOSE");
             }
         }
         return result.toArray(new Point2d[result.size() - 1]);
@@ -393,9 +392,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * @param lines PolyLine2d...; Line2d... one or more Line2d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
      *            match the first of the second, etc.
      * @return Line2d
-     * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
+     * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
      */
-    public static PolyLine2d concatenate(final PolyLine2d... lines) throws DrawException
+    public static PolyLine2d concatenate(final PolyLine2d... lines) throws DrawRuntimeException
     {
         return concatenate(0.0, lines);
     }
@@ -406,15 +405,15 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * @param line1 PolyLine2d; first line
      * @param line2 PolyLine2d; second line
      * @return Line2d; the concatenation of the two lines
-     * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
+     * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
      */
     public static PolyLine2d concatenate(final double tolerance, final PolyLine2d line1, final PolyLine2d line2)
-            throws DrawException
+            throws DrawRuntimeException
     {
         if (line1.getLast().distance(line2.getFirst()) > tolerance)
         {
-            throw new DrawException("Lines are not connected: " + line1.getLast() + " to " + line2.getFirst() + " distance is "
-                    + line1.getLast().distance(line2.getFirst()) + " > " + tolerance);
+            throw new DrawRuntimeException("Lines are not connected: " + line1.getLast() + " to " + line2.getFirst()
+                    + " distance is " + line1.getLast().distance(line2.getFirst()) + " > " + tolerance);
         }
         int size = line1.size() + line2.size() - 1;
         Point2d[] points = new Point2d[size];
@@ -436,13 +435,13 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * @param lines PolyLine2d...; Line2d... one or more Line2d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
      *            match the first of the second, etc.
      * @return Line2d; the concatenation of the lines
-     * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
+     * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
      */
-    public static PolyLine2d concatenate(final double tolerance, final PolyLine2d... lines) throws DrawException
+    public static PolyLine2d concatenate(final double tolerance, final PolyLine2d... lines) throws DrawRuntimeException
     {
         if (0 == lines.length)
         {
-            throw new DrawException("Empty argument list");
+            throw new DrawRuntimeException("Empty argument list");
         }
         else if (1 == lines.length)
         {
@@ -453,8 +452,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         {
             if (lines[i - 1].getLast().distance(lines[i].getFirst()) > tolerance)
             {
-                throw new DrawException("Lines are not connected: " + lines[i - 1].getLast() + " to " + lines[i].getFirst()
-                        + " distance is " + lines[i - 1].getLast().distance(lines[i].getFirst()) + " > " + tolerance);
+                throw new DrawRuntimeException(
+                        "Lines are not connected: " + lines[i - 1].getLast() + " to " + lines[i].getFirst() + " distance is "
+                                + lines[i - 1].getLast().distance(lines[i].getFirst()) + " > " + tolerance);
             }
             size += lines[i].size() - 1;
         }
@@ -475,13 +475,14 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
      * Create a new PolyLine2d, filtering out repeating successive points.
      * @param points Point2d...; the coordinates of the line as Point2d
      * @return the line
-     * @throws DrawException when number of points &lt; 2
+     * @throws DrawRuntimeException when number of points &lt; 2
      */
-    public static PolyLine2d createAndCleanPolyLine2d(final Point2d... points) throws DrawException
+    public static PolyLine2d createAndCleanPolyLine2d(final Point2d... points) throws DrawRuntimeException
     {
         if (points.length < 2)
         {
-            throw new DrawException("Degenerate PolyLine2d; has " + points.length + " point" + (points.length != 1 ? "s" : ""));
+            throw new DrawRuntimeException(
+                    "Degenerate PolyLine2d; has " + points.length + " point" + (points.length != 1 ? "s" : ""));
         }
         return createAndCleanPolyLine2d(new ArrayList<>(Arrays.asList(points)));
     }
@@ -712,11 +713,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
 
     /** {@inheritDoc} */
     @Override
-    public PolyLine2d extract(final double start, final double end) throws DrawException
+    public PolyLine2d extract(final double start, final double end) throws DrawRuntimeException
     {
         if (Double.isNaN(start) || Double.isNaN(end) || start < 0 || start >= end || end > getLength())
         {
-            throw new DrawException(
+            throw new DrawRuntimeException(
                     "Bad interval (" + start + ".." + end + "; length of this Line2d is " + this.getLength() + ")");
         }
         double cumulativeLength = 0;
@@ -788,17 +789,17 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         catch (DrawRuntimeException exception)
         {
             CategoryLogger.always().error(exception, "interval " + start + ".." + end + " too short");
-            throw new DrawException("interval " + start + ".." + end + "too short");
+            throw new DrawRuntimeException("interval " + start + ".." + end + "too short");
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public PolyLine2d truncate(final double position) throws DrawException
+    public PolyLine2d truncate(final double position) throws DrawRuntimeException
     {
         if (position <= 0.0 || position > getLength())
         {
-            throw new DrawException("truncate for line: position <= 0.0 or > line length. Position = " + position
+            throw new DrawRuntimeException("truncate for line: position <= 0.0 or > line length. Position = " + position
                     + ". Length = " + getLength() + " m.");
         }
 
