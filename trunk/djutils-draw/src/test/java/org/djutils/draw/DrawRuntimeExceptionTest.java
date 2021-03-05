@@ -22,7 +22,7 @@ public class DrawRuntimeExceptionTest
      * Test all constructors for DrawRuntimeException.
      */
     @Test
-    public final void DrawRuntimeExceptionTest()
+    public final void testDrawRuntimeException()
     {
         String message = "MessageString";
         Exception e = new DrawRuntimeException(message);
