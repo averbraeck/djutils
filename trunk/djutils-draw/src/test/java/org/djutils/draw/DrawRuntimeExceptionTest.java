@@ -16,29 +16,29 @@ import org.junit.Test;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-public class DrawExceptionTest
+public class DrawRuntimeExceptionTest
 {
     /**
-     * Test all constructors for DrawException.
+     * Test all constructors for DrawRuntimeException.
      */
     @Test
-    public final void drawExceptionTest()
+    public final void DrawRuntimeExceptionTest()
     {
         String message = "MessageString";
-        Exception e = new DrawException(message);
+        Exception e = new DrawRuntimeException(message);
         assertTrue("Exception should not be null", null != e);
         assertEquals("message should be our message", message, e.getMessage());
         assertEquals("cause should be null", null, e.getCause());
-        e = new DrawException();
+        e = new DrawRuntimeException();
         assertTrue("Exception should not be null", null != e);
         assertEquals("cause should be null", null, e.getCause());
         String causeString = "CauseString";
         Throwable cause = new Throwable(causeString);
-        e = new DrawException(cause);
+        e = new DrawRuntimeException(cause);
         assertTrue("Exception should not be null", null != e);
         assertEquals("cause should not be our cause", cause, e.getCause());
         assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
-        e = new DrawException(message, cause);
+        e = new DrawRuntimeException(message, cause);
         assertTrue("Exception should not be null", null != e);
         assertEquals("message should be our message", message, e.getMessage());
         assertEquals("cause should not be our cause", cause, e.getCause());

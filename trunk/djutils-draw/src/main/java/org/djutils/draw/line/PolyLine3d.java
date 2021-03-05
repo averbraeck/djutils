@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
-import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.Space3d;
@@ -187,9 +186,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      * Construct a new Line3d from an iterator that yields Point3d objects.
      * @param iterator Iterator&lt;Point3d&gt;; iterator that will provide all points that constitute the new Line3d
      * @throws NullPointerException when iterator is null
-     * @throws DrawException when the iterator provides too few points, or some adjacent identical points)
+     * @throws DrawRuntimeException when the iterator provides too few points, or some adjacent identical points)
      */
-    public PolyLine3d(final Iterator<Point3d> iterator) throws NullPointerException, DrawException
+    public PolyLine3d(final Iterator<Point3d> iterator) throws NullPointerException, DrawRuntimeException
     {
         this(iteratorToList(Throw.whenNull(iterator, "iterator cannot be null")));
     }
@@ -377,9 +376,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      * @param lines PolyLine3d...; Line3d... one or more Line3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
      *            match the first of the second, etc.
      * @return Line3d
-     * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
+     * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
      */
-    public static PolyLine3d concatenate(final PolyLine3d... lines) throws DrawException
+    public static PolyLine3d concatenate(final PolyLine3d... lines) throws DrawRuntimeException
     {
         return concatenate(0.0, lines);
     }
@@ -390,15 +389,15 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      * @param line1 PolyLine3d; first line
      * @param line2 PolyLine3d; second line
      * @return Line3d; the concatenation of the two lines
-     * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
+     * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
      */
     public static PolyLine3d concatenate(final double tolerance, final PolyLine3d line1, final PolyLine3d line2)
-            throws DrawException
+            throws DrawRuntimeException
     {
         if (line1.getLast().distance(line2.getFirst()) > tolerance)
         {
-            throw new DrawException("Lines are not connected: " + line1.getLast() + " to " + line2.getFirst() + " distance is "
-                    + line1.getLast().distance(line2.getFirst()) + " > " + tolerance);
+            throw new DrawRuntimeException("Lines are not connected: " + line1.getLast() + " to " + line2.getFirst()
+                    + " distance is " + line1.getLast().distance(line2.getFirst()) + " > " + tolerance);
         }
         int size = line1.size() + line2.size() - 1;
         Point3d[] points = new Point3d[size];
@@ -420,13 +419,13 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      * @param lines PolyLine3d...; Line3d... one or more Line3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
      *            match the first of the second, etc.
      * @return Line3d; the concatenation of the lines
-     * @throws DrawException if zero lines are given, or when there is a gap between consecutive lines
+     * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
      */
-    public static PolyLine3d concatenate(final double tolerance, final PolyLine3d... lines) throws DrawException
+    public static PolyLine3d concatenate(final double tolerance, final PolyLine3d... lines) throws DrawRuntimeException
     {
         if (0 == lines.length)
         {
-            throw new DrawException("Empty argument list");
+            throw new DrawRuntimeException("Empty argument list");
         }
         else if (1 == lines.length)
         {
@@ -437,8 +436,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         {
             if (lines[i - 1].getLast().distance(lines[i].getFirst()) > tolerance)
             {
-                throw new DrawException("Lines are not connected: " + lines[i - 1].getLast() + " to " + lines[i].getFirst()
-                        + " distance is " + lines[i - 1].getLast().distance(lines[i].getFirst()) + " > " + tolerance);
+                throw new DrawRuntimeException(
+                        "Lines are not connected: " + lines[i - 1].getLast() + " to " + lines[i].getFirst() + " distance is "
+                                + lines[i - 1].getLast().distance(lines[i].getFirst()) + " > " + tolerance);
             }
             size += lines[i].size() - 1;
         }
@@ -484,13 +484,14 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
      * Create a new PolyLine3d, filtering out repeating successive points.
      * @param points Point2d...; the coordinates of the line as Point2d
      * @return the line
-     * @throws DrawException when number of points &lt; 2
+     * @throws DrawRuntimeException when number of points &lt; 2
      */
-    public static PolyLine3d createAndCleanPolyLine3d(final Point3d... points) throws DrawException
+    public static PolyLine3d createAndCleanPolyLine3d(final Point3d... points) throws DrawRuntimeException
     {
         if (points.length < 2)
         {
-            throw new DrawException("Degenerate PolyLine2d; has " + points.length + " point" + (points.length != 1 ? "s" : ""));
+            throw new DrawRuntimeException(
+                    "Degenerate PolyLine2d; has " + points.length + " point" + (points.length != 1 ? "s" : ""));
         }
         return createAndCleanPolyLine3d(new ArrayList<>(Arrays.asList(points)));
     }
@@ -727,11 +728,11 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
 
     /** {@inheritDoc} */
     @Override
-    public PolyLine3d extract(final double start, final double end) throws DrawException
+    public PolyLine3d extract(final double start, final double end) throws DrawRuntimeException
     {
         if (Double.isNaN(start) || Double.isNaN(end) || start < 0 || start >= end || end > getLength())
         {
-            throw new DrawException(
+            throw new DrawRuntimeException(
                     "Bad interval (" + start + ".." + end + "; length of this Line3d is " + this.getLength() + ")");
         }
         double cumulativeLength = 0;
@@ -803,7 +804,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         catch (DrawRuntimeException exception)
         {
             CategoryLogger.always().error(exception, "interval " + start + ".." + end + " too short");
-            throw new DrawException("interval " + start + ".." + end + "too short");
+            throw new DrawRuntimeException("interval " + start + ".." + end + "too short");
         }
     }
 
@@ -912,11 +913,11 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
 
     /** {@inheritDoc} */
     @Override
-    public PolyLine3d truncate(final double position) throws DrawException
+    public PolyLine3d truncate(final double position) throws DrawRuntimeException
     {
         if (position <= 0.0 || position > getLength())
         {
-            throw new DrawException("truncate for line: position <= 0.0 or > line length. Position = " + position
+            throw new DrawRuntimeException("truncate for line: position <= 0.0 or > line length. Position = " + position
                     + ". Length = " + getLength() + " m.");
         }
 

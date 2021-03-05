@@ -3,7 +3,6 @@ package org.djutils.draw.line;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable;
 import org.djutils.draw.Space;
@@ -140,13 +139,14 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
      * @param start double; starting point, valid range [0..<cite>end</cite>)
      * @param end double; ending point, valid range (<cite>start</cite>..1]
      * @return Line3d; the new L
-     * @throws DrawException when start &gt;= end, or start &lt; 0, or end &gt; 1
+     * @throws DrawRuntimeException when start &gt;= end, or start &lt; 0, or end &gt; 1
      */
-    default L extractFractional(final double start, final double end) throws DrawException
+    default L extractFractional(final double start, final double end) throws DrawRuntimeException
     {
         if (start < 0 || start >= end || end > 1)
         {
-            throw new DrawException("Bad interval (start=" + start + ", end=" + end + ", this is " + this.toString() + ")");
+            throw new DrawRuntimeException(
+                    "Bad interval (start=" + start + ", end=" + end + ", this is " + this.toString() + ")");
         }
         return extract(start * getLength(), end * getLength());
     }
@@ -157,9 +157,9 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
      * @param end double; length along this Line3d where the sub-section ends, valid range
      *            (<cite>start</cite>..<cite>length</cite> (length is the length of this L)
      * @return L; the selected sub-section
-     * @throws DrawException when start &gt;= end, or start &lt; 0, or end &gt; length
+     * @throws DrawRuntimeException when start &gt;= end, or start &lt; 0, or end &gt; length
      */
-    L extract(double start, double end) throws DrawException;
+    L extract(double start, double end) throws DrawRuntimeException;
 
     /**
      * Project a Point on this PolyLine. If the the projected points lies outside this PolyLine, the nearest end point of this
@@ -206,13 +206,13 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
      * @param fraction double; the fraction for which to calculate the point on the line
      * @param tolerance double; the delta from 0.0 and 1.0 that will be forgiven
      * @return OrientedPoint3d, or OrientedPoint2d (in accordance with OP, P, L and S)
-     * @throws DrawException when fraction less than 0.0 or more than 1.0.
+     * @throws DrawRuntimeException when fraction less than 0.0 or more than 1.0.
      */
-    default R getLocationFraction(final double fraction, final double tolerance) throws DrawException
+    default R getLocationFraction(final double fraction, final double tolerance) throws DrawRuntimeException
     {
         if (fraction < -tolerance || fraction > 1.0 + tolerance)
         {
-            throw new DrawException(
+            throw new DrawRuntimeException(
                     "getLocationFraction for line: fraction < 0.0 - tolerance or > 1.0 + tolerance; fraction = " + fraction);
         }
         double f = fraction < 0 ? 0.0 : fraction > 1.0 ? 1.0 : fraction;
@@ -233,9 +233,9 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
      * Truncate this Line at the given length (less than the length of the line, and larger than zero) and return a new line.
      * @param position double; the position along the line where to truncate the line
      * @return L; a new Line that follows this line, but ends at the position where line.getLength() == lengthSI
-     * @throws DrawException when position less than 0.0 or more than line length.
+     * @throws DrawRuntimeException when position less than 0.0 or more than line length.
      */
-    L truncate(double position) throws DrawException;
+    L truncate(double position) throws DrawRuntimeException;
 
     /**
      * Binary search for a position on the line.

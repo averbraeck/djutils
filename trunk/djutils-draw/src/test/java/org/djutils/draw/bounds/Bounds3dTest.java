@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.djutils.draw.DrawException;
+import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.line.LineSegment3d;
 import org.djutils.draw.line.PolyLine3d;
@@ -32,11 +32,11 @@ public class Bounds3dTest
 
     /**
      * Test the bounding box constructor.
-     * @throws DrawException if that happens uncaught; this test has failed
+     * @throws DrawRuntimeException if that happens uncaught; this test has failed
      * @throws IllegalArgumentException on unexpected error
      */
     @Test
-    public void constructorTest() throws IllegalArgumentException, DrawException
+    public void constructorTest() throws IllegalArgumentException, DrawRuntimeException
     {
         try
         {
@@ -414,12 +414,12 @@ public class Bounds3dTest
 
     /**
      * Test various methods of a Bounds2d.
-     * @throws DrawException when that happens uncaught; this test has failed
+     * @throws DrawRuntimeException when that happens uncaught; this test has failed
      * @throws IllegalArgumentException when that happens uncaught; this test has failed
      * @throws NullPointerException when that happens uncaught; this test has failed
      */
     @Test
-    public void methodTest() throws NullPointerException, IllegalArgumentException, DrawException
+    public void methodTest() throws NullPointerException, IllegalArgumentException, DrawRuntimeException
     {
         PolyLine3d l3d = new PolyLine3d(new Point3d(10, 10, 10), new Point3d(30, -20, 40), new Point3d(-40, 100, 0));
         Bounds3d bb = new Bounds3d(l3d);

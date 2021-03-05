@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.djutils.draw.DrawException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
@@ -27,10 +26,10 @@ public class BezierTest
     /**
      * Test the various 2d methods in the Bezier class.
      * @throws DrawRuntimeException when this happens uncaught this test has failed
-     * @throws DrawException when this happens uncaught; this test has failed
+     * @throws DrawRuntimeException when this happens uncaught; this test has failed
      */
     @Test
-    public final void bezierTest2d() throws DrawRuntimeException, DrawException
+    public final void bezierTest2d() throws DrawRuntimeException, DrawRuntimeException
     {
         Point2d from = new Point2d(10, 0);
         Point2d control1 = new Point2d(20, 0);
@@ -288,10 +287,10 @@ public class BezierTest
      * @param candidate PolyLine2d; candidate B&eacute;zier curve approximation
      * @param numberOfPoints int; number of point to compare the curves at, minus one; this method checks at 0% and at 100%
      * @param epsilon double; upper limit of the distance between the two curves
-     * @throws DrawException if that happens uncaught; a test has failed
+     * @throws DrawRuntimeException if that happens uncaught; a test has failed
      */
     public void compareBeziers(final String description, final PolyLine2d reference, final PolyLine2d candidate,
-            final int numberOfPoints, final double epsilon) throws DrawException
+            final int numberOfPoints, final double epsilon) throws DrawRuntimeException
     {
         for (int step = 0; step <= numberOfPoints; step++)
         {
