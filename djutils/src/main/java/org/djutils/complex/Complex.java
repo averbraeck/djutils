@@ -27,8 +27,14 @@ public class Complex
     /** The (real) one value in the complex number space. */
     public static final Complex ONE = new Complex(1, 0);
 
+    /** The (real) minus one value in the complex number space. */
+    public static final Complex MINUS_ONE = new Complex(-1, 0);
+
     /** The imaginary unit value (i). */
     public static final Complex I = new Complex(0, 1);
+
+    /** The negative imaginary unit value (i). */
+    public static final Complex MINUS_I = new Complex(0, -1);
 
     /**
      * Construct a new complex number.
