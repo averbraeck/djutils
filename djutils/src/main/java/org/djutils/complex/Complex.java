@@ -70,8 +70,8 @@ public class Complex
     }
 
     /**
-     * Compute and return the norm, or radius of this complex number.
-     * @return double; the norm, or radius of this complex number
+     * Compute and return the norm, or radius, or absolute value of this complex number.
+     * @return double; the norm, or radius, or absolute value of this complex number
      */
     public double norm()
     {
@@ -105,6 +105,15 @@ public class Complex
     public boolean isImaginary()
     {
         return this.re == 0.0;
+    }
+    
+    /**
+     * Construct the complex conjugate of this Complex.
+     * @return Complex; the complex conjugate of this
+     */
+    public Complex conjugate()
+    {
+        return new Complex(this.re, -this.im);
     }
 
     /**
