@@ -155,7 +155,7 @@ public final class ComplexMath
         zz = ct.plus(sqrt(zz));
         zz = ln(zz);
         /* multiply by 1/i = -i */
-        return zz.times(Complex.ZERO.minus(Complex.I));
+        return zz.times(Complex.MINUS_I);
     }
 
     /**
