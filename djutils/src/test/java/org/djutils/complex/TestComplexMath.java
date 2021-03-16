@@ -45,7 +45,7 @@ public class TestComplexMath
             }
         }
     }
-    
+
     /**
      * Test the cube root function.
      */
@@ -145,6 +145,178 @@ public class TestComplexMath
                 assertEquals("sin^2 + cos^2 im", 0, sin2plusCos2.im, 0.00001);
             }
         }
+    }
+
+    /**
+     * Test the sinh, cosh, tanh functions.
+     */
+    @Test
+    public void testSinhCoshTanH()
+    {
+        double[] values = new double[] { 0, 1, Math.PI, 10, -Math.E, -10 };
+        for (double re : values)
+        {
+            for (double im : values)
+            {
+                Complex in = new Complex(re, im);
+                Complex sinh = ComplexMath.sinh(in);
+                Complex cosh = ComplexMath.cosh(in);
+                Complex tanh = ComplexMath.tanh(in);
+
+                // System.out.println(" in=" + printComplex(in) + "\ntanh=" + printComplex(tanh));
+                assertEquals("sinh re", Math.sinh(re) * Math.cos(im), sinh.re, 0.0001);
+                assertEquals("sinh im", Math.cosh(re) * Math.sin(im), sinh.im, 0.0001);
+                assertEquals("cosh re", Math.cosh(re) * Math.cos(im), cosh.re, 0.0001);
+                assertEquals("cosh im", Math.sinh(re) * Math.sin(im), cosh.im, 0.0001);
+                assertEquals("tanh re", Math.sinh(2 * re) / (Math.cosh(2 * re) + Math.cos(2 * im)), tanh.re, 0.0001);
+                assertEquals("tanh im", Math.sin(2 * im) / (Math.cosh(2 * re) + Math.cos(2 * im)), tanh.im, 0.0001);
+                // Alternate way to compute tanh
+                Complex alternateTanh = sinh.divideBy(cosh);
+                assertEquals("alternate tanh re", tanh.re, alternateTanh.re, 0.0001);
+                assertEquals("alternate tanh im", tanh.im, alternateTanh.im, 0.0001);
+                if (im == 0)
+                {
+                    // Extra checks
+                    assertEquals("sinh of real re", Math.sinh(re), sinh.re, 0.0001);
+                    assertEquals("sinh of real im", 0, sinh.im, 0.0001);
+                    assertEquals("cosh of real re", Math.cosh(re), cosh.re, 0.0001);
+                    assertEquals("cosh of real im", 0, cosh.im, 0.0001);
+                    assertEquals("tanh of real re", Math.tanh(re), tanh.re, 0.0001);
+                    assertEquals("tahh of real im", 0, tanh.im, 0.0001);
+                }
+            }
+        }
+    }
+
+    /**
+     * Test the asin, acos and atan functions.
+     */
+    @Test
+    public void testAsinAcosAtan()
+    {
+        double[] values = new double[] { 0, 0.2, 0, 8, 1, -1, -0.2, -0.8, Math.PI, 10, -Math.E, -10 };
+        for (double re : values)
+        {
+            for (double im : values)
+            {
+                Complex in = new Complex(re, im);
+                Complex asin = ComplexMath.asin(in);
+                Complex acos = ComplexMath.acos(in);
+                Complex atan = ComplexMath.atan(in);
+                // This is a lousy test; we only verify that asin(sin(asin(z)) roughly equals asin(z)
+                Complex asinOfSinOfAsin = ComplexMath.asin(ComplexMath.sin(asin));
+                assertEquals("asin re", asinOfSinOfAsin.re, asin.re, 0.0001);
+                assertEquals("asin im", asinOfSinOfAsin.im, asin.im, 0.0001);
+                Complex acosOfCosOfAcos = ComplexMath.acos(ComplexMath.cos(acos));
+                assertEquals("acos re", acosOfCosOfAcos.re, acos.re, 0.0001);
+                assertEquals("acos im", acosOfCosOfAcos.im, acos.im, 0.0001);
+                Complex atanOfTanOfAtan = ComplexMath.atan(ComplexMath.tan(atan));
+                if (Math.abs(atan.re) < 100)
+                {
+                    assertEquals("atan re", atanOfTanOfAtan.re, atan.re, 0.0001);
+                    assertEquals("atan im", atanOfTanOfAtan.im, atan.im, 0.0001);
+                }
+                if (im == 0 && re >= -1 && re <= 1)
+                {
+                    // Extra checks
+                    assertEquals("asin of real in range -1, 1 re", Math.asin(re), asin.re, 0.00001);
+                    assertEquals("asin of real in range -1, 1 im", 0, asin.im, 0.00001);
+                    assertEquals("acos of real in range -1, 1 re", Math.acos(re), acos.re, 0.00001);
+                    assertEquals("acos of real in range -1, 1 im", 0, acos.im, 0.00001);
+                }
+                else if (im == 0)
+                {
+                    assertEquals("atan of real re", Math.atan(re), atan.re, 0.00001);
+                    assertEquals("atan of real, 1 im", 0, atan.im, 0.00001);
+
+                }
+            }
+        }
+    }
+
+    /**
+     * Test the asinh function.
+     */
+    @Test
+    public void testAsinh()
+    {
+        double[] values = new double[] { 0, 0.2, 0, 8, 1, -1, -0.2, -0.8, Math.PI, 10, -Math.E, -10 };
+        for (double re : values)
+        {
+            for (double im : values)
+            {
+                Complex in = new Complex(re, im);
+                Complex asinh = ComplexMath.asinh(in);
+                Complex acosh = ComplexMath.acosh(in);
+                Complex atanh = ComplexMath.atanh(in);
+                // This is a lousy test; we only verify that asinh(sinh(asinh(z)) roughly equals asinh(z)
+                Complex asinhOfSinhOfAsinh = ComplexMath.asinh(ComplexMath.sinh(asinh));
+                assertEquals("asinh re", asinhOfSinhOfAsinh.re, asinh.re, 0.0001);
+                assertEquals("asinh im", asinhOfSinhOfAsinh.im, asinh.im, 0.0001);
+                Complex acoshOfCoshOfAcosh = ComplexMath.acosh(ComplexMath.cosh(acosh));
+                if (im != 0 || re > 1.0)
+                {
+                    // acosh is unstable around im == 0 && re <= 1.0; see <a
+                    // href="https://mathworld.wolfram.com/InverseHyperbolicCosine.html">Wolfram mathWorld: Inverse Hyperbolic
+                    // Cosine<//a> so we can't use this test there.
+                    assertEquals("acosh re", acoshOfCoshOfAcosh.re, acosh.re, 0.0001);
+                    assertEquals("acosh im", acoshOfCoshOfAcosh.im, acosh.im, 0.0001);
+                }
+                Complex atanhOfTanhOfAtanh = ComplexMath.atanh(ComplexMath.tanh(atanh));
+                if (im != 0 || re > -1.0 && re < 1.0)
+                {
+                    // atanh is unstable around im == 0 && re <= -1 && re >= 1; see <a
+                    // "https://mathworld.wolfram.com/InverseHyperbolicTangent.html">Wolfram mathWorld: Inverse Hyperbolic
+                    // Tangent</a>, so we can't use this test there.
+                    // System.out.println("   in=" + printComplex(in) + "\natanh=" + printComplex(atanh));
+                    if (im != 1 && im != -1 || re != 0)
+                    {
+                        // Also unstable around i and minus i as the atan function is unstable around -1
+                        assertEquals("atanh re", atanhOfTanhOfAtanh.re, atanh.re, 0.0001);
+                        assertEquals("atanh im", atanhOfTanhOfAtanh.im, atanh.im, 0.0001);
+                    }
+                }
+
+                if (im == 0)
+                {
+                    // Extra checks
+                    assertEquals("asinh of real re", doubleAsinh(re), asinh.re, 0.00001);
+                    assertEquals("asinh of real im", 0, asinh.im, 0.00001);
+                    if (re >= 1.0)
+                    {
+                        assertEquals("acosh of real re", doubleAcosh(re), acosh.re, 0.00001);
+                        assertEquals("acosh of real im", 0, acosh.im, 0.00001);
+                    }
+                    if (re > -1.0 && re < 1.0)
+                    {
+                        assertEquals("atanh of real re", (Math.log(1 + re) - Math.log(1 - re)) / 2, atanh.re, 0.00001);
+                        assertEquals("acosh of real im", 0, atanh.im, 0.00001);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Copied from < href="https://forgetcode.com/java/1746-asinh-return-the-hyperbolic-sine-of-value-as-a-argument">Forget Code
+     * asinh</a>.
+     * @param x double; the argument
+     * @return double; the inverse hyperbolic cosine of x
+     */
+    public static double doubleAsinh(final double x)
+    {
+        return Math.log(x + Math.sqrt(x * x + 1.0));
+    }
+
+    /**
+     * Copied from < href="https://forgetcode.com/Java/1747-acosh-Return-the-hyperbolic-Cosine-of-value-as-a-Argument">Forget
+     * Code acosh</a>.
+     * @param x double; the argument
+     * @return double; the inverse hyperbolic cosine of x
+     */
+    public static double doubleAcosh(final double x)
+    {
+        return Math.log(x + Math.sqrt(x * x - 1.0));
     }
 
     /**
