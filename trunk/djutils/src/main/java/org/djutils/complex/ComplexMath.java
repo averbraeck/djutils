@@ -1,10 +1,9 @@
 package org.djutils.complex;
 
+import org.djutils.base.AngleUtil;
+
 /**
- * ComplexMath.java. Math with complex operands and results.
- * <p>
- * TODO: major rewrite; possibly based on https://people.freebsd.org/~stephen/catrig.c <br>
- * Also consider netbsd c-sources of libm/complex: http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libm/complex/ <br>
+ * ComplexMath.java. Math with complex operands and results. <br>
  * Copyright (c) 2021-2021 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
@@ -49,7 +48,7 @@ public final class ComplexMath
     }
 
     /**
-     * Exponential function of Complex operand.
+     * Exponential function of a Complex operand.
      * @param z Complex; the operand
      * @return Complex; the result of the exponential function applied to the operand
      */
@@ -60,7 +59,7 @@ public final class ComplexMath
     }
 
     /**
-     * Principal value of the natural logarithm of Complex operand. See
+     * Principal value of the natural logarithm of a Complex operand. See
      * <a href="https://en.wikipedia.org/wiki/Complex_logarithm">Wikipedia Complex logarithm</a>.
      * @param z Complex; the operand
      * @return Complex; the principal value of the natural logarithm of the Complex operand
@@ -71,7 +70,7 @@ public final class ComplexMath
     }
 
     /**
-     * Sine function of Complex operand. See <a href="https://proofwiki.org/wiki/Sine_of_Complex_Number">ProofWiki Sine of
+     * Sine function of a Complex operand. See <a href="https://proofwiki.org/wiki/Sine_of_Complex_Number">ProofWiki Sine of
      * Complex Number</a>.
      * @param z Complex; the operand
      * @return Complex; the result of the sine function applied to the operand
@@ -93,8 +92,8 @@ public final class ComplexMath
     }
 
     /**
-     * Tangent function of Complex operand. See <a href="https://proofwiki.org/wiki/Tangent_of_Complex_Number">ProofWiki Tangent
-     * of Complex Number</a>.
+     * Tangent function of a Complex operand. See <a href="https://proofwiki.org/wiki/Tangent_of_Complex_Number">ProofWiki
+     * Tangent of Complex Number</a>.
      * @param z Complex; the operand
      * @return Complex; the result of the tangent function applied to the operand
      */
@@ -103,6 +102,142 @@ public final class ComplexMath
         // Using Formulation 4 of the reference as it appears to need the fewest trigonometric operations
         double divisor = Math.cos(2 * z.re) + Math.cosh(2 * z.im);
         return new Complex(Math.sin(2 * z.re) / divisor, Math.sinh(2 * z.im) / divisor);
+    }
+
+    /**
+     * Hyperbolic sine function of a Complex operand.
+     * @param z Complex; the operand
+     * @return Complex; the result of the sinh function applied to the operand
+     */
+    public static Complex sinh(final Complex z)
+    {
+        return new Complex(Math.sinh(z.re) * Math.cos(z.im), Math.cosh(z.re) * Math.sin(z.im));
+    }
+
+    /**
+     * Hyperbolic cosine function of Complex operand.
+     * @param z Complex; the operand
+     * @return Complex; the result of the cosh function applied to the operand
+     */
+    public static Complex cosh(final Complex z)
+    {
+        return new Complex(Math.cosh(z.re) * Math.cos(z.im), Math.sinh(z.re) * Math.sin(z.im));
+    }
+
+    /**
+     * Hyperbolic tangent function of a Complex operand. Based on
+     * <a href="https://proofwiki.org/wiki/Hyperbolic_Tangent_of_Complex_Number">ProofWiki: Hyperbolic Tangent of Complex
+     * Number, Formulation 4</a>.
+     * @param z Complex; the operand
+     * @return Complex; the result of the tanh function applied to the operand
+     */
+    public static Complex tanh(final Complex z)
+    {
+        double re2 = z.re * 2;
+        double im2 = z.im * 2;
+        double divisor = Math.cosh(re2) + Math.cos(im2);
+        return new Complex(Math.sinh(re2) / divisor, Math.sin(im2) / divisor);
+    }
+
+    /**
+     * Inverse sine function of a Complex operand. Derived from <a href=
+     * "http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/src/lib/libm/complex/casin.c?rev=1.1&content-type=text/plain">NetBSD
+     * Complex casin.c</a>.
+     * @param z Complex; the operand
+     * @return Complex; the result of the asin function applied to the operand
+     */
+    public static Complex asin(final Complex z)
+    {
+        Complex ct = z.times(Complex.I);
+        Complex zz = new Complex((z.re - z.im) * (z.re + z.im), (2.0 * z.re * z.im));
+
+        zz = new Complex(1.0 - zz.re, -zz.im);
+        zz = ct.plus(sqrt(zz));
+        zz = ln(zz);
+        /* multiply by 1/i = -i */
+        return zz.times(Complex.ZERO.minus(Complex.I));
+    }
+
+    /**
+     * Inverse cosine function of a Complex operand. Derived from <a href=
+     * "http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/src/lib/libm/complex/cacos.c?rev=1.1&content-type=text/plain">NetBSD
+     * Complex cacos.c</a>.
+     * @param z Complex; the operand
+     * @return Complex; the result of the acos function applied to the operand
+     */
+    public static Complex acos(final Complex z)
+    {
+        Complex asin = asin(z);
+        return new Complex(Math.PI / 2 - asin.re, -asin.im);
+    }
+
+    /** Maximum value of a Complex. May be returned by the atan function. */
+    private static final Complex MAXIMUM = new Complex(Double.MAX_VALUE, Double.MAX_VALUE);
+
+    /**
+     * Inverse tangent function of a Complex operand. Derived from <a href=
+     * "http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/src/lib/libm/complex/catan.c?rev=1.2&content-type=text/plain">NetBSD
+     * Complex catan.c</a>.
+     * @param z Complex; the operand
+     * @return Complex; the result of the atan function applied to the operand
+     */
+    public static Complex atan(final Complex z)
+    {
+        if ((z.re == 0.0) && (z.im > 1.0))
+        {
+            return MAXIMUM;
+        }
+
+        double x2 = z.re * z.re;
+        double a = 1.0 - x2 - (z.im * z.im);
+        if (a == 0.0)
+        {
+            return MAXIMUM;
+        }
+
+        double re = AngleUtil.normalizeAroundZero(Math.atan2(2.0 * z.re, a)) / 2;
+        double t = z.im - 1.0;
+        a = x2 + (t * t);
+        if (a == 0.0)
+        {
+            return MAXIMUM;
+        }
+
+        t = z.im + 1.0;
+        a = (x2 + (t * t)) / a;
+        return new Complex(re, 0.25 * Math.log(a));
+    }
+
+    /**
+     * Inverse hyperbolic sine of a Complex operand.
+     * @param z Complex; the operand
+     * @return Complex; the result of the asinh function applied to the operand
+     */
+    public static Complex asinh(final Complex z)
+    {
+        return Complex.MINUS_I.times(asin(z.times(Complex.I)));
+    }
+
+    /**
+     * Inverse hyperbolic cosine of a Complex operand.
+     * @param z Complex; the operand
+     * @return Complex; the result of the acosh function applied to the operand
+     */
+    public static Complex acosh(final Complex z)
+    {
+        return ln(z.plus(sqrt(z.plus(Complex.ONE)).times(sqrt(z.minus(Complex.ONE)))));
+    }
+
+    /**
+     * Inverse hyperbolic tangent of a Complex operand. Derived from
+     * <a href="http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/src/lib/libm/complex/catanh.c?rev=1.1&content-type=text/plain">
+     * NetBSD Complex catanh.c</a>.
+     * @param z Complex; the operand
+     * @return Complex; the result of the atanh function applied to the operand
+     */
+    public static Complex atanh(final Complex z)
+    {
+        return Complex.MINUS_I.times(atan(z.times(Complex.I)));
     }
 
 }
