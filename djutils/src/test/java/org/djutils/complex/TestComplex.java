@@ -27,7 +27,7 @@ public class TestComplex
     @Test
     public void testConstructors()
     {
-        double[] testValues = new double[] { 0, 1, 100, -10000, Math.PI };
+        double[] testValues = new double[] { 0, 1, 100, -1, -10000, Math.PI };
 
         for (double re : testValues)
         {
@@ -67,6 +67,9 @@ public class TestComplex
                 {
                     assertFalse("If real part is not 0; comples is not imaginary", complex.isImaginary());
                 }
+                Complex conjugate = complex.conjugate(); // Loss less operation; we can test for exact equality
+                assertEquals("Conjugate re", complex.re, conjugate.re, 0);
+                assertEquals("Conjugate im", -complex.im, conjugate.im, 0);
             }
         }
     }
@@ -114,6 +117,9 @@ public class TestComplex
         c = a.reciprocal();
         assertEquals("norm of reciprocal", a.norm(), 1 / c.norm(), 0.00001);
         assertEquals("phi of reciprocal", -a.phi(), c.phi(), 0.000001);
+        c = a.times(c);
+        assertEquals("a * a.reciprocal re", 1, c.re, 0.00001);
+        assertEquals("a * a.reciprocal im", 0, c.im, 0.00001);
         c = a.divideBy(b);
         assertEquals("norm of division", a.norm() / b.norm(), c.norm(), 0.0000001);
         assertEquals("phi of division", AngleUtil.normalizeAroundZero(a.phi() - b.phi()), c.phi(), 0.000001);
