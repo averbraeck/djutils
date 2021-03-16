@@ -120,6 +120,12 @@ public class TestComplex
         c = a.times(c);
         assertEquals("a * a.reciprocal re", 1, c.re, 0.00001);
         assertEquals("a * a.reciprocal im", 0, c.im, 0.00001);
+        for (double angle : new double[] {0, 0.1, 1, Math.E, Math.PI, 5, 10, -1, -5})
+        {
+            c = a.rotate(angle);
+            assertEquals("rotated a norm", a.norm(), c.norm(), 0.00001);
+            assertEquals("rotation difference", AngleUtil.normalizeAroundZero(a.phi() + angle), c.phi(), 0.000001);
+        }
         c = a.divideBy(b);
         assertEquals("norm of division", a.norm() / b.norm(), c.norm(), 0.0000001);
         assertEquals("phi of division", AngleUtil.normalizeAroundZero(a.phi() - b.phi()), c.phi(), 0.000001);
