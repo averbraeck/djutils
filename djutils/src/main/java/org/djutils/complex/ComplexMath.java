@@ -4,8 +4,7 @@ package org.djutils.complex;
  * ComplexMath.java. Math with complex operands and results.
  * <p>
  * TODO: major rewrite; possibly based on https://people.freebsd.org/~stephen/catrig.c <br>
- * Also consider netbsd c-sources of libm/complex: http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libm/complex/
- * <br>
+ * Also consider netbsd c-sources of libm/complex: http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libm/complex/ <br>
  * Copyright (c) 2021-2021 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
@@ -34,6 +33,19 @@ public final class ComplexMath
     {
         double norm = z.norm();
         return new Complex(Math.sqrt((z.re + norm) / 2), (z.im >= 0 ? 1 : -1) * Math.sqrt((-z.re + norm) / 2));
+    }
+
+    /**
+     * Principal cube root of a Complex operand. The principal cube root of a complex number has <i>the most positive</i. real
+     * component.
+     * @param z Complex; the operand
+     * @return Complex; the principal cube root of the operand
+     */
+    public static Complex cbrt(final Complex z)
+    {
+        double cbrtOfNorm = Math.cbrt(z.norm());
+        double phi = z.phi() / 3;
+        return new Complex(cbrtOfNorm * Math.cos(phi), cbrtOfNorm * Math.sin(phi));
     }
 
     /**

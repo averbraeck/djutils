@@ -39,6 +39,31 @@ public class TestComplexMath
                 c = ComplexMath.sqrt(in);
                 assertEquals("square root of " + in + " norm", Math.sqrt(in.norm()), c.norm(), 0.0001);
                 assertEquals("square root of " + in + " phi", in.phi() / 2, c.phi(), 0.0000001);
+                Complex c2 = c.times(c);
+                assertEquals("square of square root re", in.re, c2.re, 0.0001);
+                assertEquals("square of square root im", in.re, c2.re, 0.0001);
+            }
+        }
+    }
+    
+    /**
+     * Test the cube root function.
+     */
+    @Test
+    public void testCbrt()
+    {
+        double[] values = new double[] { 0, 1, 0.01, 100, Math.PI, -Math.E };
+        for (double re : values)
+        {
+            for (double im : values)
+            {
+                Complex in = new Complex(re, im);
+                Complex c = ComplexMath.cbrt(in);
+                assertEquals("cube root of " + in + " norm", Math.cbrt(in.norm()), c.norm(), 0.0001);
+                assertEquals("cube root of " + in + " phi", in.phi() / 3, c.phi(), 0.0000001);
+                Complex c3 = c.times(c).times(c);
+                assertEquals("cube of cube root re", in.re, c3.re, 0.0001);
+                assertEquals("cube of cube root im", in.re, c3.re, 0.0001);
             }
         }
     }
