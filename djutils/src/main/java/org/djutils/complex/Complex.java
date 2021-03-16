@@ -71,7 +71,10 @@ public class Complex
 
     /**
      * Compute and return the norm, or radius, or absolute value of this complex number.
-     * @return double; the norm, or radius, or absolute value of this complex number
+     * @return double; the norm, or radius, or absolute value of this complex number. Due to the fact that in this
+     *         implementation of complex numbers, all values are stored as a real an imaginary double value; the result may
+     *         overflow to Double.POSITIVE_INFINITY, even though both the real and imaginary part of the complex number can be
+     *         represented.
      */
     public double norm()
     {
@@ -80,7 +83,9 @@ public class Complex
 
     /**
      * Compute and return the phase or phi of this complex number.
-     * @return double; the phase or phi of this complex number in Radians
+     * @return double; the phase or phi of this complex number in Radians. Due to the fact that in this implementation of
+     *         complex numbers, all values are stored as a real and imaginary value; the result of this method is always
+     *         normalized to the interval (-&pi;,&pi;].
      */
     public double phi()
     {
@@ -106,7 +111,7 @@ public class Complex
     {
         return this.re == 0.0;
     }
-    
+
     /**
      * Construct the complex conjugate of this Complex.
      * @return Complex; the complex conjugate of this
@@ -114,6 +119,18 @@ public class Complex
     public Complex conjugate()
     {
         return new Complex(this.re, -this.im);
+    }
+
+    /**
+     * Rotate this Complex by an angle.
+     * @param angle double; the angle (in Radians)
+     * @return complex; the result of the rotation
+     */
+    public Complex rotate(final double angle)
+    {
+        double sin = Math.sin(angle);
+        double cos = Math.cos(angle);
+        return new Complex(this.re * cos - this.im * sin, this.im * cos + this.re * sin);
     }
 
     /**
@@ -208,8 +225,8 @@ public class Complex
     }
 
     /**
-     * Divide this Complex by a scalar. Division by 0.0 yields a Complex with re set to Infinity if this.re != 0 and NaN
-     * if this.re == 0 and im set to Infinity if this.im != 0 and NaN if this.im == 0.
+     * Divide this Complex by a scalar. Division by 0.0 yields a Complex with re set to Infinity if this.re != 0 and NaN if
+     * this.re == 0 and im set to Infinity if this.im != 0 and NaN if this.im == 0.
      * @param rightOperand double; the scalar right hand side operand
      * @return Complex; the ratio of this Complex and the right hand side operand
      */
