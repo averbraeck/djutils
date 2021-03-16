@@ -84,8 +84,12 @@ public class TestComplex
         assertEquals("imaginary component of ZERO", 0, Complex.ZERO.im, 0);
         assertEquals("real component of ONE", 1, Complex.ONE.re, 0);
         assertEquals("imaginary component of ONE", 0, Complex.ONE.im, 0);
+        assertEquals("real component of MINUS_ONE", -1, Complex.MINUS_ONE.re, 0);
+        assertEquals("imaginary component of MINUS_ONE", 0, Complex.MINUS_ONE.im, 0);
         assertEquals("real component of I", 0, Complex.I.re, 0);
         assertEquals("imaginary component of I", 1, Complex.I.im, 0);
+        assertEquals("real component of MINUS_I", 0, Complex.MINUS_I.re, 0);
+        assertEquals("imaginary component of MINUS_I", -1, Complex.MINUS_I.im, 0);
     }
 
     /**
