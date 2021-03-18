@@ -41,7 +41,7 @@ public class TestComplexMath
                 assertEquals("square root of " + in + " phi", in.phi() / 2, c.phi(), 0.0000001);
                 Complex c2 = c.times(c);
                 assertEquals("square of square root re", in.re, c2.re, 0.0001);
-                assertEquals("square of square root im", in.re, c2.re, 0.0001);
+                assertEquals("square of square root im", in.im, c2.im, 0.0001);
             }
         }
     }
@@ -63,7 +63,7 @@ public class TestComplexMath
                 assertEquals("cube root of " + in + " phi", in.phi() / 3, c.phi(), 0.0000001);
                 Complex c3 = c.times(c).times(c);
                 assertEquals("cube of cube root re", in.re, c3.re, 0.0001);
-                assertEquals("cube of cube root im", in.re, c3.re, 0.0001);
+                assertEquals("cube of cube root im", in.im, c3.im, 0.0001);
             }
         }
     }
