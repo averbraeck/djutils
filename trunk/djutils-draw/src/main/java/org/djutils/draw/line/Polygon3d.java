@@ -198,6 +198,29 @@ public class Polygon3d extends PolyLine3d
         this(fixClosingPoint(false, iteratorToList(Throw.whenNull(iterator, "iterator cannot be null"))));
     }
 
+    /**
+     * Create a new Polygon3d, optionally filtering out repeating successive points.
+     * @param filterDuplicates boolean; if true; filter out successive repeated points; otherwise do not filter
+     * @param points Point3d...; the coordinates of the polygon as Point3d
+     * @throws DrawRuntimeException when number of points &lt; 2
+     */
+    public Polygon3d(final boolean filterDuplicates, final Point3d... points) throws DrawRuntimeException
+    {
+        this(PolyLine3d.cleanPoints(filterDuplicates, Arrays.stream(points).iterator()));
+    }
+
+    /**
+     * Create a new Polygon3d, optionally filtering out repeating successive points.
+     * @param filterDuplicates boolean; if true; filter out successive repeated points; otherwise do not filter
+     * @param pointList List&lt;Point3d&gt;; list of the coordinates of the line as Point3d; any duplicate points in this list
+     *            are removed (this method may modify the provided list)
+     * @throws DrawRuntimeException when number of non-equal points &lt; 2
+     */
+    public Polygon3d(final boolean filterDuplicates, final List<Point3d> pointList) throws DrawRuntimeException
+    {
+        this(PolyLine3d.cleanPoints(filterDuplicates, pointList.iterator()));
+    }
+
     /** {@inheritDoc} */
     @Override
     public double getLength()

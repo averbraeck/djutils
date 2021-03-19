@@ -6,10 +6,12 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.point.Point2d;
+import org.djutils.draw.point.Point3d;
 import org.junit.Test;
 
 /**
@@ -223,6 +225,39 @@ public class Polygon2dTest
             // Ignore expected exception
         }
 
+    }
+
+    /**
+     * Test the filtering constructors.
+     */
+    @Test
+    public void filterTest()
+    {
+        Point2d[] points = new Point2d[] {new Point2d(1, 2), new Point2d(1, 2), new Point2d(4, 5)};
+        try
+        {
+            new Polygon2d(false, points);
+            fail("duplicate point should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+        
+        assertEquals("After filtering; there are two points left", 2, new Polygon2d(true, points).size()); 
+        
+        List<Point2d> list = Arrays.asList(points);
+        try
+        {
+            new Polygon2d(false, list);
+            fail("duplicate point should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+        
+        assertEquals("After filtering; there are two points left", 2, new Polygon2d(true, list).size()); 
     }
 
     /**

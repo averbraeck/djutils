@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
@@ -566,45 +567,107 @@ public class PolyLine3dTest
     }
 
     /**
-     * Test the createAndCleanLine3d method.
+     * Test the filtering constructors.
      * @throws DrawRuntimeException should never happen
      */
     @Test
-    public final void cleanTest() throws DrawRuntimeException
+    public final void filterTest() throws DrawRuntimeException
     {
         Point3d[] tooShort = new Point3d[] {};
         try
         {
-            PolyLine3d.createAndCleanPolyLine3d(tooShort);
+            new PolyLine3d(true, tooShort);
             fail("Array with no points should have thrown an exception");
         }
         catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
+
         tooShort = new Point3d[] { new Point3d(1, 2, 3) };
         try
         {
-            PolyLine3d.createAndCleanPolyLine3d(tooShort);
-            fail("Array with no points should have thrown an exception");
+            new PolyLine3d(true, tooShort);
+            fail("Array with one point should have thrown an exception");
         }
         catch (DrawRuntimeException dre)
         {
             // Ignore expected exception
         }
+
         Point3d p0 = new Point3d(1, 2, 3);
         Point3d p1 = new Point3d(4, 5, 6);
         Point3d[] points = new Point3d[] { p0, p1 };
-        PolyLine3d result = PolyLine3d.createAndCleanPolyLine3d(points);
+        PolyLine3d result = new PolyLine3d(true, points);
         assertTrue("first point is p0", p0.equals(result.get(0)));
         assertTrue("second point is p1", p1.equals(result.get(1)));
         Point3d p1Same = new Point3d(4, 5, 6);
-        result = PolyLine3d.createAndCleanPolyLine3d(new Point3d[] { p0, p0, p0, p0, p1Same, p0, p1, p1, p1Same, p1, p1 });
+        result = new PolyLine3d(true, new Point3d[] { p0, p0, p0, p0, p1Same, p0, p1, p1, p1Same, p1, p1 });
         assertEquals("result should contain 4 points", 4, result.size());
         assertTrue("first point is p0", p0.equals(result.get(0)));
         assertTrue("second point is p1", p1.equals(result.get(1)));
         assertTrue("third point is p0", p0.equals(result.get(0)));
         assertTrue("last point is p1", p1.equals(result.get(1)));
+        new PolyLine3d(true, new Point3d[] { p0, new Point3d(1, 3, 4) });
+        new PolyLine3d(true, new Point3d[] { p0, new Point3d(1, 2, 4) });
+
+        try
+        {
+            PolyLine3d.cleanPoints(true, null);
+            fail("null iterator should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            PolyLine3d.cleanPoints(true, new Iterator<Point3d>()
+            {
+                @Override
+                public boolean hasNext()
+                {
+                    return false;
+                }
+
+                @Override
+                public Point3d next()
+                {
+                    return null;
+                }
+            });
+            fail("Iterator that has no data should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        Iterator<Point3d> iterator =
+                PolyLine3d.cleanPoints(true, Arrays.stream(new Point3d[] { new Point3d(1, 2, 3) }).iterator());
+        iterator.next(); // should work
+        assertFalse("iterator should now be out of data", iterator.hasNext());
+        try
+        {
+            iterator.next();
+            fail("Iterator that has no nore data should have thrown a NoSuchElementException");
+        }
+        catch (NoSuchElementException nse)
+        {
+            // Ignore expected exception
+        }
+
+        // Check that cleanPoints with false indeed does not filter
+        iterator = PolyLine3d.cleanPoints(false,
+                Arrays.stream(new Point3d[] { new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(1, 2, 3) }).iterator());
+        assertTrue("iterator has initial point", iterator.hasNext());
+        iterator.next();
+        assertTrue("iterator has second point", iterator.hasNext());
+        iterator.next();
+        assertTrue("iterator has second point", iterator.hasNext());
+        iterator.next();
+        assertFalse("iterator has no more data", iterator.hasNext());
     }
 
     /**
@@ -1059,26 +1122,26 @@ public class PolyLine3dTest
         assertEquals("Filtering a two-point line returns that line", line, filtered);
 
         array = new Point3d[] { new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(3, 4, 5) };
-        line = PolyLine3d.createAndCleanPolyLine3d(array);
+        line = new PolyLine3d(true, array);
         assertEquals("cleaned line has 2 points", 2, line.size());
         assertEquals("first point", array[0], line.getFirst());
         assertEquals("last point", array[array.length - 1], line.getLast());
 
         array = new Point3d[] { new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(3, 4, 5), new Point3d(3, 4, 5) };
-        line = PolyLine3d.createAndCleanPolyLine3d(array);
+        line = new PolyLine3d(true, array);
         assertEquals("cleaned line has 2 points", 2, line.size());
         assertEquals("first point", array[0], line.getFirst());
         assertEquals("last point", array[array.length - 1], line.getLast());
 
         array = new Point3d[] { new Point3d(0, -1, 3), new Point3d(1, 2, 4), new Point3d(1, 2, 4), new Point3d(3, 4, 4) };
-        line = PolyLine3d.createAndCleanPolyLine3d(array);
+        line = new PolyLine3d(true, array);
         assertEquals("cleaned line has 2 points", 3, line.size());
         assertEquals("first point", array[0], line.getFirst());
         assertEquals("last point", array[array.length - 1], line.getLast());
 
         array = new Point3d[] { new Point3d(0, -1, 3), new Point3d(1, 2, 4), new Point3d(1, 2, 4), new Point3d(1, 2, 4),
                 new Point3d(3, 4, 5) };
-        line = PolyLine3d.createAndCleanPolyLine3d(array);
+        line = new PolyLine3d(true, array);
         assertEquals("cleaned line has 3 points", 3, line.size());
         assertEquals("first point", array[0], line.getFirst());
         assertEquals("mid point", array[1], line.get(1));
@@ -1086,7 +1149,7 @@ public class PolyLine3dTest
 
         try
         {
-            PolyLine3d.createAndCleanPolyLine3d(new Point3d[0]);
+            new PolyLine3d(true, new Point3d[0]);
             fail("Too short array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -1096,7 +1159,7 @@ public class PolyLine3dTest
 
         try
         {
-            PolyLine3d.createAndCleanPolyLine3d(new Point3d[] { new Point3d(1, 2, 3) });
+            new PolyLine3d(true, new Point3d[] { new Point3d(1, 2, 3) });
             fail("Too short array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -1106,7 +1169,7 @@ public class PolyLine3dTest
 
         try
         {
-            PolyLine3d.createAndCleanPolyLine3d(new Point3d[] { new Point3d(1, 2, 3), new Point3d(1, 2, 3) });
+            new PolyLine3d(true, new Point3d[] { new Point3d(1, 2, 3), new Point3d(1, 2, 3) });
             fail("All duplicate points in array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -1116,8 +1179,7 @@ public class PolyLine3dTest
 
         try
         {
-            PolyLine3d.createAndCleanPolyLine3d(
-                    new Point3d[] { new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(1, 2, 3) });
+            new PolyLine3d(true, new Point3d[] { new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(1, 2, 3) });
             fail("All duplicate points in array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)

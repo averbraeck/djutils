@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 import org.djutils.draw.DrawRuntimeException;
@@ -244,6 +245,73 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         return result;
     }
 
+    /**
+     * Create a new PolyLine2d, optionally filtering out repeating successive points.
+     * @param filterDuplicates boolean; if true; filter out successive repeated points; otherwise do not filter
+     * @param points Point2d...; the coordinates of the line as Point2d
+     * @throws DrawRuntimeException when number of points &lt; 2
+     */
+    public PolyLine2d(final boolean filterDuplicates, final Point2d... points) throws DrawRuntimeException
+    {
+        this(PolyLine2d.cleanPoints(filterDuplicates, Arrays.stream(points).iterator()));
+    }
+
+    /**
+     * Create a new PolyLine2d, optionally filtering out repeating successive points.
+     * @param filterDuplicates boolean; if true; filter out successive repeated points; otherwise do not filter
+     * @param pointList List&lt;Point2d&gt;; list of the coordinates of the line as Point3d; any duplicate points in this list
+     *            are removed (this method may modify the provided list)
+     * @throws DrawRuntimeException when number of non-equal points &lt; 2
+     */
+    public PolyLine2d(final boolean filterDuplicates, final List<Point2d> pointList) throws DrawRuntimeException
+    {
+        this(PolyLine2d.cleanPoints(filterDuplicates, pointList.iterator()));
+    }
+
+    /**
+     * Return an iterator that optionally skips identical successive points.
+     * @param filter boolean; if true; filter out itentical successive points; if false; do not filter
+     * @param iterator Iterator&lt;Point2d&gt;; iterator that generates points, potentially with successive duplicates
+     * @return Iterator&lt;Point2d&gt;; iterator that skips identical successive points
+     */
+    static Iterator<Point2d> cleanPoints(final boolean filter, final Iterator<Point2d> iterator)
+    {
+        Throw.whenNull(iterator, "Iterator may not be null");
+        Throw.when(!iterator.hasNext(), DrawRuntimeException.class, "Iterator has no points to return");
+        if (!filter)
+        {
+            return iterator;
+        }
+        return new Iterator<Point2d>()
+        {
+            private Point2d currentPoint = iterator.next();
+
+            @Override
+            public boolean hasNext()
+            {
+                return this.currentPoint != null;
+            }
+
+            @Override
+            public Point2d next()
+            {
+                Throw.when(this.currentPoint == null, NoSuchElementException.class, "Out of input");
+                Point2d result = this.currentPoint;
+                this.currentPoint = null;
+                while (iterator.hasNext())
+                {
+                    this.currentPoint = iterator.next();
+                    if (result.x != this.currentPoint.x || result.y != this.currentPoint.y)
+                    {
+                        break;
+                    }
+                    this.currentPoint = null;
+                }
+                return result;
+            }
+        };
+    }
+
     /** {@inheritDoc} */
     @Override
     public PolyLine2d instantiate(final List<Point2d> pointList) throws NullPointerException, DrawRuntimeException
@@ -469,48 +537,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
             }
         }
         return new PolyLine2d(points);
-    }
-
-    /**
-     * Create a new PolyLine2d, filtering out repeating successive points.
-     * @param points Point2d...; the coordinates of the line as Point2d
-     * @return the line
-     * @throws DrawRuntimeException when number of points &lt; 2
-     */
-    public static PolyLine2d createAndCleanPolyLine2d(final Point2d... points) throws DrawRuntimeException
-    {
-        if (points.length < 2)
-        {
-            throw new DrawRuntimeException(
-                    "Degenerate PolyLine2d; has " + points.length + " point" + (points.length != 1 ? "s" : ""));
-        }
-        return createAndCleanPolyLine2d(new ArrayList<>(Arrays.asList(points)));
-    }
-
-    /**
-     * Create a new PolyLine2d, while filtering out repeating successive points.
-     * @param pointList List&lt;Point2d&gt;; list of the coordinates of the line as Point2d; any duplicate points in this list
-     *            are removed (this method may modify the provided list)
-     * @return Line2d; the line
-     * @throws DrawRuntimeException when number of non-equal points &lt; 2
-     */
-    public static PolyLine2d createAndCleanPolyLine2d(final List<Point2d> pointList) throws DrawRuntimeException
-    {
-        // TODO rewrite to avoid modifying the input list.
-        // clean successive equal points
-        int i = 1;
-        while (i < pointList.size())
-        {
-            if (pointList.get(i - 1).equals(pointList.get(i)))
-            {
-                pointList.remove(i);
-            }
-            else
-            {
-                i++;
-            }
-        }
-        return new PolyLine2d(pointList);
     }
 
     /** {@inheritDoc} */
@@ -1032,7 +1058,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         }
         try
         {
-            return PolyLine2d.createAndCleanPolyLine2d(tempPoints);
+            return new PolyLine2d(true, tempPoints);
         }
         catch (DrawRuntimeException exception)
         {
@@ -1099,7 +1125,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
                 indexInEnd++;
             }
         }
-        return createAndCleanPolyLine2d(pointList);
+        return new PolyLine2d(true, pointList);
     }
 
     /**
