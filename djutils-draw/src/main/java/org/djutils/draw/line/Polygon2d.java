@@ -177,6 +177,29 @@ public class Polygon2d extends PolyLine2d
     }
 
     /**
+     * Create a new Polygon2d, optionally filtering out repeating successive points.
+     * @param filterDuplicates boolean; if true; filter out successive repeated points; otherwise do not filter
+     * @param points Point2d...; the coordinates of the polygon as Point2d
+     * @throws DrawRuntimeException when number of points &lt; 2
+     */
+    public Polygon2d(final boolean filterDuplicates, final Point2d... points) throws DrawRuntimeException
+    {
+        this(PolyLine2d.cleanPoints(filterDuplicates, Arrays.stream(points).iterator()));
+    }
+
+    /**
+     * Create a new Polygon2d, optionally filtering out repeating successive points.
+     * @param filterDuplicates boolean; if true; filter out successive repeated points; otherwise do not filter
+     * @param pointList List&lt;Point2d&gt;; list of the coordinates of the line as Point3d; any duplicate points in this list
+     *            are removed (this method may modify the provided list)
+     * @throws DrawRuntimeException when number of non-equal points &lt; 2
+     */
+    public Polygon2d(final boolean filterDuplicates, final List<Point2d> pointList) throws DrawRuntimeException
+    {
+        this(PolyLine2d.cleanPoints(filterDuplicates, pointList.iterator()));
+    }
+
+    /**
      * Determine if this Polygon2d is convex. Returns bogus result for self-intersecting polygons. Derived from
      * http://paulbourke.net/geometry/polygonmesh/source2.c
      * @return boolean; true if this Polygon2d is convex; false if this Polygon2d is concave

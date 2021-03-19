@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 import org.djutils.draw.DrawRuntimeException;
@@ -202,6 +203,73 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     public PolyLine3d(final List<Point3d> pointList) throws DrawRuntimeException
     {
         this(pointList.toArray(new Point3d[pointList.size()]));
+    }
+
+    /**
+     * Create a new PolyLine3d, optionally filtering out repeating successive points.
+     * @param filterDuplicates boolean; if true; filter out successive repeated points; otherwise do not filter
+     * @param points Point3d...; the coordinates of the line as Point2d
+     * @throws DrawRuntimeException when number of points &lt; 2
+     */
+    public PolyLine3d(final boolean filterDuplicates, final Point3d... points) throws DrawRuntimeException
+    {
+        this(PolyLine3d.cleanPoints(filterDuplicates, Arrays.stream(points).iterator()));
+    }
+
+    /**
+     * Create a new PolyLine3d, optionally filtering out repeating successive points.
+     * @param filterDuplicates boolean; if true; filter out successive repeated points; otherwise do not filter
+     * @param pointList List&lt;Point3d&gt;; list of the coordinates of the line as Point3d; any duplicate points in this list
+     *            are removed (this method may modify the provided list)
+     * @throws DrawRuntimeException when number of non-equal points &lt; 2
+     */
+    public PolyLine3d(final boolean filterDuplicates, final List<Point3d> pointList) throws DrawRuntimeException
+    {
+        this(PolyLine3d.cleanPoints(filterDuplicates, pointList.iterator()));
+    }
+
+    /**
+     * Return an iterator that optionally skips identical successive points.
+     * @param filter boolean; if true; filter out itentical successive points; if false; do not filter
+     * @param iterator Iterator&lt;Point3d&gt;; iterator that generates points, potentially with successive duplicates
+     * @return Iterator&lt;Point3d&gt;; iterator that skips identical successive points
+     */
+    static Iterator<Point3d> cleanPoints(final boolean filter, final Iterator<Point3d> iterator)
+    {
+        Throw.whenNull(iterator, "Iterator may not be null");
+        Throw.when(!iterator.hasNext(), DrawRuntimeException.class, "Iterator has no points to return");
+        if (!filter)
+        {
+            return iterator;
+        }
+        return new Iterator<Point3d>()
+        {
+            private Point3d currentPoint = iterator.next();
+
+            @Override
+            public boolean hasNext()
+            {
+                return this.currentPoint != null;
+            }
+
+            @Override
+            public Point3d next()
+            {
+                Throw.when(this.currentPoint == null, NoSuchElementException.class, "Out of input");
+                Point3d result = this.currentPoint;
+                this.currentPoint = null;
+                while (iterator.hasNext())
+                {
+                    this.currentPoint = iterator.next();
+                    if (result.x != this.currentPoint.x || result.y != this.currentPoint.y || result.z != this.currentPoint.z)
+                    {
+                        break;
+                    }
+                    this.currentPoint = null;
+                }
+                return result;
+            }
+        };
     }
 
     /** {@inheritDoc} */
@@ -478,48 +546,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
             return new PolyLine2d(false, Arrays.copyOf(projectedX, nextIndex), Arrays.copyOf(projectedY, nextIndex));
         }
         return new PolyLine2d(false, this.x, this.y); // The x and y arrays are immutable; so we can safely share them
-    }
-
-    /**
-     * Create a new PolyLine3d, filtering out repeating successive points.
-     * @param points Point2d...; the coordinates of the line as Point2d
-     * @return the line
-     * @throws DrawRuntimeException when number of points &lt; 2
-     */
-    public static PolyLine3d createAndCleanPolyLine3d(final Point3d... points) throws DrawRuntimeException
-    {
-        if (points.length < 2)
-        {
-            throw new DrawRuntimeException(
-                    "Degenerate PolyLine2d; has " + points.length + " point" + (points.length != 1 ? "s" : ""));
-        }
-        return createAndCleanPolyLine3d(new ArrayList<>(Arrays.asList(points)));
-    }
-
-    /**
-     * Create a new PolyLine3d, while filtering out repeating successive points.
-     * @param pointList List&lt;Point3d&gt;; list of the coordinates of the line as Point3d; any duplicate points in this list
-     *            are removed (this method may modify the provided list)
-     * @return Line3d; the line
-     * @throws DrawRuntimeException when number of non-equal points &lt; 2
-     */
-    public static PolyLine3d createAndCleanPolyLine3d(final List<Point3d> pointList) throws DrawRuntimeException
-    {
-        // TODO rewrite to avoid modifying the input list.
-        // clean successive equal points
-        int i = 1;
-        while (i < pointList.size())
-        {
-            if (pointList.get(i - 1).equals(pointList.get(i)))
-            {
-                pointList.remove(i);
-            }
-            else
-            {
-                i++;
-            }
-        }
-        return new PolyLine3d(pointList);
     }
 
     /** {@inheritDoc} */
@@ -908,7 +934,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
                 indexInEnd++;
             }
         }
-        return createAndCleanPolyLine3d(pointList);
+        return new PolyLine3d(true, pointList);
     }
 
     /** {@inheritDoc} */

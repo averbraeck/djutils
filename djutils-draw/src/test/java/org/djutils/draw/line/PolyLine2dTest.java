@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Transform2d;
@@ -463,26 +464,26 @@ public class PolyLine2dTest
         assertEquals("Filtering a two-point line returns that line", line, filtered);
 
         array = new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4) };
-        line = PolyLine2d.createAndCleanPolyLine2d(array);
+        line = new PolyLine2d(true, array);
         assertEquals("cleaned line has 2 points", 2, line.size());
         assertEquals("first point", array[0], line.getFirst());
         assertEquals("last point", array[array.length - 1], line.getLast());
 
         array = new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4), new Point2d(3, 4) };
-        line = PolyLine2d.createAndCleanPolyLine2d(array);
+        line = new PolyLine2d(true, array);
         assertEquals("cleaned line has 2 points", 2, line.size());
         assertEquals("first point", array[0], line.getFirst());
         assertEquals("last point", array[array.length - 1], line.getLast());
 
         array = new Point2d[] { new Point2d(0, -1), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4) };
-        line = PolyLine2d.createAndCleanPolyLine2d(array);
+        line = new PolyLine2d(true, array);
         assertEquals("cleaned line has 2 points", 3, line.size());
         assertEquals("first point", array[0], line.getFirst());
         assertEquals("last point", array[array.length - 1], line.getLast());
 
         array = new Point2d[] { new Point2d(0, -1), new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2),
                 new Point2d(3, 4) };
-        line = PolyLine2d.createAndCleanPolyLine2d(array);
+        line = new PolyLine2d(true, array);
         assertEquals("cleaned line has 3 points", 3, line.size());
         assertEquals("first point", array[0], line.getFirst());
         assertEquals("mid point", array[1], line.get(1));
@@ -490,7 +491,7 @@ public class PolyLine2dTest
 
         try
         {
-            PolyLine2d.createAndCleanPolyLine2d(new Point2d[0]);
+            new PolyLine2d(true, new Point2d[0]);
             fail("Too short array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -500,7 +501,7 @@ public class PolyLine2dTest
 
         try
         {
-            PolyLine2d.createAndCleanPolyLine2d(new Point2d[] { new Point2d(1, 2) });
+            new PolyLine2d(true, new Point2d[] { new Point2d(1, 2) });
             fail("Too short array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -510,7 +511,7 @@ public class PolyLine2dTest
 
         try
         {
-            PolyLine2d.createAndCleanPolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(1, 2) });
+            new PolyLine2d(true, new Point2d[] { new Point2d(1, 2), new Point2d(1, 2) });
             fail("All duplicate points in array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -520,7 +521,7 @@ public class PolyLine2dTest
 
         try
         {
-            PolyLine2d.createAndCleanPolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2) });
+            new PolyLine2d(true, new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2) });
             fail("All duplicate points in array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -1522,6 +1523,109 @@ public class PolyLine2dTest
         assertEquals("offset by zero returns original", bezier, bezier.offsetLine(0, 0));
         assertEquals("offset by constant with two arguments returns same as offset with one argument", bezier.offsetLine(3, 3),
                 bezier.offsetLine(3));
+    }
+
+    /**
+     * Test the filtering constructors.
+     * @throws DrawRuntimeException should never happen
+     */
+    @Test
+    public final void filterTest() throws DrawRuntimeException
+    {
+        Point2d[] tooShort = new Point2d[] {};
+        try
+        {
+            new PolyLine2d(true, tooShort);
+            fail("Array with no points should have thrown an exception");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        tooShort = new Point2d[] { new Point2d(1, 2) };
+        try
+        {
+            new PolyLine2d(true, tooShort);
+            fail("Array with one point should have thrown an exception");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        Point2d p0 = new Point2d(1, 2);
+        Point2d p1 = new Point2d(4, 5);
+        Point2d[] points = new Point2d[] { p0, p1 };
+        PolyLine2d result = new PolyLine2d(true, points);
+        assertTrue("first point is p0", p0.equals(result.get(0)));
+        assertTrue("second point is p1", p1.equals(result.get(1)));
+        Point2d p1Same = new Point2d(4, 5);
+        result = new PolyLine2d(true, new Point2d[] { p0, p0, p0, p0, p1Same, p0, p1, p1, p1Same, p1, p1 });
+        assertEquals("result should contain 4 points", 4, result.size());
+        assertTrue("first point is p0", p0.equals(result.get(0)));
+        assertTrue("second point is p1", p1.equals(result.get(1)));
+        assertTrue("third point is p0", p0.equals(result.get(0)));
+        assertTrue("last point is p1", p1.equals(result.get(1)));
+        new PolyLine2d(true, new Point2d[] { p0, new Point2d(1, 3) });
+
+        try
+        {
+            PolyLine2d.cleanPoints(true, null);
+            fail("null iterator should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            PolyLine2d.cleanPoints(true, new Iterator<Point2d>()
+            {
+                @Override
+                public boolean hasNext()
+                {
+                    return false;
+                }
+
+                @Override
+                public Point2d next()
+                {
+                    return null;
+                }
+            });
+            fail("Iterator that has no data should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        Iterator<Point2d> iterator =
+                PolyLine2d.cleanPoints(true, Arrays.stream(new Point2d[] { new Point2d(1, 2) }).iterator());
+        iterator.next(); // should work
+        assertFalse("iterator should now be out of data", iterator.hasNext());
+        try
+        {
+            iterator.next();
+            fail("Iterator that has no nore data should have thrown a NoSuchElementException");
+        }
+        catch (NoSuchElementException nse)
+        {
+            // Ignore expected exception
+        }
+
+        // Check that cleanPoints with false indeed does not filter
+        iterator = PolyLine2d.cleanPoints(false,
+                Arrays.stream(new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2) }).iterator());
+        assertTrue("iterator has initial point", iterator.hasNext());
+        iterator.next();
+        assertTrue("iterator has second point", iterator.hasNext());
+        iterator.next();
+        assertTrue("iterator has second point", iterator.hasNext());
+        iterator.next();
+        assertFalse("iterator has no more data", iterator.hasNext());
     }
 
     /**
