@@ -188,7 +188,7 @@ public final class BenchmarkPolynomialRoots
     /**
      * Test the cubic solver.
      */
-    public static void cubicTestNewtonDeflate()
+    public static void cubicTestNewtonFactor()
     {
         long time = System.currentTimeMillis();
         double[] paramValues = new double[] {0, 1, 2, 3, 4, Math.PI, -Math.E, 0.001, 1000};
@@ -200,7 +200,7 @@ public final class BenchmarkPolynomialRoots
                 {
                     for (double d : paramValues)
                     {
-                        PolynomialRoots2.cubicRootsNewtonDeflate(a, b, c, d);
+                        PolynomialRoots2.cubicRootsNewtonFactor(a, b, c, d);
                     }
                 }
             }
@@ -217,7 +217,7 @@ public final class BenchmarkPolynomialRoots
         cubicTest();
         cubicTestDurandKerner();
         cubicTestAberthEhrlich();
-        cubicTestNewtonDeflate();
+        cubicTestNewtonFactor();
         quarticTest();
         quarticTestDurandKerner();
         quarticTestAberthEhrlich();
