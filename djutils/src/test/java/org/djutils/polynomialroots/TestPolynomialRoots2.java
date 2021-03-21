@@ -116,7 +116,7 @@ public class TestPolynomialRoots2
                     {
                         for (double e : paramValues)
                         {
-                            System.out.print(a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e + " = 0");
+                            // System.out.print(a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e + " = 0");
                             Complex[] roots = PolynomialRoots2.quarticRootsDurandKerner(a, b, c, d, e);
                             int expectedNumber = a != 0 ? 4 : b != 0 ? 3 : c != 0 ? 2 : d != 0 ? 1 : 0;
                             assertEquals("number of roots", expectedNumber, roots.length);
@@ -197,7 +197,7 @@ public class TestPolynomialRoots2
                     {
                         for (double e : paramValues)
                         {
-                            System.out.print(a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e + " = 0");
+                            // System.out.print(a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e + " = 0");
                             Complex[] roots = PolynomialRoots2.quarticRootsAberthEhrlich(a, b, c, d, e);
                             int expectedNumber = a != 0 ? 4 : b != 0 ? 3 : c != 0 ? 2 : d != 0 ? 1 : 0;
                             assertEquals("number of roots", expectedNumber, roots.length);
@@ -228,7 +228,6 @@ public class TestPolynomialRoots2
      * Test the cubic solver.<br>
      * XXX: Not active yet. Code is in development
      */
-    // @Test
     public void cubicTestNewtonFactor()
     {
         double[] paramValues = new double[] {0, 1, 2, 3, 4, Math.PI, -Math.E, 0.001, 1000};
