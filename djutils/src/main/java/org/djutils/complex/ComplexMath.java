@@ -35,7 +35,7 @@ public final class ComplexMath
     }
 
     /**
-     * Principal cube root of a Complex operand. The principal cube root of a complex number has <i>the most positive</i. real
+     * Principal cube root of a Complex operand. The principal cube root of a complex number has <i>the most positive</i>. real
      * component.
      * @param z Complex; the operand
      * @return Complex; the principal cube root of the operand

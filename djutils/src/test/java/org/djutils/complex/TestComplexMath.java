@@ -30,7 +30,7 @@ public class TestComplexMath
         Complex c = ComplexMath.sqrt(in);
         assertEquals("square root of " + in + " norm", 2, c.norm(), 0.000001);
         assertEquals("square root of " + in + " phi", -Math.PI / 4, c.phi(), 0.000001);
-        double[] values = new double[] { 0, 1, 0.01, 100, Math.PI, -Math.E };
+        double[] values = new double[] {0, 1, 0.01, 100, Math.PI, -Math.E};
         for (double re : values)
         {
             for (double im : values)
@@ -52,7 +52,7 @@ public class TestComplexMath
     @Test
     public void testCbrt()
     {
-        double[] values = new double[] { 0, 1, 0.01, 100, Math.PI, -Math.E };
+        double[] values = new double[] {0, 1, 0.01, 100, Math.PI, -Math.E};
         for (double re : values)
         {
             for (double im : values)
@@ -76,9 +76,9 @@ public class TestComplexMath
     {
         assertEquals("exp of 1 is e; re", Math.E, ComplexMath.exp(Complex.ONE).re, 0.000001);
         assertEquals("exp of 1 is e; im", 0, ComplexMath.exp(Complex.ONE).im, 0.000001);
-        for (double re : new double[] { 0, 1, Math.PI, -Math.E, 10, -10 })
+        for (double re : new double[] {0, 1, Math.PI, -Math.E, 10, -10})
         {
-            for (double im : new double[] { 0, 0.1, Math.PI / 2, Math.PI, 5, -1, -Math.E, -50 })
+            for (double im : new double[] {0, 0.1, Math.PI / 2, Math.PI, 5, -1, -Math.E, -50})
             {
                 Complex in = new Complex(re, im);
                 Complex out = ComplexMath.exp(in);
@@ -99,9 +99,9 @@ public class TestComplexMath
         Complex out = ComplexMath.ln(in);
         assertEquals("ln(e) is ONE re", 1, out.re, 0.00000001);
         assertEquals("ln(e) is ONE im", 0, out.im, 0.00000001);
-        for (double re : new double[] { 0, 1, Math.PI, 10, -Math.E, -10 })
+        for (double re : new double[] {0, 1, Math.PI, 10, -Math.E, -10})
         {
-            for (double im : new double[] { 0, 0.1, Math.PI / 2, Math.PI, 5, -1, -Math.E, -50 })
+            for (double im : new double[] {0, 0.1, Math.PI / 2, Math.PI, 5, -1, -Math.E, -50})
             {
                 in = new Complex(re, im);
                 out = ComplexMath.ln(in);
@@ -122,7 +122,7 @@ public class TestComplexMath
         assertEquals("cos(ZERO) is ONE: re", 1, c.re, 0.00001);
         assertEquals("cos(ZERO) is ONE: im", 0, c.im, 0.00001);
         assertEquals("tan(ZERO) is ZERO", Complex.ZERO, ComplexMath.tan(Complex.ZERO));
-        double[] values = new double[] { 0, 1, Math.PI, 10, -Math.E, -10 };
+        double[] values = new double[] {0, 1, Math.PI, 10, -Math.E, -10};
         for (double re : values)
         {
             for (double im : values)
@@ -153,7 +153,7 @@ public class TestComplexMath
     @Test
     public void testSinhCoshTanH()
     {
-        double[] values = new double[] { 0, 1, Math.PI, 10, -Math.E, -10 };
+        double[] values = new double[] {0, 1, Math.PI, 10, -Math.E, -10};
         for (double re : values)
         {
             for (double im : values)
@@ -194,7 +194,7 @@ public class TestComplexMath
     @Test
     public void testAsinAcosAtan()
     {
-        double[] values = new double[] { 0, 0.2, 0, 8, 1, -1, -0.2, -0.8, Math.PI, 10, -Math.E, -10 };
+        double[] values = new double[] {0, 0.2, 0, 8, 1, -1, -0.2, -0.8, Math.PI, 10, -Math.E, -10};
         for (double re : values)
         {
             for (double im : values)
@@ -240,7 +240,7 @@ public class TestComplexMath
     @Test
     public void testAsinh()
     {
-        double[] values = new double[] { 0, 0.2, 0, 8, 1, -1, -0.2, -0.8, Math.PI, 10, -Math.E, -10 };
+        double[] values = new double[] {0, 0.2, 0, 8, 1, -1, -0.2, -0.8, Math.PI, 10, -Math.E, -10};
         for (double re : values)
         {
             for (double im : values)
@@ -268,7 +268,7 @@ public class TestComplexMath
                     // atanh is unstable around im == 0 && re <= -1 && re >= 1; see <a
                     // "https://mathworld.wolfram.com/InverseHyperbolicTangent.html">Wolfram mathWorld: Inverse Hyperbolic
                     // Tangent</a>, so we can't use this test there.
-                    // System.out.println("   in=" + printComplex(in) + "\natanh=" + printComplex(atanh));
+                    // System.out.println(" in=" + printComplex(in) + "\natanh=" + printComplex(atanh));
                     if (im != 1 && im != -1 || re != 0)
                     {
                         // Also unstable around i and minus i as the atan function is unstable around -1
@@ -298,8 +298,8 @@ public class TestComplexMath
     }
 
     /**
-     * Copied from < href="https://forgetcode.com/java/1746-asinh-return-the-hyperbolic-sine-of-value-as-a-argument">Forget Code
-     * asinh</a>.
+     * Copied from <a href="https://forgetcode.com/java/1746-asinh-return-the-hyperbolic-sine-of-value-as-a-argument">Forget
+     * Code asinh</a>.
      * @param x double; the argument
      * @return double; the inverse hyperbolic cosine of x
      */
@@ -309,7 +309,7 @@ public class TestComplexMath
     }
 
     /**
-     * Copied from < href="https://forgetcode.com/Java/1747-acosh-Return-the-hyperbolic-Cosine-of-value-as-a-Argument">Forget
+     * Copied from <a href="https://forgetcode.com/Java/1747-acosh-Return-the-hyperbolic-Cosine-of-value-as-a-Argument">Forget
      * Code acosh</a>.
      * @param x double; the argument
      * @return double; the inverse hyperbolic cosine of x
