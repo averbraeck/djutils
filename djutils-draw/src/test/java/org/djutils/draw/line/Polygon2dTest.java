@@ -11,7 +11,6 @@ import java.util.List;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.point.Point2d;
-import org.djutils.draw.point.Point3d;
 import org.junit.Test;
 
 /**
