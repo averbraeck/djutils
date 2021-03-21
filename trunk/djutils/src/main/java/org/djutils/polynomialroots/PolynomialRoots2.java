@@ -238,24 +238,24 @@ public final class PolynomialRoots2
      * The order of the roots is as follows: 1) For real roots, the order is according to their algebraic value on the number
      * scale (largest positive first, largest negative last). 2) Since there can be only one complex conjugate pair root, no
      * order is necessary. 3) All real roots precede the complex ones.
-     * @param a double; coefficient of the cubic term
-     * @param b double; coefficient of the quadratic term
-     * @param c double; coefficient of the linear term
-     * @param d double; coefficient of the independent term
+     * @param a3 double; coefficient of the cubic term
+     * @param a2 double; coefficient of the quadratic term
+     * @param a1 double; coefficient of the linear term
+     * @param a0 double; coefficient of the independent term
      * @return Complex[]; array of Complex with all the roots; there can be one, two or three roots.
      */
-    public static Complex[] cubicRootsNewtonDeflate(final double a, final double b, final double c, final double d)
+    public static Complex[] cubicRootsNewtonFactor(final double a3, final double a2, final double a1, final double a0)
     {
         // corner case: a == 0 --> quadratic equation
-        if (a == 0.0)
+        if (a3 == 0.0)
         {
-            return quadraticRoots(b, c, d);
+            return quadraticRoots(a2, a1, a0);
         }
 
         // corner case: d == 0 --> solve x * (ax^2 + bx + c) = 0
-        if (d == 0.0)
+        if (a0 == 0.0)
         {
-            Complex[] result = quadraticRoots(a, b, c);
+            Complex[] result = quadraticRoots(a3, a2, a1);
             if (result.length == 0)
             {
                 return new Complex[] {Complex.ZERO, Complex.ZERO, Complex.ZERO};
@@ -270,33 +270,68 @@ public final class PolynomialRoots2
             }
         }
 
+        double argmax = maxAbs(a3, a2, a1, a0);
+        double d = a0 / argmax;
+        double c = a1 / argmax;
+        double b = a2 / argmax;
+        double a = a3 / argmax;
+
         // find the first real root
-        Complex root1 = new Complex(rootNewtonBisection(new double[] {d, c, b, a}, 0.0));
+        double[] args = new double[] {d, c, b, a};
+        double root1 = rootNewtonRaphson(args, 0.0);
 
-        // deflate the equation
+        // check and apply bisection if this did not work
+        if (Double.isNaN(root1) || f(args, root1) > 1E-9)
+        {
+            double min = -64.0;
+            double max = 64.0;
+            int s1, s2;
+            do
+            {
+                min *= 2.0;
+                max *= 2.0;
+                if (max > 1E64)
+                {
+                    throw new RuntimeException(
+                            String.format("cannot find first root for %fx^3 + %fx^2 + %fx + %f = 0", a, b, c, d));
+                }
+                s1 = (int) Math.signum(f(args, min));
+                s2 = (int) Math.signum(f(args, max));
+            }
+            while (s1 != 0 && s2 != 0 && s1 == s2);
+            root1 = rootBisection(args, min, max, 0.0);
+//            if (Double.isNaN(root1))
+//            {
+//                throw new RuntimeException(
+//                        String.format("cannot find first root for %fx^3 + %fx^2 + %fx + %f = 0", a, b, c, d));
+//            }
+//            if (Math.abs(f(args, root1)) > 1E-6)
+//            {
+//                throw new RuntimeException(String.format("f(first root) != 0 for [%fx^3 + %fx^2 + %fx + %f = 0, but %f]", a, b,
+//                        c, d, f(args, root1)));
+//            }
+        }
 
-        // other cases: use Cardano's formula
-        double D0 = b * b - 3.0 * a * c;
-        double D1 = 2.0 * b * b * b - 9.0 * a * b * c + 27.0 * a * a * d;
-        if (D0 == 0 && D1 == 0)
-        {
-            // one real solution
-            Complex root = new Complex(rootNewtonBisection(new double[] {d, c, b, a}, 0.0));
-            return new Complex[] {root, root, root};
-        }
-        Complex r = ComplexMath.sqrt(new Complex(D1 * D1 - 4.0 * D0 * D0 * D0));
-        Complex s = r.plus(D1).times(0.5);
-        if (s.re == 0.0 && s.im == 0.0)
-        {
-            s = r.times(-1.0).plus(D1).times(0.5);
-        }
-        Complex C = ComplexMath.cbrt(s);
-        Complex x1 = C.plus(b).plus((C.reciprocal().times(D0))).times(-1.0 / (3.0 * a));
-        Complex x2 = C.rotate(Math.toRadians(120.0)).plus(b).plus((C.rotate(Math.toRadians(120.0)).reciprocal().times(D0)))
-                .times(-1.0 / (3.0 * a));
-        Complex x3 = C.rotate(Math.toRadians(-120.0)).plus(b).plus((C.rotate(Math.toRadians(-120.0)).reciprocal().times(D0)))
-                .times(-1.0 / (3.0 * a));
-        return new Complex[] {x1, x2, x3};
+        /*-
+         * Use Factor theory to factor out root 1 (r):
+         * if the equation is ax^3 + bx^2 + cx + d, and there is a root r, the equation equals:
+         * (x-r) (ax^2 + (b+ra)x + (c+r(b+ra)) + (ar^3+br^2+cr+d)/(x-r) where the last term becomes zero
+         * We can then solve find the other two roots by solving ax^2 + (b+ra)x + (c+r(b+ra)) = 0
+         */
+
+        Complex[] rootsQuadaratic = quadraticRoots(a, b + root1 * a, c + root1 * (b + root1 * a));
+//        if (Math.abs(f(args, rootsQuadaratic[0]).norm()) > 1E-6)
+//        {
+//            throw new RuntimeException(String.format("f(second root) != 0 for [%fx^3 + %fx^2 + %fx + %f = 0], but %f", a, b, c,
+//                    d, f(args, root1)));
+//        }
+//        if (Math.abs(f(args, rootsQuadaratic[1]).norm()) > 1E-6)
+//        {
+//            throw new RuntimeException(String.format("f(second root) != 0 for [%fx^3 + %fx^2 + %fx + %f = 0], but %f", a, b, c,
+//                    d, f(args, root1)));
+//        }
+
+        return new Complex[] {new Complex(root1), rootsQuadaratic[0], rootsQuadaratic[1]};
     }
 
     /**
@@ -348,7 +383,7 @@ public final class PolynomialRoots2
         if (D0 == 0 && D1 == 0)
         {
             // one real solution
-            Complex root = new Complex(rootNewtonBisection(new double[] {d, c, b, a}, 0.0));
+            Complex root = new Complex(rootNewtonRaphson(new double[] {d, c, b, a}, 0.0));
             return new Complex[] {root, root, root};
         }
         Complex r = ComplexMath.sqrt(new Complex(D1 * D1 - 4.0 * D0 * D0 * D0));
@@ -611,29 +646,78 @@ public final class PolynomialRoots2
     private static final int MAX_STEPS_NEWTON = 100;
 
     /**
-     * Polynomial root finder using the Newton-Raphson method combined with bisection to avoid cycles and the algorithm going
-     * out of bounds. Implementation based on Numerical Recipes in C, section 9.4, pp 365-366. See
-     * <a href="https://en.wikipedia.org/wiki/Newton%27s_method"> https://en.wikipedia.org/wiki/Newton%27s_method</a> for brief
-     * information about the Newton-Raphson or Newton method for root finding.
+     * Polynomial root finder using the Newton-Raphson method. See <a href="https://en.wikipedia.org/wiki/Newton%27s_method">
+     * https://en.wikipedia.org/wiki/Newton%27s_method</a> for brief information about the Newton-Raphson or Newton method for
+     * root finding.
      * @param a double[]; the factors of the polynomial, where the index i indicate the factor for x^i, so the polynomial is<br>
      *            a[n]x^n + a[n-1]x^(n-1) + ... + a[2]a^2 + a[1]x + a[0]
      * @param allowedError double; the allowed absolute error in the result
      * @return double the root of the equation that has been found on the basis of the start value, or NaN if not found within
      *         the allowed error bounds and the allowed number of steps.
      */
-    public static double rootNewtonBisection(final double[] a, final double allowedError)
+    public static double rootNewtonRaphson(final double[] a, final double allowedError)
     {
-        double x = 0.0;
+        double x = 0.1232232323234; // take a a start point that has an almost zero chance of having f'(x) = 0.
+        double newValue = Double.NaN; // for testing convergence
+        double fx = -1;
         for (int j = 0; j < MAX_STEPS_NEWTON; j++)
         {
-            double newValue = x - f(a, x) / fDerivative(a, x);
-            if (Math.abs(newValue - x) == 0.0)
+            fx = f(a, x);
+            newValue = x - fx / fDerivative(a, x);
+            if (x == newValue || Math.abs(fx) <= allowedError)
             {
                 return x;
             }
             x = newValue;
         }
-        return Math.abs(f(a, x)) <= allowedError ? x : Double.NaN;
+        return Math.abs(fx) <= allowedError ? x : Double.NaN;
+    }
+
+    /** the number of steps in approximating a real root with the bisection method. */
+    private static final int MAX_STEPS_BISECTION = 100;
+
+    /**
+     * Polynomial root finder using the bisection method combined with bisection to avoid cycles and the algorithm going out of
+     * bounds. Implementation based on Numerical Recipes in C, section 9.4, pp 365-366. See
+     * <a href="https://en.wikipedia.org/wiki/Newton%27s_method"> https://en.wikipedia.org/wiki/Newton%27s_method</a> for brief
+     * information about the Newton-Raphson or Newton method for root finding.
+     * @param a double[]; the factors of the polynomial, where the index i indicate the factor for x^i, so the polynomial is<br>
+     *            a[n]x^n + a[n-1]x^(n-1) + ... + a[2]a^2 + a[1]x + a[0]
+     * @param startMin double; the lowest initial search value
+     * @param startMax double; the highest initial search value
+     * @param allowedError double; the allowed absolute error in the result
+     * @return double the root of the equation that has been found on the basis of the start values, or NaN if not found within
+     *         the allowed error bounds and the allowed number of steps.
+     */
+    public static double rootBisection(final double[] a, final double startMin, final double startMax,
+            final double allowedError)
+    {
+        int n = 0;
+        double xPrev = startMin;
+        double min = startMin;
+        double max = startMax;
+        double fmin = f(a, min);
+        while (n <= MAX_STEPS_BISECTION)
+        {
+            double x = (min + max) / 2.0;
+            double fx = f(a, x);
+            if (x == xPrev || Math.abs(fx) < allowedError)
+            {
+                return x;
+            }
+            if (Math.signum(fx) == Math.signum(fmin))
+            {
+                min = x;
+                fmin = fx;
+            }
+            else
+            {
+                max = x;
+            }
+            xPrev = x;
+            n++;
+        }
+        return Double.NaN;
     }
 
     /**
@@ -649,6 +733,24 @@ public final class PolynomialRoots2
             if (c.norm() > m)
             {
                 m = c.norm();
+            }
+        }
+        return m;
+    }
+
+    /**
+     * Return the max of the absolute values of the coefficients in an array.
+     * @param values double[] the array with numbers
+     * @return double; the highest absolute value of the norm of the complex numbers in the array
+     */
+    private static double maxAbs(final double... values)
+    {
+        double m = Double.NEGATIVE_INFINITY;
+        for (double d : values)
+        {
+            if (Math.abs(d) > m)
+            {
+                m = Math.abs(d);
             }
         }
         return m;
@@ -686,6 +788,24 @@ public final class PolynomialRoots2
         {
             result += xPow * a[i];
             xPow = xPow * x;
+        }
+        return result;
+    }
+
+    /**
+     * Return the complex value of f(c) where f(x) = a[n]x^n + a[n-1]x^(n-1) + ... + a[2]a^2 + a[1]x + a[0].
+     * @param a double[] the complex factors of the equation
+     * @param c Complex; the value for which to calculate f(c)
+     * @return Complex; f(c)
+     */
+    private static Complex f(final double[] a, final Complex c)
+    {
+        Complex cPow = Complex.ONE;
+        Complex result = Complex.ZERO;
+        for (int i = 0; i < a.length; i++)
+        {
+            result = result.plus(cPow.times(a[i]));
+            cPow = cPow.times(c);
         }
         return result;
     }
@@ -733,10 +853,38 @@ public final class PolynomialRoots2
      */
     public static void main(final String[] args)
     {
-        Complex[] roots = PolynomialRoots.cubicRoots(1, 3, 3, 1);
+        double a = 0.001;
+        double b = 1000;
+        double c = 0;
+        double d = 1;
+        Complex[] roots = cubicRootsNewtonFactor(a, b, c, d);
         for (Complex root : roots)
         {
-            System.out.println(root);
+            System.out.println("NewtonFactor    " + root + "   f(x) = " + f(new double[] {d, c, b, a}, root));
+        }
+        System.out.println();
+        roots = cubicRootsCardano(a, b, c, d);
+        for (Complex root : roots)
+        {
+            System.out.println("Cardano         " + root + "   f(x) = " + f(new double[] {d, c, b, a}, root));
+        }
+        System.out.println();
+        roots = cubicRootsAberthEhrlich(a, b, c, d);
+        for (Complex root : roots)
+        {
+            System.out.println("Aberth-Ehrlich  " + root + "   f(x) = " + f(new double[] {d, c, b, a}, root));
+        }
+        System.out.println();
+        roots = cubicRootsDurandKerner(a, b, c, d);
+        for (Complex root : roots)
+        {
+            System.out.println("Durand-Kerner   " + root + "   f(x) = " + f(new double[] {d, c, b, a}, root));
+        }
+        System.out.println();
+        roots = PolynomialRoots.cubicRoots(a, b, c, d);
+        for (Complex root : roots)
+        {
+            System.out.println("F77             " + root + "   f(x) = " + f(new double[] {d, c, b, a}, root));
         }
     }
 }

@@ -142,7 +142,7 @@ public class TestPolynomialRoots2
             }
         }
     }
-    
+
     /**
      * Test the cubic solver.
      */
@@ -225,10 +225,11 @@ public class TestPolynomialRoots2
     }
 
     /**
-     * Test the cubic solver.
+     * Test the cubic solver.<br>
+     * XXX: Not active yet. Code is in development
      */
-    @Test
-    public void cubicTestNewtonDeflate()
+    // @Test
+    public void cubicTestNewtonFactor()
     {
         double[] paramValues = new double[] {0, 1, 2, 3, 4, Math.PI, -Math.E, 0.001, 1000};
         for (double a : paramValues)
@@ -240,7 +241,7 @@ public class TestPolynomialRoots2
                     for (double d : paramValues)
                     {
                         // System.out.print(a + " x^3 + " + b + " x^2 + " + c + " x + " + d + " = 0");
-                        Complex[] roots = PolynomialRoots2.cubicRootsNewtonDeflate(a, b, c, d);
+                        Complex[] roots = PolynomialRoots2.cubicRootsNewtonFactor(a, b, c, d);
                         int expectedNumber = a != 0 ? 3 : b != 0 ? 2 : c != 0 ? 1 : 0;
                         assertEquals("number of roots", expectedNumber, roots.length);
                         // System.out.print(": " + expectedNumber + " solutions");

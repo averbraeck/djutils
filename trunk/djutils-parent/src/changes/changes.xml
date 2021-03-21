@@ -2,12 +2,22 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.06.23" date="2021-03-19" description="Changed filtering instantiate method into a constructor">
+    <release version="1.06.23" date="2021-03-21" description="Changed filtering instantiate method into a constructor">
       <action dev="pknoppers" type="change">
         The PolyLine2d and PolyLine3d classes had static methods to construct a new instance while filtering out
         successive identical points. These have been replaced by constructors that take a boolean parameter that
         controls whether such filtering will take place. The Polygon2 and Polygon3d classes have new, similar constructors.
       </action>
+      <action dev="averbraeck" type="add">
+        Several other polynomial root solvers have been added to the PolynomialRoots2 class. Examples are the
+        methods of Cardano, Aberth-Ehrlich, and Durand-Kerner. The latter two methods are applicable for any n-th
+        order polynomial, and also work with complex factors. 
+      </action>
+      <action dev="averbraeck" type="add">
+        Preliminary code to work with floating point variables of higher precision than the double has been added
+        to the djutils class. This code for the Float128 and DoubleDouble class is untested and in a very early 
+        development stage. Don't use yet! 
+      </action>      
     </release>
 
     <release version="1.06.22" date="2021-03-14" description="wrote Complex class and PolynomialRoots class">
