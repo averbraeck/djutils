@@ -94,8 +94,8 @@
 			<property name="severity" value="error" />
 		</module>
 		<module name="JavadocStyle">
-			<property name="severity" value="warning" />
-			<property name="checkHtml" value="false" />
+			<property name="severity" value="error" />
+			<property name="checkHtml" value="true" />
 		</module>
 
 
