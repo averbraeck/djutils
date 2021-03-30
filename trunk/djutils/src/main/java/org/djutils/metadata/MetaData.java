@@ -183,7 +183,7 @@ public class MetaData implements Serializable
     public final void verifyComposition(final Object object)
     {
         Throw.when(this.objectDescriptors.length != 1, IndexOutOfBoundsException.class,
-                "Testng single object, but length of the object descriptors array is %d", this.objectDescriptors.length);
+                "Testing single object, but length of the object descriptors array is %d", this.objectDescriptors.length);
         if (this.equals(NO_META_DATA)) // anything goes
         {
             return;
