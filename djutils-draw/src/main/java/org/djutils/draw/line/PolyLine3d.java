@@ -18,7 +18,7 @@ import org.djutils.exceptions.Throw;
 import org.djutils.logger.CategoryLogger;
 
 /**
- * Implementation of Line for 3D space.
+ * Implementation of PolyLine for 3D space.
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -46,11 +46,11 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     /** The length. */
     private final double length;
 
-    /** Bounding box of this Line3d. */
+    /** Bounding box of this PolyLine3d. */
     private final Bounds3d bounds;
 
     /**
-     * Construct a new Line3d from an array of double x values, an array of double y values and an array of double z values.
+     * Construct a new PolyLine3d from an array of double x values, an array of double y values and an array of double z values.
      * @param copyNeeded boolean; if true; a deep copy of the points array is stored instead of the provided array
      * @param x double[]; the x-coordinates of the points
      * @param y double[]; the y-coordinates of the points
@@ -101,7 +101,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     }
 
     /**
-     * Construct a new Line3d from an array of Point2d. This constructor makes a deep copy of the parameters.
+     * Construct a new PolyLine3d from an array of Point2d. This constructor makes a deep copy of the parameters.
      * @param x double[]; the x-coordinates of the points
      * @param y double[]; the y-coordinates of the points
      * @param z double[]; the z-coordinates of the points
@@ -115,7 +115,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     }
 
     /**
-     * Construct a new Line3d from an array of Point3d.
+     * Construct a new PolyLine3d from an array of Point3d.
      * @param points Point3d[]; the array of points to construct this PolyLine3d from.
      * @throws NullPointerException when the array is null
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
@@ -184,8 +184,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     }
 
     /**
-     * Construct a new Line3d from an iterator that yields Point3d objects.
-     * @param iterator Iterator&lt;Point3d&gt;; iterator that will provide all points that constitute the new Line3d
+     * Construct a new PolyLine3d from an iterator that yields Point3d objects.
+     * @param iterator Iterator&lt;Point3d&gt;; iterator that will provide all points that constitute the new PolyLine3d
      * @throws NullPointerException when iterator is null
      * @throws DrawRuntimeException when the iterator provides too few points, or some adjacent identical points)
      */
@@ -195,8 +195,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     }
 
     /**
-     * Construct a new Line3d from a List&lt;Point3d&gt;.
-     * @param pointList List&lt;Point3d&gt;; the list of points to construct this Line3d from.
+     * Construct a new PolyLine3d from a List&lt;Point3d&gt;.
+     * @param pointList List&lt;Point3d&gt;; the list of points to construct this PolyLine3d from.
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
      */
@@ -390,7 +390,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     {
         if (this.size() <= 2)
         {
-            return this; // Except for some cached fields; an Line2d is immutable; so safe to return
+            return this; // Except for some cached fields; a PolyLine2d is immutable; so safe to return
         }
         Point3d prevPoint = null;
         List<Point3d> list = new ArrayList<>();
@@ -403,7 +403,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
                 {
                     if (list.size() > 1)
                     {
-                        // Replace the last point of the result by the last point of this Line2d
+                        // Replace the last point of the result by the last point of this PolyLine2d
                         list.set(list.size() - 1, currentPoint);
                     }
                     else
@@ -440,10 +440,10 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     }
 
     /**
-     * Concatenate several Line3d instances.
-     * @param lines PolyLine3d...; Line3d... one or more Line3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
+     * Concatenate several PolyLine3d instances.
+     * @param lines PolyLine3d...; one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
      *            match the first of the second, etc.
-     * @return Line3d
+     * @return PolyLine3d
      * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
      */
     public static PolyLine3d concatenate(final PolyLine3d... lines) throws DrawRuntimeException
@@ -452,11 +452,11 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     }
 
     /**
-     * Concatenate two Line3d instances. This method is separate for efficiency reasons.
+     * Concatenate two PolyLine3d instances. This method is separate for efficiency reasons.
      * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
      * @param line1 PolyLine3d; first line
      * @param line2 PolyLine3d; second line
-     * @return Line3d; the concatenation of the two lines
+     * @return PolyLine3d; the concatenation of the two lines
      * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
      */
     public static PolyLine3d concatenate(final double tolerance, final PolyLine3d line1, final PolyLine3d line2)
@@ -482,11 +482,11 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
     }
 
     /**
-     * Concatenate several Line3d instances.
+     * Concatenate several PolyLine3d instances.
      * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
-     * @param lines PolyLine3d...; Line3d... one or more Line3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
+     * @param lines PolyLine3d...; one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
      *            match the first of the second, etc.
-     * @return Line3d; the concatenation of the lines
+     * @return PolyLine3d; the concatenation of the lines
      * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
      */
     public static PolyLine3d concatenate(final double tolerance, final PolyLine3d... lines) throws DrawRuntimeException
@@ -564,7 +564,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
             }
         }
 
-        // position before start point -- extrapolate using direction from first point to second point of this Line2d
+        // position before start point -- extrapolate using direction from first point to second point of this PolyLine2d
         if (position < 0.0)
         {
             double fraction = position / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
@@ -573,7 +573,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         }
 
         // position beyond end point -- extrapolate using the direction from the before last point to the last point of this
-        // Line2d
+        // PolyLine2d
         int n1 = this.x.length - 1; // index of last point
         int n2 = this.x.length - 2; // index of before last point
         double len = position - getLength();
@@ -759,7 +759,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Spa
         if (Double.isNaN(start) || Double.isNaN(end) || start < 0 || start >= end || end > getLength())
         {
             throw new DrawRuntimeException(
-                    "Bad interval (" + start + ".." + end + "; length of this Line3d is " + this.getLength() + ")");
+                    "Bad interval (" + start + ".." + end + "; length of this PolyLine3d is " + this.getLength() + ")");
         }
         double cumulativeLength = 0;
         double nextCumulativeLength = 0;
