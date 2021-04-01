@@ -17,7 +17,7 @@ import org.djutils.draw.point.Point;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @param <L> the PolyLine type (2d or 3d)
- * @param <P> The Point type (2d or 3d)
+ * @param <P> The matching Point type (2d or 3d)
  * @param <S> The Space type (2d, or 3d)
  * @param <R> The matching Ray type (2d or 3d)
  * @param <LS> The matching LineSegment type (2d or 3d)
