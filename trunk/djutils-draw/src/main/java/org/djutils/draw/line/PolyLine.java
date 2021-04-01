@@ -16,7 +16,7 @@ import org.djutils.draw.point.Point;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
- * @param <L> the Line type (2d or 3d)
+ * @param <L> the PolyLine type (2d or 3d)
  * @param <P> The Point type (2d or 3d)
  * @param <S> The Space type (2d, or 3d)
  * @param <R> The matching Ray type (2d or 3d)
@@ -28,17 +28,18 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
     /**
      * Constructor that can be accessed as a method (used to implement default methods in this interface).
      * @param pointList List&lt;P&gt;; a list of points
-     * @return L; the new line
+     * @return L; the new PolyLine
      * @throws NullPointerException when pointList is null
      * @throws DrawRuntimeException when pointList has fewer than two points or contains successive duplicate points
      */
     L instantiate(List<P> pointList) throws NullPointerException, DrawRuntimeException;
 
     /**
-     * Construct a new Line2d that is equal to this line except for segments that are shorter than the <cite>noiseLevel</cite>.
-     * The result is guaranteed to start with the first point of this line and end with the last point of this line.
+     * Construct a new PolyLine that is equal to this line except for segments that are shorter than the
+     * <cite>noiseLevel</cite>. The result is guaranteed to start with the first point of this line and end with the last point
+     * of this line.
      * @param noiseLevel double; the minimum segment length that is <b>not</b> removed
-     * @return Line2d; the filtered line
+     * @return PolyLine2d; the filtered line
      */
     L noiseFilteredLine(double noiseLevel);
 
@@ -105,10 +106,10 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
     }
 
     /**
-     * Return one segment of this PolyLine, or Polygon.
+     * Extract one LineSegment of this PolyLine, or Polygon.
      * @param index int; the rank number of the segment; must be in range 0..Size() - 2 for PolyLine, or 0.. Size() - 1 for
      *            Polygon.
-     * @return LS; the segment that connects point index to point index + 1
+     * @return LS; the LineSegment that connects point index to point index + 1
      */
     LS getSegment(int index);
 
@@ -121,8 +122,8 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
     double lengthAtIndex(int index) throws IndexOutOfBoundsException;
 
     /**
-     * Construct a new L with all points of this Line in reverse order.
-     * @return L; the new Line
+     * Construct a new PolyLine with all points of this PolyLine in reverse order.
+     * @return L; the new PolyLine
      */
     default L reverse()
     {
@@ -135,10 +136,10 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
     }
 
     /**
-     * Construct a new L covering the indicated fraction of this L.
-     * @param start double; starting point, valid range [0..<cite>end</cite>)
-     * @param end double; ending point, valid range (<cite>start</cite>..1]
-     * @return Line3d; the new L
+     * Construct a new PolyLine covering the indicated fraction of this PolyLine.
+     * @param start double; fractional starting position, valid range [0..<cite>end</cite>)
+     * @param end double; fractional ending position, valid range (<cite>start</cite>..1]
+     * @return L; a new PolyLine covering the selected sub-section
      * @throws DrawRuntimeException when start &gt;= end, or start &lt; 0, or end &gt; 1
      */
     default L extractFractional(final double start, final double end) throws DrawRuntimeException
@@ -152,11 +153,11 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
     }
 
     /**
-     * Create a new L that covers a sub-section of this L.
-     * @param start double; length along this Line3d where the sub-section starts, valid range [0..<cite>end</cite>)
-     * @param end double; length along this Line3d where the sub-section ends, valid range
-     *            (<cite>start</cite>..<cite>length</cite> (length is the length of this L)
-     * @return L; the selected sub-section
+     * Create a new PolyLine that covers a sub-section of this PolyLine.
+     * @param start double; length along this PolyLine where the sub-section starts, valid range [0..<cite>end</cite>)
+     * @param end double; length along this PolyLine where the sub-section ends, valid range
+     *            (<cite>start</cite>..<cite>length</cite> (length is the length of this PolyLine)
+     * @return L; a new PolyLine covering the selected sub-section
      * @throws DrawRuntimeException when start &gt;= end, or start &lt; 0, or end &gt; length
      */
     L extract(double start, double end) throws DrawRuntimeException;
@@ -173,7 +174,9 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
     /**
      * Get the location at a position on the line, with its direction. Position should be between 0.0 and line length.
      * @param position double; the position on the line for which to calculate the point on the line
-     * @return OP; an oriented point
+     * @return R; a Ray at the position on the line, pointing in the direction of the line at that position. If the position is
+     *         at (or very near) a point on this PolyLine, the direction is either the direction before, or the direction after
+     *         that point
      * @throws DrawRuntimeException when position is NaN, less than 0.0, or more than line length.
      */
     R getLocation(double position) throws DrawRuntimeException;
@@ -182,14 +185,20 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
      * Get the location at a position on the line, with its direction. Position can be below 0 or more than the line length. In
      * that case, the position will be extrapolated in the direction of the line at its start or end.
      * @param position double; the position on the line for which to calculate the point on, before, or after the line
-     * @return OP; an oriented point
+     * @return R; a Ray at the position on the line, pointing in the direction of the line at that position. If the position is
+     *         at (or very near) a point on this PolyLine, the direction is either the direction before, or the direction after
+     *         that point. If the position is before the start point of this PolyLine, the direction is towards the start point.
+     *         If the position is beyond the end of this PolyLine, the direction is the direction of the last segment of this
+     *         PolyLine.
      */
     R getLocationExtended(double position);
 
     /**
      * Get the location at a fraction of the line, with its direction. Fraction should be between 0.0 and 1.0.
      * @param fraction double; the fraction for which to calculate the point on the line
-     * @return OP; an oriented point
+     * @return R; a Ray at the position on the line, pointing in the direction of the line at that position. If the position is
+     *         at (or very near) a point on this PolyLine, the direction is either the direction before, or the direction after
+     *         that point
      * @throws DrawRuntimeException when fraction less than 0.0 or more than 1.0.
      */
     default R getLocationFraction(final double fraction) throws DrawRuntimeException
@@ -205,7 +214,11 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
      * Get the location at a fraction of the line, with its direction. Fraction should be between 0.0 and 1.0.
      * @param fraction double; the fraction for which to calculate the point on the line
      * @param tolerance double; the delta from 0.0 and 1.0 that will be forgiven
-     * @return OrientedPoint3d, or OrientedPoint2d (in accordance with OP, P, L and S)
+     * @return R; a Ray at the position on the line, pointing in the direction of the line at that position. If the position is
+     *         at (or very near) a point on this PolyLine, the direction is either the direction before, or the direction after
+     *         that point. If the position is before the start point of this PolyLine, the direction is towards the start point.
+     *         If the position is beyond the end of this PolyLine, the direction is the direction of the last segment of this
+     *         PolyLine.
      * @throws DrawRuntimeException when fraction less than 0.0 or more than 1.0.
      */
     default R getLocationFraction(final double fraction, final double tolerance) throws DrawRuntimeException
@@ -222,7 +235,11 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
     /**
      * Get the location at a fraction of the line (or outside the line), with its direction.
      * @param fraction double; the fraction for which to calculate the point on the line
-     * @return OrientedPoint3d, or OrientedPoint2d (in accordance with OP, P, L and S)
+     * @return R; a Ray at the position on the line, pointing in the direction of the line at that position. If the position is
+     *         at (or very near) a point on this PolyLine, the direction is either the direction before, or the direction after
+     *         that point. If the position is before the start point of this PolyLine, the direction is towards the start point.
+     *         If the position is beyond the end of this PolyLine, the direction is the direction of the last segment of this
+     *         PolyLine.
      */
     default R getLocationFractionExtended(final double fraction)
     {
@@ -230,17 +247,18 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
     }
 
     /**
-     * Truncate this Line at the given length (less than the length of the line, and larger than zero) and return a new line.
+     * Truncate this PolyLine at the given length (less than the length of the line, and larger than zero) and return a new
+     * line.
      * @param position double; the position along the line where to truncate the line
-     * @return L; a new Line that follows this line, but ends at the position where line.getLength() == lengthSI
+     * @return L; a new PolyLine that follows this PolyLine, but ends at the position where line.getLength() == lengthSI
      * @throws DrawRuntimeException when position less than 0.0 or more than line length.
      */
     L truncate(double position) throws DrawRuntimeException;
 
     /**
-     * Binary search for a position on the line.
+     * Binary search for a point index on this PolyLine that is at, or the the nearest one before a given position.
      * @param pos double; the position to look for
-     * @return the index below the position; the position is between points[index] and points[index+1]
+     * @return the index below the position; the position lies between points[index] and points[index+1]
      * @throws DrawRuntimeException when index could not be found
      */
     default int find(final double pos) throws DrawRuntimeException
@@ -300,10 +318,10 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
     double DEFAULT_OFFSET_PRECISION = 0.00001;
 
     /**
-     * Construct an offset line. This is similar to what geographical specialists call buffering, except that this method only
-     * construct a new line on one side of the reference line and does not add half disks around the end points. This method
-     * tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise in
-     * <cite>this</cite> (the reference line) can cause major artifacts in the offset line. This method calls the underlying
+     * Construct an offset PolyLine. This is similar to what geographical specialists call buffering, except that this method
+     * only construct a new line on one side of the reference line and does not add half disks (or miters) at the end points.
+     * This method tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise
+     * in <cite>this</cite> (the reference line) can cause major artifacts in the offset line. This method calls the underlying
      * method with default values for circlePrecision (<cite>DEFAULT_OFFSET</cite>), offsetMinimumFilterValue
      * (<cite>DEFAULT_OFFSET_MINIMUM_FILTER_VALUE</cite>), offsetMaximumFilterValue
      * (<cite>DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE</cite>), offsetFilterRatio (<cite>DEFAULT_OFFSET_FILTER_RATIO</cite>),
@@ -311,7 +329,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
      * In the 3D version the offset is parallel to the X-Y plane.
      * @param offset double; the offset; positive values indicate left of the reference line, negative values indicate right of
      *            the reference line
-     * @return PolyLine2d; a line at the specified offset from the reference line
+     * @return L; a PolyLine at the specified offset from the this PolyLine
      * @throws DrawRuntimeException Only if P is PolyLine3d and the line cannot be projected into 2d
      */
     default L offsetLine(double offset) throws DrawRuntimeException
@@ -322,9 +340,9 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
 
     /**
      * Construct an offset line. This is similar to what geographical specialists call buffering, except that this method only
-     * construct a new line on one side of the reference line and does not add half disks around the end points. This method
-     * tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise in
-     * <cite>this</cite> (the reference line) can cause major artifacts in the offset line. <br>
+     * construct a new line on one side of the reference line and does not add half disks (or miters) around the end points.
+     * This method tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise
+     * in <cite>this</cite> (the reference line) can cause major artifacts in the offset line. <br>
      * In the 3D version the offset is parallel to the X-Y plane.
      * @param offset double; the offset; positive values indicate left of the reference line, negative values indicate right of
      *            the reference line
@@ -335,7 +353,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
      * @param offsetFilterRatio double; noise in the reference line less than <cite>offset / offsetFilterRatio</cite> is
      *            filtered except when the resulting value exceeds <cite>offsetMaximumFilterValue</cite>
      * @param minimumOffset double; an offset value less than this value is treated as 0.0
-     * @return PolyLine2d; a line at the specified offset from the reference line
+     * @return L; a PolyLine at the specified offset from the reference line
      * @throws IllegalArgumentException when offset is NaN, or circlePrecision, offsetMinimumFilterValue,
      *             offsetMaximumfilterValue, offsetFilterRatio, or minimumOffset is not positive, or NaN, or
      *             offsetMinimumFilterValue &gt;= offsetMaximumFilterValue
@@ -346,9 +364,9 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
 
     /**
      * Construct an offset line. This is similar to what geographical specialists call buffering, except that this method only
-     * construct a new line on one side of the reference line and does not add half disks around the end points. This method
-     * tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise in
-     * <cite>this</cite> (the reference line) can cause major artifacts in the offset line. This method calls the underlying
+     * construct a new line on one side of the reference line and does not add half disks (or miters) around the end points.
+     * This method tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise
+     * in <cite>this</cite> (the reference line) can cause major artifacts in the offset line. This method calls the underlying
      * method with default values for circlePrecision (<cite>DEFAULT_OFFSET</cite>), offsetMinimumFilterValue
      * (<cite>DEFAULT_OFFSET_MINIMUM_FILTER_VALUE</cite>), offsetMaximumFilterValue
      * (<cite>DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE</cite>), offsetFilterRatio (<cite>DEFAULT_OFFSET_FILTER_RATIO</cite>),
@@ -358,7 +376,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
      *            negative values indicate right of the reference line
      * @param offsetAtEnd double; the offset at the end of this line; positive values indicate left of the reference line,
      *            negative values indicate right of the reference line
-     * @return PolyLine2d; a line at the specified offset from the reference line
+     * @return L; a PolyLine at the specified offset from the reference line
      * @throws IllegalArgumentException when offset is NaN, or circlePrecision, offsetMinimumFilterValue,
      *             offsetMaximumfilterValue, offsetFilterRatio, or minimumOffset is not positive, or NaN, or
      *             offsetMinimumFilterValue &gt;= offsetMaximumFilterValue
@@ -372,9 +390,9 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
 
     /**
      * Construct an offset line. This is similar to what geographical specialists call buffering, except that this method only
-     * construct a new line on one side of the reference line and does not add half disks around the end points. This method
-     * tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise in
-     * <cite>this</cite> (the reference line) can cause major artifacts in the offset line. <br>
+     * construct a new line on one side of the reference line and does not add half disks (or miters) around the end points.
+     * This method tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise
+     * in <cite>this</cite> (the reference line) can cause major artifacts in the offset line. <br>
      * In the 3D version the offset is parallel to the X-Y plane.
      * @param offsetAtStart double; the offset at the start of this line; positive values indicate left of the reference line,
      *            negative values indicate right of the reference line
@@ -387,7 +405,7 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
      * @param offsetFilterRatio double; noise in the reference line less than <cite>offset / offsetFilterRatio</cite> is
      *            filtered except when the resulting value exceeds <cite>offsetMaximumFilterValue</cite>
      * @param minimumOffset double; an offset value less than this value is treated as 0.0
-     * @return PolyLine2d; a line at the specified offset from the reference line
+     * @return L; a PolyLine at the specified offset from the reference line
      * @throws IllegalArgumentException when offset is NaN, or circlePrecision, offsetMinimumFilterValue,
      *             offsetMaximumfilterValue, offsetFilterRatio, or minimumOffset is not positive, or NaN, or
      *             offsetMinimumFilterValue &gt;= offsetMaximumFilterValue
@@ -398,10 +416,10 @@ public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P,
             throws IllegalArgumentException, DrawRuntimeException;
 
     /**
-     * Make a transition line from this L to another L using a user specified function.
-     * @param endLine L; the other L
+     * Make a transition line from this PolyLine to another PolyLine using a user specified function.
+     * @param endLine L; the other PolyLine
      * @param transition TransitionFunction; how the results changes from this line to the other line
-     * @return L; a transition between this L and the other L
+     * @return L; a transition between this PolyLine and the other PolyLine
      * @throws DrawRuntimeException when construction of some point along the way fails. E.g. when the transition function
      *             returns NaN.
      */
