@@ -19,7 +19,7 @@ import org.djutils.exceptions.Throw;
 import org.djutils.logger.CategoryLogger;
 
 /**
- * Implementation of Line for 2D space.
+ * Implementation of PolyLine for 2D space.
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -44,11 +44,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     /** The length. */
     private final double length;
 
-    /** Bounding rectangle of this Line2d. */
+    /** Bounding rectangle of this PolyLine2d. */
     private final Bounds2d bounds;
 
     /**
-     * Construct a new Line2d from an array of double x values and an array of double y values.
+     * Construct a new PolyLine2d from an array of double x values and an array of double y values.
      * @param copyNeeded boolean; if true; a deep copy of the points array is stored instead of the provided array
      * @param x double[]; the x-coordinates of the points
      * @param y double[]; the y-coordinates of the points
@@ -88,7 +88,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
-     * Construct a new Line2d from an array of Point2d. This constructor makes a deep copy of the parameters.
+     * Construct a new PolyLine2d from an array of Point2d. This constructor makes a deep copy of the parameters.
      * @param x double[]; the x-coordinates of the points
      * @param y double[]; the y-coordinates of the points
      * @throws NullPointerException when iterator is null
@@ -101,7 +101,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
-     * Construct a new Line2d from an array of Point2d.
+     * Construct a new PolyLine2d from an array of Point2d.
      * @param points Point2d[]; the array of points to construct this PolyLine2d from.
      * @throws NullPointerException when the array is null
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
@@ -168,8 +168,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
-     * Construct a new Line2d from an iterator that yields Point2d objects.
-     * @param iterator Iterator&lt;Point2d&gt;; iterator that will provide all points that constitute the new Line2d
+     * Construct a new PolyLine2d from an iterator that yields Point2d objects.
+     * @param iterator Iterator&lt;Point2d&gt;; iterator that will provide all points that constitute the new PolyLine2d
      * @throws NullPointerException when iterator is null
      * @throws DrawRuntimeException when the iterator provides too few points, or some adjacent identical points)
      */
@@ -179,8 +179,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
-     * Construct a new Line2d from a List&lt;Point2d&gt;.
-     * @param pointList List&lt;Point2d&gt;; the list of points to construct this Line2d from.
+     * Construct a new PolyLine2d from a List&lt;Point2d&gt;.
+     * @param pointList List&lt;Point2d&gt;; the list of points to construct this PolyLine2d from.
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
      */
@@ -190,8 +190,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
-     * Construct a new Line2d (closed shape) from a Path2D.
-     * @param path Path2D; the Path2D to construct this Line2d from.
+     * Construct a new PolyLine2d (closed shape) from a Path2D.
+     * @param path Path2D; the Path2D to construct this PolyLine2d from.
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
      */
@@ -406,7 +406,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     {
         if (this.size() <= 2)
         {
-            return this; // Except for some cached fields; an Line2d is immutable; so safe to return
+            return this; // Except for some cached fields; a PolyLine2d is immutable; so safe to return
         }
         Point2d prevPoint = null;
         List<Point2d> list = new ArrayList<>();
@@ -419,7 +419,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
                 {
                     if (list.size() > 1)
                     {
-                        // Replace the last point of the result by the last point of this Line2d
+                        // Replace the last point of the result by the last point of this PolyLine2d
                         list.set(list.size() - 1, currentPoint);
                     }
                     else
@@ -456,10 +456,10 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
-     * Concatenate several Line2d instances.
-     * @param lines PolyLine2d...; Line2d... one or more Line2d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
+     * Concatenate several PolyLine2d instances.
+     * @param lines PolyLine2d...; One or more PolyLine2d objects. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
      *            match the first of the second, etc.
-     * @return Line2d
+     * @return PolyLine2d
      * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
      */
     public static PolyLine2d concatenate(final PolyLine2d... lines) throws DrawRuntimeException
@@ -468,11 +468,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
-     * Concatenate two Line2d instances. This method is separate for efficiency reasons.
+     * Concatenate two PolyLine2d instances. This method is separate for efficiency reasons.
      * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
      * @param line1 PolyLine2d; first line
      * @param line2 PolyLine2d; second line
-     * @return Line2d; the concatenation of the two lines
+     * @return PolyLine2d; the concatenation of the two lines
      * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
      */
     public static PolyLine2d concatenate(final double tolerance, final PolyLine2d line1, final PolyLine2d line2)
@@ -498,11 +498,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
     }
 
     /**
-     * Concatenate several Line2d instances.
+     * Concatenate several PolyLine2d instances.
      * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
-     * @param lines PolyLine2d...; Line2d... one or more Line2d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
+     * @param lines PolyLine2d...; one or more PolyLine2d objects. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
      *            match the first of the second, etc.
-     * @return Line2d; the concatenation of the lines
+     * @return PolyLine2d; the concatenation of the lines
      * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
      */
     public static PolyLine2d concatenate(final double tolerance, final PolyLine2d... lines) throws DrawRuntimeException
@@ -555,7 +555,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
             }
         }
 
-        // position before start point -- extrapolate using direction from first point to second point of this Line2d
+        // position before start point -- extrapolate using direction from first point to second point of this PolyLine2d
         if (position < 0.0)
         {
             double fraction = position / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
@@ -564,7 +564,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         }
 
         // position beyond end point -- extrapolate using the direction from the before last point to the last point of this
-        // Line2d
+        // PolyLine2d
         int n1 = this.x.length - 1; // index of last point
         int n2 = this.x.length - 2; // index of before last point
         double len = position - getLength();
@@ -744,7 +744,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Spa
         if (Double.isNaN(start) || Double.isNaN(end) || start < 0 || start >= end || end > getLength())
         {
             throw new DrawRuntimeException(
-                    "Bad interval (" + start + ".." + end + "; length of this Line2d is " + this.getLength() + ")");
+                    "Bad interval (" + start + ".." + end + "; length of this PolyLine2d is " + this.getLength() + ")");
         }
         double cumulativeLength = 0;
         double nextCumulativeLength = 0;
