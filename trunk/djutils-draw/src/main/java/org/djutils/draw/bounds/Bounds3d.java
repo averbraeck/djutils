@@ -174,7 +174,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     }
 
     /**
-     * Verify that the array contains at lease one entry.
+     * Verify that the array contains at least one entry.
      * @param drawable3dArray Drawable3d[]; array of Drawable2d objects
      * @return Drawable3d[]; the array
      * @throws NullPointerException when the array is null
