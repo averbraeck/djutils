@@ -159,7 +159,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Drawable2
     }
 
     /**
-     * Verify that the array contains at lease one entry.
+     * Verify that the array contains at least one entry.
      * @param drawable2dArray Drawable2d[]; array of Drawable2d objects
      * @return Drawable2d[]; the array
      * @throws NullPointerException when the array is null
