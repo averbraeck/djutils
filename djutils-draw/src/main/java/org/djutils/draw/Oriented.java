@@ -33,7 +33,7 @@ public interface Oriented<O extends Oriented<O>>
      *            do not want to check the angles
      * @return boolean; true if x, y, and z are less than epsilonCoordinate apart, and rotX, rotY and rotZ are less than
      *         epsilonRotation apart, otherwise false
-     * @throws NullPointerException when point is null
+     * @throws NullPointerException when other is null
      * @throws IllegalArgumentException epsilonCoordinate or epsilonRotation is NaN or negative
      */
     boolean epsilonEquals(O other, double epsilonCoordinate, double epsilonDirection)
