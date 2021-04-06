@@ -10,10 +10,11 @@ import org.djutils.draw.Oriented3d;
 import org.djutils.exceptions.Throw;
 
 /**
- * A OrientedPoint3d is an immutable directed point with an x, y, and z coordinate, stored with double precision. It differs
- * from many Point implementations by being immutable. The direction is a vector from the point, where its direction is
- * specified by the rotation around the x, y, and z-axis. A number of constructors and methods are provided for cases where only
- * the rotation around the z-axis is of importance.
+ * A OrientedPoint3d is an immutable point with an x, y, and z coordinate, stored with double precision plus a 3d orientation.
+ * The orientation is specified by the rotations around the x, y, and z-axis. A number of constructors and methods are provided
+ * for cases where only the rotation around the z-axis is of importance. Orientation in 3D is stored as three double values
+ * dirX,dirY,dirZ. This class does <b>not</b> prescribe a particular order in which these rotations are to be applied. (Applying
+ * rotations is <b>not</b> commutative, so this <i>is</i> important.)
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -39,7 +40,7 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     public final double dirZ;
 
     /**
-     * Create an immutable directed point with x, y, and z coordinates, stored with double precision, and direction 0,0,0.
+     * Create a new OrientedPoint3d with x, y, and z coordinates and direction 0,0,0.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param z double; the z coordinate
@@ -54,7 +55,7 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     }
 
     /**
-     * Create an immutable directed point with x, y, and z coordinates, stored with double precision and direction.
+     * Create a new OrientedPoint3d with x, y, and z coordinates and orientation dirX,dirY,dirZ.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param z double; the z coordinate
@@ -75,11 +76,10 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     }
 
     /**
-     * Create an immutable directed point with x, y, and z coordinates, stored with double precision, and direction 0,0,0.
+     * Create a new OrientedPoint3d with x, y, and z coordinates and direction 0,0,0.
      * @param xyz double[]; the x, y and z coordinates
      * @throws NullPointerException when xyx is null
-     * @throws IllegalArgumentException when the length of the xyx array is not 3, or contains a NaN value, or dirX, dirY, or
-     *             dirZ is NaN
+     * @throws IllegalArgumentException when the length of the xyx array is not 3, or contains a NaN value
      */
     public OrientedPoint3d(final double[] xyz) throws NullPointerException, IllegalArgumentException
     {
@@ -90,7 +90,7 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     }
 
     /**
-     * Create an immutable directed point with x, y, and z coordinates, stored with double precision, and direction 0,0,0.
+     * Create a new OrientedPoint3d with x, y, and z coordinates, stored with double precision, and orientation dirX,dirY,dirZ.
      * @param xyz double[]; the x, y and z coordinates
      * @param dirX double; the direction as rotation around the x-axis with the point as the center
      * @param dirY double; the direction as rotation around the y-axis with the point as the center
@@ -111,7 +111,7 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     }
 
     /**
-     * Create an immutable directed point from another point, stored with double precision and specified direction.
+     * Create a new OrientedPoint3d from another point and specified orientation dirX,dirY,dirZ.
      * @param point Point3d; the point from which this OrientedPoint3d will be instantiated
      * @param dirX double; the direction as rotation around the x-axis with the point as the center
      * @param dirY double; the direction as rotation around the y-axis with the point as the center
@@ -130,40 +130,44 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     }
 
     /**
-     * Create an immutable point with x, y, and z coordinates, stored with double precision, and direction.
+     * Create a new OrientedPoint3d with x, y, and z coordinates and orientation specified using a double array of three
+     * elements (containing dirX,dirY,dirZ in that order).
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param z double; the z coordinate
-     * @param direction double[]; the direction as rotations around the x,y,z-axes with the point as the center
+     * @param orientation double[]; the three orientation values as rotations around the x,y,z-axes in a double array containing
+     *            dirX,dirY,dirZ in that order
      * @throws NullPointerException when <code>rotation</code> is null
      * @throws IllegalArgumentException when the length of the <code>direction</code> array is not 3
      */
-    public OrientedPoint3d(final double x, final double y, final double z, final double[] direction)
+    public OrientedPoint3d(final double x, final double y, final double z, final double[] orientation)
             throws NullPointerException, IllegalArgumentException
     {
         super(x, y, z);
-        Throw.whenNull(direction, "direction array cannot be null");
-        Throw.when(direction.length != 3, IllegalArgumentException.class, "length of direction array must be 3");
-        this.dirX = direction[0];
-        this.dirY = direction[1];
-        this.dirZ = direction[2];
+        Throw.whenNull(orientation, "direction array cannot be null");
+        Throw.when(orientation.length != 3, IllegalArgumentException.class, "length of direction array must be 3");
+        this.dirX = orientation[0];
+        this.dirY = orientation[1];
+        this.dirZ = orientation[2];
     }
 
     /**
-     * Create an immutable point with x, y, and z coordinates, stored with double precision, and direction.
-     * @param xyz double[]; the x, y and z coordinates
-     * @param direction double[]; the rotation around the x,y,z-axis with the point as the center
+     * Create a new OrientedPoint3d with x, y, and z coordinates packed in a double array and orientation specified using a
+     * double array of three elements (containing dirX,dirY,dirZ in that order).
+     * @param xyz double[]; the x, y and z coordinates in that order
+     * @param orientation double[]; the three orientation values as rotations around the x,y,z-axes in a double array containing
+     *            dirX,dirY,dirZ in that order
      * @throws NullPointerException when xyx or direction is null
-     * @throws IllegalArgumentException when the length of the xyx array or the length of the direction array is not 3
+     * @throws IllegalArgumentException when the length of the xyx array or the length of the orientation array is not 3
      */
-    public OrientedPoint3d(final double[] xyz, final double[] direction) throws NullPointerException, IllegalArgumentException
+    public OrientedPoint3d(final double[] xyz, final double[] orientation) throws NullPointerException, IllegalArgumentException
     {
         super(xyz);
-        Throw.whenNull(direction, "direction cannot be null");
-        Throw.when(direction.length != 3, IllegalArgumentException.class, "length of direction array must be 3");
-        this.dirX = direction[0];
-        this.dirY = direction[1];
-        this.dirZ = direction[2];
+        Throw.whenNull(orientation, "direction cannot be null");
+        Throw.when(orientation.length != 3, IllegalArgumentException.class, "length of direction array must be 3");
+        this.dirX = orientation[0];
+        this.dirY = orientation[1];
+        this.dirZ = orientation[2];
     }
 
     /** {@inheritDoc} */
@@ -215,9 +219,9 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     }
 
     /**
-     * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
-     * that case the interpolation turns into an extrapolation. DirX, dirY and dirZ are interpolated using the
-     * interpolateShortest method.
+     * Interpolate towards another OrientedPoint3d with a fraction. It is allowed for fraction to be less than zero or larger
+     * than 1. In that case the interpolation turns into an extrapolation. DirX, dirY and dirZ are interpolated/extrapolated
+     * using the interpolateShortest method.
      * @param otherPoint OrientedPoint3d; the other point
      * @param fraction double; the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
      *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
@@ -239,8 +243,8 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     }
 
     /**
-     * Return a new OrientedPoint with an in-place rotation around the z-axis by the provided delta. The resulting rotation will
-     * be normalized between -&pi; and &pi;.
+     * Return a new OrientedPoint3d with an in-place rotation around the z-axis by the provided delta. The resulting rotation
+     * will be normalized between -&pi; and &pi;.
      * @param rotateZ double; the rotation around the z-axis
      * @return OrientedPoint3d; a new point with the same coordinates, dirX and dirY and modified dirZ
      * @throws IllegalArgumentException when rotateZ is NaN

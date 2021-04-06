@@ -30,7 +30,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     public final double dirZ;
 
     /**
-     * Construct an immutable directed point with an x and y coordinate, and a direction, stored with double precision.
+     * Construct an oriented point with an x and y coordinate and a direction equal to 0.0.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @throws IllegalArgumentException when any coordinate is NaN
@@ -42,7 +42,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     }
 
     /**
-     * Construct an immutable directed point with an x and y coordinate, and a direction, stored with double precision.
+     * Construct an oriented point with an x and y coordinate and a direction.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param dirZ double; the counter-clockwise rotation around the point in radians
@@ -56,7 +56,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     }
 
     /**
-     * Construct an immutable directed point with an x and y coordinate, and a direction, stored with double precision.
+     * Construct an oriented point with an x and y coordinate and a direction.
      * @param xy double[]; the x and y coordinate
      * @param dirZ double; the counter-clockwise rotation around the point in radians
      * @throws NullPointerException when xy is null
@@ -70,7 +70,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     }
 
     /**
-     * Construct an immutable directed point from an AWT Point2D, and a direction, stored with double precision.
+     * Construct an oriented point from an AWT Point2D and a direction.
      * @param point Point2D; an AWT Point2D
      * @param dirZ double; the counter-clockwise rotation around the point in radians
      * @throws IllegalArgumentException when any coordinate in point is NaN, or rotZ is NaN
@@ -83,8 +83,8 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     }
 
     /**
-     * Construct an immutable directed point with a direction from another Point, stored with double precision.
-     * @param point Point2d; a point with or without rotation
+     * Construct an oriented point from a Point2d and a direction.
+     * @param point Point2d; a point (with or without orientation)
      * @param dirZ double; the counter-clockwise rotation around the point in radians
      * @throws IllegalArgumentException when rotZ is NaN
      */
@@ -100,14 +100,14 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     public OrientedPoint2d translate(final double dx, final double dy) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class, "translation may not be NaN");
-        return new OrientedPoint2d(getX() + dx, getY() + dy, getDirZ());
+        return new OrientedPoint2d(getX() + dx, getY() + dy, this.dirZ);
     }
 
     /** {@inheritDoc} */
     @Override
     public OrientedPoint3d translate(final double dx, final double dy, final double z) throws IllegalArgumentException
     {
-        return new OrientedPoint3d(getX() + dx, getY() + dy, z, 0, 0, getDirZ());
+        return new OrientedPoint3d(getX() + dx, getY() + dy, z, 0, 0, this.dirZ);
     }
 
     /** {@inheritDoc} */
@@ -115,21 +115,21 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     public OrientedPoint2d scale(final double factor) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(factor), IllegalArgumentException.class, "factor must be a number (not NaN)");
-        return new OrientedPoint2d(getX() * factor, getY() * factor, getDirZ());
+        return new OrientedPoint2d(getX() * factor, getY() * factor, this.dirZ);
     }
 
     /** {@inheritDoc} */
     @Override
     public OrientedPoint2d neg()
     {
-        return new OrientedPoint2d(-getX(), -getY(), getDirZ() + Math.PI);
+        return new OrientedPoint2d(-getX(), -getY(), this.dirZ + Math.PI);
     }
 
     /** {@inheritDoc} */
     @Override
     public OrientedPoint2d abs()
     {
-        return new OrientedPoint2d(Math.abs(getX()), Math.abs(getY()), getDirZ());
+        return new OrientedPoint2d(Math.abs(getX()), Math.abs(getY()), this.dirZ);
     }
 
     /** {@inheritDoc} */
@@ -143,7 +143,8 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
 
     /**
      * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
-     * that case the interpolation turns into an extrapolation. DirZ is interpolated using the interpolateShortest method.
+     * that case the interpolation turns into an extrapolation. DirZ is interpolated using the AngleUtil.interpolateShortest
+     * method.
      * @param otherPoint OrientedPoint2d; the other point
      * @param fraction double; the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
      *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
@@ -163,8 +164,8 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     }
 
     /**
-     * Return a new OrientedPoint with an in-place rotation around the z-axis by the provided delta. The resulting rotation will
-     * be normalized between -&pi; and &pi;.
+     * Return a new OrientedPoint2d with an in-place rotation around the z-axis by the provided delta. The resulting rotation is
+     * normalized between -&pi; and &pi;.
      * @param rotateZ double; the rotation around the z-axis
      * @return OrientedPoint; a new point with the same coordinates and applied rotation
      * @throws IllegalArgumentException when deltaRotZ is NaN
