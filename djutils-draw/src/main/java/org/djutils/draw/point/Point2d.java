@@ -130,7 +130,7 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     @Override
     public Iterator<? extends Point2d> getPoints()
     {
-        return Arrays.stream(new Point2d[] {this}).iterator();
+        return Arrays.stream(new Point2d[] { this }).iterator();
     }
 
     /**
@@ -147,7 +147,8 @@ public class Point2d implements Drawable2d, Point<Point2d, Space2d>
     }
 
     /**
-     * Return a new Point3d with a translation by the provided delta-x, delta-y and deltaZ.
+     * Return a new Point3d with a translation by the provided delta-x, delta-y and delta-z. If this is an OrientedPoint2d, then
+     * the result is an OrientedPoint3d with rotX copied from this and rotY and rotZ are set to 0.0.
      * @param dx double; the x translation
      * @param dy double; the y translation
      * @param dz double; the z translation
