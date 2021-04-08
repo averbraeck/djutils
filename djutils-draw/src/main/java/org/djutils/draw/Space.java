@@ -18,4 +18,5 @@ public interface Space extends Serializable
      * @return int; the number of dimensions
      */
     int getDimensions();
+    
 }
