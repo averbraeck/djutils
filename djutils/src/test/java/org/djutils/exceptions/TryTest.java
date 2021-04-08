@@ -516,14 +516,13 @@ public class TryTest
 
         try
         {
-            result = Try.testFail(() -> String.format(formatWithOneArg));
+            Try.testFail(() -> String.format(formatWithOneArg));
             fail("testFail should have thrown an exception because no argument was given");
         }
         catch (Throwable e)
         {
             // Ignore expected error
         }
-        assertNull("Result has changed to null", result);
 
         result = Try.testFail(() -> String.format(formatWithOneArg));
         assertNull("Result has changed to null", result);

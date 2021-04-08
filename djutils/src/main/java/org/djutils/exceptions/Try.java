@@ -696,11 +696,9 @@ public final class Try
     public static <V, T extends Throwable> V testFail(final Assignment<V> assignment, final String message,
             final Class<T> throwableClass)
     {
-        V value;
         try
         {
-            value = assignment.assign();
-            throw new AssertionError(message);
+            assignment.assign();
         }
         catch (Throwable cause)
         {
@@ -709,10 +707,9 @@ public final class Try
                 throw new AssertionError("Assignment failed on unexpected Throwable, expected ("
                         + throwableClass.getSimpleName() + "), but got (" + cause.getClass().getSimpleName() + ").");
             }
-            // expected to fail
-            value = null;
+            return null;
         }
-        return value;
+        throw new AssertionError(message);
     }
 
     /**
