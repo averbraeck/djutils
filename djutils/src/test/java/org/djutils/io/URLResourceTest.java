@@ -109,7 +109,7 @@ public class URLResourceTest
         stream.close();
         assertEquals('a', barr[0]);
 
-        Try.testFail(() -> URLResource.getResourceAsStream("xxx:///org::djutils-test-resources<>test.txt"));
+        assertNull(URLResource.getResourceAsStream("xxx:///org::djutils-test-resources<>test.txt"));
 
         stream = URLResource.getResourceAsStream("/org/djutils-test-resources/test123.txt");
         assertNull(stream);
