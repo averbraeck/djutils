@@ -7,6 +7,10 @@
         Major change in the djutils-draw generics hierarchy. There is no longer a Space interface and not longer a Space2d,
         or Space3d class. What was in there has been moved to the Drawable interfaces.
       </action>
+      <action dev="averbraeck" type="fix">
+        Fixed a small issues in the Try.testFail() method, where it would not catch an exception that is thrown 
+        when no allowed exception was specified.
+      </action>
     </release>
     
     <release version="1.06.23" date="2021-03-21" description="Changed filtering instantiate method into a constructor">

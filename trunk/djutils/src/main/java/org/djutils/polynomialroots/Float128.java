@@ -1,6 +1,8 @@
 package org.djutils.polynomialroots;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 
 /**
  * Float128 stores immutable floating point values, with a 16 bits signed exponent, 125 bits fraction, and one sign bit. It has
@@ -363,16 +365,147 @@ public class Float128 extends Number
         return ret + big.toString() + "p" + this.exponent;
     }
 
+    /** */
+    private static byte[][] DOUBLE_DECIMAL_TABLE;
+
+    /** */
+    private static int[] DOUBLE_DECIMAL_EXP;
+
+    /** */
+    private static final BigDecimal DEC_TWO = new BigDecimal("2");
+
+    /**
+     * Calculate double decimal table. The table runs from -1024..1023 for the exponent and every set of decimal digits is 20
+     * digits long. The DOUBLE_DECIMAL_EXP table contains the exponent for the 1-digit based number. So 1.0xp0 is coded in row
+     * 1024 with a value of 1, which means 1.000000000 and an exponent of 0. In theory table could be stored in nibbles, but
+     * bytes is a lot more convenient.
+     */
+    private static void calcDoubleDecimalTable()
+    {
+        DOUBLE_DECIMAL_TABLE = new byte[2048][];
+        DOUBLE_DECIMAL_EXP = new int[2048];
+        BigInteger big = BigInteger.ONE;
+        for (int i = 0; i < 1024; i++)
+        {
+            DOUBLE_DECIMAL_TABLE[i + 1024] = new byte[20];
+            String bigStr = big.toString();
+            DOUBLE_DECIMAL_EXP[i + 1024] = bigStr.length() - 1;
+            for (int j = 0; j < 20 && j < bigStr.length(); j++)
+            {
+                DOUBLE_DECIMAL_TABLE[i + 1024][j] = (byte) (bigStr.charAt(j) - '0');
+            }
+            big = big.multiply(BigInteger.TWO);
+        }
+        BigDecimal dec = BigDecimal.ONE;
+        int exp = -1;
+        for (int i = 1; i <= 1024; i++)
+        {
+            DOUBLE_DECIMAL_TABLE[1024 - i] = new byte[20];
+            dec = dec.divide(DEC_TWO, 50, RoundingMode.HALF_UP);
+            String bigStr = dec.toString();
+            if (bigStr.startsWith("0.0"))
+            {
+                dec = dec.multiply(BigDecimal.TEN);
+                bigStr = dec.toString();
+                exp = exp - 1;
+            }
+            DOUBLE_DECIMAL_EXP[1024 - i] = exp;
+            for (int j = 0; j < 20 && j < bigStr.length() - 2; j++)
+            {
+                DOUBLE_DECIMAL_TABLE[1024 - i][j] = (byte) (bigStr.charAt(j + 2) - '0');
+            }
+        }
+    }
+
+    /**
+     * A test for a toString() method for a double.
+     * @param d double; the value
+     * @return String; the decimal 17-digit scientific notation String representation of the double
+     */
+    public static String doubleTotring(final double d)
+    {
+        if (DOUBLE_DECIMAL_TABLE == null)
+        {
+            calcDoubleDecimalTable();
+        }
+        long dl = Double.doubleToRawLongBits(d);
+        long fraction = dl & 0x000FFFFFFFFFFFFFL;
+        int exp = (int) ((dl & 0x7FF0000000000000L) >>> 52);
+        if (exp == 0)
+        {
+            // signed zero (if F == 0) and underflow (if F != 0)
+            return fraction == 0L ? "0.0" : "UNDERFLOW";
+        }
+        else if (exp == 0x7FF)
+        {
+            // infinity (if F==0) and NaN (if F != 0)
+            return fraction == 0L ? "Infinity" : "NaN";
+        }
+        else
+        {
+            // regular exponent. note that IEEE-754 exponents are stored in a shifted manner
+            exp -= 1022;
+        }
+
+        // fill and add
+        int[] digits = new int[20];
+        int startDecExp = DOUBLE_DECIMAL_EXP[exp + 1024];
+        for (int i = 0; i < 52; i++)
+        {
+            byte[] p = DOUBLE_DECIMAL_TABLE[i + exp + 1024];
+            int shift = DOUBLE_DECIMAL_EXP[i + exp + 1024] - startDecExp;
+            for (int j = shift; j < 20; j++)
+            {
+                if ((dl & (1 << (52 - i))) != 0)
+                {
+                    digits[j] += p[j - shift];
+                }
+            }
+        }
+
+        // normalize
+        for (int i = 19; i > 0; --i)
+        {
+            int v = digits[i] % 10;
+            int c = digits[i] / 10;
+            digits[i - 1] += c;
+            digits[i] = v;
+        }
+
+        StringBuffer s = new StringBuffer();
+        for (int i = 0; i < 20; i++)
+        {
+            s.append(digits[i]);
+        }
+        return s.toString();
+    }
+
     /**
      * test code.
      * @param args String[] not used
      */
     public static void main(final String[] args)
     {
+        /*-
         System.out.println(new Float128(100.0).doubleValue());
+        System.out.println(new Float128(10.0).doubleValue());
         System.out.println(new Float128(100.0).toBinaryString());
-        System.out.println(new Float128(100.0).toString());
+        System.out.println(new Float128(10.0).toBinaryString());
         Float128 ff = new Float128(100.0).plus(10.0);
         System.out.println(ff.doubleValue());
+        System.out.println(ff.toBinaryString());
+        
+        calcDoubleDecimalTable();
+        for (int i = 0; i < 2048; i++)
+        {
+            System.out.print(DOUBLE_DECIMAL_TABLE[i][0] + ".");
+            for (int j = 1; j < 20; j++)
+            {
+                System.out.print(DOUBLE_DECIMAL_TABLE[i][j]);
+            }
+            System.out.println(String.format("E%+04d", DOUBLE_DECIMAL_EXP[i]));
+        }
+        */
+        System.out.println(doubleTotring(2.0));
     }
 }
