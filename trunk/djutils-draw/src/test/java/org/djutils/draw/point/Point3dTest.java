@@ -37,11 +37,12 @@ public class Point3dTest
     {
         Point3d p = new Point3d(10.0, -20.0, 16.0);
         assertNotNull(p);
-        assertEquals(10.0, p.x, 0);
-        assertEquals(-20.0, p.y, 0);
-        assertEquals(16.0, p.z, 0);
+        assertEquals("Access x", 10.0, p.x, 0);
+        assertEquals("Access y", -20.0, p.y, 0);
+        assertEquals("Access z", 16.0, p.z, 0);
+        assertEquals("Dimensions is 3", 3, p.getDimensions());
 
-        assertEquals("size method returns 1", 1, p.size());
+        assertEquals("Size method returns 1", 1, p.size());
 
         Point2d projection = p.project();
         assertEquals(10.0, projection.x, 0);

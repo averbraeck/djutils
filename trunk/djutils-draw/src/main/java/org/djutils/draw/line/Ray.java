@@ -2,7 +2,6 @@ package org.djutils.draw.line;
 
 import org.djutils.draw.Directed;
 import org.djutils.draw.DrawRuntimeException;
-import org.djutils.draw.Space;
 import org.djutils.draw.point.Point;
 import org.djutils.exceptions.Throw;
 
@@ -16,9 +15,8 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @param <R> The Ray type (2d or 3d)
  * @param <P> The Point type (2d, or 3d)
- * @param <S> The Space type
  */
-public interface Ray<R extends Ray<R, P, S>, P extends Point<P, S>, S extends Space> extends Directed<R>, Project<P, S>
+public interface Ray<R extends Ray<R, P>, P extends Point<P>> extends Directed<R>, Project<P>
 {
     /**
      * Get the finite end point of this Ray.

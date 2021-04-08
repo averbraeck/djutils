@@ -38,10 +38,11 @@ public class Point2dTest
     {
         Point2d p = new Point2d(10.0, -20.0);
         assertNotNull(p);
-        assertEquals(10.0, p.x, 1E-6);
-        assertEquals(-20.0, p.y, 1E-6);
+        assertEquals("Access x", 10.0, p.x, 1E-6);
+        assertEquals("Access y", -20.0, p.y, 1E-6);
+        assertEquals("Dimensions is 2", 2, p.getDimensions());
 
-        assertEquals("size method returns 1", 1, p.size());
+        assertEquals("Size method returns 1", 1, p.size());
 
         try
         {

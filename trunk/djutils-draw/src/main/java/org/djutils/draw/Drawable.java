@@ -14,9 +14,8 @@ import org.djutils.draw.point.Point;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @param <P> The point type (2d or 3d)
- * @param <S> The space type (2d or 3d)
  */
-public interface Drawable<P extends Point<P, S>, S extends Space> extends Serializable
+public interface Drawable<P extends Point<P>> extends Serializable
 {
     /**
      * Retrieve, or generate all points that make up the object.
@@ -30,6 +29,12 @@ public interface Drawable<P extends Point<P, S>, S extends Space> extends Serial
      */
     int size();
 
+    /**
+     * Return the number of dimensions.
+     * @return int; the number of dimensions
+     */
+    int getDimensions();
+    
     /**
      * Produce a string describing the Drawable using default conversion for the (double) coordinate values. Regrettably, it is
      * not allowed to provide a default implementation here.

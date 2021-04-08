@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import org.djutils.draw.Drawable3d;
-import org.djutils.draw.Space3d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
 
@@ -20,7 +19,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Point3d, Drawable3d, Space3d>
+public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Point3d, Drawable3d>
 {
     /** */
     private static final long serialVersionUID = 2020829L;

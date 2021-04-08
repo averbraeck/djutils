@@ -12,12 +12,19 @@ import org.djutils.draw.point.Point2d;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public interface Drawable2d extends Drawable<Point2d, Space2d>
+public interface Drawable2d extends Drawable<Point2d>
 {
     /**
      * Retrieve the bounding rectangle of the object.
      * @return Bounds2d; the bounding box of the object
      */
     Bounds2d getBounds();
+
+    /** {@inheritDoc} */
+    @Override
+    default int getDimensions()
+    {
+        return 2;
+    }
 
 }

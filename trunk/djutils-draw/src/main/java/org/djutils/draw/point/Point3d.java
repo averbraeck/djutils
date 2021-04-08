@@ -7,7 +7,6 @@ import java.util.Locale;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
-import org.djutils.draw.Space3d;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.exceptions.Throw;
 
@@ -21,7 +20,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Point3d implements Drawable3d, Point<Point3d, Space3d>
+public class Point3d implements Drawable3d, Point<Point3d>
 {
     /** */
     private static final long serialVersionUID = 20201201L;

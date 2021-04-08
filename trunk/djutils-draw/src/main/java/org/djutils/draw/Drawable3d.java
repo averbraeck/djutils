@@ -12,13 +12,20 @@ import org.djutils.draw.point.Point3d;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public interface Drawable3d extends Drawable<Point3d, Space3d>
+public interface Drawable3d extends Drawable<Point3d>
 {
     /**
      * Retrieve the bounding box of the object.
      * @return Bounds3d; the bounding box of the object
      */
     Bounds3d getBounds();
+
+    /** {@inheritDoc} */
+    @Override
+    default int getDimensions()
+    {
+        return 3;
+    }
 
     /**
      * Project the object onto the z=0 plane.

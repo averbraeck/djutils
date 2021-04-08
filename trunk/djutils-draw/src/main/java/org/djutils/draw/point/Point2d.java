@@ -9,7 +9,6 @@ import java.util.Locale;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
-import org.djutils.draw.Space2d;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.exceptions.Throw;
 
@@ -23,7 +22,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Point2d implements Drawable2d, Point<Point2d, Space2d>
+public class Point2d implements Drawable2d, Point<Point2d>
 {
     /** */
     private static final long serialVersionUID = 20201201L;

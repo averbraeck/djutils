@@ -1,6 +1,5 @@
 package org.djutils.draw.line;
 
-import org.djutils.draw.Space;
 import org.djutils.draw.point.Point;
 
 /**
@@ -12,9 +11,8 @@ import org.djutils.draw.point.Point;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @param <P> the point type (2d or 3d)
- * @param <S> the space type (2d or 3d)
  */
-public interface Project<P extends Point<P, S>, S extends Space>
+public interface Project<P extends Point<P>>
 {
     /**
      * Project a point onto this object. For PolyLines, there may be multiple valid solutions. In that case the solution that

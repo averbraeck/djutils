@@ -21,6 +21,7 @@ import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.line.PolyLine.TransitionFunction;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
+import org.djutils.exceptions.Try;
 import org.junit.Test;
 
 /**
@@ -265,77 +266,70 @@ public class PolyLine2dTest
     {
         runConstructors(new Point2d[] { new Point2d(1.2, 3.4), new Point2d(2.3, 4.5), new Point2d(3.4, 5.6) });
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(new double[] { 1, 2, 3 }, new double[] { 4, 5 });
-            fail("double arrays of unequal length should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(new double[] { 1, 2, 3 }, new double[] { 4, 5 });
+            }
+        }, "double arrays of unequal length should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(new double[] { 1, 2 }, new double[] { 3, 4, 5 });
-            fail("double arrays of unequal length should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(new double[] { 1, 2 }, new double[] { 3, 4, 5 });
+            }
+        }, "double arrays of unequal length should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(null, new double[] { 1, 2 });
-            fail("null double array should have thrown a NullPointerException");
-        }
-        catch (NullPointerException npe)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(null, new double[] { 1, 2 });
+            }
+        }, "null double array should have thrown a NullPointerException", NullPointerException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(new double[] { 1, 2 }, null);
-            fail("null double array should have thrown a NullPointerException");
-        }
-        catch (NullPointerException npe)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(new double[] { 1, 2 }, null);
+            }
+        }, "null double array should have thrown a NullPointerException", NullPointerException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d((List<Point2d>) null);
-            fail("null list should have thrown a nullPointerException");
-        }
-        catch (NullPointerException npe)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d((List<Point2d>) null);
+            }
+        }, "null list should have thrown a nullPointerException", NullPointerException.class);
 
         List<Point2d> shortList = new ArrayList<>();
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(shortList);
-            fail("empty list should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(shortList);
+            }
+        }, "empty list should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
         shortList.add(new Point2d(1, 2));
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(shortList);
-            fail("one-point list should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(shortList);
+            }
+        }, "one-point list should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
         Point2d p1 = new Point2d(1, 2);
         Point2d p2 = new Point2d(3, 4);
@@ -354,55 +348,50 @@ public class PolyLine2dTest
         assertEquals("p1", p1, pl.get(0));
         assertEquals("p2", p2, pl.get(1));
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(new Point2d[] {});
-            fail("empty array should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(new Point2d[] {});
+            }
+        }, "empty array should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(new Point2d[] { new Point2d(1, 2) });
-            fail("single point should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(new Point2d[] { new Point2d(1, 2) });
+            }
+        }, "single point should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(1, 2) });
-            fail("duplicate point should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(1, 2) });
+            }
+        }, "duplicate point should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4) });
-            fail("duplicate point should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4) });
+            }
+        }, "duplicate point should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(new Point2d[] { new Point2d(-1, -2), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4) });
-            fail("duplicate point should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(new Point2d[] { new Point2d(-1, -2), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4) });
+            }
+        }, "duplicate point should have thrown a DrawRuntimeException", DrawRuntimeException.class);
     }
 
     /**
@@ -489,45 +478,41 @@ public class PolyLine2dTest
         assertEquals("mid point", array[1], line.get(1));
         assertEquals("last point", array[array.length - 1], line.getLast());
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(true, new Point2d[0]);
-            fail("Too short array should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(true, new Point2d[0]);
+            }
+        }, "Too short array should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(true, new Point2d[] { new Point2d(1, 2) });
-            fail("Too short array should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(true, new Point2d[] { new Point2d(1, 2) });
+            }
+        }, "Too short array should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(true, new Point2d[] { new Point2d(1, 2), new Point2d(1, 2) });
-            fail("All duplicate points in array should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(true, new Point2d[] { new Point2d(1, 2), new Point2d(1, 2) });
+            }
+        }, "All duplicate points in array should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            new PolyLine2d(true, new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2) });
-            fail("All duplicate points in array should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                new PolyLine2d(true, new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2) });
+            }
+        }, "All duplicate points in array should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
         array = new Point2d[] { new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9) };
         line = new PolyLine2d(array);
@@ -954,17 +939,17 @@ public class PolyLine2dTest
                 {
                     transformed[index] = transform.transform(points[index]);
                 }
-                PolyLine2d line = new PolyLine2d(transformed);
+                final PolyLine2d line = new PolyLine2d(transformed);
                 // System.out.println("angle " + Math.toDegrees(angle) + " line " + line);
-                try
+                Try.testFail(new Try.Execution()
                 {
-                    line.offsetLine(Double.NaN);
-                    fail("NaN offset should have thrown an IllegalArgumentException");
-                }
-                catch (IllegalArgumentException iae)
-                {
-                    // Ignore expected exception
-                }
+                    @Override
+                    public void execute() throws Throwable
+                    {
+                        line.offsetLine(Double.NaN);
+                    }
+                }, "NaN offset should have thrown an IllegalArgumentException", IllegalArgumentException.class);
+
                 assertEquals("offset 0 yields the reference line", line, line.offsetLine(0));
                 // System.out.print("reference line " + line.toPlot());
                 for (double offset : new double[] { 1, 10, 0.1, -0.1, -10 })
@@ -1014,130 +999,120 @@ public class PolyLine2dTest
             }
         }
 
-        PolyLine2d line = new PolyLine2d(new Point2d(1, 2), new Point2d(3, 4));
-        try
+        final PolyLine2d line = new PolyLine2d(new Point2d(1, 2), new Point2d(3, 4));
+        Try.testFail(new Try.Execution()
         {
-            line.offsetLine(1, 0, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
-                    PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
-            fail("zero circle precision should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                line.offsetLine(1, 0, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                        PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO,
+                        PolyLine.DEFAULT_OFFSET_PRECISION);
+            }
+        }, "zero circle precision should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            line.offsetLine(1, Double.NaN, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
-                    PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO,
-                    PolyLine.DEFAULT_OFFSET_PRECISION);
-            fail("NaN circle precision should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                line.offsetLine(1, Double.NaN, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                        PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO,
+                        PolyLine.DEFAULT_OFFSET_PRECISION);
+            }
+        }, "NaN circle precision should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, 0, PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
-                    PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
-            fail("zero offsetMinimumFilterValue should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, 0, PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
+                        PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
+            }
+        }, "zero offsetMinimumFilterValue should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, Double.NaN, PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
-                    PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
-            fail("NaN offsetMinimumFilterValue should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, Double.NaN, PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
+                        PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
+            }
+        }, "NaN offsetMinimumFilterValue should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
-                    PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO,
-                    PolyLine.DEFAULT_OFFSET_PRECISION);
-            fail("offsetMinimumFilterValue not less than offsetMaximumFilterValue should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
+                        PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO,
+                        PolyLine.DEFAULT_OFFSET_PRECISION);
+            }
+        }, "offsetMinimumFilterValue not less than offsetMaximumFilterValue should have thrown an IllegalArgumentException",
+                IllegalArgumentException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, 0,
-                    PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
-            fail("zero offsetMaximumfilterValue should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, 0,
+                        PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
+            }
+        }, "zero offsetMaximumfilterValue should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, Double.NaN,
-                    PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
-            fail("NaN offsetMaximumfilterValue should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, Double.NaN,
+                        PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
+            }
+        }, "NaN offsetMaximumfilterValue should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
-                    PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, 0, PolyLine.DEFAULT_OFFSET_PRECISION);
-            fail("zero offsetFilterRatio should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                        PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, 0, PolyLine.DEFAULT_OFFSET_PRECISION);
+            }
+        }, "zero offsetFilterRatio should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
-                    PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, Double.NaN, PolyLine.DEFAULT_OFFSET_PRECISION);
-            fail("NaN offsetFilterRatio should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                        PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, Double.NaN, PolyLine.DEFAULT_OFFSET_PRECISION);
+            }
+        }, "NaN offsetFilterRatio should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
-                    PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO, 0);
-            fail("zero offsetPrecision should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+            @Override
+            public void execute() throws Throwable
+            {
+                line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                        PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO, 0);
+            }
+        }, "zero offsetPrecision should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        try
+        Try.testFail(new Try.Execution()
         {
-            line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
-                    PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO, Double.NaN);
-            fail("NaN offsetPrecision should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
-
+            @Override
+            public void execute() throws Throwable
+            {
+                line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
+                        PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO, Double.NaN);
+            }
+        }, "NaN offsetPrecision should have thrown an IllegalArgumentException", IllegalArgumentException.class);
     }
 
     /**

@@ -1,7 +1,6 @@
 package org.djutils.draw.bounds;
 
 import org.djutils.draw.Drawable;
-import org.djutils.draw.Space;
 import org.djutils.draw.point.Point;
 
 /**
@@ -17,9 +16,8 @@ import org.djutils.draw.point.Point;
  * @param <B> The bounds type (2d or 3d)
  * @param <P> The point type (2d or 3d)
  * @param <D> The Drawable type (2d or 3d)
- * @param <S> The space type (2d or 3d)
  */
-public interface Bounds<B extends Bounds<B, P, D, S>, P extends Point<P, S>, D extends Drawable<P, S>, S extends Space>
+public interface Bounds<B extends Bounds<B, P, D>, P extends Point<P>, D extends Drawable<P>>
 {
     /**
      * Return the absolute lower bound for x.
