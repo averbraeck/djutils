@@ -50,6 +50,11 @@ public final class DrawableDemos
         {
             System.out.println(iterator.next());
         }
+        
+        Point2d point2d = new Point2d(12.34, 23.45);
+        System.out.println("2D object has two dimensions: " + point2d.getDimensions());
+        Point3d point3d = new Point3d(12.34, 23.45, 34.56);
+        System.out.println("3D object has three dimensions: " + point3d.getDimensions());
 
     }
 }
