@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable;
-import org.djutils.draw.Space;
 
 /**
  * Point is the interface for the Point2d and Point3d implementations, standardizing as many of the methods as possible.
@@ -15,9 +14,8 @@ import org.djutils.draw.Space;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @param <P> The point type
- * @param <S> The space type (2d or 3d)
  */
-public interface Point<P extends Point<P, S>, S extends Space> extends Drawable<P, S>, Serializable
+public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
 {
     /**
      * Return the x-coordinate. When the point is not in Cartesian space, a calculation to Cartesian space has to be made.

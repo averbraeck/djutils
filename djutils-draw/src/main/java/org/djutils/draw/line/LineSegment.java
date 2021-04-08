@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable;
-import org.djutils.draw.Space;
 import org.djutils.draw.point.Point;
 import org.djutils.exceptions.Throw;
 
@@ -19,10 +18,9 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @param <P> The point type (2d or 3d)
  * @param <R> The ray type (2d or 3d)
- * @param <S> The space type (2d or 3d)
  */
-public interface LineSegment<P extends Point<P, S>, R extends Ray<R, P, S>, S extends Space>
-        extends Drawable<P, S>, Serializable, Project<P, S>
+public interface LineSegment<P extends Point<P>, R extends Ray<R, P>>
+        extends Drawable<P>, Serializable, Project<P>
 {
     /**
      * Get the start point of this LineSegment.

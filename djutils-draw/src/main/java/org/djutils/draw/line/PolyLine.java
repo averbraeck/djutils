@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable;
-import org.djutils.draw.Space;
 import org.djutils.draw.point.Point;
 
 /**
@@ -18,12 +17,11 @@ import org.djutils.draw.point.Point;
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @param <L> the PolyLine type (2d or 3d)
  * @param <P> The matching Point type (2d or 3d)
- * @param <S> The matching Space type (2d, or 3d)
  * @param <R> The matching Ray type (2d or 3d)
  * @param <LS> The matching LineSegment type (2d or 3d)
  */
-public interface PolyLine<L extends PolyLine<L, P, S, R, LS>, P extends Point<P, S>, S extends Space, R extends Ray<R, P, S>,
-        LS extends LineSegment<P, R, S>> extends Drawable<P, S>, Project<P, S>
+public interface PolyLine<L extends PolyLine<L, P, R, LS>, P extends Point<P>, R extends Ray<R, P>,
+        LS extends LineSegment<P, R>> extends Drawable<P>, Project<P>
 {
     /**
      * Constructor that can be accessed as a method (used to implement default methods in this interface).

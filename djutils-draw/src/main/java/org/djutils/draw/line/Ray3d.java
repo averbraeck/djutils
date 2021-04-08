@@ -7,7 +7,6 @@ import java.util.Locale;
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
-import org.djutils.draw.Space3d;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
@@ -21,7 +20,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d, Space3d>
+public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
 {
     /** */
     private static final long serialVersionUID = 20210119L;
