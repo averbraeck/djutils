@@ -3,7 +3,7 @@
   <body>
 
     <release version="1.06.24" date="2021-04-08" description="Java generic hierarchy of draw classes modified">
-      <action dev="pknoppers" type="change">
+      <action dev="pknoppers" type="update">
         Major change in the djutils-draw generics hierarchy. There is no longer a Space interface and not longer a Space2d,
         or Space3d class. What was in there has been moved to the Drawable interfaces.
       </action>
@@ -14,7 +14,7 @@
     </release>
     
     <release version="1.06.23" date="2021-03-21" description="Changed filtering instantiate method into a constructor">
-      <action dev="pknoppers" type="change">
+      <action dev="pknoppers" type="update">
         The PolyLine2d and PolyLine3d classes had static methods to construct a new instance while filtering out
         successive identical points. These have been replaced
         by constructors that take a boolean parameter that
@@ -35,7 +35,7 @@
     </release>
 
     <release version="1.06.22" date="2021-03-14" description="wrote Complex class and PolynomialRoots class">
-      <action dev="pknoppers" type="change">
+      <action dev="pknoppers" type="update">
         Converted the PolynomialRoots code of ACM 954 from Fortran to java. Wrote unit test that test about 86% of the code.
         Wrote Complex class to store the results
         of the solvers in PolynomialRoots. With unit tests that cover 100%.
@@ -43,7 +43,7 @@
     </release>
 
     <release version="1.06.21" date="2021-03-05" description="replaced all DrawExceptions by DrawRuntimeExceptions">
-      <action dev="pknoppers" type="change">
+      <action dev="pknoppers" type="update">
         Replaced all DrawExceptions by DrawRuntimeExceptions.
       </action>
       <action dev="pknoppers" type="remove">
@@ -52,7 +52,7 @@
     </release>
 
     <release version="1.06.20" date="2021-03-03" description="new methods in line package">
-      <action dev="pknoppers" type="change">
+      <action dev="pknoppers" type="update">
         Many cases where a DrawException was thrown now throw a DrawRuntimException.
       </action>
       <action dev="pknoppers" type="add">
@@ -61,7 +61,7 @@
       <action dev="pknoppers" type="add">
         Moved OTS offsetLine methods into PolyLine classes.
       </action>
-      <action dev="pknoppers" type="change">
+      <action dev="pknoppers" type="update">
         Lambda approach replaces makeX, makeY, etc. in constructors of PolyLine and Polygon objects.
       </action>
     </release>
@@ -107,7 +107,7 @@
     </release>
 
     <release version="1.06.16" date="2021-02-18" description="Project error in Polygon3d and error in Ray3d.flip">
-      <action dev="pknoppers" type="change">
+      <action dev="pknoppers" type="update">
         Bounds now report relative extend with the getMin[XYZ] and getMax[XYZ] methods.
       </action>
       <action dev="pknoppers" type="fix">
@@ -167,7 +167,7 @@
     </release>
 
     <release version="1.06.10" date="2021-02-05" description="Made phi and theta public in the Ray classes">
-      <action dev="pknoppers" type="change">
+      <action dev="pknoppers" type="update">
         The internal values of theta (Ray3d) and phi (Ray2d and Ray3d) are now public. (Like the rotations in the
         OrientedPoint classes).
       </action>
