@@ -1,15 +1,14 @@
-package org.djutils.polynomialroots;
+package org.djutils.float128;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
 /**
- * Float128 stores immutable floating point values, with a 16 bits signed exponent, 125 bits fraction, and one sign bit. It has
+ * Float128 stores immutable floating point values, with a 16 bits signed exponent, 120 bits fraction, and one sign bit. It has
  * arithmetic for addition, subtraction, multiplication and division, as well as several Math operators such as signum and abs.
  * The fraction follows the implementation of the IEEE-754 standard, which means that the initial '1' is not stored in the
  * fraction.<br>
- * XXX: Code is in development.
  * <p>
  * Copyright (c) 2020-2021 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -33,10 +32,10 @@ public class Float128 extends Number
     /** exponent = 16 bits, stored as a regular int. */
     private int exponent;
 
-    /** fraction = 125 bits; hi (most significant) part. */
+    /** fraction = 120 bits; hi 60 bits (most significant) part. */
     private long fractionHi;
 
-    /** fraction = 125 bits; lo (least significant) part. */
+    /** fraction = 120 bits; lo 60 bits (least significant) part. */
     private long fractionLo;
 
     /** byte constant 0. */
@@ -54,7 +53,7 @@ public class Float128 extends Number
     /** UNDERFLOW bit in position 0. */
     private static final byte UNDERFLOW = (byte) 0x08;
 
-    /** UNDERFLOW bit in position 0. */
+    /** ZERO bit in position 0. */
     private static final byte ZERO = (byte) 0x10;
 
     /** MASK[n] contains n '1' bits from the right side and '0' in the other positions. */
@@ -93,8 +92,9 @@ public class Float128 extends Number
      * Create a Float128 by specifying all the fields.
      * @param sign byte; sign, infinity, NaN byte; sign in bit 0, NaN in bit 1, Infinity in bit 2, underflow in bit 3, signed
      *            zero in bit 4.
-     * @param fractionHi long; fraction = 125 bits; hi (most significant) part
-     * @param fractionLo long; fraction = 125 bits; lo (least significant) part
+     * @param fractionHi long; fraction = 120 bits; hi (most significant) 60 bits. Bit 60 is 1 to represent the initial '1' in
+     *            the fraction before the decimal point. That makes addition, subtraction, ans shifting the value a lot easier
+     * @param fractionLo long; fraction = 120 bits; lo (least significant) 60 bits
      * @param exponent int; 16 bits, stored as a regular int
      */
     private Float128(final byte sign, final long fractionHi, final long fractionLo, final int exponent)
@@ -106,16 +106,25 @@ public class Float128 extends Number
     }
 
     /**
-     * Create a Float128 based on a double.
+     * Create a Float128 based on a double. The IEEE-754 double is built up as follows:
+     * <ul>
+     * <li>bit 63 [0x8000_0000_0000_0000L]: sign bit(1-bit)</li>
+     * <li>bits 62-52 [0x7ff0_0000_0000_0000L]: exponent (11-bit), stored as a the 2-exponent value + 1022.</li>
+     * <li>- exponent 000 and fraction == 0: signed zero</li>
+     * <li>- exponent 000 and fraction != 0: underflow</li>
+     * <li>- exponent 111 and fraction == 0: infinity</li>
+     * <li>- exponent 111 and fraction != 0: NaN</li>
+     * <li>bits 51-0 [0x000f_ffff_ffff_ffffL]: fraction (52-bit)
+     * </ul>
      * @param d double; the double to store
      */
     public Float128(final double d)
     {
         this.sign = d >= 0 ? B0 : SIGN;
         long dl = Double.doubleToRawLongBits(d);
-        this.fractionHi = dl & 0x000FFFFFFFFFFFFFL;
+        this.fractionHi = (dl << 8) & 0x0FFF_FFFF_FFFF_FFFFL | 0x1000_0000_0000_0000L;
         this.fractionLo = 0L;
-        int exp = (int) ((dl & 0x7FF0000000000000L) >>> 52);
+        int exp = (int) (dl >>> 52) & 0x7FF;
         if (exp == 0)
         {
             // signed zero (if F == 0) and underflow (if F != 0)
@@ -124,18 +133,19 @@ public class Float128 extends Number
         else if (exp == 0x7FF)
         {
             // infinity (if F==0) and NaN (if F != 0)
-            this.sign |= this.fractionHi == 0L ? INF : NAN;
+            this.sign |= (dl & 0x000F_FFFF_FFFF_FFFFL) == 0L ? INF : NAN;
         }
         else
         {
             // regular exponent. note that IEEE-754 exponents are stored in a shifted manner
-            this.exponent = exp - 1022;
+            this.exponent = exp - 1023;
         }
     }
 
     /**
      * Add a Float128 value to this value. Addition works as follows: suppose you add 10 and 100 (decimal).<br>
-     * v1 = 10 = 0x(1)01000000p3 and v2 = 0x(1)100100000p6. These are the numbers behind the initial '1'.<br>
+     * v1 = 10 = 0x(1)01000000p3 and v2 = 0x(1)100100000p6. These are the numbers behind the initial (1) before the decimal
+     * point that is part of the Float128 in bit 60.<br>
      * Shift the lowest value (including the leading 1) 3 bits to the right, and add:
      * 
      * <pre>
@@ -168,9 +178,14 @@ public class Float128 extends Number
         }
         long[] ret = new long[2];
         ret[1] = tf[1] + vf[1];
-        long carry = (ret[1] & 0x4000000000000000L) == 0 ? 0L : 1L;
+        long carry = 0L;
+        if ((ret[1] & 0x1000_0000_0000_0000L) != 0)
+        {
+            carry = 1L;
+            ret[1] &= 0x0FFF_FFFF_FFFF_FFFFL;
+        }
         ret[0] = tf[0] + vf[0] + carry;
-        if ((ret[0] & 0x4000000000000000L) != 0)
+        if ((ret[0] & 0x2000_0000_0000_0000L) != 0)
         {
             shift(ret, 1);
             exp += 1;
@@ -181,14 +196,14 @@ public class Float128 extends Number
     /**
      * Shift the bits to the right for the variable v.
      * @param v long[]; the variable stored as two longs
-     * @param bits int; the number of bits to shift 'down'
+     * @param bits int; the number of bits to shift 'down'. bits HAS to be &gt;= 0.
      */
-    private void shift(final long[] v, final int bits)
+    protected void shift(final long[] v, final int bits)
     {
-        v[1] = v[1] >>> bits;
-        long carry = (v[0] & MASK[bits]) << (62 - bits);
+        v[1] >>>= bits;
+        long carry = (v[0] & MASK[bits]) << (60 - bits);
         v[1] |= carry;
-        v[0] = ((v[0] >>> 1) | 0x2000000000000000L) >>> (bits - 1);
+        v[0] >>>= bits;
     }
 
     /**
@@ -199,6 +214,18 @@ public class Float128 extends Number
     public Float128 plus(final double value)
     {
         return plus(new Float128(value));
+    }
+
+    /**
+     * Return binary representation of l, all 64 bits.
+     * @param l long; the value
+     * @return the binary string representation with 64 bits
+     */
+    private static String printLong(final long l)
+    {
+        String s = String.format("%64s", Long.toUnsignedString(l, 2)).replaceAll(" ", "0");
+        s = s.substring(0, 1) + " " + s.substring(1, 12) + " (1.)" + s.substring(12);
+        return s;
     }
 
     /** {@inheritDoc} */
@@ -234,19 +261,19 @@ public class Float128 extends Number
         {
             return ((this.sign & SIGN) == 0) ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY;
         }
-        if (this.exponent < -1022)
+        if ((this.sign & UNDERFLOW) != 0 || this.exponent < -1022)
         {
             return 0.0; // underflow
         }
-        long dl = (this.sign & SIGN) == 0 ? 0L : 0x8000000000000000L;
-        dl |= this.fractionHi & 0x000FFFFFFFFFFFFFL;
-        dl |= (this.exponent + 1022L) << 52;
+        long dl = (this.sign & SIGN) == 0 ? 0L : 0x8000_0000_0000_0000L;
+        dl |= (this.fractionHi >>> 8) & 0x000F_FFFF_FFFF_FFFFL;
+        dl |= (this.exponent + 1023L) << 52;
         return Double.longBitsToDouble(dl);
     }
 
     /**
-     * Return whether the stored value is zero.
-     * @return boolean; whether the stored value is zero
+     * Return whether the stored value is a signed zero.
+     * @return boolean; whether the stored value is signed zero
      */
     public boolean isZero()
     {
@@ -278,6 +305,15 @@ public class Float128 extends Number
     public boolean isFinite()
     {
         return (this.sign & INF) == 0;
+    }
+
+    /**
+     * Return whether the stored value is positive.
+     * @return boolean; whether the stored value is positive
+     */
+    public boolean isPositive()
+    {
+        return (this.sign & SIGN) == 0;
     }
 
     /** {@inheritDoc} */
@@ -320,23 +356,83 @@ public class Float128 extends Number
      * Return the binary string representation of this Float128 value.
      * @return String; the binary string representation of this Float128 value
      */
-    public String toBinaryString()
+    public String toPaddedBinaryString()
     {
+        if (isZero())
+        {
+            return isPositive() ? "0x0.p0" : "-0x0.p0";
+        }
+        if (isNaN())
+        {
+            return "NaN";
+        }
+        if (isInfinite())
+        {
+            return isPositive() ? "+INF" : "-INF";
+        }
+
         // create the String representation of the fraction
         StringBuffer s = new StringBuffer();
-        s.append(isZero() ? "0x0." : "0x1.");
-        for (int i = 62; i >= 0; --i)
-        {
-            s.append((this.fractionHi & (1 << i)) == 0 ? '0' : '1');
-        }
-        for (int i = 62; i >= 0; --i)
-        {
-            s.append((this.fractionLo & (1 << i)) == 0 ? '0' : '1');
-        }
         if ((this.sign & SIGN) != 0)
         {
-            s.insert(0, '-');
+            s.append('-');
         }
+        s.append("0x1.");
+        for (int i = 59; i >= 0; i--)
+        {
+            s.append((this.fractionHi & (1L << i)) == 0 ? '0' : '1');
+        }
+        for (int i = 59; i >= 0; i--)
+        {
+            s.append((this.fractionLo & (1L << i)) == 0 ? '0' : '1');
+        }
+        s.append("p");
+        s.append(this.exponent);
+        return s.toString();
+    }
+
+    /**
+     * Return the binary string representation of this Float128 value.
+     * @return String; the binary string representation of this Float128 value
+     */
+    public String toBinaryString()
+    {
+        if (isZero())
+        {
+            return isPositive() ? "0x0.p0" : "-0x0.p0";
+        }
+        if (isNaN())
+        {
+            return "NaN";
+        }
+        if (isInfinite())
+        {
+            return isPositive() ? "+INF" : "-INF";
+        }
+
+        // create the String representation of the fraction
+        StringBuffer s = new StringBuffer();
+        if ((this.sign & SIGN) != 0)
+        {
+            s.append('-');
+        }
+        s.append("0x1.");
+        for (int i = 59; i > 0; i--)
+        {
+            s.append((this.fractionHi & (1L << i)) == 0 ? '0' : '1');
+        }
+        if (this.fractionLo != 0)
+        {
+            for (int i = 59; i > 0; i--)
+            {
+                s.append((this.fractionLo & (1L << i)) == 0 ? '0' : '1');
+            }
+        }
+        while (s.charAt(s.length() - 1) == '0')
+        {
+            s.deleteCharAt(s.length() - 1);
+        }
+
         s.append("p");
         s.append(this.exponent);
         return s.toString();
@@ -346,23 +442,7 @@ public class Float128 extends Number
     @Override
     public String toString()
     {
-        // create the String representation of the fraction
-        StringBuffer s = new StringBuffer();
-        for (int i = 62; i >= 0; --i)
-        {
-            s.append((this.fractionHi & (1 << i)) == 0 ? '0' : '1');
-        }
-        for (int i = 62; i >= 0; --i)
-        {
-            s.append((this.fractionLo & (1 << i)) == 0 ? '0' : '1');
-        }
-        if ((this.sign & SIGN) != 0)
-        {
-            s.insert(0, '-');
-        }
-        BigInteger big = new BigInteger(s.toString(), 2);
-        String ret = isZero() ? "0." : "1.";
-        return ret + big.toString() + "p" + this.exponent;
+        return this.toBinaryString();
     }
 
     /** */
@@ -486,26 +566,23 @@ public class Float128 extends Number
      */
     public static void main(final String[] args)
     {
-        /*-
-        System.out.println(new Float128(100.0).doubleValue());
-        System.out.println(new Float128(10.0).doubleValue());
-        System.out.println(new Float128(100.0).toBinaryString());
-        System.out.println(new Float128(10.0).toBinaryString());
-        Float128 ff = new Float128(100.0).plus(10.0);
-        System.out.println(ff.doubleValue());
-        System.out.println(ff.toBinaryString());
-        
-        calcDoubleDecimalTable();
-        for (int i = 0; i < 2048; i++)
+        double mv = Math.PI; // .MIN_VALUE;
+        long lmv = Double.doubleToRawLongBits(mv);
+        System.out.println(printLong(lmv));
+        String s = "0x1.";
+        for (int i = 1; i <= 120; i++)
         {
-            System.out.print(DOUBLE_DECIMAL_TABLE[i][0] + ".");
-            for (int j = 1; j < 20; j++)
-            {
-                System.out.print(DOUBLE_DECIMAL_TABLE[i][j]);
-            }
-            System.out.println(String.format("E%+04d", DOUBLE_DECIMAL_EXP[i]));
+            s += (char) ('0' + (i % 10));
         }
-        */
-        System.out.println(doubleTotring(2.0));
+        System.out.println(s);
+
+        Float128 fmv = new Float128(mv);
+        System.out.println(fmv.toPaddedBinaryString());
+        System.out.println(printLong(Double.doubleToRawLongBits(fmv.doubleValue())));
+
+        Float128 pi = new Float128(3.141592653589).plus(7.932384626433E-12); //.plus(8.3279502884197E-25);
+        System.out.println(
+                "0x1.1001001000011111101101010100010001000010110100011000010001101001100010011000110011000101000101110000000110111p1");
+        System.out.println(pi.toPaddedBinaryString());
     }
 }
