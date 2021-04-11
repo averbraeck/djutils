@@ -200,10 +200,28 @@ public class Float128 extends Number
      */
     protected void shift(final long[] v, final int bits)
     {
-        v[1] >>>= bits;
-        long carry = (v[0] & MASK[bits]) << (60 - bits);
-        v[1] |= carry;
-        v[0] >>>= bits;
+        if (bits < 60)
+        {
+            v[1] >>>= bits;
+            long carry = (v[0] & MASK[bits]) << (60 - bits);
+            v[1] |= carry;
+            v[0] >>>= bits;
+        }
+        else
+        {
+            // TODO: To be tested
+            if (bits < 120)
+            {
+                v[1] = v[0];
+                v[0] = 0;
+                v[1] >>>= (bits - 60);
+            }
+            else
+            {
+                v[1] = 0;
+                v[2] = 0;
+            }
+        }
     }
 
     /**
@@ -213,7 +231,7 @@ public class Float128 extends Number
      */
     public Float128 plus(final double value)
     {
-        return plus(new Float128(value));
+        return value == 0.0 ? this : plus(new Float128(value));
     }
 
     /**
@@ -561,11 +579,54 @@ public class Float128 extends Number
     }
 
     /**
+     * Create a Float128 from this double with a significand precision of 52 bits.
+     * @param d double; the double value
+     * @return Float128; a Float128 from this double with a significand precision of 52 bits
+     */
+    public static Float128 of(final double d)
+    {
+        return new Float128(d);
+    }
+
+    /**
+     * Create a Float128 represented by this String with a significand precision up to 120 bits. Up to 39 significant digits
+     * will be used to represent this value as a Float128. The only representation that is parsed right now is the scientific
+     * notation; regular notation will follow.
+     * @param sd String; a String representation of a double value
+     * @return Float128; a Float128 from this string representation with a significand precision up to 120 bits
+     */
+    @SuppressWarnings("checkstyle:needbraces")
+    public static Float128 of(final String sd)
+    {
+        String s = sd;
+        boolean minus = s.startsWith("-");
+        if (s.startsWith("-") || s.startsWith("+"))
+            s = s.substring(1);
+        if (s.charAt(1) != '.')
+            throw new IllegalArgumentException("Format should be [+-]?d.ddddddddddddE[+-]?dddd");
+        int epos = s.indexOf('E');
+        if (epos == -1)
+            throw new IllegalArgumentException("Format should be [+-]?d.ddddddddddddE[+-]?dddd");
+        String e = s.substring(epos + 1);
+        s = s.substring(0, epos);
+        int exp = Integer.valueOf(e);
+        double d1 = Double.valueOf(s.substring(0, Math.min(14, s.length())) + "E" + exp);
+        if (minus)
+            d1 = -d1;
+        double d2 = s.length() < 14 ? 0.0 : Double.valueOf("0." + s.substring(14, Math.min(27, s.length())) + "E" + (exp - 16));
+        double d3 = s.length() < 27 ? 0.0 : Double.valueOf("0." + s.substring(27, Math.min(39, s.length())) + "E" + (exp - 27));
+        return new Float128(d1).plus(d2).plus(d3);
+    }
+
+    /**
      * test code.
      * @param args String[] not used
      */
     public static void main(final String[] args)
     {
+        Float128 v = Float128.of("1.1111111111111111111111E12");
+        System.out.println(v.doubleValue());
+
         double mv = Math.PI; // .MIN_VALUE;
         long lmv = Double.doubleToRawLongBits(mv);
         System.out.println(printLong(lmv));
@@ -580,9 +641,11 @@ public class Float128 extends Number
         System.out.println(fmv.toPaddedBinaryString());
         System.out.println(printLong(Double.doubleToRawLongBits(fmv.doubleValue())));
 
-        Float128 pi = new Float128(3.141592653589).plus(7.932384626433E-12); //.plus(8.3279502884197E-25);
+        Float128 pi = new Float128(3.141592653589).plus(7.932384626433E-12); // .plus(8.3279502884197E-25);
         System.out.println(
                 "0x1.1001001000011111101101010100010001000010110100011000010001101001100010011000110011000101000101110000000110111p1");
         System.out.println(pi.toPaddedBinaryString());
+        Float128 pi2 = Float128.of("3.141592653589793238462643383279502884197E0");
+        System.out.println(pi2.toPaddedBinaryString());
     }
 }
