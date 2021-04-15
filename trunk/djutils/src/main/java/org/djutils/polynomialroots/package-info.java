@@ -1,5 +1,5 @@
 /**
- * package-info.java. Compute roots (zeros) of linear, quadratic, cubic and quartic polynomials.
+ * Compute roots (zeros) of linear, quadratic, cubic and quartic polynomials.
  * <br><br>
  * Copyright (c) 2020-2020 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
