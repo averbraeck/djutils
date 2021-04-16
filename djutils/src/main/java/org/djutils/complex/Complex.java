@@ -84,7 +84,66 @@ public class Complex
      */
     public double norm()
     {
-        return Math.hypot(this.re, this.im);
+        return hypot(this.re, this.im);
+    }
+
+    /** Precision limit. */
+    private static final double EPSILONSQRT = Math.sqrt(Math.ulp(1.0) / 2);
+    /** Square root of smallest floating point value. */
+    private static final double SQRT_OF_MIN_VALUE = Math.sqrt(Double.MIN_VALUE);
+    /** Square root of biggest floating point value. */
+    private static final double SQRT_OF_MAX_VALUE = Math.sqrt(Double.MAX_VALUE);
+    
+    /**
+     * Better implementation of the hypotenuse function (faster and more accurate than the one in the java Math library). <br>
+     * Derived from <a href="https://arxiv.org/abs/1904.09481">An improved algorithm for hypot(a, b) by Carlos F. Borges</a>.
+     * @param x double; the x value
+     * @param y double; the y value
+     * @return double; hypot(x, y)
+     */
+    public static double hypot(final double x, final double y)
+    {
+        if (Double.isInfinite(x) || Double.isInfinite(y))
+        {
+            return Double.POSITIVE_INFINITY;
+        }
+        if (Double.isNaN(x) || Double.isNaN(y))
+        {
+            return Double.NaN;
+        }
+        double absX = Math.abs(x);
+        double absY = Math.abs(y);
+        if (absX < absY)
+        {
+            double swap = absX;
+            absX = absY;
+            absY = swap;
+        }
+        if (absY <= absX * EPSILONSQRT)
+        {
+            return absX;
+        }
+        double scale = SQRT_OF_MIN_VALUE;
+        if (absX > SQRT_OF_MAX_VALUE)
+        {
+            absX *= scale;
+            absY *= scale;
+            scale = 1.0 / scale;
+        }
+        else if (absY < SQRT_OF_MIN_VALUE)
+        {
+            absX /= scale;
+            absY /= scale;
+        }
+        else
+        {
+            scale = 1.0;
+        }
+        double h = Math.sqrt(Math.fma(absX, absX, absY * absY));
+        double hsq = h * h;
+        double xsq = absX * absX;
+        double a = Math.fma(-absY, absY, hsq - xsq) + Math.fma(h, h, -hsq) - Math.fma(absX, absX, -xsq);
+        return scale * (h - a / (2.0 * h));
     }
 
     /**
