@@ -124,7 +124,7 @@ public class TestComplex
         c = a.times(c);
         assertEquals("a * a.reciprocal re", 1, c.re, 0.00001);
         assertEquals("a * a.reciprocal im", 0, c.im, 0.00001);
-        for (double angle : new double[] {0, 0.1, 1, Math.E, Math.PI, 5, 10, -1, -5})
+        for (double angle : new double[] { 0, 0.1, 1, Math.E, Math.PI, 5, 10, -1, -5 })
         {
             c = a.rotate(angle);
             assertEquals("rotated a norm", a.norm(), c.norm(), 0.00001);
@@ -191,6 +191,35 @@ public class TestComplex
         assertFalse(a.equals(new Complex(12, 35)));
         assertFalse(a.equals(new Complex(13, 34)));
         assertEquals(a, new Complex(12, 34));
+    }
+
+    /**
+     * Test the hypot method.
+     */
+    @Test
+    public void testHypot()
+    {
+        assertTrue("hypot(Inf, 0)", Double.isInfinite(Complex.hypot(Double.POSITIVE_INFINITY, 0)));
+        assertTrue("hypot(0, Inf)", Double.isInfinite(Complex.hypot(0, Double.POSITIVE_INFINITY)));
+        assertTrue("hypot(-Inf, 0)", Double.isInfinite(Complex.hypot(Double.NEGATIVE_INFINITY, 0)));
+        assertTrue("hypot(0, Inf)", Double.isInfinite(Complex.hypot(0, Double.NEGATIVE_INFINITY)));
+        assertEquals("hypot(0, 0)", 0, Complex.hypot(0, 0), 0);
+        assertTrue("hypot(Nan, 0)", Double.isNaN(Complex.hypot(Double.NaN, 0)));
+        assertTrue("hypot(0, Nan)", Double.isNaN(Complex.hypot(0, Double.NaN)));
+        assertTrue("hypot(Nan, Nan)", Double.isNaN(Complex.hypot(Double.NaN, Double.NaN)));
+        assertEquals("hypot(1, 1", Math.sqrt(2), Complex.hypot(1, 1), 0.000001);
+        assertEquals("hypot(Double.MAX_VALUE, 0)", Double.MAX_VALUE, Complex.hypot(Double.MAX_VALUE, 0),
+                Double.MAX_VALUE / 100000);
+        assertEquals("hypot(0, Double.MAX_VALUE)", Double.MAX_VALUE, Complex.hypot(0, Double.MAX_VALUE),
+                Double.MAX_VALUE / 100000);
+        assertEquals("hypot(Double.MIN_VALUE, 0)", Double.MIN_VALUE, Complex.hypot(Double.MIN_VALUE, 0), 0);
+        assertEquals("hypot(0, Double.MIN_VALUE)", Double.MIN_VALUE, Complex.hypot(0, Double.MIN_VALUE), 0);
+        assertEquals("hypot(Double.MAX_VALUE / 2, Double.MAX_VALUE / 2)", Double.MAX_VALUE / Math.sqrt(2),
+                Complex.hypot(Double.MAX_VALUE / 2, Double.MAX_VALUE / 2), Double.MAX_VALUE / 100000);
+        assertEquals("hypot(Double.MIN_VALUE * 10, Double.MIN_VALUE * 10)", Double.MIN_VALUE * 10 *  Math.sqrt(2),
+                Complex.hypot(Double.MIN_VALUE * 10, Double.MIN_VALUE * 10), Double.MIN_VALUE);
+        assertEquals("hypot is symmetrical in x", Complex.hypot(10, 0), Complex.hypot(-10, 0), 0);
+        assertEquals("hypot is symmetrical in y", Complex.hypot(0, 10), Complex.hypot(0, -10), 0);
     }
 
 }
