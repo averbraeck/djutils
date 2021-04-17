@@ -1,5 +1,7 @@
 package org.djutils.complex.demo;
 
+import org.djutils.complex.Complex;
+
 /**
  * PerformanceTests.java. <br>
  * <br>
@@ -29,6 +31,7 @@ public final class PerformanceTests
         // Ensure that all classes are loaded before measuring things
         Math.atan2(0.5, 1.5);
         Math.hypot(1.2, 3.4);
+        Complex.hypot(1.2, 3.4);
         Math.sin(0.8);
         Math.cos(0.6);
         Math.sqrt(2.3);
@@ -43,7 +46,7 @@ public final class PerformanceTests
         }
         long nowNanos = System.nanoTime();
         long durationNanos = nowNanos - startNanos;
-        System.out.println(String.format("atan2: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
+        System.out.println(String.format("             Math.atan2: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
                 durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
         startNanos = System.nanoTime();
         for (int i = 0; i < iterations; i++)
@@ -54,7 +57,7 @@ public final class PerformanceTests
         }
         nowNanos = System.nanoTime();
         durationNanos = nowNanos - startNanos;
-        System.out.println(String.format("hypot: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
+        System.out.println(String.format("             Math.hypot: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
                 durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
         startNanos = System.nanoTime();
         for (int i = 0; i < iterations; i++)
@@ -72,7 +75,7 @@ public final class PerformanceTests
         {
             double x = 0.1 + i / 1000.0;
             double y = -0.5 + i / 2000.0;
-            PerformanceTests.hypotB(y, x);
+            Complex.hypot(y, x);
         }
         nowNanos = System.nanoTime();
         durationNanos = nowNanos - startNanos;
@@ -86,7 +89,18 @@ public final class PerformanceTests
         }
         nowNanos = System.nanoTime();
         durationNanos = nowNanos - startNanos;
-        System.out.println(String.format("  sin: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
+        System.out.println(String.format("          Complex.hypot: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
+                durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
+        startNanos = System.nanoTime();
+        for (int i = 0; i < iterations; i++)
+        {
+            double x = 0.1 + i / 1000.0;
+            double y = -0.5 + i / 2000.0;
+            PerformanceTests.hypotB(y, x);
+        }
+        nowNanos = System.nanoTime();
+        durationNanos = nowNanos - startNanos;
+        System.out.println(String.format("               Math.sin: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
                 durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
         startNanos = System.nanoTime();
         for (int i = 0; i < iterations; i++)
@@ -96,7 +110,7 @@ public final class PerformanceTests
         }
         nowNanos = System.nanoTime();
         durationNanos = nowNanos - startNanos;
-        System.out.println(String.format("  cos: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
+        System.out.println(String.format("               Math.cos: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
                 durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
         startNanos = System.nanoTime();
         for (int i = 0; i < iterations; i++)
@@ -107,7 +121,7 @@ public final class PerformanceTests
         }
         nowNanos = System.nanoTime();
         durationNanos = nowNanos - startNanos;
-        System.out.println(String.format("atan2: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
+        System.out.println(String.format("             Math.atan2: %d invocations in %.6f s (%.1f ns/invocation)", iterations,
                 durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
         startNanos = System.nanoTime();
         for (int i = 0; i < iterations; i++)
@@ -118,8 +132,8 @@ public final class PerformanceTests
         }
         nowNanos = System.nanoTime();
         durationNanos = nowNanos - startNanos;
-        System.out.println(String.format("sqrt(x*x+y*y): %d invocations in %.6f s (%.1f ns/invocation)", iterations,
-                durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
+        System.out.println(String.format("     Math.sqrt(x*x+y*y): %d invocations in %.6f s (%.1f ns/invocation)",
+                iterations, durationNanos / 1000000000.0, 1.0 * durationNanos / iterations));
     }
 
     /** 2^450. */
@@ -135,7 +149,7 @@ public final class PerformanceTests
     private static final double TWO_POW_N750 = Double.longBitsToDouble(0x1110000000000000L);
 
     /**
-     * Implementation of hypot taken from https://stackoverflow.com/questions/3764978/why-hypot-function-is-so-slow
+     * Implementation of hypot taken from https://stackoverflow.com/questions/3764978/why-hypot-function-is-so-slow .
      * @param x double; x
      * @param y double; y
      * @return double; the hypot of x, and y
