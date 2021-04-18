@@ -103,16 +103,16 @@ public class Complex
      */
     public static double hypot(final double x, final double y)
     {
-        if (Double.isInfinite(x) || Double.isInfinite(y))
-        {
-            return Double.POSITIVE_INFINITY;
-        }
-        if (Double.isNaN(x) || Double.isNaN(y))
+        if (x != x || y != y)
         {
             return Double.NaN;
         }
         double absX = Math.abs(x);
         double absY = Math.abs(y);
+        if (absX == Double.POSITIVE_INFINITY || absY == Double.POSITIVE_INFINITY)
+        {
+            return Double.POSITIVE_INFINITY;
+        }
         if (absX < absY)
         {
             double swap = absX;
