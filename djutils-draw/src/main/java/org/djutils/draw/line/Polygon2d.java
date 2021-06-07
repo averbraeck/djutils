@@ -38,7 +38,7 @@ public class Polygon2d extends PolyLine2d
     }
 
     /**
-     * Ensure that the last point is not equal to the first. Remove the last point of necessary.
+     * Ensure that the last point is not equal to the first. Remove the last point if necessary.
      * @param x double[]; the x coordinates of the points
      * @param y double[]; the y coordinates of the points
      * @return double[]; the x coordinates of the points (possibly a copy with the last element removed)
@@ -53,7 +53,7 @@ public class Polygon2d extends PolyLine2d
     }
 
     /**
-     * Ensure that the last point is not equal to the first. Remove the last point of necessary.
+     * Ensure that the last point is not equal to the first. Remove the last point if necessary.
      * @param x double[]; the x coordinates of the points
      * @param y double[]; the y coordinates of the points
      * @return double[]; the y coordinates of the points (possibly a copy with the last element removed)

@@ -38,7 +38,7 @@ public class Polygon3d extends PolyLine3d
     }
 
     /**
-     * Ensure that the last point is not equal to the first. Remove the last point of necessary.
+     * Ensure that the last point is not equal to the first. Remove the last point if necessary.
      * @param x double[]; the x coordinates of the points
      * @param y double[]; the y coordinates of the points
      * @param z double[]; the z coordinates of the points
@@ -55,7 +55,7 @@ public class Polygon3d extends PolyLine3d
     }
 
     /**
-     * Ensure that the last point is not equal to the first. Remove the last point of necessary.
+     * Ensure that the last point is not equal to the first. Remove the last point if necessary.
      * @param x double[]; the x coordinates of the points
      * @param y double[]; the y coordinates of the points
      * @param z double[]; the z coordinates of the points
@@ -72,7 +72,7 @@ public class Polygon3d extends PolyLine3d
     }
 
     /**
-     * Ensure that the last point is not equal to the first. Remove the last point of necessary.
+     * Ensure that the last point is not equal to the first. Remove the last point if necessary.
      * @param x double[]; the x coordinates of the points
      * @param y double[]; the y coordinates of the points
      * @param z double[]; the z coordinates of the points
