@@ -228,9 +228,8 @@ public final class PerformanceTests
      * @param x double; x
      * @param y double; y
      * @return sqrt(x*x +y*y) without intermediate overflow or underflow.
-     * @Note {@link Math#hypot} is unnecessarily slow. This returns the identical result to Math.hypot with reasonable run times
+     * Note {@link Math#hypot} is unnecessarily slow. This returns the identical result to Math.hypot with reasonable run times
      *       (~40 nsec vs. 800 nsec).
-     *       <p>
      *       The logic for computing z is copied from "Freely Distributable Math Library" fdlibm's e_hypot.c. This minimizes
      *       rounding error to provide 1 ulb accuracy.
      */
