@@ -128,7 +128,33 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Drawable2
      */
     public Bounds2d(final Drawable2d... drawable2d) throws NullPointerException, IllegalArgumentException
     {
-        this(new Iterator<Point2d>()
+        this(pointsOf(drawable2d));
+    }
+
+    /**
+     * Verify that the array contains at least one entry.
+     * @param drawable2dArray Drawable2d[]; array of Drawable2d objects
+     * @return Drawable2d[]; the array
+     * @throws NullPointerException when the array is null
+     * @throws IllegalArgumentException when the array contains 0 elements
+     */
+    static Drawable2d[] ensureHasOne(final Drawable2d[] drawable2dArray) throws NullPointerException, IllegalArgumentException
+    {
+        Throw.whenNull(drawable2dArray, "Array may not be null");
+        Throw.when(drawable2dArray.length == 0, IllegalArgumentException.class, "Array must contain at least one value");
+        return drawable2dArray;
+    }
+
+    /**
+     * Return an iterator that will return all points of one or more Drawable objects.
+     * @param drawable2d Drawable2d...; the Drawable objects
+     * @return Iterator&lt;P&gt;; iterator that will return all points of the Drawable objects
+     * @throws NullPointerException when drawable is null, or contains a null value
+     * @throws IllegalArgumentException when drawable is empty
+     */
+    public static Iterator<Point2d> pointsOf(final Drawable2d... drawable2d)
+    {
+        return new Iterator<Point2d>()
         {
             /** Index in the argument array. */
             private int nextArgument = 0;
@@ -154,21 +180,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Drawable2
                 this.currentIterator = drawable2d[this.nextArgument].getPoints();
                 return this.currentIterator.next(); // Cannot fail because every Drawable has at least one point
             }
-        });
-    }
-
-    /**
-     * Verify that the array contains at least one entry.
-     * @param drawable2dArray Drawable2d[]; array of Drawable2d objects
-     * @return Drawable2d[]; the array
-     * @throws NullPointerException when the array is null
-     * @throws IllegalArgumentException when the array contains 0 elements
-     */
-    static Drawable2d[] ensureHasOne(final Drawable2d[] drawable2dArray) throws NullPointerException, IllegalArgumentException
-    {
-        Throw.whenNull(drawable2dArray, "Array may not be null");
-        Throw.when(drawable2dArray.length == 0, IllegalArgumentException.class, "Array must contain at least one value");
-        return drawable2dArray;
+        };
     }
 
     /**
@@ -179,7 +191,20 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Drawable2
      */
     public Bounds2d(final Collection<Drawable2d> drawableCollection) throws NullPointerException, IllegalArgumentException
     {
-        this(new Iterator<Point2d>()
+        this(pointsOf(drawableCollection));
+    }
+
+    /**
+     * Return an iterator that will return all points of one or more Drawable2d objects.
+     * @param drawableCollection Collection&lt;Drawable2d&gt;; the collection of Drawable2d objects
+     * @return Iterator&lt;P&gt;; iterator that will return all points of the Drawable objects
+     * @throws NullPointerException when drawableCollection is null, or contains a null value
+     * @throws IllegalArgumentException when drawableCollection is empty
+     */
+    public static Iterator<Point2d> pointsOf(final Collection<Drawable2d> drawableCollection)
+            throws NullPointerException, IllegalArgumentException
+    {
+        return new Iterator<Point2d>()
         {
             /** Iterator that iterates over the collection. */
             private Iterator<Drawable2d> collectionIterator = ensureHasOne(drawableCollection.iterator());
@@ -214,7 +239,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Drawable2
                 }
                 return result;
             }
-        });
+        };
     }
 
     /**
@@ -224,7 +249,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Drawable2
      * @throws NullPointerException when the iterator is null
      * @throws IllegalArgumentException when the hasNext method of the iterator returns false
      */
-    static Iterator<Drawable2d> ensureHasOne(final Iterator<Drawable2d> iterator)
+    public static Iterator<Drawable2d> ensureHasOne(final Iterator<Drawable2d> iterator)
             throws NullPointerException, IllegalArgumentException
     {
         Throw.when(!iterator.hasNext(), IllegalArgumentException.class, "Collection may not be empty");
@@ -406,8 +431,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Drawable2
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
-        String format = String.format("%1$s[x[%2$s : %2$s], y[%2$s : %2$s]]",
-                doNotIncludeClassName ? "" : "Bounds2d ", doubleFormat);
+        String format =
+                String.format("%1$s[x[%2$s : %2$s], y[%2$s : %2$s]]", doNotIncludeClassName ? "" : "Bounds2d ", doubleFormat);
         return String.format(Locale.US, format, this.minX, this.maxX, this.minY, this.maxY);
     }
 

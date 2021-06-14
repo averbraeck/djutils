@@ -2,6 +2,14 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.26" date="2021-06-14" description="Added 2d convex hull implementation to djutils-draw">
+      <action dev="pknoppers" type="add">
+        The new class contains only static methods that return a Polygon2d object on success. If the result would be a 
+        single point; the implementations throw a DrawRuntimeException because a single point does not make a valid 
+        Polygon2d.
+      </action>
+    </release>
+    
     <release version="1.06.25" date="2021-04-16" description="Implemented better hypot in Complex">
       <action dev="pknoppers" type="change">
         The Complex class now implements its own hypot function which uses Math.fma. On CPUs not implementing that in
