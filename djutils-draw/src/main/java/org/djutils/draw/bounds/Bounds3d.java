@@ -143,7 +143,19 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      */
     public Bounds3d(final Drawable3d... drawable3d) throws NullPointerException, IllegalArgumentException
     {
-        this(new Iterator<Point3d>()
+        this(pointsOf(drawable3d));
+    }
+
+    /**
+     * Return an iterator that will return all points of one or more Drawable objects.
+     * @param drawable3d Drawable3d...; the Drawable objects
+     * @return Iterator&lt;P&gt;; iterator that will return all points of the Drawable objects
+     * @throws NullPointerException when drawable is null, or contains a null value
+     * @throws IllegalArgumentException when drawable is empty
+     */
+    public static Iterator<Point3d> pointsOf(final Drawable3d... drawable3d)
+    {
+        return new Iterator<Point3d>()
         {
             /** Index in the argument array. */
             private int nextArgument = 0;
@@ -169,7 +181,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
                 this.currentIterator = drawable3d[this.nextArgument].getPoints();
                 return this.currentIterator.next(); // Cannot fail because every Drawable has at least one point
             }
-        });
+        };
     }
 
     /**
@@ -194,7 +206,20 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      */
     public Bounds3d(final Collection<Drawable3d> drawableCollection) throws NullPointerException, IllegalArgumentException
     {
-        this(new Iterator<Point3d>()
+        this(pointsOf(drawableCollection));
+    }
+
+    /**
+     * Return an iterator that will return all points of one or more Drawable3d objects.
+     * @param drawableCollection Collection&lt;Drawable3d&gt;; the collection of Drawable2d objects
+     * @return Iterator&lt;P&gt;; iterator that will return all points of the Drawable objects
+     * @throws NullPointerException when drawableCollection is null, or contains a null value
+     * @throws IllegalArgumentException when drawableCollection is empty
+     */
+    public static Iterator<Point3d> pointsOf(final Collection<Drawable3d> drawableCollection)
+            throws NullPointerException, IllegalArgumentException
+    {
+        return new Iterator<Point3d>()
         {
             /** Iterator that iterates over the collection. */
             private Iterator<Drawable3d> collectionIterator = ensureHasOne(drawableCollection.iterator());
@@ -229,7 +254,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
                 }
                 return result;
             }
-        });
+        };
     }
 
     /**
