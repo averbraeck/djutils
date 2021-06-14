@@ -3,7 +3,7 @@
 
   <groupId>org.djutils</groupId>
   <artifactId>djutils-parent</artifactId>
-  <version>1.06.24</version>
+  <version>1.06.25</version>
   <packaging>pom</packaging>
 
   <name>DJUTILS parent pom file and development utilities</name>
