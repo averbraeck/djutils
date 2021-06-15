@@ -235,12 +235,12 @@ public class ConvexHullTest
         List<Point2d> points = new ArrayList<>();
         double centerX = 1.5;
         double centerY = 10.5;
-        points.clear();
         System.out.println("type return when the profiler is ready");
         System.in.read();
         for (double radius = 5000.0 / 64; radius <= 6000; radius *= 2)
         {
             // These for loops should not suffer from rounding errors
+            points.clear();
             for (double x = centerX - radius; x <= centerX + radius; x += 1)
             {
                 for (double y = centerY - radius; y <= centerY + radius; y += 1)
