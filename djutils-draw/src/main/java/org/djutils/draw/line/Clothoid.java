@@ -340,9 +340,9 @@ public final class Clothoid
         double dC0 = resultZ[0] - resultL[0];
         double dS0 = resultZ[1] - resultL[1];
 
-        double X = cg * dC0 - s * sg * dS0;
-        double Y = sg * dC0 + s * cg * dS0;
-        return new double[] { X, Y };
+        double x = cg * dC0 - s * sg * dS0;
+        double y = sg * dC0 + s * cg * dS0;
+        return new double[] { x, y };
     }
 
     // -------------------------------------------------------------------------
@@ -352,10 +352,10 @@ public final class Clothoid
      * @param nk int; minimum 0; maximum 3
      * @param a double; ?
      * @param b double; ?
-     * @param X double[]; ?
-     * @param Y double[]; ?
+     * @param xArray double[]; ?
+     * @param yArray double[]; ?
      */
-    private static void evalXYaLarge(final int nk, final double a, final double b, double[] X, double[] Y)
+    private static void evalXYaLarge(final int nk, final double a, final double b, final double[] xArray, final double[] yArray)
     {
         Throw.when(nk <= 0 || nk >= 4, DrawRuntimeException.class,
                 "In evalXYaLarge first argument nk must be in 1..3, nk " + nk);
@@ -368,38 +368,38 @@ public final class Clothoid
         double cg = Math.cos(g) / z;
         double sg = Math.sin(g) / z;
 
-        double[] Cl = new double[3];
-        double[] Sl = new double[3];
-        double[] Cz = new double[3];
-        double[] Sz = new double[3];
+        double[] cl = new double[3];
+        double[] sl = new double[3];
+        double[] cz = new double[3];
+        double[] sz = new double[3];
 
-        fresnelCS(nk, ell, Cl, Sl);
-        fresnelCS(nk, ell + z, Cz, Sz);
+        fresnelCS(nk, ell, cl, sl);
+        fresnelCS(nk, ell + z, cz, sz);
 
-        double dC0 = Cz[0] - Cl[0];
-        double dS0 = Sz[0] - Sl[0];
-        X[0] = cg * dC0 - s * sg * dS0;
-        Y[0] = sg * dC0 + s * cg * dS0;
+        double dC0 = cz[0] - cl[0];
+        double dS0 = sz[0] - sl[0];
+        xArray[0] = cg * dC0 - s * sg * dS0;
+        yArray[0] = sg * dC0 + s * cg * dS0;
         if (nk > 1)
         {
             cg /= z;
             sg /= z;
-            double dC1 = Cz[1] - Cl[1];
-            double dS1 = Sz[1] - Sl[1];
+            double dC1 = cz[1] - cl[1];
+            double dS1 = sz[1] - sl[1];
             double DC = dC1 - ell * dC0;
             double DS = dS1 - ell * dS0;
-            X[1] = cg * DC - s * sg * DS;
-            Y[1] = sg * DC + s * cg * DS;
+            xArray[1] = cg * DC - s * sg * DS;
+            yArray[1] = sg * DC + s * cg * DS;
             if (nk > 2)
             {
-                double dC2 = Cz[2] - Cl[2];
-                double dS2 = Sz[2] - Sl[2];
+                double dC2 = cz[2] - cl[2];
+                double dS2 = sz[2] - sl[2];
                 DC = dC2 + ell * (ell * dC0 - 2 * dC1);
                 DS = dS2 + ell * (ell * dS0 - 2 * dS1);
                 cg = cg / z;
                 sg = sg / z;
-                X[2] = cg * DC - s * sg * DS;
-                Y[2] = sg * DC + s * cg * DS;
+                xArray[2] = cg * DC - s * sg * DS;
+                yArray[2] = sg * DC + s * cg * DS;
             }
         }
     }
@@ -431,23 +431,23 @@ public final class Clothoid
      * ???
      * @param nk int; ?
      * @param b double; ?
-     * @param X double[]; ?
-     * @param Y double[]; ?
+     * @param zArray double[]; ?
+     * @param yArray double[]; ?
      */
-    private static void evalXYazero(final int nk, final double b, double X[], double Y[])
+    private static void evalXYazero(final int nk, final double b, final double[] zArray, final double[] yArray)
     {
         double sb = Math.sin(b);
         double cb = Math.cos(b);
         double b2 = b * b;
         if (Math.abs(b) < 1e-3)
         {
-            X[0] = 1 - (b2 / 6) * (1 - (b2 / 20) * (1 - (b2 / 42)));
-            Y[0] = (b / 2) * (1 - (b2 / 12) * (1 - (b2 / 30)));
+            zArray[0] = 1 - (b2 / 6) * (1 - (b2 / 20) * (1 - (b2 / 42)));
+            yArray[0] = (b / 2) * (1 - (b2 / 12) * (1 - (b2 / 30)));
         }
         else
         {
-            X[0] = sb / b;
-            Y[0] = (1 - cb) / b;
+            zArray[0] = sb / b;
+            yArray[0] = (1 - cb) / b;
         }
         // use recurrence in the stable part
         int m = (int) Math.floor(2 * b);
@@ -461,8 +461,8 @@ public final class Clothoid
         }
         for (int k = 1; k < m; ++k)
         {
-            X[k] = (sb - k * Y[k - 1]) / b;
-            Y[k] = (k * X[k - 1] - cb) / b;
+            zArray[k] = (sb - k * yArray[k - 1]) / b;
+            yArray[k] = (k * zArray[k - 1] - cb) / b;
         }
         // use Lommel for the unstable part
         if (m < nk)
@@ -477,8 +477,8 @@ public final class Clothoid
             {
                 double rLb = LommelReduced(k + 1.5, 0.5, b);
                 double rLc = LommelReduced(k + 1.5, 1.5, b);
-                X[k] = (k * A * rLa + B * rLb + cb) / (1 + k);
-                Y[k] = (C * rLc + sb) / (2 + k) + D * rLd;
+                zArray[k] = (k * A * rLa + B * rLb + cb) / (1 + k);
+                yArray[k] = (C * rLc + sb) / (2 + k) + D * rLd;
                 rLa = rLc;
                 rLd = rLb;
             }
