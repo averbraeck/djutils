@@ -175,6 +175,16 @@ public class PolyLine2dTest
             // Ignore expected exception
         }
 
+        try
+        {
+            new PolyLine2d((List<Point2d>) null);
+            fail("null list should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+        
         int horizontalMoves = 0;
         Path2D path = new Path2D.Double();
         path.moveTo(points[0].x, points[0].y);
@@ -188,6 +198,17 @@ public class PolyLine2dTest
                 horizontalMoves++;
             }
         }
+        
+        try
+        {
+            new PolyLine2d((Path2D) null);
+            fail("null path should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+        
         try
         {
             line = new PolyLine2d(path);

@@ -182,10 +182,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * @param pointList List&lt;Point2d&gt;; the list of points to construct this PolyLine2d from.
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
+     * @throws NullPointerException when pointList is null
      */
-    public PolyLine2d(final List<Point2d> pointList) throws DrawRuntimeException
+    public PolyLine2d(final List<Point2d> pointList) throws DrawRuntimeException, NullPointerException
     {
-        this(pointList.toArray(new Point2d[pointList.size()]));
+        this(pointList.toArray(new Point2d[Throw.whenNull(pointList, "pointList may not be null").size()]));
     }
 
     /**
@@ -193,10 +194,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * @param path Path2D; the Path2D to construct this PolyLine2d from.
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
+     * @throws NullPointerException when path is null
      */
-    public PolyLine2d(final Path2D path) throws DrawRuntimeException
+    public PolyLine2d(final Path2D path) throws DrawRuntimeException, NullPointerException
     {
-        this(path2DtoArray(path));
+        this(path2DtoArray(Throw.whenNull(path, "path may not be null")));
     }
 
     /**

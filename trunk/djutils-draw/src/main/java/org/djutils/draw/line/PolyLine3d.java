@@ -201,7 +201,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
      */
     public PolyLine3d(final List<Point3d> pointList) throws DrawRuntimeException
     {
-        this(pointList.toArray(new Point3d[pointList.size()]));
+        this(pointList.toArray(new Point3d[Throw.whenNull(pointList, "pointList may not be null").size()]));
     }
 
     /**
