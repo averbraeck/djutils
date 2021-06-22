@@ -185,6 +185,16 @@ public class PolyLine3dTest
             // Ignore expected exception
         }
 
+        try
+        {
+            new PolyLine3d((List<Point3d>) null);
+            fail("null list should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+        
         // Construct a Path3D.Double that contains the horizontal moveto or lineto
         Path2D path = new Path2D.Double();
         path.moveTo(points[0].x, points[0].y);
