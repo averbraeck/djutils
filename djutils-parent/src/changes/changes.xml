@@ -2,7 +2,11 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.06.26" date="2021-07-19" description="Surface3d class in djutils-draw">
+    <release version="1.06.26" date="2021-07-19" 
+            description="Surface3d class in djutils-draw, FixedBinsAccumulator in djutils-stats">
+      <action dev="pknoppers" type="add">
+        Initial version of FixedBinsAccumulator (and unit test) in djutils-stats.
+      </action>
       <action dev="pknoppers" type="add">
         Initial version of a 3D surface encoding class (and unit test).
       </action>

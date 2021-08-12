@@ -2,17 +2,17 @@ package org.djutils.stats.summarizers;
 
 import java.util.Random;
 
+import org.djutils.stats.summarizers.quantileaccumulator.FixedBinsAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.FullStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.TDigestAccumulator;
 
 /**
- * TallyDemo.java.
- * <br><br>
+ * TallyDemo.java. <br>
+ * <br>
  * Copyright (c) 2020-2021 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
- * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
- * <br>
+ * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>. <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
@@ -23,7 +23,7 @@ public final class TallyDemo
     {
         // Do not instantiate
     }
-    
+
     /**
      * Demonstrate the basic use of a Tally.
      * @param args String[]; the command line arguments (not used)
@@ -137,7 +137,21 @@ public final class TallyDemo
         System.out.println("median:                        " + tally.getQuantile(0.5));
         System.out.println("third quartile:                " + tally.getQuantile(0.75));
 
+        System.out.println();
+        
+        tally = new Tally("Example tally with FixedBinsAccumulator using 1001 bins",
+                new FixedBinsAccumulator(1.0, (Math.E - 1.0) / 1000, 1001));
+        // Feed the tally perfectly exponentially distributed values in the interval [1.0,e)
+        random = new Random(1234);
+        for (int i = 0; i <= 1000000; i++)
+        {
+            tally.ingest(Math.exp(1.0 * i / 1000000));
+        }
+        System.out.println("0% quantile (should be 1.0):                     " + tally.getQuantile(0.0));
+        System.out.println("25% quantile (should be close to sqrt(sqrt(e))): " + tally.getQuantile(0.25));
+        System.out.println("50% quantile (should be close to sqrt(e)):       " + tally.getQuantile(0.50));
+        System.out.println("100% quantile (should be close to e):            " + tally.getQuantile(1.0));
+
     }
 
 }
-
