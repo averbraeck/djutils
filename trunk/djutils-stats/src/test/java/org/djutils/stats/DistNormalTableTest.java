@@ -83,6 +83,10 @@ public class DistNormalTableTest
         {
             assertTrue(exception instanceof IllegalArgumentException);
         }
+        
+        assertEquals(0.5, DistNormalTable.getCumulativeProbability(1.0, 0, 1.0), 0);
+        assertEquals(0.0, DistNormalTable.getCumulativeProbability(1.0, 0, 1.0 - Math.ulp(1.0)), 0);
+        assertEquals(1.0, DistNormalTable.getCumulativeProbability(1.0, 0, 1.0 + Math.ulp(1.0)), 0);
     }
 
     /**

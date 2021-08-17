@@ -45,6 +45,10 @@ public final class DistNormalTable
         {
             return DistNormalTable.CUMULATIVE_NORMAL_PROBABILITIES[absZ];
         }
+        if (absZ < 0) // This is actually possible, e.g. happens when sigma == 0 and x = mu - Math.ulp(mu)
+        {
+            absZ = 1000;
+        }
         return 1 - DistNormalTable.CUMULATIVE_NORMAL_PROBABILITIES[absZ];
     }
 
