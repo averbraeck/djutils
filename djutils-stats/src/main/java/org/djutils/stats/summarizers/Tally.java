@@ -98,6 +98,13 @@ public class Tally implements TallyInterface
 
     /** {@inheritDoc} */
     @Override
+    public double getCumulativeProbability(final double quantile)
+    {
+        return this.quantileAccumulator.getCumulativeProbability(this, quantile);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public final double[] getConfidenceInterval(final double alpha)
     {
         return this.getConfidenceInterval(alpha, ConfidenceInterval.BOTH_SIDE_CONFIDENCE);

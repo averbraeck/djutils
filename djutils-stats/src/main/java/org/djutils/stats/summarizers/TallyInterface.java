@@ -144,6 +144,15 @@ public interface TallyInterface extends BasicTallyInterface
     double getQuantile(double probability);
 
     /**
+     * Get, or estimate fraction of ingested values between -infinity up to and including a given quantile.
+     * @param quantile double; the given quantile
+     * @return double; the estimated or observed fraction of ingested values between -infinity up to and including the given
+     *         quantile. When this TallyInterface has ingested zero values; this method shall return NaN.
+     * @throws IllegalArgumentException when quantile is NaN
+     */
+    double getCumulativeProbability(double quantile) throws IllegalArgumentException;
+
+    /**
      * returns the confidence interval on either side of the mean.
      * @param alpha double; Alpha is the significance level used to compute the confidence level. The confidence level equals
      *            100*(1 - alpha)%, or in other words, an alpha of 0.05 indicates a 95 percent confidence level.

@@ -16,7 +16,7 @@ public class NoStorageAccumulator implements QuantileAccumulator
     @Override
     public double ingest(final double value)
     {
-        Throw.when(Double.isNaN(value), IllegalArgumentException.class, "accumulator can not accumlate NaN value");
+        Throw.when(Double.isNaN(value), IllegalArgumentException.class, "accumulator can not accumulate NaN value");
         return value;
     }
 
@@ -29,6 +29,17 @@ public class NoStorageAccumulator implements QuantileAccumulator
                 "probability should be between 0 and 1 (inclusive)");
         return DistNormalTable.getInverseCumulativeProbability(tally.getSampleMean(), Math.sqrt(tally.getSampleVariance()),
                 probability);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double getCumulativeProbability(final Tally tally, final double quantile) throws IllegalArgumentException
+    {
+        if (tally.getN() == 0)
+        {
+            return Double.NaN;
+        }
+        return DistNormalTable.getCumulativeProbability(tally.getPopulationMean(), tally.getPopulationStDev(), quantile);
     }
 
     /** {@inheritDoc} */

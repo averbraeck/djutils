@@ -3,9 +3,12 @@
   <body>
 
     <release version="1.06.27" date="2021-08-17" 
-            description="Fixed handling of edge case in djutils-stats">
+            description="Fix and add in djutils-stats">
       <action dev="pknoppers" type="fix">
         DistNormalTable getCumulativeProbability ran into problems when sigma == 0 and x very close to mu.
+      </action>
+      <action dev="pknoppers" type="add">
+        All accumulators now implement getCumulativeProbability,
       </action>
     </release>
 
