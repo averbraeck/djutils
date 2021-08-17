@@ -76,6 +76,13 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
 
     /** {@inheritDoc} */
     @Override
+    public double getCumulativeProbability(final double quantile) throws IllegalArgumentException
+    {
+        return this.wrappedTally.getCumulativeProbability(quantile);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public final double[] getConfidenceInterval(final double alpha)
     {
         return this.wrappedTally.getConfidenceInterval(alpha);

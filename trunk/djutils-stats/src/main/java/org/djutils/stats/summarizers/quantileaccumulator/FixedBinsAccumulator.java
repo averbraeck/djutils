@@ -122,7 +122,9 @@ public class FixedBinsAccumulator implements QuantileAccumulator
     public double ingest(final double value)
     {
         Throw.when(Double.isNaN(value), IllegalArgumentException.class, "accumulator can not accumlate NaN value");
-        int bin = (int) ((value - this.minimumBinCenter) / binWidth);
+        this.cumulatives = null;
+        double floatBin = (value - this.minimumBinCenter) / binWidth;
+        int bin = (int) Math.rint(floatBin);
         if (bin < 0)
         {
             this.belowCount++;
@@ -138,13 +140,12 @@ public class FixedBinsAccumulator implements QuantileAccumulator
         this.totalCount++;
         return value;
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public double getQuantile(final Tally tally, final double probability)
+    
+    /**
+     * Compute the cumulative values if not already available.
+     */
+    private void ensureCumulatives()
     {
-        Throw.when(!Double.isFinite(probability) || probability < 0.0 || probability > 1.0, IllegalArgumentException.class,
-                "probability must be a value between 0 and 1");
         if (null == this.cumulatives)
         {
             long count = 0;
@@ -155,6 +156,15 @@ public class FixedBinsAccumulator implements QuantileAccumulator
                 this.cumulatives[bin] = count;
             }
         }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double getQuantile(final Tally tally, final double probability)
+    {
+        Throw.when(!Double.isFinite(probability) || probability < 0.0 || probability > 1.0, IllegalArgumentException.class,
+                "probability must be a value between 0 and 1");
+        ensureCumulatives();
         // TODO do something clever with belowCount and aboveCount (could involve the tally as well)
         long usableCount = this.totalCount - this.belowCount - this.aboveCount;
         if (usableCount == 0)
@@ -171,6 +181,30 @@ public class FixedBinsAccumulator implements QuantileAccumulator
             }
         }
         return 0; // cannot happen
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double getCumulativeProbability(final Tally tally, final double quantile) throws IllegalArgumentException
+    {
+        Throw.when(Double.isNaN(quantile), IllegalArgumentException.class, "quantile may not be NaN");
+        // TODO do something clever with belowCount and aboveCount (could involve the tally as well)
+        if (this.totalCount == 0)
+        {
+            return Double.NaN;
+        }
+        double floatBin = (quantile - this.minimumBinCenter) / binWidth;
+        int bin = (int) Math.rint(floatBin);
+        if (bin < 0)
+        {
+            return 0.0;
+        }
+        if (bin >= this.accumulator.length)
+        {
+            return 1.0;
+        }
+        ensureCumulatives();
+        return 1.0 * this.cumulatives[bin] / this.totalCount + (floatBin - bin - 0.5) * this.accumulator[bin] / this.totalCount;
     }
 
     /** {@inheritDoc} */

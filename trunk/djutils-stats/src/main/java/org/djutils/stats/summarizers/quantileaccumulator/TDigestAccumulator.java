@@ -65,6 +65,13 @@ public class TDigestAccumulator implements QuantileAccumulator
 
     /** {@inheritDoc} */
     @Override
+    public double getCumulativeProbability(final Tally tally, final double quantile)
+    {
+        return this.tDigest.cdf(quantile);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public void initialize()
     {
         this.tDigest = TDigest.createDigest(this.compression);
