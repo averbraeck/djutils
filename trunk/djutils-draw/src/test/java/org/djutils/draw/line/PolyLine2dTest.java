@@ -184,7 +184,7 @@ public class PolyLine2dTest
         {
             // Ignore expected exception
         }
-        
+
         int horizontalMoves = 0;
         Path2D path = new Path2D.Double();
         path.moveTo(points[0].x, points[0].y);
@@ -198,7 +198,7 @@ public class PolyLine2dTest
                 horizontalMoves++;
             }
         }
-        
+
         try
         {
             new PolyLine2d((Path2D) null);
@@ -208,7 +208,7 @@ public class PolyLine2dTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             line = new PolyLine2d(path);
@@ -1635,6 +1635,7 @@ public class PolyLine2dTest
     {
         PolyLine2d line = new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9) });
         assertTrue("toString returns something descriptive", line.toString().startsWith("PolyLine2d ["));
+        assertFalse("toString does not startHeading", line.toString().contains("startHeading"));
         assertTrue("toString can suppress the class name", line.toString().indexOf(line.toString(true)) > 0);
 
         // Verify that hashCode. Check that the result depends on the actual coordinates.
@@ -1664,6 +1665,202 @@ public class PolyLine2dTest
         assertNotEquals("equals checks y", line,
                 new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(4, 7), new Point2d(8, 9) }));
         assertTrue("Line is equal to line from same set of points", line.equals(new PolyLine2d(line.getPoints())));
+    }
+
+    /**
+     * Test the degenerate PolyLine2d.
+     */
+    @Test
+    public void testDegenerate()
+    {
+        try
+        {
+            new PolyLine2d(Double.NaN, 2, 3);
+            fail("NaN should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new PolyLine2d(1, Double.NaN, 3);
+            fail("NaN should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new PolyLine2d(1, 2, Double.NaN);
+            fail("NaN should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new PolyLine2d(1, 2, Double.POSITIVE_INFINITY);
+            fail("NaN should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new PolyLine2d(1, 2, Double.NEGATIVE_INFINITY);
+            fail("NaN should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        PolyLine2d l = new PolyLine2d(1, 2, 3);
+        assertEquals("length is 0", 0, l.getLength(), 0);
+        assertEquals("size is 1", 1, l.size());
+        assertEquals("getX(0) is 1", 1, l.getX(0), 0);
+        assertEquals("getY(0) is 2", 2, l.getY(0), 0);
+        Ray2d r = l.getLocation(0.0);
+        assertEquals("heading at 0", 3, r.getPhi(), 0);
+        assertEquals("x at 0 is 1", 1, r.getX(), 0);
+        assertEquals("y at 0 is 2", 2, r.getY(), 0);
+        assertEquals("bounds", new Bounds2d(l.get(0)), l.getBounds());
+        try
+        {
+            l.getLocation(0.1);
+            fail("location at position != 0 should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            l.getLocation(-0.1);
+            fail("location at position != 0 should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new PolyLine2d(new Point2d(1, 2), Double.NaN);
+            fail("NaN should have thrown a DrawRuntimeException");
+        }
+        catch (DrawRuntimeException dre)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new PolyLine2d((Ray2d) null);
+            fail("null pointer should have thrown a NullPointerException");
+        }
+        catch (NullPointerException npe)
+        {
+            // Ignore expected exception
+        }
+
+        assertEquals("closest point is the point", r, l.closestPointOnPolyLine(new Point2d(4, -2)));
+
+        PolyLine2d straightX = new PolyLine2d(1, 2, 0);
+        for (int x = -10; x <= 10; x += 1)
+        {
+            for (int y = -10; y <= 10; y += 1)
+            {
+                Point2d testPoint = new Point2d(x, y);
+                assertEquals("closest point extended", r.projectOrthogonalExtended(testPoint),
+                        l.projectOrthogonalExtended(testPoint));
+                assertEquals("closest point on degenerate line is the point of the degenerate line", l.getLocation(0.0),
+                        l.closestPointOnPolyLine(testPoint));
+                if (x == 1)
+                {
+                    assertEquals("projection on horizontal degenerate line hits", straightX.get(0),
+                            straightX.projectOrthogonal(testPoint));
+                }
+                else
+                {
+                    assertNull("projection on horizontal degenerate line misses", straightX.projectOrthogonal(testPoint));
+                }
+                if (x == 1 && y == 2)
+                {
+                    assertEquals("NonExtended projection will return point for exact match", testPoint,
+                            l.projectOrthogonal(testPoint));
+                    assertEquals("NonExtended fractional projection returns 0 for exact match", 0,
+                            l.projectOrthogonalFractional(testPoint), 0);
+                    assertEquals("Extended fractional projection returns 0 for exact match", 0,
+                            l.projectOrthogonalFractionalExtended(testPoint), 0);
+                }
+                else
+                {
+                    assertNull("For non-nice directions nonExtended projection will return null if point does not match",
+                            l.projectOrthogonal(testPoint));
+                    assertTrue("For non-nice directions non-extended fractional projection will return NaN if point does "
+                            + "not match", Double.isNaN(l.projectOrthogonalFractional(testPoint)));
+                    if (l.getLocation(0.0).projectOrthogonalFractional(testPoint) > 0)
+                    {
+                        assertTrue(
+                                "ProjectOrthogonalFractionalExtended returns POSITIVE_INFINITY of projection misses "
+                                        + "along startHeading side",
+                                Double.POSITIVE_INFINITY == l.projectOrthogonalFractionalExtended(testPoint));
+                    }
+                    else
+                    {
+                        assertTrue(
+                                "ProjectOrthogonalFractionalExtended returns POSITIVE_INFINITY of projection misses "
+                                        + ", but not along startHeading side",
+                                Double.NEGATIVE_INFINITY == l.projectOrthogonalFractionalExtended(testPoint));
+                    }
+                }
+                if (x == 1)
+                {
+                    assertEquals("Non-Extended projection will return point for matching X for line along X", straightX.get(0),
+                            straightX.projectOrthogonal(testPoint));
+                }
+                else
+                {
+                    assertNull("Non-Extended projection will return null for non matching X for line along X",
+                            straightX.projectOrthogonal(testPoint));
+                }
+            }
+        }
+
+        l = new PolyLine2d(new Point2d(1, 2), 3);
+        assertEquals("length is 0", 0, l.getLength(), 0);
+        assertEquals("size is 1", 1, l.size());
+        assertEquals("getX(0) is 1", 1, l.getX(0), 0);
+        assertEquals("getY(0) is 2", 2, l.getY(0), 0);
+        r = l.getLocation(0.0);
+        assertEquals("heading at 0", 3, r.getPhi(), 0);
+        assertEquals("x at 0 is 1", 1, r.getX(), 0);
+        assertEquals("y at 0 is 2", 2, r.getY(), 0);
+
+        l = new PolyLine2d(new Ray2d(1, 2, 3));
+        assertEquals("length is 0", 0, l.getLength(), 0);
+        assertEquals("size is 1", 1, l.size());
+        assertEquals("getX(0) is 1", 1, l.getX(0), 0);
+        assertEquals("getY(0) is 2", 2, l.getY(0), 0);
+        r = l.getLocation(0.0);
+        assertEquals("heading at 0", 3, r.getPhi(), 0);
+        assertEquals("x at 0 is 1", 1, r.getX(), 0);
+        assertEquals("y at 0 is 2", 2, r.getY(), 0);
+
+        PolyLine2d notEqual = new PolyLine2d(1, 2, 4);
+        assertNotEquals("Check that the equals method verifies the startHeading", l, notEqual);
+        
+        assertTrue("toString contains startHeading", l.toString().contains("startHeading"));
     }
 
     /**
