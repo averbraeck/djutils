@@ -1,0 +1,32 @@
+                   -------------------------------------
+                   DJUTILS-SERIALIZATION
+                   -------------------------------------
+                   June, 2019
+                   -------------------------------------
+                   
+DJUTILS-SERIALIZATION - Serialization / deserialization classes
+
+	DJUTILS-SERIALIZATION is a set of Java classes that can serialize / deserialize objects in a strongly typed manner.
+
+    * DJUTILS-SERIALIZATION stores a byte before each serialized field that indicates its type.
+
+    * DJUTILS-SERIALIZATION can work with little-endian and big-endian types.
+
+    * DJUTILS-SERIALIZATION handles Scalars, Vectors and Matrices from DJUNITS, including the scalar type and display type
+      (e.g. Length in kilometers, Duration in minutes, an Area vector in acres).
+
+    * DJUTILS-SERIALIZATION is the basis for the (de)serialization of types in the SIM0MQ project.
+    
+    []
+
+==========
+
+	DJUTILS-SERIALIZATION has an open source BSD 3-clause license.
+
+    * Third party components used in DJUTILS-SERIALIZATION can not have a license that is more restrictive than BSD, Apache, MIT, LGPL, or Eclipse.
+
+    * DJUTILS-SERIALIZATION can be incorporated in part or in full in other products for any use (educational, commercial, whatever).
+
+    * DJUTILS-SERIALIZATION may be extended, evolved by anyone into anything else for any purpose.
+    
+    []
