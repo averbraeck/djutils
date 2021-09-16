@@ -2,6 +2,14 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.28" date="2021-09-16" 
+            description="Additions to djutils-draw">
+      <action dev="pknoppers" type="add">
+        PolyLine2d and PolyLine3d now have additional constructors that allow construction of a one-point PolyLine that has
+        a sense of direction at that point.
+      </action>
+    </release>
+
     <release version="1.06.27" date="2021-08-17" 
             description="Fix and add in djutils-stats">
       <action dev="pknoppers" type="fix">

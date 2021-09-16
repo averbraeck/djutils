@@ -46,6 +46,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /** Bounding rectangle of this PolyLine2d. */
     private final Bounds2d bounds;
 
+    /** Heading at start point (only needed for degenerate PolyLine2d). */
+    private final double startHeading;
+
     /**
      * Construct a new PolyLine2d from an array of double x values and an array of double y values.
      * @param copyNeeded boolean; if true; a deep copy of the points array is stored instead of the provided array
@@ -84,6 +87,51 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         }
         this.length = this.lengthIndexedLine[this.lengthIndexedLine.length - 1];
         this.bounds = new Bounds2d(minX, maxX, minY, maxY);
+        this.startHeading = Double.NaN;
+    }
+
+    /**
+     * Construct a degenerate PolyLine2d (consisting of only one point).
+     * @param x double; the x-coordinate
+     * @param y double; the y-coordinate
+     * @param heading double; the heading in radians
+     * @throws DrawRuntimeException when x, y, or heading is NaN, or heading is infinite
+     */
+    public PolyLine2d(final double x, final double y, final double heading) throws DrawRuntimeException
+    {
+        Throw.when(Double.isNaN(x), DrawRuntimeException.class, "x may not be NaN");
+        Throw.when(Double.isNaN(y), DrawRuntimeException.class, "y may not be NaN");
+        Throw.when(Double.isNaN(heading), DrawRuntimeException.class, "heading may not be NaN");
+        Throw.when(Double.isInfinite(heading), DrawRuntimeException.class, "heading must be finite");
+        this.x = new double[] { x };
+        this.y = new double[] { y };
+        this.startHeading = heading;
+        this.length = 0;
+        this.bounds = new Bounds2d(x, x, y, y);
+        this.lengthIndexedLine = new double[] { 0.0 };
+    }
+
+    /**
+     * Construct a degenerate PolyLine2d (consisting of only one point).
+     * @param p Point2d; the point of the degenerate PolyLine2d
+     * @param heading double; the heading in radians
+     * @throws NullPointerException when p is null
+     * @throws DrawRuntimeException when heading is infinite
+     */
+    public PolyLine2d(final Point2d p, final double heading) throws NullPointerException, DrawRuntimeException
+    {
+        this(Throw.whenNull(p, "p may not be null").x, p.y, heading);
+    }
+
+    /**
+     * Construct a degenerate PolyLine2d (consisting of only one point).
+     * @param r Ray2d; point and heading of the degenerate PolyLine2d
+     * @throws NullPointerException when p is null
+     * @throws DrawRuntimeException when heading is infinite
+     */
+    public PolyLine2d(final Ray2d r) throws NullPointerException, DrawRuntimeException
+    {
+        this(Throw.whenNull(r, "r may not be NaN").x, r.y, r.phi);
     }
 
     /**
@@ -594,6 +642,10 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         // handle special cases: position == 0.0, or position == length
         if (position == 0.0)
         {
+            if (this.lengthIndexedLine.length == 1) // Extra special case; degenerate PolyLine2d
+            {
+                return new Ray2d(this.x[0], this.y[0], this.startHeading);
+            }
             return new Ray2d(this.x[0], this.y[0], this.x[1], this.y[1]);
         }
         if (position == getLength())
@@ -629,8 +681,27 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     private double projectOrthogonalFractional(final Point2d point, final Boolean limitHandling)
     {
         Throw.whenNull(point, "point may not be null");
-        double bestDistance = Double.POSITIVE_INFINITY;
         double result = Double.NaN;
+        if (this.lengthIndexedLine.length == 1)
+        {
+            // This is a degenerate PolyLine2d
+            if (null != limitHandling && limitHandling)
+            {
+                return 0.0;
+            }
+            result = getLocation(0.0).projectOrthogonalFractionalExtended(point);
+            if (null == limitHandling)
+            {
+                return result == 0.0 ? 0.0 : Double.NaN;
+            }
+            // limitHanling is false
+            if (result == 0.0)
+            {
+                return 0.0;
+            }
+            return result > 0 ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY;
+        }
+        double bestDistance = Double.POSITIVE_INFINITY;
         double bestDistanceExtended = Double.POSITIVE_INFINITY;
         for (int index = 1; index < this.size(); index++)
         {
@@ -702,6 +773,17 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     private Point2d projectOrthogonal(final Point2d point, final Boolean limitHandling)
     {
         Throw.whenNull(point, "point may not be null");
+        if (this.lengthIndexedLine.length == 1) // Handle degenerate case
+        {
+            // limitHandling == true is not handled because it cannot happen
+            Point2d result = this.getLocation(0.0).projectOrthogonalExtended(point);
+            if (null == limitHandling)
+            {
+                return result.x != this.x[0] || result.y != this.y[0] ? null : get(0);
+            }
+            // limitHandling is false
+            return result;
+        }
         double fraction = projectOrthogonalFractional(point, limitHandling);
         if (Double.isNaN(fraction))
         {
@@ -1189,6 +1271,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         {
             result.append(String.format(Locale.US, format, index == 0 ? "[" : ", ", this.x[index], this.y[index]));
         }
+        if (this.lengthIndexedLine.length == 1)
+        {
+            format = String.format(", startHeading=%1$s", doubleFormat);
+            result.append(String.format(Locale.US, format, this.startHeading));
+        }
         result.append("]");
         return result.toString();
     }
@@ -1226,6 +1313,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     {
         final int prime = 31;
         int result = 1;
+        long temp;
+        temp = Double.doubleToLongBits(this.startHeading);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
         result = prime * result + Arrays.hashCode(this.x);
         result = prime * result + Arrays.hashCode(this.y);
         return result;
@@ -1243,6 +1333,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         if (getClass() != obj.getClass())
             return false;
         PolyLine2d other = (PolyLine2d) obj;
+        if (Double.doubleToLongBits(this.startHeading) != Double.doubleToLongBits(other.startHeading))
+            return false;
         if (!Arrays.equals(this.x, other.x))
             return false;
         if (!Arrays.equals(this.y, other.y))

@@ -48,6 +48,12 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     /** Bounding box of this PolyLine3d. */
     private final Bounds3d bounds;
 
+    /** Heading at start point (only needed for degenerate PolyLine3d). */
+    private final double startPhi;
+
+    /** Heading at start point (only needed for degenerate PolyLine3d). */
+    private final double startTheta;
+
     /**
      * Construct a new PolyLine3d from an array of double x values, an array of double y values and an array of double z values.
      * @param copyNeeded boolean; if true; a deep copy of the points array is stored instead of the provided array
@@ -97,6 +103,61 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         }
         this.length = this.lengthIndexedLine[this.lengthIndexedLine.length - 1];
         this.bounds = new Bounds3d(minX, maxX, minY, maxY, minZ, maxZ);
+        this.startPhi = Double.NaN;
+        this.startTheta = Double.NaN;
+    }
+
+    /**
+     * Construct a degenerate PolyLine3d (consisting of only one point).
+     * @param x double; the x-coordinate
+     * @param y double; the y-coordinate
+     * @param z double; the z-coordinate
+     * @param phi double; the angle from the positive X axis direction in radians.
+     * @param theta double; the angle from the positive Z axis direction in radians
+     * @throws DrawRuntimeException when x, y, or heading is NaN, or heading is infinite
+     */
+    public PolyLine3d(final double x, final double y, final double z, final double phi, final double theta)
+            throws DrawRuntimeException
+    {
+        Throw.when(Double.isNaN(x), DrawRuntimeException.class, "x may not be NaN");
+        Throw.when(Double.isNaN(y), DrawRuntimeException.class, "y may not be NaN");
+        Throw.when(Double.isNaN(z), DrawRuntimeException.class, "z may not be NaN");
+        Throw.when(Double.isNaN(phi), DrawRuntimeException.class, "phi may not be NaN");
+        Throw.when(Double.isInfinite(phi), DrawRuntimeException.class, "phi must be finite");
+        Throw.when(Double.isNaN(theta), DrawRuntimeException.class, "theta may not be NaN");
+        Throw.when(Double.isInfinite(theta), DrawRuntimeException.class, "theta must be finite");
+        this.x = new double[] { x };
+        this.y = new double[] { y };
+        this.z = new double[] { z };
+        this.startPhi = phi;
+        this.startTheta = theta;
+        this.length = 0;
+        this.bounds = new Bounds3d(x, x, y, y, z, z);
+        this.lengthIndexedLine = new double[] { 0.0 };
+    }
+
+    /**
+     * Construct a degenerate PolyLine3d (consisting of only one point).
+     * @param p Point3d; the point of the degenerate PolyLine3d
+     * @param phi double; the angle from the positive X axis direction in radians.
+     * @param theta double; the angle from the positive Z axis direction in radians
+     * @throws NullPointerException when p is null
+     * @throws DrawRuntimeException when heading is infinite
+     */
+    public PolyLine3d(final Point3d p, final double phi, final double theta) throws NullPointerException, DrawRuntimeException
+    {
+        this(Throw.whenNull(p, "p may not be null").x, p.y, p.z, phi, theta);
+    }
+
+    /**
+     * Construct a degenerate PolyLine3d (consisting of only one point).
+     * @param r Ray3d; point, phi and theta of the degenerate PolyLine3d
+     * @throws NullPointerException when p is null
+     * @throws DrawRuntimeException when phi or theta is infinite
+     */
+    public PolyLine3d(final Ray3d r) throws NullPointerException, DrawRuntimeException
+    {
+        this(Throw.whenNull(r, "r may not be NaN").x, r.y, r.z, r.phi, r.theta);
     }
 
     /**
@@ -440,8 +501,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Concatenate several PolyLine3d instances.
-     * @param lines PolyLine3d...; one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
-     *            match the first of the second, etc.
+     * @param lines PolyLine3d...; one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
+     *            the first of the second, etc.
      * @return PolyLine3d
      * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
      */
@@ -483,8 +544,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     /**
      * Concatenate several PolyLine3d instances.
      * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
-     * @param lines PolyLine3d...; one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
-     *            match the first of the second, etc.
+     * @param lines PolyLine3d...; one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
+     *            the first of the second, etc.
      * @return PolyLine3d; the concatenation of the lines
      * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
      */
@@ -602,6 +663,10 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         // handle special cases: position == 0.0, or position == length
         if (position == 0.0)
         {
+            if (this.lengthIndexedLine.length == 1) // Extra special case; degenerate PolyLine2d
+            {
+                return new Ray3d(this.x[0], this.y[0], this.z[0], this.startPhi, this.startTheta);
+            }
             return new Ray3d(this.x[0], this.y[0], this.z[0], this.x[1], this.y[1], this.z[1]);
         }
         if (position == getLength())
@@ -639,8 +704,27 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     private double projectOrthogonalFractional(final Point3d point, final Boolean limitHandling)
     {
         Throw.whenNull(point, "point may not be null");
-        double bestDistance = Double.POSITIVE_INFINITY;
         double result = Double.NaN;
+        if (this.lengthIndexedLine.length == 1)
+        {
+            // This is a degenerate PolyLine2d
+            if (null != limitHandling && limitHandling)
+            {
+                return 0.0;
+            }
+            result = getLocation(0.0).projectOrthogonalFractionalExtended(point);
+            if (null == limitHandling)
+            {
+                return result == 0.0 ? 0.0 : Double.NaN;
+            }
+            // limitHanling is false
+            if (result == 0.0)
+            {
+                return 0.0;
+            }
+            return result > 0 ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY;
+        }
+        double bestDistance = Double.POSITIVE_INFINITY;
         double bestDistanceExtended = Double.POSITIVE_INFINITY;
         for (int index = 1; index < this.size(); index++)
         {
@@ -715,6 +799,17 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     private Point3d projectOrthogonal(final Point3d point, final Boolean limitHandling)
     {
         Throw.whenNull(point, "point may not be null");
+        if (this.lengthIndexedLine.length == 1) // Handle degenerate case
+        {
+            // limitHandling == true is not handled because it cannot happen
+            Point3d result = this.getLocation(0.0).projectOrthogonalExtended(point);
+            if (null == limitHandling)
+            {
+                return result.x != this.x[0] || result.y != this.y[0]  || result.z != this.z[0] ? null : get(0);
+            }
+            // limitHandling is false
+            return result;
+        }
         double fraction = projectOrthogonalFractional(point, limitHandling);
         if (Double.isNaN(fraction))
         {
@@ -1017,17 +1112,26 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
             result.append(
                     String.format(Locale.US, format, index == 0 ? "[" : ", ", this.x[index], this.y[index], this.z[index]));
         }
+        if (this.lengthIndexedLine.length == 1)
+        {
+            format = String.format(", startPhi=%1$s, startTheta=%1$s", doubleFormat);
+            result.append(String.format(Locale.US, format, this.startPhi, this.startTheta));
+        }
         result.append("]");
         return result.toString();
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings("checkstyle:designforextension")
     @Override
     public int hashCode()
     {
         final int prime = 31;
         int result = 1;
+        long temp;
+        temp = Double.doubleToLongBits(this.startPhi);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(this.startTheta);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
         result = prime * result + Arrays.hashCode(this.x);
         result = prime * result + Arrays.hashCode(this.y);
         result = prime * result + Arrays.hashCode(this.z);
@@ -1035,7 +1139,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings({ "checkstyle:designforextension", "checkstyle:needbraces" })
+    @SuppressWarnings("checkstyle:needbraces")
     @Override
     public boolean equals(final Object obj)
     {
@@ -1046,6 +1150,10 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         if (getClass() != obj.getClass())
             return false;
         PolyLine3d other = (PolyLine3d) obj;
+        if (Double.doubleToLongBits(this.startPhi) != Double.doubleToLongBits(other.startPhi))
+            return false;
+        if (Double.doubleToLongBits(this.startTheta) != Double.doubleToLongBits(other.startTheta))
+            return false;
         if (!Arrays.equals(this.x, other.x))
             return false;
         if (!Arrays.equals(this.y, other.y))
