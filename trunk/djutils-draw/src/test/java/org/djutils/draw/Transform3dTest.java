@@ -1,9 +1,12 @@
 package org.djutils.draw;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 
 import org.djutils.draw.bounds.Bounds3d;
@@ -596,6 +599,44 @@ public class Transform3dTest
                 "dirY: " + Math.toDegrees(Math.atan2(-rotated.z, Math.sqrt(rotated.x * rotated.x + rotated.y * rotated.y)))
                         + " == " + Math.toDegrees(Math.atan2(-rotated.z, Math.hypot(rotated.x, rotated.y))));
 
+    }
+
+    /**
+     * Test the hashCode and equals methods.
+     * @throws SecurityException if that happens uncaught; this test has failed
+     * @throws NoSuchFieldException if that happens uncaught; this test has failed
+     * @throws IllegalAccessException if that happens uncaught; this test has failed
+     * @throws IllegalArgumentException if that happens uncaught; this test has failed
+     */
+    @Test
+    @SuppressWarnings({ "unlikely-arg-type" })
+    public void testHashCodeAndEquals()
+            throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+    {
+        // Difficult to write a complete test because we can't control the values of the internal fields directly.
+        // We'll "solve" that using reflection.
+        Transform3d reference = new Transform3d();
+        assertEquals("Two different instances with same matrix do test equal", reference, new Transform3d());
+        assertEquals("Two different instances with same matrix have same hash code", reference.hashCode(),
+                new Transform3d().hashCode());
+        for (int index = 0; index < 16; index++)
+        {
+            // Alter one element in the mat array at a time and expect the hash code to change and equals to return false.
+            for (double alteration : new double[] { -100, -10, -Math.PI, -0.1, 0.3, Math.E, 123 })
+            {
+                Transform3d other = new Transform3d();
+                Field matrix = other.getClass().getDeclaredField("mat");
+                matrix.setAccessible(true);
+                double[] matrixValues = (double[]) matrix.get(other);
+                matrixValues[index] = alteration;
+                assertNotEquals("Modified transform should not be equals", reference, other);
+                assertNotEquals("HashCode should be different (or it does not take all elements of the internal array "
+                        + "into account", reference.hashCode(), other.hashCode());
+            }
+        }
+        assertTrue("equal to itself", reference.equals(reference));
+        assertFalse("not equal to null", reference.equals(null));
+        assertFalse("not equal to some other object", reference.equals("nope"));
     }
 
 }

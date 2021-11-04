@@ -2,6 +2,14 @@
   xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.29" date="2021-11-04" 
+            description="Expanded test coverage in djutils-draw">
+      <action dev="pknoppers" type="add">
+        The Transform2d and Transform3d were only partially tested because it was rather hard to set individual elements 
+        of the internal matrix. The new tests work around that problem using reflection.
+      </action>
+    </release>
+
     <release version="1.06.28" date="2021-09-16" 
             description="Additions to djutils-draw">
       <action dev="pknoppers" type="add">
