@@ -9,6 +9,8 @@ import java.io.Writer;
 import org.djutils.data.DataTable;
 import org.djutils.data.serialization.TextSerializationException;
 
+import de.siegmar.fastcsv.writer.LineDelimiter;
+
 /**
  * TSVData takes care of reading and writing of table data in Tab-Separated-Value format. The class can be used, e.g., as
  * follows:
@@ -20,7 +22,7 @@ import org.djutils.data.serialization.TextSerializationException;
  * TSVData.writeData(writer, metaWriter, dataTable);
  * </pre>
  * 
- * Copyright (c) 2020-2021 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2020-2022 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>. <br>
@@ -52,7 +54,7 @@ public final class TSVData
     public static void writeData(final Writer writer, final Writer metaWriter, final DataTable dataTable)
             throws IOException, TextSerializationException
     {
-        CSVData.writeData(writer, metaWriter, dataTable, '\t', '\u0000', '\\', "\n");
+        CSVData.writeData(writer, metaWriter, dataTable, '\t', '\u0000', LineDelimiter.CRLF);
     }
 
     /**
@@ -98,7 +100,7 @@ public final class TSVData
     public static DataTable readData(final Reader reader, final Reader metaReader)
             throws IOException, TextSerializationException
     {
-        return CSVData.readData(reader, metaReader, '\t', '\u0000', '\\', "\n");
+        return CSVData.readData(reader, metaReader, '\t', '\u0000');
     }
 
     /**

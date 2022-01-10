@@ -6,7 +6,7 @@ import java.util.Calendar;
  * The TimestampedTally interface defines the methods that a timestamped tally should implement in addition to the standard
  * weighted tally. Timestamps can, e.g., be Number based or Calendar based.
  * <p>
- * Copyright (c) 2020-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2020-2022 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>

@@ -1,25 +1,31 @@
-<document xmlns="http://maven.apache.org/changes/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
+<document xmlns="http://maven.apache.org/changes/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.06.29" date="2021-11-04" 
-            description="Expanded test coverage in djutils-draw">
+    <release version="1.06.29" date="2022-01-10" description="csv reading / writing; expanded test coverage in djutils-draw">
       <action dev="pknoppers" type="add">
         The Transform2d and Transform3d were only partially tested because it was rather hard to set individual elements 
         of the internal matrix. The new tests work around that problem using reflection.
       </action>
+      <action dev="averbraeck" type="update">
+        Version 2 of the fastcsv utility has been used in djutils-data. This version makes a difference between csv
+        files with (using named columns) and without (using numbered columns) headers.
+      </action>
+      <action dev="averbraeck" type="update">
+        pom file updated with pluginRepositories tag.
+      </action>
+      <action dev="averbraeck" type="update">
+        Copyright year updated to 2022.
+      </action>
     </release>
 
-    <release version="1.06.28" date="2021-09-16" 
-            description="Additions to djutils-draw">
+    <release version="1.06.28" date="2021-09-16" description="Additions to djutils-draw">
       <action dev="pknoppers" type="add">
         PolyLine2d and PolyLine3d now have additional constructors that allow construction of a one-point PolyLine that has
         a sense of direction at that point.
       </action>
     </release>
 
-    <release version="1.06.27" date="2021-08-17" 
-            description="Fix and add in djutils-stats">
+    <release version="1.06.27" date="2021-08-17" description="Fix and add in djutils-stats">
       <action dev="pknoppers" type="fix">
         DistNormalTable getCumulativeProbability ran into problems when sigma == 0 and x very close to mu.
       </action>
@@ -28,8 +34,7 @@
       </action>
     </release>
 
-    <release version="1.06.26" date="2021-07-19" 
-            description="Surface3d class in djutils-draw, FixedBinsAccumulator in djutils-stats">
+    <release version="1.06.26" date="2021-07-19" description="Surface3d class in djutils-draw, FixedBinsAccumulator in djutils-stats">
       <action dev="pknoppers" type="add">
         Initial version of FixedBinsAccumulator (and unit test) in djutils-stats.
       </action>
@@ -37,18 +42,18 @@
         Initial version of a 3D surface encoding class (and unit test).
       </action>
     </release>
-    
+
     <release version="1.06.26" date="2021-06-22" description="Better precondition checking in djutils-draw">
       <action dev="pknoppers" type="fix">
-        Various constructors now have explicit tests for null pointers (and the unit tests verify that these exceptions 
+        Various constructors now have explicit tests for null pointers (and the unit tests verify that these exceptions
         happen when expected).
       </action>
     </release>
-    
+
     <release version="1.06.25" date="2021-06-14" description="Added 2d convex hull implementation to djutils-draw">
       <action dev="pknoppers" type="add">
-        The new class contains only static methods that return a Polygon2d object on success. If the result would be a 
-        single point; the implementations throw a DrawRuntimeException because a single point does not make a valid 
+        The new class contains only static methods that return a Polygon2d object on success. If the result would be a
+        single point; the implementations throw a DrawRuntimeException because a single point does not make a valid
         Polygon2d.
       </action>
       <action dev="pknoppers" type="change">
@@ -56,18 +61,18 @@
         hardware this will be horribly slow.
       </action>
     </release>
-    
+
     <release version="1.06.24" date="2021-04-08" description="Java generic hierarchy of draw classes modified">
       <action dev="pknoppers" type="update">
         Major change in the djutils-draw generics hierarchy. There is no longer a Space interface and not longer a Space2d,
         or Space3d class. What was in there has been moved to the Drawable interfaces.
       </action>
       <action dev="averbraeck" type="fix">
-        Fixed a small issues in the Try.testFail() method, where it would not catch an exception that is thrown 
+        Fixed a small issues in the Try.testFail() method, where it would not catch an exception that is thrown
         when no allowed exception was specified.
       </action>
     </release>
-    
+
     <release version="1.06.23" date="2021-03-21" description="Changed filtering instantiate method into a constructor">
       <action dev="pknoppers" type="update">
         The PolyLine2d and PolyLine3d classes had static methods to construct a new instance while filtering out
