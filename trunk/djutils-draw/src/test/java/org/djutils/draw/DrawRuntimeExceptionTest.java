@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * Test the constructors for ValueException.
  * <p>
- * Copyright (c) 2013-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2013-2022 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djunits.org/docs/license.html">DJUNITS License</a>.
  * <p>
  * @version $Revision: 847 $, $LastChangedDate: 2020-01-17 15:57:08 +0100 (Fri, 17 Jan 2020) $, by $Author: pknoppers $, initial

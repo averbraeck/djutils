@@ -13,7 +13,7 @@ import org.djutils.event.ref.ReferenceType;
  * as the key, and a List of References (weak or strong) to the Listeners. The class uses a helper class EventProducerImpl to do
  * the real work, and avoid code duplication.
  * <p>
- * Copyright (c) 2002-2021 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2002-2022 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>. This class was

@@ -12,7 +12,7 @@ import org.junit.Test;
 /**
  * Test the B&eacute;zier class.
  * <p>
- * Copyright (c) 2013-2021 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2013-2022 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://opentrafficsim.org/docs/v2/license.html">OpenTrafficSim License</a>.
  * </p>
  * @version $Revision$, $LastChangedDate$, by $Author$, initial version Jan 2, 2017 <br>
