@@ -43,6 +43,7 @@ import org.djutils.reflection.ClassUtil;
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
  */
+@SuppressWarnings("checkstyle:linelength")
 public final class Throw
 {
     /** private constructor for utility class. */
@@ -387,6 +388,7 @@ public final class Throw
      * @param <O> the Object type to return
      * @return the object that was passed as the first parameter
      */
+    @SuppressWarnings("checkstyle:parameternumber")
     public static <T extends Throwable, O extends Object> O when(final O object, final boolean condition,
             final Class<T> throwableClass, final String message, final Object arg1, final Object arg2, final Object arg3,
             final Object... args) throws T
@@ -542,4 +544,41 @@ public final class Throw
         return object;
     }
 
+    /**
+     * Throw an unchecked exception for a method with a fixed signature (e.g., extending a method from a library that cannot be
+     * changed), without having to declare the exception, which can be impossible when extending a method. The typical use is:
+     * 
+     * <pre>
+     *   &#64;Override
+     *   public void someMethod() {  
+     *     try {
+     *       // some code that throws e.g., an IOException
+     *     } catch IOException e {
+     *       Throw.throwUnchecked(e);
+     *     }  
+     *   }
+     * </pre>
+     * 
+     * From: <a href="http://blog.ragozin.info/2011/10/java-how-to-throw-undeclared-checked.html" target="_blank">
+     * http://blog.ragozin.info/2011/10/java-how-to-throw-undeclared-checked.html</a> as mentioned in <a href=
+     * "https://stackoverflow.com/questions/11942946/how-to-throw-an-exception-when-your-method-signature-doesnt-allow-to-throw-exce"
+     * target="_blank">
+     * https://stackoverflow.com/questions/11942946/how-to-throw-an-exception-when-your-method-signature-doesnt-allow-to-throw-exce</a>.
+     * @param e Throwavble; the exception of Throwable to throw in an unchecked manner
+     */
+    public static void throwUnchecked(final Throwable e)
+    {
+        Throw.<RuntimeException>throwAny(e);
+    }
+
+    /**
+     * @param <E> The exception class
+     * @param e Throwable; The throwable
+     * @throws E The exception to throw
+     */
+    @SuppressWarnings("unchecked")
+    private static <E extends Throwable> void throwAny(final Throwable e) throws E
+    {
+        throw (E) e;
+    }
 }
