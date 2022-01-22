@@ -171,14 +171,14 @@ public final class PerformanceTests
 
     /**
      * Implementation of hypot taken from https://stackoverflow.com/questions/3764978/why-hypot-function-is-so-slow .
-     * @param x double; x
-     * @param y double; y
+     * @param px double; x
+     * @param py double; y
      * @return double; the hypot of x, and y
      */
-    public static double hypotA(double x, double y)
+    public static double hypotA(final double px, final double py)
     {
-        x = Math.abs(x);
-        y = Math.abs(y);
+        double x = Math.abs(px);
+        double y = Math.abs(py);
         if (y < x)
         {
             double a = x;
@@ -225,27 +225,27 @@ public final class PerformanceTests
 
     /**
      * <b>hypot</b>.
-     * @param x double; x
-     * @param y double; y
+     * @param px double; x
+     * @param py double; y
      * @return sqrt(x*x +y*y) without intermediate overflow or underflow.
      * Note {@link Math#hypot} is unnecessarily slow. This returns the identical result to Math.hypot with reasonable run times
      *       (~40 nsec vs. 800 nsec).
      *       The logic for computing z is copied from "Freely Distributable Math Library" fdlibm's e_hypot.c. This minimizes
      *       rounding error to provide 1 ulb accuracy.
      */
-    public static double hypotB(double x, double y)
+    public static double hypotB(final double px, final double py)
     {
-        if (Double.isInfinite(x) || Double.isInfinite(y))
+        if (Double.isInfinite(px) || Double.isInfinite(py))
         {
             return Double.POSITIVE_INFINITY;
         }
-        if (Double.isNaN(x) || Double.isNaN(y))
+        if (Double.isNaN(px) || Double.isNaN(py))
         {
             return Double.NaN;
         }
 
-        x = Math.abs(x);
-        y = Math.abs(y);
+        double x = Math.abs(px);
+        double y = Math.abs(py);
 
         if (x < y)
         {

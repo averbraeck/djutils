@@ -192,14 +192,14 @@ public final class TestHypotAtan
 
     /**
      * Implementation of hypot taken from https://stackoverflow.com/questions/3764978/why-hypot-function-is-so-slow.
-     * @param x double; x
-     * @param y double; y
+     * @param px double; x
+     * @param py double; y
      * @return double; the hypot of x, and y
      */
-    public static double hypotA(double x, double y)
+    public static double hypotA(final double px, final double py)
     {
-        x = Math.abs(x);
-        y = Math.abs(y);
+        double x = Math.abs(px);
+        double y = Math.abs(py);
         if (y < x)
         {
             double a = x;
@@ -411,7 +411,7 @@ public final class TestHypotAtan
      * @return atan2(y, x)
      */
     @SuppressWarnings("checkstyle:needbraces")
-    private static double atan2(double y, double x)
+    private static double atan2(final double y, final double x)
     {
         double z;
         int k, m, hx, hy, ix, iy;
@@ -430,7 +430,7 @@ public final class TestHypotAtan
         m = ((hy >> 31) & 1) | ((hx >> 30) & 2); /* 2*sign(x)+sign(y) */
 
         /* when y = 0 */
-        if ((iy | ly) == 0)
+        if ((iy | ly) == 0) 
         {
             switch (m)
             {
@@ -648,7 +648,7 @@ public final class TestHypotAtan
      * @param x x
      * @return __LO
      */
-    private static int __LO(double x)
+    private static int __LO(final double x)
     {
         long transducer = Double.doubleToRawLongBits(x);
         return (int) transducer;
@@ -660,7 +660,7 @@ public final class TestHypotAtan
      * @param low lo
      * @return __LO
      */
-    private static double __LO(double x, int low)
+    private static double __LO(final double x, final int low)
     {
         long transX = Double.doubleToRawLongBits(x);
         return Double.longBitsToDouble((transX & 0xFFFF_FFFF_0000_0000L) | (low & 0x0000_0000_FFFF_FFFFL));
@@ -671,7 +671,7 @@ public final class TestHypotAtan
      * @param x x
      * @return __HI
      */
-    private static int __HI(double x)
+    private static int __HI(final double x)
     {
         long transducer = Double.doubleToRawLongBits(x);
         return (int) (transducer >> 32);
@@ -683,7 +683,7 @@ public final class TestHypotAtan
      * @param high hi
      * @return __HI
      */
-    private static double __HI(double x, int high)
+    private static double __HI(final double x, final int high)
     {
         long transX = Double.doubleToRawLongBits(x);
         return Double.longBitsToDouble((transX & 0x0000_0000_FFFF_FFFFL) | (((long) high)) << 32);
@@ -693,7 +693,7 @@ public final class TestHypotAtan
      * @param x param
      * @return atan(x)
      */
-    static double fastAtan(double x)
+    static double fastAtan(final double x)
     {
         double u = 1.3654703620217001424e-2;
         u = u * x + -1.0046251337641932974e-1;
