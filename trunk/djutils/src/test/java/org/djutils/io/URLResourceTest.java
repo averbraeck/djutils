@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import org.djutils.exceptions.Try;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,6 +1,17 @@
 <document xmlns="http://maven.apache.org/changes/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.30" date="2022-01-22" description="Throw.throwUnchecked() method added">
+      <action dev="averbraeck" type="update">
+        The Throw.throwUnchecked() method has been added to throw exceptions in case these exceptions cannot be part of
+        the signature of the method, e.g., because the class of the method extends a method that does not have the
+        exception in its signature and cannot be changed.
+      </action>
+      <action dev="averbraeck" type="remove">
+        The float128 package has been removed as it is still unfinished. It might get its own djutils project in the end. 
+      </action>
+    </release>
+
     <release version="1.06.29" date="2022-01-10" description="csv reading / writing; expanded test coverage in djutils-draw">
       <action dev="pknoppers" type="add">
         The Transform2d and Transform3d were only partially tested because it was rather hard to set individual elements 
