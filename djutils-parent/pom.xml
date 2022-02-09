@@ -46,7 +46,7 @@
     <maven.compiler.target>${jdk.version}</maven.compiler.target>
 
     <djutils.version>${project.version}</djutils.version>
-    <picocli.version>4.1.4</picocli.version>
+    <picocli.version>4.6.2</picocli.version>
     <djunits.version>4.01.08</djunits.version>
     <tinylog.version>1.3.6</tinylog.version>
     <junit.version>4.12</junit.version>
@@ -258,7 +258,7 @@
             <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
             <link>https://download.java.net/media/java3d/javadoc/1.5.1/</link>
             <link>https://tinylog.org/v1/javadoc/</link>
-            <link>https://picocli.info/apidocs/</link>
+            <link>https://github.com/remkop/picocli/tree/main/docs/apidocs/</link>
           </links>
           <offlineLinks>
             <offlineLink>
@@ -434,7 +434,7 @@
             <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
             <link>https://download.java.net/media/java3d/javadoc/1.5.1/</link>
             <link>https://tinylog.org/v1/javadoc/</link>
-            <link>https://picocli.info/apidocs/</link>
+            <link>https://github.com/remkop/picocli/tree/main/docs/apidocs/</link>
           </links>
           <offlineLinks>
             <offlineLink>
