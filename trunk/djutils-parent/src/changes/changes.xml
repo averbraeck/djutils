@@ -1,6 +1,12 @@
 <document xmlns="http://maven.apache.org/changes/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.06.31" date="2022-02-08" description="djunits update">
+      <action dev="averbraeck" type="update">
+        Bumped djunits version to 4.01.08, and picocli to 4.6.2. Changed picocli javadoc location to github.
+      </action>
+    </release>
+    
     <release version="1.06.30" date="2022-01-22" description="Throw.throwUnchecked() method added">
       <action dev="averbraeck" type="update">
         The Throw.throwUnchecked() method has been added to throw exceptions in case these exceptions cannot be part of
