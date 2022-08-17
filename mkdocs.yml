@@ -1,0 +1,21 @@
+site_name: DJUTILS
+site_url: https://djutils.org/
+site_favicon: images/favicon.png
+copyright: (c) 2015-2022 Delft University of Technology
+
+theme: readthedocs
+
+markdown_extensions:
+  - admonition
+  
+extra_css:
+  - custom.css
+    
+nav:
+  - Home: index.md
+  - DJUNITS: 
+      - Introduction: djutils/index.md
+      - DecoderDumper: djutils/decoder-dumper.md
+      - Immutable Collections: djutils/immutable-collections.md
+  - DJUTILS documentation: https://djutils.org/docs/current/index.html
+  - DJUTILS API: https://djuils.org/docs/current/apidocs/index.html
