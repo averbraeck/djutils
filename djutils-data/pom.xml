@@ -1,15 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
+  
   <parent>
     <groupId>org.djutils</groupId>
     <artifactId>djutils-parent</artifactId>
-    <version>1.06.31</version>
-    <relativePath>../djutils-parent/pom.xml</relativePath>
+    <version>2.00.00</version>
   </parent>
-
+  
   <artifactId>djutils-data</artifactId>
-
+  
   <name>DJUTILS sampling / output data storage</name>
   <description>DJUTILS sampling and output data storage utilities</description>
 
@@ -47,4 +46,5 @@
     </dependency>
 
   </dependencies>
+
 </project>

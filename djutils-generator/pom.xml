@@ -1,67 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
-  <groupId>djutils-generator</groupId>
-  <artifactId>djutils-generator</artifactId>
-  <version>1.0</version>
-
-  <name>DJUTILS parent pom file and development utilities</name>
-  <description>DJUTILS parent pom file and development utilities</description>
-
-  <url>https://djutils.org</url>
-
-  <organization>
-    <name>Delft University of Technology</name>
-    <url>https://www.tudelft.nl</url>
-  </organization>
-
-  <inceptionYear>2018</inceptionYear>
-
-  <properties>
-    <jdk.version>1.8</jdk.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>${jdk.version}</maven.compiler.source>
-    <maven.compiler.target>${jdk.version}</maven.compiler.target>
-    <maven.compiler.version>3.8.1</maven.compiler.version>
-    <maven.resources.version>3.2.0</maven.resources.version>
-  </properties>
   
-    <!-- Build Settings -->
-
-  <build>
-    <directory>target</directory>
-    <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-    <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
-    <outputDirectory>${basedir}/target/classes</outputDirectory>
-    <testOutputDirectory> ${basedir}/target/test-classes</testOutputDirectory>
-    <resources>
-      <resource>
-        <directory>${basedir}/src/main/resources</directory>
-      </resource>
-    </resources>
-
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven.compiler.version}</version>
-        <configuration>
-          <source>${jdk.version}</source>
-          <target>${jdk.version}</target>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>${maven.resources.version}</version>
-        <configuration>
-          <encoding>${project.encoding}</encoding>
-        </configuration>
-      </plugin>
-
-    </plugins>
-  </build>
+  <parent>
+    <groupId>org.djutils</groupId>
+    <artifactId>djutils-parent</artifactId>
+    <version>2.00.00</version>
+  </parent>
+  
+  <artifactId>djutils-generator</artifactId>
+  
+  <name>Helper classes for building DJUTILS</name>
+  <description>Helper classes for building DJUTILS</description>
 
   <dependencies>
     <dependency>
@@ -75,5 +24,5 @@
       <version>3.6.25</version>
     </dependency>
   </dependencies>
-
+  
 </project>

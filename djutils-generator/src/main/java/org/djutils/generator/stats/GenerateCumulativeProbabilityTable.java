@@ -4,7 +4,6 @@ import org.apache.commons.math3.distribution.NormalDistribution;
 
 /**
  * Generate the cumulative probability table.
- * </p>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
 public class GenerateCumulativeProbabilityTable
