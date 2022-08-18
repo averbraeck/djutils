@@ -3,8 +3,12 @@ site_url: https://djutils.org/
 site_favicon: images/favicon.png
 copyright: (c) 2015-2022 Delft University of Technology
 
-theme: readthedocs
-
+theme:
+    name: readthedocs
+    navigation_depth: 4
+    collapse_navigation: True
+    titles_only: False
+    
 markdown_extensions:
   - admonition
   
@@ -29,9 +33,8 @@ nav:
       - DJUTILS documentation: https://djutils.org/docs/current/djutils/index.html
       - DJUTILS API: https://djuils.org/docs/current/apidocs/djutils/index.html
   - DJUTILS-CLI:
-      - Introduction: djutils-cli/index.html
-      - DJUTILS-CLI usage: djutils-cli/usage.html
+      - Introduction: djutils-cli/index.md
+      - DJUTILS-CLI usage: djutils-cli/usage.md
       - DJUTILS-CLI documentation: https://djutils.org/docs/current/djutils-cli/index.html
       - DJUTILS-CLI API: https://djuils.org/docs/current/apidocs/djutils-cli/index.html
-  - DJUTILS documentation: https://djutils.org/docs/current/index.html
-  - DJUTILS API: https://djuils.org/docs/current/apidocs/index.html
+
