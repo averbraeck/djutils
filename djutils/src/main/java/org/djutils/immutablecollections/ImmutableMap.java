@@ -107,7 +107,7 @@ public interface ImmutableMap<K, V> extends Serializable
      * @throws ClassCastException if the key is of an inappropriate type for this map
      * @throws NullPointerException if the specified key is null and this map does not permit null keys
      */
-    default V getOrDefault(Object key, V defaultValue)
+    default V getOrDefault(final Object key, final V defaultValue)
     {
         V v = get(key);
         return ((v != null) || containsKey(key)) ? v : defaultValue;
@@ -123,7 +123,7 @@ public interface ImmutableMap<K, V> extends Serializable
      * @throws NullPointerException if the specified action is null
      * @throws ConcurrentModificationException if an entry is found to be removed during iteration
      */
-    default void forEach(BiConsumer<? super K, ? super V> action)
+    default void forEach(final BiConsumer<? super K, ? super V> action)
     {
         Objects.requireNonNull(action);
         for (ImmutableEntry<K, V> entry : entrySet())
@@ -558,6 +558,7 @@ public interface ImmutableMap<K, V> extends Serializable
                     c2.getValue());
         }
 
+        /** {@inheritDoc} */
         @Override
         public String toString()
         {

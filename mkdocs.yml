@@ -15,7 +15,7 @@ extra_css:
     
 nav:
   - Home: index.md
-  - DJUTILS: 
+  - DJUTILS project: 
     - Introduction: djutils/index.md
     - DecoderDumper: djutils/decoder-dumper.md
     - Immutable Collections: djutils/immutable-collections.md
@@ -30,10 +30,25 @@ nav:
     - Metadata: djutils/metadata.md 
     - DJUTILS documentation: https://djutils.org/docs/current/djutils/index.html
     - DJUTILS API: https://djuils.org/docs/current/apidocs/djutils/index.html
-  - DJUTILS-CLI:
+  - DJUTILS-CLI project:
     - Introduction: djutils-cli/index.md
     - DJUTILS-CLI usage: djutils-cli/usage.md
     - DJUTILS-CLI documentation: https://djutils.org/docs/current/djutils-cli/index.html
-    - DJUTILS-CLI API: https://djuils.org/docs/current/apidocs/djutils-cli/index.html
-
+    - DJUTILS-CLI API: https://djutils.org/docs/current/djutils-cli/apidocs/index.htmll
+  - DJUTILS-SERIALIZATION:
+    - Introduction: djutils-serialization/index.md
+    - Coding types: djutils-serialization/coding-types.md
+    - 'Primitive types (#0 - #8)': djutils-serialization/primitive-types.md
+    - 'String types (#9 - #10)': djutils-serialization/string-types.md
+    - 'Array types (#11 - #17)': djutils-serialization/array-types.md
+    - 'Matrix types (#18 - #24)': djutils-serialization/matrix-types.md
+    - Coding of units: djutils-serialization/coding-units.md
+    - Display types for units: djutils-serialization/display-types.md
+    - 'Scalar types with unit (#25 - #26)': djutils-serialization/scalar-units.md 
+    - 'Vector types with unit (#27 - #28)': djutils-serialization/vector-units.md 
+    - 'Matrix types with unit (#29 - #32)': djutils-serialization/matrix-units.md 
+    - SERIALIZATION documentation: https://djutils.org/docs/current/djutils-serialization/index.html
+    - SERIALIZATION API: https://djutils.org/docs/current/djutils-serialization/apidocs/index.html
+  - DJUTILS-DATA project:
+    - Introduction: djutils-data/index.md
    

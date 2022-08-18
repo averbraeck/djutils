@@ -1,4 +1,4 @@
-## DJUTILS-CLI Usage
+# DJUTILS-CLI Usage
 
 ## Introduction
 
