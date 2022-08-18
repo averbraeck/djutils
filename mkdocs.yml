@@ -9,9 +9,15 @@ theme:
     
 markdown_extensions:
   - admonition
+
+# plugins:
+#   - section-index
   
 extra_css: 
   - css/custom.css
+  
+extra_javascript:
+  - js/collapse_menu.js
     
 nav:
   - Home: index.md
