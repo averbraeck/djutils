@@ -29,7 +29,7 @@ Which outputs:
 
 No lines are output for addresses below the initial offset of 123. The first output line starts with address 00000070 (112 decimal). Then 11 placeholders are output for bytes 112 up to 122 and the first byte of `bytes` is output in the 12th position of the line with address 00000070.
 
-If the output needs to be sent to some stream, a Dumper must be explicity instantiated and then manipulated to change the output device. Output is buffered until a line is complete, or until the user explicitly forces all buffered data to be output.
+If the output needs to be sent to some stream, a Dumper must be explicitly instantiated and then manipulated to change the output device. Output is buffered until a line is complete, or until the user explicitly forces all buffered data to be output.
 
 ```java
 byte[] bytes = new byte[] { 10, 20, 0x04, (byte) 0xff, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm' };
