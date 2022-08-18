@@ -20,10 +20,10 @@ A complex number can be instantiated with a straighforward constructor:
 
 When run, this outputs:
 
-<pre>
+```text
 Complex [re=123.456, im=-345.678]
 Complex [re=543.21, im=0.0]
-</pre>
+```
 
 The real component can be directly accessed as the `re` field, or through the `getRe()` method. The imaginary component can be directly accessed as the `im` field, or through the `getIm()` method. The norm (or radius, or absolute value) can be obtained with the `norm()` method and the phi (or phase, or angle) with the `phi()` method:
 
@@ -34,9 +34,9 @@ The real component can be directly accessed as the `re` field, or through the `g
 ```
 Outputs:
 
-<pre>
+```text
 re=123.456, im=-345.678, getRe:123.456, getIm:-345.678, norm:367.0622067443065, phi:-1.2277734859253564
-</pre>
+```
 
 As you might gather from this example, the value of phi is in radians.
 
@@ -55,13 +55,13 @@ The Complex class defines a couple of useful constants: ZERO, ONE, MINUS_ONE, I 
 
 Outputs:
 
-<pre>
+```text
 ZERO=Complex [re=0.0, im=0.0]
 ONE=Complex [re=1.0, im=0.0]
 MINUS_ONE=Complex [re=-1.0, im=0.0]
 I=Complex [re=0.0, im=1.0]
 MINUS_I=Complex [re=0.0, im=-1.0]
-</pre>
+```
 
 
 ## Simple math with complex numbers
@@ -83,7 +83,7 @@ The complex numbers implement the usual binary operations for addition, subtract
 
 Outputs:
 
-<pre>
+```text
 z1=Complex [re=3.0, im=4.0]
 z2=Complex [re=-2.0, im=5.0]
 z1 + z2=Complex [re=1.0, im=9.0]
@@ -92,7 +92,7 @@ z1 * z2=Complex [re=-26.0, im=7.0]
 z1 / z2=Complex [re=0.48275862068965525, im=-0.7931034482758621]
 z1 * I=Complex [re=-4.0, im=3.0]
 I * I=Complex [re=-1.0, im=0.0]
-</pre>
+```
 
 The last line illustrates that the square of I is indeed the real number -1.0;
 

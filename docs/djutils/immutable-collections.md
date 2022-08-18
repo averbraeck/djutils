@@ -25,7 +25,7 @@ An immutable collection embedding a particular collection has the same generic p
 
 The immutable collection package does not provide any protection against modifications of the objects contained in those collections. Whether the contents of immutable collections are prone to change is a property of those objects.
     
-### Example code
+## Example code
 
 This example code creates an ordinary `HashSet` (for Strings) and adds two Strings to it. Then two `ImmutableHashSets` are constructed. The first holds a COPY of the underlying HashSet, the other WRAPS the underlying HashSet.
 
