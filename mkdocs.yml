@@ -22,12 +22,16 @@ nav:
       - Complex math: djutils/complex-math.md
       - Logging helper classes: djutils/logging.md
       - Exception helper classes: djutils/exceptions.md
-      - URLResource class: urlresource.md
-      - Reflection helper classes: reflection.md
-      - Means package: means.md
-      - Metadata: metadata.md 
+      - URLResource class: djutils/urlresource.md
+      - Reflection helper classes: djutils/reflection.md
+      - Means package: djutils/means.md
+      - Metadata: djutils/metadata.md 
       - DJUTILS documentation: https://djutils.org/docs/current/djutils/index.html
       - DJUTILS API: https://djuils.org/docs/current/apidocs/djutils/index.html
-
+  - DJUNITS-CLI:
+      - Introduction: djutils-cli/index.html
+      - DJUTILS-CLI usage: djutils-cli/usage.html
+      - DJUTILS-CLI documentation: https://djutils.org/docs/current/djutils-cli/index.html
+      - DJUTILS-CLI API: https://djuils.org/docs/current/apidocs/djutils-cli/index.html
   - DJUTILS documentation: https://djutils.org/docs/current/index.html
   - DJUTILS API: https://djuils.org/docs/current/apidocs/index.html
