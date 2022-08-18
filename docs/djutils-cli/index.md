@@ -1,6 +1,6 @@
 # DJUTILS-CLI project
 
-## What is in the DJUTILS CLI project?
+### What is in the DJUTILS CLI project?
 
 DJUTILS-CLI makes it easy to extend a Java program with a `public static main()` method into a program with settable parameters and a help screen, so it can be called with these parameters, e.g. as:
 
@@ -16,7 +16,7 @@ private int port;
 ```
 
 
-## Maven use
+### Maven use
 
 Maven is one of the easiest ways to include DJUTILS-CLI in a Java project. The Maven files for DJUTILS-CLI reside at [https://djutils.org/maven](https://djutils.org/maven). When a POM-file is created for the project, the following snippet needs to be included to include DJUTILS:
 
@@ -45,7 +45,7 @@ Right now, the DJUTILS-CLI files are kept on a server at TU Delft, and are not y
 ```
 
 
-## Dependencies
+### Dependencies
 
 DJUTILS is directly dependent on the following packages, which can have further dependencies:
 
@@ -56,6 +56,6 @@ DJUTILS is directly dependent on the following packages, which can have further 
 If the DJUTILS-CLI library is used as a part of a Maven project, all dependencies will be automatically resolved, and the programmer / user does not have to worry about finding the libraries.
 
 
-## Documentation and test reports
+### Documentation and test reports
 
 DJUTILS-CLI documentation and test reports for the current version can be found at [https://djutils.org/docs/current/djutils-cli](https://djutils.org/docs/current/djutils-cli) and the API can be found at [https://djutils.org/docs/current/djutils-cli/apidocs/index.html](https://djutils.org/docs/current/djutils-cli/apidocs/index.html).

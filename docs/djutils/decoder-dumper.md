@@ -9,10 +9,10 @@ System.out.println(HexDumper.hexDumper(bytes));
 
 This outputs:
 
-<pre>
+```text
 00000000: 0a 14 04 ff 61 62 63 64  65 66 67 68 69 6a 6b 6c  ....abcd efghijkl
 00000010: 6d                                                m                
-</pre>
+```
 
 By default, the address of the first byte is 0. This can be overridden by explicitly setting the start address like:
 
@@ -22,10 +22,10 @@ System.out.println(HexDumper.hexDumper(123, bytes));
 
 Which outputs:
 
-<pre>
+```text
 00000070:                                   0a 14 04 ff 61              ....a
 00000080: 62 63 64 65 66 67 68 69  6a 6b 6c 6d              bcdefghi jklm    
-</pre>
+```
 
 No lines are output for addresses below the initial offset of 123. The first output line starts with address 00000070 (112 decimal). Then 11 placeholders are output for bytes 112 up to 122 and the first byte of `bytes` is output in the 12th position of the line with address 00000070.
 
@@ -46,7 +46,7 @@ hexDumper.flush(); // force the two buffered bytes to be output
 ```
 
 This will output seven lines (on the System.err OutputStream):
-<pre>
+```text
 00000000: 0a 14 04 ff 61 62 63 64  65 66 67 68 69 6a 6b 6c  ....abcd efghijkl
 before flush
 00000010: 6d                                                m                
@@ -54,7 +54,7 @@ adding more data
 00000010:    ff fe fd fc fb fa f9  f8 f7 f6 f5 f4 f3 f2 f1   ....... ........
 before 2nd flush
 00000020: f0 ef                                             ..               
-</pre>
+```
 
 Dumpers can easily be created for any output format and any data type. Each Dumper has a list of decoders. At run time, input data (the bytes that are to be decoded) is fed, one byte at a time, to all those decoders in sequence. Each decoder is responsible for constructing its own part of an output line. When any of the decoders signals that an output line must be emitted, the Dumper will collect the constructed output from each of the decoders, concatenate it and output the result (unless suppression of multiple output lines with identical data is on and this output line matches the preceding output line). Six decoders are used in the `HexDumper` in this order:
 * HexAddressDecoder(16)

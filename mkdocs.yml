@@ -4,37 +4,36 @@ site_favicon: images/favicon.png
 copyright: (c) 2015-2022 Delft University of Technology
 
 theme:
-    name: readthedocs
-    navigation_depth: 4
-    collapse_navigation: True
-    titles_only: False
+  name: readthedocs
+  navigation_depth: 1
     
 markdown_extensions:
   - admonition
   
-extra_css:
-  - custom.css
+extra_css: 
+  - css/custom.css
     
 nav:
   - Home: index.md
   - DJUTILS: 
-      - Introduction: djutils/index.md
-      - DecoderDumper: djutils/decoder-dumper.md
-      - Immutable Collections: djutils/immutable-collections.md
-      - Event package: djutils/event.md
-      - Complex numbers: djutils/complex-numbers.md
-      - Complex math: djutils/complex-math.md
-      - Logging helper classes: djutils/logging.md
-      - Exception helper classes: djutils/exceptions.md
-      - URLResource class: djutils/urlresource.md
-      - Reflection helper classes: djutils/reflection.md
-      - Means package: djutils/means.md
-      - Metadata: djutils/metadata.md 
-      - DJUTILS documentation: https://djutils.org/docs/current/djutils/index.html
-      - DJUTILS API: https://djuils.org/docs/current/apidocs/djutils/index.html
+    - Introduction: djutils/index.md
+    - DecoderDumper: djutils/decoder-dumper.md
+    - Immutable Collections: djutils/immutable-collections.md
+    - Event package: djutils/event.md
+    - Complex numbers: djutils/complex-numbers.md
+    - Complex math: djutils/complex-math.md
+    - Logging helper classes: djutils/logging.md
+    - Exception helper classes: djutils/exceptions.md
+    - URLResource class: djutils/urlresource.md
+    - Reflection helper classes: djutils/reflection.md
+    - Means package: djutils/means.md
+    - Metadata: djutils/metadata.md 
+    - DJUTILS documentation: https://djutils.org/docs/current/djutils/index.html
+    - DJUTILS API: https://djuils.org/docs/current/apidocs/djutils/index.html
   - DJUTILS-CLI:
-      - Introduction: djutils-cli/index.md
-      - DJUTILS-CLI usage: djutils-cli/usage.md
-      - DJUTILS-CLI documentation: https://djutils.org/docs/current/djutils-cli/index.html
-      - DJUTILS-CLI API: https://djuils.org/docs/current/apidocs/djutils-cli/index.html
+    - Introduction: djutils-cli/index.md
+    - DJUTILS-CLI usage: djutils-cli/usage.md
+    - DJUTILS-CLI documentation: https://djutils.org/docs/current/djutils-cli/index.html
+    - DJUTILS-CLI API: https://djuils.org/docs/current/apidocs/djutils-cli/index.html
 
+   

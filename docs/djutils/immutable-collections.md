@@ -6,8 +6,8 @@ When a collection is shared between different parties (classes or packages) ther
 
 | Trust relation | Immutable protection | Overhead |
 | ----------------- | ---------------------------- | -------------- |
-| Omni-directional (all holders of the immutable collection see a snapshot of the collection that can never be altered) | COPY | Large |
-| One-directional (holders of the immutable collection see a collection that can be changed, though not by themselves) | WRAP | Small |
+| Omni-directional (all holders of the immutable collection see <br/>a snapshot of the collection that can never be altered) | COPY | Large |
+| One-directional (holders of the immutable collection see a collection <br/>that can be changed, though not by themselves) | WRAP | Small |
 
 The classes in the immutable collections package embed the provided collection or a copy thereof (created at time of construction). The classes implement only those methods of the embedded collection that cannot modify it. The immutable collections can construct an Iterator, however the returned object is an ImmutableIterator that will throw an Exception if the remove method is called.
 
@@ -61,7 +61,7 @@ immutableHashSetThatWraps.remove("String 2"); // does not compile; there is no a
 ```
 When the last four (non-compiling) lines are removed, or commented out, this code can be compiled and run and the output would be:
     
-<pre>
+```text
 normal hash set contains: [String 1, String 2]
 immutable hash set with copy:  ImmutableHashSet [[String 1, String 2]]
 immutable hash set that wraps: ImmutableHashSet [[String 1, String 2]]
@@ -71,6 +71,6 @@ string is String 1
 Exception in thread "main" java.lang.UnsupportedOperationException: remove
   at java.base/java.util.Iterator.remove(Iterator.java:102)
   at org.djutils.immutablecollections.ImmutableCollectionsDemo.main(ImmutableCollectionsDemo.java:41)
-</pre>
+```
     
 The `ImmutableArrayList`, `ImmutableLinkedHashMap`, `ImmutableLinkedHashSet`, `ImmutableTreeMap`, `ImmutableTreeSet` and `ImmutableVector` similarly encapsulate the underlying collection, preventing modification by code that only has access to that Immutable container, or, in those cases where wrapping is not possible, making a copy that cannot even be modified by code that does have access to the underlying collection.

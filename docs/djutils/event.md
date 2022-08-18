@@ -3,6 +3,7 @@
 ## The publish-subscribe mechanism
 
 There are two ways of communication between objects in object-oriented programming languages. According to Booch et al. (1999, Chapter 20):
+
 * **Synchronous communication** implies that the invoker of a communication requests receives an immediate response. Method calls are generally synchronous events, representing the invocation of an operation. When we code: `double y = Math.sin(x)`, the call to the sine-operation is executed immediately. The thread in which the call to `sin(x)` is executed _blocks_ until the request has been completed, and an answer can be returned.
 * **Asynchronous communication** implies that an answer to a call is not immediately requested. An example is the display of a web page with a button, where a user may or may not press the button, or even press it multiple times. In order to get the response from the button, we could _poll_ every millisecond to see if the button was pressed. Apart from this not being very efficient, this will also go wrong when the button is pressed twice in a millisecond interval, or when the user cancels the web page. For this situation, asynchronous communication is a much better solution. The web page registers a place to 'call back' the original thread of execution. When the button is pressed, the web page sends an _Event_ to that callback method, and it can be processed accordingly. Sometimes sending the Event is again an asynchronous message; sometimes it is synchronous (the latter is the case in the event mechanism in DJUNITS).
 
