@@ -13,7 +13,7 @@ extra_css:
     
 nav:
   - Home: index.md
-  - DJUNITS: 
+  - DJUTILS: 
       - Introduction: djutils/index.md
       - DecoderDumper: djutils/decoder-dumper.md
       - Immutable Collections: djutils/immutable-collections.md
@@ -28,7 +28,7 @@ nav:
       - Metadata: djutils/metadata.md 
       - DJUTILS documentation: https://djutils.org/docs/current/djutils/index.html
       - DJUTILS API: https://djuils.org/docs/current/apidocs/djutils/index.html
-  - DJUNITS-CLI:
+  - DJUTILS-CLI:
       - Introduction: djutils-cli/index.html
       - DJUTILS-CLI usage: djutils-cli/usage.html
       - DJUTILS-CLI documentation: https://djutils.org/docs/current/djutils-cli/index.html
