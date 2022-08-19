@@ -60,4 +60,17 @@ nav:
     - Using DataTables: djutils-data/data-tables.md
     - DJUTILS-DATA documentation: https://djutils.org/docs/current/djutils-data/index.html
     - DJUTILS-DATA API: https://djutils.org/docs/current/djutils-data/apidocs/index.htmll
-  
+  - DJUTILS-DRAW project:
+    - Introduction: djutils-draw/index.md
+    - Drawable interface: djutils-draw/drawable.md
+    - Affine transformations: djutils-draw/affine.md
+    - Points: djutils-draw/points.md
+    - Lines: djutils-draw/lines.md
+    - Bounds: djutils-draw/bounds.md
+    - DJUTILS-DRAW documentation: https://djutils.org/docs/current/djutils-draw/index.html
+    - DJUTILS-DRAW API: https://djutils.org/docs/current/djutils-draw/apidocs/index.htmll
+  - DJUTILS-STATS project:
+    - Introduction: djutils-stats/index.md
+    - Summarizers: djutils-stats/summarizers.md
+    - DJUTILS-STATS documentation: https://djutils.org/docs/current/djutils-stats/index.html
+    - DJUTILS-STATS API: https://djutils.org/docs/current/djutils-stats/apidocs/index.htmll
