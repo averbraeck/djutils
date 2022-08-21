@@ -10,9 +10,6 @@ theme:
 markdown_extensions:
   - admonition
 
-# plugins:
-#   - section-index
-  
 extra_css: 
   - css/custom.css
   
