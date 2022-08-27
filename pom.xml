@@ -333,6 +333,7 @@
           </dependency>
         </dependencies>
       </plugin>
+      
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -349,6 +350,12 @@
           </excludes>
           <!-- Make sure every unit test is run as a separate process to avoid static leaks between tests -->
           <forkMode>always</forkMode>
+          <!-- Excludes integration tests when unit tests are run. -->
+          <excludes>
+            <exclude>**/IT*.java</exclude>
+            <exclude>/org/djutils-test-resources/test/Test.class</exclude>
+            <exclude>/org/djutils-test-resources/test folder/Test.class</exclude>
+          </excludes>
         </configuration>
       </plugin>
 
@@ -769,9 +776,9 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:git:git://github.com/averbraeck/djunits.git</connection>
-    <developerConnection>scm:git:ssh://github.com:averbraeck/djunits.git</developerConnection>
-    <url>https://github.com/averbraeck/djunits/tree/master</url>
+    <connection>scm:git:git://github.com/averbraeck/djutils.git</connection>
+    <developerConnection>scm:git:ssh://github.com:averbraeck/djutils.git</developerConnection>
+    <url>https://github.com/averbraeck/djutils/tree/master</url>
   </scm>
 
   <licenses>
