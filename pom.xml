@@ -305,7 +305,7 @@
           </links>
           <additionalJOption>-J-Xmx1024m</additionalJOption>
           <detectJavaApiLink>false</detectJavaApiLink>
-          <detectLinks>true</detectLinks>
+          <detectLinks>false</detectLinks>
           <detectOfflineLinks>true</detectOfflineLinks>
           <show>package</show>
           <stylesheetfile>${basedir}/config/javadoc/stylesheet.css</stylesheetfile>
@@ -547,7 +547,7 @@
             <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
             <link>https://junit.org/junit4/javadoc/4.12/</link>
           </links>
-          <detectLinks>true</detectLinks>
+          <detectLinks>false</detectLinks>
           <detectOfflineLinks>true</detectOfflineLinks>
           <detectJavaApiLink>false</detectJavaApiLink>
           <show>package</show>
