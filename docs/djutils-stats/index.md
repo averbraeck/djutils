@@ -12,33 +12,22 @@ The project consists of four packages:
 
 ## Maven use
 
-Maven is one of the easiest ways to include DJUTILS-SERIALIZATION in a Java project. The Maven files for reside at [https://djutils.org/maven](https://djutils.org/maven). When a POM-file is created for the project, the following snippet needs to be included to include DJUTILS-SERIALIZATION:
+Maven is one of the easiest ways to include DJUTILS-STATS in a Java project. The Maven files for DJUTILS-STATS reside at Maven Central as of version 2.0.0. When a POM-file is created for the project, the following snippet needs to be included to include DJUTILS-STATS:
 
 ```xml
 <dependencies>
   <dependency>
     <groupId>org.djutils</groupId>
-    <artifactId>djutils-serialization</artifactId>
-    <version>1.04.12</version>
+    <artifactId>djutils-stats</artifactId>
+    <version>2.0.1</version>
   </dependency>
-    ... other dependencies go here ...
 </dependencies>
 ```
 
-Of course, the version number (1.04.12 in the above example) needs to be replaced with the version that one wants to include in the project.
+Of course, the version number (2.0.1 in the above example) needs to be replaced with the version that one wants to include in the project.
 
-Right now, the DJUTILS-SERIALIZATION files are kept on a server at TU Delft, and are not yet made available on Maven Central. Therefore, the repository location has to be specified separately in the Maven POM-file:
+DJUTILS-STATS jars before version 2 are kept on a server at TU Delft at [https://djutils.org/maven](https://djutils.org/maven).
 
-```xml
-<repositories>
-  <repository>
-    <name>djutils Public Repository</name>
-    <id>djutils</id>
-    <url>https://djutils.org/maven</url>
-  </repository>
-    ... other repositories go here ...
-</repositories>
-```
 
 
 ## Dependencies
@@ -52,4 +41,6 @@ DJUTILS-STATS is directly dependent on one external package
       <version>3.2</version>
     </dependency>
 ```
+
+This package will automatically be included when djutils-stats is provided as a dependency for a project.
 

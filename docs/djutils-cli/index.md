@@ -18,38 +18,29 @@ private int port;
 
 ## Maven use
 
-Maven is one of the easiest ways to include DJUTILS-CLI in a Java project. The Maven files for DJUTILS-CLI reside at [https://djutils.org/maven](https://djutils.org/maven). When a POM-file is created for the project, the following snippet needs to be included to include DJUTILS:
+Maven is one of the easiest ways to include DJUTILS-CLI in a Java project. The Maven files for DJUTILS-CLI reside at Maven Central as of version 2.0.0. When a POM-file is created for the project, the following snippet needs to be included to include DJUTILS-CLI:
 
 ```xml
 <dependencies>
   <dependency>
     <groupId>org.djutils</groupId>
     <artifactId>djutils-cli</artifactId>
-    <version>1.04.12</version>
+    <version>2.0.1</version>
   </dependency>
 </dependencies>
 ```
 
-Of course, the version number (1.04.12 in the above example) needs to be replaced with the version that one wants to include in the project.
+Of course, the version number (2.0.1 in the above example) needs to be replaced with the version that one wants to include in the project.
 
-Right now, the DJUTILS-CLI files are kept on a server at TU Delft, and are not yet made available on Maven Central. Therefore, the repository location has to be specified separately in the Maven POM-file:
+DJUTILS-CLI jars before version 2 are kept on a server at TU Delft at [https://djutils.org/maven](https://djutils.org/maven).
 
-```xml
-<repositories>
-  <repository>
-    <name>djutils Public Repository</name>
-    <id>djutils</id>
-    <url>https://djutils.org/maven</url>
-  </repository>
-</repositories>
-```
 
 
 ## Dependencies
 
 DJUTILS is directly dependent on the following packages, which can have further dependencies:
 
-* [djutils](https://djutils.org/manual/djutils-project) for generic classes to support djutils-cli.
+* [djutils](https://djutils.org/manual/djutils) for generic classes to support djutils-cli.
 * [djunits](https://djunits.org/manual/) for being able to specify command line parameters with usits, such as `--length=20.5cm`.
 * [picocli](https://picocli.info/) that does the actual work for specifying and parsing the command line parameters
 

@@ -12,32 +12,22 @@ No matter what storage is used, the stored data is accompanied by some meta-data
 
 When in-memory, the data can be read and written using the functions defined in the java Interface. It is not possible to delete particular records. Of course, an entire in-memory table can be deleted by dropping all references to it (and letting the garbage collector do its work). A table on disk can be deleted by deleting the file(s).
 
+
 ## Maven use
 
-Maven is one of the easiest ways to include DJUTILS-DATA in a Java project. The Maven files for reside at [https://djutils.org/maven](https://djutils.org/maven). When a POM-file is created for the project, the following snippet needs to be included to include DJUTILS-DATA:
+Maven is one of the easiest ways to include DJUTILS-DATA in a Java project. The Maven files for DJUTILS-DATA reside at Maven Central as of version 2.0.0. When a POM-file is created for the project, the following snippet needs to be included to include DJUTILS-DATA:
 
 ```xml
 <dependencies>
   <dependency>
     <groupId>org.djutils</groupId>
     <artifactId>djutils-data</artifactId>
-    <version>1.04.12</version>
+    <version>2.0.1</version>
   </dependency>
-    ... other dependencies go here ...
 </dependencies>
 ```
 
-Of course, the version number (1.04.12 in the above example) needs to be replaced with the version that one wants to include in the project.
+Of course, the version number (2.0.1 in the above example) needs to be replaced with the version that one wants to include in the project.
 
-Right now, the DJUTILS-DATA files are kept on a server at TU Delft, and are not yet made available on Maven Central. Therefore, the repository location has to be specified separately in the Maven POM-file:
+DJUTILS-DATA jars before version 2 are kept on a server at TU Delft at [https://djutils.org/maven](https://djutils.org/maven).
 
-```xml
-<repositories>
-  <repository>
-    <name>djutils Public Repository</name>
-    <id>djutils</id>
-    <url>https://djutils.org/maven</url>
-  </repository>
-    ... other repositories go here ...
-</repositories>
-```
