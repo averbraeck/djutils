@@ -20,20 +20,10 @@
       <item name="djutils-draw" href="https://djutils.org/docs/${version}/djutils-draw/index.html" />
     </menu>
 
-    <menu name="API">
-      <item name="JavaDocs" href="apidocs/index.html" target="_blank" />
-    </menu>
-
     <menu name="PROJECT REPORTS">
       <item name="Reports" href="project-reports.html" />
       <item name="Source Xref" href="xref/index.html" target="_blank" />
-      <item name="Test JavaDocs" href="testapidocs/index.html" target="_blank" />
       <item name="Test Xref" href="xref-test/index.html" target="_blank" />
-      <item name="Checkstyle" href="checkstyle.html" />
-      <item name="Surefire report" href="surefire-report.html" />
-      <item name="JaCoCo" href="jacoco/index.html" target="_blank" />
-      <item name="Tag List" href="taglist.html" />
-      <item name="SpotBugs" href="spotbugs.html" />
       <item name="CPD" href="cpd.html" />
       <item name="PMD" href="pmd.html" />
     </menu>
@@ -41,7 +31,6 @@
     <menu name="PROJECT INFO">
       <item name="About" href="index.html" />
       <item name="Project Summary" href="summary.html" />
-      <item name="Dependencies" href="dependencies.html" />
       <item name="Project Team" href="team.html" />
       <item name="Project License" href="https://djutils.org/docs/${version}/license.html" />
       <item name="Versions + Changes" href="changes-report.html" />
@@ -53,7 +42,7 @@
       <item name="SIM0MQ" href="https://sim0mq.org" target="_blank" />
       <item name="DSOL" href="https://simulation.tudelft.nl/dsol/3.0/dsol-core/index.html" target="_blank" />
       <item name="OpenTrafficSim" href="https://opentrafficsim.org" target="_blank" />
-      <item name="DITTLab" href="https://dittlab.tudelft.nl" target="_blank" />
+      <item name="DITTLab" href="https://www.tudelft.nl/citg/dittlab" target="_blank" />
       <item name="Simulation@TU Delft" href="https://simulation.tudelft.nl" target="_blank" />
       <item name="About DJUTILS" href="index.html" />
     </menu>
