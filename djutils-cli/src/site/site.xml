@@ -43,7 +43,7 @@
       <item name="Project Summary" href="summary.html" />
       <item name="Dependencies" href="dependencies.html" />
       <item name="Project Team" href="team.html" />
-      <item name="Project License" href="licenses.html" />
+      <item name="Project License" href="https://djutils.org/docs/${version}/license.html" />
       <item name="Versions + Changes" href="changes-report.html" />
     </menu>
 

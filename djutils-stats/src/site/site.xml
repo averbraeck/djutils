@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="${artifactId} ${version}" xmlns="http://maven.apache.org/DECORATION/1.6.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0 http://maven.apache.org/xsd/decoration-1.6.0.xsd">
+<project name="${artifactId} ${version}" xmlns="http://maven.apache.org/DECORATION/1.6.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0 http://maven.apache.org/xsd/decoration-1.6.0.xsd">
 
   <publishDate position="left" format="dd-MM-yyyy hh:mm" />
 
@@ -36,13 +37,13 @@
       <item name="CPD" href="cpd.html" />
       <item name="PMD" href="pmd.html" />
     </menu>
-
+      
     <menu name="PROJECT INFO">
       <item name="About" href="index.html" />
       <item name="Project Summary" href="summary.html" />
       <item name="Dependencies" href="dependencies.html" />
       <item name="Project Team" href="team.html" />
-      <item name="Project License" href="licenses.html" />
+      <item name="Project License" href="https://djutils.org/docs/${version}/license.html" />
       <item name="Versions + Changes" href="changes-report.html" />
     </menu>
 
