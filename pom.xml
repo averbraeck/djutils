@@ -458,7 +458,7 @@
         <artifactId>maven-site-plugin</artifactId>
         <version>${maven.site.version}</version>
         <configuration>
-          <chmod>true</chmod>
+          <chmod>false</chmod>
           <inputEncoding>UTF-8</inputEncoding>
           <outputEncoding>UTF-8</outputEncoding>
           <!-- templateFile>src/site/site.vm</templateFile -->
