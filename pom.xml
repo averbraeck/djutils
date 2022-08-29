@@ -33,7 +33,7 @@
 
     <djutils.version>${project.version}</djutils.version>
     <picocli.version>4.6.3</picocli.version>
-    <djunits.version>5.0.0</djunits.version>
+    <djunits.version>5.0.1</djunits.version>
     <tinylog.version>1.3.6</tinylog.version>
     <junit.version>4.12</junit.version>
     <jakarta.annotation.version>2.1.1</jakarta.annotation.version>
