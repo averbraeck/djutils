@@ -21,7 +21,6 @@
     <module>djutils-cli</module>
     <module>djutils-data</module>
     <module>djutils-draw</module>
-    <module>djutils-generator</module>
     <module>djutils-serialization</module>
     <module>djutils-stats</module>
   </modules>
