@@ -462,7 +462,6 @@
           <relativizeDecorationLinks>false</relativizeDecorationLinks>
           <inputEncoding>UTF-8</inputEncoding>
           <outputEncoding>UTF-8</outputEncoding>
-          <!-- templateFile>src/site/site.vm</templateFile -->
         </configuration>
         <executions>
           <execution>
@@ -502,12 +501,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
         <version>${maven.pmd.version}</version>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-changes-plugin</artifactId>
-        <version>${maven.changes.version}</version>
       </plugin>
 
     </plugins>
