@@ -1,6 +1,6 @@
 # DJUTILS - Delft Java Utilities projects
 
-DJUTILS is a set of Java classes that are used by other TU Delft projects such as [DSOL](https://simulation.tudelft.nl/dsol/manual/), [OpenTrafficSim](https://opentrafficsim.org/docs/current/), [Sim0MQ](https://sim0mq.org/), [GSCG](https://gscg.org/), and others. The DJUTILS projects in this main group import no, or very few external packages.
+DJUTILS is a set of Java classes that are used by other TU Delft projects such as [DSOL](https://simulation.tudelft.nl/dsol/manual/), [OpenTrafficSim](https://opentrafficsim.org/docs/latest/), [Sim0MQ](https://sim0mq.org/), [GSCG](https://gscg.org/), and others. The DJUTILS projects in this main group import no, or very few external packages.
 
 DJUTILS is a highly diverse software collection. All of this software has in common that it is written in Java and that the writers/designers believe that it can (and should) be reused in other projects. The software is organized in packages
 
@@ -19,6 +19,6 @@ There are two more packages that are not important to re-users of the DJUTILS pr
 
 # Origin
 
-DJUTILS was developed at the Delft University of Technology as part of the [Open Traffic Simulator](https://opentrafficsim.org/docs/current/) project (started in 2014) and the [Delft Simulation Object Library](https://simulation.tudelft.nl/dsol/manual/) (DSOL) project (started in 2002).
+DJUTILS was developed at the Delft University of Technology as part of the [Open Traffic Simulator](https://opentrafficsim.org/docs/latest/) project (started in 2014) and the [Delft Simulation Object Library](https://simulation.tudelft.nl/dsol/manual/) (DSOL) project (started in 2002).
 
 The main authors/contributors of the DJUTILS project are Alexander Verbraeck, Peter Knoppers, and Wouter Schakel.

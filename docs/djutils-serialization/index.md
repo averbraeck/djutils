@@ -21,7 +21,7 @@ Some properties:
 
 ## Origin
 
-DJUTILS-SERIALIZATION was developed at the Delft University of Technology as part of the SIM0MQ project and further refined within the [Open Traffic Simulator](https://opentrafficsim.org/docs/current/) project. The main authors/contributors of the DJUTILS project are Alexander Verbraeck and Peter Knoppers for the Java implementation, and Sibel Eker and Jan Kwakkel for the Python implementation.
+DJUTILS-SERIALIZATION was developed at the Delft University of Technology as part of the SIM0MQ project and further refined within the [Open Traffic Simulator](https://opentrafficsim.org/docs/latest/) project. The main authors/contributors of the DJUTILS project are Alexander Verbraeck and Peter Knoppers for the Java implementation, and Sibel Eker and Jan Kwakkel for the Python implementation.
 
 
 ## Maven use
@@ -69,6 +69,6 @@ If the DJUTILS-SERIALIZATION library is used as a part of a Maven project, all d
 
 ## Documentation and test reports:
 
-* DJUTILS-SERIALIZATION documentation and test reports for the current version can be found at [https://djutils.org/docs/current/djutils-serialization](https://djutils.org/docs/current/djutils-serialization) 
-* The API can be found at [https://djutils.org/docs/current/djutils-serialization/apidocs/index.html](https://djutils.org/docs/current/djutils-serialization/apidocs/index.html).
+* DJUTILS-SERIALIZATION documentation and test reports for the current version can be found at [https://djutils.org/docs/latest/djutils-serialization](https://djutils.org/docs/latest/djutils-serialization) 
+* The API can be found at [https://djutils.org/docs/latest/djutils-serialization/apidocs/index.html](https://djutils.org/docs/latest/djutils-serialization/apidocs/index.html).
 

@@ -58,4 +58,4 @@ If the DJUTILS-CLI library is used as a part of a Maven project, all dependencie
 
 ## Documentation and test reports
 
-DJUTILS-CLI documentation and test reports for the current version can be found at [https://djutils.org/docs/current/djutils-cli](https://djutils.org/docs/current/djutils-cli) and the API can be found at [https://djutils.org/docs/current/djutils-cli/apidocs/index.html](https://djutils.org/docs/current/djutils-cli/apidocs/index.html).
+DJUTILS-CLI documentation and test reports for the current version can be found at [https://djutils.org/docs/latest/djutils-cli](https://djutils.org/docs/latest/djutils-cli) and the API can be found at [https://djutils.org/docs/latest/djutils-cli/apidocs/index.html](https://djutils.org/docs/latest/djutils-cli/apidocs/index.html).

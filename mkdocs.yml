@@ -31,13 +31,13 @@ nav:
     - Reflection helper classes: djutils/reflection.md
     - Means package: djutils/means.md
     - Metadata: djutils/metadata.md 
-    - DJUTILS documentation: https://djutils.org/docs/current/djutils/index.html
-    - DJUTILS API: https://djuils.org/docs/current/apidocs/djutils/index.html
+    - DJUTILS documentation: https://djutils.org/docs/latest/djutils/index.html
+    - DJUTILS API: https://djuils.org/docs/latest/apidocs/djutils/index.html
   - DJUTILS-CLI project:
     - Introduction: djutils-cli/index.md
     - DJUTILS-CLI usage: djutils-cli/usage.md
-    - DJUTILS-CLI documentation: https://djutils.org/docs/current/djutils-cli/index.html
-    - DJUTILS-CLI API: https://djutils.org/docs/current/djutils-cli/apidocs/index.htmll
+    - DJUTILS-CLI documentation: https://djutils.org/docs/latest/djutils-cli/index.html
+    - DJUTILS-CLI API: https://djutils.org/docs/latest/djutils-cli/apidocs/index.htmll
   - DJUTILS-SERIALIZATION:
     - Introduction: djutils-serialization/index.md
     - Coding types: djutils-serialization/coding-types.md
@@ -50,13 +50,13 @@ nav:
     - 'Scalar types with unit (#25 - #26)': djutils-serialization/scalar-units.md 
     - 'Vector types with unit (#27 - #28)': djutils-serialization/vector-units.md 
     - 'Matrix types with unit (#29 - #32)': djutils-serialization/matrix-units.md 
-    - SERIALIZATION documentation: https://djutils.org/docs/current/djutils-serialization/index.html
-    - SERIALIZATION API: https://djutils.org/docs/current/djutils-serialization/apidocs/index.html
+    - SERIALIZATION documentation: https://djutils.org/docs/latest/djutils-serialization/index.html
+    - SERIALIZATION API: https://djutils.org/docs/latest/djutils-serialization/apidocs/index.html
   - DJUTILS-DATA project:
     - Introduction: djutils-data/index.md
     - Using DataTables: djutils-data/data-tables.md
-    - DJUTILS-DATA documentation: https://djutils.org/docs/current/djutils-data/index.html
-    - DJUTILS-DATA API: https://djutils.org/docs/current/djutils-data/apidocs/index.htmll
+    - DJUTILS-DATA documentation: https://djutils.org/docs/latest/djutils-data/index.html
+    - DJUTILS-DATA API: https://djutils.org/docs/latest/djutils-data/apidocs/index.htmll
   - DJUTILS-DRAW project:
     - Introduction: djutils-draw/index.md
     - Drawable interface: djutils-draw/drawable.md
@@ -64,10 +64,10 @@ nav:
     - Points: djutils-draw/points.md
     - Lines: djutils-draw/lines.md
     - Bounds: djutils-draw/bounds.md
-    - DJUTILS-DRAW documentation: https://djutils.org/docs/current/djutils-draw/index.html
-    - DJUTILS-DRAW API: https://djutils.org/docs/current/djutils-draw/apidocs/index.htmll
+    - DJUTILS-DRAW documentation: https://djutils.org/docs/latest/djutils-draw/index.html
+    - DJUTILS-DRAW API: https://djutils.org/docs/latest/djutils-draw/apidocs/index.htmll
   - DJUTILS-STATS project:
     - Introduction: djutils-stats/index.md
     - Summarizers: djutils-stats/summarizers.md
-    - DJUTILS-STATS documentation: https://djutils.org/docs/current/djutils-stats/index.html
-    - DJUTILS-STATS API: https://djutils.org/docs/current/djutils-stats/apidocs/index.htmll
+    - DJUTILS-STATS documentation: https://djutils.org/docs/latest/djutils-stats/index.html
+    - DJUTILS-STATS API: https://djutils.org/docs/latest/djutils-stats/apidocs/index.htmll
