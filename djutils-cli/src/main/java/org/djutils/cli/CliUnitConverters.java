@@ -1,7 +1,5 @@
 package org.djutils.cli;
 
-import javax.annotation.Generated;
-
 import org.djunits.value.vdouble.scalar.AbsoluteTemperature;
 import org.djunits.value.vdouble.scalar.AbsorbedDose;
 import org.djunits.value.vdouble.scalar.Acceleration;
@@ -48,6 +46,7 @@ import org.djunits.value.vdouble.scalar.Time;
 import org.djunits.value.vdouble.scalar.Torque;
 import org.djunits.value.vdouble.scalar.Volume;
 
+import jakarta.annotation.Generated;
 import picocli.CommandLine;
 import picocli.CommandLine.ITypeConverter;
 
