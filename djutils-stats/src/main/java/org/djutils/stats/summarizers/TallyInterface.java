@@ -22,7 +22,7 @@ public interface TallyInterface extends BasicTallyInterface
      * @param value double; the value to process
      * @return double; the value
      */
-    double ingest(double value);
+    double register(double value);
 
     /**
      * Return the sum of the values of the observations.

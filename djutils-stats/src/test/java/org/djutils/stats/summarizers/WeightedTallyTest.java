@@ -43,23 +43,23 @@ public class WeightedTallyTest
         assertEquals(0.0, wt.getWeightedSum(), 0.0);
         assertEquals(0L, wt.getN());
 
-        wt.ingest(0.1, 1.1);
+        wt.register(0.1, 1.1);
         assertEquals(1.1, wt.getWeightedSampleMean(), 0.000001);
         assertEquals(1.1, wt.getWeightedPopulationMean(), 0.000001);
         assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
         assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
-        wt.ingest(0.1, 1.2);
+        wt.register(0.1, 1.2);
         assertFalse(Double.isNaN(wt.getWeightedSampleVariance()));
         assertFalse(Double.isNaN(wt.getWeightedSampleStDev()));
-        wt.ingest(0.1, 1.3);
-        wt.ingest(0.1, 1.4);
-        wt.ingest(0.1, 1.5);
-        wt.ingest(0.1, 1.6);
-        wt.ingest(0.1, 1.7);
-        wt.ingest(0.1, 1.8);
-        wt.ingest(0.1, 1.9);
-        wt.ingest(0.1, 2.0);
-        wt.ingest(0.1, 1.0);
+        wt.register(0.1, 1.3);
+        wt.register(0.1, 1.4);
+        wt.register(0.1, 1.5);
+        wt.register(0.1, 1.6);
+        wt.register(0.1, 1.7);
+        wt.register(0.1, 1.8);
+        wt.register(0.1, 1.9);
+        wt.register(0.1, 2.0);
+        wt.register(0.1, 1.0);
 
         // Now we check the WeightedTally
         assertEquals(2.0, wt.getMax(), 1.0E-6);
@@ -82,7 +82,7 @@ public class WeightedTallyTest
 
         try
         {
-            wt.ingest(-0.1, 123.456);
+            wt.register(-0.1, 123.456);
             fail("negative weight should have thrown an exception");
         }
         catch (IllegalArgumentException iae)
@@ -98,9 +98,9 @@ public class WeightedTallyTest
         // From: https://sciencing.com/calculate-time-decimals-5962681.html
         WeightedTally wt = new WeightedTally("simple WeightedTally statistic");
         wt.initialize();
-        wt.ingest(13.0, 86.0);
-        wt.ingest(23.0, 26.0);
-        wt.ingest(4.0, 0.0);
+        wt.register(13.0, 86.0);
+        wt.register(23.0, 26.0);
+        wt.register(4.0, 0.0);
 
         assertEquals(1716.0, wt.getWeightedSum(), 0.001);
         assertEquals(42.9, wt.getWeightedSampleMean(), 0.001);
@@ -109,11 +109,11 @@ public class WeightedTallyTest
         // When we have observations with duration 0, we should get the same answers
         wt = new WeightedTally("simple WeightedTally statistic");
         wt.initialize();
-        wt.ingest(13.0, 86.0);
-        wt.ingest(0.0, 86.0);
-        wt.ingest(23.0, 26.0);
-        wt.ingest(4.0, 0.0);
-        wt.ingest(0.0, 0.0);
+        wt.register(13.0, 86.0);
+        wt.register(0.0, 86.0);
+        wt.register(23.0, 26.0);
+        wt.register(4.0, 0.0);
+        wt.register(0.0, 0.0);
 
         assertEquals(1716.0, wt.getWeightedSum(), 0.001);
         assertEquals(42.9, wt.getWeightedSampleMean(), 0.001);
@@ -121,15 +121,15 @@ public class WeightedTallyTest
 
         // Example from NIST: https://www.itl.nist.gov/div898/software/dataplot/refman2/ch2/weightsd.pdf
         wt = new WeightedTally("NIST");
-        wt.ingest(1, 2);
-        wt.ingest(1, 3);
-        wt.ingest(0, 5);
-        wt.ingest(0, 7);
-        wt.ingest(4, 11);
-        wt.ingest(1, 13);
-        wt.ingest(2, 17);
-        wt.ingest(1, 19);
-        wt.ingest(0, 23);
+        wt.register(1, 2);
+        wt.register(1, 3);
+        wt.register(0, 5);
+        wt.register(0, 7);
+        wt.register(4, 11);
+        wt.register(1, 13);
+        wt.register(2, 17);
+        wt.register(1, 19);
+        wt.register(0, 23);
 
         assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedSampleMean(), 0.001);
         assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedPopulationMean(), 0.001);

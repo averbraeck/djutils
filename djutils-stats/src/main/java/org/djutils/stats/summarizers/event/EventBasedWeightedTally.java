@@ -139,7 +139,7 @@ public class EventBasedWeightedTally extends EventProducer implements EventListe
                 "WeightedTally.notify: Value (Content[1]) should be a Number");
         double weight = ((Number) content[0]).doubleValue();
         double value = ((Number) content[1]).doubleValue();
-        ingest(weight, value);
+        register(weight, value);
     }
 
     /**
@@ -148,9 +148,9 @@ public class EventBasedWeightedTally extends EventProducer implements EventListe
      * @param value double; the value to process
      * @return double; the value
      */
-    public double ingest(final double weight, final double value)
+    public double register(final double weight, final double value)
     {
-        this.wrappedWeightedTally.ingest(weight, value);
+        this.wrappedWeightedTally.register(weight, value);
         if (hasListeners())
         {
             fireEvent(new Event(StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT, this, new Object[] {weight, value}));

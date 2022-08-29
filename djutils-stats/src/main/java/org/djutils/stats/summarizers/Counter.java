@@ -57,7 +57,7 @@ public class Counter implements CounterInterface
 
     /** {@inheritDoc} */
     @Override
-    public long ingest(final long value)
+    public long register(final long value)
     {
         synchronized (this.semaphore)
         {

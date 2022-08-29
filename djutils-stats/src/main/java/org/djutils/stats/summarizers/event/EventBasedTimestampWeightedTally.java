@@ -101,11 +101,11 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
             Object timestamp = timedEvent.getTimeStamp();
             if (timestamp instanceof Number)
             {
-                ingest(((Number) timestamp).doubleValue(), value);
+                register(((Number) timestamp).doubleValue(), value);
             }
             else if (timestamp instanceof Calendar)
             {
-                ingest(((Calendar) timestamp).getTimeInMillis(), value);
+                register(((Calendar) timestamp).getTimeInMillis(), value);
             }
             else
             {
@@ -125,9 +125,9 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
      * @param value double; the value to process
      * @return double; the value
      */
-    public double ingest(final Calendar timestamp, final double value)
+    public double register(final Calendar timestamp, final double value)
     {
-        this.wrappedTimestampWeightedTally.ingest(timestamp, value);
+        this.wrappedTimestampWeightedTally.register(timestamp, value);
         fireEvents(timestamp, value);
         return value;
     }
@@ -139,9 +139,9 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
      * @param value double; the value to process
      * @return double; the value
      */
-    public <T extends Number & Comparable<T>> double ingest(final T timestamp, final double value)
+    public <T extends Number & Comparable<T>> double register(final T timestamp, final double value)
     {
-        this.wrappedTimestampWeightedTally.ingest(timestamp, value);
+        this.wrappedTimestampWeightedTally.register(timestamp, value);
         fireEvents(timestamp, value);
         return value;
     }

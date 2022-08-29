@@ -222,7 +222,7 @@ public class EventBasedWeightedTallyTest
 
         for (int i = 1; i <= 10; i++)
         {
-            weightedTally.ingest(1.0 * i, 10.0 * i);
+            weightedTally.register(1.0 * i, 10.0 * i);
         }
 
         assertEquals(10, woel.getObservationEvents());

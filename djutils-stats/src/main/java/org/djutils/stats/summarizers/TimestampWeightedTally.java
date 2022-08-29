@@ -71,7 +71,7 @@ public class TimestampWeightedTally implements TimestampTallyInterface
     @Override
     public final void endObservations(final Number timestamp)
     {
-        ingest(timestamp, this.lastValue);
+        register(timestamp, this.lastValue);
         this.active = false;
     }
 
@@ -97,10 +97,10 @@ public class TimestampWeightedTally implements TimestampTallyInterface
      * @param value double; the value to process
      * @return double; the value
      */
-    public double ingest(final Calendar timestamp, final double value)
+    public double register(final Calendar timestamp, final double value)
     {
         Throw.whenNull(timestamp, "timestamp object may not be null");
-        return ingest(timestamp.getTimeInMillis(), value);
+        return register(timestamp.getTimeInMillis(), value);
     }
 
     /**
@@ -109,7 +109,7 @@ public class TimestampWeightedTally implements TimestampTallyInterface
      * @param value double; the value to process
      * @return double; the value
      */
-    public double ingest(final Number timestamp, final double value)
+    public double register(final Number timestamp, final double value)
     {
         Throw.whenNull(timestamp, "timestamp object may not be null");
         Throw.when(Double.isNaN(value), IllegalArgumentException.class, "value may not be NaN");
@@ -131,7 +131,7 @@ public class TimestampWeightedTally implements TimestampTallyInterface
                 else
                 {
                     double deltaTime = Math.max(0.0, timestampDouble - this.lastTimestamp);
-                    this.wrappedWeightedTally.ingest(deltaTime, this.lastValue);
+                    this.wrappedWeightedTally.register(deltaTime, this.lastValue);
                 }
                 this.lastTimestamp = timestampDouble;
             }

@@ -270,9 +270,9 @@ public class EventBasedTimestampWeightedTallyTest
         assertEquals(stDev, wt.getWeightedSampleStDev(), 1.0E-6);
     }
 
-    /** Test the TimestampWeightedTally for Calendar-based timestamps with ingest(). */
+    /** Test the TimestampWeightedTally for Calendar-based timestamps with register(). */
     @Test
-    public void testEBTimestampWeightedTallyCalendarIngest()
+    public void testEBTimestampWeightedTallyCalendarregister()
     {
         String description = "THIS TIMESTAMP WEIGHTED TALLY IS TESTED";
         EventBasedTimestampWeightedTally wt = new EventBasedTimestampWeightedTally(description);
@@ -281,7 +281,7 @@ public class EventBasedTimestampWeightedTallyTest
         for (int second = 30; second <= 40; second++)
         {
             Calendar calendar = new Calendar.Builder().setDate(2000, 2, 2).setTimeOfDay(4, 12, second, 10).build();
-            wt.ingest(calendar, index++);
+            wt.register(calendar, index++);
         }
         assertTrue(wt.isActive());
         wt.endObservations(new Calendar.Builder().setDate(2000, 2, 2).setTimeOfDay(4, 12, 41, 10).build());
@@ -335,7 +335,7 @@ public class EventBasedTimestampWeightedTallyTest
         double prevTime = 0.0;
         for (int i = 1; i <= 10; i++)
         {
-            timestampedTally.ingest(prevTime, 10.0 * i);
+            timestampedTally.register(prevTime, 10.0 * i);
             prevTime += i;
         }
         timestampedTally.endObservations(prevTime);

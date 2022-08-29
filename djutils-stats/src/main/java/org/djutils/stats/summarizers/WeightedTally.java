@@ -177,7 +177,7 @@ public class WeightedTally implements WeightedTallyInterface
      * @param value double; the value to process
      * @return double; the value
      */
-    public double ingest(final double weight, final double value)
+    public double register(final double weight, final double value)
     {
         Throw.when(Double.isNaN(weight), IllegalArgumentException.class, "weight may not be NaN");
         Throw.when(weight < 0, IllegalArgumentException.class, "weight may not be negative");

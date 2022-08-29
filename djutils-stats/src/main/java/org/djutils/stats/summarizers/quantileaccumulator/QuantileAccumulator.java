@@ -14,7 +14,7 @@ public interface QuantileAccumulator
      * @return double; the ingested value
      * @throws IllegalArgumentException when the ingested value is NaN
      */
-    double ingest(double value);
+    double register(double value);
 
     /**
      * Compute (or approximate) the value that corresponds to the given fraction (percentile).

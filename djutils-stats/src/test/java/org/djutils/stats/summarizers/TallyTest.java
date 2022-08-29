@@ -68,7 +68,7 @@ public class TallyTest
         // Now we ingest some values
         try
         {
-            tally.ingest(1.1);
+            tally.register(1.1);
             assertFalse("sample mean is now available", Double.isNaN(tally.getSampleMean()));
             assertFalse("mean is now available", Double.isNaN(tally.getPopulationMean()));
             assertEquals("smaple mean is 1.1", 1.1, tally.getSampleMean(), 0.0000001);
@@ -76,25 +76,25 @@ public class TallyTest
             assertTrue("sample variance is not available", Double.isNaN(tally.getSampleVariance()));
             assertFalse("variance is not available", Double.isNaN(tally.getPopulationVariance()));
             assertTrue("skewness is not available", Double.isNaN(tally.getPopulationSkewness()));
-            tally.ingest(1.2);
+            tally.register(1.2);
             assertFalse("sample variance is now available", Double.isNaN(tally.getSampleVariance()));
             assertTrue("sample skewness is not available", Double.isNaN(tally.getSampleSkewness()));
             assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
             assertFalse("skewness is available", Double.isNaN(tally.getPopulationSkewness()));
             assertTrue("kurtosis is not available", Double.isNaN(tally.getPopulationKurtosis()));
-            tally.ingest(1.3);
+            tally.register(1.3);
             assertFalse("skewness is now available", Double.isNaN(tally.getSampleSkewness()));
             assertFalse("kurtosis is now available", Double.isNaN(tally.getPopulationKurtosis()));
             assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
-            tally.ingest(1.4);
+            tally.register(1.4);
             assertFalse("sample kurtosis is now available", Double.isNaN(tally.getSampleKurtosis()));
-            tally.ingest(1.5);
-            tally.ingest(1.6);
-            tally.ingest(1.7);
-            tally.ingest(1.8);
-            tally.ingest(1.9);
-            tally.ingest(2.0);
-            tally.ingest(1.0);
+            tally.register(1.5);
+            tally.register(1.6);
+            tally.register(1.7);
+            tally.register(1.8);
+            tally.register(1.9);
+            tally.register(2.0);
+            tally.register(1.0);
         }
         catch (Exception exception)
         {
@@ -200,7 +200,7 @@ public class TallyTest
         // test confidence interval failure on uninitialized tally
         Tally t = new Tally("unused");
         assertNull(t.getConfidenceInterval(0.95));
-        t.ingest(1.0);
+        t.register(1.0);
         assertNull(t.getConfidenceInterval(0.95));
     }
 
@@ -212,7 +212,7 @@ public class TallyTest
     public void testKurtWikipedia()
     {
         Tally tally = new Tally("Wikipedia");
-        tally.ingest(0, 3, 4, 1, 2, 3, 0, 2, 1, 3, 2, 0, 2, 2, 3, 2, 5, 2, 3, 999);
+        tally.register(0, 3, 4, 1, 2, 3, 0, 2, 1, 3, 2, 0, 2, 2, 3, 2, 5, 2, 3, 999);
         assertEquals(18.05, tally.getPopulationKurtosis(), 0.01);
         assertEquals(15.05, tally.getPopulationExcessKurtosis(), 0.01);
     }
@@ -224,10 +224,10 @@ public class TallyTest
     public void testSkewKurtExcel()
     {
         Tally tally1 = new Tally("Excel1");
-        tally1.ingest(1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2);
+        tally1.register(1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2);
         assertEquals(-1.2, tally1.getSampleExcessKurtosis(), 0.01);
         Tally tally2 = new Tally("Excel2");
-        tally2.ingest(2, 4, 6, 3, 2, 1, 2, 3, 4, 5, 9);
+        tally2.register(2, 4, 6, 3, 2, 1, 2, 3, 4, 5, 9);
         assertEquals(3.7272, tally2.getPopulationMean(), 0.01);
         assertEquals(4.7438, tally2.getPopulationVariance(), 0.01);
         assertEquals(5.2182, tally2.getSampleVariance(), 0.01);
@@ -256,7 +256,7 @@ public class TallyTest
             // Ignore expected exception
         }
 
-        tally.ingest(90.0);
+        tally.register(90.0);
         assertEquals("mean of one value is that value", 90.0, tally.getSampleMean(), 0);
         try
         {
@@ -268,7 +268,7 @@ public class TallyTest
             // Ignore expected exception
         }
 
-        tally.ingest(110.0);
+        tally.register(110.0);
         assertEquals("mean of two value", 100.0, tally.getSampleMean(), 0);
         assertEquals("50% quantile", 100.0, tally.getQuantile(0.5), 0);
         /*-
@@ -292,10 +292,10 @@ public class TallyTest
         // Test for the problem that Peter Knoppers had in Tritapt where really small rounding errors caused sqrt(-1e-14).
         double value = 166.0 / 25.0;
         tally.initialize();
-        tally.ingest(value);
-        tally.ingest(value);
-        tally.ingest(value);
-        tally.ingest(value);
+        tally.register(value);
+        tally.register(value);
+        tally.register(value);
+        tally.register(value);
         tally.initialize();
         // Throw a lot of pseudo-randomly normally distributed values in and see if the expected mean and stddev come out
         double mean = 123.456;
@@ -304,7 +304,7 @@ public class TallyTest
         for (int sample = 0; sample < 10000; sample++)
         {
             value = generateGaussianNoise(mean, stddev, random);
-            tally.ingest(value);
+            tally.register(value);
         }
         assertEquals("mean should approximately match", mean, tally.getSampleMean(), stddev / 10);
         assertEquals("stddev should approximately match", stddev, tally.getSampleStDev(), stddev / 10);
@@ -320,7 +320,7 @@ public class TallyTest
         // Insert values from 0.0 .. 100.0 (step 1.0)
         for (int step = 0; step <= 100; step++)
         {
-            tally.ingest(1.0 * step);
+            tally.register(1.0 * step);
         }
         for (double probability : new double[] {0.0, 0.01, 0.1, 0.49, 0.5, 0.51, 0.9, 0.99, 1.0})
         {
@@ -385,7 +385,7 @@ public class TallyTest
         // Insert values from 0.0 .. 100.0 (step 1.0)
         for (int step = 0; step <= 100; step++)
         {
-            tally.ingest(1.0 * step);
+            tally.register(1.0 * step);
         }
         for (double probability : new double[] {0.0, 0.01, 0.1, 0.49, 0.5, 0.51, 0.9, 0.99, 1.0})
         {
@@ -405,7 +405,7 @@ public class TallyTest
         // Insert values from 0.0 .. 100.0 (step 0.0001)
         for (int step = 0; step <= 1000000; step++)
         {
-            tally.ingest(0.0001 * step);
+            tally.register(0.0001 * step);
         }
         for (double probability : new double[] {0.0, 0.01, 0.1, 0.49, 0.5, 0.51, 0.9, 0.99, 1.0})
         {
@@ -424,7 +424,7 @@ public class TallyTest
         // Insert values from 0.0 .. 100.0 (step 0.0001)
         for (int step = 0; step <= 1000000; step++)
         {
-            tally.ingest(0.0001 * step);
+            tally.register(0.0001 * step);
         }
         for (double probability : new double[] {0.0, 0.01, 0.1, 0.49, 0.5, 0.51, 0.9, 0.99, 1.0})
         {
@@ -463,7 +463,7 @@ public class TallyTest
         for (int sample = 0; sample < 10000; sample++)
         {
             double value = generateGaussianNoise(mean, stddev, random);
-            tally.ingest(value);
+            tally.register(value);
         }
         // Test that tally reports cumulative probabilities that roughly follow that of normal distribution
         for (double probability : new double[] {0.01, 0.1, 0.25, 0.49, 0.5, 0.51, 0.75, 0.9, 0.99})
@@ -508,7 +508,7 @@ public class TallyTest
         Tally tally = new Tally("");
         for (double value : testValues)
         {
-            tally.ingest(value);
+            tally.register(value);
         }
         // System.out.println(tally);
         // System.out.println(String.format("count %d mean %20.15f variance %20.15f skew %20.15f kurtosis %20.15f", count,

@@ -15,7 +15,7 @@ import org.djutils.stats.summarizers.quantileaccumulator.QuantileAccumulator;
 /**
  * The EventBasedTally class ingests a series of values and provides mean, standard deviation, etc. of the ingested values. It
  * extends an EventProducer so it can keep listeners informed about new observations, and it listens to external events to be
- * able to receive observations, in addition to the ingest(...) method.
+ * able to receive observations, in addition to the register(...) method.
  * <p>
  * Copyright (c) 2002-2022 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
@@ -218,14 +218,14 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
             throw new IllegalArgumentException("Tally does not accept " + event);
         }
         double value = ((Number) event.getContent()).doubleValue();
-        ingest(value);
+        register(value);
     }
 
     /** {@inheritDoc} */
     @Override
-    public double ingest(final double value)
+    public double register(final double value)
     {
-        this.wrappedTally.ingest(value);
+        this.wrappedTally.register(value);
         if (hasListeners())
         {
             fireEvent(new Event(StatisticsEvents.OBSERVATION_ADDED_EVENT, this, value));

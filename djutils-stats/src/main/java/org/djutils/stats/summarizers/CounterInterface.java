@@ -25,7 +25,7 @@ public interface CounterInterface extends Serializable
      * @param value long; the value to process
      * @return long; the value
      */
-    long ingest(long value);
+    long register(long value);
 
     /**
      * Returns the description of the counter.

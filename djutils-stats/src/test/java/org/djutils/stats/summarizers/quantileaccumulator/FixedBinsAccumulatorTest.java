@@ -144,7 +144,7 @@ public class FixedBinsAccumulatorTest
         {
             double range0to1 = 1.0 * i / max;
             double value = Math.exp(range0to1); // Should be in range 0..e
-            fba.ingest(value);
+            fba.register(value);
         }
         assertEquals("total values is max", max, fba.getN());
         assertEquals("no values below 1", 0, fba.getBelowCount());
@@ -157,13 +157,13 @@ public class FixedBinsAccumulatorTest
         // Check the below and above counters
         for (int i = 0; i < 5; i++)
         {
-            fba.ingest(-i);
+            fba.register(-i);
             assertEquals("below counter", i + 1, fba.getBelowCount());
             assertEquals("above counter", 0, fba.getAboveCount());
         }
         for (int i = 0; i < 5; i++)
         {
-            fba.ingest(10);
+            fba.register(10);
             assertEquals("below counter", 5, fba.getBelowCount());
             assertEquals("above counter", i + 1, fba.getAboveCount());
         }

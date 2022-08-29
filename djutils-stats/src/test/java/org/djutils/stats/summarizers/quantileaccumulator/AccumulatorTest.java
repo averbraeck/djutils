@@ -75,25 +75,25 @@ public class AccumulatorTest
         FullStorageAccumulator fsa = new FullStorageAccumulator();
         assertTrue("getCumulativeProbability with no data returns NaN", Double.isNaN(fsa.getCumulativeProbability(null, 12.3)));
         // Ingest one value
-        fsa.ingest(10.0);
+        fsa.register(10.0);
         assertEquals("below single value returns 0", 0.0, fsa.getCumulativeProbability(null, 9.0), 0);
         assertEquals("at single value returns 0", 0.5, fsa.getCumulativeProbability(null, 10.0), 0);
         assertEquals("above single value returns 0", 1.0, fsa.getCumulativeProbability(null, 20.0), 0);
-        fsa.ingest(10.0);
+        fsa.register(10.0);
         assertEquals("below range value returns 0", 0.0, fsa.getCumulativeProbability(null, 9.0), 0);
         assertEquals("at single value returns 0", 0.5, fsa.getCumulativeProbability(null, 10.0), 0);
         assertEquals("above range value returns 0", 1.0, fsa.getCumulativeProbability(null, 20.0), 0);
-        fsa.ingest(10.0);
+        fsa.register(10.0);
         assertEquals("below range value returns 0", 0.0, fsa.getCumulativeProbability(null, 9.0), 0);
         assertEquals("at single value returns 0", 0.5, fsa.getCumulativeProbability(null, 10.0), 0);
         assertEquals("above range value returns 0", 1.0, fsa.getCumulativeProbability(null, 20.0), 0);
-        fsa.ingest(8.0);
+        fsa.register(8.0);
         assertEquals("below range value returns 0", 0.0, fsa.getCumulativeProbability(null, 7.0), 0);
         assertEquals("at bottom range of length 4 value returns 0.125", 0.125, fsa.getCumulativeProbability(null, 8.0), 0);
         assertEquals("between 0 and 1 of length 4 returns 0.25", 0.25, fsa.getCumulativeProbability(null, 9.0), 0);
         assertEquals("in range of length 4 value returns 0.625", 0.625, fsa.getCumulativeProbability(null, 10.0), 0);
         assertEquals("above range value returns 0", 1.0, fsa.getCumulativeProbability(null, 20.0), 0);
-        fsa.ingest(15.0);
+        fsa.register(15.0);
         assertEquals("below range value returns 0", 0.0, fsa.getCumulativeProbability(null, 7.0), 0);
         assertEquals("at bottom range of length 5 value returns 0.1", 0.1, fsa.getCumulativeProbability(null, 8.0), 0.00001);
         assertEquals("between 0 and 1 of length 5 returns 0.2", 0.2, fsa.getCumulativeProbability(null, 9.0), 0.00001);
@@ -104,7 +104,7 @@ public class AccumulatorTest
         fsa.initialize();
         for (int i = 0; i < 10; i++)
         {
-            fsa.ingest(i + 10);
+            fsa.register(i + 10);
         }
         for (int i = 0; i < 30; i++)
         {
@@ -133,7 +133,7 @@ public class AccumulatorTest
         // Bins are centered at 5.0, 5.5, 6.0, 6.5, 7.0
         assertTrue("getCumulativeProbability with no data returns NaN", Double.isNaN(fba.getCumulativeProbability(null, 12.3)));
         // Ingest one value
-        fba.ingest(5.7); // should be counted in bin 5.5
+        fba.register(5.7); // should be counted in bin 5.5
         assertEquals("cumulative probability of value below any bin is 0.0", 0.0, fba.getCumulativeProbability(null, 2.2), 0);
         assertEquals("cumulative probability of value below any filled bin is 0.0", 0.0,
                 fba.getCumulativeProbability(null, 5.2), 0);
@@ -150,8 +150,8 @@ public class AccumulatorTest
             assertEquals("quantile at fraction in used bin", expect, got, 0.0001);
         }
         // Put some data in other buckets
-        fba.ingest(6.1);
-        fba.ingest(5.9);
+        fba.register(6.1);
+        fba.register(5.9);
         assertEquals("cumulative probability of value below any bin is 0.0", 0.0, fba.getCumulativeProbability(null, 2.2), 0);
         assertEquals("cumulative probability of value below any filled bin is 0.0", 0.0,
                 fba.getCumulativeProbability(null, 5.2), 0);
@@ -192,13 +192,13 @@ public class AccumulatorTest
         // This one can only be tested when cooperating with a Tally.
         Tally tally = new Tally("test Tally with NoStorageAccumulator");
         assertTrue("cumulative probability with no values ingested is NaN", Double.isNaN(tally.getCumulativeProbability(4)));
-        tally.ingest(10);
+        tally.register(10);
         assertEquals("cumulative probability at single inserted value is 0.5", 0.5, tally.getCumulativeProbability(10), 0);
         assertEquals("cummulative probability below single inserted value is 0.0", 0.0,
                 tally.getCumulativeProbability(10 - Math.ulp(10)), 0);
         assertEquals("cummulative probability above single inserted value is 1.0", 1.0,
                 tally.getCumulativeProbability(10 + Math.ulp(10)), 0);
-        tally.ingest(20);
+        tally.register(20);
         assertEquals("cumulative probability at mean is 0.5", 0.5, tally.getCumulativeProbability(15), 0);
         assertEquals("cumulative probability at mean -sigma is about 0.16", 0.16, tally.getCumulativeProbability(10), 0.01);
         assertEquals("cumulative probability at mean +sigma is about 0.84", 0.84, tally.getCumulativeProbability(20), 0.01);
@@ -213,13 +213,13 @@ public class AccumulatorTest
         TDigestAccumulator tda = new TDigestAccumulator();
         assertTrue("cumulative probability with no values ingested is NaN",
                 Double.isNaN(tda.getCumulativeProbability(null, 4)));
-        tda.ingest(10);
+        tda.register(10);
         assertEquals("cumulative probability at single inserted value is 0.5", 0.5, tda.getCumulativeProbability(null, 10), 0);
         assertEquals("cummulative probability below single inserted value is 0.0", 0.0,
                 tda.getCumulativeProbability(null, 10 - Math.ulp(10)), 0);
         assertEquals("cummulative probability above single inserted value is 1.0", 1.0,
                 tda.getCumulativeProbability(null, 10 + Math.ulp(10)), 0);
-        tda.ingest(20);
+        tda.register(20);
         assertEquals("cumulative probability at mean is 0.5", 0.5, tda.getCumulativeProbability(null, 15), 0);
         assertEquals("cumulative probability at 0.25 of range is between 0 and 0.5 0.26", 0.25,
                 tda.getCumulativeProbability(null, 12.5), 0.15);

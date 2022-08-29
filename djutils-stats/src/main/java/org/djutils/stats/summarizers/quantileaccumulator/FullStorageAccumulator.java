@@ -29,7 +29,7 @@ public class FullStorageAccumulator implements QuantileAccumulator
 
     /** {@inheritDoc} */
     @Override
-    public double ingest(final double value)
+    public double register(final double value)
     {
         Throw.when(Double.isNaN(value), IllegalArgumentException.class, "accumulator can not accumlate NaN value");
         this.accumulator.add(value);

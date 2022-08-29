@@ -34,7 +34,7 @@ public final class TallyDemo
         Random random = new Random(1234);
         for (int i = 0; i < 1000; i++)
         {
-            tally.ingest(random.nextDouble());
+            tally.register(random.nextDouble());
         }
         System.out.println("minimum:                       " + tally.getMin());
         System.out.println("maximum:                       " + tally.getMax());
@@ -66,7 +66,7 @@ public final class TallyDemo
         random = new Random(1234);
         for (int i = 0; i < 1000; i++)
         {
-            tally.ingest(random.nextDouble());
+            tally.register(random.nextDouble());
         }
         System.out.println("minimum:                       " + tally.getMin());
         System.out.println("maximum:                       " + tally.getMax());
@@ -98,7 +98,7 @@ public final class TallyDemo
         random = new Random(1234);
         for (int i = 0; i < 1000; i++)
         {
-            tally.ingest(random.nextDouble());
+            tally.register(random.nextDouble());
         }
         System.out.println("minimum:                       " + tally.getMin());
         System.out.println("maximum:                       " + tally.getMax());
@@ -130,7 +130,7 @@ public final class TallyDemo
         random = new Random(1234);
         for (int i = 0; i < 1000; i++)
         {
-            tally.ingest(random.nextDouble());
+            tally.register(random.nextDouble());
         }
         System.out.println("minimum:                       " + tally.getMin());
         System.out.println("maximum:                       " + tally.getMax());
@@ -165,7 +165,7 @@ public final class TallyDemo
         for (int i = 0; i < 1000000; i++)
         {
             double d = random.nextDouble();
-            tally.ingest(d);
+            tally.register(d);
         }
         System.out.println("0% quantile (should be close to 0.0):            " + tally.getQuantile(0.0));
         System.out.println("25% quantile (should be close to 0.25):          " + tally.getQuantile(0.25));
@@ -185,7 +185,7 @@ public final class TallyDemo
         random = new Random(1234);
         for (int i = 0; i <= 1000000; i++)
         {
-            tally.ingest(Math.exp(1.0 * i / 1000000));
+            tally.register(Math.exp(1.0 * i / 1000000));
         }
         System.out.println("0% quantile (should be 1.0):                     " + tally.getQuantile(0.0));
         System.out.println("25% quantile (should be close to sqrt(sqrt(e))): " + tally.getQuantile(0.25));

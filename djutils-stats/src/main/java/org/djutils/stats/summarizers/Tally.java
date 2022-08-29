@@ -324,17 +324,17 @@ public class Tally implements TallyInterface
      * Ingest an array of values.
      * @param values double...; the values to ingest
      */
-    public void ingest(final double... values)
+    public void register(final double... values)
     {
         for (double value : values)
         {
-            ingest(value);
+            register(value);
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public double ingest(final double value)
+    public double register(final double value)
     {
         Throw.when(Double.isNaN(value), IllegalArgumentException.class, "value may not be NaN");
         synchronized (this.semaphore)
@@ -368,7 +368,7 @@ public class Tally implements TallyInterface
             {
                 this.max = value;
             }
-            this.quantileAccumulator.ingest(value);
+            this.quantileAccumulator.register(value);
         }
         return value;
     }

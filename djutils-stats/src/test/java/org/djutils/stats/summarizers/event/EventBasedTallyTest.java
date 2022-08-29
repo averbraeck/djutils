@@ -228,7 +228,7 @@ public class EventBasedTallyTest
 
         for (int i = 1; i <= 10; i++)
         {
-            tally.ingest(10 * i);
+            tally.register(10 * i);
         }
 
         assertEquals(10, oel.getObservationEvents());

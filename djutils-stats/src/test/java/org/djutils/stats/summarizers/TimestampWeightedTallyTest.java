@@ -45,14 +45,14 @@ public class TimestampWeightedTallyTest
         assertEquals(0.0, wt.getWeightedSum(), 0.0);
         assertEquals(0L, wt.getN());
 
-        wt.ingest(0.0, 1.0);
+        wt.register(0.0, 1.0);
         assertTrue(Double.isNaN(wt.getMin()));
         assertTrue(Double.isNaN(wt.getMax()));
         assertTrue(Double.isNaN(wt.getWeightedSampleMean()));
         assertTrue(Double.isNaN(wt.getWeightedPopulationMean()));
         assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
         assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
-        wt.ingest(0.1, 1.1);
+        wt.register(0.1, 1.1);
         assertEquals(1.0, wt.getMin(), 0.000001);
         assertEquals(1.0, wt.getMax(), 0.000001);
         assertEquals(1.0, wt.getWeightedSampleMean(), 0.000001);
@@ -61,21 +61,21 @@ public class TimestampWeightedTallyTest
         assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
         assertEquals(0, wt.getWeightedPopulationVariance(), 0.000001);
         assertEquals(0, wt.getWeightedPopulationStDev(), 0.0000001);
-        wt.ingest(0.2, 1.2);
+        wt.register(0.2, 1.2);
         assertFalse(Double.isNaN(wt.getWeightedSampleVariance()));
         assertFalse(Double.isNaN(wt.getWeightedSampleStDev()));
-        wt.ingest(0.3, 1.3);
-        wt.ingest(0.4, 1.4);
-        wt.ingest(0.5, 1.5);
-        wt.ingest(0.6, 1.6);
-        wt.ingest(0.7, 1.7);
-        wt.ingest(0.8, 1.8);
-        wt.ingest(0.9, 1.9);
-        wt.ingest(1.0, 2.0);
+        wt.register(0.3, 1.3);
+        wt.register(0.4, 1.4);
+        wt.register(0.5, 1.5);
+        wt.register(0.6, 1.6);
+        wt.register(0.7, 1.7);
+        wt.register(0.8, 1.8);
+        wt.register(0.9, 1.9);
+        wt.register(1.0, 2.0);
 
         try
         {
-            wt.ingest(0.8, 123.456);
+            wt.register(0.8, 123.456);
             fail("timestamp out of order should have thrown an exception");
         }
         catch (IllegalArgumentException iae)
@@ -112,7 +112,7 @@ public class TimestampWeightedTallyTest
 
         try
         {
-            wt.ingest(-0.1, 123.456);
+            wt.register(-0.1, 123.456);
             fail("negative weight should have thrown an exception");
         }
         catch (IllegalArgumentException iae)
@@ -121,7 +121,7 @@ public class TimestampWeightedTallyTest
         }
 
         // Adding something after the active period should not make a change
-        wt.ingest(10.0, 20.0);
+        wt.register(10.0, 20.0);
         assertFalse(wt.isActive());
         assertEquals(2.0, wt.getMax(), 1.0E-6);
         assertEquals(1.0, wt.getMin(), 1.0E-6);
@@ -138,9 +138,9 @@ public class TimestampWeightedTallyTest
         // From: https://sciencing.com/calculate-time-decimals-5962681.html
         TimestampWeightedTally wt = new TimestampWeightedTally("simple TimestampWeightedTally statistic");
         wt.initialize();
-        wt.ingest(0.0, 86.0);
-        wt.ingest(13.0, 26.0);
-        wt.ingest(36.0, 0.0);
+        wt.register(0.0, 86.0);
+        wt.register(13.0, 26.0);
+        wt.register(36.0, 0.0);
         wt.endObservations(40.0);
 
         assertEquals(1716.0, wt.getWeightedSum(), 0.001);
@@ -150,9 +150,9 @@ public class TimestampWeightedTallyTest
         // When we shift the times, we should get the same answers
         wt = new TimestampWeightedTally("simple TimestampWeightedTally statistic");
         wt.initialize();
-        wt.ingest(10.0, 86.0);
-        wt.ingest(23.0, 26.0);
-        wt.ingest(46.0, 0.0);
+        wt.register(10.0, 86.0);
+        wt.register(23.0, 26.0);
+        wt.register(46.0, 0.0);
         wt.endObservations(50.0);
 
         assertEquals(1716.0, wt.getWeightedSum(), 0.001);
@@ -162,12 +162,12 @@ public class TimestampWeightedTallyTest
         // When we have observations with duration 0, we should get the same answers
         wt = new TimestampWeightedTally("simple TimestampWeightedTally statistic");
         wt.initialize();
-        wt.ingest(0.0, 86.0);
-        wt.ingest(13.0, 26.0);
-        wt.ingest(13.0, 0.0);
-        wt.ingest(13.0, 26.0);
-        wt.ingest(36.0, 0.0);
-        wt.ingest(36.0, 0.0);
+        wt.register(0.0, 86.0);
+        wt.register(13.0, 26.0);
+        wt.register(13.0, 0.0);
+        wt.register(13.0, 26.0);
+        wt.register(36.0, 0.0);
+        wt.register(36.0, 0.0);
         wt.endObservations(40.0);
 
         assertEquals(1716.0, wt.getWeightedSum(), 0.001);
@@ -176,15 +176,15 @@ public class TimestampWeightedTallyTest
 
         // Example from NIST: https://www.itl.nist.gov/div898/software/dataplot/refman2/ch2/weightsd.pdf
         wt = new TimestampWeightedTally("NIST");
-        wt.ingest(0, 2);
-        wt.ingest(1, 3);
-        wt.ingest(2, 5);
-        wt.ingest(2, 7);
-        wt.ingest(2, 11);
-        wt.ingest(6, 13);
-        wt.ingest(7, 17);
-        wt.ingest(9, 19);
-        wt.ingest(10, 23);
+        wt.register(0, 2);
+        wt.register(1, 3);
+        wt.register(2, 5);
+        wt.register(2, 7);
+        wt.register(2, 11);
+        wt.register(6, 13);
+        wt.register(7, 17);
+        wt.register(9, 19);
+        wt.register(10, 23);
         wt.endObservations(10.0);
 
         assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedSampleMean(), 0.001);
@@ -202,7 +202,7 @@ public class TimestampWeightedTallyTest
         for (int second = 30; second <= 40; second++)
         {
             Calendar calendar = new Calendar.Builder().setDate(2000, 2, 2).setTimeOfDay(4, 12, second, 10).build();
-            wt.ingest(calendar, index++);
+            wt.register(calendar, index++);
         }
         assertTrue(wt.isActive());
         wt.endObservations(new Calendar.Builder().setDate(2000, 2, 2).setTimeOfDay(4, 12, 41, 10).build());

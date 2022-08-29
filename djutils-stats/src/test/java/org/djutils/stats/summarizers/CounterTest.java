@@ -29,7 +29,7 @@ public class CounterTest
         assertEquals(0L, counter.getN());
         assertEquals(0L, counter.getCount());
 
-        counter.ingest(2);
+        counter.register(2);
         assertEquals(1L, counter.getN());
         assertEquals(2L, counter.getCount());
 
@@ -40,7 +40,7 @@ public class CounterTest
         long value = 0;
         for (int i = 0; i < 100; i++)
         {
-            counter.ingest(2 * i);
+            counter.register(2 * i);
             value += 2 * i;
         }
         assertEquals(100, counter.getN());
