@@ -330,7 +330,7 @@ public interface PolyLine<L extends PolyLine<L, P, R, LS>, P extends Point<P>, R
      * @return L; a PolyLine at the specified offset from the this PolyLine
      * @throws DrawRuntimeException Only if P is PolyLine3d and the line cannot be projected into 2d
      */
-    default L offsetLine(double offset) throws DrawRuntimeException
+    default L offsetLine(final double offset) throws DrawRuntimeException
     {
         return offsetLine(offset, DEFAULT_CIRCLE_PRECISION, DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
                 DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, DEFAULT_OFFSET_FILTER_RATIO, DEFAULT_OFFSET_PRECISION);
@@ -380,7 +380,7 @@ public interface PolyLine<L extends PolyLine<L, P, R, LS>, P extends Point<P>, R
      *             offsetMinimumFilterValue &gt;= offsetMaximumFilterValue
      * @throws DrawRuntimeException Only if P is PolyLine3d and the line cannot be projected into 2d
      */
-    default L offsetLine(double offsetAtStart, double offsetAtEnd) throws IllegalArgumentException, DrawRuntimeException
+    default L offsetLine(final double offsetAtStart, final double offsetAtEnd) throws IllegalArgumentException, DrawRuntimeException
     {
         return offsetLine(offsetAtStart, offsetAtEnd, DEFAULT_CIRCLE_PRECISION, DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
                 DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, DEFAULT_OFFSET_FILTER_RATIO, DEFAULT_OFFSET_PRECISION);
