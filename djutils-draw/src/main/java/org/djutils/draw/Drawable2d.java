@@ -4,7 +4,7 @@ import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.Point2d;
 
 /**
- * Drawable2d is the interface that all drawable objects that use 2d coordinates must implement.
+ * Drawable2d is the interface that all drawable objects that use 2D coordinates must implement.
  * <p>
  * Copyright (c) 2020-2022 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.

@@ -1095,6 +1095,12 @@ public class PolyLine3dTest
             assertEquals("i-th point from line iterator", array[nextIndex++], iterator.next());
         }
         assertEquals("iterator returned all points", array.length, nextIndex);
+        List<Point3d> pointList = line.getPointList();
+        for (nextIndex = 0; nextIndex < pointList.size(); nextIndex++)
+        {
+            assertEquals("i-th point from point list", array[nextIndex], pointList.get(nextIndex));
+        }
+        assertEquals("pointList contains all points", array.length, nextIndex);
 
         PolyLine3d filtered = line.noiseFilteredLine(0.0);
         assertEquals("filtered with 0 tolerance returns line", line, filtered);

@@ -238,7 +238,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     /**
-     * Construct a new PolyLine2d (closed shape) from a Path2D.
+     * Construct a new PolyLine2d from a Path2D.
      * @param path Path2D; the Path2D to construct this PolyLine2d from.
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
@@ -600,7 +600,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             }
             catch (DrawRuntimeException exception)
             {
-                // cannot happen
+                // Cannot happen
+                CategoryLogger.always().error(exception);
+                throw new Error(exception);
             }
         }
 
@@ -694,7 +696,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             {
                 return result == 0.0 ? 0.0 : Double.NaN;
             }
-            // limitHanling is false
+            // limitHandling is false
             if (result == 0.0)
             {
                 return 0.0;
@@ -754,11 +756,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         {
             return getLocation(projectOrthogonalFractional(point, true) * getLength());
         }
-        catch (DrawRuntimeException e)
+        catch (DrawRuntimeException exception)
         {
             // Cannot happen
-            e.printStackTrace();
-            return null;
+            CategoryLogger.always().error(exception);
+            throw new Error(exception);
         }
     }
 
@@ -1250,6 +1252,21 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         return positionAtBestDistance;
     }
 
+    /**
+     * Construct a Path2D from this PolyLine2d. The result is NOT cached (in the current implementation).
+     * @return Path2D; newly construct Path2D consisting solely of straight segments.
+     */
+    public Path2D toPath2D()
+    {
+        Path2D.Double result = new Path2D.Double();
+        result.moveTo(this.x[0], this.y[0]);
+        for (int i = 1; i < this.x.length; i++)
+        {
+            result.lineTo(this.x[i], this.y[i]);
+        }
+        return result;
+    }
+    
     /** {@inheritDoc} */
     @Override
     public String toString()
@@ -1293,7 +1310,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     /**
-     * Convert this PolyLine3D to Peter's plot format.
+     * Convert this PolyLine2D to Peter's plot format.
      * @return Peter's format plot output
      */
     public String toPlot()

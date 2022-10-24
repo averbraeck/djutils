@@ -1,5 +1,7 @@
 package org.djutils.draw.line;
 
+import java.awt.geom.Path2D;
+import java.awt.geom.Path2D.Double;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -327,6 +329,18 @@ public class Polygon2d extends PolyLine2d
         return new Polygon2d(super.reverse().getPoints());
     }
 
+    /**
+     * Construct a Path2D from this PolyLine2d. The result is NOT cached (in the current implementation).
+     * @return Path2D; newly construct Path2D consisting solely of straight segments.
+     */
+    @Override
+    public Path2D toPath2D()
+    {
+        Path2D.Double result = (Double) super.toPath2D();
+        result.closePath();
+        return result;
+    }
+    
     /** {@inheritDoc} */
     @Override
     public final String toExcel()

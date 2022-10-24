@@ -1,9 +1,13 @@
 package org.djutils.draw;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.djutils.draw.point.Point;
+import org.djutils.exceptions.Throw;
 
 /**
  * Drawable is an interface to indicate zero or more points can be retrieved to draw the object.
@@ -24,6 +28,18 @@ public interface Drawable<P extends Point<P>> extends Serializable
     Iterator<? extends P> getPoints();
 
     /**
+     * Create a list of all points that make up this Drawable. This method is expensive as a new list is constructed on each
+     * invocation.
+     * @return List&lt;<? extends P>>; a list containing all points of this Drawable
+     */
+    default List<P> getPointList()
+    {
+        List<P> result = new ArrayList<>(size());
+        getPoints().forEachRemaining(result::add);
+        return result;
+    }
+
+    /**
      * Retrieve the number of points that make up the object.
      * @return int; the number of points that make up the object
      */
@@ -34,7 +50,7 @@ public interface Drawable<P extends Point<P>> extends Serializable
      * @return int; the number of dimensions
      */
     int getDimensions();
-    
+
     /**
      * Produce a string describing the Drawable using default conversion for the (double) coordinate values. Regrettably, it is
      * not allowed to provide a default implementation here.

@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.awt.geom.Path2D;
+import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -378,7 +380,36 @@ public class Polygon2dTest
                 fail("Second field " + fields[1] + " does not parse as a double");
             }
         }
-
+        
+        Path2D path = pl.toPath2D();
+        int index = 0;
+        for (PathIterator pi = path.getPathIterator(null); !pi.isDone(); pi.next())
+        {
+            double[] p = new double[6];
+            int segType = pi.currentSegment(p);
+            if (segType == PathIterator.SEG_MOVETO || segType == PathIterator.SEG_LINETO)
+            {
+                if (index == 0)
+                {
+                    assertEquals("First segment must be move", PathIterator.SEG_MOVETO, segType);
+                }
+                else
+                {
+                    assertEquals("Additional segments are line segments", PathIterator.SEG_LINETO, segType);
+                }
+                assertEquals("X coordinate", points[index].x, p[0], 0.00001);
+                assertEquals("Y coordinate", points[index].y, p[1], 0.00001);
+            }
+            else if (index == points.length)
+            {
+                assertEquals("Last segment must be close", PathIterator.SEG_CLOSE, segType);
+            }
+            else
+            {
+                fail("Unexpected segment type");
+            }
+            index++;
+        }
     }
 
 }
