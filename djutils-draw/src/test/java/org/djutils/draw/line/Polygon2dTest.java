@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.Point2d;
 import org.junit.Test;
 
@@ -33,8 +34,8 @@ public class Polygon2dTest
     @Test
     public void testConstructors()
     {
-        double[] x = new double[] { 1, 3, 5 };
-        double[] y = new double[] { 2, 1, 10 };
+        double[] x = new double[] {1, 3, 5};
+        double[] y = new double[] {2, 1, 10};
         double actualSurface = ((x[0] - x[2]) * (y[1] - y[0]) - (x[0] - x[1]) * (y[2] - y[0])) / 2;
 
         Polygon2d polygon = new Polygon2d(x, y);
@@ -43,8 +44,8 @@ public class Polygon2dTest
         assertEquals("surface of reversed polygon", -actualSurface, reversed.surface(), Math.ulp(-actualSurface));
         assertTrue("reversed polygon is also convex", reversed.isConvex());
 
-        x = new double[] { 1, 3, 5, 1 };
-        y = new double[] { 2, 1, 10, 2 };
+        x = new double[] {1, 3, 5, 1};
+        y = new double[] {2, 1, 10, 2};
         polygon = new Polygon2d(x, y); // Last point is duplicate of first point; should be handled gracefully
         assertTrue("toString returns something descriptive", polygon.toString().startsWith("Polygon2d"));
         assertTrue("toString can suppress the class name", polygon.toString().indexOf(polygon.toString(true)) > 0);
@@ -56,15 +57,15 @@ public class Polygon2dTest
         // Make a Polygon2d from Point2d where last point differs from first only in y
         new Polygon2d(polygon.get(0), polygon.get(1), polygon.get(2), new Point2d(polygon.get(0).x, 123));
 
-        x = new double[] { 1, 3, 1 }; // x coordinate of last point matches that of first
-        y = new double[] { 2, 1, 10 }; // not true for y coordinates
+        x = new double[] {1, 3, 1}; // x coordinate of last point matches that of first
+        y = new double[] {2, 1, 10}; // not true for y coordinates
         polygon = new Polygon2d(x, y);
         // System.out.println(polygon);
         actualSurface = ((x[0] - x[2]) * (y[1] - y[0]) - (x[0] - x[1]) * (y[2] - y[0])) / 2;
         checkPolygon("constructed from arrays with first and last x equal", x, y, polygon, actualSurface, true);
 
-        x = new double[] { 1, 3, 5, 3 };
-        y = new double[] { 2, 2, 10, 10 };
+        x = new double[] {1, 3, 5, 3};
+        y = new double[] {2, 2, 10, 10};
         actualSurface = 2 * 8; // Parallelogram surface with two sides parallel to X-axis is easy
         polygon = new Polygon2d(x, y);
         checkPolygon("constructed from arrays", x, y, polygon, actualSurface, true);
@@ -76,7 +77,7 @@ public class Polygon2dTest
         assertEquals("Polygon created from polygon points is equal to original polygon", polygon, otherPolygon);
         otherPolygon = new Polygon2d(list.get(0), list.get(1), list.get(2), list.get(3));
         assertEquals("Polygon created from all four points of existing polygon is equal to original", polygon, otherPolygon);
-        
+
         Point2d[] pointArray = list.toArray(new Point2d[0]);
         otherPolygon = new Polygon2d(pointArray);
         assertEquals("Polygon created from array of points of existing polygon is equal to original", polygon, otherPolygon);
@@ -94,7 +95,7 @@ public class Polygon2dTest
         new Polygon2d(list.iterator());
         list.add(list.get(0));
         new Polygon2d(list.iterator());
-        
+
         // Make last TWO points duplicate of first point
         list.add(list.get(0));
         try
@@ -106,7 +107,7 @@ public class Polygon2dTest
         {
             // Ignore expected exception
         }
-        
+
         // Non convex polygon with unneeded points in horizontal and vertical side
         x = new double[] {0, 5, 10, 5, 10, 0, 0};
         y = new double[] {0, 0, 0, 5, 10, 10, 5};
@@ -136,7 +137,7 @@ public class Polygon2dTest
 
         try
         {
-            new Polygon2d(new double[] { 1, 2, 3 }, new double[] { 1, 2, 3, 4 });
+            new Polygon2d(new double[] {1, 2, 3}, new double[] {1, 2, 3, 4});
             fail("unequal length of coordinate array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -146,7 +147,7 @@ public class Polygon2dTest
 
         try
         {
-            new Polygon2d(new double[] { 1, 2, 3, 4 }, new double[] { 1, 2, 3 });
+            new Polygon2d(new double[] {1, 2, 3, 4}, new double[] {1, 2, 3});
             fail("unequal length of coordinate array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -156,7 +157,7 @@ public class Polygon2dTest
 
         try
         {
-            new Polygon2d(null, new double[] { 1, 2, 3 });
+            new Polygon2d(null, new double[] {1, 2, 3});
             fail("null for x array hould have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -166,7 +167,7 @@ public class Polygon2dTest
 
         try
         {
-            new Polygon2d(new double[] { 1, 2, 3 }, null);
+            new Polygon2d(new double[] {1, 2, 3}, null);
             fail("null for x array hould have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -176,7 +177,7 @@ public class Polygon2dTest
 
         try
         {
-            new Polygon2d(new double[] { 1 }, new double[] { 1 });
+            new Polygon2d(new double[] {1}, new double[] {1});
             fail("too short coordinate array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -206,7 +207,7 @@ public class Polygon2dTest
 
         try
         {
-            new Polygon2d(new Point2d(1, 2), new Point2d(3, 2), new Point2d[] { new Point2d(1, 2), new Point2d(1, 2) });
+            new Polygon2d(new Point2d(1, 2), new Point2d(3, 2), new Point2d[] {new Point2d(1, 2), new Point2d(1, 2)});
             fail("two identical points at end, matching first point should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -244,9 +245,9 @@ public class Polygon2dTest
         {
             // Ignore expected exception
         }
-        
-        assertEquals("After filtering; there are two points left", 2, new Polygon2d(true, points).size()); 
-        
+
+        assertEquals("After filtering; there are two points left", 2, new Polygon2d(true, points).size());
+
         List<Point2d> list = Arrays.asList(points);
         try
         {
@@ -257,8 +258,8 @@ public class Polygon2dTest
         {
             // Ignore expected exception
         }
-        
-        assertEquals("After filtering; there are two points left", 2, new Polygon2d(true, list).size()); 
+
+        assertEquals("After filtering; there are two points left", 2, new Polygon2d(true, list).size());
     }
 
     /**
@@ -293,19 +294,19 @@ public class Polygon2dTest
     }
 
     /**
-     * Test the contains method.
+     * Test the contains method for a Point2D.
      */
     @Test
-    public void containsTest()
+    public void containsPointTest()
     {
         // Parallelogram that nowhere crosses integer coordinates; so there is a clear result for all integer coordinates
-        Polygon2d polygon = new Polygon2d(new double[] { 4.8, 10.2, 15.2, 9.8 }, new double[] { -10.1, -10.1, 0.1, 0.1 });
+        Polygon2d polygon = new Polygon2d(new double[] {4.8, 10.2, 15.2, 9.8}, new double[] {-10.1, -10.1, 0.1, 0.1});
         // System.out.print(polygon.toPlot() + " c1,0,0");
         for (int x = 0; x < 20; x += 1)
         {
             for (int y = -15; y < 5; y++)
             {
-                boolean expected = y <= 0 && y >= -10 && x >= 10 + y * 0.5 && x <= 15 + y * 0.5;
+                boolean expected = pointInParallelogram(x, y);
                 // System.out
                 // .println(String.format("%s M%.1f,%.1f L%.1f,%.1f M%.1f,%.1f L%.1f,%.1f", expected ? "c1,0,0" : "c0,0,0",
                 // x - 0.1, (double) y, x + 0.1, (double) y, (double) x, y - 0.1, (double) x, y + 0.1));
@@ -316,13 +317,51 @@ public class Polygon2dTest
     }
 
     /**
+     * Test the contains method for a Bounds2d.
+     */
+    @Test
+    public void containsBoundsTest()
+    {
+        // Parallelogram that nowhere crosses integer coordinates; so there is a clear result for all integer coordinates
+        Polygon2d polygon = new Polygon2d(new double[] {4.8, 10.2, 15.2, 9.8}, new double[] {-10.1, -10.1, 0.1, 0.1});
+        // System.out.print(polygon.toPlot() + " c1,0,0");
+        for (int x = 0; x < 20; x += 1)
+        {
+            for (int y = -15; y < 5; y++)
+            {
+                for (int dX = 0; dX < 4; dX++)
+                {
+                    for (int dY = 0; dY < 4; dY++)
+                    {
+                        boolean expected = dX > 0 && dY > 0 && pointInParallelogram(x, y) && pointInParallelogram(x + dX, y)
+                                && pointInParallelogram(x, y + dY) && pointInParallelogram(x + dX, y + dY);
+                        Bounds2d bounds = new Bounds2d(new Point2d(x, y), new Point2d(x + dX, y + dY));
+                        assertEquals("contains", expected, polygon.contains(bounds));
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Test code used in the contains tests. Only works for the parallelogram that is used in those tests.
+     * @param x int; the X coordinate
+     * @param y int; the Y coordinate
+     * @return boolean; true if (x,y) is inside the parallelogram; false if (x,y) is not inside the parallelogram
+     */
+    private boolean pointInParallelogram(final int x, final int y)
+    {
+        return y <= 0 && y >= -10 && x >= 10 + y * 0.5 && x <= 15 + y * 0.5;
+    }
+
+    /**
      * Test the debugging output methods.
      */
     @Test
     public void testExports()
     {
         Point2d[] points =
-                new Point2d[] { new Point2d(123.456, 345.678), new Point2d(234.567, 456.789), new Point2d(-12.345, -34.567) };
+                new Point2d[] {new Point2d(123.456, 345.678), new Point2d(234.567, 456.789), new Point2d(-12.345, -34.567)};
         Polygon2d pl = new Polygon2d(points);
         String[] out = pl.toExcel().split("\\n");
         assertEquals("Excel output consists of one line per point plus one", points.length + 1, out.length);
@@ -380,7 +419,7 @@ public class Polygon2dTest
                 fail("Second field " + fields[1] + " does not parse as a double");
             }
         }
-        
+
         Path2D path = pl.toPath2D();
         int index = 0;
         for (PathIterator pi = path.getPathIterator(null); !pi.isDone(); pi.next())

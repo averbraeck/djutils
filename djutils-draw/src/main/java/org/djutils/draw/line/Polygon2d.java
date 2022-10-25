@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
 
@@ -277,6 +278,23 @@ public class Polygon2d extends PolyLine2d
             prevPointY = curPointY;
         }
         return counter % 2 != 0;
+    }
+
+    /**
+     * Determine if this Polygon completely contains a Bounds2d object. If this Polygon self-intersects, the results is bogus.
+     * @param bounds Bounds2d; the Bounds2d object
+     * @return boolean; true if the Bounds2d object is completely contained in this Polygon; false if any part (or all) of the
+     *         Bounds2d object is outside this Polygon. If the Bounds2d object touches this Polygon the results are ill-defined.
+     */
+    public boolean contains(final Bounds2d bounds)
+    {
+        // Step 1: quick check to see if the bounds intersect
+        if (getBounds().disjoint(bounds))
+        {
+            return false;
+        }
+        // This is a quick hack
+        return toPath2D().contains(bounds.getMinX(), bounds.getMinY(), bounds.getDeltaX(), bounds.getDeltaY());
     }
 
     /**
