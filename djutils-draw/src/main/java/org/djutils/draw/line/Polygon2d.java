@@ -202,8 +202,8 @@ public class Polygon2d extends PolyLine2d
     }
 
     /**
-     * Determine if this Polygon2d is convex. Returns bogus result for self-intersecting polygons. Derived from
-     * http://paulbourke.net/geometry/polygonmesh/source2.c
+     * Determine if this Polygon is convex. Returns bogus result for self-intersecting polygons. Derived from
+     * <a href="http://paulbourke.net/geometry/polygonmesh/source2.c">Convex by Paul Bourke</a>
      * @return boolean; true if this Polygon2d is convex; false if this Polygon2d is concave
      */
     public final boolean isConvex()
@@ -243,7 +243,7 @@ public class Polygon2d extends PolyLine2d
 
     /**
      * Determine if a point is inside this Polygon. Returns bogus results for self-intersecting polygons. Derived from
-     * http://paulbourke.net/geometry/polygonmesh/
+     * <a href="http://paulbourke.net/geometry/polygonmesh/">Polygons and meshes by Paul Bourke</a>
      * @param x double; the x-coordinate of the point
      * @param y double; the y-coordinate of the point
      * @return boolean; true if the point is inside this polygon, false if the point is outside this polygon. Results are
@@ -286,15 +286,16 @@ public class Polygon2d extends PolyLine2d
      */
     public double surface()
     {
-        // TODO scale all coordinates back to something local to reduce rounding errors
+        // Translate all coordinates to the median of the bounding box to minimize rounding errors
+        Point2d midPoint = getBounds().midPoint();
         double result = 0;
         // We initialize previous point to the last point of this Polygon2d to avoid wrapping problems
-        double prevX = getX(size() - 1);
-        double prevY = getY(size() - 1);
+        double prevX = getX(size() - 1) - midPoint.x;
+        double prevY = getY(size() - 1) - midPoint.y;
         for (int i = 0; i < size(); i++)
         {
-            double thisX = getX(i);
-            double thisY = getY(i);
+            double thisX = getX(i) - midPoint.x;
+            double thisY = getY(i) - midPoint.y;
             result += prevX * thisY - thisX * prevY;
             prevX = thisX;
             prevY = thisY;
@@ -340,7 +341,7 @@ public class Polygon2d extends PolyLine2d
         result.closePath();
         return result;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public final String toExcel()
