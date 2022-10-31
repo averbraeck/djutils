@@ -344,6 +344,99 @@ public class Polygon2dTest
     }
 
     /**
+     * Construct a list of Point2d spread out regularly over a circle.
+     * @param centerX double; center X of the circle
+     * @param centerY double; center Y of the circle
+     * @param radius double; radius of the circle
+     * @param size int; number of points in the polygon
+     * @return List&lt;OTSPoin3D&gt;; the points that lie on a regular polygon
+     */
+    private List<Point2d> makePolygon(final double centerX, final double centerY, final double radius, final int size)
+    {
+        List<Point2d> points = new ArrayList<>(size);
+        for (int i = 0; i < size; i++)
+        {
+            double angle = Math.PI * 2 * i / size;
+            points.add(new Point2d(centerX + radius * Math.cos(angle), centerY + radius * Math.sin(angle)));
+        }
+        return points;
+    }
+
+    /**
+     * Test the intersects intersects method.
+     */
+    @Test
+    public final void testIntersects()
+    {
+        double radius = 10;
+        double cx = 5;
+        double cy = -5;
+        Polygon2d reference = new Polygon2d(makePolygon(cx, cy, radius, 18));
+        for (int dx = -20; dx <= 20; dx++)
+        {
+            for (int dy = -20; dy <= 20; dy++)
+            {
+                boolean hit = true;
+                double distance = Math.sqrt(dx * dx + dy * dy);
+                double radius2 = 2;
+                if (distance > radius + radius2)
+                {
+                    hit = false;
+                }
+                else if (distance > radius + radius2 - 0.1)
+                {
+                    continue; // too close to be sure
+                }
+                Polygon2d other = new Polygon2d(makePolygon(cx + dx, cy + dy, radius2, 16));
+                if (hit)
+                {
+                    assertTrue("shapes hit", reference.intersects(other));
+                }
+                else
+                {
+                    assertFalse("shapes do not hit", reference.intersects(other));
+                }
+            }
+        }
+        reference = new Polygon2d(new Point2d[] {new Point2d(0, 0), new Point2d(10, 0), new Point2d(10, 10)});
+        // Make shapes that overlap along the X axis
+        for (int dx = -20; dx <= 20; dx++)
+        {
+            Polygon2d other = new Polygon2d(new Point2d[] {new Point2d(dx, 0), new Point2d(dx + 5, 0), new Point2d(dx, -20)});
+            boolean hit = dx >= -5 && dx <= 10;
+            // System.out.println("hit="+hit+"\treference: " + reference + "\tother: "+ other);
+            if (hit)
+            {
+                assertTrue("shapes hit", reference.intersects(other));
+            }
+            else
+            {
+                assertFalse("shapes do not hit", reference.intersects(other));
+            }
+        }
+        // Make shapes that overlap along the Y axis
+        for (int dy = -20; dy <= 20; dy++)
+        {
+            Polygon2d other = new Polygon2d(new Point2d[] {new Point2d(20, dy), new Point2d(10, dy), new Point2d(10, dy + 10)});
+            boolean hit = dy >= -10 && dy <= 10;
+            if (hit)
+            {
+                assertTrue("shapes hit", reference.intersects(other));
+            }
+            else
+            {
+                assertFalse("shapes do not hit", reference.intersects(other));
+            }
+        }
+        // Make vertical and horizontal box
+        Polygon2d vertical = new Polygon2d(new Point2d[] {new Point2d(-1, -10), new Point2d(1, -10), new Point2d(1, 10),
+                new Point2d(-1, 10), new Point2d(-1, -10)});
+        Polygon2d horizontal = new Polygon2d(new Point2d[] {new Point2d(-10, -1), new Point2d(10, -1), new Point2d(10, 1),
+                new Point2d(-10, 1), new Point2d(-10, -1)});
+        assertTrue("shapes hit", vertical.intersects(horizontal));
+    }
+
+    /**
      * Test code used in the contains tests. Only works for the parallelogram that is used in those tests.
      * @param x int; the X coordinate
      * @param y int; the Y coordinate

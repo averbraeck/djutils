@@ -337,7 +337,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Drawable2
     {
         Throw.whenNull(drawable, "drawable cannot be null");
         Bounds2d bounds = drawable.getBounds();
-        return bounds.minX >= this.maxX || bounds.maxX <= this.minX || bounds.minY >= this.maxY || bounds.maxY <= this.minY;
+        return bounds.minX > this.maxX || bounds.maxX < this.minX || bounds.minY > this.maxY || bounds.maxY < this.minY;
     }
 
     /** {@inheritDoc} */

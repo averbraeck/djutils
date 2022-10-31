@@ -423,8 +423,8 @@ public class Bounds2dTest
         assertFalse("No intersection", br.intersects(br2));
         assertTrue("Disjoint", br.disjoint(br2));
         br2 = new Bounds2d(br.getMaxX(), br.getMaxX() + 0.0001, br.getMinY() + 0.0001, br.getMaxY() + 0.0001);
-        assertTrue("Only touching at vertical line is disjoint", br.disjoint(br2));
-        assertTrue("Only touching at vertical line is disjoint", br2.disjoint(br));
+        assertFalse("Only touching at vertical line is not disjoint", br.disjoint(br2));
+        assertFalse("Only touching at vertical line is not disjoint", br2.disjoint(br));
 
         try
         {

@@ -103,8 +103,8 @@ public interface Bounds<B extends Bounds<B, P, D>, P extends Point<P>, D extends
     boolean covers(D drawable) throws NullPointerException;
 
     /**
-     * Return whether a Drawable is disjoint from this Bounds. Only touching at an edge is considered disjoint. A Drawable that
-     * completely surrounds this Drawable is <b>not</b> disjoint.
+     * Return whether a Drawable is disjoint from this Bounds. Touching at an edge is <b>not</b> considered disjoint. A Drawable
+     * that completely surrounds this Drawable is <b>not</b> disjoint.
      * @param drawable D; the drawable
      * @return boolean; true if the drawable is disjoint from this Bounds, or only touches an edge; false if any point of the
      *         drawable is inside this Bounds, or the drawable surrounds this Bounds
@@ -113,7 +113,7 @@ public interface Bounds<B extends Bounds<B, P, D>, P extends Point<P>, D extends
     boolean disjoint(D drawable) throws NullPointerException;
 
     /**
-     * Return whether this Bounds intersects another Bounds. Only touching at an edge is not seen as intersecting.
+     * Return whether this Bounds intersects another Bounds. Touching at an edge is considered intersecting.
      * @param otherBounds B; the other Bounds
      * @return boolean; whether this bounding box/rectangle intersects the other Bounds
      * @throws NullPointerException when otherBounds is null
@@ -121,7 +121,7 @@ public interface Bounds<B extends Bounds<B, P, D>, P extends Point<P>, D extends
     boolean intersects(B otherBounds);
 
     /**
-     * Return the intersecting Bounds of this Bounds and another Bounds. Touching at the edge is not seen as intersecting. In
+     * Return the intersecting Bounds of this Bounds and another Bounds. Touching at an edge is considered intersecting. In
      * case there is no intersection, null is returned.
      * @param otherBounds B; the other Bounds
      * @return Bounds; the intersecting Bounds of this Bounds and another Bounds. Touching at the edge is not seen as

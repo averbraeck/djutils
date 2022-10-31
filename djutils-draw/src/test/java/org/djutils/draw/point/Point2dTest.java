@@ -64,7 +64,7 @@ public class Point2dTest
             // Ignore expected exception
         }
 
-        double[] p2Arr = new double[] { 5.0, 6.0 };
+        double[] p2Arr = new double[] {5.0, 6.0};
         p = new Point2d(p2Arr);
         assertEquals(5.0, p.x, 0);
         assertEquals(6.0, p.y, 0);
@@ -97,7 +97,7 @@ public class Point2dTest
             @Override
             public void execute() throws Throwable
             {
-                new Point2d(new double[] { 1.0 });
+                new Point2d(new double[] {1.0});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -106,7 +106,7 @@ public class Point2dTest
             @Override
             public void execute() throws Throwable
             {
-                new Point2d(new double[] { 1.0, 2.0, 3.0 });
+                new Point2d(new double[] {1.0, 2.0, 3.0});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -351,6 +351,8 @@ public class Point2dTest
                 new Point2d(6, 6), new Point2d(4, 2), new Point2d(-2, 2)));
         assertEquals("Intersection is at (2,2)", new Point2d(2, 2),
                 Point2d.intersectionOfLineSegments(1, 1, 6, 6, 4, 2, -2, 2));
+        assertEquals("Intersection is at (2,2)", new Point2d(2, 2),
+                Point2d.intersectionOfLineSegments(new LineSegment2d(1, 1, 6, 6), new LineSegment2d(4, 2, -2, 2)));
         // Check all four ways that two non-parallel lines can miss each other
         assertNull("line two passes before start of line one", Point2d.intersectionOfLineSegments(new Point2d(1, 1),
                 new Point2d(5, 5), new Point2d(0, -3), new Point2d(10, 0)));
@@ -361,10 +363,16 @@ public class Point2dTest
         assertNull("line one passes after end of line two", Point2d.intersectionOfLineSegments(new Point2d(1, 1),
                 new Point2d(5, 5), new Point2d(-10, 3), new Point2d(0, 2)));
         assertNull("line two passes before start of line one", Point2d.intersectionOfLineSegments(1, 1, 5, 5, 0, -3, 10, 0));
+        assertNull("line two passes before start of line one",
+                Point2d.intersectionOfLineSegments(new LineSegment2d(1, 15, 5, 5), new LineSegment2d(0, -3, 10, 0)));
         assertNull("line two passes before after end of line one",
                 Point2d.intersectionOfLineSegments(1, 1, 5, 5, 0, 20, 100, 30));
         assertNull("line one passes before start of line two", Point2d.intersectionOfLineSegments(1, 1, 5, 5, 5, 3, 10, 2));
+        assertNull("line one passes before start of line two",
+                Point2d.intersectionOfLineSegments(new LineSegment2d(1, 1, 5, 5), new LineSegment2d(5, 3, 10, 2)));
         assertNull("line one passes after end of line two", Point2d.intersectionOfLineSegments(1, 1, 5, 5, -10, 3, 0, 2));
+        assertNull("line one passes after end of line two",
+                Point2d.intersectionOfLineSegments(new LineSegment2d(1, 1, 5, 5), new LineSegment2d(-10, 3, 0, 2)));
 
         Point2d line1P1 = new Point2d(1, 2);
         Point2d line1P2 = new Point2d(3, 2);
@@ -466,6 +474,8 @@ public class Point2dTest
                 new Point2d(1, 10), new Point2d(1, 2), new Point2d(1, 10)));
         assertNull("vertical line intersection with itself returns null",
                 Point2d.intersectionOfLineSegments(1, 2, 1, 10, 1, 2, 1, 10));
+        assertNull("vertical line intersection with itself returns null",
+                Point2d.intersectionOfLineSegments(new LineSegment2d(1, 2, 1, 10), new LineSegment2d(1, 2, 1, 10)));
         assertEquals("Intersection is at (2,2)", new Point2d(2, 2),
                 Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(6, 6), new Point2d(4, 2), new Point2d(-2, 2)));
         // Check all four ways that two non-parallel lines can miss each other
@@ -518,7 +528,7 @@ public class Point2dTest
     public void testClosestPointOnSegmentAndLine() throws DrawRuntimeException
     {
         Point2d p1 = new Point2d(-2, 3);
-        for (Point2d p2 : new Point2d[] { new Point2d(7, 4)/* angled */, new Point2d(-3, 6) /* also angled */,
+        for (Point2d p2 : new Point2d[] {new Point2d(7, 4)/* angled */, new Point2d(-3, 6) /* also angled */,
                 new Point2d(-2, -5) /* vertical */, new Point2d(8, 3)/* horizontal */ })
         {
             PolyLine2d line = new PolyLine2d(p1, p2);

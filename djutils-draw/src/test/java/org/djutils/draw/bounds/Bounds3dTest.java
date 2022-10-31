@@ -525,8 +525,8 @@ public class Bounds3dTest
         assertTrue("Disjoint", bb.disjoint(bb2));
         bb2 = new Bounds3d(bb.getMaxX(), bb.getMaxX() + 0.0001, bb.getMinY() + 0.0001, bb.getMaxY() + 0.0001,
                 bb.getMinZ() + 0.0001, bb.getMaxZ() + 0.0001);
-        assertTrue("Only touching at vertical line is disjoint", bb.disjoint(bb2));
-        assertTrue("Only touching at vertical line is disjoint", bb2.disjoint(bb));
+        assertFalse("Only touching at vertical line is not disjoint", bb.disjoint(bb2));
+        assertFalse("Only touching at vertical line is not disjoint", bb2.disjoint(bb));
 
         try
         {

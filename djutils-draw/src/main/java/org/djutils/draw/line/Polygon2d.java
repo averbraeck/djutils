@@ -265,7 +265,7 @@ public class Polygon2d extends PolyLine2d
             double curPointX = getX(i);
             double curPointY = getY(i);
             // Combined 4 if statements into one; I trust that the java compiler will short-circuit this nicely
-            if (y > Math.min(prevPointY, curPointY) && y <= Math.max(prevPointY, curPointY)
+            if (y >= Math.min(prevPointY, curPointY) && y <= Math.max(prevPointY, curPointY)
                     && x <= Math.max(prevPointX, curPointX) && prevPointY != curPointY)
             {
                 double xIntersection = (y - prevPointY) * (curPointX - prevPointX) / (curPointY - prevPointY) + prevPointX;
@@ -295,6 +295,115 @@ public class Polygon2d extends PolyLine2d
         }
         // This is a quick hack
         return toPath2D().contains(bounds.getMinX(), bounds.getMinY(), bounds.getDeltaX(), bounds.getDeltaY());
+    }
+
+    /**
+     * Determine if this Polygon intersects another Polygon.
+     * @param other Polygon2d; the other Polygon
+     * @return boolean; true if the polygons intersect; false if the polygons are disjunct. Ill-defined if the polygons touch.
+     */
+    public boolean intersects(final Polygon2d other)
+    {
+        // step 1: quick check to see if the bounds intersect
+        if (!getBounds().intersects(other.getBounds()))
+        {
+            return false;
+        }
+
+        // step 2: quick check to see if any of the points of this polygon lies inside the other polygon
+        for (Iterator<Point2d> iterator = getPoints(); iterator.hasNext();)
+        {
+            if (other.contains(iterator.next()))
+            {
+                return true;
+            }
+        }
+
+        // step 3: quick check to see if any of the points of shape 2 is in shape 1
+        for (Iterator<Point2d> iterator = other.getPoints(); iterator.hasNext();)
+        {
+            if (contains(iterator.next()))
+            {
+                return true;
+            }
+        }
+
+        // step 4: see if any of the lines of shape 1 and shape 2 intersect (expensive!)
+        for (int i = 0; i < this.size(); i++)
+        {
+            LineSegment2d ourSegment = getSegment(i);
+            for (int j = 0; j < other.size(); j++)
+            {
+                LineSegment2d otherSegment = other.getSegment(j);
+                Point2d intersection = Point2d.intersectionOfLineSegments(ourSegment, otherSegment);
+                if (intersection != null)
+                {
+                    double p1x = ourSegment.startX, p1y = ourSegment.startY;
+                    double d1x = ourSegment.endX - p1x, d1y = ourSegment.endY - p1y;
+                    double p2x = otherSegment.startX, p2y = otherSegment.startY;
+                    double d2x = otherSegment.endX - p2x, d2y = otherSegment.endY - p2y;
+
+                    double det = d2x * d1y - d2y * d1x;
+                    if (det == 0)
+                    {
+                        /*- lines (partially) overlap
+                         situations:
+                         X============X        X============X        X============X        X=======X      X====X  
+                                X---------X       X------X           X----X                X-------X           X----X
+                         a. 2 intersections    b. 2 intersections    c. 1 intersection     d. 0 inters.   e. 0 inters.
+                         */
+                        Point2d p1s = ourSegment.getStartPoint(), p1e = ourSegment.getEndPoint();
+                        Point2d p2s = otherSegment.getStartPoint(), p2e = otherSegment.getEndPoint();
+                        if ((p1s.equals(p2s) && p1e.equals(p2e)) || (p1s.equals(p2e) && p1e.equals(p2s)))
+                        {
+                            return true; // situation d.
+                        }
+                        if (p1s.equals(p2s)
+                                && p2e.closestPointOnLine(ourSegment.startX, ourSegment.startY, ourSegment.endX,
+                                        ourSegment.endY).distance(p2e) > 0
+                                && p1e.closestPointOnLine(otherSegment.startX, otherSegment.startY, otherSegment.endX,
+                                        otherSegment.endY).distance(p1e) > 0)
+                        {
+                            return true; // situation e.
+                        }
+                        if (p1e.equals(p2e)
+                                && p2s.closestPointOnLine(ourSegment.startX, ourSegment.startY, ourSegment.endX,
+                                        ourSegment.endY).distance(p2e) > 0
+                                && p1s.closestPointOnLine(otherSegment.startX, otherSegment.startY, otherSegment.endX,
+                                        otherSegment.endY).distance(p1e) > 0)
+                        {
+                            return true; // situation e.
+                        }
+                        if (p1s.equals(p2e)
+                                && p2s.closestPointOnLine(ourSegment.startX, ourSegment.startY, ourSegment.endX,
+                                        ourSegment.endY).distance(p2e) > 0
+                                && p1e.closestPointOnLine(otherSegment.startX, otherSegment.startY, otherSegment.endX,
+                                        otherSegment.endY).distance(p1e) > 0)
+                        {
+                            return true; // situation e.
+                        }
+                        if (p1e.equals(p2s) 
+                                && p2e.closestPointOnLine(ourSegment.startX, ourSegment.startY, ourSegment.endX,
+                                        ourSegment.endY).distance(p2e) > 0
+                                && p1s.closestPointOnLine(otherSegment.startX, otherSegment.startY, otherSegment.endX,
+                                        otherSegment.endY).distance(p1e) > 0)
+                        {
+                            return true; // situation e.
+                        }
+                    }
+                    else
+                    {
+                        double z = (d2x * (p2y - p1y) + d2y * (p1x - p2x)) / det;
+                        if (Math.abs(z) < 10.0 * Math.ulp(1.0) || Math.abs(z - 1.0) > 10.0 * Math.ulp(1.0))
+                        {
+                            return true; // intersection at end point
+                        }
+                    }
+
+                }
+            }
+        }
+        return false;
     }
 
     /**

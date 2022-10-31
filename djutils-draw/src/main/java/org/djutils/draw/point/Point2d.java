@@ -10,6 +10,7 @@ import java.util.Locale;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.line.LineSegment2d;
 import org.djutils.exceptions.Throw;
 
 /**
@@ -129,7 +130,7 @@ public class Point2d implements Drawable2d, Point<Point2d>
     @Override
     public Iterator<? extends Point2d> getPoints()
     {
-        return Arrays.stream(new Point2d[] { this }).iterator();
+        return Arrays.stream(new Point2d[] {this}).iterator();
     }
 
     /**
@@ -369,6 +370,18 @@ public class Point2d implements Drawable2d, Point<Point2d>
     {
         return intersectionOfLines(line1P1X, line1P1Y, line1P2X, line1P2Y, true, true, line2P1X, line2P1Y, line2P2X, line2P2Y,
                 true, true);
+    }
+
+    /**
+     * Compute the 2D intersection of two line segments.
+     * @param segment1 LineSegment; the first line segment
+     * @param segment2 LineSegment; the other line segment
+     * @return Point2d; the intersection of the line segments, or null if the line segments do not intersect
+     */
+    public static Point2d intersectionOfLineSegments(final LineSegment2d segment1, final LineSegment2d segment2)
+    {
+        return intersectionOfLineSegments(segment1.startX, segment1.startY, segment1.endX, segment1.endY,
+                segment2.startX, segment2.startY, segment2.endX, segment2.endY);
     }
 
     /** {@inheritDoc} */

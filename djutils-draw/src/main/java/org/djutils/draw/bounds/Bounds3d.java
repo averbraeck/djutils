@@ -360,8 +360,8 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     {
         Throw.whenNull(drawable, "drawable cannot be null");
         Bounds3d bounds = drawable.getBounds();
-        return bounds.minX >= this.maxX || bounds.maxX <= this.minX || bounds.minY >= this.maxY || bounds.maxY <= this.minY
-                || bounds.minZ >= this.maxZ || bounds.maxZ <= this.minZ;
+        return bounds.minX > this.maxX || bounds.maxX < this.minX || bounds.minY > this.maxY || bounds.maxY < this.minY
+                || bounds.minZ > this.maxZ || bounds.maxZ < this.minZ;
     }
 
     /** {@inheritDoc} */
