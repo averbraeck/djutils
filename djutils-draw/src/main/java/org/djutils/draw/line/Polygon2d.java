@@ -344,54 +344,7 @@ public class Polygon2d extends PolyLine2d
                     double d2x = otherSegment.endX - p2x, d2y = otherSegment.endY - p2y;
 
                     double det = d2x * d1y - d2y * d1x;
-                    if (det == 0)
-                    {
-                        /*- lines (partially) overlap
-                         situations:
-                         X============X        X============X        X============X        X=======X      X====X  
-                                X---------X       X------X           X----X                X-------X           X----X
-                         a. 2 intersections    b. 2 intersections    c. 1 intersection     d. 0 inters.   e. 0 inters.
-                         */
-                        Point2d p1s = ourSegment.getStartPoint(), p1e = ourSegment.getEndPoint();
-                        Point2d p2s = otherSegment.getStartPoint(), p2e = otherSegment.getEndPoint();
-                        if ((p1s.equals(p2s) && p1e.equals(p2e)) || (p1s.equals(p2e) && p1e.equals(p2s)))
-                        {
-                            return true; // situation d.
-                        }
-                        if (p1s.equals(p2s)
-                                && p2e.closestPointOnLine(ourSegment.startX, ourSegment.startY, ourSegment.endX,
-                                        ourSegment.endY).distance(p2e) > 0
-                                && p1e.closestPointOnLine(otherSegment.startX, otherSegment.startY, otherSegment.endX,
-                                        otherSegment.endY).distance(p1e) > 0)
-                        {
-                            return true; // situation e.
-                        }
-                        if (p1e.equals(p2e)
-                                && p2s.closestPointOnLine(ourSegment.startX, ourSegment.startY, ourSegment.endX,
-                                        ourSegment.endY).distance(p2e) > 0
-                                && p1s.closestPointOnLine(otherSegment.startX, otherSegment.startY, otherSegment.endX,
-                                        otherSegment.endY).distance(p1e) > 0)
-                        {
-                            return true; // situation e.
-                        }
-                        if (p1s.equals(p2e)
-                                && p2s.closestPointOnLine(ourSegment.startX, ourSegment.startY, ourSegment.endX,
-                                        ourSegment.endY).distance(p2e) > 0
-                                && p1e.closestPointOnLine(otherSegment.startX, otherSegment.startY, otherSegment.endX,
-                                        otherSegment.endY).distance(p1e) > 0)
-                        {
-                            return true; // situation e.
-                        }
-                        if (p1e.equals(p2s) 
-                                && p2e.closestPointOnLine(ourSegment.startX, ourSegment.startY, ourSegment.endX,
-                                        ourSegment.endY).distance(p2e) > 0
-                                && p1s.closestPointOnLine(otherSegment.startX, otherSegment.startY, otherSegment.endX,
-                                        otherSegment.endY).distance(p1e) > 0)
-                        {
-                            return true; // situation e.
-                        }
-                    }
-                    else
+                    if (det != 0)
                     {
                         double z = (d2x * (p2y - p1y) + d2y * (p1x - p2x)) / det;
                         if (Math.abs(z) < 10.0 * Math.ulp(1.0) || Math.abs(z - 1.0) > 10.0 * Math.ulp(1.0))

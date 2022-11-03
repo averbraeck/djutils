@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.Transform2d;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.Point2d;
 import org.junit.Test;
@@ -434,6 +435,20 @@ public class Polygon2dTest
         Polygon2d horizontal = new Polygon2d(new Point2d[] {new Point2d(-10, -1), new Point2d(10, -1), new Point2d(10, 1),
                 new Point2d(-10, 1), new Point2d(-10, -1)});
         assertTrue("shapes hit", vertical.intersects(horizontal));
+        // Test all cases of co-linear edges
+        Polygon2d one = new Polygon2d(new Point2d(3, 4), new Point2d(4, 3), new Point2d(4, -3), new Point2d(3, -4),
+                new Point2d(-3, -4), new Point2d(-4, -3), new Point2d(-4, 3), new Point2d(-3, 4));
+        Polygon2d two = new Polygon2d(new Transform2d().translate(8,0).transform(one.getPoints()));
+        assertTrue("shapes hit", one.intersects(two));
+        two = new Polygon2d(new Transform2d().translate(8,2).transform(one.getPoints()));
+        assertTrue("shapes hit", one.intersects(two));
+        two = new Polygon2d(new Transform2d().translate(8,6).transform(one.getPoints()));
+        assertTrue("shapes hit", one.intersects(two));
+        two = new Polygon2d(new Transform2d().translate(7.75,6.25).transform(one.getPoints()));
+        assertTrue("shapes hit", one.intersects(two));
+        two = new Polygon2d(new Transform2d().translate(7,7).transform(one.getPoints()));
+        assertTrue("shapes hit", one.intersects(two));
+        
     }
 
     /**
