@@ -116,7 +116,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * @param p Point2d; the point of the degenerate PolyLine2d
      * @param heading double; the heading in radians
      * @throws NullPointerException when p is null
-     * @throws DrawRuntimeException when heading is infinite
+     * @throws DrawRuntimeException when heading is NaN, or heading is infinite
      */
     public PolyLine2d(final Point2d p, final double heading) throws NullPointerException, DrawRuntimeException
     {
