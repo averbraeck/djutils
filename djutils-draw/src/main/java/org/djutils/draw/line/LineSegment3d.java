@@ -194,6 +194,13 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d>
 
     /** {@inheritDoc} */
     @Override
+    public LineSegment3d reverse()
+    {
+        return new LineSegment3d(this.endX, this.endY, this.endZ, this.startX, this.startY, this.startZ);
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public Point3d projectOrthogonal(final Point3d point) throws NullPointerException
     {
         Throw.whenNull(point, "point may not be null");

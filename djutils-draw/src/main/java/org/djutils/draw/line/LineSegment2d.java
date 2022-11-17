@@ -162,6 +162,13 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d>
         Throw.whenNull(point, "point may not be null");
         return point.closestPointOnLine(this.startX, this.startY, this.endX, this.endY, true, true);
     }
+    
+    /** {@inheritDoc} */
+    @Override
+    public LineSegment2d reverse()
+    {
+        return new LineSegment2d(this.endX, this.endY, this.startX, this.startY);
+    }
 
     /** {@inheritDoc} */
     @Override

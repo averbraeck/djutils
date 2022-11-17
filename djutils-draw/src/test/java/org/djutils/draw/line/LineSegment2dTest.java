@@ -132,7 +132,7 @@ public class LineSegment2dTest
             // Ignore expected exception
         }
 
-        for (double position : new double[] { -3, -0.5, 0, 1, 10, 100 })
+        for (double position : new double[] {-3, -0.5, 0, 1, 10, 100})
         {
             if (position < 0 || position > segment.getLength())
             {
@@ -207,6 +207,18 @@ public class LineSegment2dTest
         result = segment.closestPointOnSegment(new Point2d(20, 10));
         assertEquals("result is end point", segment.endX, result.x, 0);
         assertEquals("result is end point", segment.endY, result.y, 0);
+    }
+
+    /**
+     * Test the reverse operation.
+     */
+    @Test
+    public void testReverse()
+    {
+        LineSegment2d segment = new LineSegment2d(1, 2, 20, 10);
+        LineSegment2d reversed = segment.reverse();
+        verifySegment("reversed", reversed, 20, 10, 1, 2);
+        assertEquals("reversed reversed equals original", segment, reversed.reverse());
     }
 
     /**

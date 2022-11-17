@@ -52,12 +52,18 @@ public interface LineSegment<P extends Point<P>, R extends Ray<R, P>>
     P closestPointOnSegment(P point) throws NullPointerException;
 
     /**
+     * Construct a new LineSegment with the points of this LineSegment in reverse order.
+     * @return LineSegment; the new LineSegment
+     */
+    LineSegment<P, R> reverse();
+
+    /**
      * Create a Ray on a specified point on this LineSegment.
      * @param position double; the distance from the start point of this LineSegment.
      * @return R; a ray beginning at the specified position
      * @throws DrawRuntimeException when position is NaN, &lt; 0 or &gt; length of this LineSegment
      */
-    default R getLocation(double position) throws DrawRuntimeException
+    default R getLocation(final double position) throws DrawRuntimeException
     {
         Throw.when(position < 0 || position > getLength(), DrawRuntimeException.class,
                 "position must be positive and less than the length of this LineSegment");

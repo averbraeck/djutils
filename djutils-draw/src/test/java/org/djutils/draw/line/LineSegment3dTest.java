@@ -241,6 +241,18 @@ public class LineSegment3dTest
     }
 
     /**
+     * Test the reverse operation.
+     */
+    @Test
+    public void testReverse()
+    {
+        LineSegment3d segment = new LineSegment3d(1, 2, 3, 20, 10, 5);
+        LineSegment3d reversed = segment.reverse();
+        verifySegment("reversed", reversed, 20, 10, 5, 1, 2, 3);
+        assertEquals("reversed reversed equals original", segment, reversed.reverse());
+    }
+    
+    /**
      * Test the project methods.
      */
     @Test
