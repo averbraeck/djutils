@@ -225,6 +225,15 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d>
         return this.startX + "\t" + this.startY + "\n" + this.endX + "\t" + this.endY + "\n";
     }
 
+    /**
+     * Convert this PolyLine2D to Peter's plot format.
+     * @return Peter's format plot output
+     */
+    public String toPlot()
+    {
+        return String.format(Locale.US, "M%.3f,%.3fL%.3f,%.3f\n", this.startX, this.startY, this.endX, this.endY);
+    }
+
     /** {@inheritDoc} */
     @Override
     public int hashCode()

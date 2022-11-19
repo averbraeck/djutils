@@ -245,7 +245,7 @@ public class LineSegment2dTest
      * @throws NumberFormatException if that happens, this test has failed
      */
     @Test
-    public void testToExcel() throws NumberFormatException
+    public void testExports() throws NumberFormatException
     {
         LineSegment2d segment = new LineSegment2d(1, 2, 20, 10);
         String result = segment.toExcel();
@@ -261,6 +261,52 @@ public class LineSegment2dTest
                 double expectedValue = lineNo == 0 ? (fieldNo == 0 ? segment.startX : segment.startY)
                         : (fieldNo == 0 ? segment.endX : segment.endY);
                 assertEquals("field contains the correct value", expectedValue, value, 0.0001);
+            }
+        }
+        result = segment.toPlot();
+        assertEquals("result is one line", 1, result.split("\n").length);
+        int valuesSeen = 0;
+        int pos = 0;
+        while ( pos < result.length())
+        {
+            if (valuesSeen % 2 == 0)
+            {
+                assertEquals("command is M", valuesSeen == 0 ? "M" : "L", result.substring(pos, pos + 1));
+            }
+            else
+            {
+                assertEquals("coordinates are separated by a comma", ",", result.substring(pos, pos + 1));
+            }
+            pos++;
+            int endPos = pos;
+            while (endPos < result.length())
+            {
+                if ("0123456789.".indexOf(result.substring(endPos, endPos + 1)) >= 0)
+                {
+                    endPos++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            double value = Double.NaN;
+            double expectedValue = valuesSeen == 0 ? segment.startX : valuesSeen == 1 ? segment.startY: valuesSeen == 2 ? segment.endX: segment.endY;
+            try
+            {
+                value = Double.parseDouble(result.substring(pos, endPos));
+                assertEquals("value matches", expectedValue, value, 0);
+            }
+            catch (NumberFormatException nfe)
+            {
+                fail("sub string should have been a parsable double value");
+            }
+            valuesSeen++;
+            pos = endPos;
+            if (valuesSeen == 4)
+            {
+                assertEquals("line terminator at end", "\n", result.substring(pos));
+                pos++;
             }
         }
     }
