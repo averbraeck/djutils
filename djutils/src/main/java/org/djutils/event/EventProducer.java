@@ -117,4 +117,118 @@ public interface EventProducer
      */
     Set<EventType> getEventTypesWithListeners() throws RemoteException;
 
+    /**
+     * Transmit an event to all subscribed listeners.
+     * @param event Event; the event
+     * @throws RemoteException If a network connection failure occurs.
+     */
+    void fireEvent(Event event) throws RemoteException;
+
+    /**
+     * Transmit a time-stamped event to all interested listeners.
+     * @param event TimedEvent&lt;C&gt;; the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @throws RemoteException If a network connection failure occurs.
+     */
+    default <C extends Comparable<C> & Serializable> void fireTimedEvent(final TimedEvent<C> event) throws RemoteException
+    {
+        fireEvent(event);
+    }
+
+    /**
+     * Transmit an event with no payload object to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @throws RemoteException If a network connection failure occurs.
+     */
+    default void fireEvent(final EventType eventType) throws RemoteException
+    {
+        this.fireEvent(new Event(eventType, getSourceId(), null, true));
+    }
+
+    /**
+     * Transmit a time-stamped event with a no payload object to all interested listeners.
+     * @param eventType TimedEventType; the eventType of the event.
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @throws RemoteException If a network connection failure occurs.
+     */
+    default <C extends Comparable<C> & Serializable> void fireTimedEvent(final TimedEventType eventType, final C time)
+            throws RemoteException
+    {
+        this.fireEvent(new TimedEvent<C>(eventType, getSourceId(), null, time, true));
+    }
+
+    /**
+     * Transmit an event with a serializable object as payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value Serializable; the object sent with the event
+     * @throws RemoteException If a network connection failure occurs.
+     */
+    default void fireEvent(final EventType eventType, final Serializable value) throws RemoteException
+    {
+        this.fireEvent(new Event(eventType, getSourceId(), value, true));
+    }
+
+    /**
+     * Transmit a time-stamped event with a Serializable object (payload) to all interested listeners.
+     * @param eventType TimedEventType; the eventType of the event.
+     * @param value Serializable; the payload sent with the event
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @throws RemoteException If a network connection failure occurs.
+     */
+    default <C extends Comparable<C> & Serializable> void fireTimedEvent(final TimedEventType eventType,
+            final Serializable value, final C time) throws RemoteException
+    {
+        this.fireEvent(new TimedEvent<C>(eventType, getSourceId(), value, time, true));
+    }
+
+    /**
+     * Transmit an event with no payload object to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @throws RemoteException If a network connection failure occurs.
+     */
+    default void fireUnverifiedEvent(final EventType eventType) throws RemoteException
+    {
+        this.fireEvent(new Event(eventType, getSourceId(), null, false));
+    }
+
+    /**
+     * Transmit a time-stamped event with a no payload object to all interested listeners.
+     * @param eventType TimedEventType; the eventType of the event.
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @throws RemoteException If a network connection failure occurs.
+     */
+    default <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final TimedEventType eventType, final C time)
+            throws RemoteException
+    {
+        this.fireEvent(new TimedEvent<C>(eventType, getSourceId(), null, time, false));
+    }
+
+    /**
+     * Transmit an event with a serializable object as payload to all interested listeners.
+     * @param eventType EventType; the eventType of the event
+     * @param value Serializable; the object sent with the event
+     * @throws RemoteException If a network connection failure occurs.
+     */
+    default void fireUnverifiedEvent(final EventType eventType, final Serializable value) throws RemoteException
+    {
+        this.fireEvent(new Event(eventType, getSourceId(), value, false));
+    }
+
+    /**
+     * Transmit a time-stamped event with a Serializable object (payload) to all interested listeners.
+     * @param eventType TimedEventType; the eventType of the event.
+     * @param value Serializable; the payload sent with the event
+     * @param time C; a time stamp for the event
+     * @param <C> the comparable type to indicate the time when the event is fired
+     * @throws RemoteException If a network connection failure occurs.
+     */
+    default <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final TimedEventType eventType,
+            final Serializable value, final C time) throws RemoteException
+    {
+        fireEvent(new TimedEvent<C>(eventType, getSourceId(), value, time, false));
+    }
+
 }
