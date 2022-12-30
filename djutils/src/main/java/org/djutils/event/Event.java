@@ -7,7 +7,16 @@ import org.djutils.metadata.MetaData;
 /**
  * The Event class forms the reference implementation for the EventInterface. Because events are often sent over the network,
  * the interface demands that source of the event and its content are serializable. It is the responsibility of the programmer,
- * though, that the <b>fields</b> of the sourceId and content are serializable as well.
+ * though, that the <b>fields</b> of the sourceId and content are serializable as well.<br>
+ * <br>
+ * In contrast with earlier implementations of the Event package, a <b>sourceId</b> is sent over the network rather than a
+ * pointer to the source itself. This has several advantages:
+ * <ol>
+ * <li>The object extending the EventProducer does not have to be Serializable itself</li>
+ * <li>There is no risk that the entire EventProducer object gets serialized (including subclasses) and is sent over the network
+ * <li>There is no risk that the receiver of an event gets a pointer to the sending object, while still being able to identify
+ * the sending object
+ * </ol>
  * <p>
  * Copyright (c) 2002-2022 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -19,13 +28,13 @@ import org.djutils.metadata.MetaData;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class AbstractEvent implements EventInterface
+public class Event implements Serializable
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140826L;
 
     /** The type of the event. */
-    private final EventTypeInterface type;
+    private final EventType type;
 
     /** The content of the event. */
     private final Serializable content;
@@ -35,24 +44,23 @@ public class AbstractEvent implements EventInterface
 
     /**
      * Construct a new Event, where compliance with the metadata is verified.
-     * @param type EventTypeInterface; the name of the Event.
+     * @param type EventType; the name of the Event.
      * @param sourceId Serializable; the source id of the sender
      * @param content Serializable; the content of the event
      */
-    public AbstractEvent(final EventTypeInterface type, final Serializable sourceId, final Serializable content)
+    public Event(final EventType type, final Serializable sourceId, final Serializable content)
     {
         this(type, sourceId, content, true);
     }
 
     /**
      * Construct a new Event, with a choice to verify compliance with metadata.
-     * @param type EventTypeInterface; the name of the Event.
+     * @param type EventType; the name of the Event.
      * @param sourceId Serializable; the source id of the sender
      * @param content Serializable; the content of the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      */
-    public AbstractEvent(final EventTypeInterface type, final Serializable sourceId, final Serializable content,
-            final boolean verifyMetaData)
+    public Event(final EventType type, final Serializable sourceId, final Serializable content, final boolean verifyMetaData)
     {
         this.type = type;
         this.sourceId = sourceId;
@@ -74,23 +82,29 @@ public class AbstractEvent implements EventInterface
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Return the id of the source of the event. The source is, or identifies the sender of the event
+     * @return Serializable; the id of the source of the event
+     */
     public final Serializable getSourceId()
     {
         return this.sourceId;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Return the content (payload) of this event.
+     * @return Serializable; the content (payload) of this event
+     */
     public final Serializable getContent()
     {
         return this.content;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public EventTypeInterface getType()
+    /**
+     * Return the type of the event.
+     * @return EventType; the type of the event
+     */
+    public EventType getType()
     {
         return this.type;
     }
@@ -118,7 +132,7 @@ public class AbstractEvent implements EventInterface
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AbstractEvent other = (AbstractEvent) obj;
+        Event other = (Event) obj;
         if (this.content == null)
         {
             if (other.content != null)
