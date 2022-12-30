@@ -1,13 +1,15 @@
 package org.djutils.event;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
+import org.djutils.event.ref.Reference;
 import org.djutils.event.ref.ReferenceType;
 
 /**
  * EmbeddedEventProducer is an EventProducer that embeds the exact event producer (local, RMI, message bus, ...) that is used.
- * Classes can extend this type to embed an EventProducer, or copy this 
+ * Classes can extend this type to embed an EventProducer, or copy this
  * <p>
  * Copyright (c) 2022-2022 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -20,7 +22,7 @@ public class EmbeddedEventProducer implements EventProducer
 {
     /** */
     private static final long serialVersionUID = 20221230L;
-    
+
     /** the embedded event producer. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     protected final EventProducer eventProducer;
@@ -77,6 +79,13 @@ public class EmbeddedEventProducer implements EventProducer
     public int numberOfListeners(final EventType eventType)
     {
         return this.eventProducer.numberOfListeners(eventType);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<Reference<EventListener>> getListenerReferences(final EventType eventType)
+    {
+        return this.eventProducer.getListenerReferences(eventType);
     }
 
     /** {@inheritDoc} */
