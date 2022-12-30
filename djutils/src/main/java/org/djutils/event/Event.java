@@ -2,6 +2,7 @@ package org.djutils.event;
 
 import java.io.Serializable;
 
+import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
 
 /**
@@ -62,10 +63,12 @@ public class Event implements Serializable
      */
     public Event(final EventType type, final Serializable sourceId, final Serializable content, final boolean verifyMetaData)
     {
+        Throw.whenNull(type, "type cannot be null");
+        Throw.whenNull(sourceId, "sourceId cannot be null");
         this.type = type;
         this.sourceId = sourceId;
         this.content = content;
-        if (verifyMetaData && null != this.type)
+        if (verifyMetaData)
         {
             MetaData metaData = type.getMetaData();
             if (null != metaData)
