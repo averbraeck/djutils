@@ -27,7 +27,7 @@ public interface EventListener extends java.util.EventListener, Serializable
     /**
      * Notifies the event listener of an event. This operation forms the callback method of the asynchronous communication
      * protocol expressed in the event package.
-     * @param event EventInterface; the event which is sent to the listener
+     * @param event Event; the event which is sent to the listener
      * @throws RemoteException If a network connection failure occurs.
      */
     void notify(Event event) throws RemoteException;
