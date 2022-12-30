@@ -6,8 +6,8 @@ import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
 
 /**
- * The Event class forms the reference implementation for the Event. Because events are often sent over the network,
- * the interface demands that source of the event and its content are serializable. It is the responsibility of the programmer,
+ * The Event class forms the reference implementation for the Event. Because events are often sent over the network, the
+ * interface demands that source of the event and its content are serializable. It is the responsibility of the programmer,
  * though, that the <b>fields</b> of the sourceId and content are serializable as well.<br>
  * <br>
  * In contrast with earlier implementations of the Event package, a <b>sourceId</b> is sent over the network rather than a
@@ -160,4 +160,11 @@ public class Event implements Serializable
         return true;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "[" + this.getClass().getName() + ";" + this.getType() + ";" + this.getSourceId() + ";" + this.getContent()
+                + "]";
+    }
 }
