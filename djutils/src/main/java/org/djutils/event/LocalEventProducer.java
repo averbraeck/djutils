@@ -16,8 +16,8 @@ import org.djutils.event.ref.WeakReference;
 import org.djutils.exceptions.Throw;
 
 /**
- * The EventProducer forms the reference implementation of the EventProducerInterface. The storage of the listeners is done in a
- * Map with the EventType as the key, and a List of References (weak or strong) to the Listeners.
+ * The EventProducer forms the reference implementation of the publish side of the pub/sub design pattern. The storage of the
+ * listeners is done in a Map with the EventType as the key, and a List of References (weak or strong) to the Listeners.
  * <p>
  * Copyright (c) 2002-2022 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -29,7 +29,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class EventProducerImpl implements EventProducerInterface, Serializable
+public class LocalEventProducer implements EventProducerInterface, Serializable
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20200207;
@@ -37,42 +37,36 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
     /** The collection of interested listeners. */
     private EventListenerMap listeners = new EventListenerMap();
 
-    /** The embedding event producer that uses this helper class. */
-    private final EventProducerInterface embeddingEventProducer;
-
+    /** The source id for identifying the sender of the event. */
+    private final Serializable sourceId;
+    
     /**
-     * Construct the helper class to execute the work for registering listeners and firing events.
-     * @param embeddingEventProducer EventProducerInterface; the embedding event producer class
+     * Construct a new EventProducer.
+     * @param sourceId Serializable; the sourceId of the event producer to identify the event publisher
+     * 
      */
-    public EventProducerImpl(final EventProducerInterface embeddingEventProducer)
+    public LocalEventProducer(final Serializable sourceId)
     {
-        this.embeddingEventProducer = embeddingEventProducer;
+        this.sourceId = sourceId;
     }
 
     /** {@inheritDoc} */
     @Override
-    public Serializable getSourceId() // without RemoteException
+    public Serializable getSourceId()
     {
-        try
-        {
-            return this.embeddingEventProducer.getSourceId();
-        }
-        catch (RemoteException rme)
-        {
-            throw new RuntimeException(rme);
-        }
+        return this.sourceId;
     }
 
     /** {@inheritDoc} */
     @Override
-    public final synchronized boolean addListener(final EventListenerInterface listener, final EventTypeInterface eventType)
+    public final synchronized boolean addListener(final EventListener listener, final EventType eventType)
     {
         return this.addListener(listener, eventType, EventProducerInterface.FIRST_POSITION);
     }
 
     /** {@inheritDoc} */
     @Override
-    public final synchronized boolean addListener(final EventListenerInterface listener, final EventTypeInterface eventType,
+    public final synchronized boolean addListener(final EventListener listener, final EventType eventType,
             final ReferenceType referenceType)
     {
         return this.addListener(listener, eventType, EventProducerInterface.FIRST_POSITION, referenceType);
@@ -80,16 +74,15 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /** {@inheritDoc} */
     @Override
-    public final synchronized boolean addListener(final EventListenerInterface listener, final EventTypeInterface eventType,
-            final int position)
+    public final synchronized boolean addListener(final EventListener listener, final EventType eventType, final int position)
     {
         return this.addListener(listener, eventType, position, ReferenceType.STRONG);
     }
 
     /** {@inheritDoc} */
     @Override
-    public final synchronized boolean addListener(final EventListenerInterface listener, final EventTypeInterface eventType,
-            final int position, final ReferenceType referenceType)
+    public final synchronized boolean addListener(final EventListener listener, final EventType eventType, final int position,
+            final ReferenceType referenceType)
     {
         Throw.whenNull(listener, "listener cannot be null");
         Throw.whenNull(eventType, "eventType cannot be null");
@@ -98,25 +91,25 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
         {
             return false;
         }
-        Reference<EventListenerInterface> reference = null;
+        Reference<EventListener> reference = null;
         if (referenceType.isStrong())
         {
-            reference = new StrongReference<EventListenerInterface>(listener);
+            reference = new StrongReference<EventListener>(listener);
         }
         else
         {
-            reference = new WeakReference<EventListenerInterface>(listener);
+            reference = new WeakReference<EventListener>(listener);
         }
         if (this.listeners.containsKey(eventType))
         {
-            for (Reference<EventListenerInterface> entry : this.listeners.get(eventType))
+            for (Reference<EventListener> entry : this.listeners.get(eventType))
             {
                 if (listener.equals(entry.get()))
                 {
                     return false;
                 }
             }
-            List<Reference<EventListenerInterface>> entries = this.listeners.get(eventType);
+            List<Reference<EventListener>> entries = this.listeners.get(eventType);
             if (position == EventProducerInterface.LAST_POSITION)
             {
                 entries.add(reference);
@@ -128,7 +121,7 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
         }
         else
         {
-            List<Reference<EventListenerInterface>> entries = new ArrayList<>();
+            List<Reference<EventListener>> entries = new ArrayList<>();
             entries.add(reference);
             this.listeners.put(eventType, entries);
         }
@@ -139,29 +132,29 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * Transmit an event to a listener. This method is a hook method. The default implementation simply invokes the notify on
      * the listener. In specific cases (filtering, storing, queuing, this method can be overwritten.
      * @param listener EventListenerInterface; the listener for this event
-     * @param event EventInterface; the event to fire
+     * @param event Event; the event to fire
      * @throws RemoteException on network failure
      */
-    public void fireEvent(final EventListenerInterface listener, final EventInterface event) throws RemoteException
+    public void fireEvent(final EventListener listener, final Event event) throws RemoteException
     {
         listener.notify(event);
     }
 
     /**
      * Transmit an event to all interested listeners.
-     * @param event EventInterface; the event
+     * @param event Event; the event
      */
-    public synchronized void fireEvent(final EventInterface event)
+    public synchronized void fireEvent(final Event event)
     {
         Throw.whenNull(event, "event may not be null");
         Throw.whenNull(event.getType(), "event type may not be null");
         if (this.listeners.containsKey(event.getType()))
         {
             // make a safe copy because of possible removeListener() in notify() method during fireEvent
-            List<Reference<EventListenerInterface>> listenerList = new ArrayList<>(this.listeners.get(event.getType()));
-            for (Reference<EventListenerInterface> reference : listenerList)
+            List<Reference<EventListener>> listenerList = new ArrayList<>(this.listeners.get(event.getType()));
+            for (Reference<EventListener> reference : listenerList)
             {
-                EventListenerInterface listener = reference.get();
+                EventListener listener = reference.get();
                 try
                 {
                     if (listener != null)
@@ -187,89 +180,70 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
     }
 
     /**
-     * Transmit a regular event to all interested listeners.
-     * @param event EventInterface; the event
-     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
-     */
-    public void fireEvent(final EventInterface event, final boolean verifyMetaData)
-    {
-        fireEvent(event);
-    }
-
-    /**
      * Transmit a time-stamped event to all interested listeners.
-     * @param event TimedEventInterface&lt;C&gt;; the event
-     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
+     * @param event TimedEvent&lt;C&gt;; the event
      * @param <C> the comparable type to indicate the time when the event is fired
      */
-    public <C extends Comparable<C> & Serializable> void fireTimedEvent(final TimedEventInterface<C> event,
-            final boolean verifyMetaData)
+    public <C extends Comparable<C> & Serializable> void fireTimedEvent(final TimedEvent<C> event)
     {
         fireEvent(event);
     }
 
     /**
      * Transmit an event with no payload object to all interested listeners.
-     * @param eventType EventTypeInterface; the eventType of the event
-     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
+     * @param eventType EventType; the eventType of the event
      */
-    public void fireEvent(final EventTypeInterface eventType, final boolean verifyMetaData)
+    public void fireEvent(final EventType eventType)
     {
-        this.fireEvent(new Event(eventType, getSourceId(), null, verifyMetaData));
+        this.fireEvent(new Event(eventType, getSourceId(), null, true));
     }
 
     /**
      * Transmit a time-stamped event with a no payload object to all interested listeners.
-     * @param eventType TimedEventTypeInterface; the eventType of the event.
+     * @param eventType TimedEventType; the eventType of the event.
      * @param time C; a time stamp for the event
-     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      */
-    public <C extends Comparable<C> & Serializable> void fireTimedEvent(final TimedEventTypeInterface eventType, final C time,
-            final boolean verifyMetaData)
+    public <C extends Comparable<C> & Serializable> void fireTimedEvent(final TimedEventType eventType, final C time)
     {
-        Throw.whenNull(time, "time may not be null");
-        this.fireEvent(new TimedEvent<C>(eventType, getSourceId(), null, time, verifyMetaData));
+        this.fireEvent(new TimedEvent<C>(eventType, getSourceId(), null, time, true));
     }
 
     /**
      * Transmit an event with a serializable object as payload to all interested listeners.
-     * @param eventType EventTypeInterface; the eventType of the event
+     * @param eventType EventType; the eventType of the event
      * @param value Serializable; the object sent with the event
-     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return Serializable; the payload
      */
-    public Serializable fireEvent(final EventTypeInterface eventType, final Serializable value, final boolean verifyMetaData)
+    public Serializable fireEvent(final EventType eventType, final Serializable value)
     {
-        this.fireEvent(new Event(eventType, getSourceId(), value, verifyMetaData));
+        this.fireEvent(new Event(eventType, getSourceId(), value, true));
         return value;
     }
 
     /**
      * Transmit a time-stamped event with a Serializable object (payload) to all interested listeners.
-     * @param eventType TimedEventTypeInterface; the eventType of the event.
+     * @param eventType TimedEventType; the eventType of the event.
      * @param value Serializable; the payload sent with the event
      * @param time C; a time stamp for the event
-     * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return Serializable; the payload
      * @param <C> the comparable type to indicate the time when the event is fired
      */
-    public <C extends Comparable<C> & Serializable> Serializable fireTimedEvent(final TimedEventTypeInterface eventType,
-            final Serializable value, final C time, final boolean verifyMetaData)
+    public <C extends Comparable<C> & Serializable> Serializable fireTimedEvent(final TimedEventType eventType,
+            final Serializable value, final C time)
     {
-        Throw.whenNull(time, "time may not be null");
-        this.fireEvent(new TimedEvent<C>(eventType, getSourceId(), value, time, verifyMetaData));
+        this.fireEvent(new TimedEvent<C>(eventType, getSourceId(), value, time, true));
         return value;
     }
 
     /**
      * Transmit an event with a one byte payload to all interested listeners.
-     * @param eventType EventTypeInterface; the eventType of the event
+     * @param eventType EventType; the eventType of the event
      * @param value byte; the payload
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return byte; the payload
      */
-    public byte fireEvent(final EventTypeInterface eventType, final byte value, final boolean verifyMetaData)
+    public byte fireEvent(final EventType eventType, final byte value, final boolean verifyMetaData)
     {
         this.fireEvent(eventType, Byte.valueOf(value), verifyMetaData);
         return value;
@@ -277,15 +251,15 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit a time-stamped event with a one byte payload to all interested listeners.
-     * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventType; the eventType of the event
      * @param value byte; the payload
      * @param time C; a time stamp for the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return byte; the payload
      */
-    public <C extends Comparable<C> & Serializable> byte fireTimedEvent(final TimedEventTypeInterface eventType,
-            final byte value, final C time, final boolean verifyMetaData)
+    public <C extends Comparable<C> & Serializable> byte fireTimedEvent(final TimedEventType eventType, final byte value,
+            final C time, final boolean verifyMetaData)
     {
         this.fireTimedEvent(eventType, Byte.valueOf(value), time, verifyMetaData);
         return value;
@@ -293,12 +267,12 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit an event with a one char payload to all interested listeners.
-     * @param eventType EventTypeInterface; the eventType of the event
+     * @param eventType EventType; the eventType of the event
      * @param value char; the payload
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return char; the payload
      */
-    public char fireEvent(final EventTypeInterface eventType, final char value, final boolean verifyMetaData)
+    public char fireEvent(final EventType eventType, final char value, final boolean verifyMetaData)
     {
         this.fireEvent(eventType, Character.valueOf(value), verifyMetaData);
         return value;
@@ -306,15 +280,15 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit a time-stamped event with a one char payload to all interested listeners.
-     * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventType; the eventType of the event
      * @param value char; the payload
      * @param time C; a time stamp for the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return char; the payload
      */
-    public <C extends Comparable<C> & Serializable> char fireTimedEvent(final TimedEventTypeInterface eventType,
-            final char value, final C time, final boolean verifyMetaData)
+    public <C extends Comparable<C> & Serializable> char fireTimedEvent(final TimedEventType eventType, final char value,
+            final C time, final boolean verifyMetaData)
     {
         this.fireTimedEvent(eventType, Character.valueOf(value), time, verifyMetaData);
         return value;
@@ -322,12 +296,12 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit an event with a boolean payload to all interested listeners.
-     * @param eventType EventTypeInterface; the eventType of the event
+     * @param eventType EventType; the eventType of the event
      * @param value boolean; the payload
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return boolean; the payload
      */
-    public boolean fireEvent(final EventTypeInterface eventType, final boolean value, final boolean verifyMetaData)
+    public boolean fireEvent(final EventType eventType, final boolean value, final boolean verifyMetaData)
     {
         this.fireEvent(eventType, Boolean.valueOf(value), verifyMetaData);
         return value;
@@ -335,15 +309,15 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit a time-stamped event with a boolean payload to all interested listeners.
-     * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventType; the eventType of the event
      * @param value boolean; the payload
      * @param time C; a time stamp for the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return boolean; the payload
      */
-    public <C extends Comparable<C> & Serializable> boolean fireTimedEvent(final TimedEventTypeInterface eventType,
-            final boolean value, final C time, final boolean verifyMetaData)
+    public <C extends Comparable<C> & Serializable> boolean fireTimedEvent(final TimedEventType eventType, final boolean value,
+            final C time, final boolean verifyMetaData)
     {
         fireTimedEvent(eventType, Boolean.valueOf(value), time, verifyMetaData);
         return value;
@@ -351,12 +325,12 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit an event with a double value payload to all interested listeners.
-     * @param eventType EventTypeInterface; the eventType of the event
+     * @param eventType EventType; the eventType of the event
      * @param value double; the payload
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return double; the payload
      */
-    public double fireEvent(final EventTypeInterface eventType, final double value, final boolean verifyMetaData)
+    public double fireEvent(final EventType eventType, final double value, final boolean verifyMetaData)
     {
         this.fireEvent(eventType, Double.valueOf(value), verifyMetaData);
         return value;
@@ -364,15 +338,15 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit a time-stamped event with a double value payload to interested listeners.
-     * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventType; the eventType of the event
      * @param value double; the payload
      * @param time C; a time stamp for the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return double; the payload
      */
-    public <C extends Comparable<C> & Serializable> double fireTimedEvent(final TimedEventTypeInterface eventType,
-            final double value, final C time, final boolean verifyMetaData)
+    public <C extends Comparable<C> & Serializable> double fireTimedEvent(final TimedEventType eventType, final double value,
+            final C time, final boolean verifyMetaData)
     {
         this.fireTimedEvent(eventType, Double.valueOf(value), time, verifyMetaData);
         return value;
@@ -380,12 +354,12 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit an event with an integer payload to all interested listeners.
-     * @param eventType EventTypeInterface; the eventType of the event
+     * @param eventType EventType; the eventType of the event
      * @param value int; the payload
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return int; the payload
      */
-    public int fireEvent(final EventTypeInterface eventType, final int value, final boolean verifyMetaData)
+    public int fireEvent(final EventType eventType, final int value, final boolean verifyMetaData)
     {
         this.fireEvent(eventType, Integer.valueOf(value), verifyMetaData);
         return value;
@@ -393,14 +367,14 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit a time-stamped event with an integer payload to all interested listeners.
-     * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventType; the eventType of the event
      * @param value int; the payload
      * @param time C; a time stamp for the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return int; the payload
      */
-    public <C extends Comparable<C> & Serializable> int fireTimedEvent(final TimedEventTypeInterface eventType, final int value,
+    public <C extends Comparable<C> & Serializable> int fireTimedEvent(final TimedEventType eventType, final int value,
             final C time, final boolean verifyMetaData)
     {
         this.fireTimedEvent(eventType, Integer.valueOf(value), time, verifyMetaData);
@@ -409,12 +383,12 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit an event with a long payload to all interested listeners.
-     * @param eventType EventTypeInterface; the eventType of the event
+     * @param eventType EventType; the eventType of the event
      * @param value long; the payload
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return long; the payload
      */
-    public long fireEvent(final EventTypeInterface eventType, final long value, final boolean verifyMetaData)
+    public long fireEvent(final EventType eventType, final long value, final boolean verifyMetaData)
     {
         this.fireEvent(eventType, Long.valueOf(value), verifyMetaData);
         return value;
@@ -422,15 +396,15 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit a time-stamped event with a long payload to all interested listeners.
-     * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventType; the eventType of the event
      * @param value long; the payload
      * @param time C; a time stamp for the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return long; the payload
      */
-    public <C extends Comparable<C> & Serializable> long fireTimedEvent(final TimedEventTypeInterface eventType,
-            final long value, final C time, final boolean verifyMetaData)
+    public <C extends Comparable<C> & Serializable> long fireTimedEvent(final TimedEventType eventType, final long value,
+            final C time, final boolean verifyMetaData)
     {
         this.fireTimedEvent(eventType, Long.valueOf(value), time, verifyMetaData);
         return value;
@@ -438,12 +412,12 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit an event with a short payload to all interested listeners.
-     * @param eventType EventTypeInterface; the eventType of the event
+     * @param eventType EventType; the eventType of the event
      * @param value short; the payload
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return short; the payload
      */
-    public short fireEvent(final EventTypeInterface eventType, final short value, final boolean verifyMetaData)
+    public short fireEvent(final EventType eventType, final short value, final boolean verifyMetaData)
     {
         this.fireEvent(eventType, Short.valueOf(value), verifyMetaData);
         return value;
@@ -451,15 +425,15 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit a time-stamped event with a short payload to all interested listeners.
-     * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventType; the eventType of the event
      * @param value short; the payload
      * @param time C; a time stamp for the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return short; the payload
      */
-    public <C extends Comparable<C> & Serializable> short fireTimedEvent(final TimedEventTypeInterface eventType,
-            final short value, final C time, final boolean verifyMetaData)
+    public <C extends Comparable<C> & Serializable> short fireTimedEvent(final TimedEventType eventType, final short value,
+            final C time, final boolean verifyMetaData)
     {
         this.fireTimedEvent(eventType, Short.valueOf(value), time, verifyMetaData);
         return value;
@@ -467,12 +441,12 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit an event with a float value payload to all interested listeners.
-     * @param eventType EventTypeInterface; the eventType of the event
+     * @param eventType EventType; the eventType of the event
      * @param value float; the payload
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @return float; the payload
      */
-    public float fireEvent(final EventTypeInterface eventType, final float value, final boolean verifyMetaData)
+    public float fireEvent(final EventType eventType, final float value, final boolean verifyMetaData)
     {
         this.fireEvent(eventType, Float.valueOf(value), verifyMetaData);
         return value;
@@ -480,15 +454,15 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /**
      * Transmit a time-stamped event with a float value payload to interested listeners.
-     * @param eventType TimedEventTypeInterface; the eventType of the event
+     * @param eventType TimedEventType; the eventType of the event
      * @param value float; the payload
      * @param time C; a time stamp for the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      * @param <C> the comparable type to indicate the time when the event is fired
      * @return float; the payload
      */
-    public <C extends Comparable<C> & Serializable> float fireTimedEvent(final TimedEventTypeInterface eventType,
-            final float value, final C time, final boolean verifyMetaData)
+    public <C extends Comparable<C> & Serializable> float fireTimedEvent(final TimedEventType eventType, final float value,
+            final C time, final boolean verifyMetaData)
     {
         this.fireTimedEvent(eventType, Float.valueOf(value), time, verifyMetaData);
         return value;
@@ -515,12 +489,12 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
     {
         Throw.whenNull(ofClass, "ofClass may not be null");
         int result = 0;
-        Map<EventTypeInterface, Reference<EventListenerInterface>> removeMap = new LinkedHashMap<>();
-        for (EventTypeInterface type : this.listeners.keySet())
+        Map<EventType, Reference<EventListener>> removeMap = new LinkedHashMap<>();
+        for (EventType type : this.listeners.keySet())
         {
-            for (Iterator<Reference<EventListenerInterface>> ii = this.listeners.get(type).iterator(); ii.hasNext();)
+            for (Iterator<Reference<EventListener>> ii = this.listeners.get(type).iterator(); ii.hasNext();)
             {
-                Reference<EventListenerInterface> listener = ii.next();
+                Reference<EventListener> listener = ii.next();
                 if (listener.get().getClass().isAssignableFrom(ofClass))
                 {
                     removeMap.put(type, listener);
@@ -528,7 +502,7 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
                 }
             }
         }
-        for (EventTypeInterface type : removeMap.keySet())
+        for (EventType type : removeMap.keySet())
         {
             removeListener(removeMap.get(type).get(), type);
         }
@@ -537,7 +511,7 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /** {@inheritDoc} */
     @Override
-    public final synchronized boolean removeListener(final EventListenerInterface listener, final EventTypeInterface eventType)
+    public final synchronized boolean removeListener(final EventListener listener, final EventType eventType)
     {
         Throw.whenNull(listener, "listener may not be null");
         Throw.whenNull(eventType, "eventType may not be null");
@@ -546,10 +520,10 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
             return false;
         }
         boolean result = false;
-        for (Iterator<Reference<EventListenerInterface>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
+        for (Iterator<Reference<EventListener>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
         {
-            Reference<EventListenerInterface> reference = i.next();
-            EventListenerInterface entry = reference.get();
+            Reference<EventListener> reference = i.next();
+            EventListener entry = reference.get();
             if (entry == null)
             {
                 i.remove();
@@ -573,16 +547,15 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
     /**
      * Remove one reference from the subscription list.
      * @param reference Reference&lt;EventListenerInterface&gt;; the (strong or weak) reference to remove
-     * @param eventType EventTypeInterface; the eventType for which reference must be removed
+     * @param eventType EventType; the eventType for which reference must be removed
      * @return boolean; true if the reference was removed; otherwise false
      */
-    private synchronized boolean removeListener(final Reference<EventListenerInterface> reference,
-            final EventTypeInterface eventType)
+    private synchronized boolean removeListener(final Reference<EventListener> reference, final EventType eventType)
     {
         Throw.whenNull(reference, "reference may not be null");
         Throw.whenNull(eventType, "eventType may not be null");
         boolean success = false;
-        for (Iterator<Reference<EventListenerInterface>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
+        for (Iterator<Reference<EventListener>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
         {
             if (i.next().equals(reference))
             {
@@ -606,7 +579,7 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /** {@inheritDoc} */
     @Override
-    public synchronized int numberOfListeners(final EventTypeInterface eventType)
+    public synchronized int numberOfListeners(final EventType eventType)
     {
         if (this.listeners.containsKey(eventType))
         {
@@ -619,13 +592,13 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
      * Return a safe copy of the list of (strong or weak) references to the registered listeners for the provided event type, or
      * an empty list when nothing is registered for this event type. The method never returns a null pointer, so it is safe to
      * use the result directly in an iterator. The references to the listeners are the original references, so not safe copies.
-     * @param eventType EventTypeInterface; the event type to look up the listeners for
+     * @param eventType EventType; the event type to look up the listeners for
      * @return List&lt;Reference&lt;EventListenerInterface&gt;&gt;; the list of references to the listeners for this event type,
      *         or an empty list when the event type is not registered
      */
-    public List<Reference<EventListenerInterface>> getListenerReferences(final EventTypeInterface eventType)
+    public List<Reference<EventListener>> getListenerReferences(final EventType eventType)
     {
-        List<Reference<EventListenerInterface>> result = new ArrayList<>();
+        List<Reference<EventListener>> result = new ArrayList<>();
         if (this.listeners.get(eventType) != null)
         {
             result.addAll(this.listeners.get(eventType));
@@ -635,7 +608,7 @@ public class EventProducerImpl implements EventProducerInterface, Serializable
 
     /** {@inheritDoc} */
     @Override
-    public synchronized Set<EventTypeInterface> getEventTypesWithListeners()
+    public synchronized Set<EventType> getEventTypesWithListeners()
     {
         return this.listeners.keySet(); // is already a safe copy
     }
