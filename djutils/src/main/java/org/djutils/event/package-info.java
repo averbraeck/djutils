@@ -1,11 +1,12 @@
 /**
- * Provides classes and interfaces for asynchronous communication. The event package is designed around three interfaces:
+ * Provides classes and interfaces for asynchronous communication. The event package is designed around four main classes:
  * <ul>
- * <li>The EventListenerInterface defining callback mechanism for a listener.</li>
- * <li>The EventProducerInterface defining registration capabilities.</li>
- * <li>The EventInterface defining the events which are sent by a producer and received by a listener.</li>
+ * <li>The EventListener defining callback mechanism for a listener.</li>
+ * <li>The EventProducer defining registration capabilities.</li>
+ * <li>The Event defining the events which are sent by a producer and received by a listener.</li>
+ * <li>The EventType allowing for strongly typed Events</li>
  * </ul>
- * In this package, two aspects are of crucial importance. Operations defined in the interfaces are prepared for distribution.
+ * In this package, two aspects are of crucial importance. Operations defined in the classes are prepared for distribution.
  * The event.remote package extends all listeners and producers to throw the <code>RemoteException</code> on network problems.
  * The second aspect is concurrency. The classes providing a reference implementation of these interfaces are designed for
  * multi-threaded deployment.
