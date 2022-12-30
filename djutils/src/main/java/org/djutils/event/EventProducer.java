@@ -1,8 +1,10 @@
 package org.djutils.event;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
+import org.djutils.event.ref.Reference;
 import org.djutils.event.ref.ReferenceType;
 
 /**
@@ -121,6 +123,16 @@ public interface EventProducer extends Serializable
      * @return boolean; whether the EventProducer has listeners or not
      */
     int numberOfListeners(EventType eventType);
+
+    /**
+     * Return a safe copy of the list of (strong or weak) references to the registered listeners for the provided event type, or
+     * an empty list when nothing is registered for this event type. The method never returns a null pointer, so it is safe to
+     * use the result directly in an iterator. The references to the listeners are the original references, so not safe copies.
+     * @param eventType EventType; the event type to look up the listeners for
+     * @return List&lt;Reference&lt;EventListenerInterface&gt;&gt;; the list of references to the listeners for this event type,
+     *         or an empty list when the event type is not registered
+     */
+    List<Reference<EventListener>> getListenerReferences(EventType eventType);
 
     /**
      * Return the EventTypes for which the EventProducer has listeners.

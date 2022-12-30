@@ -153,10 +153,8 @@ public class LocalEventProducer implements EventProducer, Serializable
         }
     }
 
-    /**
-     * Remove all the listeners from this event producer.
-     * @return int; the number of removed event types
-     */
+    /** {@inheritDoc} */
+    @Override
     public synchronized int removeAllListeners()
     {
         int result = this.listeners.size();
@@ -165,11 +163,8 @@ public class LocalEventProducer implements EventProducer, Serializable
         return result;
     }
 
-    /**
-     * Removes all the listeners of a class from this event producer.
-     * @param ofClass Class&lt;?&gt;; the class or superclass
-     * @return int; the number of removed listeners
-     */
+    /** {@inheritDoc} */
+    @Override
     public synchronized int removeAllListeners(final Class<?> ofClass)
     {
         Throw.whenNull(ofClass, "ofClass may not be null");
@@ -273,14 +268,8 @@ public class LocalEventProducer implements EventProducer, Serializable
         return 0;
     }
 
-    /**
-     * Return a safe copy of the list of (strong or weak) references to the registered listeners for the provided event type, or
-     * an empty list when nothing is registered for this event type. The method never returns a null pointer, so it is safe to
-     * use the result directly in an iterator. The references to the listeners are the original references, so not safe copies.
-     * @param eventType EventType; the event type to look up the listeners for
-     * @return List&lt;Reference&lt;EventListenerInterface&gt;&gt;; the list of references to the listeners for this event type,
-     *         or an empty list when the event type is not registered
-     */
+    /** {@inheritDoc} */
+    @Override
     public List<Reference<EventListener>> getListenerReferences(final EventType eventType)
     {
         List<Reference<EventListener>> result = new ArrayList<>();
