@@ -5,7 +5,7 @@ import java.io.Serializable;
 import org.djutils.metadata.MetaData;
 
 /**
- * The Event class forms the reference implementation for the EventInterface. Because events are often sent over the network,
+ * The Event class forms the reference implementation for the Event. Because events are often sent over the network,
  * the interface demands that source of the event and its content are serializable. It is the responsibility of the programmer,
  * though, that the <b>fields</b> of the sourceId and content are serializable as well.<br>
  * <br>
