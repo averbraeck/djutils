@@ -56,38 +56,38 @@ public class EventListenerMapTest implements Serializable
     {
         EventType eventType1 = new EventType("EVENT_TYPE1", MetaData.NO_META_DATA);
         EventType eventType2 = new EventType("EVENT_TYPE2", MetaData.NO_META_DATA);
-        EventListenerInterface el1 = new TestEventListener();
-        Reference<EventListenerInterface> sref1 = new StrongReference<>(el1);
-        EventListenerInterface el2 = new TestEventListener();
-        Reference<EventListenerInterface> sref2 = new StrongReference<>(el2);
-        EventListenerInterface el3 = new TestEventListener();
-        Reference<EventListenerInterface> wref3 = new WeakReference<>(el3);
-        EventListenerInterface el4 = new TestEventListener();
-        Reference<EventListenerInterface> wref4 = new WeakReference<>(el4);
-        Reference<EventListenerInterface> sref4 = new StrongReference<>(el4);
+        EventListener el1 = new TestEventListener();
+        Reference<EventListener> sref1 = new StrongReference<>(el1);
+        EventListener el2 = new TestEventListener();
+        Reference<EventListener> sref2 = new StrongReference<>(el2);
+        EventListener el3 = new TestEventListener();
+        Reference<EventListener> wref3 = new WeakReference<>(el3);
+        EventListener el4 = new TestEventListener();
+        Reference<EventListener> wref4 = new WeakReference<>(el4);
+        Reference<EventListener> sref4 = new StrongReference<>(el4);
 
         // test size(), isEmpty(), put()
         EventListenerMap elm = new EventListenerMap();
         assertEquals(0, elm.size());
         assertTrue(elm.isEmpty());
         assertFalse(elm.containsKey(eventType1));
-        List<Reference<EventListenerInterface>> list1 = new ArrayList<>();
+        List<Reference<EventListener>> list1 = new ArrayList<>();
         list1.add(sref1);
-        List<Reference<EventListenerInterface>> putResult = elm.put(eventType1, list1);
+        List<Reference<EventListener>> putResult = elm.put(eventType1, list1);
         assertNull(putResult);
         assertEquals(1, elm.size());
         assertFalse(elm.isEmpty());
         putResult = elm.put(eventType1, list1);
         assertEquals(1, elm.size());
         assertEquals(putResult, list1);
-        List<Reference<EventListenerInterface>> list2 = new ArrayList<>();
+        List<Reference<EventListener>> list2 = new ArrayList<>();
         list2.add(sref2);
         list2.add(wref3);
         elm.put(eventType2, list2);
         assertEquals(2, elm.size());
 
         // test keySet()
-        Set<EventTypeInterface> keySet = elm.keySet();
+        Set<EventType> keySet = elm.keySet();
         assertEquals(2, keySet.size());
         assertTrue(keySet.contains(eventType1));
         assertTrue(keySet.contains(eventType2));
@@ -110,15 +110,15 @@ public class EventListenerMapTest implements Serializable
         assertFalse(elm.containsValue(wref4));
 
         // test values()
-        Collection<List<Reference<EventListenerInterface>>> values = elm.values();
+        Collection<List<Reference<EventListener>>> values = elm.values();
         assertEquals(2, values.size());
-        Iterator<List<Reference<EventListenerInterface>>> vit = values.iterator();
-        List<Reference<EventListenerInterface>> v1 = vit.next();
-        List<Reference<EventListenerInterface>> v2 = vit.next();
+        Iterator<List<Reference<EventListener>>> vit = values.iterator();
+        List<Reference<EventListener>> v1 = vit.next();
+        List<Reference<EventListener>> v2 = vit.next();
         assertTrue((v1.size() == 1 && v2.size() == 2) || (v1.size() == 2 && v2.size() == 1));
 
         // test entrySet()
-        Set<Map.Entry<EventTypeInterface, List<Reference<EventListenerInterface>>>> entrySet = elm.entrySet();
+        Set<Map.Entry<EventType, List<Reference<EventListener>>>> entrySet = elm.entrySet();
         assertEquals(2, entrySet.size());
 
         // test putAll()
@@ -147,11 +147,11 @@ public class EventListenerMapTest implements Serializable
             Set<String> names3 = new HashSet<>();
             elm3.keySet().forEach((e) -> names3.add(e.getName()));
             assertEquals(names0, names3);
-            Collection<List<Reference<EventListenerInterface>>> values3 = elm3.values();
+            Collection<List<Reference<EventListener>>> values3 = elm3.values();
             assertEquals(2, values3.size());
-            Iterator<List<Reference<EventListenerInterface>>> vit3 = values3.iterator();
-            List<Reference<EventListenerInterface>> v31 = vit3.next();
-            List<Reference<EventListenerInterface>> v32 = vit3.next();
+            Iterator<List<Reference<EventListener>>> vit3 = values3.iterator();
+            List<Reference<EventListener>> v31 = vit3.next();
+            List<Reference<EventListener>> v32 = vit3.next();
             assertTrue((v31.size() == 1 && v32.size() == 2) || (v31.size() == 2 && v32.size() == 1));
             baos.close();
             oos.close();
@@ -167,9 +167,9 @@ public class EventListenerMapTest implements Serializable
         try
         {
             EventType remoteEventType = new EventType("REMOTE_EVENT_TYPE", MetaData.NO_META_DATA);
-            List<Reference<EventListenerInterface>> remoteList = new ArrayList<>();
+            List<Reference<EventListener>> remoteList = new ArrayList<>();
             TestRemoteEventListener remoteEventListener = new TestRemoteEventListener();
-            remoteList.add(new WeakReference<EventListenerInterface>(remoteEventListener));
+            remoteList.add(new WeakReference<EventListener>(remoteEventListener));
             elm.put(remoteEventType, remoteList);
             assertEquals(3, elm.size());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -186,11 +186,11 @@ public class EventListenerMapTest implements Serializable
             Set<String> names3 = new HashSet<>();
             elm3.keySet().forEach((e) -> names3.add(e.getName()));
             assertEquals(names0, names3);
-            Collection<List<Reference<EventListenerInterface>>> values3 = elm3.values();
+            Collection<List<Reference<EventListener>>> values3 = elm3.values();
             assertEquals(2, values3.size());
-            Iterator<List<Reference<EventListenerInterface>>> vit3 = values3.iterator();
-            List<Reference<EventListenerInterface>> v31 = vit3.next();
-            List<Reference<EventListenerInterface>> v32 = vit3.next();
+            Iterator<List<Reference<EventListener>>> vit3 = values3.iterator();
+            List<Reference<EventListener>> v31 = vit3.next();
+            List<Reference<EventListener>> v32 = vit3.next();
             assertTrue((v31.size() == 1 && v32.size() == 2) || (v31.size() == 2 && v32.size() == 1));
             baos.close();
             oos.close();
@@ -204,7 +204,7 @@ public class EventListenerMapTest implements Serializable
         }
 
         // test get()
-        List<Reference<EventListenerInterface>> getList = elm.get(eventType2);
+        List<Reference<EventListener>> getList = elm.get(eventType2);
         assertEquals(2, elm.size());
         assertEquals(2, getList.size());
         getList = elm.get(eventType1);
@@ -214,7 +214,7 @@ public class EventListenerMapTest implements Serializable
         assertNull(getList);
 
         // test remove() and see if the underlying and copied data structures remain unaffected
-        List<Reference<EventListenerInterface>> removedList = elm.remove(eventType2);
+        List<Reference<EventListener>> removedList = elm.remove(eventType2);
         assertEquals(1, elm.size());
         assertEquals(2, removedList.size());
         assertEquals(list2, removedList);
@@ -241,7 +241,7 @@ public class EventListenerMapTest implements Serializable
     }
 
     /** */
-    protected static class TestEventListener implements EventListenerInterface
+    protected static class TestEventListener implements EventListener
     {
         /** */
         private static final long serialVersionUID = 20191230L;
@@ -253,7 +253,7 @@ public class EventListenerMapTest implements Serializable
         private Object expectedObject;
 
         /** received event. */
-        private EventInterface receivedEvent;
+        private Event receivedEvent;
 
         /**
          * @param expectingNotification set expectingNotification
@@ -274,14 +274,14 @@ public class EventListenerMapTest implements Serializable
         /**
          * @return receivedEvent
          */
-        public EventInterface getReceivedEvent()
+        public Event getReceivedEvent()
         {
             return this.receivedEvent;
         }
 
         /** {@inheritDoc} */
         @Override
-        public void notify(final EventInterface event) throws RemoteException
+        public void notify(final Event event) throws RemoteException
         {
             if (!this.expectingNotification)
             {
@@ -310,7 +310,7 @@ public class EventListenerMapTest implements Serializable
 
         /** {@inheritDoc} */
         @Override
-        public void notify(final EventInterface event) throws RemoteException
+        public void notify(final Event event) throws RemoteException
         {
             // tagging method
         }

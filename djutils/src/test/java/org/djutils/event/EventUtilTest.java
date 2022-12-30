@@ -580,7 +580,7 @@ public class EventUtilTest
     }
 
     /** */
-    protected static class TestEventListener implements EventListenerInterface
+    protected static class TestEventListener implements EventListener
     {
         /** */
         private static final long serialVersionUID = 20191230L;
@@ -589,7 +589,7 @@ public class EventUtilTest
         private boolean expectingNotification = true;
 
         /** received event. */
-        private EventInterface receivedEvent;
+        private Event receivedEvent;
 
         /**
          * @param expectingNotification set expectingNotification
@@ -602,14 +602,14 @@ public class EventUtilTest
         /**
          * @return receivedEvent
          */
-        public EventInterface getReceivedEvent()
+        public Event getReceivedEvent()
         {
             return this.receivedEvent;
         }
 
         /** {@inheritDoc} */
         @Override
-        public void notify(final EventInterface event) throws RemoteException
+        public void notify(final Event event) throws RemoteException
         {
             if (!this.expectingNotification)
             {

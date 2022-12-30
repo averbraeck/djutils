@@ -271,7 +271,7 @@ public class EventPubSubTest
         }, "expected ClassCastException", ClassCastException.class);
 
         listener.setExpectedObject("abc");
-        producer.fireUnverifiedEvent(new Event(eventType, producer, "abc"));
+        producer.fireEvent(new Event(eventType, producer, "abc"));
 
         listener.setExpectedObject(Boolean.valueOf(true));
         producer.fireUnverifiedEvent(eventType, true);
@@ -370,7 +370,7 @@ public class EventPubSubTest
         assertEquals(12.09d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject("abc");
-        producer.fireUnverifiedTimedEvent(new TimedEvent<Double>(timedEventType, producer, "abc", Double.valueOf(12.10d)));
+        producer.fireTimedEvent(new TimedEvent<Double>(timedEventType, producer, "abc", Double.valueOf(12.10d)));
         assertEquals(12.10d, listener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
         listener.setExpectedObject(null);
@@ -635,13 +635,13 @@ public class EventPubSubTest
         TestEventListener listener2 = new TestEventListener();
         TestEventListener listener3 = new TestEventListener();
         addListenerOK =
-                producer.addListener(listener2, TestEventProducer.PRODUCER_EVENT_2, EventProducerInterface.LAST_POSITION);
+                producer.addListener(listener2, TestEventProducer.PRODUCER_EVENT_2, EventProducer.LAST_POSITION);
         addListenerOK =
-                producer.addListener(listener3, TestEventProducer.PRODUCER_EVENT_2, EventProducerInterface.FIRST_POSITION);
+                producer.addListener(listener3, TestEventProducer.PRODUCER_EVENT_2, EventProducer.FIRST_POSITION);
         assertEquals(3, producer.numberOfListeners(TestEventProducer.PRODUCER_EVENT_2));
 
         // check whether positions have been inserted okay: listener3 - listener - listener2
-        List<Reference<EventListenerInterface>> listenerList =
+        List<Reference<EventListener>> listenerList =
                 producer.getListenerReferences(TestEventProducer.PRODUCER_EVENT_2);
         assertEquals(3, listenerList.size());
         assertEquals(listener3, listenerList.get(0).get());
@@ -673,14 +673,14 @@ public class EventPubSubTest
         producer.fireEvent(TestEventProducer.PRODUCER_EVENT_1, 12);
 
         // check the registered listeners in the map
-        List<Reference<EventListenerInterface>> listenerList =
+        List<Reference<EventListener>> listenerList =
                 producer.getListenerReferences(TestEventProducer.PRODUCER_EVENT_1);
         assertEquals(1, listenerList.size());
-        Reference<EventListenerInterface> ref = listenerList.get(0);
+        Reference<EventListener> ref = listenerList.get(0);
         // simulate clearing by GC (the list is a safe copy, but the reference is original)
         Field referent = ref.getClass().getDeclaredField("referent");
         referent.setAccessible(true);
-        referent.set(ref, new java.lang.ref.WeakReference<EventListenerInterface>(null));
+        referent.set(ref, new java.lang.ref.WeakReference<EventListener>(null));
         referent.setAccessible(false);
 
         // fire an event -- should not arrive
@@ -693,7 +693,7 @@ public class EventPubSubTest
     }
 
     /** */
-    protected static class TestEventProducer extends EventProducer
+    protected static class TestEventProducer extends LocalEventProducer
     {
         /** */
         private static final long serialVersionUID = 20191230L;
@@ -712,16 +712,15 @@ public class EventPubSubTest
         @SuppressWarnings("unused")
         private static final EventType PRODUCER_EVENT_4 = new EventType("PRODUCER_EVENT_1", MetaData.NO_META_DATA);
 
-        /** {@inheritDoc} */
-        @Override
-        public Serializable getSourceId()
+        /** Construct EventProducer.  */
+        public TestEventProducer()
         {
-            return "producer_source_id";
+            super("producer_source_id");
         }
     }
 
     /** */
-    protected static class TestIllegalEventProducer extends EventProducer
+    protected static class TestIllegalEventProducer extends LocalEventProducer
     {
         /** */
         private static final long serialVersionUID = 20191230L;
@@ -732,16 +731,15 @@ public class EventPubSubTest
         /** duplicate static non-private EventType should give error on class construction. */
         public static final EventType PRODUCER_EVENT_2 = new EventType("PRODUCER_EVENT_1", MetaData.NO_META_DATA);
 
-        /** {@inheritDoc} */
-        @Override
-        public Serializable getSourceId()
+        /** Construct TestIllegalEventProducer.  */
+        public TestIllegalEventProducer()
         {
-            return "illegal_producer_source_id";
+            super("illegal_producer_source_id");
         }
     }
 
     /** */
-    protected static class TestEventListener implements EventListenerInterface
+    protected static class TestEventListener implements EventListener
     {
         /** */
         private static final long serialVersionUID = 20191230L;
@@ -753,7 +751,7 @@ public class EventPubSubTest
         private Object expectedObject;
 
         /** received event. */
-        private EventInterface receivedEvent;
+        private Event receivedEvent;
 
         /**
          * @param expectingNotification set expectingNotification
@@ -774,14 +772,14 @@ public class EventPubSubTest
         /**
          * @return receivedEvent
          */
-        public EventInterface getReceivedEvent()
+        public Event getReceivedEvent()
         {
             return this.receivedEvent;
         }
 
         /** {@inheritDoc} */
         @Override
-        public void notify(final EventInterface event) throws RemoteException
+        public void notify(final Event event) throws RemoteException
         {
             if (!this.expectingNotification)
             {
@@ -811,7 +809,7 @@ public class EventPubSubTest
      * TimedEventListener.
      * @param <C> the comparable time type
      */
-    protected static class TestTimedEventListener<C extends Comparable<C> & Serializable> implements EventListenerInterface
+    protected static class TestTimedEventListener<C extends Comparable<C> & Serializable> implements EventListener
     {
         /** */
         private static final long serialVersionUID = 20191230L;
@@ -852,7 +850,7 @@ public class EventPubSubTest
         /** {@inheritDoc} */
         @SuppressWarnings("unchecked")
         @Override
-        public void notify(final EventInterface event) throws RemoteException
+        public void notify(final Event event) throws RemoteException
         {
             if (!this.expectingNotification)
             {

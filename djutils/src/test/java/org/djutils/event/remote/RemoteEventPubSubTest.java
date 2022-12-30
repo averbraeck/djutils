@@ -16,9 +16,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.djutils.event.Event;
-import org.djutils.event.EventInterface;
-import org.djutils.event.EventListenerInterface;
-import org.djutils.event.EventProducerInterface;
+import org.djutils.event.EventListener;
+import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
 import org.djutils.event.TimedEvent;
 import org.djutils.event.TimedEventType;
@@ -47,6 +46,7 @@ public class RemoteEventPubSubTest
      * @throws MalformedURLException on URL error
      */
     // TODO: @Test does not run reliably on github Ubuntu platform (Port 1099 already in use)
+    @Test
     public void testRemoteEventListenerProducer() throws RemoteException, AlreadyBoundException, MalformedURLException
     {
         TestRemoteEventProducer producer = new TestRemoteEventProducer();
@@ -183,6 +183,7 @@ public class RemoteEventPubSubTest
      * @throws MalformedURLException on URL error
      */
     // TODO: @Test does not run reliably on github Ubuntu platform (Port 1099 already in use)
+    @Test
     @SuppressWarnings("checkstyle:methodlength")
     public void testRemoteEventVerificationPubSub() throws RemoteException, AlreadyBoundException, MalformedURLException
     {
@@ -297,7 +298,7 @@ public class RemoteEventPubSubTest
             }, "expected ClassCastException", ClassCastException.class);
 
             listener.setExpectedObject("abc");
-            producer.fireUnverifiedEvent(new Event(eventType, producer, "abc"));
+            producer.fireEvent(new Event(eventType, producer, "abc"));
 
             listener.setExpectedObject(Boolean.valueOf(true));
             producer.fireUnverifiedEvent(eventType, true);
@@ -352,6 +353,7 @@ public class RemoteEventPubSubTest
      * @throws MalformedURLException on URL error
      */
     // TODO: @Test does not run reliably on github Ubuntu platform (Port 1099 already in use)
+    @Test
     public void testTimedRemoteEventListenerProducer() throws RemoteException, AlreadyBoundException, MalformedURLException
     {
         TestRemoteEventProducer producer = new TestRemoteEventProducer();
@@ -411,7 +413,7 @@ public class RemoteEventPubSubTest
             assertEquals(12.09d, timedListener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
             timedListener.setExpectedObject("abc");
-            producer.fireUnverifiedTimedEvent(new TimedEvent<Double>(timedEventType, producer, "abc", Double.valueOf(12.10d)));
+            producer.fireTimedEvent(new TimedEvent<Double>(timedEventType, producer, "abc", Double.valueOf(12.10d)));
             assertEquals(12.10d, timedListener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
             timedListener.setExpectedObject(null);
@@ -439,6 +441,7 @@ public class RemoteEventPubSubTest
      */
     // TODO: @Test does not run reliably on github Ubuntu platform (Port 1099 already in use)
     @SuppressWarnings("checkstyle:methodlength")
+    @Test
     public void testRemoteTimedEventVerificationPubSub() throws RemoteException, AlreadyBoundException, MalformedURLException
     {
         TestRemoteEventProducer producer = new TestRemoteEventProducer();
@@ -614,6 +617,7 @@ public class RemoteEventPubSubTest
      * @throws AlreadyBoundException when RMI registry not cleaned
      */
     // TODO: @Test does not run reliably on github Ubuntu platform (Port 1099 already in use)
+    @Test
     public void testEventStrongWeakPos() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException,
             SecurityException, RemoteException, AlreadyBoundException
     {
@@ -695,13 +699,13 @@ public class RemoteEventPubSubTest
             TestRemoteEventListener listener2 = new TestRemoteEventListener("listener2");
             TestRemoteEventListener listener3 = new TestRemoteEventListener("listener3");
             addListenerOK = producer.addListener(listener2, TestRemoteEventProducer.REMOTE_EVENT_2,
-                    EventProducerInterface.LAST_POSITION);
+                    EventProducer.LAST_POSITION);
             addListenerOK = producer.addListener(listener3, TestRemoteEventProducer.REMOTE_EVENT_2,
-                    EventProducerInterface.FIRST_POSITION);
+                    EventProducer.FIRST_POSITION);
             assertEquals(3, producer.numberOfListeners(TestRemoteEventProducer.REMOTE_EVENT_2));
 
             // check whether positions have been inserted okay: listener3 - listener - listener2
-            List<Reference<EventListenerInterface>> listenerList =
+            List<Reference<EventListener>> listenerList =
                     producer.getListenerReferences(TestRemoteEventProducer.REMOTE_EVENT_2);
             assertEquals(3, listenerList.size());
             assertEquals(listener3, listenerList.get(0).get());
@@ -731,6 +735,7 @@ public class RemoteEventPubSubTest
      * @throws AlreadyBoundException when RMI registry not cleaned
      */
     // TODO: @Test does not run reliably on github Ubuntu platform (Port 1099 already in use)
+    @Test
     public void testEventProducerWeakRemoval() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException,
             SecurityException, RemoteException, AlreadyBoundException
     {
@@ -748,14 +753,14 @@ public class RemoteEventPubSubTest
             listener.setExpectedObject(Integer.valueOf(12));
             producer.fireEvent(TestRemoteEventProducer.REMOTE_EVENT_1, 12);
 
-            List<Reference<EventListenerInterface>> listenerList =
+            List<Reference<EventListener>> listenerList =
                     producer.getListenerReferences(TestRemoteEventProducer.REMOTE_EVENT_1);
             assertEquals(1, listenerList.size());
-            Reference<EventListenerInterface> ref = listenerList.get(0);
+            Reference<EventListener> ref = listenerList.get(0);
             // simulate clearing by GC (the list is a safe copy, but the reference is original)
             Field referent = ref.getClass().getDeclaredField("referent");
             referent.setAccessible(true);
-            referent.set(ref, new java.lang.ref.WeakReference<EventListenerInterface>(null));
+            referent.set(ref, new java.lang.ref.WeakReference<EventListener>(null));
             referent.setAccessible(false);
 
             // fire an event -- should not arrive
@@ -824,7 +829,7 @@ public class RemoteEventPubSubTest
         private Object expectedObject;
 
         /** received event. */
-        private EventInterface receivedEvent;
+        private Event receivedEvent;
 
         /**
          * @param key String; the key under which the listener will be registered in RMI
@@ -855,14 +860,14 @@ public class RemoteEventPubSubTest
         /**
          * @return receivedEvent
          */
-        public EventInterface getReceivedEvent()
+        public Event getReceivedEvent()
         {
             return this.receivedEvent;
         }
 
         /** {@inheritDoc} */
         @Override
-        public void notify(final EventInterface event) throws RemoteException
+        public void notify(final Event event) throws RemoteException
         {
             if (!this.expectingNotification)
             {
@@ -944,7 +949,7 @@ public class RemoteEventPubSubTest
         /** {@inheritDoc} */
         @SuppressWarnings("unchecked")
         @Override
-        public void notify(final EventInterface event) throws RemoteException
+        public void notify(final Event event) throws RemoteException
         {
             if (!this.expectingNotification)
             {
