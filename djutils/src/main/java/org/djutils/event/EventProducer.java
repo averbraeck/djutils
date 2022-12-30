@@ -25,7 +25,7 @@ import org.djutils.event.ref.ReferenceType;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public interface EventProducer
+public interface EventProducer extends Serializable 
 {
     /** The FIRST_POSITION in the queue. */
     int FIRST_POSITION = 0;
@@ -96,6 +96,19 @@ public interface EventProducer
      */
     boolean removeListener(EventListener listener, EventType eventType);
 
+    /**
+     * Remove all the listeners from this event producer.
+     * @return int; the number of removed event types
+     */
+    int removeAllListeners();
+
+    /**
+     * Removes all the listeners of a class from this event producer.
+     * @param ofClass Class&lt;?&gt;; the class or superclass
+     * @return int; the number of removed listeners
+     */
+    int removeAllListeners(Class<?> ofClass);
+    
     /**
      * Return whether the EventProducer has listeners.
      * @return boolean; whether the EventProducer has listeners or not
@@ -191,7 +204,6 @@ public interface EventProducer
      * @param <C> the comparable type to indicate the time when the event is fired
      */
     default <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final TimedEventType eventType, final C time)
-
     {
         fireEvent(new TimedEvent<C>(eventType, getSourceId(), null, time, false));
     }
