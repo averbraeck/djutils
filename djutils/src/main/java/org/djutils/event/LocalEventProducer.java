@@ -58,28 +58,6 @@ public class LocalEventProducer implements EventProducer, Serializable
 
     /** {@inheritDoc} */
     @Override
-    public final synchronized boolean addListener(final EventListener listener, final EventType eventType)
-    {
-        return this.addListener(listener, eventType, EventProducer.FIRST_POSITION);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final synchronized boolean addListener(final EventListener listener, final EventType eventType,
-            final ReferenceType referenceType)
-    {
-        return this.addListener(listener, eventType, EventProducer.FIRST_POSITION, referenceType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final synchronized boolean addListener(final EventListener listener, final EventType eventType, final int position)
-    {
-        return this.addListener(listener, eventType, position, ReferenceType.STRONG);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public final synchronized boolean addListener(final EventListener listener, final EventType eventType, final int position,
             final ReferenceType referenceType)
     {
