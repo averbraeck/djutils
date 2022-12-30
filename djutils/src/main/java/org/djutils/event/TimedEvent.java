@@ -2,6 +2,8 @@ package org.djutils.event;
 
 import java.io.Serializable;
 
+import org.djutils.exceptions.Throw;
+
 /**
  * The TimedEvent is the reference implementation for a timed event. Because events are often sent over the network, the
  * interface demands that the event, its sourceId, content and timestamp are serializable. It is the repsonsibility of the
@@ -50,6 +52,7 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
             final boolean verifyMetaData)
     {
         super(type, sourceId, content, verifyMetaData);
+        Throw.whenNull(timeStamp, "timeStamp cannot be null");
         this.timeStamp = timeStamp;
     }
 
