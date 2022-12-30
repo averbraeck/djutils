@@ -53,7 +53,7 @@ public class EventType implements Serializable
      * verified. This can, for instance, be used to verify that a TimedEvent is fired instead of an ordinary event.
      * @param name String; the name of the new eventType. Two values are not appreciated: null and the empty string.
      * @param metaData MetaData; describes the payload of events of the new EventType;
-     * @param validEventType Class&lt;? extends EventInterface&gt;; the valid class of events
+     * @param validEventType Class&lt;? extends Event&gt;; the valid class of events
      */
     public EventType(final String name, final MetaData metaData, final Class<? extends Event> validEventType)
     {
@@ -77,6 +77,39 @@ public class EventType implements Serializable
         this.metaData = metaData;
     }
 
+    /**
+     * Construct a new EventType. Only events of the type Event, and no subclasses of Event, can be used to fire events of this
+     * type. This means that firing a TimedEvent of this type will result in an error.
+     * @param name String; the name of the new eventType. Two values are not appreciated: null and the empty string.
+     * @param metaData MetaData; describes the payload of events of the new EventType;
+     */
+    public EventType(final String name, final MetaData metaData)
+    {
+        this(name, metaData, Event.class);
+    }
+
+    /**
+     * Construct a new EventType. The name of the metadata will function as the name of the event. Only events of the type
+     * Event, and no subclasses of Event, can be used to fire events of this type. This means that firing a TimedEvent of this
+     * type will result in an error.
+     * @param metaData MetaData; describes the payload of events of the new EventType;
+     */
+    public EventType(final MetaData metaData)
+    {
+        this(metaData == null ? null : metaData.getName(), metaData, Event.class);
+    }
+
+    /**
+     * Construct a new EventType with no meta data. Only events of the type Event, and no subclasses of Event, can be used to
+     * fire events of this type. This means that firing a TimedEvent of this type will result in an error.
+     * @param name String; the name of the new eventType. Two values are not appreciated: null and the empty string.
+     */
+    @Deprecated
+    public EventType(final String name)
+    {
+        this(name, MetaData.NO_META_DATA, Event.class);
+    }
+    
     /**
      * Return the event type name.
      * @return String; the event type name
