@@ -1,5 +1,7 @@
 package org.djutils.event;
 
+import java.io.Serializable;
+
 import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
 
@@ -26,7 +28,7 @@ import org.djutils.metadata.MetaData;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public abstract class AbstractEventType implements EventTypeInterface
+public class EventType implements Serializable
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140830L;
@@ -38,7 +40,7 @@ public abstract class AbstractEventType implements EventTypeInterface
     private final MetaData metaData;
 
     /** The class of a valid event, e.g., to indicate that a TimedEvent is expected. */
-    private final Class<? extends EventInterface> validEventType;
+    private final Class<? extends Event> validEventType;
 
     /**
      * The class name from which the event type construction was called; together with the event name this should lead to a
@@ -53,7 +55,7 @@ public abstract class AbstractEventType implements EventTypeInterface
      * @param metaData MetaData; describes the payload of events of the new EventType;
      * @param validEventType Class&lt;? extends EventInterface&gt;; the valid class of events
      */
-    public AbstractEventType(final String name, final MetaData metaData, final Class<? extends EventInterface> validEventType)
+    public EventType(final String name, final MetaData metaData, final Class<? extends Event> validEventType)
     {
         Throw.when(name == null || name.equals(""), IllegalArgumentException.class,
                 "EventType name == null || EventType name == \"\"");
@@ -75,23 +77,29 @@ public abstract class AbstractEventType implements EventTypeInterface
         this.metaData = metaData;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Return the event type name.
+     * @return String; the event type name
+     */
     public String getName()
     {
         return this.name;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Retrieve the MetaData that describes the payload of events of this EventType.
+     * @return MetaData; describes the payload of events of this EventType
+     */
     public MetaData getMetaData()
     {
         return this.metaData;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public Class<? extends EventInterface> getValidEventType()
+    /**
+     * Retrieve the event type that defines valid events of this EventType, e.g., to indicate a TimedEvent is expected.
+     * @return Class&lt;EventType&gt;; the class of valid events of this event type
+     */
+    public Class<? extends Event> getValidEventType()
     {
         return this.validEventType;
     }
@@ -125,7 +133,7 @@ public abstract class AbstractEventType implements EventTypeInterface
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AbstractEventType other = (AbstractEventType) obj;
+        EventType other = (EventType) obj;
         if (!this.name.equals(other.name))
             return false;
         if (!this.definingClassName.equals(other.definingClassName))
