@@ -3,8 +3,8 @@ package org.djutils.event.util;
 import java.io.Serializable;
 import java.util.ListIterator;
 
+import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
-import org.djutils.event.IdProvider;
 import org.djutils.metadata.MetaData;
 
 /**
@@ -36,23 +36,22 @@ public class EventProducingListIterator<T> extends EventProducingIterator<T> imp
 
     /**
      * constructs a new EventProducingListIterator, embedding the parent ListIterator.
-     * @param parent ListIterator&lt;T&gt;; embedded iterator.
+     * @param wrappedIterator ListIterator&lt;T&gt;; embedded iterator.
      * @param sourceId Serializable; the id by which the EventProducer can be identified by the EventListener
      */
-    public EventProducingListIterator(final ListIterator<T> parent, final Serializable sourceId)
+    public EventProducingListIterator(final ListIterator<T> wrappedIterator, final Serializable sourceId)
     {
-        super(parent, sourceId);
+        super(wrappedIterator, sourceId);
     }
 
     /**
      * Constructs a new EventProducingListIterator, embedding the parent iterator.
-     * @param parent ListIterator&lt;T&gt;; the parent set.
-     * @param sourceIdProvider IdProvider; the function that produces the id by which the EventProducer can be identified by the
-     *            EventListener
+     * @param wrappedIterator ListIterator&lt;T&gt;; the wrapped iterator.
+     * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
      */
-    public EventProducingListIterator(final ListIterator<T> parent, final IdProvider sourceIdProvider)
+    public EventProducingListIterator(final ListIterator<T> wrappedIterator, final EventProducer eventProducer)
     {
-        super(parent, sourceIdProvider);
+        super(wrappedIterator, eventProducer);
     }
 
     /** {@inheritDoc} */

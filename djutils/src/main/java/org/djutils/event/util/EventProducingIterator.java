@@ -3,9 +3,9 @@ package org.djutils.event.util;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import org.djutils.event.EmbeddedEventProducer;
 import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
-import org.djutils.event.IdProvider;
 import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
 
@@ -25,7 +25,7 @@ import org.djutils.metadata.MetaData;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <T> the type of elements to iterate on
  */
-public class EventProducingIterator<T> extends EventProducer implements Iterator<T>
+public class EventProducingIterator<T> extends EmbeddedEventProducer implements Iterator<T>
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;
@@ -34,50 +34,30 @@ public class EventProducingIterator<T> extends EventProducer implements Iterator
     public static final EventType OBJECT_REMOVED_EVENT = new EventType("OBJECT_REMOVED_EVENT", MetaData.NO_META_DATA);
 
     /** our parent iterator. */
-    private Iterator<T> parent = null;
-
-    /** the function that produces the id by which the EventProducer can be identified. */
-    private final IdProvider sourceIdProvider;
+    private Iterator<T> wrappedIterator = null;
 
     /**
      * constructs a new EventProducingIterator, embedding the parent Iterator.
-     * @param parent Iterator&lt;T&gt;; parent.
+     * @param wrappedIterator Iterator&lt;T&gt;; parent.
      * @param sourceId Serializable; the id by which the EventProducer can be identified by the EventListener
      */
-    public EventProducingIterator(final Iterator<T> parent, final Serializable sourceId)
+    public EventProducingIterator(final Iterator<T> wrappedIterator, final Serializable sourceId)
     {
-        this(parent, new IdProvider()
-        {
-            /** */
-            private static final long serialVersionUID = 20200119L;
-
-            @Override
-            public Serializable id()
-            {
-                return sourceId;
-            }
-        });
+        super(sourceId);
+        Throw.whenNull(wrappedIterator, "parent cannot be null");
+        this.wrappedIterator = wrappedIterator;
     }
 
     /**
      * Constructs a new EventProducingIterator, embedding the parent iterator.
-     * @param parent Iterator&lt;T&gt;; the parent set.
-     * @param sourceIdProvider IdProvider; the function that produces the id by which the EventProducer can be identified by the
-     *            EventListener
+     * @param wrappedIterator Iterator&lt;T&gt;; the wrapped iterator.
+     * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
      */
-    public EventProducingIterator(final Iterator<T> parent, final IdProvider sourceIdProvider)
+    public EventProducingIterator(final Iterator<T> wrappedIterator, final EventProducer eventProducer)
     {
-        Throw.whenNull(parent, "parent cannot be null");
-        Throw.whenNull(sourceIdProvider, "sourceIdprovider cannot be null");
-        this.parent = parent;
-        this.sourceIdProvider = sourceIdProvider;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Serializable getSourceId()
-    {
-        return this.sourceIdProvider.id();
+        super(eventProducer);
+        Throw.whenNull(wrappedIterator, "parent cannot be null");
+        this.wrappedIterator = wrappedIterator;
     }
 
     /** {@inheritDoc} */
@@ -108,7 +88,7 @@ public class EventProducingIterator<T> extends EventProducer implements Iterator
      */
     protected Iterator<T> getParent()
     {
-        return this.parent;
+        return this.wrappedIterator;
     }
 
 }

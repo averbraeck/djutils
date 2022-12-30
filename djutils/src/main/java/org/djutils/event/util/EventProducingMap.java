@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import org.djutils.event.EmbeddedEventProducer;
 import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
-import org.djutils.event.IdProvider;
 import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
@@ -29,7 +29,7 @@ import org.djutils.metadata.ObjectDescriptor;
  * @param <K> the key type
  * @param <V> the value type
  */
-public class EventProducingMap<K, V> extends EventProducer implements Map<K, V>
+public class EventProducingMap<K, V> extends EmbeddedEventProducer implements Map<K, V>
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;
@@ -49,101 +49,81 @@ public class EventProducingMap<K, V> extends EventProducer implements Map<K, V>
             new EventType("OBJECT_CHANGED_EVENT", new MetaData("Size of the map after change", "Size of the map",
                     new ObjectDescriptor("Size of the map after change", "Size of the map", Integer.class)));
 
-    /** the parent map. */
-    private final Map<K, V> parent;
-
-    /** the function that produces the id by which the EventProducer can be identified. */
-    private final IdProvider sourceIdProvider;
+    /** the wrapped map. */
+    private final Map<K, V> wrappedMap;
 
     /**
      * constructs a new EventProducingMap.
-     * @param parent Map&lt;K,V&gt;; the embedded map.
+     * @param wrappedMap Map&lt;K,V&gt;; the embedded map.
      * @param sourceId Serializable; the id by which the EventProducer can be identified by the EventListener
      */
-    public EventProducingMap(final Map<K, V> parent, final Serializable sourceId)
+    public EventProducingMap(final Map<K, V> wrappedMap, final Serializable sourceId)
     {
-        this(parent, new IdProvider()
-        {
-            /** */
-            private static final long serialVersionUID = 20200119L;
-
-            @Override
-            public Serializable id()
-            {
-                return sourceId;
-            }
-        });
+        super(sourceId);
+        Throw.whenNull(wrappedMap, "wrappedMap cannot be null");
+        this.wrappedMap = wrappedMap;
     }
 
     /**
      * Constructs a new EventProducingMap.
-     * @param parent Map&lt;K, V&gt;; the parent map.
-     * @param sourceIdProvider IdProvider; the function that produces the id by which the EventProducer can be identified by the
-     *            EventListener
+     * @param wrappedMap Map&lt;K, V&gt;; the embedded map.
+     * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
      */
-    public EventProducingMap(final Map<K, V> parent, final IdProvider sourceIdProvider)
+    public EventProducingMap(final Map<K, V> wrappedMap, final EventProducer eventProducer)
     {
-        Throw.whenNull(parent, "parent cannot be null");
-        Throw.whenNull(sourceIdProvider, "sourceIdprovider cannot be null");
-        this.parent = parent;
-        this.sourceIdProvider = sourceIdProvider;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Serializable getSourceId()
-    {
-        return this.sourceIdProvider.id();
+        super(eventProducer);
+        Throw.whenNull(wrappedMap, "wrappedMap cannot be null");
+        this.wrappedMap = wrappedMap;
     }
 
     /** {@inheritDoc} */
     @Override
     public int size()
     {
-        return this.parent.size();
+        return this.wrappedMap.size();
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean isEmpty()
     {
-        return this.parent.isEmpty();
+        return this.wrappedMap.isEmpty();
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean containsKey(final Object key)
     {
-        return this.parent.containsKey(key);
+        return this.wrappedMap.containsKey(key);
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean containsValue(final Object value)
     {
-        return this.parent.containsValue(value);
+        return this.wrappedMap.containsValue(value);
     }
 
     /** {@inheritDoc} */
     @Override
     public V get(final Object key)
     {
-        return this.parent.get(key);
+        return this.wrappedMap.get(key);
     }
 
     /** {@inheritDoc} */
     @Override
     public V put(final K key, final V value)
     {
-        int nr = this.parent.size();
-        V result = this.parent.put(key, value);
-        if (nr != this.parent.size())
+        int nr = this.wrappedMap.size();
+        V result = this.wrappedMap.put(key, value);
+        if (nr != this.wrappedMap.size())
         {
-            this.fireEvent(OBJECT_ADDED_EVENT, this.parent.size());
+            this.fireEvent(OBJECT_ADDED_EVENT, this.wrappedMap.size());
         }
         else
         {
-            this.fireEvent(OBJECT_CHANGED_EVENT, this.parent.size());
+            this.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedMap.size());
         }
         return result;
     }
@@ -152,11 +132,11 @@ public class EventProducingMap<K, V> extends EventProducer implements Map<K, V>
     @Override
     public V remove(final Object key)
     {
-        int nr = this.parent.size();
-        V result = this.parent.remove(key);
-        if (nr != this.parent.size())
+        int nr = this.wrappedMap.size();
+        V result = this.wrappedMap.remove(key);
+        if (nr != this.wrappedMap.size())
         {
-            this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+            this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedMap.size());
         }
         return result;
     }
@@ -165,17 +145,17 @@ public class EventProducingMap<K, V> extends EventProducer implements Map<K, V>
     @Override
     public void putAll(final Map<? extends K, ? extends V> map)
     {
-        int nr = this.parent.size();
-        this.parent.putAll(map);
-        if (nr != this.parent.size())
+        int nr = this.wrappedMap.size();
+        this.wrappedMap.putAll(map);
+        if (nr != this.wrappedMap.size())
         {
-            this.fireEvent(OBJECT_ADDED_EVENT, this.parent.size());
+            this.fireEvent(OBJECT_ADDED_EVENT, this.wrappedMap.size());
         }
         else
         {
             if (!map.isEmpty())
             {
-                this.fireEvent(OBJECT_CHANGED_EVENT, this.parent.size());
+                this.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedMap.size());
             }
         }
     }
@@ -184,11 +164,11 @@ public class EventProducingMap<K, V> extends EventProducer implements Map<K, V>
     @Override
     public void clear()
     {
-        int nr = this.parent.size();
-        this.parent.clear();
-        if (nr != this.parent.size())
+        int nr = this.wrappedMap.size();
+        this.wrappedMap.clear();
+        if (nr != this.wrappedMap.size())
         {
-            this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+            this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedMap.size());
         }
     }
 
@@ -196,20 +176,20 @@ public class EventProducingMap<K, V> extends EventProducer implements Map<K, V>
     @Override
     public Set<K> keySet()
     {
-        return this.parent.keySet();
+        return this.wrappedMap.keySet();
     }
 
     /** {@inheritDoc} */
     @Override
     public Collection<V> values()
     {
-        return this.parent.values();
+        return this.wrappedMap.values();
     }
 
     /** {@inheritDoc} */
     @Override
     public Set<Map.Entry<K, V>> entrySet()
     {
-        return this.parent.entrySet();
+        return this.wrappedMap.entrySet();
     }
 }

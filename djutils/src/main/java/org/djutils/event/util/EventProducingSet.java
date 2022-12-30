@@ -5,11 +5,11 @@ import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.Set;
 
-import org.djutils.event.EventInterface;
-import org.djutils.event.EventListenerInterface;
+import org.djutils.event.EmbeddedEventProducer;
+import org.djutils.event.Event;
+import org.djutils.event.EventListener;
 import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
-import org.djutils.event.IdProvider;
 import org.djutils.event.ref.ReferenceType;
 import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
@@ -31,7 +31,7 @@ import org.djutils.metadata.ObjectDescriptor;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <E> the type of elements in the set
  */
-public class EventProducingSet<E> extends EventProducer implements EventListenerInterface, Set<E>
+public class EventProducingSet<E> extends EmbeddedEventProducer implements EventListener, Set<E>
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;
@@ -51,76 +51,56 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
             new EventType("OBJECT_CHANGED_EVENT", new MetaData("Size of the set after change", "Size of the set",
                     new ObjectDescriptor("Size of the set after change", "Size of the set", Integer.class)));
 
-    /** the parent set. */
-    private Set<E> parent = null;
-
-    /** the function that produces the id by which the EventProducer can be identified. */
-    private final IdProvider sourceIdProvider;
+    /** the wrapped set. */
+    private Set<E> wrappedSet = null;
 
     /**
      * Constructs a new EventProducingSet.
-     * @param parent Set&lt;E&gt;; the parent set.
+     * @param wrappedSet Set&lt;E&gt;; the embedded set.
      * @param sourceId Serializable; the id by which the EventProducer can be identified by the EventListener
      */
-    public EventProducingSet(final Set<E> parent, final Serializable sourceId)
+    public EventProducingSet(final Set<E> wrappedSet, final Serializable sourceId)
     {
-        this(parent, new IdProvider()
-        {
-            /** */
-            private static final long serialVersionUID = 20200119L;
-
-            @Override
-            public Serializable id()
-            {
-                return sourceId;
-            }
-        });
+        super(sourceId);
+        Throw.whenNull(wrappedSet, "wrappedSet cannot be null");
+        this.wrappedSet = wrappedSet;
     }
 
     /**
      * Constructs a new EventProducingSet.
-     * @param parent Set&lt;E&gt;; the parent set.
-     * @param sourceIdProvider IdProvider; the function that produces the id by which the EventProducer can be identified by the
-     *            EventListener
+     * @param wrappedSet Set&lt;E&gt;; the embedded set.
+     * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
      */
-    public EventProducingSet(final Set<E> parent, final IdProvider sourceIdProvider)
+    public EventProducingSet(final Set<E> wrappedSet, final EventProducer eventProducer)
     {
-        Throw.whenNull(parent, "parent cannot be null");
-        Throw.whenNull(sourceIdProvider, "sourceIdprovider cannot be null");
-        this.parent = parent;
-        this.sourceIdProvider = sourceIdProvider;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Serializable getSourceId()
-    {
-        return this.sourceIdProvider.id();
+        super(eventProducer);
+        Throw.whenNull(wrappedSet, "wrappedSet cannot be null");
+        this.wrappedSet = wrappedSet;
     }
 
     /** {@inheritDoc} */
     @Override
     public int size()
     {
-        return this.parent.size();
+        return this.wrappedSet.size();
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean isEmpty()
     {
-        return this.parent.isEmpty();
+        return this.wrappedSet.isEmpty();
     }
 
     /** {@inheritDoc} */
     @Override
     public void clear()
     {
-        int nr = this.parent.size();
-        this.parent.clear();
-        if (nr != this.parent.size())
+        int nr = this.wrappedSet.size();
+        this.wrappedSet.clear();
+        if (nr != this.wrappedSet.size())
         {
-            this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+            this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
         }
     }
 
@@ -128,14 +108,14 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
     @Override
     public boolean add(final E o)
     {
-        boolean changed = this.parent.add(o);
+        boolean changed = this.wrappedSet.add(o);
         if (changed)
         {
-            this.fireEvent(OBJECT_ADDED_EVENT, this.parent.size());
+            this.fireEvent(OBJECT_ADDED_EVENT, this.wrappedSet.size());
         }
         else
         {
-            this.fireEvent(OBJECT_CHANGED_EVENT, this.parent.size());
+            this.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedSet.size());
         }
         return changed;
     }
@@ -144,16 +124,16 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
     @Override
     public boolean addAll(final Collection<? extends E> c)
     {
-        boolean changed = this.parent.addAll(c);
+        boolean changed = this.wrappedSet.addAll(c);
         if (changed)
         {
-            this.fireEvent(OBJECT_ADDED_EVENT, this.parent.size());
+            this.fireEvent(OBJECT_ADDED_EVENT, this.wrappedSet.size());
         }
         else
         {
             if (!c.isEmpty())
             {
-                this.fireEvent(OBJECT_CHANGED_EVENT, this.parent.size());
+                this.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedSet.size());
             }
         }
         return changed;
@@ -163,21 +143,21 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
     @Override
     public boolean contains(final Object o)
     {
-        return this.parent.contains(o);
+        return this.wrappedSet.contains(o);
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean containsAll(final Collection<?> c)
     {
-        return this.parent.containsAll(c);
+        return this.wrappedSet.containsAll(c);
     }
 
     /** {@inheritDoc} */
     @Override
     public EventProducingIterator<E> iterator()
     {
-        EventProducingIterator<E> iterator = new EventProducingIterator<E>(this.parent.iterator(), this.sourceIdProvider);
+        EventProducingIterator<E> iterator = new EventProducingIterator<E>(this.wrappedSet.iterator(), getSourceId());
         // WEAK reference as an iterator is usually local and should be eligible for garbage collection
         iterator.addListener(this, EventProducingIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
         return iterator;
@@ -185,12 +165,12 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
 
     /** {@inheritDoc} */
     @Override
-    public void notify(final EventInterface event) throws RemoteException
+    public void notify(final Event event) throws RemoteException
     {
         // pass through the OBJECT_REMOVED_EVENT from the iterator
         if (event.getType().equals(EventProducingIterator.OBJECT_REMOVED_EVENT))
         {
-            this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+            this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
         }
     }
 
@@ -198,10 +178,10 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
     @Override
     public boolean remove(final Object o)
     {
-        boolean changed = this.parent.remove(o);
+        boolean changed = this.wrappedSet.remove(o);
         if (changed)
         {
-            this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+            this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
         }
         return changed;
     }
@@ -210,10 +190,10 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
     @Override
     public boolean removeAll(final Collection<?> c)
     {
-        boolean changed = this.parent.removeAll(c);
+        boolean changed = this.wrappedSet.removeAll(c);
         if (changed)
         {
-            this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+            this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
         }
         return changed;
     }
@@ -222,10 +202,10 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
     @Override
     public boolean retainAll(final Collection<?> c)
     {
-        boolean changed = this.parent.retainAll(c);
+        boolean changed = this.wrappedSet.retainAll(c);
         if (changed)
         {
-            this.fireEvent(OBJECT_REMOVED_EVENT, this.parent.size());
+            this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
         }
         return changed;
     }
@@ -234,13 +214,13 @@ public class EventProducingSet<E> extends EventProducer implements EventListener
     @Override
     public Object[] toArray()
     {
-        return this.parent.toArray();
+        return this.wrappedSet.toArray();
     }
 
     /** {@inheritDoc} */
     @Override
     public <T> T[] toArray(final T[] a)
     {
-        return this.parent.toArray(a);
+        return this.wrappedSet.toArray(a);
     }
 }
