@@ -15,7 +15,7 @@ import org.djutils.metadata.MetaData;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class TimedEventType extends AbstractEventType implements TimedEventTypeInterface
+public class TimedEventType extends EventType
 {
     /** */
     private static final long serialVersionUID = 20200505L;
