@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.djutils.event.ref.Reference;
-import org.djutils.event.remote.RemoteEventListener;
+import org.djutils.event.rmi.RemoteEventListener;
 import org.djutils.exceptions.Throw;
 
 /**

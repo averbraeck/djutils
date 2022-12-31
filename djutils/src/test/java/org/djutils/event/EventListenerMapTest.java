@@ -25,7 +25,7 @@ import java.util.Set;
 import org.djutils.event.ref.Reference;
 import org.djutils.event.ref.StrongReference;
 import org.djutils.event.ref.WeakReference;
-import org.djutils.event.remote.RemoteEventListener;
+import org.djutils.event.rmi.RemoteEventListener;
 import org.djutils.metadata.MetaData;
 import org.djutils.rmi.RmiRegistry;
 import org.junit.Test;

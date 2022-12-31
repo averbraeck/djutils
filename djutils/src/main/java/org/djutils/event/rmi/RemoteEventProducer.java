@@ -1,4 +1,4 @@
-package org.djutils.event.remote;
+package org.djutils.event.rmi;
 
 import java.io.Serializable;
 import java.net.URL;

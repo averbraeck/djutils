@@ -1,4 +1,4 @@
-package org.djutils.event.remote;
+package org.djutils.event.rmi;
 
 import java.net.URL;
 import java.rmi.AccessException;
