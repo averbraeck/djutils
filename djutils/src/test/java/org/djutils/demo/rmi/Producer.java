@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.Scanner;
 import java.util.Set;
 
-import org.djutils.rmi.RMIObject;
+import org.djutils.rmi.RMIRegisteredObject;
 import org.djutils.rmi.RMIUtils;
 
 /**
@@ -17,7 +17,7 @@ import org.djutils.rmi.RMIUtils;
  * <p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
  */
-public class Producer extends RMIObject implements ProducerInterface
+public class Producer extends RMIRegisteredObject implements ProducerInterface
 {
     /** */
     private static final long serialVersionUID = 1L;

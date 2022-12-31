@@ -579,7 +579,7 @@ public class RMITest
     }
 
     /** Producer object. */
-    public class Producer extends RMIObject implements ProducerInterface
+    public class Producer extends RMIRegisteredObject implements ProducerInterface
     {
         /** */
         private static final long serialVersionUID = 1L;
@@ -657,7 +657,7 @@ public class RMITest
     }
 
     /** Listener object. */
-    public class Listener extends RMIObject implements ListenerInterface
+    public class Listener extends RMIRegisteredObject implements ListenerInterface
     {
         /** */
         private static final long serialVersionUID = 1L;
