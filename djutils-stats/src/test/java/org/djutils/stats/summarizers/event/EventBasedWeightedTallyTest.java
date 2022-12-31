@@ -6,8 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.djutils.event.Event;
-import org.djutils.event.EventInterface;
-import org.djutils.event.EventListenerInterface;
+import org.djutils.event.EventListener;
 import org.djutils.event.EventType;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
@@ -249,7 +248,7 @@ public class EventBasedWeightedTallyTest
     }
 
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
-    class WeightedObservationEventListener implements EventListenerInterface
+    class WeightedObservationEventListener implements EventListener
     {
         /** */
         private static final long serialVersionUID = 1L;
@@ -258,7 +257,7 @@ public class EventBasedWeightedTallyTest
         private int observationEvents = 0;
 
         @Override
-        public void notify(final EventInterface event)
+        public void notify(final Event event)
         {
             assertTrue(event.getType().equals(StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT));
             assertTrue("Content of the event has a wrong type, not Object[]: " + event.getContent().getClass(),

@@ -10,8 +10,7 @@ import static org.junit.Assert.fail;
 import java.util.Random;
 
 import org.djutils.event.Event;
-import org.djutils.event.EventInterface;
-import org.djutils.event.EventListenerInterface;
+import org.djutils.event.EventListener;
 import org.djutils.event.EventType;
 import org.djutils.metadata.MetaData;
 import org.djutils.stats.ConfidenceInterval;
@@ -395,7 +394,7 @@ public class EventBasedTallyTest
     }
 
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
-    class ObservationEventListener implements EventListenerInterface
+    class ObservationEventListener implements EventListener
     {
         /** */
         private static final long serialVersionUID = 1L;
@@ -404,7 +403,7 @@ public class EventBasedTallyTest
         private int observationEvents = 0;
 
         @Override
-        public void notify(final EventInterface event)
+        public void notify(final Event event)
         {
             assertTrue(event.getType().equals(StatisticsEvents.OBSERVATION_ADDED_EVENT));
             assertTrue("Content of the event has a wrong type, not DOuble: " + event.getContent().getClass(),

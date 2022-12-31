@@ -9,8 +9,7 @@ import static org.junit.Assert.fail;
 import java.util.Calendar;
 
 import org.djutils.event.Event;
-import org.djutils.event.EventInterface;
-import org.djutils.event.EventListenerInterface;
+import org.djutils.event.EventListener;
 import org.djutils.event.EventType;
 import org.djutils.event.TimedEvent;
 import org.djutils.event.TimedEventType;
@@ -366,7 +365,7 @@ public class EventBasedTimestampWeightedTallyTest
     }
 
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
-    class TimestampedObservationEventListener implements EventListenerInterface
+    class TimestampedObservationEventListener implements EventListener
     {
         /** */
         private static final long serialVersionUID = 1L;
@@ -375,7 +374,7 @@ public class EventBasedTimestampWeightedTallyTest
         private int observationEvents = 0;
 
         @Override
-        public void notify(final EventInterface event)
+        public void notify(final Event event)
         {
             assertTrue(event.getType().equals(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT));
             assertTrue("Content of the event has a wrong type, not Object[]: " + event.getContent().getClass(),

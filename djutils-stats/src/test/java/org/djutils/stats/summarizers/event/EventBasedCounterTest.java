@@ -5,8 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.djutils.event.Event;
-import org.djutils.event.EventInterface;
-import org.djutils.event.EventListenerInterface;
+import org.djutils.event.EventListener;
 import org.djutils.event.EventType;
 import org.djutils.metadata.MetaData;
 import org.junit.Test;
@@ -85,7 +84,7 @@ public class EventBasedCounterTest
     }
 
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
-    class CounterEventListener implements EventListenerInterface
+    class CounterEventListener implements EventListener
     {
         /** */
         private static final long serialVersionUID = 1L;
@@ -94,7 +93,7 @@ public class EventBasedCounterTest
         private int countEvents = 0;
 
         @Override
-        public void notify(final EventInterface event)
+        public void notify(final Event event)
         {
             assertTrue(event.getType().equals(StatisticsEvents.OBSERVATION_ADDED_EVENT));
             assertTrue("Content of the event has a wrong type, not Long: " + event.getContent().getClass(),

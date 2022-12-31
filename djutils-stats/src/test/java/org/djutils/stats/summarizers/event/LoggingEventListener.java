@@ -2,8 +2,8 @@ package org.djutils.stats.summarizers.event;
 
 import java.rmi.RemoteException;
 
-import org.djutils.event.EventInterface;
-import org.djutils.event.EventListenerInterface;
+import org.djutils.event.Event;
+import org.djutils.event.EventListener;
 
 /**
  * LoggingEventListener logs the last event that was received and the number of received events so they can be checked.
@@ -16,13 +16,13 @@ import org.djutils.event.EventListenerInterface;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class LoggingEventListener implements EventListenerInterface
+public class LoggingEventListener implements EventListener
 {
     /** */
     private static final long serialVersionUID = 1L;
     
     /** Last received event. */
-    private EventInterface lastEvent;
+    private Event lastEvent;
     
     /** Nummber of received events. */
     private int numberOfEvents = 0;
@@ -35,16 +35,16 @@ public class LoggingEventListener implements EventListenerInterface
     
     /** {@inheritDoc} */
     @Override
-    public void notify(final EventInterface event) throws RemoteException
+    public void notify(final Event event) throws RemoteException
     {
         this.lastEvent = event;
         this.numberOfEvents++;
     }
 
     /**
-     * @return EventInterface; the last received event
+     * @return Event; the last received event
      */
-    public EventInterface getLastEvent()
+    public Event getLastEvent()
     {
         return this.lastEvent;
     }
