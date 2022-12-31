@@ -3,9 +3,8 @@ package org.djutils.stats.summarizers.event;
 import java.io.Serializable;
 
 import org.djutils.event.Event;
-import org.djutils.event.EventInterface;
-import org.djutils.event.EventListenerInterface;
-import org.djutils.event.EventProducer;
+import org.djutils.event.EventListener;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.stats.summarizers.Counter;
 import org.djutils.stats.summarizers.CounterInterface;
 
@@ -21,7 +20,7 @@ import org.djutils.stats.summarizers.CounterInterface;
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  */
-public class EventBasedCounter extends EventProducer implements EventListenerInterface, CounterInterface
+public class EventBasedCounter extends LocalEventProducer implements EventListener, CounterInterface
 {
     /** */
     private static final long serialVersionUID = 20200228L;
@@ -35,6 +34,7 @@ public class EventBasedCounter extends EventProducer implements EventListenerInt
      */
     public EventBasedCounter(final String description)
     {
+        super(description);
         this.wrappedCounter = new Counter(description);
     }
 
@@ -61,7 +61,7 @@ public class EventBasedCounter extends EventProducer implements EventListenerInt
 
     /** {@inheritDoc} */
     @Override
-    public void notify(final EventInterface event)
+    public void notify(final Event event)
     {
         long value = 1;
         if (event.getContent() instanceof Number)

@@ -3,9 +3,8 @@ package org.djutils.stats.summarizers.event;
 import java.io.Serializable;
 
 import org.djutils.event.Event;
-import org.djutils.event.EventInterface;
-import org.djutils.event.EventListenerInterface;
-import org.djutils.event.EventProducer;
+import org.djutils.event.EventListener;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.stats.ConfidenceInterval;
 import org.djutils.stats.summarizers.Tally;
 import org.djutils.stats.summarizers.TallyInterface;
@@ -26,7 +25,7 @@ import org.djutils.stats.summarizers.quantileaccumulator.QuantileAccumulator;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-public class EventBasedTally extends EventProducer implements EventListenerInterface, TallyInterface
+public class EventBasedTally extends LocalEventProducer implements EventListener, TallyInterface
 {
     /** */
     private static final long serialVersionUID = 20200228L;
@@ -41,6 +40,7 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
      */
     public EventBasedTally(final String description, final QuantileAccumulator quantileAccumulator)
     {
+        super(description);
         this.wrappedTally = new Tally(description, quantileAccumulator);
     }
 
@@ -211,7 +211,7 @@ public class EventBasedTally extends EventProducer implements EventListenerInter
     /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:designforextension")
-    public void notify(final EventInterface event)
+    public void notify(final Event event)
     {
         if (!(event.getContent() instanceof Number))
         {

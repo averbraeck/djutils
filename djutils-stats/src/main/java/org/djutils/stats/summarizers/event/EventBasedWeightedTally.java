@@ -3,9 +3,8 @@ package org.djutils.stats.summarizers.event;
 import java.io.Serializable;
 
 import org.djutils.event.Event;
-import org.djutils.event.EventInterface;
-import org.djutils.event.EventListenerInterface;
-import org.djutils.event.EventProducer;
+import org.djutils.event.EventListener;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.exceptions.Throw;
 import org.djutils.stats.summarizers.WeightedTally;
 import org.djutils.stats.summarizers.WeightedTallyInterface;
@@ -22,7 +21,7 @@ import org.djutils.stats.summarizers.WeightedTallyInterface;
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-public class EventBasedWeightedTally extends EventProducer implements EventListenerInterface, WeightedTallyInterface
+public class EventBasedWeightedTally extends LocalEventProducer implements EventListener, WeightedTallyInterface
 {
     /** */
     private static final long serialVersionUID = 20200228L;
@@ -36,6 +35,7 @@ public class EventBasedWeightedTally extends EventProducer implements EventListe
      */
     public EventBasedWeightedTally(final String description)
     {
+        super(description);
         this.wrappedWeightedTally = new WeightedTally(description);
     }
 
@@ -126,7 +126,7 @@ public class EventBasedWeightedTally extends EventProducer implements EventListe
 
     /** {@inheritDoc} */
     @Override
-    public void notify(final EventInterface event)
+    public void notify(final Event event)
     {
         Throw.when(!(event.getContent() instanceof Object[]), IllegalArgumentException.class,
                 "WeightedTally.notify: Content should be Object[] {weight, value}");

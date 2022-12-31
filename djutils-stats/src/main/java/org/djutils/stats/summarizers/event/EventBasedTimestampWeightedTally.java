@@ -4,9 +4,8 @@ import java.io.Serializable;
 import java.util.Calendar;
 
 import org.djutils.event.Event;
-import org.djutils.event.EventInterface;
-import org.djutils.event.EventListenerInterface;
-import org.djutils.event.EventProducer;
+import org.djutils.event.EventListener;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.event.TimedEvent;
 import org.djutils.stats.summarizers.TimestampTallyInterface;
 import org.djutils.stats.summarizers.TimestampWeightedTally;
@@ -25,7 +24,7 @@ import org.djutils.stats.summarizers.TimestampWeightedTally;
  * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  */
-public class EventBasedTimestampWeightedTally extends EventProducer implements EventListenerInterface, TimestampTallyInterface
+public class EventBasedTimestampWeightedTally extends LocalEventProducer implements EventListener, TimestampTallyInterface
 {
     /** */
     private static final long serialVersionUID = 20200228L;
@@ -39,6 +38,7 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
      */
     public EventBasedTimestampWeightedTally(final String description)
     {
+        super(description);
         this.wrappedTimestampWeightedTally = new TimestampWeightedTally(description);
         initialize();
     }
@@ -83,7 +83,7 @@ public class EventBasedTimestampWeightedTally extends EventProducer implements E
 
     /** {@inheritDoc} */
     @Override
-    public void notify(final EventInterface event)
+    public void notify(final Event event)
     {
         if (event instanceof TimedEvent<?>)
         {
