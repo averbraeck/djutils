@@ -24,7 +24,7 @@ import org.djutils.event.TimedEventType;
 import org.djutils.event.ref.Reference;
 import org.djutils.event.ref.ReferenceType;
 import org.djutils.event.rmi.RmiEventListener;
-import org.djutils.event.rmi.RemoteEventProducer;
+import org.djutils.event.rmi.RmiEventProducer;
 import org.djutils.exceptions.Try;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
@@ -785,7 +785,7 @@ public class RemoteEventPubSubTest
     }
 
     /** */
-    protected static class TestRemoteEventProducer extends RemoteEventProducer
+    protected static class TestRemoteEventProducer extends RmiEventProducer
     {
         /** */
         private static final long serialVersionUID = 20191230L;

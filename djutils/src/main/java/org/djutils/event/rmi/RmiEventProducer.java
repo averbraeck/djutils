@@ -19,7 +19,7 @@ import org.djutils.event.ref.ReferenceType;
 import org.djutils.rmi.RmiObject;
 
 /**
- * The RemoteEventProducer provides a remote implementation of the eventProducer.
+ * The RmiEventProducer provides a remote implementation of the eventProducer using the RMI protocol.
  * <p>
  * Copyright (c) 2002-2022 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -31,7 +31,7 @@ import org.djutils.rmi.RmiObject;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public abstract class RemoteEventProducer extends RmiObject implements EventProducer, Remote
+public abstract class RmiEventProducer extends RmiObject implements EventProducer, Remote
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140830L;
@@ -53,7 +53,7 @@ public abstract class RemoteEventProducer extends RmiObject implements EventProd
      * @throws IllegalArgumentException when port &lt; 0 or port &gt; 65535
      * @throws AccessException when there is an attempt to create a registry on a remote host
      */
-    public RemoteEventProducer(final String host, final int port, final String bindingKey)
+    public RmiEventProducer(final String host, final int port, final String bindingKey)
             throws RemoteException, AlreadyBoundException
     {
         super(host, port, bindingKey);
@@ -72,7 +72,7 @@ public abstract class RemoteEventProducer extends RmiObject implements EventProd
      * @throws NullPointerException when registryURL or bindingKey is null
      * @throws AccessException when there is an attempt to create a registry on a remote host
      */
-    public RemoteEventProducer(final URL registryURL, final String bindingKey) throws RemoteException, AlreadyBoundException
+    public RmiEventProducer(final URL registryURL, final String bindingKey) throws RemoteException, AlreadyBoundException
     {
         super(registryURL, bindingKey);
         this.embeddedEventProducer = new LocalEventProducer(this);
