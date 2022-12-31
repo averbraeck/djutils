@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.djutils.event.ref.Reference;
-import org.djutils.event.rmi.RemoteEventListener;
+import org.djutils.event.rmi.RmiEventListener;
 import org.djutils.exceptions.Throw;
 
 /**
@@ -236,7 +236,7 @@ public final class EventListenerMap implements Serializable
         {
             for (Reference<EventListener> reference : entry.getValue())
             {
-                if (reference.get() instanceof RemoteEventListener)
+                if (reference.get() instanceof RmiEventListener)
                 {
                     outMap.get(entry.getKey()).remove(reference);
                 }

@@ -25,7 +25,7 @@ import java.util.Set;
 import org.djutils.event.ref.Reference;
 import org.djutils.event.ref.StrongReference;
 import org.djutils.event.ref.WeakReference;
-import org.djutils.event.rmi.RemoteEventListener;
+import org.djutils.event.rmi.RmiEventListener;
 import org.djutils.metadata.MetaData;
 import org.djutils.rmi.RmiRegistry;
 import org.junit.Test;
@@ -294,7 +294,7 @@ public class EventListenerMapTest implements Serializable
     }
 
     /** */
-    protected static class TestRemoteEventListener extends RemoteEventListener
+    protected static class TestRemoteEventListener extends RmiEventListener
     {
         /** */
         private static final long serialVersionUID = 20191230L;

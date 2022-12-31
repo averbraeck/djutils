@@ -23,7 +23,7 @@ import org.djutils.event.TimedEvent;
 import org.djutils.event.TimedEventType;
 import org.djutils.event.ref.Reference;
 import org.djutils.event.ref.ReferenceType;
-import org.djutils.event.rmi.RemoteEventListener;
+import org.djutils.event.rmi.RmiEventListener;
 import org.djutils.event.rmi.RemoteEventProducer;
 import org.djutils.exceptions.Try;
 import org.djutils.metadata.MetaData;
@@ -819,7 +819,7 @@ public class RemoteEventPubSubTest
     }
 
     /** */
-    protected static class TestRemoteEventListener extends RemoteEventListener
+    protected static class TestRemoteEventListener extends RmiEventListener
     {
         /** */
         private static final long serialVersionUID = 20191230L;
@@ -898,7 +898,7 @@ public class RemoteEventPubSubTest
      * RemoteTimedEventListener.
      * @param <C> the comparable time type
      */
-    protected static class TestRemoteTimedEventListener<C extends Comparable<C> & Serializable> extends RemoteEventListener
+    protected static class TestRemoteTimedEventListener<C extends Comparable<C> & Serializable> extends RmiEventListener
     {
         /** */
         private static final long serialVersionUID = 20191230L;

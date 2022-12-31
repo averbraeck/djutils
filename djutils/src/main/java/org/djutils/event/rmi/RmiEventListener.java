@@ -10,7 +10,7 @@ import org.djutils.event.EventListener;
 import org.djutils.rmi.RmiObject;
 
 /**
- * The RemoteEventListener class embodies a remote EventListener.
+ * The RmiEventListener class embodies a remote EventListener using the RMI protocol.
  * <p>
  * Copyright (c) 2002-2022 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -22,7 +22,7 @@ import org.djutils.rmi.RmiObject;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public abstract class RemoteEventListener extends RmiObject implements EventListener, Remote 
+public abstract class RmiEventListener extends RmiObject implements EventListener, Remote 
 {
     /** */
     private static final long serialVersionUID = 20191230L;
@@ -40,7 +40,7 @@ public abstract class RemoteEventListener extends RmiObject implements EventList
      * @throws IllegalArgumentException when port &lt; 0 or port &gt; 65535
      * @throws AccessException when there is an attempt to create a registry on a remote host
      */
-    public RemoteEventListener(final String host, final int port, final String bindingKey)
+    public RmiEventListener(final String host, final int port, final String bindingKey)
             throws RemoteException, AlreadyBoundException
     {
         super(host, port, bindingKey);
@@ -58,7 +58,7 @@ public abstract class RemoteEventListener extends RmiObject implements EventList
      * @throws NullPointerException when registryURL or bindingKey is null
      * @throws AccessException when there is an attempt to create a registry on a remote host
      */
-    public RemoteEventListener(final URL registryURL, final String bindingKey) throws RemoteException, AlreadyBoundException
+    public RmiEventListener(final URL registryURL, final String bindingKey) throws RemoteException, AlreadyBoundException
     {
         super(registryURL, bindingKey);
     }
