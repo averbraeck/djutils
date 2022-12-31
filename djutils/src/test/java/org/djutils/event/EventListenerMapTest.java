@@ -27,7 +27,7 @@ import org.djutils.event.ref.StrongReference;
 import org.djutils.event.ref.WeakReference;
 import org.djutils.event.remote.RemoteEventListener;
 import org.djutils.metadata.MetaData;
-import org.djutils.rmi.RMIUtils;
+import org.djutils.rmi.RmiRegistry;
 import org.junit.Test;
 
 /**
@@ -196,7 +196,7 @@ public class EventListenerMapTest implements Serializable
             oos.close();
             bais.close();
             ois.close();
-            RMIUtils.closeRegistry(remoteEventListener.getRegistry());
+            RmiRegistry.closeRegistry(remoteEventListener.getRegistry());
         }
         catch (IOException | ClassNotFoundException | AlreadyBoundException exception)
         {

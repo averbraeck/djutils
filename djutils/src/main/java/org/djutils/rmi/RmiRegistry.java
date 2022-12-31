@@ -23,12 +23,12 @@ import org.djutils.logger.CategoryLogger;
  * <p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
  */
-public final class RMIUtils
+public final class RmiRegistry
 {
     /**
      * Static class; constructor should not be called.
      */
-    private RMIUtils()
+    private RmiRegistry()
     {
         // static class; should not be called.
     }

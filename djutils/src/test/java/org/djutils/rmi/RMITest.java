@@ -50,7 +50,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.getRegistry(null, 1099);
+                RmiRegistry.getRegistry(null, 1099);
             }
         }, "should have thrown NullPointerException", NullPointerException.class);
         for (int port : new int[] {-1, 0, 100000, -10, 65536})
@@ -60,7 +60,7 @@ public class RMITest
                 @Override
                 public void execute() throws Throwable
                 {
-                    RMIUtils.getRegistry("localhost", port);
+                    RmiRegistry.getRegistry("localhost", port);
                 }
             }, "should have thrown IllegalArgumentException", IllegalArgumentException.class);
         }
@@ -70,12 +70,12 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.getRegistry("130.161.3.179", 41099);
+                RmiRegistry.getRegistry("130.161.3.179", 41099);
             }
         }, "should have thrown RemoteException or AccessException", RemoteException.class);
 
         // valid registry
-        Registry registry = RMIUtils.getRegistry("localhost", 1099);
+        Registry registry = RmiRegistry.getRegistry("localhost", 1099);
         assertNotNull(registry);
         assertEquals(0, registry.list().length);
 
@@ -87,7 +87,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.bind(null, key, remoteObject);
+                RmiRegistry.bind(null, key, remoteObject);
             }
         }, "should have thrown NullPointerException", NullPointerException.class);
         Try.testFail(new Try.Execution()
@@ -95,7 +95,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.bind(registry, null, remoteObject);
+                RmiRegistry.bind(registry, null, remoteObject);
             }
         }, "should have thrown NullPointerException", NullPointerException.class);
         Try.testFail(new Try.Execution()
@@ -103,7 +103,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.bind(registry, key, null);
+                RmiRegistry.bind(registry, key, null);
             }
         }, "should have thrown NullPointerException", NullPointerException.class);
         Try.testFail(new Try.Execution()
@@ -111,25 +111,25 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.bind(registry, "", remoteObject);
+                RmiRegistry.bind(registry, "", remoteObject);
             }
         }, "should have thrown IllegalArgumentPointerException", IllegalArgumentException.class);
 
         // valid bind
-        RMIUtils.bind(registry, key, remoteObject);
+        RmiRegistry.bind(registry, key, remoteObject);
         assertEquals(1, registry.list().length);
         Try.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.bind(registry, key, remoteObject);
+                RmiRegistry.bind(registry, key, remoteObject);
             }
         }, "should have thrown AlreadyBoundException", AlreadyBoundException.class);
         assertEquals(1, registry.list().length);
 
         // see if the same registry is retrieved the second time
-        Registry reg2 = RMIUtils.getRegistry("localhost", 1099);
+        Registry reg2 = RmiRegistry.getRegistry("localhost", 1099);
         assertNotNull(reg2);
         // reg2 and registry can have a different internal structure (IP address versus localhost)
         // so assertEquals(registry, reg2) cannot be used, but they should still point to the same registry
@@ -141,7 +141,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.lookup(null, key);
+                RmiRegistry.lookup(null, key);
             }
         }, "should have thrown NullPointerException", NullPointerException.class);
         Try.testFail(new Try.Execution()
@@ -149,7 +149,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.lookup(registry, null);
+                RmiRegistry.lookup(registry, null);
             }
         }, "should have thrown NullPointerException", NullPointerException.class);
         Try.testFail(new Try.Execution()
@@ -157,12 +157,12 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.lookup(registry, "");
+                RmiRegistry.lookup(registry, "");
             }
         }, "should have thrown IllegalArgumentPointerException", IllegalArgumentException.class);
 
         // valid lookup
-        RemoteObject ro = (RemoteObject) RMIUtils.lookup(registry, key);
+        RemoteObject ro = (RemoteObject) RmiRegistry.lookup(registry, key);
         assertNotNull(ro);
         assertEquals(remoteObject, ro);
         assertEquals(key, ro.getName());
@@ -173,7 +173,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.rebind(null, key, remoteObject);
+                RmiRegistry.rebind(null, key, remoteObject);
             }
         }, "should have thrown NullPointerException", NullPointerException.class);
         Try.testFail(new Try.Execution()
@@ -181,7 +181,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.rebind(registry, null, remoteObject);
+                RmiRegistry.rebind(registry, null, remoteObject);
             }
         }, "should have thrown NullPointerException", NullPointerException.class);
         Try.testFail(new Try.Execution()
@@ -189,7 +189,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.rebind(registry, key, null);
+                RmiRegistry.rebind(registry, key, null);
             }
         }, "should have thrown NullPointerException", NullPointerException.class);
         Try.testFail(new Try.Execution()
@@ -197,7 +197,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.rebind(registry, "", remoteObject);
+                RmiRegistry.rebind(registry, "", remoteObject);
             }
         }, "should have thrown IllegalArgumentPointerException", IllegalArgumentException.class);
 
@@ -205,7 +205,7 @@ public class RMITest
         String otherKey = "otherKey";
         RemoteObject otherObject = new RemoteObject(otherKey);
         assertNotEquals(remoteObject, otherObject);
-        RMIUtils.rebind(registry, key, otherObject);
+        RmiRegistry.rebind(registry, key, otherObject);
         assertEquals(1, registry.list().length);
         RemoteObject ro2 = (RemoteObject) registry.lookup(key);
         assertNotNull(ro2);
@@ -218,7 +218,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.unbind(null, key);
+                RmiRegistry.unbind(null, key);
             }
         }, "should have thrown NullPointerException", NullPointerException.class);
         Try.testFail(new Try.Execution()
@@ -226,7 +226,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.unbind(registry, null);
+                RmiRegistry.unbind(registry, null);
             }
         }, "should have thrown NullPointerException", NullPointerException.class);
         Try.testFail(new Try.Execution()
@@ -234,7 +234,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.unbind(registry, "");
+                RmiRegistry.unbind(registry, "");
             }
         }, "should have thrown IllegalArgumentPointerException", IllegalArgumentException.class);
         Try.testFail(new Try.Execution()
@@ -242,24 +242,24 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.unbind(registry, otherKey);
+                RmiRegistry.unbind(registry, otherKey);
             }
         }, "should have thrown NotBoundException", NotBoundException.class);
 
         // valid rebind / unbind
-        RMIUtils.rebind(registry, otherKey, remoteObject); // rebind should always work
+        RmiRegistry.rebind(registry, otherKey, remoteObject); // rebind should always work
         assertEquals(2, registry.list().length);
-        RMIUtils.unbind(registry, otherKey);
+        RmiRegistry.unbind(registry, otherKey);
         assertEquals(1, registry.list().length);
 
         // test closeRegistry
-        RMIUtils.closeRegistry(registry);
+        RmiRegistry.closeRegistry(registry);
         Try.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.lookup(registry, key);
+                RmiRegistry.lookup(registry, key);
             }
         }, "should have thrown an Exception");
         Try.testFail(new Try.Execution()
@@ -267,7 +267,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.lookup(reg2, key);
+                RmiRegistry.lookup(reg2, key);
             }
         });
 
@@ -278,7 +278,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.lookup(registry, key);
+                RmiRegistry.lookup(registry, key);
             }
         }, "did not get expected exception for lookup()");
         Try.testFail(new Try.Execution()
@@ -286,7 +286,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.unbind(registry, key);
+                RmiRegistry.unbind(registry, key);
             }
         }, "did not get expected exception for unbind()");
         Try.testFail(new Try.Execution()
@@ -294,7 +294,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RMIUtils.closeRegistry(registry);
+                RmiRegistry.closeRegistry(registry);
             }
         }, "did not get expected exception for closeRegistry()");
 
@@ -317,7 +317,7 @@ public class RMITest
             Registry registry = null;
             try
             {
-                registry = RMIUtils.getRegistry(localHostName, 1099);
+                registry = RmiRegistry.getRegistry(localHostName, 1099);
             }
             catch (RemoteException exception)
             {
@@ -329,14 +329,14 @@ public class RMITest
             {
                 assertNotNull(registry);
                 assertEquals(0, registry.list().length);
-                RMIUtils.closeRegistry(registry);
+                RmiRegistry.closeRegistry(registry);
                 final Registry testRegistry = registry;
                 Try.testFail(new Try.Execution()
                 {
                     @Override
                     public void execute() throws Throwable
                     {
-                        RMIUtils.lookup(testRegistry, "key");
+                        RmiRegistry.lookup(testRegistry, "key");
                     }
                 }, "should have thrown an Exception");
             }
@@ -413,7 +413,7 @@ public class RMITest
 
         // close down
         Registry registry = producer.getRegistry();
-        RMIUtils.closeRegistry(registry);
+        RmiRegistry.closeRegistry(registry);
 
         // check errors in creating RMIObject
         Try.testFail(new Try.Execution()
@@ -461,17 +461,17 @@ public class RMITest
         producer = new Producer(new URL("http", null, ""), "producer");
         assertNotNull(producer);
         assertNotNull(producer.getRegistry());
-        RMIUtils.closeRegistry(producer.getRegistry());
+        RmiRegistry.closeRegistry(producer.getRegistry());
         sleep(200);
         producer = new Producer(new URL("http://127.0.0.1:1099"), "producer");
         assertNotNull(producer);
         assertNotNull(producer.getRegistry());
-        RMIUtils.closeRegistry(producer.getRegistry());
+        RmiRegistry.closeRegistry(producer.getRegistry());
         sleep(200);
         producer = new Producer(new URL("http://localhost:1099"), "producer");
         assertNotNull(producer);
         assertNotNull(producer.getRegistry());
-        RMIUtils.closeRegistry(producer.getRegistry());
+        RmiRegistry.closeRegistry(producer.getRegistry());
         sleep(200);
 
         CategoryLogger.setAllLogLevel(Level.INFO);
@@ -679,7 +679,7 @@ public class RMITest
         {
             super("localhost", 1099, listenerName);
             this.listenerName = listenerName;
-            ProducerInterface producer = (ProducerInterface) RMIUtils.lookup(getRegistry(), "producer");
+            ProducerInterface producer = (ProducerInterface) RmiRegistry.lookup(getRegistry(), "producer");
             producer.addListener(this);
         }
 

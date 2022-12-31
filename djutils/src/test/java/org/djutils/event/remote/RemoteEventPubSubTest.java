@@ -26,7 +26,7 @@ import org.djutils.event.ref.ReferenceType;
 import org.djutils.exceptions.Try;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
-import org.djutils.rmi.RMIUtils;
+import org.djutils.rmi.RmiRegistry;
 import org.junit.Test;
 
 /**
@@ -172,7 +172,7 @@ public class RemoteEventPubSubTest
         finally
         {
             // clean up the registry
-            RMIUtils.closeRegistry(producer.getRegistry());
+            RmiRegistry.closeRegistry(producer.getRegistry());
         }
     }
 
@@ -342,7 +342,7 @@ public class RemoteEventPubSubTest
         finally
         {
             // clean up the registry
-            RMIUtils.closeRegistry(producer.getRegistry());
+            RmiRegistry.closeRegistry(producer.getRegistry());
         }
     }
 
@@ -429,7 +429,7 @@ public class RemoteEventPubSubTest
         finally
         {
             // clean up the registry
-            RMIUtils.closeRegistry(producer.getRegistry());
+            RmiRegistry.closeRegistry(producer.getRegistry());
         }
     }
 
@@ -603,7 +603,7 @@ public class RemoteEventPubSubTest
         finally
         {
             // clean up the registry
-            RMIUtils.closeRegistry(producer.getRegistry());
+            RmiRegistry.closeRegistry(producer.getRegistry());
         }
     }
 
@@ -721,7 +721,7 @@ public class RemoteEventPubSubTest
         finally
         {
             // clean up the registry
-            RMIUtils.closeRegistry(producer.getRegistry());
+            RmiRegistry.closeRegistry(producer.getRegistry());
         }
     }
 
@@ -778,7 +778,7 @@ public class RemoteEventPubSubTest
         finally
         {
             // clean up the registry
-            RMIUtils.closeRegistry(producer.getRegistry());
+            RmiRegistry.closeRegistry(producer.getRegistry());
         }
     }
 

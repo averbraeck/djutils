@@ -7,7 +7,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 import org.djutils.rmi.RmiObject;
-import org.djutils.rmi.RMIUtils;
+import org.djutils.rmi.RmiRegistry;
 
 /**
  * Producer.java.
@@ -127,7 +127,7 @@ public class Producer extends RmiObject implements ProducerInterface
         s.close();
         try
         {
-            RMIUtils.closeRegistry(getRegistry());
+            RmiRegistry.closeRegistry(getRegistry());
         }
         catch (Exception re)
         {

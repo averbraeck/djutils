@@ -5,7 +5,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 import org.djutils.rmi.RmiObject;
-import org.djutils.rmi.RMIUtils;
+import org.djutils.rmi.RmiRegistry;
 
 /**
  * Listener.java.
@@ -34,7 +34,7 @@ public class Listener extends RmiObject implements ListenerInterface
     {
         super("localhost", 1099, listenerName);
         this.listenerName = listenerName;
-        ProducerInterface producer = (ProducerInterface) RMIUtils.lookup(getRegistry(), "producer");
+        ProducerInterface producer = (ProducerInterface) RmiRegistry.lookup(getRegistry(), "producer");
         producer.addListener(this);
     }
 

@@ -80,8 +80,8 @@ public abstract class RmiObject extends UnicastRemoteObject
             throws RemoteException, AlreadyBoundException
     {
         Throw.whenNull(bindingKey, "bindingKey cannot be null");
-        this.registry = RMIUtils.getRegistry(host, port);
-        RMIUtils.bind(this.registry, bindingKey, this);
+        this.registry = RmiRegistry.getRegistry(host, port);
+        RmiRegistry.bind(this.registry, bindingKey, this);
     }
 
     /**
