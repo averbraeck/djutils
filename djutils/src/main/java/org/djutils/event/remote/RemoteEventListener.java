@@ -7,7 +7,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import org.djutils.event.EventListener;
-import org.djutils.rmi.RMIRegisteredObject;
+import org.djutils.rmi.RmiObject;
 
 /**
  * The RemoteEventListener class embodies a remote EventListener.
@@ -22,7 +22,7 @@ import org.djutils.rmi.RMIRegisteredObject;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public abstract class RemoteEventListener extends RMIRegisteredObject implements EventListener, Remote 
+public abstract class RemoteEventListener extends RmiObject implements EventListener, Remote 
 {
     /** */
     private static final long serialVersionUID = 20191230L;

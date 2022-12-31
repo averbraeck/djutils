@@ -16,7 +16,7 @@ import org.djutils.event.EventType;
 import org.djutils.event.LocalEventProducer;
 import org.djutils.event.ref.Reference;
 import org.djutils.event.ref.ReferenceType;
-import org.djutils.rmi.RMIRegisteredObject;
+import org.djutils.rmi.RmiObject;
 
 /**
  * The RemoteEventProducer provides a remote implementation of the eventProducer.
@@ -31,7 +31,7 @@ import org.djutils.rmi.RMIRegisteredObject;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public abstract class RemoteEventProducer extends RMIRegisteredObject implements EventProducer, Remote
+public abstract class RemoteEventProducer extends RmiObject implements EventProducer, Remote
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140830L;

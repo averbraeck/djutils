@@ -18,7 +18,7 @@ import org.djutils.exceptions.Throw;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
  */
-public abstract class RMIRegisteredObject extends UnicastRemoteObject
+public abstract class RmiObject extends UnicastRemoteObject
 {
     /** */
     private static final long serialVersionUID = 20200111L;
@@ -38,7 +38,7 @@ public abstract class RMIRegisteredObject extends UnicastRemoteObject
      * @throws NullPointerException when registryURL or bindingKey is null
      * @throws AccessException when there is an attempt to create a registry on a remote host
      */
-    public RMIRegisteredObject(final URL registryURL, final String bindingKey) throws RemoteException, AlreadyBoundException
+    public RmiObject(final URL registryURL, final String bindingKey) throws RemoteException, AlreadyBoundException
     {
         Throw.whenNull(registryURL, "registryURL cannot be null");
         Throw.whenNull(bindingKey, "bindingKey cannot be null");
@@ -60,7 +60,7 @@ public abstract class RMIRegisteredObject extends UnicastRemoteObject
      * @throws IllegalArgumentException when port &lt; 0 or port &gt; 65535
      * @throws AccessException when there is an attempt to create a registry on a remote host
      */
-    public RMIRegisteredObject(final String host, final int port, final String bindingKey) throws RemoteException, AlreadyBoundException
+    public RmiObject(final String host, final int port, final String bindingKey) throws RemoteException, AlreadyBoundException
     {
         register(host, port, bindingKey);
     }

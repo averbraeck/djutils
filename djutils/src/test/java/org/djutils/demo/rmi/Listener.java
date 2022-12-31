@@ -4,7 +4,7 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-import org.djutils.rmi.RMIRegisteredObject;
+import org.djutils.rmi.RmiObject;
 import org.djutils.rmi.RMIUtils;
 
 /**
@@ -15,7 +15,7 @@ import org.djutils.rmi.RMIUtils;
  * <p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
  */
-public class Listener extends RMIRegisteredObject implements ListenerInterface
+public class Listener extends RmiObject implements ListenerInterface
 {
     /** */
     private static final long serialVersionUID = 1L;
