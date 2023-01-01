@@ -1,6 +1,5 @@
 package org.djutils.event.rmi;
 
-import java.io.Serializable;
 import java.net.URL;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
@@ -8,7 +7,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 
-import org.djutils.event.LocalEventProducer;
+import org.djutils.event.EventProducer;
 import org.djutils.rmi.RmiObject;
 
 /**
@@ -24,7 +23,7 @@ import org.djutils.rmi.RmiObject;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public abstract class RmiEventProducer extends LocalEventProducer implements Remote
+public abstract class RmiEventProducer extends EventProducer implements Remote
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140830L;
@@ -40,17 +39,15 @@ public abstract class RmiEventProducer extends LocalEventProducer implements Rem
      * @param host String; the host where the RMI registry resides or will be created. Creation is only possible on localhost.
      * @param port int; the port where the RMI registry can be found or will be created
      * @param bindingKey String; the key under which this object will be bound in the RMI registry
-     * @param sourceId Serializable; the sourceId of the event producer to identify the event publisher
      * @throws RemoteException when there is a problem with the RMI registry
      * @throws AlreadyBoundException when there is already another object bound to the bindingKey
      * @throws NullPointerException when host, path, or bindingKey is null
      * @throws IllegalArgumentException when port &lt; 0 or port &gt; 65535
      * @throws AccessException when there is an attempt to create a registry on a remote host
      */
-    public RmiEventProducer(final String host, final int port, final String bindingKey, final Serializable sourceId)
+    public RmiEventProducer(final String host, final int port, final String bindingKey)
             throws RemoteException, AlreadyBoundException
     {
-        super(sourceId);
         this.rmiObject = new RmiObject(host, port, bindingKey);
     }
 
@@ -61,16 +58,13 @@ public abstract class RmiEventProducer extends LocalEventProducer implements Rem
      * registry on another computer is not possible. Any attempt to do so will cause an AccessException to be fired.
      * @param registryURL URL; the URL of the registry, e.g., "http://localhost:1099" or "http://130.161.185.14:28452"
      * @param bindingKey String; the key under which this object will be bound in the RMI registry
-     * @param sourceId Serializable; the sourceId of the event producer to identify the event publisher
      * @throws RemoteException when there is a problem with the RMI registry
      * @throws AlreadyBoundException when there is already another object bound to the bindingKey
      * @throws NullPointerException when registryURL or bindingKey is null
      * @throws AccessException when there is an attempt to create a registry on a remote host
      */
-    public RmiEventProducer(final URL registryURL, final String bindingKey, final Serializable sourceId)
-            throws RemoteException, AlreadyBoundException
+    public RmiEventProducer(final URL registryURL, final String bindingKey) throws RemoteException, AlreadyBoundException
     {
-        super(sourceId);
         this.rmiObject = new RmiObject(registryURL, bindingKey);
     }
 
