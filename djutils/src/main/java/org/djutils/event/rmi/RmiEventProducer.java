@@ -7,7 +7,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 
-import org.djutils.event.EventProducer;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.rmi.RmiObject;
 
 /**
@@ -23,7 +23,7 @@ import org.djutils.rmi.RmiObject;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public abstract class RmiEventProducer extends EventProducer implements Remote
+public abstract class RmiEventProducer extends LocalEventProducer implements Remote
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140830L;

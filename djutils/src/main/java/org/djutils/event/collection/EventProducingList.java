@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
-import org.djutils.event.EventProducer;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.event.EventProducingObject;
 import org.djutils.event.EventType;
 import org.djutils.event.reference.ReferenceType;
@@ -54,7 +54,7 @@ public class EventProducingList<E> implements EventProducingObject, EventListene
     private List<E> wrappedList = null;
 
     /** the embedded event producer. */
-    private final EventProducer eventProducer;
+    private final LocalEventProducer eventProducer;
 
     /**
      * constructs a new EventProducingList.
@@ -62,7 +62,7 @@ public class EventProducingList<E> implements EventProducingObject, EventListene
      */
     public EventProducingList(final List<E> wrappedList)
     {
-        this(wrappedList, new EventProducer());
+        this(wrappedList, new LocalEventProducer());
     }
 
     /**
@@ -70,7 +70,7 @@ public class EventProducingList<E> implements EventProducingObject, EventListene
      * @param wrappedList List&lt;E&gt;; the embedded list.
      * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
      */
-    public EventProducingList(final List<E> wrappedList, final EventProducer eventProducer)
+    public EventProducingList(final List<E> wrappedList, final LocalEventProducer eventProducer)
     {
         Throw.whenNull(wrappedList, "wrappedList cannot be null");
         Throw.whenNull(eventProducer, "eventProducer cannot be null");
@@ -310,7 +310,7 @@ public class EventProducingList<E> implements EventProducingObject, EventListene
      * Return the embedded EventProducer.
      * @return EventProducer; the embedded EventProducer
      */
-    public EventProducer getEventProducer()
+    public LocalEventProducer getEventProducer()
     {
         return this.eventProducer;
     }

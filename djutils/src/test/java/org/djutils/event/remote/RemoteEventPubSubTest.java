@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
-import org.djutils.event.EventProducer;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.event.EventType;
 import org.djutils.event.TimedEvent;
 import org.djutils.event.reference.Reference;
@@ -698,9 +698,9 @@ public class RemoteEventPubSubTest
             TestRemoteEventListener listener2 = new TestRemoteEventListener("listener2");
             TestRemoteEventListener listener3 = new TestRemoteEventListener("listener3");
             addListenerOK =
-                    producer.addListener(listener2, TestRemoteEventProducer.REMOTE_EVENT_2, EventProducer.LAST_POSITION);
+                    producer.addListener(listener2, TestRemoteEventProducer.REMOTE_EVENT_2, LocalEventProducer.LAST_POSITION);
             addListenerOK =
-                    producer.addListener(listener3, TestRemoteEventProducer.REMOTE_EVENT_2, EventProducer.FIRST_POSITION);
+                    producer.addListener(listener3, TestRemoteEventProducer.REMOTE_EVENT_2, LocalEventProducer.FIRST_POSITION);
             assertEquals(3, producer.numberOfListeners(TestRemoteEventProducer.REMOTE_EVENT_2));
 
             // check whether positions have been inserted okay: listener3 - listener - listener2

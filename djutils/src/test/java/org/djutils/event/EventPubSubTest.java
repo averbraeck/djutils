@@ -632,8 +632,8 @@ public class EventPubSubTest
         // check LAST_POSITION and FIRST_POSITION
         TestEventListener listener2 = new TestEventListener();
         TestEventListener listener3 = new TestEventListener();
-        addListenerOK = producer.addListener(listener2, TestEventProducer.PRODUCER_EVENT_2, EventProducer.LAST_POSITION);
-        addListenerOK = producer.addListener(listener3, TestEventProducer.PRODUCER_EVENT_2, EventProducer.FIRST_POSITION);
+        addListenerOK = producer.addListener(listener2, TestEventProducer.PRODUCER_EVENT_2, LocalEventProducer.LAST_POSITION);
+        addListenerOK = producer.addListener(listener3, TestEventProducer.PRODUCER_EVENT_2, LocalEventProducer.FIRST_POSITION);
         assertEquals(3, producer.numberOfListeners(TestEventProducer.PRODUCER_EVENT_2));
 
         // check whether positions have been inserted okay: listener3 - listener - listener2
@@ -687,7 +687,7 @@ public class EventPubSubTest
     }
 
     /** */
-    protected static class TestEventProducer extends EventProducer
+    protected static class TestEventProducer extends LocalEventProducer
     {
         /** */
         private static final long serialVersionUID = 20191230L;
@@ -708,7 +708,7 @@ public class EventPubSubTest
     }
 
     /** */
-    protected static class TestIllegalEventProducer extends EventProducer
+    protected static class TestIllegalEventProducer extends LocalEventProducer
     {
         /** */
         private static final long serialVersionUID = 20191230L;

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.djutils.event.EventListener;
-import org.djutils.event.EventProducer;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.event.EventProducingObject;
 import org.djutils.event.EventType;
 import org.djutils.event.reference.ReferenceType;
@@ -55,7 +55,7 @@ public class EventProducingMap<K, V> implements Map<K, V>, EventProducingObject,
     private final Map<K, V> wrappedMap;
 
     /** the embedded event producer. */
-    private final EventProducer eventProducer;
+    private final LocalEventProducer eventProducer;
 
     /**
      * constructs a new EventProducingMap.
@@ -63,7 +63,7 @@ public class EventProducingMap<K, V> implements Map<K, V>, EventProducingObject,
      */
     public EventProducingMap(final Map<K, V> wrappedMap)
     {
-        this(wrappedMap, new EventProducer());
+        this(wrappedMap, new LocalEventProducer());
     }
 
     /**
@@ -71,7 +71,7 @@ public class EventProducingMap<K, V> implements Map<K, V>, EventProducingObject,
      * @param wrappedMap Map&lt;K, V&gt;; the embedded map.
      * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
      */
-    public EventProducingMap(final Map<K, V> wrappedMap, final EventProducer eventProducer)
+    public EventProducingMap(final Map<K, V> wrappedMap, final LocalEventProducer eventProducer)
     {
         Throw.whenNull(wrappedMap, "wrappedMap cannot be null");
         Throw.whenNull(eventProducer, "eventProducer cannot be null");
@@ -200,7 +200,7 @@ public class EventProducingMap<K, V> implements Map<K, V>, EventProducingObject,
      * Return the embedded EventProducer.
      * @return EventProducer; the embedded EventProducer
      */
-    public EventProducer getEventProducer()
+    public LocalEventProducer getEventProducer()
     {
         return this.eventProducer;
     }

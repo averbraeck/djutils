@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import org.djutils.event.EventListener;
-import org.djutils.event.EventProducer;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.event.EventProducingObject;
 import org.djutils.event.EventType;
 import org.djutils.event.reference.ReferenceType;
@@ -39,7 +39,7 @@ public class EventProducingIterator<T> implements EventProducingObject, Iterator
     private Iterator<T> wrappedIterator = null;
 
     /** the embedded event producer. */
-    private final EventProducer eventProducer;
+    private final LocalEventProducer eventProducer;
 
     /**
      * constructs a new EventProducingIterator, embedding the parent Iterator.
@@ -47,7 +47,7 @@ public class EventProducingIterator<T> implements EventProducingObject, Iterator
      */
     public EventProducingIterator(final Iterator<T> wrappedIterator)
     {
-        this(wrappedIterator, new EventProducer());
+        this(wrappedIterator, new LocalEventProducer());
     }
 
     /**
@@ -55,7 +55,7 @@ public class EventProducingIterator<T> implements EventProducingObject, Iterator
      * @param wrappedIterator Iterator&lt;T&gt;; the wrapped iterator.
      * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
      */
-    public EventProducingIterator(final Iterator<T> wrappedIterator, final EventProducer eventProducer)
+    public EventProducingIterator(final Iterator<T> wrappedIterator, final LocalEventProducer eventProducer)
     {
         Throw.whenNull(wrappedIterator, "parent cannot be null");
         Throw.whenNull(eventProducer, "eventProducer cannot be null");
@@ -98,7 +98,7 @@ public class EventProducingIterator<T> implements EventProducingObject, Iterator
      * Return the embedded EventProducer.
      * @return EventProducer; the embedded EventProducer
      */
-    public EventProducer getEventProducer()
+    public LocalEventProducer getEventProducer()
     {
         return this.eventProducer;
     }

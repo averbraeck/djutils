@@ -3,7 +3,7 @@ package org.djutils.event.collection;
 import java.io.Serializable;
 import java.util.ListIterator;
 
-import org.djutils.event.EventProducer;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.event.EventType;
 import org.djutils.metadata.MetaData;
 
@@ -48,7 +48,7 @@ public class EventProducingListIterator<T> extends EventProducingIterator<T> imp
      * @param wrappedIterator ListIterator&lt;T&gt;; the wrapped iterator.
      * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
      */
-    public EventProducingListIterator(final ListIterator<T> wrappedIterator, final EventProducer eventProducer)
+    public EventProducingListIterator(final ListIterator<T> wrappedIterator, final LocalEventProducer eventProducer)
     {
         super(wrappedIterator, eventProducer);
     }

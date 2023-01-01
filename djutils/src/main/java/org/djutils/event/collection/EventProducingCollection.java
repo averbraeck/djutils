@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
-import org.djutils.event.EventProducer;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.event.EventProducingObject;
 import org.djutils.event.EventType;
 import org.djutils.event.reference.ReferenceType;
@@ -53,7 +53,7 @@ public class EventProducingCollection<T> implements EventProducingObject, EventL
     private final Collection<T> wrappedCollection;
 
     /** the embedded event producer. */
-    private final EventProducer eventProducer;
+    private final LocalEventProducer eventProducer;
 
     /**
      * constructs a new EventProducingCollection with a local EventProducer.
@@ -61,7 +61,7 @@ public class EventProducingCollection<T> implements EventProducingObject, EventL
      */
     public EventProducingCollection(final Collection<T> wrappedCollection)
     {
-        this(wrappedCollection, new EventProducer());
+        this(wrappedCollection, new LocalEventProducer());
     }
 
     /**
@@ -69,7 +69,7 @@ public class EventProducingCollection<T> implements EventProducingObject, EventL
      * @param wrappedCollection Collection&lt;T&gt;; the wrapped collection.
      * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
      */
-    public EventProducingCollection(final Collection<T> wrappedCollection, final EventProducer eventProducer)
+    public EventProducingCollection(final Collection<T> wrappedCollection, final LocalEventProducer eventProducer)
     {
         Throw.whenNull(wrappedCollection, "wrappedCollection cannot be null");
         Throw.whenNull(eventProducer, "eventProducer cannot be null");
@@ -227,7 +227,7 @@ public class EventProducingCollection<T> implements EventProducingObject, EventL
      * Return the embedded EventProducer.
      * @return EventProducer; the embedded EventProducer
      */
-    public EventProducer getEventProducer()
+    public LocalEventProducer getEventProducer()
     {
         return this.eventProducer;
     }

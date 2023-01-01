@@ -35,7 +35,7 @@ public interface EventProducingObject
      */
     default boolean addListener(final EventListener listener, final EventType eventType)
     {
-        return addListener(listener, eventType, EventProducer.FIRST_POSITION);
+        return addListener(listener, eventType, LocalEventProducer.FIRST_POSITION);
     }
 
     /**
@@ -48,7 +48,7 @@ public interface EventProducingObject
      */
     default boolean addListener(final EventListener listener, final EventType eventType, final ReferenceType referenceType)
     {
-        return addListener(listener, eventType, EventProducer.FIRST_POSITION, referenceType);
+        return addListener(listener, eventType, LocalEventProducer.FIRST_POSITION, referenceType);
     }
 
     /**

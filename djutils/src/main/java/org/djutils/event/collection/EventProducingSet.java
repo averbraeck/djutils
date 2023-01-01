@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
-import org.djutils.event.EventProducer;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.event.EventProducingObject;
 import org.djutils.event.EventType;
 import org.djutils.event.reference.ReferenceType;
@@ -54,7 +54,7 @@ public class EventProducingSet<E> implements EventProducingObject, EventListener
     private Set<E> wrappedSet = null;
 
     /** the embedded event producer. */
-    private final EventProducer eventProducer;
+    private final LocalEventProducer eventProducer;
 
     /**
      * Constructs a new EventProducingSet.
@@ -62,7 +62,7 @@ public class EventProducingSet<E> implements EventProducingObject, EventListener
      */
     public EventProducingSet(final Set<E> wrappedSet)
     {
-        this(wrappedSet, new EventProducer());
+        this(wrappedSet, new LocalEventProducer());
     }
 
     /**
@@ -70,7 +70,7 @@ public class EventProducingSet<E> implements EventProducingObject, EventListener
      * @param wrappedSet Set&lt;E&gt;; the embedded set.
      * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
      */
-    public EventProducingSet(final Set<E> wrappedSet, final EventProducer eventProducer)
+    public EventProducingSet(final Set<E> wrappedSet, final LocalEventProducer eventProducer)
     {
         Throw.whenNull(wrappedSet, "wrappedSet cannot be null");
         Throw.whenNull(eventProducer, "eventProducer cannot be null");
@@ -228,7 +228,7 @@ public class EventProducingSet<E> implements EventProducingObject, EventListener
      * Return the embedded EventProducer.
      * @return EventProducer; the embedded EventProducer 
      */
-    public EventProducer getEventProducer()
+    public LocalEventProducer getEventProducer()
     {
         return this.eventProducer;
     }
