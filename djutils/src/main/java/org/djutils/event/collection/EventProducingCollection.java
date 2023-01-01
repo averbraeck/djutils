@@ -1,4 +1,4 @@
-package org.djutils.event.util;
+package org.djutils.event.collection;
 
 import java.rmi.RemoteException;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package org.djutils.event.util;
+package org.djutils.event.collection;
 
 import java.io.Serializable;
 import java.util.ListIterator;
