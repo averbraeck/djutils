@@ -18,7 +18,7 @@ import org.djutils.exceptions.Throw;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
  */
-public abstract class RmiObject extends UnicastRemoteObject
+public class RmiObject extends UnicastRemoteObject
 {
     /** */
     private static final long serialVersionUID = 20200111L;
