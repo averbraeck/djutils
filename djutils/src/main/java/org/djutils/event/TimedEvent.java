@@ -6,8 +6,8 @@ import org.djutils.exceptions.Throw;
 
 /**
  * The TimedEvent is the reference implementation for a timed event. Because events are often sent over the network, the
- * interface demands that the event, its sourceId, content and timestamp are serializable. It is the repsonsibility of the
- * programmer, though, that the <b>fields</b> of the sourceId, content and timestamp are serializable as well.
+ * interface demands that the event, content and timestamp are serializable. It is the repsonsibility of the programmer, though,
+ * that the <b>fields</b> of the content and timestamp are serializable as well.
  * <p>
  * Copyright (c) 2002-2022 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -31,27 +31,24 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
     /**
      * Construct a new timed event, where compliance with the metadata is verified.
      * @param type EventType; the eventType of the event.
-     * @param sourceId Serializable; the source of the event.
      * @param content Serializable; the content of the event.
      * @param timeStamp T; the timeStamp.
      */
-    public TimedEvent(final EventType type, final Serializable sourceId, final Serializable content, final T timeStamp)
+    public TimedEvent(final EventType type, final Serializable content, final T timeStamp)
     {
-        this(type, sourceId, content, timeStamp, true);
+        this(type, content, timeStamp, true);
     }
 
     /**
      * Construct a new timed event, with a choice to verify compliance with metadata.
      * @param type EventType; the eventType of the event.
-     * @param sourceId Serializable; the source of the event.
      * @param content Serializable; the content of the event.
      * @param timeStamp T; the timeStamp.
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      */
-    public TimedEvent(final EventType type, final Serializable sourceId, final Serializable content, final T timeStamp,
-            final boolean verifyMetaData)
+    public TimedEvent(final EventType type, final Serializable content, final T timeStamp, final boolean verifyMetaData)
     {
-        super(type, sourceId, content, verifyMetaData);
+        super(type, content, verifyMetaData);
         Throw.whenNull(timeStamp, "timeStamp cannot be null");
         this.timeStamp = timeStamp;
     }
@@ -106,8 +103,8 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
     @Override
     public String toString()
     {
-        return "[" + this.getClass().getName() + ";" + this.getType() + ";" + this.getSourceId() + ";" + this.getContent() + ";"
-                + this.getTimeStamp() + "]";
+        return "[" + this.getClass().getName() + ";" + this.getType() + ";" + this.getContent() + ";" + this.getTimeStamp()
+                + "]";
     }
 
 }

@@ -7,17 +7,8 @@ import org.djutils.metadata.MetaData;
 
 /**
  * The Event class forms the reference implementation for the Event. Because events are often sent over the network, the
- * interface demands that source of the event and its content are serializable. It is the responsibility of the programmer,
- * though, that the <b>fields</b> of the sourceId and content are serializable as well.<br>
- * <br>
- * In contrast with earlier implementations of the Event package, a <b>sourceId</b> is sent over the network rather than a
- * pointer to the source itself. This has several advantages:
- * <ol>
- * <li>The object extending the EventProducer does not have to be Serializable itself</li>
- * <li>There is no risk that the entire EventProducer object gets serialized (including subclasses) and is sent over the network
- * <li>There is no risk that the receiver of an event gets a pointer to the sending object, while still being able to identify
- * the sending object
- * </ol>
+ * interface demands that its content are serializable. It is the responsibility of the programmer, though, that the
+ * <b>fields</b> of the content are serializable as well.
  * <p>
  * Copyright (c) 2002-2022 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -40,33 +31,26 @@ public class Event implements Serializable
     /** The content of the event. */
     private final Serializable content;
 
-    /** The source id of an event. */
-    private final Serializable sourceId;
-
     /**
      * Construct a new Event, where compliance with the metadata is verified.
      * @param type EventType; the name of the Event.
-     * @param sourceId Serializable; the source id of the sender
      * @param content Serializable; the content of the event
      */
-    public Event(final EventType type, final Serializable sourceId, final Serializable content)
+    public Event(final EventType type, final Serializable content)
     {
-        this(type, sourceId, content, true);
+        this(type, content, true);
     }
 
     /**
      * Construct a new Event, with a choice to verify compliance with metadata.
      * @param type EventType; the name of the Event.
-     * @param sourceId Serializable; the source id of the sender
      * @param content Serializable; the content of the event
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      */
-    public Event(final EventType type, final Serializable sourceId, final Serializable content, final boolean verifyMetaData)
+    public Event(final EventType type, final Serializable content, final boolean verifyMetaData)
     {
         Throw.whenNull(type, "type cannot be null");
-        Throw.whenNull(sourceId, "sourceId cannot be null");
         this.type = type;
-        this.sourceId = sourceId;
         this.content = content;
         if (verifyMetaData)
         {
@@ -83,15 +67,6 @@ public class Event implements Serializable
                 }
             }
         }
-    }
-
-    /**
-     * Return the id of the source of the event. The source is, or identifies the sender of the event
-     * @return Serializable; the id of the source of the event
-     */
-    public final Serializable getSourceId()
-    {
-        return this.sourceId;
     }
 
     /**
@@ -119,7 +94,6 @@ public class Event implements Serializable
         final int prime = 31;
         int result = 1;
         result = prime * result + ((this.content == null) ? 0 : this.content.hashCode());
-        result = prime * result + ((this.sourceId == null) ? 0 : this.sourceId.hashCode());
         result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
         return result;
     }
@@ -143,13 +117,6 @@ public class Event implements Serializable
         }
         else if (!this.content.equals(other.content))
             return false;
-        if (this.sourceId == null)
-        {
-            if (other.sourceId != null)
-                return false;
-        }
-        else if (!this.sourceId.equals(other.sourceId))
-            return false;
         if (this.type == null)
         {
             if (other.type != null)
@@ -164,7 +131,6 @@ public class Event implements Serializable
     @Override
     public String toString()
     {
-        return "[" + this.getClass().getName() + ";" + this.getType() + ";" + this.getSourceId() + ";" + this.getContent()
-                + "]";
+        return "[" + this.getClass().getName() + ";" + this.getType() + ";" + this.getContent() + "]";
     }
 }
