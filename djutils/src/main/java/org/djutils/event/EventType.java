@@ -39,9 +39,6 @@ public class EventType implements Serializable
     /** Meta data (describes the payload). */
     private final MetaData metaData;
 
-    /** The class of a valid event, e.g., to indicate that a TimedEvent is expected. */
-    private final Class<? extends Event> validEventType;
-
     /**
      * The class name from which the event type construction was called; together with the event name this should lead to a
      * unique hash, even when the same name is used in different classes.
@@ -49,21 +46,18 @@ public class EventType implements Serializable
     private String definingClassName;
 
     /**
-     * Construct a new EventType with an explicit type of event that is considered to be a valid event when the event is
-     * verified. This can, for instance, be used to verify that a TimedEvent is fired instead of an ordinary event.
+     * Construct a new EventType. Only events of the type Event, and no subclasses of Event, can be used to fire events of this
+     * type. This means that firing a TimedEvent of this type will result in an error.
      * @param name String; the name of the new eventType. Two values are not appreciated: null and the empty string.
      * @param metaData MetaData; describes the payload of events of the new EventType;
-     * @param validEventType Class&lt;? extends Event&gt;; the valid class of events
      */
-    public EventType(final String name, final MetaData metaData, final Class<? extends Event> validEventType)
+    public EventType(final String name, final MetaData metaData)
     {
         Throw.when(name == null || name.equals(""), IllegalArgumentException.class,
                 "EventType name == null || EventType name == \"\"");
         Throw.whenNull(metaData,
                 "Meta data may not be null (but you could provide the NO_META_DATA value if the payload will be varying)");
         this.name = name;
-        Throw.whenNull(validEventType, "validEventType may not be null");
-        this.validEventType = validEventType;
         StackTraceElement[] steArray = new Throwable().getStackTrace();
         for (StackTraceElement ste : steArray)
         {
@@ -78,17 +72,6 @@ public class EventType implements Serializable
     }
 
     /**
-     * Construct a new EventType. Only events of the type Event, and no subclasses of Event, can be used to fire events of this
-     * type. This means that firing a TimedEvent of this type will result in an error.
-     * @param name String; the name of the new eventType. Two values are not appreciated: null and the empty string.
-     * @param metaData MetaData; describes the payload of events of the new EventType;
-     */
-    public EventType(final String name, final MetaData metaData)
-    {
-        this(name, metaData, Event.class);
-    }
-
-    /**
      * Construct a new EventType. The name of the metadata will function as the name of the event. Only events of the type
      * Event, and no subclasses of Event, can be used to fire events of this type. This means that firing a TimedEvent of this
      * type will result in an error.
@@ -96,7 +79,7 @@ public class EventType implements Serializable
      */
     public EventType(final MetaData metaData)
     {
-        this(metaData == null ? null : metaData.getName(), metaData, Event.class);
+        this(metaData == null ? null : metaData.getName(), metaData);
     }
 
     /**
@@ -107,9 +90,9 @@ public class EventType implements Serializable
     @Deprecated
     public EventType(final String name)
     {
-        this(name, MetaData.NO_META_DATA, Event.class);
+        this(name, MetaData.NO_META_DATA);
     }
-    
+
     /**
      * Return the event type name.
      * @return String; the event type name
@@ -126,15 +109,6 @@ public class EventType implements Serializable
     public MetaData getMetaData()
     {
         return this.metaData;
-    }
-
-    /**
-     * Retrieve the event type that defines valid events of this EventType, e.g., to indicate a TimedEvent is expected.
-     * @return Class&lt;EventType&gt;; the class of valid events of this event type
-     */
-    public Class<? extends Event> getValidEventType()
-    {
-        return this.validEventType;
     }
 
     /** {@inheritDoc} */
