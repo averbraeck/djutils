@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.djutils.event.ref.Reference;
+import org.djutils.event.reference.Reference;
 import org.djutils.event.rmi.RmiEventListener;
 import org.djutils.exceptions.Throw;
 

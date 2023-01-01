@@ -7,7 +7,7 @@ import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
-import org.djutils.event.ref.ReferenceType;
+import org.djutils.event.reference.ReferenceType;
 import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;

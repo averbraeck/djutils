@@ -1,4 +1,4 @@
-package org.djutils.event.ref;
+package org.djutils.event.reference;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;

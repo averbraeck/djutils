@@ -12,4 +12,4 @@
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-package org.djutils.event.ref;
+package org.djutils.event.reference;

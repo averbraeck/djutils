@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.djutils.event.ref.Reference;
-import org.djutils.event.ref.ReferenceType;
-import org.djutils.event.ref.StrongReference;
-import org.djutils.event.ref.WeakReference;
+import org.djutils.event.reference.Reference;
+import org.djutils.event.reference.ReferenceType;
+import org.djutils.event.reference.StrongReference;
+import org.djutils.event.reference.WeakReference;
 import org.djutils.exceptions.Throw;
 
 /**
@@ -61,7 +61,7 @@ public class EventProducer implements Serializable
      * @param referenceType ReferenceType; whether the listener is added as a strong or as a weak reference
      * @return the success of adding the listener. If a listener was already added or an illegal position is provided false is
      *         returned
-     * @see org.djutils.event.ref.WeakReference
+     * @see org.djutils.event.reference.WeakReference
      */
     public final synchronized boolean addListener(final EventListener listener, final EventType eventType, final int position,
             final ReferenceType referenceType)
@@ -127,7 +127,7 @@ public class EventProducer implements Serializable
      * @param eventType EventType; the events of interest
      * @param referenceType ReferenceType; whether the listener is added as a strong or as a weak reference
      * @return the success of adding the listener. If a listener was already added false is returned
-     * @see org.djutils.event.ref.WeakReference
+     * @see org.djutils.event.reference.WeakReference
      */
     public boolean addListener(final EventListener listener, final EventType eventType, final ReferenceType referenceType)
     {

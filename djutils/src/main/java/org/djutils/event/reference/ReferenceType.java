@@ -1,4 +1,4 @@
-package org.djutils.event.ref;
+package org.djutils.event.reference;
 
 /**
  * ReferenceType indicates whether a reference is strong or weak.
