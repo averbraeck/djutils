@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import org.djutils.event.EmbeddedEventProducer;
 import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
 import org.djutils.exceptions.Throw;
@@ -29,7 +28,7 @@ import org.djutils.metadata.ObjectDescriptor;
  * @param <K> the key type
  * @param <V> the value type
  */
-public class EventProducingMap<K, V> extends EmbeddedEventProducer implements Map<K, V>
+public class EventProducingMap<K, V> implements Map<K, V>, Serializable
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;
@@ -52,16 +51,16 @@ public class EventProducingMap<K, V> extends EmbeddedEventProducer implements Ma
     /** the wrapped map. */
     private final Map<K, V> wrappedMap;
 
+    /** the embedded event producer. */
+    private final EventProducer eventProducer;
+
     /**
      * constructs a new EventProducingMap.
      * @param wrappedMap Map&lt;K,V&gt;; the embedded map.
-     * @param sourceId Serializable; the id by which the EventProducer can be identified by the EventListener
      */
-    public EventProducingMap(final Map<K, V> wrappedMap, final Serializable sourceId)
+    public EventProducingMap(final Map<K, V> wrappedMap)
     {
-        super(sourceId);
-        Throw.whenNull(wrappedMap, "wrappedMap cannot be null");
-        this.wrappedMap = wrappedMap;
+        this(wrappedMap, new EventProducer());
     }
 
     /**
@@ -71,8 +70,9 @@ public class EventProducingMap<K, V> extends EmbeddedEventProducer implements Ma
      */
     public EventProducingMap(final Map<K, V> wrappedMap, final EventProducer eventProducer)
     {
-        super(eventProducer);
         Throw.whenNull(wrappedMap, "wrappedMap cannot be null");
+        Throw.whenNull(eventProducer, "eventProducer cannot be null");
+        this.eventProducer = eventProducer;
         this.wrappedMap = wrappedMap;
     }
 
@@ -119,11 +119,11 @@ public class EventProducingMap<K, V> extends EmbeddedEventProducer implements Ma
         V result = this.wrappedMap.put(key, value);
         if (nr != this.wrappedMap.size())
         {
-            this.fireEvent(OBJECT_ADDED_EVENT, this.wrappedMap.size());
+            this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedMap.size());
         }
         else
         {
-            this.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedMap.size());
+            this.eventProducer.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedMap.size());
         }
         return result;
     }
@@ -136,7 +136,7 @@ public class EventProducingMap<K, V> extends EmbeddedEventProducer implements Ma
         V result = this.wrappedMap.remove(key);
         if (nr != this.wrappedMap.size())
         {
-            this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedMap.size());
+            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedMap.size());
         }
         return result;
     }
@@ -149,13 +149,13 @@ public class EventProducingMap<K, V> extends EmbeddedEventProducer implements Ma
         this.wrappedMap.putAll(map);
         if (nr != this.wrappedMap.size())
         {
-            this.fireEvent(OBJECT_ADDED_EVENT, this.wrappedMap.size());
+            this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedMap.size());
         }
         else
         {
             if (!map.isEmpty())
             {
-                this.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedMap.size());
+                this.eventProducer.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedMap.size());
             }
         }
     }
@@ -168,7 +168,7 @@ public class EventProducingMap<K, V> extends EmbeddedEventProducer implements Ma
         this.wrappedMap.clear();
         if (nr != this.wrappedMap.size())
         {
-            this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedMap.size());
+            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedMap.size());
         }
     }
 
@@ -192,4 +192,14 @@ public class EventProducingMap<K, V> extends EmbeddedEventProducer implements Ma
     {
         return this.wrappedMap.entrySet();
     }
+    
+    /**
+     * Return the embedded EventProducer.
+     * @return EventProducer; the embedded EventProducer 
+     */
+    public EventProducer getEventProducer()
+    {
+        return this.eventProducer;
+    }
+
 }

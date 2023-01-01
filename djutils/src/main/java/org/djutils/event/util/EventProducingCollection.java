@@ -1,10 +1,8 @@
 package org.djutils.event.util;
 
-import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Collection;
 
-import org.djutils.event.EmbeddedEventProducer;
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventProducer;
@@ -30,7 +28,7 @@ import org.djutils.metadata.ObjectDescriptor;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <T> The type of the event producing Collection.
  */
-public class EventProducingCollection<T> extends EmbeddedEventProducer implements EventListener, Collection<T>
+public class EventProducingCollection<T> implements EventListener, Collection<T>
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;
@@ -53,16 +51,16 @@ public class EventProducingCollection<T> extends EmbeddedEventProducer implement
     /** the wrapped collection. */
     private final Collection<T> wrappedCollection;
 
+    /** the embedded event producer. */
+    private final EventProducer eventProducer;
+
     /**
      * constructs a new EventProducingCollection with a local EventProducer.
      * @param wrappedCollection Collection&lt;T&gt;; the wrapped collection.
-     * @param sourceId Serializable; the id by which the EventProducer can be identified by the EventListener
      */
-    public EventProducingCollection(final Collection<T> wrappedCollection, final Serializable sourceId)
+    public EventProducingCollection(final Collection<T> wrappedCollection)
     {
-        super(sourceId);
-        Throw.whenNull(wrappedCollection, "wrappedCollection cannot be null");
-        this.wrappedCollection = wrappedCollection;
+        this(wrappedCollection, new EventProducer());
     }
 
     /**
@@ -72,8 +70,9 @@ public class EventProducingCollection<T> extends EmbeddedEventProducer implement
      */
     public EventProducingCollection(final Collection<T> wrappedCollection, final EventProducer eventProducer)
     {
-        super(eventProducer);
         Throw.whenNull(wrappedCollection, "wrappedCollection cannot be null");
+        Throw.whenNull(eventProducer, "eventProducer cannot be null");
+        this.eventProducer = eventProducer;
         this.wrappedCollection = wrappedCollection;
     }
 
@@ -99,7 +98,7 @@ public class EventProducingCollection<T> extends EmbeddedEventProducer implement
         this.wrappedCollection.clear();
         if (nr != this.wrappedCollection.size())
         {
-            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
+            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
         }
     }
 
@@ -110,11 +109,11 @@ public class EventProducingCollection<T> extends EmbeddedEventProducer implement
         boolean changed = this.wrappedCollection.add(o);
         if (changed)
         {
-            fireEvent(OBJECT_ADDED_EVENT, this.wrappedCollection.size());
+            this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedCollection.size());
         }
         else
         {
-            fireEvent(OBJECT_CHANGED_EVENT, this.wrappedCollection.size());
+            this.eventProducer.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedCollection.size());
         }
         return changed;
     }
@@ -126,13 +125,13 @@ public class EventProducingCollection<T> extends EmbeddedEventProducer implement
         boolean changed = this.wrappedCollection.addAll(c);
         if (changed)
         {
-            fireEvent(OBJECT_ADDED_EVENT, this.wrappedCollection.size());
+            this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedCollection.size());
         }
         else
         {
             if (!c.isEmpty())
             {
-                fireEvent(OBJECT_CHANGED_EVENT, this.wrappedCollection.size());
+                this.eventProducer.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedCollection.size());
             }
         }
         return changed;
@@ -156,9 +155,9 @@ public class EventProducingCollection<T> extends EmbeddedEventProducer implement
     @Override
     public EventProducingIterator<T> iterator()
     {
-        EventProducingIterator<T> iterator = new EventProducingIterator<T>(this.wrappedCollection.iterator(), getSourceId());
+        EventProducingIterator<T> iterator = new EventProducingIterator<T>(this.wrappedCollection.iterator());
         // WEAK reference as an iterator is usually local and should be eligible for garbage collection
-        iterator.addListener(this, EventProducingIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
+        iterator.getEventProducer().addListener(this, EventProducingIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
         return iterator;
     }
 
@@ -169,7 +168,7 @@ public class EventProducingCollection<T> extends EmbeddedEventProducer implement
         // pass through the OBJECT_REMOVED_EVENT from the iterator
         if (event.getType().equals(EventProducingIterator.OBJECT_REMOVED_EVENT))
         {
-            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
+            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
         }
     }
 
@@ -180,7 +179,7 @@ public class EventProducingCollection<T> extends EmbeddedEventProducer implement
         boolean changed = this.wrappedCollection.remove(o);
         if (changed)
         {
-            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
+            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
         }
         return changed;
     }
@@ -192,7 +191,7 @@ public class EventProducingCollection<T> extends EmbeddedEventProducer implement
         boolean changed = this.wrappedCollection.removeAll(c);
         if (changed)
         {
-            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
+            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
         }
         return changed;
     }
@@ -204,7 +203,7 @@ public class EventProducingCollection<T> extends EmbeddedEventProducer implement
         boolean changed = this.wrappedCollection.retainAll(c);
         if (changed)
         {
-            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
+            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
         }
         return changed;
     }
@@ -221,6 +220,15 @@ public class EventProducingCollection<T> extends EmbeddedEventProducer implement
     public <E> E[] toArray(final E[] a)
     {
         return this.wrappedCollection.toArray(a);
+    }
+
+    /**
+     * Return the embedded EventProducer.
+     * @return EventProducer; the embedded EventProducer
+     */
+    public EventProducer getEventProducer()
+    {
+        return this.eventProducer;
     }
 
 }

@@ -1,11 +1,9 @@
 package org.djutils.event.util;
 
-import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.List;
 
-import org.djutils.event.EmbeddedEventProducer;
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventProducer;
@@ -31,7 +29,7 @@ import org.djutils.metadata.ObjectDescriptor;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <E> the type of elements in the list
  */
-public class EventProducingList<E> extends EmbeddedEventProducer implements EventListener, List<E>
+public class EventProducingList<E> implements EventListener, List<E>
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;
@@ -54,16 +52,16 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
     /** the wrapped list. */
     private List<E> wrappedList = null;
 
+    /** the embedded event producer. */
+    private final EventProducer eventProducer;
+
     /**
      * constructs a new EventProducingList.
      * @param wrappedList List&lt;E&gt;; the embedded list.
-     * @param sourceId Serializable; the id by which the EventProducer can be identified by the EventListener
      */
-    public EventProducingList(final List<E> wrappedList, final Serializable sourceId)
+    public EventProducingList(final List<E> wrappedList)
     {
-        super(sourceId);
-        Throw.whenNull(wrappedList, "wrappedList cannot be null");
-        this.wrappedList = wrappedList;
+        this(wrappedList, new EventProducer());
     }
 
     /**
@@ -73,8 +71,9 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
      */
     public EventProducingList(final List<E> wrappedList, final EventProducer eventProducer)
     {
-        super(eventProducer);
         Throw.whenNull(wrappedList, "wrappedList cannot be null");
+        Throw.whenNull(eventProducer, "eventProducer cannot be null");
+        this.eventProducer = eventProducer;
         this.wrappedList = wrappedList;
     }
 
@@ -100,7 +99,7 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
         this.wrappedList.clear();
         if (nr != this.wrappedList.size())
         {
-            this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedList.size());
+            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedList.size());
         }
     }
 
@@ -109,7 +108,7 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
     public void add(final int index, final E element)
     {
         this.wrappedList.add(index, element);
-        this.fireEvent(OBJECT_ADDED_EVENT, this.wrappedList.size());
+        this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedList.size());
     }
 
     /** {@inheritDoc} */
@@ -119,7 +118,7 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
         boolean result = this.wrappedList.add(o);
         if (result)
         {
-            this.fireEvent(OBJECT_ADDED_EVENT, this.wrappedList.size());
+            this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedList.size());
         }
         return result;
     }
@@ -131,7 +130,7 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
         boolean result = this.wrappedList.addAll(c);
         if (result)
         {
-            this.fireEvent(OBJECT_ADDED_EVENT, this.wrappedList.size());
+            this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedList.size());
         }
         return result;
     }
@@ -143,7 +142,7 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
         boolean result = this.wrappedList.addAll(index, c);
         if (result)
         {
-            this.fireEvent(OBJECT_ADDED_EVENT, this.wrappedList.size());
+            this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedList.size());
         }
         return result;
     }
@@ -180,9 +179,9 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
     @Override
     public EventProducingIterator<E> iterator()
     {
-        EventProducingIterator<E> iterator = new EventProducingIterator<E>(this.wrappedList.iterator(), getSourceId());
+        EventProducingIterator<E> iterator = new EventProducingIterator<E>(this.wrappedList.iterator());
         // WEAK reference as an iterator is usually local and should be eligible for garbage collection
-        iterator.addListener(this, EventProducingIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
+        iterator.getEventProducer().addListener(this, EventProducingIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
         return iterator;
     }
 
@@ -197,12 +196,11 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
     @Override
     public EventProducingListIterator<E> listIterator(final int index)
     {
-        EventProducingListIterator<E> iterator =
-                new EventProducingListIterator<E>(this.wrappedList.listIterator(index), getSourceId());
+        EventProducingListIterator<E> iterator = new EventProducingListIterator<E>(this.wrappedList.listIterator(index));
         // WEAK references as an iterator is usually local and should be eligible for garbage collection
-        iterator.addListener(this, EventProducingIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
-        iterator.addListener(this, EventProducingListIterator.OBJECT_ADDED_EVENT, ReferenceType.WEAK);
-        iterator.addListener(this, EventProducingListIterator.OBJECT_CHANGED_EVENT, ReferenceType.WEAK);
+        iterator.getEventProducer().addListener(this, EventProducingIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
+        iterator.getEventProducer().addListener(this, EventProducingListIterator.OBJECT_ADDED_EVENT, ReferenceType.WEAK);
+        iterator.getEventProducer().addListener(this, EventProducingListIterator.OBJECT_CHANGED_EVENT, ReferenceType.WEAK);
         return iterator;
     }
 
@@ -213,15 +211,15 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
         // pass through the OBJECT_REMOVED_EVENT from the iterator
         if (event.getType().equals(EventProducingIterator.OBJECT_REMOVED_EVENT))
         {
-            this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedList.size());
+            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedList.size());
         }
         else if (event.getType().equals(EventProducingListIterator.OBJECT_ADDED_EVENT))
         {
-            this.fireEvent(OBJECT_ADDED_EVENT, this.wrappedList.size());
+            this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedList.size());
         }
         else if (event.getType().equals(EventProducingListIterator.OBJECT_CHANGED_EVENT))
         {
-            this.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedList.size());
+            this.eventProducer.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedList.size());
         }
     }
 
@@ -237,7 +235,7 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
     public E remove(final int index)
     {
         E result = this.wrappedList.remove(index);
-        this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedList.size());
+        this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedList.size());
         return result;
     }
 
@@ -248,7 +246,7 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
         boolean result = this.wrappedList.remove(o);
         if (result)
         {
-            this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedList.size());
+            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedList.size());
         }
         return result;
     }
@@ -260,7 +258,7 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
         boolean result = this.wrappedList.removeAll(c);
         if (result)
         {
-            this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedList.size());
+            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedList.size());
         }
         return result;
     }
@@ -272,7 +270,7 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
         boolean result = this.wrappedList.retainAll(c);
         if (result)
         {
-            this.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedList.size());
+            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedList.size());
         }
         return result;
     }
@@ -282,7 +280,7 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
     public E set(final int index, final E element)
     {
         E result = this.wrappedList.set(index, element);
-        this.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedList.size());
+        this.eventProducer.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedList.size());
         return result;
     }
 
@@ -306,4 +304,14 @@ public class EventProducingList<E> extends EmbeddedEventProducer implements Even
     {
         return this.wrappedList.toArray(a);
     }
+
+    /**
+     * Return the embedded EventProducer.
+     * @return EventProducer; the embedded EventProducer
+     */
+    public EventProducer getEventProducer()
+    {
+        return this.eventProducer;
+    }
+
 }

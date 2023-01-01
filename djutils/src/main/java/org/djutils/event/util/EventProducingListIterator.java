@@ -23,7 +23,7 @@ import org.djutils.metadata.MetaData;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <T> the type of elements to iterate on
  */
-public class EventProducingListIterator<T> extends EventProducingIterator<T> implements ListIterator<T>
+public class EventProducingListIterator<T> extends EventProducingIterator<T> implements ListIterator<T>, Serializable
 {
     /** */
     private static final long serialVersionUID = 20191230L;
@@ -37,11 +37,10 @@ public class EventProducingListIterator<T> extends EventProducingIterator<T> imp
     /**
      * constructs a new EventProducingListIterator, embedding the parent ListIterator.
      * @param wrappedIterator ListIterator&lt;T&gt;; embedded iterator.
-     * @param sourceId Serializable; the id by which the EventProducer can be identified by the EventListener
      */
-    public EventProducingListIterator(final ListIterator<T> wrappedIterator, final Serializable sourceId)
+    public EventProducingListIterator(final ListIterator<T> wrappedIterator)
     {
-        super(wrappedIterator, sourceId);
+        super(wrappedIterator);
     }
 
     /**
@@ -56,53 +55,53 @@ public class EventProducingListIterator<T> extends EventProducingIterator<T> imp
 
     /** {@inheritDoc} */
     @Override
-    protected ListIterator<T> getParent()
+    protected ListIterator<T> getWrappedIterator()
     {
-        return (ListIterator<T>) super.getParent();
+        return (ListIterator<T>) super.getWrappedIterator();
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean hasPrevious()
     {
-        return getParent().hasPrevious();
+        return getWrappedIterator().hasPrevious();
     }
 
     /** {@inheritDoc} */
     @Override
     public T previous()
     {
-        return getParent().previous();
+        return getWrappedIterator().previous();
     }
 
     /** {@inheritDoc} */
     @Override
     public int nextIndex()
     {
-        return getParent().nextIndex();
+        return getWrappedIterator().nextIndex();
     }
 
     /** {@inheritDoc} */
     @Override
     public int previousIndex()
     {
-        return getParent().previousIndex();
+        return getWrappedIterator().previousIndex();
     }
 
     /** {@inheritDoc} */
     @Override
     public void set(final T e)
     {
-        getParent().set(e);
-        fireEvent(OBJECT_CHANGED_EVENT);
+        getWrappedIterator().set(e);
+        getEventProducer().fireEvent(OBJECT_CHANGED_EVENT);
     }
 
     /** {@inheritDoc} */
     @Override
     public void add(final T e)
     {
-        getParent().add(e);
-        fireEvent(OBJECT_ADDED_EVENT);
+        getWrappedIterator().add(e);
+        getEventProducer().fireEvent(OBJECT_ADDED_EVENT);
     }
 
 }

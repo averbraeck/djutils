@@ -3,7 +3,6 @@ package org.djutils.event.util;
 import java.io.Serializable;
 import java.util.Iterator;
 
-import org.djutils.event.EmbeddedEventProducer;
 import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
 import org.djutils.exceptions.Throw;
@@ -25,7 +24,7 @@ import org.djutils.metadata.MetaData;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <T> the type of elements to iterate on
  */
-public class EventProducingIterator<T> extends EmbeddedEventProducer implements Iterator<T>
+public class EventProducingIterator<T> implements Iterator<T>, Serializable
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;
@@ -36,16 +35,16 @@ public class EventProducingIterator<T> extends EmbeddedEventProducer implements 
     /** our parent iterator. */
     private Iterator<T> wrappedIterator = null;
 
+    /** the embedded event producer. */
+    private final EventProducer eventProducer;
+
     /**
      * constructs a new EventProducingIterator, embedding the parent Iterator.
      * @param wrappedIterator Iterator&lt;T&gt;; parent.
-     * @param sourceId Serializable; the id by which the EventProducer can be identified by the EventListener
      */
-    public EventProducingIterator(final Iterator<T> wrappedIterator, final Serializable sourceId)
+    public EventProducingIterator(final Iterator<T> wrappedIterator)
     {
-        super(sourceId);
-        Throw.whenNull(wrappedIterator, "parent cannot be null");
-        this.wrappedIterator = wrappedIterator;
+        this(wrappedIterator, new EventProducer());
     }
 
     /**
@@ -55,8 +54,9 @@ public class EventProducingIterator<T> extends EmbeddedEventProducer implements 
      */
     public EventProducingIterator(final Iterator<T> wrappedIterator, final EventProducer eventProducer)
     {
-        super(eventProducer);
         Throw.whenNull(wrappedIterator, "parent cannot be null");
+        Throw.whenNull(eventProducer, "eventProducer cannot be null");
+        this.eventProducer = eventProducer;
         this.wrappedIterator = wrappedIterator;
     }
 
@@ -64,31 +64,40 @@ public class EventProducingIterator<T> extends EmbeddedEventProducer implements 
     @Override
     public boolean hasNext()
     {
-        return getParent().hasNext();
+        return getWrappedIterator().hasNext();
     }
 
     /** {@inheritDoc} */
     @Override
     public T next()
     {
-        return getParent().next();
+        return getWrappedIterator().next();
     }
 
     /** {@inheritDoc} */
     @Override
     public void remove()
     {
-        getParent().remove();
-        this.fireEvent(OBJECT_REMOVED_EVENT);
+        getWrappedIterator().remove();
+        this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT);
     }
 
     /**
      * Return the embedded iterator.
      * @return parent Iterator&lt;T&gt;; the embedded iterator
      */
-    protected Iterator<T> getParent()
+    protected Iterator<T> getWrappedIterator()
     {
         return this.wrappedIterator;
+    }
+
+    /**
+     * Return the embedded EventProducer.
+     * @return EventProducer; the embedded EventProducer 
+     */
+    public EventProducer getEventProducer()
+    {
+        return this.eventProducer;
     }
 
 }
