@@ -1,21 +1,23 @@
 package org.djutils.event;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.djutils.event.ref.Reference;
 import org.djutils.event.ref.ReferenceType;
+import org.djutils.event.ref.StrongReference;
+import org.djutils.event.ref.WeakReference;
+import org.djutils.exceptions.Throw;
 
 /**
- * The EventProducer defines the registration operations of an event producer. This behavior includes adding and removing
- * listeners for a specific event type. The EventListener and EventProducer together form a combination of the Publish-Subscribe
- * design pattern and the Observer design pattern using the notify(event) method. See
- * <a href="https://en.wikipedia.org/wiki/Publish-subscribe_pattern" target=
- * "_blank">https://en.wikipedia.org/wiki/Publish-subscribe_pattern</a>,
- * <a href="https://en.wikipedia.org/wiki/Observer_pattern" target="_blank">https://en.wikipedia.org/wiki/Observer_pattern</a>,
- * and <a href="https://howtodoinjava.com/design-patterns/behavioral/observer-design-pattern/" target=
- * "_blank">https://howtodoinjava.com/design-patterns/behavioral/observer-design-pattern/</a>.
+ * The EventProducer forms the reference implementation of the publish side of the pub/sub design pattern. The storage of the
+ * listeners is done in a Map with the EventType as the key, and a List of References (weak or strong) to the Listeners.
  * <p>
  * Copyright (c) 2002-2022 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -27,220 +29,262 @@ import org.djutils.event.ref.ReferenceType;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public interface EventProducer extends Serializable
+public class LocalEventProducer implements EventProducer, Serializable
 {
-    /** The FIRST_POSITION in the queue. */
-    int FIRST_POSITION = 0;
+    /** The default serial version UID for serializable classes. */
+    private static final long serialVersionUID = 20200207;
 
-    /** The LAST_POSITION in the queue. */
-    int LAST_POSITION = -1;
+    /** The collection of interested listeners. */
+    private EventListenerMap listeners = new EventListenerMap();
 
-    /**
-     * Provide the sourceId that will be transmitted with the fired Event.
-     * @return Serializable; the sourceId that will be transmitted with the fired Event
-     */
-    Serializable getSourceId();
+    /** The source id for identifying the sender of the event. */
+    private final Serializable sourceId;
 
     /**
-     * Add a listener as strong reference to the BEGINNING of a queue of listeners.
-     * @param listener EventListenerInterface; the listener which is interested at events of eventType
-     * @param eventType EventType; the events of interest
-     * @return the success of adding the listener. If a listener was already added false is returned
+     * Construct a new EventProducer.
+     * @param sourceId Serializable; the sourceId of the event producer to identify the event publisher
      */
-    default boolean addListener(final EventListener listener, final EventType eventType)
+    public LocalEventProducer(final Serializable sourceId)
     {
-        return addListener(listener, eventType, EventProducer.FIRST_POSITION);
+        this.sourceId = sourceId;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Serializable getSourceId()
+    {
+        return this.sourceId;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final synchronized boolean addListener(final EventListener listener, final EventType eventType, final int position,
+            final ReferenceType referenceType)
+    {
+        Throw.whenNull(listener, "listener cannot be null");
+        Throw.whenNull(eventType, "eventType cannot be null");
+        Throw.whenNull(referenceType, "referenceType cannot be null");
+        if (position < EventProducer.LAST_POSITION)
+        {
+            return false;
+        }
+        Reference<EventListener> reference = null;
+        if (referenceType.isStrong())
+        {
+            reference = new StrongReference<EventListener>(listener);
+        }
+        else
+        {
+            reference = new WeakReference<EventListener>(listener);
+        }
+        if (this.listeners.containsKey(eventType))
+        {
+            for (Reference<EventListener> entry : this.listeners.get(eventType))
+            {
+                if (listener.equals(entry.get()))
+                {
+                    return false;
+                }
+            }
+            List<Reference<EventListener>> entries = this.listeners.get(eventType);
+            if (position == EventProducer.LAST_POSITION)
+            {
+                entries.add(reference);
+            }
+            else
+            {
+                entries.add(position, reference);
+            }
+        }
+        else
+        {
+            List<Reference<EventListener>> entries = new ArrayList<>();
+            entries.add(reference);
+            this.listeners.put(eventType, entries);
+        }
+        return true;
     }
 
     /**
-     * Add a listener to the BEGINNING of a queue of listeners.
-     * @param listener EventListenerInterface; the listener which is interested at events of eventType
-     * @param eventType EventType; the events of interest
-     * @param referenceType ReferenceType; whether the listener is added as a strong or as a weak reference
-     * @return the success of adding the listener. If a listener was already added false is returned
-     * @see org.djutils.event.ref.WeakReference
+     * Transmit an event to a listener. This method is a hook method. The default implementation simply invokes the notify on
+     * the listener. In specific cases (filtering, storing, queueing, this method can be overwritten.
+     * @param listener EventListenerInterface; the listener for this event
+     * @param event Event; the event to fire
+     * @throws RemoteException on network failure
      */
-    default boolean addListener(final EventListener listener, final EventType eventType, final ReferenceType referenceType)
+    protected void fireEvent(final EventListener listener, final Event event) throws RemoteException
     {
-        return addListener(listener, eventType, EventProducer.FIRST_POSITION, referenceType);
+        listener.notify(event);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public synchronized void fireEvent(final Event event)
+    {
+        Throw.whenNull(event, "event may not be null");
+        if (this.listeners.containsKey(event.getType()))
+        {
+            // make a safe copy because of possible removeListener() in notify() method during fireEvent
+            List<Reference<EventListener>> listenerList = new ArrayList<>(this.listeners.get(event.getType()));
+            for (Reference<EventListener> reference : listenerList)
+            {
+                EventListener listener = reference.get();
+                try
+                {
+                    if (listener != null)
+                    {
+                        // The garbage collection has not cleaned the referent
+                        this.fireEvent(listener, event);
+                    }
+                    else
+                    {
+                        // The garbage collection cleaned the referent;
+                        // there is no need to keep the subscription
+                        this.removeListener(reference, event.getType());
+                    }
+                }
+                catch (RemoteException remoteException)
+                {
+                    // A network failure prevented the delivery,
+                    // subscription is removed.
+                    this.removeListener(reference, event.getType());
+                }
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public synchronized int removeAllListeners()
+    {
+        int result = this.listeners.size();
+        this.listeners = null;
+        this.listeners = new EventListenerMap();
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public synchronized int removeAllListeners(final Class<?> ofClass)
+    {
+        Throw.whenNull(ofClass, "ofClass may not be null");
+        int result = 0;
+        Map<EventType, Reference<EventListener>> removeMap = new LinkedHashMap<>();
+        for (EventType type : this.listeners.keySet())
+        {
+            for (Iterator<Reference<EventListener>> ii = this.listeners.get(type).iterator(); ii.hasNext();)
+            {
+                Reference<EventListener> listener = ii.next();
+                if (listener.get().getClass().isAssignableFrom(ofClass))
+                {
+                    removeMap.put(type, listener);
+                    result++;
+                }
+            }
+        }
+        for (EventType type : removeMap.keySet())
+        {
+            removeListener(removeMap.get(type).get(), type);
+        }
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final synchronized boolean removeListener(final EventListener listener, final EventType eventType)
+    {
+        Throw.whenNull(listener, "listener may not be null");
+        Throw.whenNull(eventType, "eventType may not be null");
+        if (!this.listeners.containsKey(eventType))
+        {
+            return false;
+        }
+        boolean result = false;
+        for (Iterator<Reference<EventListener>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
+        {
+            Reference<EventListener> reference = i.next();
+            EventListener entry = reference.get();
+            if (entry == null)
+            {
+                i.remove();
+            }
+            else
+            {
+                if (listener.equals(entry))
+                {
+                    i.remove();
+                    result = true;
+                }
+            }
+            if (this.listeners.get(eventType).size() == 0)
+            {
+                this.listeners.remove(eventType);
+            }
+        }
+        return result;
     }
 
     /**
-     * Add a listener as strong reference to the specified position of a queue of listeners.
-     * @param listener EventListenerInterface; the listener which is interested at events of eventType
-     * @param eventType EventType; the events of interest
-     * @param position int; the position of the listener in the queue
-     * @return the success of adding the listener. If a listener was already added, or an illegal position is provided false is
-     *         returned
+     * Remove one reference from the subscription list.
+     * @param reference Reference&lt;EventListenerInterface&gt;; the (strong or weak) reference to remove
+     * @param eventType EventType; the eventType for which reference must be removed
+     * @return boolean; true if the reference was removed; otherwise false
      */
-    default boolean addListener(final EventListener listener, final EventType eventType, final int position)
+    private synchronized boolean removeListener(final Reference<EventListener> reference, final EventType eventType)
     {
-        return addListener(listener, eventType, position, ReferenceType.STRONG);
+        Throw.whenNull(reference, "reference may not be null");
+        Throw.whenNull(eventType, "eventType may not be null");
+        boolean success = false;
+        for (Iterator<Reference<EventListener>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
+        {
+            if (i.next().equals(reference))
+            {
+                i.remove();
+                success = true;
+            }
+        }
+        if (this.listeners.get(eventType).size() == 0)
+        {
+            this.listeners.remove(eventType);
+        }
+        return success;
     }
 
-    /**
-     * Add a listener to the specified position of a queue of listeners.
-     * @param listener EventListenerInterface; which is interested at certain events
-     * @param eventType EventType; the events of interest
-     * @param position int; the position of the listener in the queue
-     * @param referenceType ReferenceType; whether the listener is added as a strong or as a weak reference
-     * @return the success of adding the listener. If a listener was already added or an illegal position is provided false is
-     *         returned
-     * @see org.djutils.event.ref.WeakReference
-     */
-    boolean addListener(EventListener listener, EventType eventType, int position, ReferenceType referenceType);
-
-    /**
-     * Remove the subscription of a listener for a specific event.
-     * @param listener EventListenerInterface; which is no longer interested
-     * @param eventType EventType; the event which is of no interest any more
-     * @return the success of removing the listener. If a listener was not subscribed false is returned
-     */
-    boolean removeListener(EventListener listener, EventType eventType);
-
-    /**
-     * Remove all the listeners from this event producer.
-     * @return int; the number of removed event types
-     */
-    int removeAllListeners();
-
-    /**
-     * Removes all the listeners of a class from this event producer.
-     * @param ofClass Class&lt;?&gt;; the class or superclass
-     * @return int; the number of removed listeners
-     */
-    int removeAllListeners(Class<?> ofClass);
-
-    /**
-     * Return whether the EventProducer has listeners.
-     * @return boolean; whether the EventProducer has listeners or not
-     */
-    boolean hasListeners();
-
-    /**
-     * Return the number of listeners for the provided EventType.
-     * @param eventType EventType; the event type to return the number of listeners for
-     * @return boolean; whether the EventProducer has listeners or not
-     */
-    int numberOfListeners(EventType eventType);
-
-    /**
-     * Return a safe copy of the list of (strong or weak) references to the registered listeners for the provided event type, or
-     * an empty list when nothing is registered for this event type. The method never returns a null pointer, so it is safe to
-     * use the result directly in an iterator. The references to the listeners are the original references, so not safe copies.
-     * @param eventType EventType; the event type to look up the listeners for
-     * @return List&lt;Reference&lt;EventListenerInterface&gt;&gt;; the list of references to the listeners for this event type,
-     *         or an empty list when the event type is not registered
-     */
-    List<Reference<EventListener>> getListenerReferences(EventType eventType);
-
-    /**
-     * Return the EventTypes for which the EventProducer has listeners.
-     * @return Set&lt;EventType&gt;; the EventTypes for which the EventProducer has registered listeners
-     */
-    Set<EventType> getEventTypesWithListeners();
-
-    /**
-     * Transmit an event to all subscribed listeners.
-     * @param event Event; the event
-     */
-    void fireEvent(Event event);
-
-    /**
-     * Transmit a time-stamped event to all interested listeners.
-     * @param event TimedEvent&lt;C&gt;; the event
-     * @param <C> the comparable type to indicate the time when the event is fired
-     */
-    default <C extends Comparable<C> & Serializable> void fireTimedEvent(final TimedEvent<C> event)
+    /** {@inheritDoc} */
+    @Override
+    public boolean hasListeners()
     {
-        fireEvent(event);
+        return !this.listeners.isEmpty();
     }
 
-    /**
-     * Transmit an event with no payload object to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     */
-    default void fireEvent(final EventType eventType)
+    /** {@inheritDoc} */
+    @Override
+    public synchronized int numberOfListeners(final EventType eventType)
     {
-        fireEvent(new Event(eventType, getSourceId(), null, true));
+        if (this.listeners.containsKey(eventType))
+        {
+            return this.listeners.get(eventType).size();
+        }
+        return 0;
     }
 
-    /**
-     * Transmit a time-stamped event with a no payload object to all interested listeners.
-     * @param eventType EventType; the eventType of the event.
-     * @param time C; a time stamp for the event
-     * @param <C> the comparable type to indicate the time when the event is fired
-     */
-    default <C extends Comparable<C> & Serializable> void fireTimedEvent(final EventType eventType, final C time)
-
+    /** {@inheritDoc} */
+    @Override
+    public List<Reference<EventListener>> getListenerReferences(final EventType eventType)
     {
-        fireEvent(new TimedEvent<C>(eventType, getSourceId(), null, time, true));
+        List<Reference<EventListener>> result = new ArrayList<>();
+        if (this.listeners.get(eventType) != null)
+        {
+            result.addAll(this.listeners.get(eventType));
+        }
+        return result;
     }
 
-    /**
-     * Transmit an event with a serializable object as payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value Serializable; the object sent with the event
-     */
-    default void fireEvent(final EventType eventType, final Serializable value)
+    /** {@inheritDoc} */
+    @Override
+    public synchronized Set<EventType> getEventTypesWithListeners()
     {
-        fireEvent(new Event(eventType, getSourceId(), value, true));
-    }
-
-    /**
-     * Transmit a time-stamped event with a Serializable object (payload) to all interested listeners.
-     * @param eventType EventType; the eventType of the event.
-     * @param value Serializable; the payload sent with the event
-     * @param time C; a time stamp for the event
-     * @param <C> the comparable type to indicate the time when the event is fired
-     */
-    default <C extends Comparable<C> & Serializable> void fireTimedEvent(final EventType eventType, final Serializable value,
-            final C time)
-    {
-        fireEvent(new TimedEvent<C>(eventType, getSourceId(), value, time, true));
-    }
-
-    /**
-     * Transmit an event with no payload object to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     */
-    default void fireUnverifiedEvent(final EventType eventType)
-    {
-        fireEvent(new Event(eventType, getSourceId(), null, false));
-    }
-
-    /**
-     * Transmit a time-stamped event with a no payload object to all interested listeners.
-     * @param eventType EventType; the eventType of the event.
-     * @param time C; a time stamp for the event
-     * @param <C> the comparable type to indicate the time when the event is fired
-     */
-    default <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final EventType eventType, final C time)
-    {
-        fireEvent(new TimedEvent<C>(eventType, getSourceId(), null, time, false));
-    }
-
-    /**
-     * Transmit an event with a serializable object as payload to all interested listeners.
-     * @param eventType EventType; the eventType of the event
-     * @param value Serializable; the object sent with the event
-     */
-    default void fireUnverifiedEvent(final EventType eventType, final Serializable value)
-    {
-        fireEvent(new Event(eventType, getSourceId(), value, false));
-    }
-
-    /**
-     * Transmit a time-stamped event with a Serializable object (payload) to all interested listeners.
-     * @param eventType EventType; the eventType of the event.
-     * @param value Serializable; the payload sent with the event
-     * @param time C; a time stamp for the event
-     * @param <C> the comparable type to indicate the time when the event is fired
-     */
-    default <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final EventType eventType,
-            final Serializable value, final C time)
-    {
-        fireEvent(new TimedEvent<C>(eventType, getSourceId(), value, time, false));
+        return this.listeners.keySet(); // is already a safe copy
     }
 
 }
