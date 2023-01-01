@@ -3,7 +3,6 @@ package org.djutils.stats.summarizers.event;
 import java.io.Serializable;
 
 import org.djutils.event.EventType;
-import org.djutils.event.TimedEventType;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
 
@@ -264,21 +263,21 @@ public final class StatisticsEvents
      * TIMED_N_EVENT is fired whenever n is updated. The event should define the Statistic as the source and the current (Long)
      * value of n as the content.
      */
-    public static final TimedEventType TIMED_N_EVENT = new TimedEventType("TIMED_N_EVENT", new MetaData("count",
+    public static final EventType TIMED_N_EVENT = new EventType("TIMED_N_EVENT", new MetaData("count",
             "Number of ingested events", new ObjectDescriptor("eventCount", "Long event count", Long.class)));
 
     /**
      * TIMED_MIN_EVENT is fired whenever there is an observation that potentially updates the lowest observed value of the
      * statistic. The event should define the Statistic as the source and the current minimum observed value as the content.
      */
-    public static final TimedEventType TIMED_MIN_EVENT = new TimedEventType("TIMED_MIN_EVENT", new MetaData("Minimum value",
+    public static final EventType TIMED_MIN_EVENT = new EventType("TIMED_MIN_EVENT", new MetaData("Minimum value",
             "Minimum Double value", new ObjectDescriptor("Minimum value", "Minimum Double value", Double.class)));
 
     /**
      * TIMED_MAX_EVENT is fired whenever there is an observation that potentially updates the highest observed value of the
      * statistic. The event should define the Statistic as the source and the current maximum observed value as the content.
      */
-    public static final TimedEventType TIMED_MAX_EVENT = new TimedEventType("TIMED_MAX_EVENT", new MetaData("Maximum value",
+    public static final EventType TIMED_MAX_EVENT = new EventType("TIMED_MAX_EVENT", new MetaData("Maximum value",
             "Maximum Double value", new ObjectDescriptor("Maximum value", "Maximum Double value", Double.class)));
 
     /**
@@ -286,18 +285,17 @@ public final class StatisticsEvents
      * value of the statistic. The event should define the Statistic as the source and the current weighted population mean as
      * the content.
      */
-    public static final TimedEventType TIMED_WEIGHTED_POPULATION_MEAN_EVENT =
-            new TimedEventType("TIMED_WEIGHTED_POPULATION_MEAN_EVENT",
-                    new MetaData("Weighted population mean value", "Weighed population mean Double value", new ObjectDescriptor(
-                            "Weighted population mean value", "Weighted population mean Double value", Double.class)));
+    public static final EventType TIMED_WEIGHTED_POPULATION_MEAN_EVENT = new EventType("TIMED_WEIGHTED_POPULATION_MEAN_EVENT",
+            new MetaData("Weighted population mean value", "Weighed population mean Double value", new ObjectDescriptor(
+                    "Weighted population mean value", "Weighted population mean Double value", Double.class)));
 
     /**
      * TIMED_WEIGHTED_VARIANCE_EVENT is fired whenever there is an observation that potentially updates the weighted population
      * variance of the statistic. The event should define the Statistic as the source and the current weighted population
      * variance as the content.
      */
-    public static final TimedEventType TIMED_WEIGHTED_POPULATION_VARIANCE_EVENT =
-            new TimedEventType("TIMED_WEIGHTED_POPULATION_VARIANCE_EVENT",
+    public static final EventType TIMED_WEIGHTED_POPULATION_VARIANCE_EVENT =
+            new EventType("TIMED_WEIGHTED_POPULATION_VARIANCE_EVENT",
                     new MetaData("Weighted population variance value", "Weighted population variance Double value",
                             new ObjectDescriptor("Weighted population variance value",
                                     "Weighted population variance Double value", Double.class)));
@@ -307,8 +305,8 @@ public final class StatisticsEvents
      * standard deviation of the statistic. The event should define the Statistic as the source and the current weighted
      * population standard deviation as the content.
      */
-    public static final TimedEventType TIMED_WEIGHTED_POPULATION_STDEV_EVENT =
-            new TimedEventType("TIMED_WEIGHTED_POPULATION_STDEV_EVENT",
+    public static final EventType TIMED_WEIGHTED_POPULATION_STDEV_EVENT =
+            new EventType("TIMED_WEIGHTED_POPULATION_STDEV_EVENT",
                     new MetaData("Weighted population stdDev value", "Weighted population stdDev Double value",
                             new ObjectDescriptor("Weighted population stdDev value", "Weighted population stdDev Double value",
                                     Double.class)));
@@ -317,8 +315,8 @@ public final class StatisticsEvents
      * TIMED_WEIGHTED_SUM_EVENT is fired whenever there is an observation that potentially updates the weighted sum value of the
      * statistic. The event should define the Statistic as the source and the current weighted sum as the content.
      */
-    public static final TimedEventType TIMED_WEIGHTED_SUM_EVENT =
-            new TimedEventType("TIMED_WEIGHTED_SUM_EVENT", new MetaData("Weighted sum value", "Weighted sum Double value",
+    public static final EventType TIMED_WEIGHTED_SUM_EVENT =
+            new EventType("TIMED_WEIGHTED_SUM_EVENT", new MetaData("Weighted sum value", "Weighted sum Double value",
                     new ObjectDescriptor("Weighted sum value", "Weighted sum Double value", Double.class)));
 
     /**
@@ -326,7 +324,7 @@ public final class StatisticsEvents
      * mean value of the statistic. The event should define the Statistic as the source and the current weighted sample mean as
      * the content.
      */
-    public static final TimedEventType TIMED_WEIGHTED_SAMPLE_MEAN_EVENT = new TimedEventType("TIMED_WEIGHTED_SAMPLE_MEAN_EVENT",
+    public static final EventType TIMED_WEIGHTED_SAMPLE_MEAN_EVENT = new EventType("TIMED_WEIGHTED_SAMPLE_MEAN_EVENT",
             new MetaData("Weighted sample mean value", "Weighted sample mean Double value",
                     new ObjectDescriptor("Weighted sample mean value", "Weighted sample mean Double value", Double.class)));
 
@@ -335,8 +333,8 @@ public final class StatisticsEvents
      * sample variance of the statistic. The event should define the Statistic as the source and the current weighted sample
      * variance as the content.
      */
-    public static final TimedEventType TIMED_WEIGHTED_SAMPLE_VARIANCE_EVENT =
-            new TimedEventType("TIMED_WEIGHTED_SAMPLE_VARIANCE_EVENT",
+    public static final EventType TIMED_WEIGHTED_SAMPLE_VARIANCE_EVENT =
+            new EventType("TIMED_WEIGHTED_SAMPLE_VARIANCE_EVENT",
                     new MetaData("Weighted sample variance value", "Weighted sample variance Double value",
                             new ObjectDescriptor("Weighted sample variance value", "Weighted sample variance Double value",
                                     Double.class)));
@@ -346,8 +344,7 @@ public final class StatisticsEvents
      * standard deviation of the statistic. The event should define the Statistic as the source and the current weighted sample
      * standard deviation as the content.
      */
-    public static final TimedEventType TIMED_WEIGHTED_SAMPLE_STDEV_EVENT = new TimedEventType(
-            "TIMED_WEIGHTED_SAMPLE_STDEV_EVENT",
+    public static final EventType TIMED_WEIGHTED_SAMPLE_STDEV_EVENT = new EventType("TIMED_WEIGHTED_SAMPLE_STDEV_EVENT",
             new MetaData("Weighted sample stdDev value", "Weighted sample stdDev Double value",
                     new ObjectDescriptor("Weighted sample stdDev value", "Weighted sample stdDev Double value", Double.class)));
 

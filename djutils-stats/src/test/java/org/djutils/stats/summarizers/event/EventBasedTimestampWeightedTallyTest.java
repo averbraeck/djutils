@@ -12,7 +12,6 @@ import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventType;
 import org.djutils.event.TimedEvent;
-import org.djutils.event.TimedEventType;
 import org.djutils.metadata.MetaData;
 import org.junit.Test;
 
@@ -30,7 +29,7 @@ import org.junit.Test;
 public class EventBasedTimestampWeightedTallyTest
 {
     /** an event to fire. */
-    private static final TimedEventType TIMED_VALUE_EVENT = new TimedEventType("VALUE_EVENT", MetaData.NO_META_DATA);
+    private static final EventType TIMED_VALUE_EVENT = new EventType("VALUE_EVENT", MetaData.NO_META_DATA);
 
     /** Test the EventBasedTimestampWeightedTally. */
     @Test
@@ -57,7 +56,7 @@ public class EventBasedTimestampWeightedTallyTest
         // We fire a wrong event with wrong content
         try
         {
-            wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", "ERROR", 0.0));
+            wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "ERROR", 0.0));
             fail("tally should fail on events.value !instanceOf Double");
         }
         catch (Exception exception)
@@ -68,7 +67,7 @@ public class EventBasedTimestampWeightedTallyTest
         // We fire a wrong event with wrong timestamp
         try
         {
-            wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "ERROR", 1.0, Double.NaN));
+            wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 1.0, Double.NaN));
             fail("tally should fail on events.timestamp == NaN");
         }
         catch (Exception exception)
@@ -77,14 +76,14 @@ public class EventBasedTimestampWeightedTallyTest
         }
 
         // Now we fire some events
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.0, 0.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 1.0, 0.0));
         assertTrue(Double.isNaN(wt.getMin()));
         assertTrue(Double.isNaN(wt.getMax()));
         assertTrue(Double.isNaN(wt.getWeightedSampleMean()));
         assertTrue(Double.isNaN(wt.getWeightedPopulationMean()));
         assertTrue(Double.isNaN(wt.getWeightedSampleVariance()));
         assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.1, 0.1));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 1.1, 0.1));
         assertEquals(1.0, wt.getMin(), 0.000001);
         assertEquals(1.0, wt.getMax(), 0.000001);
         assertEquals(1.0, wt.getWeightedSampleMean(), 0.000001);
@@ -93,21 +92,21 @@ public class EventBasedTimestampWeightedTallyTest
         assertTrue(Double.isNaN(wt.getWeightedSampleStDev()));
         assertEquals(0, wt.getWeightedPopulationVariance(), 0.000001);
         assertEquals(0, wt.getWeightedPopulationStDev(), 0.0000001);
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.2, 0.2));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 1.2, 0.2));
         assertFalse(Double.isNaN(wt.getWeightedSampleVariance()));
         assertFalse(Double.isNaN(wt.getWeightedSampleStDev()));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.3, 0.3));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.4, 0.4));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.5, 0.5));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.6, 0.6));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.7, 0.7));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.8, 0.8));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 1.9, 0.9));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 2.0, 1.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 1.3, 0.3));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 1.4, 0.4));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 1.5, 0.5));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 1.6, 0.6));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 1.7, 0.7));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 1.8, 0.8));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 1.9, 0.9));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 2.0, 1.0));
 
         try
         {
-            wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 123.456, 0.8));
+            wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 123.456, 0.8));
             fail("timestamp out of order should have thrown an exception");
         }
         catch (IllegalArgumentException iae)
@@ -143,7 +142,7 @@ public class EventBasedTimestampWeightedTallyTest
         assertEquals(stDev, wt.getWeightedPopulationStDev(), 1.0E-6);
 
         // Adding something after the active period should not make a change
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 10.0, 20.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 10.0, 20.0));
         assertFalse(wt.isActive());
         assertEquals(2.0, wt.getMax(), 1.0E-6);
         assertEquals(1.0, wt.getMin(), 1.0E-6);
@@ -154,8 +153,7 @@ public class EventBasedTimestampWeightedTallyTest
         // test some wrong events
         try
         {
-            wt.notify(new Event(new EventType("VALUE_EVENT", new MetaData("VALUE_EVENT", "non-timed event")),
-                    "EventBasedTimestampWeightedTallyTest", 123.456));
+            wt.notify(new Event(new EventType("VALUE_EVENT", new MetaData("VALUE_EVENT", "non-timed event")), 123.456));
             fail("non time-based event should have thrown an exception");
         }
         catch (Exception e)
@@ -164,7 +162,7 @@ public class EventBasedTimestampWeightedTallyTest
         }
         try
         {
-            wt.notify(new TimedEvent<String>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 123.456, "abc"));
+            wt.notify(new TimedEvent<String>(TIMED_VALUE_EVENT, 123.456, "abc"));
             fail("non time-based evenevent with timestamp != Calendar or Number should have thrown an exception");
         }
         catch (Exception e)
@@ -181,9 +179,9 @@ public class EventBasedTimestampWeightedTallyTest
         // From: https://sciencing.com/calculate-time-decimals-5962681.html
         EventBasedTimestampWeightedTally wt =
                 new EventBasedTimestampWeightedTally("simple EventBasedTimestampWeightedTally statistic");
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 86.0, 0.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 26.0, 13.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 0.0, 36.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 86.0, 0.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 26.0, 13.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 0.0, 36.0));
         wt.endObservations(40.0);
 
         assertEquals(1716.0, wt.getWeightedSum(), 0.001);
@@ -192,9 +190,9 @@ public class EventBasedTimestampWeightedTallyTest
 
         // When we shift the times, we should get the same answers
         wt = new EventBasedTimestampWeightedTally("simple EventBasedTimestampWeightedTally statistic");
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 86.0, 10.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 26.0, 23.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 0.0, 46.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 86.0, 10.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 26.0, 23.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 0.0, 46.0));
         wt.endObservations(50.0);
 
         assertEquals(1716.0, wt.getWeightedSum(), 0.001);
@@ -203,12 +201,12 @@ public class EventBasedTimestampWeightedTallyTest
 
         // When we have observations with duration 0, we should get the same answers
         wt = new EventBasedTimestampWeightedTally("simple EventBasedTimestampWeightedTally statistic");
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 86.0, 0.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 26.0, 13.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 0.0, 13.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 26.0, 13.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 0.0, 36.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 0.0, 36.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 86.0, 0.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 26.0, 13.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 0.0, 13.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 26.0, 13.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 0.0, 36.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 0.0, 36.0));
         wt.endObservations(40.0);
 
         assertEquals(1716.0, wt.getWeightedSum(), 0.001);
@@ -217,15 +215,15 @@ public class EventBasedTimestampWeightedTallyTest
 
         // Example from NIST: https://www.itl.nist.gov/div898/software/dataplot/refman2/ch2/weightsd.pdf
         wt = new EventBasedTimestampWeightedTally("NIST");
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 2, 0.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 3, 1.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 5, 2.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 7, 2.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 11, 2.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 13, 6.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 17, 7.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 19, 9.0));
-        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", 23, 10.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 2, 0.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 3, 1.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 5, 2.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 7, 2.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 11, 2.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 13, 6.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 17, 7.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 19, 9.0));
+        wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 23, 10.0));
         wt.endObservations(10.0);
 
         assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedSampleMean(), 0.001);
@@ -243,7 +241,7 @@ public class EventBasedTimestampWeightedTallyTest
         for (int second = 30; second <= 40; second++)
         {
             Calendar calendar = new Calendar.Builder().setDate(2000, 2, 2).setTimeOfDay(4, 12, second, 10).build();
-            wt.notify(new TimedEvent<Calendar>(TIMED_VALUE_EVENT, "EventBasedTimestampWeightedTallyTest", index++, calendar));
+            wt.notify(new TimedEvent<Calendar>(TIMED_VALUE_EVENT, index++, calendar));
         }
         assertTrue(wt.isActive());
         wt.endObservations(new Calendar.Builder().setDate(2000, 2, 2).setTimeOfDay(4, 12, 41, 10).build());
@@ -313,12 +311,11 @@ public class EventBasedTimestampWeightedTallyTest
     public void testWeightedTallyEventProduction()
     {
         EventBasedTimestampWeightedTally timestampedTally = new EventBasedTimestampWeightedTally("testTally");
-        assertEquals(timestampedTally, timestampedTally.getSourceId());
         TimestampedObservationEventListener toel = new TimestampedObservationEventListener();
         timestampedTally.addListener(toel, StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT);
         assertEquals(0, toel.getObservationEvents());
 
-        TimedEventType[] types = new TimedEventType[] {StatisticsEvents.TIMED_N_EVENT, StatisticsEvents.TIMED_MIN_EVENT,
+        EventType[] types = new EventType[] {StatisticsEvents.TIMED_N_EVENT, StatisticsEvents.TIMED_MIN_EVENT,
                 StatisticsEvents.TIMED_MAX_EVENT, StatisticsEvents.TIMED_WEIGHTED_POPULATION_MEAN_EVENT,
                 StatisticsEvents.TIMED_WEIGHTED_POPULATION_VARIANCE_EVENT,
                 StatisticsEvents.TIMED_WEIGHTED_POPULATION_STDEV_EVENT, StatisticsEvents.TIMED_WEIGHTED_SUM_EVENT,
@@ -347,8 +344,6 @@ public class EventBasedTimestampWeightedTallyTest
         for (int i = 0; i < types.length; i++)
         {
             assertEquals("Number of events for listener " + types[i], 11, listeners[i].getNumberOfEvents());
-            assertEquals("Event sourceId for listener " + types[i], timestampedTally,
-                    listeners[i].getLastEvent().getSourceId());
             assertEquals("Event type for listener " + types[i], types[i], listeners[i].getLastEvent().getType());
             if (expectedValues[i] instanceof Long)
             {
@@ -382,8 +377,6 @@ public class EventBasedTimestampWeightedTallyTest
             Object[] c = (Object[]) event.getContent();
             assertTrue("Content[0] of the event has a wrong type, not double: " + c[0].getClass(), c[0] instanceof Double);
             assertTrue("Content[1] of the event has a wrong type, not double: " + c[1].getClass(), c[1] instanceof Double);
-            assertTrue("SourceId of the event has a wrong type, not EventBasedTimestampWeightedTally: "
-                    + event.getSourceId().getClass(), event.getSourceId() instanceof EventBasedTimestampWeightedTally);
             this.observationEvents++;
         }
 

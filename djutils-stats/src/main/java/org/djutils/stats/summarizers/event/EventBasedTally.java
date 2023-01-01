@@ -1,7 +1,5 @@
 package org.djutils.stats.summarizers.event;
 
-import java.io.Serializable;
-
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.LocalEventProducer;
@@ -40,7 +38,6 @@ public class EventBasedTally extends LocalEventProducer implements EventListener
      */
     public EventBasedTally(final String description, final QuantileAccumulator quantileAccumulator)
     {
-        super(description);
         this.wrappedTally = new Tally(description, quantileAccumulator);
     }
 
@@ -51,13 +48,6 @@ public class EventBasedTally extends LocalEventProducer implements EventListener
     public EventBasedTally(final String description)
     {
         this(description, new NoStorageAccumulator());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Serializable getSourceId()
-    {
-        return this;
     }
 
     /** {@inheritDoc} */
@@ -205,7 +195,7 @@ public class EventBasedTally extends LocalEventProducer implements EventListener
     public void initialize()
     {
         this.wrappedTally.initialize();
-        fireEvent(new Event(StatisticsEvents.INITIALIZED_EVENT, this, null));
+        fireEvent(StatisticsEvents.INITIALIZED_EVENT);
     }
 
     /** {@inheritDoc} */
@@ -228,7 +218,7 @@ public class EventBasedTally extends LocalEventProducer implements EventListener
         this.wrappedTally.register(value);
         if (hasListeners())
         {
-            fireEvent(new Event(StatisticsEvents.OBSERVATION_ADDED_EVENT, this, value));
+            fireEvent(StatisticsEvents.OBSERVATION_ADDED_EVENT, value);
             fireEvents();
         }
         return value;
@@ -239,22 +229,22 @@ public class EventBasedTally extends LocalEventProducer implements EventListener
      */
     protected void fireEvents()
     {
-        fireEvent(new Event(StatisticsEvents.N_EVENT, this, getN()));
-        fireEvent(new Event(StatisticsEvents.MIN_EVENT, this, getMin()));
-        fireEvent(new Event(StatisticsEvents.MAX_EVENT, this, getMax()));
-        fireEvent(new Event(StatisticsEvents.POPULATION_MEAN_EVENT, this, getPopulationMean()));
-        fireEvent(new Event(StatisticsEvents.POPULATION_VARIANCE_EVENT, this, getPopulationVariance()));
-        fireEvent(new Event(StatisticsEvents.POPULATION_SKEWNESS_EVENT, this, getPopulationSkewness()));
-        fireEvent(new Event(StatisticsEvents.POPULATION_KURTOSIS_EVENT, this, getPopulationKurtosis()));
-        fireEvent(new Event(StatisticsEvents.POPULATION_EXCESS_KURTOSIS_EVENT, this, getPopulationExcessKurtosis()));
-        fireEvent(new Event(StatisticsEvents.POPULATION_STDEV_EVENT, this, getPopulationStDev()));
-        fireEvent(new Event(StatisticsEvents.SUM_EVENT, this, getSum()));
-        fireEvent(new Event(StatisticsEvents.SAMPLE_MEAN_EVENT, this, getSampleMean()));
-        fireEvent(new Event(StatisticsEvents.SAMPLE_VARIANCE_EVENT, this, getSampleVariance()));
-        fireEvent(new Event(StatisticsEvents.SAMPLE_SKEWNESS_EVENT, this, getSampleSkewness()));
-        fireEvent(new Event(StatisticsEvents.SAMPLE_KURTOSIS_EVENT, this, getSampleKurtosis()));
-        fireEvent(new Event(StatisticsEvents.SAMPLE_EXCESS_KURTOSIS_EVENT, this, getSampleExcessKurtosis()));
-        fireEvent(new Event(StatisticsEvents.SAMPLE_STDEV_EVENT, this, getSampleStDev()));
+        fireEvent(StatisticsEvents.N_EVENT, getN());
+        fireEvent(StatisticsEvents.MIN_EVENT, getMin());
+        fireEvent(StatisticsEvents.MAX_EVENT, getMax());
+        fireEvent(StatisticsEvents.POPULATION_MEAN_EVENT, getPopulationMean());
+        fireEvent(StatisticsEvents.POPULATION_VARIANCE_EVENT, getPopulationVariance());
+        fireEvent(StatisticsEvents.POPULATION_SKEWNESS_EVENT, getPopulationSkewness());
+        fireEvent(StatisticsEvents.POPULATION_KURTOSIS_EVENT, getPopulationKurtosis());
+        fireEvent(StatisticsEvents.POPULATION_EXCESS_KURTOSIS_EVENT, getPopulationExcessKurtosis());
+        fireEvent(StatisticsEvents.POPULATION_STDEV_EVENT, getPopulationStDev());
+        fireEvent(StatisticsEvents.SUM_EVENT, getSum());
+        fireEvent(StatisticsEvents.SAMPLE_MEAN_EVENT, getSampleMean());
+        fireEvent(StatisticsEvents.SAMPLE_VARIANCE_EVENT, getSampleVariance());
+        fireEvent(StatisticsEvents.SAMPLE_SKEWNESS_EVENT, getSampleSkewness());
+        fireEvent(StatisticsEvents.SAMPLE_KURTOSIS_EVENT, getSampleKurtosis());
+        fireEvent(StatisticsEvents.SAMPLE_EXCESS_KURTOSIS_EVENT, getSampleExcessKurtosis());
+        fireEvent(StatisticsEvents.SAMPLE_STDEV_EVENT, getSampleStDev());
     }
 
     /** {@inheritDoc} */

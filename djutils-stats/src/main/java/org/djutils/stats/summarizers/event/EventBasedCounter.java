@@ -1,7 +1,5 @@
 package org.djutils.stats.summarizers.event;
 
-import java.io.Serializable;
-
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.LocalEventProducer;
@@ -34,15 +32,7 @@ public class EventBasedCounter extends LocalEventProducer implements EventListen
      */
     public EventBasedCounter(final String description)
     {
-        super(description);
         this.wrappedCounter = new Counter(description);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Serializable getSourceId()
-    {
-        return this;
     }
 
     /** {@inheritDoc} */
@@ -82,7 +72,7 @@ public class EventBasedCounter extends LocalEventProducer implements EventListen
         this.wrappedCounter.register(value);
         if (hasListeners())
         {
-            fireEvent(new Event(StatisticsEvents.OBSERVATION_ADDED_EVENT, this, value));
+            fireEvent(StatisticsEvents.OBSERVATION_ADDED_EVENT, value);
             fireEvents();
         }
         return value;
@@ -93,8 +83,8 @@ public class EventBasedCounter extends LocalEventProducer implements EventListen
      */
     protected void fireEvents()
     {
-        fireEvent(new Event(StatisticsEvents.N_EVENT, this, getN()));
-        fireEvent(new Event(StatisticsEvents.COUNT_EVENT, this, getCount()));
+        fireEvent(StatisticsEvents.N_EVENT, getN());
+        fireEvent(StatisticsEvents.COUNT_EVENT, getCount());
     }
 
     /** {@inheritDoc} */
@@ -102,7 +92,7 @@ public class EventBasedCounter extends LocalEventProducer implements EventListen
     public void initialize()
     {
         this.wrappedCounter.initialize();
-        fireEvent(new Event(StatisticsEvents.INITIALIZED_EVENT, this, null));
+        fireEvent(StatisticsEvents.INITIALIZED_EVENT);
     }
 
     /** {@inheritDoc} */

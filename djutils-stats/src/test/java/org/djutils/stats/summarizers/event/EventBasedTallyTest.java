@@ -72,7 +72,7 @@ public class EventBasedTallyTest
         // We first fire a wrong event
         try
         {
-            tally.notify(new Event(VALUE_EVENT, "ERROR", "ERROR"));
+            tally.notify(new Event(VALUE_EVENT, "ERROR"));
             fail("tally should react on events.value !instanceOf Double");
         }
         catch (Exception exception)
@@ -83,29 +83,29 @@ public class EventBasedTallyTest
         // Now we fire some events
         try
         {
-            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.1));
+            tally.notify(new Event(VALUE_EVENT, 1.1));
             assertFalse("mean is now available", Double.isNaN(tally.getSampleMean()));
             assertTrue("sample variance is not available", Double.isNaN(tally.getSampleVariance()));
             assertFalse("variance is not available", Double.isNaN(tally.getPopulationVariance()));
             assertTrue("skewness is not available", Double.isNaN(tally.getPopulationSkewness()));
-            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.2));
+            tally.notify(new Event(VALUE_EVENT, 1.2));
             assertFalse("sample variance is now available", Double.isNaN(tally.getSampleVariance()));
             assertTrue("sample skewness is not available", Double.isNaN(tally.getSampleSkewness()));
             assertFalse("skewness is available", Double.isNaN(tally.getPopulationSkewness()));
             assertTrue("kurtosis is not available", Double.isNaN(tally.getPopulationKurtosis()));
-            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.3));
+            tally.notify(new Event(VALUE_EVENT, 1.3));
             assertFalse("skewness is now available", Double.isNaN(tally.getSampleSkewness()));
             assertFalse("kurtosis is now available", Double.isNaN(tally.getPopulationKurtosis()));
             assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
-            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.4));
+            tally.notify(new Event(VALUE_EVENT, 1.4));
             assertFalse("sample kurtosis is now available", Double.isNaN(tally.getSampleKurtosis()));
-            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.5));
-            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.6));
-            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.7));
-            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.8));
-            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.9));
-            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 2.0));
-            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.0));
+            tally.notify(new Event(VALUE_EVENT, 1.5));
+            tally.notify(new Event(VALUE_EVENT, 1.6));
+            tally.notify(new Event(VALUE_EVENT, 1.7));
+            tally.notify(new Event(VALUE_EVENT, 1.8));
+            tally.notify(new Event(VALUE_EVENT, 1.9));
+            tally.notify(new Event(VALUE_EVENT, 2.0));
+            tally.notify(new Event(VALUE_EVENT, 1.0));
         }
         catch (Exception exception)
         {
@@ -207,7 +207,6 @@ public class EventBasedTallyTest
     public void testTallyEventProduction()
     {
         EventBasedTally tally = new EventBasedTally("testTally");
-        assertEquals(tally, tally.getSourceId());
         ObservationEventListener oel = new ObservationEventListener();
         tally.addListener(oel, StatisticsEvents.OBSERVATION_ADDED_EVENT);
         assertEquals(0, oel.getObservationEvents());
@@ -231,14 +230,13 @@ public class EventBasedTallyTest
         }
 
         assertEquals(10, oel.getObservationEvents());
-        
+
         // values from: https://atozmath.com/StatsUG.aspx
         Object[] expectedValues =
                 new Object[] {10L, 10.0, 100.0, 55.0, 825.0, 0.0, 1.7758, 28.7228, 550.0, 55.0, 916.6667, 0.0, 1.5982, 30.2765};
         for (int i = 0; i < types.length; i++)
         {
             assertEquals("Number of events for listener " + types[i], 10, listeners[i].getNumberOfEvents());
-            assertEquals("Event sourceId for listener " + types[i], tally, listeners[i].getLastEvent().getSourceId());
             assertEquals("Event type for listener " + types[i], types[i], listeners[i].getLastEvent().getType());
             if (expectedValues[i] instanceof Long)
             {
@@ -272,7 +270,7 @@ public class EventBasedTallyTest
             // Ignore expected exception
         }
 
-        tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 90.0));
+        tally.notify(new Event(VALUE_EVENT, 90.0));
         assertEquals("mean of one value is that value", 90.0, tally.getSampleMean(), 0);
         try
         {
@@ -284,7 +282,7 @@ public class EventBasedTallyTest
             // Ignore expected exception
         }
 
-        tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 110.0));
+        tally.notify(new Event(VALUE_EVENT, 110.0));
         assertEquals("mean of two value", 100.0, tally.getSampleMean(), 0);
         assertEquals("50% quantile", 100.0, tally.getQuantile(0.5), 0);
 
@@ -309,10 +307,10 @@ public class EventBasedTallyTest
         // Test for the problem that Peter Knoppers had in Tritapt where really small rounding errors caused sqrt(-1e-14).
         double value = 166.0 / 25.0;
         tally.initialize();
-        tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
-        tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
-        tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
-        tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
+        tally.notify(new Event(VALUE_EVENT, value));
+        tally.notify(new Event(VALUE_EVENT, value));
+        tally.notify(new Event(VALUE_EVENT, value));
+        tally.notify(new Event(VALUE_EVENT, value));
         tally.initialize();
         // Throw a lot of pseudo-randomly normally distributed values in and see if the expected mean and stddev come out
         double mean = 123.456;
@@ -321,7 +319,7 @@ public class EventBasedTallyTest
         for (int sample = 0; sample < 10000; sample++)
         {
             value = generateGaussianNoise(mean, stddev, random);
-            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", value));
+            tally.notify(new Event(VALUE_EVENT, value));
         }
         assertEquals("mean should approximately match", mean, tally.getSampleMean(), stddev / 10);
         assertEquals("stddev should approximately match", stddev, tally.getSampleStDev(), stddev / 10);
@@ -338,7 +336,7 @@ public class EventBasedTallyTest
         // Insert values from 0.0 .. 100.0 (step 1.0)
         for (int step = 0; step <= 100; step++)
         {
-            tally.notify(new Event(VALUE_EVENT, "EventBasedTallyTest", 1.0 * step));
+            tally.notify(new Event(VALUE_EVENT, 1.0 * step));
         }
         for (double probability : new double[] {0.0, 0.01, 0.1, 0.49, 0.5, 0.51, 0.9, 0.99, 1.0})
         {
@@ -408,8 +406,6 @@ public class EventBasedTallyTest
             assertTrue(event.getType().equals(StatisticsEvents.OBSERVATION_ADDED_EVENT));
             assertTrue("Content of the event has a wrong type, not DOuble: " + event.getContent().getClass(),
                     event.getContent() instanceof Double);
-            assertTrue("SourceId of the event has a wrong type, not EventBasedTally: " + event.getSourceId().getClass(),
-                    event.getSourceId() instanceof EventBasedTally);
             this.observationEvents++;
         }
 

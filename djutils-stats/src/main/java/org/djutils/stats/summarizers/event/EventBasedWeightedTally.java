@@ -35,15 +35,7 @@ public class EventBasedWeightedTally extends LocalEventProducer implements Event
      */
     public EventBasedWeightedTally(final String description)
     {
-        super(description);
         this.wrappedWeightedTally = new WeightedTally(description);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Serializable getSourceId()
-    {
-        return this;
     }
 
     /** {@inheritDoc} */
@@ -121,7 +113,7 @@ public class EventBasedWeightedTally extends LocalEventProducer implements Event
     public void initialize()
     {
         this.wrappedWeightedTally.initialize();
-        fireEvent(new Event(StatisticsEvents.INITIALIZED_EVENT, this, null));
+        fireEvent(StatisticsEvents.INITIALIZED_EVENT);
     }
 
     /** {@inheritDoc} */
@@ -153,7 +145,7 @@ public class EventBasedWeightedTally extends LocalEventProducer implements Event
         this.wrappedWeightedTally.register(weight, value);
         if (hasListeners())
         {
-            fireEvent(new Event(StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT, this, new Object[] {weight, value}));
+            fireEvent(StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT, new Serializable[] {weight, value});
             fireEvents();
         }
         return value;
@@ -164,16 +156,16 @@ public class EventBasedWeightedTally extends LocalEventProducer implements Event
      */
     protected void fireEvents()
     {
-        fireEvent(new Event(StatisticsEvents.N_EVENT, this, getN()));
-        fireEvent(new Event(StatisticsEvents.MIN_EVENT, this, getMin()));
-        fireEvent(new Event(StatisticsEvents.MAX_EVENT, this, getMax()));
-        fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_MEAN_EVENT, this, getWeightedPopulationMean()));
-        fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_VARIANCE_EVENT, this, getWeightedPopulationVariance()));
-        fireEvent(new Event(StatisticsEvents.WEIGHTED_POPULATION_STDEV_EVENT, this, getWeightedPopulationStDev()));
-        fireEvent(new Event(StatisticsEvents.WEIGHTED_SUM_EVENT, this, getWeightedSum()));
-        fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_MEAN_EVENT, this, getWeightedSampleMean()));
-        fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_VARIANCE_EVENT, this, getWeightedSampleVariance()));
-        fireEvent(new Event(StatisticsEvents.WEIGHTED_SAMPLE_STDEV_EVENT, this, getWeightedSampleStDev()));
+        fireEvent(StatisticsEvents.N_EVENT, getN());
+        fireEvent(StatisticsEvents.MIN_EVENT, getMin());
+        fireEvent(StatisticsEvents.MAX_EVENT, getMax());
+        fireEvent(StatisticsEvents.WEIGHTED_POPULATION_MEAN_EVENT, getWeightedPopulationMean());
+        fireEvent(StatisticsEvents.WEIGHTED_POPULATION_VARIANCE_EVENT, getWeightedPopulationVariance());
+        fireEvent(StatisticsEvents.WEIGHTED_POPULATION_STDEV_EVENT, getWeightedPopulationStDev());
+        fireEvent(StatisticsEvents.WEIGHTED_SUM_EVENT, getWeightedSum());
+        fireEvent(StatisticsEvents.WEIGHTED_SAMPLE_MEAN_EVENT, getWeightedSampleMean());
+        fireEvent(StatisticsEvents.WEIGHTED_SAMPLE_VARIANCE_EVENT, getWeightedSampleVariance());
+        fireEvent(StatisticsEvents.WEIGHTED_SAMPLE_STDEV_EVENT, getWeightedSampleStDev());
     }
 
     /** {@inheritDoc} */

@@ -38,16 +38,8 @@ public class EventBasedTimestampWeightedTally extends LocalEventProducer impleme
      */
     public EventBasedTimestampWeightedTally(final String description)
     {
-        super(description);
         this.wrappedTimestampWeightedTally = new TimestampWeightedTally(description);
         initialize();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Serializable getSourceId()
-    {
-        return this;
     }
 
     /** {@inheritDoc} */
@@ -55,7 +47,7 @@ public class EventBasedTimestampWeightedTally extends LocalEventProducer impleme
     public void initialize()
     {
         this.wrappedTimestampWeightedTally.initialize();
-        fireEvent(new Event(StatisticsEvents.INITIALIZED_EVENT, this, null));
+        fireEvent(StatisticsEvents.INITIALIZED_EVENT);
     }
 
     /** {@inheritDoc} */
@@ -156,8 +148,7 @@ public class EventBasedTimestampWeightedTally extends LocalEventProducer impleme
     {
         if (hasListeners())
         {
-            this.fireEvent(
-                    new Event(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT, this, new Object[] {timestamp, value}));
+            this.fireEvent(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT, new Serializable[] {timestamp, value});
             fireEvents(timestamp);
         }
     }
@@ -169,22 +160,16 @@ public class EventBasedTimestampWeightedTally extends LocalEventProducer impleme
      */
     protected <T extends Serializable & Comparable<T>> void fireEvents(final T timestamp)
     {
-        fireTimedEvent(new TimedEvent<T>(StatisticsEvents.TIMED_N_EVENT, this, getN(), timestamp));
-        fireTimedEvent(new TimedEvent<T>(StatisticsEvents.TIMED_MIN_EVENT, this, getMin(), timestamp));
-        fireTimedEvent(new TimedEvent<T>(StatisticsEvents.TIMED_MAX_EVENT, this, getMax(), timestamp));
-        fireTimedEvent(new TimedEvent<T>(StatisticsEvents.TIMED_WEIGHTED_POPULATION_MEAN_EVENT, this,
-                getWeightedPopulationMean(), timestamp));
-        fireTimedEvent(new TimedEvent<T>(StatisticsEvents.TIMED_WEIGHTED_POPULATION_VARIANCE_EVENT, this,
-                getWeightedPopulationVariance(), timestamp));
-        fireTimedEvent(new TimedEvent<T>(StatisticsEvents.TIMED_WEIGHTED_POPULATION_STDEV_EVENT, this,
-                getWeightedPopulationStDev(), timestamp));
-        fireTimedEvent(new TimedEvent<T>(StatisticsEvents.TIMED_WEIGHTED_SUM_EVENT, this, getWeightedSum(), timestamp));
-        fireTimedEvent(
-                new TimedEvent<T>(StatisticsEvents.TIMED_WEIGHTED_SAMPLE_MEAN_EVENT, this, getWeightedSampleMean(), timestamp));
-        fireTimedEvent(new TimedEvent<T>(StatisticsEvents.TIMED_WEIGHTED_SAMPLE_VARIANCE_EVENT, this,
-                getWeightedSampleVariance(), timestamp));
-        fireTimedEvent(new TimedEvent<T>(StatisticsEvents.TIMED_WEIGHTED_SAMPLE_STDEV_EVENT, this, getWeightedSampleStDev(),
-                timestamp));
+        fireTimedEvent(StatisticsEvents.TIMED_N_EVENT, getN(), timestamp);
+        fireTimedEvent(StatisticsEvents.TIMED_MIN_EVENT, getMin(), timestamp);
+        fireTimedEvent(StatisticsEvents.TIMED_MAX_EVENT, getMax(), timestamp);
+        fireTimedEvent(StatisticsEvents.TIMED_WEIGHTED_POPULATION_MEAN_EVENT, getWeightedPopulationMean(), timestamp);
+        fireTimedEvent(StatisticsEvents.TIMED_WEIGHTED_POPULATION_VARIANCE_EVENT, getWeightedPopulationVariance(), timestamp);
+        fireTimedEvent(StatisticsEvents.TIMED_WEIGHTED_POPULATION_STDEV_EVENT, getWeightedPopulationStDev(), timestamp);
+        fireTimedEvent(StatisticsEvents.TIMED_WEIGHTED_SUM_EVENT, getWeightedSum(), timestamp);
+        fireTimedEvent(StatisticsEvents.TIMED_WEIGHTED_SAMPLE_MEAN_EVENT, getWeightedSampleMean(), timestamp);
+        fireTimedEvent(StatisticsEvents.TIMED_WEIGHTED_SAMPLE_VARIANCE_EVENT, getWeightedSampleVariance(), timestamp);
+        fireTimedEvent(StatisticsEvents.TIMED_WEIGHTED_SAMPLE_STDEV_EVENT, getWeightedSampleStDev(), timestamp);
     }
 
     /** {@inheritDoc} */

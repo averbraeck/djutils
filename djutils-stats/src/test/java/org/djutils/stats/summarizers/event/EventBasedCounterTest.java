@@ -33,19 +33,18 @@ public class EventBasedCounterTest
         EventBasedCounter counter = new EventBasedCounter(description);
         assertEquals(description, counter.toString());
         assertEquals(description, counter.getDescription());
-        assertEquals(counter, counter.getSourceId());
 
         assertEquals(0L, counter.getN());
         assertEquals(0L, counter.getCount());
 
-        counter.notify(new Event(COUNT_EVENT, "EventBasedCounterTest", 2));
+        counter.notify(new Event(COUNT_EVENT, 2));
         assertEquals(1L, counter.getN());
         assertEquals(2L, counter.getCount());
 
         counter.initialize();
         assertEquals(0L, counter.getN());
         assertEquals(0L, counter.getCount());
-        
+
         CounterEventListener cel = new CounterEventListener();
         counter.addListener(cel, StatisticsEvents.OBSERVATION_ADDED_EVENT);
         assertEquals(0, cel.getCountEvents());
@@ -53,14 +52,14 @@ public class EventBasedCounterTest
         // test wrong event
         try
         {
-            counter.notify(new Event(COUNT_EVENT, "EventBasedCounterTest", "abc"));
+            counter.notify(new Event(COUNT_EVENT, "abc"));
             fail("Wrong payload to EventBasedCounter should have triggreed an exception");
         }
         catch (RuntimeException exception)
         {
             // ok, should have given error
         }
-        
+
         LoggingEventListener nListener = new LoggingEventListener();
         counter.addListener(nListener, StatisticsEvents.N_EVENT);
         LoggingEventListener countListener = new LoggingEventListener();
@@ -69,7 +68,7 @@ public class EventBasedCounterTest
         long value = 0;
         for (int i = 0; i < 100; i++)
         {
-            counter.notify(new Event(COUNT_EVENT, "EventBasedCounterTest", 2 * i));
+            counter.notify(new Event(COUNT_EVENT, 2 * i));
             value += 2 * i;
         }
         assertEquals(100, counter.getN());
@@ -77,8 +76,6 @@ public class EventBasedCounterTest
         assertEquals(100, cel.getCountEvents());
         assertEquals(100, nListener.getNumberOfEvents());
         assertEquals(100, countListener.getNumberOfEvents());
-        assertEquals(counter, nListener.getLastEvent().getSourceId());
-        assertEquals(counter, countListener.getLastEvent().getSourceId());
         assertEquals(100L, nListener.getLastEvent().getContent());
         assertEquals(value, countListener.getLastEvent().getContent());
     }
@@ -98,8 +95,6 @@ public class EventBasedCounterTest
             assertTrue(event.getType().equals(StatisticsEvents.OBSERVATION_ADDED_EVENT));
             assertTrue("Content of the event has a wrong type, not Long: " + event.getContent().getClass(),
                     event.getContent() instanceof Long);
-            assertTrue("SourceId of the event has a wrong type, not EventBasedCounter: " + event.getSourceId().getClass(),
-                    event.getSourceId() instanceof EventBasedCounter);
             this.countEvents++;
         }
 
