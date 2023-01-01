@@ -1,0 +1,12 @@
+@startuml
+
+skinparam class {
+  BackgroundColor BUSINESS
+}
+
+interface EventListener extends java.util.EventListener, java.io.Serializable
+{
+  void notify(Event event);
+}
+
+@enduml

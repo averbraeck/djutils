@@ -1,0 +1,33 @@
+@startuml
+
+skinparam class {
+  BackgroundColor BUSINESS
+}
+
+class Event implements Serializable {
+  +Serializable getSourceId()
+  +Serializable getContent()
+  +EventType getType()
+}
+
+class TimedEvent<T> extends Event implements Comparable {
+  +T getTimeStamp()
+}
+
+interface Comparable {
+}
+
+class EventType {
+  +String getName() {}
+  +MetaData getMetaData()
+  +Class<? extends Event> getValidEventType()
+}
+
+class TimedEventType extends EventType {
+  +TimedEventType getType()
+}
+
+Event - EventType : type >
+TimedEvent - TimedEventType : type >
+
+@enduml
