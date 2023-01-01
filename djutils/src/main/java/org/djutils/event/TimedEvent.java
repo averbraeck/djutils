@@ -30,25 +30,25 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
 
     /**
      * Construct a new timed event, where compliance with the metadata is verified.
-     * @param type TimedEventType; the eventType of the event.
+     * @param type EventType; the eventType of the event.
      * @param sourceId Serializable; the source of the event.
      * @param content Serializable; the content of the event.
      * @param timeStamp T; the timeStamp.
      */
-    public TimedEvent(final TimedEventType type, final Serializable sourceId, final Serializable content, final T timeStamp)
+    public TimedEvent(final EventType type, final Serializable sourceId, final Serializable content, final T timeStamp)
     {
         this(type, sourceId, content, timeStamp, true);
     }
 
     /**
      * Construct a new timed event, with a choice to verify compliance with metadata.
-     * @param type TimedEventType; the eventType of the event.
+     * @param type EventType; the eventType of the event.
      * @param sourceId Serializable; the source of the event.
      * @param content Serializable; the content of the event.
      * @param timeStamp T; the timeStamp.
      * @param verifyMetaData boolean; whether to verify the compliance with metadata or not
      */
-    public TimedEvent(final TimedEventType type, final Serializable sourceId, final Serializable content, final T timeStamp,
+    public TimedEvent(final EventType type, final Serializable sourceId, final Serializable content, final T timeStamp,
             final boolean verifyMetaData)
     {
         super(type, sourceId, content, verifyMetaData);
@@ -63,13 +63,6 @@ public class TimedEvent<T extends Comparable<T> & Serializable> extends Event im
     public T getTimeStamp()
     {
         return this.timeStamp;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public TimedEventType getType()
-    {
-        return (TimedEventType) super.getType();
     }
 
     /** {@inheritDoc} */
