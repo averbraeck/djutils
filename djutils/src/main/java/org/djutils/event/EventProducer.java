@@ -27,7 +27,7 @@ import org.djutils.event.ref.ReferenceType;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public interface EventProducer extends Serializable 
+public interface EventProducer extends Serializable
 {
     /** The FIRST_POSITION in the queue. */
     int FIRST_POSITION = 0;
@@ -110,7 +110,7 @@ public interface EventProducer extends Serializable
      * @return int; the number of removed listeners
      */
     int removeAllListeners(Class<?> ofClass);
-    
+
     /**
      * Return whether the EventProducer has listeners.
      * @return boolean; whether the EventProducer has listeners or not
@@ -167,11 +167,11 @@ public interface EventProducer extends Serializable
 
     /**
      * Transmit a time-stamped event with a no payload object to all interested listeners.
-     * @param eventType TimedEventType; the eventType of the event.
+     * @param eventType EventType; the eventType of the event.
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      */
-    default <C extends Comparable<C> & Serializable> void fireTimedEvent(final TimedEventType eventType, final C time)
+    default <C extends Comparable<C> & Serializable> void fireTimedEvent(final EventType eventType, final C time)
 
     {
         fireEvent(new TimedEvent<C>(eventType, getSourceId(), null, time, true));
@@ -189,13 +189,13 @@ public interface EventProducer extends Serializable
 
     /**
      * Transmit a time-stamped event with a Serializable object (payload) to all interested listeners.
-     * @param eventType TimedEventType; the eventType of the event.
+     * @param eventType EventType; the eventType of the event.
      * @param value Serializable; the payload sent with the event
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      */
-    default <C extends Comparable<C> & Serializable> void fireTimedEvent(final TimedEventType eventType,
-            final Serializable value, final C time)
+    default <C extends Comparable<C> & Serializable> void fireTimedEvent(final EventType eventType, final Serializable value,
+            final C time)
     {
         fireEvent(new TimedEvent<C>(eventType, getSourceId(), value, time, true));
     }
@@ -211,11 +211,11 @@ public interface EventProducer extends Serializable
 
     /**
      * Transmit a time-stamped event with a no payload object to all interested listeners.
-     * @param eventType TimedEventType; the eventType of the event.
+     * @param eventType EventType; the eventType of the event.
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      */
-    default <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final TimedEventType eventType, final C time)
+    default <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final EventType eventType, final C time)
     {
         fireEvent(new TimedEvent<C>(eventType, getSourceId(), null, time, false));
     }
@@ -232,12 +232,12 @@ public interface EventProducer extends Serializable
 
     /**
      * Transmit a time-stamped event with a Serializable object (payload) to all interested listeners.
-     * @param eventType TimedEventType; the eventType of the event.
+     * @param eventType EventType; the eventType of the event.
      * @param value Serializable; the payload sent with the event
      * @param time C; a time stamp for the event
      * @param <C> the comparable type to indicate the time when the event is fired
      */
-    default <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final TimedEventType eventType,
+    default <C extends Comparable<C> & Serializable> void fireUnverifiedTimedEvent(final EventType eventType,
             final Serializable value, final C time)
     {
         fireEvent(new TimedEvent<C>(eventType, getSourceId(), value, time, false));
