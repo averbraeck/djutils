@@ -6,16 +6,9 @@ import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Set;
+import java.rmi.registry.Registry;
 
-import org.djutils.event.Event;
-import org.djutils.event.EventListener;
-import org.djutils.event.EventProducer;
-import org.djutils.event.EventType;
 import org.djutils.event.LocalEventProducer;
-import org.djutils.event.ref.Reference;
-import org.djutils.event.ref.ReferenceType;
 import org.djutils.rmi.RmiObject;
 
 /**
@@ -31,14 +24,14 @@ import org.djutils.rmi.RmiObject;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public abstract class RmiEventProducer extends RmiObject implements EventProducer, Remote
+public abstract class RmiEventProducer extends LocalEventProducer implements Remote
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140830L;
 
-    /** The EventProducer helper class with the actual implementation to avoid code duplication. */
+    /** The embedded RmiObject class for the remote firing of events. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected final LocalEventProducer embeddedEventProducer;
+    private final RmiObject rmiObject;
 
     /**
      * Create a remote event listener and register the listener in the RMI registry. When the RMI registry does not exist yet,
@@ -47,17 +40,18 @@ public abstract class RmiEventProducer extends RmiObject implements EventProduce
      * @param host String; the host where the RMI registry resides or will be created. Creation is only possible on localhost.
      * @param port int; the port where the RMI registry can be found or will be created
      * @param bindingKey String; the key under which this object will be bound in the RMI registry
+     * @param sourceId Serializable; the sourceId of the event producer to identify the event publisher
      * @throws RemoteException when there is a problem with the RMI registry
      * @throws AlreadyBoundException when there is already another object bound to the bindingKey
      * @throws NullPointerException when host, path, or bindingKey is null
      * @throws IllegalArgumentException when port &lt; 0 or port &gt; 65535
      * @throws AccessException when there is an attempt to create a registry on a remote host
      */
-    public RmiEventProducer(final String host, final int port, final String bindingKey)
+    public RmiEventProducer(final String host, final int port, final String bindingKey, final Serializable sourceId)
             throws RemoteException, AlreadyBoundException
     {
-        super(host, port, bindingKey);
-        this.embeddedEventProducer = new LocalEventProducer(this);
+        super(sourceId);
+        this.rmiObject = new RmiObject(host, port, bindingKey);
     }
 
     /**
@@ -67,86 +61,25 @@ public abstract class RmiEventProducer extends RmiObject implements EventProduce
      * registry on another computer is not possible. Any attempt to do so will cause an AccessException to be fired.
      * @param registryURL URL; the URL of the registry, e.g., "http://localhost:1099" or "http://130.161.185.14:28452"
      * @param bindingKey String; the key under which this object will be bound in the RMI registry
+     * @param sourceId Serializable; the sourceId of the event producer to identify the event publisher
      * @throws RemoteException when there is a problem with the RMI registry
      * @throws AlreadyBoundException when there is already another object bound to the bindingKey
      * @throws NullPointerException when registryURL or bindingKey is null
      * @throws AccessException when there is an attempt to create a registry on a remote host
      */
-    public RmiEventProducer(final URL registryURL, final String bindingKey) throws RemoteException, AlreadyBoundException
+    public RmiEventProducer(final URL registryURL, final String bindingKey, final Serializable sourceId)
+            throws RemoteException, AlreadyBoundException
     {
-        super(registryURL, bindingKey);
-        this.embeddedEventProducer = new LocalEventProducer(this);
+        super(sourceId);
+        this.rmiObject = new RmiObject(registryURL, bindingKey);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public Serializable getSourceId()
+    /**
+     * Returns the registry in which this object has been bound, e.g., to look up other objects in the registry.
+     * @return Registry; the registry in which this object has been bound
+     */
+    public Registry getRegistry()
     {
-        return this.embeddedEventProducer.getSourceId();
+        return this.rmiObject.getRegistry();
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean addListener(final EventListener listener, final EventType eventType, final int position,
-            final ReferenceType referenceType)
-    {
-        return this.embeddedEventProducer.addListener(listener, eventType, position, referenceType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean removeListener(final EventListener listener, final EventType eventType)
-    {
-        return this.embeddedEventProducer.removeListener(listener, eventType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int removeAllListeners()
-    {
-        return this.embeddedEventProducer.removeAllListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int removeAllListeners(final Class<?> ofClass)
-    {
-        return this.embeddedEventProducer.removeAllListeners(ofClass);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean hasListeners()
-    {
-        return this.embeddedEventProducer.hasListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int numberOfListeners(final EventType eventType)
-    {
-        return this.embeddedEventProducer.numberOfListeners(eventType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public List<Reference<EventListener>> getListenerReferences(final EventType eventType)
-    {
-        return this.embeddedEventProducer.getListenerReferences(eventType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Set<EventType> getEventTypesWithListeners()
-    {
-        return this.embeddedEventProducer.getEventTypesWithListeners();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void fireEvent(final Event event)
-    {
-        this.embeddedEventProducer.fireEvent(event);
-    }
-
 }
