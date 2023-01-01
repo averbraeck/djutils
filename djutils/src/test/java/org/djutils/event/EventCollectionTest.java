@@ -22,12 +22,12 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.djutils.event.util.EventProducingCollection;
-import org.djutils.event.util.EventProducingIterator;
-import org.djutils.event.util.EventProducingList;
-import org.djutils.event.util.EventProducingListIterator;
-import org.djutils.event.util.EventProducingMap;
-import org.djutils.event.util.EventProducingSet;
+import org.djutils.event.collection.EventProducingCollection;
+import org.djutils.event.collection.EventProducingIterator;
+import org.djutils.event.collection.EventProducingList;
+import org.djutils.event.collection.EventProducingListIterator;
+import org.djutils.event.collection.EventProducingMap;
+import org.djutils.event.collection.EventProducingSet;
 import org.djutils.exceptions.Try;
 import org.junit.Test;
 
@@ -43,7 +43,7 @@ import org.junit.Test;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class EventUtilTest
+public class EventCollectionTest
 {
     /**
      * Test the EventProducingCollection.
@@ -51,7 +51,7 @@ public class EventUtilTest
     @Test
     public void testEventProducingCollection()
     {
-        EventProducingCollection<String> epc = new EventProducingCollection<>(new LinkedHashSet<>(), "epc");
+        EventProducingCollection<String> epc = new EventProducingCollection<>(new LinkedHashSet<>());
         TestEventListener listener = new TestEventListener();
         epc.addListener(listener, EventProducingCollection.OBJECT_ADDED_EVENT);
         epc.addListener(listener, EventProducingCollection.OBJECT_REMOVED_EVENT);
@@ -62,13 +62,11 @@ public class EventUtilTest
         assertTrue(epc.isEmpty());
         boolean ok = epc.add("abc");
         assertTrue(ok);
-        assertEquals("epc", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingCollection.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(1), listener.getReceivedEvent().getContent());
         assertFalse(epc.isEmpty());
         ok = epc.add("abc");
         assertFalse(ok);
-        assertEquals("epc", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingCollection.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(1), listener.getReceivedEvent().getContent());
 
@@ -169,7 +167,7 @@ public class EventUtilTest
     @Test
     public void testEventProducingSet()
     {
-        EventProducingSet<String> eps = new EventProducingSet<>(new LinkedHashSet<>(), "eps");
+        EventProducingSet<String> eps = new EventProducingSet<>(new LinkedHashSet<>());
         TestEventListener listener = new TestEventListener();
         eps.addListener(listener, EventProducingSet.OBJECT_ADDED_EVENT);
         eps.addListener(listener, EventProducingSet.OBJECT_REMOVED_EVENT);
@@ -180,13 +178,11 @@ public class EventUtilTest
         assertTrue(eps.isEmpty());
         boolean ok = eps.add("abc");
         assertTrue(ok);
-        assertEquals("eps", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingSet.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(1), listener.getReceivedEvent().getContent());
         assertFalse(eps.isEmpty());
         ok = eps.add("abc");
         assertFalse(ok);
-        assertEquals("eps", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingSet.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(1), listener.getReceivedEvent().getContent());
 
@@ -287,7 +283,7 @@ public class EventUtilTest
     @Test
     public void testEventProducingList()
     {
-        EventProducingList<String> epl = new EventProducingList<>(new ArrayList<>(), "epl");
+        EventProducingList<String> epl = new EventProducingList<>(new ArrayList<>());
         TestEventListener listener = new TestEventListener();
         epl.addListener(listener, EventProducingList.OBJECT_ADDED_EVENT);
         epl.addListener(listener, EventProducingList.OBJECT_REMOVED_EVENT);
@@ -299,13 +295,11 @@ public class EventUtilTest
         assertEquals(0, epl.size());
         boolean ok = epl.add("abc");
         assertTrue(ok);
-        assertEquals("epl", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingList.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(1), listener.getReceivedEvent().getContent());
         assertFalse(epl.isEmpty());
         ok = epl.add("abc");
         assertTrue(ok); // duplicates allowed in list
-        assertEquals("epl", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingList.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(2), listener.getReceivedEvent().getContent());
         epl.remove(1);
@@ -488,7 +482,7 @@ public class EventUtilTest
     @Test
     public void testEventProducingMap()
     {
-        EventProducingMap<Integer, String> epm = new EventProducingMap<>(new TreeMap<>(), "epm");
+        EventProducingMap<Integer, String> epm = new EventProducingMap<>(new TreeMap<>());
         TestEventListener listener = new TestEventListener();
         epm.addListener(listener, EventProducingMap.OBJECT_ADDED_EVENT);
         epm.addListener(listener, EventProducingMap.OBJECT_REMOVED_EVENT);
@@ -500,14 +494,12 @@ public class EventUtilTest
         assertEquals(0, epm.size());
         String replaced = epm.put(1, "abc");
         assertNull(replaced);
-        assertEquals("epm", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingMap.OBJECT_ADDED_EVENT, listener.getReceivedEvent().getType());
         assertEquals(Integer.valueOf(1), listener.getReceivedEvent().getContent());
         assertFalse(epm.isEmpty());
         assertEquals(1, epm.size());
         replaced = epm.put(1, "def");
         assertEquals("abc", replaced);
-        assertEquals("epm", listener.getReceivedEvent().getSourceId());
         assertEquals(EventProducingMap.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
         // assertNull(listener.getReceivedEvent().getContent()); // Changed 2020/04/17 PK
         assertEquals("payload is now the unchanged size of the map", 1, listener.getReceivedEvent().getContent());

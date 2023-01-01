@@ -20,8 +20,8 @@ import org.djutils.event.EventListener;
 import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
 import org.djutils.event.TimedEvent;
-import org.djutils.event.ref.Reference;
-import org.djutils.event.ref.ReferenceType;
+import org.djutils.event.reference.Reference;
+import org.djutils.event.reference.ReferenceType;
 import org.djutils.event.rmi.RmiEventListener;
 import org.djutils.event.rmi.RmiEventProducer;
 import org.djutils.exceptions.Try;
@@ -68,10 +68,9 @@ public class RemoteEventPubSubTest
 
             String string = "abc123";
             listener.setExpectedObject(string);
-            producer.fireEvent(new Event(TestRemoteEventProducer.REMOTE_EVENT_1, producer, string));
+            producer.fireEvent(new Event(TestRemoteEventProducer.REMOTE_EVENT_1, string));
             assertEquals(string, listener.getReceivedEvent().getContent());
             assertEquals(TestRemoteEventProducer.REMOTE_EVENT_1, listener.getReceivedEvent().getType());
-            assertEquals(producer, listener.getReceivedEvent().getSourceId());
 
             listener.setExpectedObject(Boolean.valueOf(true));
             producer.fireEvent(TestRemoteEventProducer.REMOTE_EVENT_1, true);
@@ -151,8 +150,8 @@ public class RemoteEventPubSubTest
             timedListener.setExpectingNotification(true);
             timedListener.setExpectedObject(Double.valueOf(12.34d));
             listener.setExpectedObject(Double.valueOf(12.34d));
-            producer.fireTimedEvent(new TimedEvent<Double>(TestRemoteEventProducer.TIMED_REMOTE_EVENT_1, producer,
-                    Double.valueOf(12.34d), 12.01d));
+            producer.fireTimedEvent(
+                    new TimedEvent<Double>(TestRemoteEventProducer.TIMED_REMOTE_EVENT_1, Double.valueOf(12.34d), 12.01d));
             assertEquals(12.01, timedListener.getReceivedEvent().getTimeStamp(), 0.001);
 
             nrRemovedListeners = producer.removeAllListeners(TestRemoteEventListener.class);
@@ -299,7 +298,7 @@ public class RemoteEventPubSubTest
             }, "expected ClassCastException", ClassCastException.class);
 
             listener.setExpectedObject("abc");
-            producer.fireEvent(new Event(eventType, producer, "abc"));
+            producer.fireEvent(new Event(eventType, "abc"));
 
             listener.setExpectedObject(Boolean.valueOf(true));
             producer.fireUnverifiedEvent(eventType, true);
@@ -368,10 +367,9 @@ public class RemoteEventPubSubTest
 
             String string = "abc123";
             timedListener.setExpectedObject(string);
-            producer.fireTimedEvent(new TimedEvent<Double>(timedEventType, producer, string, 12.01d));
+            producer.fireTimedEvent(new TimedEvent<Double>(timedEventType, string, 12.01d));
             assertEquals(string, timedListener.getReceivedEvent().getContent());
             assertEquals(timedEventType, timedListener.getReceivedEvent().getType());
-            assertEquals(producer, timedListener.getReceivedEvent().getSourceId());
             assertEquals(12.01d, timedListener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
             timedListener.setExpectedObject(Boolean.valueOf(true));
@@ -414,7 +412,7 @@ public class RemoteEventPubSubTest
             assertEquals(12.09d, timedListener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
             timedListener.setExpectedObject("abc");
-            producer.fireTimedEvent(new TimedEvent<Double>(timedEventType, producer, "abc", Double.valueOf(12.10d)));
+            producer.fireTimedEvent(new TimedEvent<Double>(timedEventType, "abc", Double.valueOf(12.10d)));
             assertEquals(12.10d, timedListener.getReceivedEvent().getTimeStamp().doubleValue(), 0.001);
 
             timedListener.setExpectedObject(null);
@@ -805,15 +803,9 @@ public class RemoteEventPubSubTest
          */
         public TestRemoteEventProducer() throws RemoteException, AlreadyBoundException
         {
-            super("127.0.0.1", 1099, "producer", "producer");
+            super("127.0.0.1", 1099, "producer");
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public Serializable getSourceId()
-        {
-            return "producer";
-        }
     }
 
     /** */
