@@ -20,7 +20,6 @@ import org.djutils.event.EventListener;
 import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
 import org.djutils.event.TimedEvent;
-import org.djutils.event.TimedEventType;
 import org.djutils.event.ref.Reference;
 import org.djutils.event.ref.ReferenceType;
 import org.djutils.event.rmi.RmiEventListener;
@@ -362,7 +361,7 @@ public class RemoteEventPubSubTest
         try
         {
             TestRemoteTimedEventListener<Double> timedListener = new TestRemoteTimedEventListener<>("timedListener");
-            TimedEventType timedEventType = new TimedEventType("TIMED_TEST_TYPE", MetaData.NO_META_DATA);
+            EventType timedEventType = new EventType("TIMED_TEST_TYPE", MetaData.NO_META_DATA);
 
             boolean addListenerOK = producer.addListener(timedListener, timedEventType);
             assertTrue(addListenerOK);
@@ -450,7 +449,7 @@ public class RemoteEventPubSubTest
         try
         {
             TestRemoteTimedEventListener<Double> timedListener = new TestRemoteTimedEventListener<>("listener");
-            TimedEventType timedEventType = new TimedEventType("TIMED_STRING_TYPE",
+            EventType timedEventType = new EventType("TIMED_STRING_TYPE",
                     new MetaData("STRING", "string", new ObjectDescriptor("String", "string", String.class)));
 
             boolean addListenerOK = producer.addListener(timedListener, timedEventType);
@@ -700,10 +699,10 @@ public class RemoteEventPubSubTest
             // check LAST_POSITION and FIRST_POSITION
             TestRemoteEventListener listener2 = new TestRemoteEventListener("listener2");
             TestRemoteEventListener listener3 = new TestRemoteEventListener("listener3");
-            addListenerOK = producer.addListener(listener2, TestRemoteEventProducer.REMOTE_EVENT_2,
-                    EventProducer.LAST_POSITION);
-            addListenerOK = producer.addListener(listener3, TestRemoteEventProducer.REMOTE_EVENT_2,
-                    EventProducer.FIRST_POSITION);
+            addListenerOK =
+                    producer.addListener(listener2, TestRemoteEventProducer.REMOTE_EVENT_2, EventProducer.LAST_POSITION);
+            addListenerOK =
+                    producer.addListener(listener3, TestRemoteEventProducer.REMOTE_EVENT_2, EventProducer.FIRST_POSITION);
             assertEquals(3, producer.numberOfListeners(TestRemoteEventProducer.REMOTE_EVENT_2));
 
             // check whether positions have been inserted okay: listener3 - listener - listener2
@@ -797,8 +796,7 @@ public class RemoteEventPubSubTest
         public static final EventType REMOTE_EVENT_2 = new EventType("REMOTE_EVENT_2", MetaData.NO_META_DATA);
 
         /** */
-        public static final TimedEventType TIMED_REMOTE_EVENT_1 =
-                new TimedEventType("TIMED_REMOTE_EVENT_1", MetaData.NO_META_DATA);
+        public static final EventType TIMED_REMOTE_EVENT_1 = new EventType("TIMED_REMOTE_EVENT_1", MetaData.NO_META_DATA);
 
         /**
          * Construct a RemoteEventProducer.
@@ -807,7 +805,7 @@ public class RemoteEventPubSubTest
          */
         public TestRemoteEventProducer() throws RemoteException, AlreadyBoundException
         {
-            super("127.0.0.1", 1099, "producer");
+            super("127.0.0.1", 1099, "producer", "producer");
         }
 
         /** {@inheritDoc} */
