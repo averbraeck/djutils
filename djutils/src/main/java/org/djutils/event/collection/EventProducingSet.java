@@ -7,7 +7,7 @@ import java.util.Set;
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.LocalEventProducer;
-import org.djutils.event.EventProducingObject;
+import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
 import org.djutils.event.reference.ReferenceType;
 import org.djutils.exceptions.Throw;
@@ -30,7 +30,7 @@ import org.djutils.metadata.ObjectDescriptor;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <E> the type of elements in the set
  */
-public class EventProducingSet<E> implements EventProducingObject, EventListener, Set<E>
+public class EventProducingSet<E> implements EventProducer, EventListener, Set<E>
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;

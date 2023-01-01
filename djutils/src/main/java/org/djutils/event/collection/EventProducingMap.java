@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.djutils.event.EventListener;
 import org.djutils.event.LocalEventProducer;
-import org.djutils.event.EventProducingObject;
+import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
 import org.djutils.event.reference.ReferenceType;
 import org.djutils.exceptions.Throw;
@@ -31,7 +31,7 @@ import org.djutils.metadata.ObjectDescriptor;
  * @param <K> the key type
  * @param <V> the value type
  */
-public class EventProducingMap<K, V> implements Map<K, V>, EventProducingObject, Serializable
+public class EventProducingMap<K, V> implements Map<K, V>, EventProducer, Serializable
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;

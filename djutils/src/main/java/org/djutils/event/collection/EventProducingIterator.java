@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import org.djutils.event.EventListener;
 import org.djutils.event.LocalEventProducer;
-import org.djutils.event.EventProducingObject;
+import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
 import org.djutils.event.reference.ReferenceType;
 import org.djutils.exceptions.Throw;
@@ -27,7 +27,7 @@ import org.djutils.metadata.MetaData;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <T> the type of elements to iterate on
  */
-public class EventProducingIterator<T> implements EventProducingObject, Iterator<T>, Serializable
+public class EventProducingIterator<T> implements EventProducer, Iterator<T>, Serializable
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;

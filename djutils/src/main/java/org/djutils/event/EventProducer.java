@@ -3,8 +3,8 @@ package org.djutils.event;
 import org.djutils.event.reference.ReferenceType;
 
 /**
- * EventProducingObject exposes a few of the methods of the EventProducer to the outside world: the ability to add and remove
- * listeners.
+ * EventProducer is the interface that exposes a few of the methods of the implementation of an EventProducer to the outside
+ * world: the ability to add and remove listeners.
  * <p>
  * Copyright (c) 2022-2022 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -13,7 +13,7 @@ import org.djutils.event.reference.ReferenceType;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public interface EventProducingObject
+public interface EventProducer
 {
     /**
      * Add a listener to the specified position of a queue of listeners.
@@ -71,7 +71,7 @@ public interface EventProducingObject
      * @return the success of removing the listener. If a listener was not subscribed false is returned
      */
     boolean removeListener(EventListener listener, EventType eventType);
-    
+
     /**
      * Remove all the listeners from this event producer.
      * @return int; the number of removed event types for which listeners existed
