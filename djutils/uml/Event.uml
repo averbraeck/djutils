@@ -6,7 +6,6 @@ skinparam class {
 skinparam genericDisplay old
 
 class Event implements Serializable {
-  +Serializable getSourceId()
   +Serializable getContent()
   +EventType getType()
 }
