@@ -7,6 +7,7 @@ import java.util.List;
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventProducer;
+import org.djutils.event.EventProducingObject;
 import org.djutils.event.EventType;
 import org.djutils.event.reference.ReferenceType;
 import org.djutils.exceptions.Throw;
@@ -29,7 +30,7 @@ import org.djutils.metadata.ObjectDescriptor;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <E> the type of elements in the list
  */
-public class EventProducingList<E> implements EventListener, List<E>
+public class EventProducingList<E> implements EventProducingObject, EventListener, List<E>
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;
@@ -312,6 +313,28 @@ public class EventProducingList<E> implements EventListener, List<E>
     public EventProducer getEventProducer()
     {
         return this.eventProducer;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean addListener(final EventListener listener, final EventType eventType, final int position,
+            final ReferenceType referenceType)
+    {
+        return getEventProducer().addListener(listener, eventType, position, referenceType);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean removeListener(final EventListener listener, final EventType eventType)
+    {
+        return getEventProducer().removeListener(listener, eventType);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int removeAllListeners()
+    {
+        return getEventProducer().removeAllListeners();
     }
 
 }

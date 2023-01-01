@@ -3,8 +3,11 @@ package org.djutils.event.collection;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import org.djutils.event.EventListener;
 import org.djutils.event.EventProducer;
+import org.djutils.event.EventProducingObject;
 import org.djutils.event.EventType;
+import org.djutils.event.reference.ReferenceType;
 import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
 
@@ -24,7 +27,7 @@ import org.djutils.metadata.MetaData;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <T> the type of elements to iterate on
  */
-public class EventProducingIterator<T> implements Iterator<T>, Serializable
+public class EventProducingIterator<T> implements EventProducingObject, Iterator<T>, Serializable
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;
@@ -93,11 +96,33 @@ public class EventProducingIterator<T> implements Iterator<T>, Serializable
 
     /**
      * Return the embedded EventProducer.
-     * @return EventProducer; the embedded EventProducer 
+     * @return EventProducer; the embedded EventProducer
      */
     public EventProducer getEventProducer()
     {
         return this.eventProducer;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean addListener(final EventListener listener, final EventType eventType, final int position,
+            final ReferenceType referenceType)
+    {
+        return getEventProducer().addListener(listener, eventType, position, referenceType);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean removeListener(final EventListener listener, final EventType eventType)
+    {
+        return getEventProducer().removeListener(listener, eventType);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int removeAllListeners()
+    {
+        return getEventProducer().removeAllListeners();
     }
 
 }

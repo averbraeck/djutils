@@ -5,8 +5,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import org.djutils.event.EventListener;
 import org.djutils.event.EventProducer;
+import org.djutils.event.EventProducingObject;
 import org.djutils.event.EventType;
+import org.djutils.event.reference.ReferenceType;
 import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
@@ -28,7 +31,7 @@ import org.djutils.metadata.ObjectDescriptor;
  * @param <K> the key type
  * @param <V> the value type
  */
-public class EventProducingMap<K, V> implements Map<K, V>, Serializable
+public class EventProducingMap<K, V> implements Map<K, V>, EventProducingObject, Serializable
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;
@@ -192,14 +195,36 @@ public class EventProducingMap<K, V> implements Map<K, V>, Serializable
     {
         return this.wrappedMap.entrySet();
     }
-    
+
     /**
      * Return the embedded EventProducer.
-     * @return EventProducer; the embedded EventProducer 
+     * @return EventProducer; the embedded EventProducer
      */
     public EventProducer getEventProducer()
     {
         return this.eventProducer;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean addListener(final EventListener listener, final EventType eventType, final int position,
+            final ReferenceType referenceType)
+    {
+        return getEventProducer().addListener(listener, eventType, position, referenceType);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean removeListener(final EventListener listener, final EventType eventType)
+    {
+        return getEventProducer().removeListener(listener, eventType);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int removeAllListeners()
+    {
+        return getEventProducer().removeAllListeners();
     }
 
 }
