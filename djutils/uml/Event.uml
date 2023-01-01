@@ -3,6 +3,7 @@
 skinparam class {
   BackgroundColor BUSINESS
 }
+skinparam genericDisplay old
 
 class Event implements Serializable {
   +Serializable getSourceId()
@@ -14,20 +15,15 @@ class TimedEvent<T> extends Event implements Comparable {
   +T getTimeStamp()
 }
 
-interface Comparable {
-}
-
-class EventType {
+class EventType implements Serializable {
   +String getName() {}
   +MetaData getMetaData()
-  +Class<? extends Event> getValidEventType()
 }
 
-class TimedEventType extends EventType {
-  +TimedEventType getType()
+class Comparable<T> {
+  +int compareTo(T o);
 }
 
-Event - EventType : type >
-TimedEvent - TimedEventType : type >
+Event - EventType : getType() >
 
 @enduml
