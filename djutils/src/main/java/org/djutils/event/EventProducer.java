@@ -39,7 +39,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class EventProducer implements Serializable
+public class EventProducer implements EventProducingObject, Serializable
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20200207;
@@ -53,16 +53,8 @@ public class EventProducer implements Serializable
     /** The LAST_POSITION in the queue. */
     public static final int LAST_POSITION = -1;
 
-    /**
-     * Add a listener to the specified position of a queue of listeners.
-     * @param listener EventListenerInterface; which is interested at certain events
-     * @param eventType EventType; the events of interest
-     * @param position int; the position of the listener in the queue
-     * @param referenceType ReferenceType; whether the listener is added as a strong or as a weak reference
-     * @return the success of adding the listener. If a listener was already added or an illegal position is provided false is
-     *         returned
-     * @see org.djutils.event.reference.WeakReference
-     */
+    /** {@inheritDoc} */
+    @Override
     public final synchronized boolean addListener(final EventListener listener, final EventType eventType, final int position,
             final ReferenceType referenceType)
     {
@@ -108,43 +100,6 @@ public class EventProducer implements Serializable
             this.listeners.put(eventType, entries);
         }
         return true;
-    }
-
-    /**
-     * Add a listener as strong reference to the BEGINNING of a queue of listeners.
-     * @param listener EventListenerInterface; the listener which is interested at events of eventType
-     * @param eventType EventType; the events of interest
-     * @return the success of adding the listener. If a listener was already added false is returned
-     */
-    public boolean addListener(final EventListener listener, final EventType eventType)
-    {
-        return addListener(listener, eventType, FIRST_POSITION);
-    }
-
-    /**
-     * Add a listener to the BEGINNING of a queue of listeners.
-     * @param listener EventListenerInterface; the listener which is interested at events of eventType
-     * @param eventType EventType; the events of interest
-     * @param referenceType ReferenceType; whether the listener is added as a strong or as a weak reference
-     * @return the success of adding the listener. If a listener was already added false is returned
-     * @see org.djutils.event.reference.WeakReference
-     */
-    public boolean addListener(final EventListener listener, final EventType eventType, final ReferenceType referenceType)
-    {
-        return addListener(listener, eventType, FIRST_POSITION, referenceType);
-    }
-
-    /**
-     * Add a listener as strong reference to the specified position of a queue of listeners.
-     * @param listener EventListenerInterface; the listener which is interested at events of eventType
-     * @param eventType EventType; the events of interest
-     * @param position int; the position of the listener in the queue
-     * @return the success of adding the listener. If a listener was already added, or an illegal position is provided false is
-     *         returned
-     */
-    public boolean addListener(final EventListener listener, final EventType eventType, final int position)
-    {
-        return addListener(listener, eventType, position, ReferenceType.STRONG);
     }
 
     /**
@@ -294,10 +249,8 @@ public class EventProducer implements Serializable
         fireEvent(new TimedEvent<C>(eventType, value, time, false));
     }
 
-    /**
-     * Remove all the listeners from this event producer.
-     * @return int; the number of removed event types
-     */
+    /** {@inheritDoc} */
+    @Override
     public synchronized int removeAllListeners()
     {
         int result = this.listeners.size();
@@ -335,12 +288,8 @@ public class EventProducer implements Serializable
         return result;
     }
 
-    /**
-     * Remove the subscription of a listener for a specific event.
-     * @param listener EventListenerInterface; which is no longer interested
-     * @param eventType EventType; the event which is of no interest any more
-     * @return the success of removing the listener. If a listener was not subscribed false is returned
-     */
+    /** {@inheritDoc} */
+    @Override
     public final synchronized boolean removeListener(final EventListener listener, final EventType eventType)
     {
         Throw.whenNull(listener, "listener may not be null");
