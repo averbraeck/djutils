@@ -87,8 +87,9 @@ public class RmiObject extends UnicastRemoteObject
     /**
      * Returns the registry in which this object has been bound, e.g., to look up other objects in the registry.
      * @return Registry; the registry in which this object has been bound
+     * @throws RemoteException on network error
      */
-    public Registry getRegistry()
+    public Registry getRegistry() throws RemoteException
     {
         return this.registry;
     }
