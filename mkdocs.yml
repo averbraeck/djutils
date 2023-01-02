@@ -32,12 +32,12 @@ nav:
     - Means package: djutils/means.md
     - Metadata: djutils/metadata.md 
     - DJUTILS documentation: https://djutils.org/docs/latest/djutils/index.html
-    - DJUTILS API: https://djuils.org/docs/latest/apidocs/djutils/index.html
+    - DJUTILS API: https://djutils.org/docs/latest/djutils/apidocs/index.html
   - DJUTILS-CLI project:
     - Introduction: djutils-cli/index.md
     - DJUTILS-CLI usage: djutils-cli/usage.md
     - DJUTILS-CLI documentation: https://djutils.org/docs/latest/djutils-cli/index.html
-    - DJUTILS-CLI API: https://djutils.org/docs/latest/djutils-cli/apidocs/index.htmll
+    - DJUTILS-CLI API: https://djutils.org/docs/latest/djutils-cli/apidocs/index.html
   - DJUTILS-SERIALIZATION:
     - Introduction: djutils-serialization/index.md
     - Coding types: djutils-serialization/coding-types.md
