@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.djutils.event.reference.Reference;
@@ -46,7 +44,7 @@ public class LocalEventProducer implements EventProducer, Serializable
     private static final long serialVersionUID = 20200207;
 
     /** The collection of interested listeners. */
-    private EventListenerMap listeners = new EventListenerMap();
+    private EventListenerMap eventListenerMap = new EventListenerMap();
 
     /** {@inheritDoc} */
     @Override
@@ -69,16 +67,16 @@ public class LocalEventProducer implements EventProducer, Serializable
         {
             reference = new WeakReference<EventListener>(listener);
         }
-        if (this.listeners.containsKey(eventType))
+        if (this.eventListenerMap.containsKey(eventType))
         {
-            for (Reference<EventListener> entry : this.listeners.get(eventType))
+            for (Reference<EventListener> entry : this.eventListenerMap.get(eventType))
             {
                 if (listener.equals(entry.get()))
                 {
                     return false;
                 }
             }
-            List<Reference<EventListener>> entries = this.listeners.get(eventType);
+            List<Reference<EventListener>> entries = this.eventListenerMap.get(eventType);
             if (position == LAST_POSITION)
             {
                 entries.add(reference);
@@ -92,7 +90,7 @@ public class LocalEventProducer implements EventProducer, Serializable
         {
             List<Reference<EventListener>> entries = new ArrayList<>();
             entries.add(reference);
-            this.listeners.put(eventType, entries);
+            this.eventListenerMap.put(eventType, entries);
         }
         return true;
     }
@@ -116,10 +114,10 @@ public class LocalEventProducer implements EventProducer, Serializable
     public synchronized void fireEvent(final Event event)
     {
         Throw.whenNull(event, "event may not be null");
-        if (this.listeners.containsKey(event.getType()))
+        if (this.eventListenerMap.containsKey(event.getType()))
         {
             // make a safe copy because of possible removeListener() in notify() method during fireEvent
-            List<Reference<EventListener>> listenerList = new ArrayList<>(this.listeners.get(event.getType()));
+            List<Reference<EventListener>> listenerList = new ArrayList<>(this.eventListenerMap.get(event.getType()));
             for (Reference<EventListener> reference : listenerList)
             {
                 EventListener listener = reference.get();
@@ -145,6 +143,32 @@ public class LocalEventProducer implements EventProducer, Serializable
                 }
             }
         }
+    }
+
+    /**
+     * Remove one reference from the subscription list.
+     * @param reference Reference&lt;EventListenerInterface&gt;; the (strong or weak) reference to remove
+     * @param eventType EventType; the eventType for which reference must be removed
+     * @return boolean; true if the reference was removed; otherwise false
+     */
+    private synchronized boolean removeListener(final Reference<EventListener> reference, final EventType eventType)
+    {
+        Throw.whenNull(reference, "reference may not be null");
+        Throw.whenNull(eventType, "eventType may not be null");
+        boolean success = false;
+        for (Iterator<Reference<EventListener>> i = this.eventListenerMap.get(eventType).iterator(); i.hasNext();)
+        {
+            if (i.next().equals(reference))
+            {
+                i.remove();
+                success = true;
+            }
+        }
+        if (this.eventListenerMap.get(eventType).size() == 0)
+        {
+            this.eventListenerMap.remove(eventType);
+        }
+        return success;
     }
 
     /**
@@ -244,154 +268,164 @@ public class LocalEventProducer implements EventProducer, Serializable
         fireEvent(new TimedEvent<C>(eventType, value, time, false));
     }
 
+    /* **************************************************************************************************** */
+    /* *********************** (RE) IMPLEMENTATION OF METHODS WITHOUT REMOTEEXCEPTION ********************* */
+    /* **************************************************************************************************** */
+
     /** {@inheritDoc} */
     @Override
-    public synchronized int removeAllListeners()
+    public EventListenerMap getEventListenerMap()
     {
-        int result = this.listeners.size();
-        this.listeners = null;
-        this.listeners = new EventListenerMap();
-        return result;
-    }
-
-    /**
-     * Removes all the listeners of a class from this event producer.
-     * @param ofClass Class&lt;?&gt;; the class or superclass
-     * @return int; the number of removed listeners
-     */
-    public synchronized int removeAllListeners(final Class<?> ofClass)
-    {
-        Throw.whenNull(ofClass, "ofClass may not be null");
-        int result = 0;
-        Map<EventType, Reference<EventListener>> removeMap = new LinkedHashMap<>();
-        for (EventType type : this.listeners.keySet())
-        {
-            for (Iterator<Reference<EventListener>> ii = this.listeners.get(type).iterator(); ii.hasNext();)
-            {
-                Reference<EventListener> listener = ii.next();
-                if (listener.get().getClass().isAssignableFrom(ofClass))
-                {
-                    removeMap.put(type, listener);
-                    result++;
-                }
-            }
-        }
-        for (EventType type : removeMap.keySet())
-        {
-            removeListener(removeMap.get(type).get(), type);
-        }
-        return result;
+        return this.eventListenerMap;
     }
 
     /** {@inheritDoc} */
     @Override
-    public final synchronized boolean removeListener(final EventListener listener, final EventType eventType)
+    public boolean addListener(final EventListener listener, final EventType eventType)
     {
-        Throw.whenNull(listener, "listener may not be null");
-        Throw.whenNull(eventType, "eventType may not be null");
-        if (!this.listeners.containsKey(eventType))
+        try
         {
-            return false;
+            return EventProducer.super.addListener(listener, eventType);
         }
-        boolean result = false;
-        for (Iterator<Reference<EventListener>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
+        catch (RemoteException exception)
         {
-            Reference<EventListener> reference = i.next();
-            EventListener entry = reference.get();
-            if (entry == null)
-            {
-                i.remove();
-            }
-            else
-            {
-                if (listener.equals(entry))
-                {
-                    i.remove();
-                    result = true;
-                }
-            }
-            if (this.listeners.get(eventType).size() == 0)
-            {
-                this.listeners.remove(eventType);
-            }
+            throw new RuntimeException(exception);
         }
-        return result;
     }
 
-    /**
-     * Remove one reference from the subscription list.
-     * @param reference Reference&lt;EventListenerInterface&gt;; the (strong or weak) reference to remove
-     * @param eventType EventType; the eventType for which reference must be removed
-     * @return boolean; true if the reference was removed; otherwise false
-     */
-    private synchronized boolean removeListener(final Reference<EventListener> reference, final EventType eventType)
+    /** {@inheritDoc} */
+    @Override
+    public boolean addListener(final EventListener listener, final EventType eventType, final ReferenceType referenceType)
     {
-        Throw.whenNull(reference, "reference may not be null");
-        Throw.whenNull(eventType, "eventType may not be null");
-        boolean success = false;
-        for (Iterator<Reference<EventListener>> i = this.listeners.get(eventType).iterator(); i.hasNext();)
+        try
         {
-            if (i.next().equals(reference))
-            {
-                i.remove();
-                success = true;
-            }
+            return EventProducer.super.addListener(listener, eventType, referenceType);
         }
-        if (this.listeners.get(eventType).size() == 0)
+        catch (RemoteException exception)
         {
-            this.listeners.remove(eventType);
+            throw new RuntimeException(exception);
+
         }
-        return success;
     }
 
-    /**
-     * Return whether the EventProducer has listeners.
-     * @return boolean; whether the EventProducer has listeners or not
-     */
+    /** {@inheritDoc} */
+    @Override
+    public boolean addListener(final EventListener listener, final EventType eventType, final int position)
+    {
+        try
+        {
+            return EventProducer.super.addListener(listener, eventType, position);
+        }
+        catch (RemoteException exception)
+        {
+            throw new RuntimeException(exception);
+
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int removeAllListeners()
+    {
+        try
+        {
+            return EventProducer.super.removeAllListeners();
+        }
+        catch (RemoteException exception)
+        {
+            throw new RuntimeException(exception);
+
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int removeAllListeners(final Class<?> ofClass)
+    {
+        try
+        {
+            return EventProducer.super.removeAllListeners(ofClass);
+        }
+        catch (RemoteException exception)
+        {
+            throw new RuntimeException(exception);
+
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean removeListener(final EventListener listener, final EventType eventType)
+    {
+        try
+        {
+            return EventProducer.super.removeListener(listener, eventType);
+        }
+        catch (RemoteException exception)
+        {
+            throw new RuntimeException(exception);
+
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public boolean hasListeners()
     {
-        return !this.listeners.isEmpty();
-    }
-
-    /**
-     * Return the number of listeners for the provided EventType.
-     * @param eventType EventType; the event type to return the number of listeners for
-     * @return boolean; whether the EventProducer has listeners or not
-     */
-    public synchronized int numberOfListeners(final EventType eventType)
-    {
-        if (this.listeners.containsKey(eventType))
+        try
         {
-            return this.listeners.get(eventType).size();
+            return EventProducer.super.hasListeners();
         }
-        return 0;
+        catch (RemoteException exception)
+        {
+            throw new RuntimeException(exception);
+
+        }
     }
 
-    /**
-     * Return a safe copy of the list of (strong or weak) references to the registered listeners for the provided event type, or
-     * an empty list when nothing is registered for this event type. The method never returns a null pointer, so it is safe to
-     * use the result directly in an iterator. The references to the listeners are the original references, so not safe copies.
-     * @param eventType EventType; the event type to look up the listeners for
-     * @return List&lt;Reference&lt;EventListenerInterface&gt;&gt;; the list of references to the listeners for this event type,
-     *         or an empty list when the event type is not registered
-     */
+    /** {@inheritDoc} */
+    @Override
+    public int numberOfListeners(final EventType eventType)
+    {
+        try
+        {
+            return EventProducer.super.numberOfListeners(eventType);
+        }
+        catch (RemoteException exception)
+        {
+            throw new RuntimeException(exception);
+
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public List<Reference<EventListener>> getListenerReferences(final EventType eventType)
     {
-        List<Reference<EventListener>> result = new ArrayList<>();
-        if (this.listeners.get(eventType) != null)
+        try
         {
-            result.addAll(this.listeners.get(eventType));
+            return EventProducer.super.getListenerReferences(eventType);
         }
-        return result;
+        catch (RemoteException exception)
+        {
+            throw new RuntimeException(exception);
+
+        }
     }
 
-    /**
-     * Return the EventTypes for which the EventProducer has listeners.
-     * @return Set&lt;EventType&gt;; the EventTypes for which the EventProducer has registered listeners
-     */
-    public synchronized Set<EventType> getEventTypesWithListeners()
+    /** {@inheritDoc} */
+    @Override
+    public Set<EventType> getEventTypesWithListeners()
     {
-        return this.listeners.keySet(); // is already a safe copy
+        try
+        {
+            return EventProducer.super.getEventTypesWithListeners();
+        }
+        catch (RemoteException exception)
+        {
+            throw new RuntimeException(exception);
+
+        }
     }
 
 }
