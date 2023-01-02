@@ -5,9 +5,8 @@ import java.util.Collection;
 
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
-import org.djutils.event.LocalEventProducer;
-import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.event.reference.ReferenceType;
 import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
@@ -29,7 +28,7 @@ import org.djutils.metadata.ObjectDescriptor;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <T> The type of the event producing Collection.
  */
-public class EventProducingCollection<T> implements EventProducer, EventListener, Collection<T>
+public class EventProducingCollection<T> extends LocalEventProducer implements EventListener, Collection<T>
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;
@@ -52,28 +51,13 @@ public class EventProducingCollection<T> implements EventProducer, EventListener
     /** the wrapped collection. */
     private final Collection<T> wrappedCollection;
 
-    /** the embedded event producer. */
-    private final LocalEventProducer eventProducer;
-
     /**
      * constructs a new EventProducingCollection with a local EventProducer.
      * @param wrappedCollection Collection&lt;T&gt;; the wrapped collection.
      */
     public EventProducingCollection(final Collection<T> wrappedCollection)
     {
-        this(wrappedCollection, new LocalEventProducer());
-    }
-
-    /**
-     * constructs a new EventProducingCollection with a specific EventProducer.
-     * @param wrappedCollection Collection&lt;T&gt;; the wrapped collection.
-     * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
-     */
-    public EventProducingCollection(final Collection<T> wrappedCollection, final LocalEventProducer eventProducer)
-    {
         Throw.whenNull(wrappedCollection, "wrappedCollection cannot be null");
-        Throw.whenNull(eventProducer, "eventProducer cannot be null");
-        this.eventProducer = eventProducer;
         this.wrappedCollection = wrappedCollection;
     }
 
@@ -99,7 +83,7 @@ public class EventProducingCollection<T> implements EventProducer, EventListener
         this.wrappedCollection.clear();
         if (nr != this.wrappedCollection.size())
         {
-            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
+            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
         }
     }
 
@@ -110,11 +94,11 @@ public class EventProducingCollection<T> implements EventProducer, EventListener
         boolean changed = this.wrappedCollection.add(o);
         if (changed)
         {
-            this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedCollection.size());
+            fireEvent(OBJECT_ADDED_EVENT, this.wrappedCollection.size());
         }
         else
         {
-            this.eventProducer.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedCollection.size());
+            fireEvent(OBJECT_CHANGED_EVENT, this.wrappedCollection.size());
         }
         return changed;
     }
@@ -126,13 +110,13 @@ public class EventProducingCollection<T> implements EventProducer, EventListener
         boolean changed = this.wrappedCollection.addAll(c);
         if (changed)
         {
-            this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedCollection.size());
+            fireEvent(OBJECT_ADDED_EVENT, this.wrappedCollection.size());
         }
         else
         {
             if (!c.isEmpty())
             {
-                this.eventProducer.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedCollection.size());
+                fireEvent(OBJECT_CHANGED_EVENT, this.wrappedCollection.size());
             }
         }
         return changed;
@@ -158,7 +142,7 @@ public class EventProducingCollection<T> implements EventProducer, EventListener
     {
         EventProducingIterator<T> iterator = new EventProducingIterator<T>(this.wrappedCollection.iterator());
         // WEAK reference as an iterator is usually local and should be eligible for garbage collection
-        iterator.getEventProducer().addListener(this, EventProducingIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
+        iterator.addListener(this, EventProducingIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
         return iterator;
     }
 
@@ -169,7 +153,7 @@ public class EventProducingCollection<T> implements EventProducer, EventListener
         // pass through the OBJECT_REMOVED_EVENT from the iterator
         if (event.getType().equals(EventProducingIterator.OBJECT_REMOVED_EVENT))
         {
-            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
+            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
         }
     }
 
@@ -180,7 +164,7 @@ public class EventProducingCollection<T> implements EventProducer, EventListener
         boolean changed = this.wrappedCollection.remove(o);
         if (changed)
         {
-            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
+            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
         }
         return changed;
     }
@@ -192,7 +176,7 @@ public class EventProducingCollection<T> implements EventProducer, EventListener
         boolean changed = this.wrappedCollection.removeAll(c);
         if (changed)
         {
-            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
+            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
         }
         return changed;
     }
@@ -204,7 +188,7 @@ public class EventProducingCollection<T> implements EventProducer, EventListener
         boolean changed = this.wrappedCollection.retainAll(c);
         if (changed)
         {
-            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
+            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedCollection.size());
         }
         return changed;
     }
@@ -221,37 +205,6 @@ public class EventProducingCollection<T> implements EventProducer, EventListener
     public <E> E[] toArray(final E[] a)
     {
         return this.wrappedCollection.toArray(a);
-    }
-
-    /**
-     * Return the embedded EventProducer.
-     * @return EventProducer; the embedded EventProducer
-     */
-    public LocalEventProducer getEventProducer()
-    {
-        return this.eventProducer;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean addListener(final EventListener listener, final EventType eventType, final int position,
-            final ReferenceType referenceType)
-    {
-        return getEventProducer().addListener(listener, eventType, position, referenceType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean removeListener(final EventListener listener, final EventType eventType)
-    {
-        return getEventProducer().removeListener(listener, eventType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int removeAllListeners()
-    {
-        return getEventProducer().removeAllListeners();
     }
 
 }

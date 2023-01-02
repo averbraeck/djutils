@@ -5,11 +5,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import org.djutils.event.EventListener;
-import org.djutils.event.LocalEventProducer;
-import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
-import org.djutils.event.reference.ReferenceType;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
@@ -31,7 +28,7 @@ import org.djutils.metadata.ObjectDescriptor;
  * @param <K> the key type
  * @param <V> the value type
  */
-public class EventProducingMap<K, V> implements Map<K, V>, EventProducer, Serializable
+public class EventProducingMap<K, V> extends LocalEventProducer implements Map<K, V>, Serializable
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;
@@ -54,28 +51,13 @@ public class EventProducingMap<K, V> implements Map<K, V>, EventProducer, Serial
     /** the wrapped map. */
     private final Map<K, V> wrappedMap;
 
-    /** the embedded event producer. */
-    private final LocalEventProducer eventProducer;
-
     /**
      * constructs a new EventProducingMap.
      * @param wrappedMap Map&lt;K,V&gt;; the embedded map.
      */
     public EventProducingMap(final Map<K, V> wrappedMap)
     {
-        this(wrappedMap, new LocalEventProducer());
-    }
-
-    /**
-     * Constructs a new EventProducingMap.
-     * @param wrappedMap Map&lt;K, V&gt;; the embedded map.
-     * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
-     */
-    public EventProducingMap(final Map<K, V> wrappedMap, final LocalEventProducer eventProducer)
-    {
         Throw.whenNull(wrappedMap, "wrappedMap cannot be null");
-        Throw.whenNull(eventProducer, "eventProducer cannot be null");
-        this.eventProducer = eventProducer;
         this.wrappedMap = wrappedMap;
     }
 
@@ -122,11 +104,11 @@ public class EventProducingMap<K, V> implements Map<K, V>, EventProducer, Serial
         V result = this.wrappedMap.put(key, value);
         if (nr != this.wrappedMap.size())
         {
-            this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedMap.size());
+            fireEvent(OBJECT_ADDED_EVENT, this.wrappedMap.size());
         }
         else
         {
-            this.eventProducer.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedMap.size());
+            fireEvent(OBJECT_CHANGED_EVENT, this.wrappedMap.size());
         }
         return result;
     }
@@ -139,7 +121,7 @@ public class EventProducingMap<K, V> implements Map<K, V>, EventProducer, Serial
         V result = this.wrappedMap.remove(key);
         if (nr != this.wrappedMap.size())
         {
-            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedMap.size());
+            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedMap.size());
         }
         return result;
     }
@@ -152,13 +134,13 @@ public class EventProducingMap<K, V> implements Map<K, V>, EventProducer, Serial
         this.wrappedMap.putAll(map);
         if (nr != this.wrappedMap.size())
         {
-            this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedMap.size());
+            fireEvent(OBJECT_ADDED_EVENT, this.wrappedMap.size());
         }
         else
         {
             if (!map.isEmpty())
             {
-                this.eventProducer.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedMap.size());
+                fireEvent(OBJECT_CHANGED_EVENT, this.wrappedMap.size());
             }
         }
     }
@@ -171,7 +153,7 @@ public class EventProducingMap<K, V> implements Map<K, V>, EventProducer, Serial
         this.wrappedMap.clear();
         if (nr != this.wrappedMap.size())
         {
-            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedMap.size());
+            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedMap.size());
         }
     }
 
@@ -194,37 +176,6 @@ public class EventProducingMap<K, V> implements Map<K, V>, EventProducer, Serial
     public Set<Map.Entry<K, V>> entrySet()
     {
         return this.wrappedMap.entrySet();
-    }
-
-    /**
-     * Return the embedded EventProducer.
-     * @return EventProducer; the embedded EventProducer
-     */
-    public LocalEventProducer getEventProducer()
-    {
-        return this.eventProducer;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean addListener(final EventListener listener, final EventType eventType, final int position,
-            final ReferenceType referenceType)
-    {
-        return getEventProducer().addListener(listener, eventType, position, referenceType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean removeListener(final EventListener listener, final EventType eventType)
-    {
-        return getEventProducer().removeListener(listener, eventType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int removeAllListeners()
-    {
-        return getEventProducer().removeAllListeners();
     }
 
 }

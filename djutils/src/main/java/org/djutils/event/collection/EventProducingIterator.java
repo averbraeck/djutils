@@ -3,11 +3,8 @@ package org.djutils.event.collection;
 import java.io.Serializable;
 import java.util.Iterator;
 
-import org.djutils.event.EventListener;
-import org.djutils.event.LocalEventProducer;
-import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
-import org.djutils.event.reference.ReferenceType;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
 
@@ -27,7 +24,7 @@ import org.djutils.metadata.MetaData;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <T> the type of elements to iterate on
  */
-public class EventProducingIterator<T> implements EventProducer, Iterator<T>, Serializable
+public class EventProducingIterator<T> extends LocalEventProducer implements Iterator<T>, Serializable
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;
@@ -38,28 +35,13 @@ public class EventProducingIterator<T> implements EventProducer, Iterator<T>, Se
     /** our parent iterator. */
     private Iterator<T> wrappedIterator = null;
 
-    /** the embedded event producer. */
-    private final LocalEventProducer eventProducer;
-
     /**
      * constructs a new EventProducingIterator, embedding the parent Iterator.
      * @param wrappedIterator Iterator&lt;T&gt;; parent.
      */
     public EventProducingIterator(final Iterator<T> wrappedIterator)
     {
-        this(wrappedIterator, new LocalEventProducer());
-    }
-
-    /**
-     * Constructs a new EventProducingIterator, embedding the parent iterator.
-     * @param wrappedIterator Iterator&lt;T&gt;; the wrapped iterator.
-     * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
-     */
-    public EventProducingIterator(final Iterator<T> wrappedIterator, final LocalEventProducer eventProducer)
-    {
         Throw.whenNull(wrappedIterator, "parent cannot be null");
-        Throw.whenNull(eventProducer, "eventProducer cannot be null");
-        this.eventProducer = eventProducer;
         this.wrappedIterator = wrappedIterator;
     }
 
@@ -82,7 +64,7 @@ public class EventProducingIterator<T> implements EventProducer, Iterator<T>, Se
     public void remove()
     {
         getWrappedIterator().remove();
-        this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT);
+        fireEvent(OBJECT_REMOVED_EVENT);
     }
 
     /**
@@ -92,37 +74,6 @@ public class EventProducingIterator<T> implements EventProducer, Iterator<T>, Se
     protected Iterator<T> getWrappedIterator()
     {
         return this.wrappedIterator;
-    }
-
-    /**
-     * Return the embedded EventProducer.
-     * @return EventProducer; the embedded EventProducer
-     */
-    public LocalEventProducer getEventProducer()
-    {
-        return this.eventProducer;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean addListener(final EventListener listener, final EventType eventType, final int position,
-            final ReferenceType referenceType)
-    {
-        return getEventProducer().addListener(listener, eventType, position, referenceType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean removeListener(final EventListener listener, final EventType eventType)
-    {
-        return getEventProducer().removeListener(listener, eventType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int removeAllListeners()
-    {
-        return getEventProducer().removeAllListeners();
     }
 
 }

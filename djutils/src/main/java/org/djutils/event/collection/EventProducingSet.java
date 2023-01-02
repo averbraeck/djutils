@@ -6,9 +6,8 @@ import java.util.Set;
 
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
-import org.djutils.event.LocalEventProducer;
-import org.djutils.event.EventProducer;
 import org.djutils.event.EventType;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.event.reference.ReferenceType;
 import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
@@ -30,7 +29,7 @@ import org.djutils.metadata.ObjectDescriptor;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <E> the type of elements in the set
  */
-public class EventProducingSet<E> implements EventProducer, EventListener, Set<E>
+public class EventProducingSet<E> extends LocalEventProducer implements EventListener, Set<E>
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20191230L;
@@ -53,28 +52,13 @@ public class EventProducingSet<E> implements EventProducer, EventListener, Set<E
     /** the wrapped set. */
     private Set<E> wrappedSet = null;
 
-    /** the embedded event producer. */
-    private final LocalEventProducer eventProducer;
-
     /**
      * Constructs a new EventProducingSet.
      * @param wrappedSet Set&lt;E&gt;; the embedded set.
      */
     public EventProducingSet(final Set<E> wrappedSet)
     {
-        this(wrappedSet, new LocalEventProducer());
-    }
-
-    /**
-     * Constructs a new EventProducingSet.
-     * @param wrappedSet Set&lt;E&gt;; the embedded set.
-     * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
-     */
-    public EventProducingSet(final Set<E> wrappedSet, final LocalEventProducer eventProducer)
-    {
         Throw.whenNull(wrappedSet, "wrappedSet cannot be null");
-        Throw.whenNull(eventProducer, "eventProducer cannot be null");
-        this.eventProducer = eventProducer;
         this.wrappedSet = wrappedSet;
     }
 
@@ -100,7 +84,7 @@ public class EventProducingSet<E> implements EventProducer, EventListener, Set<E
         this.wrappedSet.clear();
         if (nr != this.wrappedSet.size())
         {
-            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
+            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
         }
     }
 
@@ -111,11 +95,11 @@ public class EventProducingSet<E> implements EventProducer, EventListener, Set<E
         boolean changed = this.wrappedSet.add(o);
         if (changed)
         {
-            this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedSet.size());
+            fireEvent(OBJECT_ADDED_EVENT, this.wrappedSet.size());
         }
         else
         {
-            this.eventProducer.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedSet.size());
+            fireEvent(OBJECT_CHANGED_EVENT, this.wrappedSet.size());
         }
         return changed;
     }
@@ -127,13 +111,13 @@ public class EventProducingSet<E> implements EventProducer, EventListener, Set<E
         boolean changed = this.wrappedSet.addAll(c);
         if (changed)
         {
-            this.eventProducer.fireEvent(OBJECT_ADDED_EVENT, this.wrappedSet.size());
+            fireEvent(OBJECT_ADDED_EVENT, this.wrappedSet.size());
         }
         else
         {
             if (!c.isEmpty())
             {
-                this.eventProducer.fireEvent(OBJECT_CHANGED_EVENT, this.wrappedSet.size());
+                fireEvent(OBJECT_CHANGED_EVENT, this.wrappedSet.size());
             }
         }
         return changed;
@@ -159,7 +143,7 @@ public class EventProducingSet<E> implements EventProducer, EventListener, Set<E
     {
         EventProducingIterator<E> iterator = new EventProducingIterator<E>(this.wrappedSet.iterator());
         // WEAK reference as an iterator is usually local and should be eligible for garbage collection
-        iterator.getEventProducer().addListener(this, EventProducingIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
+        iterator.addListener(this, EventProducingIterator.OBJECT_REMOVED_EVENT, ReferenceType.WEAK);
         return iterator;
     }
 
@@ -170,7 +154,7 @@ public class EventProducingSet<E> implements EventProducer, EventListener, Set<E
         // pass through the OBJECT_REMOVED_EVENT from the iterator
         if (event.getType().equals(EventProducingIterator.OBJECT_REMOVED_EVENT))
         {
-            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
+            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
         }
     }
 
@@ -181,7 +165,7 @@ public class EventProducingSet<E> implements EventProducer, EventListener, Set<E
         boolean changed = this.wrappedSet.remove(o);
         if (changed)
         {
-            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
+            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
         }
         return changed;
     }
@@ -193,7 +177,7 @@ public class EventProducingSet<E> implements EventProducer, EventListener, Set<E
         boolean changed = this.wrappedSet.removeAll(c);
         if (changed)
         {
-            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
+            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
         }
         return changed;
     }
@@ -205,7 +189,7 @@ public class EventProducingSet<E> implements EventProducer, EventListener, Set<E
         boolean changed = this.wrappedSet.retainAll(c);
         if (changed)
         {
-            this.eventProducer.fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
+            fireEvent(OBJECT_REMOVED_EVENT, this.wrappedSet.size());
         }
         return changed;
     }
@@ -223,35 +207,5 @@ public class EventProducingSet<E> implements EventProducer, EventListener, Set<E
     {
         return this.wrappedSet.toArray(a);
     }
-    
-    /**
-     * Return the embedded EventProducer.
-     * @return EventProducer; the embedded EventProducer 
-     */
-    public LocalEventProducer getEventProducer()
-    {
-        return this.eventProducer;
-    }
 
-    /** {@inheritDoc} */
-    @Override
-    public boolean addListener(final EventListener listener, final EventType eventType, final int position,
-            final ReferenceType referenceType)
-    {
-        return getEventProducer().addListener(listener, eventType, position, referenceType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean removeListener(final EventListener listener, final EventType eventType)
-    {
-        return getEventProducer().removeListener(listener, eventType);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public int removeAllListeners()
-    {
-        return getEventProducer().removeAllListeners();
-    }
 }

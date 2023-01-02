@@ -3,7 +3,6 @@ package org.djutils.event.collection;
 import java.io.Serializable;
 import java.util.ListIterator;
 
-import org.djutils.event.LocalEventProducer;
 import org.djutils.event.EventType;
 import org.djutils.metadata.MetaData;
 
@@ -41,16 +40,6 @@ public class EventProducingListIterator<T> extends EventProducingIterator<T> imp
     public EventProducingListIterator(final ListIterator<T> wrappedIterator)
     {
         super(wrappedIterator);
-    }
-
-    /**
-     * Constructs a new EventProducingListIterator, embedding the parent iterator.
-     * @param wrappedIterator ListIterator&lt;T&gt;; the wrapped iterator.
-     * @param eventProducer EventProducer; the EventProducer to send events to the subscribers
-     */
-    public EventProducingListIterator(final ListIterator<T> wrappedIterator, final LocalEventProducer eventProducer)
-    {
-        super(wrappedIterator, eventProducer);
     }
 
     /** {@inheritDoc} */
@@ -93,7 +82,7 @@ public class EventProducingListIterator<T> extends EventProducingIterator<T> imp
     public void set(final T e)
     {
         getWrappedIterator().set(e);
-        getEventProducer().fireEvent(OBJECT_CHANGED_EVENT);
+        fireEvent(OBJECT_CHANGED_EVENT);
     }
 
     /** {@inheritDoc} */
@@ -101,7 +90,7 @@ public class EventProducingListIterator<T> extends EventProducingIterator<T> imp
     public void add(final T e)
     {
         getWrappedIterator().add(e);
-        getEventProducer().fireEvent(OBJECT_ADDED_EVENT);
+        fireEvent(OBJECT_ADDED_EVENT);
     }
 
 }
