@@ -677,7 +677,7 @@ public class RMITest
          */
         public Listener(final String listenerName) throws RemoteException, AlreadyBoundException, NotBoundException
         {
-            super("localhost", 1099, listenerName);
+            super("localhost", 2002, listenerName);
             this.listenerName = listenerName;
             ProducerInterface producer = (ProducerInterface) RmiRegistry.lookup(getRegistry(), "producer");
             producer.addListener(this);

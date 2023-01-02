@@ -305,7 +305,7 @@ public class EventListenerMapTest implements Serializable
          */
         public TestRemoteEventListener() throws RemoteException, AlreadyBoundException
         {
-            super("localhost", 1099, "testListener");
+            super("localhost", 2050, "testListener");
         }
 
         /** {@inheritDoc} */

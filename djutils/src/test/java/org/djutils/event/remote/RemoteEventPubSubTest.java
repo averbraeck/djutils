@@ -143,7 +143,7 @@ public class RemoteEventPubSubTest
             producer.fireEvent(TestRemoteEventProducer.REMOTE_EVENT_2, 234.567d);
             assertEquals(TestRemoteEventProducer.REMOTE_EVENT_2, listener.getReceivedEvent().getType());
 
-            TestRemoteTimedEventListener<Double> timedListener = new TestRemoteTimedEventListener<>("timedListener");
+            TestRemoteTimedEventListener<Double> timedListener = new TestRemoteTimedEventListener<>("timedListener", 2100);
             addListenerOK = producer.addListener(timedListener, TestRemoteEventProducer.TIMED_REMOTE_EVENT_1);
             assertTrue(addListenerOK);
             timedListener.setExpectingNotification(true);
@@ -356,7 +356,7 @@ public class RemoteEventPubSubTest
         TestRemoteEventProducer producer = new TestRemoteEventProducer(2102);
         try
         {
-            TestRemoteTimedEventListener<Double> timedListener = new TestRemoteTimedEventListener<>("timedListener");
+            TestRemoteTimedEventListener<Double> timedListener = new TestRemoteTimedEventListener<>("timedListener", 2102);
             EventType timedEventType = new EventType("TIMED_TEST_TYPE", MetaData.NO_META_DATA);
 
             boolean addListenerOK = producer.addListener(timedListener, timedEventType);
@@ -442,7 +442,7 @@ public class RemoteEventPubSubTest
         TestRemoteEventProducer producer = new TestRemoteEventProducer(2103);
         try
         {
-            TestRemoteTimedEventListener<Double> timedListener = new TestRemoteTimedEventListener<>("listener");
+            TestRemoteTimedEventListener<Double> timedListener = new TestRemoteTimedEventListener<>("listener", 2103);
             EventType timedEventType = new EventType("TIMED_STRING_TYPE",
                     new MetaData("STRING", "string", new ObjectDescriptor("String", "string", String.class)));
 
@@ -900,14 +900,15 @@ public class RemoteEventPubSubTest
 
         /**
          * @param key String; key used to bind to the RMI registry
+         * @param port int; the TCP/IP port
          * @throws RemoteException on error
          * @throws AlreadyBoundException on error
          * @throws MalformedURLException on URL error
          */
-        public TestRemoteTimedEventListener(final String key)
+        public TestRemoteTimedEventListener(final String key, final int port)
                 throws RemoteException, AlreadyBoundException, MalformedURLException
         {
-            super(new URL("http://127.0.0.1:1099"), key);
+            super(new URL("http://127.0.0.1:" + port), key);
         }
 
         /**
