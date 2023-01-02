@@ -50,7 +50,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                RmiRegistry.getRegistry(null, 1099);
+                RmiRegistry.getRegistry(null, 2000);
             }
         }, "should have thrown NullPointerException", NullPointerException.class);
         for (int port : new int[] {-1, 0, 100000, -10, 65536})
@@ -75,7 +75,7 @@ public class RMITest
         }, "should have thrown RemoteException or AccessException", RemoteException.class);
 
         // valid registry
-        Registry registry = RmiRegistry.getRegistry("localhost", 1099);
+        Registry registry = RmiRegistry.getRegistry("localhost", 2000);
         assertNotNull(registry);
         assertEquals(0, registry.list().length);
 
@@ -129,7 +129,7 @@ public class RMITest
         assertEquals(1, registry.list().length);
 
         // see if the same registry is retrieved the second time
-        Registry reg2 = RmiRegistry.getRegistry("localhost", 1099);
+        Registry reg2 = RmiRegistry.getRegistry("localhost", 2000);
         assertNotNull(reg2);
         // reg2 and registry can have a different internal structure (IP address versus localhost)
         // so assertEquals(registry, reg2) cannot be used, but they should still point to the same registry
@@ -317,7 +317,7 @@ public class RMITest
             Registry registry = null;
             try
             {
-                registry = RmiRegistry.getRegistry(localHostName, 1099);
+                registry = RmiRegistry.getRegistry(localHostName, 2001);
             }
             catch (RemoteException exception)
             {
@@ -429,7 +429,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                new Producer(new URL("http://localhost:1099"), null);
+                new Producer(new URL("http://localhost:2002"), null);
             }
         }, "did not get expected exception", NullPointerException.class);
         Try.testFail(new Try.Execution()
@@ -437,7 +437,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                new Producer(null, 1099, "producer");
+                new Producer(null, 2002, "producer");
             }
         }, "did not get expected exception", NullPointerException.class);
         Try.testFail(new Try.Execution()
@@ -453,7 +453,7 @@ public class RMITest
             @Override
             public void execute() throws Throwable
             {
-                new Producer("localhost", 1099, null);
+                new Producer("localhost", 2002, null);
             }
         }, "did not get expected exception", NullPointerException.class);
 
@@ -463,12 +463,12 @@ public class RMITest
         assertNotNull(producer.getRegistry());
         RmiRegistry.closeRegistry(producer.getRegistry());
         sleep(200);
-        producer = new Producer(new URL("http://127.0.0.1:1099"), "producer");
+        producer = new Producer(new URL("http://127.0.0.1:2002"), "producer");
         assertNotNull(producer);
         assertNotNull(producer.getRegistry());
         RmiRegistry.closeRegistry(producer.getRegistry());
         sleep(200);
-        producer = new Producer(new URL("http://localhost:1099"), "producer");
+        producer = new Producer(new URL("http://localhost:2002"), "producer");
         assertNotNull(producer);
         assertNotNull(producer.getRegistry());
         RmiRegistry.closeRegistry(producer.getRegistry());
@@ -594,7 +594,7 @@ public class RMITest
          */
         public Producer() throws RemoteException, AlreadyBoundException
         {
-            super("localhost", 1099, "producer");
+            super("localhost", 2002, "producer");
         }
 
         /**
