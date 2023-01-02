@@ -30,7 +30,7 @@ public interface Drawable<P extends Point<P>> extends Serializable
     /**
      * Create a list of all points that make up this Drawable. This method is expensive as a new list is constructed on each
      * invocation.
-     * @return List&lt;<? extends P>>; a list containing all points of this Drawable
+     * @return List&lt;? extends P&gt;; a list containing all points of this Drawable
      */
     default List<P> getPointList()
     {
