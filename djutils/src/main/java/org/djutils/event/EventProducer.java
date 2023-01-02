@@ -1,5 +1,7 @@
 package org.djutils.event;
 
+import java.rmi.RemoteException;
+
 import org.djutils.event.reference.ReferenceType;
 
 /**
@@ -20,7 +22,7 @@ public interface EventProducer
 
     /** The LAST_POSITION in the queue. */
     int LAST_POSITION = -1;
-    
+
     /**
      * Add a listener to the specified position of a queue of listeners.
      * @param listener EventListenerInterface; which is interested at certain events
@@ -29,17 +31,20 @@ public interface EventProducer
      * @param referenceType ReferenceType; whether the listener is added as a strong or as a weak reference
      * @return the success of adding the listener. If a listener was already added or an illegal position is provided false is
      *         returned
+     * @throws RemoteException on network error
      * @see org.djutils.event.reference.WeakReference
      */
-    boolean addListener(EventListener listener, EventType eventType, int position, ReferenceType referenceType);
+    boolean addListener(EventListener listener, EventType eventType, int position, ReferenceType referenceType)
+            throws RemoteException;
 
     /**
      * Add a listener as strong reference to the BEGINNING of a queue of listeners.
      * @param listener EventListenerInterface; the listener which is interested at events of eventType
      * @param eventType EventType; the events of interest
      * @return the success of adding the listener. If a listener was already added false is returned
+     * @throws RemoteException on network error
      */
-    default boolean addListener(final EventListener listener, final EventType eventType)
+    default boolean addListener(final EventListener listener, final EventType eventType) throws RemoteException
     {
         return addListener(listener, eventType, LocalEventProducer.FIRST_POSITION);
     }
@@ -50,9 +55,11 @@ public interface EventProducer
      * @param eventType EventType; the events of interest
      * @param referenceType ReferenceType; whether the listener is added as a strong or as a weak reference
      * @return the success of adding the listener. If a listener was already added false is returned
+     * @throws RemoteException on network error
      * @see org.djutils.event.reference.WeakReference
      */
     default boolean addListener(final EventListener listener, final EventType eventType, final ReferenceType referenceType)
+            throws RemoteException
     {
         return addListener(listener, eventType, LocalEventProducer.FIRST_POSITION, referenceType);
     }
@@ -64,8 +71,10 @@ public interface EventProducer
      * @param position int; the position of the listener in the queue
      * @return the success of adding the listener. If a listener was already added, or an illegal position is provided false is
      *         returned
+     * @throws RemoteException on network error
      */
     default boolean addListener(final EventListener listener, final EventType eventType, final int position)
+            throws RemoteException
     {
         return addListener(listener, eventType, position, ReferenceType.STRONG);
     }
@@ -75,13 +84,15 @@ public interface EventProducer
      * @param listener EventListenerInterface; which is no longer interested
      * @param eventType EventType; the event which is of no interest any more
      * @return the success of removing the listener. If a listener was not subscribed false is returned
+     * @throws RemoteException on network error
      */
-    boolean removeListener(EventListener listener, EventType eventType);
+    boolean removeListener(EventListener listener, EventType eventType) throws RemoteException;
 
     /**
      * Remove all the listeners from this event producer.
      * @return int; the number of removed event types for which listeners existed
+     * @throws RemoteException on network error
      */
-    int removeAllListeners();
+    int removeAllListeners() throws RemoteException;
 
 }
