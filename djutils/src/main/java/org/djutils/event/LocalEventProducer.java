@@ -48,12 +48,6 @@ public class LocalEventProducer implements EventProducer, Serializable
     /** The collection of interested listeners. */
     private EventListenerMap listeners = new EventListenerMap();
 
-    /** The FIRST_POSITION in the queue. */
-    public static final int FIRST_POSITION = 0;
-
-    /** The LAST_POSITION in the queue. */
-    public static final int LAST_POSITION = -1;
-
     /** {@inheritDoc} */
     @Override
     public final synchronized boolean addListener(final EventListener listener, final EventType eventType, final int position,

@@ -15,6 +15,12 @@ import org.djutils.event.reference.ReferenceType;
  */
 public interface EventProducer
 {
+    /** The FIRST_POSITION in the queue. */
+    int FIRST_POSITION = 0;
+
+    /** The LAST_POSITION in the queue. */
+    int LAST_POSITION = -1;
+    
     /**
      * Add a listener to the specified position of a queue of listeners.
      * @param listener EventListenerInterface; which is interested at certain events
