@@ -46,14 +46,13 @@ public class RemoteEventPubSubTest
      * @throws AlreadyBoundException when producer or listener is already bound in the RMI registry
      * @throws MalformedURLException on URL error
      */
-    // TODO: @Test does not run reliably on github Ubuntu platform (Port 1099 already in use)
     @Test
     public void testRemoteEventListenerProducer() throws RemoteException, AlreadyBoundException, MalformedURLException
     {
-        TestRemoteEventProducer producer = new TestRemoteEventProducer();
+        TestRemoteEventProducer producer = new TestRemoteEventProducer(2100);
         try
         {
-            TestRemoteEventListener listener = new TestRemoteEventListener("listener");
+            TestRemoteEventListener listener = new TestRemoteEventListener("listener", 2100);
             assertFalse(producer.hasListeners());
             assertEquals(0, producer.numberOfListeners(TestRemoteEventProducer.REMOTE_EVENT_1));
             assertEquals(0, producer.getEventTypesWithListeners().size());
@@ -182,15 +181,14 @@ public class RemoteEventPubSubTest
      * @throws AlreadyBoundException when producer or listener is already bound in the RMI registry
      * @throws MalformedURLException on URL error
      */
-    // TODO: @Test does not run reliably on github Ubuntu platform (Port 1099 already in use)
     @Test
     @SuppressWarnings("checkstyle:methodlength")
     public void testRemoteEventVerificationPubSub() throws RemoteException, AlreadyBoundException, MalformedURLException
     {
-        TestRemoteEventProducer producer = new TestRemoteEventProducer();
+        TestRemoteEventProducer producer = new TestRemoteEventProducer(2101);
         try
         {
-            TestRemoteEventListener listener = new TestRemoteEventListener("listener");
+            TestRemoteEventListener listener = new TestRemoteEventListener("listener", 2101);
             EventType eventType = new EventType("STRING_TYPE",
                     new MetaData("STRING", "string", new ObjectDescriptor("String", "string", String.class)));
 
@@ -352,11 +350,10 @@ public class RemoteEventPubSubTest
      * @throws AlreadyBoundException when producer or listener is already bound in the RMI registry
      * @throws MalformedURLException on URL error
      */
-    // TODO: @Test does not run reliably on github Ubuntu platform (Port 1099 already in use)
     @Test
     public void testTimedRemoteEventListenerProducer() throws RemoteException, AlreadyBoundException, MalformedURLException
     {
-        TestRemoteEventProducer producer = new TestRemoteEventProducer();
+        TestRemoteEventProducer producer = new TestRemoteEventProducer(2102);
         try
         {
             TestRemoteTimedEventListener<Double> timedListener = new TestRemoteTimedEventListener<>("timedListener");
@@ -438,12 +435,11 @@ public class RemoteEventPubSubTest
      * @throws AlreadyBoundException when producer or listener is already bound in the RMI registry
      * @throws MalformedURLException on URL error
      */
-    // TODO: @Test does not run reliably on github Ubuntu platform (Port 1099 already in use)
     @SuppressWarnings("checkstyle:methodlength")
     @Test
     public void testRemoteTimedEventVerificationPubSub() throws RemoteException, AlreadyBoundException, MalformedURLException
     {
-        TestRemoteEventProducer producer = new TestRemoteEventProducer();
+        TestRemoteEventProducer producer = new TestRemoteEventProducer(2103);
         try
         {
             TestRemoteTimedEventListener<Double> timedListener = new TestRemoteTimedEventListener<>("listener");
@@ -615,15 +611,14 @@ public class RemoteEventPubSubTest
      * @throws RemoteException on network exception
      * @throws AlreadyBoundException when RMI registry not cleaned
      */
-    // TODO: @Test does not run reliably on github Ubuntu platform (Port 1099 already in use)
     @Test
     public void testEventStrongWeakPos() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException,
             SecurityException, RemoteException, AlreadyBoundException
     {
-        TestRemoteEventProducer producer = new TestRemoteEventProducer();
+        TestRemoteEventProducer producer = new TestRemoteEventProducer(2104);
         try
         {
-            TestRemoteEventListener listener = new TestRemoteEventListener("listener");
+            TestRemoteEventListener listener = new TestRemoteEventListener("listener", 2104);
 
             // test illegal parameters and null pointer exceptions in adding a listener
             try
@@ -695,8 +690,8 @@ public class RemoteEventPubSubTest
                     producer.getEventTypesWithListeners());
 
             // check LAST_POSITION and FIRST_POSITION
-            TestRemoteEventListener listener2 = new TestRemoteEventListener("listener2");
-            TestRemoteEventListener listener3 = new TestRemoteEventListener("listener3");
+            TestRemoteEventListener listener2 = new TestRemoteEventListener("listener2", 2104);
+            TestRemoteEventListener listener3 = new TestRemoteEventListener("listener3", 2104);
             addListenerOK =
                     producer.addListener(listener2, TestRemoteEventProducer.REMOTE_EVENT_2, LocalEventProducer.LAST_POSITION);
             addListenerOK =
@@ -733,15 +728,14 @@ public class RemoteEventPubSubTest
      * @throws RemoteException on network exception
      * @throws AlreadyBoundException when RMI registry not cleaned
      */
-    // TODO: @Test does not run reliably on github Ubuntu platform (Port 1099 already in use)
     @Test
     public void testEventProducerWeakRemoval() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException,
             SecurityException, RemoteException, AlreadyBoundException
     {
-        TestRemoteEventProducer producer = new TestRemoteEventProducer();
+        TestRemoteEventProducer producer = new TestRemoteEventProducer(2105);
         try
         {
-            TestRemoteEventListener listener = new TestRemoteEventListener("listener");
+            TestRemoteEventListener listener = new TestRemoteEventListener("listener", 2105);
             boolean addListenerOK = producer.addListener(listener, TestRemoteEventProducer.REMOTE_EVENT_1, ReferenceType.WEAK);
             assertTrue(addListenerOK);
             assertTrue(producer.hasListeners());
@@ -798,12 +792,13 @@ public class RemoteEventPubSubTest
 
         /**
          * Construct a RemoteEventProducer.
+         * @param port int; the port to use for this test
          * @throws RemoteException on error
          * @throws AlreadyBoundException on error
          */
-        public TestRemoteEventProducer() throws RemoteException, AlreadyBoundException
+        public TestRemoteEventProducer(final int port) throws RemoteException, AlreadyBoundException
         {
-            super("127.0.0.1", 1099, "producer");
+            super("127.0.0.1", port, "producer");
         }
 
     }
@@ -825,12 +820,13 @@ public class RemoteEventPubSubTest
 
         /**
          * @param key String; the key under which the listener will be registered in RMI
+         * @param port int; the port to use in the test
          * @throws RemoteException on error
          * @throws AlreadyBoundException on error
          */
-        public TestRemoteEventListener(final String key) throws RemoteException, AlreadyBoundException
+        public TestRemoteEventListener(final String key, final int port) throws RemoteException, AlreadyBoundException
         {
-            super("localhost", 1099, key);
+            super("localhost", port, key);
         }
 
         /**
