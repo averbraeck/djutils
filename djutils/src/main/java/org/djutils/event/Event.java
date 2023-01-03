@@ -1,6 +1,7 @@
 package org.djutils.event;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import org.djutils.exceptions.Throw;
 import org.djutils.metadata.MetaData;
@@ -91,11 +92,7 @@ public class Event implements Serializable
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.content == null) ? 0 : this.content.hashCode());
-        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
-        return result;
+        return Objects.hash(this.content, this.type);
     }
 
     /** {@inheritDoc} */
@@ -110,21 +107,7 @@ public class Event implements Serializable
         if (getClass() != obj.getClass())
             return false;
         Event other = (Event) obj;
-        if (this.content == null)
-        {
-            if (other.content != null)
-                return false;
-        }
-        else if (!this.content.equals(other.content))
-            return false;
-        if (this.type == null)
-        {
-            if (other.type != null)
-                return false;
-        }
-        else if (!this.type.equals(other.type))
-            return false;
-        return true;
+        return Objects.equals(this.content, other.content) && Objects.equals(this.type, other.type);
     }
 
     /** {@inheritDoc} */
