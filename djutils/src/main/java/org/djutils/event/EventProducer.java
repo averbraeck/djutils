@@ -1,5 +1,7 @@
 package org.djutils.event;
 
+import java.io.Serializable;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,7 +25,7 @@ import org.djutils.exceptions.Throw;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public interface EventProducer
+public interface EventProducer extends Serializable, Remote
 {
     /** The FIRST_POSITION in the queue. */
     int FIRST_POSITION = 0;

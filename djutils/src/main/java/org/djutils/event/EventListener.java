@@ -1,6 +1,7 @@
 package org.djutils.event;
 
 import java.io.Serializable;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
@@ -22,7 +23,7 @@ import java.rmi.RemoteException;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public interface EventListener extends java.util.EventListener, Serializable
+public interface EventListener extends java.util.EventListener, Serializable, Remote
 {
     /**
      * Notifies the event listener of an event. This operation forms the callback method of the asynchronous communication
