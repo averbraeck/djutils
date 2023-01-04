@@ -25,12 +25,12 @@ Maven is one of the easiest ways to include DJUTILS-CLI in a Java project. The M
   <dependency>
     <groupId>org.djutils</groupId>
     <artifactId>djutils-cli</artifactId>
-    <version>2.0.1</version>
+    <version>2.1.2</version>
   </dependency>
 </dependencies>
 ```
 
-Of course, the version number (2.0.1 in the above example) needs to be replaced with the version that one wants to include in the project.
+Of course, the version number (2.1.2 in the above example) needs to be replaced with the version that one wants to include in the project.
 
 DJUTILS-CLI jars before version 2 are kept on a server at TU Delft at [https://djutils.org/maven](https://djutils.org/maven).
 
