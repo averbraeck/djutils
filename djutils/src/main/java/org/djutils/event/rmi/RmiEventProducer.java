@@ -7,7 +7,8 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 
-import org.djutils.event.LocalEventProducer;
+import org.djutils.event.EventListenerMap;
+import org.djutils.event.EventProducer;
 import org.djutils.rmi.RmiObject;
 
 /**
@@ -23,14 +24,16 @@ import org.djutils.rmi.RmiObject;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public abstract class RmiEventProducer extends LocalEventProducer implements Remote
+public class RmiEventProducer implements EventProducer, Remote
 {
     /** The default serial version UID for serializable classes. */
     private static final long serialVersionUID = 20140830L;
 
     /** The embedded RmiObject class for the remote firing of events. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
     private final RmiObject rmiObject;
+    
+    /** the subscriber list. */
+    private final EventListenerMap eventListenerMap;
 
     /**
      * Create a remote event listener and register the listener in the RMI registry. When the RMI registry does not exist yet,
@@ -49,6 +52,7 @@ public abstract class RmiEventProducer extends LocalEventProducer implements Rem
             throws RemoteException, AlreadyBoundException
     {
         this.rmiObject = new RmiObject(host, port, bindingKey);
+        this.eventListenerMap = new EventListenerMap();
     }
 
     /**
@@ -66,6 +70,7 @@ public abstract class RmiEventProducer extends LocalEventProducer implements Rem
     public RmiEventProducer(final URL registryURL, final String bindingKey) throws RemoteException, AlreadyBoundException
     {
         this.rmiObject = new RmiObject(registryURL, bindingKey);
+        this.eventListenerMap = new EventListenerMap();
     }
 
     /**
@@ -76,5 +81,12 @@ public abstract class RmiEventProducer extends LocalEventProducer implements Rem
     public Registry getRegistry() throws RemoteException
     {
         return this.rmiObject.getRegistry();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public EventListenerMap getEventListenerMap() throws RemoteException
+    {
+        return this.eventListenerMap;
     }
 }
