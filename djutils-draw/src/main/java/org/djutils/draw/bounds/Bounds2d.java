@@ -14,7 +14,7 @@ import org.djutils.exceptions.Throw;
  * A Bounds2d stores the rectangular 2D bounds of a 2d object, or a collection of 2d objects. The Bounds2d is an immutable
  * object.
  * <p>
- * Copyright (c) 2020-2022 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2020-2023 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>

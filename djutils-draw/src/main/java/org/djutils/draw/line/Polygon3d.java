@@ -13,7 +13,7 @@ import org.djutils.exceptions.Throw;
  * Polygon3d.java. Closed PolyLine3d. The actual closing point (which is the same as the starting point) is NOT included in the
  * super PolyLine3d. The constructors automatically remove the last point if it is a at the same location as the first point.
  * <p>
- * Copyright (c) 2020-2022 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2020-2023 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>

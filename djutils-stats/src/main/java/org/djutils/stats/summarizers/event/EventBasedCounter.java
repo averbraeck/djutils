@@ -10,7 +10,7 @@ import org.djutils.stats.summarizers.CounterInterface;
  * The Counter class defines a statistics event counter. It extends an EventProducer so it can keep listeners informed about new
  * observations, and it listens to external events to be able to receive observations, in addition to the register(...) method.
  * <p>
- * Copyright (c) 2002-2022 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2002-2023 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
