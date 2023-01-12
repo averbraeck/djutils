@@ -19,7 +19,7 @@ class EventType implements Serializable {
   +MetaData getMetaData()
 }
 
-class Comparable<T> {
+interface Comparable<T> {
   +int compareTo(T o);
 }
 
