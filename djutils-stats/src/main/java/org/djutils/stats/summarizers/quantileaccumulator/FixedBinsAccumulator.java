@@ -28,13 +28,13 @@ public class FixedBinsAccumulator implements QuantileAccumulator
     /** Cumulative counts. */
     private long[] cumulatives = null;
 
-    /** Total number of ingested values. */
+    /** Total number of registered values. */
     private long totalCount = 0;
 
-    /** Count number of ingested items that fall below the range. */
+    /** Count number of registered items that fall below the range. */
     private long belowCount = 0;
 
-    /** Count number of ingested items that fall above the range. */
+    /** Count number of registered items that fall above the range. */
     private long aboveCount = 0;
 
     /**
@@ -79,8 +79,8 @@ public class FixedBinsAccumulator implements QuantileAccumulator
     }
 
     /**
-     * Retrieve the total number of ingested values.
-     * @return long; the total number of ingested values
+     * Retrieve the total number of registered values.
+     * @return long; the total number of registered values
      */
     public long getN()
     {
@@ -88,8 +88,8 @@ public class FixedBinsAccumulator implements QuantileAccumulator
     }
 
     /**
-     * Retrieve the number of ingested values that were below the range of this FixedBinsAccumulator.
-     * @return long; the number of ingested values that were below the range of this FixedBinsAccumulator
+     * Retrieve the number of registered values that were below the range of this FixedBinsAccumulator.
+     * @return long; the number of registered values that were below the range of this FixedBinsAccumulator
      */
     public long getBelowCount()
     {
@@ -97,8 +97,8 @@ public class FixedBinsAccumulator implements QuantileAccumulator
     }
 
     /**
-     * Retrieve the number of ingested values that were above the range of this FixedBinsAccumulator.
-     * @return long; the number of ingested values that were above the range of this FixedBinsAccumulator
+     * Retrieve the number of registered values that were above the range of this FixedBinsAccumulator.
+     * @return long; the number of registered values that were above the range of this FixedBinsAccumulator
      */
     public long getAboveCount()
     {

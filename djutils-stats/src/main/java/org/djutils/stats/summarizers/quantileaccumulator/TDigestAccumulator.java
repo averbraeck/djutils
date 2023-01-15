@@ -17,7 +17,7 @@ import com.tdunning.math.stats.TDigest;
  */
 public class TDigestAccumulator implements QuantileAccumulator
 {
-    /** The TDigest that accumulates the ingested data into bins. */
+    /** The TDigest that accumulates the registered data into bins. */
     private TDigest tDigest;
 
     /** The compression used to create the TDigest (required to re-initialize). */

@@ -11,8 +11,8 @@ public interface QuantileAccumulator
     /**
      * Ingest one value with weight 1. Should be called only from the Tally object and AFTER processing the value in the tally.
      * @param value double; the value
-     * @return double; the ingested value
-     * @throws IllegalArgumentException when the ingested value is NaN
+     * @return double; the registered value
+     * @throws IllegalArgumentException when the registered value is NaN
      */
     double register(double value);
 
@@ -27,11 +27,11 @@ public interface QuantileAccumulator
     double getQuantile(Tally tally, double probability);
     
     /**
-     * Get, or estimate fraction of ingested values between -infinity up to and including a given quantile.
+     * Get, or estimate fraction of registered values between -infinity up to and including a given quantile.
      * @param tally Tally; the tally object that accumulates mean, minimum, maximum, count, etc.
      * @param quantile double; the given quantile
-     * @return double; the estimated or observed fraction of ingested values between -infinity up to and including the given
-     *         quantile. When this QuantileAccumulator has ingested zero values; this method shall return NaN.
+     * @return double; the estimated or observed fraction of registered values between -infinity up to and including the given
+     *         quantile. When this QuantileAccumulator has registered zero values; this method shall return NaN.
      * @throws IllegalArgumentException when quantile is NaN
      */
     double getCumulativeProbability(Tally tally, double quantile) throws IllegalArgumentException;
