@@ -143,10 +143,9 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
 
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings("checkstyle:designforextension")
     public String toString()
     {
-        return "EventBasedWeightedTally" + super.toString().substring("WeightedTally".length());
+        return super.toString();
     }
 
 }
