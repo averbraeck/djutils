@@ -7,6 +7,7 @@ import org.djutils.event.EventListener;
 import org.djutils.event.EventListenerMap;
 import org.djutils.event.EventProducer;
 import org.djutils.event.LocalEventProducer;
+import org.djutils.exceptions.Throw;
 import org.djutils.stats.summarizers.Tally;
 import org.djutils.stats.summarizers.quantileaccumulator.NoStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.QuantileAccumulator;
@@ -73,6 +74,7 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
             final EventProducer eventProducer)
     {
         super(description, quantileAccumulator);
+        Throw.whenNull(eventProducer, "eventProducer cannot be null");
         this.eventProducer = eventProducer;
         initialize();
     }

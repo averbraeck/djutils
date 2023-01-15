@@ -7,6 +7,7 @@ import org.djutils.event.EventListener;
 import org.djutils.event.EventListenerMap;
 import org.djutils.event.EventProducer;
 import org.djutils.event.LocalEventProducer;
+import org.djutils.exceptions.Throw;
 import org.djutils.stats.summarizers.Counter;
 
 /**
@@ -46,6 +47,7 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
     public EventBasedCounter(final String description, final EventProducer eventProducer)
     {
         super(description);
+        Throw.whenNull(eventProducer, "eventProducer cannot be null");
         this.eventProducer = eventProducer;
         initialize();
     }
