@@ -51,6 +51,7 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
         super(description);
         Throw.whenNull(eventProducer, "eventProducer cannot be null");
         this.eventProducer = eventProducer;
+        initialize(); // redo initialize() after eventProducer has been set
     }
 
     /** {@inheritDoc} */
