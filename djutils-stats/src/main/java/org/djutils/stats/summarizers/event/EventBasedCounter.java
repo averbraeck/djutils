@@ -28,7 +28,7 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
     private static final long serialVersionUID = 20200228L;
 
     /** The embedded EventProducer. */
-    private final EventProducer eventProducer;
+    private EventProducer eventProducer = null;
 
     /**
      * Construct a new EventBasedCounter.
@@ -49,7 +49,6 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
         super(description);
         Throw.whenNull(eventProducer, "eventProducer cannot be null");
         this.eventProducer = eventProducer;
-        initialize();
     }
 
     /** {@inheritDoc} */
@@ -57,6 +56,24 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
     public EventListenerMap getEventListenerMap() throws RemoteException
     {
         return this.eventProducer.getEventListenerMap();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void initialize()
+    {
+        super.initialize();
+        if (this.eventProducer != null)
+        {
+            try
+            {
+                fireEvent(StatisticsEvents.INITIALIZED_EVENT);
+            }
+            catch (RemoteException exception)
+            {
+                throw new RuntimeException(exception);
+            }
+        }
     }
 
     /** {@inheritDoc} */
@@ -103,26 +120,6 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
     {
         fireEvent(StatisticsEvents.N_EVENT, getN());
         fireEvent(StatisticsEvents.COUNT_EVENT, getCount());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void initialize()
-    {
-        // first check if the initialize() method is called from the super constructor. If so, defer.
-        if (this.eventProducer == null)
-        {
-            return;
-        }
-        super.initialize();
-        try
-        {
-            fireEvent(StatisticsEvents.INITIALIZED_EVENT);
-        }
-        catch (RemoteException exception)
-        {
-            throw new RuntimeException(exception);
-        }
     }
 
 }

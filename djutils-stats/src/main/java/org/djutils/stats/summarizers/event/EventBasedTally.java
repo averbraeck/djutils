@@ -32,7 +32,7 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
     private static final long serialVersionUID = 20200228L;
 
     /** The embedded EventProducer. */
-    private final EventProducer eventProducer;
+    private EventProducer eventProducer = null;
 
     /**
      * Constructs a new EventBasedTally.
@@ -76,7 +76,6 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
         super(description, quantileAccumulator);
         Throw.whenNull(eventProducer, "eventProducer cannot be null");
         this.eventProducer = eventProducer;
-        initialize();
     }
 
     /** {@inheritDoc} */
@@ -90,19 +89,17 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
     @Override
     public void initialize()
     {
-        // first check if the initialize() method is called from the super constructor. If so, defer.
-        if (this.eventProducer == null)
-        {
-            return;
-        }
         super.initialize();
-        try
+        if (this.eventProducer != null)
         {
-            fireEvent(StatisticsEvents.INITIALIZED_EVENT);
-        }
-        catch (RemoteException exception)
-        {
-            throw new RuntimeException(exception);
+            try
+            {
+                fireEvent(StatisticsEvents.INITIALIZED_EVENT);
+            }
+            catch (RemoteException exception)
+            {
+                throw new RuntimeException(exception);
+            }
         }
     }
 

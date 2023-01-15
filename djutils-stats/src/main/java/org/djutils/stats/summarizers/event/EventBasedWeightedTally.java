@@ -30,7 +30,7 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
     private static final long serialVersionUID = 20200228L;
 
     /** The embedded EventProducer. */
-    private final EventProducer eventProducer;
+    private EventProducer eventProducer = null;
 
     /**
      * Construct a new WeightedTally with a description.
@@ -51,7 +51,6 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
         super(description);
         Throw.whenNull(eventProducer, "eventProducer cannot be null");
         this.eventProducer = eventProducer;
-        initialize(); // redo initialize() after eventProducer has been set
     }
 
     /** {@inheritDoc} */
@@ -65,19 +64,17 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
     @Override
     public void initialize()
     {
-        // first check if the initialize() method is called from the super constructor. If so, defer.
-        if (this.eventProducer == null)
-        {
-            return;
-        }
         super.initialize();
-        try
+        if (this.eventProducer != null)
         {
-            fireEvent(StatisticsEvents.INITIALIZED_EVENT);
-        }
-        catch (RemoteException exception)
-        {
-            throw new RuntimeException(exception);
+            try
+            {
+                fireEvent(StatisticsEvents.INITIALIZED_EVENT);
+            }
+            catch (RemoteException exception)
+            {
+                throw new RuntimeException(exception);
+            }
         }
     }
 
