@@ -119,7 +119,7 @@ public class WeightedTally implements Statistic
 
     /** {@inheritDoc} */
     @Override
-    public final String getDescription()
+    public String getDescription()
     {
         return this.description;
     }
@@ -128,7 +128,7 @@ public class WeightedTally implements Statistic
      * Returns the maximum value of any given observation, or NaN when no observations were registered.
      * @return double; the maximum value of any given observation
      */
-    public final double getMax()
+    public double getMax()
     {
         return this.max;
     }
@@ -137,14 +137,14 @@ public class WeightedTally implements Statistic
      * Returns the minimum value of any given observation, or NaN when no observations were registered.
      * @return double; the minimum value of any given observation
      */
-    public final double getMin()
+    public double getMin()
     {
         return this.min;
     }
 
     /** {@inheritDoc} */
     @Override
-    public final long getN()
+    public long getN()
     {
         return this.n;
     }
@@ -153,7 +153,7 @@ public class WeightedTally implements Statistic
      * Retrieve the current weighted sample mean of all observations since the initialization.
      * @return double; the current weighted sample mean
      */
-    public final double getWeightedSampleMean()
+    public double getWeightedSampleMean()
     {
         synchronized (this.semaphore)
         {
@@ -178,7 +178,7 @@ public class WeightedTally implements Statistic
      * Retrieve the current weighted sample standard deviation of the observations.
      * @return double; the current weighted sample standard deviation
      */
-    public final double getWeightedSampleStDev()
+    public double getWeightedSampleStDev()
     {
         synchronized (this.semaphore)
         {
@@ -194,7 +194,7 @@ public class WeightedTally implements Statistic
      * Retrieve the current weighted standard deviation of the observations.
      * @return double; the current weighted standard deviation
      */
-    public final double getWeightedPopulationStDev()
+    public double getWeightedPopulationStDev()
     {
         synchronized (this.semaphore)
         {
@@ -206,7 +206,7 @@ public class WeightedTally implements Statistic
      * Retrieve the current weighted sample variance of the observations.
      * @return double; the current weighted sample variance of the observations
      */
-    public final double getWeightedSampleVariance()
+    public double getWeightedSampleVariance()
     {
         synchronized (this.semaphore)
         {
@@ -222,7 +222,7 @@ public class WeightedTally implements Statistic
      * Retrieve the current weighted variance of the observations.
      * @return double; the current weighted variance of the observations
      */
-    public final double getWeightedPopulationVariance()
+    public double getWeightedPopulationVariance()
     {
         synchronized (this.semaphore)
         {
@@ -234,7 +234,7 @@ public class WeightedTally implements Statistic
      * Retrieve the current weighted sum of the values of the observations.
      * @return double; the current weighted sum of the values of the observations
      */
-    public final double getWeightedSum()
+    public double getWeightedSum()
     {
         return this.weightedSum;
     }
