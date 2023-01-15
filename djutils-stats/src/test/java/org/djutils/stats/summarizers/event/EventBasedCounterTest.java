@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.rmi.RemoteException;
+
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventType;
@@ -25,13 +27,16 @@ public class EventBasedCounterTest
     /** the event to fire. */
     private static final EventType COUNT_EVENT = new EventType("CountEvent", MetaData.NO_META_DATA);
 
-    /** Test the counter. */
+    /**
+     * Test the counter.
+     * @throws RemoteException on network error for the event-based statistic
+     */
     @Test
-    public void testEventBasedCounter()
+    public void testEventBasedCounter() throws RemoteException
     {
         String description = "counter description";
         EventBasedCounter counter = new EventBasedCounter(description);
-        assertEquals(description, counter.toString());
+        assertTrue(counter.toString().contains(description));
         assertEquals(description, counter.getDescription());
 
         assertEquals(0L, counter.getN());

@@ -11,22 +11,19 @@ package org.djutils.stats.summarizers;
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  */
-public class Counter implements Statistic, CounterInterface
+public class Counter implements Statistic
 {
     /** */
     private static final long serialVersionUID = 20200228L;
 
     /** count represents the value of the counter. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected long count = 0;
+    private long count = 0;
 
     /** n represents the number of measurements. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected long n = 0;
+    private long n = 0;
 
     /** description refers to the title of this counter. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    protected String description;
+    private String description;
 
     /** the semaphore. */
     private Object semaphore = new Object();
@@ -41,8 +38,10 @@ public class Counter implements Statistic, CounterInterface
         initialize();
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Returns the current counter value.
+     * @return long; the counter value
+     */
     public long getCount()
     {
         return this.count;
@@ -55,8 +54,11 @@ public class Counter implements Statistic, CounterInterface
         return this.n;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Process one observed value.
+     * @param value long; the value to process
+     * @return long; the value
+     */
     public long register(final long value)
     {
         synchronized (this.semaphore)
@@ -67,7 +69,9 @@ public class Counter implements Statistic, CounterInterface
         return value;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Initialize the counter.
+     */
     @Override
     public void initialize()
     {
@@ -81,13 +85,6 @@ public class Counter implements Statistic, CounterInterface
     /** {@inheritDoc} */
     @Override
     public String getDescription()
-    {
-        return this.description;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString()
     {
         return this.description;
     }
@@ -113,4 +110,12 @@ public class Counter implements Statistic, CounterInterface
     {
         return "-".repeat(72);
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return "Counter [description=" + this.description + ", n=" + this.n + ", count=" + this.count + "]";
+    }
+    
 }

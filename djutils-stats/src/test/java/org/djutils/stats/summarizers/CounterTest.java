@@ -1,6 +1,7 @@
 package org.djutils.stats.summarizers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -23,7 +24,8 @@ public class CounterTest
     {
         String description = "counter description";
         Counter counter = new Counter(description);
-        assertEquals(description, counter.toString());
+        assertTrue(counter.toString().contains(description));
+        assertTrue(counter.toString().startsWith("Counter"));
         assertEquals(description, counter.getDescription());
 
         assertEquals(0L, counter.getN());
