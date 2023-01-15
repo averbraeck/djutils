@@ -94,7 +94,7 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
     }
 
     /**
-     * Method that can be overridden to fire own events or additional events when ingesting an observation.
+     * Method that can be overridden to fire own events or additional events when registering an observation.
      */
     protected void fireEvents()
     {
