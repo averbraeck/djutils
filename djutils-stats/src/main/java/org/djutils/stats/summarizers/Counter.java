@@ -96,7 +96,7 @@ public class Counter implements Statistic
     @Override
     public String reportHeader()
     {
-        return "-".repeat(72) + String.format("\n| %-48.48s | %6.6s | %8.8s |\n", "Counter name", "n", "count")
+        return "-".repeat(72) + String.format("%n| %-48.48s | %6.6s | %8.8s |%n", "Counter name", "n", "count")
                 + "-".repeat(72);
     }
 

@@ -250,7 +250,7 @@ public class TimestampWeightedTally implements Statistic
     public String reportHeader()
     {
         return "-".repeat(113)
-                + String.format("\n| %-48.48s | %6.6s | %10.10s | %10.10s | %10.10s | %10.10s |\n",
+                + String.format("%n| %-48.48s | %6.6s | %10.10s | %10.10s | %10.10s | %10.10s |%n",
                         "Timestamp-based weighted Tally name", "n", "w.mean", "w.st.dev", "min obs", "max obs")
                 + "-".repeat(113);
     }

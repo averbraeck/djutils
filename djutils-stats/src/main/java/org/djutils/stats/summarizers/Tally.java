@@ -479,7 +479,7 @@ public class Tally implements Statistic
     @Override
     public String reportHeader()
     {
-        return "-".repeat(113) + String.format("\n| %-48.48s | %6.6s | %10.10s | %10.10s | %10.10s | %10.10s |\n", "Tally name",
+        return "-".repeat(113) + String.format("%n| %-48.48s | %6.6s | %10.10s | %10.10s | %10.10s | %10.10s |%n", "Tally name",
                 "n", "mean", "st.dev", "minimum", "maximum") + "-".repeat(113);
     }
 

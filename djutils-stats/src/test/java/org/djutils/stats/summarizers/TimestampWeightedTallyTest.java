@@ -89,9 +89,9 @@ public class TimestampWeightedTallyTest
 
         // check the report functions
         int len = wt.reportFooter().length();
-        assertEquals(len, wt.reportHeader().split("\n")[0].length());
-        assertEquals(len, wt.reportHeader().split("\n")[1].length());
-        assertEquals(len, wt.reportHeader().split("\n")[2].length());
+        assertEquals(len, wt.reportHeader().split("\\R")[0].length());
+        assertEquals(len, wt.reportHeader().split("\\R")[1].length());
+        assertEquals(len, wt.reportHeader().split("\\R")[2].length());
         assertEquals(len, wt.reportLine().length());
         assertEquals(len, new Tally("empty tally").reportLine().length());
         TimestampWeightedTally tallyX = new TimestampWeightedTally("1 value");

@@ -103,9 +103,9 @@ public class TallyTest
         
         // check the report functions
         int len = tally.reportFooter().length();
-        assertEquals(len, tally.reportHeader().split("\n")[0].length());
-        assertEquals(len, tally.reportHeader().split("\n")[1].length());
-        assertEquals(len, tally.reportHeader().split("\n")[2].length());
+        assertEquals(len, tally.reportHeader().split("\\R")[0].length());
+        assertEquals(len, tally.reportHeader().split("\\R")[1].length());
+        assertEquals(len, tally.reportHeader().split("\\R")[2].length());
         assertEquals(len, tally.reportLine().length());
         assertEquals(len, new Tally("empty tally").reportLine().length());
         Tally tallyX = new Tally("1 value");

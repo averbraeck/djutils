@@ -243,7 +243,7 @@ public class WeightedTally implements Statistic
     @Override
     public String reportHeader()
     {
-        return "-".repeat(113) + String.format("\n| %-48.48s | %6.6s | %10.10s | %10.10s | %10.10s | %10.10s |\n",
+        return "-".repeat(113) + String.format("%n| %-48.48s | %6.6s | %10.10s | %10.10s | %10.10s | %10.10s |%n",
                 "Weighted Tally name", "n", "w.mean", "w.st.dev", "min obs", "max obs") + "-".repeat(113);
     }
 

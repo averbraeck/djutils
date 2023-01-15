@@ -53,9 +53,9 @@ public class CounterTest
 
         // check the report functions
         int len = counter.reportFooter().length();
-        assertEquals(len, counter.reportHeader().split("\n")[0].length());
-        assertEquals(len, counter.reportHeader().split("\n")[1].length());
-        assertEquals(len, counter.reportHeader().split("\n")[2].length());
+        assertEquals(len, counter.reportHeader().split("\\R")[0].length());
+        assertEquals(len, counter.reportHeader().split("\\R")[1].length());
+        assertEquals(len, counter.reportHeader().split("\\R")[2].length());
         assertEquals(len, counter.reportLine().length());
         Counter counterEmpty = new Counter("Long description ".repeat(100));
         assertEquals(len, counterEmpty.reportLine().length());
