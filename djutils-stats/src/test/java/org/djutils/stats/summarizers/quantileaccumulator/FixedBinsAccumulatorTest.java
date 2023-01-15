@@ -138,7 +138,7 @@ public class FixedBinsAccumulatorTest
 
         fba = new FixedBinsAccumulator(1, (Math.E - 1) / 1000, 1001);
         assertEquals("highest bin is near e", Math.E, fba.getBinCenter(fba.getBinCount() - 1), 0.00001);
-        // ingest some values with an exponential density distribution
+        // register some values with an exponential density distribution
         int max = 1000000;
         for (int i = 0; i < max; i++)
         {

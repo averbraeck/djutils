@@ -124,7 +124,7 @@ public class AccumulatorTest
 
     /**
      * Test the getCumulativeProbability method of the FixedBinsAccumulator. This test does not cover cases where some of the
-     * ingested values are out of range; as we have not decided how to compute cumulative probabilities for such cases.
+     * registered values are out of range; as we have not decided how to compute cumulative probabilities for such cases.
      */
     @Test
     public void testFixedBinsAccumulator()
@@ -191,7 +191,7 @@ public class AccumulatorTest
     {
         // This one can only be tested when cooperating with a Tally.
         Tally tally = new Tally("test Tally with NoStorageAccumulator");
-        assertTrue("cumulative probability with no values ingested is NaN", Double.isNaN(tally.getCumulativeProbability(4)));
+        assertTrue("cumulative probability with no values registered is NaN", Double.isNaN(tally.getCumulativeProbability(4)));
         tally.register(10);
         assertEquals("cumulative probability at single inserted value is 0.5", 0.5, tally.getCumulativeProbability(10), 0);
         assertEquals("cummulative probability below single inserted value is 0.0", 0.0,
@@ -211,7 +211,7 @@ public class AccumulatorTest
     public void testTDigestAccumulator()
     {
         TDigestAccumulator tda = new TDigestAccumulator();
-        assertTrue("cumulative probability with no values ingested is NaN",
+        assertTrue("cumulative probability with no values registered is NaN",
                 Double.isNaN(tda.getCumulativeProbability(null, 4)));
         tda.register(10);
         assertEquals("cumulative probability at single inserted value is 0.5", 0.5, tda.getCumulativeProbability(null, 10), 0);
