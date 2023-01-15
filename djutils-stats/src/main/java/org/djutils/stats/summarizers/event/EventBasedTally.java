@@ -141,32 +141,26 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
 
     /**
      * Method that can be overridden to fire own events or additional events when registering an observation.
+     * @throws RemoteException on network error
      */
-    protected void fireEvents()
+    protected void fireEvents() throws RemoteException
     {
-        try
-        {
-            fireEvent(StatisticsEvents.N_EVENT, getN());
-            fireEvent(StatisticsEvents.MIN_EVENT, getMin());
-            fireEvent(StatisticsEvents.MAX_EVENT, getMax());
-            fireEvent(StatisticsEvents.POPULATION_MEAN_EVENT, getPopulationMean());
-            fireEvent(StatisticsEvents.POPULATION_VARIANCE_EVENT, getPopulationVariance());
-            fireEvent(StatisticsEvents.POPULATION_SKEWNESS_EVENT, getPopulationSkewness());
-            fireEvent(StatisticsEvents.POPULATION_KURTOSIS_EVENT, getPopulationKurtosis());
-            fireEvent(StatisticsEvents.POPULATION_EXCESS_KURTOSIS_EVENT, getPopulationExcessKurtosis());
-            fireEvent(StatisticsEvents.POPULATION_STDEV_EVENT, getPopulationStDev());
-            fireEvent(StatisticsEvents.SUM_EVENT, getSum());
-            fireEvent(StatisticsEvents.SAMPLE_MEAN_EVENT, getSampleMean());
-            fireEvent(StatisticsEvents.SAMPLE_VARIANCE_EVENT, getSampleVariance());
-            fireEvent(StatisticsEvents.SAMPLE_SKEWNESS_EVENT, getSampleSkewness());
-            fireEvent(StatisticsEvents.SAMPLE_KURTOSIS_EVENT, getSampleKurtosis());
-            fireEvent(StatisticsEvents.SAMPLE_EXCESS_KURTOSIS_EVENT, getSampleExcessKurtosis());
-            fireEvent(StatisticsEvents.SAMPLE_STDEV_EVENT, getSampleStDev());
-        }
-        catch (RemoteException exception)
-        {
-            throw new RuntimeException(exception);
-        }
+        fireEvent(StatisticsEvents.N_EVENT, getN());
+        fireEvent(StatisticsEvents.MIN_EVENT, getMin());
+        fireEvent(StatisticsEvents.MAX_EVENT, getMax());
+        fireEvent(StatisticsEvents.POPULATION_MEAN_EVENT, getPopulationMean());
+        fireEvent(StatisticsEvents.POPULATION_VARIANCE_EVENT, getPopulationVariance());
+        fireEvent(StatisticsEvents.POPULATION_SKEWNESS_EVENT, getPopulationSkewness());
+        fireEvent(StatisticsEvents.POPULATION_KURTOSIS_EVENT, getPopulationKurtosis());
+        fireEvent(StatisticsEvents.POPULATION_EXCESS_KURTOSIS_EVENT, getPopulationExcessKurtosis());
+        fireEvent(StatisticsEvents.POPULATION_STDEV_EVENT, getPopulationStDev());
+        fireEvent(StatisticsEvents.SUM_EVENT, getSum());
+        fireEvent(StatisticsEvents.SAMPLE_MEAN_EVENT, getSampleMean());
+        fireEvent(StatisticsEvents.SAMPLE_VARIANCE_EVENT, getSampleVariance());
+        fireEvent(StatisticsEvents.SAMPLE_SKEWNESS_EVENT, getSampleSkewness());
+        fireEvent(StatisticsEvents.SAMPLE_KURTOSIS_EVENT, getSampleKurtosis());
+        fireEvent(StatisticsEvents.SAMPLE_EXCESS_KURTOSIS_EVENT, getSampleExcessKurtosis());
+        fireEvent(StatisticsEvents.SAMPLE_STDEV_EVENT, getSampleStDev());
     }
 
     /** {@inheritDoc} */

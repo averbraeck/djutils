@@ -97,18 +97,12 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
 
     /**
      * Method that can be overridden to fire own events or additional events when registering an observation.
+     * @throws RemoteException on network error
      */
-    protected void fireEvents()
+    protected void fireEvents() throws RemoteException
     {
-        try
-        {
-            fireEvent(StatisticsEvents.N_EVENT, getN());
-            fireEvent(StatisticsEvents.COUNT_EVENT, getCount());
-        }
-        catch (RemoteException exception)
-        {
-            throw new RuntimeException(exception);
-        }
+        fireEvent(StatisticsEvents.N_EVENT, getN());
+        fireEvent(StatisticsEvents.COUNT_EVENT, getCount());
     }
 
     /** {@inheritDoc} */
