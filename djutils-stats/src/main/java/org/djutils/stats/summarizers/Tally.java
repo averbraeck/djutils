@@ -58,12 +58,23 @@ public class Tally implements Statistic
     protected Object semaphore = new Object();
 
     /**
+     * Convenience constructor that uses a NoStorageAccumulator to estimate quantiles.
+     * @param description String; the description of this tally
+     */
+    public Tally(final String description)
+    {
+        this(description, new NoStorageAccumulator());
+    }
+
+    /**
      * Constructs a new Tally.
      * @param description String; the description of this tally
      * @param quantileAccumulator QuantileAccumulator; the input series accumulator that can approximate or compute quantiles.
      */
     public Tally(final String description, final QuantileAccumulator quantileAccumulator)
     {
+        Throw.whenNull(description, "description cannot be null");
+        Throw.whenNull(quantileAccumulator, "quantileAccumulator cannot be null");
         this.description = description;
         this.quantileAccumulator = quantileAccumulator;
         initialize();
@@ -141,15 +152,6 @@ public class Tally implements Statistic
             this.quantileAccumulator.register(value);
         }
         return value;
-    }
-
-    /**
-     * Convenience constructor that uses a NoStorageAccumulator to estimate quantiles.
-     * @param description String; the description of this tally
-     */
-    public Tally(final String description)
-    {
-        this(description, new NoStorageAccumulator());
     }
 
     /** {@inheritDoc} */
