@@ -7,7 +7,7 @@ import org.djutils.stats.summarizers.quantileaccumulator.NoStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.QuantileAccumulator;
 
 /**
- * The Tally class ingests a series of values and provides mean, standard deviation, etc. of the ingested values.
+ * The Tally class registers a series of values and provides mean, standard deviation, etc. of the registered values.
  * <p>
  * Copyright (c) 2002-2023 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
@@ -18,7 +18,7 @@ import org.djutils.stats.summarizers.quantileaccumulator.QuantileAccumulator;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-public class Tally implements TallyInterface, Statistic
+public class Tally implements Statistic
 {
     /** */
     private static final long serialVersionUID = 20200228L;
@@ -69,239 +69,6 @@ public class Tally implements TallyInterface, Statistic
         initialize();
     }
 
-    /**
-     * Convenience constructor that uses a NoStorageAccumulator to estimate quantiles.
-     * @param description String; the description of this tally
-     */
-    public Tally(final String description)
-    {
-        this(description, new NoStorageAccumulator());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getSampleMean()
-    {
-        if (this.n > 0)
-        {
-            return this.m1;
-        }
-        return Double.NaN;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getQuantile(final double probability)
-    {
-        return this.quantileAccumulator.getQuantile(this, probability);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public double getCumulativeProbability(final double quantile)
-    {
-        return this.quantileAccumulator.getCumulativeProbability(this, quantile);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double[] getConfidenceInterval(final double alpha)
-    {
-        return this.getConfidenceInterval(alpha, ConfidenceInterval.BOTH_SIDE_CONFIDENCE);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double[] getConfidenceInterval(final double alpha, final ConfidenceInterval side)
-    {
-        Throw.whenNull(side, "type of confidence level cannot be null");
-        Throw.when(alpha < 0 || alpha > 1, IllegalArgumentException.class,
-                "confidenceLevel should be between 0 and 1 (inclusive)");
-        synchronized (this.semaphore)
-        {
-            double sampleMean = getSampleMean();
-            if (Double.isNaN(sampleMean) || Double.valueOf(this.getSampleStDev()).isNaN())
-            {
-                return null; // TODO throw something
-            }
-            double level = 1 - alpha;
-            if (side.equals(ConfidenceInterval.BOTH_SIDE_CONFIDENCE))
-            {
-                level = 1 - alpha / 2.0;
-            }
-            double z = DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, level);
-            double confidence = z * Math.sqrt(this.getSampleVariance() / this.n);
-            double[] result = {sampleMean - confidence, sampleMean + confidence};
-            if (side.equals(ConfidenceInterval.LEFT_SIDE_CONFIDENCE))
-            {
-                result[1] = sampleMean;
-            }
-            if (side.equals(ConfidenceInterval.RIGHT_SIDE_CONFIDENCE))
-            {
-                result[0] = sampleMean;
-            }
-            result[0] = Math.max(result[0], this.min);
-            result[1] = Math.min(result[1], this.max);
-            return result;
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final String getDescription()
-    {
-        return this.description;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getMax()
-    {
-        return this.max;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getMin()
-    {
-        return this.min;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final long getN()
-    {
-        return this.n;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getSampleStDev()
-    {
-        synchronized (this.semaphore)
-        {
-            if (this.n > 1)
-            {
-                return Math.sqrt(getSampleVariance());
-            }
-            return Double.NaN;
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getPopulationStDev()
-    {
-        synchronized (this.semaphore)
-        {
-            return Math.sqrt(getPopulationVariance());
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getSum()
-    {
-        return this.sum;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getSampleVariance()
-    {
-        synchronized (this.semaphore)
-        {
-            if (this.n > 1)
-            {
-                return this.m2 / (this.n - 1);
-            }
-            return Double.NaN;
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getPopulationVariance()
-    {
-        synchronized (this.semaphore)
-        {
-            if (this.n > 0)
-            {
-                return this.m2 / this.n;
-            }
-            return Double.NaN;
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getSampleSkewness()
-    {
-        if (this.n > 2)
-        {
-            return getPopulationSkewness() * Math.sqrt(this.n * (this.n - 1)) / (this.n - 2);
-        }
-        return Double.NaN;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getPopulationSkewness()
-    {
-        if (this.n > 1)
-        {
-            return (this.m3 / this.n) / Math.pow(getPopulationVariance(), 1.5);
-        }
-        return Double.NaN;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getSampleKurtosis()
-    {
-        if (this.n > 3)
-        {
-            double sVar = getSampleVariance();
-            return this.m4 / (this.n - 1) / sVar / sVar;
-        }
-        return Double.NaN;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getPopulationKurtosis()
-    {
-        if (this.n > 2)
-        {
-            return (this.m4 / this.n) / (this.m2 / this.n) / (this.m2 / this.n);
-        }
-        return Double.NaN;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getSampleExcessKurtosis()
-    {
-        if (this.n > 3)
-        {
-            double g2 = getPopulationExcessKurtosis();
-            return (1.0 * (this.n - 1) / (this.n - 2) / (this.n - 3)) * ((this.n + 1) * g2 + 6.0);
-        }
-        return Double.NaN;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getPopulationExcessKurtosis()
-    {
-        if (this.n > 2)
-        {
-            // convert kurtosis to excess kurtosis, shift by -3
-            return getPopulationKurtosis() - 3.0;
-        }
-        return Double.NaN;
-    }
-
     /** {@inheritDoc} */
     @Override
     public void initialize()
@@ -322,7 +89,7 @@ public class Tally implements TallyInterface, Statistic
 
     /**
      * Ingest an array of values.
-     * @param values double...; the values to ingest
+     * @param values double...; the values to register
      */
     public void register(final double... values)
     {
@@ -332,8 +99,11 @@ public class Tally implements TallyInterface, Statistic
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * Process one observed value.
+     * @param value double; the value to process
+     * @return double; the value
+     */
     public double register(final double value)
     {
         Throw.when(Double.isNaN(value), IllegalArgumentException.class, "value may not be NaN");
@@ -373,9 +143,329 @@ public class Tally implements TallyInterface, Statistic
         return value;
     }
 
+    /**
+     * Convenience constructor that uses a NoStorageAccumulator to estimate quantiles.
+     * @param description String; the description of this tally
+     */
+    public Tally(final String description)
+    {
+        this(description, new NoStorageAccumulator());
+    }
+
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings("checkstyle:designforextension")
+    public final String getDescription()
+    {
+        return this.description;
+    }
+
+    /**
+     * Returns the maximum value of any given observation, or NaN when no observations were registered.
+     * @return double; the maximum value of any given observation
+     */
+    public final double getMax()
+    {
+        return this.max;
+    }
+
+    /**
+     * Returns the minimum value of any given observation, or NaN when no observations were registered.
+     * @return double; the minimum value of any given observation
+     */
+    public final double getMin()
+    {
+        return this.min;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final long getN()
+    {
+        return this.n;
+    }
+
+    /**
+     * Return the sum of the values of the observations.
+     * @return double; the sum of the values of the observations
+     */
+    public final double getSum()
+    {
+        return this.sum;
+    }
+
+    /**
+     * Returns the sample mean of all observations since the initialization.
+     * @return double; the sample mean
+     */
+    public final double getSampleMean()
+    {
+        if (this.n > 0)
+        {
+            return this.m1;
+        }
+        return Double.NaN;
+    }
+
+    /**
+     * Returns the population mean of all observations since the initialization.
+     * @return double; the population mean
+     */
+    public double getPopulationMean()
+    {
+        return getSampleMean();
+    }
+
+    /**
+     * Returns the current (unbiased) sample standard deviation of all observations since the initialization. The sample
+     * standard deviation is defined as the square root of the sample variance.
+     * @return double; the sample standard deviation
+     */
+    public final double getSampleStDev()
+    {
+        synchronized (this.semaphore)
+        {
+            if (this.n > 1)
+            {
+                return Math.sqrt(getSampleVariance());
+            }
+            return Double.NaN;
+        }
+    }
+
+    /**
+     * Returns the current (biased) population standard deviation of all observations since the initialization. The population
+     * standard deviation is defined as the square root of the population variance.
+     * @return double; the population standard deviation
+     */
+    public final double getPopulationStDev()
+    {
+        synchronized (this.semaphore)
+        {
+            return Math.sqrt(getPopulationVariance());
+        }
+    }
+
+    /**
+     * Returns the current (unbiased) sample variance of all observations since the initialization. The calculation of the
+     * sample variance in relation to the population variance is undisputed. The formula is:<br>
+     * &nbsp;&nbsp;<i>S<sup>2</sup> = (1 / (n - 1)) * [ &Sigma;x<sup>2</sup> - (&Sigma;x)<sup>2</sup> / n ] </i><br>
+     * which can be calculated on the basis of the calculated population variance <i>&sigma;<sup>2</sup></i> as follows:<br>
+     * &nbsp;&nbsp;<i>S<sup>2</sup> = &sigma;<sup>2</sup> * n / (n - 1)</i><br>
+     * @return double; the current sample variance of this tally
+     */
+    public final double getSampleVariance()
+    {
+        synchronized (this.semaphore)
+        {
+            if (this.n > 1)
+            {
+                return this.m2 / (this.n - 1);
+            }
+            return Double.NaN;
+        }
+    }
+
+    /**
+     * Returns the current (biased) population variance of all observations since the initialization. The population variance is
+     * defined as:<br>
+     * <i>&sigma;<sup>2</sup> = (1 / n) * [ &Sigma;x<sup>2</sup> - (&Sigma;x)<sup>2</sup> / n ] </i>
+     * @return double; the current population variance of this tally
+     */
+    public final double getPopulationVariance()
+    {
+        synchronized (this.semaphore)
+        {
+            if (this.n > 0)
+            {
+                return this.m2 / this.n;
+            }
+            return Double.NaN;
+        }
+    }
+
+    /**
+     * Return the (unbiased) sample skewness of the registered data. There are different formulas to calculate the unbiased
+     * (sample) skewness from the biased (population) skewness. Minitab, for instance calculates unbiased skewness as:<br>
+     * &nbsp;&nbsp;<i>Skew<sub>unbiased</sub> = Skew<sub>biased</sub> [ ( n - 1) / n ]<sup> 3/2</sup></i> <br>
+     * whereas SAS, SPSS and Excel calculate it as:<br>
+     * &nbsp;&nbsp;<i>Skew<sub>unbiased</sub> = Skew<sub>biased</sub> &radic;[ n ( n - 1)] / (n - 2)</i> <br>
+     * Here we follow the last mentioned formula. All formulas converge to the same value with larger n.
+     * @return double; the sample skewness of the registered data
+     */
+    public final double getSampleSkewness()
+    {
+        if (this.n > 2)
+        {
+            return getPopulationSkewness() * Math.sqrt(this.n * (this.n - 1)) / (this.n - 2);
+        }
+        return Double.NaN;
+    }
+
+    /**
+     * Return the (biased) population skewness of the registered data. The population skewness is defined as:<br>
+     * &nbsp;&nbsp;<i>Skew<sub>biased</sub> = [ &Sigma; ( x - &mu; ) <sup>3</sup> ] / [ n . S<sup>3</sup> ]</i><br>
+     * where <i>S<sup>2</sup></i> is the <b>sample</b> variance. So the denominator is equal to <i>[ n .
+     * sample_var<sup>3/2</sup> ]</i> .
+     * @return double; the skewness of the registered data
+     */
+    public final double getPopulationSkewness()
+    {
+        if (this.n > 1)
+        {
+            return (this.m3 / this.n) / Math.pow(getPopulationVariance(), 1.5);
+        }
+        return Double.NaN;
+    }
+
+    /**
+     * Return the sample kurtosis of the registered data. The sample kurtosis can be defined in multiple ways. Here, we choose the
+     * following formula:<br>
+     * &nbsp;&nbsp;<i>Kurt<sub>unbiased</sub> = [ &Sigma; ( x - &mu; ) <sup>4</sup> ] / [ ( n - 1 ) . S<sup>4</sup> ]</i><br>
+     * where <i>S<sup>2</sup></i> is the <u>sample</u> variance. So the denominator is equal to <i>[ ( n - 1 ) .
+     * sample_var<sup>2</sup> ]</i> .
+     * @return double; the sample kurtosis of the registered data
+     */
+    public final double getSampleKurtosis()
+    {
+        if (this.n > 3)
+        {
+            double sVar = getSampleVariance();
+            return this.m4 / (this.n - 1) / sVar / sVar;
+        }
+        return Double.NaN;
+    }
+
+    /**
+     * Return the (biased) population kurtosis of the registered data. The population kurtosis is defined as:<br>
+     * &nbsp;&nbsp;<i>Kurt<sub>biased</sub> = [ &Sigma; ( x - &mu; ) <sup>4</sup> ] / [ n . &sigma;<sup>4</sup> ]</i><br>
+     * where <i>&sigma;<sup>2</sup></i> is the <u>population</u> variance. So the denominator is equal to <i>[ n .
+     * pop_var<sup>2</sup> ]</i> .
+     * @return double; the population kurtosis of the registered data
+     */
+    public final double getPopulationKurtosis()
+    {
+        if (this.n > 2)
+        {
+            return (this.m4 / this.n) / (this.m2 / this.n) / (this.m2 / this.n);
+        }
+        return Double.NaN;
+    }
+
+    /**
+     * Return the sample excess kurtosis of the registered data. The sample excess kurtosis is the sample-corrected value of the
+     * excess kurtosis. Several formulas exist to calculate the sample excess kurtosis from the population kurtosis. Here we
+     * use:<br>
+     * &nbsp;&nbsp;<i>ExcessKurt<sub>unbiased</sub> = ( n - 1 ) / [( n - 2 ) * ( n - 3 )] [ ( n + 1 ) *
+     * ExcessKurt<sub>biased</sub> + 6]</i> <br>
+     * This is the excess kurtosis that is calculated by, for instance, SAS, SPSS and Excel.
+     * @return double; the sample excess kurtosis of the registered data
+     */
+    public final double getSampleExcessKurtosis()
+    {
+        if (this.n > 3)
+        {
+            double g2 = getPopulationExcessKurtosis();
+            return (1.0 * (this.n - 1) / (this.n - 2) / (this.n - 3)) * ((this.n + 1) * g2 + 6.0);
+        }
+        return Double.NaN;
+    }
+
+    /**
+     * Return the population excess kurtosis of the registered data. The kurtosis value of the normal distribution is 3. The
+     * excess kurtosis is the kurtosis value shifted by -3 to be 0 for the normal distribution.
+     * @return double; the population excess kurtosis of the registered data
+     */
+    public final double getPopulationExcessKurtosis()
+    {
+        if (this.n > 2)
+        {
+            // convert kurtosis to excess kurtosis, shift by -3
+            return getPopulationKurtosis() - 3.0;
+        }
+        return Double.NaN;
+    }
+
+    /**
+     * Compute the quantile for the given probability.
+     * @param probability double; the probability for which the quantile is to be computed. The value should be between 0 and 1,
+     *            inclusive.
+     * @return double; the quantile for the probability
+     * @throws IllegalArgumentException when the probability is less than 0 or larger than 1
+     */
+    public final double getQuantile(final double probability)
+    {
+        return this.quantileAccumulator.getQuantile(this, probability);
+    }
+
+    /**
+     * Get, or estimate fraction of registered values between -infinity up to and including a given quantile.
+     * @param quantile double; the given quantile
+     * @return double; the estimated or observed fraction of registered values between -infinity up to and including the given
+     *         quantile. When this TallyInterface has registered zero values; this method shall return NaN.
+     * @throws IllegalArgumentException when quantile is NaN
+     */
+    public double getCumulativeProbability(final double quantile)
+    {
+        return this.quantileAccumulator.getCumulativeProbability(this, quantile);
+    }
+
+    /**
+     * returns the confidence interval on either side of the mean.
+     * @param alpha double; Alpha is the significance level used to compute the confidence level. The confidence level equals
+     *            100*(1 - alpha)%, or in other words, an alpha of 0.05 indicates a 95 percent confidence level.
+     * @return double[]; the confidence interval of this tally
+     * @throws IllegalArgumentException when alpha is less than 0 or larger than 1
+     */
+    public final double[] getConfidenceInterval(final double alpha)
+    {
+        return this.getConfidenceInterval(alpha, ConfidenceInterval.BOTH_SIDE_CONFIDENCE);
+    }
+
+    /**
+     * returns the confidence interval based of the mean.
+     * @param alpha double; Alpha is the significance level used to compute the confidence level. The confidence level equals
+     *            100*(1 - alpha)%, or in other words, an alpha of 0.05 indicates a 95 percent confidence level.
+     * @param side ConfidenceInterval; the side of the confidence interval with respect to the mean
+     * @return double[]; the confidence interval of this tally
+     * @throws IllegalArgumentException when alpha is less than 0 or larger than 1
+     * @throws NullPointerException when side is null
+     */
+    public final double[] getConfidenceInterval(final double alpha, final ConfidenceInterval side)
+    {
+        Throw.whenNull(side, "type of confidence level cannot be null");
+        Throw.when(alpha < 0 || alpha > 1, IllegalArgumentException.class,
+                "confidenceLevel should be between 0 and 1 (inclusive)");
+        synchronized (this.semaphore)
+        {
+            double sampleMean = getSampleMean();
+            if (Double.isNaN(sampleMean) || Double.valueOf(this.getSampleStDev()).isNaN())
+            {
+                return null; // TODO throw something
+            }
+            double level = 1 - alpha;
+            if (side.equals(ConfidenceInterval.BOTH_SIDE_CONFIDENCE))
+            {
+                level = 1 - alpha / 2.0;
+            }
+            double z = DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, level);
+            double confidence = z * Math.sqrt(this.getSampleVariance() / this.n);
+            double[] result = {sampleMean - confidence, sampleMean + confidence};
+            if (side.equals(ConfidenceInterval.LEFT_SIDE_CONFIDENCE))
+            {
+                result[1] = sampleMean;
+            }
+            if (side.equals(ConfidenceInterval.RIGHT_SIDE_CONFIDENCE))
+            {
+                result[0] = sampleMean;
+            }
+            result[0] = Math.max(result[0], this.min);
+            result[1] = Math.min(result[1], this.max);
+            return result;
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public String toString()
     {
         return "Tally [sum=" + this.sum + ", m1=" + this.m1 + ", m2=" + this.m2 + ", m3=" + this.m3 + ", m4=" + this.m4

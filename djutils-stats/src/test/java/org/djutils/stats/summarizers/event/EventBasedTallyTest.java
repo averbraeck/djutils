@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.rmi.RemoteException;
 import java.util.Random;
 
 import org.djutils.event.Event;
@@ -202,9 +203,10 @@ public class EventBasedTallyTest
 
     /**
      * Test produced events by EventBasedTally.
+     * @throws RemoteException on network error
      */
     @Test
-    public void testTallyEventProduction()
+    public void testTallyEventProduction() throws RemoteException
     {
         EventBasedTally tally = new EventBasedTally("testTally");
         ObservationEventListener oel = new ObservationEventListener();

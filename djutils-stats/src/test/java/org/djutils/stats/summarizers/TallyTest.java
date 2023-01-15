@@ -65,7 +65,7 @@ public class TallyTest
         assertNull(tally.getConfidenceInterval(0.95, ConfidenceInterval.RIGHT_SIDE_CONFIDENCE));
         assertNull(tally.getConfidenceInterval(0.95, ConfidenceInterval.BOTH_SIDE_CONFIDENCE));
 
-        // Now we ingest some values
+        // Now we register some values
         try
         {
             tally.register(1.1);

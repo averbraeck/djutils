@@ -65,15 +65,15 @@ public final class StatisticsEvents
      * N_EVENT is fired whenever n is updated. The event should define the Statistic as the source and the current (Long) value
      * of n as the content.
      */
-    public static final EventType N_EVENT = new EventType("N_EVENT", new MetaData("count", "Number of ingested events",
+    public static final EventType N_EVENT = new EventType("N_EVENT", new MetaData("count", "Number of registered events",
             new ObjectDescriptor("eventCount", "Long event count", Long.class)));
 
     /**
      * COUNT_EVENT is fired whenever there is an observation that potentially updates the count of the Counter. The event should
      * define the Statistic as the source and the current (Long) count value as the content.
      */
-    public static final EventType COUNT_EVENT = new EventType("COUNT_EVENT", new MetaData("count", "Number of ingested events",
-            new ObjectDescriptor("count", "Number of ingested events", Long.class)));
+    public static final EventType COUNT_EVENT = new EventType("COUNT_EVENT", new MetaData("count", "Number of registered events",
+            new ObjectDescriptor("count", "Number of registered events", Long.class)));
 
     /**
      * MIN_EVENT is fired whenever there is an observation that potentially updates the lowest observed value of the statistic.
@@ -264,7 +264,7 @@ public final class StatisticsEvents
      * value of n as the content.
      */
     public static final EventType TIMED_N_EVENT = new EventType("TIMED_N_EVENT", new MetaData("count",
-            "Number of ingested events", new ObjectDescriptor("eventCount", "Long event count", Long.class)));
+            "Number of registered events", new ObjectDescriptor("eventCount", "Long event count", Long.class)));
 
     /**
      * TIMED_MIN_EVENT is fired whenever there is an observation that potentially updates the lowest observed value of the
