@@ -1,17 +1,20 @@
 package org.djutils.stats.summarizers.event;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
+import org.djutils.event.EventListenerMap;
+import org.djutils.event.EventProducer;
 import org.djutils.event.LocalEventProducer;
 import org.djutils.exceptions.Throw;
 import org.djutils.stats.summarizers.WeightedTally;
-import org.djutils.stats.summarizers.WeightedTallyInterface;
 
 /**
  * The EventBasedWeightedTally class defines a time-weighted tally that can be notified with weights and values using the
- * EventListenerInterface. It also produces events when values are tallied and when the tally is initialized.
+ * EventListener. It also produces events when values are tallied and when the tally is initialized. It embeds an EventProducer
+ * so it can keep listeners informed about new observations.
  * <p>
  * Copyright (c) 2002-2023 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
@@ -21,13 +24,13 @@ import org.djutils.stats.summarizers.WeightedTallyInterface;
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-public class EventBasedWeightedTally extends LocalEventProducer implements EventListener, WeightedTallyInterface
+public class EventBasedWeightedTally extends WeightedTally implements EventProducer, EventListener
 {
     /** */
     private static final long serialVersionUID = 20200228L;
 
-    /** the wrapped WeightedTally. */
-    private final WeightedTally wrappedWeightedTally;
+    /** The embedded EventProducer. */
+    private final EventProducer eventProducer;
 
     /**
      * Construct a new WeightedTally with a description.
@@ -35,85 +38,46 @@ public class EventBasedWeightedTally extends LocalEventProducer implements Event
      */
     public EventBasedWeightedTally(final String description)
     {
-        this.wrappedWeightedTally = new WeightedTally(description);
+        this(description, new LocalEventProducer());
+    }
+
+    /**
+     * Construct a new WeightedTally with a description.
+     * @param description String; the description of this WeightedTally
+     * @param eventProducer EventProducer; the EventProducer to embed and use in this statistic
+     */
+    public EventBasedWeightedTally(final String description, final EventProducer eventProducer)
+    {
+        super(description);
+        Throw.whenNull(eventProducer, "eventProducer cannot be null");
+        this.eventProducer = eventProducer;
     }
 
     /** {@inheritDoc} */
     @Override
-    public final String getDescription()
+    public EventListenerMap getEventListenerMap() throws RemoteException
     {
-        return this.wrappedWeightedTally.getDescription();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getMax()
-    {
-        return this.wrappedWeightedTally.getMax();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getMin()
-    {
-        return this.wrappedWeightedTally.getMin();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final long getN()
-    {
-        return this.wrappedWeightedTally.getN();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedSampleMean()
-    {
-        return this.wrappedWeightedTally.getWeightedSampleMean();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedSampleStDev()
-    {
-        return this.wrappedWeightedTally.getWeightedSampleStDev();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedPopulationStDev()
-    {
-        return this.wrappedWeightedTally.getWeightedPopulationStDev();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedSampleVariance()
-    {
-        return this.wrappedWeightedTally.getWeightedSampleVariance();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedPopulationVariance()
-    {
-        return this.wrappedWeightedTally.getWeightedPopulationVariance();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedSum()
-    {
-        return this.wrappedWeightedTally.getWeightedSum();
+        return this.eventProducer.getEventListenerMap();
     }
 
     /** {@inheritDoc} */
     @Override
     public void initialize()
     {
-        this.wrappedWeightedTally.initialize();
-        fireEvent(StatisticsEvents.INITIALIZED_EVENT);
+        // first check if the initialize() method is called from the super constructor. If so, defer.
+        if (this.eventProducer == null)
+        {
+            return;
+        }
+        super.initialize();
+        try
+        {
+            fireEvent(StatisticsEvents.INITIALIZED_EVENT);
+        }
+        catch (RemoteException exception)
+        {
+            throw new RuntimeException(exception);
+        }
     }
 
     /** {@inheritDoc} */
@@ -140,21 +104,30 @@ public class EventBasedWeightedTally extends LocalEventProducer implements Event
      * @param value double; the value to process
      * @return double; the value
      */
+    @Override
     public double register(final double weight, final double value)
     {
-        this.wrappedWeightedTally.register(weight, value);
-        if (hasListeners())
+        super.register(weight, value);
+        try
         {
-            fireEvent(StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT, new Serializable[] {weight, value});
-            fireEvents();
+            if (hasListeners())
+            {
+                fireEvent(StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT, new Serializable[] {weight, value});
+                fireEvents();
+            }
+        }
+        catch (RemoteException exception)
+        {
+            throw new RuntimeException(exception);
         }
         return value;
     }
 
     /**
-     * Method that can be overridden to fire own events or additional events when ingesting an observation.
+     * Method that can be overridden to fire own events or additional events when registering an observation.
+     * @throws RemoteException on network error
      */
-    protected void fireEvents()
+    protected void fireEvents() throws RemoteException
     {
         fireEvent(StatisticsEvents.N_EVENT, getN());
         fireEvent(StatisticsEvents.MIN_EVENT, getMin());
@@ -173,7 +146,7 @@ public class EventBasedWeightedTally extends LocalEventProducer implements Event
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()
     {
-        return this.wrappedWeightedTally.toString();
+        return "EventBasedWeightedTally" + super.toString().substring("WeightedTally".length());
     }
 
 }

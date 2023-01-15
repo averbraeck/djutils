@@ -15,7 +15,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-public class WeightedTally implements Statistic, WeightedTallyInterface
+public class WeightedTally implements Statistic
 {
     /** */
     private static final long serialVersionUID = 20200228L;
@@ -29,7 +29,7 @@ public class WeightedTally implements Statistic, WeightedTallyInterface
     /** The sum of this WeightedTally. */
     private double weightedSum = 0;
 
-    /** The total ingested weight times the variance of this WeightedTally. */
+    /** The total registered weight times the variance of this WeightedTally. */
     private double weightTimesVariance = 0;
 
     /** The minimum observed value of this WeightedTally. */
@@ -56,103 +56,6 @@ public class WeightedTally implements Statistic, WeightedTallyInterface
     {
         this.description = description;
         initialize();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final String getDescription()
-    {
-        return this.description;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getMax()
-    {
-        return this.max;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getMin()
-    {
-        return this.min;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final long getN()
-    {
-        return this.n;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedSampleMean()
-    {
-        synchronized (this.semaphore)
-        {
-            if (this.n > 0)
-            {
-                return this.weightedMean;
-            }
-            return Double.NaN;
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedSampleStDev()
-    {
-        synchronized (this.semaphore)
-        {
-            if (this.n > 1)
-            {
-                return Math.sqrt(getWeightedSampleVariance());
-            }
-            return Double.NaN;
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedPopulationStDev()
-    {
-        synchronized (this.semaphore)
-        {
-            return Math.sqrt(getWeightedPopulationVariance());
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedSampleVariance()
-    {
-        synchronized (this.semaphore)
-        {
-            if (this.n > 1)
-            {
-                return getWeightedPopulationVariance() * this.n / (this.n - 1);
-            }
-            return Double.NaN;
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedPopulationVariance()
-    {
-        synchronized (this.semaphore)
-        {
-            return this.weightTimesVariance / this.sumOfWeights;
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedSum()
-    {
-        return this.weightedSum;
     }
 
     /** {@inheritDoc} */
@@ -216,12 +119,124 @@ public class WeightedTally implements Statistic, WeightedTallyInterface
 
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings("checkstyle:designforextension")
-    public String toString()
+    public final String getDescription()
     {
-        return "WeightedTally [sumOfWeights=" + this.sumOfWeights + ", weightedMean=" + this.weightedMean + ", weightedSum="
-                + this.weightedSum + ", weightTimesVariance=" + this.weightTimesVariance + ", min=" + this.min + ", max="
-                + this.max + ", n=" + this.n + ", description=" + this.description + "]";
+        return this.description;
+    }
+
+    /**
+     * Returns the maximum value of any given observation, or NaN when no observations were registered.
+     * @return double; the maximum value of any given observation
+     */
+    public final double getMax()
+    {
+        return this.max;
+    }
+
+    /**
+     * Returns the minimum value of any given observation, or NaN when no observations were registered.
+     * @return double; the minimum value of any given observation
+     */
+    public final double getMin()
+    {
+        return this.min;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final long getN()
+    {
+        return this.n;
+    }
+
+    /**
+     * Retrieve the current weighted sample mean of all observations since the initialization.
+     * @return double; the current weighted sample mean
+     */
+    public final double getWeightedSampleMean()
+    {
+        synchronized (this.semaphore)
+        {
+            if (this.n > 0)
+            {
+                return this.weightedMean;
+            }
+            return Double.NaN;
+        }
+    }
+
+    /**
+     * Retrieve the current weighted mean of all observations since the initialization.
+     * @return double; the current weighted mean
+     */
+    public double getWeightedPopulationMean()
+    {
+        return getWeightedSampleMean();
+    }
+
+    /**
+     * Retrieve the current weighted sample standard deviation of the observations.
+     * @return double; the current weighted sample standard deviation
+     */
+    public final double getWeightedSampleStDev()
+    {
+        synchronized (this.semaphore)
+        {
+            if (this.n > 1)
+            {
+                return Math.sqrt(getWeightedSampleVariance());
+            }
+            return Double.NaN;
+        }
+    }
+
+    /**
+     * Retrieve the current weighted standard deviation of the observations.
+     * @return double; the current weighted standard deviation
+     */
+    public final double getWeightedPopulationStDev()
+    {
+        synchronized (this.semaphore)
+        {
+            return Math.sqrt(getWeightedPopulationVariance());
+        }
+    }
+
+    /**
+     * Retrieve the current weighted sample variance of the observations.
+     * @return double; the current weighted sample variance of the observations
+     */
+    public final double getWeightedSampleVariance()
+    {
+        synchronized (this.semaphore)
+        {
+            if (this.n > 1)
+            {
+                return getWeightedPopulationVariance() * this.n / (this.n - 1);
+            }
+            return Double.NaN;
+        }
+    }
+
+    /**
+     * Retrieve the current weighted variance of the observations.
+     * @return double; the current weighted variance of the observations
+     */
+    public final double getWeightedPopulationVariance()
+    {
+        synchronized (this.semaphore)
+        {
+            return this.weightTimesVariance / this.sumOfWeights;
+        }
+    }
+
+    /**
+     * Retrieve the current weighted sum of the values of the observations.
+     * @return double; the current weighted sum of the values of the observations
+     */
+    public final double getWeightedSum()
+    {
+        return this.weightedSum;
     }
 
     /** {@inheritDoc} */
@@ -246,6 +261,16 @@ public class WeightedTally implements Statistic, WeightedTallyInterface
     public String reportFooter()
     {
         return "-".repeat(113);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    @SuppressWarnings("checkstyle:designforextension")
+    public String toString()
+    {
+        return "WeightedTally [sumOfWeights=" + this.sumOfWeights + ", weightedMean=" + this.weightedMean + ", weightedSum="
+                + this.weightedSum + ", weightTimesVariance=" + this.weightTimesVariance + ", min=" + this.min + ", max="
+                + this.max + ", n=" + this.n + ", description=" + this.description + "]";
     }
 
 }

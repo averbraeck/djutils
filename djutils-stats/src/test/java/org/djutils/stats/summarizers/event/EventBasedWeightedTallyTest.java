@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.rmi.RemoteException;
+
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventType;
@@ -197,9 +199,10 @@ public class EventBasedWeightedTallyTest
 
     /**
      * Test produced events by EventBasedWeightedTally.
+     * @throws RemoteException on network error
      */
     @Test
-    public void testWeightedTallyEventProduction()
+    public void testWeightedTallyEventProduction() throws RemoteException
     {
         EventBasedWeightedTally weightedTally = new EventBasedWeightedTally("testTally");
         WeightedObservationEventListener woel = new WeightedObservationEventListener();
