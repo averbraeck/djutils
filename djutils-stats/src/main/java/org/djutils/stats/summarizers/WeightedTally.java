@@ -15,7 +15,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-public class WeightedTally implements WeightedTallyInterface
+public class WeightedTally implements Statistic, WeightedTallyInterface
 {
     /** */
     private static final long serialVersionUID = 20200228L;
@@ -222,6 +222,30 @@ public class WeightedTally implements WeightedTallyInterface
         return "WeightedTally [sumOfWeights=" + this.sumOfWeights + ", weightedMean=" + this.weightedMean + ", weightedSum="
                 + this.weightedSum + ", weightTimesVariance=" + this.weightTimesVariance + ", min=" + this.min + ", max="
                 + this.max + ", n=" + this.n + ", description=" + this.description + "]";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String reportHeader()
+    {
+        return "-".repeat(113) + String.format("\n| %-48.48s | %6.6s | %10.10s | %10.10s | %10.10s | %10.10s |\n",
+                "Weighted Tally name", "n", "w.mean", "w.st.dev", "min obs", "max obs") + "-".repeat(113);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String reportLine()
+    {
+        return String.format("| %-48.48s | %6d | %s | %s | %s | %s |", getDescription(), getN(),
+                formatFixed(getWeightedPopulationMean(), 10), formatFixed(getWeightedPopulationStDev(), 10),
+                formatFixed(getMin(), 10), formatFixed(getMax(), 10));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String reportFooter()
+    {
+        return "-".repeat(113);
     }
 
 }

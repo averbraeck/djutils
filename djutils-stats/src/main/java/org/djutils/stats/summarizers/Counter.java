@@ -11,7 +11,7 @@ package org.djutils.stats.summarizers;
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  */
-public class Counter implements CounterInterface
+public class Counter implements Statistic, CounterInterface
 {
     /** */
     private static final long serialVersionUID = 20200228L;
@@ -92,4 +92,25 @@ public class Counter implements CounterInterface
         return this.description;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String reportHeader()
+    {
+        return "-".repeat(72) + String.format("\n| %-48.48s | %6.6s | %8.8s |\n", "Counter name", "n", "count")
+                + "-".repeat(72);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String reportLine()
+    {
+        return String.format("| %-48.48s | %6d | %8d |", getDescription(), getN(), getCount());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String reportFooter()
+    {
+        return "-".repeat(72);
+    }
 }

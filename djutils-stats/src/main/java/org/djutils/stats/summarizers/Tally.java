@@ -18,7 +18,7 @@ import org.djutils.stats.summarizers.quantileaccumulator.QuantileAccumulator;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-public class Tally implements TallyInterface
+public class Tally implements TallyInterface, Statistic
 {
     /** */
     private static final long serialVersionUID = 20200228L;
@@ -383,4 +383,27 @@ public class Tally implements TallyInterface
                 + ", quantileAccumulator=" + this.quantileAccumulator + "]";
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String reportHeader()
+    {
+        return "-".repeat(113) + String.format("\n| %-48.48s | %6.6s | %10.10s | %10.10s | %10.10s | %10.10s |\n", "Tally name",
+                "n", "mean", "st.dev", "minimum", "maximum") + "-".repeat(113);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String reportLine()
+    {
+        return String.format("| %-48.48s | %6d | %s | %s | %s | %s |", getDescription(), getN(),
+                formatFixed(getPopulationMean(), 10), formatFixed(getPopulationStDev(), 10), formatFixed(getMin(), 10),
+                formatFixed(getMax(), 10));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String reportFooter()
+    {
+        return "-".repeat(113);
+    }
 }

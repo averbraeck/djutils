@@ -45,5 +45,18 @@ public class CounterTest
         }
         assertEquals(100, counter.getN());
         assertEquals(value, counter.getCount());
+        
+        Counter counterLong = new Counter("A very " + "long ".repeat(20) + " description");
+        counterLong.register(1000);
+
+        // check the report functions
+        int len = counter.reportFooter().length();
+        assertEquals(len, counter.reportHeader().split("\n")[0].length());
+        assertEquals(len, counter.reportHeader().split("\n")[1].length());
+        assertEquals(len, counter.reportHeader().split("\n")[2].length());
+        assertEquals(len, counter.reportLine().length());
+        Counter counterEmpty = new Counter("Long description ".repeat(100));
+        assertEquals(len, counterEmpty.reportLine().length());
+
     }
 }

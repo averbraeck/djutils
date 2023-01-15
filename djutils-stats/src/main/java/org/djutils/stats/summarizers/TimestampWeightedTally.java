@@ -16,7 +16,7 @@ import org.djutils.exceptions.Throw;
  * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  */
-public class TimestampWeightedTally implements TimestampTallyInterface
+public class TimestampWeightedTally implements Statistic, TimestampTallyInterface
 {
     /** */
     private static final long serialVersionUID = 20200228L;
@@ -216,6 +216,32 @@ public class TimestampWeightedTally implements TimestampTallyInterface
     public String toString()
     {
         return this.wrappedWeightedTally.toString();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String reportHeader()
+    {
+        return "-".repeat(113)
+                + String.format("\n| %-48.48s | %6.6s | %10.10s | %10.10s | %10.10s | %10.10s |\n",
+                        "Timestamp-based weighted Tally name", "n", "w.mean", "w.st.dev", "min obs", "max obs")
+                + "-".repeat(113);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String reportLine()
+    {
+        return String.format("| %-48.48s | %6d | %s | %s | %s | %s |", getDescription(), getN(),
+                formatFixed(getWeightedPopulationMean(), 10), formatFixed(getWeightedPopulationStDev(), 10),
+                formatFixed(getMin(), 10), formatFixed(getMax(), 10));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String reportFooter()
+    {
+        return "-".repeat(113);
     }
 
 }

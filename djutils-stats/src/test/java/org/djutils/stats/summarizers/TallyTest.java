@@ -100,6 +100,20 @@ public class TallyTest
         {
             fail(exception.getMessage());
         }
+        
+        // check the report functions
+        int len = tally.reportFooter().length();
+        assertEquals(len, tally.reportHeader().split("\n")[0].length());
+        assertEquals(len, tally.reportHeader().split("\n")[1].length());
+        assertEquals(len, tally.reportHeader().split("\n")[2].length());
+        assertEquals(len, tally.reportLine().length());
+        assertEquals(len, new Tally("empty tally").reportLine().length());
+        Tally tallyX = new Tally("1 value");
+        tallyX.register(1E10);
+        assertEquals(len, tallyX.reportLine().length());
+        Tally tallyY = new Tally("1 very small value");
+        tallyY.register(-0.000000000002);
+        assertEquals(len, tallyY.reportLine().length());
 
         // Now we check the tally
         assertEquals(2.0, tally.getMax(), 1.0E-6);
