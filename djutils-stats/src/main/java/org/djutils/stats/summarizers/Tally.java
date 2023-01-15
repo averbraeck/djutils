@@ -156,7 +156,7 @@ public class Tally implements Statistic
 
     /** {@inheritDoc} */
     @Override
-    public final String getDescription()
+    public String getDescription()
     {
         return this.description;
     }
@@ -165,7 +165,7 @@ public class Tally implements Statistic
      * Returns the maximum value of any given observation, or NaN when no observations were registered.
      * @return double; the maximum value of any given observation
      */
-    public final double getMax()
+    public double getMax()
     {
         return this.max;
     }
@@ -174,14 +174,14 @@ public class Tally implements Statistic
      * Returns the minimum value of any given observation, or NaN when no observations were registered.
      * @return double; the minimum value of any given observation
      */
-    public final double getMin()
+    public double getMin()
     {
         return this.min;
     }
 
     /** {@inheritDoc} */
     @Override
-    public final long getN()
+    public long getN()
     {
         return this.n;
     }
@@ -190,7 +190,7 @@ public class Tally implements Statistic
      * Return the sum of the values of the observations.
      * @return double; the sum of the values of the observations
      */
-    public final double getSum()
+    public double getSum()
     {
         return this.sum;
     }
@@ -199,7 +199,7 @@ public class Tally implements Statistic
      * Returns the sample mean of all observations since the initialization.
      * @return double; the sample mean
      */
-    public final double getSampleMean()
+    public double getSampleMean()
     {
         if (this.n > 0)
         {
@@ -222,7 +222,7 @@ public class Tally implements Statistic
      * standard deviation is defined as the square root of the sample variance.
      * @return double; the sample standard deviation
      */
-    public final double getSampleStDev()
+    public double getSampleStDev()
     {
         synchronized (this.semaphore)
         {
@@ -239,7 +239,7 @@ public class Tally implements Statistic
      * standard deviation is defined as the square root of the population variance.
      * @return double; the population standard deviation
      */
-    public final double getPopulationStDev()
+    public double getPopulationStDev()
     {
         synchronized (this.semaphore)
         {
@@ -255,7 +255,7 @@ public class Tally implements Statistic
      * &nbsp;&nbsp;<i>S<sup>2</sup> = &sigma;<sup>2</sup> * n / (n - 1)</i><br>
      * @return double; the current sample variance of this tally
      */
-    public final double getSampleVariance()
+    public double getSampleVariance()
     {
         synchronized (this.semaphore)
         {
@@ -273,7 +273,7 @@ public class Tally implements Statistic
      * <i>&sigma;<sup>2</sup> = (1 / n) * [ &Sigma;x<sup>2</sup> - (&Sigma;x)<sup>2</sup> / n ] </i>
      * @return double; the current population variance of this tally
      */
-    public final double getPopulationVariance()
+    public double getPopulationVariance()
     {
         synchronized (this.semaphore)
         {
@@ -294,7 +294,7 @@ public class Tally implements Statistic
      * Here we follow the last mentioned formula. All formulas converge to the same value with larger n.
      * @return double; the sample skewness of the registered data
      */
-    public final double getSampleSkewness()
+    public double getSampleSkewness()
     {
         if (this.n > 2)
         {
@@ -310,7 +310,7 @@ public class Tally implements Statistic
      * sample_var<sup>3/2</sup> ]</i> .
      * @return double; the skewness of the registered data
      */
-    public final double getPopulationSkewness()
+    public double getPopulationSkewness()
     {
         if (this.n > 1)
         {
@@ -327,7 +327,7 @@ public class Tally implements Statistic
      * sample_var<sup>2</sup> ]</i> .
      * @return double; the sample kurtosis of the registered data
      */
-    public final double getSampleKurtosis()
+    public double getSampleKurtosis()
     {
         if (this.n > 3)
         {
@@ -344,7 +344,7 @@ public class Tally implements Statistic
      * pop_var<sup>2</sup> ]</i> .
      * @return double; the population kurtosis of the registered data
      */
-    public final double getPopulationKurtosis()
+    public double getPopulationKurtosis()
     {
         if (this.n > 2)
         {
@@ -362,7 +362,7 @@ public class Tally implements Statistic
      * This is the excess kurtosis that is calculated by, for instance, SAS, SPSS and Excel.
      * @return double; the sample excess kurtosis of the registered data
      */
-    public final double getSampleExcessKurtosis()
+    public double getSampleExcessKurtosis()
     {
         if (this.n > 3)
         {
@@ -377,7 +377,7 @@ public class Tally implements Statistic
      * excess kurtosis is the kurtosis value shifted by -3 to be 0 for the normal distribution.
      * @return double; the population excess kurtosis of the registered data
      */
-    public final double getPopulationExcessKurtosis()
+    public double getPopulationExcessKurtosis()
     {
         if (this.n > 2)
         {
@@ -394,7 +394,7 @@ public class Tally implements Statistic
      * @return double; the quantile for the probability
      * @throws IllegalArgumentException when the probability is less than 0 or larger than 1
      */
-    public final double getQuantile(final double probability)
+    public double getQuantile(final double probability)
     {
         return this.quantileAccumulator.getQuantile(this, probability);
     }
@@ -418,7 +418,7 @@ public class Tally implements Statistic
      * @return double[]; the confidence interval of this tally
      * @throws IllegalArgumentException when alpha is less than 0 or larger than 1
      */
-    public final double[] getConfidenceInterval(final double alpha)
+    public double[] getConfidenceInterval(final double alpha)
     {
         return this.getConfidenceInterval(alpha, ConfidenceInterval.BOTH_SIDE_CONFIDENCE);
     }
@@ -432,7 +432,7 @@ public class Tally implements Statistic
      * @throws IllegalArgumentException when alpha is less than 0 or larger than 1
      * @throws NullPointerException when side is null
      */
-    public final double[] getConfidenceInterval(final double alpha, final ConfidenceInterval side)
+    public double[] getConfidenceInterval(final double alpha, final ConfidenceInterval side)
     {
         Throw.whenNull(side, "type of confidence level cannot be null");
         Throw.when(alpha < 0 || alpha > 1, IllegalArgumentException.class,
