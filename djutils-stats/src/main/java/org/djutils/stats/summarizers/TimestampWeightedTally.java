@@ -16,7 +16,7 @@ import org.djutils.exceptions.Throw;
  * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  */
-public class TimestampWeightedTally implements Statistic, TimestampTallyInterface
+public class TimestampWeightedTally implements Statistic
 {
     /** */
     private static final long serialVersionUID = 20200228L;
@@ -60,23 +60,33 @@ public class TimestampWeightedTally implements Statistic, TimestampTallyInterfac
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public final boolean isActive()
+    /**
+     * Return whether the statistic is active (accepting observations) or not.
+     * @return boolean; whether the statistic is active (accepting observations) or not
+     */
+    public boolean isActive()
     {
         return this.active;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public final void endObservations(final Number timestamp)
+    /**
+     * End the observations and closes the last interval of observations. After ending, no more observations will be accepted.
+     * Calling this method will create an extra observation, and corresponding events for the EventBased implementations of this
+     * interface will be called.
+     * @param timestamp Number; the Number object representing the final timestamp
+     */
+    public void endObservations(final Number timestamp)
     {
         register(timestamp, this.lastValue);
         this.active = false;
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * End the observations and closes the last interval of observations. After ending, no more observations will be accepted.
+     * Calling this method will create an extra observation, and corresponding events for the EventBased implementations of this
+     * interface will be called.
+     * @param timestamp Calendar; the Calendar object representing the final timestamp
+     */
     public void endObservations(final Calendar timestamp)
     {
         endObservations(timestamp.getTimeInMillis());
@@ -142,80 +152,97 @@ public class TimestampWeightedTally implements Statistic, TimestampTallyInterfac
 
     /** {@inheritDoc} */
     @Override
-    public final String getDescription()
+    public String getDescription()
     {
         return this.wrappedWeightedTally.getDescription();
     }
 
     /** {@inheritDoc} */
     @Override
-    public final long getN()
+    public long getN()
     {
         return this.wrappedWeightedTally.getN();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public final double getMax()
+    /**
+     * Returns the maximum value of any given observation, or NaN when no observations were registered.
+     * @return double; the maximum value of any given observation
+     */
+    public double getMax()
     {
         return this.wrappedWeightedTally.getMax();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public final double getMin()
+    /**
+     * Returns the minimum value of any given observation, or NaN when no observations were registered.
+     * @return double; the minimum value of any given observation
+     */
+    public double getMin()
     {
         return this.wrappedWeightedTally.getMin();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedSampleMean()
+    /**
+     * Retrieve the current weighted sample mean of all observations since the initialization.
+     * @return double; the current weighted sample mean
+     */
+    public double getWeightedSampleMean()
     {
         return this.wrappedWeightedTally.getWeightedSampleMean();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedSampleStDev()
+    /**
+     * Retrieve the current weighted mean of all observations since the initialization.
+     * @return double; the current weighted mean
+     */
+    public double getWeightedPopulationMean()
+    {
+        return getWeightedSampleMean();
+    }
+
+    /**
+     * Retrieve the current weighted sample standard deviation of the observations.
+     * @return double; the current weighted sample standard deviation
+     */
+    public double getWeightedSampleStDev()
     {
         return this.wrappedWeightedTally.getWeightedSampleStDev();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedPopulationStDev()
+    /**
+     * Retrieve the current weighted standard deviation of the observations.
+     * @return double; the current weighted standard deviation
+     */
+    public double getWeightedPopulationStDev()
     {
         return this.wrappedWeightedTally.getWeightedPopulationStDev();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedSampleVariance()
+    /**
+     * Retrieve the current weighted sample variance of the observations.
+     * @return double; the current weighted sample variance of the observations
+     */
+    public double getWeightedSampleVariance()
     {
         return this.wrappedWeightedTally.getWeightedSampleVariance();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedPopulationVariance()
+    /**
+     * Retrieve the current weighted variance of the observations.
+     * @return double; the current weighted variance of the observations
+     */
+    public double getWeightedPopulationVariance()
     {
         return this.wrappedWeightedTally.getWeightedPopulationVariance();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public final double getWeightedSum()
+    /**
+     * Retrieve the current weighted sum of the values of the observations.
+     * @return double; the current weighted sum of the values of the observations
+     */
+    public double getWeightedSum()
     {
         return this.wrappedWeightedTally.getWeightedSum();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    @SuppressWarnings("checkstyle:designforextension")
-    public String toString()
-    {
-        return this.wrappedWeightedTally.toString();
     }
 
     /** {@inheritDoc} */
@@ -242,6 +269,13 @@ public class TimestampWeightedTally implements Statistic, TimestampTallyInterfac
     public String reportFooter()
     {
         return "-".repeat(113);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString()
+    {
+        return this.wrappedWeightedTally.toString();
     }
 
 }

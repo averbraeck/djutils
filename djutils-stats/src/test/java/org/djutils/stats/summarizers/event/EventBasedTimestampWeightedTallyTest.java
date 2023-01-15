@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.rmi.RemoteException;
 import java.util.Calendar;
 
 import org.djutils.event.Event;
@@ -306,9 +307,10 @@ public class EventBasedTimestampWeightedTallyTest
 
     /**
      * Test produced events by EventBasedWeightedTally.
+     * @throws RemoteException on network error
      */
     @Test
-    public void testWeightedTallyEventProduction()
+    public void testWeightedTallyEventProduction() throws RemoteException
     {
         EventBasedTimestampWeightedTally timestampedTally = new EventBasedTimestampWeightedTally("testTally");
         TimestampedObservationEventListener toel = new TimestampedObservationEventListener();
