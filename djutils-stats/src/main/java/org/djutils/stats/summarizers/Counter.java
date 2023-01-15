@@ -1,5 +1,7 @@
 package org.djutils.stats.summarizers;
 
+import org.djutils.exceptions.Throw;
+
 /**
  * The Counter class defines a statistics event counter.
  * <p>
@@ -34,6 +36,7 @@ public class Counter implements Statistic
      */
     public Counter(final String description)
     {
+        Throw.whenNull(description, "description cannot be null");
         this.description = description;
         initialize();
     }
