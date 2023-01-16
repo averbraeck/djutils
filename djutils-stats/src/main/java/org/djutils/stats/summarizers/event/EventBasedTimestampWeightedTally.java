@@ -54,7 +54,7 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
         super(description);
         Throw.whenNull(eventProducer, "eventProducer cannot be null");
         this.eventProducer = eventProducer;
-   }
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -72,7 +72,7 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
         {
             try
             {
-                fireEvent(StatisticsEvents.INITIALIZED_EVENT);
+                this.eventProducer.fireEvent(StatisticsEvents.INITIALIZED_EVENT);
             }
             catch (RemoteException exception)
             {
@@ -120,10 +120,14 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
     }
 
     /**
-     * Process one observed value.
+     * Process one observed Calender-based value. The time used will be the Calendar's time in milliseconds. Silently ignore
+     * when a value is registered, but tally is not active, i.e. when endObservations() has been called.
      * @param timestamp Calendar; the Calendar object representing the timestamp
      * @param value double; the value to process
      * @return double; the value
+     * @throws NullPointerException when timestamp is null
+     * @throws IllegalArgumentException when value is NaN
+     * @throws IllegalArgumentException when given timestamp is before last timestamp
      */
     @Override
     public double register(final Calendar timestamp, final double value)
@@ -133,7 +137,8 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
         {
             if (hasListeners())
             {
-                this.fireEvent(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT, new Serializable[] {timestamp, value});
+                this.eventProducer.fireEvent(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT,
+                        new Serializable[] {timestamp, value});
                 fireEvents(timestamp);
             }
         }
@@ -145,10 +150,14 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
     }
 
     /**
-     * Process one observed value.
+     * Process one observed Number-based value. Silently ignore when a value is registered, but tally is not active, i.e. when
+     * endObservations() has been called.
      * @param timestamp Number; the object representing the timestamp
      * @param value double; the value to process
      * @return double; the value
+     * @throws NullPointerException when timestamp is null
+     * @throws IllegalArgumentException when value is NaN or timestamp is NaN
+     * @throws IllegalArgumentException when given timestamp is before last timestamp
      */
     @Override
     public double register(final Number timestamp, final double value)
@@ -158,7 +167,8 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
         {
             if (hasListeners())
             {
-                this.fireEvent(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT, new Serializable[] {timestamp, value});
+                this.eventProducer.fireEvent(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT,
+                        new Serializable[] {timestamp, value});
                 fireEvents(timestamp);
             }
         }
@@ -167,6 +177,23 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
             throw new RuntimeException(exception);
         }
         return value;
+    }
+
+    /**
+     * Explicit;y override the double value method signature of WeightedTally to call the right method.<br>
+     * Process one observed double value. Silently ignore when a value is registered, but tally is not active, i.e. when
+     * endObservations() has been called.
+     * @param timestamp Number; the object representing the timestamp
+     * @param value double; the value to process
+     * @return double; the value
+     * @throws NullPointerException when timestamp is null
+     * @throws IllegalArgumentException when value is NaN or timestamp is NaN
+     * @throws IllegalArgumentException when given timestamp is before last timestamp
+     */
+    @Override
+    public double register(final double timestamp, final double value)
+    {
+        return register((Number) Double.valueOf(timestamp), value);
     }
 
     /**
