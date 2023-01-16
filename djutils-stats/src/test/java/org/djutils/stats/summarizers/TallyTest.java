@@ -4,12 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.djutils.exceptions.Try;
 import org.djutils.stats.ConfidenceInterval;
 import org.djutils.stats.DistNormalTable;
 import org.djutils.stats.summarizers.quantileaccumulator.FullStorageAccumulator;
@@ -66,41 +66,34 @@ public class TallyTest
         assertNull(tally.getConfidenceInterval(0.95, ConfidenceInterval.BOTH_SIDE_CONFIDENCE));
 
         // Now we register some values
-        try
-        {
-            tally.register(1.1);
-            assertFalse("sample mean is now available", Double.isNaN(tally.getSampleMean()));
-            assertFalse("mean is now available", Double.isNaN(tally.getPopulationMean()));
-            assertEquals("smaple mean is 1.1", 1.1, tally.getSampleMean(), 0.0000001);
-            assertEquals("mean is 1.1", 1.1, tally.getPopulationMean(), 0.0000001);
-            assertTrue("sample variance is not available", Double.isNaN(tally.getSampleVariance()));
-            assertFalse("variance is not available", Double.isNaN(tally.getPopulationVariance()));
-            assertTrue("skewness is not available", Double.isNaN(tally.getPopulationSkewness()));
-            tally.register(1.2);
-            assertFalse("sample variance is now available", Double.isNaN(tally.getSampleVariance()));
-            assertTrue("sample skewness is not available", Double.isNaN(tally.getSampleSkewness()));
-            assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
-            assertFalse("skewness is available", Double.isNaN(tally.getPopulationSkewness()));
-            assertTrue("kurtosis is not available", Double.isNaN(tally.getPopulationKurtosis()));
-            tally.register(1.3);
-            assertFalse("skewness is now available", Double.isNaN(tally.getSampleSkewness()));
-            assertFalse("kurtosis is now available", Double.isNaN(tally.getPopulationKurtosis()));
-            assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
-            tally.register(1.4);
-            assertFalse("sample kurtosis is now available", Double.isNaN(tally.getSampleKurtosis()));
-            tally.register(1.5);
-            tally.register(1.6);
-            tally.register(1.7);
-            tally.register(1.8);
-            tally.register(1.9);
-            tally.register(2.0);
-            tally.register(1.0);
-        }
-        catch (Exception exception)
-        {
-            fail(exception.getMessage());
-        }
-        
+        tally.register(1.1);
+        assertFalse("sample mean is now available", Double.isNaN(tally.getSampleMean()));
+        assertFalse("mean is now available", Double.isNaN(tally.getPopulationMean()));
+        assertEquals("smaple mean is 1.1", 1.1, tally.getSampleMean(), 0.0000001);
+        assertEquals("mean is 1.1", 1.1, tally.getPopulationMean(), 0.0000001);
+        assertTrue("sample variance is not available", Double.isNaN(tally.getSampleVariance()));
+        assertFalse("variance is not available", Double.isNaN(tally.getPopulationVariance()));
+        assertTrue("skewness is not available", Double.isNaN(tally.getPopulationSkewness()));
+        tally.register(1.2);
+        assertFalse("sample variance is now available", Double.isNaN(tally.getSampleVariance()));
+        assertTrue("sample skewness is not available", Double.isNaN(tally.getSampleSkewness()));
+        assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
+        assertFalse("skewness is available", Double.isNaN(tally.getPopulationSkewness()));
+        assertTrue("kurtosis is not available", Double.isNaN(tally.getPopulationKurtosis()));
+        tally.register(1.3);
+        assertFalse("skewness is now available", Double.isNaN(tally.getSampleSkewness()));
+        assertFalse("kurtosis is now available", Double.isNaN(tally.getPopulationKurtosis()));
+        assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
+        tally.register(1.4);
+        assertFalse("sample kurtosis is now available", Double.isNaN(tally.getSampleKurtosis()));
+        tally.register(1.5);
+        tally.register(1.6);
+        tally.register(1.7);
+        tally.register(1.8);
+        tally.register(1.9);
+        tally.register(2.0);
+        tally.register(1.0);
+
         // check the report functions
         int len = tally.reportFooter().length();
         assertEquals(len, tally.reportHeader().split("\\R")[0].length());
@@ -168,33 +161,12 @@ public class TallyTest
         assertEquals(1.525334710, tally.getConfidenceInterval(0.40, ConfidenceInterval.RIGHT_SIDE_CONFIDENCE)[1], 1E-05);
 
         // we check the input of the confidence interval
-        try
-        {
-            tally.getConfidenceInterval(0.95, null);
-            fail("null is not defined as side of confidence level");
-        }
-        catch (Exception exception)
-        {
-            assertTrue(exception.getClass().equals(NullPointerException.class));
-        }
-        try
-        {
-            assertNull(tally.getConfidenceInterval(-0.95));
-            fail("should have reacted on wrong confidence level -0.95");
-        }
-        catch (Exception exception)
-        {
-            assertTrue(exception.getClass().equals(IllegalArgumentException.class));
-        }
-        try
-        {
-            assertNull(tally.getConfidenceInterval(1.14));
-            fail("should have reacted on wrong confidence level 1.14");
-        }
-        catch (Exception exception)
-        {
-            assertTrue(exception.getClass().equals(IllegalArgumentException.class));
-        }
+        Try.testFail(() -> tally.getConfidenceInterval(0.95, null), "null is not defined as side of confidence level",
+                NullPointerException.class);
+        Try.testFail(() -> tally.getConfidenceInterval(-0.95), "should have reacted on wrong confidence level -0.95",
+                IllegalArgumentException.class);
+        Try.testFail(() -> tally.getConfidenceInterval(1.14), "should have reacted on wrong confidence level 1.14",
+                IllegalArgumentException.class);
 
         assertTrue(Math.abs(tally.getSampleMean() - 1.5) < 10E-6);
 
@@ -260,27 +232,12 @@ public class TallyTest
     {
         Tally tally = new Tally("test with the NoStorageAccumulator", new NoStorageAccumulator());
         assertTrue("mean of no data is NaN", Double.isNaN(tally.getSampleMean()));
-        try
-        {
-            tally.getQuantile(0.5);
-            fail("getQuantile of no data should have resulted in an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
-
+        Try.testFail(() -> tally.getQuantile(0.5), "getQuantile of no data should have resulted in an IllegalArgumentException",
+                IllegalArgumentException.class);
         tally.register(90.0);
         assertEquals("mean of one value is that value", 90.0, tally.getSampleMean(), 0);
-        try
-        {
-            tally.getQuantile(0.5);
-            fail("getQuantile of one value should have resulted in an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+        Try.testFail(() -> tally.getQuantile(0.5),
+                "getQuantile of one value should have resulted in an IllegalArgumentException", IllegalArgumentException.class);
 
         tally.register(110.0);
         assertEquals("mean of two value", 100.0, tally.getSampleMean(), 0);
@@ -342,25 +299,10 @@ public class TallyTest
             double got = tally.getQuantile(probability);
             assertEquals("quantile should match", expected, got, 0.00001);
         }
-        try
-        {
-            tally.getQuantile(-0.01);
-            fail("negative probability should have thrown an exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
-
-        try
-        {
-            tally.getQuantile(1.01);
-            fail("Probability > 1 should have thrown an exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+        Try.testFail(() -> tally.getQuantile(-0.01), "negative probability should have thrown an exception",
+                IllegalArgumentException.class);
+        Try.testFail(() -> tally.getQuantile(1.01), "Probability > 1 should have thrown an exception",
+                IllegalArgumentException.class);
 
         assertTrue("toString returns something descriptive",
                 new FullStorageAccumulator().toString().startsWith("FullStorageAccumulator"));
@@ -447,25 +389,13 @@ public class TallyTest
             // System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
             assertEquals("quantile should match", expected, got, 0.01); // Uniformly distributed data yields very good estimates
         }
-        try
-        {
-            tally.getQuantile(-0.01);
-            fail("negative probability should have thrown an exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
 
-        try
-        {
-            tally.getQuantile(1.01);
-            fail("Probability > 1 should have thrown an exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+        final Tally tally1 = tally;
+        Try.testFail(() -> tally1.getQuantile(-0.01), "negative probability should have thrown an exception",
+                IllegalArgumentException.class);
+        Try.testFail(() -> tally1.getQuantile(1.01), "Probability > 1 should have thrown an exception",
+                IllegalArgumentException.class);
+
         assertTrue("toString returns something descriptive",
                 new TDigestAccumulator().toString().startsWith("TDigestAccumulator"));
         tally = new Tally("Tally for TDigestAccumulator test", new TDigestAccumulator());
