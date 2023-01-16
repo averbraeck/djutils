@@ -18,34 +18,34 @@ import org.djutils.stats.summarizers.quantileaccumulator.QuantileAccumulator;
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-public class Tally implements Statistic
+public class Tally implements TallyStatistic
 {
     /** */
     private static final long serialVersionUID = 20200228L;
 
     /** The sum of this tally. */
-    private double sum = 0;
+    private double sum;
 
     /** The mean of this tally. */
-    private double m1 = 0;
+    private double m1;
 
     /** The summation for the second moment (variance). */
-    private double m2 = 0;
+    private double m2;
 
     /** The summation for the third moment (skewness). */
-    private double m3 = 0;
+    private double m3;
 
     /** The summation for the fourth moment (kurtosis). */
-    private double m4 = 0;
+    private double m4;
 
     /** The minimum observed value of this tally. */
-    private double min = Double.NaN;
+    private double min;
 
     /** The maximum observed value of this tally. */
-    private double max = Double.NaN;
+    private double max;
 
     /** The number of measurements of this tally. */
-    private long n = 0;
+    private long n;
 
     /** The description of this tally. */
     private final String description;
@@ -161,19 +161,15 @@ public class Tally implements Statistic
         return this.description;
     }
 
-    /**
-     * Returns the maximum value of any given observation, or NaN when no observations were registered.
-     * @return double; the maximum value of any given observation
-     */
+    /** {@inheritDoc} */
+    @Override
     public double getMax()
     {
         return this.max;
     }
 
-    /**
-     * Returns the minimum value of any given observation, or NaN when no observations were registered.
-     * @return double; the minimum value of any given observation
-     */
+    /** {@inheritDoc} */
+    @Override
     public double getMin()
     {
         return this.min;
