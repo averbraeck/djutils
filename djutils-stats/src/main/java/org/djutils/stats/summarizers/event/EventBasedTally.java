@@ -94,7 +94,7 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
         {
             try
             {
-                fireEvent(StatisticsEvents.INITIALIZED_EVENT);
+                this.eventProducer.fireEvent(StatisticsEvents.INITIALIZED_EVENT);
             }
             catch (RemoteException exception)
             {
@@ -125,7 +125,7 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
         {
             if (hasListeners())
             {
-                fireEvent(StatisticsEvents.OBSERVATION_ADDED_EVENT, value);
+                this.eventProducer.fireEvent(StatisticsEvents.OBSERVATION_ADDED_EVENT, value);
                 fireEvents();
             }
         }
@@ -142,22 +142,22 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
      */
     protected void fireEvents() throws RemoteException
     {
-        fireEvent(StatisticsEvents.N_EVENT, getN());
-        fireEvent(StatisticsEvents.MIN_EVENT, getMin());
-        fireEvent(StatisticsEvents.MAX_EVENT, getMax());
-        fireEvent(StatisticsEvents.POPULATION_MEAN_EVENT, getPopulationMean());
-        fireEvent(StatisticsEvents.POPULATION_VARIANCE_EVENT, getPopulationVariance());
-        fireEvent(StatisticsEvents.POPULATION_SKEWNESS_EVENT, getPopulationSkewness());
-        fireEvent(StatisticsEvents.POPULATION_KURTOSIS_EVENT, getPopulationKurtosis());
-        fireEvent(StatisticsEvents.POPULATION_EXCESS_KURTOSIS_EVENT, getPopulationExcessKurtosis());
-        fireEvent(StatisticsEvents.POPULATION_STDEV_EVENT, getPopulationStDev());
-        fireEvent(StatisticsEvents.SUM_EVENT, getSum());
-        fireEvent(StatisticsEvents.SAMPLE_MEAN_EVENT, getSampleMean());
-        fireEvent(StatisticsEvents.SAMPLE_VARIANCE_EVENT, getSampleVariance());
-        fireEvent(StatisticsEvents.SAMPLE_SKEWNESS_EVENT, getSampleSkewness());
-        fireEvent(StatisticsEvents.SAMPLE_KURTOSIS_EVENT, getSampleKurtosis());
-        fireEvent(StatisticsEvents.SAMPLE_EXCESS_KURTOSIS_EVENT, getSampleExcessKurtosis());
-        fireEvent(StatisticsEvents.SAMPLE_STDEV_EVENT, getSampleStDev());
+        this.eventProducer.fireEvent(StatisticsEvents.N_EVENT, getN());
+        this.eventProducer.fireEvent(StatisticsEvents.MIN_EVENT, getMin());
+        this.eventProducer.fireEvent(StatisticsEvents.MAX_EVENT, getMax());
+        this.eventProducer.fireEvent(StatisticsEvents.POPULATION_MEAN_EVENT, getPopulationMean());
+        this.eventProducer.fireEvent(StatisticsEvents.POPULATION_VARIANCE_EVENT, getPopulationVariance());
+        this.eventProducer.fireEvent(StatisticsEvents.POPULATION_SKEWNESS_EVENT, getPopulationSkewness());
+        this.eventProducer.fireEvent(StatisticsEvents.POPULATION_KURTOSIS_EVENT, getPopulationKurtosis());
+        this.eventProducer.fireEvent(StatisticsEvents.POPULATION_EXCESS_KURTOSIS_EVENT, getPopulationExcessKurtosis());
+        this.eventProducer.fireEvent(StatisticsEvents.POPULATION_STDEV_EVENT, getPopulationStDev());
+        this.eventProducer.fireEvent(StatisticsEvents.SUM_EVENT, getSum());
+        this.eventProducer.fireEvent(StatisticsEvents.SAMPLE_MEAN_EVENT, getSampleMean());
+        this.eventProducer.fireEvent(StatisticsEvents.SAMPLE_VARIANCE_EVENT, getSampleVariance());
+        this.eventProducer.fireEvent(StatisticsEvents.SAMPLE_SKEWNESS_EVENT, getSampleSkewness());
+        this.eventProducer.fireEvent(StatisticsEvents.SAMPLE_KURTOSIS_EVENT, getSampleKurtosis());
+        this.eventProducer.fireEvent(StatisticsEvents.SAMPLE_EXCESS_KURTOSIS_EVENT, getSampleExcessKurtosis());
+        this.eventProducer.fireEvent(StatisticsEvents.SAMPLE_STDEV_EVENT, getSampleStDev());
     }
 
     /** {@inheritDoc} */
