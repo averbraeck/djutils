@@ -8,11 +8,13 @@ import static org.junit.Assert.fail;
 
 import java.rmi.RemoteException;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventType;
 import org.djutils.event.TimedEvent;
+import org.djutils.exceptions.Try;
 import org.djutils.metadata.MetaData;
 import org.junit.Test;
 
@@ -105,15 +107,8 @@ public class EventBasedTimestampWeightedTallyTest
         wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 1.9, 0.9));
         wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 2.0, 1.0));
 
-        try
-        {
-            wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 123.456, 0.8));
-            fail("timestamp out of order should have thrown an exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+        Try.testFail(() -> wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 123.456, 0.8)),
+                "timestamp out of order should have thrown an exception", IllegalArgumentException.class);
 
         assertTrue(wt.isActive());
         wt.endObservations(1.1);
@@ -152,24 +147,15 @@ public class EventBasedTimestampWeightedTallyTest
         assertEquals(1.5, wt.getWeightedSampleMean(), 1.0E-6);
 
         // test some wrong events
-        try
-        {
-            wt.notify(new Event(new EventType("VALUE_EVENT", new MetaData("VALUE_EVENT", "non-timed event")), 123.456));
-            fail("non time-based event should have thrown an exception");
-        }
-        catch (Exception e)
-        {
-            // Ignore expected exception
-        }
-        try
-        {
-            wt.notify(new TimedEvent<String>(TIMED_VALUE_EVENT, 123.456, "abc"));
-            fail("non time-based evenevent with timestamp != Calendar or Number should have thrown an exception");
-        }
-        catch (Exception e)
-        {
-            // Ignore expected exception
-        }
+        Try.testFail(() -> wt.notify(new Event(TIMED_VALUE_EVENT, new Object[] {1.0, 2.0})),
+                "non time-based event should have thrown an exception", IllegalArgumentException.class);
+        Try.testFail(() -> wt.notify(new TimedEvent<String>(TIMED_VALUE_EVENT, 123.456, "abc")),
+                "non time-based event with timestamp != Calendar or Number should have thrown an exception",
+                IllegalArgumentException.class);
+
+        // call initialize later to see if event firing is okay
+        wt.initialize();
+        assertEquals(0, wt.getN());
 
     }
 
@@ -310,7 +296,7 @@ public class EventBasedTimestampWeightedTallyTest
      * @throws RemoteException on network error
      */
     @Test
-    public void testWeightedTallyEventProduction() throws RemoteException
+    public void testEventBasedWeightedTallyEventProduction() throws RemoteException
     {
         EventBasedTimestampWeightedTally timestampedTally = new EventBasedTimestampWeightedTally("testTally");
         TimestampedObservationEventListener toel = new TimestampedObservationEventListener();
@@ -361,6 +347,62 @@ public class EventBasedTimestampWeightedTallyTest
         }
     }
 
+    /**
+     * Test produced events by EventBasedWeightedTally.
+     * @throws RemoteException on network error
+     */
+    @Test
+    public void testCalendarBasedWeightedTallyEventProduction() throws RemoteException
+    {
+        EventBasedTimestampWeightedTally timestampedTally = new EventBasedTimestampWeightedTally("testTally");
+        CalendarObservationEventListener toel = new CalendarObservationEventListener();
+        timestampedTally.addListener(toel, StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT);
+        assertEquals(0, toel.getObservationEvents());
+
+        EventType[] types = new EventType[] {StatisticsEvents.TIMED_N_EVENT, StatisticsEvents.TIMED_MIN_EVENT,
+                StatisticsEvents.TIMED_MAX_EVENT, StatisticsEvents.TIMED_WEIGHTED_POPULATION_MEAN_EVENT,
+                StatisticsEvents.TIMED_WEIGHTED_POPULATION_VARIANCE_EVENT,
+                StatisticsEvents.TIMED_WEIGHTED_POPULATION_STDEV_EVENT, StatisticsEvents.TIMED_WEIGHTED_SUM_EVENT,
+                StatisticsEvents.TIMED_WEIGHTED_SAMPLE_MEAN_EVENT, StatisticsEvents.TIMED_WEIGHTED_SAMPLE_VARIANCE_EVENT,
+                StatisticsEvents.TIMED_WEIGHTED_SAMPLE_STDEV_EVENT};
+        LoggingEventListener[] listeners = new LoggingEventListener[types.length];
+        for (int i = 0; i < types.length; i++)
+        {
+            listeners[i] = new LoggingEventListener();
+            timestampedTally.addListener(listeners[i], types[i]);
+        }
+
+        Calendar calendar = new GregorianCalendar(2000, 1, 10, 20, 30);
+        for (int i = 1; i <= 10; i++)
+        {
+            timestampedTally.register(calendar, 10.0 * i);
+            calendar.roll(Calendar.MINUTE, true);
+        }
+        timestampedTally.endObservations(calendar);
+
+        // the endObservation fires an observation event, but does not increase N
+        assertEquals(11, toel.getObservationEvents());
+    }
+
+    /**
+     * Test the event-based timestamp weighted tally for RemoteExceptions.
+     * @throws RemoteException on network error for the event-based statistic
+     */
+    @Test
+    public void testEventBasedTimestampTallyRemote() throws RemoteException
+    {
+        String description = "tally description";
+        EventBasedTimestampWeightedTally tally = new EventBasedTimestampWeightedTally(description, new RmiErrorEventProducer());
+        RmiErrorEventListener listener = new RmiErrorEventListener();
+        tally.addListener(listener, StatisticsEvents.INITIALIZED_EVENT);
+        tally.addListener(listener, StatisticsEvents.OBSERVATION_ADDED_EVENT);
+        // RemoteException is packed in a RuntimeException
+        Try.testFail(() -> tally.initialize(), RuntimeException.class);
+        Try.testFail(() -> tally.register(1.0, 10.0), RuntimeException.class);
+        Calendar calendar = new GregorianCalendar(2000, 1, 10, 20, 30);
+        Try.testFail(() -> tally.register(calendar, 10.0), RuntimeException.class);
+    }
+
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
     class TimestampedObservationEventListener implements EventListener
     {
@@ -378,6 +420,36 @@ public class EventBasedTimestampWeightedTallyTest
                     event.getContent() instanceof Object[]);
             Object[] c = (Object[]) event.getContent();
             assertTrue("Content[0] of the event has a wrong type, not double: " + c[0].getClass(), c[0] instanceof Double);
+            assertTrue("Content[1] of the event has a wrong type, not double: " + c[1].getClass(), c[1] instanceof Double);
+            this.observationEvents++;
+        }
+
+        /**
+         * @return countEvents
+         */
+        public int getObservationEvents()
+        {
+            return this.observationEvents;
+        }
+    }
+
+    /** The Calendar-based listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
+    class CalendarObservationEventListener implements EventListener
+    {
+        /** */
+        private static final long serialVersionUID = 1L;
+
+        /** counter for the event. */
+        private int observationEvents = 0;
+
+        @Override
+        public void notify(final Event event)
+        {
+            assertTrue(event.getType().equals(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT));
+            assertTrue("Content of the event has a wrong type, not Object[]: " + event.getContent().getClass(),
+                    event.getContent() instanceof Object[]);
+            Object[] c = (Object[]) event.getContent();
+            assertTrue("Content[0] of the event has a wrong type, not Calendar: " + c[0].getClass(), c[0] instanceof Calendar);
             assertTrue("Content[1] of the event has a wrong type, not double: " + c[1].getClass(), c[1] instanceof Double);
             this.observationEvents++;
         }
