@@ -3,8 +3,8 @@ package org.djutils.stats.summarizers;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
+import org.djutils.exceptions.Try;
 import org.junit.Test;
 
 /**
@@ -14,8 +14,7 @@ import org.junit.Test;
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
- * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
- * <br>
+ * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @since 1.5
  */
@@ -67,7 +66,7 @@ public class WeightedTallyTest
         assertEquals(len, wt.reportHeader().split("\\R")[1].length());
         assertEquals(len, wt.reportHeader().split("\\R")[2].length());
         assertEquals(len, wt.reportLine().length());
-        assertEquals(len, new Tally("empty tally").reportLine().length());
+        assertEquals(len, new WeightedTally("empty tally").reportLine().length());
         WeightedTally tallyX = new WeightedTally("1 value");
         tallyX.register(2.0, 1E10);
         assertEquals(len, tallyX.reportLine().length());
@@ -94,15 +93,8 @@ public class WeightedTallyTest
         assertEquals(variance, wt.getWeightedSampleVariance(), 1.0E-6);
         assertEquals(stDev, wt.getWeightedSampleStDev(), 1.0E-6);
 
-        try
-        {
-            wt.register(-0.1, 123.456);
-            fail("negative weight should have thrown an exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+        Try.testFail(() -> wt.register(-0.1, 123.456), "negative weight should have thrown an exception",
+                IllegalArgumentException.class);
     }
 
     /** Test the WeightedTally on a simple example. */
@@ -147,7 +139,7 @@ public class WeightedTallyTest
 
         assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedSampleMean(), 0.001);
         assertEquals((2 + 3 + 4 * 11 + 13 + 2 * 17 + 19) / 10.0, wt.getWeightedPopulationMean(), 0.001);
-        
+
         assertEquals(5.82, wt.getWeightedSampleStDev(), 0.01);
         // System.out.println("sample variance " + wt.getWeightedSampleVariance());
         // System.out.println("sample stdev " + wt.getWeightedSampleStDev());
