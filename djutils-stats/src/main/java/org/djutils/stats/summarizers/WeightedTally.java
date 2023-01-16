@@ -15,31 +15,31 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-public class WeightedTally implements Statistic
+public class WeightedTally implements TallyStatistic
 {
     /** */
     private static final long serialVersionUID = 20200228L;
 
     /** The sum of the weights of this WeightedTally. */
-    private double sumOfWeights = 0;
+    private double sumOfWeights;
 
     /** The mean of this WeightedTally. */
-    private double weightedMean = 0;
+    private double weightedMean;
 
     /** The sum of this WeightedTally. */
-    private double weightedSum = 0;
+    private double weightedSum;
 
     /** The total registered weight times the variance of this WeightedTally. */
-    private double weightTimesVariance = 0;
+    private double weightTimesVariance;
 
     /** The minimum observed value of this WeightedTally. */
-    private double min = Double.NaN;
+    private double min;
 
     /** The maximum observed value of this WeightedTally. */
-    private double max = Double.NaN;
+    private double max;
 
     /** The number of non-zero weight measurements of this WeightedTally. */
-    private long n = 0;
+    private long n;
 
     /** The description of this WeightedTally. */
     private final String description;
@@ -54,6 +54,7 @@ public class WeightedTally implements Statistic
      */
     public WeightedTally(final String description)
     {
+        Throw.whenNull(description, "description cannot be null");
         this.description = description;
         initialize();
     }
@@ -124,19 +125,15 @@ public class WeightedTally implements Statistic
         return this.description;
     }
 
-    /**
-     * Returns the maximum value of any given observation, or NaN when no observations were registered.
-     * @return double; the maximum value of any given observation
-     */
+    /** {@inheritDoc} */
+    @Override
     public double getMax()
     {
         return this.max;
     }
 
-    /**
-     * Returns the minimum value of any given observation, or NaN when no observations were registered.
-     * @return double; the minimum value of any given observation
-     */
+    /** {@inheritDoc} */
+    @Override
     public double getMin()
     {
         return this.min;
