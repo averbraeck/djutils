@@ -69,7 +69,7 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
         {
             try
             {
-                fireEvent(StatisticsEvents.INITIALIZED_EVENT);
+                this.eventProducer.fireEvent(StatisticsEvents.INITIALIZED_EVENT);
             }
             catch (RemoteException exception)
             {
@@ -82,15 +82,8 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
     @Override
     public void notify(final Event event)
     {
-        Throw.when(!(event.getContent() instanceof Object[]), IllegalArgumentException.class,
-                "WeightedTally.notify: Content should be Object[] {weight, value}");
+        // metadata descriptor checks content
         Object[] content = (Object[]) event.getContent();
-        Throw.when(content.length != 2, IllegalArgumentException.class,
-                "WeightedTally.notify: Content should be Object[] {weight, value}");
-        Throw.when(!(content[0] instanceof Number), IllegalArgumentException.class,
-                "WeightedTally.notify: Weight (Content[0]) should be a Number");
-        Throw.when(!(content[1] instanceof Number), IllegalArgumentException.class,
-                "WeightedTally.notify: Value (Content[1]) should be a Number");
         double weight = ((Number) content[0]).doubleValue();
         double value = ((Number) content[1]).doubleValue();
         register(weight, value);
@@ -110,7 +103,8 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
         {
             if (hasListeners())
             {
-                fireEvent(StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT, new Serializable[] {weight, value});
+                this.eventProducer.fireEvent(StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT,
+                        new Serializable[] {weight, value});
                 fireEvents();
             }
         }
@@ -127,16 +121,16 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
      */
     protected void fireEvents() throws RemoteException
     {
-        fireEvent(StatisticsEvents.N_EVENT, getN());
-        fireEvent(StatisticsEvents.MIN_EVENT, getMin());
-        fireEvent(StatisticsEvents.MAX_EVENT, getMax());
-        fireEvent(StatisticsEvents.WEIGHTED_POPULATION_MEAN_EVENT, getWeightedPopulationMean());
-        fireEvent(StatisticsEvents.WEIGHTED_POPULATION_VARIANCE_EVENT, getWeightedPopulationVariance());
-        fireEvent(StatisticsEvents.WEIGHTED_POPULATION_STDEV_EVENT, getWeightedPopulationStDev());
-        fireEvent(StatisticsEvents.WEIGHTED_SUM_EVENT, getWeightedSum());
-        fireEvent(StatisticsEvents.WEIGHTED_SAMPLE_MEAN_EVENT, getWeightedSampleMean());
-        fireEvent(StatisticsEvents.WEIGHTED_SAMPLE_VARIANCE_EVENT, getWeightedSampleVariance());
-        fireEvent(StatisticsEvents.WEIGHTED_SAMPLE_STDEV_EVENT, getWeightedSampleStDev());
+        this.eventProducer.fireEvent(StatisticsEvents.N_EVENT, getN());
+        this.eventProducer.fireEvent(StatisticsEvents.MIN_EVENT, getMin());
+        this.eventProducer.fireEvent(StatisticsEvents.MAX_EVENT, getMax());
+        this.eventProducer.fireEvent(StatisticsEvents.WEIGHTED_POPULATION_MEAN_EVENT, getWeightedPopulationMean());
+        this.eventProducer.fireEvent(StatisticsEvents.WEIGHTED_POPULATION_VARIANCE_EVENT, getWeightedPopulationVariance());
+        this.eventProducer.fireEvent(StatisticsEvents.WEIGHTED_POPULATION_STDEV_EVENT, getWeightedPopulationStDev());
+        this.eventProducer.fireEvent(StatisticsEvents.WEIGHTED_SUM_EVENT, getWeightedSum());
+        this.eventProducer.fireEvent(StatisticsEvents.WEIGHTED_SAMPLE_MEAN_EVENT, getWeightedSampleMean());
+        this.eventProducer.fireEvent(StatisticsEvents.WEIGHTED_SAMPLE_VARIANCE_EVENT, getWeightedSampleVariance());
+        this.eventProducer.fireEvent(StatisticsEvents.WEIGHTED_SAMPLE_STDEV_EVENT, getWeightedSampleStDev());
     }
 
     /** {@inheritDoc} */
