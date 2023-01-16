@@ -13,28 +13,26 @@ import org.djutils.exceptions.Throw;
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
- * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
+ * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
+ * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  */
-public class TimestampWeightedTally implements Statistic
+public class TimestampWeightedTally extends WeightedTally
 {
     /** */
     private static final long serialVersionUID = 20200228L;
 
-    /** the wrapped weighted tally. */
-    private WeightedTally wrappedWeightedTally;
-
     /** startTime defines the time of the first observation. Often equals to 0.0, but can also have other value. */
-    private double startTime = Double.NaN;
+    private double startTime;
 
     /** lastTimestamp stores the time of the last observation. Stored separately to avoid ulp rounding errors and allow ==. */
-    private double lastTimestamp = Double.NaN;
+    private double lastTimestamp;
 
     /** lastValue tracks the last value. */
-    private double lastValue = Double.NaN;
+    private double lastValue;
 
     /** indicate whether the statistic is active or not (false before first event and after last event). */
-    private boolean active = false;
+    private boolean active;
 
     /**
      * constructs a new TimestampWeightedTally with a description.
@@ -42,17 +40,16 @@ public class TimestampWeightedTally implements Statistic
      */
     public TimestampWeightedTally(final String description)
     {
-        this.wrappedWeightedTally = new WeightedTally(description);
-        initialize();
+        super(description);
     }
 
     /** {@inheritDoc} */
     @Override
     public void initialize()
     {
-        synchronized (this.wrappedWeightedTally.semaphore)
+        synchronized (super.semaphore)
         {
-            this.wrappedWeightedTally.initialize();
+            super.initialize();
             this.startTime = Double.NaN;
             this.lastTimestamp = Double.NaN;
             this.lastValue = 0.0;
@@ -89,7 +86,8 @@ public class TimestampWeightedTally implements Statistic
      */
     public void endObservations(final Calendar timestamp)
     {
-        endObservations(timestamp.getTimeInMillis());
+        register(timestamp, this.lastValue);
+        this.active = false;
     }
 
     /**
@@ -102,24 +100,64 @@ public class TimestampWeightedTally implements Statistic
     }
 
     /**
-     * Process one observed value.
+     * Process one observed Calender-based value. The time used will be the Calendar's time in milliseconds. Silently ignore
+     * when a value is registered, but tally is not active, i.e. when endObservations() has been called.
      * @param timestamp Calendar; the Calendar object representing the timestamp
      * @param value double; the value to process
      * @return double; the value
+     * @throws NullPointerException when timestamp is null
+     * @throws IllegalArgumentException when value is NaN
+     * @throws IllegalArgumentException when given timestamp is before last timestamp
      */
     public double register(final Calendar timestamp, final double value)
     {
         Throw.whenNull(timestamp, "timestamp object may not be null");
-        return register(timestamp.getTimeInMillis(), value);
+        return registerValue(timestamp.getTimeInMillis(), value);
     }
 
     /**
-     * Process one observed value.
+     * Process one observed Number-based value. Silently ignore when a value is registered, but tally is not active, i.e. when
+     * endObservations() has been called.
      * @param timestamp Number; the object representing the timestamp
      * @param value double; the value to process
      * @return double; the value
+     * @throws NullPointerException when timestamp is null
+     * @throws IllegalArgumentException when value is NaN or timestamp is NaN
+     * @throws IllegalArgumentException when given timestamp is before last timestamp
      */
     public double register(final Number timestamp, final double value)
+    {
+        return registerValue(timestamp, value);
+    }
+
+    /**
+     * Explicit;y override the double value method signature of WeightedTally to call the right method.<br>
+     * Process one observed double value. Silently ignore when a value is registered, but tally is not active, i.e. when
+     * endObservations() has been called.
+     * @param timestamp Number; the object representing the timestamp
+     * @param value double; the value to process
+     * @return double; the value
+     * @throws NullPointerException when timestamp is null
+     * @throws IllegalArgumentException when value is NaN or timestamp is NaN
+     * @throws IllegalArgumentException when given timestamp is before last timestamp
+     */
+    @Override
+    public double register(final double timestamp, final double value)
+    {
+        return registerValue(timestamp, value);
+    }
+
+    /**
+     * Process one observed Number-based value. Silently ignore when a value is registered, but tally is not active, i.e. when
+     * endObservations() has been called.
+     * @param timestamp Number; the object representing the timestamp
+     * @param value double; the value to process
+     * @return double; the value
+     * @throws NullPointerException when timestamp is null
+     * @throws IllegalArgumentException when value is NaN or timestamp is NaN
+     * @throws IllegalArgumentException when given timestamp is before last timestamp
+     */
+    protected double registerValue(final Number timestamp, final double value)
     {
         Throw.whenNull(timestamp, "timestamp object may not be null");
         Throw.when(Double.isNaN(value), IllegalArgumentException.class, "value may not be NaN");
@@ -129,7 +167,7 @@ public class TimestampWeightedTally implements Statistic
                 "times not offered in ascending order. Last time was " + this.lastTimestamp + ", new timestamp was "
                         + timestampDouble);
 
-        synchronized (this.wrappedWeightedTally.semaphore)
+        synchronized (super.semaphore)
         {
             // only calculate anything when the time interval is larger than 0, and when the TimestampWeightedTally is active
             if ((Double.isNaN(this.lastTimestamp) || timestampDouble > this.lastTimestamp) && this.active)
@@ -141,7 +179,7 @@ public class TimestampWeightedTally implements Statistic
                 else
                 {
                     double deltaTime = Math.max(0.0, timestampDouble - this.lastTimestamp);
-                    this.wrappedWeightedTally.register(deltaTime, this.lastValue);
+                    super.register(deltaTime, this.lastValue);
                 }
                 this.lastTimestamp = timestampDouble;
             }
@@ -152,130 +190,35 @@ public class TimestampWeightedTally implements Statistic
 
     /** {@inheritDoc} */
     @Override
-    public String getDescription()
-    {
-        return this.wrappedWeightedTally.getDescription();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public long getN()
-    {
-        return this.wrappedWeightedTally.getN();
-    }
-
-    /**
-     * Returns the maximum value of any given observation, or NaN when no observations were registered.
-     * @return double; the maximum value of any given observation
-     */
-    public double getMax()
-    {
-        return this.wrappedWeightedTally.getMax();
-    }
-
-    /**
-     * Returns the minimum value of any given observation, or NaN when no observations were registered.
-     * @return double; the minimum value of any given observation
-     */
-    public double getMin()
-    {
-        return this.wrappedWeightedTally.getMin();
-    }
-
-    /**
-     * Retrieve the current weighted sample mean of all observations since the initialization.
-     * @return double; the current weighted sample mean
-     */
-    public double getWeightedSampleMean()
-    {
-        return this.wrappedWeightedTally.getWeightedSampleMean();
-    }
-
-    /**
-     * Retrieve the current weighted mean of all observations since the initialization.
-     * @return double; the current weighted mean
-     */
-    public double getWeightedPopulationMean()
-    {
-        return getWeightedSampleMean();
-    }
-
-    /**
-     * Retrieve the current weighted sample standard deviation of the observations.
-     * @return double; the current weighted sample standard deviation
-     */
-    public double getWeightedSampleStDev()
-    {
-        return this.wrappedWeightedTally.getWeightedSampleStDev();
-    }
-
-    /**
-     * Retrieve the current weighted standard deviation of the observations.
-     * @return double; the current weighted standard deviation
-     */
-    public double getWeightedPopulationStDev()
-    {
-        return this.wrappedWeightedTally.getWeightedPopulationStDev();
-    }
-
-    /**
-     * Retrieve the current weighted sample variance of the observations.
-     * @return double; the current weighted sample variance of the observations
-     */
-    public double getWeightedSampleVariance()
-    {
-        return this.wrappedWeightedTally.getWeightedSampleVariance();
-    }
-
-    /**
-     * Retrieve the current weighted variance of the observations.
-     * @return double; the current weighted variance of the observations
-     */
-    public double getWeightedPopulationVariance()
-    {
-        return this.wrappedWeightedTally.getWeightedPopulationVariance();
-    }
-
-    /**
-     * Retrieve the current weighted sum of the values of the observations.
-     * @return double; the current weighted sum of the values of the observations
-     */
-    public double getWeightedSum()
-    {
-        return this.wrappedWeightedTally.getWeightedSum();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public String reportHeader()
     {
-        return "-".repeat(113)
-                + String.format("%n| %-48.48s | %6.6s | %10.10s | %10.10s | %10.10s | %10.10s |%n",
-                        "Timestamp-based weighted Tally name", "n", "w.mean", "w.st.dev", "min obs", "max obs")
-                + "-".repeat(113);
+        return "-".repeat(126)
+                + String.format("%n| %-48.48s | %6.6s | %10.10s | %10.10s | %10.10s | %10.10s | %10.10s |%n",
+                        "Timestamp-based weighted Tally name", "n", "interval", "w.mean", "w.st.dev", "min obs", "max obs")
+                + "-".repeat(126);
     }
 
     /** {@inheritDoc} */
     @Override
     public String reportLine()
     {
-        return String.format("| %-48.48s | %6d | %s | %s | %s | %s |", getDescription(), getN(),
-                formatFixed(getWeightedPopulationMean(), 10), formatFixed(getWeightedPopulationStDev(), 10),
-                formatFixed(getMin(), 10), formatFixed(getMax(), 10));
+        return String.format("| %-48.48s | %6d | %s | %s | %s | %s | %s |", getDescription(), getN(),
+                formatFixed(getWeightedPopulationMean(), 10), formatFixed(this.lastTimestamp - this.startTime, 10),
+                formatFixed(getWeightedPopulationStDev(), 10), formatFixed(getMin(), 10), formatFixed(getMax(), 10));
     }
 
     /** {@inheritDoc} */
     @Override
     public String reportFooter()
     {
-        return "-".repeat(113);
+        return "-".repeat(126);
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString()
     {
-        return this.wrappedWeightedTally.toString();
+        return "TimestampWeightedTally" + super.toString().substring("WeightedTally".length());
     }
 
 }
