@@ -2,10 +2,8 @@ package org.djutils.stats.summarizers.event;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.rmi.RemoteException;
 import java.util.Random;
@@ -13,6 +11,7 @@ import java.util.Random;
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventType;
+import org.djutils.exceptions.Try;
 import org.djutils.metadata.MetaData;
 import org.djutils.stats.ConfidenceInterval;
 import org.djutils.stats.DistNormalTable;
@@ -71,47 +70,32 @@ public class EventBasedTallyTest
         assertNull(tally.getConfidenceInterval(0.95, ConfidenceInterval.BOTH_SIDE_CONFIDENCE));
 
         // We first fire a wrong event
-        try
-        {
-            tally.notify(new Event(VALUE_EVENT, "ERROR"));
-            fail("tally should react on events.value !instanceOf Double");
-        }
-        catch (Exception exception)
-        {
-            assertNotNull(exception);
-        }
+        Try.testFail(() -> tally.notify(new Event(VALUE_EVENT, "abc")), IllegalArgumentException.class);
 
         // Now we fire some events
-        try
-        {
-            tally.notify(new Event(VALUE_EVENT, 1.1));
-            assertFalse("mean is now available", Double.isNaN(tally.getSampleMean()));
-            assertTrue("sample variance is not available", Double.isNaN(tally.getSampleVariance()));
-            assertFalse("variance is not available", Double.isNaN(tally.getPopulationVariance()));
-            assertTrue("skewness is not available", Double.isNaN(tally.getPopulationSkewness()));
-            tally.notify(new Event(VALUE_EVENT, 1.2));
-            assertFalse("sample variance is now available", Double.isNaN(tally.getSampleVariance()));
-            assertTrue("sample skewness is not available", Double.isNaN(tally.getSampleSkewness()));
-            assertFalse("skewness is available", Double.isNaN(tally.getPopulationSkewness()));
-            assertTrue("kurtosis is not available", Double.isNaN(tally.getPopulationKurtosis()));
-            tally.notify(new Event(VALUE_EVENT, 1.3));
-            assertFalse("skewness is now available", Double.isNaN(tally.getSampleSkewness()));
-            assertFalse("kurtosis is now available", Double.isNaN(tally.getPopulationKurtosis()));
-            assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
-            tally.notify(new Event(VALUE_EVENT, 1.4));
-            assertFalse("sample kurtosis is now available", Double.isNaN(tally.getSampleKurtosis()));
-            tally.notify(new Event(VALUE_EVENT, 1.5));
-            tally.notify(new Event(VALUE_EVENT, 1.6));
-            tally.notify(new Event(VALUE_EVENT, 1.7));
-            tally.notify(new Event(VALUE_EVENT, 1.8));
-            tally.notify(new Event(VALUE_EVENT, 1.9));
-            tally.notify(new Event(VALUE_EVENT, 2.0));
-            tally.notify(new Event(VALUE_EVENT, 1.0));
-        }
-        catch (Exception exception)
-        {
-            fail(exception.getMessage());
-        }
+        tally.notify(new Event(VALUE_EVENT, 1.1));
+        assertFalse("mean is now available", Double.isNaN(tally.getSampleMean()));
+        assertTrue("sample variance is not available", Double.isNaN(tally.getSampleVariance()));
+        assertFalse("variance is not available", Double.isNaN(tally.getPopulationVariance()));
+        assertTrue("skewness is not available", Double.isNaN(tally.getPopulationSkewness()));
+        tally.notify(new Event(VALUE_EVENT, 1.2));
+        assertFalse("sample variance is now available", Double.isNaN(tally.getSampleVariance()));
+        assertTrue("sample skewness is not available", Double.isNaN(tally.getSampleSkewness()));
+        assertFalse("skewness is available", Double.isNaN(tally.getPopulationSkewness()));
+        assertTrue("kurtosis is not available", Double.isNaN(tally.getPopulationKurtosis()));
+        tally.notify(new Event(VALUE_EVENT, 1.3));
+        assertFalse("skewness is now available", Double.isNaN(tally.getSampleSkewness()));
+        assertFalse("kurtosis is now available", Double.isNaN(tally.getPopulationKurtosis()));
+        assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
+        tally.notify(new Event(VALUE_EVENT, 1.4));
+        assertFalse("sample kurtosis is now available", Double.isNaN(tally.getSampleKurtosis()));
+        tally.notify(new Event(VALUE_EVENT, 1.5));
+        tally.notify(new Event(VALUE_EVENT, 1.6));
+        tally.notify(new Event(VALUE_EVENT, 1.7));
+        tally.notify(new Event(VALUE_EVENT, 1.8));
+        tally.notify(new Event(VALUE_EVENT, 1.9));
+        tally.notify(new Event(VALUE_EVENT, 2.0));
+        tally.notify(new Event(VALUE_EVENT, 1.0));
 
         // Now we check the tally
         assertEquals(2.0, tally.getMax(), 1.0E-6);
@@ -157,33 +141,12 @@ public class EventBasedTallyTest
         assertEquals(1.525334710, tally.getConfidenceInterval(0.40, ConfidenceInterval.RIGHT_SIDE_CONFIDENCE)[1], 1E-05);
 
         // we check the input of the confidence interval
-        try
-        {
-            tally.getConfidenceInterval(0.95, null);
-            fail("null is not defined as side of confidence level");
-        }
-        catch (Exception exception)
-        {
-            assertTrue(exception.getClass().equals(NullPointerException.class));
-        }
-        try
-        {
-            assertNull(tally.getConfidenceInterval(-0.95));
-            fail("should have reacted on wrong confidence level -0.95");
-        }
-        catch (Exception exception)
-        {
-            assertTrue(exception.getClass().equals(IllegalArgumentException.class));
-        }
-        try
-        {
-            assertNull(tally.getConfidenceInterval(1.14));
-            fail("should have reacted on wrong confidence level 1.14");
-        }
-        catch (Exception exception)
-        {
-            assertTrue(exception.getClass().equals(IllegalArgumentException.class));
-        }
+        Try.testFail(() -> tally.getConfidenceInterval(0.95, null), "null is not defined as side of confidence level",
+                NullPointerException.class);
+        Try.testFail(() -> tally.getConfidenceInterval(-0.95), "should have reacted on wrong confidence level -0.95",
+                IllegalArgumentException.class);
+        Try.testFail(() -> tally.getConfidenceInterval(1.14), "should have reacted on wrong confidence level 1.14",
+                IllegalArgumentException.class);
 
         assertTrue(Math.abs(tally.getSampleMean() - 1.5) < 10E-6);
 
@@ -262,27 +225,12 @@ public class EventBasedTallyTest
     {
         EventBasedTally tally = new EventBasedTally("test with the NoStorageAccumulator", new NoStorageAccumulator());
         assertTrue("mean of no data is NaN", Double.isNaN(tally.getSampleMean()));
-        try
-        {
-            tally.getQuantile(0.5);
-            fail("getQuantile of no data should have resulted in an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
-
+        Try.testFail(() -> tally.getQuantile(0.5), "getQuantile of no data should have resulted in an IllegalArgumentException",
+                IllegalArgumentException.class);
         tally.notify(new Event(VALUE_EVENT, 90.0));
         assertEquals("mean of one value is that value", 90.0, tally.getSampleMean(), 0);
-        try
-        {
-            tally.getQuantile(0.5);
-            fail("getQuantile of one value should have resulted in an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+        Try.testFail(() -> tally.getQuantile(0.5),
+                "getQuantile of one value should have resulted in an IllegalArgumentException", IllegalArgumentException.class);
 
         tally.notify(new Event(VALUE_EVENT, 110.0));
         assertEquals("mean of two value", 100.0, tally.getSampleMean(), 0);
@@ -346,25 +294,10 @@ public class EventBasedTallyTest
             double got = tally.getQuantile(probability);
             assertEquals("quantile should match", expected, got, 0.00001);
         }
-        try
-        {
-            tally.getQuantile(-0.01);
-            fail("negative probability should have thrown an exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
-
-        try
-        {
-            tally.getQuantile(1.01);
-            fail("Probability > 1 should have thrown an exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
+        Try.testFail(() -> tally.getQuantile(-0.01), "negative probability should have thrown an exception",
+                IllegalArgumentException.class);
+        Try.testFail(() -> tally.getQuantile(1.01), "Probability > 1 should have thrown an exception",
+                IllegalArgumentException.class);
 
         assertTrue("toString returns something descriptive",
                 new FullStorageAccumulator().toString().startsWith("FullStorageAccumulator"));
@@ -391,6 +324,23 @@ public class EventBasedTallyTest
         while (u1 <= epsilon);
 
         return mu + sigma * Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(twoPi * u2);
+    }
+
+    /**
+     * Test the event-based tally for RemoteExceptions.
+     * @throws RemoteException on network error for the event-based statistic
+     */
+    @Test
+    public void testEventBasedTallyRemote() throws RemoteException
+    {
+        String description = "tally description";
+        EventBasedTally tally = new EventBasedTally(description, new RmiErrorEventProducer());
+        RmiErrorEventListener listener = new RmiErrorEventListener();
+        tally.addListener(listener, StatisticsEvents.INITIALIZED_EVENT);
+        tally.addListener(listener, StatisticsEvents.OBSERVATION_ADDED_EVENT);
+        // RemoteException is packed in a RuntimeException
+        Try.testFail(() -> tally.initialize(), RuntimeException.class);
+        Try.testFail(() -> tally.register(10.0), RuntimeException.class);
     }
 
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
