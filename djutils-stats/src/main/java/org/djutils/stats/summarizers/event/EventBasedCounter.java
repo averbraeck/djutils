@@ -67,7 +67,7 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
         {
             try
             {
-                fireEvent(StatisticsEvents.INITIALIZED_EVENT);
+                this.eventProducer.fireEvent(StatisticsEvents.INITIALIZED_EVENT);
             }
             catch (RemoteException exception)
             {
@@ -101,7 +101,7 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
         {
             if (hasListeners())
             {
-                fireEvent(StatisticsEvents.OBSERVATION_ADDED_EVENT, value);
+                this.eventProducer.fireEvent(StatisticsEvents.OBSERVATION_ADDED_EVENT, value);
                 fireEvents();
             }
         }
@@ -118,8 +118,8 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
      */
     protected void fireEvents() throws RemoteException
     {
-        fireEvent(StatisticsEvents.N_EVENT, getN());
-        fireEvent(StatisticsEvents.COUNT_EVENT, getCount());
+        this.eventProducer.fireEvent(StatisticsEvents.N_EVENT, getN());
+        this.eventProducer.fireEvent(StatisticsEvents.COUNT_EVENT, getCount());
     }
 
 }
