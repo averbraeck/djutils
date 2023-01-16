@@ -72,6 +72,7 @@ public class TimestampWeightedTallyTest
         wt.register(0.8, 1.8);
         wt.register(0.9, 1.9);
         wt.register(1.0, 2.0);
+        assertEquals(2.0, wt.getLastValue(), 1E-6);
 
         try
         {
@@ -93,7 +94,7 @@ public class TimestampWeightedTallyTest
         assertEquals(len, wt.reportHeader().split("\\R")[1].length());
         assertEquals(len, wt.reportHeader().split("\\R")[2].length());
         assertEquals(len, wt.reportLine().length());
-        assertEquals(len, new Tally("empty tally").reportLine().length());
+        assertEquals(len, new TimestampWeightedTally("empty tally").reportLine().length());
         TimestampWeightedTally tallyX = new TimestampWeightedTally("1 value");
         tallyX.register(2.0, 1E10);
         assertEquals(len, tallyX.reportLine().length());
