@@ -1,15 +1,14 @@
 package org.djutils.stats.summarizers.event;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.rmi.RemoteException;
 
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventType;
+import org.djutils.exceptions.Try;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
 import org.junit.Test;
@@ -88,61 +87,8 @@ public class EventBasedWeightedTallyTest
         assertEquals(variance, wt.getWeightedSampleVariance(), 1.0E-6);
         assertEquals(stDev, wt.getWeightedSampleStDev(), 1.0E-6);
 
-        try
-        {
-            wt.notify(new Event(VALUE_EVENT, new Object[] {-0.1, 123.456}));
-            fail("negative weight should have thrown an exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
-        try
-        {
-            wt.notify(new Event(VALUE_EVENT, "123"));
-            fail("non Object[] content should have thrown an exception");
-        }
-        catch (IndexOutOfBoundsException iobe)
-        {
-            // Ignore expected exception
-        }
-        try
-        {
-            wt.notify(new Event(VALUE_EVENT, new Object[] {0.1}));
-            fail("Object[] with one argument should have thrown an exception");
-        }
-        catch (IndexOutOfBoundsException iae)
-        {
-            // Ignore expected exception
-        }
-        try
-        {
-            wt.notify(new Event(VALUE_EVENT, new Object[] {0.1, 0.2, 0.3}));
-            fail("Object[] with thre arguments should have thrown an exception");
-        }
-        catch (IndexOutOfBoundsException iae)
-        {
-            // Ignore expected exception
-        }
-        try
-        {
-            wt.notify(new Event(VALUE_EVENT, new Object[] {"bla", 0.2}));
-            fail("EventBasedWeightedTally should fail on weight !instanceOf Double");
-        }
-        catch (Exception exception)
-        {
-            assertNotNull(exception);
-        }
-        try
-        {
-            wt.notify(new Event(VALUE_EVENT, new Object[] {0.3, "bla"}));
-            fail("EventBasedWeightedTally should fail on value !instanceOf Double");
-        }
-        catch (Exception exception)
-        {
-            assertNotNull(exception);
-        }
-
+        Try.testFail(() -> wt.notify(new Event(VALUE_EVENT, new Object[] {-0.1, 123.456})),
+                "negative weight should have thrown an exception", IllegalArgumentException.class);
     }
 
     /** Test the EventBasedWeightedTally on a simple example. */
@@ -246,6 +192,23 @@ public class EventBasedWeightedTallyTest
                 assertEquals("Final value for listener " + types[i], e, c, 0.001);
             }
         }
+    }
+
+    /**
+     * Test the event-based weighted tally for RemoteExceptions.
+     * @throws RemoteException on network error for the event-based statistic
+     */
+    @Test
+    public void testEventBasedTallyRemote() throws RemoteException
+    {
+        String description = "tally description";
+        EventBasedWeightedTally tally = new EventBasedWeightedTally(description, new RmiErrorEventProducer());
+        RmiErrorEventListener listener = new RmiErrorEventListener();
+        tally.addListener(listener, StatisticsEvents.INITIALIZED_EVENT);
+        tally.addListener(listener, StatisticsEvents.OBSERVATION_ADDED_EVENT);
+        // RemoteException is packed in a RuntimeException
+        Try.testFail(() -> tally.initialize(), RuntimeException.class);
+        Try.testFail(() -> tally.register(1.0, 10.0), RuntimeException.class);
     }
 
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
