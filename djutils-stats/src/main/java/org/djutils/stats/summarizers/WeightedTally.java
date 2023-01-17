@@ -236,9 +236,11 @@ public class WeightedTally implements TallyStatistic
         return this.weightedSum;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public String reportHeader()
+    /**
+     * Return a string representing a header for a textual table with a monospaced font that can contain multiple statistics.
+     * @return String; header for the textual table.
+     */
+    public static String reportHeader()
     {
         return "-".repeat(113) + String.format("%n| %-48.48s | %6.6s | %10.10s | %10.10s | %10.10s | %10.10s |%n",
                 "Weighted Tally name", "n", "w.mean", "w.st.dev", "min obs", "max obs") + "-".repeat(113);
@@ -253,9 +255,11 @@ public class WeightedTally implements TallyStatistic
                 formatFixed(getMin(), 10), formatFixed(getMax(), 10));
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public String reportFooter()
+    /**
+     * Return a string representing a footer for a textual table with a monospaced font that can contain multiple statistics.
+     * @return String; footer for the textual table
+     */
+    public static String reportFooter()
     {
         return "-".repeat(113);
     }
