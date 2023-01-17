@@ -61,10 +61,10 @@ public class WeightedTallyTest
         wt.register(0.1, 1.0);
 
         // check the report functions
-        int len = wt.reportFooter().length();
-        assertEquals(len, wt.reportHeader().split("\\R")[0].length());
-        assertEquals(len, wt.reportHeader().split("\\R")[1].length());
-        assertEquals(len, wt.reportHeader().split("\\R")[2].length());
+        int len = WeightedTally.reportFooter().length();
+        assertEquals(len, WeightedTally.reportHeader().split("\\R")[0].length());
+        assertEquals(len, WeightedTally.reportHeader().split("\\R")[1].length());
+        assertEquals(len, WeightedTally.reportHeader().split("\\R")[2].length());
         assertEquals(len, wt.reportLine().length());
         assertEquals(len, new WeightedTally("empty tally").reportLine().length());
         WeightedTally tallyX = new WeightedTally("1 value");

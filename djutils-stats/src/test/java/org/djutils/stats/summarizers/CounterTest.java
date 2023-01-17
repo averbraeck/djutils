@@ -52,10 +52,10 @@ public class CounterTest
         counterLong.register(1000);
 
         // check the report functions
-        int len = counter.reportFooter().length();
-        assertEquals(len, counter.reportHeader().split("\\R")[0].length());
-        assertEquals(len, counter.reportHeader().split("\\R")[1].length());
-        assertEquals(len, counter.reportHeader().split("\\R")[2].length());
+        int len = Counter.reportFooter().length();
+        assertEquals(len, Counter.reportHeader().split("\\R")[0].length());
+        assertEquals(len, Counter.reportHeader().split("\\R")[1].length());
+        assertEquals(len, Counter.reportHeader().split("\\R")[2].length());
         assertEquals(len, counter.reportLine().length());
         Counter counterEmpty = new Counter("Long description ".repeat(100));
         assertEquals(len, counterEmpty.reportLine().length());
