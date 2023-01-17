@@ -205,7 +205,7 @@ public class TimestampWeightedTally extends WeightedTally
     public String reportLine()
     {
         return String.format("| %-48.48s | %6d | %s | %s | %s | %s | %s |", getDescription(), getN(),
-                formatFixed(getWeightedPopulationMean(), 10), formatFixed(this.lastTimestamp - this.startTime, 10),
+                formatFixed(this.lastTimestamp - this.startTime, 10), formatFixed(getWeightedPopulationMean(), 10),
                 formatFixed(getWeightedPopulationStDev(), 10), formatFixed(getMin(), 10), formatFixed(getMax(), 10));
     }
 
