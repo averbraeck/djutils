@@ -32,23 +32,11 @@ public interface Statistic extends Serializable
     long getN();
 
     /**
-     * Return a string representing a header for a textual table with a monospaced font that can contain multiple statistics.
-     * @return String; header for the textual table.
-     */
-    String reportHeader();
-
-    /**
      * Return a string representing a line with important statistics values for this statistic, for a textual table with a
      * monospaced font that can contain multiple statistics.
      * @return String; line with most important values of the statistic
      */
     String reportLine();
-
-    /**
-     * Return a string representing a footer for a textual table with a monospaced font that can contain multiple statistics.
-     * @return String; footer for the textual table
-     */
-    String reportFooter();
 
     /**
      * Return a formatted string with 2 digits precision for a floating point value that fits the number of characters. The
