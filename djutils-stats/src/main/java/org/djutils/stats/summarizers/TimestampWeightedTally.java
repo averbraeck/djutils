@@ -188,9 +188,11 @@ public class TimestampWeightedTally extends WeightedTally
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public String reportHeader()
+    /**
+     * Return a string representing a header for a textual table with a monospaced font that can contain multiple statistics.
+     * @return String; header for the textual table.
+     */
+    public static String reportHeader()
     {
         return "-".repeat(126)
                 + String.format("%n| %-48.48s | %6.6s | %10.10s | %10.10s | %10.10s | %10.10s | %10.10s |%n",
@@ -207,9 +209,11 @@ public class TimestampWeightedTally extends WeightedTally
                 formatFixed(getWeightedPopulationStDev(), 10), formatFixed(getMin(), 10), formatFixed(getMax(), 10));
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public String reportFooter()
+    /**
+     * Return a string representing a footer for a textual table with a monospaced font that can contain multiple statistics.
+     * @return String; footer for the textual table
+     */
+    public static String reportFooter()
     {
         return "-".repeat(126);
     }
