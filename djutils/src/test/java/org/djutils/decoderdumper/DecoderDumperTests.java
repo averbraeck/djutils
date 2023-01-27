@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Locale;
 
-import org.djutils.logger.CategoryLogger;
 import org.junit.Test;
 
 /**
@@ -32,9 +32,11 @@ public class DecoderDumperTests
      * @throws InterruptedException if that happens; this test has failed.
      * @throws IOException if that happens; this test has failed.
      */
+    @SuppressWarnings("checkstyle:methodlength")
     @Test
     public final void testHexDumper() throws InterruptedException, IOException
     {
+        Locale.setDefault(Locale.US);
         assertEquals("Empty input yields empty output", "", HexDumper.hexDumper(new byte[] {}));
         byte[] input = new byte[] {1, 2};
         String output = HexDumper.hexDumper(input);
@@ -120,7 +122,7 @@ public class DecoderDumperTests
         PrintStream oldErrOutput = System.err;
         PrintStream ps = new PrintStream(new BufferedOutputStream(baos));
         System.setErr(ps);
-        // Redirect the output to a CategoryLogger
+        // Redirect the output to System.err
         hd = new HexDumper().setOutputStream(new OutputStream()
         {
             /** The string builder. */
@@ -131,7 +133,7 @@ public class DecoderDumperTests
             {
                 if ('\n' == b)
                 {
-                    CategoryLogger.always().error(this.sb.toString());
+                    System.err.println(this.sb.toString());
                     this.sb.setLength(0);
                 }
                 else
