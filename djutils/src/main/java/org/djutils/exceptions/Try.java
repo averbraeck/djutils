@@ -649,10 +649,34 @@ public final class Try
     // Test fail/succeed (JUNIT)
 
     /**
-     * Fails if the assignment succeeds.
+     * Method for unit tests to test if an expected exception is thrown on an assignment. This method does not provide an
+     * explanation, and it is not checking for a specific type of exception to be thrown. The testFail() method throws an
+     * AssertionError when the assignment does not throw any exception. A way to use the method is, for instance: <br>
+     * 
+     * <pre>
+     * <code>
+     *   Try.testFail(() -> methodFailsOnNull(null));
+     * </code>
+     * </pre>
+     * 
+     * or
+     * 
+     * <pre><code>
+     * {
+     *   Try.testFail(new Try.Assignment&lt;Double&gt;()
+     *   {
+     *       {@literal @}Override
+     *       public Double assign() throws Throwable
+     *       {
+     *           return methodFailsOnNull(null);
+     *       }
+     *   });
+     * }</code></pre>
+     * 
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
-     * @param <V> value type
-     * @return V; value to assign
+     * @param <V> value type, which is the return type of the assignment
+     * @return V; assigned value
+     * @throws AssertionError when the assignment fails to throw an exception
      */
     public static <V> V testFail(final Assignment<V> assignment)
     {
@@ -660,11 +684,35 @@ public final class Try
     }
 
     /**
-     * Fails if the assignment succeeds.
+     * Method for unit tests to test if an expected exception is thrown on an assignment. This method provides an explanation
+     * message, but it is not checking for a specific type of exception to be thrown. The testFail() method throws an
+     * AssertionError when the assignment does not throw an exception. A way to use the method is, for instance: <br>
+     * 
+     * <pre>
+     * <code>
+     *   Try.testFail(() -> methodFailsOnNull(null), "call should have thrown an NPE");
+     * </code>
+     * </pre>
+     * 
+     * or
+     * 
+     * <pre><code>
+     * {
+     *   Try.testFail(new Try.Assignment&lt;Double&gt;()
+     *   {
+     *       {@literal @}Override
+     *       public Double assign() throws Throwable
+     *       {
+     *           return methodFailsOnNull(null);
+     *       }
+     *   }, "call should have thrown an NPE");
+     * }</code></pre>
+     * 
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
-     * @param message String; fail message
-     * @param <V> value type
-     * @return V; value to assign
+     * @param <V> value type, which is the return type of the assignment
+     * @param message String; message to use in the AssertionError when the assignment succeeds
+     * @return V; assigned value
+     * @throws AssertionError when the assignment fails to throw an exception
      */
     public static <V> V testFail(final Assignment<V> assignment, final String message)
     {
@@ -672,29 +720,78 @@ public final class Try
     }
 
     /**
-     * Fails if the assignment succeeds.
+     * Method for unit tests to test if an expected exception is thrown on an assignment. This method does not provide an
+     * explanation, but it is checking for a specific type of exception to be thrown. The testFail() method throws an
+     * AssertionError when the assignment does not throw an exception, or when it throws a different exception than
+     * expectedThrowableClass. A way to use the method is, for instance: <br>
+     * 
+     * <pre>
+     * <code>
+     *   Try.testFail(() -> methodFailsOnNull(null), NullPointerException.class);
+     * </code>
+     * </pre>
+     * 
+     * or
+     * 
+     * <pre><code>
+     * {
+     *   Try.testFail(new Try.Assignment&lt;Double&gt;()
+     *   {
+     *       {@literal @}Override
+     *       public Double assign() throws Throwable
+     *       {
+     *           return methodFailsOnNull(null);
+     *       }
+     *   }, NullPointerException.class);
+     * }</code></pre>
+     * 
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
-     * @param throwableClass Class&lt;T&gt;; throwable class to catch
-     * @param <V> value type
-     * @param <T> throwable type
-     * @return V; value to assign
+     * @param expectedThrowableClass Class&lt;T&gt;; the class of the exception we expect the assignment to throw
+     * @param <V> value type, which is the return type of the assignment
+     * @param <T> throwable type, which ensures that we provide a throwable class as the argument
+     * @return V; assigned value
+     * @throws AssertionError when the assignment fails to throw an exception or the correct exception
      */
-    public static <V, T extends Throwable> V testFail(final Assignment<V> assignment, final Class<T> throwableClass)
+    public static <V, T extends Throwable> V testFail(final Assignment<V> assignment, final Class<T> expectedThrowableClass)
     {
-        return testFail(assignment, null, throwableClass);
+        return testFail(assignment, null, expectedThrowableClass);
     }
 
     /**
-     * Fails if the assignment succeeds.
+     * Method for unit tests to test if an expected exception is thrown on an assignment. This method provides an explanation
+     * message, and it is checking for a specific type of exception to be thrown. The testFail() method throws an AssertionError
+     * when the assignment does not throw an exception, or when it throws a different exception than expectedThrowableClass. A
+     * way to use the method is, for instance: <br>
+     * 
+     * <pre>
+     * <code>
+     *   Try.testFail(() -> methodFailsOnNull(null), "call should have thrown an NPE", NullPointerException.class);
+     * </code>
+     * </pre>
+     * 
+     * or
+     * 
+     * <pre><code>
+     * {
+     *   Try.testFail(new Try.Assignment&lt;Double&gt;()
+     *   {
+     *       {@literal @}Override
+     *       public Double assign() throws Throwable
+     *       {
+     *           return methodFailsOnNull(null);
+     *       }
+     *   }, "call should have thrown an NPE", NullPointerException.class);
+     * }</code></pre>
+     * 
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
-     * @param message String; fail message
-     * @param throwableClass Class&lt;T&gt;; throwable class to catch
-     * @param <V> value type
-     * @param <T> throwable type
-     * @return V; value to assign
+     * @param message String; message to use in the AssertionError when the test fails
+     * @param expectedThrowableClass Class&lt;T&gt;; the class of the exception we expect the assignment to throw
+     * @param <V> value type, which is the return type of the assignment
+     * @param <T> throwable type, which ensures that we provide a throwable class as the argument
+     * @return V; assigned value
      */
     public static <V, T extends Throwable> V testFail(final Assignment<V> assignment, final String message,
-            final Class<T> throwableClass)
+            final Class<T> expectedThrowableClass)
     {
         try
         {
@@ -702,19 +799,42 @@ public final class Try
         }
         catch (Throwable cause)
         {
-            if (!throwableClass.isAssignableFrom(cause.getClass()))
+            if (!expectedThrowableClass.isAssignableFrom(cause.getClass()))
             {
-                throw new AssertionError("Assignment failed on unexpected Throwable, expected ("
-                        + throwableClass.getSimpleName() + "), but got (" + cause.getClass().getSimpleName() + ").");
+                throw new AssertionError(message + "; Assignment failed on unexpected Throwable, expected ("
+                        + expectedThrowableClass.getSimpleName() + "), but got (" + cause.getClass().getSimpleName() + ").");
             }
             return null;
         }
-        throw new AssertionError(message);
+        throw new AssertionError(message + "; Assignment did not throw any exception");
     }
 
     /**
-     * Fails if the execution succeeds.
-     * @param execution Execution; functional interface to execute
+     * Method for unit tests to test if an expected exception is thrown on code execution. This method does not provide an
+     * explanation message, nor is it checking for a specific type of exception to be thrown. The testFail() method throws an
+     * AssertionError when the execution does not throw an exception. A way to use the method is, for instance: <br>
+     * 
+     * <pre>
+     * <code>
+     *   Try.testFail(() -> methodFailsOnNull(null));
+     * </code>
+     * </pre>
+     * 
+     * or
+     * 
+     * <pre><code>
+     * {
+     *   Try.testFail(new Try.Execution()
+     *   {
+     *       {@literal @}Override
+     *       public void execute() throws Throwable
+     *       {
+     *           methodFailsOnNull(null);
+     *       }
+     *   });
+     * }</code></pre>
+     * 
+     * @param execution Execution; functional interface to execute a method that does not need to return a value
      */
     public static void testFail(final Execution execution)
     {
@@ -722,9 +842,33 @@ public final class Try
     }
 
     /**
-     * Fails if the execution succeeds.
-     * @param execution Execution; functional interface to execute
-     * @param message String; fail message
+     * Method for unit tests to test if an expected exception is thrown on code execution. This method provides an explanation
+     * message, but it is not checking for a specific type of exception to be thrown. The testFail() method throws an
+     * AssertionError when the execution does not throw an exception, or when it throws a different exception than
+     * expectedThrowableClass. A way to use the method is, for instance: <br>
+     * 
+     * <pre>
+     * <code>
+     *   Try.testFail(() -> methodFailsOnNull(null), "call should have thrown an NPE");
+     * </code>
+     * </pre>
+     * 
+     * or
+     * 
+     * <pre><code>
+     * {
+     *   Try.testFail(new Try.Execution()
+     *   {
+     *       {@literal @}Override
+     *       public void execute() throws Throwable
+     *       {
+     *           methodFailsOnNull(null);
+     *       }
+     *   }, "call should have thrown an NPE");
+     * }</code></pre>
+     * 
+     * @param execution Execution; functional interface to execute a method that does not need to return a value
+     * @param message String; message to use in the AssertionError when the test fails
      */
     public static void testFail(final Execution execution, final String message)
     {
@@ -732,25 +876,73 @@ public final class Try
     }
 
     /**
-     * Fails if the execution succeeds.
-     * @param execution Execution; functional interface to execute
-     * @param throwableClass Class&lt;T&gt;; throwable class to catch
-     * @param <T> throwable type
+     * Method for unit tests to test if an expected exception is thrown on code execution. This method does not provide an
+     * explanation message, but it is checking for a specific type of exception to be thrown. The testFail() method throws an
+     * AssertionError when the execution does not throw an exception, or when it throws a different exception than
+     * expectedThrowableClass. A way to use the method is, for instance: <br>
+     * 
+     * <pre>
+     * <code>
+     *   Try.testFail(() -> methodFailsOnNull(null), NullPointerException.class);
+     * </code>
+     * </pre>
+     * 
+     * or
+     * 
+     * <pre><code>
+     * {
+     *   Try.testFail(new Try.Execution()
+     *   {
+     *       {@literal @}Override
+     *       public void execute() throws Throwable
+     *       {
+     *           methodFailsOnNull(null);
+     *       }
+     *   }, NullPointerException.class);
+     * }</code></pre>
+     * 
+     * @param execution Execution; functional interface to execute a method that does not need to return a value
+     * @param expectedThrowableClass Class&lt;T&gt;; the class of the exception we expect the execution to throw
+     * @param <T> throwable type, which ensures that we provide a throwable class as the argument
      */
-    public static <T extends Throwable> void testFail(final Execution execution, final Class<T> throwableClass)
+    public static <T extends Throwable> void testFail(final Execution execution, final Class<T> expectedThrowableClass)
     {
-        testFail(execution, null, throwableClass);
+        testFail(execution, null, expectedThrowableClass);
     }
 
     /**
-     * Fails if the execution succeeds.
-     * @param execution Execution; functional interface to execute
-     * @param message String; fail message
-     * @param throwableClass Class&lt;T&gt;; throwable class to catch
-     * @param <T> throwable type
+     * Method for unit tests to test if an expected exception is thrown on code execution. This method provides an explanation
+     * message, and it is checking for a specific type of exception to be thrown. The testFail() method throws an AssertionError
+     * when the execution does not throw an exception, or when it throws a different exception than expectedThrowableClass. A
+     * way to use the method is, for instance: <br>
+     * 
+     * <pre>
+     * <code>
+     *   Try.testFail(() -> methodFailsOnNull(null), "call should have thrown an NPE", NullPointerException.class);
+     * </code>
+     * </pre>
+     * 
+     * or
+     * 
+     * <pre><code>
+     * {
+     *   Try.testFail(new Try.Execution()
+     *   {
+     *       {@literal @}Override
+     *       public void execute() throws Throwable
+     *       {
+     *           methodFailsOnNull(null);
+     *       }
+     *   }, "call should have thrown an NPE", NullPointerException.class);
+     * }</code></pre>
+     * 
+     * @param execution Execution; functional interface to execute a method that does not need to return a value
+     * @param message String; message to use in the AssertionError when the test fails
+     * @param expectedThrowableClass Class&lt;T&gt;; the class of the exception we expect the execution to throw
+     * @param <T> throwable type, which ensures that we provide a throwable class as the argument
      */
     public static <T extends Throwable> void testFail(final Execution execution, final String message,
-            final Class<T> throwableClass)
+            final Class<T> expectedThrowableClass)
     {
         try
         {
@@ -758,15 +950,15 @@ public final class Try
         }
         catch (Throwable cause)
         {
-            if (!throwableClass.isAssignableFrom(cause.getClass()))
+            if (!expectedThrowableClass.isAssignableFrom(cause.getClass()))
             {
-                throw new AssertionError("Execution failed on unexpected Throwable, expected (" + throwableClass.getSimpleName()
-                        + "), but got (" + cause.getClass().getSimpleName() + ").");
+                throw new AssertionError(message + "; Execution failed on unexpected Throwable, expected ("
+                        + expectedThrowableClass.getSimpleName() + "), but got (" + cause.getClass().getSimpleName() + ").");
             }
             // expected to fail
             return;
         }
-        throw new AssertionError(message);
+        throw new AssertionError(message + "; Assignment did not throw any exception");
     }
 
     // Interfaces
