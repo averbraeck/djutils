@@ -837,64 +837,6 @@ public final class Try
         throw new AssertionError(message);
     }
 
-    /**
-     * Fails if the execution does not succeed.
-     * @param execution Execution; functional interface to execute
-     */
-    public static void testSucceed(final Execution execution)
-    {
-        testSucceed(execution, null, Throwable.class);
-    }
-
-    /**
-     * Fails if the execution does not succeed.
-     * @param execution Execution; functional interface to execute
-     * @param message String; fail message
-     */
-    public static void testSucceed(final Execution execution, final String message)
-    {
-        testSucceed(execution, message, Throwable.class);
-    }
-
-    /**
-     * Fails if the execution does not succeed.
-     * @param execution Execution; functional interface to execute
-     * @param throwableClass Class&lt;T&gt;; throwable class to catch
-     * @param <T> throwable type
-     */
-    public static <T extends Throwable> void testSucceed(final Execution execution, final Class<T> throwableClass)
-    {
-        testSucceed(execution, null, throwableClass);
-    }
-
-    /**
-     * Fails if the execution does not succeed.
-     * @param execution Execution; functional interface to execute
-     * @param message String; fail message
-     * @param throwableClass Class&lt;T&gt;; throwable class to catch
-     * @param <T> throwable type
-     */
-    public static <T extends Throwable> void testSucceed(final Execution execution, final String message,
-            final Class<T> throwableClass)
-    {
-        try
-        {
-            execution.execute();
-        }
-        catch (Throwable cause)
-        {
-            if (throwableClass.isAssignableFrom(cause.getClass()))
-            {
-                throw new AssertionError(message);
-            }
-            else
-            {
-                throw new AssertionError("Execution failed on unexpected Throwable, expected (" + throwableClass.getSimpleName()
-                        + "), but got (" + cause.getClass().getSimpleName() + ").");
-            }
-        }
-    }
-
     // Interfaces
 
     /**
