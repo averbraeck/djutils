@@ -696,21 +696,6 @@ public class TryTest
         assertEquals("this.value should not be changed", initialValueOfResult, this.value);
         this.value = initialValueOfResult;
 
-        try
-        {
-            Try.testSucceed(() -> setResult(String.format(formatWithOneArg, arg1)));
-            assertEquals("this.value should be changed", "format arg1", this.value);
-        }
-        catch (Throwable e)
-        {
-            fail("testSucceed should NOT have thrown an exception");
-        }
-        this.value = initialValueOfResult;
-
-        Try.testSucceed(() -> setResult(String.format(formatWithoutArg)));
-        assertEquals("this.value should be changed", formatWithoutArg, this.value);
-        this.value = initialValueOfResult;
-
         // class argument
 
         try
@@ -727,21 +712,6 @@ public class TryTest
 
         Try.testFail(() -> setResult(String.format(nullPointer)), NullPointerException.class);
         assertEquals("this.value should not be changed", initialValueOfResult, this.value);
-        this.value = initialValueOfResult;
-
-        try
-        {
-            Try.testSucceed(() -> setResult(String.format(formatWithOneArg, arg1)), IllegalArgumentException.class);
-            assertEquals("this.value should be changed", "format arg1", this.value);
-        }
-        catch (Throwable e)
-        {
-            fail("testSucceed should NOT have thrown an exception");
-        }
-        this.value = initialValueOfResult;
-
-        Try.testSucceed(() -> setResult(String.format(formatWithoutArg)), NullPointerException.class);
-        assertEquals("this.value should be changed", formatWithoutArg, this.value);
         this.value = initialValueOfResult;
 
         // String argument
@@ -762,21 +732,6 @@ public class TryTest
         assertEquals("this.value should not be changed", initialValueOfResult, this.value);
         this.value = initialValueOfResult;
 
-        try
-        {
-            Try.testSucceed(() -> setResult(String.format(formatWithOneArg, arg1)), "error");
-            assertEquals("this.value should be changed", "format arg1", this.value);
-        }
-        catch (Throwable e)
-        {
-            fail("testSucceed should NOT have thrown an exception");
-        }
-        this.value = initialValueOfResult;
-
-        Try.testSucceed(() -> setResult(String.format(formatWithOneArg, arg1)), "error");
-        assertEquals("this.value should be changed", "format arg1", this.value);
-        this.value = initialValueOfResult;
-
         // String and class argument
 
         try
@@ -792,44 +747,6 @@ public class TryTest
 
         Try.testFail(() -> setResult(String.format(formatWithOneArg)), "error", IllegalFormatException.class);
         assertEquals("this.value should not be changed", initialValueOfResult, this.value);
-        this.value = initialValueOfResult;
-
-        try
-        {
-            Try.testSucceed(() -> setResult(String.format(formatWithOneArg, arg1)), "error", IllegalFormatException.class);
-            assertEquals("this.value should be changed", "format arg1", this.value);
-        }
-        catch (Throwable e)
-        {
-            fail("testSucceed should NOT have thrown an exception");
-        }
-        this.value = initialValueOfResult;
-
-        try
-        {
-            Try.testSucceed(() -> setResult(String.format(formatWithOneArg)), "error", NullPointerException.class);
-            fail("testSucceed should have thrown an exception because the wrong exception was given");
-        }
-        catch (Throwable e)
-        {
-            // ignore expected error
-        }
-        this.value = initialValueOfResult;
-
-        try
-        {
-            Try.testSucceed(() -> setResult(String.format(formatWithOneArg)), "error", IllegalFormatException.class);
-            fail("testSucceed should have thrown an exception because the wrong number of arguments were provided");
-        }
-        catch (Throwable e)
-        {
-            // ignore expected error
-        }
-        assertEquals("this.value should not be changed", initialValueOfResult, this.value);
-        this.value = initialValueOfResult;
-
-        Try.testSucceed(() -> setResult(String.format(formatWithOneArg, arg1)), "error", IllegalArgumentException.class);
-        assertEquals("this.value should be changed", "format arg1", this.value);
         this.value = initialValueOfResult;
     }
 
