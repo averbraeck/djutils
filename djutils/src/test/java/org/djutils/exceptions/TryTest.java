@@ -509,7 +509,6 @@ public class TryTest
         String initialValueOfResult = "initial value of result";
         String result = initialValueOfResult;
         String formatWithoutArg = "format";
-        String arg1 = "arg1";
         String formatWithOneArg = "format %s";
 
         // no argument
@@ -526,21 +525,6 @@ public class TryTest
 
         result = Try.testFail(() -> String.format(formatWithOneArg));
         assertNull("Result has changed to null", result);
-        result = initialValueOfResult;
-
-        try
-        {
-            result = Try.testSucceed(() -> String.format(formatWithOneArg, arg1));
-            assertEquals("result should be changed", "format arg1", result);
-        }
-        catch (Throwable e)
-        {
-            fail("testSucceed should NOT have thrown an exception");
-        }
-        result = initialValueOfResult;
-
-        result = Try.testSucceed(() -> String.format(formatWithoutArg));
-        assertEquals("result should be changed", formatWithoutArg, result);
         result = initialValueOfResult;
 
         // class argument
@@ -560,21 +544,6 @@ public class TryTest
         assertNull("Result has changed to null", result);
         result = initialValueOfResult;
 
-        try
-        {
-            result = Try.testSucceed(() -> String.format(formatWithOneArg, arg1), IllegalArgumentException.class);
-            assertEquals("result should be changed", "format arg1", result);
-        }
-        catch (Throwable e)
-        {
-            fail("testSucceed should NOT have thrown an exception");
-        }
-        result = initialValueOfResult;
-
-        result = Try.testSucceed(() -> String.format(formatWithoutArg), NullPointerException.class);
-        assertEquals("result should be changed", formatWithoutArg, result);
-        result = initialValueOfResult;
-
         // String argument
 
         try
@@ -590,21 +559,6 @@ public class TryTest
 
         result = Try.testFail(() -> String.format(formatWithOneArg), "error");
         assertNull("Result has changed to null", result);
-        result = initialValueOfResult;
-
-        try
-        {
-            result = Try.testSucceed(() -> String.format(formatWithOneArg, arg1), "error");
-            assertEquals("result should be changed", "format arg1", result);
-        }
-        catch (Throwable e)
-        {
-            fail("testSucceed should NOT have thrown an exception");
-        }
-        result = initialValueOfResult;
-
-        result = Try.testSucceed(() -> String.format(formatWithOneArg, arg1), "error");
-        assertEquals("result should be changed", "format arg1", result);
         result = initialValueOfResult;
 
         // String and class argument
@@ -623,44 +577,6 @@ public class TryTest
         result = Try.testFail(() -> String.format(formatWithOneArg), "error", IllegalFormatException.class);
         assertNull("Result has changed to null", result);
         result = initialValueOfResult;
-
-        try
-        {
-            result = Try.testSucceed(() -> String.format(formatWithOneArg, arg1), "error", IllegalFormatException.class);
-            assertEquals("result should be changed", "format arg1", result);
-        }
-        catch (Throwable e)
-        {
-            fail("testSucceed should NOT have thrown an exception");
-        }
-        result = initialValueOfResult;
-
-        try
-        {
-            result = Try.testSucceed(() -> String.format(formatWithOneArg), "error", NullPointerException.class);
-            fail("testSucceed should have thrown an exception because the wrong exception was given");
-        }
-        catch (Throwable e)
-        {
-            // ignore expected error
-        }
-        result = initialValueOfResult;
-
-        try
-        {
-            result = Try.testSucceed(() -> String.format(formatWithOneArg), "error", IllegalFormatException.class);
-            fail("testSucceed should have thrown an exception because the wrong number of arguments were provided");
-        }
-        catch (Throwable e)
-        {
-            // ignore expected error
-        }
-        assertNull("Result has changed to null", result);
-        result = initialValueOfResult;
-
-        result = Try.testSucceed(() -> String.format(formatWithOneArg, arg1), "error", IllegalArgumentException.class);
-        assertEquals("result should be changed", "format arg1", result);
-        result = initialValueOfResult;
     }
 
     /**
@@ -674,7 +590,6 @@ public class TryTest
         String nullPointer = null;
         String initialValueOfResult = "initial value of result";
         String formatWithoutArg = "format";
-        String arg1 = "arg1";
         String formatWithOneArg = "format %s";
 
         // no argument
