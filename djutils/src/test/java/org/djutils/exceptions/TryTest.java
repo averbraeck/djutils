@@ -1,11 +1,12 @@
 package org.djutils.exceptions;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.IllegalFormatException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashSet;
 
 import org.junit.Test;
 
@@ -498,171 +499,846 @@ public class TryTest
     }
 
     /**
-     * Test the fail / succeed methods in the Try class using assignments.
+     * Test the fail methods in the Try class using assignments with lambda functions.
      * @throws RuntimeException if that happens (uncaught); this test has failed.
      */
-    @SuppressWarnings("checkstyle:methodlength")
+    @SuppressWarnings({"checkstyle:methodlength", "null"})
     @Test
-    public void trySucceedFailTestAssign() throws RuntimeException
+    public void tryFailTestAssignLambda() throws RuntimeException
     {
-        String nullPointer = null;
-        String initialValueOfResult = "initial value of result";
-        String result = initialValueOfResult;
-        String formatWithoutArg = "format";
-        String formatWithOneArg = "format %s";
+        // test case from Issue #7.
+        try
+        {
+            Double dn = null;
+            Double d1 = Double.valueOf(1.0);
+            Try.testFail(() -> d1.toString());
+            Try.testFail(() -> dn.toString());
+        }
+        catch (AssertionError e)
+        {
+            // ok, one of the two should have thrown an error
+        }
+        
+        Try.testFail(() -> fnfAssignment());
+        Try.testFail(() -> npeAssignment());
+        Try.testFail(() -> fnfAssignment(), "message");
+        Try.testFail(() -> npeAssignment(), "message");
+        Try.testFail(() -> fnfAssignment(), Exception.class);
+        Try.testFail(() -> npeAssignment(), Exception.class);
+        Try.testFail(() -> fnfAssignment(), FileNotFoundException.class);
+        Try.testFail(() -> fnfAssignment(), IOException.class);
+        Try.testFail(() -> npeAssignment(), NullPointerException.class);
+        Try.testFail(() -> fnfAssignment(), "message", Exception.class);
+        Try.testFail(() -> npeAssignment(), "message", Exception.class);
+        Try.testFail(() -> fnfAssignment(), "message", FileNotFoundException.class);
+        Try.testFail(() -> fnfAssignment(), "message", IOException.class);
+        Try.testFail(() -> npeAssignment(), "message", NullPointerException.class);
 
-        // no argument
+        // test assignment methods that do not throw exceptions
+        try
+        {
+            Try.testFail(() -> Math.abs(-1.0));
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment did not throw any exception"));
+        }
 
         try
         {
-            Try.testFail(() -> String.format(formatWithOneArg));
-            fail("testFail should have thrown an exception because no argument was given");
+            Try.testFail(() -> Math.abs(-1.0), "xyz");
         }
-        catch (Throwable e)
+        catch (Throwable t)
         {
-            // Ignore expected error
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment did not throw any exception"));
+            assertTrue(t.getMessage().contains("xyz"));
         }
-
-        result = Try.testFail(() -> String.format(formatWithOneArg));
-        assertNull("Result has changed to null", result);
-        result = initialValueOfResult;
-
-        // class argument
 
         try
         {
-            result = Try.testFail(() -> String.format(formatWithoutArg), NullPointerException.class);
-            fail("testFail should have thrown an exception because no NullPointerException was thrown in the assignment");
+            Try.testFail(() -> Math.abs(-1.0), NullPointerException.class);
         }
-        catch (Throwable e)
+        catch (Throwable t)
         {
-            // Ignore expected error
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment did not throw any exception"));
         }
-        assertEquals("Result has not changed", initialValueOfResult, result);
-
-        result = Try.testFail(() -> String.format(nullPointer), NullPointerException.class);
-        assertNull("Result has changed to null", result);
-        result = initialValueOfResult;
-
-        // String argument
 
         try
         {
-            result = Try.testFail(() -> String.format(formatWithOneArg), "error");
-            fail("testFail should have thrown an exception because no arg was given");
+            Try.testFail(() -> Math.abs(-1.0), "xyz", NullPointerException.class);
         }
-        catch (Throwable e)
+        catch (Throwable t)
         {
-            // Ignore expected error
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment did not throw any exception"));
+            assertTrue(t.getMessage().contains("xyz"));
         }
-        assertNull("Result has changed to null", result);
 
-        result = Try.testFail(() -> String.format(formatWithOneArg), "error");
-        assertNull("Result has changed to null", result);
-        result = initialValueOfResult;
-
-        // String and class argument
+        // test assignment methods that throw the wrong exception
 
         try
         {
-            result = Try.testFail(() -> String.format(formatWithOneArg), "error", NullPointerException.class);
-            fail("testFail should have thrown an exception because the wrong exception was given");
+            Try.testFail(() -> fnfAssignment(), NullPointerException.class);
         }
-        catch (Throwable e)
+        catch (Throwable t)
         {
-            // Ignore expected error
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
         }
-        assertEquals("this.value should not be changed", initialValueOfResult, result);
 
-        result = Try.testFail(() -> String.format(formatWithOneArg), "error", IllegalFormatException.class);
-        assertNull("Result has changed to null", result);
-        result = initialValueOfResult;
+        try
+        {
+            Try.testFail(() -> fnfAssignment(), "xyz", NullPointerException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+            assertTrue(t.getMessage().contains("xyz"));
+        }
+
+        try
+        {
+            Try.testFail(() -> npeAssignment(), IllegalStateException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+        }
+
+        try
+        {
+            Try.testFail(() -> npeAssignment(), "xyz", IllegalStateException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+            assertTrue(t.getMessage().contains("xyz"));
+        }
     }
 
     /**
-     * Test the fail / succeed methods in the Try class using executions.
+     * Test the fail methods in the Try class using Assignments.
      * @throws RuntimeException if that happens (uncaught); this test has failed.
      */
     @SuppressWarnings("checkstyle:methodlength")
     @Test
-    public void trySucceedFailTestExecute() throws RuntimeException
+    public void tryFailTestAssign() throws RuntimeException
     {
-        String nullPointer = null;
-        String initialValueOfResult = "initial value of result";
-        String formatWithoutArg = "format";
-        String formatWithOneArg = "format %s";
+        Try.testFail(new Try.Assignment<Object>()
+        {
+            @Override
+            public Object assign() throws FileNotFoundException
+            {
+                return fnfAssignment();
+            }
+        });
 
-        // no argument
+        Try.testFail(new Try.Assignment<Object>()
+        {
+            @Override
+            public Object assign()
+            {
+                return npeAssignment();
+            }
+        });
 
-        this.value = initialValueOfResult;
+        Try.testFail(new Try.Assignment<Object>()
+        {
+            @Override
+            public Object assign() throws FileNotFoundException
+            {
+                return fnfAssignment();
+            }
+        }, "message");
+
+        Try.testFail(new Try.Assignment<Object>()
+        {
+            @Override
+            public Object assign()
+            {
+                return npeAssignment();
+            }
+        }, "message");
+
+        Try.testFail(new Try.Assignment<Object>()
+        {
+            @Override
+            public Object assign() throws FileNotFoundException
+            {
+                return fnfAssignment();
+            }
+        }, Exception.class);
+
+        Try.testFail(new Try.Assignment<Object>()
+        {
+            @Override
+            public Object assign()
+            {
+                return npeAssignment();
+            }
+        }, Exception.class);
+
+        Try.testFail(new Try.Assignment<Object>()
+        {
+            @Override
+            public Object assign() throws FileNotFoundException
+            {
+                return fnfAssignment();
+            }
+        }, FileNotFoundException.class);
+
+        Try.testFail(new Try.Assignment<Object>()
+        {
+            @Override
+            public Object assign() throws FileNotFoundException
+            {
+                return fnfAssignment();
+            }
+        }, IOException.class);
+
+        Try.testFail(new Try.Assignment<Object>()
+        {
+            @Override
+            public Object assign()
+            {
+                return npeAssignment();
+            }
+        }, NullPointerException.class);
+
+        Try.testFail(new Try.Assignment<Object>()
+        {
+            @Override
+            public Object assign() throws FileNotFoundException
+            {
+                return fnfAssignment();
+            }
+        }, "message", Exception.class);
+        
+        Try.testFail(new Try.Assignment<Object>()
+        {
+            @Override
+            public Object assign()
+            {
+                return npeAssignment();
+            }
+        }, "message", Exception.class);
+
+        Try.testFail(new Try.Assignment<Object>()
+        {
+            @Override
+            public Object assign() throws FileNotFoundException
+            {
+                return fnfAssignment();
+            }
+        }, "message", FileNotFoundException.class);
+
+        Try.testFail(new Try.Assignment<Object>()
+        {
+            @Override
+            public Object assign() throws FileNotFoundException
+            {
+                return fnfAssignment();
+            }
+        }, "message", IOException.class);
+
+        Try.testFail(new Try.Assignment<Object>()
+        {
+            @Override
+            public Object assign()
+            {
+                return npeAssignment();
+            }
+        }, "message", NullPointerException.class);
+
+        // test assignment methods that do not throw exceptions
         try
         {
-            Try.testFail(() -> setResult(String.format(formatWithOneArg)));
-            fail("testFail should have thrown an exception because no argument was given");
+            Try.testFail(new Try.Assignment<Object>()
+            {
+                @Override
+                public Object assign()
+                {
+                    return Math.abs(-1.0);
+                }
+            });
         }
-        catch (Throwable e)
+        catch (Throwable t)
         {
-            // Ignore expected error
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment did not throw any exception"));
         }
-        assertEquals("this.value should not be changed", initialValueOfResult, this.value);
-        this.value = initialValueOfResult;
-
-        Try.testFail(() -> setResult(String.format(formatWithOneArg)));
-        assertEquals("this.value should not be changed", initialValueOfResult, this.value);
-        this.value = initialValueOfResult;
-
-        // class argument
 
         try
         {
-            Try.testFail(() -> setResult(String.format(formatWithoutArg)), NullPointerException.class);
-            fail("testFail should have thrown an exception because no NullPointerException was thrown in the assignment");
+            Try.testFail(new Try.Assignment<Object>()
+            {
+                @Override
+                public Object assign()
+                {
+                    return Math.abs(-1.0);
+                }
+            }, "xyz");
         }
-        catch (Throwable e)
+        catch (Throwable t)
         {
-            // Ignore expected error
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment did not throw any exception"));
+            assertTrue(t.getMessage().contains("xyz"));
         }
-        assertEquals("this.value should be changed", formatWithoutArg, this.value);
-        this.value = initialValueOfResult;
-
-        Try.testFail(() -> setResult(String.format(nullPointer)), NullPointerException.class);
-        assertEquals("this.value should not be changed", initialValueOfResult, this.value);
-        this.value = initialValueOfResult;
-
-        // String argument
 
         try
         {
-            Try.testFail(() -> setResult(String.format(formatWithOneArg)), "error");
-            fail("testFail should have thrown an exception because no arg was given");
+            Try.testFail(new Try.Assignment<Object>()
+            {
+                @Override
+                public Object assign()
+                {
+                    return Math.abs(-1.0);
+                }
+            }, NullPointerException.class);
         }
-        catch (Throwable e)
+        catch (Throwable t)
         {
-            // Ignore expected error
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment did not throw any exception"));
         }
-        assertEquals("this.value should not be changed", initialValueOfResult, this.value);
-        this.value = initialValueOfResult;
-
-        Try.testFail(() -> setResult(String.format(formatWithOneArg)), "error");
-        assertEquals("this.value should not be changed", initialValueOfResult, this.value);
-        this.value = initialValueOfResult;
-
-        // String and class argument
 
         try
         {
-            Try.testFail(() -> setResult(String.format(formatWithOneArg)), "error", NullPointerException.class);
-            fail("testFail should have thrown an exception because the wrong exception was given");
+            Try.testFail(new Try.Assignment<Object>()
+            {
+                @Override
+                public Object assign()
+                {
+                    return Math.abs(-1.0);
+                }
+            }, "xyz", NullPointerException.class);
         }
-        catch (Throwable e)
+        catch (Throwable t)
         {
-            // Ignore expected error
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment did not throw any exception"));
+            assertTrue(t.getMessage().contains("xyz"));
         }
-        assertEquals("this.value should not be changed", initialValueOfResult, this.value);
 
-        Try.testFail(() -> setResult(String.format(formatWithOneArg)), "error", IllegalFormatException.class);
-        assertEquals("this.value should not be changed", initialValueOfResult, this.value);
-        this.value = initialValueOfResult;
+        // test assignment methods that throw the wrong exception
+
+        try
+        {
+            Try.testFail(new Try.Assignment<Object>()
+            {
+                @Override
+                public Object assign() throws FileNotFoundException
+                {
+                    return fnfAssignment();
+                }
+            }, NullPointerException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+        }
+
+        try
+        {
+            Try.testFail(new Try.Assignment<Object>()
+            {
+                @Override
+                public Object assign() throws FileNotFoundException
+                {
+                    return fnfAssignment();
+                }
+            }, "xyz", NullPointerException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+            assertTrue(t.getMessage().contains("xyz"));
+        }
+
+        try
+        {
+            Try.testFail(new Try.Assignment<Object>()
+            {
+                @Override
+                public Object assign()
+                {
+                    return npeAssignment();
+                }
+            }, IllegalStateException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+        }
+
+        try
+        {
+            Try.testFail(new Try.Assignment<Object>()
+            {
+                @Override
+                public Object assign()
+                {
+                    return npeAssignment();
+                }
+            }, "xyz", IllegalStateException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Assignment"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+            assertTrue(t.getMessage().contains("xyz"));
+        }
+    }
+
+    /**
+     * Test the fail methods in the Try class using lambda executions.
+     * @throws RuntimeException if that happens (uncaught); this test has failed.
+     */
+    @SuppressWarnings("checkstyle:methodlength")
+    @Test
+    public void tryFailTestExecuteLambda() throws RuntimeException
+    {
+        Try.testFail(() -> fnfExecution());
+        Try.testFail(() -> npeExecution());
+        Try.testFail(() -> fnfExecution(), "message");
+        Try.testFail(() -> npeExecution(), "message");
+        Try.testFail(() -> fnfExecution(), Exception.class);
+        Try.testFail(() -> npeExecution(), Exception.class);
+        Try.testFail(() -> fnfExecution(), FileNotFoundException.class);
+        Try.testFail(() -> fnfExecution(), IOException.class);
+        Try.testFail(() -> npeExecution(), NullPointerException.class);
+        Try.testFail(() -> fnfExecution(), "message", Exception.class);
+        Try.testFail(() -> npeExecution(), "message", Exception.class);
+        Try.testFail(() -> fnfExecution(), "message", FileNotFoundException.class);
+        Try.testFail(() -> fnfExecution(), "message", IOException.class);
+        Try.testFail(() -> npeExecution(), "message", NullPointerException.class);
+
+        // test execution methods that do not throw exceptions
+        try
+        {
+            Try.testFail(() -> new HashSet<String>().clear());
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution did not throw any exception"));
+        }
+
+        try
+        {
+            Try.testFail(() -> new HashSet<String>().clear(), "xyz");
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution did not throw any exception"));
+            assertTrue(t.getMessage().contains("xyz"));
+        }
+
+        try
+        {
+            Try.testFail(() -> new HashSet<String>().clear(), NullPointerException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution did not throw any exception"));
+        }
+
+        try
+        {
+            Try.testFail(() -> new HashSet<String>().clear(), "xyz", NullPointerException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution did not throw any exception"));
+            assertTrue(t.getMessage().contains("xyz"));
+        }
+
+        // test execution methods that throw the wrong exception
+
+        try
+        {
+            Try.testFail(() -> fnfExecution(), NullPointerException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+        }
+
+        try
+        {
+            Try.testFail(() -> fnfExecution(), "xyz", NullPointerException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+            assertTrue(t.getMessage().contains("xyz"));
+        }
+
+        try
+        {
+            Try.testFail(() -> npeExecution(), IllegalStateException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+        }
+
+        try
+        {
+            Try.testFail(() -> npeExecution(), "xyz", IllegalStateException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+            assertTrue(t.getMessage().contains("xyz"));
+        }
+    }
+
+    /**
+     * Test the fail methods in the Try class using Executions.
+     * @throws RuntimeException if that happens (uncaught); this test has failed.
+     */
+    @SuppressWarnings("checkstyle:methodlength")
+    @Test
+    public void tryFailTestExecute() throws RuntimeException
+    {
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws FileNotFoundException
+            {
+                fnfExecution();
+            }
+        });
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute()
+            {
+                npeExecution();
+            }
+        });
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws FileNotFoundException
+            {
+                fnfExecution();
+            }
+        }, "message");
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute()
+            {
+                npeExecution();
+            }
+        }, "message");
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws FileNotFoundException
+            {
+                fnfExecution();
+            }
+        }, Exception.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute()
+            {
+                npeExecution();
+            }
+        }, Exception.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws FileNotFoundException
+            {
+                fnfExecution();
+            }
+        }, FileNotFoundException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws FileNotFoundException
+            {
+                fnfExecution();
+            }
+        }, IOException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute()
+            {
+                npeExecution();
+            }
+        }, NullPointerException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws FileNotFoundException
+            {
+                fnfExecution();
+            }
+        }, "message", Exception.class);
+        
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute()
+            {
+                npeExecution();
+            }
+        }, "message", Exception.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws FileNotFoundException
+            {
+                fnfExecution();
+            }
+        }, "message", FileNotFoundException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws FileNotFoundException
+            {
+                fnfExecution();
+            }
+        }, "message", IOException.class);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute()
+            {
+                npeExecution();
+            }
+        }, "message", NullPointerException.class);
+
+        // test assignment methods that do not throw exceptions
+        try
+        {
+            Try.testFail(new Try.Execution()
+            {
+                @Override
+                public void execute()
+                {
+                    new HashSet<Double>().clear();
+                }
+            });
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution did not throw any exception"));
+        }
+
+        try
+        {
+            Try.testFail(new Try.Execution()
+            {
+                @Override
+                public void execute()
+                {
+                    new HashSet<Double>().clear();
+                }
+            }, "xyz");
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution did not throw any exception"));
+            assertTrue(t.getMessage().contains("xyz"));
+        }
+
+        try
+        {
+            Try.testFail(new Try.Execution()
+            {
+                @Override
+                public void execute()
+                {
+                    new HashSet<Double>().clear();
+                }
+            }, NullPointerException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution did not throw any exception"));
+        }
+
+        try
+        {
+            Try.testFail(new Try.Execution()
+            {
+                @Override
+                public void execute()
+                {
+                    new HashSet<Double>().clear();
+                }
+            }, "xyz", NullPointerException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution did not throw any exception"));
+            assertTrue(t.getMessage().contains("xyz"));
+        }
+
+        // test assignment methods that throw the wrong exception
+
+        try
+        {
+            Try.testFail(new Try.Execution()
+            {
+                @Override
+                public void execute() throws FileNotFoundException
+                {
+                    fnfExecution();
+                }
+            }, NullPointerException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+        }
+
+        try
+        {
+            Try.testFail(new Try.Execution()
+            {
+                @Override
+                public void execute() throws FileNotFoundException
+                {
+                    fnfExecution();
+                }
+            }, "xyz", NullPointerException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+            assertTrue(t.getMessage().contains("xyz"));
+        }
+
+        try
+        {
+            Try.testFail(new Try.Execution()
+            {
+                @Override
+                public void execute()
+                {
+                    npeExecution();
+                }
+            }, IllegalStateException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+        }
+
+        try
+        {
+            Try.testFail(new Try.Execution()
+            {
+                @Override
+                public void execute()
+                {
+                    npeExecution();
+                }
+            }, "xyz", IllegalStateException.class);
+        }
+        catch (Throwable t)
+        {
+            assertTrue(t instanceof AssertionError);
+            assertTrue(t.getMessage().contains("Execution"));
+            assertTrue(t.getMessage().contains("unexpected Throwable"));
+            assertTrue(t.getMessage().contains("xyz"));
+        }
+    }
+
+    /**
+     * Test method that throws FNFE.
+     * @return Object (never happens)
+     * @throws FileNotFoundException to test FNF and IO exceptions
+     */
+    private Object fnfAssignment() throws FileNotFoundException
+    {
+        throw new FileNotFoundException();
+    }
+
+    /**
+     * Test method that throws FNFE.
+     * @throws FileNotFoundException to test FNF and IO exceptions
+     */
+    private void fnfExecution() throws FileNotFoundException
+    {
+        throw new FileNotFoundException();
+    }
+
+    /**
+     * Test method that throws NPE.
+     * @return Object (never happens)
+     */
+    private Object npeAssignment()
+    {
+        throw new NullPointerException();
+    }
+
+    /**
+     * Test method that throws NPE.
+     */
+    private void npeExecution()
+    {
+        throw new NullPointerException();
     }
 
     /**
