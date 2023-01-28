@@ -13,6 +13,7 @@ import org.djunits.value.vdouble.scalar.Length;
 import org.djunits.value.vdouble.scalar.Time;
 import org.djunits.value.vfloat.scalar.FloatDirection;
 import org.djunits.value.vfloat.scalar.FloatDuration;
+import org.djutils.data.serialization.IntegerSerializer;
 import org.djutils.data.serialization.TextSerializationException;
 import org.djutils.data.serialization.TextSerializer;
 import org.junit.Test;
@@ -38,8 +39,8 @@ public class TestTextSerializers
     public void testPrimitiveSerializers() throws TextSerializationException
     {
         int i = 10;
-        TextSerializer<?> serializer = TextSerializer.resolve(int.class);
-        assertEquals(i, serializer.deserialize(serializer.serialize(i)));
+        IntegerSerializer serializer = new IntegerSerializer();
+        assertEquals(String.valueOf(i), serializer.deserialize(Integer.class, serializer.serialize(i), ""));
 
         double d = 124.5;
         serializer = TextSerializer.resolve(double.class);
