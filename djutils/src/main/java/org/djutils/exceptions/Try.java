@@ -958,7 +958,7 @@ public final class Try
             // expected to fail
             return;
         }
-        throw new AssertionError(message + "; Assignment did not throw any exception");
+        throw new AssertionError(message + "; Execution did not throw any exception");
     }
 
     // Interfaces
