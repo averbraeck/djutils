@@ -1,12 +1,11 @@
 /**
- * The csv package takes care of reading and writing of data in csv / tsv format to/from files or streams. <br>
- * <br>
- * Copyright (c) 2020-2023 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
- * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
- * distributed under a three-clause BSD-style license, which can be found at
- * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>. <br>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
- * @author <a href="http://www.transport.citg.tudelft.nl">Wouter Schakel</a>
+ * The csv package takes care of reading and writing of data in csv / tsv format to/from files or streams.
+ * <p>
+ * Copyright (c) 2020-2023 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
+ * </p>
+ * @author <a href="https://github.com/averbraeck">Alexander Verbraeck</a>
+ * @author <a href="https://tudelft.nl/staff/p.knoppers-1">Peter Knoppers</a>
+ * @author <a href="https://dittlab.tudelft.nl">Wouter Schakel</a>
  */
 package org.djutils.data.csv;
