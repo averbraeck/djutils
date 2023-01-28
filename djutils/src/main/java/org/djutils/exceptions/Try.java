@@ -655,7 +655,7 @@ public final class Try
      * 
      * <pre>
      * <code>
-     *   Try.testFail(() -> methodFailsOnNull(null));
+     *   Try.testFail(() -&gt; methodFailsOnNull(null));
      * </code>
      * </pre>
      * 
@@ -689,7 +689,7 @@ public final class Try
      * 
      * <pre>
      * <code>
-     *   Try.testFail(() -> methodFailsOnNull(null), "call should have thrown an NPE");
+     *   Try.testFail(() -&gt; methodFailsOnNull(null), "call should have thrown an NPE");
      * </code>
      * </pre>
      * 
@@ -725,7 +725,7 @@ public final class Try
      * 
      * <pre>
      * <code>
-     *   Try.testFail(() -> methodFailsOnNull(null), NullPointerException.class);
+     *   Try.testFail(() -&gt; methodFailsOnNull(null), NullPointerException.class);
      * </code>
      * </pre>
      * 
@@ -762,7 +762,7 @@ public final class Try
      * 
      * <pre>
      * <code>
-     *   Try.testFail(() -> methodFailsOnNull(null), "call should have thrown an NPE", NullPointerException.class);
+     *   Try.testFail(() -&gt; methodFailsOnNull(null), "call should have thrown an NPE", NullPointerException.class);
      * </code>
      * </pre>
      * 
@@ -812,7 +812,7 @@ public final class Try
      * 
      * <pre>
      * <code>
-     *   Try.testFail(() -> methodFailsOnNull(null));
+     *   Try.testFail(() -&gt; methodFailsOnNull(null));
      * </code>
      * </pre>
      * 
@@ -844,7 +844,7 @@ public final class Try
      * 
      * <pre>
      * <code>
-     *   Try.testFail(() -> methodFailsOnNull(null), "call should have thrown an NPE");
+     *   Try.testFail(() -&gt; methodFailsOnNull(null), "call should have thrown an NPE");
      * </code>
      * </pre>
      * 
@@ -877,7 +877,7 @@ public final class Try
      * 
      * <pre>
      * <code>
-     *   Try.testFail(() -> methodFailsOnNull(null), NullPointerException.class);
+     *   Try.testFail(() -&gt; methodFailsOnNull(null), NullPointerException.class);
      * </code>
      * </pre>
      * 
@@ -911,7 +911,7 @@ public final class Try
      * 
      * <pre>
      * <code>
-     *   Try.testFail(() -> methodFailsOnNull(null), "call should have thrown an NPE", NullPointerException.class);
+     *   Try.testFail(() -&gt; methodFailsOnNull(null), "call should have thrown an NPE", NullPointerException.class);
      * </code>
      * </pre>
      * 
