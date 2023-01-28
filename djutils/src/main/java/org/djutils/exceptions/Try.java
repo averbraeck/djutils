@@ -662,7 +662,6 @@ public final class Try
      * or
      * 
      * <pre><code>
-     * {
      *   Try.testFail(new Try.Assignment&lt;Double&gt;()
      *   {
      *       {@literal @}Override
@@ -671,7 +670,7 @@ public final class Try
      *           return methodFailsOnNull(null);
      *       }
      *   });
-     * }</code></pre>
+     * </code></pre>
      * 
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
      * @param <V> value type, which is the return type of the assignment
@@ -697,7 +696,6 @@ public final class Try
      * or
      * 
      * <pre><code>
-     * {
      *   Try.testFail(new Try.Assignment&lt;Double&gt;()
      *   {
      *       {@literal @}Override
@@ -706,7 +704,7 @@ public final class Try
      *           return methodFailsOnNull(null);
      *       }
      *   }, "call should have thrown an NPE");
-     * }</code></pre>
+     * </code></pre>
      * 
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
      * @param <V> value type, which is the return type of the assignment
@@ -734,7 +732,6 @@ public final class Try
      * or
      * 
      * <pre><code>
-     * {
      *   Try.testFail(new Try.Assignment&lt;Double&gt;()
      *   {
      *       {@literal @}Override
@@ -743,7 +740,7 @@ public final class Try
      *           return methodFailsOnNull(null);
      *       }
      *   }, NullPointerException.class);
-     * }</code></pre>
+     * </code></pre>
      * 
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
      * @param expectedThrowableClass Class&lt;T&gt;; the class of the exception we expect the assignment to throw
@@ -772,7 +769,6 @@ public final class Try
      * or
      * 
      * <pre><code>
-     * {
      *   Try.testFail(new Try.Assignment&lt;Double&gt;()
      *   {
      *       {@literal @}Override
@@ -781,7 +777,7 @@ public final class Try
      *           return methodFailsOnNull(null);
      *       }
      *   }, "call should have thrown an NPE", NullPointerException.class);
-     * }</code></pre>
+     * </code></pre>
      * 
      * @param assignment Assignment&lt;V&gt;; functional interface to assign value
      * @param message String; message to use in the AssertionError when the test fails
@@ -823,7 +819,6 @@ public final class Try
      * or
      * 
      * <pre><code>
-     * {
      *   Try.testFail(new Try.Execution()
      *   {
      *       {@literal @}Override
@@ -832,7 +827,7 @@ public final class Try
      *           methodFailsOnNull(null);
      *       }
      *   });
-     * }</code></pre>
+     * </code></pre>
      * 
      * @param execution Execution; functional interface to execute a method that does not need to return a value
      */
@@ -856,7 +851,6 @@ public final class Try
      * or
      * 
      * <pre><code>
-     * {
      *   Try.testFail(new Try.Execution()
      *   {
      *       {@literal @}Override
@@ -865,7 +859,7 @@ public final class Try
      *           methodFailsOnNull(null);
      *       }
      *   }, "call should have thrown an NPE");
-     * }</code></pre>
+     * </code></pre>
      * 
      * @param execution Execution; functional interface to execute a method that does not need to return a value
      * @param message String; message to use in the AssertionError when the test fails
@@ -890,7 +884,6 @@ public final class Try
      * or
      * 
      * <pre><code>
-     * {
      *   Try.testFail(new Try.Execution()
      *   {
      *       {@literal @}Override
@@ -899,7 +892,7 @@ public final class Try
      *           methodFailsOnNull(null);
      *       }
      *   }, NullPointerException.class);
-     * }</code></pre>
+     * </code></pre>
      * 
      * @param execution Execution; functional interface to execute a method that does not need to return a value
      * @param expectedThrowableClass Class&lt;T&gt;; the class of the exception we expect the execution to throw
@@ -925,7 +918,6 @@ public final class Try
      * or
      * 
      * <pre><code>
-     * {
      *   Try.testFail(new Try.Execution()
      *   {
      *       {@literal @}Override
@@ -934,7 +926,7 @@ public final class Try
      *           methodFailsOnNull(null);
      *       }
      *   }, "call should have thrown an NPE", NullPointerException.class);
-     * }</code></pre>
+     * </code></pre>
      * 
      * @param execution Execution; functional interface to execute a method that does not need to return a value
      * @param message String; message to use in the AssertionError when the test fails
