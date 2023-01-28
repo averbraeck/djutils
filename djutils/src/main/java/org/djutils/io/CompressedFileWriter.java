@@ -62,16 +62,13 @@ public final class CompressedFileWriter implements AutoCloseable
     /**
      * Closes the previous file in the zip file, and opens up the next file. The {@code BufferedWriter} returned is the same for
      * each call on a {@code CompressedFileWriter}.
-     * @param name String; name of the nex file in the zip file
+     * @param name String; name of the next file in the zip file
      * @return BufferedWriter; writer to write the next file in to.
      * @throws IOException if no next entry could be created in the zip file
      */
     public BufferedWriter next(final String name) throws IOException
     {
-        if (this.bufferedWriter != null)
-        {
-            this.bufferedWriter.flush();
-        }
+        this.bufferedWriter.flush();
         this.zipOutputStream.putNextEntry(new ZipEntry(name));
         return this.bufferedWriter;
     }
@@ -80,40 +77,32 @@ public final class CompressedFileWriter implements AutoCloseable
     @Override
     public void close() throws IOException
     {
-        if (this.bufferedWriter != null)
-        {
-            this.bufferedWriter.flush();
-        }
+        this.bufferedWriter.flush();
         this.zipOutputStream.close();
     }
 
     /**
-     * Creates a writer to write to a file. This file may or may not be inside a zip file. In particular if
-     * {@code zipped = true}, then with {@code file = "myFile.csv"}, a file {@code myFile.csv.zip} will result in which a file
-     * {@code myFile.csv} is located. Writing occurs on this file.
-     * @param file String; file
+     * Creates a writer to write data to a file, which can be a zipped file or a regular file. In particular if
+     * {@code zipped = true}, then with {@code file = "myFile.csv"}, a file {@code myFile.csv.zip} will be created in which a
+     * file {@code myFile.csv} is located. Writing occurs on this file.
+     * @param filePath String; path of the file to write; in case of a zipped file, the filename of the zip-file will end with
+     *            .zip, and the filename in the zip file will be the the filename without .zip.
      * @param zipped boolean; whether to contain the file in a zip file
      * @return BufferedWriter writer tot write in to
+     * @throws IOException on error with filenames, file writing, closing, etc.
      */
-    public static BufferedWriter create(final String file, final boolean zipped)
+    public static BufferedWriter create(final String filePath, final boolean zipped) throws IOException
     {
-        try
+        if (zipped)
         {
-            if (zipped)
-            {
-                ZipOutputStream zipOutputStream =
-                        new ZipOutputStream(new FileOutputStream(file.toLowerCase().endsWith(".zip") ? file : file + ".zip"));
-                String name = new File(file).getName();
-                name = name.toLowerCase().endsWith(".zip") ? name.substring(0, name.length() - 4) : name;
-                zipOutputStream.putNextEntry(new ZipEntry(name));
-                return new BufferedWriter(new OutputStreamWriter(zipOutputStream));
-            }
-            return new BufferedWriter(new FileWriter(file));
+            ZipOutputStream zipOutputStream = new ZipOutputStream(
+                    new FileOutputStream(filePath.toLowerCase().endsWith(".zip") ? filePath : filePath + ".zip"));
+            String fileName = new File(filePath).getName();
+            fileName = fileName.toLowerCase().endsWith(".zip") ? fileName.substring(0, fileName.length() - 4) : fileName;
+            zipOutputStream.putNextEntry(new ZipEntry(fileName));
+            return new BufferedWriter(new OutputStreamWriter(zipOutputStream));
         }
-        catch (IOException exception)
-        {
-            throw new RuntimeException(exception);
-        }
+        return new BufferedWriter(new FileWriter(filePath));
     }
 
 }
