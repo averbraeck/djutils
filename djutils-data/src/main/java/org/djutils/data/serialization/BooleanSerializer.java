@@ -23,7 +23,7 @@ public class BooleanSerializer implements SpecificTextSerializer<Boolean>
     @Override
     public Boolean deserialize(final Class<Boolean> type, final String text, final String unit)
     {
-        return text == null ? null : Boolean.valueOf(text);
+        return (text == null || text.isEmpty()) ? null : Boolean.valueOf(text);
     }
 
 }

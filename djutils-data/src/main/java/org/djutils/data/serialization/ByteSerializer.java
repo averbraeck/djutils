@@ -23,7 +23,7 @@ public class ByteSerializer implements SpecificTextSerializer<Byte>
     @Override
     public Byte deserialize(final Class<Byte> type, final String text, final String unit)
     {
-        return text == null ? null : Byte.valueOf(text);
+        return (text == null || text.isEmpty()) ? null : Byte.valueOf(text);
     }
 
 }

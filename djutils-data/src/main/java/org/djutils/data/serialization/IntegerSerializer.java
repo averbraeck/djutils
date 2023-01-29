@@ -23,7 +23,7 @@ public class IntegerSerializer implements SpecificTextSerializer<Integer>
     @Override
     public Integer deserialize(final Class<Integer> type, final String text, final String unit)
     {
-        return text == null ? null : Integer.valueOf(text);
+        return (text == null || text.isEmpty()) ? null : Integer.valueOf(text);
     }
 
 }

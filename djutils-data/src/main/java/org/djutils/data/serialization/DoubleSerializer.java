@@ -23,7 +23,7 @@ public class DoubleSerializer implements SpecificTextSerializer<Double>
     @Override
     public Double deserialize(final Class<Double> type, final String text, final String unit)
     {
-        return text == null ? null : Double.valueOf(text);
+        return (text == null || text.isEmpty()) ? null : Double.valueOf(text);
     }
 
 }

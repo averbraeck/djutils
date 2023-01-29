@@ -23,7 +23,7 @@ public class LongSerializer implements SpecificTextSerializer<Long>
     @Override
     public Long deserialize(final Class<Long> type, final String text, final String unit)
     {
-        return text == null ? null : Long.valueOf(text);
+        return (text == null || text.isEmpty()) ? null : Long.valueOf(text);
     }
 
 }

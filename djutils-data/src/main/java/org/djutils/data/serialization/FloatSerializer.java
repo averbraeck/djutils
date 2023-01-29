@@ -23,7 +23,7 @@ public class FloatSerializer implements SpecificTextSerializer<Float>
     @Override
     public Float deserialize(final Class<Float> type, final String text, final String unit)
     {
-        return text == null ? null : Float.valueOf(text);
+        return (text == null || text.isEmpty()) ? null : Float.valueOf(text);
     }
 
 }

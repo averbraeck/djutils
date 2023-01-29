@@ -45,7 +45,7 @@ public class DoubleScalarSerializer<U extends Unit<U>, S extends AbstractScalar<
     @Override
     public S deserialize(final Class<S> type, final String text, final String unit)
     {
-        if (text == null)
+        if (text == null || text.isEmpty())
         {
             return null;
         }

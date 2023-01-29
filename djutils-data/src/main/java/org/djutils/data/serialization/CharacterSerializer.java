@@ -23,7 +23,7 @@ public class CharacterSerializer implements SpecificTextSerializer<Character>
     @Override
     public Character deserialize(final Class<Character> type, final String text, final String unit)
     {
-        return text == null ? null : text.charAt(0);
+        return (text == null || text.isEmpty()) ? null : text.charAt(0);
     }
 
 }

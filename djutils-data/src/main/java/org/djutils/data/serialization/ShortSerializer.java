@@ -23,7 +23,7 @@ public class ShortSerializer implements SpecificTextSerializer<Short>
     @Override
     public Short deserialize(final Class<Short> type, final String text, final String unit)
     {
-        return text == null ? null : Short.valueOf(text);
+        return (text == null || text.isEmpty()) ? null : Short.valueOf(text);
     }
 
 }
