@@ -3,7 +3,6 @@ package org.djutils.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 import java.util.Locale;
 
@@ -15,6 +14,7 @@ import org.djunits.value.vdouble.scalar.Length;
 import org.djunits.value.vdouble.scalar.Time;
 import org.djunits.value.vfloat.scalar.FloatDirection;
 import org.djunits.value.vfloat.scalar.FloatDuration;
+import org.djunits.value.vfloat.scalar.FloatLength;
 import org.djutils.data.serialization.BooleanSerializer;
 import org.djutils.data.serialization.ByteSerializer;
 import org.djutils.data.serialization.CharacterSerializer;
@@ -28,6 +28,7 @@ import org.djutils.data.serialization.ShortSerializer;
 import org.djutils.data.serialization.StringSerializer;
 import org.djutils.data.serialization.TextSerializationException;
 import org.djutils.data.serialization.TextSerializer;
+import org.djutils.exceptions.Try;
 import org.junit.Test;
 
 /**
@@ -96,6 +97,58 @@ public class TestTextSerializers
     }
 
     /**
+     * Test the serializers of the primitive types, using the generic (de)serializer from the textSerializer interface.
+     * @throws TextSerializationException when serializer could not be found
+     */
+    @Test
+    public void testPrimitiveClassSerializersGeneric() throws TextSerializationException
+    {
+        int i = 10;
+        TextSerializer<?> serializer = TextSerializer.resolve(Integer.class);
+        Column<?> column = new Column<>("c", "d", Integer.class, "");
+        assertEquals(Integer.valueOf(i),
+                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, i), column));
+
+        double d = 124.5;
+        serializer = TextSerializer.resolve(Double.class);
+        column = new Column<>("c", "d", Double.class, "");
+        assertEquals(Double.valueOf(d),
+                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, d), column));
+
+        float f = 11.4f;
+        serializer = TextSerializer.resolve(Float.class);
+        column = new Column<>("c", "d", Float.class, "");
+        assertEquals(Float.valueOf(f), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, f), column));
+
+        long l = 100_456_678L;
+        serializer = TextSerializer.resolve(Long.class);
+        column = new Column<>("c", "d", Long.class, "");
+        assertEquals(Long.valueOf(l), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, l), column));
+
+        short s = (short) 12.34;
+        serializer = TextSerializer.resolve(Short.class);
+        column = new Column<>("c", "d", Short.class, "");
+        assertEquals(Short.valueOf(s), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, s), column));
+
+        byte b = (byte) 67;
+        serializer = TextSerializer.resolve(Byte.class);
+        column = new Column<>("c", "d", Byte.class, "");
+        assertEquals(Byte.valueOf(b), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, b), column));
+
+        char c = 'a';
+        serializer = TextSerializer.resolve(Character.class);
+        column = new Column<>("c", "d", Character.class, "");
+        assertEquals(Character.valueOf(c),
+                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, c), column));
+
+        boolean t = true;
+        serializer = TextSerializer.resolve(Boolean.class);
+        column = new Column<>("c", "d", Boolean.class, "");
+        assertEquals(Boolean.valueOf(t),
+                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, t), column));
+    }
+
+    /**
      * Test the serializers of the Number types, Boolean and Character.
      * @throws TextSerializationException when serializer could not be found
      */
@@ -133,6 +186,60 @@ public class TestTextSerializers
         Boolean t = true;
         BooleanSerializer booleanSerializer = new BooleanSerializer();
         assertEquals(t, booleanSerializer.deserialize(booleanSerializer.serialize(t)));
+
+        TextSerializer<?> lengthSerializer = TextSerializer.resolve(Length.class);
+        Column<?> lengthColumn = new Column<>("c", "d", Length.class, "m");
+        Length length = Length.of(10.0, "m");
+        assertEquals(length,
+                TextSerializer.deserialize(lengthSerializer, TextSerializer.serialize(lengthSerializer, length), lengthColumn));
+
+        TextSerializer<?> floatLengthSerializer = TextSerializer.resolve(FloatLength.class);
+        Column<?> floatLengthColumn = new Column<>("c", "d", FloatLength.class, "m");
+        FloatLength floatLength = FloatLength.of(10.0f, "m");
+        assertEquals(floatLength, TextSerializer.deserialize(floatLengthSerializer,
+                TextSerializer.serialize(floatLengthSerializer, floatLength), floatLengthColumn));
+
+        Try.testFail(() -> TextSerializer.deserialize(lengthSerializer, "1.0 xx", lengthColumn),
+                "Deserializing an unknown unit for length should have thrown a RuntimeException", RuntimeException.class);
+
+        Try.testFail(() -> TextSerializer.resolve(NumberExtension.class),
+                "Getting serializer for unknown Number class should have thrown a TextSerializationException",
+                TextSerializationException.class);
+    }
+
+    /** test class that extends Number. */
+    private class NumberExtension extends Number
+    {
+        /** */
+        private static final long serialVersionUID = 1L;
+
+        /** {@inheritDoc} */
+        @Override
+        public int intValue()
+        {
+            return 0;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public long longValue()
+        {
+            return 0L;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public float floatValue()
+        {
+            return 0.0f;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public double doubleValue()
+        {
+            return 0.0;
+        }
     }
 
     /**
@@ -154,25 +261,10 @@ public class TestTextSerializers
     @Test
     public void testSerializerErrors() throws TextSerializationException
     {
-        try
-        {
-            TextSerializer.resolve(Object.class);
-            fail("resolving an unknown serializer should have raised an exception");
-        }
-        catch (TextSerializationException tse)
-        {
-            // ok
-        }
-
-        try
-        {
-            TextSerializer.resolve(null);
-            fail("null class should have raised an exception");
-        }
-        catch (NullPointerException npe)
-        {
-            // ok
-        }
+        Try.testFail(() -> TextSerializer.resolve(Object.class),
+                "resolving an unknown serializer should have raised an exception", TextSerializationException.class);
+        Try.testFail(() -> TextSerializer.resolve(null), "null class should have raised an exception",
+                NullPointerException.class);
 
         Exception e = new TextSerializationException();
         assertNull(e.getMessage());
