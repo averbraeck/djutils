@@ -251,40 +251,62 @@ public class TestTextSerializers
     {
         IntegerSerializer integerSerializer = new IntegerSerializer();
         assertNull(integerSerializer.deserialize(integerSerializer.serialize(null)));
+        assertNull(integerSerializer.deserialize(""));
+        assertNull(integerSerializer.deserialize(null));
 
         DoubleSerializer doubleSerializer = new DoubleSerializer();
         assertNull(doubleSerializer.deserialize(doubleSerializer.serialize(null)));
+        assertNull(doubleSerializer.deserialize(""));
+        assertNull(doubleSerializer.deserialize(null));
 
         FloatSerializer floatSerializer = new FloatSerializer();
         assertNull(floatSerializer.deserialize(floatSerializer.serialize(null)));
+        assertNull(floatSerializer.deserialize(""));
+        assertNull(floatSerializer.deserialize(null));
 
         LongSerializer longSerializer = new LongSerializer();
         assertNull(longSerializer.deserialize(longSerializer.serialize(null)));
+        assertNull(longSerializer.deserialize(""));
+        assertNull(longSerializer.deserialize(null));
 
         ShortSerializer shortSerializer = new ShortSerializer();
         assertNull(shortSerializer.deserialize(shortSerializer.serialize(null)));
+        assertNull(shortSerializer.deserialize(""));
+        assertNull(shortSerializer.deserialize(null));
 
         ByteSerializer byteSerializer = new ByteSerializer();
         assertNull(byteSerializer.deserialize(byteSerializer.serialize(null)));
+        assertNull(byteSerializer.deserialize(""));
+        assertNull(byteSerializer.deserialize(null));
 
         CharacterSerializer characterSerializer = new CharacterSerializer();
         assertNull(characterSerializer.deserialize(characterSerializer.serialize(null)));
+        assertNull(characterSerializer.deserialize(""));
+        assertNull(characterSerializer.deserialize(null));
 
         BooleanSerializer booleanSerializer = new BooleanSerializer();
         assertNull(booleanSerializer.deserialize(booleanSerializer.serialize(null)));
+        assertNull(booleanSerializer.deserialize(""));
+        assertNull(booleanSerializer.deserialize(null));
 
         TextSerializer<?> lengthSerializer = TextSerializer.resolve(Length.class);
         Column<?> lengthColumn = new Column<>("c", "d", Length.class, "m");
         assertNull(
                 TextSerializer.deserialize(lengthSerializer, TextSerializer.serialize(lengthSerializer, null), lengthColumn));
+        assertNull(TextSerializer.deserialize(lengthSerializer, "", lengthColumn));
+        assertNull(TextSerializer.deserialize(lengthSerializer, null, lengthColumn));
 
         TextSerializer<?> floatLengthSerializer = TextSerializer.resolve(FloatLength.class);
         Column<?> floatLengthColumn = new Column<>("c", "d", FloatLength.class, "m");
         assertNull(TextSerializer.deserialize(floatLengthSerializer, TextSerializer.serialize(floatLengthSerializer, null),
                 floatLengthColumn));
+        assertNull(TextSerializer.deserialize(floatLengthSerializer, "", lengthColumn));
+        assertNull(TextSerializer.deserialize(floatLengthSerializer, null, lengthColumn));
 
-        StringSerializer serializer = new StringSerializer();
-        assertNull(serializer.deserialize(serializer.serialize(null)));
+        StringSerializer stringSerializer = new StringSerializer();
+        assertNull(stringSerializer.deserialize(stringSerializer.serialize(null)));
+        assertNull(stringSerializer.deserialize(""));
+        assertNull(stringSerializer.deserialize(null));
     }
 
     /**
@@ -365,5 +387,40 @@ public class TestTextSerializers
         FloatScalarSerializer<DirectionUnit, FloatDirection> floatDirectionSerializer = new FloatScalarSerializer<>();
         assertEquals(direction, floatDirectionSerializer.deserialize(FloatDirection.class,
                 floatDirectionSerializer.serialize(direction), "rad"));
+    }
+
+    /**
+     * Test the serializers of the DoubleScalar and FloatScalar types with a different unit in the Column.
+     * @throws TextSerializationException when serializer could not be found
+     */
+    @Test
+    public void testScalarSerializersColumnUnits() throws TextSerializationException
+    {
+        Locale.setDefault(Locale.US);
+
+        TextSerializer<?> lengthSerializer = TextSerializer.resolve(Length.class);
+        Column<Length> lengthColumn = new Column<>("c", "d", Length.class, "km");
+        Length length = new Length(30.0, LengthUnit.METER);
+        assertEquals(length,
+                TextSerializer.deserialize(lengthSerializer, TextSerializer.serialize(lengthSerializer, length), lengthColumn));
+        length = new Length(20.0, LengthUnit.KILOMETER);
+        assertEquals(length,
+                TextSerializer.deserialize(lengthSerializer, TextSerializer.serialize(lengthSerializer, length), lengthColumn));
+        length = new Length(Math.PI, LengthUnit.MILE);
+        assertEquals(length,
+                TextSerializer.deserialize(lengthSerializer, TextSerializer.serialize(lengthSerializer, length), lengthColumn));
+
+        TextSerializer<?> floatLengthSerializer = TextSerializer.resolve(FloatLength.class);
+        Column<?> floatLengthColumn = new Column<>("c", "d", FloatLength.class, "mm");
+        FloatLength floatLength = new FloatLength(30.0f, LengthUnit.METER);
+        assertEquals(floatLength, TextSerializer.deserialize(floatLengthSerializer,
+                TextSerializer.serialize(floatLengthSerializer, floatLength), floatLengthColumn));
+        floatLength = new FloatLength(20.0f, LengthUnit.KILOMETER);
+        assertEquals(floatLength, TextSerializer.deserialize(floatLengthSerializer,
+                TextSerializer.serialize(floatLengthSerializer, floatLength), floatLengthColumn));
+        floatLength = new FloatLength(Math.PI, LengthUnit.MILE);
+        assertEquals(floatLength, TextSerializer.deserialize(floatLengthSerializer,
+                TextSerializer.serialize(floatLengthSerializer, floatLength), floatLengthColumn));
+
     }
 }
