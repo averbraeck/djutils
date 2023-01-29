@@ -65,16 +65,13 @@ public final class DataDemo
         Column<Integer> timeStamp = new Column<>("timeStamp", "time rounded to nearest second", int.class, "");
         Column<Double> temperature = new Column<>("temperature", "engine temperature in Celcius", double.class, "");
         Column<String> remark = new Column<>("remark", "remark", String.class, "");
-        List<Column<?>> columns = new ArrayList<>();
-        columns.add(timeStamp);
-        columns.add(temperature);
-        columns.add(remark);
+        List<Column<?>> columns = List.of(timeStamp, temperature, remark);
         ListTable table = new ListTable("engineTemperatureData", "engine temperature samples", columns);
 
         System.out.println(table);
 
-        Object[] row = new Object[] { 600, 18.0, "starting engine" };
-        table.addRow(row);
+        Object[] rowData = new Object[] { 600, 18.0, "starting engine" };
+        table.addRow(rowData);
 
         Map<String, Object> map = new HashMap<>();
         map.put("remark", "leaving parking lot");
@@ -82,23 +79,23 @@ public final class DataDemo
         map.put("timeStamp", 660);
         table.addRowByColumnIds(map);
 
-        for (Row dataRecord : table)
+        for (Row row : table)
         {
             for (int column = 0; column < table.getNumberOfColumns(); column++)
             {
-                System.out.println("column " + column + ": " + dataRecord.getValues()[column]);
+                System.out.println("column " + column + ": " + row.getValues()[column]);
             }
         }
-        for (Row dataRecord : table)
+        for (Row row : table)
         {
-            System.out.println("timeStamp=" + dataRecord.getValue("timeStamp") + ", temperature="
-                    + dataRecord.getValue("temperature") + ", " + dataRecord.getValue("remark"));
+            System.out.println("timeStamp=" + row.getValue("timeStamp") + ", temperature="
+                    + row.getValue("temperature") + ", " + row.getValue("remark"));
         }
 
         System.out.println("JSON");
-        JsonData.writeData("C:/Temp/example.json", table);
+        JsonData.writeData("C:/Temp/example1.json", table);
 
-        Table readBack = JsonData.readData("C:/Temp/example.json");
+        Table readBack = JsonData.readData("C:/Temp/example1.json");
         for (Row dataRecord : readBack)
         {
             for (int column = 0; column < readBack.getNumberOfColumns(); column++)
@@ -108,9 +105,9 @@ public final class DataDemo
         }
 
         System.out.println("XML");
-        XmlData.writeData("C:/Temp/example.xml", table);
+        XmlData.writeData("C:/Temp/example1.xml", table);
 
-        readBack = XmlData.readData("C:/Temp/example.xml");
+        readBack = XmlData.readData("C:/Temp/example1.xml");
         for (Row dataRecord : readBack)
         {
             for (int column = 0; column < readBack.getNumberOfColumns(); column++)
@@ -120,9 +117,9 @@ public final class DataDemo
         }
 
         System.out.println("CSV");
-        CsvData.writeData("C:/Temp/example.csv", "C:/Temp/example.csvm", table);
+        CsvData.writeData("C:/Temp/example1.csv", "C:/Temp/example1.csvm", table);
 
-        readBack = CsvData.readData("C:/Temp/example.csv", "C:/Temp/example.csvm");
+        readBack = CsvData.readData("C:/Temp/example1.csv", "C:/Temp/example1.csvm");
         for (Row dataRecord : readBack)
         {
             for (int column = 0; column < readBack.getNumberOfColumns(); column++)
@@ -132,9 +129,9 @@ public final class DataDemo
         }
 
         System.out.println("TSV");
-        TsvData.writeData("C:/Temp/example.tsv", "C:/Temp/example.tsvm", table);
+        TsvData.writeData("C:/Temp/example1.tsv", "C:/Temp/example1.tsvm", table);
 
-        readBack = TsvData.readData("C:/Temp/example.tsv", "C:/Temp/example.tsvm");
+        readBack = TsvData.readData("C:/Temp/example1.tsv", "C:/Temp/example1.tsvm");
         for (Row dataRecord : readBack)
         {
             for (int column = 0; column < readBack.getNumberOfColumns(); column++)
@@ -147,9 +144,9 @@ public final class DataDemo
         table.addRow(new Object[] { 780, Double.POSITIVE_INFINITY, "can we store positive infinity?" });
         table.addRow(new Object[] { 840, Double.NEGATIVE_INFINITY, "can we store negative infinity?" });
         System.out.println("JSON");
-        JsonData.writeData("C:/Temp/example.json", table);
+        JsonData.writeData("C:/Temp/exampleNaN.json", table);
 
-        readBack = JsonData.readData("C:/Temp/example.json");
+        readBack = JsonData.readData("C:/Temp/exampleNaN.json");
         for (Row dataRecord : readBack)
         {
             for (int column = 0; column < readBack.getNumberOfColumns(); column++)
@@ -157,7 +154,7 @@ public final class DataDemo
                 System.out.println("column " + column + ": " + dataRecord.getValues()[column]);
             }
         }
-        CsvData.writeData("C:/Temp/example.csv", "C:/Temp/example.csvm", table);
+        CsvData.writeData("C:/Temp/exampleNaN.csv", "C:/Temp/exampleNaN.csvm", table);
 
     }
 
@@ -204,9 +201,9 @@ public final class DataDemo
         }
 
         System.out.println("JSON");
-        JsonData.writeData("C:/Temp/example.json", table);
+        JsonData.writeData("C:/Temp/example2.json", table);
 
-        Table readBack = JsonData.readData("C:/Temp/example.json");
+        Table readBack = JsonData.readData("C:/Temp/example2.json");
         for (Row dataRecord : readBack)
         {
             for (int column = 0; column < readBack.getNumberOfColumns(); column++)
