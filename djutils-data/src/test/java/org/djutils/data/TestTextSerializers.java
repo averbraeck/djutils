@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import java.util.Locale;
+
 import org.djunits.unit.DirectionUnit;
 import org.djunits.unit.DurationUnit;
 import org.djunits.unit.LengthUnit;
@@ -13,7 +15,17 @@ import org.djunits.value.vdouble.scalar.Length;
 import org.djunits.value.vdouble.scalar.Time;
 import org.djunits.value.vfloat.scalar.FloatDirection;
 import org.djunits.value.vfloat.scalar.FloatDuration;
+import org.djutils.data.serialization.BooleanSerializer;
+import org.djutils.data.serialization.ByteSerializer;
+import org.djutils.data.serialization.CharacterSerializer;
+import org.djutils.data.serialization.DoubleScalarSerializer;
+import org.djutils.data.serialization.DoubleSerializer;
+import org.djutils.data.serialization.FloatScalarSerializer;
+import org.djutils.data.serialization.FloatSerializer;
 import org.djutils.data.serialization.IntegerSerializer;
+import org.djutils.data.serialization.LongSerializer;
+import org.djutils.data.serialization.ShortSerializer;
+import org.djutils.data.serialization.StringSerializer;
 import org.djutils.data.serialization.TextSerializationException;
 import org.djutils.data.serialization.TextSerializer;
 import org.junit.Test;
@@ -32,43 +44,55 @@ import org.junit.Test;
 public class TestTextSerializers
 {
     /**
-     * Test the serializers of the primitive types.
+     * Test the serializers of the primitive types, using the generic (de)serializer from the textSerializer interface.
      * @throws TextSerializationException when serializer could not be found
      */
     @Test
-    public void testPrimitiveSerializers() throws TextSerializationException
+    public void testPrimitiveSerializersGeneric() throws TextSerializationException
     {
         int i = 10;
-        IntegerSerializer serializer = new IntegerSerializer();
-        assertEquals(String.valueOf(i), serializer.deserialize(Integer.class, serializer.serialize(i), ""));
+        TextSerializer<?> serializer = TextSerializer.resolve(int.class);
+        Column<?> column = new Column<>("c", "d", int.class, "");
+        assertEquals(Integer.valueOf(i),
+                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, i), column));
 
         double d = 124.5;
         serializer = TextSerializer.resolve(double.class);
-        assertEquals(d, serializer.deserialize(serializer.serialize(d)));
+        column = new Column<>("c", "d", double.class, "");
+        assertEquals(Double.valueOf(d),
+                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, d), column));
 
         float f = 11.4f;
         serializer = TextSerializer.resolve(float.class);
-        assertEquals(f, serializer.deserialize(serializer.serialize(f)));
+        column = new Column<>("c", "d", float.class, "");
+        assertEquals(Float.valueOf(f), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, f), column));
 
         long l = 100_456_678L;
         serializer = TextSerializer.resolve(long.class);
-        assertEquals(l, serializer.deserialize(serializer.serialize(l)));
+        column = new Column<>("c", "d", long.class, "");
+        assertEquals(Long.valueOf(l), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, l), column));
 
         short s = (short) 12.34;
         serializer = TextSerializer.resolve(short.class);
-        assertEquals(s, serializer.deserialize(serializer.serialize(s)));
+        column = new Column<>("c", "d", short.class, "");
+        assertEquals(Short.valueOf(s), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, s), column));
 
         byte b = (byte) 67;
         serializer = TextSerializer.resolve(byte.class);
-        assertEquals(b, serializer.deserialize(serializer.serialize(b)));
+        column = new Column<>("c", "d", byte.class, "");
+        assertEquals(Byte.valueOf(b), TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, b), column));
 
         char c = 'a';
         serializer = TextSerializer.resolve(char.class);
-        assertEquals(c, serializer.deserialize(serializer.serialize(c)));
+        column = new Column<>("c", "d", char.class, "");
+        assertEquals(Character.valueOf(c),
+                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, c), column));
 
         boolean t = true;
         serializer = TextSerializer.resolve(boolean.class);
-        assertEquals(t, serializer.deserialize(serializer.serialize(t)));
+        column = new Column<>("c", "d", boolean.class, "");
+        assertEquals(Boolean.valueOf(t),
+                TextSerializer.deserialize(serializer, TextSerializer.serialize(serializer, t), column));
     }
 
     /**
@@ -79,36 +103,36 @@ public class TestTextSerializers
     public void testNumberSerializers() throws TextSerializationException
     {
         Integer i = 10;
-        TextSerializer<?> serializer = TextSerializer.resolve(i.getClass());
-        assertEquals(i, serializer.deserialize(serializer.serialize(i)));
+        IntegerSerializer integerSerializer = new IntegerSerializer();
+        assertEquals(i, integerSerializer.deserialize(integerSerializer.serialize(i)));
 
         Double d = 124.5;
-        serializer = TextSerializer.resolve(d.getClass());
-        assertEquals(d, serializer.deserialize(serializer.serialize(d)));
+        DoubleSerializer doubleSerializer = new DoubleSerializer();
+        assertEquals(d, doubleSerializer.deserialize(doubleSerializer.serialize(d)));
 
         Float f = 11.4f;
-        serializer = TextSerializer.resolve(f.getClass());
-        assertEquals(f, serializer.deserialize(serializer.serialize(f)));
+        FloatSerializer floatSerializer = new FloatSerializer();
+        assertEquals(f, floatSerializer.deserialize(floatSerializer.serialize(f)));
 
         Long l = 100_456_678L;
-        serializer = TextSerializer.resolve(l.getClass());
-        assertEquals(l, serializer.deserialize(serializer.serialize(l)));
+        LongSerializer longSerializer = new LongSerializer();
+        assertEquals(l, longSerializer.deserialize(longSerializer.serialize(l)));
 
         Short s = (short) 12.34;
-        serializer = TextSerializer.resolve(s.getClass());
-        assertEquals(s, serializer.deserialize(serializer.serialize(s)));
+        ShortSerializer shortSerializer = new ShortSerializer();
+        assertEquals(s, shortSerializer.deserialize(shortSerializer.serialize(s)));
 
         Byte b = (byte) 67;
-        serializer = TextSerializer.resolve(b.getClass());
-        assertEquals(b, serializer.deserialize(serializer.serialize(b)));
+        ByteSerializer byteSerializer = new ByteSerializer();
+        assertEquals(b, byteSerializer.deserialize(byteSerializer.serialize(b)));
 
         Character c = 'a';
-        serializer = TextSerializer.resolve(c.getClass());
-        assertEquals(c, serializer.deserialize(serializer.serialize(c)));
+        CharacterSerializer characterSerializer = new CharacterSerializer();
+        assertEquals(c, characterSerializer.deserialize(characterSerializer.serialize(c)));
 
         Boolean t = true;
-        serializer = TextSerializer.resolve(t.getClass());
-        assertEquals(t, serializer.deserialize(serializer.serialize(t)));
+        BooleanSerializer booleanSerializer = new BooleanSerializer();
+        assertEquals(t, booleanSerializer.deserialize(booleanSerializer.serialize(t)));
     }
 
     /**
@@ -119,7 +143,7 @@ public class TestTextSerializers
     public void testStringSerializer() throws TextSerializationException
     {
         String s = "abc, &%#";
-        TextSerializer<?> serializer = TextSerializer.resolve(s.getClass());
+        StringSerializer serializer = new StringSerializer();
         assertEquals(s, serializer.deserialize(serializer.serialize(s)));
     }
 
@@ -176,30 +200,33 @@ public class TestTextSerializers
     @Test
     public void testScalarSerializers() throws TextSerializationException
     {
+        Locale.setDefault(Locale.US);
+
         Length length = new Length(20.0, LengthUnit.KILOMETER);
-        TextSerializer<?> serializer = TextSerializer.resolve(length.getClass());
-        assertEquals(length, serializer.deserialize(serializer.serialize(length)));
+        DoubleScalarSerializer<LengthUnit, Length> lengthSerializer = new DoubleScalarSerializer<>();
+        assertEquals(length, lengthSerializer.deserialize(Length.class, lengthSerializer.serialize(length), "m"));
 
         // repeat to test caching
         length = new Length(123.456, LengthUnit.MILE);
-        serializer = TextSerializer.resolve(length.getClass());
-        assertEquals(length, serializer.deserialize(serializer.serialize(length)));
+        assertEquals(length, lengthSerializer.deserialize(Length.class, lengthSerializer.serialize(length), "m"));
 
         Time time = new Time(10.0, TimeUnit.BASE_DAY);
-        serializer = TextSerializer.resolve(time.getClass());
-        assertEquals(time, serializer.deserialize(serializer.serialize(time)));
+        DoubleScalarSerializer<TimeUnit, Time> timeSerializer = new DoubleScalarSerializer<>();
+        assertEquals(time, timeSerializer.deserialize(Time.class, timeSerializer.serialize(time), "s"));
 
         FloatDuration duration = new FloatDuration(12.5f, DurationUnit.WEEK);
-        serializer = TextSerializer.resolve(duration.getClass());
-        assertEquals(duration, serializer.deserialize(serializer.serialize(duration)));
+        FloatScalarSerializer<DurationUnit, FloatDuration> floatDurationSerializer = new FloatScalarSerializer<>();
+        assertEquals(duration,
+                floatDurationSerializer.deserialize(FloatDuration.class, floatDurationSerializer.serialize(duration), "s"));
 
         // repeat to test caching
         duration = new FloatDuration(876.32f, DurationUnit.MINUTE);
-        serializer = TextSerializer.resolve(duration.getClass());
-        assertEquals(duration, serializer.deserialize(serializer.serialize(duration)));
+        assertEquals(duration,
+                floatDurationSerializer.deserialize(FloatDuration.class, floatDurationSerializer.serialize(duration), "s"));
 
         FloatDirection direction = new FloatDirection(80.5, DirectionUnit.EAST_DEGREE);
-        serializer = TextSerializer.resolve(direction.getClass());
-        assertEquals(direction, serializer.deserialize(serializer.serialize(direction)));
+        FloatScalarSerializer<DirectionUnit, FloatDirection> floatDirectionSerializer = new FloatScalarSerializer<>();
+        assertEquals(direction, floatDirectionSerializer.deserialize(FloatDirection.class,
+                floatDirectionSerializer.serialize(direction), "rad"));
     }
 }

@@ -11,9 +11,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.djunits.value.vdouble.scalar.Length;
+import org.djutils.exceptions.Try;
 import org.djutils.primitives.Primitive;
 import org.junit.Test;
 
@@ -39,7 +42,7 @@ public class TestListTable
 
         assertEquals("time", column1.getId());
         assertEquals("time rounded to second [s]", column1.getDescription());
-        assertEquals(int.class, column1.getValueType());
+        assertEquals(Integer.class, column1.getValueType());
 
         List<Column<?>> columns = new ArrayList<>();
         columns.add(column1);
@@ -54,8 +57,9 @@ public class TestListTable
         assertArrayEquals(new String[] {"time", "value", "remark"}, table.getColumnIds());
         assertArrayEquals(new String[] {"time rounded to second [s]", "measured value [m]", "remark about the measurement"},
                 table.getColumnDescriptions());
-        assertArrayEquals(new Class<?>[] {int.class, double.class, String.class}, table.getColumnDataTypes());
-        assertArrayEquals(new String[] {"int", "double", "java.lang.String"}, table.getColumnDataTypeStrings());
+        assertArrayEquals(new Class<?>[] {Integer.class, Double.class, String.class}, table.getColumnDataTypes());
+        assertArrayEquals(new String[] {"java.lang.Integer", "java.lang.Double", "java.lang.String"},
+                table.getColumnDataTypeStrings());
 
         // add some data
         assertTrue(table.isEmpty());
@@ -75,19 +79,19 @@ public class TestListTable
         ListTable txy = new ListTable("xy[][]", "x, y[][]", List.of(c1, c2));
         assertArrayEquals(new String[] {"x", "y"}, txy.getColumnIds());
         assertArrayEquals(new String[] {"x", "y"}, txy.getColumnDescriptions());
-        assertArrayEquals(new Class<?>[] {double.class, double[][].class}, txy.getColumnDataTypes());
-        assertArrayEquals(new String[] {"double", "[[D"}, txy.getColumnDataTypeStrings());
+        assertArrayEquals(new Class<?>[] {Double.class, double[][].class}, txy.getColumnDataTypes());
+        assertArrayEquals(new String[] {"java.lang.Double", "[[D"}, txy.getColumnDataTypeStrings());
 
         String tableString = table.toString();
-        assertTrue(tableString.startsWith("ListTable"));
-        assertTrue(tableString.contains("tableId"));
-        assertTrue(tableString.contains("tableDescription"));
-        assertTrue(tableString.contains("Column"));
+        assertTrue(tableString.startsWith("Table"));
+        assertTrue(tableString.contains("id"));
+        assertTrue(tableString.contains("description"));
+        assertTrue(tableString.contains("column"));
 
         String recordString = table.iterator().next().toString();
-        assertTrue(recordString.startsWith("ListTable.ListRecord"));
-        assertTrue(recordString.contains("time = 2"));
-        assertTrue(recordString.contains("value = 5.0"));
+        assertTrue(recordString.startsWith("Row"));
+        assertTrue(recordString.contains("2,"));
+        assertTrue(recordString.contains("5.0,"));
     }
 
     /** Test the ListTable, the Column and the Record. */
@@ -183,155 +187,62 @@ public class TestListTable
     @Test
     public void testIllegalColumnTable()
     {
-        Column<Integer> column1 = new Column<>("time", "time, rounded to second [s]", int.class, "");
-        Column<Double> column2 = new Column<>("value", "measured value [m]", double.class, "");
-        Column<String> column3 = new Column<>("remark", "remark about the measurement", String.class, "");
-        List<Column<?>> columns = new ArrayList<>();
-        columns.add(column1);
-        columns.add(column2);
-        columns.add(column3);
+        Locale.setDefault(Locale.US);
 
-        //
+        Column<Integer> column1 = new Column<>("time", "time, rounded to second [s]", int.class);
+        Column<Double> column2 = new Column<>("value", "measured value [m]", Double.class);
+        Column<String> column3 = new Column<>("remark", "remark about the measurement", String.class);
+        List<Column<?>> columns = List.of(column1, column2, column3);
+
         // test illegal columns
-        //
+        Try.testFail(() -> new Column<>(null, "measured value [m]", double.class, ""),
+                "null id should have thrown NullPointerException", NullPointerException.class);
 
-        try
-        {
-            new Column<>(null, "measured value [m]", double.class, "");
-            fail("null id should have thrown NullPointerException");
-        }
-        catch (NullPointerException npe)
-        {
-            // ok
-        }
-        try
-        {
-            new Column<>("value", null, double.class, "");
-            fail("null description should have thrown NullPointerException");
-        }
-        catch (NullPointerException npe)
-        {
-            // ok
-        }
-        try
-        {
-            new Column<>("value", "measured value [m]", null, "");
-            fail("null valueType should have thrown NullPointerException");
-        }
-        catch (NullPointerException npe)
-        {
-            // ok
-        }
-        try
-        {
-            new Column<>("", "measured value [m]", double.class, "");
-            fail("empty id should have thrown IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // ok
-        }
+        Try.testFail(() -> new Column<>("value", null, double.class, ""),
+                "null description should have thrown NullPointerException", NullPointerException.class);
+        Try.testFail(() -> new Column<>("value", "measured value [m]", null, ""),
+                "null valueType should have thrown NullPointerException", NullPointerException.class);
+        Try.testFail(() -> new Column<>("", "measured value [m]", double.class, ""),
+                "empty id should have thrown IllegalArgumentException", IllegalArgumentException.class);
+        Try.testFail(() -> new Column<>("length", "length [m]", Length.class, null),
+                "null unit for djunits value should have thrown IllegalArgumentException", IllegalArgumentException.class);
+        Try.testFail(() -> new Column<>("length", "length [m]", Length.class, ""),
+                "empty unit for djunits value should have thrown IllegalArgumentException", IllegalArgumentException.class);
+        Try.testFail(() -> new Column<>("length", "length [m]", Length.class, "xx"),
+                "wrong unit for djunits value should have thrown IllegalArgumentException", IllegalArgumentException.class);
+        Try.testFail(() -> new Column<>("length", "length [m]", Length.class, "s"),
+                "wrong unit for djunits value should have thrown IllegalArgumentException", IllegalArgumentException.class);
 
-        //
         // test illegal tables
-        //
+        List<Column<?>> cx = List.of(column1, column1, column3); // duplicate
+        Try.testFail(() -> new ListTable("tableId", "tableDescription", cx),
+                "duplicate column should have thrown IllegalArgumentException", IllegalArgumentException.class);
 
-        List<Column<?>> cx = new ArrayList<>();
-        cx.add(column1);
-        cx.add(column1); // duplicate
-        cx.add(column3);
-        try
-        {
-            new ListTable("tableId", "tableDescription", cx);
-            fail("duplicate column should have thrown IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // ok
-        }
+        List<Column<?>> cy = List.of(column1, new Column<>("time", "another timestamp", double.class, ""), column3);
+        Try.testFail(() -> new ListTable("tableId", "tableDescription", cy),
+                "duplicate column id should have thrown IllegalArgumentException", IllegalArgumentException.class);
 
-        cx = new ArrayList<>();
-        cx.add(column1);
-        cx.add(new Column<>("time", "another timestamp", double.class, ""));
-        cx.add(column3);
-        try
-        {
-            new ListTable("tableId", "tableDescription", cx);
-            fail("duplicate column id should have thrown IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // ok
-        }
-
-        try
-        {
-            new ListTable(null, "tableDescription", columns);
-            fail("null id should have thrown NullPointerException");
-        }
-        catch (NullPointerException iae)
-        {
-            // ok
-        }
-
-        try
-        {
-            new ListTable("", "tableDescription", columns);
-            fail("empty id should have thrown IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // ok
-        }
-
-        try
-        {
-            new ListTable("tableId", null, columns);
-            fail("null id should have thrown NullPointerException");
-        }
-        catch (NullPointerException iae)
-        {
-            // ok
-        }
-
-        try
-        {
-            new ListTable("tableId", "tableDescription", (List<Column<?>>) null);
-            fail("null columns should have thrown NullPointerException");
-        }
-        catch (NullPointerException iae)
-        {
-            // ok
-        }
-
-        try
-        {
-            new ListTable("tableId", "tableDescription", (Collection<Column<?>>) null);
-            fail("null columns should have thrown NullPointerException");
-        }
-        catch (NullPointerException iae)
-        {
-            // ok
-        }
-
-        try
-        {
-            new ListTable("tableId", "tableDescription", new ArrayList<Column<?>>());
-            fail("zero columns should have thrown IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // ok
-        }
+        Try.testFail(() -> new ListTable(null, "tableDescription", columns), "null id should have thrown NullPointerException",
+                NullPointerException.class);
+        Try.testFail(() -> new ListTable("", "tableDescription", columns),
+                "empty id should have thrown IllegalArgumentException", IllegalArgumentException.class);
+        Try.testFail(() -> new ListTable("tableId", null, columns), "empty description should have thrown NullPointerException",
+                NullPointerException.class);
+        Try.testFail(() -> new ListTable("tableId", "tableDescription", (List<Column<?>>) null),
+                "null columns should have thrown NullPointerException", NullPointerException.class);
+        Try.testFail(() -> new ListTable("tableId", "tableDescription", (Collection<Column<?>>) null),
+                "null columns should have thrown NullPointerException", NullPointerException.class);
+        Try.testFail(() -> new ListTable("tableId", "tableDescription", new ArrayList<Column<?>>()),
+                "zero columns should have thrown IllegalArgumentException", IllegalArgumentException.class);
     }
 
     /** Test column and table construction with wrong value arguments. */
     @Test
     public void testIllegalRecordTable()
     {
-        Column<Integer> column1 = new Column<>("time", "time, rounded to second [s]", int.class, "");
-        Column<Double> column2 = new Column<>("value", "measured value [m]", double.class, "");
-        Column<String> column3 = new Column<>("remark", "remark about the measurement", String.class, "");
+        Column<Integer> column1 = new Column<>("time", "time, rounded to second [s]", Integer.class);
+        Column<Double> column2 = new Column<>("value", "measured value [m]", double.class);
+        Column<String> column3 = new Column<>("remark", "remark about the measurement", String.class);
         List<Column<?>> columns = new ArrayList<>();
         columns.add(column1);
         columns.add(column2);
