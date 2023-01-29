@@ -4,7 +4,6 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -260,113 +259,33 @@ public class TestListTable
                 IllegalArgumentException.class);
 
         // test null data
+        Try.testFail(() -> table.addRow((Object[]) null), "null data record should have raised exception",
+                NullPointerException.class);
+        Try.testFail(() -> table.addRowByColumnIds((Map<String, Object>) null), "null data record should have raised exception",
+                NullPointerException.class);
 
-        try
-        {
-            table.addRow((Object[]) null);
-            fail("null data record should have raised exception");
-        }
-        catch (NullPointerException npe)
-        {
-            // ok
-        }
-
-        try
-        {
-            table.addRowByColumnIds((Map<String, Object>) null);
-            fail("null data record should have raised exception");
-        }
-        catch (NullPointerException npe)
-        {
-            // ok
-        }
-
-        //
         // test too few columns data
-        //
+        Try.testFail(() -> table.addRow(new Object[] {}), "empty data record should have raised exception",
+                IllegalArgumentException.class);
 
-        try
-        {
-            table.addRow(new Object[] {});
-            fail("empty data record should have raised exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // ok
-        }
+        Try.testFail(() -> table.addRowByColumnIds(new HashMap<String, Object>()),
+                "empty data record should have raised exception", IllegalArgumentException.class);
 
-        try
-        {
-            table.addRowByColumnIds(new HashMap<String, Object>());
-            fail("empty data record should have raised exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // ok
-        }
-
-        //
         // test too many columns data
-        //
+        Try.testFail(() -> table.addRow(new Object[] {1, 2, 3, 4}), "too long data record should have raised exception",
+                IllegalArgumentException.class);
+        Try.testFail(() -> table.addRowByColumnIds(Map.of("time", 3, "value", 3.5, "remark", "none", "extra", "xx")),
+                "too long data record should have raised exception", IllegalArgumentException.class);
 
-        try
-        {
-            table.addRow(new Object[] {1, 2, 3, 4});
-            fail("too long data record should have raised exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // ok
-        }
-
-        try
-        {
-            table.addRowByColumnIds(Map.of("time", 3, "value", 3.5, "remark", "none", "extra", "xx"));
-            fail("too long data record should have raised exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // ok
-        }
-
-        //
         // test wrong type data
-        //
+        Try.testFail(() -> table.addRow(new Object[] {1, 2, 3}), "wrong type data record should have raised exception",
+                IllegalArgumentException.class);
+        Try.testFail(() -> table.addRowByColumnIds(Map.of("time", 3, "value", 2L, "remark", "none")),
+                "wrong type data record should have raised exception", IllegalArgumentException.class);
 
-        try
-        {
-            table.addRow(new Object[] {1, 2, 3});
-            fail("wrong type data record should have raised exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // ok
-        }
-
-        try
-        {
-            table.addRowByColumnIds(Map.of("time", 3, "value", 2L, "remark", "none"));
-            fail("wrong type data record should have raised exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // ok
-        }
-
-        //
         // test missing column data, where the number of columns is okay
-        //
-
-        try
-        {
-            table.addRowByColumnIds(Map.of("time", 3, "remark", "none", "wrong", 3));
-            fail("wrong type data record should have raised exception");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // ok
-        }
-
+        Try.testFail(() -> table.addRowByColumnIds(Map.of("time", 3, "remark", "none", "wrong", 3)),
+                "wrong type data record should have raised exception", IllegalArgumentException.class);
     }
 
 }
