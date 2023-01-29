@@ -10,7 +10,7 @@ package org.djutils.data.serialization;
  * @author <a href="https://tudelft.nl/staff/p.knoppers-1">Peter Knoppers</a>
  * @author <a href="https://dittlab.tudelft.nl">Wouter Schakel</a>
  */
-public class StringSerializer implements TextSerializer<String>
+public class StringSerializer implements SpecificTextSerializer<String>
 {
     /** {@inheritDoc} */
     @Override
