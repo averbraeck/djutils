@@ -249,9 +249,17 @@ public class TestListTable
         columns.add(column3);
         ListTable table = new ListTable("tableId", "tableDescription", columns);
 
-        //
+        // test add row with wrong content
+        Column<String> column3a = new Column<>("bla", "bla", String.class);
+        Map<Column<?>, Object> data = new HashMap<>();
+        data.put(column1, 2);
+        data.put(column2, 4.0);
+        data.put(column3a, "bla");
+        Try.testFail(() -> table.addRow(data),
+                "Adding a column that was not specified for the table should throw IllegalArgumentException",
+                IllegalArgumentException.class);
+
         // test null data
-        //
 
         try
         {
