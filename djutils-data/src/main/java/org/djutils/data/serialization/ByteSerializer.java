@@ -16,14 +16,14 @@ public class ByteSerializer implements SpecificTextSerializer<Byte>
     @Override
     public String serialize(final Byte value)
     {
-        return String.valueOf(value.byteValue());
+        return value == null ? null : String.valueOf(value.byteValue());
     }
 
     /** {@inheritDoc} */
     @Override
     public Byte deserialize(final Class<Byte> type, final String text, final String unit)
     {
-        return Byte.valueOf(text);
+        return text == null ? null : Byte.valueOf(text);
     }
 
 }

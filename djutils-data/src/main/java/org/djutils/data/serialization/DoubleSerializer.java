@@ -16,14 +16,14 @@ public class DoubleSerializer implements SpecificTextSerializer<Double>
     @Override
     public String serialize(final Double value)
     {
-        return String.valueOf(value.doubleValue());
+        return value == null ? null : String.valueOf(value.doubleValue());
     }
 
     /** {@inheritDoc} */
     @Override
     public Double deserialize(final Class<Double> type, final String text, final String unit)
     {
-        return Double.valueOf(text);
+        return text == null ? null : Double.valueOf(text);
     }
 
 }

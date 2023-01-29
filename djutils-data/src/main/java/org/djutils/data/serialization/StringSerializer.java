@@ -23,6 +23,7 @@ public class StringSerializer implements SpecificTextSerializer<String>
     @Override
     public String deserialize(final Class<String> type, final String text, final String unit)
     {
+        // TODO: how do we distinguish between an empty string and 
         return (text == null || text.isEmpty()) ? null : text;
     }
 

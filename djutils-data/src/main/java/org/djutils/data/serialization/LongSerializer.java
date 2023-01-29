@@ -16,14 +16,14 @@ public class LongSerializer implements SpecificTextSerializer<Long>
     @Override
     public String serialize(final Long value)
     {
-        return String.valueOf(value.longValue());
+        return value == null ? null : String.valueOf(value.longValue());
     }
 
     /** {@inheritDoc} */
     @Override
     public Long deserialize(final Class<Long> type, final String text, final String unit)
     {
-        return Long.valueOf(text);
+        return text == null ? null : Long.valueOf(text);
     }
 
 }

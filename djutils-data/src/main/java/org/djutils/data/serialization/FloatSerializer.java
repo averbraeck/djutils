@@ -16,14 +16,14 @@ public class FloatSerializer implements SpecificTextSerializer<Float>
     @Override
     public String serialize(final Float value)
     {
-        return String.valueOf(value.floatValue());
+        return value == null ? null : String.valueOf(value.floatValue());
     }
 
     /** {@inheritDoc} */
     @Override
     public Float deserialize(final Class<Float> type, final String text, final String unit)
     {
-        return Float.valueOf(text);
+        return text == null ? null : Float.valueOf(text);
     }
 
 }

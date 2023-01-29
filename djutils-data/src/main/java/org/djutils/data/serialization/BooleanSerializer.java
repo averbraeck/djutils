@@ -16,14 +16,14 @@ public class BooleanSerializer implements SpecificTextSerializer<Boolean>
     @Override
     public String serialize(final Boolean value)
     {
-        return value.toString();
+        return value == null ? null : value.toString();
     }
 
     /** {@inheritDoc} */
     @Override
     public Boolean deserialize(final Class<Boolean> type, final String text, final String unit)
     {
-        return Boolean.valueOf(text);
+        return text == null ? null : Boolean.valueOf(text);
     }
 
 }

@@ -16,14 +16,14 @@ public class ShortSerializer implements SpecificTextSerializer<Short>
     @Override
     public String serialize(final Short value)
     {
-        return String.valueOf(value.shortValue());
+        return value == null ? null : String.valueOf(value.shortValue());
     }
 
     /** {@inheritDoc} */
     @Override
     public Short deserialize(final Class<Short> type, final String text, final String unit)
     {
-        return Short.valueOf(text);
+        return text == null ? null : Short.valueOf(text);
     }
 
 }

@@ -28,7 +28,7 @@ public class FloatScalarSerializer<U extends Unit<U>, S extends AbstractFloatSca
     @Override
     public String serialize(final S value)
     {
-        return String.valueOf(value.floatValue());
+        return value == null ? null : String.valueOf(value.floatValue());
     }
 
 }

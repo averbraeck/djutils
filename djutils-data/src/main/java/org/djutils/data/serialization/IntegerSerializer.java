@@ -16,14 +16,14 @@ public class IntegerSerializer implements SpecificTextSerializer<Integer>
     @Override
     public String serialize(final Integer value)
     {
-        return String.valueOf(value.intValue());
+        return value == null ? null : String.valueOf(value.intValue());
     }
 
     /** {@inheritDoc} */
     @Override
     public Integer deserialize(final Class<Integer> type, final String text, final String unit)
     {
-        return Integer.valueOf(text);
+        return text == null ? null : Integer.valueOf(text);
     }
 
 }

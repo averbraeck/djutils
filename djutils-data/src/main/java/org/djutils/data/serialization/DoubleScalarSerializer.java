@@ -33,7 +33,7 @@ public class DoubleScalarSerializer<U extends Unit<U>, S extends AbstractScalar<
     @Override
     public String serialize(final S value)
     {
-        return String.valueOf(value.doubleValue());
+        return value == null ? null : String.valueOf(value.doubleValue());
     }
 
     /**
@@ -45,6 +45,10 @@ public class DoubleScalarSerializer<U extends Unit<U>, S extends AbstractScalar<
     @Override
     public S deserialize(final Class<S> type, final String text, final String unit)
     {
+        if (text == null)
+        {
+            return null;
+        }
         try
         {
             Method valueOfMethod = valueOfMethodCache.get(type.getName());

@@ -16,14 +16,14 @@ public class CharacterSerializer implements SpecificTextSerializer<Character>
     @Override
     public String serialize(final Character value)
     {
-        return String.valueOf(value.charValue());
+        return value == null ? null : String.valueOf(value.charValue());
     }
 
     /** {@inheritDoc} */
     @Override
     public Character deserialize(final Class<Character> type, final String text, final String unit)
     {
-        return text.charAt(0);
+        return text == null ? null : text.charAt(0);
     }
 
 }
