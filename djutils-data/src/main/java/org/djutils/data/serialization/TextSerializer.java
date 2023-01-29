@@ -19,18 +19,26 @@ import org.djutils.exceptions.Throw;
 public interface TextSerializer<T>
 {
     /**
-     * Serialize a value to text in such a way that it can be deserialized with the corresponding deserializer.
-     * @param value T; the value to serialize
-     * @return String; a string representation of the value that can later be deserialized
+     * Serialize a value to text in such a way that it can be deserialized with the corresponding deserializer. Note that
+     * {@code null} values for value <b>are allowed</b>. A {@code null} values stands for an empty column value in a CVS-file, a
+     * missing tag in an XML-file, etc.
+     * @param value T; the value to serialize, may be {@code null}
+     * @return String; a string representation of the value that can later be deserialized, or {@code null}to denote a missing
+     *         value
      */
     String serialize(T value);
 
     /**
-     * Deserialize a value from text that has been created with the corresponding serializer.
-     * @param type Class&lt;T&gt;; class of the value type
-     * @param text String; the string to deserialize
+     * Deserialize a value from text that has been created with the corresponding serializer. Note that {@code null} values for
+     * text <b>are allowed</b>. A {@code null} values stands for an empty column value in a CVS-file, a missing tag in an
+     * XML-file, etc. In this way, we can explicitly show values that were not specified in the file. Also, the type may be
+     * {@code null}; this is, for instance, the case for any {@code TextSerializer} implementing {@code 
+     * SpecificTextSerializer}, where no class needs to be provided (although it can).
+     * @param type Class&lt;T&gt;; class of the value type, may be {@code null}
+     * @param text String; the string to deserialize, may be {@code null}
      * @param unit String; unit with the value, may be {@code null}
-     * @return T; an instance of the object created with the corresponding serializer
+     * @return T; an instance of the object created with the corresponding serializer, may be {@code null} when a value was not
+     *         specified in the source from which the deserializer was called
      */
     T deserialize(Class<T> type, String text, String unit);
 
@@ -134,11 +142,14 @@ public interface TextSerializer<T>
     }
 
     /**
-     * Helper function to deal with casting when calling {@code TextSerializer.serialize()}.
+     * Helper function to deal with casting when calling {@code TextSerializer.serialize()}. When the {@code resolve(class)}
+     * method returns an 'unspecified' serializer, this {@code serialize} method allows you to use it. Note that {@code null}
+     * values for value <b>are allowed</b>. A {@code null} values stands for an empty column value in a CVS-file, a missing tag
+     * in an XML-file, etc.
      * @param <T> value type
      * @param serializer TextSerializer&lt;?&gt;; serializer
-     * @param value Object; value
-     * @return String; serialized value
+     * @param value Object; value, may be {@code null}
+     * @return String; serialized value, or {@code null}to denote a missing value
      */
     @SuppressWarnings("unchecked")
     static <T> String serialize(final TextSerializer<?> serializer, final Object value)
@@ -147,17 +158,21 @@ public interface TextSerializer<T>
     }
 
     /**
-     * Helper function to deal with casting when calling {@code TextSerializer.deserialize()}.
+     * Helper function to deal with casting when calling {@code TextSerializer.deserialize()}. When the {@code resolve(class)}
+     * method returns an 'unspecified' serializer, this {@code serialize} method allows you to use it. Note that {@code null}
+     * values for text <b>are allowed</b>. A {@code null} values stands for an empty column value in a CVS-file, a missing tag
+     * in an XML-file, etc. In this way, we can explicitly show values that were not specified in the file for a certain column.
      * @param <T> value type
      * @param serializer TextSerializer&lt;?&gt;; serializer
-     * @param value String; value
+     * @param text String; value, may be {@code null}
      * @param column Column&lt;?&gt;; columns
-     * @return T; deserialized value
+     * @return T; deserialized value, may be {@code null} when a value was not specified in the source for which the
+     *         deserializer was called
      */
     @SuppressWarnings("unchecked")
-    static <T> T deserialize(final TextSerializer<?> serializer, final String value, final Column<?> column)
+    static <T> T deserialize(final TextSerializer<?> serializer, final String text, final Column<?> column)
     {
-        return ((TextSerializer<T>) serializer).deserialize((Class<T>) column.getValueType(), value, column.getUnit());
+        return ((TextSerializer<T>) serializer).deserialize((Class<T>) column.getValueType(), text, column.getUnit());
     }
 
 }
