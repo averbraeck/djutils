@@ -56,7 +56,7 @@ nav:
     - Introduction: djutils-data/index.md
     - Using Data Tables: djutils-data/data-tables.md
     - DJUTILS-DATA documentation: https://djutils.org/docs/latest/djutils-data/index.html
-    - DJUTILS-DATA API: https://djutils.org/docs/latest/djutils-data/apidocs/index.htmll
+    - DJUTILS-DATA API: https://djutils.org/docs/latest/djutils-data/apidocs/index.html
   - DJUTILS-DRAW project:
     - Introduction: djutils-draw/index.md
     - Drawable interface: djutils-draw/drawable.md
@@ -65,9 +65,9 @@ nav:
     - Lines: djutils-draw/lines.md
     - Bounds: djutils-draw/bounds.md
     - DJUTILS-DRAW documentation: https://djutils.org/docs/latest/djutils-draw/index.html
-    - DJUTILS-DRAW API: https://djutils.org/docs/latest/djutils-draw/apidocs/index.htmll
+    - DJUTILS-DRAW API: https://djutils.org/docs/latest/djutils-draw/apidocs/index.html
   - DJUTILS-STATS project:
     - Introduction: djutils-stats/index.md
     - Summarizers: djutils-stats/summarizers.md
     - DJUTILS-STATS documentation: https://djutils.org/docs/latest/djutils-stats/index.html
-    - DJUTILS-STATS API: https://djutils.org/docs/latest/djutils-stats/apidocs/index.htmll
+    - DJUTILS-STATS API: https://djutils.org/docs/latest/djutils-stats/apidocs/index.html
