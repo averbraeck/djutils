@@ -1,10 +1,15 @@
 package org.djutils.data;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Objects;
 
 import org.djunits.Throw;
+import org.djunits.value.Value;
+import org.djunits.value.base.Scalar;
 import org.djutils.base.Identifiable;
+import org.djutils.primitives.Primitive;
 
 /**
  * Column identifier and descriptor.
@@ -36,12 +41,13 @@ public class Column<T> implements Identifiable, Serializable
     private final String unit;
 
     /**
-     * Constructor.
-     * @param id String; id.
-     * @param description String; description.
-     * @param valueType Class&lt;T&gt;; value type.
-     * @param unit String; unit, may be {@code null}.
+     * Make a new column for a table with an id, description, type, and unit.
+     * @param id String; id of the column
+     * @param description String; description of the column
+     * @param valueType Class&lt;T&gt;; value type of the column
+     * @param unit String; unit, may be {@code null}
      */
+    @SuppressWarnings("unchecked")
     public Column(final String id, final String description, final Class<T> valueType, final String unit)
     {
         Throw.whenNull(id, "id may not be null.");
@@ -50,8 +56,35 @@ public class Column<T> implements Identifiable, Serializable
         Throw.whenNull(valueType, "valueType may not be null.");
         this.id = id;
         this.description = description;
-        this.valueType = valueType;
+        this.valueType = valueType.isPrimitive() ? (Class<T>) Primitive.getWrapper(valueType) : valueType;
+        Throw.when(Value.class.isAssignableFrom(valueType) && (unit == null || unit.length() == 0),
+                IllegalArgumentException.class, "For a DJUNITS value, unit cannot be null or the empty string");
+        if (Scalar.class.isAssignableFrom(valueType))
+        {
+            try
+            {
+                Method valueOfMethod = valueType.getDeclaredMethod("valueOf", String.class);
+                valueOfMethod.invoke(null, "1.0" + unit);
+            }
+            catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+                    | SecurityException exception)
+            {
+                throw new IllegalArgumentException(
+                        "unit of the Column does not belong to Scalar of type " + valueType.getSimpleName());
+            }
+        }
         this.unit = unit;
+    }
+
+    /**
+     * Make a new column for a table with an id, description, type. The unit is blank (null).
+     * @param id String; id of the column
+     * @param description String; description of the column
+     * @param valueType Class&lt;T&gt;; value type of the column
+     */
+    public Column(final String id, final String description, final Class<T> valueType)
+    {
+        this(id, description, valueType, null);
     }
 
     /** {@inheritDoc} */
