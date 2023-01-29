@@ -243,6 +243,51 @@ public class TestTextSerializers
     }
 
     /**
+     * Test the serializers for correctly handling null values.
+     * @throws TextSerializationException when serializer could not be found
+     */
+    @Test
+    public void testNullValueSerializers() throws TextSerializationException
+    {
+        IntegerSerializer integerSerializer = new IntegerSerializer();
+        assertNull(integerSerializer.deserialize(integerSerializer.serialize(null)));
+
+        DoubleSerializer doubleSerializer = new DoubleSerializer();
+        assertNull(doubleSerializer.deserialize(doubleSerializer.serialize(null)));
+
+        FloatSerializer floatSerializer = new FloatSerializer();
+        assertNull(floatSerializer.deserialize(floatSerializer.serialize(null)));
+
+        LongSerializer longSerializer = new LongSerializer();
+        assertNull(longSerializer.deserialize(longSerializer.serialize(null)));
+
+        ShortSerializer shortSerializer = new ShortSerializer();
+        assertNull(shortSerializer.deserialize(shortSerializer.serialize(null)));
+
+        ByteSerializer byteSerializer = new ByteSerializer();
+        assertNull(byteSerializer.deserialize(byteSerializer.serialize(null)));
+
+        CharacterSerializer characterSerializer = new CharacterSerializer();
+        assertNull(characterSerializer.deserialize(characterSerializer.serialize(null)));
+
+        BooleanSerializer booleanSerializer = new BooleanSerializer();
+        assertNull(booleanSerializer.deserialize(booleanSerializer.serialize(null)));
+
+        TextSerializer<?> lengthSerializer = TextSerializer.resolve(Length.class);
+        Column<?> lengthColumn = new Column<>("c", "d", Length.class, "m");
+        assertNull(
+                TextSerializer.deserialize(lengthSerializer, TextSerializer.serialize(lengthSerializer, null), lengthColumn));
+
+        TextSerializer<?> floatLengthSerializer = TextSerializer.resolve(FloatLength.class);
+        Column<?> floatLengthColumn = new Column<>("c", "d", FloatLength.class, "m");
+        assertNull(TextSerializer.deserialize(floatLengthSerializer, TextSerializer.serialize(floatLengthSerializer, null),
+                floatLengthColumn));
+
+        StringSerializer serializer = new StringSerializer();
+        assertNull(serializer.deserialize(serializer.serialize(null)));
+    }
+
+    /**
      * Test the serializer of the String type.
      * @throws TextSerializationException when serializer could not be found
      */
