@@ -14,7 +14,7 @@ public class IntegerSerializer implements SpecificTextSerializer<Integer>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final Integer value)
+    public String serialize(final Integer value, final String unit)
     {
         return value == null ? null : String.valueOf(value.intValue());
     }

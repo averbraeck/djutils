@@ -14,7 +14,7 @@ public class DoubleSerializer implements SpecificTextSerializer<Double>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final Double value)
+    public String serialize(final Double value, final String unit)
     {
         return value == null ? null : String.valueOf(value.doubleValue());
     }

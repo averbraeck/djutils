@@ -152,7 +152,7 @@ public final class XmlData
                     xmlw.writeCharacters("      ");
                     xmlw.writeEmptyElement("value");
                     xmlw.writeAttribute("nr", String.valueOf(i));
-                    String content = TextSerializer.serialize(serializers[i], values[i]);
+                    String content = TextSerializer.serialize(serializers[i], values[i], dataTable.getColumn(i).getUnit());
                     if (content != null)
                     {
                         xmlw.writeAttribute("content", content);

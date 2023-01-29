@@ -23,10 +23,12 @@ public interface TextSerializer<T>
      * {@code null} values for value <b>are allowed</b>. A {@code null} values stands for an empty column value in a CVS-file, a
      * missing tag in an XML-file, etc.
      * @param value T; the value to serialize, may be {@code null}
+     * @param unit String; the unit used to convert the data to and store, so all valus in a column may have the same unit. The
+     *            value may be {@code null} or blank
      * @return String; a string representation of the value that can later be deserialized, or {@code null}to denote a missing
      *         value
      */
-    String serialize(T value);
+    String serialize(T value, String unit);
 
     /**
      * Deserialize a value from text that has been created with the corresponding serializer. Note that {@code null} values for
@@ -35,8 +37,8 @@ public interface TextSerializer<T>
      * {@code null}; this is, for instance, the case for any {@code TextSerializer} implementing {@code 
      * SpecificTextSerializer}, where no class needs to be provided (although it can).
      * @param type Class&lt;T&gt;; class of the value type, may be {@code null}
-     * @param text String; the string to deserialize, may be {@code null}
-     * @param unit String; unit with the value, may be {@code null}
+     * @param text String; the string to deserialize, may be {@code null} or blank
+     * @param unit String; unit with the value, may be {@code null} or blank
      * @return T; an instance of the object created with the corresponding serializer, may be {@code null} when a value was not
      *         specified in the source from which the deserializer was called
      */
@@ -149,12 +151,14 @@ public interface TextSerializer<T>
      * @param <T> value type
      * @param serializer TextSerializer&lt;?&gt;; serializer
      * @param value Object; value, may be {@code null}
+     * @param unit String; the unit used to convert the data to and store, so all valus in a column may have the same unit. The
+     *            value may be {@code null} or blank
      * @return String; serialized value, or {@code null}to denote a missing value
      */
     @SuppressWarnings("unchecked")
-    static <T> String serialize(final TextSerializer<?> serializer, final Object value)
+    static <T> String serialize(final TextSerializer<?> serializer, final Object value, final String unit)
     {
-        return ((TextSerializer<T>) serializer).serialize((T) value);
+        return ((TextSerializer<T>) serializer).serialize((T) value, unit);
     }
 
     /**

@@ -14,7 +14,7 @@ public class CharacterSerializer implements SpecificTextSerializer<Character>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final Character value)
+    public String serialize(final Character value, final String unit)
     {
         return value == null ? null : String.valueOf(value.charValue());
     }

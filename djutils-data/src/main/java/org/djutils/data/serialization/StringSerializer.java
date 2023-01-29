@@ -14,7 +14,7 @@ public class StringSerializer implements SpecificTextSerializer<String>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final String value)
+    public String serialize(final String value, final String unit)
     {
         return value == null ? null : value.toString();
     }

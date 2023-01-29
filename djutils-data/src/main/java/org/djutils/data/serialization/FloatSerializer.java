@@ -14,7 +14,7 @@ public class FloatSerializer implements SpecificTextSerializer<Float>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final Float value)
+    public String serialize(final Float value, final String unit)
     {
         return value == null ? null : String.valueOf(value.floatValue());
     }

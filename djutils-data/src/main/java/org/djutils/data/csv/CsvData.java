@@ -197,7 +197,7 @@ public final class CsvData
                 Object[] values = row.getValues();
                 for (int i = 0; i < table.getNumberOfColumns(); i++)
                 {
-                    textFields[i] = TextSerializer.serialize(serializers[i], values[i]);
+                    textFields[i] = TextSerializer.serialize(serializers[i], values[i], table.getColumn(i).getUnit());
                 }
                 csvWriter.writeRow(textFields);
             }

@@ -15,6 +15,19 @@ package org.djutils.data.serialization;
 public interface SpecificTextSerializer<T> extends TextSerializer<T>
 {
     /**
+     * Serialize a value to text in such a way that it can be deserialized with the corresponding deserializer. Note that
+     * {@code null} values for value <b>are allowed</b>. A {@code null} values stands for an empty column value in a CVS-file, a
+     * missing tag in an XML-file, etc. This version of the serialize method ignores the unit. 
+     * @param value T; the value to serialize, may be {@code null}
+     * @return String; a string representation of the value that can later be deserialized, or {@code null}to denote a missing
+     *         value
+     */
+    default String serialize(final T value)
+    {
+        return serialize(value, null);
+    }
+    
+    /**
      * Deserialize a value from text that has been created with the corresponding serializer, where the value does not have a
      * unit, and the class is known and fixed (and not checked). Note that {@code null} values for text <b>are allowed</b>. A
      * {@code null} values stands for an empty column value in a CVS-file, a missing tag in an XML-file, etc. In this way, we

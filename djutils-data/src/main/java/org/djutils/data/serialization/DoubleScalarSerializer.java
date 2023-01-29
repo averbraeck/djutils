@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.djunits.unit.Unit;
-import org.djunits.value.AbstractScalar;
+import org.djunits.value.vdouble.scalar.base.AbstractDoubleScalar;
 
 /**
  * DoubleScalarSerializer (de)serializes DJUNITS double scalars.
@@ -20,20 +20,36 @@ import org.djunits.value.AbstractScalar;
  * @param <U> the unit type
  * @param <S> the scalar type
  */
-public class DoubleScalarSerializer<U extends Unit<U>, S extends AbstractScalar<U, S>> implements TextSerializer<S>
+public class DoubleScalarSerializer<U extends Unit<U>, S extends AbstractDoubleScalar<U, S>> implements TextSerializer<S>
 {
     /** cache of the retrieved valueOf(String) methods for scalars based on the stored string. */
     private static Map<String, Method> valueOfMethodCache = new LinkedHashMap<>();
+
+    /** cache of the retrieved unit instances based on the unit string. */
+    private static Map<String, Unit<?>> unitCache = new LinkedHashMap<>();
 
     /**
      * Serialize an Scalar value to text in such a way that it can be deserialized with the corresponding deserializer.
      * @param value Object; the scalar to serialize
      * @return String; a string representation of the value that can later be deserialized
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public String serialize(final S value)
+    public String serialize(final S value, final String unitString)
     {
-        return value == null ? null : String.valueOf(value.doubleValue());
+        if (value == null)
+        {
+            return null;
+        }
+
+        String key = value.getClass().getSimpleName() + "_" + unitString;
+        Unit<?> unit = unitCache.get(key);
+        if (unit == null)
+        {
+            unit = value.getDisplayUnit().getQuantity().of(unitString);
+            unitCache.put(key, unit);
+        }
+        return String.valueOf(value.getInUnit((U) unit));
     }
 
     /**

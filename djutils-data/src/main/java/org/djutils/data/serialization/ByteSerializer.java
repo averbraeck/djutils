@@ -14,7 +14,7 @@ public class ByteSerializer implements SpecificTextSerializer<Byte>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final Byte value)
+    public String serialize(final Byte value, final String unit)
     {
         return value == null ? null : String.valueOf(value.byteValue());
     }

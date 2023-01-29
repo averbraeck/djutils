@@ -14,7 +14,7 @@ public class BooleanSerializer implements SpecificTextSerializer<Boolean>
 {
     /** {@inheritDoc} */
     @Override
-    public String serialize(final Boolean value)
+    public String serialize(final Boolean value, final String unit)
     {
         return value == null ? null : value.toString();
     }

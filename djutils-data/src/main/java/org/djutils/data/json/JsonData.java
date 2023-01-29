@@ -145,7 +145,8 @@ public final class JsonData
                 jw.setIndent("");
                 for (int i = 0; i < dataTable.getNumberOfColumns(); i++)
                 {
-                    jw.beginObject().name(String.valueOf(i)).value(TextSerializer.serialize(serializers[i], values[i]))
+                    jw.beginObject().name(String.valueOf(i))
+                            .value(TextSerializer.serialize(serializers[i], values[i], dataTable.getColumn(i).getUnit()))
                             .endObject();
                 }
                 jw.endArray(); // record
