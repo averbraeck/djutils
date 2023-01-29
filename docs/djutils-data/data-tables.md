@@ -1,4 +1,4 @@
-# Using DataTables
+# Using Data Tables
 
 A new in-memory `Table` is created by creating one or more `Column` objects, organize them in a `List` and then calling the constructor of `ListTable` (which is - at this time - the only implementation of a `DataTable`):
 

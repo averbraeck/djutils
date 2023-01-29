@@ -54,7 +54,7 @@ nav:
     - SERIALIZATION API: https://djutils.org/docs/latest/djutils-serialization/apidocs/index.html
   - DJUTILS-DATA project:
     - Introduction: djutils-data/index.md
-    - Using DataTables: djutils-data/data-tables.md
+    - Using Data Tables: djutils-data/data-tables.md
     - DJUTILS-DATA documentation: https://djutils.org/docs/latest/djutils-data/index.html
     - DJUTILS-DATA API: https://djutils.org/docs/latest/djutils-data/apidocs/index.htmll
   - DJUTILS-DRAW project:
