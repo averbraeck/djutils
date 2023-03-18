@@ -2,6 +2,8 @@ package org.djutils.cli;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Locale;
+
 import org.djunits.unit.AbsoluteTemperatureUnit;
 import org.djunits.unit.AbsorbedDoseUnit;
 import org.djunits.unit.AccelerationUnit;
@@ -303,6 +305,7 @@ public class TestCLIUnitConverters
     @Test
     public void testCli() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
+        Locale.setDefault(Locale.US);
         String[] args;
         Options options;
 
@@ -318,7 +321,7 @@ public class TestCLIUnitConverters
         options = new Options();
         CliUtil.execute(options, args);
         assertEquals(new AbsorbedDose(200.0, AbsorbedDoseUnit.GRAY), options.absorbeddose);
-        args = new String[] {"--absorbeddose", "100.0erg/g"};
+        args = new String[] {"--absorbeddose", "100.0 erg/g"};
         CliUtil.execute(options, args);
         assertEquals(new AbsorbedDose(100.0, AbsorbedDoseUnit.ERG_PER_GRAM), options.absorbeddose);
 
