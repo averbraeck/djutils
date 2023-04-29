@@ -20,8 +20,9 @@ nav:
   - Home: index.md
   - DJUTILS project: 
     - Introduction: djutils/index.md
-    - DecoderDumper: djutils/decoder-dumper.md
+    - Mutable Primitives: djutils/mutable-primitives.md
     - Immutable Collections: djutils/immutable-collections.md
+    - Number Parser: djutils/number-parser.md
     - Event package: djutils/event.md
     - Complex numbers: djutils/complex-numbers.md
     - Complex math: djutils/complex-math.md
@@ -31,6 +32,7 @@ nav:
     - Reflection helper classes: djutils/reflection.md
     - Means package: djutils/means.md
     - Metadata: djutils/metadata.md 
+    - DecoderDumper: djutils/decoder-dumper.md
     - DJUTILS documentation: https://djutils.org/docs/latest/djutils/index.html
     - DJUTILS API: https://djutils.org/docs/latest/djutils/apidocs/index.html
   - DJUTILS-CLI project:
