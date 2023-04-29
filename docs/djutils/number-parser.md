@@ -44,7 +44,7 @@ The chaining methods that can be used are:
 | noTrailing() | trailing information is not allowed (exception of present) |
 | locale(newLocale) | define the parser to use newLocale |
 
-The parsing methods that can be ued are:
+The parsing methods that can be used are:
 
 | method | meaning |
 | ----------------- | -------------- |
