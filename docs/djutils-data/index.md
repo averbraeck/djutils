@@ -1,6 +1,7 @@
 # DJUTILS-DATA project
 
 The DJUTILS DATA project contains packages for managing, writing and reading tabular structured data. Data can be written and read in several formats:
+
 * [CSV](https://en.wikipedia.org/wiki/Comma-separated_values) (comma-separated values)
 * [TSV](https://en.wikipedia.org/wiki/Tab-separated_values) (tab-separated values)
 * [JSON](https://en.wikipedia.org/wiki/JSON) (JavaScript Object Notation)
