@@ -13,18 +13,27 @@ import org.djutils.exceptions.Throw;
  * NumberParser is a class that can parse a number in a strict or lenient way, and dependent on locale. It also provides help
  * for numbers that have trailing information in the String, such as a unit. The class has been defined to use two ways of
  * defining a parser: The first is a classical manner with a constructor that defines the settings: <br>
- * <code><pre>
+ * 
+ * <pre>
  *   NumberParser np = new NumberParser(true, true);
  *   String text = "+1.127E3 m/s";
  *   double d = np.parseDouble(text);
  *   String unit = text.substring(np.getTrailingPosition()).trim();
- * </pre></code> or, for a simple lenient setting without trailing information: <br>
- * <code><pre>
+ * </pre>
+ * 
+ * or, for a simple lenient setting without trailing information: <br>
+ * 
+ * <pre>
  *   double d = new NumberParser().parseDouble(text);
- * </pre></code> Alternatively, chaining can be used: <br>
- * <code><pre>
+ * </pre>
+ * 
+ * Alternatively, chaining can be used: <br>
+ * 
+ * <pre>
  *   double d = new NumberParser().lenient().locale(Locale.US).noTrailing().parseDouble(text);
- * </pre></code> An instantiated NumberParser can be used multiple times, but the class is not thread-safe.
+ * </pre>
+ * 
+ * An instantiated NumberParser can be used multiple times, but the class is not thread-safe.
  * <p>
  * Information on how Java handles Locales from version 11 onward can be found at
  * <a href= "https://www.oracle.com/java/technologies/javase/jdk11-suported-locales.html">
@@ -105,9 +114,11 @@ public class NumberParser
 
     /**
      * Set the parser to strict parsing. This method is included for chaining, so the following statement can be executed:
-     * <code><pre>
+     * 
+     * <pre>
      * new NumberParser().strict().noTrailing().locale(Locale.US).parseDouble(text);
-     * </pre></code>
+     * </pre>
+     * 
      * @return the current NumberParser for chaining
      */
     public NumberParser strict()
@@ -118,9 +129,11 @@ public class NumberParser
 
     /**
      * Set the parser to lenient parsing. This method is included for chaining, so the following statement can be executed:
-     * <code><pre>
+     * 
+     * <pre>
      * new NumberParser().lenient().noTrailing().locale(Locale.US).parseDouble(text);
-     * </pre></code>
+     * </pre>
+     * 
      * @return the current NumberParser for chaining
      */
     public NumberParser lenient()
@@ -131,9 +144,12 @@ public class NumberParser
 
     /**
      * Set the parser to allow for trailing characters when parsing. This method is included for chaining, so the following
-     * statement can be executed: <code><pre>
+     * statement can be executed:
+     * 
+     * <pre>
      * new NumberParser().lenient().trailing().locale(Locale.US).parseDouble(text);
-     * </pre></code>
+     * </pre>
+     * 
      * @return the current NumberParser for chaining
      */
     public NumberParser trailing()
@@ -144,9 +160,12 @@ public class NumberParser
 
     /**
      * Set the parser to not allow for trailing characters when parsing. This method is included for chaining, so the following
-     * statement can be executed: <code><pre>
+     * statement can be executed:
+     * 
+     * <pre>
      * new NumberParser().lenient().noTrailing().locale(Locale.US).parseDouble(text);
-     * </pre></code>
+     * </pre>
+     * 
      * @return the current NumberParser for chaining
      */
     public NumberParser noTrailing()
@@ -157,9 +176,11 @@ public class NumberParser
 
     /**
      * Set the locale for the parser to use. This method is included for chaining, so the following statement can be executed:
-     * <code><pre>
+     * 
+     * <pre>
      * new NumberParser().lenient().trailing().locale(Locale.US).parseDouble(text);
-     * </pre></code>
+     * </pre>
+     * 
      * @param newLocale Locale; the new Locale to use
      * @return the current NumberParser for chaining
      */
@@ -314,11 +335,14 @@ public class NumberParser
     /**
      * Return the position in the original String of the first character after the parsing of the number stopped. This means
      * that the trailing String can be retrieved using: <br>
-     * <code><pre>
+     * 
+     * <pre>
      * NumberParser np = new NumberParser();
      * double d = np.parseDouble("12.0 m/s");
      * String unit = text.substring(np.getTrailingPosition()).trim();
-     * </pre></code> The substring starting with the trailing position returns leading and trailing spaces.
+     * </pre>
+     * 
+     * The substring starting with the trailing position returns leading and trailing spaces.
      * @return int; the trailing position that denotes the first character after the parsing of the number stopped
      */
     public int getTrailingPosition()
