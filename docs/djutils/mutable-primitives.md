@@ -1,6 +1,6 @@
 # Mutable Primitives
 
-## These classes augment the Java primitive wrappers with mutable variants.
+## These classes augment the Java primitive wrappers with mutable variants
 
 Sometimes, we want to return one or more primitive values after a method call in addition to the return value itself. 
 As an example, consider a parser that returns the parsed value, but also an index for the character where the parsing stopped.
@@ -21,7 +21,7 @@ After parsing, `position` can for instance contain the first position in the Str
 The String `unit` will contain the value `m/s` after this call.
 
 
-## methods for the mutable primitives
+## Methods for the mutable primitives
 
 The `MutableInt`, `MutableLong`, `MutableFloat`, `MutableDouble`, `MutableShort`, `MutableByte` contain the following methods:
 

@@ -53,3 +53,11 @@ The parsing methods that can be used are:
 | int parseInt(text) | parse text as an int value |
 | long parseLong(text) | parse text as a long value |
 
+!!! Warning
+    The parsing of numbers is dependent on the version of the JDK / JRE. Jdk11 uses CLDR version 33 
+    (see [cldr-33](https://cldr.unicode.org/index/downloads/cldr-33)) 
+    and Jdk17 uses CLDR version 35.1 (see [cldr-35](https://cldr.unicode.org/index/downloads/cldr-35)). 
+    This means that, for instance, both the French and the Arabic Locales for parsing and displaying numbers
+    are different between Jdk11 and Jdk17. A number formatted and stores with Jdk11 cannot be read back by Jdk17 
+    and vice versa. 
+
