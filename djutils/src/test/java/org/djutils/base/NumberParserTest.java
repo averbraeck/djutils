@@ -343,10 +343,12 @@ public class NumberParserTest
     }
 
     /**
-     * Test with a few settings for the FR locale.
+     * Test with a few settings for the FR locale. Note that the Locale for France in jdk17 is different from jdk11. See
+     * https://stackoverflow.com/questions/70865403/why-numberformat-working-different-for-openjdk11-and-openjdk17 and
+     * https://bugs.openjdk.org/browse/JDK-8225245 for more information. The jdk17 standard can be downloaded from
+     * https://unicode.org/Public/cldr/35.1/. The jdk11 standard can be downloaded from https://unicode.org/Public/cldr/33/.
      */
-    @Test
-    public void testNumberParserFloatFR()
+    public void testNumberParserFloatFRjdk17()
     {
         // @formatter:off
         TestCase[] testCasesStrict = new TestCase[]
@@ -471,11 +473,162 @@ public class NumberParserTest
     }
 
     /**
-     * Test with a few settings for the Arabic locale. Note that Arabic is written right-to-left, but the numbers in a Java
-     * String are still formatted left-to-right.
+     * Test with a few settings for the FR locale. Note that the Locale for France in jdk17 is different from jdk11. See
+     * https://stackoverflow.com/questions/70865403/why-numberformat-working-different-for-openjdk11-and-openjdk17 and
+     * https://bugs.openjdk.org/browse/JDK-8225245 for more information. The jdk17 standard can be downloaded from
+     * https://unicode.org/Public/cldr/35.1/. The jdk11 standard can be downloaded from https://unicode.org/Public/cldr/33/.
+     */
+    public void testNumberParserFloatFRjdk11()
+    {
+        // @formatter:off
+        TestCase[] testCasesStrict = new TestCase[]
+            {
+                new TestCase("12000,12", 12000.12, ""),
+                new TestCase("12\u00A0000,12", 12000.12, ""),
+                new TestCase(" 12\u00A0000,12 ", 12000.12, ""),
+                new TestCase("12000,12E-3", 12.00012, ""),
+                new TestCase("12\u00A0000,12E-3", 12.00012, ""),
+                new TestCase("12000,12E2", 1200012, ""),
+                new TestCase("12\u00A0000,12E2", 1200012, ""),
+                new TestCase(" 12\u00A0000,12 m/s ", 12000.12, " m/s "),
+                new TestCase(" 12\u00A0000,12m/s", 12000.12, "m/s"),
+                new TestCase("12000,12E-3 m/s", 12.00012, " m/s"),
+                new TestCase("12\u00A0000,12E-3m/s", 12.00012, "m/s"),
+                new TestCase("12000,12E2 m/s", 1200012, " m/s"),
+                new TestCase("12\u00A0000,12E2m/s", 1200012, "m/s"),
+                new TestCase(" 12\u00A0000,12 E+", 12000.12, " E+"),
+                new TestCase(" 12\u00A0000,12E+", 12000.12, "E+"),
+                new TestCase("12\u00A00", 120.0, ""),
+                
+                new TestCase("-12000,12", -12000.12, ""),
+                new TestCase("-12\u00A0000,12", -12000.12, ""),
+                new TestCase(" -12\u00A0000,12 ", -12000.12, ""),
+                new TestCase("-12000,12E-3", -12.00012, ""),
+                new TestCase("-12\u00A0000,12E-3", -12.00012, ""),
+                new TestCase("-12000,12E2", -1200012, ""),
+                new TestCase("-12\u00A0000,12E2", -1200012, ""),
+                new TestCase(" -12\u00A0000,12 m/s ", -12000.12, " m/s "),
+                new TestCase(" -12\u00A0000,12m/s", -12000.12, "m/s"),
+                new TestCase("-12000,12E-3 m/s", -12.00012, " m/s"),
+                new TestCase("-12\u00A0000,12E-3m/s", -12.00012, "m/s"),
+                new TestCase("-12000,12E2 m/s", -1200012, " m/s"),
+                new TestCase("-12\u00A0000,12E2m/s", -1200012, "m/s"),
+                new TestCase(" -12\u00A0000,12 E+", -12000.12, " E+"),
+                new TestCase(" -12\u00A0000,12E+", -12000.12, "E+"),
+                new TestCase("-12\u00A00", -120.0, ""),
+            };
+        TestCase[] testCasesLenient = new TestCase[]
+            {
+                new TestCase("+12\u00A0000,12", 12000.12, ""),
+                new TestCase(" +12\u00A0000,12 ", 12000.12, ""),
+                new TestCase("+12\u00A0000,12m/s", 12000.12, "m/s"),
+                new TestCase(" +12\u00A0000,12 m/s", 12000.12, " m/s"),
+                new TestCase(" 12\u00A0000,12E+20 m/s", 1.200012E24, " m/s"),
+                new TestCase(" +12\u00A0000,12e+20 m/s", 1.200012E24, " m/s"),
+                new TestCase(" +12\u00A0000,12e+20 m/s e+E+..,,++--++--", 1.200012E24, " m/s e+E+..,,++--++--"),
+                new TestCase(" +12e", 12.0, "e"),
+                new TestCase(" +12,", 12.0, ""),
+                new TestCase(" +12\u00A0", 12.0, ""),
+                new TestCase(" +12\u00A0e", 12.0, "\u00A0e"),
+                new TestCase(" +12,E", 12.0, "E"),
+                new TestCase(" +12,0E", 12.0, "E"),
+                new TestCase(" +12,0erg", 12.0, "erg"),
+                new TestCase(" +12,0E-a", 12.0, "E-a"),
+                
+                new TestCase(" -12\u00A0000,12e+20 m/s", -1.200012E24, " m/s"),
+                new TestCase(" -12e", -12.0, "e"),
+                new TestCase(" -12,", -12.0, ""),
+                new TestCase(" -12\u00A0", -12.0, ""),
+                new TestCase(" -12\u00A0e", -12.0, "\u00A0e"),
+                new TestCase(" -12,E", -12.0, "E"),
+                new TestCase(" -12,0E", -12.0, "E"),
+                new TestCase(" -12,0erg", -12.0, "erg"),
+                new TestCase(" -12,0E-a", -12.0, "E-a"),
+            };
+        TestCaseFail[] testCasesFail = new TestCaseFail[]
+            {
+                new TestCaseFail("+12\u00A0000,12", true, false),
+                new TestCaseFail(" +12\u00A0000,12 ", true, false),
+                new TestCaseFail(" 12\u00A0000,12E+20 m/s", false, false), // E+20 m/s is the trail
+                new TestCaseFail(" +12\u00A0000,12e+20 m/s", true, false),
+                new TestCaseFail("12e", true, false),
+                new TestCaseFail("12,,", true, false),
+                new TestCaseFail("12\u00A0\u00A0", true, false),
+                new TestCaseFail("12,000.10", true, false),
+                new TestCaseFail("12\u00A00E+3", true, false),
+                new TestCaseFail("12,0E+\u00A03", true, false),
+                new TestCaseFail("12,0E+.3", true, false),
+                new TestCaseFail("12,0E-,3", true, false),
+                new TestCaseFail("12,0E-3.", true, false),
+
+                new TestCaseFail("-12e", true, false),
+                new TestCaseFail("-12,,", true, false),
+                new TestCaseFail("-12\u00A0\u00A0", true, false),
+                new TestCaseFail("-12,000.10", true, false),
+                new TestCaseFail("-12\u00A00E+3", true, false),
+                new TestCaseFail("-12,0E+\u00A03", true, false),
+                new TestCaseFail("-12,0E+.3", true, false),
+                new TestCaseFail("-12,0E-,3", true, false),
+                new TestCaseFail("-12,0E-3.", true, false),
+            };
+        // @formatter:on
+
+        Locale localeFR = Locale.FRANCE;
+        for (TestCase test : testCasesStrict)
+        {
+            testDouble(test.text, test.expectedValue, test.expectedTrail, true, localeFR);
+            testFloat(test.text, (float) test.expectedValue, test.expectedTrail, true, localeFR);
+            testDouble(test.text, test.expectedValue, test.expectedTrail, false, localeFR);
+            testFloat(test.text, (float) test.expectedValue, test.expectedTrail, false, localeFR);
+        }
+        for (TestCase test : testCasesLenient)
+        {
+            testDouble(test.text, test.expectedValue, test.expectedTrail, false, localeFR);
+            testFloat(test.text, (float) test.expectedValue, test.expectedTrail, false, localeFR);
+        }
+        for (TestCaseFail test : testCasesFail)
+        {
+            testDoubleFail(test.text, test.strict, test.trailing, localeFR);
+            testFloatFail(test.text, test.strict, test.trailing, localeFR);
+        }
+
+        // special case
+        String text = " 12\u00A0000,12E+20 m/s";
+        testDouble(text, 12000.12, "E+20 m/s", true, localeFR);
+        testDouble(text, 1.200012E24, " m/s", false, localeFR);
+        testFloat(text, 12000.12f, "E+20 m/s", true, localeFR);
+        testFloat(text, 1.200012E24f, " m/s", false, localeFR);
+        testDoubleFail(text, true, false, localeFR);
+        testFloatFail(text, true, false, localeFR);
+    }
+
+    /**
+     * Test with a few settings for the FR locale. Note that the Locale for France in jdk17 is different from jdk11. See
+     * https://stackoverflow.com/questions/70865403/why-numberformat-working-different-for-openjdk11-and-openjdk17 for more
+     * information. The jdk17 standard can be downloaded from https://unicode.org/Public/cldr/35.1/. The jdk11 standard can be
+     * downloaded from https://unicode.org/Public/cldr/33/.
      */
     @Test
-    public void testNumberParserFloatArabic()
+    public void testNumberParserFloatFR()
+    {
+        if (Runtime.version().feature() < 13)
+        {
+            testNumberParserFloatFRjdk11();
+        }
+        else
+        {
+            testNumberParserFloatFRjdk17();
+        }
+    }
+
+    /**
+     * Test with a few settings for the Arabic locale. Note that Arabic is written right-to-left, but the numbers in a Java
+     * String are still formatted left-to-right. Note that the Locale for Arabic in jdk17 is different from jdk11. See
+     * https://stackoverflow.com/questions/72738425/numberformating-issue-with-negative-numbers-in-rtl-locale-like-arabic for
+     * more information. The jdk17 standard can be downloaded from https://unicode.org/Public/cldr/35.1/. The jdk11 standard can
+     * be downloaded from https://unicode.org/Public/cldr/33/.
+     */
+    public void testNumberParserFloatArabicJdk17()
     {
         // Numbers 0 to 9 are: ٠١٢٣٤٥٦٧٨٩
 
@@ -590,6 +743,147 @@ public class NumberParserTest
     }
 
     /**
+     * Test with a few settings for the Arabic locale. Note that Arabic is written right-to-left, but the numbers in a Java
+     * String are still formatted left-to-right. Note that the Locale for Arabic in jdk17 is different from jdk11. See
+     * https://stackoverflow.com/questions/72738425/numberformating-issue-with-negative-numbers-in-rtl-locale-like-arabic for
+     * more information. The jdk17 standard can be downloaded from https://unicode.org/Public/cldr/35.1/. The jdk11 standard can
+     * be downloaded from https://unicode.org/Public/cldr/33/.
+     */
+    public void testNumberParserFloatArabicJdk11()
+    {
+        // Numbers 0 to 9 are: ٠١٢٣٤٥٦٧٨٩
+
+        // @formatter:off
+        TestCase[] testCasesStrict = new TestCase[]
+                {
+                    new TestCase("١٢٠٠٠٫١٢", 12000.12, ""),
+                    new TestCase("١٢٬٠٠٠٫١٢", 12000.12, ""),
+                    new TestCase(" ١٢٬٠٠٠٫١٢ ", 12000.12, ""),
+                    new TestCase(" ١٢٬٠٠٠٫١٢ m/s ", 12000.12, " m/s "),
+                    new TestCase(" ١٢٬٠٠٠٫١٢m/s", 12000.12, "m/s"),
+                    new TestCase(" ١٢٬٠٠٠٫١٢ E+", 12000.12, " E+"),
+                    new TestCase(" ١٢٬٠٠٠٫١٢E+", 12000.12, "E+"),
+                    new TestCase("١٢٬٠", 120.0, ""),
+                    
+                    new TestCase("\u061c١٢٠٠٠٫١٢", -12000.12, ""),
+                    new TestCase("\u061c١٢٬٠٠٠٫١٢", -12000.12, ""),
+                    new TestCase(" \u061c١٢٬٠٠٠٫١٢ ", -12000.12, ""),
+                    new TestCase(" \u061c١٢٬٠٠٠٫١٢ m/s ", -12000.12, " m/s "),
+                    new TestCase(" \u061c١٢٬٠٠٠٫١٢m/s", -12000.12, "m/s"),
+                    new TestCase(" \u061c١٢٬٠٠٠٫١٢ E+", -12000.12, " E+"),
+                    new TestCase(" \u061c١٢٬٠٠٠٫١٢E+", -12000.12, "E+"),
+                    new TestCase("\u061c١٢٬٠", -120.0, ""),
+                };
+            TestCase[] testCasesLenient = new TestCase[]
+                {
+                    new TestCase("+١٢٬٠٠٠٫١٢", 12000.12, ""),
+                    new TestCase(" +١٢٬٠٠٠٫١٢ ", 12000.12, ""),
+                    new TestCase("+١٢٬٠٠٠٫١٢m/s", 12000.12, "m/s"),
+                    new TestCase(" +١٢٬٠٠٠٫١٢ m/s", 12000.12, " m/s"),
+                    new TestCase(" +١٢e", 12.0, "e"),
+                    new TestCase(" +١٢٬", 12.0, ""),
+                    new TestCase(" +١٢٫", 12.0, ""),
+                    new TestCase(" +١٢٬e", 12.0, "٬e"),
+                    new TestCase(" +١٢٫E", 12.0, "E"),
+                    new TestCase(" +١٢٫٠E", 12.0, "E"),
+                    new TestCase(" +١٢٫٠erg", 12.0, "erg"),
+                    new TestCase(" +١٢٫٠E-a", 12.0, "E-a"),
+
+                    new TestCase("\u061c١٢٬٠٠٠٫١٢", -12000.12, ""),
+                    new TestCase(" \u061c١٢٬٠٠٠٫١٢ ", -12000.12, ""),
+                    new TestCase("\u061c١٢٬٠٠٠٫١٢m/s", -12000.12, "m/s"),
+                    new TestCase(" \u061c١٢٬٠٠٠٫١٢ m/s", -12000.12, " m/s"),
+                    new TestCase(" \u061c١٢e", -12.0, "e"),
+                    new TestCase(" \u061c١٢٬", -12.0, ""),
+                    new TestCase(" \u061c١٢٫", -12.0, ""),
+                    new TestCase(" \u061c١٢٬e", -12.0, "٬e"),
+                    new TestCase(" \u061c١٢٫E", -12.0, "E"),
+                    new TestCase(" \u061c١٢٫٠E", -12.0, "E"),
+                    new TestCase(" \u061c١٢٫٠erg", -12.0, "erg"),
+                    new TestCase(" \u061c١٢٫٠E-a", -12.0, "E-a"),
+                };
+            TestCaseFail[] testCasesFail = new TestCaseFail[]
+                {
+                    new TestCaseFail("+١٢٬٠٠٠٫١٢", true, false),
+                    new TestCaseFail(" +١٢٬٠٠٠٫١٢ ", true, false),
+                    new TestCaseFail(" ١٢٬٠٠٠٫١٢E+٢٠ m/s", false, false), // E+20 m/s is the trail
+                    new TestCaseFail(" +١٢٬٠٠٠٫١٢e+٢٠ m/s", true, false),
+                    new TestCaseFail("١٢e", true, false),
+                    new TestCaseFail("١٢٬٬", true, false),
+                    new TestCaseFail("١٢٫٫", true, false),
+                    new TestCaseFail("١٢٫٠٠٠٬1٠", true, false),
+                    new TestCaseFail("١٢,٠E+٣", true, false),
+                    new TestCaseFail("١٢٫٠E+٬٣", true, false),
+                    new TestCaseFail("١٢٫٠E+٫٣", true, false),
+                    new TestCaseFail("١٢٫٠E-٬٣", true, false),
+                    new TestCaseFail("١٢٫٠E-٣٫", true, false),
+
+                    new TestCaseFail("\u061c١٢e", true, false),
+                    new TestCaseFail("\u061c١٢٬٬", true, false),
+                    new TestCaseFail("\u061c١٢٫٫", true, false),
+                    new TestCaseFail("\u061c١٢٫٠٠٠٬1٠", true, false),
+                    new TestCaseFail("\u061c١٢,٠E+٣", true, false),
+                    new TestCaseFail("\u061c١٢٫٠E+٬٣", true, false),
+                    new TestCaseFail("\u061c١٢٫٠E+٫٣", true, false),
+                    new TestCaseFail("\u061c١٢٫٠E-٬٣", true, false),
+                    new TestCaseFail("\u061c١٢٫٠E-٣٫", true, false),
+                };
+        // @formatter:on
+
+        Locale localeArabic = Locale.forLanguageTag("ar-DZ-u-nu-arab");
+        for (TestCase test : testCasesStrict)
+        {
+            testDouble(test.text, test.expectedValue, test.expectedTrail, true, localeArabic);
+            testFloat(test.text, (float) test.expectedValue, test.expectedTrail, true, localeArabic);
+            testDouble(test.text, test.expectedValue, test.expectedTrail, false, localeArabic);
+            testFloat(test.text, (float) test.expectedValue, test.expectedTrail, false, localeArabic);
+        }
+        for (TestCase test : testCasesLenient)
+        {
+            testDouble(test.text, test.expectedValue, test.expectedTrail, false, localeArabic);
+            testFloat(test.text, (float) test.expectedValue, test.expectedTrail, false, localeArabic);
+        }
+        for (TestCaseFail test : testCasesFail)
+        {
+            testDoubleFail(test.text, test.strict, test.trailing, localeArabic);
+            testFloatFail(test.text, test.strict, test.trailing, localeArabic);
+        }
+
+        // int and long
+        assertEquals(12000, new NumberParser().strict().noTrailing().locale(localeArabic).parseInt("١٢٠٠٠"));
+        assertEquals(12000L, new NumberParser().strict().noTrailing().locale(localeArabic).parseLong("١٢٠٠٠"));
+        // the String -12000 is:
+        // \u061c\u0661\u0662\u066c\u0660\u0660\u0660
+        // ALM 1 2 ATHS 0 0 0
+        // for ALM see https://unicode-explorer.com/c/061C
+        // for ATHS (Arabic Thousands Separator) see https://unicode-explorer.com/c/066C
+        // Here we use it without the thousands separator
+        String ar = "\u061c\u0661\u0662\u0660\u0660\u0660";
+        assertEquals(-12000, new NumberParser().strict().noTrailing().locale(localeArabic).parseInt(ar));
+        assertEquals(-12000L, new NumberParser().strict().noTrailing().locale(localeArabic).parseLong(ar));
+    }
+
+    /**
+     * Test with a few settings for the Arabic locale. Note that Arabic is written right-to-left, but the numbers in a Java
+     * String are still formatted left-to-right. Note that the Locale for Arabic in jdk17 is different from jdk11. See
+     * https://stackoverflow.com/questions/72738425/numberformating-issue-with-negative-numbers-in-rtl-locale-like-arabic for
+     * more information. The jdk17 standard can be downloaded from https://unicode.org/Public/cldr/35.1/. The jdk11 standard can
+     * be downloaded from https://unicode.org/Public/cldr/33/.
+     */
+    @Test
+    public void testNumberParserFloatArabic()
+    {
+        if (Runtime.version().feature() < 13)
+        {
+            testNumberParserFloatArabicJdk11();
+        }
+        else
+        {
+            testNumberParserFloatArabicJdk17();
+        }
+    }
+
+    /**
      * @param cp char at codepoint expressed as int
      * @return unicode
      */
@@ -598,8 +892,8 @@ public class NumberParserTest
         return String.format("\\u%04x", cp);
     }
 
-    /** 
-     * Helper method to print the internal formatting of an Arab number in unicode.  
+    /**
+     * Helper method to print the internal formatting of an Arab number in unicode.
      */
     public void arabicStringToHex()
     {
