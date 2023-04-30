@@ -93,7 +93,7 @@ Excess kurtosis is defined as `kurtosis minus 3`. This makes the excess kurtosis
 
 A [box plot](https://en.wikipedia.org/wiki/Box_plot) is a nice way to graph minimum, first quartile, median, third quartile and maximum of a distribution. As shown above, the `Tally` collects minimum and maximum values. The quartiles and the median can only be approximated by the `Tally`. This is done by calling the getQuantile method:
 
- ```java
+```java
 System.out.println("first quartile:                " + tally.getQuantile(0.25));
 System.out.println("median:                        " + tally.getQuantile(0.5));
 System.out.println("third quartile:                " + tally.getQuantile(0.75));
