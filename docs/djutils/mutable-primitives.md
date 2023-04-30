@@ -4,7 +4,7 @@
 
 Sometimes, we want to return one or more primitive values after a method call in addition to the return value itself. 
 As an example, consider a parser that returns the parsed value, but also an index for the character where the parsing stopped.
-Often, 'ugly' constructs are used, such as providing a `new int[1]` to the method, or an `AtomicInteger`. Both can be written. Instead of these solutions, djutils-base contains the classes `MutableInt`, `MutableLong`, `MutableFloat`, `MutableDouble`, `MutableShort`, `MutableByte`, and `MutableBoolean`. The classes can, for instance be used as follows:
+Often, 'ugly' constructs are used, such as providing a `new int[1]` to the method, or an `AtomicInteger`. Both solutions have an internal value thay can be written. Instead of these solutions, djutils-base contains the classes `MutableInt`, `MutableLong`, `MutableFloat`, `MutableDouble`, `MutableShort`, `MutableByte`, and `MutableBoolean`. The classes can, for instance be used as follows:
 
 ```java
   String text = "123.4 m/s";
