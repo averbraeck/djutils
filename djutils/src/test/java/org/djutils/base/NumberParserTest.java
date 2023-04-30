@@ -601,7 +601,7 @@ public class NumberParserTest
     /** 
      * Helper method to print the internal formatting of an Arab number in unicode.  
      */
-    public void ArabicStringToHex()
+    public void arabicStringToHex()
     {
         String ar = NumberFormat.getInstance(Locale.forLanguageTag("ar-DZ-u-nu-arab")).format(-12000);
         String s = "";
@@ -836,6 +836,7 @@ public class NumberParserTest
     }
 
     /** */
+    @SuppressWarnings("checkstyle:visibilitymodifier")
     static class TestCase
     {
         /** text to parse. */
@@ -853,7 +854,7 @@ public class NumberParserTest
          * @param expectedValue double; expected value
          * @param expectedTrail String expected trailing characters
          */
-        public TestCase(final String text, final double expectedValue, final String expectedTrail)
+        TestCase(final String text, final double expectedValue, final String expectedTrail)
         {
             super();
             this.text = text;
@@ -863,6 +864,7 @@ public class NumberParserTest
     }
 
     /** */
+    @SuppressWarnings("checkstyle:visibilitymodifier")
     static class TestCaseFail
     {
         /** text to parse. */
@@ -880,7 +882,7 @@ public class NumberParserTest
          * @param strict boolean; strict or not
          * @param trailing boolean; trailing allowed or not
          */
-        public TestCaseFail(final String text, final boolean strict, final boolean trailing)
+        TestCaseFail(final String text, final boolean strict, final boolean trailing)
         {
             super();
             this.text = text;
