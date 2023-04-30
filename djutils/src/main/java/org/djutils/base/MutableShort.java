@@ -28,11 +28,11 @@ public class MutableShort
 
     /**
      * set the mutable short to a new value.
-     * @param value short; the new value of the mutable short
+     * @param newValue short; the new value of the mutable short
      */
-    public void set(final short value)
+    public void set(final short newValue)
     {
-        this.value = value;
+        this.value = newValue;
     }
 
     /**

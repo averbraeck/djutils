@@ -13,7 +13,6 @@ import java.util.Date;
 
 import org.djutils.io.URLResource;
 import org.djutils.reflection.ClassUtil.ClassFileDescriptor;
-import org.junit.Test;
 
 /**
  * ClassFileDescriptorTest.java. <br>

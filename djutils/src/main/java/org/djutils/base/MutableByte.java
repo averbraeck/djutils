@@ -28,11 +28,11 @@ public class MutableByte
 
     /**
      * set the mutable byte to a new value.
-     * @param value byte; the new value of the mutable byte
+     * @param newValue byte; the new value of the mutable byte
      */
-    public void set(final byte value)
+    public void set(final byte newValue)
     {
-        this.value = value;
+        this.value = newValue;
     }
 
     /**

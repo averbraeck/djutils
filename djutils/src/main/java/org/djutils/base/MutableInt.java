@@ -28,11 +28,11 @@ public class MutableInt
 
     /**
      * set the mutable integer to a new value.
-     * @param value int; the new value of the mutable integer
+     * @param newValue int; the new value of the mutable integer
      */
-    public void set(final int value)
+    public void set(final int newValue)
     {
-        this.value = value;
+        this.value = newValue;
     }
 
     /**

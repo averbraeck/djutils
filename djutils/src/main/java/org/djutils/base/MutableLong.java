@@ -28,11 +28,11 @@ public class MutableLong
 
     /**
      * set the mutable long to a new value.
-     * @param value long; the new value of the mutable long
+     * @param newValue long; the new value of the mutable long
      */
-    public void set(final long value)
+    public void set(final long newValue)
     {
-        this.value = value;
+        this.value = newValue;
     }
 
     /**

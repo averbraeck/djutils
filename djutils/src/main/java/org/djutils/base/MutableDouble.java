@@ -28,11 +28,11 @@ public class MutableDouble
 
     /**
      * set the mutable double to a new value.
-     * @param value double; the new value of the mutable double
+     * @param newValue double; the new value of the mutable double
      */
-    public void set(final double value)
+    public void set(final double newValue)
     {
-        this.value = value;
+        this.value = newValue;
     }
 
     /**

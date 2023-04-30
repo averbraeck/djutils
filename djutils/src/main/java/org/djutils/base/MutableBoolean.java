@@ -28,11 +28,11 @@ public class MutableBoolean
 
     /**
      * set the mutable boolean to a new value.
-     * @param value boolean; the new value of the mutable boolean
+     * @param newValue boolean; the new value of the mutable boolean
      */
-    public void set(final boolean value)
+    public void set(final boolean newValue)
     {
-        this.value = value;
+        this.value = newValue;
     }
 
     /**

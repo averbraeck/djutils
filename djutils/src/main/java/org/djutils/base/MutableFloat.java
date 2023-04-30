@@ -28,11 +28,11 @@ public class MutableFloat
 
     /**
      * set the mutable float to a new value.
-     * @param value float; the new value of the mutable float
+     * @param newValue float; the new value of the mutable float
      */
-    public void set(final float value)
+    public void set(final float newValue)
     {
-        this.value = value;
+        this.value = newValue;
     }
 
     /**
