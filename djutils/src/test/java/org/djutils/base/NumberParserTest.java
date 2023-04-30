@@ -90,7 +90,7 @@ public class NumberParserTest
     }
 
     /**
-     * Test with a few settings for the US locale
+     * Test with a few settings for the US locale.
      */
     @Test
     public void testNumberParserFloatUS()
@@ -216,7 +216,7 @@ public class NumberParserTest
     }
 
     /**
-     * Test with a few settings for the NL locale
+     * Test with a few settings for the NL locale.
      */
     @Test
     public void testNumberParserFloatNL()
@@ -343,7 +343,7 @@ public class NumberParserTest
     }
 
     /**
-     * Test with a few settings for the FR locale
+     * Test with a few settings for the FR locale.
      */
     @Test
     public void testNumberParserFloatFR()
