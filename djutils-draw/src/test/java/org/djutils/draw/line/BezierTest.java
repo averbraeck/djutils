@@ -122,7 +122,11 @@ public class BezierTest
         for (double epsilonPosition : new double[] {3, 1, 0.1, 0.05, 0.02})
         {
             // System.out.println("epsilonPosition " + epsilonPosition);
-            PolyLine2d line = Bezier.bezier(epsilonPosition, start, c1, c2, end);
+            PolyLine2d line = Bezier.bezier(epsilonPosition, start, end);
+            assertEquals("Bezier from two points should be 2-point poly line", 2, line.size());
+            assertEquals("Start point should be start", start, line.getFirst());
+            assertEquals("End point shoujld be end", end, line.getLast());
+            line = Bezier.bezier(epsilonPosition, start, c1, c2, end);
             // System.out.print("epsilonPosition " + epsilonPosition + " yields " + line.toPlot());
             // for (int percent = 0; percent <= 100; percent++)
             // {
@@ -295,17 +299,47 @@ public class BezierTest
         for (int step = 0; step <= numberOfPoints; step++)
         {
             double fraction = 1.0 * step / numberOfPoints;
-            Ray2d ray = reference.getLocationFraction(fraction);
-            double position = candidate.projectRay(ray);
+            Ray2d referenceRay = reference.getLocationFraction(fraction);
+            double position = candidate.projectRay(referenceRay);
             Point2d pointAtPosition = candidate.getLocation(position);
-            double positionError = ray.distance(pointAtPosition);
+            double positionError = referenceRay.distance(pointAtPosition);
             if (positionError >= epsilon)
             {
-                System.out.println("fraction " + fraction + ", on " + ray + " projected to " + pointAtPosition
+                System.out.println("fraction " + fraction + ", on " + referenceRay + " projected to " + pointAtPosition
                         + " positionError " + positionError);
-                System.out.print("connection: " + new PolyLine2d(ray, pointAtPosition).toPlot());
+                System.out.print("connection: " + new PolyLine2d(referenceRay, pointAtPosition).toPlot());
                 System.out.print("reference: " + reference.toPlot());
                 System.out.print("candidate: " + candidate.toPlot());
+            }
+            assertTrue(description + " actual error is less than epsilon ", positionError < epsilon);
+        }
+    }
+
+    /**
+     * Compare B&eacute;zier curve approximations.
+     * @param description String; description of the test
+     * @param reference PolyLine3d; reference B&eacute;zier curve approximation
+     * @param candidate PolyLine3d; candidate B&eacute;zier curve approximation
+     * @param numberOfPoints int; number of point to compare the curves at, minus one; this method checks at 0% and at 100%
+     * @param epsilon double; upper limit of the distance between the two curves
+     * @throws DrawRuntimeException if that happens uncaught; a test has failed
+     */
+    public void compareBeziers(final String description, final PolyLine3d reference, final PolyLine3d candidate,
+            final int numberOfPoints, final double epsilon) throws DrawRuntimeException
+    {
+        for (int step = 0; step <= numberOfPoints; step++)
+        {
+            double fraction = 1.0 * step / numberOfPoints;
+            Ray3d referenceRay = reference.getLocationFraction(fraction);
+            Ray3d candidateRay = candidate.getLocationFraction(fraction);
+            double positionError = referenceRay.distance(candidateRay);
+            if (positionError >= epsilon)
+            {
+                System.out.println("Comparing at fraction " + fraction + ", on " + referenceRay + " compared to " + candidateRay
+                        + " positionError " + positionError);
+                System.out.print("connection: " + new PolyLine3d(referenceRay, candidateRay).project().toPlot());
+                System.out.print("reference: " + reference.project().toPlot());
+                System.out.print("candidate: " + candidate.project().toPlot());
             }
             assertTrue(description + " actual error is less than epsilon ", positionError < epsilon);
         }
@@ -405,6 +439,54 @@ public class BezierTest
                 assertTrue("z of intermediate point has reasonable value", p.z > -10 && p.z <= 30);
             }
         }
+
+        Point3d start = new Point3d(1, 1, 2);
+        Point3d c1 = new Point3d(11, 1, 2);
+        // Point2d c3 = new Point2d(5, 1);
+        Point3d c2 = new Point3d(1, 11, 2);
+        Point3d end = new Point3d(11, 11, 2);
+        double autoDistance = start.distance(end) / 2;
+        Point3d c1Auto = new Point3d(start.x + autoDistance, start.y, 2);
+        Point3d c2Auto = new Point3d(end.x - autoDistance, end.y, 2);
+        // Should produce a right leaning S shape; something between a slash and an S
+        PolyLine3d reference = Bezier.bezier(256, start, c1, c2, end);
+        PolyLine3d referenceAuto = Bezier.bezier(256, start, c1Auto, c2Auto, end);
+        // System.out.print("ref " + reference.toPlot());
+        Ray3d startRay = new Ray3d(start, c1);
+        Ray3d endRay = new Ray3d(end, c2).flip();
+        for (double epsilonPosition : new double[] {3, 1, 0.1, 0.05, 0.02})
+        {
+            // System.out.println("epsilonPosition " + epsilonPosition);
+            PolyLine3d line = Bezier.bezier(epsilonPosition, start, end);
+            assertEquals("Bezier from two points should be 2-point poly line", 2, line.size());
+            assertEquals("Start point should be start", start, line.getFirst());
+            assertEquals("End point shoujld be end", end, line.getLast());
+            line = Bezier.bezier(epsilonPosition, start, c1, c2, end);
+            // System.out.print("epsilonPosition " + epsilonPosition + " yields " + line.toPlot());
+            // for (int percent = 0; percent <= 100; percent++)
+            // {
+            // Ray2d ray = reference.getLocationFraction(percent / 100.0);
+            // double position = line.projectRay(ray);
+            // Point2d pointAtPosition = line.getLocation(position);
+            // double positionError = ray.distance(pointAtPosition);
+            // System.out.print(String.format(" %.3f", positionError));
+            // if (positionError >= epsilonPosition)
+            // {
+            // System.out.println();
+            // System.out.println("percent " + percent + ", on " + ray + " projected to " + pointAtPosition
+            // + " positionError " + positionError);
+            // }
+            // assertTrue("Actual error " + positionError + " exceeds epsilon " + epsilonPosition,
+            // positionError < epsilonPosition);
+            // }
+            // System.out.println();
+            compareBeziers("bezier with 2 explicit control points", reference, line, 100, epsilonPosition);
+            line = Bezier.cubic(epsilonPosition, start, c1, c2, end);
+            compareBeziers("cubic with 2 explicit control points", reference, line, 100, epsilonPosition);
+            line = Bezier.cubic(epsilonPosition, startRay, endRay);
+            compareBeziers("cubic with automatic control points", referenceAuto, line, 100, epsilonPosition);
+        }
+
     }
 
     /**

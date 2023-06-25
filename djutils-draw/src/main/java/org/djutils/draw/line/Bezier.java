@@ -340,6 +340,10 @@ public final class Bezier
         Throw.when(points.length < 2, DrawRuntimeException.class, "Too few points; need at least two");
         Throw.when(Double.isNaN(epsilon) || epsilon <= 0, DrawRuntimeException.class,
                 "epsilonPosition must be a positive number");
+        if (points.length == 2)
+        {
+            return new PolyLine2d(points[0], points[1]);
+        }
         NavigableMap<Double, Point2d> result = new TreeMap<>();
         double[] px = new double[points.length];
         double[] py = new double[points.length];
@@ -711,6 +715,10 @@ public final class Bezier
         Throw.when(points.length < 2, DrawRuntimeException.class, "Too few points; need at least two");
         Throw.when(Double.isNaN(epsilon) || epsilon <= 0, DrawRuntimeException.class,
                 "epsilonPosition must be a positive number");
+        if (points.length == 2)
+        {
+            return new PolyLine3d(points[0], points[1]);
+        }
         NavigableMap<Double, Point3d> result = new TreeMap<>();
         double[] px = new double[points.length];
         double[] py = new double[points.length];
