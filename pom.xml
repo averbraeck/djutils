@@ -23,6 +23,7 @@
     <module>djutils-draw</module>
     <module>djutils-serialization</module>
     <module>djutils-stats</module>
+    <module>djutils-eval</module>
   </modules>
 
   <properties>
