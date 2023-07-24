@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.djunits.unit.Unit;
-import org.djunits.value.vdouble.matrix.base.AbstractDoubleMatrix;
-import org.djunits.value.vdouble.scalar.base.AbstractDoubleScalar;
-import org.djunits.value.vdouble.vector.base.AbstractDoubleVector;
-import org.djunits.value.vfloat.matrix.base.AbstractFloatMatrix;
-import org.djunits.value.vfloat.scalar.base.AbstractFloatScalar;
-import org.djunits.value.vfloat.vector.base.AbstractFloatVector;
+import org.djunits.value.vdouble.matrix.base.DoubleMatrix;
+import org.djunits.value.vdouble.scalar.base.DoubleScalar;
+import org.djunits.value.vdouble.vector.base.DoubleVector;
+import org.djunits.value.vfloat.matrix.base.FloatMatrix;
+import org.djunits.value.vfloat.scalar.base.FloatScalar;
+import org.djunits.value.vfloat.vector.base.FloatVector;
 import org.djutils.exceptions.Throw;
 import org.djutils.serialization.serializers.BasicPrimitiveArrayOrMatrixSerializer;
 import org.djutils.serialization.serializers.DoubleMatrixSerializer;
@@ -175,7 +175,7 @@ public final class TypedMessage
                 @Override
                 public Boolean deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
                 {
-                    return buffer[pointer.getAndIncrement(1)] == 0 ? false : true;
+                    return buffer[pointer.getAndIncrement(1)] != 0;
                 }
             };
 
@@ -629,7 +629,7 @@ public final class TypedMessage
                     boolean[] result = new boolean[size];
                     for (int i = 0; i < size; i++)
                     {
-                        result[i] = buffer[pointer.getAndIncrement(getElementSize())] == 0 ? false : true;
+                        result[i] = buffer[pointer.getAndIncrement(getElementSize())] != 0;
                     }
                     return result;
                 }
@@ -649,7 +649,7 @@ public final class TypedMessage
                 @Override
                 public Boolean deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
-                    return buffer[offset] == 0 ? false : true;
+                    return buffer[offset] != 0;
                 }
             };
 
@@ -1076,7 +1076,7 @@ public final class TypedMessage
                     {
                         for (int j = 0; j < width; j++)
                         {
-                            result[i][j] = buffer[pointer.getAndIncrement(getElementSize())] == 0 ? false : true;
+                            result[i][j] = buffer[pointer.getAndIncrement(getElementSize())] != 0;
                         }
                     }
                     return result;
@@ -1097,37 +1097,37 @@ public final class TypedMessage
                 @Override
                 public Boolean deSerializeElement(final byte[] buffer, final int offset, final EndianUtil endianUtil)
                 {
-                    return buffer[offset] == 0 ? false : true;
+                    return buffer[offset] != 0;
                 }
             };
 
-    /** Converter for descendants of AbstractFloatScalar. */
+    /** Converter for descendants of FloatScalar. */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static final Serializer<AbstractFloatScalar<?, ?>> CONVERT_DJUNITS_FLOAT_SCALAR = new FloatScalarSerializer();
+    private static final Serializer<FloatScalar<?, ?>> CONVERT_DJUNITS_FLOAT_SCALAR = new FloatScalarSerializer();
 
-    /** Converter for descendants of AbstractDoubleScalar. */
+    /** Converter for descendants of DoubleScalar. */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static final Serializer<AbstractDoubleScalar<?, ?>> CONVERT_DJUNITS_DOUBLE_SCALAR = new DoubleScalarSerializer();
+    private static final Serializer<DoubleScalar<?, ?>> CONVERT_DJUNITS_DOUBLE_SCALAR = new DoubleScalarSerializer();
 
-    /** Converter for descendants of AbstractFloatVector. */
+    /** Converter for descendants of FloatVector. */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static final Serializer<AbstractFloatVector<?, ?, ?>> CONVERT_DJUNITS_FLOAT_VECTOR = new FloatVectorSerializer();
+    private static final Serializer<FloatVector<?, ?, ?>> CONVERT_DJUNITS_FLOAT_VECTOR = new FloatVectorSerializer();
 
-    /** Converter for descendants of AbstractDoubleVector. */
+    /** Converter for descendants of DoubleVector. */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static final Serializer<AbstractDoubleVector<?, ?, ?>> CONVERT_DJUNITS_DOUBLE_VECTOR = new DoubleVectorSerializer();
+    private static final Serializer<DoubleVector<?, ?, ?>> CONVERT_DJUNITS_DOUBLE_VECTOR = new DoubleVectorSerializer();
 
-    /** Converter for descendants of AbstractFloatMatrix. */
+    /** Converter for descendants of FloatMatrix. */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static final Serializer<AbstractFloatMatrix<?, ?, ?, ?>> CONVERT_DJUNITS_FLOAT_MATRIX = new FloatMatrixSerializer();
+    private static final Serializer<FloatMatrix<?, ?, ?, ?>> CONVERT_DJUNITS_FLOAT_MATRIX = new FloatMatrixSerializer();
 
-    /** Converter for descendants of AbstractDoubleMatrix. */
+    /** Converter for descendants of DoubleMatrix. */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static final Serializer<AbstractDoubleMatrix> CONVERT_DJUNITS_DOUBLE_MATRIX = new DoubleMatrixSerializer();
+    private static final Serializer<DoubleMatrix> CONVERT_DJUNITS_DOUBLE_MATRIX = new DoubleMatrixSerializer();
 
     /** Serializer for array of DoubleVector. Each DoubleVector must have same size. */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static final Serializer<AbstractDoubleVector[]> CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY =
+    private static final Serializer<DoubleVector[]> CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY =
             new DoubleVectorArraySerializer();
 
     /** Converter for array of SerializebleObject using UTF16 for strings and characters. */
@@ -1453,27 +1453,27 @@ public final class TypedMessage
         {
             return utf8 ? CONVERT_STRING8 : CONVERT_STRING16;
         }
-        else if (object instanceof AbstractFloatScalar)
+        else if (object instanceof FloatScalar)
         {
             return CONVERT_DJUNITS_FLOAT_SCALAR;
         }
-        else if (object instanceof AbstractDoubleScalar)
+        else if (object instanceof DoubleScalar)
         {
             return CONVERT_DJUNITS_DOUBLE_SCALAR;
         }
-        else if (object instanceof AbstractFloatVector)
+        else if (object instanceof FloatVector)
         {
             return CONVERT_DJUNITS_FLOAT_VECTOR;
         }
-        else if (object instanceof AbstractDoubleVector)
+        else if (object instanceof DoubleVector)
         {
             return CONVERT_DJUNITS_DOUBLE_VECTOR;
         }
-        else if (object instanceof AbstractFloatMatrix)
+        else if (object instanceof FloatMatrix)
         {
             return CONVERT_DJUNITS_FLOAT_MATRIX;
         }
-        else if (object instanceof AbstractDoubleMatrix)
+        else if (object instanceof DoubleMatrix)
         {
             return CONVERT_DJUNITS_DOUBLE_MATRIX;
         }
@@ -1481,7 +1481,7 @@ public final class TypedMessage
         {
             return utf8 ? COMPOUND_ARRAY_SERIALIZER_UTF8 : COMPOUND_ARRAY_SERIALIZER_UTF16;
         }
-        else if (object instanceof AbstractDoubleVector[])
+        else if (object instanceof DoubleVector[])
         {
             return CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY;
         }
