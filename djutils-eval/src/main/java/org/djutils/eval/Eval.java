@@ -275,15 +275,15 @@ public class Eval
         DoubleScalar<?, ?> ds = pop();
         if (!(ds instanceof DoubleScalarRel))
         {
-            throwException("Cannot add a non relative");
+            throwException("Cannot add an absolute value to some other value");
         }
         DoubleScalarRel<?, ?> right = (DoubleScalarRel<?, ?>) ds;
         ds = pop();
         // System.out.println("left unit : " + ds.getDisplayUnit().getStandardUnit());
         // System.out.println("right unit: " + right.getDisplayUnit().getStandardUnit());
-        if (!ds.getDisplayUnit().getStandardUnit().equals(right.getDisplayUnit().getStandardUnit()))
+        if (!ds.getDisplayUnit().getStandardUnit().toString().equals(right.getDisplayUnit().getStandardUnit().toString()))
         {
-            throwException("Cannot add " + ds + " and " + right);
+            throwException("Cannot add " + ds + " and " + right + " because the types are incompatible");
         }
         if (ds.isAbsolute())
         {
@@ -312,9 +312,11 @@ public class Eval
         DoubleScalar<?, ?> left = pop();
         // System.out.println("left unit : " + left.getDisplayUnit().getStandardUnit());
         // System.out.println("right unit: " + right.getDisplayUnit().getStandardUnit());
-        if (!left.getDisplayUnit().getStandardUnit().equals(right.getDisplayUnit().getStandardUnit()))
+        if (!left.getDisplayUnit().getStandardUnit().toString().equals(right.getDisplayUnit().getStandardUnit().toString()))
         {
-            throwException("Cannot subtract " + right + " from " + left);
+            //System.out.println("left standard unit: " + left.getDisplayUnit().getStandardUnit().toString() + ", right standard unit: "
+            //        + right.getDisplayUnit().getStandardUnit().toString());
+            throwException("Cannot subtract " + right + " from " + left + " because the types are incompatible");
         }
         if (left.isAbsolute() && right.isAbsolute())
         {
@@ -335,7 +337,7 @@ public class Eval
         else if (right.isAbsolute())
         {
             // Rel - Abs -> error
-            throwException("Cannot subtract " + right + " from " + left);
+            throwException("Cannot subtract " + right + " from " + left + " because the right operand is absolute");
         }
         else
         {
@@ -364,8 +366,8 @@ public class Eval
         boolean seenRadix = false;
         while (this.position < this.expression.length())
         {
-            char token = this.expression.charAt(this.position);
-            if ((!seenDigit) && ('-' == token || '+' == token))
+            char c = this.expression.charAt(this.position);
+            if ((!seenDigit) && ('-' == c || '+' == c))
             {
                 if (seenSign)
                 {
@@ -373,7 +375,7 @@ public class Eval
                 }
                 seenSign = true;
             }
-            else if (seenExp && (!seenExpDigit) && ('-' == token || '+' == token))
+            else if (seenExp && (!seenExpDigit) && ('-' == c || '+' == c))
             {
                 if (seenExpSign)
                 {
@@ -381,7 +383,7 @@ public class Eval
                 }
                 seenExpSign = true;
             }
-            else if ('e' == token || 'E' == token)
+            else if ('e' == c || 'E' == c)
             {
                 if (seenExp)
                 {
@@ -389,14 +391,14 @@ public class Eval
                 }
                 seenExp = true;
             }
-            else if ('.' == token)
+            else if ('.' == c)
             {
                 if (seenRadix)
                 {
                     throw new RuntimeException("Too many '.'");
                 }
             }
-            else if (Character.isDigit(token))
+            else if (Character.isDigit(c))
             {
                 if (seenExp)
                 {
@@ -421,12 +423,12 @@ public class Eval
             startPosition = this.position;
             while (this.position < this.expression.length())
             {
-                char token = this.expression.charAt(this.position);
-                if (']' == token)
+                char c = this.expression.charAt(this.position);
+                if (']' == c)
                 {
                     return SIScalar.valueOf(number + " " + this.expression.substring(startPosition, this.position++));
                 }
-                if ((!Character.isLetterOrDigit(token)) && '-' != token && '^' != token && '/' != token)
+                if ((!Character.isLetterOrDigit(c)) && '-' != c && '^' != c && '/' != c)
                 {
                     throwException("Bad symbol in SI unit string");
                 }
@@ -451,7 +453,7 @@ public class Eval
         while (this.position < this.expression.length())
         {
             char c = this.expression.charAt(this.position);
-            if (Character.isLetterOrDigit(c) || '.' == c)
+            if (Character.isLetterOrDigit(c) || '.' == c || '_' == c)
             {
                 this.position++;
             }
