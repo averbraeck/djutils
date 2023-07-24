@@ -2,8 +2,8 @@ package org.djutils.cli;
 
 import static org.junit.Assert.assertEquals;
 
-import org.djunits.Throw;
 import org.djunits.value.vdouble.scalar.Duration;
+import org.djutils.exceptions.Throw;
 import org.junit.Test;
 
 import picocli.CommandLine.Command;
