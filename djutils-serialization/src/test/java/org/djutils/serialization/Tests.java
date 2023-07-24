@@ -26,17 +26,15 @@ import org.djunits.unit.TimeUnit;
 import org.djunits.value.ValueRuntimeException;
 import org.djunits.value.storage.StorageType;
 import org.djunits.value.vdouble.matrix.ElectricalCurrentMatrix;
-import org.djunits.value.vdouble.matrix.base.DoubleMatrix;
 import org.djunits.value.vdouble.scalar.Dimensionless;
 import org.djunits.value.vdouble.scalar.Length;
 import org.djunits.value.vdouble.vector.ElectricalCurrentVector;
-import org.djunits.value.vdouble.vector.base.AbstractDoubleVector;
+import org.djunits.value.vdouble.vector.LengthVector;
+import org.djunits.value.vdouble.vector.TimeVector;
 import org.djunits.value.vdouble.vector.base.DoubleVector;
 import org.djunits.value.vfloat.matrix.FloatElectricalResistanceMatrix;
-import org.djunits.value.vfloat.matrix.base.FloatMatrix;
 import org.djunits.value.vfloat.scalar.FloatArea;
 import org.djunits.value.vfloat.vector.FloatElectricalResistanceVector;
-import org.djunits.value.vfloat.vector.base.FloatVector;
 import org.djutils.decoderdumper.HexDumper;
 import org.djutils.serialization.serializers.BasicSerializer;
 import org.djutils.serialization.serializers.Pointer;
@@ -309,12 +307,12 @@ public class Tests
         Dimensionless value = new Dimensionless(345.6, DimensionlessUnit.SI);
         FloatArea area = new FloatArea(66.66f, AreaUnit.ACRE);
         ElectricalCurrentVector currents =
-                DoubleVector.instantiate(new double[] {1.2, 2.3, 3.4}, ElectricalCurrentUnit.MILLIAMPERE, StorageType.DENSE);
-        FloatElectricalResistanceVector resistors =
-                FloatVector.instantiate(new float[] {1.2f, 4.7f, 6.8f}, ElectricalResistanceUnit.KILOOHM, StorageType.DENSE);
-        ElectricalCurrentMatrix currentMatrix = DoubleMatrix.instantiate(new double[][] {{1.2, 2.3, 3.4}, {5.5, 6.6, 7.7}},
+                new ElectricalCurrentVector(new double[] {1.2, 2.3, 3.4}, ElectricalCurrentUnit.MILLIAMPERE, StorageType.DENSE);
+        FloatElectricalResistanceVector resistors = new FloatElectricalResistanceVector(new float[] {1.2f, 4.7f, 6.8f},
+                ElectricalResistanceUnit.KILOOHM, StorageType.DENSE);
+        ElectricalCurrentMatrix currentMatrix = new ElectricalCurrentMatrix(new double[][] {{1.2, 2.3, 3.4}, {5.5, 6.6, 7.7}},
                 ElectricalCurrentUnit.MILLIAMPERE, StorageType.DENSE);
-        FloatElectricalResistanceMatrix resistorMatrix = FloatMatrix.instantiate(
+        FloatElectricalResistanceMatrix resistorMatrix = new FloatElectricalResistanceMatrix(
                 new float[][] {{1.2f, 4.7f, 6.8f}, {2.2f, 3.3f, 4.4f}}, ElectricalResistanceUnit.KILOOHM, StorageType.DENSE);
 
         Object[] objects = new Object[] {length, value, area, currents, resistors, currentMatrix, resistorMatrix};
@@ -551,13 +549,12 @@ public class Tests
      * @throws ValueRuntimeException if that happens uncaught; this test has failed
      * @throws SerializationException if that happens uncaught; this test has failed
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void testArrayOfDjutilsVectors() throws ValueRuntimeException, SerializationException
     {
-        AbstractDoubleVector<?, ?, ?>[] array = new AbstractDoubleVector[] {
-                DoubleVector.instantiate(new double[] {0.1, 0.2, 0.3}, LengthUnit.INCH, StorageType.DENSE),
-                DoubleVector.instantiate(new double[] {10.1, 20.2, 30.3}, TimeUnit.BASE_MINUTE, StorageType.DENSE)};
+        DoubleVector<?, ?, ?>[] array =
+                new DoubleVector[] {new LengthVector(new double[] {0.1, 0.2, 0.3}, LengthUnit.INCH, StorageType.DENSE),
+                        new TimeVector(new double[] {10.1, 20.2, 30.3}, TimeUnit.BASE_MINUTE, StorageType.DENSE)};
         Object[] objects = new Object[] {array};
         for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
         {
@@ -575,10 +572,10 @@ public class Tests
                     assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
                     for (int i = 0; i < objects.length; i++)
                     {
-                        if (objects[i] instanceof AbstractDoubleVector<?, ?, ?>[])
+                        if (objects[i] instanceof DoubleVector<?, ?, ?>[])
                         {
-                            AbstractDoubleVector<?, ?, ?>[] arrayIn = (AbstractDoubleVector<?, ?, ?>[]) objects[i];
-                            AbstractDoubleVector<?, ?, ?>[] arrayOut = (AbstractDoubleVector<?, ?, ?>[]) decodedObjects[i];
+                            DoubleVector<?, ?, ?>[] arrayIn = (DoubleVector<?, ?, ?>[]) objects[i];
+                            DoubleVector<?, ?, ?>[] arrayOut = (DoubleVector<?, ?, ?>[]) decodedObjects[i];
                             for (int j = 0; j < arrayOut.length; j++)
                             {
                                 assertEquals("Decoded Djutils array vector element matches", arrayIn[j], arrayOut[j]);
