@@ -5,10 +5,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-import org.djunits.Throw;
 import org.djunits.value.Value;
 import org.djunits.value.base.Scalar;
 import org.djutils.base.Identifiable;
+import org.djutils.exceptions.Throw;
 import org.djutils.primitives.Primitive;
 
 /**

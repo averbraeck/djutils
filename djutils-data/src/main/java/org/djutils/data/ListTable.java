@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.djunits.Throw;
+import org.djutils.exceptions.Throw;
 
 /**
  * Table implementation that stores {@code Record}s in a {@code List}.
