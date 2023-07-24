@@ -1,7 +1,7 @@
 package org.djutils.data.serialization;
 
-import org.djunits.value.vdouble.scalar.base.DoubleScalarInterface;
-import org.djunits.value.vfloat.scalar.base.FloatScalarInterface;
+import org.djunits.value.vdouble.scalar.base.DoubleScalar;
+import org.djunits.value.vfloat.scalar.base.FloatScalar;
 import org.djutils.data.Column;
 import org.djutils.exceptions.Throw;
 
@@ -115,11 +115,11 @@ public interface TextSerializer<T>
             {
                 return new ByteSerializer();
             }
-            else if (DoubleScalarInterface.class.isAssignableFrom(valueClass)) // DoubleScalar is a Number
+            else if (DoubleScalar.class.isAssignableFrom(valueClass)) // DoubleScalar is a Number
             {
                 return new DoubleScalarSerializer<>();
             }
-            else if (FloatScalarInterface.class.isAssignableFrom(valueClass)) // FloatScalar is a Number
+            else if (FloatScalar.class.isAssignableFrom(valueClass)) // FloatScalar is a Number
             {
                 return new FloatScalarSerializer<>();
             }

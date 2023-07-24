@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.djunits.unit.Unit;
-import org.djunits.value.vfloat.scalar.base.AbstractFloatScalar;
+import org.djunits.value.vfloat.scalar.base.FloatScalar;
 
 /**
  * FloatScalarSerializer (de)serializes DJUNITS float scalars. This class extends DoubleScalarSerializer. Since the target class
@@ -22,7 +22,7 @@ import org.djunits.value.vfloat.scalar.base.AbstractFloatScalar;
  * @param <U> the unit type
  * @param <S> the scalar type
  */
-public class FloatScalarSerializer<U extends Unit<U>, S extends AbstractFloatScalar<U, S>> implements TextSerializer<S>
+public class FloatScalarSerializer<U extends Unit<U>, S extends FloatScalar<U, S>> implements TextSerializer<S>
 {
     /** cache of the retrieved valueOf(String) methods for scalars based on the stored string. */
     private static Map<String, Method> valueOfMethodCache = new LinkedHashMap<>();
