@@ -2,7 +2,6 @@ package org.djutils.serialization.serializers;
 
 import org.djunits.unit.Unit;
 import org.djunits.value.vfloat.scalar.base.FloatScalar;
-import org.djunits.value.vfloat.scalar.base.FloatScalarInterface;
 import org.djutils.serialization.EndianUtil;
 import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
@@ -17,7 +16,7 @@ import org.djutils.serialization.SerializationException;
  * @param <U> the unit type
  * @param <S> the scalar type
  */
-public class FloatScalarSerializer<U extends Unit<U>, S extends FloatScalarInterface<U, S>>
+public class FloatScalarSerializer<U extends Unit<U>, S extends FloatScalar<U, S>>
         extends ObjectWithUnitSerializer<U, S>
 {
     /** */

@@ -1,12 +1,19 @@
 package org.djutils.serialization.serializers;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.djunits.unit.SIUnit;
 import org.djunits.unit.Unit;
 import org.djunits.unit.scale.IdentityScale;
+import org.djunits.unit.util.UnitRuntimeException;
 import org.djunits.value.ValueRuntimeException;
 import org.djunits.value.storage.StorageType;
-import org.djunits.value.vdouble.scalar.base.DoubleScalarInterface;
+import org.djunits.value.vdouble.scalar.base.DoubleScalar;
+import org.djunits.value.vdouble.vector.SIVector;
 import org.djunits.value.vdouble.vector.base.DoubleVector;
-import org.djunits.value.vdouble.vector.base.DoubleVectorInterface;
 import org.djunits.value.vdouble.vector.data.DoubleVectorData;
 import org.djutils.serialization.EndianUtil;
 import org.djutils.serialization.FieldTypes;
@@ -23,9 +30,12 @@ import org.djutils.serialization.SerializationException;
  * @param <S> the scalar type
  * @param <V> the vector type
  */
-public class DoubleVectorSerializer<U extends Unit<U>, S extends DoubleScalarInterface<U, S>,
-        V extends DoubleVectorInterface<U, S, V>> extends ArrayOrMatrixWithUnitSerializer<U, V>
+public class DoubleVectorSerializer<U extends Unit<U>, S extends DoubleScalar<U, S>, V extends DoubleVector<U, S, V>>
+        extends ArrayOrMatrixWithUnitSerializer<U, V>
 {
+    /** The cache to make the lookup of the constructor for a Vevtor belonging to a unit faster. */
+    private static final Map<Unit<?>, Constructor<? extends DoubleVector<?, ?, ?>>> CACHE = new HashMap<>();
+
     /** */
     public DoubleVectorSerializer()
     {
@@ -80,7 +90,7 @@ public class DoubleVectorSerializer<U extends Unit<U>, S extends DoubleScalarInt
         try
         {
             DoubleVectorData fvd = DoubleVectorData.instantiate(array, IdentityScale.SCALE, StorageType.DENSE);
-            return DoubleVector.instantiateAnonymous(fvd, unit);
+            return instantiateAnonymous(fvd, unit);
         }
         catch (ValueRuntimeException exception)
         {
@@ -88,4 +98,51 @@ public class DoubleVectorSerializer<U extends Unit<U>, S extends DoubleScalarInt
         }
     }
 
+    /**
+     * Instantiate the DoubleVector based on its unit. Loose check for types on the compiler. This allows the unit to be
+     * specified as a Unit&lt;?&gt; type.<br>
+     * <b>Note</b> that it is possible to make mistakes with anonymous units.
+     * @param data DoubleVectorData; the values
+     * @param unit Unit&lt;?&gt;; the unit in which the value is expressed
+     * @return V; an instantiated DoubleVector with the provided displayUunit
+     * @param <U> the unit type
+     * @param <S> the scalar type
+     * @param <V> the vector type
+     */
+    @SuppressWarnings("unchecked")
+    public static <U extends Unit<U>, S extends DoubleScalar<U, S>,
+            V extends DoubleVector<U, S, V>> V instantiateAnonymous(final DoubleVectorData data, final Unit<?> unit)
+    {
+        try
+        {
+            Constructor<? extends DoubleVector<?, ?, ?>> vectorConstructor = CACHE.get(unit);
+            if (vectorConstructor == null)
+            {
+                if (!unit.getClass().getSimpleName().endsWith("Unit"))
+                {
+                    throw new ClassNotFoundException("Unit " + unit.getClass().getSimpleName()
+                            + " name does noet end with 'Unit'. Cannot find corresponding scalar");
+                }
+                Class<? extends DoubleVector<?, ?, ?>> vectorClass;
+                if (unit instanceof SIUnit)
+                {
+                    vectorClass = SIVector.class;
+                }
+                else
+                {
+                    vectorClass = (Class<DoubleVector<?, ?, ?>>) Class.forName("org.djunits.value.vdouble.vector."
+                            + unit.getClass().getSimpleName().replace("Unit", "") + "Vector");
+                }
+                vectorConstructor = vectorClass.getDeclaredConstructor(DoubleVectorData.class, unit.getClass());
+                CACHE.put(unit, vectorConstructor);
+            }
+            return (V) vectorConstructor.newInstance(data, unit);
+        }
+        catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
+                | IllegalAccessException | IllegalArgumentException | InvocationTargetException exception)
+        {
+            throw new UnitRuntimeException(
+                    "Cannot instantiate DoubleVector of unit " + unit.toString() + ". Reason: " + exception.getMessage());
+        }
+    }
 }

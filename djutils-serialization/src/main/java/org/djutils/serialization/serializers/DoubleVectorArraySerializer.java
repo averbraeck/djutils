@@ -4,10 +4,8 @@ import org.djunits.unit.Unit;
 import org.djunits.unit.scale.IdentityScale;
 import org.djunits.value.ValueRuntimeException;
 import org.djunits.value.storage.StorageType;
-import org.djunits.value.vdouble.scalar.base.DoubleScalarInterface;
-import org.djunits.value.vdouble.vector.base.AbstractDoubleVector;
+import org.djunits.value.vdouble.scalar.base.DoubleScalar;
 import org.djunits.value.vdouble.vector.base.DoubleVector;
-import org.djunits.value.vdouble.vector.base.DoubleVectorInterface;
 import org.djunits.value.vdouble.vector.data.DoubleVectorData;
 import org.djutils.exceptions.Throw;
 import org.djutils.serialization.EndianUtil;
@@ -25,8 +23,8 @@ import org.djutils.serialization.SerializationException;
  * @param <S> the scalar type
  * @param <V> the vector type
  */
-public class DoubleVectorArraySerializer<U extends Unit<U>, S extends DoubleScalarInterface<U, S>,
-        V extends DoubleVectorInterface<U, S, V>> extends ObjectWithUnitSerializer<U, V[]>
+public class DoubleVectorArraySerializer<U extends Unit<U>, S extends DoubleScalar<U, S>,
+        V extends DoubleVector<U, S, V>> extends ObjectWithUnitSerializer<U, V[]>
 {
     /** */
     public DoubleVectorArraySerializer()
@@ -93,7 +91,7 @@ public class DoubleVectorArraySerializer<U extends Unit<U>, S extends DoubleScal
         int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         @SuppressWarnings("unchecked")
-        V[] result = (V[]) new AbstractDoubleVector[width];
+        V[] result = (V[]) new DoubleVector[width];
         Unit<? extends Unit<?>>[] units = new Unit<?>[width];
         for (int col = 0; col < width; col++)
         {
@@ -112,7 +110,7 @@ public class DoubleVectorArraySerializer<U extends Unit<U>, S extends DoubleScal
             try
             {
                 DoubleVectorData fvd = DoubleVectorData.instantiate(values[col], IdentityScale.SCALE, StorageType.DENSE);
-                result[col] = DoubleVector.instantiateAnonymous(fvd, units[col]);
+                result[col] = DoubleVectorSerializer.instantiateAnonymous(fvd, units[col]);
             }
             catch (ValueRuntimeException e)
             {

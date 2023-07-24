@@ -1,14 +1,21 @@
 package org.djutils.serialization.serializers;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.djunits.unit.SIUnit;
 import org.djunits.unit.Unit;
 import org.djunits.unit.scale.IdentityScale;
+import org.djunits.unit.util.UnitRuntimeException;
 import org.djunits.value.ValueRuntimeException;
 import org.djunits.value.storage.StorageType;
+import org.djunits.value.vfloat.matrix.FloatSIMatrix;
 import org.djunits.value.vfloat.matrix.base.FloatMatrix;
-import org.djunits.value.vfloat.matrix.base.FloatMatrixInterface;
 import org.djunits.value.vfloat.matrix.data.FloatMatrixData;
-import org.djunits.value.vfloat.scalar.base.FloatScalarInterface;
-import org.djunits.value.vfloat.vector.base.FloatVectorInterface;
+import org.djunits.value.vfloat.scalar.base.FloatScalar;
+import org.djunits.value.vfloat.vector.base.FloatVector;
 import org.djutils.serialization.EndianUtil;
 import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
@@ -25,10 +32,12 @@ import org.djutils.serialization.SerializationException;
  * @param <V> the vector type
  * @param <M> the matrix type
  */
-public class FloatMatrixSerializer<U extends Unit<U>, S extends FloatScalarInterface<U, S>,
-        V extends FloatVectorInterface<U, S, V>, M extends FloatMatrixInterface<U, S, V, M>>
-        extends ArrayOrMatrixWithUnitSerializer<U, M>
+public class FloatMatrixSerializer<U extends Unit<U>, S extends FloatScalar<U, S>, V extends FloatVector<U, S, V>,
+        M extends FloatMatrix<U, S, V, M>> extends ArrayOrMatrixWithUnitSerializer<U, M>
 {
+    /** The cache to make the lookup of the constructor for a Vevtor belonging to a unit faster. */
+    private static final Map<Unit<?>, Constructor<? extends FloatMatrix<?, ?, ?, ?>>> CACHE = new HashMap<>();
+
     /** */
     public FloatMatrixSerializer()
     {
@@ -91,11 +100,60 @@ public class FloatMatrixSerializer<U extends Unit<U>, S extends FloatScalarInter
         try
         {
             FloatMatrixData fvd = FloatMatrixData.instantiate(array, IdentityScale.SCALE, StorageType.DENSE);
-            return FloatMatrix.instantiateAnonymous(fvd, unit);
+            return instantiateAnonymous(fvd, unit);
         }
         catch (ValueRuntimeException exception)
         {
             throw new SerializationException(exception);
+        }
+    }
+
+    /**
+     * Instantiate the FloatMatrix based on its unit. Loose check for types on the compiler. This allows the unit to be
+     * specified as a Unit&lt;?&gt; type.<br>
+     * <b>Note</b> that it is possible to make mistakes with anonymous units.
+     * @param data FloatMatrixData; the values
+     * @param unit Unit&lt;?&gt;; the unit in which the value is expressed
+     * @return M; an instantiated FloatMatrix with the provided displayUunit
+     * @param <U> the unit type
+     * @param <S> the scalar type
+     * @param <V> the vector type
+     * @param <M> the matrix type
+     */
+    @SuppressWarnings("unchecked")
+    public static <U extends Unit<U>, S extends FloatScalar<U, S>, V extends FloatVector<U, S, V>,
+            M extends FloatMatrix<U, S, V, M>> M instantiateAnonymous(final FloatMatrixData data, final Unit<?> unit)
+    {
+        try
+        {
+            Constructor<? extends FloatMatrix<?, ?, ?, ?>> matrixConstructor = CACHE.get(unit);
+            if (matrixConstructor == null)
+            {
+                if (!unit.getClass().getSimpleName().endsWith("Unit"))
+                {
+                    throw new ClassNotFoundException("Unit " + unit.getClass().getSimpleName()
+                            + " name does noet end with 'Unit'. Cannot find corresponding scalar");
+                }
+                Class<? extends FloatMatrix<?, ?, ?, ?>> matrixClass;
+                if (unit instanceof SIUnit)
+                {
+                    matrixClass = FloatSIMatrix.class;
+                }
+                else
+                {
+                    matrixClass = (Class<FloatMatrix<?, ?, ?, ?>>) Class.forName("org.djunits.value.vfloat.matrix.Float"
+                            + unit.getClass().getSimpleName().replace("Unit", "") + "Matrix");
+                }
+                matrixConstructor = matrixClass.getDeclaredConstructor(FloatMatrixData.class, unit.getClass());
+                CACHE.put(unit, matrixConstructor);
+            }
+            return (M) matrixConstructor.newInstance(data, unit);
+        }
+        catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
+                | IllegalAccessException | IllegalArgumentException | InvocationTargetException exception)
+        {
+            throw new UnitRuntimeException(
+                    "Cannot instantiate FloatMatrix of unit " + unit.toString() + ". Reason: " + exception.getMessage());
         }
     }
 
