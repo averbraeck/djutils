@@ -11,4 +11,11 @@
   <name>Expression evaluator</name>
   <description>Function and expression evaluator in Java</description>
   
+  <dependencies>
+  	<dependency>
+  		<groupId>org.djunits</groupId>
+  		<artifactId>djunits</artifactId>
+  		<version>5.1.0</version>
+  	</dependency>
+  </dependencies>
 </project>
