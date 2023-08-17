@@ -12,6 +12,7 @@ import org.djunits.value.vdouble.scalar.base.Constants;
 import org.djunits.value.vdouble.scalar.base.DoubleScalar;
 import org.djunits.value.vdouble.scalar.base.DoubleScalarAbs;
 import org.djunits.value.vdouble.scalar.base.DoubleScalarRel;
+import org.djutils.exceptions.Throw;
 
 /**
  * Eval - evaluate mathematical expression. Derived from software developed between 2002-2016 by Peter Knoppers.
@@ -94,6 +95,8 @@ public class Eval
      */
     public static Object evaluate(final String expression, final RetrieveValue retrieveValue) throws RuntimeException
     {
+        Throw.whenNull(expression, "expression may not be null");
+        Throw.when(expression.length() == 0, IllegalArgumentException.class, "Expression may not be the empty string");
         Eval evaluator = new Eval(expression, retrieveValue);
         evaluator.evalLhs(0);
         evaluator.eatSpace();
@@ -124,13 +127,17 @@ public class Eval
     }
 
     /**
-     * Evaluate the right-hand-side of a binary operation.
+     * Evaluate the left-hand-side of a binary operation.
      * @param bindingStrength int; the binding strength of a pending binary operation (0 if no binary operation is pending)
      * @throws RuntimeException on error
      */
     private void evalLhs(final int bindingStrength) throws RuntimeException
     {
         eatSpace();
+        if (this.position >= this.expression.length())
+        {
+            throwException("Missing operand");
+        }
         char token = this.expression.charAt(this.position);
         switch (token)
         {
@@ -148,7 +155,7 @@ public class Eval
             }
 
             case '!':
-                if (this.position < this.expression.length() - 1 && '=' != this.expression.charAt(this.position + 1))
+                if (this.position >= this.expression.length() - 1 || '=' != this.expression.charAt(this.position + 1))
                 {
                     // unary logical negation
                     this.position++;
@@ -159,7 +166,7 @@ public class Eval
                         push(!((Boolean) value));
                         break;
                     }
-                    throwException("Cannot apply unary negation operator on " + value);
+                    throwException("Cannot apply unary not operator on " + value);
                 }
                 break; // We should not get a "!=" operation here, but if we do, it results in an error later on TODO unit test
                        // for this
@@ -183,7 +190,6 @@ public class Eval
                 else if (Character.isDigit(token) || '.' == token)
                 {
                     push(handleNumber());
-                    // I don't think we can automatically parse things like "123.456 m/s" into a Speed
                 }
             }
         }
@@ -209,6 +215,10 @@ public class Eval
                     return;
 
                 case '^': // power operator
+                    if (this.stack.isEmpty())
+                    {
+                        throwException("Missing left operand");
+                    }
                     if (bindingStrength >= BIND_POW)
                     {
                         return;
@@ -219,6 +229,10 @@ public class Eval
                     break;
 
                 case '*':
+                    if (this.stack.isEmpty())
+                    {
+                        throwException("Missing left operand");
+                    }
                     if (bindingStrength >= BIND_MUL)
                     {
                         return;
@@ -229,6 +243,10 @@ public class Eval
                     break;
 
                 case '/':
+                    if (this.stack.isEmpty())
+                    {
+                        throwException("Missing left operand");
+                    }
                     if (bindingStrength >= BIND_MUL)
                     {
                         return;
@@ -239,6 +257,10 @@ public class Eval
                     break;
 
                 case '+':
+                    if (this.stack.isEmpty())
+                    {
+                        throwException("Missing left operand");
+                    }
                     if (bindingStrength >= BIND_ADD)
                     {
                         return;
@@ -249,6 +271,10 @@ public class Eval
                     break;
 
                 case '-':
+                    if (this.stack.isEmpty())
+                    {
+                        throwException("Missing left operand");
+                    }
                     if (bindingStrength >= BIND_ADD)
                     {
                         return;
@@ -262,6 +288,10 @@ public class Eval
                     if (this.position >= this.expression.length() - 1 || '&' != this.expression.charAt(this.position))
                     {
                         throwException("Single \'&\' is not a valid operator");
+                    }
+                    if (this.stack.isEmpty())
+                    {
+                        throwException("Missing left operand");
                     }
                     if (bindingStrength >= BIND_AND)
                     {
@@ -277,6 +307,10 @@ public class Eval
                     {
                         throwException("Single \'|\' is not a valid operator");
                     }
+                    if (this.stack.isEmpty())
+                    {
+                        throwException("Missing left operand");
+                    }
                     if (bindingStrength >= BIND_OR)
                     {
                         return;
@@ -287,6 +321,10 @@ public class Eval
                     break;
 
                 case '<':
+                    if (this.stack.isEmpty())
+                    {
+                        throwException("Missing left operand");
+                    }
                     this.position++;
                     if (this.position < this.expression.length() && '=' == this.expression.charAt(this.position))
                     {
@@ -320,6 +358,10 @@ public class Eval
                     }
 
                 case '>': // FIXME: looks too much like case '<'. Should probably use lambda expressions
+                    if (this.stack.isEmpty())
+                    {
+                        throwException("Missing left operand");
+                    }
                     this.position++;
                     if (this.position < this.expression.length() && '=' == this.expression.charAt(this.position))
                     {
@@ -358,6 +400,10 @@ public class Eval
                     {
                         throwException("Single \'=\' is not a valid operator");
                     }
+                    if (this.stack.isEmpty())
+                    {
+                        throwException("Missing left operand");
+                    }
                     this.position += 2;
                     evalLhs(BIND_EQUAL);
                     Object right = pop();
@@ -371,6 +417,10 @@ public class Eval
                     if (this.position >= this.expression.length() - 1 || '=' != this.expression.charAt(this.position + 1))
                     {
                         throwException("Single \'!\' is not a valid operator");
+                    }
+                    if (this.stack.isEmpty())
+                    {
+                        throwException("Missing left operand");
                     }
                     this.position += 2;
                     evalLhs(BIND_EQUAL);
@@ -414,7 +464,7 @@ public class Eval
                     }
                     break;
                 }
-                
+
                 case ':':
                     return;
 
@@ -544,7 +594,7 @@ public class Eval
         {
             DoubleScalar<?, ?> result = DoubleScalarRel.instantiate(
                     Math.pow(((DoubleScalarRel<?, ?>) base).si, ((DoubleScalarRel<?, ?>) exponent).si), DimensionlessUnit.SI);
-            System.out.println(base + " ^ " + exponent + " = " + result);
+            // System.out.println(base + " ^ " + exponent + " = " + result);
             push(result);
             return;
         }
@@ -598,7 +648,7 @@ public class Eval
             DoubleScalar<?, ?> sum =
                     DoubleScalarRel.instantiate(((DoubleScalarRel<?, ?>) left).si + ((DoubleScalarRel<?, ?>) right).si,
                             ((DoubleScalarRel<?, ?>) left).getDisplayUnit().getStandardUnit());
-            System.out.println(left + " + " + right + " = " + sum);
+            // System.out.println(left + " + " + right + " = " + sum);
             // Set display unit???
             push(sum);
             return;
@@ -919,14 +969,14 @@ public class Eval
             case "TAU":
                 return Constants.TAU;
 
+            case "VACUUMIMPEDANCE":
+                return Constants.VACUUMIMPEDANCE;
+
             case "VACUUMPERMEABILITY":
                 return Constants.VACUUMPERMEABILITY;
 
             case "VACUUMPERMITTIVITY":
                 return Constants.VACUUMPERMITTIVITY;
-
-            case "VACUUMIMPEDANCE":
-                return Constants.VACUUMIMPEDANCE;
 
             case "TRUE":
                 return Boolean.TRUE;
@@ -948,11 +998,16 @@ public class Eval
     {
         Object object = pop();
         // All implemented one-argument functions only operate on a DimensionLess value
-        if (!(object instanceof Dimensionless))
+        if (!(object instanceof DoubleScalar))
         {
             throwException("Function " + functionName + " cannot be applied to " + object); // should test if the name is valid
         }
-        Dimensionless dl = (Dimensionless) object;
+        DoubleScalar<?, ?> ds = (DoubleScalar<?, ?>) object;
+        if (!(ds.getDisplayUnit().getQuantity().equals(DimensionlessUnit.SI.getQuantity())))
+        {
+            throwException("Function " + functionName + " cannot be applied to " + ds);
+        }
+        Dimensionless dl = new Dimensionless(ds.si, DimensionlessUnit.SI);
         switch (functionName)
         {
             case "acos":
@@ -971,8 +1026,7 @@ public class Eval
                 return dl.cos();
 
             case "cosh":
-                push(dl.cosh());
-                break;
+                return(dl.cosh());
 
             case "exp":
                 return dl.exp();
