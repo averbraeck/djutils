@@ -1,7 +1,5 @@
 package org.djutils.eval;
 
-import org.djunits.value.vdouble.scalar.base.DoubleScalar;
-
 /**
  * RetrieveValue.java.
  * <p>
@@ -15,9 +13,10 @@ import org.djunits.value.vdouble.scalar.base.DoubleScalar;
 public interface RetrieveValue
 {
     /**
-     * Look up a variable and return its value as a DoubleScalar.
+     * Look up a variable and return its value. Numeric values should be returned as a DoubleScalar of some kind. Logical values
+     * should be returned as a Boolean.
      * @param name String; name of the variable
-     * @return DoubleScalar&lt;?,?&gt;; the value of the variable
+     * @return Object; the value of the variable
      */
-    DoubleScalar<?,?> lookup(final String name);
+    Object lookup(final String name);
 }

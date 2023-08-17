@@ -36,7 +36,7 @@ public class Calculator
         doEval("NEUTRONMASS()-PI()");
         doEval("12 [ms-1] / 123[/s]");
         Map<String, DoubleScalar<?,?>> valuePool = new HashMap<>();
-        valuePool.put("position", Position.valueOf("100 m"));
+        valuePool.put("position", Position.valueOf("100 m")); // Absolute
         doEval("position-10[m]", new RetrieveValue() {
 
             @Override
@@ -85,7 +85,7 @@ public class Calculator
     {
         try
         {
-            DoubleScalar<?, ?> result = Eval.evaluate(expression, valuePool);
+            Object result = Eval.evaluate(expression, valuePool);
             System.out.println(expression + ": " + result);
         }
         catch (RuntimeException e)

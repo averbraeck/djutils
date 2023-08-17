@@ -23,7 +23,7 @@ import org.djunits.value.vdouble.scalar.base.DoubleScalarRel;
 public class Eval
 {
     /** The expression evaluation stack. */
-    private List<DoubleScalar<?, ?>> stack = new ArrayList<>();
+    private List<Object> stack = new ArrayList<>();
 
     /** The expression. */
     private String expression;
@@ -67,11 +67,10 @@ public class Eval
      * Construct an expression evaluator and let it attempt to evaluate a mathematical expression
      * @param expression String; the expression
      * @param retrieveValue RetrieveValue; object that allows retrieving a value (can be null)
-     * @return DoubleScalar&lt;?,?&gt;; The value of the evaluated expression
+     * @return Object; The value of the evaluated expression
      * @throws RuntimeException when the expression cannot be evaluated
      */
-    public static DoubleScalar<?, ?> evaluate(final String expression, final RetrieveValue retrieveValue)
-            throws RuntimeException
+    public static Object evaluate(final String expression, final RetrieveValue retrieveValue) throws RuntimeException
     {
         Eval evaluator = new Eval(expression, retrieveValue);
         evaluator.evalLhs(0);
@@ -114,10 +113,17 @@ public class Eval
         switch (token)
         {
             case '-': // Unary minus
+            {
                 this.position++;
                 evalLhs(BIND_UMINUS);
-                push(pop().neg()); // apply the unary minus
-                break;
+                Object value = pop();
+                if (value instanceof DoubleScalar<?, ?>)
+                {
+                    push(((DoubleScalar<?, ?>) value).neg());
+                    break;
+                }
+                throwException("Cannot apply unary minus on " + value);
+            }
 
             case '(': // parenthesized expression
                 this.position++;
@@ -226,20 +232,14 @@ public class Eval
      */
     private void multiply()
     {
-        DoubleScalar<?, ?> ds = pop();
-        if (!(ds instanceof DoubleScalarRel))
+        Object right = pop();
+        Object left = pop();
+        if ((right instanceof DoubleScalarRel) && (left instanceof DoubleScalarRel))
         {
-            throwException("Cannot multiply with " + ds + " as right hand operand");
+            push(((DoubleScalarRel<?, ?>) left).times((DoubleScalarRel<?, ?>) right));
+            return;
         }
-        DoubleScalarRel<?, ?> right = (DoubleScalarRel<?, ?>) ds;
-        ds = pop();
-        if (!(ds instanceof DoubleScalarRel))
-        {
-            throw new RuntimeException("Cannot multiply " + ds + " with anything");
-        }
-        DoubleScalarRel<?, ?> left = (DoubleScalarRel<?, ?>) ds;
-        // System.out.println("left=" + left + ", right=" + right + ", product=" + left.times(right));
-        push(left.times(right));
+        throwException("Cannot multiply with " + right + " as right hand operand");
     }
 
     /**
@@ -247,24 +247,18 @@ public class Eval
      */
     private void divide()
     {
-        DoubleScalar<?, ?> ds = pop();
-        if (!(ds instanceof DoubleScalarRel))
+        Object right = pop();
+        Object left = pop();
+        if ((left instanceof DoubleScalarRel) && (right instanceof DoubleScalarRel))
         {
-            throw new RuntimeException("Cannot divide by " + ds);
+            if (0.0 == ((DoubleScalarRel<?, ?>) right).si)
+            {
+                throw new RuntimeException("Division by 0");
+            }
+            push(((DoubleScalarRel<?, ?>) left).divide((DoubleScalarRel<?, ?>) right));
+            return;
         }
-        DoubleScalarRel<?, ?> right = (DoubleScalarRel<?, ?>) ds;
-        ds = pop();
-        if (!(ds instanceof DoubleScalarRel))
-        {
-            throw new RuntimeException("Cannot divide " + ds + " by anything");
-        }
-        DoubleScalarRel<?, ?> left = (DoubleScalarRel<?, ?>) ds;
-        if (0.0 == right.si)
-        {
-            throw new RuntimeException("Division by 0");
-        }
-        // System.out.println("left=" + left + ", right=" + right + ", dividend=" + left.divide(right));
-        push(left.divide(right));
+        throw new RuntimeException("Cannot divide " + left + " by " + right);
     }
 
     /**
@@ -272,35 +266,42 @@ public class Eval
      */
     private void add()
     {
-        DoubleScalar<?, ?> ds = pop();
-        if (!(ds instanceof DoubleScalarRel))
+        Object right = pop();
+        Object left = pop();
+        if ((left instanceof DoubleScalarRel) && (right instanceof DoubleScalarRel))
+        {
+            // Rel + Rel -> Rel
+            DoubleScalar<?, ?> sum =
+                    DoubleScalarRel.instantiate(((DoubleScalarRel<?, ?>) left).si + ((DoubleScalarRel<?, ?>) right).si,
+                            ((DoubleScalarRel<?, ?>) left).getDisplayUnit().getStandardUnit());
+            System.out.println(left + " + " + right + " = " + sum);
+            // Set display unit???
+            push(sum);
+            return;
+        }
+        if (right instanceof DoubleScalarAbs)
         {
             throwException("Cannot add an absolute value to some other value");
         }
-        DoubleScalarRel<?, ?> right = (DoubleScalarRel<?, ?>) ds;
-        ds = pop();
         // System.out.println("left unit : " + ds.getDisplayUnit().getStandardUnit());
         // System.out.println("right unit: " + right.getDisplayUnit().getStandardUnit());
-        if (!ds.getDisplayUnit().getStandardUnit().toString().equals(right.getDisplayUnit().getStandardUnit().toString()))
+        if (!((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit().toString()
+                .equals(((DoubleScalarRel<?, ?>) right).getDisplayUnit().getStandardUnit().toString()))
         {
-            throwException("Cannot add " + ds + " and " + right + " because the types are incompatible");
+            throwException("Cannot add " + left + " to " + right + " because the types are incompatible");
         }
-        if (ds.isAbsolute())
+        if ((left instanceof DoubleScalarAbs) && (right instanceof DoubleScalarRel))
         {
             // Abs + Rel -> Abs
-            DoubleScalar<?, ?> sum = DoubleScalarAbs.instantiate(ds.si + right.si, ds.getDisplayUnit().getStandardUnit());
-            System.out.println(ds + " + " + right + " = " + sum);
+            DoubleScalar<?, ?> sum =
+                    DoubleScalarAbs.instantiate(((DoubleScalarAbs<?, ?, ?, ?>) left).si + ((DoubleScalarRel<?, ?>) right).si,
+                            ((DoubleScalarAbs<?, ?, ?, ?>) left).getDisplayUnit().getStandardUnit());
+            System.out.println(left + " + " + right + " = " + sum);
             // sum.setDisplayUnit(ds.getDisplayUnit());
             push(sum);
+            return;
         }
-        else
-        {
-            // Rel + Rel -> Rel
-            DoubleScalar<?, ?> sum = DoubleScalarRel.instantiate(ds.si + right.si, ds.getDisplayUnit().getStandardUnit());
-            System.out.println(ds + " + " + right + " = " + sum);
-            // sum.setDisplayUnit(ds.getDisplayUnit());
-            push(sum);
-        }
+        throwException("Cannot add " + left + " to " + right);
     }
 
     /**
@@ -308,50 +309,59 @@ public class Eval
      */
     private void subtract()
     {
-        DoubleScalar<?, ?> right = pop();
-        DoubleScalar<?, ?> left = pop();
+        Object right = pop();
+        Object left = pop();
         // System.out.println("left unit : " + left.getDisplayUnit().getStandardUnit());
         // System.out.println("right unit: " + right.getDisplayUnit().getStandardUnit());
-        if (!left.getDisplayUnit().getStandardUnit().toString().equals(right.getDisplayUnit().getStandardUnit().toString()))
+        if (!((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit().toString()
+                .equals(((DoubleScalar<?, ?>) right).getDisplayUnit().getStandardUnit().toString()))
         {
-            //System.out.println("left standard unit: " + left.getDisplayUnit().getStandardUnit().toString() + ", right standard unit: "
-            //        + right.getDisplayUnit().getStandardUnit().toString());
+            // System.out.println("left standard unit: " + left.getDisplayUnit().getStandardUnit().toString() + ", right
+            // standard unit: "
+            // + right.getDisplayUnit().getStandardUnit().toString());
             throwException("Cannot subtract " + right + " from " + left + " because the types are incompatible");
         }
-        if (left.isAbsolute() && right.isAbsolute())
+        if ((left instanceof DoubleScalarAbs) && (right instanceof DoubleScalarAbs))
         {
             // Abs - Abs -> Rel
             DoubleScalar<?, ?> difference =
-                    DoubleScalarRel.instantiate(left.si - right.si, left.getDisplayUnit().getStandardUnit());
+                    DoubleScalarRel.instantiate(((DoubleScalar<?, ?>) left).si - ((DoubleScalar<?, ?>) right).si,
+                            ((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit());
             // System.out.println(left + " - " + right + " = " + difference);
             push(difference);
+            return;
         }
-        else if (left.isAbsolute() && right.isRelative())
+        if ((left instanceof DoubleScalarAbs) && (right instanceof DoubleScalarRel))
         {
             // Abs - Rel -> Abs
             DoubleScalar<?, ?> difference =
-                    DoubleScalarAbs.instantiate(left.si - right.si, left.getDisplayUnit().getStandardUnit());
+                    DoubleScalarAbs.instantiate(((DoubleScalar<?, ?>) left).si - ((DoubleScalar<?, ?>) right).si,
+                            ((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit());
             // System.out.println(left + " - " + right + " = " + difference);
             push(difference);
+            return;
         }
-        else if (right.isAbsolute())
+        if ((left instanceof DoubleScalarRel) && (right instanceof DoubleScalarAbs))
         {
             // Rel - Abs -> error
             throwException("Cannot subtract " + right + " from " + left + " because the right operand is absolute");
         }
-        else
+        if ((left instanceof DoubleScalarRel) && (right instanceof DoubleScalarRel))
         {
             // Rel - Rel -> Rel
             DoubleScalar<?, ?> difference =
-                    DoubleScalarRel.instantiate(left.si - right.si, left.getDisplayUnit().getStandardUnit());
+                    DoubleScalarRel.instantiate(((DoubleScalar<?, ?>) left).si - ((DoubleScalar<?, ?>) right).si,
+                            ((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit());
             // System.out.println(left + " - " + right + " = " + difference);
             push(difference);
+            return;
         }
+        throwException("Cannot subtract " + right + " from " + left);
     }
 
     /**
-     * Parse a number and convert it to a Dimensionless. If it is followed by an SI unit string inside square brackets, parse it
-     * into the correct type.
+     * Parse a number and convert it to a SIScalar. If it is followed by an SI unit string inside square brackets, parse it into
+     * the correct type.
      * @return SIScalar; the value of the parsed number or value
      */
     private SIScalar handleNumber()
@@ -445,9 +455,9 @@ public class Eval
     /**
      * Process a function call, a variable interpolation, or a mathematical, or physical constant. Precondition: this.position
      * points to the first letter of the name of the function, variable, or constant.
-     * @return DoubleScalar&lt;?,?&gt;; the value of the function, variable, or mathematical or physical constant
+     * @return Object; the value of the function, variable, or mathematical or physical constant
      */
-    private DoubleScalar<?, ?> handleFunctionOrVariableOrNamedConstant()
+    private Object handleFunctionOrVariableOrNamedConstant()
     {
         int startPosition = this.position;
         while (this.position < this.expression.length())
@@ -492,17 +502,13 @@ public class Eval
             }
             else if (2 == argCount && "pow" == name)
             {
-                DoubleScalar<?, ?> power = pop();
-                if (!(power instanceof Dimensionless))
+                Object power = pop();
+                Object base = pop();
+                if ((base instanceof Dimensionless) && (power instanceof Dimensionless))
                 {
-                    throwException("Function pow cannot be applied to " + power);
+                    return ((Dimensionless) base).pow(((Dimensionless)power).si);
                 }
-                DoubleScalar<?, ?> ds = pop();
-                if (!(ds instanceof Dimensionless))
-                {
-                    throwException("Function pow cannot be applied to " + ds);
-                }
-                return ((Dimensionless) ds).pow(power.si);
+                throwException("Cannot raise " + base + " to power " + power);
             }
             else
             {
@@ -512,12 +518,14 @@ public class Eval
         else
         {
             // No opening parenthesis; name must be the name of a variable; look it up
-            DoubleScalar<?, ?> result = null == this.retrieveValue ? null : this.retrieveValue.lookup(name);
+            Object result = null == this.retrieveValue ? null : this.retrieveValue.lookup(name);
             if (null == result)
             {
                 throwException("Cannot resolve variable " + name);
             }
-            return result;
+            if ((result instanceof DoubleScalar) || (result instanceof Boolean))
+                return result;
+            throwException("Value of " + name + " is neither a DoubleScalar nor a Boolean");
         }
         return null; // cannot happen
     }
@@ -606,15 +614,15 @@ public class Eval
      * @param functionName String; the name of the zero-argument function
      * @return DoubleScalar&lt;?,?&gt;; the result of evaluating the one-argument function
      */
-    private DoubleScalar<?, ?> executeOneArgumentFunction(final String functionName)
+    private Object executeOneArgumentFunction(final String functionName)
     {
-        DoubleScalar<?, ?> ds = pop();
+        Object object = pop();
         // All implemented one-argument functions only operate on a DimensionLess value
-        if (!(ds instanceof Dimensionless))
+        if (!(object instanceof Dimensionless))
         {
-            throwException("Function " + functionName + " cannot be applied to " + ds); // should test if the name is valid
+            throwException("Function " + functionName + " cannot be applied to " + object); // should test if the name is valid
         }
-        Dimensionless dl = (Dimensionless) ds;
+        Dimensionless dl = (Dimensionless) object;
         switch (functionName)
         {
             case "acos":
@@ -676,19 +684,19 @@ public class Eval
 
     /**
      * Push one value onto the evaluation stack.
-     * @param value DoubleScalar&lt;?,?&gt;; the value to push onto the evaluation stack
+     * @param value Object; the value to push onto the evaluation stack
      */
-    private void push(final DoubleScalar<?, ?> value)
+    private void push(final Object value)
     {
         this.stack.add(value);
     }
 
     /**
      * Pop one value from the evaluation stack. Throw exception when stack underflows
-     * @return DoubleScalar&lt;?,?&gt;; the value popped from the evaluation stack
+     * @return Object; the value popped from the evaluation stack
      * @throws RuntimeException when the stack is currently empty
      */
-    private DoubleScalar<?, ?> pop() throws RuntimeException
+    private Object pop() throws RuntimeException
     {
         if (0 == this.stack.size())
         {
