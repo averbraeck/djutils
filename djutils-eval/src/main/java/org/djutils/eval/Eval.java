@@ -19,6 +19,10 @@ import org.djunits.value.vdouble.scalar.base.DoubleScalarRel;
  * TODO: implement strings datatype
  * <p>
  * TODO: implement if statement
+ * <p>
+ * The precedence of binary operators follows the list of the
+ * <a href="https://www.cs.bilkent.edu.tr/~guvenir/courses/CS101/op_precedence.html">Java Operator Precendence Table</a>,
+ * skipping bitwise and other operators that make no sense for this evaluator and adding the exponentiation (^) operator.
  */
 public class Eval
 {
@@ -34,14 +38,32 @@ public class Eval
     /** Access to the variable pool. */
     private final RetrieveValue retrieveValue;
 
+    /** Binding strength of ternary conditional. */
+    private static final int BIND_CONDITIONAL_EXPRESSION = 1;
+
+    /** Binding strength of boolean OR operation. */
+    private static final int BIND_OR = 2;
+
+    /** Binding strength of boolean AND operation. */
+    private static final int BIND_AND = 3;
+
+    /** Binding strength of == and != operators. */
+    private static final int BIND_EQUAL = 4;
+
+    /** Binding strength of <, <=, >, >= relational operators. */
+    private static final int BIND_RELATIONAL = 5;
+
     /** Binding strength of addition and subtraction operators. */
-    private static final int BIND_ADD = 1;
+    private static final int BIND_ADD = 6;
 
     /** Binding strength of multiplication and division operators. */
-    private static final int BIND_MUL = 2;
+    private static final int BIND_MUL = 7;
 
-    /** Binding strength of unary minus. */
-    private static final int BIND_UMINUS = 3;
+    /** Binding strength of the power operation. */
+    private static final int BIND_POW = 8;
+
+    /** Binding strength of unary minus and logical negation. */
+    private static final int BIND_UMINUS = 9;
 
     /** Pi. */
     static final Dimensionless PI = new Dimensionless(Math.PI, DimensionlessUnit.SI);
@@ -125,6 +147,23 @@ public class Eval
                 throwException("Cannot apply unary minus on " + value);
             }
 
+            case '!':
+                if (this.position < this.expression.length() - 1 && '=' != this.expression.charAt(this.position + 1))
+                {
+                    // unary logical negation
+                    this.position++;
+                    evalLhs(BIND_UMINUS);
+                    Object value = pop();
+                    if (value instanceof Boolean)
+                    {
+                        push(!((Boolean) value));
+                        break;
+                    }
+                    throwException("Cannot apply unary negation operator on " + value);
+                }
+                break; // We should not get a "!=" operation here, but if we do, it results in an error later on TODO unit test
+                       // for this
+
             case '(': // parenthesized expression
                 this.position++;
                 evalLhs(0);
@@ -169,6 +208,16 @@ public class Eval
                 case ')':
                     return;
 
+                case '^': // power operator
+                    if (bindingStrength >= BIND_POW)
+                    {
+                        return;
+                    }
+                    this.position++;
+                    evalLhs(BIND_POW);
+                    power();
+                    break;
+
                 case '*':
                     if (bindingStrength >= BIND_MUL)
                     {
@@ -209,11 +258,170 @@ public class Eval
                     subtract();
                     break;
 
+                case '&': // boolean and ?
+                    if (this.position >= this.expression.length() - 1 || '&' != this.expression.charAt(this.position))
+                    {
+                        throwException("Single \'&\' is not a valid operator");
+                    }
+                    if (bindingStrength >= BIND_AND)
+                    {
+                        return;
+                    }
+                    this.position += 2;
+                    evalLhs(BIND_AND);
+                    and();
+                    break;
+
+                case '|': // boolean and ?
+                    if (this.position >= this.expression.length() - 1 || '|' != this.expression.charAt(this.position))
+                    {
+                        throwException("Single \'|\' is not a valid operator");
+                    }
+                    if (bindingStrength >= BIND_OR)
+                    {
+                        return;
+                    }
+                    this.position += 2;
+                    evalLhs(BIND_OR);
+                    or();
+                    break;
+
+                case '<':
+                    this.position++;
+                    if (this.position < this.expression.length() && '=' == this.expression.charAt(this.position))
+                    {
+                        this.position++;
+                        evalLhs(BIND_RELATIONAL);
+                        Object right = pop();
+                        Object left = pop();
+                        if ((left instanceof DoubleScalar) && (right instanceof DoubleScalar)
+                                && ((DoubleScalar<?, ?>) left).getDisplayUnit().getQuantity()
+                                        .equals(((DoubleScalar<?, ?>) right).getDisplayUnit().getQuantity()))
+                        {
+                            push(((DoubleScalar<?, ?>) left).si <= ((DoubleScalar<?, ?>) right).si);
+                            break;
+                        }
+                        throwException("Cannot compare " + left + " to " + right);
+                    }
+                    else
+                    {
+                        // FIXME: "<=" looks too much like "<"; should probably use a lambda expression
+                        evalLhs(BIND_RELATIONAL);
+                        Object right = pop();
+                        Object left = pop();
+                        if ((left instanceof DoubleScalar) && (right instanceof DoubleScalar)
+                                && ((DoubleScalar<?, ?>) left).getDisplayUnit().getQuantity()
+                                        .equals(((DoubleScalar<?, ?>) right).getDisplayUnit().getQuantity()))
+                        {
+                            push(((DoubleScalar<?, ?>) left).si < ((DoubleScalar<?, ?>) right).si);
+                            break;
+                        }
+                        throwException("Cannot compare " + left + " to " + right);
+                    }
+
+                case '>': // FIXME: looks too much like case '<'. Should probably use lambda expressions
+                    this.position++;
+                    if (this.position < this.expression.length() && '=' == this.expression.charAt(this.position))
+                    {
+                        this.position++;
+                        evalLhs(BIND_RELATIONAL);
+                        Object right = pop();
+                        Object left = pop();
+                        if ((left instanceof DoubleScalar) && (right instanceof DoubleScalar)
+                                && ((DoubleScalar<?, ?>) left).getDisplayUnit().getQuantity()
+                                        .equals(((DoubleScalar<?, ?>) right).getDisplayUnit().getQuantity()))
+                        {
+                            push(((DoubleScalar<?, ?>) left).si >= ((DoubleScalar<?, ?>) right).si);
+                            break;
+                        }
+                        throwException("Cannot compare " + left + " to " + right);
+                    }
+                    else
+                    {
+                        // FIXME: ">=" looks too much like ">"; should probably use a lambda expression
+                        evalLhs(BIND_RELATIONAL);
+                        Object right = pop();
+                        Object left = pop();
+                        if ((left instanceof DoubleScalar) && (right instanceof DoubleScalar)
+                                && ((DoubleScalar<?, ?>) left).getDisplayUnit().getQuantity()
+                                        .equals(((DoubleScalar<?, ?>) right).getDisplayUnit().getQuantity()))
+                        {
+                            push(((DoubleScalar<?, ?>) left).si > ((DoubleScalar<?, ?>) right).si);
+                            break;
+                        }
+                        throwException("Cannot compare " + left + " to " + right);
+                    }
+
+                case '=':
+                {
+                    if (this.position >= this.expression.length() - 1 || '=' != this.expression.charAt(this.position + 1))
+                    {
+                        throwException("Single \'=\' is not a valid operator");
+                    }
+                    this.position += 2;
+                    evalLhs(BIND_EQUAL);
+                    Object right = pop();
+                    Object left = pop();
+                    push(left.equals(right)); // This also works for Boolean operands.
+                    break;
+                }
+
+                case '!':
+                {
+                    if (this.position >= this.expression.length() - 1 || '=' != this.expression.charAt(this.position + 1))
+                    {
+                        throwException("Single \'!\' is not a valid operator");
+                    }
+                    this.position += 2;
+                    evalLhs(BIND_EQUAL);
+                    Object right = pop();
+                    Object left = pop();
+                    push(!left.equals(right)); // This also works for Boolean operands and mixed-type operands.
+                    break;
+                }
+
+                case '?': // Conditional expression
+                {
+                    this.position++;
+                    // This is special as we really do not want to evaluate or cause side effects on the non-taken part
+                    Object choice = pop();
+                    if (!(choice instanceof Boolean))
+                    {
+                        throwException("Condition does not evaluate to a logical value");
+                    }
+                    if (!((Boolean) choice))
+                    {
+                        // Skip the "then" part
+                        skip(true);
+                    }
+                    else
+                    {
+                        evalLhs(0); // should consume everything up to the ':'
+                    }
+                    if (this.position >= this.expression.length() || ':' != this.expression.charAt(this.position))
+                    {
+                        throwException("Missing \':\' of conditional expresion");
+                    }
+                    this.position++; // skip the ':'
+                    if ((Boolean) choice)
+                    {
+                        // Skip the "else" part
+                        skip(false);
+                    }
+                    else
+                    {
+                        evalLhs(BIND_CONDITIONAL_EXPRESSION);
+                    }
+                    break;
+                }
+                
+                case ':':
+                    return;
+
                 default:
                     throwException("Operator expected (got\"" + token + "\")");
 
             }
-
         }
     }
 
@@ -225,6 +433,122 @@ public class Eval
     private void throwException(final String description) throws RuntimeException
     {
         throw new RuntimeException(description + " at position " + this.position);
+    }
+
+    /**
+     * Skip the "then" or the "else" part of a conditional expression.
+     * @param thenPart boolean; if true; skip the then part (i.e. skip until a ':'); if false; skip the else part (i.e. until
+     *            end of expression of a binary operator)
+     */
+    private void skip(final boolean thenPart)
+    {
+        while (this.position < this.expression.length())
+        {
+            switch (this.expression.charAt(this.position))
+            {
+                case '(': // Eat up everything until the matching closing parenthesis
+                {
+                    int level = 1;
+                    this.position++;
+                    while (this.position < this.expression.length())
+                    {
+                        if ('(' == this.expression.charAt(this.position))
+                        {
+                            level++;
+                        }
+                        else if (')' == this.expression.charAt(this.position) && --level == 0)
+                        {
+                            break;
+                        }
+                        this.position++;
+                    }
+                    this.position++; // skip the closing parenthesis
+                    break;
+                }
+
+                case '?': // Nested conditional expression
+                    this.position++;
+                    skip(true);
+                    if (this.position >= this.expression.length() || ':' != this.expression.charAt(this.position))
+                    {
+                        throwException("Conditional expression missing \':\'");
+                    }
+                    this.position++;
+                    skip(false);
+                    break;
+
+                case ':':
+                    return;
+
+                case '^':
+                case '*':
+                case '/':
+                case '+':
+                case '-':
+                case '<':
+                case '=':
+                case '>':
+                case '!':
+                    if (!thenPart)
+                    {
+                        return;
+                    }
+                    this.position++;
+                    break;
+
+                default:
+                    this.position++;
+                    break;
+            }
+        }
+        throwException("Nonterminated conditional expression");
+    }
+
+    /**
+     * Perform the boolean AND operation on the two top-most elements on the stack and push the result back onto the stack.
+     */
+    private void and()
+    {
+        Object right = pop();
+        Object left = pop();
+        if ((left instanceof Boolean) && (right instanceof Boolean))
+        {
+            push(((Boolean) left) && ((Boolean) right));
+        }
+        throwException("Cannot compute logical AND of " + left + " and " + right);
+    }
+
+    /**
+     * Perform the boolean OR operation on the two top-most elements on the stack and push the result back onto the stack.
+     */
+    private void or()
+    {
+        Object right = pop();
+        Object left = pop();
+        if ((left instanceof Boolean) && (right instanceof Boolean))
+        {
+            push(((Boolean) left) || ((Boolean) right));
+        }
+    }
+
+    /**
+     * Perform the power operation on the two top-most elements on stack and push the result back onto the stack.
+     */
+    private void power()
+    {
+        Object exponent = pop();
+        Object base = pop();
+        if ((base instanceof DoubleScalarRel) && (exponent instanceof DoubleScalarRel)
+                && ((DoubleScalarRel<?, ?>) base).getDisplayUnit().getQuantity().equals(DimensionlessUnit.SI.getQuantity())
+                && ((DoubleScalarRel<?, ?>) exponent).getDisplayUnit().getQuantity().equals(DimensionlessUnit.SI.getQuantity()))
+        {
+            DoubleScalar<?, ?> result = DoubleScalarRel.instantiate(
+                    Math.pow(((DoubleScalarRel<?, ?>) base).si, ((DoubleScalarRel<?, ?>) exponent).si), DimensionlessUnit.SI);
+            System.out.println(base + " ^ " + exponent + " = " + result);
+            push(result);
+            return;
+        }
+        throwException("Cannot raise " + base + " to power " + exponent);
     }
 
     /**
@@ -506,7 +830,7 @@ public class Eval
                 Object base = pop();
                 if ((base instanceof Dimensionless) && (power instanceof Dimensionless))
                 {
-                    return ((Dimensionless) base).pow(((Dimensionless)power).si);
+                    return ((Dimensionless) base).pow(((Dimensionless) power).si);
                 }
                 throwException("Cannot raise " + base + " to power " + power);
             }
@@ -534,10 +858,10 @@ public class Eval
      * Execute a zero-argument function. These functions return a physical or mathematical constant, or invoke some system
      * function.
      * @param functionName String; name of the function to invoke
-     * @return DoubleScalar&lt;?,?&gt;; the result of executing the function
+     * @return Object; the result of executing the function
      * @throws RuntimeException when no function with the specified name is known
      */
-    private DoubleScalar<?, ?> handleZeroArgumentFunction(final String functionName) throws RuntimeException
+    private Object handleZeroArgumentFunction(final String functionName) throws RuntimeException
     {
         switch (functionName)
         {
@@ -603,6 +927,12 @@ public class Eval
 
             case "VACUUMIMPEDANCE":
                 return Constants.VACUUMIMPEDANCE;
+
+            case "TRUE":
+                return Boolean.TRUE;
+
+            case "FALSE":
+                return Boolean.FALSE;
 
         }
         throwException("Unknown zero-argument function " + functionName);

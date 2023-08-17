@@ -65,6 +65,16 @@ public class Calculator
             {
                 return valuePool.get(name);
             }});
+        doEval("5^3");
+        doEval("5<5");
+        doEval("!5<5");
+        doEval("12 [m/s] > 7 [m]");
+        doEval("TRUE()");
+        doEval("FALSE()");
+        doEval("TRUE()!=5");
+        doEval("TRUE()==5");
+        doEval("FALSE()==5");
+        doEval("(2>3)?5:1+100");
     }
 
     /**
