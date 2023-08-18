@@ -120,6 +120,121 @@ public class TestEval
                 assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("not a valid operator"));
             }
         }
+
+        try
+        {
+            Eval.evaluate("-TRUE()", null);
+            fail("Unary minus cannot be applied to logical value");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot apply unary minus"));
+        }
+
+        try
+        {
+            Eval.evaluate("TRUE()&", null);
+            fail("Incomplete operator should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("single \'&\' is not a valid operator"));
+        }
+
+        try
+        {
+            Eval.evaluate("TRUE()&TRUE()", null);
+            fail("Incomplete operator should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("single \'&\' is not a valid operator"));
+        }
+
+        try
+        {
+            Eval.evaluate("TRUE()|", null);
+            fail("Incomplete operator should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("single \'|\' is not a valid operator"));
+        }
+
+        try
+        {
+            Eval.evaluate("TRUE()|TRUE()", null);
+            fail("Incomplete operator should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("single \'|\' is not a valid operator"));
+        }
+
+        try
+        {
+            Eval.evaluate("(123+456", null);
+            fail("Unclosed parenthesis should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing closing parenthesis"));
+        }
+
+        try
+        {
+            Eval.evaluate("(123+456(", null);
+            fail("Unclosed parenthesis should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("operator expected"));
+        }
+        
+        try
+        {
+            Eval.evaluate("+123", null);
+            fail("Double (unary) plus should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing left operand"));
+        }
+        
+        try
+        {
+            Eval.evaluate("-+123", null);
+            fail("Double (unary) plus should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing left operand"));
+        }
+        
+        try
+        {
+            Eval.evaluate("123 [m/s", null);
+            fail("Missing closing bracket of unit should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing closing bracket (\']\')"));
+        }
+        
+        try
+        {
+            Eval.evaluate("123 [m/s*", null);
+            fail("Missing closing bracket of unit should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("bad symbol in si unit string"));
+        }
+        
     }
 
     /**
@@ -171,7 +286,8 @@ public class TestEval
             }
             catch (RuntimeException rte)
             {
-                assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("cannot "));
+                assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("right operand ")
+                        || rte.getMessage().toLowerCase().contains("cannot "));
             }
 
             try
@@ -181,11 +297,26 @@ public class TestEval
             }
             catch (RuntimeException rte)
             {
-                assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("cannot "));
+                assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("left operand ")
+                        || rte.getMessage().toLowerCase().contains("cannot "));
+            }
+
+        }
+
+        for (String operator : new String[] {"^", "+", "-", "<", "<=", ">", ">=", "&&", "||"})
+        {
+            try
+            {
+                Eval.evaluate("123" + operator + "345 [m/s]", null);
+                fail("Non-compatible operand types should have thrown a RuntimeException");
+            }
+            catch (RuntimeException rte)
+            {
+                assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot "));
             }
         }
     }
-    
+
     /**
      * Test some illegal operators
      */
@@ -194,27 +325,28 @@ public class TestEval
     {
         try
         {
-            Eval.evaluate("2=5",null);
+            Eval.evaluate("2=5", null);
             fail("Single \'=\' should have thrown a RuntimeException");
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("single \'=\' is not a valid operator"));
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("single \'=\' is not a valid operator"));
         }
-        
-        
+
         try
         {
-            Eval.evaluate("TRUE()!FALSE()",null);
+            Eval.evaluate("TRUE()!FALSE()", null);
             fail("Single \'!\' should have thrown a RuntimeException");
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("single \'!\' is not a valid operator"));
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("single \'!\' is not a valid operator"));
         }
-        
+
     }
-    
+
     /**
      * Test handling of binary operator at the end of the expression.
      */
@@ -257,7 +389,7 @@ public class TestEval
         {
             assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
         }
-        
+
         try
         {
             Eval.evaluate("123e4.5", null);
@@ -267,7 +399,7 @@ public class TestEval
         {
             assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("not allowed after"));
         }
-        
+
         try
         {
             Eval.evaluate("123.456.789", null);
@@ -277,7 +409,7 @@ public class TestEval
         {
             assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
         }
-        
+
         try
         {
             Eval.evaluate("123e--4", null);
@@ -287,7 +419,7 @@ public class TestEval
         {
             assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
         }
-        
+
         try
         {
             Eval.evaluate("123e-+4", null);
@@ -297,7 +429,7 @@ public class TestEval
         {
             assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
         }
-        
+
         try
         {
             Eval.evaluate("123..56", null);
@@ -307,7 +439,7 @@ public class TestEval
         {
             assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
         }
-        
+
     }
 
     /**
@@ -372,6 +504,8 @@ public class TestEval
                 Constants.VACUUMPERMITTIVITY.si, 0.0, Constants.VACUUMPERMITTIVITY.getDisplayUnit().getQuantity());
         verifyBoolean("Logical value true", Eval.evaluate("TRUE()", null), true);
         verifyBoolean("Logical value false", Eval.evaluate("FALSE()", null), false);
+        verifyValueAndUnit("Number that starts with radix symbol", Eval.evaluate(".345", null), .345, 0,
+                DimensionlessUnit.SI.getQuantity());
     }
 
     /**
@@ -525,7 +659,7 @@ public class TestEval
         verifyValueAndUnit("tanh(0.5)", Eval.evaluate("tanh(0.5)", null), Math.tanh(0.5), 0.000001,
                 DimensionlessUnit.SI.getQuantity());
     }
-    
+
     /**
      * Test division by zero
      */
@@ -544,6 +678,58 @@ public class TestEval
     }
 
     /**
+     * Test the order in which operators are applied.
+     */
+    @Test
+    public void testEvaluationOrder()
+    {
+        verifyValueAndUnit("13+17-19+23-31", Eval.evaluate("13+17-19+23-31", null), 13 + 17 - 19 + 23 - 31, 0,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("13+17-19/23-31", Eval.evaluate("13+17-19/23-31", null), 13 + 17 - 19.0 / 23 - 31, 0,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("13+17-19/23^3-31", Eval.evaluate("13+17-19/23^3-31", null), 13 + 17 - 19.0 / Math.pow(23, 3) - 31,
+                0.0000001, DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("13*17/19*23/31", Eval.evaluate("13*17/19*23/31", null), 13.0 * 17 / 19 * 23 / 31, 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyBoolean("TRUE()&&TRUE()&&TRUE()", Eval.evaluate("TRUE()&&TRUE()&&TRUE()", null), true);
+        verifyBoolean("TRUE()&&TRUE()&&FALSE()", Eval.evaluate("TRUE()&&TRUE()&&FALSE()", null), false);
+        verifyBoolean("TRUE()&&FALSE()&&TRUE()", Eval.evaluate("TRUE()&&FALSE()&&TRUE()", null), false);
+        verifyBoolean("TRUE()&&FALSE()&&FALSE()", Eval.evaluate("TRUE()&&FALSE()&&FALSE()", null), false);
+        verifyBoolean("FALSE()&&TRUE()&&TRUE()", Eval.evaluate("FALSE()&&TRUE()&&TRUE()", null), false);
+        verifyBoolean("FALSE()&&TRUE()&&FALSE()", Eval.evaluate("FALSE()&&TRUE()&&FALSE()", null), false);
+        verifyBoolean("FALSE()&&FALSE()&&TRUE()", Eval.evaluate("FALSE()&&TRUE()&&TRUE()", null), false);
+        verifyBoolean("FALSE()&&FALSE()&&FALSE()", Eval.evaluate("FALSE()&&FALSE()&&FALSE()", null), false);
+
+        verifyBoolean("TRUE()||TRUE()&&TRUE()", Eval.evaluate("TRUE()||TRUE()&&TRUE()", null), true);
+        verifyBoolean("TRUE()||TRUE()&&FALSE()", Eval.evaluate("TRUE()||TRUE()&&FALSE()", null), true);
+        verifyBoolean("TRUE()||FALSE()&&TRUE()", Eval.evaluate("TRUE()||FALSE()&&TRUE()", null), true);
+        verifyBoolean("TRUE()||FALSE()&&FALSE()", Eval.evaluate("TRUE()||FALSE()&&FALSE()", null), true);
+        verifyBoolean("FALSE()||TRUE()&&TRUE()", Eval.evaluate("FALSE()||TRUE()&&TRUE()", null), true);
+        verifyBoolean("FALSE()||TRUE()&&FALSE()", Eval.evaluate("FALSE()||TRUE()&&FALSE()", null), false);
+        verifyBoolean("FALSE()||FALSE()&&TRUE()", Eval.evaluate("FALSE()||FALSE()&&TRUE()", null), false);
+        verifyBoolean("FALSE()||FALSE()&&FALSE()", Eval.evaluate("FALSE()||FALSE()&&FALSE()", null), false);
+
+        verifyBoolean("TRUE()&&TRUE()||TRUE()", Eval.evaluate("TRUE()&&TRUE()||TRUE()", null), true);
+        verifyBoolean("TRUE()&&TRUE()||FALSE()", Eval.evaluate("TRUE()&&TRUE()||FALSE()", null), true);
+        verifyBoolean("TRUE()&&FALSE()||TRUE()", Eval.evaluate("TRUE()&&FALSE()||TRUE()", null), true);
+        verifyBoolean("TRUE()&&FALSE()||FALSE()", Eval.evaluate("TRUE()&&FALSE()||FALSE()", null), false);
+        verifyBoolean("FALSE()&&TRUE()||TRUE()", Eval.evaluate("FALSE()&&TRUE()||TRUE()", null), true);
+        verifyBoolean("FALSE()&&TRUE()||FALSE()", Eval.evaluate("FALSE()&&TRUE()||FALSE()", null), false);
+        verifyBoolean("FALSE()&&FALSE()||TRUE()", Eval.evaluate("FALSE()&&TRUE()||TRUE()", null), true);
+        verifyBoolean("FALSE()&&FALSE()||FALSE()", Eval.evaluate("FALSE()&&FALSE()||FALSE()", null), false);
+
+        verifyBoolean("TRUE()||TRUE()||TRUE()", Eval.evaluate("TRUE()||TRUE()||TRUE()", null), true);
+        verifyBoolean("TRUE()||TRUE()||FALSE()", Eval.evaluate("TRUE()||TRUE()||FALSE()", null), true);
+        verifyBoolean("TRUE()||FALSE()||TRUE()", Eval.evaluate("TRUE()||FALSE()||TRUE()", null), true);
+        verifyBoolean("TRUE()||FALSE()||FALSE()", Eval.evaluate("TRUE()||FALSE()||FALSE()", null), true);
+        verifyBoolean("FALSE()||TRUE()||TRUE()", Eval.evaluate("FALSE()||TRUE()||TRUE()", null), true);
+        verifyBoolean("FALSE()||TRUE()||FALSE()", Eval.evaluate("FALSE()||TRUE()||FALSE()", null), true);
+        verifyBoolean("FALSE()||FALSE()||TRUE()", Eval.evaluate("FALSE()||FALSE()||TRUE()", null), true);
+        verifyBoolean("FALSE()||FALSE()||FALSE()", Eval.evaluate("FALSE()||FALSE()||FALSE()", null), false);
+
+    }
+
+    /**
      * Test conditional expressions
      */
     @Test
@@ -553,9 +739,73 @@ public class TestEval
         verifyValueAndUnit("FALSE()?1/0:3", Eval.evaluate("FALSE()?1/0:3", null), 3, 0, DimensionlessUnit.SI.getQuantity());
         verifyValueAndUnit("TRUE()?3:((1/0))", Eval.evaluate("TRUE()?3:(1/0)", null), 3, 0, DimensionlessUnit.SI.getQuantity());
         verifyValueAndUnit("FALSE()?((1/0)):3", Eval.evaluate("FALSE()?1/0:3", null), 3, 0, DimensionlessUnit.SI.getQuantity());
-        // TODO test nested conditional expressions
+        verifyValueAndUnit("TRUE()?TRUE()?1:2:3", Eval.evaluate("TRUE()?TRUE()?1:2:3", null), 1, 0,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("TRUE()?FALSE()?1:2:3", Eval.evaluate("TRUE()?FALSE()?1:2:3", null), 2, 0,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("FALSE()?TRUE()?1:2:3", Eval.evaluate("FALSE()?TRUE()?1:2:3", null), 3, 0,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("FALSE()?FALSE()?1:2:3", Eval.evaluate("FALSE()?FALSE()?1:2:3", null), 3, 0,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("TRUE()?1:TRUE()?2:3", Eval.evaluate("TRUE()?1:TRUE()?2:3", null), 1, 0,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("TRUE()?1:FALSE()?2:3", Eval.evaluate("TRUE()?1:FALSE()?2:3", null), 1, 0,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("FALSE()?1:TRUE()?2:3", Eval.evaluate("FALSE()?1:TRUE()?2:3", null), 2, 0,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("FALSE()?1:FALSE()?2:3", Eval.evaluate("FALSE()?1:FALSE()?2:3", null), 3, 0,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("TRUE()?(((3))):(((1/0)))", Eval.evaluate("TRUE()?(((3))):(((1/0)))", null), 3, 0,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("FALSE()?(((1/0))):(((5)))", Eval.evaluate("FALSE()?(((1/0))):(((5)))", null), 5, 0,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("FALSE()?1:2+3", Eval.evaluate("FALSE()?1:2+3", null), 5, 0, DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("TRUE()?1:2+3", Eval.evaluate("TRUE()?1:2+3", null), 4, 0, DimensionlessUnit.SI.getQuantity());
+        try
+        {
+            Eval.evaluate("TRUE()?1:(", null);
+            fail("Missing closing parentheses should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing closing parenthesis"));
+        }
+
+        try
+        {
+            Eval.evaluate("FALSE()?TRUE()", null);
+            fail("Incomplete conditional expression should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            // System.out.println(rte.getMessage());
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("nonterminated conditional expression"));
+        }
+
+        try
+        {
+            Eval.evaluate("TRUE()?TRUE()", null);
+            fail("Incomplete conditional expression should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("missing \':\' of conditional expression"));
+        }
+
+        try
+        {
+            Eval.evaluate("TRUE()?TRUE()?", null);
+            fail("Incomplete conditional expression should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing operand"));
+        }
+
     }
-    
+
     /**
      * Verify the class, value and unit of a DoubleScalar value.
      * @param description String; description of the test

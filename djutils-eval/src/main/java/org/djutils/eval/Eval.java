@@ -221,7 +221,7 @@ public class Eval
                     }
                     if (bindingStrength >= BIND_POW)
                     {
-                        return;
+                        return; // Cannot happen
                     }
                     this.position++;
                     evalLhs(BIND_POW);
@@ -273,7 +273,7 @@ public class Eval
                 case '-':
                     if (this.stack.isEmpty())
                     {
-                        throwException("Missing left operand");
+                        throwException("Missing left operand"); // Cannot happen; that minus would be considered unary
                     }
                     if (bindingStrength >= BIND_ADD)
                     {
@@ -285,7 +285,7 @@ public class Eval
                     break;
 
                 case '&': // boolean and ?
-                    if (this.position >= this.expression.length() - 1 || '&' != this.expression.charAt(this.position))
+                    if (this.position >= this.expression.length() - 1 || '&' != this.expression.charAt(this.position + 1))
                     {
                         throwException("Single \'&\' is not a valid operator");
                     }
@@ -302,8 +302,8 @@ public class Eval
                     and();
                     break;
 
-                case '|': // boolean and ?
-                    if (this.position >= this.expression.length() - 1 || '|' != this.expression.charAt(this.position))
+                case '|': // boolean or ?
+                    if (this.position >= this.expression.length() - 1 || '|' != this.expression.charAt(this.position + 1))
                     {
                         throwException("Single \'|\' is not a valid operator");
                     }
@@ -450,7 +450,7 @@ public class Eval
                     }
                     if (this.position >= this.expression.length() || ':' != this.expression.charAt(this.position))
                     {
-                        throwException("Missing \':\' of conditional expresion");
+                        throwException("Missing \':\' of conditional expression");
                     }
                     this.position++; // skip the ':'
                     if ((Boolean) choice)
@@ -469,7 +469,7 @@ public class Eval
                     return;
 
                 default:
-                    throwException("Operator expected (got\"" + token + "\")");
+                    throwException("Operator expected (got \"" + token + "\")");
 
             }
         }
@@ -512,6 +512,10 @@ public class Eval
                             break;
                         }
                         this.position++;
+                    }
+                    if (level > 0)
+                    {
+                        throwException("Missing closing parenthesis");
                     }
                     this.position++; // skip the closing parenthesis
                     break;
@@ -650,6 +654,21 @@ public class Eval
     {
         Object right = pop();
         Object left = pop();
+        if (!(left instanceof DoubleScalar))
+        {
+            throwException("Left operand of addition must be a scalar (got " + left + ")");
+        }
+        if (!(right instanceof DoubleScalar))
+        {
+            throwException("Right operand of addition must be a scalar (got " + right + ")");
+        }
+        // Both operands are DoubleScalar
+        if (!((DoubleScalar<?, ?>) left).getDisplayUnit().getQuantity()
+                .equals(((DoubleScalarRel<?, ?>) right).getDisplayUnit().getQuantity()))
+        {
+            throwException("Cannot add " + left + " to " + right + " because the types are incompatible");
+        }
+        // Operands are of compatible unit
         if ((left instanceof DoubleScalarRel) && (right instanceof DoubleScalarRel))
         {
             // Rel + Rel -> Rel
@@ -665,26 +684,13 @@ public class Eval
         {
             throwException("Cannot add an absolute value to some other value");
         }
-        // System.out.println("left unit : " + ds.getDisplayUnit().getStandardUnit());
-        // System.out.println("right unit: " + right.getDisplayUnit().getStandardUnit());
-        if (left instanceof DoubleScalar && right instanceof DoubleScalar
-                && (!((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit().toString()
-                        .equals(((DoubleScalarRel<?, ?>) right).getDisplayUnit().getStandardUnit().toString())))
-        {
-            throwException("Cannot add " + left + " to " + right + " because the types are incompatible");
-        }
-        if ((left instanceof DoubleScalarAbs) && (right instanceof DoubleScalarRel))
-        {
-            // Abs + Rel -> Abs
-            DoubleScalar<?, ?> sum =
-                    DoubleScalarAbs.instantiate(((DoubleScalarAbs<?, ?, ?, ?>) left).si + ((DoubleScalarRel<?, ?>) right).si,
-                            ((DoubleScalarAbs<?, ?, ?, ?>) left).getDisplayUnit().getStandardUnit());
-            System.out.println(left + " + " + right + " = " + sum);
-            // sum.setDisplayUnit(ds.getDisplayUnit());
-            push(sum);
-            return;
-        }
-        throwException("Cannot add " + left + " to " + right);
+        // Abs + Rel -> Abs
+        DoubleScalar<?, ?> sum =
+                DoubleScalarAbs.instantiate(((DoubleScalarAbs<?, ?, ?, ?>) left).si + ((DoubleScalarRel<?, ?>) right).si,
+                        ((DoubleScalarAbs<?, ?, ?, ?>) left).getDisplayUnit().getStandardUnit());
+        System.out.println(left + " + " + right + " = " + sum);
+        // sum.setDisplayUnit(ds.getDisplayUnit());
+        push(sum);
     }
 
     /**
@@ -694,19 +700,20 @@ public class Eval
     {
         Object right = pop();
         Object left = pop();
-        if ((!(left instanceof DoubleScalar)) || (!(right instanceof DoubleScalar)))
+        if (!(left instanceof DoubleScalar))
         {
-            throwException("Cannot subtract " + right + " from " + left);            
+            throwException("Left operand of subtraction must be a scalar (got " + left + ")");
+        }
+        if (!(right instanceof DoubleScalar))
+        {
+            throwException("Right operand of subtraction must be a scalar (got " + right + ")");
         }
         // Now we know that we're dealing with DoubleScalar objects
         // System.out.println("left unit : " + left.getDisplayUnit().getStandardUnit());
         // System.out.println("right unit: " + right.getDisplayUnit().getStandardUnit());
-        if (!((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit().toString()
-                .equals(((DoubleScalar<?, ?>) right).getDisplayUnit().getStandardUnit().toString()))
+        if (!((DoubleScalar<?, ?>) left).getDisplayUnit().getQuantity()
+                .equals(((DoubleScalar<?, ?>) right).getDisplayUnit().getQuantity()))
         {
-            // System.out.println("left standard unit: " + left.getDisplayUnit().getStandardUnit().toString() + ", right
-            // standard unit: "
-            // + right.getDisplayUnit().getStandardUnit().toString());
             throwException("Cannot subtract " + right + " from " + left + " because the types are incompatible");
         }
         if ((left instanceof DoubleScalarAbs) && (right instanceof DoubleScalarAbs))
@@ -734,17 +741,12 @@ public class Eval
             // Rel - Abs -> error
             throwException("Cannot subtract " + right + " from " + left + " because the right operand is absolute");
         }
-        if ((left instanceof DoubleScalarRel) && (right instanceof DoubleScalarRel))
-        {
-            // Rel - Rel -> Rel
-            DoubleScalar<?, ?> difference =
-                    DoubleScalarRel.instantiate(((DoubleScalar<?, ?>) left).si - ((DoubleScalar<?, ?>) right).si,
-                            ((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit());
-            // System.out.println(left + " - " + right + " = " + difference);
-            push(difference);
-            return;
-        }
-        throwException("Cannot subtract " + right + " from " + left);
+        // Rel - Rel -> Rel
+        DoubleScalar<?, ?> difference =
+                DoubleScalarRel.instantiate(((DoubleScalar<?, ?>) left).si - ((DoubleScalar<?, ?>) right).si,
+                        ((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit());
+        // System.out.println(left + " - " + right + " = " + difference);
+        push(difference);
     }
 
     /**
@@ -766,7 +768,7 @@ public class Eval
         {
             char c = this.expression.charAt(this.position);
             if ((!seenDigit) && ('-' == c || '+' == c))
-            {
+            { // Cannot happen???
                 if (seenSign)
                 {
                     throwException("Too many signs");
