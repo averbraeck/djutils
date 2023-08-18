@@ -502,11 +502,12 @@ public class Eval
                     this.position++;
                     while (this.position < this.expression.length())
                     {
-                        if ('(' == this.expression.charAt(this.position))
+                        char c = this.expression.charAt(this.position);
+                        if ('(' == c)
                         {
                             level++;
                         }
-                        else if (')' == this.expression.charAt(this.position) && --level == 0)
+                        else if (')' == c && --level == 0)
                         {
                             break;
                         }
@@ -551,7 +552,11 @@ public class Eval
                     break;
             }
         }
-        throwException("Nonterminated conditional expression");
+        if (thenPart)
+        {
+            throwException("Nonterminated conditional expression");
+        }
+        // Else end of expression is end of else part
     }
 
     /**
@@ -564,6 +569,7 @@ public class Eval
         if ((left instanceof Boolean) && (right instanceof Boolean))
         {
             push(((Boolean) left) && ((Boolean) right));
+            return;
         }
         throwException("Cannot compute logical AND of " + left + " and " + right);
     }
@@ -578,7 +584,9 @@ public class Eval
         if ((left instanceof Boolean) && (right instanceof Boolean))
         {
             push(((Boolean) left) || ((Boolean) right));
+            return;
         }
+        throwException("Cannot compute logical AND of " + left + " and " + right);
     }
 
     /**
@@ -627,12 +635,12 @@ public class Eval
         {
             if (0.0 == ((DoubleScalarRel<?, ?>) right).si)
             {
-                throw new RuntimeException("Division by 0");
+                throwException("Division by 0");
             }
             push(((DoubleScalarRel<?, ?>) left).divide((DoubleScalarRel<?, ?>) right));
             return;
         }
-        throw new RuntimeException("Cannot divide " + left + " by " + right);
+        throwException("Cannot divide " + left + " by " + right);
     }
 
     /**
@@ -659,8 +667,9 @@ public class Eval
         }
         // System.out.println("left unit : " + ds.getDisplayUnit().getStandardUnit());
         // System.out.println("right unit: " + right.getDisplayUnit().getStandardUnit());
-        if (!((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit().toString()
-                .equals(((DoubleScalarRel<?, ?>) right).getDisplayUnit().getStandardUnit().toString()))
+        if (left instanceof DoubleScalar && right instanceof DoubleScalar
+                && (!((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit().toString()
+                        .equals(((DoubleScalarRel<?, ?>) right).getDisplayUnit().getStandardUnit().toString())))
         {
             throwException("Cannot add " + left + " to " + right + " because the types are incompatible");
         }
@@ -685,6 +694,11 @@ public class Eval
     {
         Object right = pop();
         Object left = pop();
+        if ((!(left instanceof DoubleScalar)) || (!(right instanceof DoubleScalar)))
+        {
+            throwException("Cannot subtract " + right + " from " + left);            
+        }
+        // Now we know that we're dealing with DoubleScalar objects
         // System.out.println("left unit : " + left.getDisplayUnit().getStandardUnit());
         // System.out.println("right unit: " + right.getDisplayUnit().getStandardUnit());
         if (!((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit().toString()
@@ -755,7 +769,7 @@ public class Eval
             {
                 if (seenSign)
                 {
-                    throwException("Too many consecutive signs");
+                    throwException("Too many signs");
                 }
                 seenSign = true;
             }
@@ -763,9 +777,13 @@ public class Eval
             {
                 if (seenExpSign)
                 {
-                    throwException("Too many consecutive signs");
+                    throwException("Too many signs in exponent");
                 }
                 seenExpSign = true;
+            }
+            else if (seenExp && seenExpSign && (!Character.isDigit(c)))
+            {
+                break;
             }
             else if ('e' == c || 'E' == c)
             {
@@ -779,8 +797,13 @@ public class Eval
             {
                 if (seenRadix)
                 {
-                    throw new RuntimeException("Too many '.'");
+                    throwException("Too many '.'");
                 }
+                if (seenExp)
+                {
+                    throwException("A \'.\' is not allowed after \'e\' or \'E\'");
+                }
+                seenRadix = true;
             }
             else if (Character.isDigit(c))
             {
@@ -800,6 +823,10 @@ public class Eval
             this.position++;
         }
         eatSpace();
+        if (seenExp && !seenExpDigit)
+        {
+            throwException("Exponent value missing");
+        }
         String number = this.expression.substring(startPosition, this.position);
         if (this.position < this.expression.length() && '[' == this.expression.charAt(this.position))
         {
@@ -1026,7 +1053,7 @@ public class Eval
                 return dl.cos();
 
             case "cosh":
-                return(dl.cosh());
+                return (dl.cosh());
 
             case "exp":
                 return dl.exp();

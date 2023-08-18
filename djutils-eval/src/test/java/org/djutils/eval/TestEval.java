@@ -154,15 +154,160 @@ public class TestEval
         verifyBoolean("not operator", Eval.evaluate("!2!=2", null), true);
         verifyBoolean("not operator", Eval.evaluate("!3==3", null), false);
         verifyBoolean("not operator", Eval.evaluate("!3!=3", null), true);
+        verifyBoolean("true && true", Eval.evaluate("TRUE()&&TRUE()", null), true);
+        verifyBoolean("true && false", Eval.evaluate("TRUE()&&FALSE()", null), false);
+        verifyBoolean("false && true", Eval.evaluate("FALSE()&&TRUE()", null), false);
+        verifyBoolean("false && false", Eval.evaluate("FALSE()&&FALSE()", null), false);
+        verifyBoolean("true || true", Eval.evaluate("TRUE()||TRUE()", null), true);
+        verifyBoolean("true || false", Eval.evaluate("TRUE()||FALSE()", null), true);
+        verifyBoolean("false || true", Eval.evaluate("FALSE()||TRUE()", null), true);
+        verifyBoolean("false || false", Eval.evaluate("FALSE()||FALSE()", null), false);
+        for (String operator : new String[] {"^", "*", "/", "+", "-", "<", "<=", ">", ">=", "&&", "||"})
+        {
+            try
+            {
+                Eval.evaluate("123" + operator + "TRUE()", null);
+                fail("Illegal operand type should have thrown a RuntimeException");
+            }
+            catch (RuntimeException rte)
+            {
+                assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("cannot "));
+            }
+
+            try
+            {
+                Eval.evaluate("TRUE()" + operator + "123", null);
+                fail("Illegal operand type should have thrown a RuntimeException");
+            }
+            catch (RuntimeException rte)
+            {
+                assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("cannot "));
+            }
+        }
+    }
+    
+    /**
+     * Test some illegal operators
+     */
+    @Test
+    public void testIllegalOperators()
+    {
         try
         {
-            Eval.evaluate("!5", null);
-            fail("Applying logical not on non-logical value should have thrown a RuntimeException");
+            Eval.evaluate("2=5",null);
+            fail("Single \'=\' should have thrown a RuntimeException");
         }
-        catch(RuntimeException rte)
+        catch (RuntimeException rte)
         {
-            assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("cannot apply unary not operator"));
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("single \'=\' is not a valid operator"));
         }
+        
+        
+        try
+        {
+            Eval.evaluate("TRUE()!FALSE()",null);
+            fail("Single \'!\' should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("single \'!\' is not a valid operator"));
+        }
+        
+    }
+    
+    /**
+     * Test handling of binary operator at the end of the expression.
+     */
+    @Test
+    public void testBinaryOperatorAtEndOfExpression()
+    {
+        for (String operation : new String[] {"^", "*", "/", "+", "&&", "||", "<", "<=", ">", ">=", "==", "!="})
+        {
+            try
+            {
+                Eval.evaluate("123" + operation, null);
+                fail("Binary operator at end of expression should have thrown a RuntimeException");
+            }
+            catch (RuntimeException rte)
+            {
+                assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing operand"));
+            }
+        }
+        // FIXME: the evaluator could throw an exception when a number is followed by && or ||
+    }
+
+    /**
+     * Test the number parser
+     */
+    @Test
+    public void testNumberParser()
+    {
+        verifyValueAndUnit("E notation", Eval.evaluate("2E6", null), 2e6, 0, DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("E notation", Eval.evaluate("2E-6", null), 2e-6, 0, DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("e notation", Eval.evaluate("2e6", null), 2e6, 0, DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("e notation", Eval.evaluate("2e-6", null), 2e-6, 0, DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("E notation", Eval.evaluate("2E+6", null), 2e6, 0, DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("e notation", Eval.evaluate("2e+6", null), 2e6, 0, DimensionlessUnit.SI.getQuantity());
+        try
+        {
+            Eval.evaluate("123e45e6", null);
+            fail("Multiple e letters in a number should throw a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
+        }
+        
+        try
+        {
+            Eval.evaluate("123e4.5", null);
+            fail("Decimal symbol after e should throw a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("not allowed after"));
+        }
+        
+        try
+        {
+            Eval.evaluate("123.456.789", null);
+            fail("Multiple radix symbols should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
+        }
+        
+        try
+        {
+            Eval.evaluate("123e--4", null);
+            fail("Multiple minus signs in exponent should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
+        }
+        
+        try
+        {
+            Eval.evaluate("123e-+4", null);
+            fail("Multiple signs in exponent should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
+        }
+        
+        try
+        {
+            Eval.evaluate("123..56", null);
+            fail("Multiple radix symbols in mantissa should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
+        }
+        
     }
 
     /**
@@ -228,7 +373,54 @@ public class TestEval
         verifyBoolean("Logical value true", Eval.evaluate("TRUE()", null), true);
         verifyBoolean("Logical value false", Eval.evaluate("FALSE()", null), false);
     }
-    
+
+    /**
+     * Test the unary operators
+     */
+    @Test
+    public void testUnaryOperators()
+    {
+        try
+        {
+            Eval.evaluate("!5", null);
+            fail("Applying logical not on non-logical value should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("cannot apply unary not operator"));
+        }
+
+        try
+        {
+            Eval.evaluate("123 456", null); // Missing binary operator
+            fail("Two operands with no operator between them should have thown a RuntimException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("operator expected"));
+        }
+
+        try
+        {
+            Eval.evaluate("-TRUE()", null); // Unary minus on logical value
+            fail("Unary minus on logical value should have thrown an RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("cannot apply unary minus"));
+        }
+
+        try
+        {
+            Eval.evaluate("!5", null); // Logical not operator on non logical operand
+            fail("Unary not operator on non logical operand should have thrown an RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("cannot apply unary not"));
+        }
+    }
+
     /**
      * Test the one argument functions (mostly math)
      */
@@ -240,7 +432,7 @@ public class TestEval
             Eval.evaluate("nosuchoneargumentfunction(123)", null);
             fail("Nonexistant one-argument function should have thrown a RuntimeException");
         }
-        catch(RuntimeException rte)
+        catch (RuntimeException rte)
         {
             assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("unknown function"));
         }
@@ -262,43 +454,108 @@ public class TestEval
         {
             assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot be applied to"));
         }
-        verifyValueAndUnit("acos(-1)", Eval.evaluate("acos(-1)", null), Math.acos(-1), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("acos(0.5)", Eval.evaluate("acos(0.5)", null), Math.acos(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("asin(-1)", Eval.evaluate("asin(-1)", null), Math.asin(-1), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("asin(0.5)", Eval.evaluate("asin(0.5)", null), Math.asin(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("atan(-1)", Eval.evaluate("atan(-1)", null), Math.atan(-1), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("atan(0.5)", Eval.evaluate("atan(0.5)", null), Math.atan(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("cbrt(50)", Eval.evaluate("cbrt(50)", null), Math.cbrt(50), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("cbrt(0.5)", Eval.evaluate("cbrt(0.5)", null), Math.cbrt(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("cos(-1)", Eval.evaluate("cos(-1)", null), Math.cos(-1), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("cos(0.5)", Eval.evaluate("cos(0.5)", null), Math.cos(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("cosh(-1)", Eval.evaluate("cosh(-1)", null), Math.cosh(-1), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("cosh(0.5)", Eval.evaluate("cosh(0.5)", null), Math.cosh(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("exp(-1)", Eval.evaluate("exp(-1)", null), Math.exp(-1), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("exp(0.5)", Eval.evaluate("exp(0.5)", null), Math.exp(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("expm1(-1)", Eval.evaluate("expm1(-1)", null), Math.expm1(-1), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("expm1(0.5)", Eval.evaluate("expm1(0.5)", null), Math.expm1(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("log(50)", Eval.evaluate("log(50)", null), Math.log(50), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("log(0.5)", Eval.evaluate("log(0.5)", null), Math.log(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("log10(50)", Eval.evaluate("log10(50)", null), Math.log10(50), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("log10(0.5)", Eval.evaluate("log10(0.5)", null), Math.log10(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("log1p(50)", Eval.evaluate("log1p(50)", null), Math.log1p(50), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("log1p(0.5)", Eval.evaluate("log1p(0.5)", null), Math.log1p(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("signum(0)", Eval.evaluate("signum(0)", null), Math.signum(0), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("signum(0.5)", Eval.evaluate("signum(0.5)", null), Math.signum(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("signum(-0.5)", Eval.evaluate("signum(-0.5)", null), Math.signum(-0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("sin(-1)", Eval.evaluate("sin(-1)", null), Math.sin(-1), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("sin(0.5)", Eval.evaluate("sin(0.5)", null), Math.sin(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("sinh(-1)", Eval.evaluate("sinh(-1)", null), Math.sinh(-1), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("sinh(0.5)", Eval.evaluate("sinh(0.5)", null), Math.sinh(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("sqrt(50)", Eval.evaluate("sqrt(50)", null), Math.sqrt(50), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("sqrt(0.5)", Eval.evaluate("sqrt(0.5)", null), Math.sqrt(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("tan(-1)", Eval.evaluate("tan(-1)", null), Math.tan(-1), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("tan(0.5)", Eval.evaluate("tan(0.5)", null), Math.tan(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("tanh(-1)", Eval.evaluate("tanh(-1)", null), Math.tanh(-1), 0.000001, DimensionlessUnit.SI.getQuantity());
-        verifyValueAndUnit("tanh(0.5)", Eval.evaluate("tanh(0.5)", null), Math.tanh(0.5), 0.000001, DimensionlessUnit.SI.getQuantity());
-}
+        verifyValueAndUnit("acos(-1)", Eval.evaluate("acos(-1)", null), Math.acos(-1), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("acos(0.5)", Eval.evaluate("acos(0.5)", null), Math.acos(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("asin(-1)", Eval.evaluate("asin(-1)", null), Math.asin(-1), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("asin(0.5)", Eval.evaluate("asin(0.5)", null), Math.asin(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("atan(-1)", Eval.evaluate("atan(-1)", null), Math.atan(-1), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("atan(0.5)", Eval.evaluate("atan(0.5)", null), Math.atan(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("cbrt(50)", Eval.evaluate("cbrt(50)", null), Math.cbrt(50), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("cbrt(0.5)", Eval.evaluate("cbrt(0.5)", null), Math.cbrt(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("cos(-1)", Eval.evaluate("cos(-1)", null), Math.cos(-1), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("cos(0.5)", Eval.evaluate("cos(0.5)", null), Math.cos(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("cosh(-1)", Eval.evaluate("cosh(-1)", null), Math.cosh(-1), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("cosh(0.5)", Eval.evaluate("cosh(0.5)", null), Math.cosh(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("exp(-1)", Eval.evaluate("exp(-1)", null), Math.exp(-1), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("exp(0.5)", Eval.evaluate("exp(0.5)", null), Math.exp(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("expm1(-1)", Eval.evaluate("expm1(-1)", null), Math.expm1(-1), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("expm1(0.5)", Eval.evaluate("expm1(0.5)", null), Math.expm1(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("log(50)", Eval.evaluate("log(50)", null), Math.log(50), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("log(0.5)", Eval.evaluate("log(0.5)", null), Math.log(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("log10(50)", Eval.evaluate("log10(50)", null), Math.log10(50), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("log10(0.5)", Eval.evaluate("log10(0.5)", null), Math.log10(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("log1p(50)", Eval.evaluate("log1p(50)", null), Math.log1p(50), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("log1p(0.5)", Eval.evaluate("log1p(0.5)", null), Math.log1p(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("signum(0)", Eval.evaluate("signum(0)", null), Math.signum(0), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("signum(0.5)", Eval.evaluate("signum(0.5)", null), Math.signum(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("signum(-0.5)", Eval.evaluate("signum(-0.5)", null), Math.signum(-0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("sin(-1)", Eval.evaluate("sin(-1)", null), Math.sin(-1), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("sin(0.5)", Eval.evaluate("sin(0.5)", null), Math.sin(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("sinh(-1)", Eval.evaluate("sinh(-1)", null), Math.sinh(-1), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("sinh(0.5)", Eval.evaluate("sinh(0.5)", null), Math.sinh(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("sqrt(50)", Eval.evaluate("sqrt(50)", null), Math.sqrt(50), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("sqrt(0.5)", Eval.evaluate("sqrt(0.5)", null), Math.sqrt(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("tan(-1)", Eval.evaluate("tan(-1)", null), Math.tan(-1), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("tan(0.5)", Eval.evaluate("tan(0.5)", null), Math.tan(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("tanh(-1)", Eval.evaluate("tanh(-1)", null), Math.tanh(-1), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("tanh(0.5)", Eval.evaluate("tanh(0.5)", null), Math.tanh(0.5), 0.000001,
+                DimensionlessUnit.SI.getQuantity());
+    }
+    
+    /**
+     * Test division by zero
+     */
+    @Test
+    public void testDivisionByZero()
+    {
+        try
+        {
+            Eval.evaluate("1/0", null);
+            fail("Division by zero should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("division by 0"));
+        }
+    }
 
+    /**
+     * Test conditional expressions
+     */
+    @Test
+    public void testConditionalExpressions()
+    {
+        verifyValueAndUnit("TRUE()?3:(1/0)", Eval.evaluate("TRUE()?3:(1/0)", null), 3, 0, DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("FALSE()?1/0:3", Eval.evaluate("FALSE()?1/0:3", null), 3, 0, DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("TRUE()?3:((1/0))", Eval.evaluate("TRUE()?3:(1/0)", null), 3, 0, DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("FALSE()?((1/0)):3", Eval.evaluate("FALSE()?1/0:3", null), 3, 0, DimensionlessUnit.SI.getQuantity());
+        // TODO test nested conditional expressions
+    }
+    
     /**
      * Verify the class, value and unit of a DoubleScalar value.
      * @param description String; description of the test
