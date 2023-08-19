@@ -4,9 +4,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.djunits.quantity.Quantity;
 import org.djunits.unit.DimensionlessUnit;
+import org.djunits.unit.LengthUnit;
+import org.djunits.unit.PositionUnit;
 import org.djunits.unit.TimeUnit;
+import org.djunits.value.vdouble.scalar.Position;
 import org.djunits.value.vdouble.scalar.base.Constants;
 import org.djunits.value.vdouble.scalar.base.DoubleScalar;
 import org.junit.Test;
@@ -194,7 +200,7 @@ public class TestEval
         {
             assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("operator expected"));
         }
-        
+
         try
         {
             Eval.evaluate("+123", null);
@@ -204,7 +210,7 @@ public class TestEval
         {
             assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing left operand"));
         }
-        
+
         try
         {
             Eval.evaluate("-+123", null);
@@ -214,7 +220,7 @@ public class TestEval
         {
             assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing left operand"));
         }
-        
+
         try
         {
             Eval.evaluate("123 [m/s", null);
@@ -222,9 +228,10 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing closing bracket (\']\')"));
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("missing closing bracket (\']\')"));
         }
-        
+
         try
         {
             Eval.evaluate("123 [m/s*", null);
@@ -232,9 +239,61 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("bad symbol in si unit string"));
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("bad symbol in si unit string"));
         }
-        
+
+        try
+        {
+            Eval.evaluate("abc+123", null);
+            fail("Variable without RetrieveValue object should throw a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot resolve variable "));
+        }
+
+        try
+        {
+            Eval.evaluate("abc.def_pqr+123", null);
+            fail("Variable without RetrieveValue object should throw a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot resolve variable "));
+        }
+
+        try
+        {
+            Eval.evaluate("abc", null);
+            fail("Variable without RetrieveValue object should throw a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot resolve variable "));
+        }
+
+        try
+        {
+            Eval.evaluate("abc(", null);
+            fail("Variable without RetrieveValue object should throw a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("missing closing parenthesis "));
+        }
+
+        try
+        {
+            Eval.evaluate("123+456%", null);
+            fail("Bad character where operator is expected should throw a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("operator expected "));
+        }
+
     }
 
     /**
@@ -661,6 +720,140 @@ public class TestEval
     }
 
     /**
+     * Test the two-parameter functions.
+     */
+    @Test
+    public void testTwoParameterFunctions()
+    {
+        verifyValueAndUnit("pow(3.4,5.2)", Eval.evaluate("pow(3.4,5.2)", null), Math.pow(3.4, 5.2), 0.1,
+                DimensionlessUnit.SI.getQuantity());
+
+        try
+        {
+            Eval.evaluate("12[m]^3", null);
+            fail("Power operator on non-dimensionless should throw a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot raise "));
+        }
+
+        try
+        {
+            Eval.evaluate("pow(TRUE(),5.2)", null);
+            fail("Attempt to raise a logical value to some power should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("first argument of pow must be a scalar"));
+        }
+
+        try
+        {
+            Eval.evaluate("pow(3.4,TRUE())", null);
+            fail("Attempt to raise a value to a logical value should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("second argument of pow must be a scalar"));
+        }
+
+        try
+        {
+            Eval.evaluate("pow(3.4,5.2[m])", null);
+            fail("Attempt to raise a value to a non Dimensionless value should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("function pow cannot be applied to "));
+        }
+
+        try
+        {
+            Eval.evaluate("pow(3.4[s],5.2)", null);
+            fail("Attempt to raise a value to a non Dimensionless value should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("function pow cannot be applied to "));
+        }
+
+        try
+        {
+            Eval.evaluate("TRUE()^5.2", null);
+            fail("Attempt to raise a logical value to some power should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot raise "));
+        }
+
+        try
+        {
+            Eval.evaluate("3.4^TRUE()", null);
+            fail("Attempt to raise a value to a logical value should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot raise "));
+        }
+
+        verifyValueAndUnit("atan2(1,2)", Eval.evaluate("atan2(1,2)", null), Math.atan2(1, 2), 0.00001,
+                DimensionlessUnit.SI.getQuantity());
+        verifyValueAndUnit("atan2(-2,-1)", Eval.evaluate("atan2(-2,-1)", null), Math.atan2(-2, -1), 0.00001,
+                DimensionlessUnit.SI.getQuantity());
+        try
+        {
+            Eval.evaluate("atan2(TRUE(),1)", null);
+            fail("Attempt to use a logical operand in atan2 should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("first argument of atan2 must be a scalar"));
+        }
+
+        try
+        {
+            Eval.evaluate("atan2(2,FALSE())", null);
+            fail("Attempt to use a logical operand in atan2 should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("second argument of atan2 must be a scalar"));
+        }
+
+        verifyValueAndUnit("atan2(1[m],2[m])", Eval.evaluate("atan2(1[m],2[m])", null), Math.atan2(1, 2), 0.00001,
+                DimensionlessUnit.SI.getQuantity());
+
+        try
+        {
+            Eval.evaluate("atan2(1[m],2[s])", null);
+            fail("Attempt to use atan2 with parameters of different types should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("arguments of atan2 must be of the same type"));
+        }
+
+        try
+        {
+            Eval.evaluate("nosuchtwoparameterfunction(123,456)", null);
+            fail("Attempt to call an non-existant two-parameter function should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("unknown function "));
+        }
+    }
+
+    /**
      * Test division by zero
      */
     @Test
@@ -727,6 +920,8 @@ public class TestEval
         verifyBoolean("FALSE()||FALSE()||TRUE()", Eval.evaluate("FALSE()||FALSE()||TRUE()", null), true);
         verifyBoolean("FALSE()||FALSE()||FALSE()", Eval.evaluate("FALSE()||FALSE()||FALSE()", null), false);
 
+        verifyValueAndUnit("2^3^5", Eval.evaluate("2^3^5", null), Math.pow(2, Math.pow(3, 5)), 1,
+                DimensionlessUnit.SI.getQuantity());
     }
 
     /**
@@ -802,6 +997,104 @@ public class TestEval
         catch (RuntimeException rte)
         {
             assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing operand"));
+        }
+
+        try
+        {
+            Eval.evaluate("123?4:5", null);
+            fail("Conditional expression depending on non-logical should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("condition does not evaluate to a logical value"));
+        }
+
+        verifyBoolean("Binding strength of else part is minimum", Eval.evaluate("12>16?3:FALSE()||TRUE()", null), true);
+        verifyBoolean("Binding strength of else part is minimum", Eval.evaluate("12>16?3:5>4", null), true);
+    }
+
+    /**
+     * Test the mechanism for retrieving the values from a value store by name and the handling of absolute operands.
+     */
+    @Test
+    public void testNamedVariablesAndHandlingOfAbsoluteOperands()
+    {
+        try
+        {
+            Eval.evaluate("abc", null);
+            fail("Attempt to retrieve value with no value store should throw a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot resolve variable "));
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        ValueStore valueStore = new ValueStore(map);
+
+        try
+        {
+            Eval.evaluate("abc", valueStore);
+            fail("Attempt to retrieve value with empty value store should throw a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot resolve variable "));
+        }
+
+        map.put("booleanTrue", Boolean.TRUE);
+        Position position = new Position(456, PositionUnit.INCH);
+        map.put("position", position);
+        Position otherPosition = new Position(135, PositionUnit.YARD);
+        map.put("otherPosition", otherPosition);
+        verifyBoolean("Retrieve a logical value from the value store", Eval.evaluate("booleanTrue", valueStore), true);
+        verifyValueAndUnit("Retrieve a Position from the value store", Eval.evaluate("position", valueStore),
+                new Position(456, PositionUnit.INCH).si, 0.0001, PositionUnit.INCH.getQuantity());
+
+        verifyValueAndUnit("Abs+Rel->Abs", Eval.evaluate("position+12[m]", valueStore),
+                new Position(456, PositionUnit.INCH).si + 12, 0.0001, PositionUnit.BASE);
+
+        try
+        {
+            Eval.evaluate("456[m]+position", valueStore);
+            fail("Using an absolute as RHS for addition should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem",
+                    rte.getMessage().toLowerCase().contains("cannot add an absolute value to some other value"));
+        }
+
+        verifyValueAndUnit("Abs-Abs->Rel", Eval.evaluate("position-otherPosition", valueStore),
+                position.minus(otherPosition).si, 0.00001, LengthUnit.SI.getQuantity());
+        verifyValueAndUnit("Abs-Rel->Abs", Eval.evaluate("position-200[m]", valueStore), position.si - 200, 0.0001,
+                PositionUnit.BASE);
+    }
+
+    /**
+     * Value store for testing the value retrieval system.
+     */
+    class ValueStore implements RetrieveValue
+    {
+        /** The mapping from name to value. */
+        private final Map<String, Object> values;
+
+        /**
+         * Create a new ValueStore.
+         * @param map Map&lt;String,Object&gt;; map that translates names to value (not deep-copies; thus this map can be
+         *            changed at any time).
+         */
+        ValueStore(final Map<String, Object> map)
+        {
+            this.values = map;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public Object lookup(final String name)
+        {
+            return this.values.get(name);
         }
 
     }

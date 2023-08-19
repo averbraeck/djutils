@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.djunits.unit.DimensionlessUnit;
 import org.djunits.unit.TimeUnit;
+import org.djunits.unit.Unit;
+import org.djunits.unit.si.SIDimensions;
 import org.djunits.value.vdouble.scalar.Dimensionless;
 import org.djunits.value.vdouble.scalar.SIScalar;
 import org.djunits.value.vdouble.scalar.Time;
@@ -17,9 +19,9 @@ import org.djutils.exceptions.Throw;
 /**
  * Eval - evaluate mathematical expression. Derived from software developed between 2002-2016 by Peter Knoppers.
  * <p>
- * TODO: implement strings datatype
+ * CONSIDER: implement string datatype.
  * <p>
- * TODO: implement if statement
+ * TODO: implement atan2 and put it in a handleTwoArgumentFunction method.
  * <p>
  * The precedence of binary operators follows the list of the
  * <a href="https://www.cs.bilkent.edu.tr/~guvenir/courses/CS101/op_precedence.html">Java Operator Precendence Table</a>,
@@ -219,8 +221,8 @@ public class Eval
                     {
                         throwException("Missing left operand");
                     }
-                    if (bindingStrength >= BIND_POW)
-                    {
+                    if (bindingStrength > BIND_POW) // Not >=; this ensures a^b^c is evaluated as a^(b^c); not (a^b)^c
+                    { // See https://en.wikipedia.org/wiki/Order_of_operations#Serial_exponentiation
                         return; // Cannot happen
                     }
                     this.position++;
@@ -284,7 +286,7 @@ public class Eval
                     subtract();
                     break;
 
-                case '&': // boolean and ?
+                case '&': // boolean and with something
                     if (this.position >= this.expression.length() - 1 || '&' != this.expression.charAt(this.position + 1))
                     {
                         throwException("Single \'&\' is not a valid operator");
@@ -302,7 +304,7 @@ public class Eval
                     and();
                     break;
 
-                case '|': // boolean or ?
+                case '|': // boolean or with something
                     if (this.position >= this.expression.length() - 1 || '|' != this.expression.charAt(this.position + 1))
                     {
                         throwException("Single \'|\' is not a valid operator");
@@ -333,8 +335,7 @@ public class Eval
                         Object right = pop();
                         Object left = pop();
                         if ((left instanceof DoubleScalar) && (right instanceof DoubleScalar)
-                                && ((DoubleScalar<?, ?>) left).getDisplayUnit().getQuantity()
-                                        .equals(((DoubleScalar<?, ?>) right).getDisplayUnit().getQuantity()))
+                                && getDimensions((DoubleScalar<?, ?>) left).equals(getDimensions((DoubleScalar<?, ?>) right)))
                         {
                             push(((DoubleScalar<?, ?>) left).si <= ((DoubleScalar<?, ?>) right).si);
                             break;
@@ -348,8 +349,7 @@ public class Eval
                         Object right = pop();
                         Object left = pop();
                         if ((left instanceof DoubleScalar) && (right instanceof DoubleScalar)
-                                && ((DoubleScalar<?, ?>) left).getDisplayUnit().getQuantity()
-                                        .equals(((DoubleScalar<?, ?>) right).getDisplayUnit().getQuantity()))
+                                && getDimensions((DoubleScalar<?, ?>) left).equals(getDimensions((DoubleScalar<?, ?>) right)))
                         {
                             push(((DoubleScalar<?, ?>) left).si < ((DoubleScalar<?, ?>) right).si);
                             break;
@@ -370,8 +370,7 @@ public class Eval
                         Object right = pop();
                         Object left = pop();
                         if ((left instanceof DoubleScalar) && (right instanceof DoubleScalar)
-                                && ((DoubleScalar<?, ?>) left).getDisplayUnit().getQuantity()
-                                        .equals(((DoubleScalar<?, ?>) right).getDisplayUnit().getQuantity()))
+                                && getDimensions((DoubleScalar<?, ?>) left).equals(getDimensions((DoubleScalar<?, ?>) right)))
                         {
                             push(((DoubleScalar<?, ?>) left).si >= ((DoubleScalar<?, ?>) right).si);
                             break;
@@ -385,8 +384,7 @@ public class Eval
                         Object right = pop();
                         Object left = pop();
                         if ((left instanceof DoubleScalar) && (right instanceof DoubleScalar)
-                                && ((DoubleScalar<?, ?>) left).getDisplayUnit().getQuantity()
-                                        .equals(((DoubleScalar<?, ?>) right).getDisplayUnit().getQuantity()))
+                                && getDimensions((DoubleScalar<?, ?>) left).equals(getDimensions((DoubleScalar<?, ?>) right)))
                         {
                             push(((DoubleScalar<?, ?>) left).si > ((DoubleScalar<?, ?>) right).si);
                             break;
@@ -432,6 +430,10 @@ public class Eval
 
                 case '?': // Conditional expression
                 {
+                    if (bindingStrength >= BIND_CONDITIONAL_EXPRESSION)
+                    {
+                        return;
+                    }
                     this.position++;
                     // This is special as we really do not want to evaluate or cause side effects on the non-taken part
                     Object choice = pop();
@@ -466,6 +468,9 @@ public class Eval
                 }
 
                 case ':':
+                    return;
+
+                case ',':
                     return;
 
                 default:
@@ -546,7 +551,7 @@ public class Eval
                 case '!':
                     if (!thenPart)
                     {
-                        return;
+                        return; // Every operator has lower precedence than the else part
                     }
                     this.position++;
                     break;
@@ -601,8 +606,8 @@ public class Eval
         Object exponent = pop();
         Object base = pop();
         if ((base instanceof DoubleScalarRel) && (exponent instanceof DoubleScalarRel)
-                && ((DoubleScalarRel<?, ?>) base).getDisplayUnit().getQuantity().equals(DimensionlessUnit.SI.getQuantity())
-                && ((DoubleScalarRel<?, ?>) exponent).getDisplayUnit().getQuantity().equals(DimensionlessUnit.SI.getQuantity()))
+                && getDimensions((DoubleScalarRel<?, ?>) base).equals(getDimensions(DimensionlessUnit.SI))
+                && getDimensions((DoubleScalarRel<?, ?>) exponent).equals(getDimensions(DimensionlessUnit.SI)))
         {
             DoubleScalar<?, ?> result = DoubleScalarRel.instantiate(
                     Math.pow(((DoubleScalarRel<?, ?>) base).si, ((DoubleScalarRel<?, ?>) exponent).si), DimensionlessUnit.SI);
@@ -656,16 +661,18 @@ public class Eval
         Object left = pop();
         if (!(left instanceof DoubleScalar))
         {
-            throwException("Left operand of addition must be a scalar (got " + left + ")");
+            throwException("Left operand of addition must be a scalar (got \"" + left + "\")");
         }
         if (!(right instanceof DoubleScalar))
         {
-            throwException("Right operand of addition must be a scalar (got " + right + ")");
+            throwException("Right operand of addition must be a scalar (got \"" + right + "\")");
         }
         // Both operands are DoubleScalar
-        if (!((DoubleScalar<?, ?>) left).getDisplayUnit().getQuantity()
-                .equals(((DoubleScalarRel<?, ?>) right).getDisplayUnit().getQuantity()))
+        if (!((DoubleScalar<?, ?>) left).getDisplayUnit().getQuantity().getSiDimensions()
+                .equals(getDimensions((DoubleScalar<?, ?>) right)))
         {
+            // System.out.println("left: " + getDimensions((DoubleScalar<?, ?>) left));
+            // System.out.println("right: " + getDimensions((DoubleScalar<?, ?>) right));
             throwException("Cannot add " + left + " to " + right + " because the types are incompatible");
         }
         // Operands are of compatible unit
@@ -688,7 +695,7 @@ public class Eval
         DoubleScalar<?, ?> sum =
                 DoubleScalarAbs.instantiate(((DoubleScalarAbs<?, ?, ?, ?>) left).si + ((DoubleScalarRel<?, ?>) right).si,
                         ((DoubleScalarAbs<?, ?, ?, ?>) left).getDisplayUnit().getStandardUnit());
-        System.out.println(left + " + " + right + " = " + sum);
+        // System.out.println(left + " + " + right + " = " + sum);
         // sum.setDisplayUnit(ds.getDisplayUnit());
         push(sum);
     }
@@ -702,17 +709,14 @@ public class Eval
         Object left = pop();
         if (!(left instanceof DoubleScalar))
         {
-            throwException("Left operand of subtraction must be a scalar (got " + left + ")");
+            throwException("Left operand of subtraction must be a scalar (got \"" + left + "\")");
         }
         if (!(right instanceof DoubleScalar))
         {
-            throwException("Right operand of subtraction must be a scalar (got " + right + ")");
+            throwException("Right operand of subtraction must be a scalar (got \"" + right + "\")");
         }
         // Now we know that we're dealing with DoubleScalar objects
-        // System.out.println("left unit : " + left.getDisplayUnit().getStandardUnit());
-        // System.out.println("right unit: " + right.getDisplayUnit().getStandardUnit());
-        if (!((DoubleScalar<?, ?>) left).getDisplayUnit().getQuantity()
-                .equals(((DoubleScalar<?, ?>) right).getDisplayUnit().getQuantity()))
+        if (!getDimensions((DoubleScalar<?, ?>) left).equals(getDimensions((DoubleScalar<?, ?>) right)))
         {
             throwException("Cannot subtract " + right + " from " + left + " because the types are incompatible");
         }
@@ -758,24 +762,16 @@ public class Eval
     {
         // Parse a number value
         int startPosition = this.position;
-        boolean seenSign = false;
         boolean seenExp = false;
         boolean seenExpSign = false;
-        boolean seenDigit = false;
         boolean seenExpDigit = false;
         boolean seenRadix = false;
         while (this.position < this.expression.length())
         {
             char c = this.expression.charAt(this.position);
-            if ((!seenDigit) && ('-' == c || '+' == c))
-            { // Cannot happen???
-                if (seenSign)
-                {
-                    throwException("Too many signs");
-                }
-                seenSign = true;
-            }
-            else if (seenExp && (!seenExpDigit) && ('-' == c || '+' == c))
+            // Any leading plus and minus signs at the start of this value are consumed by evalLhs
+            // A subsequent plus and minus sign indicates an addition or subtraction 
+            if (seenExp && (!seenExpDigit) && ('-' == c || '+' == c))
             {
                 if (seenExpSign)
                 {
@@ -812,10 +808,6 @@ public class Eval
                 if (seenExp)
                 {
                     seenExpDigit = true;
-                }
-                else
-                {
-                    seenDigit = true;
                 }
             }
             else
@@ -879,7 +871,7 @@ public class Eval
         eatSpace();
         if (this.position < this.expression.length() && '(' == this.expression.charAt(this.position))
         {
-            // Open parentheses signals the start of a function call; collect the parameters of the function on the stack and
+            // Open parenthesis signals the start of a function call; collect the parameters of the function on the stack and
             // count them
             this.position++;
             eatSpace();
@@ -889,10 +881,14 @@ public class Eval
                 evalLhs(0);
                 argCount++;
                 eatSpace();
+                if (this.position < this.expression.length() && ',' == this.expression.charAt(this.position))
+                {
+                    this.position++;
+                }
             }
             if (this.position >= this.expression.length() || ')' != this.expression.charAt(this.position))
             {
-                throwException("Missing closing parentheses");
+                throwException("Missing closing parenthesis");
             }
             this.position++; // step over the closing parenthesis
             if (0 == argCount)
@@ -903,19 +899,9 @@ public class Eval
             {
                 return executeOneArgumentFunction(name);
             }
-            else if (2 == argCount && "pow" == name)
+            else if (2 == argCount)
             {
-                Object power = pop();
-                Object base = pop();
-                if ((base instanceof Dimensionless) && (power instanceof Dimensionless))
-                {
-                    return ((Dimensionless) base).pow(((Dimensionless) power).si);
-                }
-                throwException("Cannot raise " + base + " to power " + power);
-            }
-            else
-            {
-                throwException("Unknown " + argCount + " argument function " + name);
+                return executeTwoArgumentFunction(name);
             }
         }
         else
@@ -1019,7 +1005,7 @@ public class Eval
     }
 
     /**
-     * Execute a one-argument function on the top-element of the stack and push the result onto the stack.
+     * Execute a one-argument function on the top-element of the stack.
      * @param functionName String; the name of the zero-argument function
      * @return DoubleScalar&lt;?,?&gt;; the result of evaluating the one-argument function
      */
@@ -1032,7 +1018,7 @@ public class Eval
             throwException("Function " + functionName + " cannot be applied to " + object); // should test if the name is valid
         }
         DoubleScalar<?, ?> ds = (DoubleScalar<?, ?>) object;
-        if (!(ds.getDisplayUnit().getQuantity().equals(DimensionlessUnit.SI.getQuantity())))
+        if (!getDimensions(ds).equals(getDimensions(DimensionlessUnit.SI)))
         {
             throwException("Function " + functionName + " cannot be applied to " + ds);
         }
@@ -1096,26 +1082,90 @@ public class Eval
     }
 
     /**
-     * Push one value onto the evaluation stack.
-     * @param value Object; the value to push onto the evaluation stack
+     * Execute a one-argument function on the top-element of the stack.
+     * @param functionName String; the name of the zero-argument function
+     * @return Object; the result of executing the function
      */
-    private void push(final Object value)
+    private Object executeTwoArgumentFunction(final String functionName)
     {
-        this.stack.add(value);
+        Object second = pop(); // The second argument comes of the stack first!
+        Object first = pop();
+        // All these functions operate solely on DoubleScalar objects
+        if (!(first instanceof DoubleScalar))
+        {
+            throwException("First argument of " + functionName + " must be a scalar (got \"" + first + "\")");
+        }
+        if (!(second instanceof DoubleScalar))
+        {
+            throwException("Second argument of " + functionName + " must be a scalar (got \"" + second + "\")");
+        }
+        DoubleScalar<?, ?> firstDS = (DoubleScalar<?, ?>) first;
+        DoubleScalar<?, ?> secondDS = (DoubleScalar<?, ?>) second;
+        switch (functionName)
+        {
+            case "pow":
+                if (!getDimensions(firstDS).equals(getDimensions(DimensionlessUnit.SI)))
+                {
+                    throwException("Function " + functionName + " cannot be applied to " + firstDS);
+                }
+                if (!getDimensions(secondDS).equals(getDimensions(DimensionlessUnit.SI)))
+                {
+                    throwException("Function " + functionName + " cannot be applied to " + secondDS);
+                }
+                return new Dimensionless(Math.pow(firstDS.si, secondDS.si), DimensionlessUnit.SI);
+
+            case "atan2":
+                if (!getDimensions(firstDS).equals(getDimensions(secondDS)))
+                {
+                    throwException("Arguments of atan2 must be of the same type");
+                }
+                return new Dimensionless(Math.atan2(firstDS.si, secondDS.si), DimensionlessUnit.SI);
+        }
+        throwException("Unknown function " + functionName);
+        return null;// cannot happen
     }
 
     /**
-     * Pop one value from the evaluation stack. Throw exception when stack underflows
-     * @return Object; the value popped from the evaluation stack
+     * Push one object onto the evaluation stack.
+     * @param object Object; the object to push onto the evaluation stack
+     */
+    private void push(final Object object)
+    {
+        this.stack.add(object);
+    }
+
+    /**
+     * Pop one object from the evaluation stack. Throw exception when stack underflows
+     * @return Object; the object popped from the evaluation stack
      * @throws RuntimeException when the stack is currently empty
      */
     private Object pop() throws RuntimeException
     {
-        if (0 == this.stack.size())
+        if (this.stack.isEmpty())
         {
             throwException("Stack empty");
         }
         return (this.stack.remove(this.stack.size() - 1));
+    }
+
+    /**
+     * Retrieve the SIDimensions of a DoubleScalar.
+     * @param doubleScalar DoubleScalar&lt;?,?&gt;; the DoubleScalar
+     * @return SIDimensions; the SIDimensions object that describes the quantity of the DoubleScalar
+     */
+    private SIDimensions getDimensions(final DoubleScalar<?, ?> doubleScalar)
+    {
+        return doubleScalar.getDisplayUnit().getQuantity().getSiDimensions();
+    }
+
+    /**
+     * Retrieve the SIDimensions of a unit.
+     * @param unit Unit&lt;?&gt;; the unit
+     * @return SIDimensions; the SIDimensions unit
+     */
+    private SIDimensions getDimensions(final Unit<?> unit)
+    {
+        return unit.getQuantity().getSiDimensions();
     }
 
 }
