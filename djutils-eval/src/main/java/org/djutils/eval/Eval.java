@@ -1,7 +1,11 @@
 package org.djutils.eval;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.djunits.unit.DimensionlessUnit;
 import org.djunits.unit.TimeUnit;
@@ -15,17 +19,19 @@ import org.djunits.value.vdouble.scalar.base.DoubleScalar;
 import org.djunits.value.vdouble.scalar.base.DoubleScalarAbs;
 import org.djunits.value.vdouble.scalar.base.DoubleScalarRel;
 import org.djutils.exceptions.Throw;
+import org.djutils.metadata.MetaData;
+import org.djutils.metadata.ObjectDescriptor;
 
 /**
  * Eval - evaluate mathematical expression. Derived from software developed between 2002-2016 by Peter Knoppers.
  * <p>
  * CONSIDER: implement string datatype.
  * <p>
- * TODO: implement atan2 and put it in a handleTwoArgumentFunction method.
- * <p>
  * The precedence of binary operators follows the list of the
- * <a href="https://www.cs.bilkent.edu.tr/~guvenir/courses/CS101/op_precedence.html">Java Operator Precendence Table</a>,
+ * <a href="https://www.cs.bilkent.edu.tr/~guvenir/courses/CS101/op_precedence.html">Java Operator Precedence Table</a>,
  * skipping bitwise and other operators that make no sense for this evaluator and adding the exponentiation (^) operator.
+ * </p>
+ * @author Peter Knoppers</a>
  */
 public class Eval
 {
@@ -39,7 +45,7 @@ public class Eval
     private int position = 0;
 
     /** Access to the variable pool. */
-    private final RetrieveValue retrieveValue;
+    private RetrieveValue retrieveValue = null;
 
     /** Binding strength of ternary conditional. */
     private static final int BIND_CONDITIONAL_EXPRESSION = 1;
@@ -68,53 +74,231 @@ public class Eval
     /** Binding strength of unary minus and logical negation. */
     private static final int BIND_UMINUS = 9;
 
-    /** Pi. */
-    static final Dimensionless PI = new Dimensionless(Math.PI, DimensionlessUnit.SI);
+    /** Object descriptor array for all zero argument functions. */
+    private static final ObjectDescriptor[] noArguments = new ObjectDescriptor[] {};
 
-    /** Euler's constant, a.k.a. the base of the natural logarithm (e). */
-    private static final Dimensionless E = new Dimensionless(Math.E, DimensionlessUnit.SI);
+    /** The built-in functions. */
+    // @formatter:off
+    private final Function[] builtinFunctions = new Function[] {
+        new F0("AVOGADRO", Constants.AVOGADRO, new MetaData("Avogadro constant", "Avogadro constant in 1/mol", noArguments)),
+        new F0("BOLTZMANN", Constants.BOLTZMANN, new MetaData("Boltzmann constant",
+                "The exact value of the Boltzmann constant in Joule per Kelvin", noArguments)),
+        new F0("CESIUM133_FREQUENCY", Constants.CESIUM133_FREQUENCY, new MetaData("Cesium 133 frequency", 
+                "The exact value of the Cesium 133 ground state hyperfine structure transition frequency", noArguments)),
+        new F0("CURRENTTIME", Time.ZERO.getClass(),
+                new MetaData("The current time in seconds since 1970 UTC", 
+                        "The current time in seconds since 1970 UTC to the nearest ms as reported by the operating system", noArguments), 
+                (f) -> new Time(System.currentTimeMillis() / 1000d, TimeUnit.BASE_SECOND)),
+        new F0("E", Constants.E, new MetaData("Euler\'s constant e", "Euler\'s constant e; the base of the natural logarithm")),
+        new F0("ELECTRONCHARGE", Constants.ELECTRONCHARGE, new MetaData("Electrical charge of one electron", 
+                "The exact electrical charge of one electron", noArguments)),
+        new F0("ELECTRONMASS", Constants.ELECTRONMASS, new MetaData("Mass of an electron", 
+                "Mass of an electron, the value of this physical constant has an uncertainty of 2.8e-40 kg", noArguments)),
+        new F0("G", Constants.G, new MetaData("Gravitational constant", 
+                "Gravitational constant, a.k.a. Newtonian constant of gravitation. This is the 2018 best known approximation, which has an "
+                + "uncertainty 1.5e-15 m^3/kgs^2", noArguments)),
+        new F0("LIGHTSPEED", Constants.LIGHTSPEED, new MetaData("Speed of light in vacuum", "The exact speed of light in vacuum", noArguments)),
+        new F0("LUMINOUS_EFFICACY_540THZ", Constants.LUMINOUS_EFFICACY_540THZ, new MetaData(
+                "The luminous efficacy Kcd of monochromatic radiation of frequency 540×10^12 Hz (540 THz)",
+                "The exact luminous efficacy Kcd of monochromatic radiation of frequency 540×10^12 Hz (540 THz)", noArguments)),
+        new F0("NEUTRONMASS", Constants.NEUTRONMASS, new MetaData("Mass of a neutron", 
+                "Mass of a neutron. The value of this physical constant has an uncertainty of 9.5e-37 kg.", noArguments)),
+        new F0("PI", Constants.PI, new MetaData("Ratio of a half circumference of a circle and its radius", 
+                "Ratio of a half circumference of a circle and its radius", noArguments)),
+        new F0("PHI", Constants.PHI, new MetaData("Golden ratio", "Golden ratio", noArguments)),
+        new F0("PLANCK", Constants.PLANCK, new MetaData("Planck constant; ratio of a photon's energy and its frequency",
+                "Planck constant; the exact ratio of a photon's energy and its frequency", noArguments)),
+        new F0("PLANCKREDUCED", Constants.PLANKREDUCED, new MetaData("Reduced Planck constant", 
+                "Reduced Planck constant, a.k.a. angular Planck constant; Planck constant divided by 2 pi" ,noArguments)),
+        new F0("PROTONCHARGE", Constants.PROTONCHARGE, new MetaData("ElectricalCharge of one proton", "ElectricalCharge of one proton", noArguments)),
+        new F0("PROTONMASS", Constants.PROTONMASS, new MetaData("Mass of a proton", 
+                "Mass of a proton. The value of this physical constant has an uncertainty of 5.1e-37", noArguments)),
+        new F0("TAU", Constants.TAU, new MetaData("Ratio of circumference of circle and its radius", 
+                "Ratio of circumference of circle and its radius", noArguments)),
+        new F0("VACUUMIMPEDANCE", Constants.VACUUMIMPEDANCE, new MetaData("Impedance of vacuum", "Impedance of vacuum", noArguments)),
+        new F0("VACUUMPERMEABILITY", Constants.VACUUMPERMEABILITY, new MetaData("Permeability of vacuum",
+                "Permeability of vacuum. The uncertainty of this value is 1.9e-16N/A^2", noArguments)),
+        new F0("VACUUMPERMITTIVITY", Constants.VACUUMPERMITTIVITY, new MetaData("Permittivity of vacuum.",
+                "Permittivity of vacuum. The uncertainty of this value is 1.3e-21 F/m.", noArguments)),
+        new F0("TRUE", Boolean.TRUE, new MetaData("The logical value TRUE", "The logical value TRUE", noArguments)),
+        new F0("FALSE", Boolean.FALSE, new MetaData("The logical value FALSE", "The logical value FALSE", noArguments)),
+        new F1("acos", Dimensionless.class, new MetaData("acos", "returns the angle of which the cosine equals the value of the argument",
+                new ObjectDescriptor("angle", "angle", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).acos()),
+        new F1("asin", Dimensionless.class, new MetaData("asin", "returns the angle of which the sine equals the value of the argument",
+                new ObjectDescriptor("angle", "angle", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).asin()),
+        new F1("atan", Dimensionless.class, new MetaData("atan", "returns the angle of which the tangent equals the value of the argument",
+                new ObjectDescriptor("angle", "angle", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).atan()),
+        new F1("cbrt", Dimensionless.class, new MetaData("cbrt", "returns the cubic root of the value of the argument",
+                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).cbrt()),
+        new F1("cos", Dimensionless.class, new MetaData("cos", "returns the cosine of the value of the argument",
+                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).cos()),
+        new F1("cosh", Dimensionless.class, new MetaData("cosh", "returns the hyperbolic cosine of the value of the argument",
+                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).cosh()),
+        new F1("exp", Dimensionless.class, new MetaData("exp", "returns e to the power of the argument",
+                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).exp()),
+        new F1("expm1", Dimensionless.class, new MetaData("expm1", "returns e to the power of the argument minus 1",
+                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).expm1()),
+        new F1("log", Dimensionless.class, new MetaData("log", "returns natural logarithm (logarithm base e) of the argument",
+                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).log()),
+        new F1("log10", Dimensionless.class, new MetaData("log10", "returns logarithm base 10 of the argument",
+                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).log10()),
+        new F1("log1p", Dimensionless.class, new MetaData("log1p", "returns natural logarithm (logarithm base e) of the argument plus 1",
+                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).log1p()),
+        new F1("signum", Dimensionless.class, new MetaData("signum", "returns sign of the argument (1 if positive, -1 if negative, 0 if zero)",
+                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).signum()),
+        new F1("sin", Dimensionless.class, new MetaData("cos", "returns the sine of the value of the argument",
+                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).sin()),
+        new F1("sinh", Dimensionless.class, new MetaData("cosh", "returns the hyperbolic sine of the value of the argument",
+                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).sinh()),
+        new F1("sqrt", Dimensionless.class, new MetaData("cos", "returns the square root of the value of the argument",
+                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).sqrt()),
+        new F1("tan", Dimensionless.class, new MetaData("cos", "returns the tangent of the value of the argument",
+                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).tan()),
+        new F1("tanh", Dimensionless.class, new MetaData("cosh", "returns the hyperbolic tangent of the value of the argument",
+                new ObjectDescriptor("value", "value", Dimensionless.class)), (i, a) -> checkDimensionless(i, a).tanh()),
+        new F2("pow", new MetaData("pow", "raises the first argument to the power of the second argument",                
+                new ObjectDescriptor("base", "base", Dimensionless.class), 
+                new ObjectDescriptor("exponent", "exponent", Dimensionless.class)),
+                (i, b, p)-> performPower(b, p) ),
+        new F2("atan2", new MetaData("atan2", 
+                "atan2 function (needs two DoubleScalarRel parameters that have the same SI dimensions)", 
+                new ObjectDescriptor("y", "y", DoubleScalarRel.class),
+                new ObjectDescriptor("x", "x", DoubleScalarRel.class)), (i, y, x) -> performAtan2(y, x)),
+        };
+    
+    // @formatter:on
+    /** Map of all the built-in functions. */
+    private Map<String, Function> functionData;
 
-    /** Phi. */
-    private static final Dimensionless PHI = new Dimensionless((1 + Math.sqrt(5)) / 2, DimensionlessUnit.SI);
+    {
+        this.functionData = new HashMap<>();
+        for (Function function : this.builtinFunctions)
+        {
+            this.functionData.put(function.getId(), function);
+        }
+    }
+
+    /** User defined functions. */
+    private Map<String, Function> userDefinedFunctions = null;
+
+    /** Map from DoubleScalar sub classes to Quantities */
+    private Map<Class<?>, SIDimensions> siDimensionsMap = new HashMap<>();
 
     /**
-     * Construct a new expression evaluator.
-     * @param expression String; the expression that the evaluator shall attempt to evaluate
-     * @param retrieveValue RetrieveValue; object that allows retrieving a value (can be null)
+     * Construct a new evaluator with no RetrieveValue object and no added/overridden function and no added/overridden units.
      */
-    private Eval(final String expression, final RetrieveValue retrieveValue)
+    public Eval()
     {
-        this.expression = expression;
-        this.retrieveValue = retrieveValue;
+        // Nothing to do here
     }
 
     /**
-     * Construct an expression evaluator and let it attempt to evaluate a mathematical expression
+     * Set or replace the RetrieveValue object of this evaluator.
+     * @param retrieveValue RetrieveValue; the new RetrieveValue object (may be null to only delete the currently active
+     *            RetrieveValue object).
+     * @return this (for easy method chaining)
+     */
+    public Eval setRetrieveValue(final RetrieveValue retrieveValue)
+    {
+        this.retrieveValue = retrieveValue;
+        return this;
+    }
+    
+    // TODO create a mechanism that allows parsing of user-defined units (e.g., [km/h])
+
+    /**
+     * Evaluate a mathematical expression
      * @param expression String; the expression
-     * @param retrieveValue RetrieveValue; object that allows retrieving a value (can be null)
      * @return Object; The value of the evaluated expression
      * @throws RuntimeException when the expression cannot be evaluated
      */
-    public static Object evaluate(final String expression, final RetrieveValue retrieveValue) throws RuntimeException
+    public Object evaluate(final String expression) throws RuntimeException
+    {
+        return evaluateExpression(expression);
+    }
+
+    /**
+     * Evaluate a mathematical expression, check that the result is a logical value and return that value as a Boolean
+     * @param expression String; the expression
+     * @return Boolean; the result of the expression
+     * @throws RuntimeException when the expression could not be evaluated, or the result is not a logical value
+     */
+    public Boolean evaluateAsBoolean(final String expression) throws RuntimeException
+    {
+        Object result = evaluateExpression(expression);
+        if (!(result instanceof Boolean))
+        {
+            throwException("Result " + result + " can not be cast to a Boolean");
+        }
+        return ((Boolean) result);
+    }
+
+    /**
+     * Evaluate a mathematical expression, check that the result is a floating point value and return that value as a double. If
+     * the result is strongly typed (some DJUNITS quantity), the SI value is returned.
+     * @param expression String; the expression
+     * @return double; the result of the expression
+     * @throws RuntimeException when the expression could not be evaluated, or the result is not a logical value
+     */
+    public double evaluateAsDouble(final String expression) throws RuntimeException
+    {
+        Object result = evaluateExpression(expression);
+        if (!(result instanceof DoubleScalar<?, ?>))
+        {
+            throwException("Result " + result + " can not be cast to a double");
+        }
+        return ((DoubleScalar<?, ?>) result).si;
+    }
+
+    /**
+     * Create and return a collection of all built in functions.
+     * @return Collection&lt;Function&gt;; all built in functions
+     */
+    public Collection<Function> builtInFunctions()
+    {
+        return this.functionData.values();
+    }
+
+    /**
+     * Install a map of user-defined functions. If a built-in function has the same name as a user-defined function; the
+     * user-defined function takes precedence.
+     * @param userDefinedFunctionMap Map&lt;String, Function&gt;; map that maps the name of the function to a Function object
+     * @return Eval; this (for easy method chaining)
+     */
+    public Eval setUserDefinedFunctions(final Map<String, Function> userDefinedFunctionMap)
+    {
+        this.userDefinedFunctions = userDefinedFunctionMap;
+        return this;
+    }
+
+    /**
+     * Evaluate one expression.
+     * @param expression String; the expression to evaluate
+     * @return Object; the result of the evaluation (DoubleScalar or Boolean)
+     * @throws RuntimeException when the expression could not be evaluated, or the result is not a logical value
+     */
+    public Object evaluateExpression(final String expression) throws RuntimeException
     {
         Throw.whenNull(expression, "expression may not be null");
         Throw.when(expression.length() == 0, IllegalArgumentException.class, "Expression may not be the empty string");
-        Eval evaluator = new Eval(expression, retrieveValue);
-        evaluator.evalLhs(0);
-        evaluator.eatSpace();
-        if (evaluator.position < evaluator.expression.length())
+        this.expression = expression;
+        this.position = 0;
+        this.stack.clear();
+        eatSpace();
+        evalLhs(0);
+        if (this.position < this.expression.length())
         {
-            evaluator.throwException("Trailing garbage: \"" + evaluator.expression.substring(evaluator.position) + "\"");
+            this.throwException("Trailing garbage: \"" + this.expression.substring(this.position) + "\"");
         }
-        if (evaluator.stack.size() > 1)
+        if (this.stack.size() > 1)
         {
-            evaluator.throwException("Unfinished operations");
+            this.throwException("Unfinished operations");
         }
-        if (evaluator.stack.size() <= 0)
+        if (this.stack.size() <= 0)
         {
-            evaluator.throwException("No result after evaluation");
+            this.throwException("No result after evaluation");
         }
-        return evaluator.pop();
+        return pop();
     }
 
     /**
@@ -170,8 +354,7 @@ public class Eval
                     }
                     throwException("Cannot apply unary not operator on " + value);
                 }
-                break; // We should not get a "!=" operation here, but if we do, it results in an error later on TODO unit test
-                       // for this
+                break; // We should not get a "!=" operation here, but if we do, it results in an error later on
 
             case '(': // parenthesized expression
                 this.position++;
@@ -332,32 +515,16 @@ public class Eval
                     {
                         this.position++;
                         evalLhs(BIND_RELATIONAL);
-                        Object right = pop();
-                        Object left = pop();
-                        if ((left instanceof DoubleScalar) && (right instanceof DoubleScalar)
-                                && getDimensions((DoubleScalar<?, ?>) left).equals(getDimensions((DoubleScalar<?, ?>) right)))
-                        {
-                            push(((DoubleScalar<?, ?>) left).si <= ((DoubleScalar<?, ?>) right).si);
-                            break;
-                        }
-                        throwException("Cannot compare " + left + " to " + right);
+                        compareDoubleScalars((a, b) -> (a <= b));
                     }
                     else
                     {
-                        // FIXME: "<=" looks too much like "<"; should probably use a lambda expression
                         evalLhs(BIND_RELATIONAL);
-                        Object right = pop();
-                        Object left = pop();
-                        if ((left instanceof DoubleScalar) && (right instanceof DoubleScalar)
-                                && getDimensions((DoubleScalar<?, ?>) left).equals(getDimensions((DoubleScalar<?, ?>) right)))
-                        {
-                            push(((DoubleScalar<?, ?>) left).si < ((DoubleScalar<?, ?>) right).si);
-                            break;
-                        }
-                        throwException("Cannot compare " + left + " to " + right);
+                        compareDoubleScalars((a, b) -> (a < b));
                     }
+                    break;
 
-                case '>': // FIXME: looks too much like case '<'. Should probably use lambda expressions
+                case '>':
                     if (this.stack.isEmpty())
                     {
                         throwException("Missing left operand");
@@ -367,30 +534,14 @@ public class Eval
                     {
                         this.position++;
                         evalLhs(BIND_RELATIONAL);
-                        Object right = pop();
-                        Object left = pop();
-                        if ((left instanceof DoubleScalar) && (right instanceof DoubleScalar)
-                                && getDimensions((DoubleScalar<?, ?>) left).equals(getDimensions((DoubleScalar<?, ?>) right)))
-                        {
-                            push(((DoubleScalar<?, ?>) left).si >= ((DoubleScalar<?, ?>) right).si);
-                            break;
-                        }
-                        throwException("Cannot compare " + left + " to " + right);
+                        compareDoubleScalars((a, b) -> (a >= b));
                     }
                     else
                     {
-                        // FIXME: ">=" looks too much like ">"; should probably use a lambda expression
                         evalLhs(BIND_RELATIONAL);
-                        Object right = pop();
-                        Object left = pop();
-                        if ((left instanceof DoubleScalar) && (right instanceof DoubleScalar)
-                                && getDimensions((DoubleScalar<?, ?>) left).equals(getDimensions((DoubleScalar<?, ?>) right)))
-                        {
-                            push(((DoubleScalar<?, ?>) left).si > ((DoubleScalar<?, ?>) right).si);
-                            break;
-                        }
-                        throwException("Cannot compare " + left + " to " + right);
+                        compareDoubleScalars((a, b) -> (a > b));
                     }
+                    break;
 
                 case '=':
                 {
@@ -478,6 +629,38 @@ public class Eval
 
             }
         }
+    }
+
+    /**
+     * Interface for comparator for two double values.
+     */
+    interface CompareValues
+    {
+        /**
+         * Compare two double values.
+         * @param argument1 double; the left argument of the comparator
+         * @param argument2 double; the right argument of the comparator
+         * @return Object; the result type of the function
+         */
+        Object execute(double argument1, double argument2);
+
+    }
+
+    /**
+     * Pop two operands from the stack and compare them using the provided comparator lambda expression
+     * @param comparator CompareValues; a function that compares two DoubleScalar values.
+     */
+    private void compareDoubleScalars(final CompareValues comparator)
+    {
+        Object right = pop();
+        Object left = pop();
+        if ((left instanceof DoubleScalar) && (right instanceof DoubleScalar)
+                && getDimensions((DoubleScalar<?, ?>) left).equals(getDimensions((DoubleScalar<?, ?>) right)))
+        {
+            push(comparator.execute(((DoubleScalar<?, ?>) left).si, ((DoubleScalar<?, ?>) right).si));
+            return;
+        }
+        throwException("Cannot compare " + left + " to " + right);
     }
 
     /**
@@ -605,6 +788,17 @@ public class Eval
     {
         Object exponent = pop();
         Object base = pop();
+        push(performPower(base, exponent));
+    }
+
+    /**
+     * Perform the power operation on the two arguments and return the result
+     * @param base Object; the base operand of the power operation
+     * @param exponent Object; the exponent of the power operation
+     * @return Object; the result of the power operation
+     */
+    private Object performPower(final Object base, final Object exponent)
+    {
         if ((base instanceof DoubleScalarRel) && (exponent instanceof DoubleScalarRel)
                 && getDimensions((DoubleScalarRel<?, ?>) base).equals(getDimensions(DimensionlessUnit.SI))
                 && getDimensions((DoubleScalarRel<?, ?>) exponent).equals(getDimensions(DimensionlessUnit.SI)))
@@ -612,10 +806,31 @@ public class Eval
             DoubleScalar<?, ?> result = DoubleScalarRel.instantiate(
                     Math.pow(((DoubleScalarRel<?, ?>) base).si, ((DoubleScalarRel<?, ?>) exponent).si), DimensionlessUnit.SI);
             // System.out.println(base + " ^ " + exponent + " = " + result);
-            push(result);
-            return;
+            return result;
         }
         throwException("Cannot raise " + base + " to power " + exponent);
+        return null; // Not reached
+    }
+
+    /**
+     * Perform the atan2 function on the two arguments and return the result
+     * @param y Object; should be some kind of DoubleScalarRel
+     * @param x Object; should be some kind of DoubleScalarRel with the same SiDimensions as y
+     * @return Object; in fact a DoubleScalarRel with a quantity matching Dimensionless
+     */
+    private Object performAtan2(final Object y, final Object x)
+    {
+        if ((y instanceof DoubleScalarRel) && (x instanceof DoubleScalarRel)
+                && getDimensions((DoubleScalarRel<?, ?>) y).equals(getDimensions((DoubleScalarRel<?, ?>) x)))
+        {
+            DoubleScalar<?, ?> result = DoubleScalarRel.instantiate(
+                    Math.atan2(((DoubleScalarRel<?, ?>) y).si, ((DoubleScalarRel<?, ?>) x).si), DimensionlessUnit.SI);
+            // System.out.println(base + " ^ " + exponent + " = " + result);
+            return result;
+        }
+        throwException("Cannot compute atan2 of " + y + ", " + x + ")");
+        return null; // Not reached
+
     }
 
     /**
@@ -770,7 +985,7 @@ public class Eval
         {
             char c = this.expression.charAt(this.position);
             // Any leading plus and minus signs at the start of this value are consumed by evalLhs
-            // A subsequent plus and minus sign indicates an addition or subtraction 
+            // A subsequent plus and minus sign indicates an addition or subtraction
             if (seenExp && (!seenExpDigit) && ('-' == c || '+' == c))
             {
                 if (seenExpSign)
@@ -833,7 +1048,7 @@ public class Eval
                 {
                     return SIScalar.valueOf(number + " " + this.expression.substring(startPosition, this.position++));
                 }
-                if ((!Character.isLetterOrDigit(c)) && '-' != c && '^' != c && '/' != c)
+                if ((!Character.isLetterOrDigit(c)) && '-' != c && '^' != c && '/' != c && '.' != c)
                 {
                     throwException("Bad symbol in SI unit string");
                 }
@@ -891,17 +1106,79 @@ public class Eval
                 throwException("Missing closing parenthesis");
             }
             this.position++; // step over the closing parenthesis
-            if (0 == argCount)
+            Function f = null;
+            if (null != this.userDefinedFunctions)
             {
-                return handleZeroArgumentFunction(name);
+                f = this.userDefinedFunctions.get(name);
             }
-            if (1 == argCount)
+            if (null == f)
             {
-                return executeOneArgumentFunction(name);
+                f = this.functionData.get(name);
             }
-            else if (2 == argCount)
+            Object[] args = new Object[argCount];
+            for (int i = 0; i < argCount; i++)
             {
-                return executeTwoArgumentFunction(name);
+                args[argCount - i - 1] = pop();
+            }
+            if (null != f)
+            {
+                if (f.getMetaData() != MetaData.NO_META_DATA)
+                {
+                    // MetaData.verifyComposition does not handle this case correctly.
+                    if (f.getMetaData().getObjectDescriptors().length != argCount)
+                    {
+                        throwException(name + " needs " + f.getMetaData().getObjectDescriptors().length + " parameters, got("
+                                + argCount + ")");
+                    }
+                    for (int i = 0; i < argCount; i++)
+                    {
+                        if ((args[i] instanceof Boolean)
+                                && (!Boolean.class.isAssignableFrom(f.getMetaData().getObjectClass(i))))
+                        {
+                            throwException(name + " does not take " + args[i] + " as parameter " + i);
+                        }
+                        else if ((args[i] instanceof DoubleScalar)
+                                && (DoubleScalar.class.isAssignableFrom(f.getMetaData().getObjectClass(i))))
+                        {
+                            DoubleScalar<?, ?> ds = (DoubleScalar<?, ?>) args[i];
+                            Class<?> clazz = f.getMetaData().getObjectClass(i);
+                            if (!clazz.equals(DoubleScalarRel.class))
+                            {
+                                SIDimensions siDimensions = this.siDimensionsMap.get(clazz);
+                                if (null == siDimensions)
+                                {
+                                    // Not in the cache
+                                    try
+                                    {
+                                        Field field = clazz.getDeclaredField("ZERO"); // Every DoubleScalar type has this
+                                        DoubleScalar<?, ?> zero = (DoubleScalar<?, ?>) field.get(clazz);
+                                        siDimensions = zero.getDisplayUnit().getQuantity().getSiDimensions();
+                                        this.siDimensionsMap.put(clazz, siDimensions); // Add this one to our map
+                                    }
+                                    catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException nsfe)
+                                    {
+                                        throwException("ERROR: Cannot determine quantity for " + clazz.getCanonicalName());
+                                    }
+                                }
+                                if (!siDimensions.equals(getDimensions(ds)))
+                                {
+                                    throwException("parameter " + i + " of " + name + " has incompatible quantity");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            throwException(
+                                    "Argument " + i + " of function " + name + " is of an unhandled type (" + args[i] + ")");
+                        }
+                    }
+                }
+                // All parameters are apparently compatible; invoke the function
+                return (f.function(args));
+            }
+            else
+            {
+                throwException("Unknown function " + name);
             }
         }
         else
@@ -917,212 +1194,6 @@ public class Eval
             throwException("Value of " + name + " is neither a DoubleScalar nor a Boolean");
         }
         return null; // cannot happen
-    }
-
-    /**
-     * Execute a zero-argument function. These functions return a physical or mathematical constant, or invoke some system
-     * function.
-     * @param functionName String; name of the function to invoke
-     * @return Object; the result of executing the function
-     * @throws RuntimeException when no function with the specified name is known
-     */
-    private Object handleZeroArgumentFunction(final String functionName) throws RuntimeException
-    {
-        switch (functionName)
-        {
-            case "AVOGADRO":
-                return Constants.AVOGADRO;
-
-            case "BOLTZMANN":
-                return Constants.BOLTZMANN;
-
-            case "CESIUM133_FREQUENCY":
-                return Constants.CESIUM133_FREQUENCY;
-
-            case "CURRENTTIME":
-                return new Time(System.currentTimeMillis() / 1000d, TimeUnit.BASE_SECOND);
-
-            case "E":
-                return E;
-
-            case "ELECTRONCHARGE":
-                return Constants.ELECTRONCHARGE;
-
-            case "ELECTRONMASS":
-                return Constants.ELECTRONMASS;
-
-            case "G":
-                return Constants.G;
-
-            case "LIGHTSPEED":
-                return Constants.LIGHTSPEED;
-
-            case "LUMINOUS_EFFICACY_540THZ":
-                return Constants.LUMINOUS_EFFICACY_540THZ;
-
-            case "NEUTRONMASS":
-                return Constants.NEUTRONMASS;
-
-            case "PI":
-                return PI;
-
-            case "PHI":
-                return PHI;
-
-            case "PLANCK":
-                return Constants.PLANCK;
-
-            case "PLANKREDUCED":
-                return Constants.PLANKREDUCED;
-
-            case "PROTONCHARGE":
-                return Constants.PROTONCHARGE;
-
-            case "PROTONMASS":
-                return Constants.PROTONMASS;
-
-            case "TAU":
-                return Constants.TAU;
-
-            case "VACUUMIMPEDANCE":
-                return Constants.VACUUMIMPEDANCE;
-
-            case "VACUUMPERMEABILITY":
-                return Constants.VACUUMPERMEABILITY;
-
-            case "VACUUMPERMITTIVITY":
-                return Constants.VACUUMPERMITTIVITY;
-
-            case "TRUE":
-                return Boolean.TRUE;
-
-            case "FALSE":
-                return Boolean.FALSE;
-
-        }
-        throwException("Unknown zero-argument function " + functionName);
-        return null;// cannot happen
-    }
-
-    /**
-     * Execute a one-argument function on the top-element of the stack.
-     * @param functionName String; the name of the zero-argument function
-     * @return DoubleScalar&lt;?,?&gt;; the result of evaluating the one-argument function
-     */
-    private Object executeOneArgumentFunction(final String functionName)
-    {
-        Object object = pop();
-        // All implemented one-argument functions only operate on a DimensionLess value
-        if (!(object instanceof DoubleScalar))
-        {
-            throwException("Function " + functionName + " cannot be applied to " + object); // should test if the name is valid
-        }
-        DoubleScalar<?, ?> ds = (DoubleScalar<?, ?>) object;
-        if (!getDimensions(ds).equals(getDimensions(DimensionlessUnit.SI)))
-        {
-            throwException("Function " + functionName + " cannot be applied to " + ds);
-        }
-        Dimensionless dl = new Dimensionless(ds.si, DimensionlessUnit.SI);
-        switch (functionName)
-        {
-            case "acos":
-                return dl.acos();
-
-            case "asin":
-                return dl.asin();
-
-            case "atan":
-                return dl.atan();
-
-            case "cbrt":
-                return dl.cbrt();
-
-            case "cos":
-                return dl.cos();
-
-            case "cosh":
-                return (dl.cosh());
-
-            case "exp":
-                return dl.exp();
-
-            case "expm1":
-                return dl.expm1();
-
-            case "log":
-                return dl.log();
-
-            case "log10":
-                return dl.log10();
-
-            case "log1p":
-                return dl.log1p();
-
-            case "signum":
-                return dl.signum();
-
-            case "sin":
-                return dl.sin();
-
-            case "sinh":
-                return dl.sinh();
-
-            case "sqrt":
-                return dl.sqrt();
-
-            case "tan":
-                return dl.tan();
-
-            case "tanh":
-                return dl.tanh();
-
-        }
-        throwException("Unknown function " + functionName);
-        return null;// cannot happen
-    }
-
-    /**
-     * Execute a one-argument function on the top-element of the stack.
-     * @param functionName String; the name of the zero-argument function
-     * @return Object; the result of executing the function
-     */
-    private Object executeTwoArgumentFunction(final String functionName)
-    {
-        Object second = pop(); // The second argument comes of the stack first!
-        Object first = pop();
-        // All these functions operate solely on DoubleScalar objects
-        if (!(first instanceof DoubleScalar))
-        {
-            throwException("First argument of " + functionName + " must be a scalar (got \"" + first + "\")");
-        }
-        if (!(second instanceof DoubleScalar))
-        {
-            throwException("Second argument of " + functionName + " must be a scalar (got \"" + second + "\")");
-        }
-        DoubleScalar<?, ?> firstDS = (DoubleScalar<?, ?>) first;
-        DoubleScalar<?, ?> secondDS = (DoubleScalar<?, ?>) second;
-        switch (functionName)
-        {
-            case "pow":
-                if (!getDimensions(firstDS).equals(getDimensions(DimensionlessUnit.SI)))
-                {
-                    throwException("Function " + functionName + " cannot be applied to " + firstDS);
-                }
-                if (!getDimensions(secondDS).equals(getDimensions(DimensionlessUnit.SI)))
-                {
-                    throwException("Function " + functionName + " cannot be applied to " + secondDS);
-                }
-                return new Dimensionless(Math.pow(firstDS.si, secondDS.si), DimensionlessUnit.SI);
-
-            case "atan2":
-                if (!getDimensions(firstDS).equals(getDimensions(secondDS)))
-                {
-                    throwException("Arguments of atan2 must be of the same type");
-                }
-                return new Dimensionless(Math.atan2(firstDS.si, secondDS.si), DimensionlessUnit.SI);
-        }
-        throwException("Unknown function " + functionName);
-        return null;// cannot happen
     }
 
     /**
@@ -1149,11 +1220,32 @@ public class Eval
     }
 
     /**
+     * Convert an object to a Dimensionless if possible, or complain.
+     * @param functionData Function; meta data of the function that wants a Dimensionless
+     * @param object Object; object that supposedly can be converted to a Dimensionless
+     * @return Dimensionless; the result
+     */
+    private Dimensionless checkDimensionless(final Function functionData, final Object object)
+    {
+        if (!(object instanceof DoubleScalar))
+        {
+            throwException("Function " + functionData.getId() + " cannot be applied to " + object); // should test if the name
+                                                                                                    // is valid
+        }
+        DoubleScalar<?, ?> ds = (DoubleScalar<?, ?>) object;
+        if (!getDimensions(ds).equals(getDimensions(DimensionlessUnit.SI)))
+        {
+            throwException("Function " + functionData.getId() + " cannot be applied to " + ds);
+        }
+        return new Dimensionless(ds.si, DimensionlessUnit.SI);
+    }
+
+    /**
      * Retrieve the SIDimensions of a DoubleScalar.
      * @param doubleScalar DoubleScalar&lt;?,?&gt;; the DoubleScalar
      * @return SIDimensions; the SIDimensions object that describes the quantity of the DoubleScalar
      */
-    private SIDimensions getDimensions(final DoubleScalar<?, ?> doubleScalar)
+    private static SIDimensions getDimensions(final DoubleScalar<?, ?> doubleScalar)
     {
         return doubleScalar.getDisplayUnit().getQuantity().getSiDimensions();
     }
@@ -1163,7 +1255,7 @@ public class Eval
      * @param unit Unit&lt;?&gt;; the unit
      * @return SIDimensions; the SIDimensions unit
      */
-    private SIDimensions getDimensions(final Unit<?> unit)
+    private static SIDimensions getDimensions(final Unit<?> unit)
     {
         return unit.getQuantity().getSiDimensions();
     }

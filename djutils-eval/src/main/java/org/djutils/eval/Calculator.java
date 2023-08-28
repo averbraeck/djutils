@@ -14,7 +14,7 @@ import org.djunits.value.vdouble.scalar.base.DoubleScalar;
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
- * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
+ * @author Peter Knoppers</a>
  */
 public class Calculator
 {
@@ -24,6 +24,7 @@ public class Calculator
      */
     public static void main(final String... args)
     {
+        doEval("3[kg.ms-2]");
         doEval("23.45*10");
         doEval(" 23.45 * 10 ");
         doEval("PI()*AVOGADRO()");
@@ -75,6 +76,16 @@ public class Calculator
         doEval("TRUE()==5");
         doEval("FALSE()==5");
         doEval("(2>3)?5:1+100");
+        doEval("PHI()");
+        doEval("-0==0");//FIXME
+        doEval("2^-2");
+        doEval("3e+5");
+        doEval("12>4?TRUE():(9+5)");
+        doEval("3==5!");
+        doEval("3[km/h]");
+        doEval("5*2[s]/5[s]");
+        // TODO? can we add additional non-base-SI units (e.g. km/h)?
+        // TODO unit test for value with unit containing '.' characters (e.g. 12 [kg.m])
     }
 
     /**
@@ -95,7 +106,7 @@ public class Calculator
     {
         try
         {
-            Object result = Eval.evaluate(expression, valuePool);
+            Object result = new Eval().setRetrieveValue(valuePool).evaluate(expression);
             System.out.println(expression + ": " + result);
         }
         catch (RuntimeException e)

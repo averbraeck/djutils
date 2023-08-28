@@ -19,4 +19,5 @@ public interface RetrieveValue
      * @return Object; the value of the variable
      */
     Object lookup(final String name);
+    
 }
