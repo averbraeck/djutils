@@ -10,7 +10,7 @@ import org.djutils.metadata.MetaData;
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
- * @author Peter Knoppers</a>
+ * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
 class F2 implements Function
 {

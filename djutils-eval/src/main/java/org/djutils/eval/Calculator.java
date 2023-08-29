@@ -14,7 +14,7 @@ import org.djunits.value.vdouble.scalar.base.DoubleScalar;
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
- * @author Peter Knoppers</a>
+ * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
 public class Calculator
 {
@@ -84,8 +84,6 @@ public class Calculator
         doEval("3==5!");
         doEval("3[km/h]");
         doEval("5*2[s]/5[s]");
-        // TODO? can we add additional non-base-SI units (e.g. km/h)?
-        // TODO unit test for value with unit containing '.' characters (e.g. 12 [kg.m])
     }
 
     /**
@@ -113,6 +111,5 @@ public class Calculator
         {
             System.out.println(expression + ": ERROR: "+ e.getMessage());
         }
-        
     }
 }

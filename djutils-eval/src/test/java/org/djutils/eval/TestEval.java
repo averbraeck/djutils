@@ -1,21 +1,31 @@
 package org.djutils.eval;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.djunits.quantity.Quantity;
 import org.djunits.unit.DimensionlessUnit;
+import org.djunits.unit.DurationUnit;
 import org.djunits.unit.ForceUnit;
 import org.djunits.unit.LengthUnit;
 import org.djunits.unit.PositionUnit;
 import org.djunits.unit.TimeUnit;
+import org.djunits.unit.si.SIDimensions;
+import org.djunits.value.vdouble.scalar.Dimensionless;
+import org.djunits.value.vdouble.scalar.Duration;
 import org.djunits.value.vdouble.scalar.Position;
+import org.djunits.value.vdouble.scalar.Speed;
 import org.djunits.value.vdouble.scalar.base.Constants;
 import org.djunits.value.vdouble.scalar.base.DoubleScalar;
+import org.djutils.metadata.MetaData;
+import org.djutils.metadata.ObjectDescriptor;
 import org.junit.Test;
 
 /**
@@ -293,6 +303,26 @@ public class TestEval
         catch (RuntimeException rte)
         {
             assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("operator expected "));
+        }
+        
+        try
+        {
+            new Eval().evaluate("cos()");
+            fail("Too few arguments should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("needs 1 "));
+        }
+
+        try
+        {
+            new Eval().evaluate("cos(1, 2)");
+            fail("Too many arguments should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("needs 1 "));
         }
 
         verifyValueAndUnit("dot in unit", new Eval().evaluateExpression("20[kg.m/s2]"), 20, 0, ForceUnit.SI.getQuantity());
@@ -1064,6 +1094,204 @@ public class TestEval
                 position.minus(otherPosition).si, 0.00001, LengthUnit.SI.getQuantity());
         verifyValueAndUnit("Abs-Rel->Abs", new Eval().setRetrieveValue(valueStore).evaluate("position-200[m]"),
                 position.si - 200, 0.0001, PositionUnit.BASE);
+    }
+
+    /**
+     * Test the user-provided unit parser hook.
+     */
+    @Test
+    public void testUserParser()
+    {
+        Eval eval = new Eval();
+        Object resultObject = eval.evaluate("123[ms]");
+        assertTrue("result is a DoubleScalar", resultObject instanceof DoubleScalar);
+        DoubleScalar<?, ?> resultds = (DoubleScalar<?, ?>) resultObject;
+        assertEquals("value is 123", 123, resultds.si, 0);
+        SIDimensions siDimensions = resultds.getDisplayUnit().getQuantity().getSiDimensions();
+        assertTrue("SI dimensions match", siDimensions.equals(new SIDimensions(new byte[] {0, 0, 0, 1, 1, 0, 0, 0, 0})));
+        // Create and install a user parser for milli seconds
+        UnitParser unitParser = new UnitParser()
+        {
+            @Override
+            public DoubleScalar<?, ?> parseUnit(final double value, final String unit)
+            {
+                if (unit.equals("ms"))
+                {
+                    return new Duration(value, DurationUnit.MILLISECOND);
+                }
+                // Anything else is not handled by this UnitParser
+                return null;
+            }
+        };
+        eval.setUnitParser(unitParser);
+        Object newResultObject = eval.evaluate("123[ms]");
+        assertEquals("value is 0.123", 0.123, ((DoubleScalar<?, ?>) newResultObject).si, 0.0000001);
+        assertEquals("unit is ms", DurationUnit.MILLISECOND, ((DoubleScalar<?, ?>) newResultObject).getDisplayUnit());
+        // Parse something that is not handled by the user unit parser
+        verifyValueAndUnit("Parse something that is not handled by the user unit parser", eval.evaluate("123[m/s]"), 123, 0.0,
+                Speed.ZERO.getDisplayUnit().getQuantity());
+        // Uninstall the user parser
+        eval.setUnitParser(null);
+        Object oldResult = eval.evaluate("123[ms]");
+        assertEquals("user unit parser is no longer active", resultObject, oldResult);
+    }
+
+    /**
+     * Test the evaluateAs methods
+     */
+    @Test
+    public void testEvaluateAsMethods()
+    {
+        Object result = new Eval().evaluateAsDouble("123");
+        assertTrue("result is a Double", result instanceof Double);
+        assertEquals("value is 123", 123, ((Double) result), 0);
+        try
+        {
+            new Eval().evaluateAsBoolean("123");
+            fail("evaluateAsBoolean for a non-boolean result should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("can not be cast to "));
+        }
+
+        result = new Eval().evaluateAsBoolean("2>3");
+        assertTrue("result is a Boolean", result instanceof Boolean);
+        assertFalse("result is false", (Boolean) result);
+        try
+        {
+            new Eval().evaluateAsDouble("2>3");
+            fail("evaluateAsDouble for a boolean result should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("can not be cast to "));
+        }
+
+    }
+
+    /**
+     * Test the use of user-defined functions.
+     */
+    @Test
+    public void testUserFunctions()
+    {
+        Map<String, Function> map = new HashMap<>();
+        Eval eval = new Eval();
+        try
+        {
+            eval.evaluate("ceil(5.1)");
+            fail("Calling an undefined function should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("unknown function "));
+        }
+        
+        // Install the (still empty) map
+        eval.setUserDefinedFunctions(map);
+        try
+        {
+            eval.evaluate("ceil(5.1)");
+            fail("Calling an undefined function should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("unknown function "));
+        }
+        
+        Function ceil = new Function()
+        {
+
+            @Override
+            public String getId()
+            {
+                return "ceil";
+            }
+
+            @Override
+            public MetaData getMetaData()
+            {
+                return new MetaData("ceil", "returns the ceil of the argument (which must be Dimensionless)",
+                        new ObjectDescriptor("argument", "argument", Dimensionless.class));
+            }
+
+            @Override
+            public Object function(final Object[] arguments) throws RuntimeException
+            {
+                if (arguments.length != 1)
+                {
+                    throw new RuntimeException("ceil requires one argument (got " + arguments.length + ")");
+                }
+                if (!(arguments[0] instanceof DoubleScalar))
+                {
+                    throw new RuntimeException("argument of ceil should be a DoubleScalar");
+                }
+                return new Dimensionless(Math.ceil(((DoubleScalar<?, ?>) (arguments[0])).si), DimensionlessUnit.SI);
+            }
+        };
+        map.put(ceil.getId(), ceil);
+        verifyValueAndUnit("ceil should now work", eval.evaluateExpression("ceil(5.1)"), 6, 0.0000001,
+                DimensionlessUnit.SI.getQuantity());
+        // Remove all user defined functions
+        eval.setUserDefinedFunctions(null);
+        try
+        {
+            eval.evaluate("ceil(5.1)");
+            fail("Calling an undefined function should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("unknown function "));
+        }
+        
+        // Remove our function and reinstall the map
+        map.remove("ceil");
+        eval.setUserDefinedFunctions(map);
+        try
+        {
+            eval.evaluate("ceil(5.1)");
+            fail("Calling an undefined function should have thrown a RuntimeException");
+        }
+        catch (RuntimeException rte)
+        {
+            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("unknown function "));
+        }
+        
+    }
+
+    /**
+     * Test the builtinFunctions method.
+     */
+    @Test
+    public void testBuiltinFunction()
+    {
+        Eval eval = new Eval();
+        Collection<Function> collection = eval.builtInFunctions();
+        assertNotNull("result may not be null", collection);
+        boolean foundAtan2 = false;
+        boolean foundAcos = false;
+        boolean foundAvogadro = false;
+        for (Function f : collection)
+        {
+            switch (f.getId())
+            {
+                case "atan2":
+                    foundAtan2 = true;
+                    break;
+
+                case "acos":
+                    foundAcos = true;
+                    break;
+
+                case "AVOGADRO":
+                    foundAvogadro = true;
+                    break;
+            }
+        }
+        assertTrue("Found atan2", foundAtan2);
+        assertTrue("Found acos", foundAcos);
+        assertTrue("Found Avogadro", foundAvogadro);
     }
 
     /**

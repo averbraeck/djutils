@@ -31,7 +31,7 @@ import org.djutils.metadata.ObjectDescriptor;
  * <a href="https://www.cs.bilkent.edu.tr/~guvenir/courses/CS101/op_precedence.html">Java Operator Precedence Table</a>,
  * skipping bitwise and other operators that make no sense for this evaluator and adding the exponentiation (^) operator.
  * </p>
- * @author Peter Knoppers</a>
+ * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
 public class Eval
 {
@@ -181,6 +181,9 @@ public class Eval
     /** User defined functions. */
     private Map<String, Function> userDefinedFunctions = null;
 
+    /** User supplied unit parser. */
+    private UnitParser userSuppliedUnitParser = null;
+
     /** Map from DoubleScalar sub classes to Quantities */
     private Map<Class<?>, SIDimensions> siDimensionsMap = new HashMap<>();
 
@@ -196,14 +199,26 @@ public class Eval
      * Set or replace the RetrieveValue object of this evaluator.
      * @param retrieveValue RetrieveValue; the new RetrieveValue object (may be null to only delete the currently active
      *            RetrieveValue object).
-     * @return this (for easy method chaining)
+     * @return Eval; this (for easy method chaining)
      */
     public Eval setRetrieveValue(final RetrieveValue retrieveValue)
     {
         this.retrieveValue = retrieveValue;
         return this;
     }
-    
+
+    /**
+     * Install a unit parser (or replace or remove a previously installed unit parser). A user supplied unit parser takes
+     * precedence over the built-in unit parser (that can only handle SI strings; see SIDimensions.of).
+     * @param unitParser UnitParser; the new unit parser or null to remove a previously installed unit parser
+     * @return Eval; this (for easy method chainging)
+     */
+    public Eval setUnitParser(final UnitParser unitParser)
+    {
+        this.userSuppliedUnitParser = unitParser;
+        return this;
+    }
+
     // TODO create a mechanism that allows parsing of user-defined units (e.g., [km/h])
 
     /**
@@ -515,12 +530,16 @@ public class Eval
                     {
                         this.position++;
                         evalLhs(BIND_RELATIONAL);
-                        compareDoubleScalars((a, b) -> (a <= b));
+                        compareDoubleScalars((
+                                a, b
+                        ) -> (a <= b));
                     }
                     else
                     {
                         evalLhs(BIND_RELATIONAL);
-                        compareDoubleScalars((a, b) -> (a < b));
+                        compareDoubleScalars((
+                                a, b
+                        ) -> (a < b));
                     }
                     break;
 
@@ -534,12 +553,16 @@ public class Eval
                     {
                         this.position++;
                         evalLhs(BIND_RELATIONAL);
-                        compareDoubleScalars((a, b) -> (a >= b));
+                        compareDoubleScalars((
+                                a, b
+                        ) -> (a >= b));
                     }
                     else
                     {
                         evalLhs(BIND_RELATIONAL);
-                        compareDoubleScalars((a, b) -> (a > b));
+                        compareDoubleScalars((
+                                a, b
+                        ) -> (a > b));
                     }
                     break;
 
@@ -971,9 +994,9 @@ public class Eval
     /**
      * Parse a number and convert it to a SIScalar. If it is followed by an SI unit string inside square brackets, parse it into
      * the correct type.
-     * @return SIScalar; the value of the parsed number or value
+     * @return DoubleScalar&lt;?,?&gt;; the value of the parsed number or value
      */
-    private SIScalar handleNumber()
+    private DoubleScalar<?, ?> handleNumber()
     {
         // Parse a number value
         int startPosition = this.position;
@@ -1046,7 +1069,17 @@ public class Eval
                 char c = this.expression.charAt(this.position);
                 if (']' == c)
                 {
-                    return SIScalar.valueOf(number + " " + this.expression.substring(startPosition, this.position++));
+                    String unit = this.expression.substring(startPosition, this.position++);
+                    DoubleScalar<?, ?> result = null;
+                    if (null != this.userSuppliedUnitParser)
+                    {
+                        result = this.userSuppliedUnitParser.parseUnit(Double.parseDouble(number), unit);
+                    }
+                    if (null == result)
+                    {
+                        result = SIScalar.valueOf(number + " " + unit);
+                    }
+                    return result;
                 }
                 if ((!Character.isLetterOrDigit(c)) && '-' != c && '^' != c && '/' != c && '.' != c)
                 {
@@ -1059,7 +1092,7 @@ public class Eval
                 throwException("Missing closing bracket (\']\')");
             }
         }
-        return SIScalar.valueOf(number);
+        return SIScalar.valueOf(number); // No unit specified
     }
 
     /**
@@ -1084,104 +1117,7 @@ public class Eval
         }
         String name = this.expression.substring(startPosition, this.position);
         eatSpace();
-        if (this.position < this.expression.length() && '(' == this.expression.charAt(this.position))
-        {
-            // Open parenthesis signals the start of a function call; collect the parameters of the function on the stack and
-            // count them
-            this.position++;
-            eatSpace();
-            int argCount = 0;
-            while (this.position < this.expression.length() && ')' != this.expression.charAt(this.position))
-            {
-                evalLhs(0);
-                argCount++;
-                eatSpace();
-                if (this.position < this.expression.length() && ',' == this.expression.charAt(this.position))
-                {
-                    this.position++;
-                }
-            }
-            if (this.position >= this.expression.length() || ')' != this.expression.charAt(this.position))
-            {
-                throwException("Missing closing parenthesis");
-            }
-            this.position++; // step over the closing parenthesis
-            Function f = null;
-            if (null != this.userDefinedFunctions)
-            {
-                f = this.userDefinedFunctions.get(name);
-            }
-            if (null == f)
-            {
-                f = this.functionData.get(name);
-            }
-            Object[] args = new Object[argCount];
-            for (int i = 0; i < argCount; i++)
-            {
-                args[argCount - i - 1] = pop();
-            }
-            if (null != f)
-            {
-                if (f.getMetaData() != MetaData.NO_META_DATA)
-                {
-                    // MetaData.verifyComposition does not handle this case correctly.
-                    if (f.getMetaData().getObjectDescriptors().length != argCount)
-                    {
-                        throwException(name + " needs " + f.getMetaData().getObjectDescriptors().length + " parameters, got("
-                                + argCount + ")");
-                    }
-                    for (int i = 0; i < argCount; i++)
-                    {
-                        if ((args[i] instanceof Boolean)
-                                && (!Boolean.class.isAssignableFrom(f.getMetaData().getObjectClass(i))))
-                        {
-                            throwException(name + " does not take " + args[i] + " as parameter " + i);
-                        }
-                        else if ((args[i] instanceof DoubleScalar)
-                                && (DoubleScalar.class.isAssignableFrom(f.getMetaData().getObjectClass(i))))
-                        {
-                            DoubleScalar<?, ?> ds = (DoubleScalar<?, ?>) args[i];
-                            Class<?> clazz = f.getMetaData().getObjectClass(i);
-                            if (!clazz.equals(DoubleScalarRel.class))
-                            {
-                                SIDimensions siDimensions = this.siDimensionsMap.get(clazz);
-                                if (null == siDimensions)
-                                {
-                                    // Not in the cache
-                                    try
-                                    {
-                                        Field field = clazz.getDeclaredField("ZERO"); // Every DoubleScalar type has this
-                                        DoubleScalar<?, ?> zero = (DoubleScalar<?, ?>) field.get(clazz);
-                                        siDimensions = zero.getDisplayUnit().getQuantity().getSiDimensions();
-                                        this.siDimensionsMap.put(clazz, siDimensions); // Add this one to our map
-                                    }
-                                    catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException nsfe)
-                                    {
-                                        throwException("ERROR: Cannot determine quantity for " + clazz.getCanonicalName());
-                                    }
-                                }
-                                if (!siDimensions.equals(getDimensions(ds)))
-                                {
-                                    throwException("parameter " + i + " of " + name + " has incompatible quantity");
-                                }
-                            }
-                        }
-                        else
-                        {
-                            throwException(
-                                    "Argument " + i + " of function " + name + " is of an unhandled type (" + args[i] + ")");
-                        }
-                    }
-                }
-                // All parameters are apparently compatible; invoke the function
-                return (f.function(args));
-            }
-            else
-            {
-                throwException("Unknown function " + name);
-            }
-        }
-        else
+        if (this.position >= this.expression.length() || this.expression.charAt(this.position) != '(')
         {
             // No opening parenthesis; name must be the name of a variable; look it up
             Object result = null == this.retrieveValue ? null : this.retrieveValue.lookup(name);
@@ -1190,10 +1126,101 @@ public class Eval
                 throwException("Cannot resolve variable " + name);
             }
             if ((result instanceof DoubleScalar) || (result instanceof Boolean))
+            {
                 return result;
+            }
             throwException("Value of " + name + " is neither a DoubleScalar nor a Boolean");
         }
-        return null; // cannot happen
+        // At an opening parenthesis. This signals the start of a function call; collect the parameters of the function on the
+        // stack and count them
+        this.position++;
+        eatSpace();
+        int argCount = 0;
+        while (this.position < this.expression.length() && ')' != this.expression.charAt(this.position))
+        {
+            evalLhs(0);
+            argCount++;
+            eatSpace();
+            if (this.position < this.expression.length() && ',' == this.expression.charAt(this.position))
+            {
+                this.position++;
+            }
+        }
+        if (this.position >= this.expression.length() || ')' != this.expression.charAt(this.position))
+        {
+            throwException("Missing closing parenthesis");
+        }
+        this.position++; // step over the closing parenthesis
+        Function f = null;
+        if (null != this.userDefinedFunctions)
+        {
+            f = this.userDefinedFunctions.get(name);
+        }
+        if (null == f)
+        {
+            f = this.functionData.get(name);
+        }
+        if (null == f)
+        {
+            throwException("Unknown function " + name);
+        }
+        Object[] args = new Object[argCount];
+        for (int i = 0; i < argCount; i++)
+        {
+            args[argCount - i - 1] = pop();
+        }
+        if (f.getMetaData() != MetaData.NO_META_DATA)
+        {
+            // MetaData.verifyComposition does not handle this case correctly.
+            int argsNeeded = f.getMetaData().getObjectDescriptors().length;
+            if (argsNeeded != argCount)
+            {
+                throwException(name + " needs " + argsNeeded + " parameter" + (argsNeeded == 1 ? "" : "s") + " (got " + argCount
+                        + ")");
+            }
+            for (int i = 0; i < argCount; i++)
+            {
+                if ((args[i] instanceof Boolean) && (!Boolean.class.isAssignableFrom(f.getMetaData().getObjectClass(i))))
+                {
+                    throwException(name + " does not take " + args[i] + " as parameter " + i);
+                }
+                else if ((args[i] instanceof DoubleScalar)
+                        && (DoubleScalar.class.isAssignableFrom(f.getMetaData().getObjectClass(i))))
+                {
+                    DoubleScalar<?, ?> ds = (DoubleScalar<?, ?>) args[i];
+                    Class<?> clazz = f.getMetaData().getObjectClass(i);
+                    if (!clazz.equals(DoubleScalarRel.class))
+                    {
+                        SIDimensions siDimensions = this.siDimensionsMap.get(clazz);
+                        if (null == siDimensions)
+                        {
+                            // Not in the cache
+                            try
+                            {
+                                Field field = clazz.getDeclaredField("ZERO"); // Every DoubleScalar type has this
+                                DoubleScalar<?, ?> zero = (DoubleScalar<?, ?>) field.get(clazz);
+                                siDimensions = zero.getDisplayUnit().getQuantity().getSiDimensions();
+                                this.siDimensionsMap.put(clazz, siDimensions); // Add this one to our map
+                            }
+                            catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException nsfe)
+                            {
+                                throwException("ERROR: Cannot determine quantity for " + clazz.getCanonicalName());
+                            }
+                        }
+                        if (!siDimensions.equals(getDimensions(ds)))
+                        {
+                            throwException("parameter " + i + " of " + name + " has incompatible quantity");
+                        }
+                    }
+                }
+                else
+                {
+                    throwException("Argument " + i + " of function " + name + " is of an unhandled type (" + args[i] + ")");
+                }
+            }
+        }
+        // All parameters are apparently compatible; invoke the function
+        return (f.function(args));
     }
 
     /**
@@ -1229,8 +1256,7 @@ public class Eval
     {
         if (!(object instanceof DoubleScalar))
         {
-            throwException("Function " + functionData.getId() + " cannot be applied to " + object); // should test if the name
-                                                                                                    // is valid
+            throwException("Function " + functionData.getId() + " cannot be applied to " + object);
         }
         DoubleScalar<?, ?> ds = (DoubleScalar<?, ?>) object;
         if (!getDimensions(ds).equals(getDimensions(DimensionlessUnit.SI)))
