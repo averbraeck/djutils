@@ -1,9 +1,9 @@
 package org.djutils.stats.summarizers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the Counter class.
@@ -12,8 +12,7 @@ import org.junit.Test;
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
- * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
- * <br>
+ * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.tbm.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
 public class CounterTest
@@ -47,7 +46,7 @@ public class CounterTest
         }
         assertEquals(100, counter.getN());
         assertEquals(value, counter.getCount());
-        
+
         Counter counterLong = new Counter("A very " + "long ".repeat(20) + " description");
         counterLong.register(1000);
 

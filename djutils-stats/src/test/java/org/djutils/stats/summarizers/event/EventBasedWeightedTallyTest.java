@@ -1,7 +1,7 @@
 package org.djutils.stats.summarizers.event;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.rmi.RemoteException;
 
@@ -11,7 +11,7 @@ import org.djutils.event.EventType;
 import org.djutils.exceptions.Try;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * The EventBasedWeightedTallyTest tests the EventBasedWeightedTally.
@@ -178,18 +178,18 @@ public class EventBasedWeightedTallyTest
         Object[] expectedValues = new Object[] {10L, 10.0, 100.0, 70.0, 600.0, 24.4949, 3850.0, 70.0, 666.6667, 25.81989};
         for (int i = 0; i < types.length; i++)
         {
-            assertEquals("Number of events for listener " + types[i], 10, listeners[i].getNumberOfEvents());
-            assertEquals("Event type for listener " + types[i], types[i], listeners[i].getLastEvent().getType());
+            assertEquals(10, listeners[i].getNumberOfEvents(), "Number of events for listener " + types[i]);
+            assertEquals(types[i], listeners[i].getLastEvent().getType(), "Event type for listener " + types[i]);
             if (expectedValues[i] instanceof Long)
             {
-                assertEquals("Final value for listener " + types[i], expectedValues[i],
-                        listeners[i].getLastEvent().getContent());
+                assertEquals(expectedValues[i], listeners[i].getLastEvent().getContent(),
+                        "Final value for listener " + types[i]);
             }
             else
             {
                 double e = ((Double) expectedValues[i]).doubleValue();
                 double c = ((Double) listeners[i].getLastEvent().getContent()).doubleValue();
-                assertEquals("Final value for listener " + types[i], e, c, 0.001);
+                assertEquals(e, c, 0.001, "Final value for listener " + types[i]);
             }
         }
     }
@@ -224,11 +224,11 @@ public class EventBasedWeightedTallyTest
         public void notify(final Event event)
         {
             assertTrue(event.getType().equals(StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT));
-            assertTrue("Content of the event has a wrong type, not Object[]: " + event.getContent().getClass(),
-                    event.getContent() instanceof Object[]);
+            assertTrue(event.getContent() instanceof Object[],
+                    "Content of the event has a wrong type, not Object[]: " + event.getContent().getClass());
             Object[] c = (Object[]) event.getContent();
-            assertTrue("Content[0] of the event has a wrong type, not double: " + c[0].getClass(), c[0] instanceof Double);
-            assertTrue("Content[1] of the event has a wrong type, not double: " + c[1].getClass(), c[1] instanceof Double);
+            assertTrue(c[0] instanceof Double, "Content[0] of the event has a wrong type, not double: " + c[0].getClass());
+            assertTrue(c[1] instanceof Double, "Content[1] of the event has a wrong type, not double: " + c[1].getClass());
             this.observationEvents++;
         }
 

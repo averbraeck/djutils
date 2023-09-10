@@ -1,14 +1,13 @@
 package org.djutils.stats;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
- * Test the DistNormalTable class.
- * <br>
+ * Test the DistNormalTable class. <br>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
 public class DistNormalTableTest
@@ -24,10 +23,10 @@ public class DistNormalTableTest
         double prevValue = 0.5;
         for (double value : DistNormalTable.CUMULATIVE_NORMAL_PROBABILITIES)
         {
-            assertTrue("value are non-decreasing", prevValue <= value);
+            assertTrue(prevValue <= value, "value are non-decreasing");
             prevValue = value;
         }
-        assertEquals("last value is 1.0", 1.0, prevValue, 0.0);
+        assertEquals(1.0, prevValue, 0.0, "last value is 1.0");
     }
 
     /**
@@ -72,7 +71,7 @@ public class DistNormalTableTest
         assertEquals(0.5 - 0.997300203936740 / 2.0, DistNormalTable.getCumulativeProbability(6.0, 2.0, 0.0), 1E-6); // -3 sigma
         assertEquals(0.0, DistNormalTable.getCumulativeProbability(6.0, 2.0, -100.0), 0.001);
         assertEquals(0.0, DistNormalTable.getCumulativeProbability(6.0, 2.0, -10000.0), 0.001);
-        
+
         // test negative sigma
         try
         {
@@ -83,7 +82,7 @@ public class DistNormalTableTest
         {
             assertTrue(exception instanceof IllegalArgumentException);
         }
-        
+
         assertEquals(0.5, DistNormalTable.getCumulativeProbability(1.0, 0, 1.0), 0);
         assertEquals(0.0, DistNormalTable.getCumulativeProbability(1.0, 0, 1.0 - Math.ulp(1.0)), 0);
         assertEquals(1.0, DistNormalTable.getCumulativeProbability(1.0, 0, 1.0 + Math.ulp(1.0)), 0);
@@ -98,31 +97,31 @@ public class DistNormalTableTest
     {
         assertEquals(0.0, DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, 0.5), 1E-6);
         assertEquals(1.0, DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, 0.5 + 0.682689492137086 / 2.0), 1E-6);
-        assertEquals(2.0, DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, 0.5 + 0.954499736103642 / 2.0), 1E-6); 
+        assertEquals(2.0, DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, 0.5 + 0.954499736103642 / 2.0), 1E-6);
         assertEquals(3.0, DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, 0.5 + 0.997300203936740 / 2.0), 1E-6);
         assertTrue(DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, 1.0) > 5.0);
         assertEquals(-1.0, DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, 0.5 - 0.682689492137086 / 2.0), 1E-6);
-        assertEquals(-2.0, DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, 0.5 - 0.954499736103642 / 2.0), 1E-6); 
+        assertEquals(-2.0, DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, 0.5 - 0.954499736103642 / 2.0), 1E-6);
         assertEquals(-3.0, DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, 0.5 - 0.997300203936740 / 2.0), 1E-6);
         assertTrue(DistNormalTable.getInverseCumulativeProbability(0.0, 1.0, 0.0) < -5.0);
 
         assertEquals(0.0, DistNormalTable.getInverseCumulativeProbability(0.0, 2.0, 0.5), 1E-6);
         assertEquals(2.0, DistNormalTable.getInverseCumulativeProbability(0.0, 2.0, 0.5 + 0.682689492137086 / 2.0), 1E-6);
-        assertEquals(4.0, DistNormalTable.getInverseCumulativeProbability(0.0, 2.0, 0.5 + 0.954499736103642 / 2.0), 1E-6); 
+        assertEquals(4.0, DistNormalTable.getInverseCumulativeProbability(0.0, 2.0, 0.5 + 0.954499736103642 / 2.0), 1E-6);
         assertEquals(6.0, DistNormalTable.getInverseCumulativeProbability(0.0, 2.0, 0.5 + 0.997300203936740 / 2.0), 1E-6);
         assertTrue(DistNormalTable.getInverseCumulativeProbability(0.0, 2.0, 1.0) > 10.0);
         assertEquals(-2.0, DistNormalTable.getInverseCumulativeProbability(0.0, 2.0, 0.5 - 0.682689492137086 / 2.0), 1E-6);
-        assertEquals(-4.0, DistNormalTable.getInverseCumulativeProbability(0.0, 2.0, 0.5 - 0.954499736103642 / 2.0), 1E-6); 
+        assertEquals(-4.0, DistNormalTable.getInverseCumulativeProbability(0.0, 2.0, 0.5 - 0.954499736103642 / 2.0), 1E-6);
         assertEquals(-6.0, DistNormalTable.getInverseCumulativeProbability(0.0, 2.0, 0.5 - 0.997300203936740 / 2.0), 1E-6);
         assertTrue(DistNormalTable.getInverseCumulativeProbability(0.0, 2.0, 0.0) < -10.0);
 
         assertEquals(6.0, DistNormalTable.getInverseCumulativeProbability(6.0, 2.0, 0.5), 1E-6);
         assertEquals(8.0, DistNormalTable.getInverseCumulativeProbability(6.0, 2.0, 0.5 + 0.682689492137086 / 2.0), 1E-6);
-        assertEquals(10.0, DistNormalTable.getInverseCumulativeProbability(6.0, 2.0, 0.5 + 0.954499736103642 / 2.0), 1E-6); 
+        assertEquals(10.0, DistNormalTable.getInverseCumulativeProbability(6.0, 2.0, 0.5 + 0.954499736103642 / 2.0), 1E-6);
         assertEquals(12.0, DistNormalTable.getInverseCumulativeProbability(6.0, 2.0, 0.5 + 0.997300203936740 / 2.0), 1E-6);
         assertTrue(DistNormalTable.getInverseCumulativeProbability(6.0, 2.0, 1.0) > 16.0);
         assertEquals(4.0, DistNormalTable.getInverseCumulativeProbability(6.0, 2.0, 0.5 - 0.682689492137086 / 2.0), 1E-6);
-        assertEquals(2.0, DistNormalTable.getInverseCumulativeProbability(6.0, 2.0, 0.5 - 0.954499736103642 / 2.0), 1E-6); 
+        assertEquals(2.0, DistNormalTable.getInverseCumulativeProbability(6.0, 2.0, 0.5 - 0.954499736103642 / 2.0), 1E-6);
         assertEquals(0.0, DistNormalTable.getInverseCumulativeProbability(6.0, 2.0, 0.5 - 0.997300203936740 / 2.0), 1E-6);
         assertTrue(DistNormalTable.getInverseCumulativeProbability(6.0, 2.0, 0.0) < -4.0);
 
@@ -136,7 +135,7 @@ public class DistNormalTableTest
         {
             assertTrue(exception instanceof IllegalArgumentException);
         }
-        
+
         // test cumulative probability out of bounds
         try
         {

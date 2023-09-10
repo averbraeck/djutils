@@ -1,9 +1,9 @@
 package org.djutils.stats.summarizers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.djutils.stats.DistNormalTable;
 import org.djutils.stats.summarizers.quantileaccumulator.FullStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.NoStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.TDigestAccumulator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * The TallyTest test the tally.
@@ -67,25 +67,25 @@ public class TallyTest
 
         // Now we register some values
         tally.register(1.1);
-        assertFalse("sample mean is now available", Double.isNaN(tally.getSampleMean()));
-        assertFalse("mean is now available", Double.isNaN(tally.getPopulationMean()));
-        assertEquals("smaple mean is 1.1", 1.1, tally.getSampleMean(), 0.0000001);
-        assertEquals("mean is 1.1", 1.1, tally.getPopulationMean(), 0.0000001);
-        assertTrue("sample variance is not available", Double.isNaN(tally.getSampleVariance()));
-        assertFalse("variance is not available", Double.isNaN(tally.getPopulationVariance()));
-        assertTrue("skewness is not available", Double.isNaN(tally.getPopulationSkewness()));
+        assertFalse(Double.isNaN(tally.getSampleMean()), "sample mean is now available");
+        assertFalse(Double.isNaN(tally.getPopulationMean()), "mean is now available");
+        assertEquals(1.1, tally.getSampleMean(), 0.0000001, "smaple mean is 1.1");
+        assertEquals(1.1, tally.getPopulationMean(), 0.0000001, "mean is 1.1");
+        assertTrue(Double.isNaN(tally.getSampleVariance()), "sample variance is not available");
+        assertFalse(Double.isNaN(tally.getPopulationVariance()), "variance is not available");
+        assertTrue(Double.isNaN(tally.getPopulationSkewness()), "skewness is not available");
         tally.register(1.2);
-        assertFalse("sample variance is now available", Double.isNaN(tally.getSampleVariance()));
-        assertTrue("sample skewness is not available", Double.isNaN(tally.getSampleSkewness()));
-        assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
-        assertFalse("skewness is available", Double.isNaN(tally.getPopulationSkewness()));
-        assertTrue("kurtosis is not available", Double.isNaN(tally.getPopulationKurtosis()));
+        assertFalse(Double.isNaN(tally.getSampleVariance()), "sample variance is now available");
+        assertTrue(Double.isNaN(tally.getSampleSkewness()), "sample skewness is not available");
+        assertTrue(Double.isNaN(tally.getSampleKurtosis()), "sample kurtosis is not available");
+        assertFalse(Double.isNaN(tally.getPopulationSkewness()), "skewness is available");
+        assertTrue(Double.isNaN(tally.getPopulationKurtosis()), "kurtosis is not available");
         tally.register(1.3);
-        assertFalse("skewness is now available", Double.isNaN(tally.getSampleSkewness()));
-        assertFalse("kurtosis is now available", Double.isNaN(tally.getPopulationKurtosis()));
-        assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
+        assertFalse(Double.isNaN(tally.getSampleSkewness()), "skewness is now available");
+        assertFalse(Double.isNaN(tally.getPopulationKurtosis()), "kurtosis is now available");
+        assertTrue(Double.isNaN(tally.getSampleKurtosis()), "sample kurtosis is not available");
         tally.register(1.4);
-        assertFalse("sample kurtosis is now available", Double.isNaN(tally.getSampleKurtosis()));
+        assertFalse(Double.isNaN(tally.getSampleKurtosis()), "sample kurtosis is now available");
         tally.register(1.5);
         tally.register(1.6);
         tally.register(1.7);
@@ -231,17 +231,17 @@ public class TallyTest
     public void testNoStorageAccumulator()
     {
         Tally tally = new Tally("test with the NoStorageAccumulator", new NoStorageAccumulator());
-        assertTrue("mean of no data is NaN", Double.isNaN(tally.getSampleMean()));
+        assertTrue(Double.isNaN(tally.getSampleMean()), "mean of no data is NaN");
         Try.testFail(() -> tally.getQuantile(0.5), "getQuantile of no data should have resulted in an IllegalArgumentException",
                 IllegalArgumentException.class);
         tally.register(90.0);
-        assertEquals("mean of one value is that value", 90.0, tally.getSampleMean(), 0);
+        assertEquals(90.0, tally.getSampleMean(), 0, "mean of one value is that value");
         Try.testFail(() -> tally.getQuantile(0.5),
                 "getQuantile of one value should have resulted in an IllegalArgumentException", IllegalArgumentException.class);
 
         tally.register(110.0);
-        assertEquals("mean of two value", 100.0, tally.getSampleMean(), 0);
-        assertEquals("50% quantile", 100.0, tally.getQuantile(0.5), 0);
+        assertEquals(100.0, tally.getSampleMean(), 0, "mean of two value");
+        assertEquals(100.0, tally.getQuantile(0.5), 0, "50% quantile");
         /*-
         double sigma = tally.getSampleStDev();
         double mu = tally.getSampleMean();
@@ -257,8 +257,8 @@ public class TallyTest
         // Output shows that the inverse cumulative probability function works fine up to about 8 sigma
          */
 
-        assertEquals("84% is about one sigma", 1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.84), 0.01);
-        assertEquals("16% is about minus one sigma", -1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.16), 0.01);
+        assertEquals(1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.84), 0.01, "84% is about one sigma");
+        assertEquals(-1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.16), 0.01, "16% is about minus one sigma");
 
         // Test for the problem that Peter Knoppers had in Tritapt where really small rounding errors caused sqrt(-1e-14).
         double value = 166.0 / 25.0;
@@ -277,8 +277,8 @@ public class TallyTest
             value = generateGaussianNoise(mean, stddev, random);
             tally.register(value);
         }
-        assertEquals("mean should approximately match", mean, tally.getSampleMean(), stddev / 10);
-        assertEquals("stddev should approximately match", stddev, tally.getSampleStDev(), stddev / 10);
+        assertEquals(mean, tally.getSampleMean(), stddev / 10, "mean should approximately match");
+        assertEquals(stddev, tally.getSampleStDev(), stddev / 10, "stddev should approximately match");
     }
 
     /**
@@ -297,15 +297,15 @@ public class TallyTest
         {
             double expected = 100 * probability;
             double got = tally.getQuantile(probability);
-            assertEquals("quantile should match", expected, got, 0.00001);
+            assertEquals(expected, got, 0.00001, "quantile should match");
         }
         Try.testFail(() -> tally.getQuantile(-0.01), "negative probability should have thrown an exception",
                 IllegalArgumentException.class);
         Try.testFail(() -> tally.getQuantile(1.01), "Probability > 1 should have thrown an exception",
                 IllegalArgumentException.class);
 
-        assertTrue("toString returns something descriptive",
-                new FullStorageAccumulator().toString().startsWith("FullStorageAccumulator"));
+        assertTrue(new FullStorageAccumulator().toString().startsWith("FullStorageAccumulator"),
+                "toString returns something descriptive");
     }
 
     /**
@@ -348,13 +348,13 @@ public class TallyTest
             double expected = 100 * probability;
             double got = tally.getQuantile(probability);
             // System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
-            assertEquals("quantile should match", expected, got, 1.0); // With 100 bins the error should be below 1%
+            assertEquals(expected, got, 1.0, "quantile should match"); // With 100 bins the error should be below 1%
         }
         // https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)
-        assertEquals("sample skewness should be 0", 0, tally.getSampleSkewness(), 0.0001);
-        assertEquals("skewness should be 0", 0, tally.getPopulationSkewness(), 0.0001);
-        assertEquals("sample excess kurtosis should be -1.2", -1.2, tally.getSampleExcessKurtosis(), 0.0001);
-        assertEquals("population excess kurtosis should be -1.2", -1.2, tally.getPopulationExcessKurtosis(), 0.01);
+        assertEquals(0, tally.getSampleSkewness(), 0.0001, "sample skewness should be 0");
+        assertEquals(0, tally.getPopulationSkewness(), 0.0001, "skewness should be 0");
+        assertEquals(-1.2, tally.getSampleExcessKurtosis(), 0.0001, "sample excess kurtosis should be -1.2");
+        assertEquals(-1.2, tally.getPopulationExcessKurtosis(), 0.01, "population excess kurtosis should be -1.2");
         // System.out.println(String.format("%d uniformly distributed values: skewness %20.15f, kurtosis %20.15f", tally.getN(),
         // tally.getSampleSkewness(), tally.getSampleKurtosis()));
         tally.initialize();
@@ -368,14 +368,14 @@ public class TallyTest
             double expected = 100 * probability;
             double got = tally.getQuantile(probability);
             // System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
-            assertEquals("quantile should match", expected, got, 0.01); // Uniformly distributed data yields very good estimates
+            assertEquals(expected, got, 0.01, "quantile should match"); // Uniformly distributed data yields very good estimates
         }
         // System.out.println(String.format("%d uniformly distributed values: skewness %20.15f, kurtosis %20.15f", tally.getN(),
         // tally.getSampleSkewness(), tally.getSampleKurtosis()));
-        assertEquals("sample skewness should be 0", 0, tally.getSampleSkewness(), 0.0001);
-        assertEquals("skewness should be 0", 0, tally.getPopulationSkewness(), 0.0001);
-        assertEquals("sample kurtosis should be -1.2", -1.2, tally.getSampleExcessKurtosis(), 0.0001);
-        assertEquals("population excess kurtosis should be -1.2", -1.2, tally.getPopulationExcessKurtosis(), 0.0001);
+        assertEquals(0, tally.getSampleSkewness(), 0.0001, "sample skewness should be 0");
+        assertEquals(0, tally.getPopulationSkewness(), 0.0001, "skewness should be 0");
+        assertEquals(-1.2, tally.getSampleExcessKurtosis(), 0.0001, "sample kurtosis should be -1.2");
+        assertEquals(-1.2, tally.getPopulationExcessKurtosis(), 0.0001, "population excess kurtosis should be -1.2");
         tally = new Tally("Tally for TDigestAccumulator test", new TDigestAccumulator(4));
         // Insert values from 0.0 .. 100.0 (step 0.0001)
         for (int step = 0; step <= 1000000; step++)
@@ -387,7 +387,7 @@ public class TallyTest
             double expected = 100 * probability;
             double got = tally.getQuantile(probability);
             // System.out.println(String.format("probability %10.8f, expected %10.8f, got %10.8f", probability, expected, got));
-            assertEquals("quantile should match", expected, got, 0.01); // Uniformly distributed data yields very good estimates
+            assertEquals(expected, got, 0.01, "quantile should match"); // Uniformly distributed data yields very good estimates
         }
 
         final Tally tally1 = tally;
@@ -396,8 +396,8 @@ public class TallyTest
         Try.testFail(() -> tally1.getQuantile(1.01), "Probability > 1 should have thrown an exception",
                 IllegalArgumentException.class);
 
-        assertTrue("toString returns something descriptive",
-                new TDigestAccumulator().toString().startsWith("TDigestAccumulator"));
+        assertTrue(new TDigestAccumulator().toString().startsWith("TDigestAccumulator"),
+                "toString returns something descriptive");
         tally = new Tally("Tally for TDigestAccumulator test", new TDigestAccumulator());
         // Throw a lot of pseudo-randomly normally distributed values in and see if the accumulator gets a good approximation
         // of the distribution
@@ -417,7 +417,7 @@ public class TallyTest
             double margin = mean / 10 / Math.sqrt(Math.min(probability, 1 - probability));
             // System.out.println(String.format("probability %12.7f, expected %12.7f, reasonable margin %12.7f, got %12.7f",
             // probability, expected, margin, got));
-            assertEquals("quantile should match", expected, got, margin);
+            assertEquals(expected, got, margin, "quantile should match");
         }
     }
 
@@ -480,8 +480,8 @@ public class TallyTest
         double sg2 = 1.0 * (count - 1) / (count - 2) / (count - 3) * ((count + 1) * g2 + 6);
         // System.out.println(String.format("g1 %20.15f sampleSkewness %20.15f, a4 %20.15f g2 %20.15f sampleKurtosis %20.15f",
         // g1, sg1, a4, g2, sg2));
-        assertEquals("skew should match", sg1, tally.getSampleSkewness(), 0.0001);
-        assertEquals("kurtosis should match", sg2, tally.getSampleExcessKurtosis(), 0.0001);
+        assertEquals(sg1, tally.getSampleSkewness(), 0.0001, "skew should match");
+        assertEquals(sg2, tally.getSampleExcessKurtosis(), 0.0001, "kurtosis should match");
     }
 
 }

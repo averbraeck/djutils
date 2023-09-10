@@ -1,9 +1,9 @@
 package org.djutils.stats.summarizers.event;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.rmi.RemoteException;
 import java.util.Random;
@@ -17,7 +17,7 @@ import org.djutils.stats.ConfidenceInterval;
 import org.djutils.stats.DistNormalTable;
 import org.djutils.stats.summarizers.quantileaccumulator.FullStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.NoStorageAccumulator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * The TallyTest test the tally.
@@ -74,21 +74,21 @@ public class EventBasedTallyTest
 
         // Now we fire some events
         tally.notify(new Event(VALUE_EVENT, 1.1));
-        assertFalse("mean is now available", Double.isNaN(tally.getSampleMean()));
-        assertTrue("sample variance is not available", Double.isNaN(tally.getSampleVariance()));
-        assertFalse("variance is not available", Double.isNaN(tally.getPopulationVariance()));
-        assertTrue("skewness is not available", Double.isNaN(tally.getPopulationSkewness()));
+        assertFalse(Double.isNaN(tally.getSampleMean()), "mean is now available");
+        assertTrue(Double.isNaN(tally.getSampleVariance()), "sample variance is not available");
+        assertFalse(Double.isNaN(tally.getPopulationVariance()), "variance is not available");
+        assertTrue(Double.isNaN(tally.getPopulationSkewness()), "skewness is not available");
         tally.notify(new Event(VALUE_EVENT, 1.2));
-        assertFalse("sample variance is now available", Double.isNaN(tally.getSampleVariance()));
-        assertTrue("sample skewness is not available", Double.isNaN(tally.getSampleSkewness()));
-        assertFalse("skewness is available", Double.isNaN(tally.getPopulationSkewness()));
-        assertTrue("kurtosis is not available", Double.isNaN(tally.getPopulationKurtosis()));
+        assertFalse(Double.isNaN(tally.getSampleVariance()), "sample variance is now available");
+        assertTrue(Double.isNaN(tally.getSampleSkewness()), "sample skewness is not available");
+        assertFalse(Double.isNaN(tally.getPopulationSkewness()), "skewness is available");
+        assertTrue(Double.isNaN(tally.getPopulationKurtosis()), "kurtosis is not available");
         tally.notify(new Event(VALUE_EVENT, 1.3));
-        assertFalse("skewness is now available", Double.isNaN(tally.getSampleSkewness()));
-        assertFalse("kurtosis is now available", Double.isNaN(tally.getPopulationKurtosis()));
-        assertTrue("sample kurtosis is not available", Double.isNaN(tally.getSampleKurtosis()));
+        assertFalse(Double.isNaN(tally.getSampleSkewness()), "skewness is now available");
+        assertFalse(Double.isNaN(tally.getPopulationKurtosis()), "kurtosis is now available");
+        assertTrue(Double.isNaN(tally.getSampleKurtosis()), "sample kurtosis is not available");
         tally.notify(new Event(VALUE_EVENT, 1.4));
-        assertFalse("sample kurtosis is now available", Double.isNaN(tally.getSampleKurtosis()));
+        assertFalse(Double.isNaN(tally.getSampleKurtosis()), "sample kurtosis is now available");
         tally.notify(new Event(VALUE_EVENT, 1.5));
         tally.notify(new Event(VALUE_EVENT, 1.6));
         tally.notify(new Event(VALUE_EVENT, 1.7));
@@ -201,18 +201,18 @@ public class EventBasedTallyTest
                 new Object[] {10L, 10.0, 100.0, 55.0, 825.0, 0.0, 1.7758, 28.7228, 550.0, 55.0, 916.6667, 0.0, 1.5982, 30.2765};
         for (int i = 0; i < types.length; i++)
         {
-            assertEquals("Number of events for listener " + types[i], 10, listeners[i].getNumberOfEvents());
-            assertEquals("Event type for listener " + types[i], types[i], listeners[i].getLastEvent().getType());
+            assertEquals(10, listeners[i].getNumberOfEvents(), "Number of events for listener " + types[i]);
+            assertEquals(types[i], listeners[i].getLastEvent().getType(), "Event type for listener " + types[i]);
             if (expectedValues[i] instanceof Long)
             {
-                assertEquals("Final value for listener " + types[i], expectedValues[i],
-                        listeners[i].getLastEvent().getContent());
+                assertEquals(expectedValues[i], listeners[i].getLastEvent().getContent(),
+                        "Final value for listener " + types[i]);
             }
             else
             {
                 double e = ((Double) expectedValues[i]).doubleValue();
                 double c = ((Double) listeners[i].getLastEvent().getContent()).doubleValue();
-                assertEquals("Final value for listener " + types[i], e, c, 0.001);
+                assertEquals(e, c, 0.001, "Final value for listener " + types[i]);
             }
         }
     }
@@ -224,17 +224,17 @@ public class EventBasedTallyTest
     public void testNoStorageAccumulator()
     {
         EventBasedTally tally = new EventBasedTally("test with the NoStorageAccumulator", new NoStorageAccumulator());
-        assertTrue("mean of no data is NaN", Double.isNaN(tally.getSampleMean()));
+        assertTrue(Double.isNaN(tally.getSampleMean()), "mean of no data is NaN");
         Try.testFail(() -> tally.getQuantile(0.5), "getQuantile of no data should have resulted in an IllegalArgumentException",
                 IllegalArgumentException.class);
         tally.notify(new Event(VALUE_EVENT, 90.0));
-        assertEquals("mean of one value is that value", 90.0, tally.getSampleMean(), 0);
+        assertEquals(90.0, tally.getSampleMean(), 0, "mean of one value is that value");
         Try.testFail(() -> tally.getQuantile(0.5),
                 "getQuantile of one value should have resulted in an IllegalArgumentException", IllegalArgumentException.class);
 
         tally.notify(new Event(VALUE_EVENT, 110.0));
-        assertEquals("mean of two value", 100.0, tally.getSampleMean(), 0);
-        assertEquals("50% quantile", 100.0, tally.getQuantile(0.5), 0);
+        assertEquals(100.0, tally.getSampleMean(), 0, "mean of two value");
+        assertEquals(100.0, tally.getQuantile(0.5), 0, "50% quantile");
 
         /*-
         double sigma = tally.getSampleStDev();
@@ -251,8 +251,8 @@ public class EventBasedTallyTest
         // Output shows that the inverse cumulative probability function works fine up to about 8 sigma
          */
 
-        assertEquals("84% is about one sigma", 1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.84), 0.01);
-        assertEquals("16% is about minus one sigma", -1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.16), 0.01);
+        assertEquals(1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.84), 0.01, "84% is about one sigma");
+        assertEquals(-1, DistNormalTable.getInverseCumulativeProbability(0, 1, 0.16), 0.01, "16% is about minus one sigma");
 
         // Test for the problem that Peter Knoppers had in Tritapt where really small rounding errors caused sqrt(-1e-14).
         double value = 166.0 / 25.0;
@@ -271,8 +271,8 @@ public class EventBasedTallyTest
             value = generateGaussianNoise(mean, stddev, random);
             tally.notify(new Event(VALUE_EVENT, value));
         }
-        assertEquals("mean should approximately match", mean, tally.getSampleMean(), stddev / 10);
-        assertEquals("stddev should approximately match", stddev, tally.getSampleStDev(), stddev / 10);
+        assertEquals(mean, tally.getSampleMean(), stddev / 10, "mean should approximately match");
+        assertEquals(stddev, tally.getSampleStDev(), stddev / 10, "stddev should approximately match");
     }
 
     /**
@@ -292,15 +292,15 @@ public class EventBasedTallyTest
         {
             double expected = 100 * probability;
             double got = tally.getQuantile(probability);
-            assertEquals("quantile should match", expected, got, 0.00001);
+            assertEquals(expected, got, 0.00001, "quantile should match");
         }
         Try.testFail(() -> tally.getQuantile(-0.01), "negative probability should have thrown an exception",
                 IllegalArgumentException.class);
         Try.testFail(() -> tally.getQuantile(1.01), "Probability > 1 should have thrown an exception",
                 IllegalArgumentException.class);
 
-        assertTrue("toString returns something descriptive",
-                new FullStorageAccumulator().toString().startsWith("FullStorageAccumulator"));
+        assertTrue(new FullStorageAccumulator().toString().startsWith("FullStorageAccumulator"),
+                "toString returns something descriptive");
     }
 
     /**
@@ -356,8 +356,8 @@ public class EventBasedTallyTest
         public void notify(final Event event)
         {
             assertTrue(event.getType().equals(StatisticsEvents.OBSERVATION_ADDED_EVENT));
-            assertTrue("Content of the event has a wrong type, not DOuble: " + event.getContent().getClass(),
-                    event.getContent() instanceof Double);
+            assertTrue(event.getContent() instanceof Double,
+                    "Content of the event has a wrong type, not DOuble: " + event.getContent().getClass());
             this.observationEvents++;
         }
 

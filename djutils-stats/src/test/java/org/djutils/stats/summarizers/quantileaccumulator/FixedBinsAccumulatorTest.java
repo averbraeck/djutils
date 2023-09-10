@@ -1,10 +1,10 @@
 package org.djutils.stats.summarizers.quantileaccumulator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * FixedBinsAccumulatorTest.java. <br>
@@ -105,16 +105,16 @@ public class FixedBinsAccumulatorTest
         }
 
         FixedBinsAccumulator fba = new FixedBinsAccumulator(10.0, 0.25, 100);
-        assertEquals("binWidth", 0.25, fba.getBinWidth(), 0.0);
-        assertEquals("bin count", 100, fba.getBinCount());
-        assertEquals("total count", 0, fba.getN());
-        assertEquals("below count", 0, fba.getBelowCount());
-        assertEquals("above count", 0, fba.getAboveCount());
-        assertTrue("quantile cannot be computed yet", Double.isNaN(fba.getQuantile(null, 0.5)));
+        assertEquals(0.25, fba.getBinWidth(), 0.0, "binWidth");
+        assertEquals(100, fba.getBinCount(), "bin count");
+        assertEquals(0, fba.getN(), "total count");
+        assertEquals(0, fba.getBelowCount(), "below count");
+        assertEquals(0, fba.getAboveCount(), "above count");
+        assertTrue(Double.isNaN(fba.getQuantile(null, 0.5)), "quantile cannot be computed yet");
 
         for (int bin = 0; bin < 100; bin++)
         {
-            assertEquals("Bin center", 10.0 + 0.25 * bin, fba.getBinCenter(bin), 0.0001);
+            assertEquals(10.0 + 0.25 * bin, fba.getBinCenter(bin), 0.0001, "Bin center");
         }
         try
         {
@@ -137,7 +137,7 @@ public class FixedBinsAccumulatorTest
         }
 
         fba = new FixedBinsAccumulator(1, (Math.E - 1) / 1000, 1001);
-        assertEquals("highest bin is near e", Math.E, fba.getBinCenter(fba.getBinCount() - 1), 0.00001);
+        assertEquals(Math.E, fba.getBinCenter(fba.getBinCount() - 1), 0.00001, "highest bin is near e");
         // register some values with an exponential density distribution
         int max = 1000000;
         for (int i = 0; i < max; i++)
@@ -146,28 +146,28 @@ public class FixedBinsAccumulatorTest
             double value = Math.exp(range0to1); // Should be in range 0..e
             fba.register(value);
         }
-        assertEquals("total values is max", max, fba.getN());
-        assertEquals("no values below 1", 0, fba.getBelowCount());
-        assertEquals("no values above e", 0, fba.getAboveCount());
-        assertEquals("0% quantile", 1.0, fba.getQuantile(null, 0.0), 0.001);
-        assertEquals("100% quantile", Math.E, fba.getQuantile(null, 1.0), Math.E / 1000);
-        assertEquals("50% quantile", Math.sqrt(Math.E), fba.getQuantile(null, 0.5), Math.E / 1000);
-        assertEquals("25% quantile", Math.sqrt(Math.sqrt(Math.E)), fba.getQuantile(null, 0.25), Math.E / 1000);
-        
+        assertEquals(max, fba.getN(), "total values is max");
+        assertEquals(0, fba.getBelowCount(), "no values below 1");
+        assertEquals(0, fba.getAboveCount(), "no values above e");
+        assertEquals(1.0, fba.getQuantile(null, 0.0), 0.001, "0% quantile");
+        assertEquals(Math.E, fba.getQuantile(null, 1.0), Math.E / 1000, "100% quantile");
+        assertEquals(Math.sqrt(Math.E), fba.getQuantile(null, 0.5), Math.E / 1000, "50% quantile");
+        assertEquals(Math.sqrt(Math.sqrt(Math.E)), fba.getQuantile(null, 0.25), Math.E / 1000, "25% quantile");
+
         // Check the below and above counters
         for (int i = 0; i < 5; i++)
         {
             fba.register(-i);
-            assertEquals("below counter", i + 1, fba.getBelowCount());
-            assertEquals("above counter", 0, fba.getAboveCount());
+            assertEquals(i + 1, fba.getBelowCount(), "below counter");
+            assertEquals(0, fba.getAboveCount(), "above counter");
         }
         for (int i = 0; i < 5; i++)
         {
             fba.register(10);
-            assertEquals("below counter", 5, fba.getBelowCount());
-            assertEquals("above counter", i + 1, fba.getAboveCount());
+            assertEquals(5, fba.getBelowCount(), "below counter");
+            assertEquals(i + 1, fba.getAboveCount(), "above counter");
         }
-        
+
         try
         {
             fba.getQuantile(null, -0.001);
@@ -177,7 +177,7 @@ public class FixedBinsAccumulatorTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             fba.getQuantile(null, 1.001);
@@ -187,7 +187,7 @@ public class FixedBinsAccumulatorTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             fba.getQuantile(null, Double.POSITIVE_INFINITY);
@@ -197,7 +197,7 @@ public class FixedBinsAccumulatorTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             fba.getQuantile(null, Double.NEGATIVE_INFINITY);
@@ -207,7 +207,7 @@ public class FixedBinsAccumulatorTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             fba.getQuantile(null, Double.NaN);
@@ -217,16 +217,16 @@ public class FixedBinsAccumulatorTest
         {
             // Ignore expected exception
         }
-        
+
         fba.initialize();
-        assertEquals("binWidth", (Math.E - 1) / 1001, fba.getBinWidth(), 0.00001);
-        assertEquals("bin count", 1001, fba.getBinCount());
-        assertEquals("total count", 0, fba.getN());
-        assertEquals("below count", 0, fba.getBelowCount());
-        assertEquals("above count", 0, fba.getAboveCount());
-        assertTrue("quantile cannot be computed yet", Double.isNaN(fba.getQuantile(null, 0.5)));
-        
-        assertTrue("toString returns something descriptive", fba.toString().startsWith("FixedBinsAccumulator "));
+        assertEquals((Math.E - 1) / 1001, fba.getBinWidth(), 0.00001, "binWidth");
+        assertEquals(1001, fba.getBinCount(), "bin count");
+        assertEquals(0, fba.getN(), "total count");
+        assertEquals(0, fba.getBelowCount(), "below count");
+        assertEquals(0, fba.getAboveCount(), "above count");
+        assertTrue(Double.isNaN(fba.getQuantile(null, 0.5)), "quantile cannot be computed yet");
+
+        assertTrue(fba.toString().startsWith("FixedBinsAccumulator "), "toString returns something descriptive");
     }
 
 }

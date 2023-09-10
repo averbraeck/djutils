@@ -1,13 +1,13 @@
 package org.djutils.stats.summarizers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Calendar;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * The TimestampWeightedTallyTest test the weighted tally that receives observations with a timestamp.
@@ -16,8 +16,7 @@ import org.junit.Test;
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL
  * project is distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://simulation.tudelft.nl/dsol/3.0/license.html" target="_blank">
- * https://simulation.tudelft.nl/dsol/3.0/license.html</a>.
- * <br>
+ * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  * @since 1.5
  */
@@ -119,7 +118,7 @@ public class TimestampWeightedTallyTest
         double stDev = Math.sqrt(variance);
         assertEquals(variance, wt.getWeightedSampleVariance(), 1.0E-6);
         assertEquals(stDev, wt.getWeightedSampleStDev(), 1.0E-6);
-        
+
         variance = varianceAccumulator / 11.0;
         stDev = Math.sqrt(variance);
         assertEquals(variance, wt.getWeightedPopulationVariance(), 1.0E-6);

@@ -1,7 +1,7 @@
 package org.djutils.stats.summarizers.event;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.rmi.RemoteException;
 
@@ -10,7 +10,7 @@ import org.djutils.event.EventListener;
 import org.djutils.event.EventType;
 import org.djutils.exceptions.Try;
 import org.djutils.metadata.MetaData;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the EventBasedCounter class.
@@ -107,8 +107,8 @@ public class EventBasedCounterTest
         public void notify(final Event event)
         {
             assertTrue(event.getType().equals(StatisticsEvents.OBSERVATION_ADDED_EVENT));
-            assertTrue("Content of the event has a wrong type, not Long: " + event.getContent().getClass(),
-                    event.getContent() instanceof Long);
+            assertTrue(event.getContent() instanceof Long,
+                    "Content of the event has a wrong type, not Long: " + event.getContent().getClass());
             this.countEvents++;
         }
 
