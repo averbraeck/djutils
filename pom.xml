@@ -69,6 +69,15 @@
 
   <!-- dependency versions for all projects -->
 
+  <dependencies>
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>5.10.0</version>
+        <scope>test</scope>
+    </dependency>    
+  </dependencies>
+  
   <dependencyManagement>
     <dependencies>
 
@@ -106,13 +115,6 @@
         <groupId>org.djutils</groupId>
         <artifactId>djutils-stats</artifactId>
         <version>${djutils.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
       </dependency>
 
       <dependency>
