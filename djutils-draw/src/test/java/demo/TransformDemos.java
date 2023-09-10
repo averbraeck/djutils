@@ -37,7 +37,7 @@ public final class TransformDemos
         scale();
         transformPolyLine();
     }
-    
+
     /**
      * Demonstrate translate and rotate.
      */
@@ -55,7 +55,7 @@ public final class TransformDemos
         Transform3d transform2 = new Transform3d().translate(2, 5, 8).rotY(Math.PI / 2);
         System.out.println(transform2.transform(point));
     }
-    
+
     /**
      * Demonstrate 2D shear.
      */
@@ -72,7 +72,7 @@ public final class TransformDemos
             }
         }
     }
-    
+
     /**
      * Demonstrate 3d shear.
      */
@@ -92,7 +92,7 @@ public final class TransformDemos
             }
         }
     }
-    
+
     /**
      * Demonstrate scale.
      */
@@ -109,7 +109,7 @@ public final class TransformDemos
             }
         }
     }
-    
+
     /**
      * Demonstrate transforming of iterator of Point.
      */

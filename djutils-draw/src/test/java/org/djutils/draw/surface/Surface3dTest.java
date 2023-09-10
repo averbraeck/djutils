@@ -1,11 +1,11 @@
 package org.djutils.draw.surface;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.Point3d;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Surface3dTest.java; test the Surface3d class.
@@ -121,19 +121,19 @@ public class Surface3dTest
                     new Point3d(triangle + 10, triangle + 11, triangle - 12) };
         }
         Surface3d surface3d = new Surface3d(points);
-        assertEquals("size", points.length * 3, surface3d.size());
+        assertEquals(points.length * 3, surface3d.size(), "size");
         Iterator<? extends Point3d> iterator = surface3d.getPoints();
-        assertNotNull("iterator is not null", iterator);
+        assertNotNull(iterator, "iterator is not null");
         for (int triangle = 0; triangle < points.length; triangle++)
         {
             for (int i = 0; i < 3; i++)
             {
-                assertTrue("iterator should not be exhaused yet", iterator.hasNext());
+                assertTrue(iterator.hasNext(), "iterator should not be exhaused yet");
                 Object result = iterator.next();
-                assertEquals("iterator returned correct point", points[triangle][i], result);
+                assertEquals(points[triangle][i], result, "iterator returned correct point");
             }
         }
-        assertFalse("iterator should now be exhaused", iterator.hasNext());
+        assertFalse(iterator.hasNext(), "iterator should now be exhaused");
         try
         {
             iterator.next();
@@ -169,7 +169,7 @@ public class Surface3dTest
             }
         };
         Bounds3d bounds = new Bounds3d(iterator);
-        assertEquals("Bounds match", bounds, surface3d.getBounds());
+        assertEquals(bounds, surface3d.getBounds(), "Bounds match");
 
         // Triangulate a cube
         Point3d[][] cubePoints = new Point3d[12][];
@@ -192,8 +192,8 @@ public class Surface3dTest
         cubePoints[10] = new Point3d[] { new Point3d(-1, 1, -1), new Point3d(1, 1, -1), new Point3d(1, 1, 1) };
         cubePoints[11] = new Point3d[] { new Point3d(1, 1, 1), new Point3d(-1, 1, 1), new Point3d(-1, 1, -1) };
         surface3d = new Surface3d(cubePoints);
-        assertEquals("size (number of points in 12 triangles) is 36", 36, surface3d.size());
-        assertEquals("bounds", new Bounds3d(-1, 1, -1, 1, -1, 1), surface3d.getBounds());
+        assertEquals(36, surface3d.size(), "size (number of points in 12 triangles) is 36");
+        assertEquals(new Bounds3d(-1, 1, -1, 1, -1, 1), surface3d.getBounds(), "bounds");
 
         try
         {
@@ -205,15 +205,15 @@ public class Surface3dTest
             // Ignore expected exception
         }
 
-        assertTrue("toString results starts with class name (if not suppressed)",
-                surface3d.toString().startsWith("Surface3d "));
+        assertTrue(surface3d.toString().startsWith("Surface3d "),
+                "toString results starts with class name (if not suppressed)");
 
-        assertEquals("toString results with argument false is default", surface3d.toString(), surface3d.toString(false));
+        assertEquals(surface3d.toString(), surface3d.toString(false), "toString results with argument false is default");
 
-        assertTrue("toString result with argument true is substring of default result",
-                surface3d.toString().indexOf(surface3d.toString(true)) > 5);
+        assertTrue(surface3d.toString().indexOf(surface3d.toString(true)) > 5,
+                "toString result with argument true is substring of default result");
 
-        assertEquals("toString result with argument \"%f\" is default", surface3d.toString(), surface3d.toString("%f"));
+        assertEquals(surface3d.toString(), surface3d.toString("%f"), "toString result with argument \"%f\" is default");
     }
 
     /**
@@ -226,74 +226,74 @@ public class Surface3dTest
         Point3d[][] referencePoints = new Point3d[][] { { new Point3d(1, 2, 3), new Point3d(4, 5, 6), new Point3d(7, 8, 9) },
                 { new Point3d(11, 12, 13), new Point3d(14, 15, 16), new Point3d(17, 18, 19) } };
         Surface3d referenceSurface = new Surface3d(referencePoints);
-        assertTrue("Equal to itself", referenceSurface.equals(referenceSurface));
-        assertFalse("Not equal to null", referenceSurface.equals(null));
-        assertFalse("Not equal to some other object", referenceSurface.equals("some string"));
+        assertTrue(referenceSurface.equals(referenceSurface), "Equal to itself");
+        assertFalse(referenceSurface.equals(null), "Not equal to null");
+        assertFalse(referenceSurface.equals("some string"), "Not equal to some other object");
         // We could, in fact, patch the referencePoints array, but it is cleaner to work with a copy.
         Point3d[][] otherPoints =
                 java.util.Arrays.stream(referencePoints).map(el -> el.clone()).toArray($ -> referencePoints.clone());
-        assertTrue("Equal to other Surface3d created from copy of referencePoints",
-                referenceSurface.equals(new Surface3d(otherPoints)));
-        assertEquals("hashCode is same", referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode());
+        assertTrue(referenceSurface.equals(new Surface3d(otherPoints)),
+                "Equal to other Surface3d created from copy of referencePoints");
+        assertEquals(referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode(), "hashCode is same");
         // Now alter one element at a time and check that hashCode changes and equals returns false
         otherPoints[0][0] = new Point3d(1, 2, 3.5);
-        assertFalse("Not equal to other Surface3d created from altered copy of referencePoints",
-                referenceSurface.equals(new Surface3d(otherPoints)));
-        assertNotEquals("hashCode differs", referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode());
+        assertFalse(referenceSurface.equals(new Surface3d(otherPoints)),
+                "Not equal to other Surface3d created from altered copy of referencePoints");
+        assertNotEquals(referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode(), "hashCode differs");
         otherPoints[0][0] = new Point3d(1, 2.5, 3);
-        assertFalse("Not equal to other Surface3d created from altered copy of referencePoints",
-                referenceSurface.equals(new Surface3d(otherPoints)));
-        assertNotEquals("hashCode differs", referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode());
+        assertFalse(referenceSurface.equals(new Surface3d(otherPoints)),
+                "Not equal to other Surface3d created from altered copy of referencePoints");
+        assertNotEquals(referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode(), "hashCode differs");
         otherPoints[0][0] = new Point3d(1.5, 2, 3);
-        assertFalse("Not equal to other Surface3d created from altered copy of referencePoints",
-                referenceSurface.equals(new Surface3d(otherPoints)));
+        assertFalse(referenceSurface.equals(new Surface3d(otherPoints)),
+                "Not equal to other Surface3d created from altered copy of referencePoints");
         otherPoints[0][0] = new Point3d(1, 2, 3);
         otherPoints[0][1] = new Point3d(4, 5, 6.5);
-        assertFalse("Not equal to other Surface3d created from altered copy of referencePoints",
-                referenceSurface.equals(new Surface3d(otherPoints)));
-        assertNotEquals("hashCode differs", referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode());
+        assertFalse(referenceSurface.equals(new Surface3d(otherPoints)),
+                "Not equal to other Surface3d created from altered copy of referencePoints");
+        assertNotEquals(referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode(), "hashCode differs");
         otherPoints[0][1] = new Point3d(4, 5.5, 6);
-        assertFalse("Not equal to other Surface3d created from altered copy of referencePoints",
-                referenceSurface.equals(new Surface3d(otherPoints)));
-        assertNotEquals("hashCode differs", referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode());
+        assertFalse(referenceSurface.equals(new Surface3d(otherPoints)),
+                "Not equal to other Surface3d created from altered copy of referencePoints");
+        assertNotEquals(referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode(), "hashCode differs");
         otherPoints[0][1] = new Point3d(4.5, 5, 6);
-        assertFalse("Not equal to other Surface3d created from altered copy of referencePoints",
-                referenceSurface.equals(new Surface3d(otherPoints)));
-        assertNotEquals("hashCode differs", referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode());
+        assertFalse(referenceSurface.equals(new Surface3d(otherPoints)),
+                "Not equal to other Surface3d created from altered copy of referencePoints");
+        assertNotEquals(referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode(), "hashCode differs");
         otherPoints[0][1] = new Point3d(4, 5, 6);
         otherPoints[0][2] = new Point3d(7, 8, 9.5);
-        assertFalse("Not equal to other Surface3d created from altered copy of referencePoints",
-                referenceSurface.equals(new Surface3d(otherPoints)));
-        assertNotEquals("hashCode differs", referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode());
+        assertFalse(referenceSurface.equals(new Surface3d(otherPoints)),
+                "Not equal to other Surface3d created from altered copy of referencePoints");
+        assertNotEquals(referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode(), "hashCode differs");
         otherPoints[0][2] = new Point3d(7, 8.5, 9);
-        assertFalse("Not equal to other Surface3d created from altered copy of referencePoints",
-                referenceSurface.equals(new Surface3d(otherPoints)));
+        assertFalse(referenceSurface.equals(new Surface3d(otherPoints)),
+                "Not equal to other Surface3d created from altered copy of referencePoints");
         otherPoints[0][2] = new Point3d(7.5, 8, 9);
-        assertFalse("Not equal to other Surface3d created from altered copy of referencePoints",
-                referenceSurface.equals(new Surface3d(otherPoints)));
-        assertNotEquals("hashCode differs", referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode());
+        assertFalse(referenceSurface.equals(new Surface3d(otherPoints)),
+                "Not equal to other Surface3d created from altered copy of referencePoints");
+        assertNotEquals(referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode(), "hashCode differs");
         otherPoints[0][2] = new Point3d(7, 8, 9);
         // Now we skip a few
         otherPoints[1][2] = new Point3d(17, 18, 19.5);
-        assertFalse("Not equal to other Surface3d created from altered copy of referencePoints",
-                referenceSurface.equals(new Surface3d(otherPoints)));
-        assertNotEquals("hashCode differs", referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode());
+        assertFalse(referenceSurface.equals(new Surface3d(otherPoints)),
+                "Not equal to other Surface3d created from altered copy of referencePoints");
+        assertNotEquals(referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode(), "hashCode differs");
         otherPoints[1][2] = new Point3d(17, 18.5, 19);
-        assertFalse("Not equal to other Surface3d created from altered copy of referencePoints",
-                referenceSurface.equals(new Surface3d(otherPoints)));
-        assertNotEquals("hashCode differs", referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode());
+        assertFalse(referenceSurface.equals(new Surface3d(otherPoints)),
+                "Not equal to other Surface3d created from altered copy of referencePoints");
+        assertNotEquals(referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode(), "hashCode differs");
         otherPoints[1][2] = new Point3d(17.5, 18, 19);
-        assertFalse("Not equal to other Surface3d created from altered copy of referencePoints",
-                referenceSurface.equals(new Surface3d(otherPoints)));
-        assertNotEquals("hashCode differs", referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode());
+        assertFalse(referenceSurface.equals(new Surface3d(otherPoints)),
+                "Not equal to other Surface3d created from altered copy of referencePoints");
+        assertNotEquals(referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode(), "hashCode differs");
         // Now make one that uses the same set of points (and in the same order), but different indices
         otherPoints = new Point3d[3][];
         otherPoints[0] = referencePoints[0];
         otherPoints[1] = referencePoints[1];
         otherPoints[2] = referencePoints[1]; // A third triangle, using the same points as the second
-        assertFalse("Not equal to other Surface3d created from altered copy of referencePoints",
-                referenceSurface.equals(new Surface3d(otherPoints)));
-        assertNotEquals("hashCode differs", referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode());
+        assertFalse(referenceSurface.equals(new Surface3d(otherPoints)),
+                "Not equal to other Surface3d created from altered copy of referencePoints");
+        assertNotEquals(referenceSurface.hashCode(), new Surface3d(otherPoints).hashCode(), "hashCode differs");
     }
 
 }

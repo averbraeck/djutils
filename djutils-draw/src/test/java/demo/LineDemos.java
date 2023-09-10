@@ -36,11 +36,11 @@ public final class LineDemos
     {
         PolyLine2d pl1 = new PolyLine2d(new Point2d(1, 2), new Point2d(3, 4), new Point2d(20, -5));
         System.out.println(pl1);
-        Point2d[] pointArray = new Point2d[] { new Point2d(1, 2), new Point2d(3, 4), new Point2d(20, -5) };
+        Point2d[] pointArray = new Point2d[] {new Point2d(1, 2), new Point2d(3, 4), new Point2d(20, -5)};
         PolyLine2d pl2 = new PolyLine2d(pointArray);
         System.out.println(pl2);
-        double[] x = new double[] { 1, 3, 20 };
-        double[] y = new double[] { 2, 4, -5 };
+        double[] x = new double[] {1, 3, 20};
+        double[] y = new double[] {2, 4, -5};
         PolyLine2d pl3 = new PolyLine2d(x, y);
         System.out.println(pl3);
         List<Point2d> pointList = new ArrayList<>();

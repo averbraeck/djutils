@@ -1,8 +1,8 @@
 package org.djutils.draw.line;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.point.Point3d;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Polygon3dTest.java.
@@ -40,21 +40,21 @@ public class Polygon3dTest
         for (int index = 0; index < 3; index++)
         {
             Point3d p = reversed.get(x.length - 1 - index);
-            assertEquals("reversed x", x[index], p.x, 0.0001);
-            assertEquals("reversed y", y[index], p.y, 0.0001);
-            assertEquals("reversed z", z[index], p.z, 0.0001);
+            assertEquals(x[index], p.x, 0.0001, "reversed x");
+            assertEquals(y[index], p.y, 0.0001, "reversed y");
+            assertEquals(z[index], p.z, 0.0001, "reversed z");
         }
 
         x = new double[] { 1, 3, 5, 1 };
         y = new double[] { 2, 1, 10, 2 };
         z = new double[] { 2, 3, 4, 2 };
         polygon = new Polygon3d(x, y, z); // Last point is duplicate of first point; should be handled gracefully
-        assertTrue("toString returns something descriptive", polygon.toString().startsWith("Polygon3d"));
-        assertTrue("toString can suppress the class name", polygon.toString().indexOf(polygon.toString(true)) > 0);
+        assertTrue(polygon.toString().startsWith("Polygon3d"), "toString returns something descriptive");
+        assertTrue(polygon.toString().indexOf(polygon.toString(true)) > 0, "toString can suppress the class name");
         checkPolygon("constructed from arrays", x, y, z, polygon);
         Polygon3d otherPolygon = new Polygon3d(polygon.get(0), polygon.get(1), polygon.get(2), polygon.get(0));
-        assertEquals("polygon constructed from all points of existing polygon with first point duplicated at end is equal "
-                + "to original", polygon, otherPolygon);
+        assertEquals(polygon, otherPolygon, "polygon constructed from all points of existing polygon with first point duplicated at end is equal "
+                        + "to original");
         // Make a Polygon3d from Point3d where last point differs from first only in y
         new Polygon3d(polygon.get(0), polygon.get(1), polygon.get(2), new Point3d(polygon.get(0).x, 123, polygon.get(0).z));
         // Make a Polygon3d from Point3d where last point differs from first only in z
@@ -83,22 +83,22 @@ public class Polygon3dTest
         List<Point3d> list = new ArrayList<>();
         polygon.getPoints().forEachRemaining(list::add);
         otherPolygon = new Polygon3d(list);
-        assertEquals("Polygon created from polygon points is equal to original polygon", polygon, otherPolygon);
+        assertEquals(polygon, otherPolygon, "Polygon created from polygon points is equal to original polygon");
         otherPolygon = new Polygon3d(list.get(0), list.get(1), list.get(2), list.get(3));
-        assertEquals("Polygon created from all four points of existing polygon is equal to original", polygon, otherPolygon);
+        assertEquals(polygon, otherPolygon, "Polygon created from all four points of existing polygon is equal to original");
 
         Point3d[] pointArray = list.toArray(new Point3d[0]);
         otherPolygon = new Polygon3d(pointArray);
-        assertEquals("Polygon created from array of points of existing polygon is equal to original", polygon, otherPolygon);
+        assertEquals(polygon, otherPolygon, "Polygon created from array of points of existing polygon is equal to original");
 
         list.add(list.get(0));
         otherPolygon = new Polygon3d(list.iterator());
-        assertEquals("Polygon created from polygon points and duplicate of first point at end is equal to original polygon",
-                polygon, otherPolygon);
+        assertEquals(polygon,
+                otherPolygon, "Polygon created from polygon points and duplicate of first point at end is equal to original polygon");
 
         otherPolygon = new Polygon3d(list);
-        assertEquals("Polygon created from polygon points and duplicate of first point at end is equal to original polygon",
-                polygon, otherPolygon);
+        assertEquals(polygon,
+                otherPolygon, "Polygon created from polygon points and duplicate of first point at end is equal to original polygon");
         // Add a point that only differs in y
         list.add(new Point3d(list.get(0).x, 123, list.get(0).z));
         new Polygon3d(list.iterator());
@@ -275,7 +275,7 @@ public class Polygon3dTest
             // Ignore expected exception
         }
         
-        assertEquals("After filtering; there are two points left", 2, new Polygon3d(true, points).size()); 
+        assertEquals(2, new Polygon3d(true, points).size(), "After filtering; there are two points left"); 
         
         List<Point3d> list = Arrays.asList(points);
         try
@@ -288,7 +288,7 @@ public class Polygon3dTest
             // Ignore expected exception
         }
         
-        assertEquals("After filtering; there are two points left", 2, new Polygon3d(true, list).size()); 
+        assertEquals(2, new Polygon3d(true, list).size(), "After filtering; there are two points left"); 
     }
 
     /**
@@ -308,38 +308,38 @@ public class Polygon3dTest
 
         Polygon3d l01 = new Polygon3d(p0, p1);
         Polygon3d r = l01.reverse();
-        assertEquals("result has size 2", 2, r.size());
-        assertEquals("point 0 is p1", p1, r.get(0));
-        assertEquals("point 1 is p0", p0, r.get(1));
+        assertEquals(2, r.size(), "result has size 2");
+        assertEquals(p1, r.get(0), "point 0 is p1");
+        assertEquals(p0, r.get(1), "point 1 is p0");
 
         Polygon3d l05 = new Polygon3d(p0, p1, p2, p3, p4, p5);
         r = l05.reverse();
-        assertEquals("result has size 6", 6, r.size());
-        assertEquals("point 0 is p5", p5, r.get(0));
-        assertEquals("point 1 is p4", p4, r.get(1));
-        assertEquals("point 2 is p3", p3, r.get(2));
-        assertEquals("point 3 is p2", p2, r.get(3));
-        assertEquals("point 4 is p1", p1, r.get(4));
-        assertEquals("point 5 is p0", p0, r.get(5));
+        assertEquals(6, r.size(), "result has size 6");
+        assertEquals(p5, r.get(0), "point 0 is p5");
+        assertEquals(p4, r.get(1), "point 1 is p4");
+        assertEquals(p3, r.get(2), "point 2 is p3");
+        assertEquals(p2, r.get(3), "point 3 is p2");
+        assertEquals(p1, r.get(4), "point 4 is p1");
+        assertEquals(p0, r.get(5), "point 5 is p0");
 
         PolyLine2d l2d = l05.project();
-        assertEquals("result has size 6", 6, l2d.size());
-        assertEquals("point 0 is p5", p0.project(), l2d.get(0));
-        assertEquals("point 1 is p4", p1.project(), l2d.get(1));
-        assertEquals("point 2 is p3", p2.project(), l2d.get(2));
-        assertEquals("point 3 is p2", p3.project(), l2d.get(3));
-        assertEquals("point 4 is p1", p4.project(), l2d.get(4));
-        assertEquals("point 5 is p0", p5.project(), l2d.get(5));
+        assertEquals(6, l2d.size(), "result has size 6");
+        assertEquals(p0.project(), l2d.get(0), "point 0 is p5");
+        assertEquals(p1.project(), l2d.get(1), "point 1 is p4");
+        assertEquals(p2.project(), l2d.get(2), "point 2 is p3");
+        assertEquals(p3.project(), l2d.get(3), "point 3 is p2");
+        assertEquals(p4.project(), l2d.get(4), "point 4 is p1");
+        assertEquals(p5.project(), l2d.get(5), "point 5 is p0");
 
         l05 = new Polygon3d(p0, p1, p2, p2x, p3, p4, p5);
         l2d = l05.project();
-        assertEquals("result has size 6", 6, l2d.size());
-        assertEquals("point 0 is p5", p0.project(), l2d.get(0));
-        assertEquals("point 1 is p4", p1.project(), l2d.get(1));
-        assertEquals("point 2 is p3", p2.project(), l2d.get(2));
-        assertEquals("point 3 is p2", p3.project(), l2d.get(3));
-        assertEquals("point 4 is p1", p4.project(), l2d.get(4));
-        assertEquals("point 5 is p0", p5.project(), l2d.get(5));
+        assertEquals(6, l2d.size(), "result has size 6");
+        assertEquals(p0.project(), l2d.get(0), "point 0 is p5");
+        assertEquals(p1.project(), l2d.get(1), "point 1 is p4");
+        assertEquals(p2.project(), l2d.get(2), "point 2 is p3");
+        assertEquals(p3.project(), l2d.get(3), "point 3 is p2");
+        assertEquals(p4.project(), l2d.get(4), "point 4 is p1");
+        assertEquals(p5.project(), l2d.get(5), "point 5 is p0");
 
         Polygon3d l22x = new Polygon3d(p2, p2x);
         try
@@ -366,21 +366,21 @@ public class Polygon3dTest
         double cumulativeLength = 0;
         for (int index = 0; index < polygon.size(); index++)
         {
-            assertEquals(where + " x[index]", x[index], polygon.getX(index), Math.ulp(x[index]));
-            assertEquals(where + " y[index]", y[index], polygon.getY(index), Math.ulp(y[index]));
-            assertEquals(where + " z[index]", z[index], polygon.getZ(index), Math.ulp(z[index]));
+            assertEquals(x[index], polygon.getX(index), Math.ulp(x[index]), where + " x[index]");
+            assertEquals(y[index], polygon.getY(index), Math.ulp(y[index]), where + " y[index]");
+            assertEquals(z[index], polygon.getZ(index), Math.ulp(z[index]), where + " z[index]");
             LineSegment3d segment = polygon.getSegment(index);
-            assertEquals(where + " segment start x", x[index], segment.startX, Math.ulp(x[index]));
-            assertEquals(where + " segment start y", y[index], segment.startY, Math.ulp(y[index]));
-            assertEquals(where + " segment start z", z[index], segment.startZ, Math.ulp(z[index]));
+            assertEquals(x[index], segment.startX, Math.ulp(x[index]), where + " segment start x");
+            assertEquals(y[index], segment.startY, Math.ulp(y[index]), where + " segment start y");
+            assertEquals(z[index], segment.startZ, Math.ulp(z[index]), where + " segment start z");
             int wrappedIndex = (index + 1) % polygon.size();
-            assertEquals(where + " segment end x", x[wrappedIndex], segment.endX, Math.ulp(x[wrappedIndex]));
-            assertEquals(where + " segment end y", y[wrappedIndex], segment.endY, Math.ulp(y[wrappedIndex]));
-            assertEquals(where + " segment end z", z[wrappedIndex], segment.endZ, Math.ulp(z[wrappedIndex]));
+            assertEquals(x[wrappedIndex], segment.endX, Math.ulp(x[wrappedIndex]), where + " segment end x");
+            assertEquals(y[wrappedIndex], segment.endY, Math.ulp(y[wrappedIndex]), where + " segment end y");
+            assertEquals(z[wrappedIndex], segment.endZ, Math.ulp(z[wrappedIndex]), where + " segment end z");
             cumulativeLength += segment.getLength();
         }
-        assertEquals(where + " circumference", cumulativeLength, polygon.getLength(),
-                polygon.size() * Math.ulp(cumulativeLength));
+        assertEquals(cumulativeLength, polygon.getLength(), polygon.size() * Math.ulp(cumulativeLength),
+                where + " circumference");
     }
 
     /**
@@ -393,15 +393,15 @@ public class Polygon3dTest
                 new Point3d(-12.345, -34.567, 45.678) };
         Polygon3d pl = new Polygon3d(points);
         String[] out = pl.toExcel().split("\\n");
-        assertEquals("Excel output consists of one line per point plus one", points.length + 1, out.length);
+        assertEquals(points.length + 1, out.length, "Excel output consists of one line per point plus one");
         for (int index = 0; index <= points.length; index++)
         {
             String[] fields = out[index].split("\\t");
-            assertEquals("each line consists of three fields", 3, fields.length);
+            assertEquals(3, fields.length, "each line consists of three fields");
             try
             {
                 double x = Double.parseDouble(fields[0].trim());
-                assertEquals("x matches", points[index % pl.size()].x, x, 0.001);
+                assertEquals(points[index % pl.size()].x, x, 0.001, "x matches");
             }
             catch (NumberFormatException nfe)
             {
@@ -410,7 +410,7 @@ public class Polygon3dTest
             try
             {
                 double y = Double.parseDouble(fields[1].trim());
-                assertEquals("y matches", points[index % pl.size()].y, y, 0.001);
+                assertEquals(points[index % pl.size()].y, y, 0.001, "y matches");
             }
             catch (NumberFormatException nfe)
             {
@@ -419,7 +419,7 @@ public class Polygon3dTest
             try
             {
                 double z = Double.parseDouble(fields[2].trim());
-                assertEquals("z matches", points[index % pl.size()].z, z, 0.001);
+                assertEquals(points[index % pl.size()].z, z, 0.001, "z matches");
             }
             catch (NumberFormatException nfe)
             {

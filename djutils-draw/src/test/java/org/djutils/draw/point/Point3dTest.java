@@ -1,12 +1,12 @@
 package org.djutils.draw.point;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.geom.Point2D;
 
@@ -15,7 +15,7 @@ import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.line.LineSegment3d;
 import org.djutils.draw.line.PolyLine3d;
 import org.djutils.exceptions.Try;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Point3dTest.java.
@@ -37,12 +37,12 @@ public class Point3dTest
     {
         Point3d p = new Point3d(10.0, -20.0, 16.0);
         assertNotNull(p);
-        assertEquals("Access x", 10.0, p.x, 0);
-        assertEquals("Access y", -20.0, p.y, 0);
-        assertEquals("Access z", 16.0, p.z, 0);
-        assertEquals("Dimensions is 3", 3, p.getDimensions());
+        assertEquals(10.0, p.x, 0, "Access x");
+        assertEquals(-20.0, p.y, 0, "Access y");
+        assertEquals(16.0, p.z, 0, "Access z");
+        assertEquals(3, p.getDimensions(), "Dimensions is 3");
 
-        assertEquals("Size method returns 1", 1, p.size());
+        assertEquals(1, p.size(), "Size method returns 1");
 
         Point2d projection = p.project();
         assertEquals(10.0, projection.x, 0);
@@ -162,7 +162,7 @@ public class Point3dTest
         assertFalse(p.equals(p2d));
         assertFalse(p.equals(null));
         assertNotEquals(p2d.hashCode(), p.hashCode());
-        assertEquals("Translating over 0,0,0 returns p", p, p.translate(0.0, 0.0, 0.0));
+        assertEquals(p, p.translate(0.0, 0.0, 0.0), "Translating over 0,0,0 returns p");
         assertNotEquals(p, p.translate(1.0, 0.0, 0.0));
         assertNotEquals(p, p.translate(0.0, 1.0, 0.0));
         assertNotEquals(p, p.translate(0.0, 0.0, 1.0));
@@ -195,15 +195,15 @@ public class Point3dTest
 
         p2d = new Point2d(123, 456);
         p3 = new Point3d(p2d, 789);
-        assertEquals("x", 123, p3.x, 0);
-        assertEquals("y", 456, p3.y, 0);
-        assertEquals("z", 789, p3.z, 0);
+        assertEquals(123, p3.x, 0, "x");
+        assertEquals(456, p3.y, 0, "y");
+        assertEquals(789, p3.z, 0, "z");
 
         Point2D p2D = new java.awt.geom.Point2D.Double(123, 456);
         p3 = new Point3d(p2D, 789);
-        assertEquals("x", 123, p3.x, 0);
-        assertEquals("y", 456, p3.y, 0);
-        assertEquals("z", 789, p3.z, 0);
+        assertEquals(123, p3.x, 0, "x");
+        assertEquals(456, p3.y, 0, "y");
+        assertEquals(789, p3.z, 0, "z");
     }
 
     /**
@@ -294,7 +294,7 @@ public class Point3dTest
         // interpolate
         Point3d p1 = new Point3d(1.0, 1.0, 1.0);
         Point3d p2 = new Point3d(5.0, 5.0, 5.0);
-        assertEquals("Interpolate at 0.0 returns this", p1, p1.interpolate(p2, 0.0));
+        assertEquals(p1, p1.interpolate(p2, 0.0), "Interpolate at 0.0 returns this");
         assertEquals(p2, p2.interpolate(p1, 0.0));
         assertEquals(p1, p1.interpolate(p1, 0.0));
         assertEquals(new Point3d(3.0, 3.0, 3.0), p1.interpolate(p2, 0.5));
@@ -328,18 +328,18 @@ public class Point3dTest
             }
         }, "Should throw DRtE", DrawRuntimeException.class);
 
-        assertEquals("size of a Point3d is 1", 1, p1.size());
+        assertEquals(1, p1.size(), "size of a Point3d is 1");
         Point2d projection = p1.project();
-        assertEquals("projected x", p1.x, projection.x, 0);
-        assertEquals("projected y", p1.y, projection.y, 0);
+        assertEquals(p1.x, projection.x, 0, "projected x");
+        assertEquals(p1.y, projection.y, 0, "projected y");
 
         Bounds3d bounds = p1.getBounds();
-        assertEquals("Bounds min x", p1.x, bounds.getMinX(), 0);
-        assertEquals("Bounds min y", p1.y, bounds.getMinY(), 0);
-        assertEquals("Bounds min z", p1.z, bounds.getMinZ(), 0);
-        assertEquals("Bounds max x", p1.x, bounds.getMaxX(), 0);
-        assertEquals("Bounds max y", p1.y, bounds.getMaxY(), 0);
-        assertEquals("Bounds max z", p1.z, bounds.getMaxZ(), 0);
+        assertEquals(p1.x, bounds.getMinX(), 0, "Bounds min x");
+        assertEquals(p1.y, bounds.getMinY(), 0, "Bounds min y");
+        assertEquals(p1.z, bounds.getMinZ(), 0, "Bounds min z");
+        assertEquals(p1.x, bounds.getMaxX(), 0, "Bounds max x");
+        assertEquals(p1.y, bounds.getMaxY(), 0, "Bounds max y");
+        assertEquals(p1.z, bounds.getMaxZ(), 0, "Bounds max z");
     }
 
     /**
@@ -451,25 +451,25 @@ public class Point3dTest
                             step /= 2;
                         }
                         Point3d result = p.closestPointOnSegment(p1, p2);
-                        assertEquals("distance should be less than one thousandth of line length", 0,
-                                approximation.distance(result), line.getLength() / 1000);
-                        assertEquals("zero length line segment should always return start point", p1,
-                                p.closestPointOnSegment(p1, p1));
+                        assertEquals(0, approximation.distance(result),
+                                line.getLength() / 1000, "distance should be less than one thousandth of line length");
+                        assertEquals(p1, p.closestPointOnSegment(p1, p1),
+                                "zero length line segment should always return start point");
                         result = p.closestPointOnSegment(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
-                        assertEquals("distance should be less than one thousandth of line length", 0,
-                                approximation.distance(result), line.getLength() / 1000);
+                        assertEquals(0, approximation.distance(result),
+                                line.getLength() / 1000, "distance should be less than one thousandth of line length");
 
                         if (fraction > 0.001 && fraction < 0.999)
                         {
                             result = p.closestPointOnLine(p1, p2);
-                            assertEquals("distance should be less than one thousandth of line length", 0,
-                                    approximation.distance(result), line.getLength() / 1000);
+                            assertEquals(0, approximation.distance(result),
+                                    line.getLength() / 1000, "distance should be less than one thousandth of line length");
                             result = p.closestPointOnLine(p1, p2);
-                            assertEquals("distance should be less than one thousandth of line length", 0,
-                                    approximation.distance(result), line.getLength() / 1000);
+                            assertEquals(0, approximation.distance(result),
+                                    line.getLength() / 1000, "distance should be less than one thousandth of line length");
                             result = p.closestPointOnLine(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
-                            assertEquals("distance should be less than one thousandth of line length", 0,
-                                    approximation.distance(result), line.getLength() / 1000);
+                            assertEquals(0, approximation.distance(result),
+                                    line.getLength() / 1000, "distance should be less than one thousandth of line length");
                         }
                         else
                         {
@@ -507,20 +507,20 @@ public class Point3dTest
                                 step /= 2;
                             }
                             result = p.closestPointOnLine(p1, p2);
-                            assertEquals("distance should be less than one thousandth of range", 0,
-                                    approximation.distance(result), range / 1000);
+                            assertEquals(0, approximation.distance(result),
+                                    range / 1000, "distance should be less than one thousandth of range");
                             result = p.closestPointOnLine(p1, p2);
-                            assertEquals("distance should be less than one thousandth of range", 0,
-                                    approximation.distance(result), range / 1000);
+                            assertEquals(0, approximation.distance(result),
+                                    range / 1000, "distance should be less than one thousandth of range");
                             result = p.closestPointOnLine(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
-                            assertEquals("distance should be less than one thousandth of range", 0,
-                                    approximation.distance(result), range / 1000);
+                            assertEquals(0, approximation.distance(result),
+                                    range / 1000, "distance should be less than one thousandth of range");
                             if (fraction < -0.001 || fraction > 1.001)
                             {
-                                assertNull("projectOrthogonal should return null",
-                                        new LineSegment3d(p1, p2).projectOrthogonal(p));
-                                assertEquals("projectOrthogonalExtended should return same result as closestPointOnLine",
-                                        result, new LineSegment3d(p1, p2).projectOrthogonalExtended(p));
+                                assertNull(new LineSegment3d(p1, p2).projectOrthogonal(p),
+                                        "projectOrthogonal should return null");
+                                assertEquals(result,
+                                        new LineSegment3d(p1, p2).projectOrthogonalExtended(p), "projectOrthogonalExtended should return same result as closestPointOnLine");
                             }
                         }
                     }

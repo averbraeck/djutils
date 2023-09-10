@@ -21,7 +21,7 @@ public final class RayDemos
     {
         // Do not instantiate.
     }
-    
+
     /**
      * Demonstrate the Ray classes.
      * @param args String[]; the command line arguments (not used)
@@ -40,7 +40,6 @@ public final class RayDemos
         System.out.println(r5);
         Ray2d r6 = new Ray2d(new Point2d(1, 2), Math.PI / 2);
         System.out.println(r6);
-        
+
     }
 }
-

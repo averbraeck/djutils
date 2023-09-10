@@ -1,7 +1,7 @@
 package org.djutils.draw.line;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.Random;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.point.Point2d;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * ConvexHullTest.java.
@@ -108,8 +108,8 @@ public class ConvexHullTest
             }
             
             // Verify that the provided array was not modified.
-            assertEquals("points still contains one point", 1, points.size());
-            assertEquals("points still contains testPoint", testPoint, points.get(0));
+            assertEquals(1, points.size(), "points still contains one point");
+            assertEquals(testPoint, points.get(0), "points still contains testPoint");
             
             points = new ArrayList<>();
             points.add(testPoint);
@@ -125,9 +125,9 @@ public class ConvexHullTest
             }
             
             // Verify that the provided array was not modified.
-            assertEquals("points still contains one point", 2, points.size());
-            assertEquals("first points is testPoint", testPoint, points.get(0));
-            assertEquals("second points is testPoint", testPoint, points.get(1));
+            assertEquals(2, points.size(), "points still contains one point");
+            assertEquals(testPoint, points.get(0), "first points is testPoint");
+            assertEquals(testPoint, points.get(1), "second points is testPoint");
         }
         try
         {
@@ -161,21 +161,21 @@ public class ConvexHullTest
         Collections.shuffle(points, new Random(123));
         checkImplementations(implementations, points, expectedResult);
 
-        assertEquals("convex hull of iterator", expectedResult, ConvexHull.convexHull(points.iterator()));
+        assertEquals(expectedResult, ConvexHull.convexHull(points.iterator()), "convex hull of iterator");
 
-        assertEquals("convex hull of one drawable", expectedResult, ConvexHull.convexHull(new PolyLine2d(points)));
+        assertEquals(expectedResult, ConvexHull.convexHull(new PolyLine2d(points)), "convex hull of one drawable");
 
-        assertEquals("convex hull of two drawables", expectedResult,
-                ConvexHull.convexHull(new PolyLine2d(points), new Point2d(1, 2)));
-        assertEquals("convex hull of two drawables", expectedResult,
-                ConvexHull.convexHull(new Point2d(1, 2), new PolyLine2d(points)));
+        assertEquals(expectedResult, ConvexHull.convexHull(new PolyLine2d(points), new Point2d(1, 2)),
+                "convex hull of two drawables");
+        assertEquals(expectedResult, ConvexHull.convexHull(new Point2d(1, 2), new PolyLine2d(points)),
+                "convex hull of two drawables");
 
         Collection<Drawable2d> collection = new LinkedHashSet<>();
         collection.add(new PolyLine2d(points));
-        assertEquals("convex hull of collection of one Drawable2d object", expectedResult, ConvexHull.convexHull(collection));
+        assertEquals(expectedResult, ConvexHull.convexHull(collection), "convex hull of collection of one Drawable2d object");
 
         collection.add(new Point2d(1, 2));
-        assertEquals("convex hull of collection of two Drawable2d objects", expectedResult, ConvexHull.convexHull(collection));
+        assertEquals(expectedResult, ConvexHull.convexHull(collection), "convex hull of collection of two Drawable2d objects");
 
         points = new ArrayList<>();
         for (int x = -1; x <= 1; x++)
@@ -300,7 +300,7 @@ public class ConvexHullTest
                 System.err.println("         input: " + in);
                 implementations.get(name).run(new ArrayList<>(in));
             }
-            assertEquals(name, expectedResult, result);
+            assertEquals(expectedResult, result, name);
         }
 
     }

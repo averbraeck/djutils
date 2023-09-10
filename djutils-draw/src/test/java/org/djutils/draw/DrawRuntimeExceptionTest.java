@@ -1,9 +1,9 @@
 package org.djutils.draw;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the constructors for ValueException.
@@ -26,23 +26,23 @@ public class DrawRuntimeExceptionTest
     {
         String message = "MessageString";
         Exception e = new DrawRuntimeException(message);
-        assertTrue("Exception should not be null", null != e);
-        assertEquals("message should be our message", message, e.getMessage());
-        assertEquals("cause should be null", null, e.getCause());
+        assertTrue(null != e, "Exception should not be null");
+        assertEquals(message, e.getMessage(), "message should be our message");
+        assertEquals(null, e.getCause(), "cause should be null");
         e = new DrawRuntimeException();
-        assertTrue("Exception should not be null", null != e);
-        assertEquals("cause should be null", null, e.getCause());
+        assertTrue(null != e, "Exception should not be null");
+        assertEquals(null, e.getCause(), "cause should be null");
         String causeString = "CauseString";
         Throwable cause = new Throwable(causeString);
         e = new DrawRuntimeException(cause);
-        assertTrue("Exception should not be null", null != e);
-        assertEquals("cause should not be our cause", cause, e.getCause());
-        assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+        assertTrue(null != e, "Exception should not be null");
+        assertEquals(cause, e.getCause(), "cause should not be our cause");
+        assertEquals(causeString, e.getCause().getMessage(), "cause description should be our cause string");
         e = new DrawRuntimeException(message, cause);
-        assertTrue("Exception should not be null", null != e);
-        assertEquals("message should be our message", message, e.getMessage());
-        assertEquals("cause should not be our cause", cause, e.getCause());
-        assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+        assertTrue(null != e, "Exception should not be null");
+        assertEquals(message, e.getMessage(), "message should be our message");
+        assertEquals(cause, e.getCause(), "cause should not be our cause");
+        assertEquals(causeString, e.getCause().getMessage(), "cause description should be our cause string");
     }
 
     /**
@@ -53,23 +53,23 @@ public class DrawRuntimeExceptionTest
     {
         String message = "MessageString";
         Exception e = new DrawRuntimeException(message);
-        assertTrue("Exception should not be null", null != e);
-        assertEquals("message should be our message", message, e.getMessage());
-        assertEquals("cause should be null", null, e.getCause());
+        assertTrue(null != e, "Exception should not be null");
+        assertEquals(message, e.getMessage(), "message should be our message");
+        assertEquals(null, e.getCause(), "cause should be null");
         e = new DrawRuntimeException();
-        assertTrue("Exception should not be null", null != e);
-        assertEquals("cause should be null", null, e.getCause());
+        assertTrue(null != e, "Exception should not be null");
+        assertEquals(null, e.getCause(), "cause should be null");
         String causeString = "CauseString";
         Throwable cause = new Throwable(causeString);
         e = new DrawRuntimeException(cause);
-        assertTrue("Exception should not be null", null != e);
-        assertEquals("cause should not be our cause", cause, e.getCause());
-        assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+        assertTrue(null != e, "Exception should not be null");
+        assertEquals(cause, e.getCause(), "cause should not be our cause");
+        assertEquals(causeString, e.getCause().getMessage(), "cause description should be our cause string");
         e = new DrawRuntimeException(message, cause);
-        assertTrue("Exception should not be null", null != e);
-        assertEquals("message should be our message", message, e.getMessage());
-        assertEquals("cause should not be our cause", cause, e.getCause());
-        assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+        assertTrue(null != e, "Exception should not be null");
+        assertEquals(message, e.getMessage(), "message should be our message");
+        assertEquals(cause, e.getCause(), "cause should not be our cause");
+        assertEquals(causeString, e.getCause().getMessage(), "cause description should be our cause string");
     }
 
 }

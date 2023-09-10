@@ -45,7 +45,7 @@ public final class BoundsDemos
         System.out.println("b3: " + b3);
         Bounds2d b4 = line.getBounds(); // Of course, the PolyLine2d can create a Bounds2d by itself
         System.out.println("b4: " + b4);
-        Point2d[] pointArray = new Point2d[] { new Point2d(1, 2), new Point2d(3, 4), new Point2d(-5, 12) };
+        Point2d[] pointArray = new Point2d[] {new Point2d(1, 2), new Point2d(3, 4), new Point2d(-5, 12)};
         Bounds2d b5 = new Bounds2d(pointArray);
         System.out.println("b5: " + b5);
         Collection<Drawable2d> drawableCollection = new LinkedHashSet<>();

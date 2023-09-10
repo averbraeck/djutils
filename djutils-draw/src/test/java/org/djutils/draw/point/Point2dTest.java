@@ -1,12 +1,12 @@
 package org.djutils.draw.point;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.line.LineSegment2d;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.exceptions.Try;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Point2dTest.java.
@@ -38,11 +38,11 @@ public class Point2dTest
     {
         Point2d p = new Point2d(10.0, -20.0);
         assertNotNull(p);
-        assertEquals("Access x", 10.0, p.x, 1E-6);
-        assertEquals("Access y", -20.0, p.y, 1E-6);
-        assertEquals("Dimensions is 2", 2, p.getDimensions());
+        assertEquals(10.0, p.x, 1E-6, "Access x");
+        assertEquals(-20.0, p.y, 1E-6, "Access y");
+        assertEquals(2, p.getDimensions(), "Dimensions is 2");
 
-        assertEquals("Size method returns 1", 1, p.size());
+        assertEquals(1, p.size(), "Size method returns 1");
 
         try
         {
@@ -138,9 +138,9 @@ public class Point2dTest
         assertEquals(p, p.translate(0.0, 0.0));
         assertNotEquals(p, p.translate(1.0, 0.0));
         assertNotEquals(p, p.translate(0.0, 1.0));
-        assertEquals("x", p.x + 1, p3d.x, 0.00001);
-        assertEquals("y", p.y + 2, p3d.y, 0.00001);
-        assertEquals("z", 3, p3d.z, 0);
+        assertEquals(p.x + 1, p3d.x, 0.00001, "x");
+        assertEquals(p.y + 2, p3d.y, 0.00001, "y");
+        assertEquals(3, p3d.z, 0, "z");
 
         // toString
         p = new Point2d(10.0, 20.0);
@@ -245,10 +245,10 @@ public class Point2dTest
         }, "Should throw DRtE", DrawRuntimeException.class);
 
         Bounds2d bounds = p1.getBounds();
-        assertEquals("Bounds min x", p1.x, bounds.getMinX(), 0);
-        assertEquals("Bounds min y", p1.y, bounds.getMinY(), 0);
-        assertEquals("Bounds max x", p1.x, bounds.getMaxX(), 0);
-        assertEquals("Bounds max y", p1.y, bounds.getMaxY(), 0);
+        assertEquals(p1.x, bounds.getMinX(), 0, "Bounds min x");
+        assertEquals(p1.y, bounds.getMinY(), 0, "Bounds min y");
+        assertEquals(p1.x, bounds.getMaxX(), 0, "Bounds max x");
+        assertEquals(p1.y, bounds.getMaxY(), 0, "Bounds max y");
     }
 
     /**
@@ -343,36 +343,36 @@ public class Point2dTest
     @Test
     public void testIntersectionOfLineSegments()
     {
-        assertNull("horizontal line intersection with itself returns null",
-                Point2d.intersectionOfLineSegments(new Point2d(1, 2), new Point2d(4, 2), new Point2d(1, 2), new Point2d(4, 2)));
-        assertNull("vertical line intersection with itself returns null", Point2d.intersectionOfLineSegments(new Point2d(1, 2),
-                new Point2d(1, 10), new Point2d(1, 2), new Point2d(1, 10)));
-        assertEquals("Intersection is at (2,2)", new Point2d(2, 2), Point2d.intersectionOfLineSegments(new Point2d(1, 1),
-                new Point2d(6, 6), new Point2d(4, 2), new Point2d(-2, 2)));
-        assertEquals("Intersection is at (2,2)", new Point2d(2, 2),
-                Point2d.intersectionOfLineSegments(1, 1, 6, 6, 4, 2, -2, 2));
-        assertEquals("Intersection is at (2,2)", new Point2d(2, 2),
-                Point2d.intersectionOfLineSegments(new LineSegment2d(1, 1, 6, 6), new LineSegment2d(4, 2, -2, 2)));
+        assertNull(Point2d.intersectionOfLineSegments(new Point2d(1, 2), new Point2d(4, 2), new Point2d(1, 2), new Point2d(4, 2)),
+                "horizontal line intersection with itself returns null");
+        assertNull(Point2d.intersectionOfLineSegments(new Point2d(1, 2),
+                new Point2d(1, 10), new Point2d(1, 2), new Point2d(1, 10)), "vertical line intersection with itself returns null");
+        assertEquals(new Point2d(2, 2), Point2d.intersectionOfLineSegments(new Point2d(1, 1),
+                new Point2d(6, 6), new Point2d(4, 2), new Point2d(-2, 2)), "Intersection is at (2,2)");
+        assertEquals(new Point2d(2, 2), Point2d.intersectionOfLineSegments(1, 1, 6, 6, 4, 2, -2, 2),
+                "Intersection is at (2,2)");
+        assertEquals(new Point2d(2, 2), Point2d.intersectionOfLineSegments(new LineSegment2d(1, 1, 6, 6), new LineSegment2d(4, 2, -2, 2)),
+                "Intersection is at (2,2)");
         // Check all four ways that two non-parallel lines can miss each other
-        assertNull("line two passes before start of line one", Point2d.intersectionOfLineSegments(new Point2d(1, 1),
-                new Point2d(5, 5), new Point2d(0, -3), new Point2d(10, 0)));
-        assertNull("line two passes before after end of line one", Point2d.intersectionOfLineSegments(new Point2d(1, 1),
-                new Point2d(5, 5), new Point2d(0, 20), new Point2d(100, 30)));
-        assertNull("line one passes before start of line two", Point2d.intersectionOfLineSegments(new Point2d(1, 1),
-                new Point2d(5, 5), new Point2d(5, 3), new Point2d(10, 2)));
-        assertNull("line one passes after end of line two", Point2d.intersectionOfLineSegments(new Point2d(1, 1),
-                new Point2d(5, 5), new Point2d(-10, 3), new Point2d(0, 2)));
-        assertNull("line two passes before start of line one", Point2d.intersectionOfLineSegments(1, 1, 5, 5, 0, -3, 10, 0));
-        assertNull("line two passes before start of line one",
-                Point2d.intersectionOfLineSegments(new LineSegment2d(1, 15, 5, 5), new LineSegment2d(0, -3, 10, 0)));
-        assertNull("line two passes before after end of line one",
-                Point2d.intersectionOfLineSegments(1, 1, 5, 5, 0, 20, 100, 30));
-        assertNull("line one passes before start of line two", Point2d.intersectionOfLineSegments(1, 1, 5, 5, 5, 3, 10, 2));
-        assertNull("line one passes before start of line two",
-                Point2d.intersectionOfLineSegments(new LineSegment2d(1, 1, 5, 5), new LineSegment2d(5, 3, 10, 2)));
-        assertNull("line one passes after end of line two", Point2d.intersectionOfLineSegments(1, 1, 5, 5, -10, 3, 0, 2));
-        assertNull("line one passes after end of line two",
-                Point2d.intersectionOfLineSegments(new LineSegment2d(1, 1, 5, 5), new LineSegment2d(-10, 3, 0, 2)));
+        assertNull(Point2d.intersectionOfLineSegments(new Point2d(1, 1),
+                new Point2d(5, 5), new Point2d(0, -3), new Point2d(10, 0)), "line two passes before start of line one");
+        assertNull(Point2d.intersectionOfLineSegments(new Point2d(1, 1),
+                new Point2d(5, 5), new Point2d(0, 20), new Point2d(100, 30)), "line two passes before after end of line one");
+        assertNull(Point2d.intersectionOfLineSegments(new Point2d(1, 1),
+                new Point2d(5, 5), new Point2d(5, 3), new Point2d(10, 2)), "line one passes before start of line two");
+        assertNull(Point2d.intersectionOfLineSegments(new Point2d(1, 1),
+                new Point2d(5, 5), new Point2d(-10, 3), new Point2d(0, 2)), "line one passes after end of line two");
+        assertNull(Point2d.intersectionOfLineSegments(1, 1, 5, 5, 0, -3, 10, 0), "line two passes before start of line one");
+        assertNull(Point2d.intersectionOfLineSegments(new LineSegment2d(1, 15, 5, 5), new LineSegment2d(0, -3, 10, 0)),
+                "line two passes before start of line one");
+        assertNull(Point2d.intersectionOfLineSegments(1, 1, 5, 5, 0, 20, 100, 30),
+                "line two passes before after end of line one");
+        assertNull(Point2d.intersectionOfLineSegments(1, 1, 5, 5, 5, 3, 10, 2), "line one passes before start of line two");
+        assertNull(Point2d.intersectionOfLineSegments(new LineSegment2d(1, 1, 5, 5), new LineSegment2d(5, 3, 10, 2)),
+                "line one passes before start of line two");
+        assertNull(Point2d.intersectionOfLineSegments(1, 1, 5, 5, -10, 3, 0, 2), "line one passes after end of line two");
+        assertNull(Point2d.intersectionOfLineSegments(new LineSegment2d(1, 1, 5, 5), new LineSegment2d(-10, 3, 0, 2)),
+                "line one passes after end of line two");
 
         Point2d line1P1 = new Point2d(1, 2);
         Point2d line1P2 = new Point2d(3, 2);
@@ -466,58 +466,58 @@ public class Point2dTest
     @Test
     public void testIntersectionOfLines()
     {
-        assertNull("horizontal line intersection with itself returns null",
-                Point2d.intersectionOfLines(new Point2d(1, 2), new Point2d(4, 2), new Point2d(1, 2), new Point2d(4, 2)));
-        assertNull("horizontal line intersection with itself returns null",
-                Point2d.intersectionOfLines(1, 2, 4, 2, 1, 2, 4, 2));
-        assertNull("vertical line intersection with itself returns null", Point2d.intersectionOfLineSegments(new Point2d(1, 2),
-                new Point2d(1, 10), new Point2d(1, 2), new Point2d(1, 10)));
-        assertNull("vertical line intersection with itself returns null",
-                Point2d.intersectionOfLineSegments(1, 2, 1, 10, 1, 2, 1, 10));
-        assertNull("vertical line intersection with itself returns null",
-                Point2d.intersectionOfLineSegments(new LineSegment2d(1, 2, 1, 10), new LineSegment2d(1, 2, 1, 10)));
-        assertEquals("Intersection is at (2,2)", new Point2d(2, 2),
-                Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(6, 6), new Point2d(4, 2), new Point2d(-2, 2)));
+        assertNull(Point2d.intersectionOfLines(new Point2d(1, 2), new Point2d(4, 2), new Point2d(1, 2), new Point2d(4, 2)),
+                "horizontal line intersection with itself returns null");
+        assertNull(Point2d.intersectionOfLines(1, 2, 4, 2, 1, 2, 4, 2),
+                "horizontal line intersection with itself returns null");
+        assertNull(Point2d.intersectionOfLineSegments(new Point2d(1, 2),
+                new Point2d(1, 10), new Point2d(1, 2), new Point2d(1, 10)), "vertical line intersection with itself returns null");
+        assertNull(Point2d.intersectionOfLineSegments(1, 2, 1, 10, 1, 2, 1, 10),
+                "vertical line intersection with itself returns null");
+        assertNull(Point2d.intersectionOfLineSegments(new LineSegment2d(1, 2, 1, 10), new LineSegment2d(1, 2, 1, 10)),
+                "vertical line intersection with itself returns null");
+        assertEquals(new Point2d(2, 2), Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(6, 6), new Point2d(4, 2), new Point2d(-2, 2)),
+                "Intersection is at (2,2)");
         // Check all four ways that two non-parallel lines can miss each other
-        assertEquals("line two passes before start of line one", new Point2d(-1.5, -1.5),
-                Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(0, -3), new Point2d(10, -13)));
-        assertEquals("line two passes before after end of line one", new Point2d(20, 20),
-                Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(0, 20), new Point2d(100, 20)));
-        assertEquals("line one passes before start of line two", new Point2d(4, 4),
-                Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(7, 1), new Point2d(10, -2)));
-        assertEquals("line one passes after end of line two", new Point2d(-3.5, -3.5),
-                Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(-10, 3), new Point2d(0, -7)));
+        assertEquals(new Point2d(-1.5, -1.5), Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(0, -3), new Point2d(10, -13)),
+                "line two passes before start of line one");
+        assertEquals(new Point2d(20, 20), Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(0, 20), new Point2d(100, 20)),
+                "line two passes before after end of line one");
+        assertEquals(new Point2d(4, 4), Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(7, 1), new Point2d(10, -2)),
+                "line one passes before start of line two");
+        assertEquals(new Point2d(-3.5, -3.5), Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(5, 5), new Point2d(-10, 3), new Point2d(0, -7)),
+                "line one passes after end of line two");
         // Test the various exact hits at begin or end point
-        assertEquals("begin of first is on second", new Point2d(1, 1),
-                Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(2, 1), new Point2d(1, 0), new Point2d(1, 3)));
-        assertEquals("end of first is on second", new Point2d(1, 1),
-                Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(1, 1), new Point2d(1, 0), new Point2d(1, 3)));
-        assertEquals("begin of second is on first", new Point2d(1, 1),
-                Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(2, 1), new Point2d(1, 1), new Point2d(1, 3)));
-        assertEquals("end of second is on first", new Point2d(1, 1),
-                Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(2, 1), new Point2d(1, -1), new Point2d(1, 1)));
+        assertEquals(new Point2d(1, 1), Point2d.intersectionOfLines(new Point2d(1, 1), new Point2d(2, 1), new Point2d(1, 0), new Point2d(1, 3)),
+                "begin of first is on second");
+        assertEquals(new Point2d(1, 1), Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(1, 1), new Point2d(1, 0), new Point2d(1, 3)),
+                "end of first is on second");
+        assertEquals(new Point2d(1, 1), Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(2, 1), new Point2d(1, 1), new Point2d(1, 3)),
+                "begin of second is on first");
+        assertEquals(new Point2d(1, 1), Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(2, 1), new Point2d(1, -1), new Point2d(1, 1)),
+                "end of second is on first");
         // Test the various not quite exact hits at begin or end point
-        assertTrue("begin of first is just over second", new Point2d(1, 1).epsilonEquals(
+        assertTrue(new Point2d(1, 1).epsilonEquals(
                 Point2d.intersectionOfLines(new Point2d(1.001, 1), new Point2d(2, 1), new Point2d(1, 0), new Point2d(1, 3)),
-                0.0001));
-        assertTrue("end of first is just over second", new Point2d(1, 1).epsilonEquals(
+                0.0001), "begin of first is just over second");
+        assertTrue(new Point2d(1, 1).epsilonEquals(
                 Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(0.999, 1), new Point2d(1, 0), new Point2d(1, 3)),
-                0.0001));
-        assertTrue("begin of second is just over first", new Point2d(1, 1).epsilonEquals(
+                0.0001), "end of first is just over second");
+        assertTrue(new Point2d(1, 1).epsilonEquals(
                 Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(2, 1), new Point2d(1, 1.001), new Point2d(1, 3)),
-                0.0001));
-        assertTrue("end of second is just over first", new Point2d(1, 1).epsilonEquals(
+                0.0001), "begin of second is just over first");
+        assertTrue(new Point2d(1, 1).epsilonEquals(
                 Point2d.intersectionOfLines(new Point2d(-1, 1), new Point2d(2, 1), new Point2d(1, -1), new Point2d(1, 0.999)),
-                0.0001));
+                0.0001), "end of second is just over first");
         // Test the various close hits at begin or end point
-        assertNull("begin of first is just not on second", Point2d.intersectionOfLineSegments(new Point2d(1.001, 1),
-                new Point2d(2, 1), new Point2d(1, 0), new Point2d(1, 3)));
-        assertNull("end of first is just not on second", Point2d.intersectionOfLineSegments(new Point2d(-1, 1),
-                new Point2d(0.999, 1), new Point2d(1, 0), new Point2d(1, 3)));
-        assertNull("begin of second is just not on first", Point2d.intersectionOfLineSegments(new Point2d(-1, 1),
-                new Point2d(2, 1), new Point2d(1, 1.001), new Point2d(1, 3)));
-        assertNull("end of second is just not on first", Point2d.intersectionOfLineSegments(new Point2d(-1, 1),
-                new Point2d(2, 1), new Point2d(1, -1), new Point2d(1, 0.999)));
+        assertNull(Point2d.intersectionOfLineSegments(new Point2d(1.001, 1),
+                new Point2d(2, 1), new Point2d(1, 0), new Point2d(1, 3)), "begin of first is just not on second");
+        assertNull(Point2d.intersectionOfLineSegments(new Point2d(-1, 1),
+                new Point2d(0.999, 1), new Point2d(1, 0), new Point2d(1, 3)), "end of first is just not on second");
+        assertNull(Point2d.intersectionOfLineSegments(new Point2d(-1, 1),
+                new Point2d(2, 1), new Point2d(1, 1.001), new Point2d(1, 3)), "begin of second is just not on first");
+        assertNull(Point2d.intersectionOfLineSegments(new Point2d(-1, 1),
+                new Point2d(2, 1), new Point2d(1, -1), new Point2d(1, 0.999)), "end of second is just not on first");
     }
 
     /**
@@ -571,25 +571,25 @@ public class Point2dTest
                         step /= 2;
                     }
                     Point2d result = p.closestPointOnSegment(p1, p2);
-                    assertEquals("distance should be less than one thousandth of line length", 0,
-                            approximation.distance(result), line.getLength() / 1000);
-                    assertEquals("zero length line segment should always return start point", p1,
-                            p.closestPointOnSegment(p1, p1));
+                    assertEquals(0, approximation.distance(result),
+                            line.getLength() / 1000, "distance should be less than one thousandth of line length");
+                    assertEquals(p1, p.closestPointOnSegment(p1, p1),
+                            "zero length line segment should always return start point");
                     result = p.closestPointOnSegment(p1.x, p1.y, p2.x, p2.y);
-                    assertEquals("distance should be less than one thousandth of line length", 0,
-                            approximation.distance(result), line.getLength() / 1000);
+                    assertEquals(0, approximation.distance(result),
+                            line.getLength() / 1000, "distance should be less than one thousandth of line length");
 
                     if (fraction > 0.001 && fraction < 0.999)
                     {
                         result = p.closestPointOnLine(p1, p2);
-                        assertEquals("distance should be less than one thousandth of line length", 0,
-                                approximation.distance(result), line.getLength() / 1000);
+                        assertEquals(0, approximation.distance(result),
+                                line.getLength() / 1000, "distance should be less than one thousandth of line length");
                         result = p.closestPointOnLine(p1, p2);
-                        assertEquals("distance should be less than one thousandth of line length", 0,
-                                approximation.distance(result), line.getLength() / 1000);
+                        assertEquals(0, approximation.distance(result),
+                                line.getLength() / 1000, "distance should be less than one thousandth of line length");
                         result = p.closestPointOnLine(p1.x, p1.y, p2.x, p2.y);
-                        assertEquals("distance should be less than one thousandth of line length", 0,
-                                approximation.distance(result), line.getLength() / 1000);
+                        assertEquals(0, approximation.distance(result),
+                                line.getLength() / 1000, "distance should be less than one thousandth of line length");
                     }
                     else
                     {
@@ -627,19 +627,19 @@ public class Point2dTest
                             step /= 2;
                         }
                         result = p.closestPointOnLine(p1, p2);
-                        assertEquals("distance should be less than one thousandth of range", 0, approximation.distance(result),
-                                range / 1000);
+                        assertEquals(0, approximation.distance(result), range / 1000,
+                                "distance should be less than one thousandth of range");
                         result = p.closestPointOnLine(p1, p2);
-                        assertEquals("distance should be less than one thousandth of range", 0, approximation.distance(result),
-                                range / 1000);
+                        assertEquals(0, approximation.distance(result), range / 1000,
+                                "distance should be less than one thousandth of range");
                         result = p.closestPointOnLine(p1.x, p1.y, p2.x, p2.y);
-                        assertEquals("distance should be less than one thousandth of range", 0, approximation.distance(result),
-                                range / 1000);
+                        assertEquals(0, approximation.distance(result), range / 1000,
+                                "distance should be less than one thousandth of range");
                         if (fraction < -0.001 || fraction > 1.001)
                         {
-                            assertNull("projectOrthogonal should return null", new LineSegment2d(p1, p2).projectOrthogonal(p));
-                            assertEquals("projectOrthogonalExtended should return same result as closestPointOnLine", result,
-                                    new LineSegment2d(p1, p2).projectOrthogonalExtended(p));
+                            assertNull(new LineSegment2d(p1, p2).projectOrthogonal(p), "projectOrthogonal should return null");
+                            assertEquals(result, new LineSegment2d(p1, p2).projectOrthogonalExtended(p),
+                                    "projectOrthogonalExtended should return same result as closestPointOnLine");
                         }
                     }
                 }
@@ -807,7 +807,7 @@ public class Point2dTest
                                         {
                                             Point2d.circleIntersections(p1, r1, p2, r2);
                                         }
-                                        assertEquals("There are 0 intersections", 0, result.size());
+                                        assertEquals(0, result.size(), "There are 0 intersections");
                                     }
                                     if (distance < r1 + r2 - 0.0001 && distance > Math.abs(r2 - r1) + 0.0001)
                                     {
@@ -815,7 +815,7 @@ public class Point2dTest
                                         {
                                             Point2d.circleIntersections(p1, r1, p2, r2);
                                         }
-                                        assertEquals("There are 2 intersections", 2, result.size());
+                                        assertEquals(2, result.size(), "There are 2 intersections");
                                     }
                                     for (Point2d p : result)
                                     {
@@ -823,8 +823,8 @@ public class Point2dTest
                                         {
                                             Point2d.circleIntersections(p1, r1, p2, r2);
                                         }
-                                        assertEquals("result is at r1 from p1", r1, p.distance(p1), 0.0001);
-                                        assertEquals("result is at r2 from p2", r2, p.distance(p2), 0.0001);
+                                        assertEquals(r1, p.distance(p1), 0.0001, "result is at r1 from p1");
+                                        assertEquals(r2, p.distance(p2), 0.0001, "result is at r2 from p2");
                                     }
                                 }
                             }
@@ -881,13 +881,13 @@ public class Point2dTest
     public void testDirection()
     {
         Point2d reference = new Point2d(5, 8);
-        assertEquals("East", 0, reference.directionTo(new Point2d(reference.x + 10, reference.y)), 0);
-        assertEquals("North", Math.PI / 2, reference.directionTo(new Point2d(reference.x, reference.y + 5)), 0.00001);
-        assertEquals("NorthEast", Math.PI / 4, reference.directionTo(new Point2d(reference.x + 2, reference.y + 2)), 0.00001);
-        assertEquals("West", Math.PI, reference.directionTo(new Point2d(reference.x - 1, reference.y)), 0);
-        assertEquals("South", -Math.PI / 2, reference.directionTo(new Point2d(reference.x, reference.y - 0.5)), 0.00001);
-        assertEquals("SouthWst", -3 * Math.PI / 4, reference.directionTo(new Point2d(reference.x - 0.2, reference.y - 0.2)),
-                0.00001);
+        assertEquals(0, reference.directionTo(new Point2d(reference.x + 10, reference.y)), 0, "East");
+        assertEquals(Math.PI / 2, reference.directionTo(new Point2d(reference.x, reference.y + 5)), 0.00001, "North");
+        assertEquals(Math.PI / 4, reference.directionTo(new Point2d(reference.x + 2, reference.y + 2)), 0.00001, "NorthEast");
+        assertEquals(Math.PI, reference.directionTo(new Point2d(reference.x - 1, reference.y)), 0, "West");
+        assertEquals(-Math.PI / 2, reference.directionTo(new Point2d(reference.x, reference.y - 0.5)), 0.00001, "South");
+        assertEquals(-3 * Math.PI / 4, reference.directionTo(new Point2d(reference.x - 0.2, reference.y - 0.2)), 0.00001,
+                "SouthWst");
     }
 
 }

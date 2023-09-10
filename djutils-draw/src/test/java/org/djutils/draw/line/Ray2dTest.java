@@ -1,11 +1,11 @@
 package org.djutils.draw.line;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -15,7 +15,7 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.OrientedPoint2d;
 import org.djutils.draw.point.Point2d;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Ray2dTest.java.
@@ -130,8 +130,8 @@ public class Ray2dTest
         }
 
         Ray2d ray = new Ray2d(1, 2, 3);
-        assertTrue("toString returns something descriptive", ray.toString().startsWith("Ray2d"));
-        assertTrue("toString can suppress the class name", ray.toString().indexOf(ray.toString(true)) > 0);
+        assertTrue(ray.toString().startsWith("Ray2d"), "toString returns something descriptive");
+        assertTrue(ray.toString().indexOf(ray.toString(true)) > 0, "toString can suppress the class name");
     }
 
     /**
@@ -145,38 +145,38 @@ public class Ray2dTest
     private void verifyRay(final String description, final Ray2d ray, final double expectedX, final double expectedY,
             final double expectedPhi)
     {
-        assertEquals(description + " getX", expectedX, ray.getX(), 0.0001);
-        assertEquals(description + " x", expectedX, ray.x, 0.0001);
-        assertEquals(description + " getY", expectedY, ray.getY(), 0.0001);
-        assertEquals(description + " y", expectedY, ray.y, 0.0001);
-        assertEquals(description + " getPhi", expectedPhi, ray.getPhi(), 0.0001);
-        assertEquals(description + " phi", expectedPhi, ray.phi, 0.0001);
+        assertEquals(expectedX, ray.getX(), 0.0001, description + " getX");
+        assertEquals(expectedX, ray.x, 0.0001, description + " x");
+        assertEquals(expectedY, ray.getY(), 0.0001, description + " getY");
+        assertEquals(expectedY, ray.y, 0.0001, description + " y");
+        assertEquals(expectedPhi, ray.getPhi(), 0.0001, description + " getPhi");
+        assertEquals(expectedPhi, ray.phi, 0.0001, description + " phi");
         Point2d startPoint = ray.getEndPoint();
-        assertEquals(description + " getStartPoint x", expectedX, startPoint.x, 0.0001);
-        assertEquals(description + " getStartPoint y", expectedY, startPoint.y, 0.0001);
+        assertEquals(expectedX, startPoint.x, 0.0001, description + " getStartPoint x");
+        assertEquals(expectedY, startPoint.y, 0.0001, description + " getStartPoint y");
         Ray2d negated = ray.neg();
-        assertEquals(description + " neg x", -expectedX, negated.x, 0.0001);
-        assertEquals(description + " neg y", -expectedY, negated.y, 0.0001);
-        assertEquals(description + " neg phi", expectedPhi + Math.PI, negated.phi, 0.0001);
+        assertEquals(-expectedX, negated.x, 0.0001, description + " neg x");
+        assertEquals(-expectedY, negated.y, 0.0001, description + " neg y");
+        assertEquals(expectedPhi + Math.PI, negated.phi, 0.0001, description + " neg phi");
         Ray2d flipped = ray.flip();
-        assertEquals(description + " getX", expectedX, flipped.getX(), 0.0001);
-        assertEquals(description + " x", expectedX, flipped.x, 0.0001);
-        assertEquals(description + " getY", expectedY, flipped.getY(), 0.0001);
-        assertEquals(description + " y", expectedY, flipped.y, 0.0001);
-        assertEquals(description + " getPhi", expectedPhi + Math.PI, flipped.getPhi(), 0.0001);
-        assertEquals(description + " phi", expectedPhi + Math.PI, flipped.phi, 0.0001);
-        assertEquals(description + " size", 2, ray.size());
+        assertEquals(expectedX, flipped.getX(), 0.0001, description + " getX");
+        assertEquals(expectedX, flipped.x, 0.0001, description + " x");
+        assertEquals(expectedY, flipped.getY(), 0.0001, description + " getY");
+        assertEquals(expectedY, flipped.y, 0.0001, description + " y");
+        assertEquals(expectedPhi + Math.PI, flipped.getPhi(), 0.0001, description + " getPhi");
+        assertEquals(expectedPhi + Math.PI, flipped.phi, 0.0001, description + " phi");
+        assertEquals(2, ray.size(), description + " size");
         Iterator<Point2d> iterator = ray.getPoints();
         // First result of iterator is the finite end point (but this is not a hard promise)
         assertTrue(iterator.hasNext());
         Point2d point = iterator.next();
-        assertEquals(description + " iterator first point x", expectedX, point.x, 0.0001);
-        assertEquals(description + " iterator first point y", expectedY, point.y, 0.0001);
+        assertEquals(expectedX, point.x, 0.0001, description + " iterator first point x");
+        assertEquals(expectedY, point.y, 0.0001, description + " iterator first point y");
         assertTrue(iterator.hasNext());
         point = iterator.next();
         // We only check that the point is infinite in at least one direction; the boundTest covers the rest
-        assertTrue(description + " iterator second point is at infinity",
-                Double.isInfinite(point.x) || Double.isInfinite(point.y));
+        assertTrue(Double.isInfinite(point.x) || Double.isInfinite(point.y),
+                description + " iterator second point is at infinity");
         assertFalse(iterator.hasNext());
         try
         {
@@ -233,10 +233,10 @@ public class Ray2dTest
     private void verifyBounds(final Bounds2d bounds, final double expectedMinX, final double expectedMinY,
             final double expectedMaxX, final double expectedMaxY)
     {
-        assertEquals("Bounds minX", expectedMinX, bounds.getMinX(), 0.0001);
-        assertEquals("Bounds minY", expectedMinY, bounds.getMinY(), 0.0001);
-        assertEquals("Bounds maxX", expectedMaxX, bounds.getMaxX(), 0.0001);
-        assertEquals("Bounds maxY", expectedMaxY, bounds.getMaxY(), 0.0001);
+        assertEquals(expectedMinX, bounds.getMinX(), 0.0001, "Bounds minX");
+        assertEquals(expectedMinY, bounds.getMinY(), 0.0001, "Bounds minY");
+        assertEquals(expectedMaxX, bounds.getMaxX(), 0.0001, "Bounds maxX");
+        assertEquals(expectedMaxY, bounds.getMaxY(), 0.0001, "Bounds maxY");
     }
 
     /**
@@ -321,20 +321,20 @@ public class Ray2dTest
             for (double position : new double[] { 0, 10, 0.1, -2 })
             {
                 Ray2d result = ray.getLocationExtended(position);
-                assertEquals("result is position distance away from base of ray", Math.abs(position), ray.distance(result),
-                        0.001);
-                assertEquals("result has same phi as ray", ray.phi, result.phi, 0.00001);
-                assertTrue("Reverse position on result yields ray",
-                        ray.epsilonEquals(result.getLocationExtended(-position), 0.0001));
+                assertEquals(Math.abs(position), ray.distance(result), 0.001,
+                        "result is position distance away from base of ray");
+                assertEquals(ray.phi, result.phi, 0.00001, "result has same phi as ray");
+                assertTrue(ray.epsilonEquals(result.getLocationExtended(-position), 0.0001),
+                        "Reverse position on result yields ray");
                 if (position > 0)
                 {
-                    assertEquals("result lies in on ray", AngleUtil.normalizeAroundZero(ray.phi), ray.directionTo(result),
-                            0.0001);
+                    assertEquals(AngleUtil.normalizeAroundZero(ray.phi), ray.directionTo(result), 0.0001,
+                            "result lies in on ray");
                 }
                 if (position < 0)
                 {
-                    assertEquals("ray lies on result", AngleUtil.normalizeAroundZero(result.phi), result.directionTo(ray),
-                            0.0001);
+                    assertEquals(AngleUtil.normalizeAroundZero(result.phi), result.directionTo(ray), 0.0001,
+                            "ray lies on result");
                 }
             }
         }
@@ -358,34 +358,34 @@ public class Ray2dTest
         }
 
         Point2d result = ray.closestPointOnRay(new Point2d(1, 0));
-        assertEquals("result is start point", ray.x, result.x, 0);
-        assertEquals("result is start point", ray.y, result.y, 0);
+        assertEquals(ray.x, result.x, 0, "result is start point");
+        assertEquals(ray.y, result.y, 0, "result is start point");
         result = ray.closestPointOnRay(new Point2d(0, 2));
-        assertEquals("result is start point", ray.x, result.x, 0);
-        assertEquals("result is start point", ray.y, result.y, 0);
+        assertEquals(ray.x, result.x, 0, "result is start point");
+        assertEquals(ray.y, result.y, 0, "result is start point");
         result = ray.closestPointOnRay(new Point2d(1, 2));
-        assertEquals("result is start point", ray.x, result.x, 0);
-        assertEquals("result is start point", ray.y, result.y, 0);
+        assertEquals(ray.x, result.x, 0, "result is start point");
+        assertEquals(ray.y, result.y, 0, "result is start point");
 
-        assertNull("projection misses the ray", ray.projectOrthogonal(new Point2d(1, 0)));
-        assertNull("projection misses the ray", ray.projectOrthogonal(new Point2d(0, 2)));
-        assertEquals("projection hits start point of ray", new Point2d(1, 2), ray.projectOrthogonal(new Point2d(1, 2)));
-        assertEquals("extended projection returns same point as projection on sufficiently long line segment", 0,
-                new LineSegment2d(ray.getLocationExtended(-100), ray.getLocation(100)).closestPointOnSegment(new Point2d(1, 0))
-                        .distance(ray.projectOrthogonalExtended(new Point2d(1, 0))),
-                0.0001);
+        assertNull(ray.projectOrthogonal(new Point2d(1, 0)), "projection misses the ray");
+        assertNull(ray.projectOrthogonal(new Point2d(0, 2)), "projection misses the ray");
+        assertEquals(new Point2d(1, 2), ray.projectOrthogonal(new Point2d(1, 2)), "projection hits start point of ray");
+        assertEquals(0, new LineSegment2d(ray.getLocationExtended(-100), ray.getLocation(100)).closestPointOnSegment(new Point2d(1, 0))
+                .distance(ray.projectOrthogonalExtended(new Point2d(1, 0))),
+                0.0001,
+                "extended projection returns same point as projection on sufficiently long line segment");
 
         Point2d projectingPoint = new Point2d(10, 10);
         result = ray.closestPointOnRay(projectingPoint); // Projects at a point along the ray
         double distance = result.distance(ray.getEndPoint());
-        assertTrue("distance from start is > 0", distance > 0);
+        assertTrue(distance > 0, "distance from start is > 0");
         // Angle startPoint-result-test-projectingPoint should be 90 degrees
         double angle = ray.getPhi() - result.directionTo(projectingPoint);
-        assertEquals("angle should be about 90 degrees", Math.PI / 2, Math.abs(AngleUtil.normalizeAroundZero(angle)), 0.0001);
-        assertEquals("projection hits closest point on the ray", 0, result.distance(ray.projectOrthogonal(projectingPoint)),
-                0.0001);
-        assertEquals("projectOrthogonalExtended returns same result as long as orthogonal projection exists", 0,
-                result.distance(ray.projectOrthogonalExtended(projectingPoint)), 0.0001);
+        assertEquals(Math.PI / 2, Math.abs(AngleUtil.normalizeAroundZero(angle)), 0.0001, "angle should be about 90 degrees");
+        assertEquals(0, result.distance(ray.projectOrthogonal(projectingPoint)), 0.0001,
+                "projection hits closest point on the ray");
+        assertEquals(0, result.distance(ray.projectOrthogonalExtended(projectingPoint)),
+                0.0001, "projectOrthogonalExtended returns same result as long as orthogonal projection exists");
     }
 
     /**
@@ -395,10 +395,10 @@ public class Ray2dTest
     public void testProject()
     {
         Ray2d ray = new Ray2d(1, 2, 20, 10);
-        assertTrue("projects outside", Double.isNaN(ray.projectOrthogonalFractional(new Point2d(1, 1))));
-        assertTrue("projects before start", ray.projectOrthogonalFractionalExtended(new Point2d(1, 1)) < 0);
-        assertEquals("projects at", -new Point2d(1 - 19 - 19, 2 - 8 - 8).distance(ray),
-                ray.projectOrthogonalFractionalExtended(new Point2d(1 - 19 - 19 + 8, 2 - 8 - 8 - 19)), 0.0001);
+        assertTrue(Double.isNaN(ray.projectOrthogonalFractional(new Point2d(1, 1))), "projects outside");
+        assertTrue(ray.projectOrthogonalFractionalExtended(new Point2d(1, 1)) < 0, "projects before start");
+        assertEquals(-new Point2d(1 - 19 - 19, 2 - 8 - 8).distance(ray), ray.projectOrthogonalFractionalExtended(new Point2d(1 - 19 - 19 + 8, 2 - 8 - 8 - 19)),
+                0.0001, "projects at");
         // Projection of projection is projection
         for (int x = -2; x < 5; x++)
         {
@@ -408,18 +408,18 @@ public class Ray2dTest
                 double fraction = ray.projectOrthogonalFractionalExtended(point);
                 if (fraction < 0)
                 {
-                    assertTrue("non extended version yields NaN", Double.isNaN(ray.projectOrthogonalFractional(point)));
-                    assertNull("non extended projectOrthogonal yields null", ray.projectOrthogonal(point));
+                    assertTrue(Double.isNaN(ray.projectOrthogonalFractional(point)), "non extended version yields NaN");
+                    assertNull(ray.projectOrthogonal(point), "non extended projectOrthogonal yields null");
                 }
                 else
                 {
-                    assertEquals("non extended version yields same", fraction, ray.projectOrthogonalFractional(point), 0.00001);
-                    assertEquals("non extended version yields same as extended version", ray.projectOrthogonal(point),
-                            ray.projectOrthogonalExtended(point));
+                    assertEquals(fraction, ray.projectOrthogonalFractional(point), 0.00001, "non extended version yields same");
+                    assertEquals(ray.projectOrthogonal(point), ray.projectOrthogonalExtended(point),
+                            "non extended version yields same as extended version");
                 }
                 Point2d projected = ray.projectOrthogonalExtended(point);
-                assertEquals("projecting projected point yields same", fraction,
-                        ray.projectOrthogonalFractionalExtended(projected), 0.00001);
+                assertEquals(fraction, ray.projectOrthogonalFractionalExtended(projected),
+                        0.00001, "projecting projected point yields same");
             }
         }
     }
@@ -494,11 +494,11 @@ public class Ray2dTest
                         // System.out.println(String.format("dX=%f, dY=%f, dPhi=%f, epsilon=%f", dX, dY, dPhi, epsilon));
                         boolean result = ray.epsilonEquals(other, epsilon, Double.POSITIVE_INFINITY);
                         boolean expected = Math.abs(dX) <= epsilon && Math.abs(dY) <= epsilon;
-                        assertEquals("result of epsilonEquals checking x, y, z", expected, result);
+                        assertEquals(expected, result, "result of epsilonEquals checking x, y, z");
 
                         result = ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
                         expected = Math.abs(dPhi) <= epsilon;
-                        assertEquals("result of epsilonEquals checking phi", expected, result);
+                        assertEquals(expected, result, "result of epsilonEquals checking phi");
                     }
                 }
             }
@@ -512,17 +512,17 @@ public class Ray2dTest
     public void equalsAndHashCodeTest()
     {
         Ray2d ray = new Ray2d(1, 2, 11, 12);
-        assertEquals("equal to itself", ray, ray);
-        assertNotEquals("not equal to null", ray, null);
-        assertNotEquals("not equal to different object with same parent class", ray, new OrientedPoint2d(1, 2));
-        assertNotEquals("not equal to ray with different direction", ray, new Ray2d(1, 2, 11, 10));
-        assertNotEquals("not equal to ray with different start x", ray, new Ray2d(2, 2, 12, 12));
-        assertNotEquals("not equal to ray with different start y", ray, new Ray2d(1, 3, 12, 13));
-        assertEquals("equal to ray with same x, y and direction", ray, new Ray2d(1, 2, 21, 22));
+        assertEquals(ray, ray, "equal to itself");
+        assertNotEquals(ray, null, "not equal to null");
+        assertNotEquals(ray, new OrientedPoint2d(1, 2), "not equal to different object with same parent class");
+        assertNotEquals(ray, new Ray2d(1, 2, 11, 10), "not equal to ray with different direction");
+        assertNotEquals(ray, new Ray2d(2, 2, 12, 12), "not equal to ray with different start x");
+        assertNotEquals(ray, new Ray2d(1, 3, 12, 13), "not equal to ray with different start y");
+        assertEquals(ray, new Ray2d(1, 2, 21, 22), "equal to ray with same x, y and direction");
 
-        assertNotEquals("hashCode depends on x", ray.hashCode(), new Ray2d(2, 2, 12, 12));
-        assertNotEquals("hashCode depends on y", ray.hashCode(), new Ray2d(1, 3, 11, 13));
-        assertNotEquals("hashCode depends on phi", ray.hashCode(), new Ray2d(1, 2, 11, 10));
+        assertNotEquals(ray.hashCode(), new Ray2d(2, 2, 12, 12), "hashCode depends on x");
+        assertNotEquals(ray.hashCode(), new Ray2d(1, 3, 11, 13), "hashCode depends on y");
+        assertNotEquals(ray.hashCode(), new Ray2d(1, 2, 11, 10), "hashCode depends on phi");
     }
 
 }

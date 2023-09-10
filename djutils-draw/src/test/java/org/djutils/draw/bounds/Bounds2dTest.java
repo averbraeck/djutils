@@ -1,11 +1,11 @@
 package org.djutils.draw.bounds;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import org.djutils.draw.Drawable2d;
 import org.djutils.draw.line.LineSegment2d;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.Point2d;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Bounds2dTest.java.
@@ -110,10 +110,10 @@ public class Bounds2dTest
         }
 
         Bounds2d br = new Bounds2d(1, 2, 3, 6);
-        assertEquals("minX", 1, br.getMinX(), 0);
-        assertEquals("maxX", 2, br.getMaxX(), 0);
-        assertEquals("minY", 3, br.getMinY(), 0);
-        assertEquals("maxY", 6, br.getMaxY(), 0);
+        assertEquals(1, br.getMinX(), 0, "minX");
+        assertEquals(2, br.getMaxX(), 0, "maxX");
+        assertEquals(3, br.getMinY(), 0, "minY");
+        assertEquals(6, br.getMaxY(), 0, "maxY");
 
         try
         {
@@ -156,25 +156,25 @@ public class Bounds2dTest
         }
 
         br = new Bounds2d(20, 30);
-        assertEquals("deltaX", 20, br.getDeltaX(), 0);
-        assertEquals("deltaY", 30, br.getDeltaY(), 0);
-        assertEquals("volume", 20 * 30, br.getArea(), 0);
-        assertFalse("contains does not include boundaries", br.contains(-10, 0));
-        assertFalse("contains does not include boundaries", br.contains(10, 0));
-        assertFalse("contains does not include boundaries", br.contains(0, -15));
-        assertFalse("contains does not include boundaries", br.contains(0, 15));
-        assertTrue("contains", br.contains(-0.999, 0));
-        assertTrue("contains", br.contains(0.999, 0));
-        assertTrue("contains", br.contains(0, -14.999));
-        assertTrue("contains", br.contains(0, 14.999));
-        assertTrue("covers includes boundaries", br.covers(-10, 0));
-        assertTrue("covers includes boundaries", br.covers(10, 0));
-        assertTrue("covers includes boundaries", br.covers(0, -15));
-        assertTrue("covers includes boundaries", br.covers(0, 15));
-        assertFalse("covers", br.covers(-10.001, 0));
-        assertFalse("covers", br.covers(10.001, 0));
-        assertFalse("covers", br.covers(0, -15.001));
-        assertFalse("covers", br.covers(0, 15.001));
+        assertEquals(20, br.getDeltaX(), 0, "deltaX");
+        assertEquals(30, br.getDeltaY(), 0, "deltaY");
+        assertEquals(20 * 30, br.getArea(), 0, "volume");
+        assertFalse(br.contains(-10, 0), "contains does not include boundaries");
+        assertFalse(br.contains(10, 0), "contains does not include boundaries");
+        assertFalse(br.contains(0, -15), "contains does not include boundaries");
+        assertFalse(br.contains(0, 15), "contains does not include boundaries");
+        assertTrue(br.contains(-0.999, 0), "contains");
+        assertTrue(br.contains(0.999, 0), "contains");
+        assertTrue(br.contains(0, -14.999), "contains");
+        assertTrue(br.contains(0, 14.999), "contains");
+        assertTrue(br.covers(-10, 0), "covers includes boundaries");
+        assertTrue(br.covers(10, 0), "covers includes boundaries");
+        assertTrue(br.covers(0, -15), "covers includes boundaries");
+        assertTrue(br.covers(0, 15), "covers includes boundaries");
+        assertFalse(br.covers(-10.001, 0), "covers");
+        assertFalse(br.covers(10.001, 0), "covers");
+        assertFalse(br.covers(0, -15.001), "covers");
+        assertFalse(br.covers(0, 15.001), "covers");
 
         Collection<Drawable2d> drawable2dCollection = new ArrayList<>();
         try
@@ -201,44 +201,44 @@ public class Bounds2dTest
 
         drawable2dCollection.add(new Point2d(10, 20));
         br = new Bounds2d(drawable2dCollection);
-        assertEquals("minX", 10, br.getMinX(), 0);
-        assertEquals("maxX", 10, br.getMaxX(), 0);
-        assertEquals("minY", 20, br.getMinY(), 0);
-        assertEquals("maxY", 20, br.getMaxY(), 0);
+        assertEquals(10, br.getMinX(), 0, "minX");
+        assertEquals(10, br.getMaxX(), 0, "maxX");
+        assertEquals(20, br.getMinY(), 0, "minY");
+        assertEquals(20, br.getMaxY(), 0, "maxY");
 
         drawable2dCollection.add(new Point2d(-5, -6));
         br = new Bounds2d(drawable2dCollection);
-        assertEquals("minX", -5, br.getMinX(), 0);
-        assertEquals("maxX", 10, br.getMaxX(), 0);
-        assertEquals("minY", -6, br.getMinY(), 0);
-        assertEquals("maxY", 20, br.getMaxY(), 0);
+        assertEquals(-5, br.getMinX(), 0, "minX");
+        assertEquals(10, br.getMaxX(), 0, "maxX");
+        assertEquals(-6, br.getMinY(), 0, "minY");
+        assertEquals(20, br.getMaxY(), 0, "maxY");
 
         drawable2dCollection.add(new LineSegment2d(20, 30, 40, 50));
         br = new Bounds2d(drawable2dCollection);
-        assertEquals("minX", -5, br.getMinX(), 0);
-        assertEquals("maxX", 40, br.getMaxX(), 0);
-        assertEquals("minY", -6, br.getMinY(), 0);
-        assertEquals("maxY", 50, br.getMaxY(), 0);
+        assertEquals(-5, br.getMinX(), 0, "minX");
+        assertEquals(40, br.getMaxX(), 0, "maxX");
+        assertEquals(-6, br.getMinY(), 0, "minY");
+        assertEquals(50, br.getMaxY(), 0, "maxY");
 
-        assertTrue("toString returns something descriptive", br.toString().startsWith("Bounds2d "));
-        assertEquals("toString with false argument produces same as toString with no argument", br.toString(),
-                br.toString(false));
-        assertTrue("toString with true argument produces rhs of toString with no argument",
-                br.toString().indexOf(br.toString(true)) > 0);
+        assertTrue(br.toString().startsWith("Bounds2d "), "toString returns something descriptive");
+        assertEquals(br.toString(), br.toString(false),
+                "toString with false argument produces same as toString with no argument");
+        assertTrue(br.toString().indexOf(br.toString(true)) > 0,
+                "toString with true argument produces rhs of toString with no argument");
 
         drawable2dCollection.add(new Point2d(40, 50));
         // This collection is an ArrayList, so the elements are stored in the order in which they were added
         br = new Bounds2d(drawable2dCollection);
-        assertEquals("minX", -5, br.getMinX(), 0);
-        assertEquals("maxX", 40, br.getMaxX(), 0);
-        assertEquals("minY", -6, br.getMinY(), 0);
-        assertEquals("maxY", 50, br.getMaxY(), 0);
+        assertEquals(-5, br.getMinX(), 0, "minX");
+        assertEquals(40, br.getMaxX(), 0, "maxX");
+        assertEquals(-6, br.getMinY(), 0, "minY");
+        assertEquals(50, br.getMaxY(), 0, "maxY");
 
         br = new Bounds2d(drawable2dCollection.toArray((new Drawable2d[0])));
-        assertEquals("minX", -5, br.getMinX(), 0);
-        assertEquals("maxX", 40, br.getMaxX(), 0);
-        assertEquals("minY", -6, br.getMinY(), 0);
-        assertEquals("maxY", 50, br.getMaxY(), 0);
+        assertEquals(-5, br.getMinX(), 0, "minX");
+        assertEquals(40, br.getMaxX(), 0, "maxX");
+        assertEquals(-6, br.getMinY(), 0, "minY");
+        assertEquals(50, br.getMaxY(), 0, "maxY");
 
         drawable2dCollection.add(null);
         try
@@ -253,21 +253,21 @@ public class Bounds2dTest
 
         PolyLine2d line = new PolyLine2d(new Point2d(1, 12), new Point2d(3, 12), new Point2d(2, 11));
         br = new Bounds2d(line);
-        assertEquals("minX", 1, br.getMinX(), 0);
-        assertEquals("minY", 11, br.getMinY(), 0);
-        assertEquals("maxX", 3, br.getMaxX(), 0);
-        assertEquals("maxY", 12, br.getMaxY(), 0);
+        assertEquals(1, br.getMinX(), 0, "minX");
+        assertEquals(11, br.getMinY(), 0, "minY");
+        assertEquals(3, br.getMaxX(), 0, "maxX");
+        assertEquals(12, br.getMaxY(), 0, "maxY");
 
-        assertEquals("bounding box of reversed line", br, new Bounds2d(line.reverse()));
+        assertEquals(br, new Bounds2d(line.reverse()), "bounding box of reversed line");
 
         Point2d p2d = new Point2d(123, 456);
         br = new Bounds2d(p2d);
-        assertEquals("minX", 123, br.getMinX(), 0);
-        assertEquals("maxX", 123, br.getMaxX(), 0);
-        assertEquals("minY", 456, br.getMinY(), 0);
-        assertEquals("maxY", 456, br.getMaxY(), 0);
-        assertFalse("contains does not include boundaries", br.contains(p2d));
-        assertTrue("covers includes boundaries", br.covers(p2d));
+        assertEquals(123, br.getMinX(), 0, "minX");
+        assertEquals(123, br.getMaxX(), 0, "maxX");
+        assertEquals(456, br.getMinY(), 0, "minY");
+        assertEquals(456, br.getMaxY(), 0, "maxY");
+        assertFalse(br.contains(p2d), "contains does not include boundaries");
+        assertTrue(br.covers(p2d), "covers includes boundaries");
 
         try
         {
@@ -279,25 +279,25 @@ public class Bounds2dTest
             // Ignore expected exception
         }
 
-        assertEquals("Size of a Bounds2d is always 4", 4, br.size());
+        assertEquals(4, br.size(), "Size of a Bounds2d is always 4");
 
         br = new Bounds2d(line, p2d);
-        assertEquals("minX", 1, br.getMinX(), 0);
-        assertEquals("minY", 11, br.getMinY(), 0);
-        assertEquals("maxX", 123, br.getMaxX(), 0);
-        assertEquals("maxY", 456, br.getMaxY(), 0);
+        assertEquals(1, br.getMinX(), 0, "minX");
+        assertEquals(11, br.getMinY(), 0, "minY");
+        assertEquals(123, br.getMaxX(), 0, "maxX");
+        assertEquals(456, br.getMaxY(), 0, "maxY");
 
         br = new Bounds2d(p2d, line);
-        assertEquals("minX", 1, br.getMinX(), 0);
-        assertEquals("minY", 11, br.getMinY(), 0);
-        assertEquals("maxX", 123, br.getMaxX(), 0);
-        assertEquals("maxY", 456, br.getMaxY(), 0);
+        assertEquals(1, br.getMinX(), 0, "minX");
+        assertEquals(11, br.getMinY(), 0, "minY");
+        assertEquals(123, br.getMaxX(), 0, "maxX");
+        assertEquals(456, br.getMaxY(), 0, "maxY");
 
         br = new Bounds2d(line, line);
-        assertEquals("minX", 1, br.getMinX(), 0);
-        assertEquals("minY", 11, br.getMinY(), 0);
-        assertEquals("maxX", 3, br.getMaxX(), 0);
-        assertEquals("maxY", 12, br.getMaxY(), 0);
+        assertEquals(1, br.getMinX(), 0, "minX");
+        assertEquals(11, br.getMinY(), 0, "minY");
+        assertEquals(3, br.getMaxX(), 0, "maxX");
+        assertEquals(12, br.getMaxY(), 0, "maxY");
 
         try
         {
@@ -347,15 +347,15 @@ public class Bounds2dTest
     {
         PolyLine2d l2d = new PolyLine2d(new Point2d(10, 10), new Point2d(30, -20), new Point2d(-40, 100));
         Bounds2d br = new Bounds2d(l2d);
-        assertEquals("minX", -40, br.getMinX(), 0);
-        assertEquals("maxX", 30, br.getMaxX(), 0);
-        assertEquals("minY", -20, br.getMinY(), 0);
-        assertEquals("maxY", 100, br.getMaxY(), 0);
+        assertEquals(-40, br.getMinX(), 0, "minX");
+        assertEquals(30, br.getMaxX(), 0, "maxX");
+        assertEquals(-20, br.getMinY(), 0, "minY");
+        assertEquals(100, br.getMaxY(), 0, "maxY");
 
         Point2d midPoint = br.midPoint();
-        assertEquals("midPoint x", (br.getMinX() + br.getMaxX()) / 2, midPoint.x, 0);
-        assertEquals("midPoint y", (br.getMinY() + br.getMaxY()) / 2, midPoint.y, 0);
-        assertEquals("midPoint of bounds of point is point", midPoint, new Bounds2d(midPoint).midPoint());
+        assertEquals((br.getMinX() + br.getMaxX()) / 2, midPoint.x, 0, "midPoint x");
+        assertEquals((br.getMinY() + br.getMaxY()) / 2, midPoint.y, 0, "midPoint y");
+        assertEquals(midPoint, new Bounds2d(midPoint).midPoint(), "midPoint of bounds of point is point");
 
         try
         {
@@ -377,9 +377,9 @@ public class Bounds2dTest
             // Ignore expected exception
         }
 
-        assertFalse("boundingbox does not contain itself", br.contains(br));
+        assertFalse(br.contains(br), "boundingbox does not contain itself");
         Bounds2d br2 = new Bounds2d(br.getMinX() - 0.0001, br.getMaxX() + 0.0001, br.getMinY() - 0.0001, br.getMaxY() + 0.0001);
-        assertTrue("Slightly enlarged bounding box contains non-enlarged version", br2.contains(br));
+        assertTrue(br2.contains(br), "Slightly enlarged bounding box contains non-enlarged version");
 
         try
         {
@@ -411,20 +411,20 @@ public class Bounds2dTest
             // Ignore expected exception
         }
 
-        assertTrue("Bounds2d covers itself", br.covers(br));
-        assertFalse("Bounds2d does not cover slightly enlarged version of itself", br.covers(br2));
+        assertTrue(br.covers(br), "Bounds2d covers itself");
+        assertFalse(br.covers(br2), "Bounds2d does not cover slightly enlarged version of itself");
         br2 = new Bounds2d(br.getMinX() + 0.0001, br.getMaxX() + 0.0001, br.getMinY() + 0.0001, br.getMaxY() + 0.0001);
-        assertFalse("Bounds2d does not cover slightly moved version of itself", br.covers(br2));
+        assertFalse(br.covers(br2), "Bounds2d does not cover slightly moved version of itself");
 
-        assertFalse("Overlapping Bounds2d is not disjoint", br.disjoint(br2));
-        assertTrue("Overlapping Bounds2d is not disjoint", br.intersects(br2));
+        assertFalse(br.disjoint(br2), "Overlapping Bounds2d is not disjoint");
+        assertTrue(br.intersects(br2), "Overlapping Bounds2d is not disjoint");
 
         br2 = new Bounds2d(br.getMinX() + 1000, br.getMaxX() + 1000, br.getMinY() + 1000, br.getMaxY() + 1000);
-        assertFalse("No intersection", br.intersects(br2));
-        assertTrue("Disjoint", br.disjoint(br2));
+        assertFalse(br.intersects(br2), "No intersection");
+        assertTrue(br.disjoint(br2), "Disjoint");
         br2 = new Bounds2d(br.getMaxX(), br.getMaxX() + 0.0001, br.getMinY() + 0.0001, br.getMaxY() + 0.0001);
-        assertFalse("Only touching at vertical line is not disjoint", br.disjoint(br2));
-        assertFalse("Only touching at vertical line is not disjoint", br2.disjoint(br));
+        assertFalse(br.disjoint(br2), "Only touching at vertical line is not disjoint");
+        assertFalse(br2.disjoint(br), "Only touching at vertical line is not disjoint");
 
         try
         {
@@ -445,39 +445,39 @@ public class Bounds2dTest
                 Bounds2d intersection = br.intersection(br2);
                 if (Math.abs(dx) >= 200 || Math.abs(dy) >= 200)
                 {
-                    assertNull("intersection is null", intersection);
+                    assertNull(intersection, "intersection is null");
                 }
                 else
                 {
-                    assertEquals("min x", Math.max(br.getMinX(), br2.getMinX()), intersection.getMinX(), 0);
-                    assertEquals("max x", Math.min(br.getMaxX(), br2.getMaxX()), intersection.getMaxX(), 0);
-                    assertEquals("min y", Math.max(br.getMinY(), br2.getMinY()), intersection.getMinY(), 0);
-                    assertEquals("max y", Math.min(br.getMaxY(), br2.getMaxY()), intersection.getMaxY(), 0);
+                    assertEquals(Math.max(br.getMinX(), br2.getMinX()), intersection.getMinX(), 0, "min x");
+                    assertEquals(Math.min(br.getMaxX(), br2.getMaxX()), intersection.getMaxX(), 0, "max x");
+                    assertEquals(Math.max(br.getMinY(), br2.getMinY()), intersection.getMinY(), 0, "min y");
+                    assertEquals(Math.min(br.getMaxY(), br2.getMaxY()), intersection.getMaxY(), 0, "max y");
                 }
             }
         }
         Rectangle2D r2D = br.toRectangle2D();
-        assertEquals("x", r2D.getX(), br.getMinX(), 0);
-        assertEquals("y", r2D.getY(), br.getMinY(), 0);
-        assertEquals("w", r2D.getWidth(), br.getDeltaX(), 0.000001);
-        assertEquals("h", r2D.getHeight(), br.getDeltaY(), 0.000001);
-        assertEquals("getBounds returns this", br, br.getBounds());
-        assertNotEquals("HashCode uses minX", br.hashCode(),
-                new Bounds2d(br.getMinX() + 1, br.getMaxX(), br.getMinY(), br.getMaxY()));
-        assertNotEquals("HashCode uses maxX", br.hashCode(),
-                new Bounds2d(br.getMinX(), br.getMaxX() + 1, br.getMinY(), br.getMaxY()));
-        assertNotEquals("HashCode uses minY", br.hashCode(),
-                new Bounds2d(br.getMinX(), br.getMaxX(), br.getMinY() + 1, br.getMaxY()));
-        assertNotEquals("HashCode uses maxY", br.hashCode(),
-                new Bounds2d(br.getMinX(), br.getMaxX(), br.getMinY(), br.getMaxY() + 1));
+        assertEquals(r2D.getX(), br.getMinX(), 0, "x");
+        assertEquals(r2D.getY(), br.getMinY(), 0, "y");
+        assertEquals(r2D.getWidth(), br.getDeltaX(), 0.000001, "w");
+        assertEquals(r2D.getHeight(), br.getDeltaY(), 0.000001, "h");
+        assertEquals(br, br.getBounds(), "getBounds returns this");
+        assertNotEquals(br.hashCode(), new Bounds2d(br.getMinX() + 1, br.getMaxX(), br.getMinY(), br.getMaxY()),
+                "HashCode uses minX");
+        assertNotEquals(br.hashCode(), new Bounds2d(br.getMinX(), br.getMaxX() + 1, br.getMinY(), br.getMaxY()),
+                "HashCode uses maxX");
+        assertNotEquals(br.hashCode(), new Bounds2d(br.getMinX(), br.getMaxX(), br.getMinY() + 1, br.getMaxY()),
+                "HashCode uses minY");
+        assertNotEquals(br.hashCode(), new Bounds2d(br.getMinX(), br.getMaxX(), br.getMinY(), br.getMaxY() + 1),
+                "HashCode uses maxY");
 
-        assertFalse("equals checks for null", br.equals(null));
-        assertFalse("equals checks for different kind of object", br.equals("string"));
-        assertFalse("equals checks minX", br.equals(new Bounds2d(br.getMinX() + 1, br.getMaxX(), br.getMinY(), br.getMaxY())));
-        assertFalse("equals checks maxX", br.equals(new Bounds2d(br.getMinX(), br.getMaxX() + 1, br.getMinY(), br.getMaxY())));
-        assertFalse("equals checks minY", br.equals(new Bounds2d(br.getMinX(), br.getMaxX(), br.getMinY() + 1, br.getMaxY())));
-        assertFalse("equals checks maxy", br.equals(new Bounds2d(br.getMinX(), br.getMaxX(), br.getMinY(), br.getMaxY() + 1)));
-        assertTrue("equals to copy of itself", br.equals(new Bounds2d(br)));
+        assertFalse(br.equals(null), "equals checks for null");
+        assertFalse(br.equals("string"), "equals checks for different kind of object");
+        assertFalse(br.equals(new Bounds2d(br.getMinX() + 1, br.getMaxX(), br.getMinY(), br.getMaxY())), "equals checks minX");
+        assertFalse(br.equals(new Bounds2d(br.getMinX(), br.getMaxX() + 1, br.getMinY(), br.getMaxY())), "equals checks maxX");
+        assertFalse(br.equals(new Bounds2d(br.getMinX(), br.getMaxX(), br.getMinY() + 1, br.getMaxY())), "equals checks minY");
+        assertFalse(br.equals(new Bounds2d(br.getMinX(), br.getMaxX(), br.getMinY(), br.getMaxY() + 1)), "equals checks maxy");
+        assertTrue(br.equals(new Bounds2d(br)), "equals to copy of itself");
     }
 
 }

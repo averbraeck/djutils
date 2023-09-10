@@ -1,13 +1,13 @@
 package org.djutils.draw.line;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the B&eacute;zier class.
@@ -38,14 +38,14 @@ public class BezierTest
         for (int n : new int[] {2, 3, 4, 100})
         {
             PolyLine2d line = Bezier.cubic(n, from, control1, control2, to);
-            assertTrue("result has n points", line.size() == n);
-            assertTrue("result starts with from", line.get(0).equals(from));
-            assertTrue("result ends with to", line.get(line.size() - 1).equals(to));
+            assertTrue(line.size() == n, "result has n points");
+            assertTrue(line.get(0).equals(from), "result starts with from");
+            assertTrue(line.get(line.size() - 1).equals(to), "result ends with to");
             for (int i = 1; i < line.size() - 1; i++)
             {
                 Point2d p = line.get(i);
-                assertTrue("x of intermediate point has reasonable value", p.x > 0 && p.x < 15);
-                assertTrue("y of intermediate point has reasonable value", p.y > 0 && p.y < 15);
+                assertTrue(p.x > 0 && p.x < 15, "x of intermediate point has reasonable value");
+                assertTrue(p.y > 0 && p.y < 15, "y of intermediate point has reasonable value");
             }
         }
         for (int n = -1; n <= 1; n++)
@@ -71,16 +71,16 @@ public class BezierTest
                     for (int i = 1; i < line.size() - 1; i++)
                     {
                         Point2d p = line.get(i);
-                        assertTrue("x of intermediate point has reasonable value", p.x > 0 && p.x < 15);
-                        assertTrue("y of intermediate point has reasonable value", p.y > 0 && p.y < 15);
+                        assertTrue(p.x > 0 && p.x < 15, "x of intermediate point has reasonable value");
+                        assertTrue(p.y > 0 && p.y < 15, "y of intermediate point has reasonable value");
                     }
                 }
             }
         }
         // Pity that the value 64 is private in the Bezier class.
-        assertEquals("Number of points is 64", 64,
-                Bezier.cubic(new Ray2d(from.x, from.y, Math.PI / 2), new Ray2d(to.x, to.y, -Math.PI / 2)).size());
-        assertEquals("Number of points is 64", 64, Bezier.bezier(from, control1, control2, to).size());
+        assertEquals(64, Bezier.cubic(new Ray2d(from.x, from.y, Math.PI / 2), new Ray2d(to.x, to.y, -Math.PI / 2)).size(),
+                "Number of points is 64");
+        assertEquals(64, Bezier.bezier(from, control1, control2, to).size(), "Number of points is 64");
         control1 = new Point2d(5, 0);
         control2 = new Point2d(0, 5);
         for (int n : new int[] {2, 3, 4, 100})
@@ -90,8 +90,8 @@ public class BezierTest
             {
                 Point2d p = line.get(i);
                 // System.out.println("Point " + i + " of " + n + " is " + p);
-                assertTrue("x of intermediate point has reasonable value", p.x > 0 && p.x < 10);
-                assertTrue("y of intermediate point has reasonable value", p.y > 0 && p.y < 10);
+                assertTrue(p.x > 0 && p.x < 10, "x of intermediate point has reasonable value");
+                assertTrue(p.y > 0 && p.y < 10, "y of intermediate point has reasonable value");
             }
         }
         for (int n : new int[] {2, 3, 4, 100})
@@ -100,8 +100,8 @@ public class BezierTest
             for (int i = 1; i < line.size() - 1; i++)
             {
                 Point2d p = line.get(i);
-                assertTrue("x of intermediate point has reasonable value", p.x > 0 && p.x < 10);
-                assertTrue("y of intermediate point has reasonable value", p.y > 0 && p.y < 10);
+                assertTrue(p.x > 0 && p.x < 10, "x of intermediate point has reasonable value");
+                assertTrue(p.y > 0 && p.y < 10, "y of intermediate point has reasonable value");
             }
         }
 
@@ -123,9 +123,9 @@ public class BezierTest
         {
             // System.out.println("epsilonPosition " + epsilonPosition);
             PolyLine2d line = Bezier.bezier(epsilonPosition, start, end);
-            assertEquals("Bezier from two points should be 2-point poly line", 2, line.size());
-            assertEquals("Start point should be start", start, line.getFirst());
-            assertEquals("End point shoujld be end", end, line.getLast());
+            assertEquals(2, line.size(), "Bezier from two points should be 2-point poly line");
+            assertEquals(start, line.getFirst(), "Start point should be start");
+            assertEquals(end, line.getLast(), "End point shoujld be end");
             line = Bezier.bezier(epsilonPosition, start, c1, c2, end);
             // System.out.print("epsilonPosition " + epsilonPosition + " yields " + line.toPlot());
             // for (int percent = 0; percent <= 100; percent++)
@@ -311,7 +311,7 @@ public class BezierTest
                 System.out.print("reference: " + reference.toPlot());
                 System.out.print("candidate: " + candidate.toPlot());
             }
-            assertTrue(description + " actual error is less than epsilon ", positionError < epsilon);
+            assertTrue(positionError < epsilon, description + " actual error is less than epsilon ");
         }
     }
 
@@ -341,7 +341,7 @@ public class BezierTest
                 System.out.print("reference: " + reference.project().toPlot());
                 System.out.print("candidate: " + candidate.project().toPlot());
             }
-            assertTrue(description + " actual error is less than epsilon ", positionError < epsilon);
+            assertTrue(positionError < epsilon, description + " actual error is less than epsilon ");
         }
     }
 
@@ -359,16 +359,16 @@ public class BezierTest
         for (int n : new int[] {2, 3, 4, 100})
         {
             PolyLine3d line = Bezier.cubic(n, from, control1, control2, to);
-            assertTrue("result has n points", line.size() == n);
-            assertTrue("result starts with from", line.get(0).equals(from));
-            assertTrue("result ends with to", line.get(line.size() - 1).equals(to));
+            assertTrue(line.size() == n, "result has n points");
+            assertTrue(line.get(0).equals(from), "result starts with from");
+            assertTrue(line.get(line.size() - 1).equals(to), "result ends with to");
             for (int i = 1; i < line.size() - 1; i++)
             {
                 Point3d p = line.get(i);
                 // System.out.println(p);
-                assertTrue("z of intermediate point has reasonable value", p.z > line.get(i - 1).z && p.z < line.get(i + 1).z);
-                assertTrue("x of intermediate point has reasonable value", p.x > 0 && p.x < 15);
-                assertTrue("y of intermediate point has reasonable value", p.y > 0 && p.y < 15);
+                assertTrue(p.z > line.get(i - 1).z && p.z < line.get(i + 1).z, "z of intermediate point has reasonable value");
+                assertTrue(p.x > 0 && p.x < 15, "x of intermediate point has reasonable value");
+                assertTrue(p.y > 0 && p.y < 15, "y of intermediate point has reasonable value");
             }
         }
         for (int n = -1; n <= 1; n++)
@@ -395,35 +395,35 @@ public class BezierTest
                     {
                         Point3d p = line.get(i);
                         // System.out.println(p);
-                        assertTrue("x of intermediate point has reasonable value", p.x > -10 && p.x < 20);
-                        assertTrue("y of intermediate point has reasonable value", p.y > -10 && p.y < 30);
-                        assertTrue("z of intermediate point has reasonable value", p.z > -10 && p.z < 40);
+                        assertTrue(p.x > -10 && p.x < 20, "x of intermediate point has reasonable value");
+                        assertTrue(p.y > -10 && p.y < 30, "y of intermediate point has reasonable value");
+                        assertTrue(p.z > -10 && p.z < 40, "z of intermediate point has reasonable value");
                     }
                 }
             }
         }
         // Pity that the value 64 is private in the Bezier class.
-        assertEquals("Number of points is 64", 64, Bezier.cubic(new Ray3d(from.x, from.y, from.z, Math.PI / 2, -Math.PI / 2),
-                new Ray3d(to.x, to.y, to.z, Math.PI, -Math.PI / 2)).size());
-        assertEquals("Number of points is 64", 64, Bezier.bezier(from, control1, control2, to).size());
+        assertEquals(64, Bezier.cubic(new Ray3d(from.x, from.y, from.z, Math.PI / 2, -Math.PI / 2),
+                new Ray3d(to.x, to.y, to.z, Math.PI, -Math.PI / 2)).size(), "Number of points is 64");
+        assertEquals(64, Bezier.bezier(from, control1, control2, to).size(), "Number of points is 64");
         control1 = new Point3d(5, 0, 10);
         control2 = new Point3d(0, 5, 20);
         for (int n : new int[] {2, 3, 4, 100})
         {
             PolyLine3d line = Bezier.cubic(n, from, control1, control2, to);
-            assertEquals("from x", from.x, line.getFirst().x, 0);
-            assertEquals("from y", from.y, line.getFirst().y, 0);
-            assertEquals("from z", from.z, line.getFirst().z, 0);
-            assertEquals("to x", to.x, line.getLast().x, 0);
-            assertEquals("to y", to.y, line.getLast().y, 0);
-            assertEquals("to z", to.z, line.getLast().z, 0);
+            assertEquals(from.x, line.getFirst().x, 0, "from x");
+            assertEquals(from.y, line.getFirst().y, 0, "from y");
+            assertEquals(from.z, line.getFirst().z, 0, "from z");
+            assertEquals(to.x, line.getLast().x, 0, "to x");
+            assertEquals(to.y, line.getLast().y, 0, "to y");
+            assertEquals(to.z, line.getLast().z, 0, "to z");
             for (int i = 0; i < line.size(); i++)
             {
                 Point3d p = line.get(i);
                 // System.out.println(p);
-                assertTrue("x of intermediate point has reasonable value", p.x > -10 && p.x < 20);
-                assertTrue("y of intermediate point has reasonable value", p.y > -10 && p.y < 30);
-                assertTrue("z of intermediate point has reasonable value", p.z > -10 && p.z <= 30);
+                assertTrue(p.x > -10 && p.x < 20, "x of intermediate point has reasonable value");
+                assertTrue(p.y > -10 && p.y < 30, "y of intermediate point has reasonable value");
+                assertTrue(p.z > -10 && p.z <= 30, "z of intermediate point has reasonable value");
             }
         }
         for (int n : new int[] {2, 3, 4, 100})
@@ -434,9 +434,9 @@ public class BezierTest
             {
                 Point3d p = line.get(i);
                 // System.out.println(p);
-                assertTrue("x of intermediate point has reasonable value", p.x > -10 && p.x < 20);
-                assertTrue("y of intermediate point has reasonable value", p.y > -10 && p.y < 30);
-                assertTrue("z of intermediate point has reasonable value", p.z > -10 && p.z <= 30);
+                assertTrue(p.x > -10 && p.x < 20, "x of intermediate point has reasonable value");
+                assertTrue(p.y > -10 && p.y < 30, "y of intermediate point has reasonable value");
+                assertTrue(p.z > -10 && p.z <= 30, "z of intermediate point has reasonable value");
             }
         }
 
@@ -458,9 +458,9 @@ public class BezierTest
         {
             // System.out.println("epsilonPosition " + epsilonPosition);
             PolyLine3d line = Bezier.bezier(epsilonPosition, start, end);
-            assertEquals("Bezier from two points should be 2-point poly line", 2, line.size());
-            assertEquals("Start point should be start", start, line.getFirst());
-            assertEquals("End point shoujld be end", end, line.getLast());
+            assertEquals(2, line.size(), "Bezier from two points should be 2-point poly line");
+            assertEquals(start, line.getFirst(), "Start point should be start");
+            assertEquals(end, line.getLast(), "End point shoujld be end");
             line = Bezier.bezier(epsilonPosition, start, c1, c2, end);
             // System.out.print("epsilonPosition " + epsilonPosition + " yields " + line.toPlot());
             // for (int percent = 0; percent <= 100; percent++)
@@ -561,13 +561,13 @@ public class BezierTest
         }
 
         PolyLine2d result = Bezier.bezier(2, ray1, ray3); // Should succeed
-        assertEquals("size should be 2", 2, result.size());
-        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
+        assertEquals(2, result.size(), "size should be 2");
+        assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
+        assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
         result = Bezier.bezier(ray1, ray3); // Should succeed
-        assertEquals("size should be default", Bezier.DEFAULT_BEZIER_SIZE, result.size());
-        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
+        assertEquals(Bezier.DEFAULT_BEZIER_SIZE, result.size(), "size should be default");
+        assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
+        assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
         try
         {
             Bezier.bezier(1, ray1, ray3);
@@ -589,13 +589,13 @@ public class BezierTest
         }
 
         result = Bezier.cubic(2, ray1, cp1, cp2, ray3);
-        assertEquals("size should be 2", 2, result.size());
-        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
+        assertEquals(2, result.size(), "size should be 2");
+        assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
+        assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
         result = Bezier.cubic(4, ray1, cp1, cp2, ray3);
-        assertEquals("size should be 4", 4, result.size());
-        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
+        assertEquals(4, result.size(), "size should be 4");
+        assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
+        assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
 
         try
         {
@@ -681,13 +681,13 @@ public class BezierTest
         }
 
         PolyLine3d result = Bezier.bezier(2, ray1, ray3); // Should succeed
-        assertEquals("size should be 2", 2, result.size());
-        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
+        assertEquals(2, result.size(), "size should be 2");
+        assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
+        assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
         result = Bezier.bezier(ray1, ray3); // Should succeed
-        assertEquals("size should be default", Bezier.DEFAULT_BEZIER_SIZE, result.size());
-        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
+        assertEquals(Bezier.DEFAULT_BEZIER_SIZE, result.size(), "size should be default");
+        assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
+        assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
         try
         {
             Bezier.bezier(1, ray1, ray3);
@@ -709,13 +709,13 @@ public class BezierTest
         }
 
         result = Bezier.cubic(2, ray1, cp1, cp2, ray3);
-        assertEquals("size should be 2", 2, result.size());
-        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
+        assertEquals(2, result.size(), "size should be 2");
+        assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
+        assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
         result = Bezier.cubic(4, ray1, cp1, cp2, ray3);
-        assertEquals("size should be 4", 4, result.size());
-        assertEquals("start of result is at start", 0, ray1.distanceSquared(result.getFirst()), 0);
-        assertEquals("end of result is at start", 0, ray3.distanceSquared(result.getLast()), 0);
+        assertEquals(4, result.size(), "size should be 4");
+        assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
+        assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
 
         try
         {

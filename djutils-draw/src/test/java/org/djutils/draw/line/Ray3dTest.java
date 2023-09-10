@@ -1,11 +1,11 @@
 package org.djutils.draw.line;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -14,7 +14,7 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.OrientedPoint3d;
 import org.djutils.draw.point.Point3d;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Ray3dTest.java.
@@ -159,8 +159,8 @@ public class Ray3dTest
         }
 
         Ray3d ray = new Ray3d(1, 2, 3, 0.2, 0.3);
-        assertTrue("toString returns something descriptive", ray.toString().startsWith("Ray3d"));
-        assertTrue("toString can suppress the class name", ray.toString().indexOf(ray.toString(true)) > 0);
+        assertTrue(ray.toString().startsWith("Ray3d"), "toString returns something descriptive");
+        assertTrue(ray.toString().indexOf(ray.toString(true)) > 0, "toString can suppress the class name");
     }
 
     /**
@@ -176,50 +176,50 @@ public class Ray3dTest
     private void verifyRay(final String description, final Ray3d ray, final double expectedX, final double expectedY,
             final double expectedZ, final double expectedPhi, final double expectedTheta)
     {
-        assertEquals(description + " getX", expectedX, ray.getX(), 0.0001);
-        assertEquals(description + " x", expectedX, ray.x, 0.0001);
-        assertEquals(description + " getY", expectedY, ray.getY(), 0.0001);
-        assertEquals(description + " y", expectedY, ray.y, 0.0001);
-        assertEquals(description + " getZ", expectedZ, ray.getZ(), 0.0001);
-        assertEquals(description + " z", expectedZ, ray.z, 0.0001);
-        assertEquals(description + " getPhi", expectedPhi, ray.getPhi(), 0.0001);
-        assertEquals(description + " phi", expectedPhi, ray.phi, 0.0001);
-        assertEquals(description + " getTheta", expectedTheta, ray.getTheta(), 0.0001);
-        assertEquals(description + " theta", expectedTheta, ray.theta, 0.0001);
+        assertEquals(expectedX, ray.getX(), 0.0001, description + " getX");
+        assertEquals(expectedX, ray.x, 0.0001, description + " x");
+        assertEquals(expectedY, ray.getY(), 0.0001, description + " getY");
+        assertEquals(expectedY, ray.y, 0.0001, description + " y");
+        assertEquals(expectedZ, ray.getZ(), 0.0001, description + " getZ");
+        assertEquals(expectedZ, ray.z, 0.0001, description + " z");
+        assertEquals(expectedPhi, ray.getPhi(), 0.0001, description + " getPhi");
+        assertEquals(expectedPhi, ray.phi, 0.0001, description + " phi");
+        assertEquals(expectedTheta, ray.getTheta(), 0.0001, description + " getTheta");
+        assertEquals(expectedTheta, ray.theta, 0.0001, description + " theta");
         Point3d startPoint = ray.getEndPoint();
-        assertEquals(description + " getStartPoint x", expectedX, startPoint.x, 0.0001);
-        assertEquals(description + " getStartPoint y", expectedY, startPoint.y, 0.0001);
-        assertEquals(description + " getStartPoint z", expectedZ, startPoint.z, 0.0001);
+        assertEquals(expectedX, startPoint.x, 0.0001, description + " getStartPoint x");
+        assertEquals(expectedY, startPoint.y, 0.0001, description + " getStartPoint y");
+        assertEquals(expectedZ, startPoint.z, 0.0001, description + " getStartPoint z");
         Ray3d negated = ray.neg();
-        assertEquals(description + " neg x", -expectedX, negated.x, 0.0001);
-        assertEquals(description + " neg y", -expectedY, negated.y, 0.0001);
-        assertEquals(description + " neg z", -expectedZ, negated.z, 0.0001);
-        assertEquals(description + " neg phi", expectedPhi + Math.PI, negated.phi, 0.0001);
-        assertEquals(description + " neg theta", expectedTheta + Math.PI, negated.theta, 0.0001);
+        assertEquals(-expectedX, negated.x, 0.0001, description + " neg x");
+        assertEquals(-expectedY, negated.y, 0.0001, description + " neg y");
+        assertEquals(-expectedZ, negated.z, 0.0001, description + " neg z");
+        assertEquals(expectedPhi + Math.PI, negated.phi, 0.0001, description + " neg phi");
+        assertEquals(expectedTheta + Math.PI, negated.theta, 0.0001, description + " neg theta");
         Ray3d flipped = ray.flip();
-        assertEquals(description + " getX", expectedX, flipped.getX(), 0.0001);
-        assertEquals(description + " x", expectedX, flipped.x, 0.0001);
-        assertEquals(description + " getY", expectedY, flipped.getY(), 0.0001);
-        assertEquals(description + " y", expectedY, flipped.y, 0.0001);
-        assertEquals(description + " getZ", expectedZ, flipped.getZ(), 0.0001);
-        assertEquals(description + " z", expectedZ, flipped.z, 0.0001);
-        assertEquals(description + " getPhi", expectedPhi + Math.PI, flipped.getPhi(), 0.0001);
-        assertEquals(description + " phi", expectedPhi + Math.PI, flipped.phi, 0.0001);
-        assertEquals(description + " getTheta", Math.PI - expectedTheta, flipped.getTheta(), 0.0001);
-        assertEquals(description + " theta", Math.PI - expectedTheta, flipped.theta, 0.0001);
-        assertEquals(description + " size", 2, ray.size());
+        assertEquals(expectedX, flipped.getX(), 0.0001, description + " getX");
+        assertEquals(expectedX, flipped.x, 0.0001, description + " x");
+        assertEquals(expectedY, flipped.getY(), 0.0001, description + " getY");
+        assertEquals(expectedY, flipped.y, 0.0001, description + " y");
+        assertEquals(expectedZ, flipped.getZ(), 0.0001, description + " getZ");
+        assertEquals(expectedZ, flipped.z, 0.0001, description + " z");
+        assertEquals(expectedPhi + Math.PI, flipped.getPhi(), 0.0001, description + " getPhi");
+        assertEquals(expectedPhi + Math.PI, flipped.phi, 0.0001, description + " phi");
+        assertEquals(Math.PI - expectedTheta, flipped.getTheta(), 0.0001, description + " getTheta");
+        assertEquals(Math.PI - expectedTheta, flipped.theta, 0.0001, description + " theta");
+        assertEquals(2, ray.size(), description + " size");
         Iterator<Point3d> iterator = ray.getPoints();
         // First result of iterator is the finite end point (but this is not a hard promise)
         assertTrue(iterator.hasNext());
         Point3d point = iterator.next();
-        assertEquals(description + " iterator first point x", expectedX, point.x, 0.0001);
-        assertEquals(description + " iterator first point y", expectedY, point.y, 0.0001);
-        assertEquals(description + " iterator first point z", expectedZ, point.z, 0.0001);
+        assertEquals(expectedX, point.x, 0.0001, description + " iterator first point x");
+        assertEquals(expectedY, point.y, 0.0001, description + " iterator first point y");
+        assertEquals(expectedZ, point.z, 0.0001, description + " iterator first point z");
         assertTrue(iterator.hasNext());
         point = iterator.next();
         // We only check that the point is infinite in at least one direction; the boundTest covers the rest
-        assertTrue(description + " iterator second point is at infinity",
-                Double.isInfinite(point.x) || Double.isInfinite(point.y) || Double.isInfinite(point.z));
+        assertTrue(Double.isInfinite(point.x) || Double.isInfinite(point.y) || Double.isInfinite(point.z),
+                description + " iterator second point is at infinity");
         assertFalse(iterator.hasNext());
         try
         {
@@ -338,12 +338,12 @@ public class Ray3dTest
     private void verifyBounds(final Bounds3d bounds, final double expectedMinX, final double expectedMinY,
             final double expectedMinZ, final double expectedMaxX, final double expectedMaxY, final double expectedMaxZ)
     {
-        assertEquals("Bounds minX", expectedMinX, bounds.getMinX(), 0.0001);
-        assertEquals("Bounds minY", expectedMinY, bounds.getMinY(), 0.0001);
-        assertEquals("Bounds minZ", expectedMinZ, bounds.getMinZ(), 0.0001);
-        assertEquals("Bounds maxX", expectedMaxX, bounds.getMaxX(), 0.0001);
-        assertEquals("Bounds maxY", expectedMaxY, bounds.getMaxY(), 0.0001);
-        assertEquals("Bounds maxZ", expectedMaxZ, bounds.getMaxZ(), 0.0001);
+        assertEquals(expectedMinX, bounds.getMinX(), 0.0001, "Bounds minX");
+        assertEquals(expectedMinY, bounds.getMinY(), 0.0001, "Bounds minY");
+        assertEquals(expectedMinZ, bounds.getMinZ(), 0.0001, "Bounds minZ");
+        assertEquals(expectedMaxX, bounds.getMaxX(), 0.0001, "Bounds maxX");
+        assertEquals(expectedMaxY, bounds.getMaxY(), 0.0001, "Bounds maxY");
+        assertEquals(expectedMaxZ, bounds.getMaxZ(), 0.0001, "Bounds maxZ");
     }
 
     /**
@@ -430,21 +430,21 @@ public class Ray3dTest
                 for (double position : new double[] { 0, 10, 0.1, -2 })
                 {
                     Ray3d result = ray.getLocationExtended(position);
-                    assertEquals("result is position distance away from base of ray", Math.abs(position), ray.distance(result),
-                            0.001);
-                    assertEquals("result has same phi as ray", ray.phi, result.phi, 0.00001);
-                    assertTrue("Reverse position on result yields ray",
-                            ray.epsilonEquals(result.getLocationExtended(-position), 0.0001));
+                    assertEquals(Math.abs(position), ray.distance(result), 0.001,
+                            "result is position distance away from base of ray");
+                    assertEquals(ray.phi, result.phi, 0.00001, "result has same phi as ray");
+                    assertTrue(ray.epsilonEquals(result.getLocationExtended(-position), 0.0001),
+                            "Reverse position on result yields ray");
                     if (position > 0)
                     {
                         // TODO verify that it is on positive side of ray
-                        assertEquals("result lies in on ray (phi)", ray.phi, result.phi, 0.0001);
-                        assertEquals("result lies on ray (theta)", ray.theta, result.theta, 0.0001);
+                        assertEquals(ray.phi, result.phi, 0.0001, "result lies in on ray (phi)");
+                        assertEquals(ray.theta, result.theta, 0.0001, "result lies on ray (theta)");
                     }
                     if (position < 0)
                     {
-                        assertEquals("ray lies on result (phi)", result.phi, ray.phi, 0.0001);
-                        assertEquals("ray lies on result (theta)", result.theta, ray.theta, 0.0001);
+                        assertEquals(result.phi, ray.phi, 0.0001, "ray lies on result (phi)");
+                        assertEquals(result.theta, ray.theta, 0.0001, "ray lies on result (theta)");
                     }
                 }
             }
@@ -469,44 +469,44 @@ public class Ray3dTest
         }
 
         Point3d result = ray.closestPointOnRay(new Point3d(1, 2, 0));
-        assertEquals("result is start point", ray.x, result.x, 0);
-        assertEquals("result is start point", ray.y, result.y, 0);
-        assertEquals("result is start point", ray.z, result.z, 0);
+        assertEquals(ray.x, result.x, 0, "result is start point");
+        assertEquals(ray.y, result.y, 0, "result is start point");
+        assertEquals(ray.z, result.z, 0, "result is start point");
         result = ray.closestPointOnRay(new Point3d(1, 2, 0));
-        assertEquals("result is start point", ray.x, result.x, 0);
-        assertEquals("result is start point", ray.y, result.y, 0);
-        assertEquals("result is start point", ray.z, result.z, 0);
+        assertEquals(ray.x, result.x, 0, "result is start point");
+        assertEquals(ray.y, result.y, 0, "result is start point");
+        assertEquals(ray.z, result.z, 0, "result is start point");
         result = ray.closestPointOnRay(new Point3d(0, 2, 3));
-        assertEquals("result is start point", ray.x, result.x, 0);
-        assertEquals("result is start point", ray.y, result.y, 0);
-        assertEquals("result is start point", ray.z, result.z, 0);
+        assertEquals(ray.x, result.x, 0, "result is start point");
+        assertEquals(ray.y, result.y, 0, "result is start point");
+        assertEquals(ray.z, result.z, 0, "result is start point");
         result = ray.closestPointOnRay(new Point3d(1, 2, 3));
-        assertEquals("result is start point", ray.x, result.x, 0);
-        assertEquals("result is start point", ray.y, result.y, 0);
-        assertEquals("result is start point", ray.z, result.z, 0);
+        assertEquals(ray.x, result.x, 0, "result is start point");
+        assertEquals(ray.y, result.y, 0, "result is start point");
+        assertEquals(ray.z, result.z, 0, "result is start point");
 
-        assertNull("projection misses the ray", ray.projectOrthogonal(new Point3d(1, 0, 3)));
-        assertNull("projection misses the ray", ray.projectOrthogonal(new Point3d(0, 2, 3)));
-        assertNull("projection misses the ray", ray.projectOrthogonal(new Point3d(1, 2, 2)));
-        assertEquals("projection hits start point of ray", new Point3d(1, 2, 3), ray.projectOrthogonal(new Point3d(1, 2, 3)));
-        assertEquals("extended projection returns same point as projection on sufficiently long line segment", 0,
-                new LineSegment3d(ray.getLocationExtended(-100), ray.getLocation(100))
-                        .closestPointOnSegment(new Point3d(1, 0, -1))
-                        .distance(ray.projectOrthogonalExtended(new Point3d(1, 0, -1))),
-                0.0001);
+        assertNull(ray.projectOrthogonal(new Point3d(1, 0, 3)), "projection misses the ray");
+        assertNull(ray.projectOrthogonal(new Point3d(0, 2, 3)), "projection misses the ray");
+        assertNull(ray.projectOrthogonal(new Point3d(1, 2, 2)), "projection misses the ray");
+        assertEquals(new Point3d(1, 2, 3), ray.projectOrthogonal(new Point3d(1, 2, 3)), "projection hits start point of ray");
+        assertEquals(0, new LineSegment3d(ray.getLocationExtended(-100), ray.getLocation(100))
+                .closestPointOnSegment(new Point3d(1, 0, -1))
+                .distance(ray.projectOrthogonalExtended(new Point3d(1, 0, -1))),
+                0.0001,
+                "extended projection returns same point as projection on sufficiently long line segment");
 
         Point3d projectingPoint = new Point3d(10, 10, 10);
         result = ray.closestPointOnRay(projectingPoint); // Projects at a point along the ray
         double distance = result.distance(ray.getEndPoint());
-        assertTrue("distance from start is > 0", distance > 0);
+        assertTrue(distance > 0, "distance from start is > 0");
         // Check that points on the ray slightly closer to start point or slightly further are indeed further from
         // projectingPoint
-        assertTrue("Point on ray closer than result is further from projectingPoint",
-                ray.getLocation(distance - 0.1).distance(projectingPoint) < distance);
-        assertTrue("Point on ray further than result is further from projectingPoint",
-                ray.getLocation(distance + 0.1).distance(projectingPoint) < distance);
-        assertEquals("projectOrthogonalExtended returns same result as long as orthogonal projection exists", 0,
-                result.distance(ray.projectOrthogonalExtended(projectingPoint)), 0.0001);
+        assertTrue(ray.getLocation(distance - 0.1).distance(projectingPoint) < distance,
+                "Point on ray closer than result is further from projectingPoint");
+        assertTrue(ray.getLocation(distance + 0.1).distance(projectingPoint) < distance,
+                "Point on ray further than result is further from projectingPoint");
+        assertEquals(0, result.distance(ray.projectOrthogonalExtended(projectingPoint)),
+                0.0001, "projectOrthogonalExtended returns same result as long as orthogonal projection exists");
     }
 
     /**
@@ -516,10 +516,10 @@ public class Ray3dTest
     public void testProject()
     {
         Ray3d ray = new Ray3d(1, 2, 3, 20, 10, 5);
-        assertTrue("projects outside", Double.isNaN(ray.projectOrthogonalFractional(new Point3d(1, 1, 1))));
-        assertTrue("projects before start", ray.projectOrthogonalFractionalExtended(new Point3d(1, 1, 1)) < 0);
-        assertEquals("projects at", -new Point3d(1 - 19 - 19, 2 - 8 - 8, 3 - 2 - 2).distance(ray),
-                ray.projectOrthogonalFractionalExtended(new Point3d(1 - 19 - 19 + 8, 2 - 8 - 8 - 19, 3 - 2 - 2)), 0.0001);
+        assertTrue(Double.isNaN(ray.projectOrthogonalFractional(new Point3d(1, 1, 1))), "projects outside");
+        assertTrue(ray.projectOrthogonalFractionalExtended(new Point3d(1, 1, 1)) < 0, "projects before start");
+        assertEquals(-new Point3d(1 - 19 - 19, 2 - 8 - 8, 3 - 2 - 2).distance(ray), ray.projectOrthogonalFractionalExtended(new Point3d(1 - 19 - 19 + 8, 2 - 8 - 8 - 19, 3 - 2 - 2)),
+                0.0001, "projects at");
         // Projection of projection is projection
         for (int x = -2; x < 5; x++)
         {
@@ -531,19 +531,19 @@ public class Ray3dTest
                     double fraction = ray.projectOrthogonalFractionalExtended(point);
                     if (fraction < 0)
                     {
-                        assertTrue("non extended version yields NaN", Double.isNaN(ray.projectOrthogonalFractional(point)));
-                        assertNull("non extended projectOrthogonal yields null", ray.projectOrthogonal(point));
+                        assertTrue(Double.isNaN(ray.projectOrthogonalFractional(point)), "non extended version yields NaN");
+                        assertNull(ray.projectOrthogonal(point), "non extended projectOrthogonal yields null");
                     }
                     else
                     {
-                        assertEquals("non extended version yields same", fraction, ray.projectOrthogonalFractional(point),
-                                0.00001);
-                        assertEquals("non extended version yields same as extended version", ray.projectOrthogonal(point),
-                                ray.projectOrthogonalExtended(point));
+                        assertEquals(fraction, ray.projectOrthogonalFractional(point), 0.00001,
+                                "non extended version yields same");
+                        assertEquals(ray.projectOrthogonal(point), ray.projectOrthogonalExtended(point),
+                                "non extended version yields same as extended version");
                     }
                     Point3d projected = ray.projectOrthogonalExtended(point);
-                    assertEquals("projecting projected point yields same", fraction,
-                            ray.projectOrthogonalFractionalExtended(projected), 0.00001);
+                    assertEquals(fraction, ray.projectOrthogonalFractionalExtended(projected),
+                            0.00001, "projecting projected point yields same");
                 }
             }
         }
@@ -626,21 +626,21 @@ public class Ray3dTest
                                 boolean result = ray.epsilonEquals(other, epsilon, Double.POSITIVE_INFINITY);
                                 boolean expected =
                                         Math.abs(dX) <= epsilon && Math.abs(dY) <= epsilon && Math.abs(dZ) <= epsilon;
-                                assertEquals("result of epsilonEquals checking x, y, z", expected, result);
+                                assertEquals(expected, result, "result of epsilonEquals checking x, y, z");
 
                                 result = ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
                                 expected = Math.abs(dPhi) <= epsilon && Math.abs(dTheta) <= epsilon;
-                                assertEquals("result of epsilonEquals checking phi and theta", expected, result);
+                                assertEquals(expected, result, "result of epsilonEquals checking phi and theta");
                                 // Create an equivalent alternative ray
                                 other = new Ray3d(ray.x + dX, ray.y + dY, ray.z + dZ, Math.PI + ray.phi + dPhi,
                                         Math.PI - ray.theta + dTheta);
                                 result = ray.epsilonEquals(other, epsilon, Double.POSITIVE_INFINITY);
                                 expected = Math.abs(dX) <= epsilon && Math.abs(dY) <= epsilon && Math.abs(dZ) <= epsilon;
-                                assertEquals("result of epsilonEquals checking x, y, z", expected, result);
+                                assertEquals(expected, result, "result of epsilonEquals checking x, y, z");
 
                                 result = ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
                                 expected = Math.abs(dPhi) <= epsilon && Math.abs(dTheta) <= epsilon;
-                                assertEquals("result of epsilonEquals checking phi and theta", expected, result);
+                                assertEquals(expected, result, "result of epsilonEquals checking phi and theta");
                             }
                         }
                     }
@@ -656,20 +656,20 @@ public class Ray3dTest
     public void equalsAndHashCodeTest()
     {
         Ray3d ray = new Ray3d(1, 2, 3, 11, 12, 13);
-        assertEquals("equal to itself", ray, ray);
-        assertNotEquals("not equal to null", ray, null);
-        assertNotEquals("not equal to different object with same parent class", ray, new OrientedPoint3d(1, 2, 3));
-        assertNotEquals("not equal to ray with different phi", ray, new Ray3d(1, 2, 3, 11, 10, 13));
-        assertNotEquals("not equal to ray with different theta", ray, new Ray3d(1, 2, 3, 11, 12, 10));
-        assertNotEquals("not equal to ray with different start x", ray, new Ray3d(2, 2, 3, 12, 12, 13));
-        assertNotEquals("not equal to ray with different start y", ray, new Ray3d(1, 3, 3, 11, 13, 13));
-        assertEquals("equal to ray with same x, y and direction", ray, new Ray3d(1, 2, 3, 21, 22, 23));
+        assertEquals(ray, ray, "equal to itself");
+        assertNotEquals(ray, null, "not equal to null");
+        assertNotEquals(ray, new OrientedPoint3d(1, 2, 3), "not equal to different object with same parent class");
+        assertNotEquals(ray, new Ray3d(1, 2, 3, 11, 10, 13), "not equal to ray with different phi");
+        assertNotEquals(ray, new Ray3d(1, 2, 3, 11, 12, 10), "not equal to ray with different theta");
+        assertNotEquals(ray, new Ray3d(2, 2, 3, 12, 12, 13), "not equal to ray with different start x");
+        assertNotEquals(ray, new Ray3d(1, 3, 3, 11, 13, 13), "not equal to ray with different start y");
+        assertEquals(ray, new Ray3d(1, 2, 3, 21, 22, 23), "equal to ray with same x, y and direction");
 
-        assertNotEquals("hashCode depends on x", ray.hashCode(), new Ray3d(2, 2, 3, 12, 12, 13));
-        assertNotEquals("hashCode depends on y", ray.hashCode(), new Ray3d(1, 3, 3, 11, 13, 13));
-        assertNotEquals("hashCode depends on y", ray.hashCode(), new Ray3d(1, 2, 4, 11, 12, 14));
-        assertNotEquals("hashCode depends on phi", ray.hashCode(), new Ray3d(1, 2, 3, 11, 10, 13));
-        assertNotEquals("hashCode depends on theta", ray.hashCode(), new Ray3d(1, 2, 3, 11, 12, 10));
+        assertNotEquals(ray.hashCode(), new Ray3d(2, 2, 3, 12, 12, 13), "hashCode depends on x");
+        assertNotEquals(ray.hashCode(), new Ray3d(1, 3, 3, 11, 13, 13), "hashCode depends on y");
+        assertNotEquals(ray.hashCode(), new Ray3d(1, 2, 4, 11, 12, 14), "hashCode depends on y");
+        assertNotEquals(ray.hashCode(), new Ray3d(1, 2, 3, 11, 10, 13), "hashCode depends on phi");
+        assertNotEquals(ray.hashCode(), new Ray3d(1, 2, 3, 11, 12, 10), "hashCode depends on theta");
     }
 
 }
