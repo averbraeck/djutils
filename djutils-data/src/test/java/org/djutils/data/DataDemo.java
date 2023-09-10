@@ -45,8 +45,7 @@ public final class DataDemo
      * @throws IOException ...
      * @throws XMLStreamException ...
      */
-    public static void main(final String[] args)
-            throws IOException, TextSerializationException, XMLStreamException
+    public static void main(final String[] args) throws IOException, TextSerializationException, XMLStreamException
     {
         System.out.println("Example using java basic types");
         example1();
@@ -70,7 +69,7 @@ public final class DataDemo
 
         System.out.println(table);
 
-        Object[] rowData = new Object[] { 600, 18.0, "starting engine" };
+        Object[] rowData = new Object[] {600, 18.0, "starting engine"};
         table.addRow(rowData);
 
         Map<String, Object> map = new HashMap<>();
@@ -88,8 +87,8 @@ public final class DataDemo
         }
         for (Row row : table)
         {
-            System.out.println("timeStamp=" + row.getValue("timeStamp") + ", temperature="
-                    + row.getValue("temperature") + ", " + row.getValue("remark"));
+            System.out.println("timeStamp=" + row.getValue("timeStamp") + ", temperature=" + row.getValue("temperature") + ", "
+                    + row.getValue("remark"));
         }
 
         System.out.println("JSON");
@@ -140,9 +139,9 @@ public final class DataDemo
             }
         }
 
-        table.addRow(new Object[] { 720, Double.NaN, "can we store a NaN value?" });
-        table.addRow(new Object[] { 780, Double.POSITIVE_INFINITY, "can we store positive infinity?" });
-        table.addRow(new Object[] { 840, Double.NEGATIVE_INFINITY, "can we store negative infinity?" });
+        table.addRow(new Object[] {720, Double.NaN, "can we store a NaN value?"});
+        table.addRow(new Object[] {780, Double.POSITIVE_INFINITY, "can we store positive infinity?"});
+        table.addRow(new Object[] {840, Double.NEGATIVE_INFINITY, "can we store negative infinity?"});
         System.out.println("JSON");
         JsonData.writeData("C:/Temp/exampleNaN.json", table);
 
@@ -177,8 +176,8 @@ public final class DataDemo
 
         System.out.println(table);
 
-        Object[] record = new Object[] { new Time(600, TimeUnit.BASE_SECOND),
-                new AbsoluteTemperature(18.0, AbsoluteTemperatureUnit.DEGREE_CELSIUS), "starting engine" };
+        Object[] record = new Object[] {new Time(600, TimeUnit.BASE_SECOND),
+                new AbsoluteTemperature(18.0, AbsoluteTemperatureUnit.DEGREE_CELSIUS), "starting engine"};
         table.addRow(record);
 
         Map<String, Object> map = new HashMap<>();

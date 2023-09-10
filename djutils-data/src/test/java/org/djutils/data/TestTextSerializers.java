@@ -1,8 +1,8 @@
 package org.djutils.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Locale;
 
@@ -29,7 +29,7 @@ import org.djutils.data.serialization.StringSerializer;
 import org.djutils.data.serialization.TextSerializationException;
 import org.djutils.data.serialization.TextSerializer;
 import org.djutils.exceptions.Try;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestTextSerializers tests the (de)serialization of the different classes from/into text. <br>

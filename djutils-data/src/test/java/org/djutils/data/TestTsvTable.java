@@ -1,9 +1,9 @@
 package org.djutils.data;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import org.djunits.value.vdouble.scalar.Speed;
 import org.djutils.data.csv.TsvData;
 import org.djutils.data.serialization.TextSerializationException;
 import org.djutils.io.CompressedFileWriter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestTsvData tests writing and reading of a TSV file, and checks that all data is read back correctly into the Table

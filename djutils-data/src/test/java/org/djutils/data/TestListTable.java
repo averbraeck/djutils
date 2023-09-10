@@ -1,9 +1,9 @@
 package org.djutils.data;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +17,7 @@ import java.util.TreeMap;
 import org.djunits.value.vdouble.scalar.Length;
 import org.djutils.exceptions.Try;
 import org.djutils.primitives.Primitive;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestListTable tests the functions of the ListTable, the Column and the Record.

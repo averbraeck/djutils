@@ -1,9 +1,9 @@
 package org.djutils.data;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import org.djunits.value.vdouble.scalar.Speed;
 import org.djutils.data.csv.CsvData;
 import org.djutils.data.serialization.TextSerializationException;
 import org.djutils.io.CompressedFileWriter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import de.siegmar.fastcsv.writer.LineDelimiter;
 
@@ -225,7 +225,7 @@ public class TestCsvTable
     public void testReadWriteCsvUnits() throws IOException, TextSerializationException
     {
         Locale.setDefault(Locale.US);
-        
+
         File tempDataFile = File.createTempFile("testdata", ".csv");
         File tempMetaDataFile = File.createTempFile("testmetadata", ".csv");
         tempDataFile.deleteOnExit();

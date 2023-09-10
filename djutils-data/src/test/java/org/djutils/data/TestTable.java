@@ -1,8 +1,8 @@
 package org.djutils.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -12,9 +12,9 @@ import java.util.Map;
 
 import org.djunits.value.vfloat.scalar.FloatSpeed;
 import org.djutils.exceptions.Try;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-/** 
+/**
  * Table test.
  * <p>
  * Copyright (c) 2020-2023 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
@@ -155,7 +155,7 @@ public class TestTable
             assertEquals(data3[rowNum], row.getValue("id3"));
             rowNum++;
         }
-        assertTrue("Table has wrong number of rows.", rowNum == data1.length);
+        assertTrue(rowNum == data1.length, "Table has wrong number of rows.");
     }
 
 }
