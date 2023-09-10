@@ -1,11 +1,11 @@
 package org.djutils.profile;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the Profile class.
@@ -97,28 +97,28 @@ public class ProfileTest
                     switch (parts[0])
                     {
                         case "name":
-                            assertEquals("value of name should be \"delay\"", "delay", parts[1]);
+                            assertEquals("delay", parts[1], "value of name should be \"delay\"");
                             break;
                         case "start":
-                            assertEquals("value of start should be \"null\"", "null", parts[1]);
+                            assertEquals("null", parts[1], "value of start should be \"null\"");
                             break;
                         case "total":
-                            assertTrue("value of total should be at least ... ",
-                                    calls * sleepTime <= Double.parseDouble(value) * 1000);
+                            assertTrue(calls * sleepTime <= Double.parseDouble(value) * 1000,
+                                    "value of total should be at least ... ");
                         case "totalSquared":
-                            assertTrue("value of totalSquared should be at least ... ",
-                                    calls * sleepTime * calls * sleepTime <= Math.pow(Double.parseDouble(value), 2) * 1000);
+                            assertTrue(calls * sleepTime * calls * sleepTime <= Math.pow(Double.parseDouble(value), 2) * 1000,
+                                    "value of totalSquared should be at least ... ");
                             break;
                         case "minTime":
-                            assertTrue("value of minTime should be at least ... ",
-                                    calls * sleepTime <= Double.parseDouble(value) * 1000);
+                            assertTrue(calls * sleepTime <= Double.parseDouble(value) * 1000,
+                                    "value of minTime should be at least ... ");
                             break;
                         case "maxTime":
-                            assertTrue("value of maxTime should be at least ... ",
-                                    calls * sleepTime <= Double.parseDouble(value) * 1000);
+                            assertTrue(calls * sleepTime <= Double.parseDouble(value) * 1000,
+                                    "value of maxTime should be at least ... ");
                             break;
                         case "invocations":
-                            assertEquals("value of invocations should be number of calls", calls, Long.parseLong(parts[1]));
+                            assertEquals(calls, Long.parseLong(parts[1]), "value of invocations should be number of calls");
                             break;
 
                         default:
@@ -191,7 +191,7 @@ public class ProfileTest
             // Ignore expected exception
         }
 
-        assertNull("statistics for method that never called Profile.start should return null", Profile.statistics("Naaahhhh"));
+        assertNull(Profile.statistics("Naaahhhh"), "statistics for method that never called Profile.start should return null");
 
         try
         {

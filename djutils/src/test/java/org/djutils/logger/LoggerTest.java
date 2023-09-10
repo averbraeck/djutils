@@ -1,9 +1,9 @@
 package org.djutils.logger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -12,7 +12,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.pmw.tinylog.Configuration;
 import org.pmw.tinylog.Level;
 import org.pmw.tinylog.LogEntry;

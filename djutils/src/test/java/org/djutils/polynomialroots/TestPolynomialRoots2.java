@@ -1,10 +1,10 @@
 package org.djutils.polynomialroots;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.djutils.complex.Complex;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestPolynomialRoots2.java.
@@ -35,7 +35,7 @@ public class TestPolynomialRoots2
                     // System.out.print(a + " x^2 + " + b + " x " + c + " = 0");
                     Complex[] roots = PolynomialRoots2.quadraticRoots(a, b, c);
                     int expectedNumber = a != 0 ? 2 : b != 0 ? 1 : 0;
-                    assertEquals("number of roots", expectedNumber, roots.length);
+                    assertEquals(expectedNumber, roots.length, "number of roots");
                     // System.out.print(": " + expectedNumber + " solutions");
                     // Check that each root is indeed a root
                     for (Complex root : roots)
@@ -43,23 +43,23 @@ public class TestPolynomialRoots2
                         // System.out.print(" " + root);
                         Complex result = root.times(root).times(a).plus(root.times(b)).plus(c);
                         double margin = Math.max(root.norm() / 1e6, 1E-300);
-                        assertEquals("root is a root of the equation; re", 0, result.re, margin);
-                        assertEquals("root is a root of the equation; im", 0, result.im, margin);
+                        assertEquals(0, result.re, margin, "root is a root of the equation; re");
+                        assertEquals(0, result.im, margin, "root is a root of the equation; im");
                     }
                     // System.out.println();
                     Complex[] alternate = PolynomialRoots2.cubicRootsDurandKerner(0, a, b, c);
-                    assertArrayEquals("cubic solver returns same results as quadratic solver if a is 0", roots, alternate);
+                    assertArrayEquals(roots, alternate, "cubic solver returns same results as quadratic solver if a is 0");
                 }
             }
         }
         double q1 = 3 * Math.sqrt(Double.MAX_VALUE);
         Complex[] roots = PolynomialRoots2.quadraticRoots(q1, 1);
-        assertEquals("two roots", 2, roots.length);
-        assertEquals("first root is 0: re", 0, roots[0].re, 0.0001);
-        assertEquals("first root is 0: im", 0, roots[0].im, 0.0001);
+        assertEquals(2, roots.length, "two roots");
+        assertEquals(0, roots[0].re, 0.0001, "first root is 0: re");
+        assertEquals(0, roots[0].im, 0.0001, "first root is 0: im");
         // System.out.println(roots[1]);
-        assertEquals("second root is 0: re", -q1, roots[1].re, q1 / 1e7);
-        assertEquals("second root is 0: im", 0, roots[1].im, 0.0001);
+        assertEquals(-q1, roots[1].re, q1 / 1e7, "second root is 0: re");
+        assertEquals(0, roots[1].im, 0.0001, "second root is 0: im");
     }
 
     /**
@@ -80,7 +80,7 @@ public class TestPolynomialRoots2
                         // System.out.print(a + " x^3 " + b + " x^2 + " + c + " x + " + d + " = 0");
                         Complex[] roots = PolynomialRoots2.cubicRootsDurandKerner(a, b, c, d);
                         int expectedNumber = a != 0 ? 3 : b != 0 ? 2 : c != 0 ? 1 : 0;
-                        assertEquals("number of roots", expectedNumber, roots.length);
+                        assertEquals(expectedNumber, roots.length, "number of roots");
                         // System.out.print(": " + expectedNumber + " solutions");
                         // Check that each root is indeed a root
                         for (Complex root : roots)
@@ -89,8 +89,8 @@ public class TestPolynomialRoots2
                             Complex result = root.times(root).times(root).times(a).plus(root.times(root).times(b))
                                     .plus(root.times(c)).plus(d);
                             double margin = Math.max(root.norm() / 1e6, 1E-300);
-                            assertEquals("root is a root of the equation; re", 0, result.re, margin);
-                            assertEquals("root is a root of the equation; im", 0, result.im, margin);
+                            assertEquals(0, result.re, margin, "root is a root of the equation; re");
+                            assertEquals(0, result.im, margin, "root is a root of the equation; im");
                         }
                         // System.out.println();
                     }
@@ -119,7 +119,7 @@ public class TestPolynomialRoots2
                             // System.out.print(a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e + " = 0");
                             Complex[] roots = PolynomialRoots2.quarticRootsDurandKerner(a, b, c, d, e);
                             int expectedNumber = a != 0 ? 4 : b != 0 ? 3 : c != 0 ? 2 : d != 0 ? 1 : 0;
-                            assertEquals("number of roots", expectedNumber, roots.length);
+                            assertEquals(expectedNumber, roots.length, "number of roots");
                             // System.out.print(": " + expectedNumber + " solutions");
                             // Check that each root is indeed a root
                             for (Complex root : roots)
@@ -130,10 +130,10 @@ public class TestPolynomialRoots2
                                         .plus(root.times(root).times(root).times(b)).plus(root.times(root).times(c))
                                         .plus(root.times(d)).plus(e);
                                 double margin = Math.max(root.norm() / 2e5, 1E-300);
-                                assertEquals(a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e
-                                        + " = 0 : root is a root of the equation; re", 0, result.re, margin);
-                                assertEquals(a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e
-                                        + " = 0 : root is a root of the equation; im", 0, result.im, margin);
+                                assertEquals(0, result.re, margin, a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e
+                                                + " = 0 : root is a root of the equation; re");
+                                assertEquals(0, result.im, margin, a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e
+                                                + " = 0 : root is a root of the equation; im");
                             }
                             // System.out.println();
                         }
@@ -161,7 +161,7 @@ public class TestPolynomialRoots2
                         // System.out.print(a + " x^3 " + b + " x^2 + " + c + " x + " + d + " = 0");
                         Complex[] roots = PolynomialRoots2.cubicRootsAberthEhrlich(a, b, c, d);
                         int expectedNumber = a != 0 ? 3 : b != 0 ? 2 : c != 0 ? 1 : 0;
-                        assertEquals("number of roots", expectedNumber, roots.length);
+                        assertEquals(expectedNumber, roots.length, "number of roots");
                         // System.out.print(": " + expectedNumber + " solutions");
                         // Check that each root is indeed a root
                         for (Complex root : roots)
@@ -170,8 +170,8 @@ public class TestPolynomialRoots2
                             Complex result = root.times(root).times(root).times(a).plus(root.times(root).times(b))
                                     .plus(root.times(c)).plus(d);
                             double margin = Math.max(root.norm() / 1e6, 1E-300);
-                            assertEquals("root is a root of the equation; re", 0, result.re, margin);
-                            assertEquals("root is a root of the equation; im", 0, result.im, margin);
+                            assertEquals(0, result.re, margin, "root is a root of the equation; re");
+                            assertEquals(0, result.im, margin, "root is a root of the equation; im");
                         }
                         // System.out.println();
                     }
@@ -200,7 +200,7 @@ public class TestPolynomialRoots2
                             // System.out.print(a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e + " = 0");
                             Complex[] roots = PolynomialRoots2.quarticRootsAberthEhrlich(a, b, c, d, e);
                             int expectedNumber = a != 0 ? 4 : b != 0 ? 3 : c != 0 ? 2 : d != 0 ? 1 : 0;
-                            assertEquals("number of roots", expectedNumber, roots.length);
+                            assertEquals(expectedNumber, roots.length, "number of roots");
                             // System.out.print(": " + expectedNumber + " solutions");
                             // Check that each root is indeed a root
                             for (Complex root : roots)
@@ -211,10 +211,10 @@ public class TestPolynomialRoots2
                                         .plus(root.times(root).times(root).times(b)).plus(root.times(root).times(c))
                                         .plus(root.times(d)).plus(e);
                                 double margin = Math.max(root.norm() / 2e5, 1E-300);
-                                assertEquals(a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e
-                                        + " = 0 : root is a root of the equation; re", 0, result.re, margin);
-                                assertEquals(a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e
-                                        + " = 0 : root is a root of the equation; im", 0, result.im, margin);
+                                assertEquals(0, result.re, margin, a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e
+                                                + " = 0 : root is a root of the equation; re");
+                                assertEquals(0, result.im, margin, a + " x^4 + " + b + " x^3 + " + c + " x^2 + " + d + " x + " + e
+                                                + " = 0 : root is a root of the equation; im");
                             }
                             // System.out.println();
                         }
@@ -242,7 +242,7 @@ public class TestPolynomialRoots2
                         // System.out.print(a + " x^3 + " + b + " x^2 + " + c + " x + " + d + " = 0");
                         Complex[] roots = PolynomialRoots2.cubicRootsNewtonFactor(a, b, c, d);
                         int expectedNumber = a != 0 ? 3 : b != 0 ? 2 : c != 0 ? 1 : 0;
-                        assertEquals("number of roots", expectedNumber, roots.length);
+                        assertEquals(expectedNumber, roots.length, "number of roots");
                         // System.out.print(": " + expectedNumber + " solutions");
                         // Check that each root is indeed a root
                         for (Complex root : roots)
@@ -252,8 +252,8 @@ public class TestPolynomialRoots2
                                     .plus(root.times(c)).plus(d);
                             double margin = Math.max(root.norm() / 1e4, 1E-3);
                             String eq = a + " x^3 + " + b + " x^2 + " + c + " x + " + d + " = 0";
-                            assertEquals(eq + ", root=" + root + ", result=" + result + "; re", 0, result.re, margin);
-                            assertEquals(eq + ", root=" + root + ", result=" + result + "; im", 0, result.im, margin);
+                            assertEquals(0, result.re, margin, eq + ", root=" + root + ", result=" + result + "; re");
+                            assertEquals(0, result.im, margin, eq + ", root=" + root + ", result=" + result + "; im");
                         }
                         // System.out.println();
                     }

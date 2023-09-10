@@ -1,14 +1,14 @@
 package org.djutils.exceptions;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * The JUNIT Test for <code>Throw</code> class.
@@ -47,7 +47,7 @@ public class ThrowTest
         }
         catch (Exception e)
         {
-            assertTrue(e.getMessage() + " / " + message, e.getMessage().endsWith(message));
+            assertTrue(e.getMessage().endsWith(message), e.getMessage() + " / " + message);
         }
 
         String message1arg = "Throw error has occurred for %s. Correct";
@@ -58,7 +58,7 @@ public class ThrowTest
         }
         catch (Exception e)
         {
-            assertTrue(e.getMessage() + " / " + message1, e.getMessage().endsWith(message1));
+            assertTrue(e.getMessage().endsWith(message1), e.getMessage() + " / " + message1);
         }
 
         String message2arg = "Throw error %d has occurred for %s. Correct";
@@ -69,7 +69,7 @@ public class ThrowTest
         }
         catch (Exception e)
         {
-            assertTrue(e.getMessage() + " / " + message2, e.getMessage().endsWith(message2));
+            assertTrue(e.getMessage().endsWith(message2), e.getMessage() + " / " + message2);
         }
 
         String message3arg = "Throw error %4.1f has occurred for %s, value %d. Correct";
@@ -80,7 +80,7 @@ public class ThrowTest
         }
         catch (Exception e)
         {
-            assertTrue(e.getMessage() + " / " + message3, e.getMessage().endsWith(message3));
+            assertTrue(e.getMessage().endsWith(message3), e.getMessage() + " / " + message3);
         }
 
         String message4arg = "Throw error %4.1f has occurred for %s, hex=%h, value %d. Correct";
@@ -91,7 +91,7 @@ public class ThrowTest
         }
         catch (Exception e)
         {
-            assertTrue(e.getMessage() + " / " + message4, e.getMessage().endsWith(message4));
+            assertTrue(e.getMessage().endsWith(message4), e.getMessage() + " / " + message4);
         }
 
         // this should be okay
@@ -111,7 +111,7 @@ public class ThrowTest
         }
         catch (Exception e)
         {
-            assertTrue(e.getMessage() + " / " + message, e.getMessage().endsWith(message));
+            assertTrue(e.getMessage().endsWith(message), e.getMessage() + " / " + message);
         }
 
         try
@@ -120,7 +120,7 @@ public class ThrowTest
         }
         catch (Exception e)
         {
-            assertTrue(e.getMessage() + " / " + message1, e.getMessage().endsWith(message1));
+            assertTrue(e.getMessage().endsWith(message1), e.getMessage() + " / " + message1);
         }
 
         try
@@ -129,7 +129,7 @@ public class ThrowTest
         }
         catch (Exception e)
         {
-            assertTrue(e.getMessage() + " / " + message2, e.getMessage().endsWith(message2));
+            assertTrue(e.getMessage().endsWith(message2), e.getMessage() + " / " + message2);
         }
 
         try
@@ -138,7 +138,7 @@ public class ThrowTest
         }
         catch (Exception e)
         {
-            assertTrue(e.getMessage() + " / " + message3, e.getMessage().endsWith(message3));
+            assertTrue(e.getMessage().endsWith(message3), e.getMessage() + " / " + message3);
         }
 
         try
@@ -147,7 +147,7 @@ public class ThrowTest
         }
         catch (Exception e)
         {
-            assertTrue(e.getMessage() + " / " + message4, e.getMessage().endsWith(message4));
+            assertTrue(e.getMessage().endsWith(message4), e.getMessage() + " / " + message4);
         }
 
         // this should be okay
@@ -170,8 +170,8 @@ public class ThrowTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("exception is a RuntimeException", rte instanceof RuntimeException);
-            assertTrue("message is present", rte.getMessage().contains(message));
+            assertTrue(rte instanceof RuntimeException, "exception is a RuntimeException");
+            assertTrue(rte.getMessage().contains(message), "message is present");
         }
 
         String badFormatString = "FormatString with bad placeholder %f";
@@ -183,11 +183,11 @@ public class ThrowTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("exception is a RuntimeException", rte instanceof RuntimeException);
-            assertTrue("description is descriptive, despite error in format string",
-                    rte.getMessage().contains(badFormatString));
-            assertTrue("description is descriptive, despite error in format string",
-                    rte.getMessage().contains(notAFloatOrDouble));
+            assertTrue(rte instanceof RuntimeException, "exception is a RuntimeException");
+            assertTrue(rte.getMessage().contains(badFormatString),
+                    "description is descriptive, despite error in format string");
+            assertTrue(rte.getMessage().contains(notAFloatOrDouble),
+                    "description is descriptive, despite error in format string");
         }
 
         try
@@ -198,11 +198,11 @@ public class ThrowTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("exception is a RuntimeException", rte instanceof RuntimeException);
-            assertTrue("description is descriptive, despite error in format string",
-                    rte.getMessage().contains(badFormatString));
-            assertTrue("description is descriptive, despite error in format string",
-                    rte.getMessage().contains(notAFloatOrDouble));
+            assertTrue(rte instanceof RuntimeException, "exception is a RuntimeException");
+            assertTrue(rte.getMessage().contains(badFormatString),
+                    "description is descriptive, despite error in format string");
+            assertTrue(rte.getMessage().contains(notAFloatOrDouble),
+                    "description is descriptive, despite error in format string");
         }
 
         try
@@ -213,8 +213,8 @@ public class ThrowTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("exception is a RuntimeException", rte instanceof RuntimeException);
-            assertTrue("description is descriptive", rte.getMessage().contains(message));
+            assertTrue(rte instanceof RuntimeException, "exception is a RuntimeException");
+            assertTrue(rte.getMessage().contains(message), "description is descriptive");
         }
 
         Object result = Double.valueOf(123 / 456);
@@ -227,10 +227,10 @@ public class ThrowTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("exception is a RuntimeException", rte instanceof RuntimeException);
-            assertTrue("description is descriptive", rte.getMessage().contains("message"));
-            assertTrue("description is descriptive", rte.getMessage().contains(arg1));
-            assertTrue("description is descriptive", rte.getMessage().contains(arg2));
+            assertTrue(rte instanceof RuntimeException, "exception is a RuntimeException");
+            assertTrue(rte.getMessage().contains("message"), "description is descriptive");
+            assertTrue(rte.getMessage().contains(arg1), "description is descriptive");
+            assertTrue(rte.getMessage().contains(arg2), "description is descriptive");
         }
 
         String formatStringWith3PlaceHolders = "message %s %s %s";
@@ -241,11 +241,11 @@ public class ThrowTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("exception is a RuntimeException", rte instanceof RuntimeException);
-            assertTrue("description is descriptive", rte.getMessage().contains("message"));
-            assertTrue("description is descriptive", rte.getMessage().contains(arg1));
-            assertTrue("description is descriptive", rte.getMessage().contains(arg2));
-            assertTrue("description is descriptive", rte.getMessage().contains(arg3));
+            assertTrue(rte instanceof RuntimeException, "exception is a RuntimeException");
+            assertTrue(rte.getMessage().contains("message"), "description is descriptive");
+            assertTrue(rte.getMessage().contains(arg1), "description is descriptive");
+            assertTrue(rte.getMessage().contains(arg2), "description is descriptive");
+            assertTrue(rte.getMessage().contains(arg3), "description is descriptive");
         }
 
         String formatStringWith4PlaceHolders = "message %s %s %s %s";
@@ -256,12 +256,12 @@ public class ThrowTest
         }
         catch (RuntimeException rte)
         {
-            assertTrue("exception is a RuntimeException", rte instanceof RuntimeException);
-            assertTrue("description is descriptive", rte.getMessage().contains("message"));
-            assertTrue("description is descriptive", rte.getMessage().contains(arg1));
-            assertTrue("description is descriptive", rte.getMessage().contains(arg2));
-            assertTrue("description is descriptive", rte.getMessage().contains(arg3));
-            assertTrue("description is descriptive", rte.getMessage().contains(arg4));
+            assertTrue(rte instanceof RuntimeException, "exception is a RuntimeException");
+            assertTrue(rte.getMessage().contains("message"), "description is descriptive");
+            assertTrue(rte.getMessage().contains(arg1), "description is descriptive");
+            assertTrue(rte.getMessage().contains(arg2), "description is descriptive");
+            assertTrue(rte.getMessage().contains(arg3), "description is descriptive");
+            assertTrue(rte.getMessage().contains(arg4), "description is descriptive");
         }
     }
 
@@ -279,7 +279,7 @@ public class ThrowTest
         }
         catch (Exception e)
         {
-            assertTrue("The exception thrown by NoThrow.doSomething() is not an IOException", e instanceof IOException);
+            assertTrue(e instanceof IOException, "The exception thrown by NoThrow.doSomething() is not an IOException");
         }
     }
 

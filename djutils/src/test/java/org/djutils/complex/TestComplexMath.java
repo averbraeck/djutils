@@ -1,9 +1,9 @@
 package org.djutils.complex;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.djutils.base.AngleUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestComplexMath.java. <br>
@@ -25,11 +25,11 @@ public class TestComplexMath
     public void testSqrt()
     {
         // Start by testing the bloody obvious
-        assertEquals("square root of -1 is I", Complex.I, ComplexMath.sqrt(new Complex(-1)));
+        assertEquals(Complex.I, ComplexMath.sqrt(new Complex(-1)), "square root of -1 is I");
         Complex in = new Complex(0, -4);
         Complex c = ComplexMath.sqrt(in);
-        assertEquals("square root of " + in + " norm", 2, c.norm(), 0.000001);
-        assertEquals("square root of " + in + " phi", -Math.PI / 4, c.phi(), 0.000001);
+        assertEquals(2, c.norm(), 0.000001, "square root of " + in + " norm");
+        assertEquals(-Math.PI / 4, c.phi(), 0.000001, "square root of " + in + " phi");
         double[] values = new double[] {0, 1, 0.01, 100, Math.PI, -Math.E};
         for (double re : values)
         {
@@ -37,11 +37,11 @@ public class TestComplexMath
             {
                 in = new Complex(re, im);
                 c = ComplexMath.sqrt(in);
-                assertEquals("square root of " + in + " norm", Math.sqrt(in.norm()), c.norm(), 0.0001);
-                assertEquals("square root of " + in + " phi", in.phi() / 2, c.phi(), 0.0000001);
+                assertEquals(Math.sqrt(in.norm()), c.norm(), 0.0001, "square root of " + in + " norm");
+                assertEquals(in.phi() / 2, c.phi(), 0.0000001, "square root of " + in + " phi");
                 Complex c2 = c.times(c);
-                assertEquals("square of square root re", in.re, c2.re, 0.0001);
-                assertEquals("square of square root im", in.im, c2.im, 0.0001);
+                assertEquals(in.re, c2.re, 0.0001, "square of square root re");
+                assertEquals(in.im, c2.im, 0.0001, "square of square root im");
             }
         }
     }
@@ -59,11 +59,11 @@ public class TestComplexMath
             {
                 Complex in = new Complex(re, im);
                 Complex c = ComplexMath.cbrt(in);
-                assertEquals("cube root of " + in + " norm", Math.cbrt(in.norm()), c.norm(), 0.0001);
-                assertEquals("cube root of " + in + " phi", in.phi() / 3, c.phi(), 0.0000001);
+                assertEquals(Math.cbrt(in.norm()), c.norm(), 0.0001, "cube root of " + in + " norm");
+                assertEquals(in.phi() / 3, c.phi(), 0.0000001, "cube root of " + in + " phi");
                 Complex c3 = c.times(c).times(c);
-                assertEquals("cube of cube root re", in.re, c3.re, 0.0001);
-                assertEquals("cube of cube root im", in.im, c3.im, 0.0001);
+                assertEquals(in.re, c3.re, 0.0001, "cube of cube root re");
+                assertEquals(in.im, c3.im, 0.0001, "cube of cube root im");
             }
         }
     }
@@ -74,16 +74,16 @@ public class TestComplexMath
     @Test
     public void testExp()
     {
-        assertEquals("exp of 1 is e; re", Math.E, ComplexMath.exp(Complex.ONE).re, 0.000001);
-        assertEquals("exp of 1 is e; im", 0, ComplexMath.exp(Complex.ONE).im, 0.000001);
+        assertEquals(Math.E, ComplexMath.exp(Complex.ONE).re, 0.000001, "exp of 1 is e; re");
+        assertEquals(0, ComplexMath.exp(Complex.ONE).im, 0.000001, "exp of 1 is e; im");
         for (double re : new double[] {0, 1, Math.PI, -Math.E, 10, -10})
         {
             for (double im : new double[] {0, 0.1, Math.PI / 2, Math.PI, 5, -1, -Math.E, -50})
             {
                 Complex in = new Complex(re, im);
                 Complex out = ComplexMath.exp(in);
-                assertEquals("exp(" + in + ") re", Math.exp(re) * Math.cos(im), out.re, 0.01);
-                assertEquals("exp(" + in + ") im", Math.exp(re) * Math.sin(im), out.im, 0.01);
+                assertEquals(Math.exp(re) * Math.cos(im), out.re, 0.01, "exp(" + in + ") re");
+                assertEquals(Math.exp(re) * Math.sin(im), out.im, 0.01, "exp(" + in + ") im");
             }
         }
     }
@@ -94,19 +94,19 @@ public class TestComplexMath
     @Test
     public void testLog()
     {
-        assertEquals("ln(ONE) is ZERO", Complex.ZERO, ComplexMath.ln(Complex.ONE));
+        assertEquals(Complex.ZERO, ComplexMath.ln(Complex.ONE), "ln(ONE) is ZERO");
         Complex in = new Complex(Math.E);
         Complex out = ComplexMath.ln(in);
-        assertEquals("ln(e) is ONE re", 1, out.re, 0.00000001);
-        assertEquals("ln(e) is ONE im", 0, out.im, 0.00000001);
+        assertEquals(1, out.re, 0.00000001, "ln(e) is ONE re");
+        assertEquals(0, out.im, 0.00000001, "ln(e) is ONE im");
         for (double re : new double[] {0, 1, Math.PI, 10, -Math.E, -10})
         {
             for (double im : new double[] {0, 0.1, Math.PI / 2, Math.PI, 5, -1, -Math.E, -50})
             {
                 in = new Complex(re, im);
                 out = ComplexMath.ln(in);
-                assertEquals("ln(" + in + ") re", Math.log(in.norm()), out.re, 0.01);
-                assertEquals("ln(" + in + ") im", Math.atan2(im, re), out.im, 0.00001);
+                assertEquals(Math.log(in.norm()), out.re, 0.01, "ln(" + in + ") re");
+                assertEquals(Math.atan2(im, re), out.im, 0.00001, "ln(" + in + ") im");
             }
         }
     }
@@ -117,11 +117,11 @@ public class TestComplexMath
     @Test
     public void testSinCosTan()
     {
-        assertEquals("sin(ZERO) is ZERO", Complex.ZERO, ComplexMath.sin(Complex.ZERO));
+        assertEquals(Complex.ZERO, ComplexMath.sin(Complex.ZERO), "sin(ZERO) is ZERO");
         Complex c = ComplexMath.cos(Complex.ZERO);
-        assertEquals("cos(ZERO) is ONE: re", 1, c.re, 0.00001);
-        assertEquals("cos(ZERO) is ONE: im", 0, c.im, 0.00001);
-        assertEquals("tan(ZERO) is ZERO", Complex.ZERO, ComplexMath.tan(Complex.ZERO));
+        assertEquals(1, c.re, 0.00001, "cos(ZERO) is ONE: re");
+        assertEquals(0, c.im, 0.00001, "cos(ZERO) is ONE: im");
+        assertEquals(Complex.ZERO, ComplexMath.tan(Complex.ZERO), "tan(ZERO) is ZERO");
         double[] values = new double[] {0, 1, Math.PI, 10, -Math.E, -10};
         for (double re : values)
         {
@@ -129,20 +129,20 @@ public class TestComplexMath
             {
                 Complex in = new Complex(re, im);
                 Complex sin = ComplexMath.sin(in);
-                assertEquals("sin(" + in + ") re", Math.sin(re) * Math.cosh(im), sin.re, 0.0001);
-                assertEquals("sin(" + in + ") im", Math.cos(re) * Math.sinh(im), sin.im, 0.0001);
+                assertEquals(Math.sin(re) * Math.cosh(im), sin.re, 0.0001, "sin(" + in + ") re");
+                assertEquals(Math.cos(re) * Math.sinh(im), sin.im, 0.0001, "sin(" + in + ") im");
                 Complex cos = ComplexMath.cos(in);
-                assertEquals("cos(" + in + ") re", Math.cos(re) * Math.cosh(im), cos.re, 0.0001);
-                assertEquals("cos(" + in + ") im", -Math.sin(re) * Math.sinh(im), cos.im, 0.0001);
+                assertEquals(Math.cos(re) * Math.cosh(im), cos.re, 0.0001, "cos(" + in + ") re");
+                assertEquals(-Math.sin(re) * Math.sinh(im), cos.im, 0.0001, "cos(" + in + ") im");
                 Complex tan = ComplexMath.tan(in);
                 Complex div = sin.divideBy(cos);
-                assertEquals("div norm", sin.norm() / cos.norm(), div.norm(), 0.00001);
-                assertEquals("div phi", AngleUtil.normalizeAroundZero(sin.phi() - cos.phi()), div.phi(), 0.0001);
-                assertEquals("tan(" + in + ") re", div.re, tan.re, 0.0001);
-                assertEquals("tan(" + in + ") im", div.im, tan.im, 0.0001);
+                assertEquals(sin.norm() / cos.norm(), div.norm(), 0.00001, "div norm");
+                assertEquals(AngleUtil.normalizeAroundZero(sin.phi() - cos.phi()), div.phi(), 0.0001, "div phi");
+                assertEquals(div.re, tan.re, 0.0001, "tan(" + in + ") re");
+                assertEquals(div.im, tan.im, 0.0001, "tan(" + in + ") im");
                 Complex sin2plusCos2 = sin.times(sin).plus(cos.times(cos));
-                assertEquals("sin^2 + cos^2 re", 1, sin2plusCos2.re, 0.00001);
-                assertEquals("sin^2 + cos^2 im", 0, sin2plusCos2.im, 0.00001);
+                assertEquals(1, sin2plusCos2.re, 0.00001, "sin^2 + cos^2 re");
+                assertEquals(0, sin2plusCos2.im, 0.00001, "sin^2 + cos^2 im");
             }
         }
     }
@@ -164,25 +164,25 @@ public class TestComplexMath
                 Complex tanh = ComplexMath.tanh(in);
 
                 // System.out.println(" in=" + printComplex(in) + "\ntanh=" + printComplex(tanh));
-                assertEquals("sinh re", Math.sinh(re) * Math.cos(im), sinh.re, 0.0001);
-                assertEquals("sinh im", Math.cosh(re) * Math.sin(im), sinh.im, 0.0001);
-                assertEquals("cosh re", Math.cosh(re) * Math.cos(im), cosh.re, 0.0001);
-                assertEquals("cosh im", Math.sinh(re) * Math.sin(im), cosh.im, 0.0001);
-                assertEquals("tanh re", Math.sinh(2 * re) / (Math.cosh(2 * re) + Math.cos(2 * im)), tanh.re, 0.0001);
-                assertEquals("tanh im", Math.sin(2 * im) / (Math.cosh(2 * re) + Math.cos(2 * im)), tanh.im, 0.0001);
+                assertEquals(Math.sinh(re) * Math.cos(im), sinh.re, 0.0001, "sinh re");
+                assertEquals(Math.cosh(re) * Math.sin(im), sinh.im, 0.0001, "sinh im");
+                assertEquals(Math.cosh(re) * Math.cos(im), cosh.re, 0.0001, "cosh re");
+                assertEquals(Math.sinh(re) * Math.sin(im), cosh.im, 0.0001, "cosh im");
+                assertEquals(Math.sinh(2 * re) / (Math.cosh(2 * re) + Math.cos(2 * im)), tanh.re, 0.0001, "tanh re");
+                assertEquals(Math.sin(2 * im) / (Math.cosh(2 * re) + Math.cos(2 * im)), tanh.im, 0.0001, "tanh im");
                 // Alternate way to compute tanh
                 Complex alternateTanh = sinh.divideBy(cosh);
-                assertEquals("alternate tanh re", tanh.re, alternateTanh.re, 0.0001);
-                assertEquals("alternate tanh im", tanh.im, alternateTanh.im, 0.0001);
+                assertEquals(tanh.re, alternateTanh.re, 0.0001, "alternate tanh re");
+                assertEquals(tanh.im, alternateTanh.im, 0.0001, "alternate tanh im");
                 if (im == 0)
                 {
                     // Extra checks
-                    assertEquals("sinh of real re", Math.sinh(re), sinh.re, 0.0001);
-                    assertEquals("sinh of real im", 0, sinh.im, 0.0001);
-                    assertEquals("cosh of real re", Math.cosh(re), cosh.re, 0.0001);
-                    assertEquals("cosh of real im", 0, cosh.im, 0.0001);
-                    assertEquals("tanh of real re", Math.tanh(re), tanh.re, 0.0001);
-                    assertEquals("tahh of real im", 0, tanh.im, 0.0001);
+                    assertEquals(Math.sinh(re), sinh.re, 0.0001, "sinh of real re");
+                    assertEquals(0, sinh.im, 0.0001, "sinh of real im");
+                    assertEquals(Math.cosh(re), cosh.re, 0.0001, "cosh of real re");
+                    assertEquals(0, cosh.im, 0.0001, "cosh of real im");
+                    assertEquals(Math.tanh(re), tanh.re, 0.0001, "tanh of real re");
+                    assertEquals(0, tanh.im, 0.0001, "tahh of real im");
                 }
             }
         }
@@ -205,29 +205,29 @@ public class TestComplexMath
                 Complex atan = ComplexMath.atan(in);
                 // This is a lousy test; we only verify that asin(sin(asin(z)) roughly equals asin(z)
                 Complex asinOfSinOfAsin = ComplexMath.asin(ComplexMath.sin(asin));
-                assertEquals("asin re", asinOfSinOfAsin.re, asin.re, 0.0001);
-                assertEquals("asin im", asinOfSinOfAsin.im, asin.im, 0.0001);
+                assertEquals(asinOfSinOfAsin.re, asin.re, 0.0001, "asin re");
+                assertEquals(asinOfSinOfAsin.im, asin.im, 0.0001, "asin im");
                 Complex acosOfCosOfAcos = ComplexMath.acos(ComplexMath.cos(acos));
-                assertEquals("acos re", acosOfCosOfAcos.re, acos.re, 0.0001);
-                assertEquals("acos im", acosOfCosOfAcos.im, acos.im, 0.0001);
+                assertEquals(acosOfCosOfAcos.re, acos.re, 0.0001, "acos re");
+                assertEquals(acosOfCosOfAcos.im, acos.im, 0.0001, "acos im");
                 Complex atanOfTanOfAtan = ComplexMath.atan(ComplexMath.tan(atan));
                 if (Math.abs(atan.re) < 100)
                 {
-                    assertEquals("atan re", atanOfTanOfAtan.re, atan.re, 0.0001);
-                    assertEquals("atan im", atanOfTanOfAtan.im, atan.im, 0.0001);
+                    assertEquals(atanOfTanOfAtan.re, atan.re, 0.0001, "atan re");
+                    assertEquals(atanOfTanOfAtan.im, atan.im, 0.0001, "atan im");
                 }
                 if (im == 0 && re >= -1 && re <= 1)
                 {
                     // Extra checks
-                    assertEquals("asin of real in range -1, 1 re", Math.asin(re), asin.re, 0.00001);
-                    assertEquals("asin of real in range -1, 1 im", 0, asin.im, 0.00001);
-                    assertEquals("acos of real in range -1, 1 re", Math.acos(re), acos.re, 0.00001);
-                    assertEquals("acos of real in range -1, 1 im", 0, acos.im, 0.00001);
+                    assertEquals(Math.asin(re), asin.re, 0.00001, "asin of real in range -1, 1 re");
+                    assertEquals(0, asin.im, 0.00001, "asin of real in range -1, 1 im");
+                    assertEquals(Math.acos(re), acos.re, 0.00001, "acos of real in range -1, 1 re");
+                    assertEquals(0, acos.im, 0.00001, "acos of real in range -1, 1 im");
                 }
                 else if (im == 0)
                 {
-                    assertEquals("atan of real re", Math.atan(re), atan.re, 0.00001);
-                    assertEquals("atan of real, 1 im", 0, atan.im, 0.00001);
+                    assertEquals(Math.atan(re), atan.re, 0.00001, "atan of real re");
+                    assertEquals(0, atan.im, 0.00001, "atan of real, 1 im");
 
                 }
             }
@@ -251,16 +251,16 @@ public class TestComplexMath
                 Complex atanh = ComplexMath.atanh(in);
                 // This is a lousy test; we only verify that asinh(sinh(asinh(z)) roughly equals asinh(z)
                 Complex asinhOfSinhOfAsinh = ComplexMath.asinh(ComplexMath.sinh(asinh));
-                assertEquals("asinh re", asinhOfSinhOfAsinh.re, asinh.re, 0.0001);
-                assertEquals("asinh im", asinhOfSinhOfAsinh.im, asinh.im, 0.0001);
+                assertEquals(asinhOfSinhOfAsinh.re, asinh.re, 0.0001, "asinh re");
+                assertEquals(asinhOfSinhOfAsinh.im, asinh.im, 0.0001, "asinh im");
                 Complex acoshOfCoshOfAcosh = ComplexMath.acosh(ComplexMath.cosh(acosh));
                 if (im != 0 || re > 1.0)
                 {
                     // acosh is unstable around im == 0 && re <= 1.0; see <a
                     // href="https://mathworld.wolfram.com/InverseHyperbolicCosine.html">Wolfram mathWorld: Inverse Hyperbolic
                     // Cosine<//a> so we can't use this test there.
-                    assertEquals("acosh re", acoshOfCoshOfAcosh.re, acosh.re, 0.0001);
-                    assertEquals("acosh im", acoshOfCoshOfAcosh.im, acosh.im, 0.0001);
+                    assertEquals(acoshOfCoshOfAcosh.re, acosh.re, 0.0001, "acosh re");
+                    assertEquals(acoshOfCoshOfAcosh.im, acosh.im, 0.0001, "acosh im");
                 }
                 Complex atanhOfTanhOfAtanh = ComplexMath.atanh(ComplexMath.tanh(atanh));
                 if (im != 0 || re > -1.0 && re < 1.0)
@@ -272,25 +272,25 @@ public class TestComplexMath
                     if (im != 1 && im != -1 || re != 0)
                     {
                         // Also unstable around i and minus i as the atan function is unstable around -1
-                        assertEquals("atanh re", atanhOfTanhOfAtanh.re, atanh.re, 0.0001);
-                        assertEquals("atanh im", atanhOfTanhOfAtanh.im, atanh.im, 0.0001);
+                        assertEquals(atanhOfTanhOfAtanh.re, atanh.re, 0.0001, "atanh re");
+                        assertEquals(atanhOfTanhOfAtanh.im, atanh.im, 0.0001, "atanh im");
                     }
                 }
 
                 if (im == 0)
                 {
                     // Extra checks
-                    assertEquals("asinh of real re", doubleAsinh(re), asinh.re, 0.00001);
-                    assertEquals("asinh of real im", 0, asinh.im, 0.00001);
+                    assertEquals(doubleAsinh(re), asinh.re, 0.00001, "asinh of real re");
+                    assertEquals(0, asinh.im, 0.00001, "asinh of real im");
                     if (re >= 1.0)
                     {
-                        assertEquals("acosh of real re", doubleAcosh(re), acosh.re, 0.00001);
-                        assertEquals("acosh of real im", 0, acosh.im, 0.00001);
+                        assertEquals(doubleAcosh(re), acosh.re, 0.00001, "acosh of real re");
+                        assertEquals(0, acosh.im, 0.00001, "acosh of real im");
                     }
                     if (re > -1.0 && re < 1.0)
                     {
-                        assertEquals("atanh of real re", (Math.log(1 + re) - Math.log(1 - re)) / 2, atanh.re, 0.00001);
-                        assertEquals("acosh of real im", 0, atanh.im, 0.00001);
+                        assertEquals((Math.log(1 + re) - Math.log(1 - re)) / 2, atanh.re, 0.00001, "atanh of real re");
+                        assertEquals(0, atanh.im, 0.00001, "acosh of real im");
                     }
                 }
             }

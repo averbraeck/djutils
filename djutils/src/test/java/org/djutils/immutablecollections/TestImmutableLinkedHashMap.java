@@ -1,5 +1,8 @@
 package org.djutils.immutablecollections;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -7,8 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.djutils.immutablecollections.ImmutableMap.ImmutableEntry;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestImmutableLinkedHashMap.java.
@@ -44,7 +46,7 @@ public class TestImmutableLinkedHashMap
         ImmutableLinkedHashMap<Integer, Integer> ihs = new ImmutableLinkedHashMap<Integer, Integer>(map);
         testIntMap(map, new ImmutableLinkedHashMap<Integer, Integer>(ihs), Immutable.COPY);
         ImmutableLinkedHashMap<Integer, Integer> ilhm = new ImmutableLinkedHashMap<>(ihs, Immutable.COPY);
-        Assert.assertTrue("toString returns something descriptive", ilhm.toString().startsWith("ImmutableLinkedHashMap ["));
+        assertTrue(ilhm.toString().startsWith("ImmutableLinkedHashMap ["), "toString returns something descriptive");
     }
 
     /**
@@ -56,56 +58,56 @@ public class TestImmutableLinkedHashMap
     private void testIntMap(final Map<Integer, Integer> map, final ImmutableMap<Integer, Integer> imMap,
             final Immutable copyOrWrap)
     {
-        Assert.assertTrue(map.size() == 10);
-        Assert.assertTrue(imMap.size() == 10);
+        assertTrue(map.size() == 10);
+        assertTrue(imMap.size() == 10);
         for (int i = 0; i < 10; i++)
         {
-            Assert.assertTrue(imMap.containsKey(i + 1));
+            assertTrue(imMap.containsKey(i + 1));
         }
         for (int i = 0; i < 10; i++)
         {
-            Assert.assertTrue(imMap.containsValue(100 * (i + 1)));
+            assertTrue(imMap.containsValue(100 * (i + 1)));
         }
-        Assert.assertFalse(imMap.isEmpty());
-        Assert.assertFalse(imMap.containsKey(15));
-        Assert.assertFalse(imMap.containsValue(1500));
+        assertFalse(imMap.isEmpty());
+        assertFalse(imMap.containsKey(15));
+        assertFalse(imMap.containsValue(1500));
 
-        Assert.assertTrue(imMap.keySet().size() == 10);
-        Assert.assertTrue(imMap.values().size() == 10);
+        assertTrue(imMap.keySet().size() == 10);
+        assertTrue(imMap.values().size() == 10);
 
-        Assert.assertTrue(sameContent(map.keySet(), imMap.keySet().toSet()));
-        Assert.assertTrue(sameContent(map.values(), imMap.values().toCollection()));
-        Assert.assertTrue(sameContent(map.keySet(), imMap.keySet().toSet())); // cached
-        Assert.assertTrue(sameContent(map.values(), imMap.values().toCollection()));
+        assertTrue(sameContent(map.keySet(), imMap.keySet().toSet()));
+        assertTrue(sameContent(map.values(), imMap.values().toCollection()));
+        assertTrue(sameContent(map.keySet(), imMap.keySet().toSet())); // cached
+        assertTrue(sameContent(map.values(), imMap.values().toCollection()));
 
-        Assert.assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet()));
-        Assert.assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet())); // cached
+        assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet()));
+        assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet())); // cached
 
         if (copyOrWrap == Immutable.COPY)
         {
-            Assert.assertTrue(imMap.isCopy());
-            Assert.assertTrue(imMap.toMap().equals(map));
-            Assert.assertFalse(imMap.toMap() == map);
+            assertTrue(imMap.isCopy());
+            assertTrue(imMap.toMap().equals(map));
+            assertFalse(imMap.toMap() == map);
         }
         else
         {
-            Assert.assertTrue(imMap.isWrap());
-            Assert.assertTrue(imMap.toMap().equals(map));
-            Assert.assertFalse(imMap.toMap() == map); // this WRAP method returns a NEW list
+            assertTrue(imMap.isWrap());
+            assertTrue(imMap.toMap().equals(map));
+            assertFalse(imMap.toMap() == map); // this WRAP method returns a NEW list
         }
 
         Map<Integer, Integer> to = imMap.toMap();
-        Assert.assertTrue(map.equals(to));
+        assertTrue(map.equals(to));
 
         // modify the underlying data structure
         map.put(11, 1100);
         if (copyOrWrap == Immutable.COPY)
         {
-            Assert.assertTrue(imMap.size() == 10);
+            assertTrue(imMap.size() == 10);
         }
         else
         {
-            Assert.assertTrue(imMap.size() == 11);
+            assertTrue(imMap.size() == 11);
         }
     }
 

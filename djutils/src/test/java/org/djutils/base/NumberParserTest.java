@@ -1,13 +1,13 @@
 package org.djutils.base;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 import org.djutils.exceptions.Try;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * NumberParserTest tests the NumberParser.
@@ -928,42 +928,42 @@ public class NumberParserTest
                 NumberParser np = new NumberParser(trailing, lenient, locale);
                 double d = np.parseDouble(text);
                 String trailingText = text.substring(np.getTrailingPosition());
-                assertEquals(error, expectedAnswer, d, expectedAnswer / 1E6);
-                assertEquals(error, expectedTrailing, trailingText);
+                assertEquals(expectedAnswer, d, Math.abs(expectedAnswer / 1E6), error);
+                assertEquals(expectedTrailing, trailingText, error);
 
                 // test by setting a different locale
                 Locale.setDefault(Locale.TRADITIONAL_CHINESE);
                 np = new NumberParser(trailing, lenient, locale);
                 d = np.parseDouble(text);
                 trailingText = text.substring(np.getTrailingPosition());
-                assertEquals(error, expectedAnswer, d, expectedAnswer / 1E6);
-                assertEquals(error, expectedTrailing, trailingText);
-                assertEquals(error, Locale.TRADITIONAL_CHINESE, Locale.getDefault());
+                assertEquals(expectedAnswer, d, Math.abs(expectedAnswer / 1E6), error);
+                assertEquals(expectedTrailing, trailingText, error);
+                assertEquals(Locale.TRADITIONAL_CHINESE, Locale.getDefault(), error);
 
                 // test by using a default locale
                 Locale.setDefault(locale);
                 np = new NumberParser(trailing, lenient);
                 d = np.parseDouble(text);
                 trailingText = text.substring(np.getTrailingPosition());
-                assertEquals(error, expectedAnswer, d, expectedAnswer / 1E6);
-                assertEquals(error, expectedTrailing, trailingText);
+                assertEquals(expectedAnswer, d, Math.abs(expectedAnswer / 1E6), error);
+                assertEquals(expectedTrailing, trailingText, error);
 
                 // test chaining
                 Locale.setDefault(Locale.TRADITIONAL_CHINESE);
                 np = makeNumberParserChaining(lenient, trailing, locale);
                 d = np.parseDouble(text);
                 trailingText = text.substring(np.getTrailingPosition());
-                assertEquals(error, expectedAnswer, d, expectedAnswer / 1E6);
-                assertEquals(error, expectedTrailing, trailingText);
-                assertEquals(error, Locale.TRADITIONAL_CHINESE, Locale.getDefault());
+                assertEquals(expectedAnswer, d, Math.abs(expectedAnswer / 1E6), error);
+                assertEquals(expectedTrailing, trailingText, error);
+                assertEquals(Locale.TRADITIONAL_CHINESE, Locale.getDefault(), error);
 
                 // test chaining with a default locale
                 Locale.setDefault(locale);
                 np = makeNumberParserChaining(lenient, trailing, null);
                 d = np.parseDouble(text);
                 trailingText = text.substring(np.getTrailingPosition());
-                assertEquals(error, expectedAnswer, d, expectedAnswer / 1E6);
-                assertEquals(error, expectedTrailing, trailingText);
+                assertEquals(expectedAnswer, d, Math.abs(expectedAnswer / 1E6), error);
+                assertEquals(expectedTrailing, trailingText, error);
             }
             catch (NumberFormatException nfe)
             {
@@ -994,42 +994,42 @@ public class NumberParserTest
                 NumberParser np = new NumberParser(trailing, lenient, locale);
                 float f = np.parseFloat(text);
                 String trailingText = text.substring(np.getTrailingPosition());
-                assertEquals(error, expectedAnswer, f, expectedAnswer / 1E6f);
-                assertEquals(error, expectedTrailing, trailingText);
+                assertEquals(expectedAnswer, f, Math.abs(expectedAnswer / 1E6f), error);
+                assertEquals(expectedTrailing, trailingText, error);
 
                 // test by setting a different locale
                 Locale.setDefault(Locale.TRADITIONAL_CHINESE);
                 np = new NumberParser(trailing, lenient, locale);
                 f = np.parseFloat(text);
                 trailingText = text.substring(np.getTrailingPosition());
-                assertEquals(error, expectedAnswer, f, expectedAnswer / 1E6f);
-                assertEquals(error, expectedTrailing, trailingText);
-                assertEquals(error, Locale.TRADITIONAL_CHINESE, Locale.getDefault());
+                assertEquals(expectedAnswer, f, Math.abs(expectedAnswer / 1E6f), error);
+                assertEquals(expectedTrailing, trailingText, error);
+                assertEquals(Locale.TRADITIONAL_CHINESE, Locale.getDefault(), error);
 
                 // test by using a default locale
                 Locale.setDefault(locale);
                 np = new NumberParser(trailing, lenient);
                 f = np.parseFloat(text);
                 trailingText = text.substring(np.getTrailingPosition());
-                assertEquals(error, expectedAnswer, f, expectedAnswer / 1E6f);
-                assertEquals(error, expectedTrailing, trailingText);
+                assertEquals(expectedAnswer, f, Math.abs(expectedAnswer / 1E6f), error);
+                assertEquals(expectedTrailing, trailingText, error);
 
                 // test chaining
                 Locale.setDefault(Locale.TRADITIONAL_CHINESE);
                 np = makeNumberParserChaining(lenient, trailing, locale);
                 f = np.parseFloat(text);
                 trailingText = text.substring(np.getTrailingPosition());
-                assertEquals(error, expectedAnswer, f, expectedAnswer / 1E6f);
-                assertEquals(error, expectedTrailing, trailingText);
-                assertEquals(error, Locale.TRADITIONAL_CHINESE, Locale.getDefault());
+                assertEquals(expectedAnswer, f, Math.abs(expectedAnswer / 1E6f), error);
+                assertEquals(expectedTrailing, trailingText, error);
+                assertEquals(Locale.TRADITIONAL_CHINESE, Locale.getDefault(), error);
 
                 // test chaining with a default locale
                 Locale.setDefault(locale);
                 np = makeNumberParserChaining(lenient, trailing, null);
                 f = np.parseFloat(text);
                 trailingText = text.substring(np.getTrailingPosition());
-                assertEquals(error, expectedAnswer, f, expectedAnswer / 1E6f);
-                assertEquals(error, expectedTrailing, trailingText);
+                assertEquals(expectedAnswer, f, Math.abs(expectedAnswer / 1E6f), error);
+                assertEquals(expectedTrailing, trailingText, error);
             }
             catch (NumberFormatException nfe)
             {

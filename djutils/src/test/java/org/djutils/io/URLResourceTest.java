@@ -1,7 +1,8 @@
 package org.djutils.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,8 +20,7 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * URLResourceTest.java.
@@ -46,14 +46,12 @@ public class URLResourceTest
         File tempFile = File.createTempFile("filetest-", ".temp");
         String tempFilePath = tempFile.getAbsolutePath();
         URL url1 = URLResource.getResource(tempFilePath);
-        Assert.assertNotNull(url1);
-        Assert.assertEquals(new File(url1.getPath()).getAbsolutePath().replaceAll("\\\\", "/"),
-                tempFilePath.replaceAll("\\\\", "/"));
+        assertNotNull(url1);
+        assertEquals(new File(url1.getPath()).getAbsolutePath().replaceAll("\\\\", "/"), tempFilePath.replaceAll("\\\\", "/"));
 
         URL url2 = URLResource.getResource("/" + tempFilePath);
-        Assert.assertNotNull(url2);
-        Assert.assertEquals(new File(url2.getPath()).getAbsolutePath().replaceAll("\\\\", "/"),
-                tempFilePath.replaceAll("\\\\", "/"));
+        assertNotNull(url2);
+        assertEquals(new File(url2.getPath()).getAbsolutePath().replaceAll("\\\\", "/"), tempFilePath.replaceAll("\\\\", "/"));
     }
 
     /**
@@ -138,11 +136,11 @@ public class URLResourceTest
 
         String jarFilePath = jarFile.getAbsolutePath();
         URL jarURL = URLResource.getResource(jarFilePath);
-        Assert.assertNotNull(jarURL);
+        assertNotNull(jarURL);
         // System.out.println(jarFile.getAbsolutePath() + "!" + file1.getName());
         // URL jar1 = URLResource.getResource(jarFile.getAbsolutePath() + "!" + file1.getName());
         // System.out.println(jar1.toURI());
-        // Assert.assertNotNull(jar1);
+        // assertNotNull(jar1);
     }
 
     /**

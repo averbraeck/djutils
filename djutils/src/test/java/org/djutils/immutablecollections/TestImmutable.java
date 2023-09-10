@@ -1,9 +1,9 @@
 package org.djutils.immutablecollections;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the enum Immutable.
@@ -23,10 +23,10 @@ public class TestImmutable
     @Test
     public void testImmutable()
     {
-        assertTrue("isWrap", Immutable.WRAP.isWrap());
-        assertTrue("isCopy", Immutable.COPY.isCopy());
-        assertFalse("isWrap", Immutable.COPY.isWrap());
-        assertFalse("isCopy", Immutable.WRAP.isCopy());
+        assertTrue(Immutable.WRAP.isWrap(), "isWrap");
+        assertTrue(Immutable.COPY.isCopy(), "isCopy");
+        assertFalse(Immutable.COPY.isWrap(), "isWrap");
+        assertFalse(Immutable.WRAP.isCopy(), "isCopy");
         // That was easy.
     }
 

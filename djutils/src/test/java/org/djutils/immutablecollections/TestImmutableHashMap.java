@@ -1,9 +1,9 @@
 package org.djutils.immutablecollections;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,8 +13,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 
 import org.djutils.immutablecollections.ImmutableMap.ImmutableEntry;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestImmutableHashMap.java.
@@ -44,52 +43,52 @@ public class TestImmutableHashMap
             mutableMap1.put(key, Math.PI + key);
             mutableMap2.put(key, Math.PI + key);
         }
-        assertEquals("maps with same content should be equal", mutableMap1, mutableMap2);
-        assertEquals("maps with same content should have same hash code", mutableMap1.hashCode(), mutableMap2.hashCode());
+        assertEquals(mutableMap1, mutableMap2, "maps with same content should be equal");
+        assertEquals(mutableMap1.hashCode(), mutableMap2.hashCode(), "maps with same content should have same hash code");
         // No see that the same logic holds for our immutable maps
         ImmutableMap<Integer, Double> im1 = new ImmutableHashMap<>(mutableMap1, Immutable.WRAP);
         assertFalse(im1.isCopy());
         ImmutableMap<Integer, Double> im2 = new ImmutableHashMap<>(mutableMap2, Immutable.WRAP);
-        assertEquals("immutable maps with same content should be equal", im1, im2);
-        assertEquals("immutable maps with same content should have same hash code", im1.hashCode(), im2.hashCode());
+        assertEquals(im1, im2, "immutable maps with same content should be equal");
+        assertEquals(im1.hashCode(), im2.hashCode(), "immutable maps with same content should have same hash code");
         im2 = new ImmutableHashMap<>(mutableMap2, Immutable.COPY);
-        assertEquals("immutable maps with same content should be equal", im1, im2);
-        assertEquals("immutable maps with same content should be equal", im2, im1);
+        assertEquals(im1, im2, "immutable maps with same content should be equal");
+        assertEquals(im2, im1, "immutable maps with same content should be equal");
         im1 = new ImmutableHashMap<>(mutableMap1, Immutable.COPY);
         assertTrue(im1.isCopy());
-        assertEquals("immutable maps with same content should be equal", im1, im2);
-        assertEquals("immutable maps with same content should be equal", im2, im1);
+        assertEquals(im1, im2, "immutable maps with same content should be equal");
+        assertEquals(im2, im1, "immutable maps with same content should be equal");
         // test the short cut path in equals
-        assertEquals("immutable map is equal to itself", im1, im1);
-        assertFalse("immutable map is not equal to null", im1.equals(null));
-        assertFalse("immutable map is not equal to some totally different object", im1.equals("abc"));
+        assertEquals(im1, im1, "immutable map is equal to itself");
+        assertFalse(im1.equals(null), "immutable map is not equal to null");
+        assertFalse(im1.equals("abc"), "immutable map is not equal to some totally different object");
         mutableMap2.put(keys[0], Math.E);
-        assertFalse("altered mutable map differs", mutableMap1.equals(mutableMap2));
-        assertEquals("immutable map holding copy is not altered", im1, im2);
+        assertFalse(mutableMap1.equals(mutableMap2), "altered mutable map differs");
+        assertEquals(im1, im2, "immutable map holding copy is not altered");
         ImmutableMap<Integer, Double> im1Wrap = new ImmutableHashMap<>(mutableMap1, Immutable.WRAP);
-        assertEquals("another immutable map from the same collection is equal", im1, im1Wrap);
-        assertEquals("another immutable map from the same collection has same hash code", im1.hashCode(), im1Wrap.hashCode());
+        assertEquals(im1, im1Wrap, "another immutable map from the same collection is equal");
+        assertEquals(im1.hashCode(), im1Wrap.hashCode(), "another immutable map from the same collection has same hash code");
         mutableMap1.put(keys[0], -Math.PI);
-        assertFalse("wrapped immutable map re-checks content", im1.equals(im1Wrap));
-        assertFalse("wrapped immutable map re-checks content", im1Wrap.equals(im1));
-        assertFalse("wrapped immutable map re-computes hash code", im1.hashCode() == im1Wrap.hashCode());
-        assertFalse("wrapped immutable map re-computes hash code", im1Wrap.hashCode() == im1.hashCode());
+        assertFalse(im1.equals(im1Wrap), "wrapped immutable map re-checks content");
+        assertFalse(im1Wrap.equals(im1), "wrapped immutable map re-checks content");
+        assertFalse(im1.hashCode() == im1Wrap.hashCode(), "wrapped immutable map re-computes hash code");
+        assertFalse(im1Wrap.hashCode() == im1.hashCode(), "wrapped immutable map re-computes hash code");
         // Test the get method
-        assertNull("result of get for non-existent key returns null", im1.get(-123));
+        assertNull(im1.get(-123), "result of get for non-existent key returns null");
         for (Integer key : keys)
         {
-            assertEquals("Immutable map returns same as underlying mutable map", mutableMap1.get(key), im1Wrap.get(key));
+            assertEquals(mutableMap1.get(key), im1Wrap.get(key), "Immutable map returns same as underlying mutable map");
         }
         ImmutableMap<Integer, Double> map3 =
                 new ImmutableHashMap<>((ImmutableAbstractMap<Integer, Double>) im1Wrap, Immutable.WRAP);
-        assertEquals("immutable map constructed by wrapping another immutable map is equals", im1Wrap, map3);
+        assertEquals(im1Wrap, map3, "immutable map constructed by wrapping another immutable map is equals");
         map3 = new ImmutableHashMap<>((ImmutableAbstractMap<Integer, Double>) im1Wrap, Immutable.COPY);
-        assertEquals("immutable map constructed by copyinig another immutable map is equals", im1Wrap, map3);
-        assertTrue("toString returns something descriptive", map3.toString().startsWith("ImmutableHashMap ["));
-        assertEquals("get with default returns value for key when it exists", mutableMap1.get(keys[0]),
-                map3.getOrDefault(keys[0], Math.asin(2.0)));
-        assertEquals("get with default returns default for key when it does not exist", Math.asin(2.0),
-                map3.getOrDefault(-123, Math.asin(2.0)), 0.00001);
+        assertEquals(im1Wrap, map3, "immutable map constructed by copyinig another immutable map is equals");
+        assertTrue(map3.toString().startsWith("ImmutableHashMap ["), "toString returns something descriptive");
+        assertEquals(mutableMap1.get(keys[0]), map3.getOrDefault(keys[0], Math.asin(2.0)),
+                "get with default returns value for key when it exists");
+        assertEquals(Math.asin(2.0), map3.getOrDefault(-123, Math.asin(2.0)),
+                0.00001, "get with default returns default for key when it does not exist");
         final ImmutableMap<Integer, Double> map4 =
                 new ImmutableHashMap<Integer, Double>((ImmutableAbstractMap<Integer, Double>) im1Wrap, Immutable.WRAP);
         boolean[] tested = new boolean[keys.length];
@@ -98,7 +97,7 @@ public class TestImmutableHashMap
             @Override
             public void accept(final Integer t, final Double u)
             {
-                assertEquals("accept got a value that matches the key", u, map4.get(t), 0.0001);
+                assertEquals(u, map4.get(t), 0.0001, "accept got a value that matches the key");
                 int index = -1;
                 for (int i = 0; i < keys.length; i++)
                 {
@@ -107,14 +106,14 @@ public class TestImmutableHashMap
                         index = i;
                     }
                 }
-                assertTrue("key is contained in keys", index >= 0);
-                assertFalse("key has not appeared before", tested[index]);
+                assertTrue(index >= 0, "key is contained in keys");
+                assertFalse(tested[index], "key has not appeared before");
                 tested[index] = true;
             }
         });
         for (int index = 0; index < tested.length; index++)
         {
-            assertTrue("each index got tested", tested[index]);
+            assertTrue(tested[index], "each index got tested");
         }
     }
 
@@ -149,56 +148,56 @@ public class TestImmutableHashMap
     private void testIntMap(final Map<Integer, Integer> map, final ImmutableMap<Integer, Integer> imMap,
             final Immutable copyOrWrap)
     {
-        Assert.assertTrue(map.size() == 10);
-        Assert.assertTrue(imMap.size() == 10);
+        assertTrue(map.size() == 10);
+        assertTrue(imMap.size() == 10);
         for (int i = 0; i < 10; i++)
         {
-            Assert.assertTrue(imMap.containsKey(i + 1));
+            assertTrue(imMap.containsKey(i + 1));
         }
         for (int i = 0; i < 10; i++)
         {
-            Assert.assertTrue(imMap.containsValue(100 * (i + 1)));
+            assertTrue(imMap.containsValue(100 * (i + 1)));
         }
-        Assert.assertFalse(imMap.isEmpty());
-        Assert.assertFalse(imMap.containsKey(15));
-        Assert.assertFalse(imMap.containsValue(1500));
+        assertFalse(imMap.isEmpty());
+        assertFalse(imMap.containsKey(15));
+        assertFalse(imMap.containsValue(1500));
 
-        Assert.assertTrue(imMap.keySet().size() == 10);
-        Assert.assertTrue(imMap.values().size() == 10);
+        assertTrue(imMap.keySet().size() == 10);
+        assertTrue(imMap.values().size() == 10);
 
-        Assert.assertTrue(sameContent(map.keySet(), imMap.keySet().toSet()));
-        Assert.assertTrue(sameContent(map.values(), imMap.values().toCollection()));
-        Assert.assertTrue(sameContent(map.keySet(), imMap.keySet().toSet())); // cached
-        Assert.assertTrue(sameContent(map.values(), imMap.values().toCollection()));
+        assertTrue(sameContent(map.keySet(), imMap.keySet().toSet()));
+        assertTrue(sameContent(map.values(), imMap.values().toCollection()));
+        assertTrue(sameContent(map.keySet(), imMap.keySet().toSet())); // cached
+        assertTrue(sameContent(map.values(), imMap.values().toCollection()));
 
-        Assert.assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet()));
-        Assert.assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet())); // cached
+        assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet()));
+        assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet())); // cached
 
         if (copyOrWrap == Immutable.COPY)
         {
-            Assert.assertTrue(imMap.isCopy());
-            Assert.assertTrue(imMap.toMap().equals(map));
-            Assert.assertFalse(imMap.toMap() == map);
+            assertTrue(imMap.isCopy());
+            assertTrue(imMap.toMap().equals(map));
+            assertFalse(imMap.toMap() == map);
         }
         else
         {
-            Assert.assertTrue(imMap.isWrap());
-            Assert.assertTrue(imMap.toMap().equals(map));
-            Assert.assertFalse(imMap.toMap() == map); // this WRAP method returns a NEW list
+            assertTrue(imMap.isWrap());
+            assertTrue(imMap.toMap().equals(map));
+            assertFalse(imMap.toMap() == map); // this WRAP method returns a NEW list
         }
 
         Map<Integer, Integer> to = imMap.toMap();
-        Assert.assertTrue(map.equals(to));
+        assertTrue(map.equals(to));
 
         // modify the underlying data structure
         map.put(11, 1100);
         if (copyOrWrap == Immutable.COPY)
         {
-            Assert.assertTrue(imMap.size() == 10);
+            assertTrue(imMap.size() == 10);
         }
         else
         {
-            Assert.assertTrue(imMap.size() == 11);
+            assertTrue(imMap.size() == 11);
         }
     }
 

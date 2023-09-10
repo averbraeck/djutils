@@ -1,13 +1,13 @@
 package org.djutils.reflection;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -26,7 +26,7 @@ import java.util.Set;
 
 import org.djutils.exceptions.Try;
 import org.djutils.reflection.TestClass.InnerPublic;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * The JUNIT Test for <code>ClassUtil</code>.
@@ -727,8 +727,8 @@ public class ClassUtilTest
         Set<Integer> mSet = new HashSet<>();
         for (int m : modifiers)
         {
-            assertTrue("failed modifier for field " + clazz.getSimpleName() + "." + fieldName + " for modifier " + m,
-                    (field.getModifiers() & m) != 0);
+            assertTrue((field.getModifiers() & m) != 0,
+                    "failed modifier for field " + clazz.getSimpleName() + "." + fieldName + " for modifier " + m);
             mSet.add(m);
         }
         for (int p = 0; p < 12; p++)
@@ -736,8 +736,8 @@ public class ClassUtilTest
             int m = 1 << p;
             if (!mSet.contains(m))
             {
-                assertTrue("failed modifier for field " + clazz.getSimpleName() + "." + fieldName + " for bit " + p,
-                        (field.getModifiers() & m) == 0);
+                assertTrue((field.getModifiers() & m) == 0,
+                        "failed modifier for field " + clazz.getSimpleName() + "." + fieldName + " for bit " + p);
             }
         }
     }
@@ -757,8 +757,8 @@ public class ClassUtilTest
         for (int m : modifiers)
         {
             assertTrue(
-                    "failed modifier for field " + object.getClass().getSimpleName() + "." + fieldName + " for modifier " + m,
-                    (field.getModifiers() & m) != 0);
+                    (field.getModifiers() & m) != 0,
+                    "failed modifier for field " + object.getClass().getSimpleName() + "." + fieldName + " for modifier " + m);
             mSet.add(m);
         }
         for (int p = 0; p < 12; p++)
@@ -766,8 +766,8 @@ public class ClassUtilTest
             int m = 1 << p;
             if (!mSet.contains(m))
             {
-                assertTrue("failed modifier for field " + object.getClass().getSimpleName() + "." + fieldName + " for bit " + p,
-                        (field.getModifiers() & m) == 0);
+                assertTrue((field.getModifiers() & m) == 0,
+                        "failed modifier for field " + object.getClass().getSimpleName() + "." + fieldName + " for bit " + p);
             }
         }
     }
@@ -804,8 +804,8 @@ public class ClassUtilTest
         Set<Integer> mSet = new HashSet<>();
         for (int m : modifiers)
         {
-            assertTrue("failed modifier for method " + clazz.getSimpleName() + "." + methodName + " for modifier " + m,
-                    (method.getModifiers() & m) != 0);
+            assertTrue((method.getModifiers() & m) != 0,
+                    "failed modifier for method " + clazz.getSimpleName() + "." + methodName + " for modifier " + m);
             mSet.add(m);
         }
         for (int p = 0; p < 12; p++)
@@ -813,8 +813,8 @@ public class ClassUtilTest
             int m = 1 << p;
             if (!mSet.contains(m))
             {
-                assertTrue("failed modifier for method " + clazz.getSimpleName() + "." + methodName + " for bit " + p,
-                        (method.getModifiers() & m) == 0);
+                assertTrue((method.getModifiers() & m) == 0,
+                        "failed modifier for method " + clazz.getSimpleName() + "." + methodName + " for bit " + p);
             }
         }
     }
@@ -836,8 +836,8 @@ public class ClassUtilTest
         for (int m : modifiers)
         {
             assertTrue(
-                    "failed modifier for method " + object.getClass().getSimpleName() + "." + methodName + " for modifier " + m,
-                    (method.getModifiers() & m) != 0);
+                    (method.getModifiers() & m) != 0,
+                    "failed modifier for method " + object.getClass().getSimpleName() + "." + methodName + " for modifier " + m);
             mSet.add(m);
         }
         for (int p = 0; p < 12; p++)
@@ -846,8 +846,8 @@ public class ClassUtilTest
             if (!mSet.contains(m))
             {
                 assertTrue(
-                        "failed modifier for method " + object.getClass().getSimpleName() + "." + methodName + " for bit " + p,
-                        (method.getModifiers() & m) == 0);
+                        (method.getModifiers() & m) == 0,
+                        "failed modifier for method " + object.getClass().getSimpleName() + "." + methodName + " for bit " + p);
             }
         }
     }
@@ -869,8 +869,8 @@ public class ClassUtilTest
         for (int m : modifiers)
         {
             assertTrue(
-                    "failed modifier for method " + object.getClass().getSimpleName() + "." + methodName + " for modifier " + m,
-                    (method.getModifiers() & m) != 0);
+                    (method.getModifiers() & m) != 0,
+                    "failed modifier for method " + object.getClass().getSimpleName() + "." + methodName + " for modifier " + m);
             mSet.add(m);
         }
         for (int p = 0; p < 12; p++)
@@ -879,8 +879,8 @@ public class ClassUtilTest
             if (!mSet.contains(m))
             {
                 assertTrue(
-                        "failed modifier for method " + object.getClass().getSimpleName() + "." + methodName + " for bit " + p,
-                        (method.getModifiers() & m) == 0);
+                        (method.getModifiers() & m) == 0,
+                        "failed modifier for method " + object.getClass().getSimpleName() + "." + methodName + " for bit " + p);
             }
         }
     }

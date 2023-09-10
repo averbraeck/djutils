@@ -1,8 +1,8 @@
 package org.djutils.immutablecollections;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test immutable list.
@@ -38,64 +38,64 @@ public class TestImmutableList
     {
         Integer[] values = new Integer[] {2, 5, 1, 2, 4, 9};
         ImmutableList<Integer> il = new ImmutableArrayList<>(Arrays.asList(values));
-        assertTrue("toString returns something descriptive", il.toString().startsWith("ImmutableArrayList ["));
-        assertTrue("default is to copy", il.isCopy());
-        assertFalse("default is not to wrap", il.isWrap());
+        assertTrue(il.toString().startsWith("ImmutableArrayList ["), "toString returns something descriptive");
+        assertTrue(il.isCopy(), "default is to copy");
+        assertFalse(il.isWrap(), "default is not to wrap");
         ImmutableList<Integer> il2 = new ImmutableArrayList<>(Arrays.asList(values), Immutable.COPY);
-        assertTrue("COPY means copy", il2.isCopy());
+        assertTrue(il2.isCopy(), "COPY means copy");
         il2 = new ImmutableArrayList<>(Arrays.asList(values), Immutable.WRAP);
-        assertTrue("COPY means copy", il2.isWrap());
+        assertTrue(il2.isWrap(), "COPY means copy");
         il2 = new ImmutableArrayList<Integer>((ImmutableAbstractCollection<Integer>) il);
-        assertTrue("default is to copy", il2.isCopy());
-        assertEquals("has same size", il.size(), il2.size());
+        assertTrue(il2.isCopy(), "default is to copy");
+        assertEquals(il.size(), il2.size(), "has same size");
         il2 = new ImmutableArrayList<Integer>((ImmutableAbstractList<Integer>) il);
-        assertTrue("default is to copy", il2.isCopy());
-        assertEquals("has same size", il.size(), il2.size());
+        assertTrue(il2.isCopy(), "default is to copy");
+        assertEquals(il.size(), il2.size(), "has same size");
         il2 = new ImmutableArrayList<Integer>((ImmutableAbstractList<Integer>) il, Immutable.COPY);
-        assertTrue("COPY means copy", il2.isCopy());
-        assertEquals("has same size", il.size(), il2.size());
+        assertTrue(il2.isCopy(), "COPY means copy");
+        assertEquals(il.size(), il2.size(), "has same size");
         il2 = new ImmutableArrayList<Integer>((ImmutableAbstractList<Integer>) il, Immutable.WRAP);
-        assertTrue("WRAP means wrap", il2.isWrap());
-        assertFalse("WRAP is not copy", il2.isCopy());
-        assertTrue("Wrap is wrap", il2.isWrap());
-        assertEquals("has same size", il.size(), il2.size());
+        assertTrue(il2.isWrap(), "WRAP means wrap");
+        assertFalse(il2.isCopy(), "WRAP is not copy");
+        assertTrue(il2.isWrap(), "Wrap is wrap");
+        assertEquals(il.size(), il2.size(), "has same size");
         il2 = il.subList(2, 4);
-        assertEquals("sublist has length 2", 2, il2.size());
+        assertEquals(2, il2.size(), "sublist has length 2");
         for (int index = 0; index < il2.size(); index++)
         {
-            assertEquals("sub list element matches", values[index + 2], il2.get(index));
+            assertEquals(values[index + 2], il2.get(index), "sub list element matches");
         }
-        assertEquals("position of first 2", 0, il.indexOf(Integer.valueOf(2)));
-        assertEquals("position of first (and only) 4", 4, il.indexOf(Integer.valueOf(4)));
-        assertEquals("position of last 2", 3, il.lastIndexOf(Integer.valueOf(2)));
-        assertTrue("contains 1", il.contains(Integer.valueOf(1)));
-        assertFalse("does not contain 123", il.contains(Integer.valueOf(123)));
+        assertEquals(0, il.indexOf(Integer.valueOf(2)), "position of first 2");
+        assertEquals(4, il.indexOf(Integer.valueOf(4)), "position of first (and only) 4");
+        assertEquals(3, il.lastIndexOf(Integer.valueOf(2)), "position of last 2");
+        assertTrue(il.contains(Integer.valueOf(1)), "contains 1");
+        assertFalse(il.contains(Integer.valueOf(123)), "does not contain 123");
         Object[] outObject = il.toArray();
-        assertEquals("length of toArray matches size of what went in", values.length, outObject.length);
+        assertEquals(values.length, outObject.length, "length of toArray matches size of what went in");
         for (int index = 0; index < outObject.length; index++)
         {
-            assertEquals("objects in out match what went in", values[index], outObject[index]);
+            assertEquals(values[index], outObject[index], "objects in out match what went in");
         }
         Integer[] outInteger = il.toArray(new Integer[0]);
-        assertEquals("length of toArray matches size of what went in", values.length, outInteger.length);
+        assertEquals(values.length, outInteger.length, "length of toArray matches size of what went in");
         for (int index = 0; index < outInteger.length; index++)
         {
-            assertEquals("objects in out match what went in", values[index], outInteger[index]);
+            assertEquals(values[index], outInteger[index], "objects in out match what went in");
         }
         for (int index = 0; index < values.length; index++)
         {
-            assertEquals("values can be retrieved one by one", values[index], il.get(index));
+            assertEquals(values[index], il.get(index), "values can be retrieved one by one");
         }
         ImmutableIterator<Integer> ii = il.iterator();
-        assertTrue("toString method of iterator returns something descriptive",
-                ii.toString().startsWith("ImmutableIterator ["));
+        assertTrue(ii.toString().startsWith("ImmutableIterator ["),
+                "toString method of iterator returns something descriptive");
         for (int index = 0; index < values.length; index++)
         {
             assertTrue(ii.hasNext());
             Integer got = ii.next();
-            assertEquals("iterator returned next value", values[index], got);
+            assertEquals(values[index], got, "iterator returned next value");
         }
-        assertFalse("iterator has run out", ii.hasNext());
+        assertFalse(ii.hasNext(), "iterator has run out");
         this.sum = 0;
         il.forEach(new Consumer<Integer>()
         {
@@ -112,29 +112,29 @@ public class TestImmutableList
         {
             expectedSum += values[index];
         }
-        assertEquals("sum matches", expectedSum, this.sum);
-        assertTrue("contains all", il.containsAll(Arrays.asList(values)));
-        assertFalse("not contains all", il.containsAll(Arrays.asList(new Integer[] {1, 2, 3})));
-        assertTrue("contains all", il.containsAll(new ImmutableArrayList<Integer>(Arrays.asList(values))));
-        assertFalse("not contains all",
-                il.containsAll(new ImmutableArrayList<Integer>(Arrays.asList(new Integer[] {1, 2, 3}))));
+        assertEquals(expectedSum, this.sum, "sum matches");
+        assertTrue(il.containsAll(Arrays.asList(values)), "contains all");
+        assertFalse(il.containsAll(Arrays.asList(new Integer[] {1, 2, 3})), "not contains all");
+        assertTrue(il.containsAll(new ImmutableArrayList<Integer>(Arrays.asList(values))), "contains all");
+        assertFalse(il.containsAll(new ImmutableArrayList<Integer>(Arrays.asList(new Integer[] {1, 2, 3}))),
+                "not contains all");
         outObject = il.stream().toArray();
-        assertEquals("length of toArray matches size of what went in", values.length, outObject.length);
+        assertEquals(values.length, outObject.length, "length of toArray matches size of what went in");
         for (int index = 0; index < outObject.length; index++)
         {
-            assertEquals("objects in out match what went in", values[index], outObject[index]);
+            assertEquals(values[index], outObject[index], "objects in out match what went in");
         }
-        assertTrue("toString returns something descriptive", il.toString().startsWith("ImmutableArrayList ["));
-        assertEquals("size returns correct value", values.length, il.size());
-        assertFalse("list is not empty", il.isEmpty());
-        assertTrue("emty list reports it is empty", new ImmutableArrayList<Integer>(Arrays.asList(new Integer[] {})).isEmpty());
-        assertTrue("equal to itself", il.equals(il));
-        assertFalse("not equal to null", il.equals(null));
-        assertFalse("not equal to some string", il.equals("abc"));
-        assertFalse("not equal to a (shorter) sub list of itself", il.equals(il2));
+        assertTrue(il.toString().startsWith("ImmutableArrayList ["), "toString returns something descriptive");
+        assertEquals(values.length, il.size(), "size returns correct value");
+        assertFalse(il.isEmpty(), "list is not empty");
+        assertTrue(new ImmutableArrayList<Integer>(Arrays.asList(new Integer[] {})).isEmpty(), "emty list reports it is empty");
+        assertTrue(il.equals(il), "equal to itself");
+        assertFalse(il.equals(null), "not equal to null");
+        assertFalse(il.equals("abc"), "not equal to some string");
+        assertFalse(il.equals(il2), "not equal to a (shorter) sub list of itself");
         il2 = new ImmutableArrayList<Integer>(Arrays.asList(values));
-        assertTrue("equal to another one that has the exact same contents", il.equals(il2));
-        assertEquals("hashcodes should match", il.hashCode(), il2.hashCode());
+        assertTrue(il.equals(il2), "equal to another one that has the exact same contents");
+        assertEquals(il.hashCode(), il2.hashCode(), "hashcodes should match");
 
         // Testing the spliterator and parallelstream will have to wait until I understand how to write a unit test for that
     }
@@ -148,52 +148,52 @@ public class TestImmutableList
     {
         Integer[] values = new Integer[] {2, 5, 1, 12, 4, 9}; // all different
         ImmutableSet<Integer> is = new ImmutableHashSet<>(Arrays.asList(values));
-        assertTrue("default is to copy", is.isCopy());
-        assertFalse("default is not to wrap", is.isWrap());
+        assertTrue(is.isCopy(), "default is to copy");
+        assertFalse(is.isWrap(), "default is not to wrap");
         ImmutableSet<Integer> is2 = new ImmutableHashSet<>(new HashSet<Integer>(Arrays.asList(values)), Immutable.COPY);
-        assertTrue("COPY means copy", is2.isCopy());
+        assertTrue(is2.isCopy(), "COPY means copy");
         is2 = new ImmutableHashSet<>(new HashSet<Integer>(Arrays.asList(values)), Immutable.WRAP);
-        assertTrue("COPY means copy", is2.isWrap());
+        assertTrue(is2.isWrap(), "COPY means copy");
         is2 = new ImmutableHashSet<Integer>((ImmutableAbstractCollection<Integer>) is);
-        assertTrue("default is to copy", is2.isCopy());
-        assertEquals("has same size", is.size(), is2.size());
+        assertTrue(is2.isCopy(), "default is to copy");
+        assertEquals(is.size(), is2.size(), "has same size");
         is2 = new ImmutableHashSet<Integer>((ImmutableAbstractSet<Integer>) is);
-        assertTrue("default is to copy", is2.isCopy());
-        assertEquals("has same size", is.size(), is2.size());
+        assertTrue(is2.isCopy(), "default is to copy");
+        assertEquals(is.size(), is2.size(), "has same size");
         is2 = new ImmutableHashSet<Integer>((ImmutableAbstractSet<Integer>) is, Immutable.COPY);
-        assertTrue("COPY means copy", is2.isCopy());
-        assertEquals("has same size", is.size(), is2.size());
+        assertTrue(is2.isCopy(), "COPY means copy");
+        assertEquals(is.size(), is2.size(), "has same size");
         is2 = new ImmutableHashSet<Integer>((ImmutableAbstractSet<Integer>) is, Immutable.WRAP);
-        assertTrue("WRAP means wrap", is2.isWrap());
-        assertEquals("has same size", is.size(), is2.size());
-        assertTrue("contains 1", is.contains(Integer.valueOf(1)));
-        assertFalse("does not contain 123", is.contains(Integer.valueOf(123)));
+        assertTrue(is2.isWrap(), "WRAP means wrap");
+        assertEquals(is.size(), is2.size(), "has same size");
+        assertTrue(is.contains(Integer.valueOf(1)), "contains 1");
+        assertFalse(is.contains(Integer.valueOf(123)), "does not contain 123");
         Object[] outObject = is.toArray();
-        assertEquals("length of toArray matches size of what went in", values.length, outObject.length);
+        assertEquals(values.length, outObject.length, "length of toArray matches size of what went in");
         Set<Integer> verify = new HashSet<>(Arrays.asList(values));
         for (int index = 0; index < outObject.length; index++)
         {
-            assertTrue("Each object matches an object that went in", verify.remove(outObject[index]));
+            assertTrue(verify.remove(outObject[index]), "Each object matches an object that went in");
         }
-        assertTrue("All objects were matched", verify.isEmpty());
+        assertTrue(verify.isEmpty(), "All objects were matched");
         Integer[] outInteger = is.toArray(new Integer[0]);
-        assertEquals("length of toArray matches size of what went in", values.length, outInteger.length);
+        assertEquals(values.length, outInteger.length, "length of toArray matches size of what went in");
         verify = new HashSet<>(Arrays.asList(values));
         for (int index = 0; index < outInteger.length; index++)
         {
-            assertTrue("Each object matches an object that went in", verify.remove(outInteger[index]));
+            assertTrue(verify.remove(outInteger[index]), "Each object matches an object that went in");
         }
-        assertTrue("All objects were matched", verify.isEmpty());
+        assertTrue(verify.isEmpty(), "All objects were matched");
         verify = new HashSet<>(Arrays.asList(values));
         ImmutableIterator<Integer> ii = is.iterator();
         for (int index = 0; index < values.length; index++)
         {
             assertTrue(ii.hasNext());
             Integer got = ii.next();
-            assertTrue("Each object matches an object that went in", verify.remove(got));
+            assertTrue(verify.remove(got), "Each object matches an object that went in");
         }
-        assertFalse("iterator has run out", ii.hasNext());
-        assertTrue("All objects were matched", verify.isEmpty());
+        assertFalse(ii.hasNext(), "iterator has run out");
+        assertTrue(verify.isEmpty(), "All objects were matched");
         this.sum = 0;
         is.forEach(new Consumer<Integer>()
         {
@@ -210,41 +210,41 @@ public class TestImmutableList
         {
             expectedSum += values[index];
         }
-        assertEquals("sum matches", expectedSum, this.sum);
-        assertTrue("contains all", is.containsAll(Arrays.asList(values)));
-        assertFalse("not contains all", is.containsAll(Arrays.asList(new Integer[] {1, 2, 3})));
-        assertTrue("contains all", is.containsAll(new ImmutableArrayList<Integer>(Arrays.asList(values))));
-        assertFalse("not contains all",
-                is.containsAll(new ImmutableArrayList<Integer>(Arrays.asList(new Integer[] {1, 2, 3}))));
+        assertEquals(expectedSum, this.sum, "sum matches");
+        assertTrue(is.containsAll(Arrays.asList(values)), "contains all");
+        assertFalse(is.containsAll(Arrays.asList(new Integer[] {1, 2, 3})), "not contains all");
+        assertTrue(is.containsAll(new ImmutableArrayList<Integer>(Arrays.asList(values))), "contains all");
+        assertFalse(is.containsAll(new ImmutableArrayList<Integer>(Arrays.asList(new Integer[] {1, 2, 3}))),
+                "not contains all");
         outObject = is.stream().toArray();
-        assertEquals("length of toArray matches size of what went in", values.length, outObject.length);
+        assertEquals(values.length, outObject.length, "length of toArray matches size of what went in");
         verify = new HashSet<>(Arrays.asList(values));
         for (int index = 0; index < outObject.length; index++)
         {
-            assertTrue("Each object matches an object that went in", verify.remove(outObject[index]));
+            assertTrue(verify.remove(outObject[index]), "Each object matches an object that went in");
         }
-        assertTrue("All objects were matched", verify.isEmpty());
-        assertTrue("toString returns something descriptive", is.toString().startsWith("ImmutableHashSet ["));
-        assertEquals("size returns correct value", values.length, is.size());
-        assertFalse("list is not empty", is.isEmpty());
-        assertTrue("emty list reports it is empty", new ImmutableArrayList<Integer>(Arrays.asList(new Integer[] {})).isEmpty());
-        assertTrue("equal to itself", is.equals(is));
-        assertFalse("not equal to null", is.equals(null));
-        assertFalse("not equal to some string", is.equals("abc"));
+        assertTrue(verify.isEmpty(), "All objects were matched");
+        assertTrue(is.toString().startsWith("ImmutableHashSet ["), "toString returns something descriptive");
+        assertEquals(values.length, is.size(), "size returns correct value");
+        assertFalse(is.isEmpty(), "list is not empty");
+        assertTrue(new ImmutableArrayList<Integer>(Arrays.asList(new Integer[] {})).isEmpty(), "emty list reports it is empty");
+        assertTrue(is.equals(is), "equal to itself");
+        assertFalse(is.equals(null), "not equal to null");
+        assertFalse(is.equals("abc"), "not equal to some string");
         is2 = new ImmutableHashSet<Integer>(Arrays.asList(Arrays.copyOfRange(values, 2, 4)));
-        assertFalse("not equal to a (smaller) sub set of itself", is.equals(is2));
+        assertFalse(is.equals(is2), "not equal to a (smaller) sub set of itself");
         is2 = new ImmutableHashSet<Integer>(new HashSet<>(Arrays.asList(values)));
-        assertTrue("equal to another one that has the exact same contents", is.equals(is2));
-        assertEquals("hashcodes should match", is.hashCode(), is2.hashCode());
+        assertTrue(is.equals(is2), "equal to another one that has the exact same contents");
+        assertEquals(is.hashCode(), is2.hashCode(), "hashcodes should match");
         Collection<Integer> collection = is.toCollection();
-        assertEquals("to collection result has correct number of values", is.size(), collection.size());
+        assertEquals(is.size(), collection.size(), "to collection result has correct number of values");
         verify = new HashSet<>(Arrays.asList(values));
         Iterator<Integer> i = collection.iterator();
         while (i.hasNext())
         {
-            assertTrue("Each object matches an object that went in", verify.remove(i.next()));
+            assertTrue(verify.remove(i.next()), "Each object matches an object that went in");
         }
-        assertTrue("All objects were matched", verify.isEmpty());
+        assertTrue(verify.isEmpty(), "All objects were matched");
 
         // Testing the spliterator and parallelstream will have to wait until I understand how to write a unit test for that
     }

@@ -1,14 +1,14 @@
 package org.djutils.immutablecollections;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Comparator;
 import java.util.Map.Entry;
 
 import org.djutils.immutablecollections.ImmutableMap.ImmutableEntry;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the ImmutableEntry sub class.
@@ -31,9 +31,9 @@ public class TestImmutableEntry
     {
         MyEntry<String, String> entry = new MyEntry<>("Key", "Value");
         ImmutableEntry<String, String> ie = new ImmutableEntry<>(entry);
-        assertEquals("key must be retrievable", entry.getKey(), ie.getKey());
-        assertEquals("value must be retrievable", entry.getValue(), ie.getValue());
-        assertEquals("ie is equal to itself", ie, ie);
+        assertEquals(entry.getKey(), ie.getKey(), "key must be retrievable");
+        assertEquals(entry.getValue(), ie.getValue(), "value must be retrievable");
+        assertEquals(ie, ie, "ie is equal to itself");
         Comparator<ImmutableEntry<String, String>> keyComparator = ImmutableEntry.comparingByKey();
         Comparator<ImmutableEntry<String, String>> valueComparator = ImmutableEntry.comparingByValue();
         Comparator<String> reverseComparator = new Comparator<String>()
@@ -46,45 +46,45 @@ public class TestImmutableEntry
         };
         Comparator<ImmutableEntry<String, String>> ownKeyComparator = ImmutableEntry.comparingByKey(reverseComparator);
         Comparator<ImmutableEntry<String, String>> ownValueComparator = ImmutableEntry.comparingByValue(reverseComparator);
-        assertEquals("keyComparator returns 0 when comparing ie to itself", 0, keyComparator.compare(ie, ie));
-        assertEquals("valueComparator returns 0 when comparing ie to itself", 0, valueComparator.compare(ie, ie));
-        assertEquals("ownKeyComparator returns 0 when comparing ie to itself", 0, ownKeyComparator.compare(ie, ie));
-        assertEquals("ownValueComparator returns 0 when comparing ie to itself", 0, ownValueComparator.compare(ie, ie));
+        assertEquals(0, keyComparator.compare(ie, ie), "keyComparator returns 0 when comparing ie to itself");
+        assertEquals(0, valueComparator.compare(ie, ie), "valueComparator returns 0 when comparing ie to itself");
+        assertEquals(0, ownKeyComparator.compare(ie, ie), "ownKeyComparator returns 0 when comparing ie to itself");
+        assertEquals(0, ownValueComparator.compare(ie, ie), "ownValueComparator returns 0 when comparing ie to itself");
         ImmutableEntry<String, String> ie2 = new ImmutableEntry<>(entry);
-        assertEquals("ie has same hashCode as ie2 (which wraps the same MyEntry)", ie.hashCode(), ie2.hashCode());
-        assertEquals("ie is equal to another ie embedding the same entry", ie, ie2);
-        assertNotEquals("ie is not equal to null", ie, null);
-        assertNotEquals("ie is not equal to some unrelated object", ie, "Hello");
+        assertEquals(ie.hashCode(), ie2.hashCode(), "ie has same hashCode as ie2 (which wraps the same MyEntry)");
+        assertEquals(ie, ie2, "ie is equal to another ie embedding the same entry");
+        assertNotEquals(ie, null, "ie is not equal to null");
+        assertNotEquals(ie, "Hello", "ie is not equal to some unrelated object");
         ie2 = new ImmutableEntry<>(null);
-        assertNotEquals("ie is not equal to ie embedding null", ie, ie2);
-        assertNotEquals("ie embedding null is not equal to ie embedding non-null", ie2, ie);
+        assertNotEquals(ie, ie2, "ie is not equal to ie embedding null");
+        assertNotEquals(ie2, ie, "ie embedding null is not equal to ie embedding non-null");
         MyEntry<String, String> entry2 = new MyEntry<>("Key", "DifferentValue");
         ie2 = new ImmutableEntry<>(entry2);
-        assertNotEquals("ie is not equal to other ie embedding same key but different value", ie, ie2);
-        assertEquals("comparator returns 0 when comparing ie to other that has same key but different value", 0,
-                keyComparator.compare(ie, ie2));
+        assertNotEquals(ie, ie2, "ie is not equal to other ie embedding same key but different value");
+        assertEquals(0, keyComparator.compare(ie, ie2),
+                "comparator returns 0 when comparing ie to other that has same key but different value");
         entry2 = new MyEntry<>("Key2", "Value2");
         ie2 = new ImmutableEntry<>(entry2);
         System.out.println(ie + " " + ie2 + " " + keyComparator.compare(ie, ie2));
-        assertTrue("keyComparator returns < 0 when comparing objects that are in natural order",
-                keyComparator.compare(ie, ie2) < 0);
-        assertTrue("keyComparator returns > 0 when comparing objects that are in reverse natural order",
-                keyComparator.compare(ie2, ie) > 0);
-        assertTrue("ownKeyComparator returns > 0 when comparing objects that are in natural order",
-                ownKeyComparator.compare(ie, ie2) > 0);
-        assertTrue("ownKeyComparator returns < 0 when comparing objects that are in reverse natural order",
-                ownKeyComparator.compare(ie2, ie) < 0);
-        assertTrue("valueComparator returns < 0 when comparing objects that are in natural order",
-                valueComparator.compare(ie, ie2) < 0);
-        assertTrue("valueComparator returns > 0 when comparing objects that are in reverse natural order",
-                valueComparator.compare(ie2, ie) > 0);
-        assertTrue("ownValueComparator returns > 0 when comparing objects that are in natural order",
-                ownValueComparator.compare(ie, ie2) > 0);
-        assertTrue("ownValueComparator returns > 0 when comparing objects that are in reverse natural order",
-                ownValueComparator.compare(ie2, ie) < 0);
+        assertTrue(keyComparator.compare(ie, ie2) < 0,
+                "keyComparator returns < 0 when comparing objects that are in natural order");
+        assertTrue(keyComparator.compare(ie2, ie) > 0,
+                "keyComparator returns > 0 when comparing objects that are in reverse natural order");
+        assertTrue(ownKeyComparator.compare(ie, ie2) > 0,
+                "ownKeyComparator returns > 0 when comparing objects that are in natural order");
+        assertTrue(ownKeyComparator.compare(ie2, ie) < 0,
+                "ownKeyComparator returns < 0 when comparing objects that are in reverse natural order");
+        assertTrue(valueComparator.compare(ie, ie2) < 0,
+                "valueComparator returns < 0 when comparing objects that are in natural order");
+        assertTrue(valueComparator.compare(ie2, ie) > 0,
+                "valueComparator returns > 0 when comparing objects that are in reverse natural order");
+        assertTrue(ownValueComparator.compare(ie, ie2) > 0,
+                "ownValueComparator returns > 0 when comparing objects that are in natural order");
+        assertTrue(ownValueComparator.compare(ie2, ie) < 0,
+                "ownValueComparator returns > 0 when comparing objects that are in reverse natural order");
         ie = new ImmutableEntry<>(null);
         ie2 = new ImmutableEntry<>(null);
-        assertEquals("ie embedding null is equal to another that also embeds null", ie, ie2);
+        assertEquals(ie, ie2, "ie embedding null is equal to another that also embeds null");
     }
 
     /**

@@ -1,14 +1,14 @@
 package org.djutils.quadtree;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.awt.geom.Point2D;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * QuadTreeTests.java. <br>
@@ -30,10 +30,10 @@ public class QuadTreeTests
     public void testBasics()
     {
         QuadTree<Bounded> qt = new QuadTree<>(10, 10.0, 0, 0, 100, 100);
-        assertTrue("The toString method returns something descriptive", qt.toString().startsWith("QuadTree"));
+        assertTrue(qt.toString().startsWith("QuadTree"), "The toString method returns something descriptive");
         // System.out.println(qt);
-        assertEquals("quad tree is empty", 0, qt.size());
-        assertTrue("quad tree is empty", qt.isEmpty());
+        assertEquals(0, qt.size(), "quad tree is empty");
+        assertTrue(qt.isEmpty(), "quad tree is empty");
         Bounded[] b = new Bounded[324];
         for (int i = 0; i < b.length; i++)
         {
@@ -47,22 +47,22 @@ public class QuadTreeTests
             points[4] = new Point2D.Double(cX, cY + 6);
             b[i] = new Bounded(points, "Test object " + i);
             // System.out.println("Created shape " + b[i]);
-            assertFalse("shape is not yet in quad tree", qt.contains(b[i]));
-            assertTrue("adding the shape modifies the quad tree", qt.add(b[i]));
-            assertEquals("quad tree now contains one more item", i + 1, qt.size());
+            assertFalse(qt.contains(b[i]), "shape is not yet in quad tree");
+            assertTrue(qt.add(b[i]), "adding the shape modifies the quad tree");
+            assertEquals(i + 1, qt.size(), "quad tree now contains one more item");
             if (!qt.contains(b[i]))
             {
                 qt.contains(b[i]);
             }
-            assertTrue("shape was added", qt.contains(b[i]));
-            assertFalse("quad tree is not empty", qt.isEmpty());
+            assertTrue(qt.contains(b[i]), "shape was added");
+            assertFalse(qt.isEmpty(), "quad tree is not empty");
         }
         for (int i = 0; i < b.length; i++)
         {
-            assertTrue("shape is in the quad tree", qt.contains(b[i]));
-            assertFalse("Adding shape " + i + " again does not modify the quad tree", qt.add(b[i]));
+            assertTrue(qt.contains(b[i]), "shape is in the quad tree");
+            assertFalse(qt.add(b[i]), "Adding shape " + i + " again does not modify the quad tree");
         }
-        assertEquals("quad tree contains the expected number of shapes", b.length, qt.size());
+        assertEquals(b.length, qt.size(), "quad tree contains the expected number of shapes");
         // System.out.println(qt.toString(5));
         // System.out.println(qt.dump(" "));
         boolean[] seen = new boolean[b.length];
@@ -73,18 +73,18 @@ public class QuadTreeTests
             {
                 if (bounded.equals(b[i]))
                 {
-                    assertFalse("each one is returned only once", seen[i]);
+                    assertFalse(seen[i], "each one is returned only once");
                     seen[i] = true;
                     totalSeen++;
                 }
             }
         }
-        assertEquals("all elements have been returned", b.length, totalSeen);
+        assertEquals(b.length, totalSeen, "all elements have been returned");
         for (int i = 0; i < b.length; i++)
         {
-            assertFalse("Element can not be added again", qt.add(b[i]));
+            assertFalse(qt.add(b[i]), "Element can not be added again");
         }
-        assertEquals("quad tree contains the expected number of shapes", b.length, qt.size());
+        assertEquals(b.length, qt.size(), "quad tree contains the expected number of shapes");
 
         for (int i = -10; i < 100; i++)
         {
@@ -102,7 +102,7 @@ public class QuadTreeTests
                     {
                         if (bounded.equals(b[k]))
                         {
-                            assertFalse("each one is returned only once", seen[k]);
+                            assertFalse(seen[k], "each one is returned only once");
                             seen[k] = true;
                         }
                     }
@@ -112,7 +112,7 @@ public class QuadTreeTests
                 {
                     if (b[k].intersects(area))
                     {
-                        assertTrue("Intersecting object was found", seen[k]);
+                        assertTrue(seen[k], "Intersecting object was found");
                     }
                 }
             }
@@ -120,12 +120,12 @@ public class QuadTreeTests
 
         for (int i = 0; i < b.length; i++)
         {
-            assertTrue("quad tree changes on removal of object", qt.remove(b[i]));
-            assertEquals("size of quad tree is now one less", b.length - i - 1, qt.size());
-            assertFalse("shape is no longer in quad tree", qt.contains(b[i]));
+            assertTrue(qt.remove(b[i]), "quad tree changes on removal of object");
+            assertEquals(b.length - i - 1, qt.size(), "size of quad tree is now one less");
+            assertFalse(qt.contains(b[i]), "shape is no longer in quad tree");
         }
-        assertEquals("quad tree is empty when all shapes have been removed", 0, qt.size());
-        assertTrue("quad tree is empty", qt.isEmpty());
+        assertEquals(0, qt.size(), "quad tree is empty when all shapes have been removed");
+        assertTrue(qt.isEmpty(), "quad tree is empty");
     }
 
 }

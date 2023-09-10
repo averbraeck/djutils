@@ -1,14 +1,14 @@
 package org.djutils.traceverifier;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Test the TraceVerifier class. <br>
@@ -24,9 +24,9 @@ public class TraceVerifierTest
 {
 
     /** Temporary directory that should be deleted by Junit at end of test. */
-    @Rule
-    public TemporaryFolder testDir = new TemporaryFolder();
-
+    @TempDir
+    private Path testDir;
+    
     /**
      * Test the TraceVerifier class.
      * @throws IOException if that happens uncaught, this test has failed.
@@ -46,10 +46,10 @@ public class TraceVerifierTest
         }
 
         // System.out.println("testdir is " + this.testDir.getRoot());
-        String traceFileName = this.testDir.getRoot().getCanonicalPath() + File.separator + "traceFile.txt";
+        String traceFileName = this.testDir.toString() + File.separator + "traceFile.txt";
 
         TraceVerifier tv = new TraceVerifier(traceFileName);
-        assertTrue("toString returns something descriptive", tv.toString().startsWith("TraceVerifier"));
+        assertTrue(tv.toString().startsWith("TraceVerifier"), "toString returns something descriptive");
         // Trace some things
         tv.sample("sample 1", "state 1");
         tv.sample("sample 2", "state 2");
@@ -65,8 +65,8 @@ public class TraceVerifierTest
         catch (TraceVerifierException re)
         {
             // exception expected
-            assertTrue("Got wrong message: " + re.getMessage() + " of exception " + re.getClass(),
-                    re.getMessage().startsWith("Discrepancy found"));
+            assertTrue(re.getMessage().startsWith("Discrepancy found"),
+                    "Got wrong message: " + re.getMessage() + " of exception " + re.getClass());
         }
         try
         {
@@ -76,8 +76,8 @@ public class TraceVerifierTest
         catch (TraceVerifierException re)
         {
             // exception expected
-            assertTrue("Got wrong message: " + re.getMessage() + " of exception " + re.getClass(),
-                    re.getMessage().startsWith("Discrepancy found"));
+            assertTrue(re.getMessage().startsWith("Discrepancy found"),
+                    "Got wrong message: " + re.getMessage() + " of exception " + re.getClass());
         }
         tv.sample("sample 3", "state 3");
         tv.close();

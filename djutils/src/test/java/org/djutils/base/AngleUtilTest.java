@@ -1,10 +1,10 @@
 package org.djutils.base;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * AngleUtilTest tests the angle normalization methods in AngleUtil. <br>
@@ -190,28 +190,28 @@ public class AngleUtilTest
                     {
                         AngleUtil.interpolateShortest(angle1, angle2, fraction);
                     }
-                    assertTrue("diff of normalized is less than Pi * fraction", check1 <= Math.PI * fraction + 0.000001);
-                    assertTrue("diff of normalized complement is less than 2*Pi/3",
-                            check2 <= Math.PI * (1 - fraction) + 0.000001);
+                    assertTrue(check1 <= Math.PI * fraction + 0.000001, "diff of normalized is less than Pi * fraction");
+                    assertTrue(check2 <= Math.PI * (1 - fraction) + 0.000001,
+                            "diff of normalized complement is less than 2*Pi/3");
                     if (angle1 != angle2)
                     {
                         if (Math.abs(check1) > 0.00001 && Math.abs(check2) > 0.00001)
                         {
-                            assertEquals("angle should be divided in parts with ratio fraction", fraction / (1 - fraction),
-                                    check1 / check2, 0.0001);
+                            assertEquals(fraction / (1 - fraction), check1 / check2,
+                                    0.0001, "angle should be divided in parts with ratio fraction");
                         }
                     }
                     else
                     {
-                        assertEquals("if angles are identical; both parts are zero ", 0, check1, 1e-10);
-                        assertEquals("if angles are identical; both parts are zero ", 0, check2, 1e-10);
+                        assertEquals(0, check1, 1e-10, "if angles are identical; both parts are zero ");
+                        assertEquals(0, check2, 1e-10, "if angles are identical; both parts are zero ");
                     }
                 }
             }
         }
         // Test extrapolation lightly
-        assertEquals("extrapolate at 2 of 0.2, 0.3", 0.4, AngleUtil.interpolateShortest(0.2, 0.3, 2), 0.00001);
-        assertEquals("extrapolate at 01 of 0.2, 0.3", 0.1, AngleUtil.interpolateShortest(0.2, 0.3, -1), 0.00001);
+        assertEquals(0.4, AngleUtil.interpolateShortest(0.2, 0.3, 2), 0.00001, "extrapolate at 2 of 0.2, 0.3");
+        assertEquals(0.1, AngleUtil.interpolateShortest(0.2, 0.3, -1), 0.00001, "extrapolate at 01 of 0.2, 0.3");
     }
 
     /**

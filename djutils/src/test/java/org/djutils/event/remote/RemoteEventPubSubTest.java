@@ -1,9 +1,9 @@
 package org.djutils.event.remote;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -17,8 +17,8 @@ import java.util.List;
 
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
-import org.djutils.event.LocalEventProducer;
 import org.djutils.event.EventType;
+import org.djutils.event.LocalEventProducer;
 import org.djutils.event.TimedEvent;
 import org.djutils.event.reference.Reference;
 import org.djutils.event.reference.ReferenceType;
@@ -28,7 +28,7 @@ import org.djutils.exceptions.Try;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
 import org.djutils.rmi.RmiRegistry;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * RemoteEventTest makes some very basic tests for the RemoteEventListener and RemoteEventProducer.

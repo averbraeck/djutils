@@ -1,5 +1,11 @@
 package org.djutils.immutablecollections;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -8,8 +14,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.djutils.immutablecollections.ImmutableMap.ImmutableEntry;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestImmutableTreeMap.java.
@@ -48,63 +53,63 @@ public class TestImmutableTreeMap
 
         ImmutableTreeMap<Integer, Integer> itm = new ImmutableTreeMap<>(isMap, Immutable.WRAP);
         ImmutableTreeMap<Integer, Integer> itmw = new ImmutableTreeMap<>(itm, Immutable.WRAP);
-        Assert.assertEquals("wrapper is equal to wrapped", itm, itmw);
+        assertEquals(itm, itmw, "wrapper is equal to wrapped");
         itmw = new ImmutableTreeMap<>(itm, Immutable.COPY);
-        Assert.assertEquals("copied is equal to wrapped", itm, itmw);
-        Assert.assertEquals("wrapped is equal to copied", itmw, itm);
-        Assert.assertTrue("toString returns something descriptive", itm.toString().startsWith("ImmutableTreeMap ["));
+        assertEquals(itm, itmw, "copied is equal to wrapped");
+        assertEquals(itmw, itm, "wrapped is equal to copied");
+        assertTrue(itm.toString().startsWith("ImmutableTreeMap ["), "toString returns something descriptive");
         ImmutableTreeMap<Integer, Integer> subMap = (ImmutableTreeMap<Integer, Integer>) itm.subMap(3, 5);
-        Assert.assertEquals("size is 2", 2, subMap.size());
-        Assert.assertEquals("first key is 3", 3, subMap.firstKey(), 0);
-        Assert.assertEquals("last key is 4", 4, subMap.lastKey(), 0);
-        Assert.assertNull("sub map has no value for key 2", subMap.get(2));
-        Assert.assertNull("sub map has no value for key 5", subMap.get(5));
-        Assert.assertEquals("value for key 3 is 300", 300, subMap.get(3), 0);
-        Assert.assertEquals("value for key 4 is 400", 400, subMap.get(4), 0);
+        assertEquals(2, subMap.size(), "size is 2");
+        assertEquals(3, subMap.firstKey(), 0, "first key is 3");
+        assertEquals(4, subMap.lastKey(), 0, "last key is 4");
+        assertNull(subMap.get(2), "sub map has no value for key 2");
+        assertNull(subMap.get(5), "sub map has no value for key 5");
+        assertEquals(300, subMap.get(3), 0, "value for key 3 is 300");
+        assertEquals(400, subMap.get(4), 0, "value for key 4 is 400");
         subMap = (ImmutableTreeMap<Integer, Integer>) itm.subMap(2, true, 6, true);
-        Assert.assertEquals("first key is 2", 2, subMap.firstKey(), 0);
-        Assert.assertEquals("last key is 6", 6, subMap.lastKey(), 0);
+        assertEquals(2, subMap.firstKey(), 0, "first key is 2");
+        assertEquals(6, subMap.lastKey(), 0, "last key is 6");
         ImmutableTreeMap<Integer, Integer> headMap = (ImmutableTreeMap<Integer, Integer>) itm.headMap(5);
-        Assert.assertEquals("headMap has 4 entries", 4, headMap.size());
-        Assert.assertEquals("first key is 1", 1, headMap.firstKey(), 0);
-        Assert.assertEquals("last key is 4", 4, headMap.lastKey(), 0);
+        assertEquals(4, headMap.size(), "headMap has 4 entries");
+        assertEquals(1, headMap.firstKey(), 0, "first key is 1");
+        assertEquals(4, headMap.lastKey(), 0, "last key is 4");
         headMap = (ImmutableTreeMap<Integer, Integer>) itm.headMap(5, true);
-        Assert.assertEquals("headMap has 5 entries", 5, headMap.size());
-        Assert.assertEquals("first key is 1", 1, headMap.firstKey(), 0);
-        Assert.assertEquals("last key is 5", 5, headMap.lastKey(), 0);
+        assertEquals(5, headMap.size(), "headMap has 5 entries");
+        assertEquals(1, headMap.firstKey(), 0, "first key is 1");
+        assertEquals(5, headMap.lastKey(), 0, "last key is 5");
         ImmutableTreeMap<Integer, Integer> tailMap = (ImmutableTreeMap<Integer, Integer>) itm.tailMap(5);
-        Assert.assertEquals("tailMap has 6 entries", 6, tailMap.size());
-        Assert.assertEquals("first key is 5", 5, tailMap.firstKey(), 0);
+        assertEquals(6, tailMap.size(), "tailMap has 6 entries");
+        assertEquals(5, tailMap.firstKey(), 0, "first key is 5");
         tailMap = (ImmutableTreeMap<Integer, Integer>) itm.tailMap(5, false);
-        Assert.assertEquals("tailMap has 5 entries", 5, tailMap.size());
-        Assert.assertEquals("first key is 6", 6, tailMap.firstKey(), 0);
-        Assert.assertNull("there is no lower key than 1", itm.lowerKey(1));
-        Assert.assertEquals("highest key lower than 5 is 4", 4, itm.lowerKey(5), 0);
-        Assert.assertEquals("highest key lower than 999 is 10", 10, itm.lowerKey(999), 0);
-        Assert.assertEquals("highest key lower than, or equal to 5 is s", 5, itm.floorKey(5), 0);
-        Assert.assertNull("highest key lower than, or equal to 0 does not exist", itm.floorKey(0));
-        Assert.assertEquals("lowest key equal or bigger than 3 is 3", 3, itm.ceilingKey(3), 0);
-        Assert.assertNull("lowest key equal or bigger than 11 does not exist", itm.ceilingKey(11));
-        Assert.assertEquals("lowest key bigger than -10 is 1", 1, itm.higherKey(-10), 0);
-        Assert.assertEquals("lowest key bigger than 5 is 6", 6, itm.higherKey(5), 0);
-        Assert.assertNull("lowest key bigger than 10 does not exist", itm.higherKey(10));
+        assertEquals(5, tailMap.size(), "tailMap has 5 entries");
+        assertEquals(6, tailMap.firstKey(), 0, "first key is 6");
+        assertNull(itm.lowerKey(1), "there is no lower key than 1");
+        assertEquals(4, itm.lowerKey(5), 0, "highest key lower than 5 is 4");
+        assertEquals(10, itm.lowerKey(999), 0, "highest key lower than 999 is 10");
+        assertEquals(5, itm.floorKey(5), 0, "highest key lower than, or equal to 5 is s");
+        assertNull(itm.floorKey(0), "highest key lower than, or equal to 0 does not exist");
+        assertEquals(3, itm.ceilingKey(3), 0, "lowest key equal or bigger than 3 is 3");
+        assertNull(itm.ceilingKey(11), "lowest key equal or bigger than 11 does not exist");
+        assertEquals(1, itm.higherKey(-10), 0, "lowest key bigger than -10 is 1");
+        assertEquals(6, itm.higherKey(5), 0, "lowest key bigger than 5 is 6");
+        assertNull(itm.higherKey(10), "lowest key bigger than 10 does not exist");
         ImmutableTreeMap<Integer, Integer> descending = (ImmutableTreeMap<Integer, Integer>) itm.descendingMap();
-        Assert.assertEquals("descending map has same size", itm.size(), descending.size());
+        assertEquals(itm.size(), descending.size(), "descending map has same size");
         ImmutableSet<ImmutableEntry<Integer, Integer>> entrySet = itm.entrySet();
         Iterator<ImmutableEntry<Integer, Integer>> iterator = entrySet.iterator();
         ImmutableEntry<Integer, Integer> sampleEntry = iterator.next();
-        Assert.assertEquals("ImmutableEntry is equal to itself", sampleEntry, sampleEntry);
-        Assert.assertFalse("entry is not equal to null", sampleEntry.equals(null));
-        Assert.assertFalse("entry is not equal to some other object", sampleEntry.equals("ABC"));
+        assertEquals(sampleEntry, sampleEntry, "ImmutableEntry is equal to itself");
+        assertFalse(sampleEntry.equals(null), "entry is not equal to null");
+        assertFalse(sampleEntry.equals("ABC"), "entry is not equal to some other object");
         ImmutableEntry<Integer, Integer> differentEntry = iterator.next();
-        Assert.assertFalse("entry is not equal to the next entry", sampleEntry.equals(differentEntry));
+        assertFalse(sampleEntry.equals(differentEntry), "entry is not equal to the next entry");
         ImmutableEntry<Integer, Integer> copy = new ImmutableEntry<Integer, Integer>(isMap.firstEntry());
-        Assert.assertEquals("wrapped entry is equal to self made entry containing same entry", sampleEntry, copy);
+        assertEquals(sampleEntry, copy, "wrapped entry is equal to self made entry containing same entry");
         ImmutableEntry<Integer, Integer> containsNull = new ImmutableEntry<Integer, Integer>(null);
-        Assert.assertFalse("wrapped entry is not equal to self made entry contaning null", sampleEntry.equals(containsNull));
-        Assert.assertFalse("Self made entry containing null is not equal to sampleEntry", containsNull.equals(sampleEntry));
+        assertFalse(sampleEntry.equals(containsNull), "wrapped entry is not equal to self made entry contaning null");
+        assertFalse(containsNull.equals(sampleEntry), "Self made entry containing null is not equal to sampleEntry");
         ImmutableEntry<Integer, Integer> otherContainsNull = new ImmutableEntry<Integer, Integer>(null);
-        Assert.assertEquals("entry containing null is equal to another entry containing null", containsNull, otherContainsNull);
+        assertEquals(containsNull, otherContainsNull, "entry containing null is equal to another entry containing null");
 
     }
 
@@ -117,59 +122,59 @@ public class TestImmutableTreeMap
     private void testIntMap(final NavigableMap<Integer, Integer> map, final ImmutableTreeMap<Integer, Integer> imMap,
             final Immutable copyOrWrap)
     {
-        Assert.assertTrue(map.size() == 10);
-        Assert.assertTrue(imMap.size() == 10);
+        assertTrue(map.size() == 10);
+        assertTrue(imMap.size() == 10);
         for (int i = 0; i < 10; i++)
         {
-            Assert.assertTrue(imMap.containsKey(i + 1));
+            assertTrue(imMap.containsKey(i + 1));
         }
         for (int i = 0; i < 10; i++)
         {
-            Assert.assertTrue(imMap.containsValue(100 * (i + 1)));
+            assertTrue(imMap.containsValue(100 * (i + 1)));
         }
-        Assert.assertFalse(imMap.isEmpty());
-        Assert.assertFalse(imMap.containsKey(15));
-        Assert.assertFalse(imMap.containsValue(1500));
+        assertFalse(imMap.isEmpty());
+        assertFalse(imMap.containsKey(15));
+        assertFalse(imMap.containsValue(1500));
 
-        Assert.assertTrue(imMap.keySet().size() == 10);
-        Assert.assertTrue(imMap.values().size() == 10);
-        Assert.assertTrue(imMap.keySet().first() == 1);
-        Assert.assertTrue(imMap.keySet().last() == 10);
-        Assert.assertTrue(imMap.values().contains(200));
+        assertTrue(imMap.keySet().size() == 10);
+        assertTrue(imMap.values().size() == 10);
+        assertTrue(imMap.keySet().first() == 1);
+        assertTrue(imMap.keySet().last() == 10);
+        assertTrue(imMap.values().contains(200));
 
-        Assert.assertArrayEquals(map.keySet().toArray(), imMap.keySet().toSet().toArray());
-        Assert.assertArrayEquals(map.values().toArray(), imMap.values().toSet().toArray());
-        Assert.assertArrayEquals(map.keySet().toArray(), imMap.keySet().toSet().toArray()); // cached
-        Assert.assertArrayEquals(map.values().toArray(), imMap.values().toSet().toArray());
+        assertArrayEquals(map.keySet().toArray(), imMap.keySet().toSet().toArray());
+        assertArrayEquals(map.values().toArray(), imMap.values().toSet().toArray());
+        assertArrayEquals(map.keySet().toArray(), imMap.keySet().toSet().toArray()); // cached
+        assertArrayEquals(map.values().toArray(), imMap.values().toSet().toArray());
 
-        Assert.assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet()));
-        Assert.assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet())); // cached
+        assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet()));
+        assertTrue(checkEntrySets(map.entrySet(), imMap.entrySet().toSet())); // cached
 
         if (copyOrWrap == Immutable.COPY)
         {
-            Assert.assertTrue(imMap.isCopy());
-            Assert.assertTrue(imMap.toMap().equals(map));
-            Assert.assertFalse(imMap.toMap() == map);
+            assertTrue(imMap.isCopy());
+            assertTrue(imMap.toMap().equals(map));
+            assertFalse(imMap.toMap() == map);
         }
         else
         {
-            Assert.assertTrue(imMap.isWrap());
-            Assert.assertTrue(imMap.toMap().equals(map));
-            Assert.assertFalse(imMap.toMap() == map); // this WRAP method returns a NEW list
+            assertTrue(imMap.isWrap());
+            assertTrue(imMap.toMap().equals(map));
+            assertFalse(imMap.toMap() == map); // this WRAP method returns a NEW list
         }
 
         Map<Integer, Integer> to = imMap.toMap();
-        Assert.assertTrue(map.equals(to));
+        assertTrue(map.equals(to));
 
         // modify the underlying data structure
         map.put(11, 1100);
         if (copyOrWrap == Immutable.COPY)
         {
-            Assert.assertTrue(imMap.size() == 10);
+            assertTrue(imMap.size() == 10);
         }
         else
         {
-            Assert.assertTrue(imMap.size() == 11);
+            assertTrue(imMap.size() == 11);
         }
     }
 

@@ -1,12 +1,12 @@
 package org.djutils.event;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import org.djutils.event.collection.EventProducingListIterator;
 import org.djutils.event.collection.EventProducingMap;
 import org.djutils.event.collection.EventProducingSet;
 import org.djutils.exceptions.Try;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the EventProducingCollection, EventProducingList, EventProducingMap, EventProducingSet and EventIterator.
@@ -502,7 +502,7 @@ public class EventCollectionTest
         assertEquals("abc", replaced);
         assertEquals(EventProducingMap.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
         // assertNull(listener.getReceivedEvent().getContent()); // Changed 2020/04/17 PK
-        assertEquals("payload is now the unchanged size of the map", 1, listener.getReceivedEvent().getContent());
+        assertEquals(1, listener.getReceivedEvent().getContent(), "payload is now the unchanged size of the map");
         assertNull(epm.get(2));
         assertEquals("def", epm.get(1));
         assertEquals(1, epm.size());
@@ -539,7 +539,7 @@ public class EventCollectionTest
         epm.putAll(addMap);
         assertEquals(EventProducingMap.OBJECT_CHANGED_EVENT, listener.getReceivedEvent().getType());
         // assertNull(listener.getReceivedEvent().getContent()); // Changed 2020/04/17 PK
-        assertEquals("payload is now the unchanged size of the map", 5, listener.getReceivedEvent().getContent());
+        assertEquals(5, listener.getReceivedEvent().getContent(), "payload is now the unchanged size of the map");
         listener.setExpectingNotification(false);
         epm.putAll(new LinkedHashMap<>());
         assertEquals(5, epm.size());

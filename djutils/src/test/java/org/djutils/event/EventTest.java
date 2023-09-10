@@ -1,16 +1,16 @@
 package org.djutils.event;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Serializable;
 
 import org.djutils.exceptions.Try;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * EventTest tests the EventType, Event, and TimedEvent.
@@ -149,9 +149,9 @@ public class EventTest
 
         // Check the deprecated constructor
         eventType = new EventType("event with unspecified meta data");
-        assertEquals("Deprecated constructor uses NO_META_DATA for the meta data", MetaData.NO_META_DATA,
-                eventType.getMetaData());
-        assertEquals("Name is correctly used", "event with unspecified meta data", eventType.getName());
+        assertEquals(MetaData.NO_META_DATA, eventType.getMetaData(),
+                "Deprecated constructor uses NO_META_DATA for the meta data");
+        assertEquals("event with unspecified meta data", eventType.getName(), "Name is correctly used");
     }
 
     /**

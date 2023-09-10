@@ -1,14 +1,14 @@
 package org.djutils.multikeymap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Set;
 import java.util.function.Supplier;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the MultiKeyMap class.
@@ -47,15 +47,15 @@ public class TestMultiKeyMap
         {
             // Ignore expected exception
         }
-        assertNull("non existent key return null", mkm.get("abc"));
+        assertNull(mkm.get("abc"), "non existent key return null");
         mkm.put("value1", "key1");
-        assertEquals("existing key return value for that  key", "value1", mkm.get("key1"));
+        assertEquals("value1", mkm.get("key1"), "existing key return value for that  key");
         mkm.put("value2", "key2");
-        assertEquals("existing key return value for that  key", "value1", mkm.get("key1"));
-        assertEquals("existing key return value for that  key", "value2", mkm.get("key2"));
+        assertEquals("value1", mkm.get("key1"), "existing key return value for that  key");
+        assertEquals("value2", mkm.get("key2"), "existing key return value for that  key");
         mkm.clear("value1");
-        assertNull("no longer existent key return null", mkm.get("value1"));
-        assertEquals("existing key return value for that  key", "value2", mkm.get("key2"));
+        assertNull(mkm.get("value1"), "no longer existent key return null");
+        assertEquals("value2", mkm.get("key2"), "existing key return value for that  key");
         String result = mkm.get(new Supplier<String>()
         {
             @Override
@@ -64,11 +64,11 @@ public class TestMultiKeyMap
                 return "newValue3";
             }
         }, "key3");
-        assertEquals("result is new value", "newValue3", result);
-        assertEquals("existing key return value for that  key", "newValue3", mkm.get("key3"));
+        assertEquals("newValue3", result, "result is new value");
+        assertEquals("newValue3", mkm.get("key3"), "existing key return value for that  key");
         String oldValue = mkm.put("newValue3", "key3");
-        assertEquals("existing key returns new value for that  key", "newValue3", mkm.get("key3"));
-        assertEquals("put has returned old value", "newValue3", oldValue);
+        assertEquals("newValue3", mkm.get("key3"), "existing key returns new value for that  key");
+        assertEquals("newValue3", oldValue, "put has returned old value");
         result = mkm.get(new Supplier<String>()
         {
             @Override
@@ -78,7 +78,7 @@ public class TestMultiKeyMap
                 return "newNewalue3";
             }
         }, "key3");
-        assertEquals("result is unchanged", "newValue3", result);
+        assertEquals("newValue3", result, "result is unchanged");
 
         try
         {
@@ -102,10 +102,10 @@ public class TestMultiKeyMap
 
         mkm = new MultiKeyMap<>(String.class, Double.class);
         result = mkm.get("k", 123.456);
-        assertNull("result should be null", result);
+        assertNull(result, "result should be null");
         mkm.put("dummy", "1", 123.456);
-        assertEquals("two step key works", "dummy", mkm.get("1", 123.456));
-        assertNull("two step key works", mkm.get("1", 123.457));
+        assertEquals("dummy", mkm.get("1", 123.456), "two step key works");
+        assertNull(mkm.get("1", 123.457), "two step key works");
         try
         {
             mkm.get("1", "2");
@@ -117,13 +117,13 @@ public class TestMultiKeyMap
         }
 
         Set<Object> keySet = mkm.getKeys();
-        assertEquals("there is one key at level 0", 1, keySet.size());
-        assertEquals("type of key is String", String.class, keySet.iterator().next().getClass());
-        assertEquals("object is string with value \"1\"", "1", keySet.iterator().next());
+        assertEquals(1, keySet.size(), "there is one key at level 0");
+        assertEquals(String.class, keySet.iterator().next().getClass(), "type of key is String");
+        assertEquals("1", keySet.iterator().next(), "object is string with value \"1\"");
         keySet = mkm.getKeys("1");
-        assertEquals("there is one key at level 1", 1, keySet.size());
-        assertEquals("type of key is Double", Double.class, keySet.iterator().next().getClass());
-        assertEquals("object is Double with value 123.456", 123.456, keySet.iterator().next());
+        assertEquals(1, keySet.size(), "there is one key at level 1");
+        assertEquals(Double.class, keySet.iterator().next().getClass(), "type of key is Double");
+        assertEquals(123.456, keySet.iterator().next(), "object is Double with value 123.456");
         try
         {
             mkm.getKeys("1", 123.456, "3");
@@ -133,17 +133,17 @@ public class TestMultiKeyMap
         {
             // Ignore expected exception
         }
-        assertNull("Clearing non-existant sub map returns null", mkm.clear("2", 123.4));
+        assertNull(mkm.clear("2", 123.4), "Clearing non-existant sub map returns null");
         Object o = mkm.clear("1", 123.456);
-        assertEquals("result of clear is removed object", "dummy", o);
-        assertNull("dummy is no longer in the map", mkm.get("1", 123.456));
+        assertEquals("dummy", o, "result of clear is removed object");
+        assertNull(mkm.get("1", 123.456), "dummy is no longer in the map");
         mkm.put("dummy", "1", 123.456);
-        assertEquals("dummy is back", "dummy", mkm.get("1", 123.456));
+        assertEquals("dummy", mkm.get("1", 123.456), "dummy is back");
         mkm.put("dummy2", "2", 23.456);
         MultiKeyMap<String> subMap = mkm.getSubMap();
-        assertEquals("Top level sub map ", subMap, mkm);
+        assertEquals(subMap, mkm, "Top level sub map ");
         subMap = mkm.getSubMap("1");
-        assertEquals("level one sub map contains dummy", "dummy", subMap.get(123.456));
+        assertEquals("dummy", subMap.get(123.456), "level one sub map contains dummy");
         try
         {
             mkm.getSubMap("1", 123.456);
@@ -154,11 +154,11 @@ public class TestMultiKeyMap
             // Ignore expected exception
         }
         mkm.clear("1");
-        assertNull("dummy was removed", mkm.get("1", 123.456));
-        assertEquals("dummy2 is still there", "dummy2", mkm.get("2", 23.456));
+        assertNull(mkm.get("1", 123.456), "dummy was removed");
+        assertEquals("dummy2", mkm.get("2", 23.456), "dummy2 is still there");
         mkm.clear();
-        assertEquals("result of clear at top level clears the entire map", 0, mkm.getKeys().size());
+        assertEquals(0, mkm.getKeys().size(), "result of clear at top level clears the entire map");
 
-        assertTrue("toString returns something descriptive", mkm.toString().startsWith("MultiKeyMap ["));
+        assertTrue(mkm.toString().startsWith("MultiKeyMap ["), "toString returns something descriptive");
     }
 }

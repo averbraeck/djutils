@@ -1,8 +1,12 @@
 package org.djutils.primitives;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * The JUNIT Test for the <code>Primitive</code>.
@@ -14,7 +18,7 @@ import junit.framework.TestCase;
  * </p>
  * @author <a href="https://www.linkedin.com/in/peterhmjacobs">Peter Jacobs </a>
  */
-public class PrimitiveTest extends TestCase
+public class PrimitiveTest
 {
 
     /**

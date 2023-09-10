@@ -1,10 +1,11 @@
 package org.djutils.immutablecollections;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -14,8 +15,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestImmutableTreeSet.java.
@@ -51,13 +51,13 @@ public class TestImmutableTreeSet
         List<Integer> il = Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
         testIntSet(sortedSet, new ImmutableTreeSet<Integer>(il), Immutable.COPY);
         ImmutableTreeSet<Integer> its = new ImmutableTreeSet<Integer>(sortedSet);
-        Assert.assertTrue("toString returns something descriptive", its.toString().startsWith("ImmutableTreeSet ["));
+        assertTrue(its.toString().startsWith("ImmutableTreeSet ["), "toString returns something descriptive");
 
         ImmutableTreeSet<Integer> wrapped = new ImmutableTreeSet<Integer>(its, Immutable.WRAP);
-        Assert.assertEquals("wrapped is equal wrapped-wrapped", its, wrapped);
+        assertEquals(its, wrapped, "wrapped is equal wrapped-wrapped");
         ImmutableTreeSet<Integer> copied = new ImmutableTreeSet<Integer>(its, Immutable.COPY);
-        Assert.assertEquals("wrapped is equal to copy-wrapped", its, copied);
-        Assert.assertEquals("copy-wrapped is equal to wrapped", copied, its);
+        assertEquals(its, copied, "wrapped is equal to copy-wrapped");
+        assertEquals(copied, its, "copy-wrapped is equal to wrapped");
     }
 
     /**
@@ -68,47 +68,47 @@ public class TestImmutableTreeSet
      */
     private void testIntSet(final NavigableSet<Integer> set, final ImmutableTreeSet<Integer> imSet, final Immutable copyOrWrap)
     {
-        Assert.assertTrue(set.size() == 10);
-        Assert.assertTrue(imSet.size() == 10);
+        assertTrue(set.size() == 10);
+        assertTrue(imSet.size() == 10);
         for (int i = 0; i < 10; i++)
         {
-            Assert.assertTrue(imSet.contains(i + 1));
+            assertTrue(imSet.contains(i + 1));
         }
-        Assert.assertFalse(imSet.isEmpty());
-        Assert.assertFalse(imSet.contains(15));
+        assertFalse(imSet.isEmpty());
+        assertFalse(imSet.contains(15));
 
-        Assert.assertTrue(imSet.first() == 1);
-        Assert.assertTrue(imSet.last() == 10);
+        assertTrue(imSet.first() == 1);
+        assertTrue(imSet.last() == 10);
 
         if (copyOrWrap == Immutable.COPY)
         {
-            Assert.assertTrue(imSet.isCopy());
-            Assert.assertTrue(imSet.toSet().equals(set));
-            Assert.assertFalse(imSet.toSet() == set);
+            assertTrue(imSet.isCopy());
+            assertTrue(imSet.toSet().equals(set));
+            assertFalse(imSet.toSet() == set);
         }
         else
         {
-            Assert.assertTrue(imSet.isWrap());
-            Assert.assertTrue(imSet.toSet().equals(set));
-            Assert.assertFalse(imSet.toSet() == set); // this WRAP method returns a NEW list
+            assertTrue(imSet.isWrap());
+            assertTrue(imSet.toSet().equals(set));
+            assertFalse(imSet.toSet() == set); // this WRAP method returns a NEW list
         }
 
         Set<Integer> to = imSet.toSet();
-        Assert.assertTrue(set.equals(to));
+        assertTrue(set.equals(to));
 
         Integer[] arr = imSet.toArray(new Integer[] {});
         Integer[] sar = set.toArray(new Integer[] {});
-        Assert.assertArrayEquals(arr, sar);
+        assertArrayEquals(arr, sar);
 
         // modify the underlying data structure
         set.add(11);
         if (copyOrWrap == Immutable.COPY)
         {
-            Assert.assertTrue(imSet.size() == 10);
+            assertTrue(imSet.size() == 10);
         }
         else
         {
-            Assert.assertTrue(imSet.size() == 11);
+            assertTrue(imSet.size() == 11);
         }
     }
 
@@ -121,7 +121,7 @@ public class TestImmutableTreeSet
         Integer[] values = new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         Set<Integer> intSet = new TreeSet<>(Arrays.asList(values));
         NavigableSet<Integer> sortedSet = new TreeSet<Integer>(intSet);
-        assertNull("Sorted set uses default compare; not an explicit comparator", sortedSet.comparator());
+        assertNull(sortedSet.comparator(), "Sorted set uses default compare; not an explicit comparator");
         Comparator<Integer> reverseIntegerComparator = new Comparator<Integer>()
         {
             @Override
@@ -139,16 +139,16 @@ public class TestImmutableTreeSet
         sortedSet = new TreeSet<Integer>(reverseIntegerComparator);
         sortedSet.addAll(intSet);
         ImmutableTreeSet<Integer> its = new ImmutableTreeSet<>(sortedSet, Immutable.WRAP);
-        assertEquals("custom comparator is returned", reverseIntegerComparator, its.comparator());
+        assertEquals(reverseIntegerComparator, its.comparator(), "custom comparator is returned");
         // Let's check that the custom comparator actually worked
-        assertEquals("size must match", values.length, its.size());
+        assertEquals(values.length, its.size(), "size must match");
         Integer prev = null;
         for (Integer value : its)
         {
             // System.out.println(value);
             if (prev != null)
             {
-                assertTrue("Values must be in non-increasing order", value <= prev);
+                assertTrue(value <= prev, "Values must be in non-increasing order");
             }
             prev = value;
         }
@@ -159,7 +159,7 @@ public class TestImmutableTreeSet
         for (Integer value : subSet)
         {
             // System.out.println(value);
-            assertTrue("value must be in range", value <= 7 && value >= 3);
+            assertTrue(value <= 7 && value >= 3, "value must be in range");
             if (3 == value)
             {
                 seen3 = true;
@@ -170,12 +170,12 @@ public class TestImmutableTreeSet
             }
             if (prev != null)
             {
-                assertTrue("Values are in decreasing order", value <= prev);
+                assertTrue(value <= prev, "Values are in decreasing order");
             }
             prev = value;
         }
-        assertFalse("3 must not have been returned", seen3);
-        assertTrue("7 must have been returned", seen7);
+        assertFalse(seen3, "3 must not have been returned");
+        assertTrue(seen7, "7 must have been returned");
 
         subSet = its.subSet(7, false, 3, false);
         prev = null;
@@ -184,7 +184,7 @@ public class TestImmutableTreeSet
         for (Integer value : subSet)
         {
             // System.out.println(value);
-            assertTrue("value must be in range", value <= 7 && value >= 3);
+            assertTrue(value <= 7 && value >= 3, "value must be in range");
             if (3 == value)
             {
                 seen3 = true;
@@ -195,12 +195,12 @@ public class TestImmutableTreeSet
             }
             if (prev != null)
             {
-                assertTrue("Values are in decreasing order", value <= prev);
+                assertTrue(value <= prev, "Values are in decreasing order");
             }
             prev = value;
         }
-        assertFalse("3 must not have been returned", seen3);
-        assertFalse("7 must not have been returned", seen7);
+        assertFalse(seen3, "3 must not have been returned");
+        assertFalse(seen7, "7 must not have been returned");
 
         subSet = its.subSet(7, true, 3, false);
         prev = null;
@@ -209,7 +209,7 @@ public class TestImmutableTreeSet
         for (Integer value : subSet)
         {
             // System.out.println(value);
-            assertTrue("value must be in range", value <= 7 && value >= 3);
+            assertTrue(value <= 7 && value >= 3, "value must be in range");
             if (3 == value)
             {
                 seen3 = true;
@@ -220,12 +220,12 @@ public class TestImmutableTreeSet
             }
             if (prev != null)
             {
-                assertTrue("Values are in decreasing order", value <= prev);
+                assertTrue(value <= prev, "Values are in decreasing order");
             }
             prev = value;
         }
-        assertFalse("3 must not have been returned", seen3);
-        assertTrue("7 must have been returned", seen7);
+        assertFalse(seen3, "3 must not have been returned");
+        assertTrue(seen7, "7 must have been returned");
 
         subSet = its.subSet(7, false, 3, true);
         prev = null;
@@ -234,7 +234,7 @@ public class TestImmutableTreeSet
         for (Integer value : subSet)
         {
             // System.out.println(value);
-            assertTrue("value must be in range", value <= 7 && value >= 3);
+            assertTrue(value <= 7 && value >= 3, "value must be in range");
             if (3 == value)
             {
                 seen3 = true;
@@ -245,12 +245,12 @@ public class TestImmutableTreeSet
             }
             if (prev != null)
             {
-                assertTrue("Values are in decreasing order", value <= prev);
+                assertTrue(value <= prev, "Values are in decreasing order");
             }
             prev = value;
         }
-        assertTrue("3 must have been returned", seen3);
-        assertFalse("7 must not have been returned", seen7);
+        assertTrue(seen3, "3 must have been returned");
+        assertFalse(seen7, "7 must not have been returned");
 
         subSet = its.subSet(7, true, 3, true);
         prev = null;
@@ -259,7 +259,7 @@ public class TestImmutableTreeSet
         for (Integer value : subSet)
         {
             // System.out.println(value);
-            assertTrue("value must be in range", value <= 7 && value >= 3);
+            assertTrue(value <= 7 && value >= 3, "value must be in range");
             if (3 == value)
             {
                 seen3 = true;
@@ -270,158 +270,158 @@ public class TestImmutableTreeSet
             }
             if (prev != null)
             {
-                assertTrue("Values are in decreasing order", value <= prev);
+                assertTrue(value <= prev, "Values are in decreasing order");
             }
             prev = value;
         }
-        assertTrue("3 must have been returned", seen3);
-        assertTrue("7 must have been returned", seen7);
+        assertTrue(seen3, "3 must have been returned");
+        assertTrue(seen7, "7 must have been returned");
 
         ImmutableSortedSet<Integer> headSet = its.headSet(7);
         prev = null;
         seen7 = false;
         for (Integer value : headSet)
         {
-            assertTrue("value must be in range", value >= 7);
+            assertTrue(value >= 7, "value must be in range");
             if (7 == value)
             {
                 seen7 = true;
             }
             if (prev != null)
             {
-                assertTrue("Values are in decreasing order", value <= prev);
+                assertTrue(value <= prev, "Values are in decreasing order");
             }
             prev = value;
         }
-        assertFalse("7 must not have been returned", seen7);
+        assertFalse(seen7, "7 must not have been returned");
 
         headSet = its.headSet(7, true);
         prev = null;
         seen7 = false;
         for (Integer value : headSet)
         {
-            assertTrue("value must be in range", value >= 7);
+            assertTrue(value >= 7, "value must be in range");
             if (7 == value)
             {
                 seen7 = true;
             }
             if (prev != null)
             {
-                assertTrue("Values are in decreasing order", value <= prev);
+                assertTrue(value <= prev, "Values are in decreasing order");
             }
             prev = value;
         }
-        assertTrue("7 must have been returned", seen7);
+        assertTrue(seen7, "7 must have been returned");
 
         headSet = its.headSet(7, false);
         prev = null;
         seen7 = false;
         for (Integer value : headSet)
         {
-            assertTrue("value must be in range", value >= 7);
+            assertTrue(value >= 7, "value must be in range");
             if (7 == value)
             {
                 seen7 = true;
             }
             if (prev != null)
             {
-                assertTrue("Values are in decreasing order", value <= prev);
+                assertTrue(value <= prev, "Values are in decreasing order");
             }
             prev = value;
         }
-        assertFalse("7 must not have been returned", seen7);
+        assertFalse(seen7, "7 must not have been returned");
 
         ImmutableSortedSet<Integer> tailSet = its.tailSet(3);
         prev = null;
         seen3 = false;
         for (Integer value : tailSet)
         {
-            assertTrue("value must be in range", value <= 3);
+            assertTrue(value <= 3, "value must be in range");
             if (3 == value)
             {
                 seen3 = true;
             }
             if (prev != null)
             {
-                assertTrue("Values are in decreasing order", value <= prev);
+                assertTrue(value <= prev, "Values are in decreasing order");
             }
             prev = value;
         }
-        assertTrue("3 must have been returned", seen3);
+        assertTrue(seen3, "3 must have been returned");
 
         tailSet = its.tailSet(3, true);
         prev = null;
         seen3 = false;
         for (Integer value : tailSet)
         {
-            assertTrue("value must be in range", value <= 3);
+            assertTrue(value <= 3, "value must be in range");
             if (3 == value)
             {
                 seen3 = true;
             }
             if (prev != null)
             {
-                assertTrue("Values are in decreasing order", value <= prev);
+                assertTrue(value <= prev, "Values are in decreasing order");
             }
             prev = value;
         }
-        assertTrue("3 must have been returned", seen3);
+        assertTrue(seen3, "3 must have been returned");
 
         tailSet = its.tailSet(3, false);
         prev = null;
         seen3 = false;
         for (Integer value : tailSet)
         {
-            assertTrue("value must be in range", value <= 3);
+            assertTrue(value <= 3, "value must be in range");
             if (3 == value)
             {
                 seen3 = true;
             }
             if (prev != null)
             {
-                assertTrue("Values are in decreasing order", value <= prev);
+                assertTrue(value <= prev, "Values are in decreasing order");
             }
             prev = value;
         }
-        assertFalse("3 must not have been returned", seen3);
+        assertFalse(seen3, "3 must not have been returned");
 
         for (int index = 0; index < values.length; index++)
         {
             Integer lower = its.lower(values[index]);
             if (index == values.length - 1)
             {
-                assertNull("lower of last element should have returned null", lower);
+                assertNull(lower, "lower of last element should have returned null");
             }
             else
             {
-                assertEquals("lower should have returned next higher value", values[index + 1], lower);
+                assertEquals(values[index + 1], lower, "lower should have returned next higher value");
             }
             Integer higher = its.higher(values[index]);
             if (index == 0)
             {
-                assertNull("higher should have returned null", higher);
+                assertNull(higher, "higher should have returned null");
             }
             else
             {
-                assertEquals("higher should have returned next lower value", values[index - 1], higher);
+                assertEquals(values[index - 1], higher, "higher should have returned next lower value");
             }
             Integer floor = its.floor(values[index]);
-            assertEquals("floor of element in set returns that element", values[index], floor);
+            assertEquals(values[index], floor, "floor of element in set returns that element");
             Integer ceil = its.floor(values[index]);
-            assertEquals("ceil of element in set returns that element", values[index], ceil);
+            assertEquals(values[index], ceil, "ceil of element in set returns that element");
         }
-        assertNull("floor of value higher than any in set returns null", its.floor(11));
-        assertNull("ceil of value lower than any in set returns null", its.ceiling(0));
-        assertEquals("floor of value lower than any in set is lowest in set", 1, its.floor(0), 0);
-        assertEquals("ceiling of value higher than any in set is highest in set", 10, its.ceiling(11), 0);
+        assertNull(its.floor(11), "floor of value higher than any in set returns null");
+        assertNull(its.ceiling(0), "ceil of value lower than any in set returns null");
+        assertEquals(1, its.floor(0), 0, "floor of value lower than any in set is lowest in set");
+        assertEquals(10, its.ceiling(11), 0, "ceiling of value higher than any in set is highest in set");
         ImmutableSet<Integer> descendingSet = its.descendingSet();
-        assertEquals("descendingSet has correct size", values.length, descendingSet.size());
+        assertEquals(values.length, descendingSet.size(), "descendingSet has correct size");
         prev = null;
         for (Integer value : descendingSet)
         {
             if (null != prev)
             {
-                assertTrue("descendingSet has value in ascending order", value >= prev);
+                assertTrue(value >= prev, "descendingSet has value in ascending order");
             }
             prev = value;
         }
@@ -432,7 +432,7 @@ public class TestImmutableTreeSet
             Integer next = ii.next();
             if (null != prev)
             {
-                assertTrue("descendingSet has value in ascending order", next >= prev);
+                assertTrue(next >= prev, "descendingSet has value in ascending order");
             }
             prev = next;
         }

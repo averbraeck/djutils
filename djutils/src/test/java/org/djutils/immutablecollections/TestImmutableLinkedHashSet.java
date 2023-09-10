@@ -1,12 +1,16 @@
 package org.djutils.immutablecollections;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestImmutableLinkedHashSet.java.
@@ -42,12 +46,12 @@ public class TestImmutableLinkedHashSet
         List<Integer> il = Arrays.asList(new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
         testIntSet(set, new ImmutableLinkedHashSet<Integer>(il), Immutable.COPY);
         ImmutableLinkedHashSet<Integer> ilhs = new ImmutableLinkedHashSet<Integer>(set, Immutable.COPY);
-        Assert.assertTrue("toString returns something descriptive", ilhs.toString().startsWith("ImmutableLinkedHashSet ["));
+        assertTrue(ilhs.toString().startsWith("ImmutableLinkedHashSet ["), "toString returns something descriptive");
 
         ImmutableLinkedHashSet<Integer> wilhs = new ImmutableLinkedHashSet<Integer>(ilhs, Immutable.WRAP);
-        Assert.assertEquals("wrapped immutable linked hash set is equal to that immutable hash set", wilhs, ilhs);
+        assertEquals(wilhs, ilhs, "wrapped immutable linked hash set is equal to that immutable hash set");
         ImmutableLinkedHashSet<Integer> cilhs = new ImmutableLinkedHashSet<Integer>(ilhs, Immutable.COPY);
-        Assert.assertEquals("copied immutable linked hash set is equal to that immutable hash set", cilhs, ilhs);
+        assertEquals(cilhs, ilhs, "copied immutable linked hash set is equal to that immutable hash set");
     }
 
     /**
@@ -58,43 +62,43 @@ public class TestImmutableLinkedHashSet
      */
     private void testIntSet(final Set<Integer> set, final ImmutableSet<Integer> imSet, final Immutable copyOrWrap)
     {
-        Assert.assertTrue(set.size() == 10);
-        Assert.assertTrue(imSet.size() == 10);
+        assertTrue(set.size() == 10);
+        assertTrue(imSet.size() == 10);
         for (int i = 0; i < 10; i++)
         {
-            Assert.assertTrue(imSet.contains(i + 1));
+            assertTrue(imSet.contains(i + 1));
         }
-        Assert.assertFalse(imSet.isEmpty());
-        Assert.assertFalse(imSet.contains(15));
+        assertFalse(imSet.isEmpty());
+        assertFalse(imSet.contains(15));
         if (copyOrWrap == Immutable.COPY)
         {
-            Assert.assertTrue(imSet.isCopy());
-            Assert.assertTrue(imSet.toSet().equals(set));
-            Assert.assertFalse(imSet.toSet() == set);
+            assertTrue(imSet.isCopy());
+            assertTrue(imSet.toSet().equals(set));
+            assertFalse(imSet.toSet() == set);
         }
         else
         {
-            Assert.assertTrue(imSet.isWrap());
-            Assert.assertTrue(imSet.toSet().equals(set));
-            Assert.assertFalse(imSet.toSet() == set); // this WRAP method returns a NEW list
+            assertTrue(imSet.isWrap());
+            assertTrue(imSet.toSet().equals(set));
+            assertFalse(imSet.toSet() == set); // this WRAP method returns a NEW list
         }
 
         Set<Integer> to = imSet.toSet();
-        Assert.assertTrue(set.equals(to));
+        assertTrue(set.equals(to));
 
         Integer[] arr = imSet.toArray(new Integer[] {});
         Integer[] sar = set.toArray(new Integer[] {});
-        Assert.assertArrayEquals(arr, sar);
+        assertArrayEquals(arr, sar);
 
         // modify the underlying data structure
         set.add(11);
         if (copyOrWrap == Immutable.COPY)
         {
-            Assert.assertTrue(imSet.size() == 10);
+            assertTrue(imSet.size() == 10);
         }
         else
         {
-            Assert.assertTrue(imSet.size() == 11);
+            assertTrue(imSet.size() == 11);
         }
     }
 

@@ -1,11 +1,11 @@
 package org.djutils.metadata;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * MetaDataTest.java. <br>
@@ -27,9 +27,9 @@ public class MetaDataTest
     public void testObjectDescriptor()
     {
         ObjectDescriptor objectDescriptor = new ObjectDescriptor("name", "description", Integer.class);
-        assertEquals("name", "name", objectDescriptor.getName());
-        assertEquals("description", "description", objectDescriptor.getDescription());
-        assertEquals("class", Integer.class, objectDescriptor.getObjectClass());
+        assertEquals("name", objectDescriptor.getName(), "name");
+        assertEquals("description", objectDescriptor.getDescription(), "description");
+        assertEquals(Integer.class, objectDescriptor.getObjectClass(), "class");
         assertEquals(objectDescriptor, objectDescriptor);
         assertEquals(objectDescriptor.hashCode(), objectDescriptor.hashCode());
         assertEquals(objectDescriptor, new ObjectDescriptor("name", "description", Integer.class));
@@ -78,7 +78,7 @@ public class MetaDataTest
             // Ignore expected exception
         }
 
-        assertTrue("toString returns something descriptive", objectDescriptor.toString().startsWith("ObjectDescriptor"));
+        assertTrue(objectDescriptor.toString().startsWith("ObjectDescriptor"), "toString returns something descriptive");
     }
 
     /**
@@ -92,15 +92,15 @@ public class MetaDataTest
         MetaData metaData = new MetaData("meta data name", "meta data description",
                 new ObjectDescriptor("string", "the string", String.class),
                 new ObjectDescriptor("length", "the length", Double.class));
-        assertEquals("name", "meta data name", metaData.getName());
-        assertEquals("description", "meta data description", metaData.getDescription());
-        assertEquals("size", 2, metaData.size());
-        assertEquals("name of element 0", "string", metaData.getFieldName(0));
-        assertEquals("name of element 1", "length", metaData.getFieldName(1));
-        assertEquals("description of element 0", "the string", metaData.getObjectDescription(0));
-        assertEquals("description of element 1", "the length", metaData.getObjectDescription(1));
-        assertEquals("class of element 0", String.class, metaData.getObjectClass(0));
-        assertEquals("class of element 1", Double.class, metaData.getObjectClass(1));
+        assertEquals("meta data name", metaData.getName(), "name");
+        assertEquals("meta data description", metaData.getDescription(), "description");
+        assertEquals(2, metaData.size(), "size");
+        assertEquals("string", metaData.getFieldName(0), "name of element 0");
+        assertEquals("length", metaData.getFieldName(1), "name of element 1");
+        assertEquals("the string", metaData.getObjectDescription(0), "description of element 0");
+        assertEquals("the length", metaData.getObjectDescription(1), "description of element 1");
+        assertEquals(String.class, metaData.getObjectClass(0), "class of element 0");
+        assertEquals(Double.class, metaData.getObjectClass(1), "class of element 1");
 
         ObjectDescriptor[] descriptors = metaData.getObjectDescriptors();
         assertEquals(2, descriptors.length);
@@ -116,7 +116,7 @@ public class MetaDataTest
         assertNotEquals(metaData, new MetaData("meta data name", "x", new ObjectDescriptor[0]));
         assertNotEquals(metaData, new MetaData("meta data name", "meta data description", new ObjectDescriptor[0]));
 
-        assertTrue("toString returns something descriptive", metaData.toString().startsWith("MetaData"));
+        assertTrue(metaData.toString().startsWith("MetaData"), "toString returns something descriptive");
         metaData.verifyComposition(new Object[] {"TestString", 123.456});
         metaData.verifyComposition(new Object[] {null, 123.456});
         try
@@ -271,12 +271,12 @@ public class MetaDataTest
         }
 
         metaData = new MetaData("name", "description", new ObjectDescriptor("integer", "integers only please", Integer.class));
-        assertEquals("name", "name", metaData.getName());
-        assertEquals("description", "description", metaData.getDescription());
-        assertEquals("check name of object descriptor", "integer", metaData.getFieldName(0));
-        assertEquals("check description of object descriptor", "integers only please", metaData.getObjectDescription(0));
-        assertEquals("check class of object descriptor", Integer.class, metaData.getObjectClass(0));
-        assertEquals("size should be 1", 1, metaData.size());
+        assertEquals("name", metaData.getName(), "name");
+        assertEquals("description", metaData.getDescription(), "description");
+        assertEquals("integer", metaData.getFieldName(0), "check name of object descriptor");
+        assertEquals("integers only please", metaData.getObjectDescription(0), "check description of object descriptor");
+        assertEquals(Integer.class, metaData.getObjectClass(0), "check class of object descriptor");
+        assertEquals(1, metaData.size(), "size should be 1");
         try
         {
             metaData.getFieldName(-1);
@@ -342,9 +342,9 @@ public class MetaDataTest
         metaData.verifyComposition(new Object[] {}); // empty Object array is too
 
         metaData = new MetaData("name", "description", new ObjectDescriptor("n", "d", Integer.class));
-        assertEquals("name", "name", metaData.getName());
-        assertEquals("description", "description", metaData.getDescription());
-        assertEquals("class", Integer.class, metaData.getObjectClass(0));
+        assertEquals("name", metaData.getName(), "name");
+        assertEquals("description", metaData.getDescription(), "description");
+        assertEquals(Integer.class, metaData.getObjectClass(0), "class");
         metaData.verifyComposition(123);
         try
         {
