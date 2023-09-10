@@ -16,5 +16,9 @@
   		<groupId>org.djunits</groupId>
   		<artifactId>djunits</artifactId>
   	</dependency>
+    <dependency>
+      <groupId>org.djutils</groupId>
+      <artifactId>djutils</artifactId>
+    </dependency>
   </dependencies>
 </project>

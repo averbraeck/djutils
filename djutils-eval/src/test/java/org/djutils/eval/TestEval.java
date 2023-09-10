@@ -1,10 +1,10 @@
 package org.djutils.eval;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ import org.djunits.value.vdouble.scalar.base.Constants;
 import org.djunits.value.vdouble.scalar.base.DoubleScalar;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestEval.java.
@@ -73,7 +73,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes position of problem", rte.getMessage().contains("position 3"));
+            assertTrue(rte.getMessage().contains("position 3"), "Message describes position of problem");
         }
 
         // Unary operators with no argument
@@ -86,7 +86,7 @@ public class TestEval
             }
             catch (RuntimeException rte)
             {
-                assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing operand"));
+                assertTrue(rte.getMessage().toLowerCase().contains("missing operand"), "Message describes the problem");
             }
         }
 
@@ -101,7 +101,7 @@ public class TestEval
             }
             catch (RuntimeException rte)
             {
-                assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing left operand"));
+                assertTrue(rte.getMessage().toLowerCase().contains("missing left operand"), "Message describes the problem");
             }
 
             // With left operand, but missing right operand
@@ -112,7 +112,7 @@ public class TestEval
             }
             catch (RuntimeException rte)
             {
-                assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing operand"));
+                assertTrue(rte.getMessage().toLowerCase().contains("missing operand"), "Message describes the problem");
             }
         }
         try
@@ -122,7 +122,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing operand"));
+            assertTrue(rte.getMessage().toLowerCase().contains("missing operand"), "Message describes the problem");
         }
 
         for (String operation : new String[] {"&", "|"})
@@ -134,7 +134,7 @@ public class TestEval
             }
             catch (RuntimeException rte)
             {
-                assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("not a valid operator"));
+                assertTrue(rte.getMessage().toLowerCase().contains("not a valid operator"), "Message describes the problem");
             }
         }
 
@@ -145,7 +145,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot apply unary minus"));
+            assertTrue(rte.getMessage().toLowerCase().contains("cannot apply unary minus"), "Message describes the problem");
         }
 
         try
@@ -155,8 +155,8 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem",
-                    rte.getMessage().toLowerCase().contains("single \'&\' is not a valid operator"));
+            assertTrue(rte.getMessage().toLowerCase().contains("single \'&\' is not a valid operator"),
+                    "Message describes the problem");
         }
 
         try
@@ -166,8 +166,8 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem",
-                    rte.getMessage().toLowerCase().contains("single \'&\' is not a valid operator"));
+            assertTrue(rte.getMessage().toLowerCase().contains("single \'&\' is not a valid operator"),
+                    "Message describes the problem");
         }
 
         try
@@ -177,8 +177,8 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem",
-                    rte.getMessage().toLowerCase().contains("single \'|\' is not a valid operator"));
+            assertTrue(rte.getMessage().toLowerCase().contains("single \'|\' is not a valid operator"),
+                    "Message describes the problem");
         }
 
         try
@@ -188,8 +188,8 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem",
-                    rte.getMessage().toLowerCase().contains("single \'|\' is not a valid operator"));
+            assertTrue(rte.getMessage().toLowerCase().contains("single \'|\' is not a valid operator"),
+                    "Message describes the problem");
         }
 
         try
@@ -199,7 +199,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing closing parenthesis"));
+            assertTrue(rte.getMessage().toLowerCase().contains("missing closing parenthesis"), "Message describes the problem");
         }
 
         try
@@ -209,7 +209,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("operator expected"));
+            assertTrue(rte.getMessage().toLowerCase().contains("operator expected"), "Message describes the problem");
         }
 
         try
@@ -219,7 +219,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing left operand"));
+            assertTrue(rte.getMessage().toLowerCase().contains("missing left operand"), "Message describes the problem");
         }
 
         try
@@ -229,7 +229,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing left operand"));
+            assertTrue(rte.getMessage().toLowerCase().contains("missing left operand"), "Message describes the problem");
         }
 
         try
@@ -239,8 +239,8 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem",
-                    rte.getMessage().toLowerCase().contains("missing closing bracket (\']\')"));
+            assertTrue(rte.getMessage().toLowerCase().contains("missing closing bracket (\']\')"),
+                    "Message describes the problem");
         }
 
         try
@@ -250,8 +250,8 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem",
-                    rte.getMessage().toLowerCase().contains("bad symbol in si unit string"));
+            assertTrue(rte.getMessage().toLowerCase().contains("bad symbol in si unit string"),
+                    "Message describes the problem");
         }
 
         try
@@ -261,7 +261,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot resolve variable "));
+            assertTrue(rte.getMessage().toLowerCase().contains("cannot resolve variable "), "Message describes the problem");
         }
 
         try
@@ -271,7 +271,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot resolve variable "));
+            assertTrue(rte.getMessage().toLowerCase().contains("cannot resolve variable "), "Message describes the problem");
         }
 
         try
@@ -281,7 +281,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot resolve variable "));
+            assertTrue(rte.getMessage().toLowerCase().contains("cannot resolve variable "), "Message describes the problem");
         }
 
         try
@@ -291,8 +291,8 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem",
-                    rte.getMessage().toLowerCase().contains("missing closing parenthesis "));
+            assertTrue(rte.getMessage().toLowerCase().contains("missing closing parenthesis "),
+                    "Message describes the problem");
         }
 
         try
@@ -302,9 +302,9 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("operator expected "));
+            assertTrue(rte.getMessage().toLowerCase().contains("operator expected "), "Message describes the problem");
         }
-        
+
         try
         {
             new Eval().evaluate("cos()");
@@ -312,7 +312,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("needs 1 "));
+            assertTrue(rte.getMessage().toLowerCase().contains("needs 1 "), "Message describes the problem");
         }
 
         try
@@ -322,7 +322,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("needs 1 "));
+            assertTrue(rte.getMessage().toLowerCase().contains("needs 1 "), "Message describes the problem");
         }
 
         verifyValueAndUnit("dot in unit", new Eval().evaluateExpression("20[kg.m/s2]"), 20, 0, ForceUnit.SI.getQuantity());
@@ -377,8 +377,8 @@ public class TestEval
             }
             catch (RuntimeException rte)
             {
-                assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("right operand ")
-                        || rte.getMessage().toLowerCase().contains("cannot "));
+                assertTrue(rte.getMessage().toLowerCase().contains("right operand ")
+                        || rte.getMessage().toLowerCase().contains("cannot "), "Message is descriptive");
             }
 
             try
@@ -388,8 +388,8 @@ public class TestEval
             }
             catch (RuntimeException rte)
             {
-                assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("left operand ")
-                        || rte.getMessage().toLowerCase().contains("cannot "));
+                assertTrue(rte.getMessage().toLowerCase().contains("left operand ")
+                        || rte.getMessage().toLowerCase().contains("cannot "), "Message is descriptive");
             }
 
         }
@@ -403,7 +403,7 @@ public class TestEval
             }
             catch (RuntimeException rte)
             {
-                assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot "));
+                assertTrue(rte.getMessage().toLowerCase().contains("cannot "), "Message describes the problem");
             }
         }
     }
@@ -421,8 +421,8 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem",
-                    rte.getMessage().toLowerCase().contains("single \'=\' is not a valid operator"));
+            assertTrue(rte.getMessage().toLowerCase().contains("single \'=\' is not a valid operator"),
+                    "Message describes the problem");
         }
 
         try
@@ -432,8 +432,8 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem",
-                    rte.getMessage().toLowerCase().contains("single \'!\' is not a valid operator"));
+            assertTrue(rte.getMessage().toLowerCase().contains("single \'!\' is not a valid operator"),
+                    "Message describes the problem");
         }
 
     }
@@ -453,7 +453,7 @@ public class TestEval
             }
             catch (RuntimeException rte)
             {
-                assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing operand"));
+                assertTrue(rte.getMessage().toLowerCase().contains("missing operand"), "Message describes the problem");
             }
         }
     }
@@ -477,7 +477,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
+            assertTrue(rte.getMessage().toLowerCase().contains("too many"), "Message describes the problem");
         }
 
         try
@@ -487,7 +487,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("not allowed after"));
+            assertTrue(rte.getMessage().toLowerCase().contains("not allowed after"), "Message describes the problem");
         }
 
         try
@@ -497,7 +497,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
+            assertTrue(rte.getMessage().toLowerCase().contains("too many"), "Message describes the problem");
         }
 
         try
@@ -507,7 +507,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
+            assertTrue(rte.getMessage().toLowerCase().contains("too many"), "Message describes the problem");
         }
 
         try
@@ -517,7 +517,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
+            assertTrue(rte.getMessage().toLowerCase().contains("too many"), "Message describes the problem");
         }
 
         try
@@ -527,7 +527,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("too many"));
+            assertTrue(rte.getMessage().toLowerCase().contains("too many"), "Message describes the problem");
         }
 
     }
@@ -545,7 +545,7 @@ public class TestEval
         }
         catch (RuntimeException re)
         {
-            assertTrue("exception is descriptive", re.getMessage().contains("Unknown"));
+            assertTrue(re.getMessage().contains("Unknown"), "exception is descriptive");
         }
         verifyValueAndUnit("Avogadro constant", new Eval().evaluate("AVOGADRO()"), Constants.AVOGADRO.si, 0.0,
                 Constants.AVOGADRO.getDisplayUnit().getQuantity());
@@ -609,7 +609,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("cannot apply unary not operator"));
+            assertTrue(rte.getMessage().toLowerCase().contains("cannot apply unary not operator"), "Message is descriptive");
         }
 
         try
@@ -619,7 +619,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("operator expected"));
+            assertTrue(rte.getMessage().toLowerCase().contains("operator expected"), "Message is descriptive");
         }
 
         try
@@ -629,7 +629,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("cannot apply unary minus"));
+            assertTrue(rte.getMessage().toLowerCase().contains("cannot apply unary minus"), "Message is descriptive");
         }
 
         try
@@ -639,7 +639,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message is descriptive", rte.getMessage().toLowerCase().contains("cannot apply unary not"));
+            assertTrue(rte.getMessage().toLowerCase().contains("cannot apply unary not"), "Message is descriptive");
         }
     }
 
@@ -656,7 +656,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("unknown function"));
+            assertTrue(rte.getMessage().toLowerCase().contains("unknown function"), "Message describes the problem");
         }
         try
         {
@@ -665,7 +665,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("does not take "));
+            assertTrue(rte.getMessage().toLowerCase().contains("does not take "), "Message describes the problem");
         }
         try
         {
@@ -674,7 +674,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("incompatible quantity"));
+            assertTrue(rte.getMessage().toLowerCase().contains("incompatible quantity"), "Message describes the problem");
         }
         verifyValueAndUnit("acos(-1)", new Eval().evaluate("acos(-1)"), Math.acos(-1), 0.000001,
                 DimensionlessUnit.SI.getQuantity());
@@ -764,7 +764,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot raise "));
+            assertTrue(rte.getMessage().toLowerCase().contains("cannot raise "), "Message describes the problem");
         }
 
         try
@@ -774,7 +774,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("does not take "));
+            assertTrue(rte.getMessage().toLowerCase().contains("does not take "), "Message describes the problem");
         }
 
         try
@@ -784,7 +784,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("does not take "));
+            assertTrue(rte.getMessage().toLowerCase().contains("does not take "), "Message describes the problem");
         }
 
         try
@@ -794,7 +794,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("incompatible quantity"));
+            assertTrue(rte.getMessage().toLowerCase().contains("incompatible quantity"), "Message describes the problem");
         }
 
         try
@@ -804,7 +804,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("incompatible quantity"));
+            assertTrue(rte.getMessage().toLowerCase().contains("incompatible quantity"), "Message describes the problem");
         }
 
         try
@@ -814,7 +814,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot raise "));
+            assertTrue(rte.getMessage().toLowerCase().contains("cannot raise "), "Message describes the problem");
         }
 
         try
@@ -824,7 +824,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot raise "));
+            assertTrue(rte.getMessage().toLowerCase().contains("cannot raise "), "Message describes the problem");
         }
 
         verifyValueAndUnit("atan2(1,2)", new Eval().evaluate("atan2(1,2)"), Math.atan2(1, 2), 0.00001,
@@ -838,7 +838,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("atan2 does not take "));
+            assertTrue(rte.getMessage().toLowerCase().contains("atan2 does not take "), "Message describes the problem");
         }
 
         try
@@ -848,7 +848,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("atan2 does not take "));
+            assertTrue(rte.getMessage().toLowerCase().contains("atan2 does not take "), "Message describes the problem");
         }
 
         verifyValueAndUnit("atan2(1[m],2[m])", new Eval().evaluate("atan2(1[m],2[m])"), Math.atan2(1, 2), 0.00001,
@@ -861,7 +861,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot compute atan2 of "));
+            assertTrue(rte.getMessage().toLowerCase().contains("cannot compute atan2 of "), "Message describes the problem");
         }
 
         try
@@ -871,7 +871,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("unknown function "));
+            assertTrue(rte.getMessage().toLowerCase().contains("unknown function "), "Message describes the problem");
         }
     }
 
@@ -888,7 +888,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("division by 0"));
+            assertTrue(rte.getMessage().toLowerCase().contains("division by 0"), "Message describes the problem");
         }
     }
 
@@ -985,7 +985,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing closing parenthesis"));
+            assertTrue(rte.getMessage().toLowerCase().contains("missing closing parenthesis"), "Message describes the problem");
         }
 
         try
@@ -996,8 +996,8 @@ public class TestEval
         catch (RuntimeException rte)
         {
             // System.out.println(rte.getMessage());
-            assertTrue("Message describes the problem",
-                    rte.getMessage().toLowerCase().contains("nonterminated conditional expression"));
+            assertTrue(rte.getMessage().toLowerCase().contains("nonterminated conditional expression"),
+                    "Message describes the problem");
         }
 
         try
@@ -1007,8 +1007,8 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem",
-                    rte.getMessage().toLowerCase().contains("missing \':\' of conditional expression"));
+            assertTrue(rte.getMessage().toLowerCase().contains("missing \':\' of conditional expression"),
+                    "Message describes the problem");
         }
 
         try
@@ -1018,7 +1018,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("missing operand"));
+            assertTrue(rte.getMessage().toLowerCase().contains("missing operand"), "Message describes the problem");
         }
 
         try
@@ -1028,8 +1028,8 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem",
-                    rte.getMessage().toLowerCase().contains("condition does not evaluate to a logical value"));
+            assertTrue(rte.getMessage().toLowerCase().contains("condition does not evaluate to a logical value"),
+                    "Message describes the problem");
         }
 
         verifyBoolean("Binding strength of else part is minimum", new Eval().evaluate("12>16?3:FALSE()||TRUE()"), true);
@@ -1049,7 +1049,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot resolve variable "));
+            assertTrue(rte.getMessage().toLowerCase().contains("cannot resolve variable "), "Message describes the problem");
         }
 
         Map<String, Object> map = new HashMap<>();
@@ -1062,7 +1062,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("cannot resolve variable "));
+            assertTrue(rte.getMessage().toLowerCase().contains("cannot resolve variable "), "Message describes the problem");
         }
 
         map.put("booleanTrue", Boolean.TRUE);
@@ -1086,8 +1086,8 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem",
-                    rte.getMessage().toLowerCase().contains("cannot add an absolute value to some other value"));
+            assertTrue(rte.getMessage().toLowerCase().contains("cannot add an absolute value to some other value"),
+                    "Message describes the problem");
         }
 
         verifyValueAndUnit("Abs-Abs->Rel", new Eval().setRetrieveValue(valueStore).evaluate("position-otherPosition"),
@@ -1104,11 +1104,11 @@ public class TestEval
     {
         Eval eval = new Eval();
         Object resultObject = eval.evaluate("123[ms]");
-        assertTrue("result is a DoubleScalar", resultObject instanceof DoubleScalar);
+        assertTrue(resultObject instanceof DoubleScalar, "result is a DoubleScalar");
         DoubleScalar<?, ?> resultds = (DoubleScalar<?, ?>) resultObject;
-        assertEquals("value is 123", 123, resultds.si, 0);
+        assertEquals(123, resultds.si, 0, "value is 123");
         SIDimensions siDimensions = resultds.getDisplayUnit().getQuantity().getSiDimensions();
-        assertTrue("SI dimensions match", siDimensions.equals(new SIDimensions(new byte[] {0, 0, 0, 1, 1, 0, 0, 0, 0})));
+        assertTrue(siDimensions.equals(new SIDimensions(new byte[] {0, 0, 0, 1, 1, 0, 0, 0, 0})), "SI dimensions match");
         // Create and install a user parser for milli seconds
         UnitParser unitParser = new UnitParser()
         {
@@ -1125,15 +1125,15 @@ public class TestEval
         };
         eval.setUnitParser(unitParser);
         Object newResultObject = eval.evaluate("123[ms]");
-        assertEquals("value is 0.123", 0.123, ((DoubleScalar<?, ?>) newResultObject).si, 0.0000001);
-        assertEquals("unit is ms", DurationUnit.MILLISECOND, ((DoubleScalar<?, ?>) newResultObject).getDisplayUnit());
+        assertEquals(0.123, ((DoubleScalar<?, ?>) newResultObject).si, 0.0000001, "value is 0.123");
+        assertEquals(DurationUnit.MILLISECOND, ((DoubleScalar<?, ?>) newResultObject).getDisplayUnit(), "unit is ms");
         // Parse something that is not handled by the user unit parser
         verifyValueAndUnit("Parse something that is not handled by the user unit parser", eval.evaluate("123[m/s]"), 123, 0.0,
                 Speed.ZERO.getDisplayUnit().getQuantity());
         // Uninstall the user parser
         eval.setUnitParser(null);
         Object oldResult = eval.evaluate("123[ms]");
-        assertEquals("user unit parser is no longer active", resultObject, oldResult);
+        assertEquals(resultObject, oldResult, "user unit parser is no longer active");
     }
 
     /**
@@ -1143,8 +1143,8 @@ public class TestEval
     public void testEvaluateAsMethods()
     {
         Object result = new Eval().evaluateAsDouble("123");
-        assertTrue("result is a Double", result instanceof Double);
-        assertEquals("value is 123", 123, ((Double) result), 0);
+        assertTrue(result instanceof Double, "result is a Double");
+        assertEquals(123, ((Double) result), 0, "value is 123");
         try
         {
             new Eval().evaluateAsBoolean("123");
@@ -1152,12 +1152,12 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("can not be cast to "));
+            assertTrue(rte.getMessage().toLowerCase().contains("can not be cast to "), "Message describes the problem");
         }
 
         result = new Eval().evaluateAsBoolean("2>3");
-        assertTrue("result is a Boolean", result instanceof Boolean);
-        assertFalse("result is false", (Boolean) result);
+        assertTrue(result instanceof Boolean, "result is a Boolean");
+        assertFalse((Boolean) result, "result is false");
         try
         {
             new Eval().evaluateAsDouble("2>3");
@@ -1165,7 +1165,7 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("can not be cast to "));
+            assertTrue(rte.getMessage().toLowerCase().contains("can not be cast to "), "Message describes the problem");
         }
 
     }
@@ -1185,9 +1185,9 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("unknown function "));
+            assertTrue(rte.getMessage().toLowerCase().contains("unknown function "), "Message describes the problem");
         }
-        
+
         // Install the (still empty) map
         eval.setUserDefinedFunctions(map);
         try
@@ -1197,9 +1197,9 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("unknown function "));
+            assertTrue(rte.getMessage().toLowerCase().contains("unknown function "), "Message describes the problem");
         }
-        
+
         Function ceil = new Function()
         {
 
@@ -1242,9 +1242,9 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("unknown function "));
+            assertTrue(rte.getMessage().toLowerCase().contains("unknown function "), "Message describes the problem");
         }
-        
+
         // Remove our function and reinstall the map
         map.remove("ceil");
         eval.setUserDefinedFunctions(map);
@@ -1255,9 +1255,9 @@ public class TestEval
         }
         catch (RuntimeException rte)
         {
-            assertTrue("Message describes the problem", rte.getMessage().toLowerCase().contains("unknown function "));
+            assertTrue(rte.getMessage().toLowerCase().contains("unknown function "), "Message describes the problem");
         }
-        
+
     }
 
     /**
@@ -1268,7 +1268,7 @@ public class TestEval
     {
         Eval eval = new Eval();
         Collection<Function> collection = eval.builtInFunctions();
-        assertNotNull("result may not be null", collection);
+        assertNotNull(collection, "result may not be null");
         boolean foundAtan2 = false;
         boolean foundAcos = false;
         boolean foundAvogadro = false;
@@ -1289,9 +1289,9 @@ public class TestEval
                     break;
             }
         }
-        assertTrue("Found atan2", foundAtan2);
-        assertTrue("Found acos", foundAcos);
-        assertTrue("Found Avogadro", foundAvogadro);
+        assertTrue(foundAtan2, "Found atan2");
+        assertTrue(foundAcos, "Found acos");
+        assertTrue(foundAvogadro, "Found Avogadro");
     }
 
     /**
@@ -1336,10 +1336,10 @@ public class TestEval
         {
             System.out.println("object: " + object.getClass().getCanonicalName());
         }
-        assertTrue(description, object instanceof DoubleScalar);
+        assertTrue(object instanceof DoubleScalar, description);
         DoubleScalar<?, ?> ds = (DoubleScalar<?, ?>) object;
-        assertEquals(description, ds.si, expectedValue, tolerance);
-        assertEquals(description, ds.getDisplayUnit().getQuantity().getSiDimensions(), expectedQuantity.getSiDimensions());
+        assertEquals(ds.si, expectedValue, tolerance, description);
+        assertEquals(ds.getDisplayUnit().getQuantity().getSiDimensions(), expectedQuantity.getSiDimensions(), description);
     }
 
     /**
@@ -1350,8 +1350,8 @@ public class TestEval
      */
     private void verifyBoolean(final String description, final Object object, final boolean expectedValue)
     {
-        assertTrue(description, object instanceof Boolean);
+        assertTrue(object instanceof Boolean, description);
         Boolean bv = (Boolean) object;
-        assertEquals(description, bv, expectedValue);
+        assertEquals(bv, expectedValue, description);
     }
 }

@@ -1,10 +1,10 @@
 package org.djutils.eval;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * TestFunction.java. Test the Function interface.
@@ -24,12 +24,12 @@ public class TestFunction
     @Test
     public void functionTest()
     {
-        assertEquals("id of Function is returned", "id", this.f.getId());
-        assertEquals("name in MetaData is returned", "short", this.f.getMetaData().getName());
-        assertEquals("description in MetaData is returned", "long", this.f.getMetaData().getDescription());
+        assertEquals("id", this.f.getId(), "id of Function is returned");
+        assertEquals("short", this.f.getMetaData().getName(), "name in MetaData is returned");
+        assertEquals("long", this.f.getMetaData().getDescription(), "description in MetaData is returned");
         // Currently we can't verify the fields in the ObjectDescriptor due to those methods being non public
-        assertEquals("function executes (4>3", true, this.f.function(new Object[] {4, 3}));
-        assertEquals("function executes (4>4", false, this.f.function(new Object[] {3, 3}));
+        assertEquals(true, this.f.function(new Object[] {4, 3}), "function executes (4>3");
+        assertEquals(false, this.f.function(new Object[] {3, 3}), "function executes (4>4");
     }
 
     /**
