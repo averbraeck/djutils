@@ -1,11 +1,11 @@
 package org.djutils.serialization;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -39,7 +39,7 @@ import org.djutils.decoderdumper.HexDumper;
 import org.djutils.serialization.serializers.BasicSerializer;
 import org.djutils.serialization.serializers.Pointer;
 import org.djutils.serialization.util.SerialDataDumper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test message conversions.
@@ -93,12 +93,11 @@ public class Tests
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
                             : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
-                    assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                    assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                     for (int i = 0; i < objects.length; i++)
                     {
-                        assertEquals(
-                                "decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
-                                objects[i], decodedObjects[i]);
+                        assertEquals(objects[i], decodedObjects[i],
+                                "decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input");
                     }
                 }
             }
@@ -146,11 +145,11 @@ public class Tests
                 System.out.print(HexDumper.hexDumper(serialized));
                 System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
                 Object[] decodedObjects = TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
-                assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                 for (int i = 0; i < objects.length; i++)
                 {
-                    assertEquals("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
-                            objects[i], decodedObjects[i]);
+                    assertEquals(objects[i], decodedObjects[i],
+                            "decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input");
                 }
             }
         }
@@ -167,7 +166,7 @@ public class Tests
         assertEquals(expected.length, actual.length);
         for (int i = 0; i < expected.length; i++)
         {
-            assertEquals("byte " + i + " expected: " + expected[i] + ", actual: " + actual[i], expected[i], actual[i]);
+            assertEquals(expected[i], actual[i], "byte " + i + " expected: " + expected[i] + ", actual: " + actual[i]);
         }
     }
 
@@ -238,11 +237,11 @@ public class Tests
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
                             : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
-                    assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                    assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                     for (int i = 0; i < objects.length; i++)
                     {
-                        assertTrue("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
-                                deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                        assertTrue(deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])),
+                                "decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input");
                     }
                 }
             }
@@ -284,11 +283,11 @@ public class Tests
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
                             : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
-                    assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                    assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                     for (int i = 0; i < objects.length; i++)
                     {
-                        assertTrue("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
-                                deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                        assertTrue(deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])),
+                                "decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input");
                     }
                 }
             }
@@ -325,11 +324,11 @@ public class Tests
             {
                 Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
                         : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
-                assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                 for (int i = 0; i < objects.length; i++)
                 {
-                    assertTrue("decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input",
-                            deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                    assertTrue(deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])),
+                            "decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input");
                 }
             }
         }
@@ -499,7 +498,7 @@ public class Tests
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
                             : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
-                    assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                    assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                     // Replace all List objects in the result by corresponding new Compound objects
                     for (int i = 0; i < objects.length; i++)
                     {
@@ -523,20 +522,19 @@ public class Tests
                         if (objects[i] instanceof Compound[])
                         {
                             Compound[] in = (Compound[]) objects[i];
-                            assertTrue("decoded object is now also a Compound[]", decodedObjects[i] instanceof Compound[]);
+                            assertTrue(decodedObjects[i] instanceof Compound[], "decoded object is now also a Compound[]");
                             Compound[] out = (Compound[]) objects[i];
-                            assertEquals("Compound arrays have same length", in.length, out.length);
+                            assertEquals(in.length, out.length, "Compound arrays have same length");
                             for (int j = 0; j < in.length; j++)
                             {
-                                assertEquals("reconstructed compound object matches input", in[j], out[j]);
+                                assertEquals(in[j], out[j], "reconstructed compound object matches input");
                             }
                         }
                         else
                         {
-                            assertTrue(
+                            assertTrue(deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])),
                                     "decoded object at index " + i + "(" + objects[i]
-                                            + ") equals corresponding object in input",
-                                    deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                                            + ") equals corresponding object in input");
                         }
                     }
                 }
@@ -569,7 +567,7 @@ public class Tests
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized, endianUtil)
                             : TypedMessage.decodeToObjectDataTypes(serialized, endianUtil);
-                    assertEquals("Size of decoded matches", objects.length, decodedObjects.length);
+                    assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                     for (int i = 0; i < objects.length; i++)
                     {
                         if (objects[i] instanceof DoubleVector<?, ?, ?>[])
@@ -578,15 +576,14 @@ public class Tests
                             DoubleVector<?, ?, ?>[] arrayOut = (DoubleVector<?, ?, ?>[]) decodedObjects[i];
                             for (int j = 0; j < arrayOut.length; j++)
                             {
-                                assertEquals("Decoded Djutils array vector element matches", arrayIn[j], arrayOut[j]);
+                                assertEquals(arrayIn[j], arrayOut[j], "Decoded Djutils array vector element matches");
                             }
                         }
                         else
                         {
-                            assertTrue(
+                            assertTrue(deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])),
                                     "decoded object at index " + i + "(" + objects[i]
-                                            + ") equals corresponding object in input",
-                                    deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])));
+                                            + ") equals corresponding object in input");
                         }
                     }
                 }
@@ -684,12 +681,12 @@ public class Tests
     public void pointerTest()
     {
         Pointer pointer = new Pointer();
-        assertEquals("initial offset is 0", 0, pointer.get());
-        assertEquals("initial offset is 0", 0, pointer.getAndIncrement(10));
-        assertEquals("offset is now 10", 10, pointer.get());
+        assertEquals(0, pointer.get(), "initial offset is 0");
+        assertEquals(0, pointer.getAndIncrement(10), "initial offset is 0");
+        assertEquals(10, pointer.get(), "offset is now 10");
         pointer.inc(20);
-        assertEquals("offset is now 30", 30, pointer.get());
-        assertTrue("ToString method returns something descriptive", pointer.toString().startsWith("Pointer"));
+        assertEquals(30, pointer.get(), "offset is now 30");
+        assertTrue(pointer.toString().startsWith("Pointer"), "ToString method returns something descriptive");
     }
 
     /**
@@ -923,25 +920,25 @@ public class Tests
         String description = "AccelerationDescription";
         String siUnit = "[m/s^2]";
         SerializationUnits testAccelerationUnitType = new SerializationUnits(code, unitClass, name, description, siUnit);
-        assertEquals("code is returned", code, testAccelerationUnitType.getCode());
-        assertEquals("unit class is returned", unitClass, testAccelerationUnitType.getDjunitsType());
-        assertEquals("name is returned", name, testAccelerationUnitType.getName());
-        assertEquals("description is returned", description, testAccelerationUnitType.getDescription());
-        assertEquals("SI unit is returned", siUnit, testAccelerationUnitType.getSiUnit());
-        assertTrue("toString returns something descriptive", testAccelerationUnitType.toString().startsWith("UnitType"));
+        assertEquals(code, testAccelerationUnitType.getCode(), "code is returned");
+        assertEquals(unitClass, testAccelerationUnitType.getDjunitsType(), "unit class is returned");
+        assertEquals(name, testAccelerationUnitType.getName(), "name is returned");
+        assertEquals(description, testAccelerationUnitType.getDescription(), "description is returned");
+        assertEquals(siUnit, testAccelerationUnitType.getSiUnit(), "SI unit is returned");
+        assertTrue(testAccelerationUnitType.toString().startsWith("UnitType"), "toString returns something descriptive");
 
         byte undefined = 126;
-        assertEquals("new unit is in the byte type map", testAccelerationUnitType, SerializationUnits.getUnitType(code));
-        assertNull("undefined byte returns null", SerializationUnits.getUnitType(undefined));
-        assertEquals("djunits type is returned", unitClass, SerializationUnits.getUnitClass(code));
-        assertNull("undefined byte returns null", SerializationUnits.getUnitClass(undefined));
-        assertEquals("speed type can be found by byte code", SerializationUnits.SPEED,
-                SerializationUnits.getUnitType((byte) 22));
-        assertEquals("speed type can be found by unit type", SerializationUnits.SPEED,
-                SerializationUnits.getUnitType(SpeedUnit.SI));
-        assertEquals("speed type can be found by non SI unit type", SerializationUnits.SPEED,
-                SerializationUnits.getUnitType(SpeedUnit.FOOT_PER_SECOND));
-        assertEquals("speed unit code can be found by unit type", 22, SerializationUnits.getUnitCode(SpeedUnit.SI));
+        assertEquals(testAccelerationUnitType, SerializationUnits.getUnitType(code), "new unit is in the byte type map");
+        assertNull(SerializationUnits.getUnitType(undefined), "undefined byte returns null");
+        assertEquals(unitClass, SerializationUnits.getUnitClass(code), "djunits type is returned");
+        assertNull(SerializationUnits.getUnitClass(undefined), "undefined byte returns null");
+        assertEquals(SerializationUnits.SPEED, SerializationUnits.getUnitType((byte) 22),
+                "speed type can be found by byte code");
+        assertEquals(SerializationUnits.SPEED, SerializationUnits.getUnitType(SpeedUnit.SI),
+                "speed type can be found by unit type");
+        assertEquals(SerializationUnits.SPEED, SerializationUnits.getUnitType(SpeedUnit.FOOT_PER_SECOND),
+                "speed type can be found by non SI unit type");
+        assertEquals(22, SerializationUnits.getUnitCode(SpeedUnit.SI), "speed unit code can be found by unit type");
     }
 
     /**
@@ -952,28 +949,28 @@ public class Tests
     {
         String message = "MessageString";
         Exception e = new SerializationException(message);
-        assertEquals("message should be our message", message, e.getMessage());
-        assertEquals("cause should be null", null, e.getCause());
+        assertEquals(message, e.getMessage(), "message should be our message");
+        assertEquals(null, e.getCause(), "cause should be null");
         e = new SerializationException();
-        assertEquals("cause should be null", null, e.getCause());
+        assertEquals(null, e.getCause(), "cause should be null");
         String causeString = "CauseString";
         Throwable cause = new Throwable(causeString);
         e = new SerializationException(cause);
-        assertEquals("cause should not be our cause", cause, e.getCause());
-        assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+        assertEquals(cause, e.getCause(), "cause should not be our cause");
+        assertEquals(causeString, e.getCause().getMessage(), "cause description should be our cause string");
         e = new SerializationException(message, cause);
-        assertEquals("message should be our message", message, e.getMessage());
-        assertEquals("cause should not be our cause", cause, e.getCause());
-        assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+        assertEquals(message, e.getMessage(), "message should be our message");
+        assertEquals(cause, e.getCause(), "cause should not be our cause");
+        assertEquals(causeString, e.getCause().getMessage(), "cause description should be our cause string");
         for (boolean enableSuppression : new boolean[] {true, false})
         {
             for (boolean writableStackTrace : new boolean[] {true, false})
             {
                 e = new SerializationException(message, cause, enableSuppression, writableStackTrace);
-                assertTrue("Exception should not be null", null != e);
-                assertEquals("message should be our message", message, e.getMessage());
-                assertEquals("cause should not be our cause", cause, e.getCause());
-                assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+                assertTrue(null != e, "Exception should not be null");
+                assertEquals(message, e.getMessage(), "message should be our message");
+                assertEquals(cause, e.getCause(), "cause should not be our cause");
+                assertEquals(causeString, e.getCause().getMessage(), "cause description should be our cause string");
                 // Don't know how to check if suppression is enabled/disabled
                 StackTraceElement[] stackTrace = new StackTraceElement[1];
                 stackTrace[0] = new StackTraceElement("a", "b", "c", 1234);
@@ -983,14 +980,14 @@ public class Tests
                 }
                 catch (Exception e1)
                 {
-                    assertTrue("Stack trace should be writable", writableStackTrace);
+                    assertTrue(writableStackTrace, "Stack trace should be writable");
                     continue;
                 }
                 // You wouldn't believe it, but a call to setStackTrace if non-writable is silently ignored
                 StackTraceElement[] retrievedStackTrace = e.getStackTrace();
                 if (retrievedStackTrace.length > 0)
                 {
-                    assertTrue("stack trace should be writable", writableStackTrace);
+                    assertTrue(writableStackTrace, "stack trace should be writable");
                 }
             }
         }
@@ -1004,28 +1001,28 @@ public class Tests
     {
         String message = "MessageString";
         Exception e = new SerializationRuntimeException(message);
-        assertEquals("message should be our message", message, e.getMessage());
-        assertEquals("cause should be null", null, e.getCause());
+        assertEquals(message, e.getMessage(), "message should be our message");
+        assertEquals(null, e.getCause(), "cause should be null");
         e = new SerializationRuntimeException();
-        assertEquals("cause should be null", null, e.getCause());
+        assertEquals(null, e.getCause(), "cause should be null");
         String causeString = "CauseString";
         Throwable cause = new Throwable(causeString);
         e = new SerializationRuntimeException(cause);
-        assertEquals("cause should not be our cause", cause, e.getCause());
-        assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+        assertEquals(cause, e.getCause(), "cause should not be our cause");
+        assertEquals(causeString, e.getCause().getMessage(), "cause description should be our cause string");
         e = new SerializationRuntimeException(message, cause);
-        assertEquals("message should be our message", message, e.getMessage());
-        assertEquals("cause should not be our cause", cause, e.getCause());
-        assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+        assertEquals(message, e.getMessage(), "message should be our message");
+        assertEquals(cause, e.getCause(), "cause should not be our cause");
+        assertEquals(causeString, e.getCause().getMessage(), "cause description should be our cause string");
         for (boolean enableSuppression : new boolean[] {true, false})
         {
             for (boolean writableStackTrace : new boolean[] {true, false})
             {
                 e = new SerializationRuntimeException(message, cause, enableSuppression, writableStackTrace);
-                assertTrue("Exception should not be null", null != e);
-                assertEquals("message should be our message", message, e.getMessage());
-                assertEquals("cause should not be our cause", cause, e.getCause());
-                assertEquals("cause description should be our cause string", causeString, e.getCause().getMessage());
+                assertTrue(null != e, "Exception should not be null");
+                assertEquals(message, e.getMessage(), "message should be our message");
+                assertEquals(cause, e.getCause(), "cause should not be our cause");
+                assertEquals(causeString, e.getCause().getMessage(), "cause description should be our cause string");
                 // Don't know how to check if suppression is enabled/disabled
                 StackTraceElement[] stackTrace = new StackTraceElement[1];
                 stackTrace[0] = new StackTraceElement("a", "b", "c", 1234);
@@ -1035,14 +1032,14 @@ public class Tests
                 }
                 catch (Exception e1)
                 {
-                    assertTrue("Stack trace should be writable", writableStackTrace);
+                    assertTrue(writableStackTrace, "Stack trace should be writable");
                     continue;
                 }
                 // You wouldn't believe it, but a call to setStackTrace if non-writable is silently ignored
                 StackTraceElement[] retrievedStackTrace = e.getStackTrace();
                 if (retrievedStackTrace.length > 0)
                 {
-                    assertTrue("stack trace should be writable", writableStackTrace);
+                    assertTrue(writableStackTrace, "stack trace should be writable");
                 }
             }
         }
@@ -1054,13 +1051,13 @@ public class Tests
     @Test
     public void testEndianUtil()
     {
-        assertTrue("EndianUtil.BIG_ENDIAN is big endian", EndianUtil.BIG_ENDIAN.isBigEndian());
-        assertFalse("EndianUtil.LITTLE_ENDIAN is not big endian", EndianUtil.LITTLE_ENDIAN.isBigEndian());
-        assertEquals("Platform endianness matches what EndianUtil says", ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN),
-                EndianUtil.isPlatformBigEndian());
-        assertTrue("EndianUtil.BIG_ENDIAN is big endian", EndianUtil.bigEndian().isBigEndian());
-        assertFalse("EndianUtil.LITTLE_ENDIAN is not big endian", EndianUtil.littleEndian().isBigEndian());
-        assertTrue("EndianUtil has descriptive toString method", EndianUtil.BIG_ENDIAN.toString().startsWith("EndianUtil"));
+        assertTrue(EndianUtil.BIG_ENDIAN.isBigEndian(), "EndianUtil.BIG_ENDIAN is big endian");
+        assertFalse(EndianUtil.LITTLE_ENDIAN.isBigEndian(), "EndianUtil.LITTLE_ENDIAN is not big endian");
+        assertEquals(ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN), EndianUtil.isPlatformBigEndian(),
+                "Platform endianness matches what EndianUtil says");
+        assertTrue(EndianUtil.bigEndian().isBigEndian(), "EndianUtil.BIG_ENDIAN is big endian");
+        assertFalse(EndianUtil.littleEndian().isBigEndian(), "EndianUtil.LITTLE_ENDIAN is not big endian");
+        assertTrue(EndianUtil.BIG_ENDIAN.toString().startsWith("EndianUtil"), "EndianUtil has descriptive toString method");
     }
 
     /**
@@ -1118,8 +1115,8 @@ public class Tests
             }
         };
         // We only want to test two methods; so we don't have to provide real implementation for other methods
-        assertEquals("data class name is returned", dataClassName, testSerializer.dataClassName());
-        assertTrue("toString returns something descriptive", testSerializer.toString().startsWith("BasicSerializer"));
+        assertEquals(dataClassName, testSerializer.dataClassName(), "data class name is returned");
+        assertTrue(testSerializer.toString().startsWith("BasicSerializer"), "toString returns something descriptive");
     }
 
 }
