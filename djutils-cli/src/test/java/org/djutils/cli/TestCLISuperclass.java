@@ -1,10 +1,10 @@
 package org.djutils.cli;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.djunits.unit.DurationUnit;
 import org.djunits.value.vdouble.scalar.Duration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;

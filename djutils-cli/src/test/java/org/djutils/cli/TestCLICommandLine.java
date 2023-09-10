@@ -1,9 +1,12 @@
 package org.djutils.cli;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import com.github.stefanbirkner.systemlambda.SystemLambda;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -54,9 +57,6 @@ public class TestCLICommandLine
     @Test
     public void testCli() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
-        // prevent exit to really exit
-        System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
-
         // test CliUtil with CommandLine
         String[] args = new String[] {"-p", "2400"};
         Options options = new Options();
@@ -68,19 +68,22 @@ public class TestCLICommandLine
         assertEquals("Test program for CLI", options.getClass().getAnnotation(Command.class).description()[0]);
 
         // test CliUtil with CommandLine and check() method
-        args = new String[] {"-p", "240000"};
+        final String[] argsErr = new String[] {"-p", "240000"};
         options = new Options();
-        cmd = new CommandLine(options);
+        final CommandLine cmdErr = new CommandLine(options);
+        String errorText = "";
         try
         {
-            CliUtil.execute(cmd, args);
-            fail("check() is not called: the program should exit with an error message when a wrong port is provided");
+            errorText = SystemLambda.tapSystemErr(() ->
+            {
+                SystemLambda.catchSystemExit(() ->
+                { CliUtil.execute(cmdErr, argsErr); });
+            });
         }
-        catch (ExitHelper.ExitException e)
+        catch (Exception e)
         {
-            // ok!
+            fail("calling CliUtil.execute caused exception", e);
         }
-
-        System.setSecurityManager(null);
+        assertTrue(errorText.startsWith("Port should be between 1 and 65535"));
     }
 }

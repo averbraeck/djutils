@@ -1,6 +1,6 @@
 package org.djutils.cli;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Locale;
 
@@ -94,7 +94,7 @@ import org.djunits.value.vdouble.scalar.Temperature;
 import org.djunits.value.vdouble.scalar.Time;
 import org.djunits.value.vdouble.scalar.Torque;
 import org.djunits.value.vdouble.scalar.Volume;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;

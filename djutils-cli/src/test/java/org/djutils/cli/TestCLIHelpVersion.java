@@ -1,11 +1,11 @@
 package org.djutils.cli;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.contrib.java.lang.system.SystemOutRule;
+import org.junit.jupiter.api.Test;
+
+import com.github.stefanbirkner.systemlambda.SystemLambda;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -45,10 +45,6 @@ public class TestCLIHelpVersion
         }
     }
 
-    /** store the System.out.print() information in a log. */
-    @Rule
-    public final SystemOutRule systemOutRule = new SystemOutRule().enableLog();
-
     /**
      * Test the CliUtil "--help" option (that calls System.exit).
      * @throws CliException on error
@@ -59,26 +55,28 @@ public class TestCLIHelpVersion
     @Test
     public void testCliHelp() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
-        System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
+        // System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
         String[] args = new String[] {"--help"};
         Options options = new Options();
         CliUtil.changeCommandVersion(options, "2.0");
         CliUtil.changeCommandName(options, "Program2");
         CliUtil.changeCommandDescription(options, "2nd version of program");
+        String helpText = "";
         try
         {
-            CliUtil.execute(options, args);
-            fail("Program should have exited");
+            helpText = SystemLambda.tapSystemOut(() ->
+            {
+                SystemLambda.catchSystemExit(() ->
+                { CliUtil.execute(options, args); });
+            });
         }
-        catch (ExitHelper.ExitException e)
+        catch (Exception e)
         {
-            // ok!
+            fail("Requesting help caused exception", e);
         }
-        System.setSecurityManager(null);
-        String helpText = this.systemOutRule.getLog();
         assertTrue(helpText.contains("Program2"));
         assertTrue(helpText.contains("2nd version of program"));
-        
+
         // clean the override map
         CliUtil.overrideMap.clear();
     }
@@ -93,25 +91,26 @@ public class TestCLIHelpVersion
     @Test
     public void testCliVersion() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
-        System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
         String[] args = new String[] {"-V"};
         Options options = new Options();
         CliUtil.changeCommandVersion(options, "2.0");
         CliUtil.changeCommandName(options, "Program2");
         CliUtil.changeCommandDescription(options, "2nd version of program");
+        String versionText = "";
         try
         {
-            CliUtil.execute(options, args);
-            fail("Program should have exited");
+            versionText = SystemLambda.tapSystemOut(() ->
+            {
+                SystemLambda.catchSystemExit(() ->
+                { CliUtil.execute(options, args); });
+            });
         }
-        catch (ExitHelper.ExitException e)
+        catch (Exception e)
         {
-            // ok!
+            fail("Requesting help caused exception", e);
         }
-        System.setSecurityManager(null);
-        String versionText = this.systemOutRule.getLog();
         assertTrue(versionText.contains("2.0"));
-        
+
         // clean the override map
         CliUtil.overrideMap.clear();
     }
@@ -122,21 +121,22 @@ public class TestCLIHelpVersion
     @Test
     public void testCliWrongValue()
     {
-        // prevent exit to really exit
-        System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
-
         String[] args = new String[] {"-p", "120000"};
         Options options = new Options();
+        String errorText = "";
         try
         {
-            CliUtil.execute(options, args);
-            fail("the program should exit with an error message when a wrong port is provided");
+            errorText = SystemLambda.tapSystemErr(() ->
+            {
+                SystemLambda.catchSystemExit(() ->
+                { CliUtil.execute(options, args); });
+            });
         }
-        catch (ExitHelper.ExitException e)
+        catch (Exception e)
         {
-            // ok!
+            fail("calling CliUtil.execute caused exception", e);
         }
-        System.setSecurityManager(null);
+        assertTrue(errorText.startsWith("Port should be between 1 and 65535"));
     }
 
     /**
@@ -145,22 +145,23 @@ public class TestCLIHelpVersion
     @Test
     public void testCliWrongOption()
     {
-        // prevent exit to really exit
-        System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
-
         String[] args = new String[] {"--wrongOption=50"};
         Options options = new Options();
+        String errorText = "";
         try
         {
-            CliUtil.execute(options, args);
-            fail("the program should exit with an error message when a wrong option is provided");
+            errorText = SystemLambda.tapSystemErr(() ->
+            {
+                SystemLambda.catchSystemExit(() ->
+                { CliUtil.execute(options, args); });
+            });
         }
-        catch (ExitHelper.ExitException e)
+        catch (Exception e)
         {
-            // ok!
+            fail("calling CliUtil.execute caused exception", e);
         }
-
-        System.setSecurityManager(null);
+        assertTrue(errorText.contains("Unknown option:"));
+        assertTrue(errorText.contains("--wrongOption=50"));
     }
 
 }
