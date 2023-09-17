@@ -918,7 +918,7 @@ public class Eval
         {
             // Rel + Rel -> Rel
             DoubleScalar<?, ?> sum =
-                    DoubleScalarRel.instantiate(((DoubleScalarRel<?, ?>) left).si + ((DoubleScalarRel<?, ?>) right).si,
+                    DoubleScalarRel.instantiateAnonymous(((DoubleScalarRel<?, ?>) left).si + ((DoubleScalarRel<?, ?>) right).si,
                             ((DoubleScalarRel<?, ?>) left).getDisplayUnit().getStandardUnit());
             // System.out.println(left + " + " + right + " = " + sum);
             // Set display unit???
@@ -931,7 +931,7 @@ public class Eval
         }
         // Abs + Rel -> Abs
         DoubleScalar<?, ?> sum =
-                DoubleScalarAbs.instantiate(((DoubleScalarAbs<?, ?, ?, ?>) left).si + ((DoubleScalarRel<?, ?>) right).si,
+                DoubleScalarAbs.instantiateAnonymous(((DoubleScalarAbs<?, ?, ?, ?>) left).si + ((DoubleScalarRel<?, ?>) right).si,
                         ((DoubleScalarAbs<?, ?, ?, ?>) left).getDisplayUnit().getStandardUnit());
         // System.out.println(left + " + " + right + " = " + sum);
         // sum.setDisplayUnit(ds.getDisplayUnit());
@@ -962,7 +962,7 @@ public class Eval
         {
             // Abs - Abs -> Rel
             DoubleScalar<?, ?> difference =
-                    DoubleScalarRel.instantiate(((DoubleScalar<?, ?>) left).si - ((DoubleScalar<?, ?>) right).si,
+                    DoubleScalarRel.instantiateAnonymous(((DoubleScalar<?, ?>) left).si - ((DoubleScalar<?, ?>) right).si,
                             ((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit());
             // System.out.println(left + " - " + right + " = " + difference);
             push(difference);
@@ -972,7 +972,7 @@ public class Eval
         {
             // Abs - Rel -> Abs
             DoubleScalar<?, ?> difference =
-                    DoubleScalarAbs.instantiate(((DoubleScalar<?, ?>) left).si - ((DoubleScalar<?, ?>) right).si,
+                    DoubleScalarAbs.instantiateAnonymous(((DoubleScalar<?, ?>) left).si - ((DoubleScalar<?, ?>) right).si,
                             ((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit());
             // System.out.println(left + " - " + right + " = " + difference);
             push(difference);
@@ -985,7 +985,7 @@ public class Eval
         }
         // Rel - Rel -> Rel
         DoubleScalar<?, ?> difference =
-                DoubleScalarRel.instantiate(((DoubleScalar<?, ?>) left).si - ((DoubleScalar<?, ?>) right).si,
+                DoubleScalarRel.instantiateAnonymous(((DoubleScalar<?, ?>) left).si - ((DoubleScalar<?, ?>) right).si,
                         ((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit());
         // System.out.println(left + " - " + right + " = " + difference);
         push(difference);
