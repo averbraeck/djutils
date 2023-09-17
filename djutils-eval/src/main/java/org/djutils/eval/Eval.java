@@ -108,7 +108,7 @@ public class Eval
         new F0("PHI", Constants.PHI, new MetaData("Golden ratio", "Golden ratio", noArguments)),
         new F0("PLANCK", Constants.PLANCK, new MetaData("Planck constant; ratio of a photon's energy and its frequency",
                 "Planck constant; the exact ratio of a photon's energy and its frequency", noArguments)),
-        new F0("PLANCKREDUCED", Constants.PLANKREDUCED, new MetaData("Reduced Planck constant", 
+        new F0("PLANCKREDUCED", Constants.PLANCKREDUCED, new MetaData("Reduced Planck constant", 
                 "Reduced Planck constant, a.k.a. angular Planck constant; Planck constant divided by 2 pi" ,noArguments)),
         new F0("PROTONCHARGE", Constants.PROTONCHARGE, new MetaData("ElectricalCharge of one proton", "ElectricalCharge of one proton", noArguments)),
         new F0("PROTONMASS", Constants.PROTONMASS, new MetaData("Mass of a proton", 

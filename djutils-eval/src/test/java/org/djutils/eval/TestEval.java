@@ -576,8 +576,8 @@ public class TestEval
                 Constants.PHI.getDisplayUnit().getQuantity());
         verifyValueAndUnit("Planck constant", new Eval().evaluate("PLANCK()"), Constants.PLANCK.si, 0.0,
                 Constants.PLANCK.getDisplayUnit().getQuantity());
-        verifyValueAndUnit("Planck constant divided by 2 pi", new Eval().evaluate("PLANCKREDUCED()"), Constants.PLANKREDUCED.si,
-                0.0, Constants.PLANKREDUCED.getDisplayUnit().getQuantity());
+        verifyValueAndUnit("Planck constant divided by 2 pi", new Eval().evaluate("PLANCKREDUCED()"), Constants.PLANCKREDUCED.si,
+                0.0, Constants.PLANCKREDUCED.getDisplayUnit().getQuantity());
         verifyValueAndUnit("Electrical charge of a proton", new Eval().evaluate("PROTONCHARGE()"), Constants.PROTONCHARGE.si,
                 0.0, Constants.PROTONCHARGE.getDisplayUnit().getQuantity());
         verifyValueAndUnit("Mass of a proton", new Eval().evaluate("PROTONMASS()"), Constants.PROTONMASS.si, 0.0,
