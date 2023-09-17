@@ -12,13 +12,4 @@
   <name>DJUTILS - Drawing and animation primitives</name>
   <description>DJUTILS - Delft Java Utilities Drawing and animation primitives</description>
 
-  <dependencies>
-
-    <dependency>
-      <groupId>org.djutils</groupId>
-      <artifactId>djutils</artifactId>
-    </dependency>
-
-  </dependencies>
-
 </project>
