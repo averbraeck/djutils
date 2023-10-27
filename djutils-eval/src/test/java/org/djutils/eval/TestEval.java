@@ -1104,7 +1104,9 @@ public class TestEval
                 PositionUnit.CENTIMETER.getQuantity());
         verifyValueAndUnit("_variable", new Eval().setRetrieveValue(valueStore).evaluate("__pk_wjs_avb"), 9.45E18, 1E16,
                 PositionUnit.LIGHTYEAR.getQuantity());
-        ;
+        String string = "Bla";
+        map.put("theString", string);
+        assertEquals(string, new Eval().setRetrieveValue(valueStore).evaluate("theString"), "evaluator can return other objects");
     }
 
     /**

@@ -1138,11 +1138,8 @@ public class Eval
             {
                 throwException("Cannot resolve variable " + name);
             }
-            if ((result instanceof DoubleScalar) || (result instanceof Boolean))
-            {
-                return result;
-            }
-            throwException("Value of " + name + " is neither a DoubleScalar nor a Boolean");
+            // Do not check the type of the result to allow expression that return any kind of object
+            return result;
         }
         // At an opening parenthesis. This signals the start of a function call; collect the parameters of the function on the
         // stack and count them
