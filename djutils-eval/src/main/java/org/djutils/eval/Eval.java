@@ -296,24 +296,36 @@ public class Eval
     {
         Throw.whenNull(expression, "expression may not be null");
         Throw.when(expression.length() == 0, IllegalArgumentException.class, "Expression may not be the empty string");
-        this.expression = expression;
-        this.position = 0;
-        this.stack.clear();
-        eatSpace();
-        evalLhs(0);
-        if (this.position < this.expression.length())
+        String savedExpression = this.expression;
+        int savedPosition = this.position;
+        List<Object> savedStack = new ArrayList<>(this.stack);
+        try
         {
-            this.throwException("Trailing garbage: \"" + this.expression.substring(this.position) + "\"");
+            this.expression = expression;
+            this.position = 0;
+            this.stack.clear();
+            eatSpace();
+            evalLhs(0);
+            if (this.position < this.expression.length())
+            {
+                this.throwException("Trailing garbage: \"" + this.expression.substring(this.position) + "\"");
+            }
+            if (this.stack.size() > 1)
+            {
+                this.throwException("Unfinished operations");
+            }
+            if (this.stack.size() <= 0)
+            {
+                this.throwException("No result after evaluation");
+            }
+            return pop();
         }
-        if (this.stack.size() > 1)
+        finally
         {
-            this.throwException("Unfinished operations");
+            this.expression = savedExpression;
+            this.position = savedPosition;
+            this.stack = savedStack;
         }
-        if (this.stack.size() <= 0)
-        {
-            this.throwException("No result after evaluation");
-        }
-        return pop();
     }
 
     /**
@@ -930,8 +942,9 @@ public class Eval
             throwException("Cannot add an absolute value to some other value");
         }
         // Abs + Rel -> Abs
-        DoubleScalar<?, ?> sum =
-                DoubleScalarAbs.instantiateAnonymous(((DoubleScalarAbs<?, ?, ?, ?>) left).si + ((DoubleScalarRel<?, ?>) right).si,
+        DoubleScalar<?,
+                ?> sum = DoubleScalarAbs.instantiateAnonymous(
+                        ((DoubleScalarAbs<?, ?, ?, ?>) left).si + ((DoubleScalarRel<?, ?>) right).si,
                         ((DoubleScalarAbs<?, ?, ?, ?>) left).getDisplayUnit().getStandardUnit());
         // System.out.println(left + " + " + right + " = " + sum);
         // sum.setDisplayUnit(ds.getDisplayUnit());
