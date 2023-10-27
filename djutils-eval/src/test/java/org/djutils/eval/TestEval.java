@@ -576,8 +576,8 @@ public class TestEval
                 Constants.PHI.getDisplayUnit().getQuantity());
         verifyValueAndUnit("Planck constant", new Eval().evaluate("PLANCK()"), Constants.PLANCK.si, 0.0,
                 Constants.PLANCK.getDisplayUnit().getQuantity());
-        verifyValueAndUnit("Planck constant divided by 2 pi", new Eval().evaluate("PLANCKREDUCED()"), Constants.PLANCKREDUCED.si,
-                0.0, Constants.PLANCKREDUCED.getDisplayUnit().getQuantity());
+        verifyValueAndUnit("Planck constant divided by 2 pi", new Eval().evaluate("PLANCKREDUCED()"),
+                Constants.PLANCKREDUCED.si, 0.0, Constants.PLANCKREDUCED.getDisplayUnit().getQuantity());
         verifyValueAndUnit("Electrical charge of a proton", new Eval().evaluate("PROTONCHARGE()"), Constants.PROTONCHARGE.si,
                 0.0, Constants.PROTONCHARGE.getDisplayUnit().getQuantity());
         verifyValueAndUnit("Mass of a proton", new Eval().evaluate("PROTONMASS()"), Constants.PROTONMASS.si, 0.0,
@@ -1094,6 +1094,17 @@ public class TestEval
                 position.minus(otherPosition).si, 0.00001, LengthUnit.SI.getQuantity());
         verifyValueAndUnit("Abs-Rel->Abs", new Eval().setRetrieveValue(valueStore).evaluate("position-200[m]"),
                 position.si - 200, 0.0001, PositionUnit.BASE);
+
+        map.put("@ab@c", new Position(321, PositionUnit.ANGSTROM));
+        map.put("#pq#r", new Position(456, PositionUnit.CENTIMETER));
+        map.put("__pk_wjs_avb", new Position(999, PositionUnit.LIGHTYEAR));
+        verifyValueAndUnit("@variable", new Eval().setRetrieveValue(valueStore).evaluate("@ab@c"), 321e-10, 1e-16,
+                PositionUnit.ANGSTROM.getQuantity());
+        verifyValueAndUnit("#variable", new Eval().setRetrieveValue(valueStore).evaluate("#pq#r"), 4.56, 0.001,
+                PositionUnit.CENTIMETER.getQuantity());
+        verifyValueAndUnit("_variable", new Eval().setRetrieveValue(valueStore).evaluate("__pk_wjs_avb"), 9.45E18, 1E16,
+                PositionUnit.LIGHTYEAR.getQuantity());
+        ;
     }
 
     /**

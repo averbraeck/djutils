@@ -395,7 +395,7 @@ public class Eval
 
             default: // parse one operand
             {
-                if (Character.isLetter(token))
+                if (Character.isLetter(token) || '#' == token || '@' == token || '_' == token)
                 {
                     push(handleFunctionOrVariableOrNamedConstant());
                 }
@@ -1119,7 +1119,7 @@ public class Eval
         while (this.position < this.expression.length())
         {
             char c = this.expression.charAt(this.position);
-            if (Character.isLetterOrDigit(c) || '.' == c || '_' == c)
+            if (Character.isLetterOrDigit(c) || '.' == c || '_' == c || '@' == c || '#' == c)
             {
                 this.position++;
             }
