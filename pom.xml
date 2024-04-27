@@ -513,7 +513,7 @@
         <configuration>
           <links>
             <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
-            <link>https://junit.org/junit4/javadoc/4.12/</link>
+            <link>https://junit.org/junit5/docs/5.10.2/api/</link>
           </links>
           <detectLinks>false</detectLinks>
           <detectOfflineLinks>true</detectOfflineLinks>
