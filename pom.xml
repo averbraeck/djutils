@@ -283,7 +283,6 @@
           <detectLinks>false</detectLinks>
           <detectOfflineLinks>true</detectOfflineLinks>
           <show>package</show>
-          <stylesheetfile>${basedir}/config/javadoc/stylesheet.css</stylesheetfile>
         </configuration>
         <executions>
           <execution>
@@ -513,13 +512,13 @@
         <configuration>
           <links>
             <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
-            <link>https://junit.org/junit5/docs/5.10.2/api/</link>
+            <link>https://tinylog.org/v1/javadoc/</link>
+            <link>https://github.com/remkop/picocli/tree/main/docs/apidocs/</link>
           </links>
           <detectLinks>false</detectLinks>
           <detectOfflineLinks>true</detectOfflineLinks>
           <detectJavaApiLink>false</detectJavaApiLink>
           <show>package</show>
-          <stylesheetfile>${basedir}/config/javadoc/stylesheet.css</stylesheetfile>
         </configuration>
         <reportSets>
           <reportSet>
