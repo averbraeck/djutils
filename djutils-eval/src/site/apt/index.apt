@@ -1,0 +1,26 @@
+                   --------------------------------
+                   DJUTILS - EVAL
+                   --------------------------------
+                   APRIL, 2024
+                   --------------------------------
+                   
+DJUTILS-EVAL - Delft Java Utilities
+
+	The DJUTILS-EVAL project contains an evaluator of expressions that can contain variables. DJUTILS-EVAL is unit-aware.
+	
+	
+==========
+
+	DJUTILS-EVAL has an open source BSD 3-clause license.
+
+    * Third party components used in DJUTILS-EVAL can not have a license that is more restrictive than BSD, Apache, MIT, LGPL, or Eclipse.
+
+    * DJUTILS-EVAL can be incorporated in part or in full in other products for any use (educational, commercial, whatever).
+
+    * DJUTILS-EVAL may be extended, evolved by anyone into anything else for any purpose.
+    
+    []
+    
+==========
+
+
