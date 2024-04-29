@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
- * @author Peter Knoppers</a>
+ * @author Peter Knoppers
  */
 public class TestFunction
 {
