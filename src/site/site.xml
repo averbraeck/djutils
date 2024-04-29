@@ -29,6 +29,7 @@
       <item name="djutils-data" href="https://djutils.org/docs/${version}/djutils-data/index.html" />
       <item name="djutils-stats" href="https://djutils.org/docs/${version}/djutils-stats/index.html" />
       <item name="djutils-draw" href="https://djutils.org/docs/${version}/djutils-draw/index.html" />
+      <item name="djutils-eval" href="https://djutils.org/docs/${version}/djutils-eval/index.html" />
     </menu>
 
     <menu name="PROJECT REPORTS">
