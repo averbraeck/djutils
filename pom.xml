@@ -273,15 +273,28 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven.javadoc.version}</version>
         <configuration>
-          <links>
-            <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
-            <link>https://tinylog.org/v1/javadoc/</link>
-            <link>https://github.com/remkop/picocli/tree/main/docs/apidocs/</link>
-          </links>
+          <offlineLinks>
+            <offlineLink><url>https://tinylog.org/v1/javadoc/</url></offlineLink>
+            <offlineLink><url>https://djunits.org/docs/latest/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-base/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-serialization/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-cli/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-data/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-draw/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-eval/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-serialization/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-stats/apidocs/</url></offlineLink>
+            <offlineLink><url>https://junit.org/junit5/docs/current/api/</url></offlineLink>
+            <offlineLink><url>https://javadoc.io/doc/jakarta.annotation/jakarta.annotation-api/latest/jakarta.annotation/</url></offlineLink>
+            <offlineLink><url>https://picocli.info/apidocs/</url></offlineLink>
+            <offlineLink><url>https://javadoc.io/doc/de.siegmar/fastcsv/latest/de.siegmar.fastcsv/</url></offlineLink>
+            <offlineLink><url>https://www.javadoc.io/doc/com.google.code.gson/gson/latest/</url></offlineLink>
+          </offlineLinks>
           <additionalJOption>-J-Xmx1024m</additionalJOption>
-          <detectJavaApiLink>false</detectJavaApiLink>
-          <detectLinks>false</detectLinks>
+          <detectJavaApiLink>true</detectJavaApiLink>
           <detectOfflineLinks>true</detectOfflineLinks>
+          <detectLinks>false</detectLinks>
           <show>package</show>
         </configuration>
         <executions>
@@ -432,7 +445,7 @@
         <version>${maven.site.version}</version>
         <configuration>
           <chmod>true</chmod>
-          <relativizeDecorationLinks>false</relativizeDecorationLinks>
+          <relativizeSiteLinks>false</relativizeSiteLinks>
           <inputEncoding>UTF-8</inputEncoding>
           <outputEncoding>UTF-8</outputEncoding>
         </configuration>
@@ -510,12 +523,25 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven.javadoc.version}</version>
         <configuration>
-          <links>
-            <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
-            <link>https://tinylog.org/v1/javadoc/</link>
-            <link>https://github.com/remkop/picocli/tree/main/docs/apidocs/</link>
-          </links>
-          <detectLinks>false</detectLinks>
+          <offlineLinks>
+            <offlineLink><url>https://tinylog.org/v1/javadoc/</url></offlineLink>
+            <offlineLink><url>https://djunits.org/docs/latest/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-base/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-serialization/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-cli/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-data/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-draw/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-eval/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-serialization/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-stats/apidocs/</url></offlineLink>
+            <offlineLink><url>https://junit.org/junit5/docs/current/api/</url></offlineLink>
+            <offlineLink><url>https://javadoc.io/doc/jakarta.annotation/jakarta.annotation-api/latest/jakarta.annotation/</url></offlineLink>
+            <offlineLink><url>https://picocli.info/apidocs/</url></offlineLink>
+            <offlineLink><url>https://javadoc.io/doc/de.siegmar/fastcsv/latest/de.siegmar.fastcsv/</url></offlineLink>
+            <offlineLink><url>https://www.javadoc.io/doc/com.google.code.gson/gson/latest/</url></offlineLink>
+          </offlineLinks>
+          <detectLinks>true</detectLinks>
           <detectOfflineLinks>true</detectOfflineLinks>
           <detectJavaApiLink>false</detectJavaApiLink>
           <show>package</show>
