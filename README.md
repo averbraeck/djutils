@@ -4,7 +4,7 @@ DJUTILS is a set of Java classes that are used by other TU Delft projects such a
 
 DJUTILS is a highly diverse software collection. All of this software has in common that it is written in Java and that the writers/designers believe that it can (and should) be reused in other projects. The software is organized in packages
 
-* [djutils](https://djutils.org/manual/djutils): several small projects that require few or no external packages.
+* [djutils-base](https://djutils.org/manual/djutils): several small projects that require few or no external packages.
 * [djutils-cli](https://djutils.org/manual/djutils-cli): command line arguments processing with defaults taken from environment variables and other sources, usage summary, etc.
 * [djutils-serialization](https://djutils.org/manual/djutils-serialization): utilities to serialize and deserialize data.
 * [djutils-data](https://djutils.org/manual/djutils-data): utilities to collect, store, write and read structured data, e.g., measurements from sensors, or results from a simulation.
