@@ -221,12 +221,20 @@ public class AccumulatorTest
                 "cummulative probability above single inserted value is 1.0");
         tda.register(20);
         assertEquals(0.5, tda.getCumulativeProbability(null, 15), 0, "cumulative probability at mean is 0.5");
-        assertEquals(0.25, tda.getCumulativeProbability(null, 12.5), 0.15,
-                "cumulative probability at 0.25 of range is between 0 and 0.5 0.26");
-        assertEquals(0.75, tda.getCumulativeProbability(null, 17.5), 0.15,
-                "cumulative probability at 0.75 of range is between 0.5 and 1.0");
-        assertEquals(0.0, tda.getCumulativeProbability(null, 10), 0, "cumulative probability at start of range is 0.0");
-        assertEquals(1.0, tda.getCumulativeProbability(null, 20), 0, "cumulative probability at end of range is 1.0");
+        assertEquals(0.5, tda.getCumulativeProbability(null, 12.5), 0.0001,
+                "cumulative probability at 0.25 of range is 0.5 -- see https://github.com/tdunning/t-digest/issues/103");
+        assertEquals(0.5, tda.getCumulativeProbability(null, 17.5), 0.0001,
+                "cumulative probability at 0.75 of range is 0.5 -- see https://github.com/tdunning/t-digest/issues/103");
+        assertEquals(0.0, tda.getCumulativeProbability(null, 10 - 0.00001), 0,
+                "cumulative probability before start of range is 0.0");
+        assertEquals(0.25, tda.getCumulativeProbability(null, 10), 0, "cumulative probability at start of range is 0.25");
+        assertEquals(0.5, tda.getCumulativeProbability(null, 10 + 0.0001), 0,
+                "cumulative probability after start of range is 0.5");
+        assertEquals(0.5, tda.getCumulativeProbability(null, 20 - 0.0001), 0,
+                "cumulative probability before end of range is 0.5");
+        assertEquals(0.75, tda.getCumulativeProbability(null, 20), 0, "cumulative probability at end of range is 0.75");
+        assertEquals(1.0, tda.getCumulativeProbability(null, 20 + 0.0001), 0,
+                "cumulative probability after end of range is 0.1");
     }
 
 }
