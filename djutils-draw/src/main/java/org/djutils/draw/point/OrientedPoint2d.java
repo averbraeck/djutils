@@ -37,8 +37,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
      */
     public OrientedPoint2d(final double x, final double y) throws IllegalArgumentException
     {
-        super(x, y);
-        this.dirZ = 0;
+        this(x, y, 0.0);
     }
 
     /**
@@ -51,7 +50,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     public OrientedPoint2d(final double x, final double y, final double dirZ) throws IllegalArgumentException
     {
         super(x, y);
-        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "rotZ must be a number (not NaN)");
+        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "dirZ must be a number (not NaN)");
         this.dirZ = dirZ;
     }
 
@@ -90,9 +89,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
      */
     public OrientedPoint2d(final Point2d point, final double dirZ) throws IllegalArgumentException
     {
-        super(point.x, point.y);
-        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "rotZ must be a number (not NaN)");
-        this.dirZ = dirZ;
+        this(point.x, point.y, dirZ);
     }
 
     /** {@inheritDoc} */
@@ -122,7 +119,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     @Override
     public OrientedPoint2d neg()
     {
-        return new OrientedPoint2d(-getX(), -getY(), this.dirZ + Math.PI);
+        return new OrientedPoint2d(-getX(), -getY(), AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
     }
 
     /** {@inheritDoc} */
@@ -156,7 +153,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     public OrientedPoint2d interpolate(final OrientedPoint2d otherPoint, final double fraction)
             throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(otherPoint, "point cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
         return new OrientedPoint2d((1.0 - fraction) * getX() + fraction * otherPoint.x,
                 (1.0 - fraction) * getY() + fraction * otherPoint.y,
@@ -164,7 +161,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     }
 
     /**
-     * Return a new OrientedPoint2d with an in-place rotation around the z-axis by the provided delta. The resulting rotation is
+     * Return a new OrientedPoint2d with an in-place rotation around the z-axis by the provided rotateZ. The resulting rotation is
      * normalized between -&pi; and &pi;.
      * @param rotateZ double; the rotation around the z-axis
      * @return OrientedPoint; a new point with the same coordinates and applied rotation

@@ -157,14 +157,14 @@ public class Ray2dTest
         Ray2d negated = ray.neg();
         assertEquals(-expectedX, negated.x, 0.0001, description + " neg x");
         assertEquals(-expectedY, negated.y, 0.0001, description + " neg y");
-        assertEquals(expectedPhi + Math.PI, negated.phi, 0.0001, description + " neg phi");
+        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), negated.phi, 0.0001, description + " neg phi");
         Ray2d flipped = ray.flip();
         assertEquals(expectedX, flipped.getX(), 0.0001, description + " getX");
         assertEquals(expectedX, flipped.x, 0.0001, description + " x");
         assertEquals(expectedY, flipped.getY(), 0.0001, description + " getY");
         assertEquals(expectedY, flipped.y, 0.0001, description + " y");
-        assertEquals(expectedPhi + Math.PI, flipped.getPhi(), 0.0001, description + " getPhi");
-        assertEquals(expectedPhi + Math.PI, flipped.phi, 0.0001, description + " phi");
+        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), flipped.getPhi(), 0.0001, description + " getPhi");
+        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), flipped.phi, 0.0001, description + " phi");
         assertEquals(2, ray.size(), description + " size");
         Iterator<Point2d> iterator = ray.getPoints();
         // First result of iterator is the finite end point (but this is not a hard promise)

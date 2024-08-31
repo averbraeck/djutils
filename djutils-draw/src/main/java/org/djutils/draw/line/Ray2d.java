@@ -61,13 +61,15 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d>
      * @param y double; the y coordinate of the finite end point of the ray
      * @param throughX double; the x coordinate of another point on the ray
      * @param throughY double; the y coordinate of another point on the ray
-     * @throws DrawRuntimeException when throughX == x and throughY == y
+     * @throws DrawRuntimeException when throughX == x and throughY == y, or any through-value is NaN
      */
     public Ray2d(final double x, final double y, final double throughX, final double throughY) throws DrawRuntimeException
     {
         super(x, y);
         Throw.when(throughX == x && throughY == y, DrawRuntimeException.class,
                 "the coordinates of the through point must differ from (x, y)");
+        Throw.when(Double.isNaN(throughX) || Double.isNaN(throughY), DrawRuntimeException.class,
+                "throughX and throughY must be numbers (not NaN)");
         this.phi = Math.atan2(throughY - y, throughX - x);
     }
 
@@ -77,7 +79,7 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d>
      * @param throughX double; the x coordinate of another point on the ray
      * @param throughY double; the y coordinate of another point on the ray
      * @throws NullPointerException when point is null
-     * @throws DrawRuntimeException when throughX == point.x and throughY == point.y
+     * @throws DrawRuntimeException when throughX == point.x and throughY == point.y, or any through-value is NaN
      */
     public Ray2d(final Point2d point, final double throughX, final double throughY)
             throws NullPointerException, DrawRuntimeException
@@ -138,9 +140,9 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d>
     {
         double cosPhi = Math.cos(this.phi);
         double sinPhi = Math.sin(this.phi);
-        Point2d[] array = new Point2d[] { new Point2d(this.x, this.y),
+        Point2d[] array = new Point2d[] {new Point2d(this.x, this.y),
                 new Point2d(cosPhi == 0 ? this.x : cosPhi * Double.POSITIVE_INFINITY,
-                        sinPhi == 0 ? this.y : sinPhi * Double.POSITIVE_INFINITY) };
+                        sinPhi == 0 ? this.y : sinPhi * Double.POSITIVE_INFINITY)};
         return Arrays.stream(array).iterator();
     }
 
@@ -158,14 +160,14 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d>
     @Override
     public Ray2d neg()
     {
-        return new Ray2d(-this.x, -this.y, this.phi + Math.PI);
+        return new Ray2d(-this.x, -this.y, AngleUtil.normalizeAroundZero(this.phi + Math.PI));
     }
 
     /** {@inheritDoc} */
     @Override
     public Ray2d flip()
     {
-        return new Ray2d(this.x, this.y, this.phi + Math.PI);
+        return new Ray2d(this.x, this.y, AngleUtil.normalizeAroundZero(this.phi + Math.PI));
     }
 
     /** {@inheritDoc} */

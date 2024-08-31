@@ -72,7 +72,7 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
      * @param throughX double; the x coordinate of another point on the ray
      * @param throughY double; the y coordinate of another point on the ray
      * @param throughZ double; the z coordinate of another point on the ray
-     * @throws DrawRuntimeException when throughX == x and throughY == y
+     * @throws DrawRuntimeException when throughX == x and throughY == y and throughZ == z, or any through-value is NaN
      */
     public Ray3d(final double x, final double y, final double z, final double throughX, final double throughY,
             final double throughZ) throws DrawRuntimeException
@@ -80,6 +80,8 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
         super(x, y, z);
         Throw.when(throughX == x && throughY == y && throughZ == z, DrawRuntimeException.class,
                 "the coordinates of the through point must differ from (x, y, z)");
+        Throw.when(Double.isNaN(throughX) || Double.isNaN(throughY) || Double.isNaN(throughZ), DrawRuntimeException.class,
+                "throughX, throughY and throughZ must be numbers (not NaN)");
         this.phi = Math.atan2(throughY - y, throughX - x);
         this.theta = Math.atan2(Math.hypot(throughX - x, throughY - y), throughZ - z);
     }
@@ -91,7 +93,8 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
      * @param throughY double; the y coordinate of another point on the ray
      * @param throughZ double; the z coordinate of another point on the ray
      * @throws NullPointerException when point is null
-     * @throws DrawRuntimeException when throughX == point.x and throughY == point.y
+     * @throws DrawRuntimeException when throughX == point.x and throughY == point.y and point.z == throughZ, or any
+     *             through-value is NaN
      */
     public Ray3d(final Point3d point, final double throughX, final double throughY, final double throughZ)
             throws NullPointerException, DrawRuntimeException
@@ -165,10 +168,10 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
         double cosPhi = Math.cos(this.phi);
         double sinTheta = Math.sin(this.theta);
         double cosTheta = Math.cos(this.theta);
-        Point3d[] array = new Point3d[] { new Point3d(this.x, this.y, this.z),
+        Point3d[] array = new Point3d[] {new Point3d(this.x, this.y, this.z),
                 new Point3d(cosPhi * sinTheta == 0 ? this.x : cosPhi * sinTheta * Double.POSITIVE_INFINITY,
                         cosPhi * sinPhi == 0 ? this.y : cosPhi * sinPhi * Double.POSITIVE_INFINITY,
-                        cosTheta == 0 ? this.z : cosTheta * Double.POSITIVE_INFINITY) };
+                        cosTheta == 0 ? this.z : cosTheta * Double.POSITIVE_INFINITY)};
         return Arrays.stream(array).iterator();
     }
 
@@ -191,14 +194,16 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
     @Override
     public Ray3d neg()
     {
-        return new Ray3d(-this.x, -this.y, -this.z, this.phi + Math.PI, this.theta + Math.PI);
+        return new Ray3d(-this.x, -this.y, -this.z, AngleUtil.normalizeAroundZero(this.phi + Math.PI),
+                AngleUtil.normalizeAroundZero(this.theta + Math.PI));
     }
 
     /** {@inheritDoc} */
     @Override
     public Ray3d flip()
     {
-        return new Ray3d(this.x, this.y, this.z, this.phi + Math.PI, Math.PI - this.theta);
+        return new Ray3d(this.x, this.y, this.z, AngleUtil.normalizeAroundZero(this.phi + Math.PI),
+                AngleUtil.normalizeAroundZero(Math.PI - this.theta));
     }
 
     /** {@inheritDoc} */
@@ -308,8 +313,8 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
-        String format = String.format("%1$s[x=%2$s, y=%2$s, z=%2$s, phi=%2$s, theta=%2$s]", doNotIncludeClassName ? "" : "Ray3d ",
-                doubleFormat);
+        String format = String.format("%1$s[x=%2$s, y=%2$s, z=%2$s, phi=%2$s, theta=%2$s]",
+                doNotIncludeClassName ? "" : "Ray3d ", doubleFormat);
         return String.format(Locale.US, format, this.x, this.y, this.z, this.phi, this.theta);
     }
 
