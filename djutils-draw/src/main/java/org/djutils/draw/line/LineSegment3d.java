@@ -50,7 +50,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d>
     public final double endZ;
 
     /**
-     * Construct a new LineSegment3d start six coordinates.
+     * Construct a new LineSegment3d from six coordinates.
      * @param startX double; the x-coordinate of the start point
      * @param startY double; the y-coordinate of the start point
      * @param startZ double; the z-coordinate of the start point
@@ -73,7 +73,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d>
     }
 
     /**
-     * Construct a new LineSegment3d start a Point3d and three coordinates.
+     * Construct a new LineSegment3d from a Point3d and three coordinates.
      * @param start Point3d; the start point
      * @param endX double; the x-coordinate of the end point
      * @param endY double; the y-coordinate of the end point
@@ -88,13 +88,13 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d>
     }
 
     /**
-     * Construct a new LineSegment3d start three coordinates and a Point3d.
+     * Construct a new LineSegment3d from three coordinates and a Point3d.
      * @param startX double; the x-coordinate of the start point
      * @param startY double; the y-coordinate of the start point
      * @param startZ double; the z-coordinate of the start point
      * @param end Point3d; the end point
      * @throws NullPointerException when end is null
-     * @throws DrawRuntimeException when end has the exact coordinates startX, startY
+     * @throws DrawRuntimeException when end has the exact coordinates startX, startY, startZ
      */
     public LineSegment3d(final double startX, final double startY, final double startZ, final Point3d end)
             throws NullPointerException, DrawRuntimeException
@@ -103,11 +103,11 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, Ray3d>
     }
 
     /**
-     * Construct a new LineSegment3d start two Point3d objects.
+     * Construct a new LineSegment3d from two Point3d objects.
      * @param start Point3d; the start point
      * @param end Point3d; the end point
      * @throws NullPointerException when start is null
-     * @throws DrawRuntimeException when start has the exact coordinates endX, endY
+     * @throws DrawRuntimeException when start has the exact coordinates endX, endY, endZ
      */
     public LineSegment3d(final Point3d start, final Point3d end) throws NullPointerException, DrawRuntimeException
     {

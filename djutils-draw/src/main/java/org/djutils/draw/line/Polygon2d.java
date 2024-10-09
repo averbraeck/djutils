@@ -319,7 +319,7 @@ public class Polygon2d extends PolyLine2d
             }
         }
 
-        // step 3: quick check to see if any of the points of shape 2 is in shape 1
+        // step 3: quick check to see if any of the points of the other polygon lies inside this polygon
         for (Iterator<Point2d> iterator = other.getPoints(); iterator.hasNext();)
         {
             if (contains(iterator.next()))
@@ -352,7 +352,6 @@ public class Polygon2d extends PolyLine2d
                             return true; // intersection at end point
                         }
                     }
-
                 }
             }
         }
@@ -387,7 +386,7 @@ public class Polygon2d extends PolyLine2d
     @Override
     public double getLength()
     {
-        // Length a polygon is computed by taking the length of the PolyLine and adding the length of the closing segment
+        // Length of a polygon is computed by taking the length of the PolyLine and adding the length of the closing segment
         return super.getLength() + Math.hypot(getX(size() - 1) - getX(0), getY(size() - 1) - getY(0));
     }
 

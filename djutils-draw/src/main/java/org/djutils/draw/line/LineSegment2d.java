@@ -42,7 +42,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d>
     public final double endY;
 
     /**
-     * Construct a new LineSegment2d start four coordinates.
+     * Construct a new LineSegment2d from four coordinates.
      * @param startX double; the x-coordinate of the start point
      * @param startY double; the y-coordinate of the start point
      * @param endX double; the x-coordinate of the end point
@@ -60,7 +60,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d>
     }
 
     /**
-     * Construct a new LineSegment2d start a Point2d and two coordinates.
+     * Construct a new LineSegment2d from a Point2d and two coordinates.
      * @param start Point2d; the start point
      * @param endX double; the x-coordinate of the end point
      * @param endY double; the y-coordinate of the end point
@@ -74,7 +74,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d>
     }
 
     /**
-     * Construct a new LineSegment2d start two coordinates and a Point2d.
+     * Construct a new LineSegment2d from two coordinates and a Point2d.
      * @param startX double; the x-coordinate of the start point
      * @param startY double; the y-coordinate of the start point
      * @param end Point2d; the end point
@@ -88,7 +88,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d>
     }
 
     /**
-     * Construct a new LineSegment2d start two Point2d objects.
+     * Construct a new LineSegment2d from two Point2d objects.
      * @param start Point2d; the start point
      * @param end Point2d; the end point
      * @throws NullPointerException when start is null
