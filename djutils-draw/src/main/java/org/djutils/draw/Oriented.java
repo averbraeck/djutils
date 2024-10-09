@@ -26,7 +26,7 @@ public interface Oriented<O extends Oriented<O>>
 
     /**
      * Compare this Oriented with another Oriented with specified tolerances in the coordinates and the angles.
-     * @param other O; the point to compare with
+     * @param other O; the Oriented to compare with
      * @param epsilonCoordinate double; the upper bound of difference for one of the coordinates; use Double.POSITIVE_INFINITY
      *            if you do not want to check the coordinates
      * @param epsilonDirection double; the upper bound of difference for the direction(s); use Double.POSITIVE_INFINITY if you
