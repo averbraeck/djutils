@@ -42,14 +42,14 @@ public interface Ray<R extends Ray<R, P>, P extends Point<P>> extends Directed<R
      * @return R; a ray with the same direction as this ray (even if the direction of this ray is not normalized)
      * @throws DrawRuntimeException when position less than 0.0, infinite, or NaN.
      */
-    default R getLocation(double position) throws DrawRuntimeException
+    default R getLocation(final double position) throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(position) || position < 0, DrawRuntimeException.class, "position must be finite and positive");
         return getLocationExtended(position);
     }
 
     /**
-     * Get the location at a position on the line, with its direction. Position must be a positive, finite value
+     * Get the location at a position on the line, with its direction. Position must be a finite value
      * @param position double; the position on the line for which to calculate the point on the line
      * @return R; a ray with the same direction as this ray
      * @throws DrawRuntimeException when position infinite, or NaN.

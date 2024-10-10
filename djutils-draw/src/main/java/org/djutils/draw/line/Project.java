@@ -15,8 +15,9 @@ import org.djutils.draw.point.Point;
 public interface Project<P extends Point<P>>
 {
     /**
-     * Project a point onto this object. For PolyLines, there may be multiple valid solutions. In that case the solution that
-     * lies on the closest segment is returned. If there is no valid solution on the closest segment, null is returned.
+     * Project a point onto this object. For PolyLines and Polygons, there may be multiple valid solutions. In that case the
+     * solution that lies on the closest segment is returned. If there is no valid solution on the closest segment, null is
+     * returned.
      * @param point P; the point
      * @return P; the projection of the point (may be null if no sensible projection is possible). If the result is not null;
      *         the result lies somewhere on this object.
@@ -25,8 +26,8 @@ public interface Project<P extends Point<P>>
     P projectOrthogonal(P point) throws NullPointerException;
 
     /**
-     * Project a point onto this object. For PolyLines, there may be multiple valid solutions. In that case the solution that
-     * lies on the closest segment is returned.
+     * Project a point onto this object. For PolyLines and Polygons, there may be multiple valid solutions. In that case the
+     * solution that lies on the closest segment is returned.
      * @param point P; the point
      * @return P; the projection of the point. This result cannot be null, but it may not lie on this object, but, in stead, lie
      *         on a line, or plane that extends this object
@@ -35,8 +36,9 @@ public interface Project<P extends Point<P>>
     P projectOrthogonalExtended(P point) throws NullPointerException;
 
     /**
-     * Project a point onto this object. For PolyLines, there may be multiple valid solutions. In that case the solution that
-     * lies on the closest segment is returned. If there is no valid solution on the closest segment, null is returned.
+     * Project a point onto this object. For PolyLines and Polygons, there may be multiple valid solutions. In that case the
+     * solution that lies on the closest segment is returned. If there is no valid solution on the closest segment, null is
+     * returned.
      * @param point P; the point
      * @return double; the fractional position of the projection of the point (may be NaN if no sensible projection is
      *         possible). If the result is not null; the result lies somewhere on this object.
@@ -45,8 +47,8 @@ public interface Project<P extends Point<P>>
     double projectOrthogonalFractional(P point) throws NullPointerException;
 
     /**
-     * Project a point onto this object. For PolyLines, there may be multiple valid solutions. In that case the solution that
-     * lies on the closest segment is returned.
+     * Project a point onto this object. For PolyLines and Polygons, there may be multiple valid solutions. In that case the
+     * solution that lies on the closest segment is returned.
      * @param point P; the point
      * @return double; the fractional position of the projection of the point. This result cannot be NaN, but it may be outside
      *         the range 0.0 .. 1.0.

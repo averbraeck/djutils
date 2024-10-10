@@ -126,20 +126,20 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         Throw.when(Double.isInfinite(phi), DrawRuntimeException.class, "phi must be finite");
         Throw.when(Double.isNaN(theta), DrawRuntimeException.class, "theta may not be NaN");
         Throw.when(Double.isInfinite(theta), DrawRuntimeException.class, "theta must be finite");
-        this.x = new double[] { x };
-        this.y = new double[] { y };
-        this.z = new double[] { z };
+        this.x = new double[] {x};
+        this.y = new double[] {y};
+        this.z = new double[] {z};
         this.startPhi = phi;
         this.startTheta = theta;
         this.length = 0;
         this.bounds = new Bounds3d(x, x, y, y, z, z);
-        this.lengthIndexedLine = new double[] { 0.0 };
+        this.lengthIndexedLine = new double[] {0.0};
     }
 
     /**
      * Construct a degenerate PolyLine3d (consisting of only one point).
      * @param p Point3d; the point of the degenerate PolyLine3d
-     * @param phi double; the angle from the positive X axis direction in radians.
+     * @param phi double; the angle from the positive X axis direction in the XY plane in radians.
      * @param theta double; the angle from the positive Z axis direction in radians
      * @throws NullPointerException when p is null
      * @throws DrawRuntimeException when heading is infinite
@@ -204,11 +204,11 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     }
 
     /**
-     * Construct a new PolyLine3d from an array of Point3d.
+     * Construct a new PolyLine3d from two or more Point3d arguments.
      * @param point1 Point3d; starting point of the PolyLine3d
      * @param point2 Point3d; second point of the PolyLine3d
-     * @param otherPoints Point3d...; additional points of the PolyLine3d
-     * @throws NullPointerException when point1, or point2 is null
+     * @param otherPoints Point3d...; additional points of the PolyLine3d (may be null, or have zero length)
+     * @throws NullPointerException when point1, or point2 is null, or otherPoints contains a null value
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
      */
@@ -246,7 +246,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     /**
      * Construct a new PolyLine3d from an iterator that yields Point3d objects.
      * @param iterator Iterator&lt;Point3d&gt;; iterator that will provide all points that constitute the new PolyLine3d
-     * @throws NullPointerException when iterator is null
+     * @throws NullPointerException when iterator is null, or yields a null
      * @throws DrawRuntimeException when the iterator provides too few points, or some adjacent identical points)
      */
     public PolyLine3d(final Iterator<Point3d> iterator) throws NullPointerException, DrawRuntimeException
@@ -256,7 +256,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Construct a new PolyLine3d from a List&lt;Point3d&gt;.
-     * @param pointList List&lt;Point3d&gt;; the list of points to construct this PolyLine3d from.
+     * @param pointList List&lt;Point3d&gt;; the list of points to construct the new PolyLine3d from.
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
      */
@@ -290,7 +290,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Return an iterator that optionally skips identical successive points.
-     * @param filter boolean; if true; filter out itentical successive points; if false; do not filter
+     * @param filter boolean; if true; filter out identical successive points; if false; do not filter
      * @param iterator Iterator&lt;Point3d&gt;; iterator that generates points, potentially with successive duplicates
      * @return Iterator&lt;Point3d&gt;; iterator that skips identical successive points
      */
@@ -545,9 +545,10 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
      * Concatenate several PolyLine3d instances.
      * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
      * @param lines PolyLine3d...; one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
-     *            the first of the second, etc.
+     *            the first of the second within the provided tolerance value, etc.
      * @return PolyLine3d; the concatenation of the lines
-     * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
+     * @throws DrawRuntimeException if zero lines are given, or when there is a gap larger than tolerance between consecutive
+     *             lines
      */
     public static PolyLine3d concatenate(final double tolerance, final PolyLine3d... lines) throws DrawRuntimeException
     {
@@ -699,7 +700,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
      * @param limitHandling Boolean; if Null; results outside the interval 0.0 .. 1.0 are replaced by NaN, if false, results
      *            outside that interval are returned as is; if true results outside the interval are truncated to the interval
      *            and therefore not truly orthogonal
-     * @return double; the fractional position on this PolyLine that is closest to point, or NaN
+     * @return double; the fractional position on this PolyLine3d that is closest to point, or NaN
      */
     private double projectOrthogonalFractional(final Point3d point, final Boolean limitHandling)
     {
@@ -794,7 +795,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
      * @param limitHandling Boolean; if Null; results outside this PolyLin2de are replaced by Null, if false, results outside
      *            that interval are returned as is; if true results outside this PolyLine2d are truncated to the first or last
      *            point of this PolyLine2d and therefore not truly orthogonal
-     * @return Point2d; the orthogonal projection of point on this PolyLine2d
+     * @return Point3d; the orthogonal projection of point on this PolyLine3d
      */
     private Point3d projectOrthogonal(final Point3d point, final Boolean limitHandling)
     {
@@ -805,7 +806,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
             Point3d result = this.getLocation(0.0).projectOrthogonalExtended(point);
             if (null == limitHandling)
             {
-                return result.x != this.x[0] || result.y != this.y[0]  || result.z != this.z[0] ? null : get(0);
+                return result.x != this.x[0] || result.y != this.y[0] || result.z != this.z[0] ? null : get(0);
             }
             // limitHandling is false
             return result;
