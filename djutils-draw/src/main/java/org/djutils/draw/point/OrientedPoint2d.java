@@ -161,8 +161,8 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     }
 
     /**
-     * Return a new OrientedPoint2d with an in-place rotation around the z-axis by the provided rotateZ. The resulting rotation is
-     * normalized between -&pi; and &pi;.
+     * Return a new OrientedPoint2d with an in-place rotation around the z-axis by the provided rotateZ. The resulting rotation
+     * is normalized between -&pi; and &pi;.
      * @param rotateZ double; the rotation around the z-axis
      * @return OrientedPoint; a new point with the same coordinates and applied rotation
      * @throws IllegalArgumentException when deltaRotZ is NaN
@@ -184,7 +184,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     @Override
     public Iterator<? extends OrientedPoint2d> getPoints()
     {
-        return Arrays.stream(new OrientedPoint2d[] { this }).iterator();
+        return Arrays.stream(new OrientedPoint2d[] {this}).iterator();
     }
 
     /** {@inheritDoc} */
