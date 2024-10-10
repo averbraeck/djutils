@@ -37,7 +37,7 @@ public class Point2d implements Drawable2d, Point<Point2d>
     public final double y;
 
     /**
-     * Create a new Point with just an x and y coordinate, stored with double precision.
+     * Create a new Point2d from x and y coordinates provided as double arguments.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @throws IllegalArgumentException when x or y is NaN
@@ -50,10 +50,10 @@ public class Point2d implements Drawable2d, Point<Point2d>
     }
 
     /**
-     * Create a new Point with just an x and y coordinate, stored with double precision.
-     * @param xy double[]; the x and y coordinate
+     * Create a new Point2d from a x and y coordinates provided as values in a double array.
+     * @param xy double[]; the x and y coordinates
      * @throws NullPointerException when xy is null
-     * @throws IllegalArgumentException when the dimension of xy is not 2, or a coordinate is NaN
+     * @throws IllegalArgumentException when the length of xy is not 2, or a coordinate is NaN
      */
     public Point2d(final double[] xy) throws NullPointerException, IllegalArgumentException
     {
@@ -61,8 +61,8 @@ public class Point2d implements Drawable2d, Point<Point2d>
     }
 
     /**
-     * Create an immutable point with just two values, x and y, stored with double precision from an AWT Point2D.
-     * @param point Point2D; an AWT Point2D
+     * Create an new Point2d from x and y obtained from a java.awt.geom.Point2D.
+     * @param point Point2D; a java.awt.geom.Point2D
      * @throws NullPointerException when point is null
      * @throws IllegalArgumentException when point has a NaN coordinate
      */
@@ -134,9 +134,9 @@ public class Point2d implements Drawable2d, Point<Point2d>
     }
 
     /**
-     * Return a new Point with a translation by the provided dx and dy.
-     * @param dx double; the horizontal translation
-     * @param dy double; the vertical translation
+     * Return a new Point2d with a translation by the provided dx and dy.
+     * @param dx double; the x translation
+     * @param dy double; the y translation
      * @return P; a new point with the translated coordinates
      * @throws IllegalArgumentException when dx, or dy is NaN
      */
@@ -147,8 +147,8 @@ public class Point2d implements Drawable2d, Point<Point2d>
     }
 
     /**
-     * Return a new Point3d with a translation by the provided delta-x, delta-y and delta-z. If this is an OrientedPoint2d, then
-     * the result is an OrientedPoint3d with rotX copied from this and rotY and rotZ are set to 0.0.
+     * Return a new Point3d with a translation by the provided dx, dy and dz. If this is an OrientedPoint2d, then the result is
+     * an OrientedPoint3d with rotX copied from this and rotY and rotZ are set to 0.0.
      * @param dx double; the x translation
      * @param dy double; the y translation
      * @param dz double; the z translation
@@ -195,23 +195,24 @@ public class Point2d implements Drawable2d, Point<Point2d>
 
     /** {@inheritDoc} */
     @Override
-    public Point2d interpolate(final Point2d point, final double fraction)
+    public Point2d interpolate(final Point2d otherPoint, final double fraction)
     {
-        Throw.whenNull(point, "point cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
-        return new Point2d((1.0 - fraction) * this.x + fraction * point.x, (1.0 - fraction) * this.y + fraction * point.y);
+        return new Point2d((1.0 - fraction) * this.x + fraction * otherPoint.x,
+                (1.0 - fraction) * this.y + fraction * otherPoint.y);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean epsilonEquals(final Point2d other, final double epsilon)
+    public boolean epsilonEquals(final Point2d otherPoint, final double epsilon)
     {
-        Throw.whenNull(other, "other point cannot be null");
-        if (Math.abs(this.x - other.x) > epsilon)
+        Throw.whenNull(otherPoint, "otherPoint cannot be null");
+        if (Math.abs(this.x - otherPoint.x) > epsilon)
         {
             return false;
         }
-        if (Math.abs(this.y - other.y) > epsilon)
+        if (Math.abs(this.y - otherPoint.y) > epsilon)
         {
             return false;
         }
@@ -380,8 +381,8 @@ public class Point2d implements Drawable2d, Point<Point2d>
      */
     public static Point2d intersectionOfLineSegments(final LineSegment2d segment1, final LineSegment2d segment2)
     {
-        return intersectionOfLineSegments(segment1.startX, segment1.startY, segment1.endX, segment1.endY,
-                segment2.startX, segment2.startY, segment2.endX, segment2.endY);
+        return intersectionOfLineSegments(segment1.startX, segment1.startY, segment1.endX, segment1.endY, segment2.startX,
+                segment2.startY, segment2.endX, segment2.endY);
     }
 
     /** {@inheritDoc} */
@@ -548,7 +549,7 @@ public class Point2d implements Drawable2d, Point<Point2d>
         double distance = Math.hypot(dX, dY);
         if (distance > radius1 + radius2 || distance < Math.abs(radius1 - radius2))
         {
-            return result;
+            return result; // empty list
         }
         double a = (radius1 * radius1 - radius2 * radius2 + distance * distance) / (2 * distance);
         // x2,y2 is the point where the line through the circle intersections crosses the line through the circle centers
@@ -580,8 +581,8 @@ public class Point2d implements Drawable2d, Point<Point2d>
     }
 
     /**
-     * Return the coordinates as an AWT Point2D.Double object.
-     * @return Point2D; the coordinates as an AWT Point2D.Double object
+     * Return the coordinates as a java.awt.geom.Point2D.Double object.
+     * @return Point2D; the coordinates as a java.awt.geom.Point2D.Double object
      */
     public Point2D toPoint2D()
     {

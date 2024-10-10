@@ -38,11 +38,11 @@ public class Point3d implements Drawable3d, Point<Point3d>
     public final double z;
 
     /**
-     * Create a new Point with just an x, y and z coordinate, stored with double precision.
+     * Create a new Point from x, y and z coordinates provided as double arguments.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param z double; the z coordinate
-     * @throws IllegalArgumentException when x or y is NaN
+     * @throws IllegalArgumentException when x or y or z is NaN
      */
     public Point3d(final double x, final double y, final double z)
     {
@@ -54,10 +54,10 @@ public class Point3d implements Drawable3d, Point<Point3d>
     }
 
     /**
-     * Create a new Point with just an x, y and z coordinate, stored with double precision.
-     * @param xyz double[]; the x, y and z coordinate
+     * Create a new Point3d from x, y and z coordinates provided as values in a double array.
+     * @param xyz double[]; the x, y and z coordinates
      * @throws NullPointerException when xyz is null
-     * @throws IllegalArgumentException when the dimension of xyz is not 3, or a coordinate is NaN
+     * @throws IllegalArgumentException when the length of xyz is not 3, or a coordinate is NaN
      */
     public Point3d(final double[] xyz) throws NullPointerException, IllegalArgumentException
     {
@@ -65,8 +65,8 @@ public class Point3d implements Drawable3d, Point<Point3d>
     }
 
     /**
-     * Create an immutable point with just three values, x, y and z, stored with double precision from a Point2d and z.
-     * @param point Point2d; a Point2d
+     * Create a new Point3d from x, y stored in a java.awt.geom.Point2D and double z.
+     * @param point Point2d; a java.awt.geom.Point2D
      * @param z double; the z coordinate
      * @throws NullPointerException when point is null
      * @throws IllegalArgumentException when z is NaN
@@ -81,7 +81,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
     }
 
     /**
-     * Create an immutable point with just three values, x, y and z, stored with double precision from an AWT Point2D and z.
+     * Create an immutable point from x, y obtained from a AWT Point2D and double z.
      * @param point Point2D; an AWT Point2D
      * @param z double; the z coordinate
      * @throws NullPointerException when point is null
@@ -148,7 +148,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
     @Override
     public double distance(final Point3d otherPoint) throws NullPointerException
     {
-        Throw.whenNull(otherPoint, "point cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint cannot be null");
         return Math.sqrt(distanceSquared(otherPoint));
     }
 
@@ -174,9 +174,9 @@ public class Point3d implements Drawable3d, Point<Point3d>
     }
 
     /**
-     * Return a new Point with a translation by the provided dx and dy.
-     * @param dx double; the horizontal translation
-     * @param dy double; the vertical translation
+     * Return a new Point3d with a translation by the provided dx and dy.
+     * @param dx double; the x translation
+     * @param dy double; the y translation
      * @return Point3D; a new point with the translated coordinates
      * @throws IllegalArgumentException when dx, or dy is NaN
      */
@@ -246,18 +246,18 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /** {@inheritDoc} */
     @Override
-    public boolean epsilonEquals(final Point3d other, final double epsilon)
+    public boolean epsilonEquals(final Point3d otherPoint, final double epsilon)
     {
-        Throw.whenNull(other, "other point cannot be null");
-        if (Math.abs(this.x - other.x) > epsilon)
+        Throw.whenNull(otherPoint, "otherPoint cannot be null");
+        if (Math.abs(this.x - otherPoint.x) > epsilon)
         {
             return false;
         }
-        if (Math.abs(this.y - other.y) > epsilon)
+        if (Math.abs(this.y - otherPoint.y) > epsilon)
         {
             return false;
         }
-        if (Math.abs(this.z - other.z) > epsilon)
+        if (Math.abs(this.z - otherPoint.z) > epsilon)
         {
             return false;
         }
@@ -436,51 +436,51 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Return the direction to another point, in radians, ignoring the z-coordinate.
-     * @param point Point3d; the other point
+     * @param otherPoint Point3d; the other point
      * @return double; the direction of the projection of the point in the x-y plane to another point, in radians
      * @throws NullPointerException when <code>point</code> is null
      */
-    final double horizontalDirection(final Point3d point) throws NullPointerException
+    final double horizontalDirection(final Point3d otherPoint) throws NullPointerException
     {
-        Throw.whenNull(point, "point cannot be null");
-        return Math.atan2(point.y - this.y, point.x - this.x);
+        Throw.whenNull(otherPoint, "point cannot be null");
+        return Math.atan2(otherPoint.y - this.y, otherPoint.x - this.x);
     }
 
     /**
      * Return the direction with respect to the Z axis to another point, in radians.
-     * @param point Point3d; the other point
+     * @param otherPoint Point3d; the other point
      * @return double; the direction with respect to the Z axis to another point, in radians
      * @throws NullPointerException when <code>point</code> is null
      */
-    final double verticalDirection(final Point3d point) throws NullPointerException
+    final double verticalDirection(final Point3d otherPoint) throws NullPointerException
     {
-        Throw.whenNull(point, "point cannot be null");
-        return Math.atan2(Math.hypot(point.y - this.y, point.x - this.x), point.z - this.z);
+        Throw.whenNull(otherPoint, "point cannot be null");
+        return Math.atan2(Math.hypot(otherPoint.y - this.y, otherPoint.x - this.x), otherPoint.z - this.z);
     }
 
     /**
      * Return the squared distance between the coordinates of this point and the provided point, ignoring the z-coordinate.
-     * @param point Point3d; the other point
+     * @param otherPoint Point3d; the other point
      * @return double; the squared distance between this point and the other point, ignoring the z-coordinate
      * @throws NullPointerException when point is null
      */
-    final double horizontalDistanceSquared(final Point3d point)
+    final double horizontalDistanceSquared(final Point3d otherPoint)
     {
-        Throw.whenNull(point, "point cannot be null");
-        double dx = this.x - point.x;
-        double dy = this.y - point.y;
+        Throw.whenNull(otherPoint, "point cannot be null");
+        double dx = this.x - otherPoint.x;
+        double dy = this.y - otherPoint.y;
         return dx * dx + dy * dy;
     }
 
     /**
      * Return the Euclidean distance between this point and the provided point, ignoring the z-coordinate.
-     * @param point Point3d; the other point
+     * @param otherPoint Point3d; the other point
      * @return double; the Euclidean distance between this point and the other point, ignoring the z-coordinate
      * @throws NullPointerException when point is null
      */
-    final double horizontalDistance(final Point3d point)
+    final double horizontalDistance(final Point3d otherPoint)
     {
-        return Math.sqrt(horizontalDistanceSquared(point));
+        return Math.sqrt(horizontalDistanceSquared(otherPoint));
     }
 
     /** {@inheritDoc} */

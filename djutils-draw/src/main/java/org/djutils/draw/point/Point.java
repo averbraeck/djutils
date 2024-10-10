@@ -74,7 +74,7 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
     /**
      * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
      * that case the interpolation turns into an extrapolation.
-     * @param point P; the other point
+     * @param otherPoint P; the other point
      * @param fraction double; the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
      *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
      *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
@@ -82,7 +82,7 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
      * @throws NullPointerException when point is null
      * @throws IllegalArgumentException when fraction is NaN
      */
-    P interpolate(P point, double fraction);
+    P interpolate(P otherPoint, double fraction);
 
     /**
      * Project a point on a line segment. If the the projected points lies outside the line segment, the nearest end point of
@@ -111,11 +111,11 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
 
     /**
      * A comparison with another point that returns true of each of the coordinates is less than epsilon apart.
-     * @param other P; the point to compare with
+     * @param otherPoint P; the point to compare with
      * @param epsilon double; the upper bound of difference for one of the coordinates
      * @return boolean; true if both x, y and z (if a Point3d) are less than epsilon apart, otherwise false
      * @throws NullPointerException when other is null
      */
-    boolean epsilonEquals(P other, double epsilon) throws NullPointerException;
+    boolean epsilonEquals(P otherPoint, double epsilon) throws NullPointerException;
 
 }
