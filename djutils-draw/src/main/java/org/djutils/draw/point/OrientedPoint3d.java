@@ -87,13 +87,13 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     }
 
     /**
-     * Create a new OrientedPoint3d with x, y, and z coordinates, stored with double precision, and orientation dirX,dirY,dirZ.
+     * Create a new OrientedPoint3d with x, y, and z coordinates and orientation dirX,dirY,dirZ.
      * @param xyz double[]; the x, y and z coordinates
      * @param dirX double; the direction as rotation around the x-axis with the point as the center
      * @param dirY double; the direction as rotation around the y-axis with the point as the center
      * @param dirZ double; the direction as rotation around the z-axis with the point as the center
      * @throws NullPointerException when xyx is null
-     * @throws IllegalArgumentException when the length of the xyx array is not 3, or contains a NaN value, or dirX, dirY, or
+     * @throws IllegalArgumentException when the length of the xyz array is not 3, or contains a NaN value, or dirX, dirY, or
      *             dirZ is NaN
      */
     public OrientedPoint3d(final double[] xyz, final double dirX, final double dirY, final double dirZ)
@@ -122,8 +122,8 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     }
 
     /**
-     * Verify that a double vector is not null, has three elements and does not contain NaN value(s).
-     * @param orientation double[]; the vector to check
+     * Verify that a double array is not null, has three elements.
+     * @param orientation double[]; the array to check
      * @return double; the first element of the argument
      * @throws NullPointerException when <code>orientation</code> is null
      * @throws IllegalArgumentException when the length of the <code>orientation</code> array is not 3
@@ -221,7 +221,7 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
      * @param otherPoint OrientedPoint3d; the other point
      * @param fraction double; the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
      *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
-     *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
+     *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
      * @return OrientedPoint3d; a new OrientedPoint3d at the requested fraction
      * @throws NullPointerException when otherPoint is null
      * @throws IllegalArgumentException when fraction is NaN
@@ -231,6 +231,14 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     {
         Throw.whenNull(otherPoint, "otherPoint cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
+        if (0.0 == fraction)
+        {
+            return this;
+        }
+        if (1.0 == fraction)
+        {
+            return otherPoint;
+        }
         return new OrientedPoint3d((1.0 - fraction) * getX() + fraction * otherPoint.x,
                 (1.0 - fraction) * getY() + fraction * otherPoint.y, (1.0 - fraction) * getZ() + fraction * otherPoint.z,
                 AngleUtil.interpolateShortest(getDirX(), otherPoint.getDirX(), fraction),

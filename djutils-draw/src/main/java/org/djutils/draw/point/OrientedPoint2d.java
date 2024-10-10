@@ -145,7 +145,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
      * @param otherPoint OrientedPoint2d; the other point
      * @param fraction double; the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
      *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
-     *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
+     *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
      * @return OrientedPoint2d; a new OrientedPoint2d at the requested fraction
      * @throws NullPointerException when otherPoint is null
      * @throws IllegalArgumentException when fraction is NaN
@@ -155,6 +155,14 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     {
         Throw.whenNull(otherPoint, "otherPoint cannot be null");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
+        if (0.0 == fraction)
+        {
+            return this;
+        }
+        if (1.0 == fraction)
+        {
+            return otherPoint;
+        }
         return new OrientedPoint2d((1.0 - fraction) * getX() + fraction * otherPoint.x,
                 (1.0 - fraction) * getY() + fraction * otherPoint.y,
                 AngleUtil.interpolateShortest(getDirZ(), otherPoint.getDirZ(), fraction));
