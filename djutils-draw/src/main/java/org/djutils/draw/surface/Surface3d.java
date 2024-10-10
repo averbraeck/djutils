@@ -46,9 +46,10 @@ public class Surface3d implements Drawable3d
     /**
      * Construct a new Surface3d.
      * @param points Point3d[][]; two dimensional array of points. The first index iterates over the individual triangles; the
-     *            second index iterates of the points of a single triangle. The range of the second index must be 3.
+     *            second index iterates over the points of a single triangle. The range of the second index must be 3. It is
+     *            expected that all points appear multiple times in the points array, but never within the same sub-array.
      * @throws NullPointerException when points is null, or any element in points is null
-     * @throws DrawRuntimeException when points is empty, or any element in points does not contain exactly three elements
+     * @throws DrawRuntimeException when points is empty, or any element in points does not contain exactly three different points
      */
     public Surface3d(final Point3d[][] points) throws NullPointerException, DrawRuntimeException
     {
@@ -112,7 +113,6 @@ public class Surface3d implements Drawable3d
                 return this.current < size();
             }
 
-            @SuppressWarnings("synthetic-access")
             /** {@inheritDoc} */
             @Override
             public Point3d next()
@@ -196,7 +196,7 @@ public class Surface3d implements Drawable3d
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings({ "checkstyle:designforextension", "checkstyle:needbraces" })
+    @SuppressWarnings({"checkstyle:designforextension", "checkstyle:needbraces"})
     @Override
     public boolean equals(final Object obj)
     {
