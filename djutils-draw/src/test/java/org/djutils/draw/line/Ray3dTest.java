@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
+import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.OrientedPoint3d;
 import org.djutils.draw.point.Point3d;
 import org.junit.jupiter.api.Test;
@@ -41,40 +42,44 @@ public class Ray3dTest
         verifyRay("negative x", new Ray3d(0, 0, 0, -1, 0, 0), 0, 0, 0, Math.PI, Math.PI / 2);
         verifyRay("negative y", new Ray3d(0, 0, 0, 0, -1, 0), 0, 0, 0, -Math.PI / 2, Math.PI / 2);
         verifyRay("negative z", new Ray3d(0, 0, 0, 0, 0, -1), 0, 0, 0, 0, Math.PI);
-        verifyRay("Constructor from x, y, phi, theta", new Ray3d(1, 2, 3, 4, 5), 1, 2, 3, 4, 5);
+        verifyRay("Constructor from x, y, z, phi, theta", new Ray3d(1, 2, 3, 4, 5), 1, 2, 3, 4, 5);
+        verifyRay("Constructor from [x, y, z], phi, theta", new Ray3d(new double[] {1, 2, 3}, 4, 5), 1, 2, 3, 4, 5);
+        verifyRay("Constructor from x, y, z, [phi, theta]", new Ray3d(1, 2, 3, new double[] {4, 5}), 1, 2, 3, 4, 5);
+        verifyRay("Constructor from [x, y, z], [phi, theta]", new Ray3d(new double[] {1, 2, 3}, new double[] {4, 5}), 1, 2, 3,
+                4, 5);
         verifyRay("Constructor from Point3d, phi, theta", new Ray3d(new Point3d(0.1, 0.2, 0.3), -0.4, -0.5), 0.1, 0.2, 0.3,
                 -0.4, -0.5);
         verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 4, 6, 15), 1, 2, 3,
                 Math.atan2(4, 3), Math.atan2(5, 12));
-        verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 1, 6, 15), 1, 2, 3,
-                Math.atan2(4, 0), Math.atan2(4, 12));
-        verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 1, 2, 15), 1, 2, 3,
-                Math.atan2(0, 0), Math.atan2(0, 12));
+        verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 1, 6, 15), 1, 2, 3, Math.PI / 2,
+                Math.atan2(4, 12));
+        verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 1, 2, 15), 1, 2, 3, 0,
+                Math.atan2(0, 0));
         verifyRay("Constructor from Point3d, throughX, throughY, throughZ", new Ray3d(new Point3d(1, 2, 3), 4, 6, 15), 1, 2, 3,
                 Math.atan2(4, 3), Math.atan2(5, 12));
         verifyRay("Constructor from Point3d, throughX, throughY, throughZ", new Ray3d(new Point3d(1, 2, 3), 1, 6, 15), 1, 2, 3,
-                Math.atan2(4, 0), Math.atan2(4, 12));
+                Math.PI / 2, Math.atan2(4, 12));
         verifyRay("Constructor from Point3d, throughX, throughY, throughZ", new Ray3d(new Point3d(1, 2, 3), 1, 2, 15), 1, 2, 3,
-                Math.atan2(0, 0), Math.atan2(0, 12));
+                Math.atan2(0, 12), Math.atan2(0, 0));
         verifyRay("Constructor from x, y, z, Point3d", new Ray3d(1, 2, 3, new Point3d(4, 6, 15)), 1, 2, 3, Math.atan2(4, 3),
                 Math.atan2(5, 12));
-        verifyRay("Constructor from x, y, z, Point3d", new Ray3d(1, 2, 3, new Point3d(1, 6, 15)), 1, 2, 3, Math.atan2(4, 0),
+        verifyRay("Constructor from x, y, z, Point3d", new Ray3d(1, 2, 3, new Point3d(1, 6, 15)), 1, 2, 3, Math.PI / 2,
                 Math.atan2(4, 12));
-        verifyRay("Constructor from x, y, z, Point3d", new Ray3d(1, 2, 3, new Point3d(1, 2, 15)), 1, 2, 3, Math.atan2(0, 0),
-                Math.atan2(0, 12));
+        verifyRay("Constructor from x, y, z, Point3d", new Ray3d(1, 2, 3, new Point3d(1, 2, 15)), 1, 2, 3, Math.atan2(0, 12),
+                Math.atan2(0, 0));
         verifyRay("Constructor from Point3d, Point3d", new Ray3d(new Point3d(1, 2, 3), new Point3d(4, 6, 15)), 1, 2, 3,
                 Math.atan2(4, 3), Math.atan2(5, 12));
         verifyRay("Constructor from Point3d, Point3d", new Ray3d(new Point3d(1, 2, 3), new Point3d(1, 6, 15)), 1, 2, 3,
-                Math.atan2(4, 0), Math.atan2(4, 12));
+                Math.PI / 2, Math.atan2(4, 12));
         verifyRay("Constructor from Point3d, Point3d", new Ray3d(new Point3d(1, 2, 3), new Point3d(1, 2, 15)), 1, 2, 3,
-                Math.atan2(0, 0), Math.atan2(0, 12));
+                Math.atan2(0, 12), Math.atan2(0, 0));
 
         try
         {
             new Ray3d(1, 2, 3, Double.NaN, 0);
             fail("NaN for phy should have thrown a DrawRuntimeException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException dre)
         {
             // Ignore expected exception
         }
@@ -84,14 +89,14 @@ public class Ray3dTest
             new Ray3d(1, 2, 3, 0, Double.NaN);
             fail("NaN for theta should have thrown a DrawRuntimeException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException dre)
         {
             // Ignore expected exception
         }
 
         try
         {
-            new Ray3d(null, 1, 2);
+            new Ray3d((Point3d) null, 1, 2);
             fail("null for point should have thrown a NullPointerException");
         }
         catch (NullPointerException dre)
@@ -104,7 +109,7 @@ public class Ray3dTest
             new Ray3d(1, 2, 3, 1, 2, 3);
             fail("Same coordinates for through point should have thrown a DrawRuntimeException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException dre)
         {
             // Ignore expected exception
         }
@@ -114,7 +119,7 @@ public class Ray3dTest
             new Ray3d(1, 2, 3, new Point3d(1, 2, 3));
             fail("Same coordinates for through point should have thrown a DrawRuntimeException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException dre)
         {
             // Ignore expected exception
         }
@@ -124,14 +129,14 @@ public class Ray3dTest
             new Ray3d(new Point3d(1, 2, 3), 1, 2, 3);
             fail("Same coordinates for through point should have thrown a DrawRuntimeException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException dre)
         {
             // Ignore expected exception
         }
 
         try
         {
-            new Ray3d(1, 2, 3, null);
+            new Ray3d(1, 2, 3, (Point3d) null);
             fail("null for through point should have thrown a NullPointerException");
         }
         catch (NullPointerException dre)
@@ -210,7 +215,7 @@ public class Ray3dTest
                 description + " getTheta");
         assertEquals(AngleUtil.normalizeAroundZero(Math.PI - expectedTheta), flipped.theta, 0.0001, description + " theta");
         assertEquals(2, ray.size(), description + " size");
-        Iterator<Point3d> iterator = ray.getPoints();
+        Iterator<DirectedPoint3d> iterator = ray.getPoints();
         // First result of iterator is the finite end point (but this is not a hard promise)
         assertTrue(iterator.hasNext());
         Point3d point = iterator.next();
@@ -241,8 +246,8 @@ public class Ray3dTest
     public void boundsTest()
     {
         // X direction
-        // Angle of 0 is exact; bounds should be infinite in only the positive X direction
-        verifyBounds(new Ray3d(1, 2, 3, 0, 1).getBounds(), 1, 2, 3, Double.POSITIVE_INFINITY, 2, Double.POSITIVE_INFINITY);
+        // Angle of 0 is exact; bounds should be infinite in only the positive X and Z directions
+        verifyBounds(new Ray3d(1, 2, 3, 1, 0).getBounds(), 1, 2, 3, 1, 2, Double.POSITIVE_INFINITY);
 
         // Z direction
         // Angle of 0 is exact; bounds should be infinite in only the positive X direction
@@ -340,12 +345,34 @@ public class Ray3dTest
     private void verifyBounds(final Bounds3d bounds, final double expectedMinX, final double expectedMinY,
             final double expectedMinZ, final double expectedMaxX, final double expectedMaxY, final double expectedMaxZ)
     {
-        assertEquals(expectedMinX, bounds.getMinX(), 0.0001, "Bounds minX");
-        assertEquals(expectedMinY, bounds.getMinY(), 0.0001, "Bounds minY");
-        assertEquals(expectedMinZ, bounds.getMinZ(), 0.0001, "Bounds minZ");
-        assertEquals(expectedMaxX, bounds.getMaxX(), 0.0001, "Bounds maxX");
-        assertEquals(expectedMaxY, bounds.getMaxY(), 0.0001, "Bounds maxY");
-        assertEquals(expectedMaxZ, bounds.getMaxZ(), 0.0001, "Bounds maxZ");
+        verifyBound(expectedMinX, bounds.getMinX(), "Bounds minX");
+        verifyBound(expectedMinY, bounds.getMinY(), "Bounds minY");
+        verifyBound(expectedMinZ, bounds.getMinZ(), "Bounds minZ");
+        verifyBound(expectedMaxX, bounds.getMaxX(), "Bounds maxX");
+        verifyBound(expectedMaxY, bounds.getMaxY(), "Bounds maxY");
+        verifyBound(expectedMaxZ, bounds.getMaxZ(), "Bounds maxZ");
+    }
+
+    /**
+     * Verify one element of a Bounds.
+     * @param expected double; expected value
+     * @param got double; obtained value
+     * @param name String; name of the field
+     */
+    private void verifyBound(final double expected, final double got, final String name)
+    {
+        if (expected == Double.POSITIVE_INFINITY)
+        {
+            assertTrue(got == Double.POSITIVE_INFINITY, name);
+        }
+        else if (expected == Double.NEGATIVE_INFINITY)
+        {
+            assertTrue(got == Double.NEGATIVE_INFINITY, name);
+        }
+        else
+        {
+            assertEquals(expected, got, 0.0001, name);
+        }
     }
 
     /**
@@ -632,7 +659,7 @@ public class Ray3dTest
                                 result = ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
                                 expected = Math.abs(dPhi) <= epsilon && Math.abs(dTheta) <= epsilon;
                                 assertEquals(expected, result, "result of epsilonEquals checking phi and theta");
-                                // Create an equivalent alternative ray
+                                // Create an alternative ray
                                 other = new Ray3d(ray.x + dX, ray.y + dY, ray.z + dZ, Math.PI + ray.phi + dPhi,
                                         Math.PI - ray.theta + dTheta);
                                 result = ray.epsilonEquals(other, epsilon, Double.POSITIVE_INFINITY);
@@ -640,7 +667,13 @@ public class Ray3dTest
                                 assertEquals(expected, result, "result of epsilonEquals checking x, y, z");
 
                                 result = ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
-                                expected = Math.abs(dPhi) <= epsilon && Math.abs(dTheta) <= epsilon;
+                                expected = Math.abs(dPhi) <= Double.POSITIVE_INFINITY && Math.abs(Math.PI + dTheta) <= epsilon;
+                                if (result != expected)
+                                {
+                                    System.out.println("Oops: compare " + ray + " to " + other + " using epsilonEquals("
+                                            + Double.POSITIVE_INFINITY + "," + epsilon + ")");
+                                    ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
+                                }
                                 assertEquals(expected, result, "result of epsilonEquals checking phi and theta");
                             }
                         }

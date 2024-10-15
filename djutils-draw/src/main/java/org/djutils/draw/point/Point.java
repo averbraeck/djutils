@@ -38,13 +38,13 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
     P scale(double factor) throws IllegalArgumentException;
 
     /**
-     * Return a new Point with negated coordinate values.
+     * Return a new Point with negated coordinate values. If this is a DirectedPoint, phi and theta are negated.
      * @return Point; a new point with negated coordinate values
      */
     P neg();
 
     /**
-     * Return a new Point with absolute coordinate values.
+     * Return a new Point with absolute coordinate values. If this is a DirectedPoint, phi and theta are copied unchanged.
      * @return Point; a new point with absolute coordinate values
      */
     P abs();

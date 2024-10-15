@@ -14,15 +14,16 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @param <R> The Ray type (2d or 3d)
- * @param <P> The Point type (2d, or 3d)
+ * @param <D> The Directed type (2d or 3d)
+ * @param <P> The Point type (2d or 3d)
  */
-public interface Ray<R extends Ray<R, P>, P extends Point<P>> extends Directed<R>, Project<P>
+public interface Ray<R extends Ray<R, D, P>, D extends Directed<D>, P extends Point<P>> extends Project<P>
 {
     /**
      * Get the finite end point of this Ray.
      * @return P; the finite end point of this Ray
      */
-    P getEndPoint();
+    D getEndPoint();
 
     /**
      * Retrieve the angle from the positive X axis direction in radians.
@@ -62,7 +63,7 @@ public interface Ray<R extends Ray<R, P>, P extends Point<P>> extends Directed<R
      * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
      * Bourke</a>.
      * @param point P; the point to project onto the segment
-     * @return P; either the start point, or the end point of the segment or a Point2d that lies somewhere in between those two.
+     * @return D; either the start point, or DirectedPoint that lies somewhere on this Ray.
      * @throws NullPointerException when point is null
      */
     P closestPointOnRay(P point) throws NullPointerException;

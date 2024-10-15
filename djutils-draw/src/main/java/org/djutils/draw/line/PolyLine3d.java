@@ -9,8 +9,11 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.Drawable2d;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.bounds.Bounds3d;
+import org.djutils.draw.point.DirectedPoint2d;
+import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
@@ -25,7 +28,7 @@ import org.djutils.logger.CategoryLogger;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray3d, LineSegment3d>
+public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray3d, DirectedPoint3d, LineSegment3d>
 {
     /** */
     private static final long serialVersionUID = 20200911L;

@@ -7,6 +7,7 @@ import java.util.Locale;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
 
@@ -20,7 +21,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class LineSegment2d implements Drawable2d, LineSegment<Point2d, Ray2d>
+public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedPoint2d>
 {
     /** */
     private static final long serialVersionUID = 20210121L;

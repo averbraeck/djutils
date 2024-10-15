@@ -7,12 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.awt.geom.Point2D;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.OrientedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.junit.jupiter.api.Test;
@@ -35,6 +37,8 @@ public class Ray2dTest
     public void testConstructors()
     {
         verifyRay("Constructor from x, y, phi", new Ray2d(1, 2, 3), 1, 2, 3);
+        verifyRay("Constructor from [x, y], phi", new Ray2d(new double[] {1, 2}, 3), 1, 2, 3);
+        verifyRay("Constructor from Point2D.Double(x, y), phi", new Ray2d(new Point2D.Double(1, 2), 3), 1, 2, 3);
         verifyRay("Constructor from Point2d, phi", new Ray2d(new Point2d(0.1, 0.2), -0.3), 0.1, 0.2, -0.3);
         verifyRay("Constructor from x, y, throughX, throughY", new Ray2d(1, 2, 3, 5), 1, 2, Math.atan2(3, 2));
         verifyRay("Constructor from x, y, throughX, throughY", new Ray2d(1, 2, 1, 5), 1, 2, Math.atan2(3, 0));
@@ -52,16 +56,16 @@ public class Ray2dTest
         try
         {
             new Ray2d(1, 2, Double.NaN);
-            fail("NaN for phy should have thrown a DrawRuntimeException");
+            fail("NaN for phy should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            new Ray2d(null, 1);
+            new Ray2d((Point2d) null, 1);
             fail("null for point should have thrown a NullPointerException");
         }
         catch (NullPointerException dre)
@@ -72,9 +76,9 @@ public class Ray2dTest
         try
         {
             new Ray2d(1, 2, 1, 2);
-            fail("Same coordinates for through point should have thrown a DrawRuntimeException");
+            fail("Same coordinates for through point should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
@@ -82,9 +86,9 @@ public class Ray2dTest
         try
         {
             new Ray2d(1, 2, new Point2d(1, 2));
-            fail("Same coordinates for through point should have thrown a DrawRuntimeException");
+            fail("Same coordinates for through point should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
@@ -92,9 +96,9 @@ public class Ray2dTest
         try
         {
             new Ray2d(new Point2d(1, 2), 1, 2);
-            fail("Same coordinates for through point should have thrown a DrawRuntimeException");
+            fail("Same coordinates for through point should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
@@ -166,7 +170,7 @@ public class Ray2dTest
         assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), flipped.getPhi(), 0.0001, description + " getPhi");
         assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), flipped.phi, 0.0001, description + " phi");
         assertEquals(2, ray.size(), description + " size");
-        Iterator<Point2d> iterator = ray.getPoints();
+        Iterator<DirectedPoint2d> iterator = ray.getPoints();
         // First result of iterator is the finite end point (but this is not a hard promise)
         assertTrue(iterator.hasNext());
         Point2d point = iterator.next();
@@ -315,10 +319,10 @@ public class Ray2dTest
             // Ignore expected exception
         }
 
-        for (double phi : new double[] { 0, 1, 2, 3, 4, 5, -1, -2, Math.PI })
+        for (double phi : new double[] {0, 1, 2, 3, 4, 5, -1, -2, Math.PI})
         {
             Ray2d ray = new Ray2d(1, 2, phi);
-            for (double position : new double[] { 0, 10, 0.1, -2 })
+            for (double position : new double[] {0, 10, 0.1, -2})
             {
                 Ray2d result = ray.getLocationExtended(position);
                 assertEquals(Math.abs(position), ray.distance(result), 0.001,
@@ -370,10 +374,10 @@ public class Ray2dTest
         assertNull(ray.projectOrthogonal(new Point2d(1, 0)), "projection misses the ray");
         assertNull(ray.projectOrthogonal(new Point2d(0, 2)), "projection misses the ray");
         assertEquals(new Point2d(1, 2), ray.projectOrthogonal(new Point2d(1, 2)), "projection hits start point of ray");
-        assertEquals(0, new LineSegment2d(ray.getLocationExtended(-100), ray.getLocation(100)).closestPointOnSegment(new Point2d(1, 0))
-                .distance(ray.projectOrthogonalExtended(new Point2d(1, 0))),
-                0.0001,
-                "extended projection returns same point as projection on sufficiently long line segment");
+        assertEquals(0,
+                new LineSegment2d(ray.getLocationExtended(-100), ray.getLocation(100)).closestPointOnSegment(new Point2d(1, 0))
+                        .distance(ray.projectOrthogonalExtended(new Point2d(1, 0))),
+                0.0001, "extended projection returns same point as projection on sufficiently long line segment");
 
         Point2d projectingPoint = new Point2d(10, 10);
         result = ray.closestPointOnRay(projectingPoint); // Projects at a point along the ray
@@ -384,8 +388,8 @@ public class Ray2dTest
         assertEquals(Math.PI / 2, Math.abs(AngleUtil.normalizeAroundZero(angle)), 0.0001, "angle should be about 90 degrees");
         assertEquals(0, result.distance(ray.projectOrthogonal(projectingPoint)), 0.0001,
                 "projection hits closest point on the ray");
-        assertEquals(0, result.distance(ray.projectOrthogonalExtended(projectingPoint)),
-                0.0001, "projectOrthogonalExtended returns same result as long as orthogonal projection exists");
+        assertEquals(0, result.distance(ray.projectOrthogonalExtended(projectingPoint)), 0.0001,
+                "projectOrthogonalExtended returns same result as long as orthogonal projection exists");
     }
 
     /**
@@ -397,8 +401,8 @@ public class Ray2dTest
         Ray2d ray = new Ray2d(1, 2, 20, 10);
         assertTrue(Double.isNaN(ray.projectOrthogonalFractional(new Point2d(1, 1))), "projects outside");
         assertTrue(ray.projectOrthogonalFractionalExtended(new Point2d(1, 1)) < 0, "projects before start");
-        assertEquals(-new Point2d(1 - 19 - 19, 2 - 8 - 8).distance(ray), ray.projectOrthogonalFractionalExtended(new Point2d(1 - 19 - 19 + 8, 2 - 8 - 8 - 19)),
-                0.0001, "projects at");
+        assertEquals(-new Point2d(1 - 19 - 19, 2 - 8 - 8).distance(ray),
+                ray.projectOrthogonalFractionalExtended(new Point2d(1 - 19 - 19 + 8, 2 - 8 - 8 - 19)), 0.0001, "projects at");
         // Projection of projection is projection
         for (int x = -2; x < 5; x++)
         {
@@ -418,8 +422,8 @@ public class Ray2dTest
                             "non extended version yields same as extended version");
                 }
                 Point2d projected = ray.projectOrthogonalExtended(point);
-                assertEquals(fraction, ray.projectOrthogonalFractionalExtended(projected),
-                        0.00001, "projecting projected point yields same");
+                assertEquals(fraction, ray.projectOrthogonalFractionalExtended(projected), 0.00001,
+                        "projecting projected point yields same");
             }
         }
     }
@@ -481,7 +485,7 @@ public class Ray2dTest
             // Ignore expected exception
         }
 
-        double[] deltas = new double[] { 0.0, -0.125, 0.125, -1, 1 }; // Use values that can be represented exactly in a double
+        double[] deltas = new double[] {0.0, -0.125, 0.125, -1, 1}; // Use values that can be represented exactly in a double
         for (double dX : deltas)
         {
             for (double dY : deltas)
@@ -489,7 +493,7 @@ public class Ray2dTest
                 for (double dPhi : deltas)
                 {
                     Ray2d other = new Ray2d(ray.x + dX, ray.y + dY, ray.phi + dPhi);
-                    for (double epsilon : new double[] { 0, 0.125, 0.5, 0.9, 1.0, 1.1 })
+                    for (double epsilon : new double[] {0, 0.125, 0.5, 0.9, 1.0, 1.1})
                     {
                         // System.out.println(String.format("dX=%f, dY=%f, dPhi=%f, epsilon=%f", dX, dY, dPhi, epsilon));
                         boolean result = ray.epsilonEquals(other, epsilon, Double.POSITIVE_INFINITY);
@@ -498,6 +502,12 @@ public class Ray2dTest
 
                         result = ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
                         expected = Math.abs(dPhi) <= epsilon;
+                        if (result != expected)
+                        {
+                            System.out.println("epsilongEquals rotation mismatch: ray=" + ray + ", other=" + other
+                                    + ", epsilongRotation=" + epsilon + ", result=" + result);
+                            ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
+                        }
                         assertEquals(expected, result, "result of epsilonEquals checking phi");
                     }
                 }

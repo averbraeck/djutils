@@ -8,6 +8,7 @@ import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.bounds.Bounds3d;
+import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
 
@@ -20,18 +21,10 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
+public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, DirectedPoint3d, Point3d>
 {
     /** */
     private static final long serialVersionUID = 20210119L;
-
-    /** Phi; the angle from the positive X axis direction in radians. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    public final double phi;
-
-    /** Theta; the angle from the positive Z axis direction in radians. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    public final double theta;
 
     /**
      * Construct a new Ray3d.
@@ -45,10 +38,21 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
     public Ray3d(final double x, final double y, final double z, final double phi, final double theta)
             throws DrawRuntimeException
     {
-        super(x, y, z);
-        Throw.when(Double.isNaN(phi) || Double.isNaN(theta), DrawRuntimeException.class, "phi and theta may not be NaN");
-        this.phi = phi;
-        this.theta = theta;
+        super(x, y, z, phi, theta);
+    }
+
+    /**
+     * Create a new Ray3d from x, y, and z coordinates packed in a double array of three elements and direction phi,theta.
+     * @param xyz double[]; the <cite>x</cite>, <cite>y</cite> and <cite>z</cite> coordinates in that order
+     * @param phi double; the counter-clockwise rotation around the point in radians
+     * @param theta double; the complement of the slope
+     * @throws NullPointerException when <cite>xyx</cite> is null
+     * @throws IllegalArgumentException when the length of the <cite>xyz</cite> array is not 3, or contains a NaN value, or phi,
+     *             or theta is NaN
+     */
+    public Ray3d(final double[] xyz, final double phi, final double theta) throws NullPointerException, IllegalArgumentException
+    {
+        super(xyz, phi, theta);
     }
 
     /**
@@ -61,7 +65,7 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
      */
     public Ray3d(final Point3d point, final double phi, final double theta) throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(point, "point may not be null").x, point.y, point.z, phi, theta);
+        super(point, phi, theta);
     }
 
     /**
@@ -77,13 +81,7 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
     public Ray3d(final double x, final double y, final double z, final double throughX, final double throughY,
             final double throughZ) throws DrawRuntimeException
     {
-        super(x, y, z);
-        Throw.when(throughX == x && throughY == y && throughZ == z, DrawRuntimeException.class,
-                "the coordinates of the through point must differ from (x, y, z)");
-        Throw.when(Double.isNaN(throughX) || Double.isNaN(throughY) || Double.isNaN(throughZ), DrawRuntimeException.class,
-                "throughX, throughY and throughZ must be numbers (not NaN)");
-        this.phi = Math.atan2(throughY - y, throughX - x);
-        this.theta = Math.atan2(Math.hypot(throughX - x, throughY - y), throughZ - z);
+        super(x, y, z, throughX, throughY, throughZ);
     }
 
     /**
@@ -99,7 +97,39 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
     public Ray3d(final Point3d point, final double throughX, final double throughY, final double throughZ)
             throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(point, "point may not be null").x, point.y, point.z, throughX, throughY, throughZ);
+        super(point, throughX, throughY, throughZ);
+    }
+
+    /**
+     * Create a new Ray3d with x, y, and z coordinates and orientation specified using a double array of three
+     * elements (containing dirX,dirY,dirZ in that order).
+     * @param x double; the x coordinate
+     * @param y double; the y coordinate
+     * @param z double; the z coordinate
+     * @param orientation double[]; the two direction values (theta and phi) in a double array containing theta and phi in that
+     *            order. Theta is the angle from the positive x-axis to the projection of the direction in the x-y-plane. Phi is
+     *            the rotation from the positive z-axis to the direction.
+     * @throws NullPointerException when <code>orientation</code> is null, or contains a NaN value
+     * @throws IllegalArgumentException when the length of the <code>direction</code> array is not 2
+     */
+    public Ray3d(final double x, final double y, final double z, final double[] orientation)
+            throws NullPointerException, IllegalArgumentException
+    {
+        super(x, y, z, orientation);
+    }
+
+    /**
+     * Create a new Rayt3d from x, y, and z coordinates packed in a double array of three elements and a direction
+     * specified using a double array of two elements.
+     * @param xyz double[]; the <cite>x</cite>, <cite>y</cite> and <cite>z</cite> coordinates in that order
+     * @param orientation double[]; the two orientation angles <cite>phi</cite> and <cite>theta</cite> in that order
+     * @throws NullPointerException when <cite>xyx</cite> or <cite>orientation</cite> is null
+     * @throws IllegalArgumentException when the length of the <cite>xyx</cite> array is not 3 or the length of the
+     *             <cite>orientation</cite> array is not 2
+     */
+    public Ray3d(final double[] xyz, final double[] orientation) throws NullPointerException, IllegalArgumentException
+    {
+        super(xyz, orientation);
     }
 
     /**
@@ -114,7 +144,7 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
     public Ray3d(final double x, final double y, final double z, final Point3d throughPoint)
             throws NullPointerException, DrawRuntimeException
     {
-        this(x, y, z, Throw.whenNull(throughPoint, "througPoint may not be null").x, throughPoint.y, throughPoint.z);
+        super(x, y, z, throughPoint);
     }
 
     /**
@@ -126,8 +156,14 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
      */
     public Ray3d(final Point3d point, final Point3d throughPoint) throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(point, "point may not be null").x, point.y, point.z,
-                Throw.whenNull(throughPoint, "throughPoint may not be null").x, throughPoint.y, throughPoint.z);
+        super(point, throughPoint);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final double getTheta()
+    {
+        return this.theta;
     }
 
     /** {@inheritDoc} */
@@ -137,20 +173,11 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
         return this.phi;
     }
 
-    /**
-     * Retrieve the angle from the positive Z axis direction in radians.
-     * @return double; the angle from the positive Z axis direction in radians
-     */
-    public final double getTheta()
-    {
-        return this.theta;
-    }
-
     /** {@inheritDoc} */
     @Override
-    public Point3d getEndPoint()
+    public DirectedPoint3d getEndPoint()
     {
-        return new Point3d(this.x, this.y, this.z);
+        return this;
     }
 
     /** {@inheritDoc} */
@@ -162,16 +189,16 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
 
     /** {@inheritDoc} */
     @Override
-    public Iterator<Point3d> getPoints()
+    public Iterator<DirectedPoint3d> getPoints()
     {
         double sinPhi = Math.sin(this.phi);
         double cosPhi = Math.cos(this.phi);
         double sinTheta = Math.sin(this.theta);
         double cosTheta = Math.cos(this.theta);
-        Point3d[] array = new Point3d[] {new Point3d(this.x, this.y, this.z),
-                new Point3d(cosPhi * sinTheta == 0 ? this.x : cosPhi * sinTheta * Double.POSITIVE_INFINITY,
+        DirectedPoint3d[] array = new DirectedPoint3d[] {this,
+                new DirectedPoint3d(cosPhi * sinTheta == 0 ? this.x : cosPhi * sinTheta * Double.POSITIVE_INFINITY,
                         cosPhi * sinPhi == 0 ? this.y : cosPhi * sinPhi * Double.POSITIVE_INFINITY,
-                        cosTheta == 0 ? this.z : cosTheta * Double.POSITIVE_INFINITY)};
+                        cosTheta == 0 ? this.z : cosTheta * Double.POSITIVE_INFINITY, this.phi, this.theta)};
         return Arrays.stream(array).iterator();
     }
 
@@ -271,39 +298,6 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
 
     /** {@inheritDoc} */
     @Override
-    public boolean epsilonEquals(final Ray3d other, final double epsilonCoordinate, final double epsilonRotation)
-            throws NullPointerException, IllegalArgumentException
-    {
-        Throw.whenNull(other, "other point may not be null");
-        Throw.when(
-                Double.isNaN(epsilonCoordinate) || epsilonCoordinate < 0 || Double.isNaN(epsilonRotation)
-                        || epsilonRotation < 0,
-                IllegalArgumentException.class, "epsilon values may not be negative and may not be NaN");
-        if (Math.abs(this.x - other.x) > epsilonCoordinate)
-        {
-            return false;
-        }
-        if (Math.abs(this.y - other.y) > epsilonCoordinate)
-        {
-            return false;
-        }
-        if (Math.abs(this.z - other.z) > epsilonCoordinate)
-        {
-            return false;
-        }
-        if ((Math.abs(AngleUtil.normalizeAroundZero(this.phi - other.phi)) > epsilonRotation
-                || Math.abs(AngleUtil.normalizeAroundZero(this.theta - other.theta)) > epsilonRotation)
-                && (Math.abs(AngleUtil.normalizeAroundZero(Math.PI + this.phi - other.phi)) > epsilonRotation
-                        || Math.abs(AngleUtil.normalizeAroundZero(Math.PI - this.theta - other.theta)) > epsilonRotation))
-        {
-            return false;
-        }
-        return true;
-        // FIXME this method should return true if the same angle is approximated with inverted theta and phi off by PI
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public String toString()
     {
         return toString("%f", false);
@@ -322,14 +316,7 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = super.hashCode();
-        long temp;
-        temp = Double.doubleToLongBits(this.phi);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(this.theta);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        return result;
+        return super.hashCode();
     }
 
     /** {@inheritDoc} */
@@ -342,11 +329,6 @@ public class Ray3d extends Point3d implements Drawable3d, Ray<Ray3d, Point3d>
         if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
-            return false;
-        Ray3d other = (Ray3d) obj;
-        if (Double.doubleToLongBits(this.phi) != Double.doubleToLongBits(other.phi))
-            return false;
-        if (Double.doubleToLongBits(this.theta) != Double.doubleToLongBits(other.theta))
             return false;
         return true;
     }

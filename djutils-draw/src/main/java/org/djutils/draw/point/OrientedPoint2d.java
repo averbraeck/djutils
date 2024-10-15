@@ -139,9 +139,9 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
     }
 
     /**
-     * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
-     * that case the interpolation turns into an extrapolation. DirZ is interpolated using the AngleUtil.interpolateShortest
-     * method.
+     * Interpolate towards another OrientedPoint2d with a fraction. It is allowed for fraction to be less than zero or larger
+     * than 1. In that case the interpolation turns into an extrapolation. DirZ is interpolated using the
+     * AngleUtil.interpolateShortest method.
      * @param otherPoint OrientedPoint2d; the other point
      * @param fraction double; the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
      *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
@@ -172,7 +172,7 @@ public class OrientedPoint2d extends Point2d implements Oriented2d<OrientedPoint
      * Return a new OrientedPoint2d with an in-place rotation around the z-axis by the provided rotateZ. The resulting rotation
      * is normalized between -&pi; and &pi;.
      * @param rotateZ double; the rotation around the z-axis
-     * @return OrientedPoint; a new point with the same coordinates and applied rotation
+     * @return OrientedPoint2d; a new point with the same coordinates and applied rotation
      * @throws IllegalArgumentException when deltaRotZ is NaN
      */
     public OrientedPoint2d rotate(final double rotateZ) throws IllegalArgumentException

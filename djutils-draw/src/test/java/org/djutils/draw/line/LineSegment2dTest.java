@@ -11,6 +11,7 @@ import java.util.Iterator;
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.junit.jupiter.api.Test;
 
@@ -148,10 +149,10 @@ public class LineSegment2dTest
             }
             else
             {
-                Ray2d ray = segment.getLocation(position);
-                assertEquals(position, ray.distance(startPoint), 0.0001, "distance from start point");
-                assertEquals(segment.getLength() - position, ray.distance(endPoint), 0.0001, "distance from end point");
-                assertEquals(startPoint.directionTo(endPoint), ray.phi, 0.0001, "direction of ray");
+                DirectedPoint2d dp = segment.getLocation(position);
+                assertEquals(position, dp.distance(startPoint), 0.0001, "distance from start point");
+                assertEquals(segment.getLength() - position, dp.distance(endPoint), 0.0001, "distance from end point");
+                assertEquals(startPoint.directionTo(endPoint), dp.phi, 0.0001, "direction of ray");
             }
             Ray2d ray = segment.getLocationExtended(position);
             assertEquals(Math.abs(position), ray.distance(startPoint), 0.0001, "distance from start point");

@@ -10,6 +10,7 @@ import java.util.Iterator;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
+import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point3d;
 import org.junit.jupiter.api.Test;
 
@@ -81,9 +82,8 @@ public class LineSegment3dTest
         assertEquals(expectedEndX, segment.getEndPoint().x, 0.0001, description + " getEndPoint x");
         assertEquals(expectedEndY, segment.getEndPoint().y, 0.0001, description + " getEndPoint y");
         assertEquals(expectedEndZ, segment.getEndPoint().z, 0.0001, description + " getEndPoint z");
-        assertEquals(Math
-                .hypot(Math.hypot(expectedEndX - expectedStartX, expectedEndY - expectedStartY), expectedEndZ - expectedStartZ), segment.getLength(),
-                0.0001, description + " length");
+        assertEquals(Math.hypot(Math.hypot(expectedEndX - expectedStartX, expectedEndY - expectedStartY),
+                expectedEndZ - expectedStartZ), segment.getLength(), 0.0001, description + " length");
         assertEquals(2, segment.size(), description + " size is 2");
         Iterator<? extends Point3d> iterator = segment.getPoints();
         assertTrue(iterator.hasNext(), description + " iterator has data");
@@ -164,19 +164,20 @@ public class LineSegment3dTest
             }
             else
             {
-                Ray3d ray = segment.getLocation(position);
-                assertEquals(position, ray.distance(startPoint), 0.0001, "distance from start point");
-                assertEquals(segment.getLength() - position, ray.distance(endPoint), 0.0001, "distance from end point");
-                assertEquals(startPoint.project().directionTo(endPoint.project()), ray.phi, 0.0001, "direction of ray phi");
-                assertEquals(Math.atan2(endPoint.z - startPoint.z, segment.project().getLength()), ray.theta,
-                        0.0001, "direction of ray theta");
+                DirectedPoint3d dp = segment.getLocation(position);
+                assertEquals(position, dp.distance(startPoint), 0.0001, "distance from start point");
+                assertEquals(segment.getLength() - position, dp.distance(endPoint), 0.0001, "distance from end point");
+                assertEquals(startPoint.project().directionTo(endPoint.project()), dp.phi, 0.0001,
+                        "direction of directedPoint phi");
+                assertEquals(Math.atan2(endPoint.z - startPoint.z, segment.project().getLength()), dp.theta, 0.0001,
+                        "direction of directedPoint theta");
             }
             Ray3d ray = segment.getLocationExtended(position);
             assertEquals(Math.abs(position), ray.distance(startPoint), 0.0001, "distance from start point");
             assertEquals(Math.abs(segment.getLength() - position), ray.distance(endPoint), 0.0001, "distance from end point");
             assertEquals(startPoint.project().directionTo(endPoint.project()), ray.phi, 0.0001, "direction of ray phi");
-            assertEquals(Math.atan2(endPoint.z - startPoint.z, segment.project().getLength()), ray.theta,
-                    0.0001, "direction of ray theta");
+            assertEquals(Math.atan2(endPoint.z - startPoint.z, segment.project().getLength()), ray.theta, 0.0001,
+                    "direction of ray theta");
         }
     }
 
@@ -251,7 +252,7 @@ public class LineSegment3dTest
         verifySegment("reversed", reversed, 20, 10, 5, 1, 2, 3);
         assertEquals(segment, reversed.reverse(), "reversed reversed equals original");
     }
-    
+
     /**
      * Test the project methods.
      */
@@ -263,8 +264,8 @@ public class LineSegment3dTest
         assertTrue(segment.projectOrthogonalFractionalExtended(new Point3d(1, 1, 1)) < 0, "projects before start");
         assertEquals(-2, segment.projectOrthogonalFractionalExtended(new Point3d(1 - 19 - 19 + 8, 2 - 8 - 8 - 19, 3 - 2 - 2)),
                 0.0001, "projects at -2");
-        assertEquals(0.5, segment.projectOrthogonalFractional(new Point3d(11, 1, 4)),
-                0.1, "point near half way (not on segment) project at about half way");
+        assertEquals(0.5, segment.projectOrthogonalFractional(new Point3d(11, 1, 4)), 0.1,
+                "point near half way (not on segment) project at about half way");
         assertTrue(Double.isNaN(segment.projectOrthogonalFractional(new Point3d(25, 15, 6))), "projects outside");
         assertTrue(segment.projectOrthogonalFractionalExtended(new Point3d(25, 15, 6)) > 1, "projects after end");
         assertEquals(2, segment.projectOrthogonalFractionalExtended(new Point3d(1 + 19 + 19 - 8, 2 + 8 + 8 + 19, 3 + 2 + 2)),

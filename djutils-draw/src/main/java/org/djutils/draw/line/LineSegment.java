@@ -2,6 +2,7 @@ package org.djutils.draw.line;
 
 import java.io.Serializable;
 
+import org.djutils.draw.Directed;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable;
 import org.djutils.draw.point.Point;
@@ -17,10 +18,10 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @param <P> The point type (2d or 3d)
- * @param <R> The ray type (2d or 3d)
+ * @param <D> The directed type (2d or 3d)
  */
-public interface LineSegment<P extends Point<P>, R extends Ray<R, P>>
-        extends Drawable<P>, Serializable, Project<P>
+public interface LineSegment<P extends Point<P>, D extends Directed<D>>
+         extends Drawable<P>, Serializable, Project<P>
 {
     /**
      * Get the start point of this LineSegment.
@@ -55,15 +56,15 @@ public interface LineSegment<P extends Point<P>, R extends Ray<R, P>>
      * Construct a new LineSegment with the points of this LineSegment in reverse order.
      * @return LineSegment; the new LineSegment
      */
-    LineSegment<P, R> reverse();
+    LineSegment<P, D> reverse();
 
     /**
-     * Create a Ray on a specified point on this LineSegment.
+     * Create a DirectedPoint at the specified position along this LineSegment.
      * @param position double; the distance from the start point of this LineSegment.
-     * @return R; a ray beginning at the specified position
+     * @return D; a DirectedPoint beginning at the specified position
      * @throws DrawRuntimeException when position is NaN, &lt; 0 or &gt; length of this LineSegment
      */
-    default R getLocation(final double position) throws DrawRuntimeException
+    default D getLocation(final double position) throws DrawRuntimeException
     {
         Throw.when(position < 0 || position > getLength(), DrawRuntimeException.class,
                 "position must be positive and less than the length of this LineSegment");
@@ -71,12 +72,12 @@ public interface LineSegment<P extends Point<P>, R extends Ray<R, P>>
     }
 
     /**
-     * Create a Ray on a specified point on this LineSegment.
+     * Create a DirectedPoint at the specified position along this LineSegment.
      * @param position double; the distance from the start point of this LineSegment.
-     * @return R; a ray beginning at the specified position
+     * @return D; a DirectedPoint at the specified position
      * @throws DrawRuntimeException when position is NaN or infinite
      */
-    R getLocationExtended(double position) throws DrawRuntimeException;
+    D getLocationExtended(double position) throws DrawRuntimeException;
 
     /**
      * Convert this PolyLine to something that MS-Excel can plot.

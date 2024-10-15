@@ -1,5 +1,6 @@
 package org.djutils.draw.line;
 
+import java.awt.geom.Point2D;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
@@ -8,11 +9,12 @@ import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
 
 /**
- * Ray2d is a half-line; it has one end point with non-infinite coordinates; the other end point is infinitely far away.
+ * Ray2d is a half-line; it has one end point with finite coordinates; the other end point is infinitely far away.
  * <p>
  * Copyright (c) 2020-2024 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -20,14 +22,10 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d>
+public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, DirectedPoint2d, Point2d>
 {
     /** */
     private static final long serialVersionUID = 20210119L;
-
-    /** Phi; the angle from the positive X axis direction in radians. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    public final double phi;
 
     /**
      * Construct a new Ray2d.
@@ -38,13 +36,34 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d>
      */
     public Ray2d(final double x, final double y, final double phi) throws DrawRuntimeException
     {
-        super(x, y);
-        Throw.when(Double.isNaN(phi), DrawRuntimeException.class, "phi may not be NaN");
-        this.phi = phi;
+        super(x, y, phi);
     }
 
     /**
-     * Construct a new Ray2d.
+     * Construct a new Ray2d from x and y coordinates in a double[] and a direction.
+     * @param xy double[]; the <cite>x</cite> and <cite>y</cite> coordinates of the finite end point in that order
+     * @param phi double; the counter-clockwise rotation around the point in radians
+     * @throws NullPointerException when xy is null
+     * @throws IllegalArgumentException when the dimension of xy is not 2 or any value in xy is NaN or rotZ is NaN
+     */
+    public Ray2d(final double[] xy, final double phi) throws IllegalArgumentException
+    {
+        super(xy, phi);
+    }
+    
+    /**
+     * Construct a new Ray2d from an AWT Point2D and a direction.
+     * @param point Point2D; an AWT Point2D
+     * @param phi double; the counter-clockwise rotation around the point in radians
+     * @throws IllegalArgumentException when any coordinate in point is NaN, or rotZ is NaN
+     */
+    public Ray2d(final Point2D point, final double phi) throws IllegalArgumentException
+    {
+        super(point, phi);
+    }
+
+    /**
+     * Construct a new Ray2d from a Point2d and a direction.
      * @param point Point2d; the finite end point of the ray
      * @param phi double; the angle from the positive X axis direction in radians.
      * @throws NullPointerException when point is null
@@ -52,7 +71,7 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d>
      */
     public Ray2d(final Point2d point, final double phi) throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(point, "point may not be null").x, point.y, phi);
+        super(point, phi);
     }
 
     /**
@@ -65,12 +84,7 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d>
      */
     public Ray2d(final double x, final double y, final double throughX, final double throughY) throws DrawRuntimeException
     {
-        super(x, y);
-        Throw.when(throughX == x && throughY == y, DrawRuntimeException.class,
-                "the coordinates of the through point must differ from (x, y)");
-        Throw.when(Double.isNaN(throughX) || Double.isNaN(throughY), DrawRuntimeException.class,
-                "throughX and throughY must be numbers (not NaN)");
-        this.phi = Math.atan2(throughY - y, throughX - x);
+        super(x, y, throughX, throughY);
     }
 
     /**
@@ -84,7 +98,7 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d>
     public Ray2d(final Point2d point, final double throughX, final double throughY)
             throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(point, "point may not be null").x, point.y, throughX, throughY);
+        super(point, throughX, throughY);
     }
 
     /**
@@ -122,9 +136,9 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d>
 
     /** {@inheritDoc} */
     @Override
-    public Point2d getEndPoint()
+    public DirectedPoint2d getEndPoint()
     {
-        return new Point2d(this.x, this.y);
+        return this;
     }
 
     /** {@inheritDoc} */
@@ -136,13 +150,13 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d>
 
     /** {@inheritDoc} */
     @Override
-    public Iterator<Point2d> getPoints()
+    public Iterator<DirectedPoint2d> getPoints()
     {
         double cosPhi = Math.cos(this.phi);
         double sinPhi = Math.sin(this.phi);
-        Point2d[] array = new Point2d[] {new Point2d(this.x, this.y),
-                new Point2d(cosPhi == 0 ? this.x : cosPhi * Double.POSITIVE_INFINITY,
-                        sinPhi == 0 ? this.y : sinPhi * Double.POSITIVE_INFINITY)};
+        DirectedPoint2d[] array =
+                new DirectedPoint2d[] {this, new DirectedPoint2d(cosPhi == 0 ? this.x : cosPhi * Double.POSITIVE_INFINITY,
+                        sinPhi == 0 ? this.y : sinPhi * Double.POSITIVE_INFINITY, this.phi)};
         return Arrays.stream(array).iterator();
     }
 
@@ -225,31 +239,6 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d>
 
     /** {@inheritDoc} */
     @Override
-    public boolean epsilonEquals(final Ray2d other, final double epsilonCoordinate, final double epsilonDirection)
-            throws NullPointerException, IllegalArgumentException
-    {
-        Throw.whenNull(other, "other point may not be null");
-        Throw.when(
-                Double.isNaN(epsilonCoordinate) || epsilonCoordinate < 0 || Double.isNaN(epsilonDirection)
-                        || epsilonDirection < 0,
-                IllegalArgumentException.class, "epsilon values may not be negative and may not be NaN");
-        if (Math.abs(this.x - other.x) > epsilonCoordinate)
-        {
-            return false;
-        }
-        if (Math.abs(this.y - other.y) > epsilonCoordinate)
-        {
-            return false;
-        }
-        if (Math.abs(AngleUtil.normalizeAroundZero(this.phi - other.phi)) > epsilonDirection)
-        {
-            return false;
-        }
-        return true;
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public String toString()
     {
         return toString("%f", false);
@@ -267,12 +256,7 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d>
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = super.hashCode();
-        long temp;
-        temp = Double.doubleToLongBits(this.phi);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        return result;
+        return super.hashCode();
     }
 
     /** {@inheritDoc} */
@@ -285,9 +269,6 @@ public class Ray2d extends Point2d implements Drawable2d, Ray<Ray2d, Point2d>
         if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
-            return false;
-        Ray2d other = (Ray2d) obj;
-        if (Double.doubleToLongBits(this.phi) != Double.doubleToLongBits(other.phi))
             return false;
         return true;
     }
