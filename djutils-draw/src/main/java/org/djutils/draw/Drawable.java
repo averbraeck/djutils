@@ -1,13 +1,11 @@
 package org.djutils.draw;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.djutils.draw.point.Point;
-import org.djutils.exceptions.Throw;
 
 /**
  * Drawable is an interface to indicate zero or more points can be retrieved to draw the object.
