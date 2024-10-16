@@ -71,8 +71,8 @@ public class LineSegment2dTest
         assertEquals(expectedStartY, segment.getStartPoint().y, 0.0001, description + " getStartPoint y");
         assertEquals(expectedEndX, segment.getEndPoint().x, 0.0001, description + " getEndPoint x");
         assertEquals(expectedEndY, segment.getEndPoint().y, 0.0001, description + " getEndPoint y");
-        assertEquals(Math.hypot(expectedEndX - expectedStartX, expectedEndY - expectedStartY), segment.getLength(),
-                0.0001, description + " length");
+        assertEquals(Math.hypot(expectedEndX - expectedStartX, expectedEndY - expectedStartY), segment.getLength(), 0.0001,
+                description + " length");
         assertEquals(2, segment.size(), description + " size is 2");
         Iterator<? extends Point2d> iterator = segment.getPoints();
         assertTrue(iterator.hasNext(), description + " iterator has data");
@@ -231,14 +231,14 @@ public class LineSegment2dTest
         LineSegment2d segment = new LineSegment2d(1, 2, 20, 10);
         assertTrue(Double.isNaN(segment.projectOrthogonalFractional(new Point2d(1, 1))), "projects outside");
         assertTrue(segment.projectOrthogonalFractionalExtended(new Point2d(1, 1)) < 0, "projects before start");
-        assertEquals(-2, segment.projectOrthogonalFractionalExtended(new Point2d(1 - 19 - 19 + 8, 2 - 8 - 8 - 19)),
-                0.0001, "projects at -2");
-        assertEquals(0.5, segment.projectOrthogonalFractional(new Point2d(11, 1)),
-                0.1, "point near half way (not on segment) project at about half way");
+        assertEquals(-2, segment.projectOrthogonalFractionalExtended(new Point2d(1 - 19 - 19 + 8, 2 - 8 - 8 - 19)), 0.0001,
+                "projects at -2");
+        assertEquals(0.5, segment.projectOrthogonalFractional(new Point2d(11, 1)), 0.1,
+                "point near half way (not on segment) project at about half way");
         assertTrue(Double.isNaN(segment.projectOrthogonalFractional(new Point2d(25, 15))), "projects outside");
         assertTrue(segment.projectOrthogonalFractionalExtended(new Point2d(25, 15)) > 1, "projects after end");
-        assertEquals(2, segment.projectOrthogonalFractionalExtended(new Point2d(1 + 19 + 19 - 8, 2 + 8 + 8 + 19)),
-                0.0001, "projects at 2");
+        assertEquals(2, segment.projectOrthogonalFractionalExtended(new Point2d(1 + 19 + 19 - 8, 2 + 8 + 8 + 19)), 0.0001,
+                "projects at 2");
     }
 
     /**
@@ -268,7 +268,7 @@ public class LineSegment2dTest
         assertEquals(1, result.split("\n").length, "result is one line");
         int valuesSeen = 0;
         int pos = 0;
-        while ( pos < result.length())
+        while (pos < result.length())
         {
             if (valuesSeen % 2 == 0)
             {
@@ -292,7 +292,8 @@ public class LineSegment2dTest
                 }
             }
             double value = Double.NaN;
-            double expectedValue = valuesSeen == 0 ? segment.startX : valuesSeen == 1 ? segment.startY: valuesSeen == 2 ? segment.endX: segment.endY;
+            double expectedValue = valuesSeen == 0 ? segment.startX
+                    : valuesSeen == 1 ? segment.startY : valuesSeen == 2 ? segment.endX : segment.endY;
             try
             {
                 value = Double.parseDouble(result.substring(pos, endPos));

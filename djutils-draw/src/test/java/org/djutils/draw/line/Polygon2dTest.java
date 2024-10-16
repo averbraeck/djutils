@@ -53,7 +53,8 @@ public class Polygon2dTest
         checkPolygon("constructed from arrays", x, y, polygon, actualSurface, true);
         assertEquals(-actualSurface, polygon.reverse().surface(), Math.ulp(-actualSurface), "surface of reversed polygon");
         Polygon2d otherPolygon = new Polygon2d(polygon.get(0), polygon.get(1), polygon.get(2), polygon.get(0));
-        assertEquals(polygon, otherPolygon, "polygon constructed from all points of existing polygon with first point duplicated at end is equal "
+        assertEquals(polygon, otherPolygon,
+                "polygon constructed from all points of existing polygon with first point duplicated at end is equal "
                         + "to original");
         // Make a Polygon2d from Point2d where last point differs from first only in y
         new Polygon2d(polygon.get(0), polygon.get(1), polygon.get(2), new Point2d(polygon.get(0).x, 123));
@@ -85,12 +86,12 @@ public class Polygon2dTest
 
         list.add(list.get(0));
         otherPolygon = new Polygon2d(list.iterator());
-        assertEquals(polygon,
-                otherPolygon, "Polygon created from polygon points and duplicate of first point at end is equal to original polygon");
+        assertEquals(polygon, otherPolygon,
+                "Polygon created from polygon points and duplicate of first point at end is equal to original polygon");
 
         otherPolygon = new Polygon2d(list);
-        assertEquals(polygon,
-                otherPolygon, "Polygon created from polygon points and duplicate of first point at end is equal to original polygon");
+        assertEquals(polygon, otherPolygon,
+                "Polygon created from polygon points and duplicate of first point at end is equal to original polygon");
         // Add a point that only differs in y
         list.add(new Point2d(list.get(0).x, 123));
         new Polygon2d(list.iterator());
@@ -438,17 +439,17 @@ public class Polygon2dTest
         // Test all cases of co-linear edges
         Polygon2d one = new Polygon2d(new Point2d(3, 4), new Point2d(4, 3), new Point2d(4, -3), new Point2d(3, -4),
                 new Point2d(-3, -4), new Point2d(-4, -3), new Point2d(-4, 3), new Point2d(-3, 4));
-        Polygon2d two = new Polygon2d(new Transform2d().translate(8,0).transform(one.getPoints()));
+        Polygon2d two = new Polygon2d(new Transform2d().translate(8, 0).transform(one.getPoints()));
         assertTrue(one.intersects(two), "shapes hit");
-        two = new Polygon2d(new Transform2d().translate(8,2).transform(one.getPoints()));
+        two = new Polygon2d(new Transform2d().translate(8, 2).transform(one.getPoints()));
         assertTrue(one.intersects(two), "shapes hit");
-        two = new Polygon2d(new Transform2d().translate(8,6).transform(one.getPoints()));
+        two = new Polygon2d(new Transform2d().translate(8, 6).transform(one.getPoints()));
         assertTrue(one.intersects(two), "shapes hit");
-        two = new Polygon2d(new Transform2d().translate(7.75,6.25).transform(one.getPoints()));
+        two = new Polygon2d(new Transform2d().translate(7.75, 6.25).transform(one.getPoints()));
         assertTrue(one.intersects(two), "shapes hit");
-        two = new Polygon2d(new Transform2d().translate(7,7).transform(one.getPoints()));
+        two = new Polygon2d(new Transform2d().translate(7, 7).transform(one.getPoints()));
         assertTrue(one.intersects(two), "shapes hit");
-        
+
     }
 
     /**
