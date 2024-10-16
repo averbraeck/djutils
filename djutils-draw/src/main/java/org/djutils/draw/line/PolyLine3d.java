@@ -9,10 +9,8 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 import org.djutils.draw.DrawRuntimeException;
-import org.djutils.draw.Drawable2d;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
