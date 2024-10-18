@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.Export;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.junit.jupiter.api.Test;
@@ -307,9 +308,9 @@ public class BezierTest
             {
                 System.out.println("fraction " + fraction + ", on " + referenceRay + " projected to " + pointAtPosition
                         + " positionError " + positionError);
-                System.out.print("connection: " + new PolyLine2d(referenceRay, pointAtPosition).toPlot());
-                System.out.print("reference: " + reference.toPlot());
-                System.out.print("candidate: " + candidate.toPlot());
+                System.out.print("connection: " + Export.toPlot(new PolyLine2d(referenceRay, pointAtPosition)));
+                System.out.print("reference: " + Export.toPlot(reference));
+                System.out.print("candidate: " + Export.toPlot(candidate));
             }
             assertTrue(positionError < epsilon, description + " actual error is less than epsilon ");
         }
@@ -337,9 +338,9 @@ public class BezierTest
             {
                 System.out.println("Comparing at fraction " + fraction + ", on " + referenceRay + " compared to " + candidateRay
                         + " positionError " + positionError);
-                System.out.print("connection: " + new PolyLine3d(referenceRay, candidateRay).project().toPlot());
-                System.out.print("reference: " + reference.project().toPlot());
-                System.out.print("candidate: " + candidate.project().toPlot());
+                System.out.print("connection: " + Export.toPlot(new PolyLine3d(referenceRay, candidateRay).project()));
+                System.out.print("reference: " + Export.toPlot(reference.project()));
+                System.out.print("candidate: " + Export.toPlot(candidate.project()));
             }
             assertTrue(positionError < epsilon, description + " actual error is less than epsilon ");
         }

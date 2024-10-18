@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.Export;
 import org.djutils.draw.Transform2d;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.Point2d;
@@ -474,7 +475,7 @@ public class Polygon2dTest
         Point2d[] points =
                 new Point2d[] {new Point2d(123.456, 345.678), new Point2d(234.567, 456.789), new Point2d(-12.345, -34.567)};
         Polygon2d pl = new Polygon2d(points);
-        String[] out = pl.toExcel().split("\\n");
+        String[] out = Export.toExcel(pl).split("\\n");
         assertEquals(points.length + 1, out.length, "Excel output consists of one line per point plus one");
         for (int index = 0; index <= points.length; index++)
         {
@@ -500,7 +501,7 @@ public class Polygon2dTest
             }
         }
 
-        out = pl.toPlot().split(" L");
+        out = Export.toPlot(pl).split(" L");
         assertEquals(points.length + 1, out.length, "Plotter output consists of one coordinate pair per point plus one");
         for (int index = 0; index < points.length; index++)
         {

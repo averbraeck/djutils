@@ -130,14 +130,14 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     public DirectedPoint2d translate(final double dx, final double dy) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class, "translation may not be NaN");
-        return new DirectedPoint2d(getX() + dx, getY() + dy, this.dirZ);
+        return new DirectedPoint2d(this.x + dx, this.y + dy, this.dirZ);
     }
 
     /** {@inheritDoc} */
     @Override
     public DirectedPoint3d translate(final double dx, final double dy, final double z) throws IllegalArgumentException
     {
-        return new DirectedPoint3d(getX() + dx, getY() + dy, z, 0, this.dirZ);
+        return new DirectedPoint3d(this.x + dx, this.y + dy, z, 0, this.dirZ);
     }
 
     /** {@inheritDoc} */
@@ -145,28 +145,28 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     public DirectedPoint2d scale(final double factor) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(factor), IllegalArgumentException.class, "factor must be a number (not NaN)");
-        return new DirectedPoint2d(getX() * factor, getY() * factor, this.dirZ);
+        return new DirectedPoint2d(this.x * factor, this.y * factor, this.dirZ);
     }
 
     /** {@inheritDoc} */
     @Override
     public DirectedPoint2d neg()
     {
-        return new DirectedPoint2d(-getX(), -getY(), AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
+        return new DirectedPoint2d(-this.x, -this.y, AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
     }
 
     /** {@inheritDoc} */
     @Override
     public DirectedPoint2d abs()
     {
-        return new DirectedPoint2d(Math.abs(getX()), Math.abs(getY()), this.dirZ);
+        return new DirectedPoint2d(Math.abs(this.x), Math.abs(this.y), this.dirZ);
     }
 
     /** {@inheritDoc} */
     @Override
     public DirectedPoint2d normalize()
     {
-        double length = Math.sqrt(getX() * getX() + getY() * getY());
+        double length = Math.sqrt(this.x * this.x + this.y * this.y);
         Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0)");
         return this.scale(1.0 / length);
     }
@@ -196,9 +196,9 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
         {
             return otherPoint;
         }
-        return new DirectedPoint2d((1.0 - fraction) * getX() + fraction * otherPoint.x,
-                (1.0 - fraction) * getY() + fraction * otherPoint.y,
-                AngleUtil.interpolateShortest(getDirZ(), otherPoint.getDirZ(), fraction));
+        return new DirectedPoint2d((1.0 - fraction) * this.x + fraction * otherPoint.x,
+                (1.0 - fraction) * this.y + fraction * otherPoint.y,
+                AngleUtil.interpolateShortest(this.dirZ, otherPoint.dirZ, fraction));
     }
 
     /**
@@ -211,7 +211,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     public DirectedPoint2d rotate(final double rotateZ) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(rotateZ), IllegalArgumentException.class, "deltaDirZ must be a number (not NaN)");
-        return new DirectedPoint2d(getX(), getY(), AngleUtil.normalizeAroundZero(getDirZ() + rotateZ));
+        return new DirectedPoint2d(this.x, this.y, AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
 
     /** {@inheritDoc} */

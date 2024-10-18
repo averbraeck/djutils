@@ -621,7 +621,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     @Override
     public final Ray3d getLocationExtended(final double position)
     {
-        if (position >= 0.0 && position <= getLength())
+        if (position >= 0.0 && position <= this.length)
         {
             return getLocation(position);
         }
@@ -638,7 +638,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         // PolyLine2d
         int n1 = this.x.length - 1; // index of last point
         int n2 = this.x.length - 2; // index of before last point
-        double len = position - getLength();
+        double len = position - this.length;
         double fraction = len / (this.lengthIndexedLine[n1] - this.lengthIndexedLine[n2]);
         while (Double.isInfinite(fraction))
         {
@@ -661,8 +661,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     public final Ray3d getLocation(final double position) throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(position), DrawRuntimeException.class, "position may not be NaN");
-        Throw.when(position < 0.0 || position > getLength(), DrawRuntimeException.class,
-                "getLocation for line: position < 0.0 or > line length. Position = " + position + "; length = " + getLength());
+        Throw.when(position < 0.0 || position > this.length, DrawRuntimeException.class,
+                "getLocation for line: position < 0.0 or > line length. Position = " + position + "; length = " + this.length);
         // handle special cases: position == 0.0, or position == length
         if (position == 0.0)
         {
@@ -672,7 +672,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
             }
             return new Ray3d(this.x[0], this.y[0], this.z[0], this.x[1], this.y[1], this.z[1]);
         }
-        if (position == getLength())
+        if (position == this.length)
         {
             return new Ray3d(this.x[this.x.length - 1], this.y[this.x.length - 1], this.z[this.x.length - 1],
                     2 * this.x[this.x.length - 1] - this.x[this.x.length - 2],
@@ -772,14 +772,14 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         {
             return Double.NaN;
         }
-        return result / getLength();
+        return result / this.length;
     }
 
     /** {@inheritDoc} */
     @Override
     public Point3d closestPointOnPolyLine(final Point3d point)
     {
-        return getLocation(projectOrthogonalFractional(point, true) * getLength());
+        return getLocation(projectOrthogonalFractional(point, true) * this.length);
     }
 
     /**
@@ -809,7 +809,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         {
             return null;
         }
-        return getLocationExtended(fraction * getLength());
+        return getLocationExtended(fraction * this.length);
     }
 
     /** {@inheritDoc} */
@@ -844,10 +844,10 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     @Override
     public PolyLine3d extract(final double start, final double end) throws DrawRuntimeException
     {
-        if (Double.isNaN(start) || Double.isNaN(end) || start < 0 || start >= end || end > getLength())
+        if (Double.isNaN(start) || Double.isNaN(end) || start < 0 || start >= end || end > this.length)
         {
             throw new DrawRuntimeException(
-                    "Bad interval (" + start + ".." + end + "; length of this PolyLine3d is " + this.getLength() + ")");
+                    "Bad interval (" + start + ".." + end + "; length of this PolyLine3d is " + this.length + ")");
         }
         double cumulativeLength = 0;
         double nextCumulativeLength = 0;
@@ -984,23 +984,23 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         int indexInEnd = 0;
         while (indexInStart < this.size() && indexInEnd < endLine.size())
         {
-            double fractionInStart = lengthAtIndex(indexInStart) / getLength();
-            double fractionInEnd = endLine.lengthAtIndex(indexInEnd) / endLine.getLength();
+            double fractionInStart = lengthAtIndex(indexInStart) / this.length;
+            double fractionInEnd = endLine.lengthAtIndex(indexInEnd) / endLine.length;
             if (fractionInStart < fractionInEnd)
             {
-                pointList.add(get(indexInStart).interpolate(endLine.getLocation(fractionInStart * endLine.getLength()),
+                pointList.add(get(indexInStart).interpolate(endLine.getLocation(fractionInStart * endLine.length),
                         transition.function(fractionInStart)));
                 indexInStart++;
             }
             else if (fractionInStart > fractionInEnd)
             {
-                pointList.add(this.getLocation(fractionInEnd * getLength()).interpolate(endLine.get(indexInEnd),
+                pointList.add(this.getLocation(fractionInEnd * this.length).interpolate(endLine.get(indexInEnd),
                         transition.function(fractionInEnd)));
                 indexInEnd++;
             }
             else
             {
-                pointList.add(this.get(indexInStart).interpolate(endLine.getLocation(fractionInEnd * endLine.getLength()),
+                pointList.add(this.get(indexInStart).interpolate(endLine.getLocation(fractionInEnd * endLine.length),
                         transition.function(fractionInStart)));
                 indexInStart++;
                 indexInEnd++;
@@ -1013,14 +1013,14 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     @Override
     public PolyLine3d truncate(final double position) throws DrawRuntimeException
     {
-        if (position <= 0.0 || position > getLength())
+        if (position <= 0.0 || position > this.length)
         {
             throw new DrawRuntimeException("truncate for line: position <= 0.0 or > line length. Position = " + position
-                    + ". Length = " + getLength() + " m.");
+                    + ". Length = " + this.length + " m.");
         }
 
         // handle special case: position == length
-        if (position == getLength())
+        if (position == this.length)
         {
             return this;
         }
@@ -1054,18 +1054,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         truncatedY[index] = lastPoint.y;
         truncatedZ[index] = lastPoint.z;
         return new PolyLine3d(truncatedX, truncatedY, truncatedZ);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toExcel()
-    {
-        StringBuffer s = new StringBuffer();
-        for (int i = 0; i < size(); i++)
-        {
-            s.append(getX(i) + "\t" + getY(i) + "\t" + getZ(i) + "\n");
-        }
-        return s.toString();
     }
 
     /** {@inheritDoc} */

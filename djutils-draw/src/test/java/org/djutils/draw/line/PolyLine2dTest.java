@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.Export;
 import org.djutils.draw.Transform2d;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.line.PolyLine.TransitionFunction;
@@ -44,7 +45,7 @@ public class PolyLine2dTest
     @Test
     public final void constructorsTest() throws DrawRuntimeException
     {
-        double[] values = { -999, 0, 99, 9999 }; // Keep this list short; execution time grows with 6th power of length
+        double[] values = {-999, 0, 99, 9999}; // Keep this list short; execution time grows with 6th power of length
         Point2d[] points = new Point2d[0]; // Empty array
         try
         {
@@ -286,14 +287,14 @@ public class PolyLine2dTest
     @Test
     public void testConstructors() throws DrawRuntimeException, DrawRuntimeException
     {
-        runConstructors(new Point2d[] { new Point2d(1.2, 3.4), new Point2d(2.3, 4.5), new Point2d(3.4, 5.6) });
+        runConstructors(new Point2d[] {new Point2d(1.2, 3.4), new Point2d(2.3, 4.5), new Point2d(3.4, 5.6)});
 
         Try.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(new double[] { 1, 2, 3 }, new double[] { 4, 5 });
+                new PolyLine2d(new double[] {1, 2, 3}, new double[] {4, 5});
             }
         }, "double arrays of unequal length should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
@@ -302,7 +303,7 @@ public class PolyLine2dTest
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(new double[] { 1, 2 }, new double[] { 3, 4, 5 });
+                new PolyLine2d(new double[] {1, 2}, new double[] {3, 4, 5});
             }
         }, "double arrays of unequal length should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
@@ -311,7 +312,7 @@ public class PolyLine2dTest
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(null, new double[] { 1, 2 });
+                new PolyLine2d(null, new double[] {1, 2});
             }
         }, "null double array should have thrown a NullPointerException", NullPointerException.class);
 
@@ -320,7 +321,7 @@ public class PolyLine2dTest
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(new double[] { 1, 2 }, null);
+                new PolyLine2d(new double[] {1, 2}, null);
             }
         }, "null double array should have thrown a NullPointerException", NullPointerException.class);
 
@@ -384,7 +385,7 @@ public class PolyLine2dTest
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(new Point2d[] { new Point2d(1, 2) });
+                new PolyLine2d(new Point2d[] {new Point2d(1, 2)});
             }
         }, "single point should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
@@ -393,7 +394,7 @@ public class PolyLine2dTest
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(1, 2) });
+                new PolyLine2d(new Point2d[] {new Point2d(1, 2), new Point2d(1, 2)});
             }
         }, "duplicate point should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
@@ -402,7 +403,7 @@ public class PolyLine2dTest
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4) });
+                new PolyLine2d(new Point2d[] {new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4)});
             }
         }, "duplicate point should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
@@ -411,7 +412,7 @@ public class PolyLine2dTest
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(new Point2d[] { new Point2d(-1, -2), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4) });
+                new PolyLine2d(new Point2d[] {new Point2d(-1, -2), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4)});
             }
         }, "duplicate point should have thrown a DrawRuntimeException", DrawRuntimeException.class);
     }
@@ -425,7 +426,7 @@ public class PolyLine2dTest
     @Test
     public void testOtherMethods() throws NullPointerException, DrawRuntimeException
     {
-        Point2d[] array = new Point2d[] { new Point2d(1, 2), new Point2d(3, 4), new Point2d(3.2, 4.1), new Point2d(5, 6) };
+        Point2d[] array = new Point2d[] {new Point2d(1, 2), new Point2d(3, 4), new Point2d(3.2, 4.1), new Point2d(5, 6)};
         PolyLine2d line = new PolyLine2d(Arrays.stream(array).iterator());
         assertEquals(array.length, line.size(), "size");
         for (int i = 0; i < array.length; i++)
@@ -459,7 +460,7 @@ public class PolyLine2dTest
         assertEquals(line.getFirst(), filtered.getFirst(), "first point of filtered line matches");
         assertEquals(line.getLast(), filtered.getLast(), "last point of filtered line matches");
 
-        array = new Point2d[] { new Point2d(1, 2), new Point2d(3, 4), new Point2d(3.2, 4.1), new Point2d(1, 2) };
+        array = new Point2d[] {new Point2d(1, 2), new Point2d(3, 4), new Point2d(3.2, 4.1), new Point2d(1, 2)};
         line = new PolyLine2d(Arrays.stream(array).iterator());
         filtered = line.noiseFilteredLine(10);
         assertEquals(3, filtered.size(), "size of filtered line is 3");
@@ -467,7 +468,7 @@ public class PolyLine2dTest
         assertEquals(line.getLast(), filtered.getLast(), "last point of filtered line matches");
         assertEquals(line.get(1), filtered.get(1), "mid point of filtered line is point 1 of unfiltered line");
 
-        array = new Point2d[] { new Point2d(1, 2), new Point2d(3, 4), new Point2d(1.1, 2.1), new Point2d(1, 2) };
+        array = new Point2d[] {new Point2d(1, 2), new Point2d(3, 4), new Point2d(1.1, 2.1), new Point2d(1, 2)};
         line = new PolyLine2d(Arrays.stream(array).iterator());
         filtered = line.noiseFilteredLine(0.5);
         assertEquals(3, filtered.size(), "size of filtered line is 3");
@@ -475,31 +476,30 @@ public class PolyLine2dTest
         assertEquals(line.getLast(), filtered.getLast(), "last point of filtered line matches");
         assertEquals(line.get(1), filtered.get(1), "mid point of filtered line is point 1 of unfiltered line");
 
-        array = new Point2d[] { new Point2d(1, 2), new Point2d(3, 4) };
+        array = new Point2d[] {new Point2d(1, 2), new Point2d(3, 4)};
         line = new PolyLine2d(Arrays.stream(array).iterator());
         filtered = line.noiseFilteredLine(10);
         assertEquals(line, filtered, "Filtering a two-point line returns that line");
 
-        array = new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4) };
+        array = new Point2d[] {new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4)};
         line = new PolyLine2d(true, array);
         assertEquals(2, line.size(), "cleaned line has 2 points");
         assertEquals(array[0], line.getFirst(), "first point");
         assertEquals(array[array.length - 1], line.getLast(), "last point");
 
-        array = new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4), new Point2d(3, 4) };
+        array = new Point2d[] {new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4), new Point2d(3, 4)};
         line = new PolyLine2d(true, array);
         assertEquals(2, line.size(), "cleaned line has 2 points");
         assertEquals(array[0], line.getFirst(), "first point");
         assertEquals(array[array.length - 1], line.getLast(), "last point");
 
-        array = new Point2d[] { new Point2d(0, -1), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4) };
+        array = new Point2d[] {new Point2d(0, -1), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4)};
         line = new PolyLine2d(true, array);
         assertEquals(3, line.size(), "cleaned line has 2 points");
         assertEquals(array[0], line.getFirst(), "first point");
         assertEquals(array[array.length - 1], line.getLast(), "last point");
 
-        array = new Point2d[] { new Point2d(0, -1), new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2),
-                new Point2d(3, 4) };
+        array = new Point2d[] {new Point2d(0, -1), new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4)};
         line = new PolyLine2d(true, array);
         assertEquals(3, line.size(), "cleaned line has 3 points");
         assertEquals(array[0], line.getFirst(), "first point");
@@ -520,7 +520,7 @@ public class PolyLine2dTest
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(true, new Point2d[] { new Point2d(1, 2) });
+                new PolyLine2d(true, new Point2d[] {new Point2d(1, 2)});
             }
         }, "Too short array should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
@@ -529,7 +529,7 @@ public class PolyLine2dTest
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(true, new Point2d[] { new Point2d(1, 2), new Point2d(1, 2) });
+                new PolyLine2d(true, new Point2d[] {new Point2d(1, 2), new Point2d(1, 2)});
             }
         }, "All duplicate points in array should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
@@ -538,11 +538,11 @@ public class PolyLine2dTest
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(true, new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2) });
+                new PolyLine2d(true, new Point2d[] {new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2)});
             }
         }, "All duplicate points in array should have thrown a DrawRuntimeException", DrawRuntimeException.class);
 
-        array = new Point2d[] { new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9) };
+        array = new Point2d[] {new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9)};
         line = new PolyLine2d(array);
 
         try
@@ -600,7 +600,7 @@ public class PolyLine2dTest
             // Ignore expected exception
         }
 
-        for (double position : new double[] { -1, 0, 2.5, 4.9, 5.1, 7.5, 9.9, 10, 11 })
+        for (double position : new double[] {-1, 0, 2.5, 4.9, 5.1, 7.5, 9.9, 10, 11})
         {
             Ray2d ray = line.getLocationExtended(position);
             if (position < 5)
@@ -627,7 +627,7 @@ public class PolyLine2dTest
         }
 
         // Test the projectOrthogonal methods
-        array = new Point2d[] { new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9) };
+        array = new Point2d[] {new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9)};
         line = new PolyLine2d(array);
         // System.out.println(line.toPlot());
         for (double x = -15; x <= 20; x++)
@@ -643,10 +643,10 @@ public class PolyLine2dTest
                     assertTrue(result <= 1.0, "result must be <= 1.0");
                     Ray2d ray = line.getLocationFraction(result);
                     Point2d projected = line.projectOrthogonal(xy);
-                    assertEquals(ray.x, projected.x,
-                            00001, "if fraction is between 0 and 1; projectOrthogonal yiels point at that fraction");
-                    assertEquals(ray.y, projected.y,
-                            00001, "if fraction is between 0 and 1; projectOrthogonal yiels point at that fraction");
+                    assertEquals(ray.x, projected.x, 00001,
+                            "if fraction is between 0 and 1; projectOrthogonal yiels point at that fraction");
+                    assertEquals(ray.y, projected.y, 00001,
+                            "if fraction is between 0 and 1; projectOrthogonal yiels point at that fraction");
                 }
                 else
                 {
@@ -677,15 +677,15 @@ public class PolyLine2dTest
                         if (result < 0)
                         {
                             assertEquals(resultPoint.distance(line.get(1)) - resultPoint.distance(line.getFirst()),
-                                    line.getFirst().distance(line.get(1)),
-                                    0.0001, "resultPoint lies on extention of start segment");
+                                    line.getFirst().distance(line.get(1)), 0.0001,
+                                    "resultPoint lies on extention of start segment");
                         }
                         else
                         {
                             // result > 1
                             assertEquals(resultPoint.distance(line.get(line.size() - 2)) - resultPoint.distance(line.getLast()),
-                                    line.getLast().distance(line.get(line.size() - 2)),
-                                    0.0001, "resultPoint lies on extention of end segment");
+                                    line.getLast().distance(line.get(line.size() - 2)), 0.0001,
+                                    "resultPoint lies on extention of end segment");
                         }
                     }
                 }
@@ -735,10 +735,10 @@ public class PolyLine2dTest
         }
 
         // Test the extract and truncate methods
-        array = new Point2d[] { new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9) };
+        array = new Point2d[] {new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9)};
         line = new PolyLine2d(array);
         length = line.getLength();
-        for (double to : new double[] { -10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20 })
+        for (double to : new double[] {-10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20})
         {
             if (to <= 0 || to > length)
             {
@@ -758,7 +758,7 @@ public class PolyLine2dTest
                 assertEquals(line.getFirst(), truncated.getFirst(), "truncated line start with start point of line");
                 assertEquals(to, truncated.getLength(), 0.0001, "Length of truncated line is truncate position");
             }
-            for (double from : new double[] { -10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20 })
+            for (double from : new double[] {-10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20})
             {
                 if (from >= to || from < 0 || to > length)
                 {
@@ -892,9 +892,9 @@ public class PolyLine2dTest
 
         // Test concatenate methods with tolerance
         PolyLine2d thirdLine = new PolyLine2d(p4, p5);
-        for (double tolerance : new double[] { 0.1, 0.01, 0.001, 0.0001, 0.00001 })
+        for (double tolerance : new double[] {0.1, 0.01, 0.001, 0.0001, 0.00001})
         {
-            for (double actualError : new double[] { tolerance * 0.9, tolerance * 1.1 })
+            for (double actualError : new double[] {tolerance * 0.9, tolerance * 1.1})
             {
                 int maxDirection = 10;
                 for (int direction = 0; direction < maxDirection; direction++)
@@ -955,9 +955,9 @@ public class PolyLine2dTest
     @Test
     public void testOffsetLine() throws DrawRuntimeException
     {
-        for (Point2d[] points : new Point2d[][] { { new Point2d(1, 2), new Point2d(3, 50) },
-                { new Point2d(-40, -20), new Point2d(5, -2), new Point2d(3, 50) },
-                { new Point2d(-40, -20), new Point2d(5, -2), new Point2d(3, -50) } })
+        for (Point2d[] points : new Point2d[][] {{new Point2d(1, 2), new Point2d(3, 50)},
+                {new Point2d(-40, -20), new Point2d(5, -2), new Point2d(3, 50)},
+                {new Point2d(-40, -20), new Point2d(5, -2), new Point2d(3, -50)}})
         {
             for (double angle = 0; angle < 2 * Math.PI; angle += Math.PI / 360)
             {
@@ -980,15 +980,15 @@ public class PolyLine2dTest
 
                 assertEquals(line, line.offsetLine(0), "offset 0 yields the reference line");
                 // System.out.print("reference line " + line.toPlot());
-                for (double offset : new double[] { 1, 10, 0.1, -0.1, -10 })
+                for (double offset : new double[] {1, 10, 0.1, -0.1, -10})
                 {
                     PolyLine2d offsetLine = line.offsetLine(offset);
                     // System.out.print("angle " + angle + ", offset " + offset + ": " + offsetLine.toPlot());
                     if (points.length == 2)
                     {
                         assertEquals(2, offsetLine.size(), "two-point line should have a two-point offset line");
-                        assertEquals(line.getLength(),
-                                offsetLine.getLength(), 0.01, "length of offset line of two-point reference line equals length of reference line");
+                        assertEquals(line.getLength(), offsetLine.getLength(), 0.01,
+                                "length of offset line of two-point reference line equals length of reference line");
                     }
                     assertEquals(Math.abs(offset), line.getFirst().distance(offsetLine.getFirst()), 0.01, "offset at start");
                     assertEquals(Math.abs(offset), line.getLast().distance(offsetLine.getLast()), 0.01, "offset at end");
@@ -997,11 +997,11 @@ public class PolyLine2dTest
                             0.001, "offset to the left vs to the right differs by twice the offset");
                     // The following four may be false if the offset is not small comparable to the lenght of the first or last
                     // segment of the line
-                    assertEquals(0, offsetLine.getLocationExtended(
-                            offsetLine.projectOrthogonalFractionalExtended(line.getFirst()) * offsetLine.getLength())
-                            .distance(offsetLine.getFirst()),
-                            0.01,
-                            "projection of first point of line onto offset line is (almost) first point of offset line");
+                    assertEquals(0,
+                            offsetLine.getLocationExtended(
+                                    offsetLine.projectOrthogonalFractionalExtended(line.getFirst()) * offsetLine.getLength())
+                                    .distance(offsetLine.getFirst()),
+                            0.01, "projection of first point of line onto offset line is (almost) first point of offset line");
                     double fraction = offsetLine.projectOrthogonalFractionalExtended(line.getLast());
                     assertEquals(1, fraction, 0.000001, "fraction should be 1 with maximum error a few ULP");
                     if (fraction > 1.0)
@@ -1010,19 +1010,19 @@ public class PolyLine2dTest
                     }
                     assertEquals(0, offsetLine.getLocation(fraction * offsetLine.getLength()).distance(offsetLine.getLast()),
                             0.01, "projection of last point of line onto offset line is (almost) last point of offset line");
-                    assertEquals(0, line.getLocationExtended(
-                            line.projectOrthogonalFractionalExtended(offsetLine.getFirst()) * line.getLength())
-                            .distance(line.getFirst()),
-                            0.01,
-                            "projection of first point of offset line onto line is (almost) first point of line");
+                    assertEquals(0,
+                            line.getLocationExtended(
+                                    line.projectOrthogonalFractionalExtended(offsetLine.getFirst()) * line.getLength())
+                                    .distance(line.getFirst()),
+                            0.01, "projection of first point of offset line onto line is (almost) first point of line");
                     fraction = line.projectOrthogonalFractionalExtended(offsetLine.getLast());
                     assertEquals(1, fraction, 0.000001, "fraction should be 1 with maximum error a few ULP");
                     if (fraction > 1.0)
                     {
                         fraction = 1.0;
                     }
-                    assertEquals(0, line.getLocation(fraction * line.getLength()).distance(line.getLast()),
-                            0.01, "projection of last point of offset line onto line is (almost) last point of line");
+                    assertEquals(0, line.getLocation(fraction * line.getLength()).distance(line.getLast()), 0.01,
+                            "projection of last point of offset line onto line is (almost) last point of line");
                 }
             }
         }
@@ -1334,9 +1334,9 @@ public class PolyLine2dTest
     public void testExports()
     {
         Point2d[] points =
-                new Point2d[] { new Point2d(123.456, 345.678), new Point2d(234.567, 456.789), new Point2d(-12.345, -34.567) };
+                new Point2d[] {new Point2d(123.456, 345.678), new Point2d(234.567, 456.789), new Point2d(-12.345, -34.567)};
         PolyLine2d pl = new PolyLine2d(points);
-        String[] out = pl.toExcel().split("\\n");
+        String[] out = Export.toExcel(pl).split("\\n");
         assertEquals(points.length, out.length, "Excel output consists of one line per point");
         for (int index = 0; index < points.length; index++)
         {
@@ -1362,7 +1362,7 @@ public class PolyLine2dTest
             }
         }
 
-        out = pl.toPlot().split(" L");
+        out = Export.toPlot(pl).split(" L");
         assertEquals(points.length, out.length, "Plotter output consists of one coordinate pair per point");
         for (int index = 0; index < points.length; index++)
         {
@@ -1392,7 +1392,7 @@ public class PolyLine2dTest
                 fail("Second field " + fields[1] + " does not parse as a double");
             }
         }
-        
+
         Path2D path = pl.toPath2D();
         int index = 0;
         for (PathIterator pi = path.getPathIterator(null); !pi.isDone(); pi.next())
@@ -1572,7 +1572,7 @@ public class PolyLine2dTest
             // Ignore expected exception
         }
 
-        tooShort = new Point2d[] { new Point2d(1, 2) };
+        tooShort = new Point2d[] {new Point2d(1, 2)};
         try
         {
             new PolyLine2d(true, tooShort);
@@ -1585,18 +1585,18 @@ public class PolyLine2dTest
 
         Point2d p0 = new Point2d(1, 2);
         Point2d p1 = new Point2d(4, 5);
-        Point2d[] points = new Point2d[] { p0, p1 };
+        Point2d[] points = new Point2d[] {p0, p1};
         PolyLine2d result = new PolyLine2d(true, points);
         assertTrue(p0.equals(result.get(0)), "first point is p0");
         assertTrue(p1.equals(result.get(1)), "second point is p1");
         Point2d p1Same = new Point2d(4, 5);
-        result = new PolyLine2d(true, new Point2d[] { p0, p0, p0, p0, p1Same, p0, p1, p1, p1Same, p1, p1 });
+        result = new PolyLine2d(true, new Point2d[] {p0, p0, p0, p0, p1Same, p0, p1, p1, p1Same, p1, p1});
         assertEquals(4, result.size(), "result should contain 4 points");
         assertTrue(p0.equals(result.get(0)), "first point is p0");
         assertTrue(p1.equals(result.get(1)), "second point is p1");
         assertTrue(p0.equals(result.get(0)), "third point is p0");
         assertTrue(p1.equals(result.get(1)), "last point is p1");
-        new PolyLine2d(true, new Point2d[] { p0, new Point2d(1, 3) });
+        new PolyLine2d(true, new Point2d[] {p0, new Point2d(1, 3)});
 
         try
         {
@@ -1631,8 +1631,7 @@ public class PolyLine2dTest
             // Ignore expected exception
         }
 
-        Iterator<Point2d> iterator =
-                PolyLine2d.cleanPoints(true, Arrays.stream(new Point2d[] { new Point2d(1, 2) }).iterator());
+        Iterator<Point2d> iterator = PolyLine2d.cleanPoints(true, Arrays.stream(new Point2d[] {new Point2d(1, 2)}).iterator());
         iterator.next(); // should work
         assertFalse(iterator.hasNext(), "iterator should now be out of data");
         try
@@ -1647,7 +1646,7 @@ public class PolyLine2dTest
 
         // Check that cleanPoints with false indeed does not filter
         iterator = PolyLine2d.cleanPoints(false,
-                Arrays.stream(new Point2d[] { new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2) }).iterator());
+                Arrays.stream(new Point2d[] {new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2)}).iterator());
         assertTrue(iterator.hasNext(), "iterator has initial point");
         iterator.next();
         assertTrue(iterator.hasNext(), "iterator has second point");
@@ -1666,24 +1665,20 @@ public class PolyLine2dTest
     @Test
     public void testToStringHashCodeAndEquals() throws NullPointerException, DrawRuntimeException
     {
-        PolyLine2d line = new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9) });
+        PolyLine2d line = new PolyLine2d(new Point2d[] {new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9)});
         assertTrue(line.toString().startsWith("PolyLine2d ["), "toString returns something descriptive");
         assertFalse(line.toString().contains("startHeading"), "toString does not startHeading");
         assertTrue(line.toString().indexOf(line.toString(true)) > 0, "toString can suppress the class name");
 
         // Verify that hashCode. Check that the result depends on the actual coordinates.
         assertNotEquals(new PolyLine2d(new Point2d(0, 0), new Point2d(1, 1)).hashCode(),
-                new PolyLine2d(new Point2d(1, 0), new Point2d(1, 1)).hashCode(),
-                "hash code takes x coordinate into account");
+                new PolyLine2d(new Point2d(1, 0), new Point2d(1, 1)).hashCode(), "hash code takes x coordinate into account");
         assertNotEquals(new PolyLine2d(new Point2d(0, 0), new Point2d(1, 1)).hashCode(),
-                new PolyLine2d(new Point2d(0, 1), new Point2d(1, 1)).hashCode(),
-                "hash code takes y coordinate into account");
+                new PolyLine2d(new Point2d(0, 1), new Point2d(1, 1)).hashCode(), "hash code takes y coordinate into account");
         assertNotEquals(new PolyLine2d(new Point2d(0, 0), new Point2d(1, 1)).hashCode(),
-                new PolyLine2d(new Point2d(0, 0), new Point2d(2, 1)).hashCode(),
-                "hash code takes x coordinate into account");
+                new PolyLine2d(new Point2d(0, 0), new Point2d(2, 1)).hashCode(), "hash code takes x coordinate into account");
         assertNotEquals(new PolyLine2d(new Point2d(0, 0), new Point2d(1, 1)).hashCode(),
-                new PolyLine2d(new Point2d(0, 0), new Point2d(1, 2)).hashCode(),
-                "hash code takes y coordinate into account");
+                new PolyLine2d(new Point2d(0, 0), new Point2d(1, 2)).hashCode(), "hash code takes y coordinate into account");
 
         // Verify the equals method.
         assertTrue(line.equals(line), "line is equal to itself");
@@ -1691,11 +1686,11 @@ public class PolyLine2dTest
                 "line is not equal to a different line");
         assertFalse(line.equals(null), "line is not equal to null");
         assertFalse(line.equals("unlikely"), "line is not equal to a different kind of object");
-        assertEquals(line, new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9) }),
+        assertEquals(line, new PolyLine2d(new Point2d[] {new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9)}),
                 "equals verbatim copy");
-        assertNotEquals(line, new PolyLine2d(new Point2d[] { new Point2d(2, 2), new Point2d(4, 6), new Point2d(8, 9) }),
+        assertNotEquals(line, new PolyLine2d(new Point2d[] {new Point2d(2, 2), new Point2d(4, 6), new Point2d(8, 9)}),
                 "equals checks x");
-        assertNotEquals(line, new PolyLine2d(new Point2d[] { new Point2d(1, 2), new Point2d(4, 7), new Point2d(8, 9) }),
+        assertNotEquals(line, new PolyLine2d(new Point2d[] {new Point2d(1, 2), new Point2d(4, 7), new Point2d(8, 9)}),
                 "equals checks y");
         assertTrue(line.equals(new PolyLine2d(line.getPoints())), "Line is equal to line from same set of points");
     }
@@ -1831,28 +1826,27 @@ public class PolyLine2dTest
                 {
                     assertEquals(testPoint, l.projectOrthogonal(testPoint),
                             "NonExtended projection will return point for exact match");
-                    assertEquals(0, l.projectOrthogonalFractional(testPoint),
-                            0, "NonExtended fractional projection returns 0 for exact match");
-                    assertEquals(0, l.projectOrthogonalFractionalExtended(testPoint),
-                            0, "Extended fractional projection returns 0 for exact match");
+                    assertEquals(0, l.projectOrthogonalFractional(testPoint), 0,
+                            "NonExtended fractional projection returns 0 for exact match");
+                    assertEquals(0, l.projectOrthogonalFractionalExtended(testPoint), 0,
+                            "Extended fractional projection returns 0 for exact match");
                 }
                 else
                 {
                     assertNull(l.projectOrthogonal(testPoint),
                             "For non-nice directions nonExtended projection will return null if point does not match");
-                    assertTrue(Double.isNaN(l.projectOrthogonalFractional(testPoint)), "For non-nice directions non-extended fractional projection will return NaN if point does "
+                    assertTrue(Double.isNaN(l.projectOrthogonalFractional(testPoint)),
+                            "For non-nice directions non-extended fractional projection will return NaN if point does "
                                     + "not match");
                     if (l.getLocation(0.0).projectOrthogonalFractional(testPoint) > 0)
                     {
-                        assertTrue(
-                                Double.POSITIVE_INFINITY == l.projectOrthogonalFractionalExtended(testPoint),
+                        assertTrue(Double.POSITIVE_INFINITY == l.projectOrthogonalFractionalExtended(testPoint),
                                 "ProjectOrthogonalFractionalExtended returns POSITIVE_INFINITY of projection misses "
                                         + "along startHeading side");
                     }
                     else
                     {
-                        assertTrue(
-                                Double.NEGATIVE_INFINITY == l.projectOrthogonalFractionalExtended(testPoint),
+                        assertTrue(Double.NEGATIVE_INFINITY == l.projectOrthogonalFractionalExtended(testPoint),
                                 "ProjectOrthogonalFractionalExtended returns POSITIVE_INFINITY of projection misses "
                                         + ", but not along startHeading side");
                     }
@@ -1892,7 +1886,7 @@ public class PolyLine2dTest
 
         PolyLine2d notEqual = new PolyLine2d(1, 2, 4);
         assertNotEquals(l, notEqual, "Check that the equals method verifies the startHeading");
-        
+
         assertTrue(l.toString().contains("startHeading"), "toString contains startHeading");
     }
 

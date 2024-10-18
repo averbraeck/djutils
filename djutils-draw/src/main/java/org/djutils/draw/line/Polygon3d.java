@@ -285,19 +285,6 @@ public class Polygon3d extends PolyLine3d
 
     /** {@inheritDoc} */
     @Override
-    public final String toExcel()
-    {
-        StringBuffer s = new StringBuffer();
-        for (int i = 0; i < size(); i++)
-        {
-            s.append(getX(i) + "\t" + getY(i) + "\t" + getZ(i) + "\n");
-        }
-        s.append(getX(0) + "\t" + getY(0) + "\t" + getZ(0) + "\n");
-        return s.toString();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public final String toString()
     {
         return toString("%f", false);

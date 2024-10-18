@@ -16,6 +16,7 @@ import java.util.Random;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
+import org.djutils.draw.Export;
 import org.djutils.draw.point.Point2d;
 import org.junit.jupiter.api.Test;
 
@@ -295,8 +296,8 @@ public class ConvexHullTest
             if (!result.equals(expectedResult))
             {
                 System.err.println("Discrepancy for " + name);
-                System.err.println("        result: " + result.toPlot());
-                System.err.println("expectedResult: " + expectedResult.toPlot());
+                System.err.println("        result: " + Export.toPlot(result));
+                System.err.println("expectedResult: " + Export.toPlot(expectedResult));
                 System.err.println("         input: " + in);
                 implementations.get(name).run(new ArrayList<>(in));
             }

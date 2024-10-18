@@ -279,12 +279,6 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
         throw new DrawRuntimeException("Could not find position " + pos + " on line with length: " + getLength());
     }
 
-    /**
-     * Convert this PolyLine to something that MS-Excel can plot.
-     * @return String MS-excel XY, or XYZ plottable output
-     */
-    String toExcel();
-
     /** Default precision of approximation of arcs in the offsetLine method. */
     double DEFAULT_CIRCLE_PRECISION = 0.001;
 

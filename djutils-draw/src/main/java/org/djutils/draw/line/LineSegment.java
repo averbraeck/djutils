@@ -79,10 +79,4 @@ public interface LineSegment<P extends Point<P>, D extends Directed<D>>
      */
     D getLocationExtended(double position) throws DrawRuntimeException;
 
-    /**
-     * Convert this PolyLine to something that MS-Excel can plot.
-     * @return String MS-excel XY, or XYZ plottable output
-     */
-    String toExcel();
-
 }

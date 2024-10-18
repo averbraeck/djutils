@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.Iterator;
 
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.Export;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point3d;
@@ -280,7 +281,7 @@ public class LineSegment3dTest
     public void testToExcel() throws NumberFormatException
     {
         LineSegment3d segment = new LineSegment3d(1, 2, 3, 20, 10, 5);
-        String result = segment.toExcel();
+        String result = Export.toExcel(segment);
         String[] lines = result.split("\n");
         assertEquals(2, lines.length, "result is two lines");
         for (int lineNo = 0; lineNo < lines.length; lineNo++)

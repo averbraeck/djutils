@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.Export;
 import org.djutils.draw.line.LineSegment2d;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.Point2d;
@@ -67,7 +68,7 @@ public final class LineDemos
             System.out.println("segment " + index + ": " + polyLine2d.getSegment(index));
         }
 
-        System.out.print(polyLine2d.toPlot());
+        System.out.print(Export.toPlot( polyLine2d));
 
         System.out.println("PolyLine: " + polyLine2d);
         System.out.println("closest point to (0,1): " + polyLine2d.closestPointOnPolyLine(new Point2d(0, 1)));

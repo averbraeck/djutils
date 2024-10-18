@@ -10,6 +10,7 @@ import java.util.Iterator;
 
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.Export;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
@@ -249,7 +250,7 @@ public class LineSegment2dTest
     public void testExports() throws NumberFormatException
     {
         LineSegment2d segment = new LineSegment2d(1, 2, 20, 10);
-        String result = segment.toExcel();
+        String result = Export.toExcel(segment);
         String[] lines = result.split("\n");
         assertEquals(2, lines.length, "result is two lines");
         for (int lineNo = 0; lineNo < lines.length; lineNo++)
@@ -264,7 +265,7 @@ public class LineSegment2dTest
                 assertEquals(expectedValue, value, 0.0001, "field contains the correct value");
             }
         }
-        result = segment.toPlot();
+        result = Export.toPlot(segment);
         assertEquals(1, result.split("\n").length, "result is one line");
         int valuesSeen = 0;
         int pos = 0;

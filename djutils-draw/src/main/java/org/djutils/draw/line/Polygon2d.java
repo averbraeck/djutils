@@ -432,33 +432,6 @@ public class Polygon2d extends PolyLine2d
 
     /** {@inheritDoc} */
     @Override
-    public final String toExcel()
-    {
-        StringBuffer s = new StringBuffer();
-        for (int i = 0; i < size(); i++)
-        {
-            s.append(getX(i) + "\t" + getY(i) + "\n");
-        }
-        s.append(getX(0) + "\t" + getY(0) + "\n");
-        return s.toString();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public final String toPlot()
-    {
-        StringBuffer result = new StringBuffer();
-        for (int i = 0; i < size(); i++)
-        {
-            result.append(String.format(Locale.US, "%s%.3f,%.3f", 0 == result.length() ? "M" : " L", getX(i), getY(i)));
-        }
-        result.append(String.format(Locale.US, " L%.3f,%.3f", getX(0), getY(0)));
-        result.append("\n");
-        return result.toString();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public final String toString()
     {
         return toString("%f", false);

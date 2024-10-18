@@ -208,7 +208,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
     public DirectedPoint3d translate(final double dx, final double dy) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class, "translation may not contain NaN");
-        return new DirectedPoint3d(getX() + dx, getY() + dy, getZ(), getDirY(), getDirZ());
+        return new DirectedPoint3d(this.x + dx, this.y + dy, this.z, this.dirY, this.dirZ);
     }
 
     /** {@inheritDoc} */
@@ -246,7 +246,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
     @Override
     public DirectedPoint3d normalize() throws DrawRuntimeException
     {
-        double length = Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
+        double length = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
         Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0, 0.0)");
         return new DirectedPoint3d(this.x / length, this.y / length, this.z / length, this.dirY, this.dirZ);
     }
@@ -276,10 +276,10 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
         {
             return otherPoint;
         }
-        return new DirectedPoint3d((1.0 - fraction) * getX() + fraction * otherPoint.x,
-                (1.0 - fraction) * getY() + fraction * otherPoint.y, (1.0 - fraction) * getZ() + fraction * otherPoint.z,
-                AngleUtil.interpolateShortest(getDirY(), otherPoint.getDirY(), fraction),
-                AngleUtil.interpolateShortest(getDirZ(), otherPoint.getDirZ(), fraction));
+        return new DirectedPoint3d((1.0 - fraction) * this.x + fraction * otherPoint.x,
+                (1.0 - fraction) * this.y + fraction * otherPoint.y, (1.0 - fraction) * this.z + fraction * otherPoint.z,
+                AngleUtil.interpolateShortest(this.dirY, otherPoint.dirY, fraction),
+                AngleUtil.interpolateShortest(this.dirZ, otherPoint.dirZ, fraction));
     }
 
     /**
@@ -292,7 +292,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
     public DirectedPoint3d rotate(final double rotateZ) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(rotateZ), IllegalArgumentException.class, "rotateZ must be a number (not NaN)");
-        return new DirectedPoint3d(getX(), getY(), getZ(), getDirY(), AngleUtil.normalizeAroundZero(getDirZ() + rotateZ));
+        return new DirectedPoint3d(this.x, this.y, this.z, this.dirY, AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
 
     /**
@@ -307,8 +307,8 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
     {
         Throw.when(Double.isNaN(rotateY) || Double.isNaN(rotateZ), IllegalArgumentException.class,
                 "rotateY and rotateZ must be a numbers (not NaN)");
-        return new DirectedPoint3d(getX(), getY(), getZ(), AngleUtil.normalizeAroundZero(getDirY() + rotateY),
-                AngleUtil.normalizeAroundZero(getDirZ() + rotateZ));
+        return new DirectedPoint3d(this.x, this.y, this.z, AngleUtil.normalizeAroundZero(this.dirY + rotateY),
+                AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
 
     /** {@inheritDoc} */
