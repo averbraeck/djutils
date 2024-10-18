@@ -22,7 +22,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint3d>
+public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<OrientedPoint3d>
 {
     /** */
     private static final long serialVersionUID = 20200828L;
@@ -30,14 +30,6 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     /** The direction as rotation around the x-axis. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     public final double dirX;
-
-    /** The direction as rotation around the y-axis. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    public final double dirY;
-
-    /** The direction as rotation around the z-axis. */
-    @SuppressWarnings("checkstyle:visibilitymodifier")
-    public final double dirZ;
 
     /**
      * Create a new OrientedPoint3d with x, y, and z coordinates and direction 0,0,0.
@@ -64,12 +56,9 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     public OrientedPoint3d(final double x, final double y, final double z, final double dirX, final double dirY,
             final double dirZ) throws IllegalArgumentException
     {
-        super(x, y, z);
-        Throw.when(Double.isNaN(dirX) || Double.isNaN(dirY) || Double.isNaN(dirZ), IllegalArgumentException.class,
-                "dirX, dirY and dirZ must be numbers (not NaN)");
+        super(x, y, z, dirY, dirZ);
+        Throw.when(Double.isNaN(dirX), IllegalArgumentException.class, "dirX must be a numbers (not NaN)");
         this.dirX = dirX;
-        this.dirY = dirY;
-        this.dirZ = dirZ;
     }
 
     /**
@@ -80,10 +69,8 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
      */
     public OrientedPoint3d(final double[] xyz) throws NullPointerException, IllegalArgumentException
     {
-        super(xyz);
+        super(xyz, 0, 0);
         this.dirX = 0.0;
-        this.dirY = 0.0;
-        this.dirZ = 0.0;
     }
 
     /**
@@ -99,12 +86,9 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     public OrientedPoint3d(final double[] xyz, final double dirX, final double dirY, final double dirZ)
             throws NullPointerException, IllegalArgumentException
     {
-        super(xyz);
-        Throw.when(Double.isNaN(dirX) || Double.isNaN(dirY) || Double.isNaN(dirZ), IllegalArgumentException.class,
-                "dirX, dirY and dirZ must be numbers (not NaN)");
+        super(xyz, dirY, dirZ);
+        Throw.when(Double.isNaN(dirX), IllegalArgumentException.class, "dirX must be a number (not NaN)");
         this.dirX = dirX;
-        this.dirY = dirY;
-        this.dirZ = dirZ;
     }
 
     /**
@@ -171,7 +155,7 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     public OrientedPoint3d translate(final double dx, final double dy) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class, "translation may not contain NaN");
-        return new OrientedPoint3d(getX() + dx, getY() + dy, getZ(), getDirX(), getDirY(), getDirZ());
+        return new OrientedPoint3d(this.x + dx, this.y + dy, this.z, this.dirX, this.dirY, this.dirZ);
     }
 
     /** {@inheritDoc} */
@@ -209,7 +193,7 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     @Override
     public OrientedPoint3d normalize() throws DrawRuntimeException
     {
-        double length = Math.sqrt(getX() * getX() + getY() * getY() + getZ() * getZ());
+        double length = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
         Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0, 0.0)");
         return new OrientedPoint3d(this.x / length, this.y / length, this.z / length, this.dirX, this.dirY, this.dirZ);
     }
@@ -239,11 +223,11 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
         {
             return otherPoint;
         }
-        return new OrientedPoint3d((1.0 - fraction) * getX() + fraction * otherPoint.x,
-                (1.0 - fraction) * getY() + fraction * otherPoint.y, (1.0 - fraction) * getZ() + fraction * otherPoint.z,
-                AngleUtil.interpolateShortest(getDirX(), otherPoint.getDirX(), fraction),
-                AngleUtil.interpolateShortest(getDirY(), otherPoint.getDirY(), fraction),
-                AngleUtil.interpolateShortest(getDirZ(), otherPoint.getDirZ(), fraction));
+        return new OrientedPoint3d((1.0 - fraction) * this.x + fraction * otherPoint.x,
+                (1.0 - fraction) * this.y + fraction * otherPoint.y, (1.0 - fraction) * this.z + fraction * otherPoint.z,
+                AngleUtil.interpolateShortest(this.dirX, otherPoint.dirX, fraction),
+                AngleUtil.interpolateShortest(this.dirY, otherPoint.dirY, fraction),
+                AngleUtil.interpolateShortest(this.dirZ, otherPoint.dirZ, fraction));
     }
 
     /**
@@ -253,11 +237,12 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
      * @return OrientedPoint3d; a new point with the same coordinates, dirX and dirY and modified dirZ
      * @throws IllegalArgumentException when rotateZ is NaN
      */
+    @Override
     public OrientedPoint3d rotate(final double rotateZ) throws IllegalArgumentException
     {
         Throw.when(Double.isNaN(rotateZ), IllegalArgumentException.class, "rotateZ must be a number (not NaN)");
-        return new OrientedPoint3d(getX(), getY(), getZ(), getDirX(), getDirY(),
-                AngleUtil.normalizeAroundZero(getDirZ() + rotateZ));
+        return new OrientedPoint3d(this.x, this.y, this.z, this.dirX, this.dirY,
+                AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
 
     /**
@@ -274,8 +259,8 @@ public class OrientedPoint3d extends Point3d implements Oriented3d<OrientedPoint
     {
         Throw.when(Double.isNaN(rotateX) || Double.isNaN(rotateY) || Double.isNaN(rotateZ), IllegalArgumentException.class,
                 "rotateX, rotateY and rotateZ must be a numbers (not NaN)");
-        return new OrientedPoint3d(getX(), getY(), getZ(), AngleUtil.normalizeAroundZero(getDirX() + rotateX),
-                AngleUtil.normalizeAroundZero(getDirY() + rotateY), AngleUtil.normalizeAroundZero(getDirZ() + rotateZ));
+        return new OrientedPoint3d(this.x, this.y, this.z, AngleUtil.normalizeAroundZero(this.dirX + rotateX),
+                AngleUtil.normalizeAroundZero(this.dirY + rotateY), AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
 
     /** {@inheritDoc} */
