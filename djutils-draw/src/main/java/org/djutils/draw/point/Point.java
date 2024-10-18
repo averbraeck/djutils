@@ -44,7 +44,7 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
     P neg();
 
     /**
-     * Return a new Point with absolute coordinate values. If this is a DirectedPoint, phi and theta are copied unchanged.
+     * Return a new Point with absolute coordinate values. If this is a DirectedPoint, dirY and dirZ are copied unchanged.
      * @return Point; a new point with absolute coordinate values
      */
     P abs();

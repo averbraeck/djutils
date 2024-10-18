@@ -501,18 +501,18 @@ public class PolyLine3dTest
         Point3d p1 = new Point3d(40, 50, 60);
         Point3d p2 = new Point3d(90, 80, 70);
         PolyLine3d polyLine = new PolyLine3d(new Point3d[] {p0, p1, p2});
-        double expectedPhi1 = Math.atan2(p1.y - p0.y, p1.x - p0.x);
-        double expectedTheta1 = Math.atan2(Math.hypot(p1.x - p0.x, p1.y - p0.y), p1.z - p0.z);
-        checkGetLocation(polyLine, -10, null, expectedPhi1, expectedTheta1);
-        checkGetLocation(polyLine, -0.0001, p0, expectedPhi1, expectedTheta1);
-        checkGetLocation(polyLine, 0, p0, expectedPhi1, expectedTheta1);
-        checkGetLocation(polyLine, 0.0001, p0, expectedPhi1, expectedTheta1);
-        double expectedPhi2 = Math.atan2(p2.y - p1.y, p2.x - p1.x);
-        double expectedTheta2 = Math.atan2(Math.hypot(p2.x - p1.x, p2.y - p1.y), p2.z - p1.z);
-        checkGetLocation(polyLine, 0.9999, p2, expectedPhi2, expectedTheta2);
-        checkGetLocation(polyLine, 1.0, p2, expectedPhi2, expectedTheta2);
-        checkGetLocation(polyLine, 1.0001, p2, expectedPhi2, expectedTheta2);
-        checkGetLocation(polyLine, 10, null, expectedPhi2, expectedTheta2);
+        double expectedDirZ1 = Math.atan2(p1.y - p0.y, p1.x - p0.x);
+        double expectedDirY1 = Math.atan2(Math.hypot(p1.x - p0.x, p1.y - p0.y), p1.z - p0.z);
+        checkGetLocation(polyLine, -10, null, expectedDirY1, expectedDirZ1);
+        checkGetLocation(polyLine, -0.0001, p0, expectedDirY1, expectedDirZ1);
+        checkGetLocation(polyLine, 0, p0, expectedDirY1, expectedDirZ1);
+        checkGetLocation(polyLine, 0.0001, p0, expectedDirY1, expectedDirZ1);
+        double expectedDirZ = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+        double expectedDirY = Math.atan2(Math.hypot(p2.x - p1.x, p2.y - p1.y), p2.z - p1.z);
+        checkGetLocation(polyLine, 0.9999, p2, expectedDirY, expectedDirZ);
+        checkGetLocation(polyLine, 1.0, p2, expectedDirY, expectedDirZ);
+        checkGetLocation(polyLine, 1.0001, p2, expectedDirY, expectedDirZ);
+        checkGetLocation(polyLine, 10, null, expectedDirY, expectedDirZ);
     }
 
     /**
@@ -520,15 +520,15 @@ public class PolyLine3dTest
      * @param line Line3d; the line
      * @param fraction double; relative position to check
      * @param expectedPoint Point3d; expected location of the result
-     * @param expectedPhi double; expected angle of the result from the X axis
-     * @param expectedTheta double; expected angle of the result from the Z axis
+     * @param expectedDirY double; expected angle of the result from the Z axis
+     * @param expectedDirZ double; expected angle of the result from the X axis
      * @throws DrawRuntimeException on failure
      */
     private void checkGetLocation(final PolyLine3d line, final double fraction, final Point3d expectedPoint,
-            final double expectedPhi, final double expectedTheta) throws DrawRuntimeException
+            final double expectedDirY, final double expectedDirZ) throws DrawRuntimeException
     {
         double length = line.getLength();
-        checkRay3d(line.getLocationExtended(fraction * length), expectedPoint, expectedPhi, expectedTheta);
+        checkRay3d(line.getLocationExtended(fraction * length), expectedPoint, expectedDirY, expectedDirZ);
         if (fraction < 0 || fraction > 1)
         {
             try
@@ -552,8 +552,8 @@ public class PolyLine3dTest
         }
         else
         {
-            checkRay3d(line.getLocation(fraction * length), expectedPoint, expectedPhi, expectedTheta);
-            checkRay3d(line.getLocationFraction(fraction), expectedPoint, expectedPhi, expectedTheta);
+            checkRay3d(line.getLocation(fraction * length), expectedPoint, expectedDirY, expectedDirZ);
+            checkRay3d(line.getLocationFraction(fraction), expectedPoint, expectedDirY, expectedDirZ);
         }
 
     }
@@ -562,18 +562,18 @@ public class PolyLine3dTest
      * Verify the location and direction of a DirectedPoint3d.
      * @param dp DirectedPoint3d; the DirectedPoint3d that should be verified
      * @param expectedPoint Point3d; the expected location (or null if location should not be checked)
-     * @param expectedPhi double; the expected angle from the X axis
-     * @param expectedTheta double; the expected angle from the Z axis
+     * @param expectedDirY double; the expected angle from the Z axis
+     * @param expectedDirZ double; the expected angle from the X axis
      */
-    private void checkRay3d(final Ray3d dp, final Point3d expectedPoint, final double expectedPhi, final double expectedTheta)
+    private void checkRay3d(final Ray3d dp, final Point3d expectedPoint, final double expectedDirY, final double expectedDirZ)
     {
         if (null != expectedPoint)
         {
             Point3d p = new Point3d(dp.x, dp.y, dp.z);
             assertEquals(0, expectedPoint.distance(p), 0.1, "locationExtended(0) returns approximately expected point");
         }
-        assertEquals(expectedPhi, dp.getPhi(), 0.001, "Phi (rotation of projection from X axis)");
-        assertEquals(expectedTheta, dp.getTheta(), 0.001, "Theta (rotation from Z axis)");
+        assertEquals(expectedDirY, dp.getDirY(), 0.001, "dirY (rotation from Z axis)");
+        assertEquals(expectedDirZ, dp.getDirZ(), 0.001, "dirZ (rotation of projection from X axis)");
     }
 
     /**
@@ -1267,26 +1267,26 @@ public class PolyLine3dTest
             if (position < length / 2)
             {
                 Ray3d expected =
-                        new Ray3d(array[0].interpolate(array[1], position / (length / 2)), Math.atan2(4, 3), Math.atan2(5, 6));
+                        new Ray3d(array[0].interpolate(array[1], position / (length / 2)), Math.atan2(5, 6), Math.atan2(4, 3));
                 assertTrue(expected.epsilonEquals(ray, 0.0001, 0.00001), "interpolated/extrapolated point");
             }
             else
             {
                 Ray3d expected = new Ray3d(array[1].interpolate(array[2], (position - length / 2) / (length / 2)),
-                        Math.atan2(3, 4), Math.atan2(5, 6));
+                        Math.atan2(5, 6), Math.atan2(3, 4));
                 assertTrue(expected.epsilonEquals(ray, 0.0001, 0.00001), "interpolated/extrapolated point");
             }
             ray = line.getLocationFractionExtended(position / line.getLength());
             if (position < length / 2)
             {
                 Ray3d expected =
-                        new Ray3d(array[0].interpolate(array[1], position / (length / 2)), Math.atan2(4, 3), Math.atan2(5, 6));
+                        new Ray3d(array[0].interpolate(array[1], position / (length / 2)), Math.atan2(5, 6), Math.atan2(4, 3));
                 assertTrue(expected.epsilonEquals(ray, 0.0001, 0.00001), "interpolated/extrapolated point");
             }
             else
             {
                 Ray3d expected = new Ray3d(array[1].interpolate(array[2], (position - length / 2) / (length / 2)),
-                        Math.atan2(3, 4), Math.atan2(5, 6));
+                        Math.atan2(5, 6), Math.atan2(3, 4));
                 assertTrue(expected.epsilonEquals(ray, 0.0001, 0.00001), "interpolated/extrapolated point");
             }
         }
@@ -1782,12 +1782,12 @@ public class PolyLine3dTest
         {
             double distance = length * step / 1000;
             Ray3d ray = bezier.getLocation(distance);
-            double direction = Math.toDegrees(ray.phi);
+            double direction = Math.toDegrees(ray.dirZ);
             if (step > 0)
             {
                 assertEquals(prevDir, direction, 2, "phi changes very little at step " + step);
             }
-            prevDir = Math.toDegrees(ray.phi);
+            prevDir = Math.toDegrees(ray.dirZ);
         }
         // Make a gradually transitioning offset line
         PolyLine3d transitioningOffsetLine = bezier.offsetLine(0, 2);
@@ -1798,12 +1798,12 @@ public class PolyLine3dTest
         {
             double distance = length * step / 1000;
             Ray3d ray = transitioningOffsetLine.getLocation(distance);
-            double direction = Math.toDegrees(ray.phi);
+            double direction = Math.toDegrees(ray.dirZ);
             if (step > 0)
             {
                 assertEquals(prevDir, direction, 2, "phi changes very little at step " + step);
             }
-            prevDir = Math.toDegrees(ray.phi);
+            prevDir = Math.toDegrees(ray.dirZ);
         }
         PolyLine3d endLine = bezier.offsetLine(-2);
         // System.out.print("c0,1,0" + endLine.project().toPlot());
@@ -1823,12 +1823,12 @@ public class PolyLine3dTest
         {
             double distance = length * step / 1000;
             Ray3d ray = cosineSmoothTransitioningLine.getLocation(distance);
-            double direction = Math.toDegrees(ray.phi);
+            double direction = Math.toDegrees(ray.dirZ);
             if (step > 0)
             {
                 assertEquals(prevDir, direction, 4, "phi changes very little at step " + step);
             }
-            prevDir = Math.toDegrees(ray.phi);
+            prevDir = Math.toDegrees(ray.dirZ);
         }
         // System.out.print(
         // "c0,0,1" + Bezier.cubic(bezier1.getLocationFraction(0), endLine.getLocationFraction(1)).project().toPlot());
@@ -1845,8 +1845,8 @@ public class PolyLine3dTest
             assertEquals(ray1.x, ray2.x, 0.001, "rays are almost equal in x");
             assertEquals(ray1.y, ray2.y, 0.001, "rays are almost equal in y");
             assertEquals(ray1.z, ray2.z, 0.001, "rays are almost equal in z");
-            assertEquals(ray1.phi, ray2.phi, 0.0001, "rays are almost equal in phi");
-            assertEquals(ray1.theta, ray2.theta, 0.0001, "rays are almost equal in theta");
+            assertEquals(ray1.dirZ, ray2.dirZ, 0.0001, "rays are almost equal in phi");
+            assertEquals(ray1.dirY, ray2.dirY, 0.0001, "rays are almost equal in theta");
         }
 
         assertEquals(bezier, bezier.offsetLine(0, 0), "offset by zero returns original");
@@ -1950,13 +1950,13 @@ public class PolyLine3dTest
             // Ignore expected exception
         }
 
-        PolyLine3d l = new PolyLine3d(1, 2, 2.5, 3, -1);
+        PolyLine3d l = new PolyLine3d(1, 2, 2.5, -1, 3);
         assertEquals(0, l.getLength(), 0, "length is 0");
         assertEquals(1, l.size(), "size is 1");
         assertEquals(1, l.getX(0), 0, "getX(0) is 1");
         assertEquals(2, l.getY(0), 0, "getY(0) is 2");
         Ray3d r = l.getLocation(0.0);
-        assertEquals(3, r.getPhi(), 0, "heading at 0");
+        assertEquals(3, r.getDirZ(), 0, "heading at 0");
         assertEquals(1, r.getX(), 0, "x at 0 is 1");
         assertEquals(2, r.getY(), 0, "y at 0 is 2");
         assertEquals(new Bounds3d(l.get(0)), l.getBounds(), "bounds");
@@ -2076,15 +2076,15 @@ public class PolyLine3dTest
             }
         }
 
-        l = new PolyLine3d(new Point3d(1, 2, 2.5), 3, -1);
+        l = new PolyLine3d(new Point3d(1, 2, 2.5), -1, 3);
         assertEquals(0, l.getLength(), 0, "length is 0");
         assertEquals(1, l.size(), "size is 1");
         assertEquals(1, l.getX(0), 0, "getX(0) is 1");
         assertEquals(2, l.getY(0), 0, "getY(0) is 2");
         assertEquals(2.5, l.getZ(0), 0, "getZ(0) is 2.5");
         r = l.getLocation(0.0);
-        assertEquals(3, r.getPhi(), 0, "phi at 0");
-        assertEquals(-1, r.getTheta(), 0, "theta at 0");
+        assertEquals(3, r.getDirZ(), 0, "dirZ at 0");
+        assertEquals(-1, r.getDirY(), 0, "dirY at 0");
         assertEquals(1, r.getX(), 0, "x at 0 is 1");
         assertEquals(2, r.getY(), 0, "y at 0 is 2");
         assertEquals(2.5, r.getZ(), 0, "z at 0 is 2.5");
@@ -2096,8 +2096,8 @@ public class PolyLine3dTest
         assertEquals(2, l.getY(0), 0, "getY(0) is 2");
         assertEquals(2.5, l.getZ(0), 0, "getZ(0) is 2.5");
         r = l.getLocation(0.0);
-        assertEquals(3, r.getPhi(), 0, "phi at 0");
-        assertEquals(-1, r.getTheta(), 0, "theta at 0");
+        assertEquals(3, r.getDirZ(), 0, "dirZ at 0");
+        assertEquals(-1, r.getDirY(), 0, "dirY at 0");
         assertEquals(1, r.getX(), 0, "x at 0 is 1");
         assertEquals(2, r.getY(), 0, "y at 0 is 2");
         assertEquals(2.5, r.getZ(), 0, "z at 0 is 2.5");

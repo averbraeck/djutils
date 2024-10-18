@@ -158,7 +158,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
      */
     public PolyLine3d(final Ray3d r) throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(r, "r may not be NaN").x, r.y, r.z, r.phi, r.theta);
+        this(Throw.whenNull(r, "r may not be NaN").x, r.y, r.z, r.dirZ, r.dirY);
     }
 
     /**
@@ -651,8 +651,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
             fraction = len / (this.lengthIndexedLine[n1] - this.lengthIndexedLine[n2]);
         }
         return new Ray3d(this.x[n1] + fraction * (this.x[n1] - this.x[n2]), this.y[n1] + fraction * (this.y[n1] - this.y[n2]),
-                this.z[n1] + fraction * (this.z[n1] - this.z[n2]), Math.atan2(this.y[n1] - this.y[n2], this.x[n1] - this.x[n2]),
-                Math.atan2(Math.hypot(this.x[n1] - this.x[n2], this.y[n1] - this.y[n2]), this.z[n1] - this.z[n2]));
+                this.z[n1] + fraction * (this.z[n1] - this.z[n2]),
+                Math.atan2(Math.hypot(this.x[n1] - this.x[n2], this.y[n1] - this.y[n2]), this.z[n1] - this.z[n2]),
+                Math.atan2(this.y[n1] - this.y[n2], this.x[n1] - this.x[n2]));
     }
 
     /** {@inheritDoc} */

@@ -29,58 +29,58 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
 
     /** The counter-clockwise rotation around the point in radians. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
-    public final double phi;
+    public final double dirZ;
 
     /**
      * Construct a new DirectedPoint2d with an x and y coordinate and a direction.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
-     * @param phi double; the counter-clockwise rotation around the point in radians
+     * @param dirZ double; the counter-clockwise rotation around the point in radians
      * @throws IllegalArgumentException when any coordinate or dirZ is NaN
      */
-    public DirectedPoint2d(final double x, final double y, final double phi) throws IllegalArgumentException
+    public DirectedPoint2d(final double x, final double y, final double dirZ) throws IllegalArgumentException
     {
         super(x, y);
-        Throw.when(Double.isNaN(phi), IllegalArgumentException.class, "phi must be a number (not NaN)");
-        this.phi = phi;
+        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "phi must be a number (not NaN)");
+        this.dirZ = dirZ;
     }
 
     /**
      * Construct a new DirectedPoint2d from an x and y coordinates in a double[] and a direction.
      * @param xy double[]; the <cite>x</cite> and <cite>y</cite> coordinates in that order
-     * @param phi double; the counter-clockwise rotation around the point in radians
+     * @param dirZ double; the counter-clockwise rotation around the point in radians
      * @throws NullPointerException when xy is null
      * @throws IllegalArgumentException when the dimension of xy is not 2 or any value in xy is NaN or rotZ is NaN
      */
-    public DirectedPoint2d(final double[] xy, final double phi) throws IllegalArgumentException
+    public DirectedPoint2d(final double[] xy, final double dirZ) throws IllegalArgumentException
     {
         super(xy);
-        Throw.when(Double.isNaN(phi), IllegalArgumentException.class, "phi must be a number (not NaN)");
-        this.phi = phi;
+        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "phi must be a number (not NaN)");
+        this.dirZ = dirZ;
     }
 
     /**
      * Construct a new DirectedPoint2d from an AWT Point2D and a direction.
      * @param point Point2D; an AWT Point2D
-     * @param phi double; the counter-clockwise rotation around the point in radians
+     * @param dirZ double; the counter-clockwise rotation around the point in radians
      * @throws IllegalArgumentException when any coordinate in point is NaN, or rotZ is NaN
      */
-    public DirectedPoint2d(final Point2D point, final double phi) throws IllegalArgumentException
+    public DirectedPoint2d(final Point2D point, final double dirZ) throws IllegalArgumentException
     {
         super(point);
-        Throw.when(Double.isNaN(phi), IllegalArgumentException.class, "phi must be a number (not NaN)");
-        this.phi = phi;
+        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "phi must be a number (not NaN)");
+        this.dirZ = dirZ;
     }
 
     /**
      * Construct a new DirectedPoint2d from a Point2d and a direction.
      * @param point Point2d; a point (with or without orientation)
-     * @param phi double; the counter-clockwise rotation around the point in radians
+     * @param dirZ double; the counter-clockwise rotation around the point in radians
      * @throws IllegalArgumentException when rotZ is NaN
      */
-    public DirectedPoint2d(final Point2d point, final double phi) throws IllegalArgumentException
+    public DirectedPoint2d(final Point2d point, final double dirZ) throws IllegalArgumentException
     {
-        this(point.x, point.y, phi);
+        this(point.x, point.y, dirZ);
     }
 
     /**
@@ -99,7 +99,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     }
 
     /**
-     * Build the direction vector.
+     * Build the direction.
      * @param dX double; x difference
      * @param dY double; y difference
      * @return double; the computed value of phi
@@ -127,16 +127,98 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
 
     /** {@inheritDoc} */
     @Override
-    public DirectedPoint2d neg()
+    public DirectedPoint2d translate(final double dx, final double dy) throws IllegalArgumentException
     {
-        return new DirectedPoint2d(-getX(), -getY(), AngleUtil.normalizeAroundZero(this.phi + Math.PI));
+        Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class, "translation may not be NaN");
+        return new DirectedPoint2d(getX() + dx, getY() + dy, this.dirZ);
     }
 
     /** {@inheritDoc} */
     @Override
-    public double getPhi()
+    public DirectedPoint3d translate(final double dx, final double dy, final double z) throws IllegalArgumentException
     {
-        return this.phi;
+        return new DirectedPoint3d(getX() + dx, getY() + dy, z, 0, this.dirZ);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public DirectedPoint2d scale(final double factor) throws IllegalArgumentException
+    {
+        Throw.when(Double.isNaN(factor), IllegalArgumentException.class, "factor must be a number (not NaN)");
+        return new DirectedPoint2d(getX() * factor, getY() * factor, this.dirZ);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public DirectedPoint2d neg()
+    {
+        return new DirectedPoint2d(-getX(), -getY(), AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public DirectedPoint2d abs()
+    {
+        return new DirectedPoint2d(Math.abs(getX()), Math.abs(getY()), this.dirZ);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public DirectedPoint2d normalize()
+    {
+        double length = Math.sqrt(getX() * getX() + getY() * getY());
+        Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0)");
+        return this.scale(1.0 / length);
+    }
+
+    /**
+     * Interpolate towards another DirectedPoint2d with a fraction. It is allowed for fraction to be less than zero or larger
+     * than 1. In that case the interpolation turns into an extrapolation. DirZ is interpolated using the
+     * AngleUtil.interpolateShortest method.
+     * @param otherPoint DirectedPoint2d; the other point
+     * @param fraction double; the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
+     *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
+     *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
+     * @return DirectedPoint2d; a new OrientedPoint2d at the requested fraction
+     * @throws NullPointerException when otherPoint is null
+     * @throws IllegalArgumentException when fraction is NaN
+     */
+    public DirectedPoint2d interpolate(final DirectedPoint2d otherPoint, final double fraction)
+            throws NullPointerException, IllegalArgumentException
+    {
+        Throw.whenNull(otherPoint, "otherPoint cannot be null");
+        Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
+        if (0.0 == fraction)
+        {
+            return this;
+        }
+        if (1.0 == fraction)
+        {
+            return otherPoint;
+        }
+        return new DirectedPoint2d((1.0 - fraction) * getX() + fraction * otherPoint.x,
+                (1.0 - fraction) * getY() + fraction * otherPoint.y,
+                AngleUtil.interpolateShortest(getDirZ(), otherPoint.getDirZ(), fraction));
+    }
+
+    /**
+     * Return a new DirectedPoint2d with an in-place rotation around the z-axis by the provided rotateZ. The resulting rotation
+     * is normalized between -&pi; and &pi;.
+     * @param rotateZ double; the rotation around the z-axis
+     * @return DirectedPoint2d; a new point with the same coordinates and applied rotation
+     * @throws IllegalArgumentException when deltaRotZ is NaN
+     */
+    public DirectedPoint2d rotate(final double rotateZ) throws IllegalArgumentException
+    {
+        Throw.when(Double.isNaN(rotateZ), IllegalArgumentException.class, "deltaDirZ must be a number (not NaN)");
+        return new DirectedPoint2d(getX(), getY(), AngleUtil.normalizeAroundZero(getDirZ() + rotateZ));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double getDirZ()
+    {
+        return this.dirZ;
     }
 
     /** {@inheritDoc} */
@@ -158,8 +240,8 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
         String format =
-                String.format("%1$s[x=%2$s, y=%2$s, rot=%2$s]", doNotIncludeClassName ? "" : "DirectedPoint2d ", doubleFormat);
-        return String.format(Locale.US, format, this.x, this.y, this.phi);
+                String.format("%1$s[x=%2$s, y=%2$s, dirZ=%2$s]", doNotIncludeClassName ? "" : "DirectedPoint2d ", doubleFormat);
+        return String.format(Locale.US, format, this.x, this.y, this.dirZ);
     }
 
     /** {@inheritDoc} */
@@ -180,7 +262,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
         {
             return false;
         }
-        if (Math.abs(AngleUtil.normalizeAroundZero(this.phi - other.phi)) > epsilonRotation)
+        if (Math.abs(AngleUtil.normalizeAroundZero(this.dirZ - other.dirZ)) > epsilonRotation)
         {
             return false;
         }
@@ -193,7 +275,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result + Objects.hash(this.phi);
+        result = prime * result + Objects.hash(this.dirZ);
         return result;
     }
 
@@ -209,7 +291,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
         if (getClass() != obj.getClass())
             return false;
         DirectedPoint2d other = (DirectedPoint2d) obj;
-        return Double.doubleToLongBits(this.phi) == Double.doubleToLongBits(other.phi);
+        return Double.doubleToLongBits(this.dirZ) == Double.doubleToLongBits(other.dirZ);
     }
 
 }

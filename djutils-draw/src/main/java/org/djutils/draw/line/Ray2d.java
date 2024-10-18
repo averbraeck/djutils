@@ -129,9 +129,9 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
 
     /** {@inheritDoc} */
     @Override
-    public final double getPhi()
+    public final double getDirZ()
     {
-        return this.phi;
+        return this.dirZ;
     }
 
     /** {@inheritDoc} */
@@ -152,11 +152,11 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     @Override
     public Iterator<DirectedPoint2d> getPoints()
     {
-        double cosPhi = Math.cos(this.phi);
-        double sinPhi = Math.sin(this.phi);
+        double cosPhi = Math.cos(this.dirZ);
+        double sinPhi = Math.sin(this.dirZ);
         DirectedPoint2d[] array =
                 new DirectedPoint2d[] {this, new DirectedPoint2d(cosPhi == 0 ? this.x : cosPhi * Double.POSITIVE_INFINITY,
-                        sinPhi == 0 ? this.y : sinPhi * Double.POSITIVE_INFINITY, this.phi)};
+                        sinPhi == 0 ? this.y : sinPhi * Double.POSITIVE_INFINITY, this.dirZ)};
         return Arrays.stream(array).iterator();
     }
 
@@ -164,8 +164,8 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     @Override
     public Bounds2d getBounds()
     {
-        double cosPhi = Math.cos(this.phi);
-        double sinPhi = Math.sin(this.phi);
+        double cosPhi = Math.cos(this.dirZ);
+        double sinPhi = Math.sin(this.dirZ);
         return new Bounds2d(cosPhi >= 0 ? this.x : Double.NEGATIVE_INFINITY, cosPhi <= 0 ? this.x : Double.POSITIVE_INFINITY,
                 sinPhi >= 0 ? this.y : Double.NEGATIVE_INFINITY, sinPhi <= 0 ? this.y : Double.POSITIVE_INFINITY);
     }
@@ -174,14 +174,14 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     @Override
     public Ray2d neg()
     {
-        return new Ray2d(-this.x, -this.y, AngleUtil.normalizeAroundZero(this.phi + Math.PI));
+        return new Ray2d(-this.x, -this.y, AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
     }
 
     /** {@inheritDoc} */
     @Override
     public Ray2d flip()
     {
-        return new Ray2d(this.x, this.y, AngleUtil.normalizeAroundZero(this.phi + Math.PI));
+        return new Ray2d(this.x, this.y, AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
     }
 
     /** {@inheritDoc} */
@@ -190,7 +190,7 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     {
         Throw.when(Double.isNaN(position) || Double.isInfinite(position), DrawRuntimeException.class,
                 "position must be finite");
-        return new Ray2d(this.x + Math.cos(this.phi) * position, this.y + Math.sin(this.phi) * position, this.phi);
+        return new Ray2d(this.x + Math.cos(this.dirZ) * position, this.y + Math.sin(this.dirZ) * position, this.dirZ);
     }
 
     /** {@inheritDoc} */
@@ -198,8 +198,8 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     public Point2d closestPointOnRay(final Point2d point) throws NullPointerException
     {
         Throw.whenNull(point, "point may not be null");
-        double dX = Math.cos(this.phi);
-        double dY = Math.sin(this.phi);
+        double dX = Math.cos(this.dirZ);
+        double dY = Math.sin(this.dirZ);
         return point.closestPointOnLine(this.x, this.y, this.x + dX, this.y + dY, true, false);
     }
 
@@ -208,7 +208,7 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     public Point2d projectOrthogonal(final Point2d point) throws NullPointerException
     {
         Throw.whenNull(point, "point may not be null");
-        return point.closestPointOnLine(this.x, this.y, this.x + Math.cos(this.phi), this.y + Math.sin(this.phi), null, false);
+        return point.closestPointOnLine(this.x, this.y, this.x + Math.cos(this.dirZ), this.y + Math.sin(this.dirZ), null, false);
     }
 
     /** {@inheritDoc} */
@@ -216,7 +216,7 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     public Point2d projectOrthogonalExtended(final Point2d point)
     {
         Throw.whenNull(point, "point may not be null");
-        return point.closestPointOnLine(getX(), getY(), getX() + Math.cos(this.phi), getY() + Math.sin(this.phi), false, false);
+        return point.closestPointOnLine(getX(), getY(), getX() + Math.cos(this.dirZ), getY() + Math.sin(this.dirZ), false, false);
     }
 
     /** {@inheritDoc} */
@@ -224,7 +224,7 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     public double projectOrthogonalFractional(final Point2d point) throws NullPointerException
     {
         Throw.whenNull(point, "point may not be null");
-        return point.fractionalPositionOnLine(this.x, this.y, this.x + Math.cos(this.phi), this.y + Math.sin(this.phi), null,
+        return point.fractionalPositionOnLine(this.x, this.y, this.x + Math.cos(this.dirZ), this.y + Math.sin(this.dirZ), null,
                 false);
     }
 
@@ -233,7 +233,7 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     public double projectOrthogonalFractionalExtended(final Point2d point) throws NullPointerException
     {
         Throw.whenNull(point, "point may not be null");
-        return point.fractionalPositionOnLine(this.x, this.y, this.x + Math.cos(this.phi), this.y + Math.sin(this.phi), false,
+        return point.fractionalPositionOnLine(this.x, this.y, this.x + Math.cos(this.dirZ), this.y + Math.sin(this.dirZ), false,
                 false);
     }
 
@@ -249,7 +249,7 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
         String format = String.format("%1$s[x=%2$s, y=%2$s, phi=%2%s]", doNotIncludeClassName ? "" : "Ray2d ", doubleFormat);
-        return String.format(Locale.US, format, this.x, this.y, this.phi);
+        return String.format(Locale.US, format, this.x, this.y, this.dirZ);
     }
 
     /** {@inheritDoc} */

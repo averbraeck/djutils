@@ -182,7 +182,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
         double dZ = this.endZ - this.startZ;
         double length = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
         return new Ray3d(this.startX + position * dX / length, this.startY + position * dY / length,
-                this.startZ + position * dZ / length, Math.atan2(dY, dX), Math.atan2(dZ, Math.hypot(dX, dY)));
+                this.startZ + position * dZ / length, Math.atan2(dZ, Math.hypot(dX, dY)), Math.atan2(dY, dX));
     }
 
     /** {@inheritDoc} */

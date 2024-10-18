@@ -132,7 +132,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     public PolyLine2d(final Ray2d r) throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(r, "r may not be NaN").x, r.y, r.phi);
+        this(Throw.whenNull(r, "r may not be NaN").x, r.y, r.dirZ);
     }
 
     /**
@@ -1205,8 +1205,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         double positionAtBestDistance = Double.NaN;
         // Point2d prevPoint = null;
         // Define the line that is perpendicular to ray, passing through the start point of ray
-        double perpendicularX = ray.x - Math.sin(ray.phi);
-        double perpendicularY = ray.y + Math.cos(ray.phi);
+        double perpendicularX = ray.x - Math.sin(ray.dirZ);
+        double perpendicularY = ray.y + Math.cos(ray.dirZ);
         for (int index = 1; index < this.x.length; index++)
         {
             Point2d intersection = Point2d.intersectionOfLines(ray.x, ray.y, perpendicularX, perpendicularY, false, false,

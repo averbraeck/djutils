@@ -29,7 +29,7 @@ public interface Ray<R extends Ray<R, D, P>, D extends Directed<D>, P extends Po
      * Retrieve the angle from the positive X axis direction in radians.
      * @return double; the angle from the positive X axis direction in radians
      */
-    double getPhi();
+    double getDirZ();
 
     /**
      * Flip the direction of the Ray (creates and returns a new Ray instance).

@@ -1,6 +1,5 @@
 package demo;
 
-import org.djutils.draw.point.OrientedPoint2d;
 import org.djutils.draw.point.Point2d;
 
 /**
@@ -55,7 +54,5 @@ public final class PointDemos
         System.out.println("The point with absolute values: " + point1.abs());
         System.out.println("The point negated, then absolute: " + point1.neg().abs());
 
-        OrientedPoint2d orientedPoint2d = new OrientedPoint2d(123.45, 234.56, -0.2);
-        System.out.println(orientedPoint2d);
     }
 }

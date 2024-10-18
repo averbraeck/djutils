@@ -240,10 +240,10 @@ public final class Bezier
             double dEnd = end.distance(start.projectOrthogonalExtended(end));
             double wStart = dStart / (dStart + dEnd);
             double wEnd = dEnd / (dStart + dEnd);
-            control1 = new Transform2d().translate(start).rotation(start.phi).scale(distance * wStart, distance * wStart)
+            control1 = new Transform2d().translate(start).rotation(start.dirZ).scale(distance * wStart, distance * wStart)
                     .transform(UNIT_VECTOR2D);
             // - (minus) as the angle is where the line leaves, i.e. from shape point to end
-            control2 = new Transform2d().translate(end).rotation(end.phi + Math.PI).scale(distance * wEnd, distance * wEnd)
+            control2 = new Transform2d().translate(end).rotation(end.dirZ + Math.PI).scale(distance * wEnd, distance * wEnd)
                     .transform(UNIT_VECTOR2D);
         }
         else

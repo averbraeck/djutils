@@ -22,8 +22,8 @@ import org.djutils.draw.point.Point;
  * @param <R> The matching Ray type (2d or 3d)
  * @param <LS> The matching LineSegment type (2d or 3d)
  */
-public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>, R extends Ray<R, D, P>,
-        D extends Directed<D>, LS extends LineSegment<P, D>> extends Drawable<P>, Project<P>
+public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>, R extends Ray<R, D, P>, D extends Directed<D>,
+        LS extends LineSegment<P, D>> extends Drawable<P>, Project<P>
 {
     /**
      * Constructor that can be accessed as a method (used to implement default methods in this interface).
@@ -79,14 +79,7 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      */
     default P getFirst()
     {
-        try
-        {
-            return get(0);
-        }
-        catch (IndexOutOfBoundsException ioobe)
-        {
-            throw new RuntimeException("cannot happen");
-        }
+        return get(0);
     }
 
     /**
@@ -95,14 +88,7 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      */
     default P getLast()
     {
-        try
-        {
-            return get(size() - 1);
-        }
-        catch (IndexOutOfBoundsException ioobe)
-        {
-            throw new RuntimeException("cannot happen");
-        }
+        return get(size() - 1);
     }
 
     /**
@@ -382,7 +368,8 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      *             offsetMinimumFilterValue &gt;= offsetMaximumFilterValue
      * @throws DrawRuntimeException Only if P is PolyLine3d and the line cannot be projected into 2d
      */
-    default L offsetLine(final double offsetAtStart, final double offsetAtEnd) throws IllegalArgumentException, DrawRuntimeException
+    default L offsetLine(final double offsetAtStart, final double offsetAtEnd)
+            throws IllegalArgumentException, DrawRuntimeException
     {
         return offsetLine(offsetAtStart, offsetAtEnd, DEFAULT_CIRCLE_PRECISION, DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
                 DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, DEFAULT_OFFSET_FILTER_RATIO, DEFAULT_OFFSET_PRECISION);

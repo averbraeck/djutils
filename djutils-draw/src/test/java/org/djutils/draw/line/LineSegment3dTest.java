@@ -167,17 +167,17 @@ public class LineSegment3dTest
                 DirectedPoint3d dp = segment.getLocation(position);
                 assertEquals(position, dp.distance(startPoint), 0.0001, "distance from start point");
                 assertEquals(segment.getLength() - position, dp.distance(endPoint), 0.0001, "distance from end point");
-                assertEquals(startPoint.project().directionTo(endPoint.project()), dp.phi, 0.0001,
+                assertEquals(startPoint.project().directionTo(endPoint.project()), dp.dirZ, 0.0001,
                         "direction of directedPoint phi");
-                assertEquals(Math.atan2(endPoint.z - startPoint.z, segment.project().getLength()), dp.theta, 0.0001,
+                assertEquals(Math.atan2(endPoint.z - startPoint.z, segment.project().getLength()), dp.dirY, 0.0001,
                         "direction of directedPoint theta");
             }
             Ray3d ray = segment.getLocationExtended(position);
             assertEquals(Math.abs(position), ray.distance(startPoint), 0.0001, "distance from start point");
             assertEquals(Math.abs(segment.getLength() - position), ray.distance(endPoint), 0.0001, "distance from end point");
-            assertEquals(startPoint.project().directionTo(endPoint.project()), ray.phi, 0.0001, "direction of ray phi");
-            assertEquals(Math.atan2(endPoint.z - startPoint.z, segment.project().getLength()), ray.theta, 0.0001,
-                    "direction of ray theta");
+            assertEquals(startPoint.project().directionTo(endPoint.project()), ray.dirZ, 0.0001, "direction of ray dirZ");
+            assertEquals(Math.atan2(endPoint.z - startPoint.z, segment.project().getLength()), ray.dirY, 0.0001,
+                    "direction of ray dirY");
         }
     }
 

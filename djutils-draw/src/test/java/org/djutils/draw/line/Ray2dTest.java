@@ -15,7 +15,6 @@ import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.DirectedPoint2d;
-import org.djutils.draw.point.OrientedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.junit.jupiter.api.Test;
 
@@ -153,22 +152,22 @@ public class Ray2dTest
         assertEquals(expectedX, ray.x, 0.0001, description + " x");
         assertEquals(expectedY, ray.getY(), 0.0001, description + " getY");
         assertEquals(expectedY, ray.y, 0.0001, description + " y");
-        assertEquals(expectedPhi, ray.getPhi(), 0.0001, description + " getPhi");
-        assertEquals(expectedPhi, ray.phi, 0.0001, description + " phi");
+        assertEquals(expectedPhi, ray.getDirZ(), 0.0001, description + " getPhi");
+        assertEquals(expectedPhi, ray.dirZ, 0.0001, description + " phi");
         Point2d startPoint = ray.getEndPoint();
         assertEquals(expectedX, startPoint.x, 0.0001, description + " getStartPoint x");
         assertEquals(expectedY, startPoint.y, 0.0001, description + " getStartPoint y");
         Ray2d negated = ray.neg();
         assertEquals(-expectedX, negated.x, 0.0001, description + " neg x");
         assertEquals(-expectedY, negated.y, 0.0001, description + " neg y");
-        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), negated.phi, 0.0001, description + " neg phi");
+        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), negated.dirZ, 0.0001, description + " neg phi");
         Ray2d flipped = ray.flip();
         assertEquals(expectedX, flipped.getX(), 0.0001, description + " getX");
         assertEquals(expectedX, flipped.x, 0.0001, description + " x");
         assertEquals(expectedY, flipped.getY(), 0.0001, description + " getY");
         assertEquals(expectedY, flipped.y, 0.0001, description + " y");
-        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), flipped.getPhi(), 0.0001, description + " getPhi");
-        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), flipped.phi, 0.0001, description + " phi");
+        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), flipped.getDirZ(), 0.0001, description + " getPhi");
+        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), flipped.dirZ, 0.0001, description + " phi");
         assertEquals(2, ray.size(), description + " size");
         Iterator<DirectedPoint2d> iterator = ray.getPoints();
         // First result of iterator is the finite end point (but this is not a hard promise)
@@ -327,17 +326,17 @@ public class Ray2dTest
                 Ray2d result = ray.getLocationExtended(position);
                 assertEquals(Math.abs(position), ray.distance(result), 0.001,
                         "result is position distance away from base of ray");
-                assertEquals(ray.phi, result.phi, 0.00001, "result has same phi as ray");
+                assertEquals(ray.dirZ, result.dirZ, 0.00001, "result has same phi as ray");
                 assertTrue(ray.epsilonEquals(result.getLocationExtended(-position), 0.0001),
                         "Reverse position on result yields ray");
                 if (position > 0)
                 {
-                    assertEquals(AngleUtil.normalizeAroundZero(ray.phi), ray.directionTo(result), 0.0001,
+                    assertEquals(AngleUtil.normalizeAroundZero(ray.dirZ), ray.directionTo(result), 0.0001,
                             "result lies in on ray");
                 }
                 if (position < 0)
                 {
-                    assertEquals(AngleUtil.normalizeAroundZero(result.phi), result.directionTo(ray), 0.0001,
+                    assertEquals(AngleUtil.normalizeAroundZero(result.dirZ), result.directionTo(ray), 0.0001,
                             "ray lies on result");
                 }
             }
@@ -384,7 +383,7 @@ public class Ray2dTest
         double distance = result.distance(ray.getEndPoint());
         assertTrue(distance > 0, "distance from start is > 0");
         // Angle startPoint-result-test-projectingPoint should be 90 degrees
-        double angle = ray.getPhi() - result.directionTo(projectingPoint);
+        double angle = ray.getDirZ() - result.directionTo(projectingPoint);
         assertEquals(Math.PI / 2, Math.abs(AngleUtil.normalizeAroundZero(angle)), 0.0001, "angle should be about 90 degrees");
         assertEquals(0, result.distance(ray.projectOrthogonal(projectingPoint)), 0.0001,
                 "projection hits closest point on the ray");
@@ -492,7 +491,7 @@ public class Ray2dTest
             {
                 for (double dPhi : deltas)
                 {
-                    Ray2d other = new Ray2d(ray.x + dX, ray.y + dY, ray.phi + dPhi);
+                    Ray2d other = new Ray2d(ray.x + dX, ray.y + dY, ray.dirZ + dPhi);
                     for (double epsilon : new double[] {0, 0.125, 0.5, 0.9, 1.0, 1.1})
                     {
                         // System.out.println(String.format("dX=%f, dY=%f, dPhi=%f, epsilon=%f", dX, dY, dPhi, epsilon));
@@ -524,7 +523,7 @@ public class Ray2dTest
         Ray2d ray = new Ray2d(1, 2, 11, 12);
         assertEquals(ray, ray, "equal to itself");
         assertNotEquals(ray, null, "not equal to null");
-        assertNotEquals(ray, new OrientedPoint2d(1, 2), "not equal to different object with same parent class");
+        assertNotEquals(ray, new DirectedPoint2d(1, 2, 3), "not equal to different object with same parent class");
         assertNotEquals(ray, new Ray2d(1, 2, 11, 10), "not equal to ray with different direction");
         assertNotEquals(ray, new Ray2d(2, 2, 12, 12), "not equal to ray with different start x");
         assertNotEquals(ray, new Ray2d(1, 3, 12, 13), "not equal to ray with different start y");

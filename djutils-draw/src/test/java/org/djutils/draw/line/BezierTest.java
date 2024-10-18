@@ -388,8 +388,8 @@ public class BezierTest
             {
                 for (boolean weighted : new boolean[] {false, true})
                 {
-                    Ray3d start = new Ray3d(from.x, from.y, from.z, Math.PI / 2, Math.PI / 3);
-                    Ray3d end = new Ray3d(to.x, to.y, to.z, Math.PI, 0);
+                    Ray3d start = new Ray3d(from.x, from.y, from.z, Math.PI / 3, Math.PI / 2);
+                    Ray3d end = new Ray3d(to.x, to.y, to.z, 0, Math.PI);
                     PolyLine3d line = 1.0 == shape ? Bezier.cubic(n, start, end) : Bezier.cubic(n, start, end, shape, weighted);
                     for (int i = 1; i < line.size() - 1; i++)
                     {

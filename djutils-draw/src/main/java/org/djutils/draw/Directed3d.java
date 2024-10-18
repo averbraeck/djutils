@@ -26,14 +26,14 @@ public interface Directed3d<D extends Directed<D>> extends Directed<D>
      * towards the positive y-axis (and beyond).
      * @return double; phi
      */
-    double getPhi();
+    double getDirZ();
 
     /**
      * Retrieve the angle from the positive z axis to the direction. Normally these are values between [0:&pi;]. Angles less
      * than &pi;/2 indicate above the x-y-plane; positive slope, angles > &pi;/2 indicate angles below this plane; negative
      * slope.
-     * @return double; theta
+     * @return double; dirY
      */
-    double getTheta();
+    double getDirY();
 
 }

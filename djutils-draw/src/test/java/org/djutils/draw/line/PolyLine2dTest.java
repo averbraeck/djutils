@@ -1484,12 +1484,12 @@ public class PolyLine2dTest
         {
             double distance = length * step / 1000;
             Ray2d ray = bezier.getLocation(distance);
-            double direction = Math.toDegrees(ray.phi);
+            double direction = Math.toDegrees(ray.dirZ);
             if (step > 0)
             {
                 assertEquals(prevDir, direction, 2, "phi changes very little at step " + step);
             }
-            prevDir = Math.toDegrees(ray.phi);
+            prevDir = Math.toDegrees(ray.dirZ);
         }
         // Make a gradually transitioning offset line
         PolyLine2d transitioningOffsetLine = bezier.offsetLine(0, 2);
@@ -1500,12 +1500,12 @@ public class PolyLine2dTest
         {
             double distance = length * step / 1000;
             Ray2d ray = transitioningOffsetLine.getLocation(distance);
-            double direction = Math.toDegrees(ray.phi);
+            double direction = Math.toDegrees(ray.dirZ);
             if (step > 0)
             {
                 assertEquals(prevDir, direction, 2, "phi changes very little at step " + step);
             }
-            prevDir = Math.toDegrees(ray.phi);
+            prevDir = Math.toDegrees(ray.dirZ);
         }
         PolyLine2d endLine = bezier.offsetLine(-2);
         // System.out.print("c0,1,0" + endLine.project().toPlot());
@@ -1525,12 +1525,12 @@ public class PolyLine2dTest
         {
             double distance = length * step / 1000;
             Ray2d ray = cosineSmoothTransitioningLine.getLocation(distance);
-            double direction = Math.toDegrees(ray.phi);
+            double direction = Math.toDegrees(ray.dirZ);
             if (step > 0)
             {
                 assertEquals(prevDir, direction, 4, "phi changes very little at step " + step);
             }
-            prevDir = Math.toDegrees(ray.phi);
+            prevDir = Math.toDegrees(ray.dirZ);
         }
         // System.out.print(
         // "c0,0,1" + Bezier.cubic(bezier1.getLocationFraction(0), endLine.getLocationFraction(1)).project().toPlot());
@@ -1546,7 +1546,7 @@ public class PolyLine2dTest
             Ray2d ray2 = cosineSmoothTransitioningLine2.getLocation(step * cosineSmoothTransitioningLine2.getLength() / 1000);
             assertEquals(ray1.x, ray2.x, 0.001, "rays are almost equal in x");
             assertEquals(ray1.y, ray2.y, 0.001, "rays are almost equal in y");
-            assertEquals(ray1.phi, ray2.phi, 0.0001, "rays are almost equal in phi");
+            assertEquals(ray1.dirZ, ray2.dirZ, 0.0001, "rays are almost equal in phi");
         }
 
         assertEquals(bezier, bezier.offsetLine(0, 0), "offset by zero returns original");
@@ -1762,7 +1762,7 @@ public class PolyLine2dTest
         assertEquals(1, l.getX(0), 0, "getX(0) is 1");
         assertEquals(2, l.getY(0), 0, "getY(0) is 2");
         Ray2d r = l.getLocation(0.0);
-        assertEquals(3, r.getPhi(), 0, "heading at 0");
+        assertEquals(3, r.getDirZ(), 0, "heading at 0");
         assertEquals(1, r.getX(), 0, "x at 0 is 1");
         assertEquals(2, r.getY(), 0, "y at 0 is 2");
         assertEquals(new Bounds2d(l.get(0)), l.getBounds(), "bounds");
@@ -1876,7 +1876,7 @@ public class PolyLine2dTest
         assertEquals(1, l.getX(0), 0, "getX(0) is 1");
         assertEquals(2, l.getY(0), 0, "getY(0) is 2");
         r = l.getLocation(0.0);
-        assertEquals(3, r.getPhi(), 0, "heading at 0");
+        assertEquals(3, r.getDirZ(), 0, "heading at 0");
         assertEquals(1, r.getX(), 0, "x at 0 is 1");
         assertEquals(2, r.getY(), 0, "y at 0 is 2");
 
@@ -1886,7 +1886,7 @@ public class PolyLine2dTest
         assertEquals(1, l.getX(0), 0, "getX(0) is 1");
         assertEquals(2, l.getY(0), 0, "getY(0) is 2");
         r = l.getLocation(0.0);
-        assertEquals(3, r.getPhi(), 0, "heading at 0");
+        assertEquals(3, r.getDirZ(), 0, "heading at 0");
         assertEquals(1, r.getX(), 0, "x at 0 is 1");
         assertEquals(2, r.getY(), 0, "y at 0 is 2");
 

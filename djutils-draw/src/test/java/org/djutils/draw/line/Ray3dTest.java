@@ -35,44 +35,44 @@ public class Ray3dTest
     @Test
     public void testConstructors()
     {
-        // Verify theta and phi for the six basic directions.
-        verifyRay("positive x", new Ray3d(0, 0, 0, 1, 0, 0), 0, 0, 0, 0, Math.PI / 2);
+        // Verify dirY and dirZ for the six basic directions.
+        verifyRay("positive x", new Ray3d(0, 0, 0, 1, 0, 0), 0, 0, 0, Math.PI / 2, 0);
         verifyRay("positive y", new Ray3d(0, 0, 0, 0, 1, 0), 0, 0, 0, Math.PI / 2, Math.PI / 2);
         verifyRay("positive z", new Ray3d(0, 0, 0, 0, 0, 1), 0, 0, 0, 0, 0);
-        verifyRay("negative x", new Ray3d(0, 0, 0, -1, 0, 0), 0, 0, 0, Math.PI, Math.PI / 2);
-        verifyRay("negative y", new Ray3d(0, 0, 0, 0, -1, 0), 0, 0, 0, -Math.PI / 2, Math.PI / 2);
-        verifyRay("negative z", new Ray3d(0, 0, 0, 0, 0, -1), 0, 0, 0, 0, Math.PI);
-        verifyRay("Constructor from x, y, z, phi, theta", new Ray3d(1, 2, 3, 4, 5), 1, 2, 3, 4, 5);
-        verifyRay("Constructor from [x, y, z], phi, theta", new Ray3d(new double[] {1, 2, 3}, 4, 5), 1, 2, 3, 4, 5);
-        verifyRay("Constructor from x, y, z, [phi, theta]", new Ray3d(1, 2, 3, new double[] {4, 5}), 1, 2, 3, 4, 5);
-        verifyRay("Constructor from [x, y, z], [phi, theta]", new Ray3d(new double[] {1, 2, 3}, new double[] {4, 5}), 1, 2, 3,
+        verifyRay("negative x", new Ray3d(0, 0, 0, -1, 0, 0), 0, 0, 0, Math.PI / 2, Math.PI);
+        verifyRay("negative y", new Ray3d(0, 0, 0, 0, -1, 0), 0, 0, 0, Math.PI / 2, -Math.PI / 2);
+        verifyRay("negative z", new Ray3d(0, 0, 0, 0, 0, -1), 0, 0, 0, Math.PI, 0);
+        verifyRay("Constructor from x, y, z, dirY, dirZ", new Ray3d(1, 2, 3, 4, 5), 1, 2, 3, 4, 5);
+        verifyRay("Constructor from [x, y, z], dirY, dirZ", new Ray3d(new double[] {1, 2, 3}, 4, 5), 1, 2, 3, 4, 5);
+        verifyRay("Constructor from x, y, z, [dirY, dirZ]", new Ray3d(1, 2, 3, new double[] {4, 5}), 1, 2, 3, 4, 5);
+        verifyRay("Constructor from [x, y, z], [dirY, dirZ]", new Ray3d(new double[] {1, 2, 3}, new double[] {4, 5}), 1, 2, 3,
                 4, 5);
         verifyRay("Constructor from Point3d, phi, theta", new Ray3d(new Point3d(0.1, 0.2, 0.3), -0.4, -0.5), 0.1, 0.2, 0.3,
                 -0.4, -0.5);
         verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 4, 6, 15), 1, 2, 3,
-                Math.atan2(4, 3), Math.atan2(5, 12));
-        verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 1, 6, 15), 1, 2, 3, Math.PI / 2,
-                Math.atan2(4, 12));
+                Math.atan2(5, 12), Math.atan2(4, 3));
+        verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 1, 6, 15), 1, 2, 3,
+                Math.atan2(4, 12), Math.PI / 2);
         verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 1, 2, 15), 1, 2, 3, 0,
                 Math.atan2(0, 0));
         verifyRay("Constructor from Point3d, throughX, throughY, throughZ", new Ray3d(new Point3d(1, 2, 3), 4, 6, 15), 1, 2, 3,
-                Math.atan2(4, 3), Math.atan2(5, 12));
+                Math.atan2(5, 12), Math.atan2(4, 3));
         verifyRay("Constructor from Point3d, throughX, throughY, throughZ", new Ray3d(new Point3d(1, 2, 3), 1, 6, 15), 1, 2, 3,
-                Math.PI / 2, Math.atan2(4, 12));
+                Math.atan2(4, 12), Math.PI / 2);
         verifyRay("Constructor from Point3d, throughX, throughY, throughZ", new Ray3d(new Point3d(1, 2, 3), 1, 2, 15), 1, 2, 3,
-                Math.atan2(0, 12), Math.atan2(0, 0));
-        verifyRay("Constructor from x, y, z, Point3d", new Ray3d(1, 2, 3, new Point3d(4, 6, 15)), 1, 2, 3, Math.atan2(4, 3),
-                Math.atan2(5, 12));
-        verifyRay("Constructor from x, y, z, Point3d", new Ray3d(1, 2, 3, new Point3d(1, 6, 15)), 1, 2, 3, Math.PI / 2,
-                Math.atan2(4, 12));
+                Math.atan2(0, 0), Math.atan2(0, 12));
+        verifyRay("Constructor from x, y, z, Point3d", new Ray3d(1, 2, 3, new Point3d(4, 6, 15)), 1, 2, 3, Math.atan2(5, 12),
+                Math.atan2(4, 3));
+        verifyRay("Constructor from x, y, z, Point3d", new Ray3d(1, 2, 3, new Point3d(1, 6, 15)), 1, 2, 3, Math.atan2(4, 12),
+                Math.PI / 2);
         verifyRay("Constructor from x, y, z, Point3d", new Ray3d(1, 2, 3, new Point3d(1, 2, 15)), 1, 2, 3, Math.atan2(0, 12),
                 Math.atan2(0, 0));
         verifyRay("Constructor from Point3d, Point3d", new Ray3d(new Point3d(1, 2, 3), new Point3d(4, 6, 15)), 1, 2, 3,
-                Math.atan2(4, 3), Math.atan2(5, 12));
+                Math.atan2(5, 12), Math.atan2(4, 3));
         verifyRay("Constructor from Point3d, Point3d", new Ray3d(new Point3d(1, 2, 3), new Point3d(1, 6, 15)), 1, 2, 3,
-                Math.PI / 2, Math.atan2(4, 12));
+                Math.atan2(4, 12), Math.PI / 2);
         verifyRay("Constructor from Point3d, Point3d", new Ray3d(new Point3d(1, 2, 3), new Point3d(1, 2, 15)), 1, 2, 3,
-                Math.atan2(0, 12), Math.atan2(0, 0));
+                Math.atan2(0, 0), Math.atan2(0, 12));
 
         try
         {
@@ -176,11 +176,11 @@ public class Ray3dTest
      * @param expectedX double; the expected x value
      * @param expectedY double; the expected y value
      * @param expectedZ double; the expected z value
-     * @param expectedPhi double; the expected phi value
-     * @param expectedTheta double; the expected theta value
+     * @param expectedDirY double; the expected theta value
+     * @param expectedDirZ double; the expected phi value
      */
     private void verifyRay(final String description, final Ray3d ray, final double expectedX, final double expectedY,
-            final double expectedZ, final double expectedPhi, final double expectedTheta)
+            final double expectedZ, final double expectedDirY, final double expectedDirZ)
     {
         assertEquals(expectedX, ray.getX(), 0.0001, description + " getX");
         assertEquals(expectedX, ray.x, 0.0001, description + " x");
@@ -188,10 +188,10 @@ public class Ray3dTest
         assertEquals(expectedY, ray.y, 0.0001, description + " y");
         assertEquals(expectedZ, ray.getZ(), 0.0001, description + " getZ");
         assertEquals(expectedZ, ray.z, 0.0001, description + " z");
-        assertEquals(expectedPhi, ray.getPhi(), 0.0001, description + " getPhi");
-        assertEquals(expectedPhi, ray.phi, 0.0001, description + " phi");
-        assertEquals(expectedTheta, ray.getTheta(), 0.0001, description + " getTheta");
-        assertEquals(expectedTheta, ray.theta, 0.0001, description + " theta");
+        assertEquals(expectedDirZ, ray.getDirZ(), 0.0001, description + " getDirZ");
+        assertEquals(expectedDirZ, ray.dirZ, 0.0001, description + " dirZ");
+        assertEquals(expectedDirY, ray.getDirY(), 0.0001, description + " getDirY");
+        assertEquals(expectedDirY, ray.dirY, 0.0001, description + " dirY");
         Point3d startPoint = ray.getEndPoint();
         assertEquals(expectedX, startPoint.x, 0.0001, description + " getStartPoint x");
         assertEquals(expectedY, startPoint.y, 0.0001, description + " getStartPoint y");
@@ -200,8 +200,8 @@ public class Ray3dTest
         assertEquals(-expectedX, negated.x, 0.0001, description + " neg x");
         assertEquals(-expectedY, negated.y, 0.0001, description + " neg y");
         assertEquals(-expectedZ, negated.z, 0.0001, description + " neg z");
-        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), negated.phi, 0.0001, description + " neg phi");
-        assertEquals(AngleUtil.normalizeAroundZero(expectedTheta + Math.PI), negated.theta, 0.0001, description + " neg theta");
+        assertEquals(AngleUtil.normalizeAroundZero(expectedDirZ + Math.PI), negated.dirZ, 0.0001, description + " neg dirZ");
+        assertEquals(AngleUtil.normalizeAroundZero(expectedDirY + Math.PI), negated.dirY, 0.0001, description + " neg dirY");
         Ray3d flipped = ray.flip();
         assertEquals(expectedX, flipped.getX(), 0.0001, description + " getX");
         assertEquals(expectedX, flipped.x, 0.0001, description + " x");
@@ -209,11 +209,12 @@ public class Ray3dTest
         assertEquals(expectedY, flipped.y, 0.0001, description + " y");
         assertEquals(expectedZ, flipped.getZ(), 0.0001, description + " getZ");
         assertEquals(expectedZ, flipped.z, 0.0001, description + " z");
-        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), flipped.getPhi(), 0.0001, description + " getPhi");
-        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), flipped.phi, 0.0001, description + " phi");
-        assertEquals(AngleUtil.normalizeAroundZero(Math.PI - expectedTheta), flipped.getTheta(), 0.0001,
-                description + " getTheta");
-        assertEquals(AngleUtil.normalizeAroundZero(Math.PI - expectedTheta), flipped.theta, 0.0001, description + " theta");
+        assertEquals(AngleUtil.normalizeAroundZero(expectedDirZ + Math.PI), flipped.getDirZ(), 0.0001,
+                description + " getdirZ");
+        assertEquals(AngleUtil.normalizeAroundZero(expectedDirZ + Math.PI), flipped.dirZ, 0.0001, description + " dirZ");
+        assertEquals(AngleUtil.normalizeAroundZero(Math.PI - expectedDirY), flipped.getDirY(), 0.0001,
+                description + " getDirY");
+        assertEquals(AngleUtil.normalizeAroundZero(Math.PI - expectedDirY), flipped.dirY, 0.0001, description + " dirY");
         assertEquals(2, ray.size(), description + " size");
         Iterator<DirectedPoint3d> iterator = ray.getPoints();
         // First result of iterator is the finite end point (but this is not a hard promise)
@@ -247,82 +248,82 @@ public class Ray3dTest
     {
         // X direction
         // Angle of 0 is exact; bounds should be infinite in only the positive X and Z directions
-        verifyBounds(new Ray3d(1, 2, 3, 1, 0).getBounds(), 1, 2, 3, 1, 2, Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray3d(1, 2, 3, 0, 1).getBounds(), 1, 2, 3, 1, 2, Double.POSITIVE_INFINITY);
 
         // Z direction
         // Angle of 0 is exact; bounds should be infinite in only the positive X direction
         verifyBounds(new Ray3d(1, 2, 3, 0, 0).getBounds(), 1, 2, 3, 1, 2, Double.POSITIVE_INFINITY);
 
         // first quadrant in XY, pointing up (positive Z)
-        verifyBounds(new Ray3d(1, 2, 3, 0.2, 1.1).getBounds(), 1, 2, 3, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 1.1, 0.2).getBounds(), 1, 2, 3, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
 
         // Math.PI / 2 is in first quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, Math.PI / 2, 1).getBounds(), 1, 2, 3, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 1, Math.PI / 2).getBounds(), 1, 2, 3, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 
         // second quadrant in XY, pointing up
-        verifyBounds(new Ray3d(1, 2, 3, 2, 1).getBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 1, 2).getBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
 
         // Math.PI is in second quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, Math.PI, 1).getBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 1, Math.PI).getBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
 
         // third quadrant
-        verifyBounds(new Ray3d(1, 2, 3, 4, 1).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1, 2,
+        verifyBounds(new Ray3d(1, 2, 3, 1, 4).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1, 2,
                 Double.POSITIVE_INFINITY);
 
         // fourth quadrant
-        verifyBounds(new Ray3d(1, 2, 3, -1, 1).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
+        verifyBounds(new Ray3d(1, 2, 3, 1, -1).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
                 Double.POSITIVE_INFINITY);
 
         // -Math.PI / 2 is in fourth quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, -Math.PI / 2, 1).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 1, -Math.PI / 2).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY,
                 2, Double.POSITIVE_INFINITY);
 
         // first quadrant in XY, pointing down (negative Z)
-        verifyBounds(new Ray3d(1, 2, 3, 0.2, 3).getBounds(), 1, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 3, 0.2).getBounds(), 1, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY, 3);
 
         // second quadrant in XY, pointing down
-        verifyBounds(new Ray3d(1, 2, 3, 2, 3).getBounds(), Double.NEGATIVE_INFINITY, 2, Double.NEGATIVE_INFINITY, 1,
+        verifyBounds(new Ray3d(1, 2, 3, 3, 2).getBounds(), Double.NEGATIVE_INFINITY, 2, Double.NEGATIVE_INFINITY, 1,
                 Double.POSITIVE_INFINITY, 3);
 
         // Math.PI is in second quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, Math.PI, 3).getBounds(), Double.NEGATIVE_INFINITY, 2, Double.NEGATIVE_INFINITY, 1,
+        verifyBounds(new Ray3d(1, 2, 3, 3, Math.PI).getBounds(), Double.NEGATIVE_INFINITY, 2, Double.NEGATIVE_INFINITY, 1,
                 Double.POSITIVE_INFINITY, 3);
 
         // third quadrant
-        verifyBounds(new Ray3d(1, 2, 3, 4, 3).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 3, 4).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
                 Double.NEGATIVE_INFINITY, 1, 2, 3);
 
         // fourth quadrant
-        verifyBounds(new Ray3d(1, 2, 3, -1, 3).getBounds(), 1, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 3, -1).getBounds(), 1, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
                 Double.POSITIVE_INFINITY, 2, 3);
 
         // -Math.PI / 2 is in fourth quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, -Math.PI / 2, 3).getBounds(), 1, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 3, -Math.PI / 2).getBounds(), 1, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
                 Double.POSITIVE_INFINITY, 2, 3);
 
         // first quadrant in XY, pointing up (positive Z)
-        verifyBounds(new Ray3d(1, 2, 3, 0.2, -1.1).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1, 2,
+        verifyBounds(new Ray3d(1, 2, 3, -1.1, 0.2).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1, 2,
                 Double.POSITIVE_INFINITY);
 
         // Math.PI / 2 is in first quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, Math.PI / 2, -1).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1,
+        verifyBounds(new Ray3d(1, 2, 3, -1, Math.PI / 2).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1,
                 2, Double.POSITIVE_INFINITY);
 
         // second quadrant in XY, pointing up
-        verifyBounds(new Ray3d(1, 2, 3, 2, -1).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
+        verifyBounds(new Ray3d(1, 2, 3, -1, 2).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
                 Double.POSITIVE_INFINITY);
 
         // Math.PI is in second quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, Math.PI, -1).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
+        verifyBounds(new Ray3d(1, 2, 3, -1, Math.PI).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
                 Double.POSITIVE_INFINITY);
 
         // third quadrant
-        verifyBounds(new Ray3d(1, 2, 3, 4, -1).getBounds(), 1, 2, 3, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, -1, 4).getBounds(), 1, 2, 3, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
 
         // fourth quadrant
@@ -451,29 +452,29 @@ public class Ray3dTest
             // Ignore expected exception
         }
 
-        for (double phi : new double[] {0, 1, 2, 3, 4, 5, -1, -2, Math.PI})
+        for (double dirZ : new double[] {0, 1, 2, 3, 4, 5, -1, -2, Math.PI})
         {
-            for (double theta : new double[] {0, 1, 2, 3, 4, 5, -1, -2, Math.PI})
+            for (double dirY : new double[] {0, 1, 2, 3, 4, 5, -1, -2, Math.PI})
             {
-                Ray3d ray = new Ray3d(1, 2, 3, phi, theta);
+                Ray3d ray = new Ray3d(1, 2, 3, dirZ, dirY);
                 for (double position : new double[] {0, 10, 0.1, -2})
                 {
                     Ray3d result = ray.getLocationExtended(position);
                     assertEquals(Math.abs(position), ray.distance(result), 0.001,
                             "result is position distance away from base of ray");
-                    assertEquals(ray.phi, result.phi, 0.00001, "result has same phi as ray");
+                    assertEquals(ray.dirZ, result.dirZ, 0.00001, "result has same dirZ as ray");
                     assertTrue(ray.epsilonEquals(result.getLocationExtended(-position), 0.0001),
                             "Reverse position on result yields ray");
                     if (position > 0)
                     {
                         // TODO verify that it is on positive side of ray
-                        assertEquals(ray.phi, result.phi, 0.0001, "result lies in on ray (phi)");
-                        assertEquals(ray.theta, result.theta, 0.0001, "result lies on ray (theta)");
+                        assertEquals(ray.dirZ, result.dirZ, 0.0001, "result lies in on ray (phi)");
+                        assertEquals(ray.dirY, result.dirY, 0.0001, "result lies on ray (theta)");
                     }
                     if (position < 0)
                     {
-                        assertEquals(result.phi, ray.phi, 0.0001, "ray lies on result (phi)");
-                        assertEquals(result.theta, ray.theta, 0.0001, "ray lies on result (theta)");
+                        assertEquals(result.dirZ, ray.dirZ, 0.0001, "ray lies on result (phi)");
+                        assertEquals(result.dirY, ray.dirY, 0.0001, "ray lies on result (theta)");
                     }
                 }
             }
@@ -641,33 +642,30 @@ public class Ray3dTest
             {
                 for (double dZ : deltas)
                 {
-                    for (double dPhi : deltas)
+                    for (double dDirZ : deltas)
                     {
-                        for (double dTheta : deltas)
+                        for (double dDirY : deltas)
                         {
                             for (double epsilon : new double[] {0, 0.125, 0.5, 0.9, 1.0, 1.1})
                             {
-                                Ray3d other = new Ray3d(ray.x + dX, ray.y + dY, ray.z + dZ, ray.phi + dPhi, ray.theta + dTheta);
-                                // System.out.println(String.format("dX=%f, dY=%f, dZ=%f, dPhi=%f, dTheta=%f, epsilon=%f", dX,
-                                // dY,
-                                // dZ, dPhi, dTheta, epsilon));
+                                Ray3d other = new Ray3d(ray.x + dX, ray.y + dY, ray.z + dZ, ray.dirY + dDirY, ray.dirZ + dDirZ);
                                 boolean result = ray.epsilonEquals(other, epsilon, Double.POSITIVE_INFINITY);
                                 boolean expected =
                                         Math.abs(dX) <= epsilon && Math.abs(dY) <= epsilon && Math.abs(dZ) <= epsilon;
                                 assertEquals(expected, result, "result of epsilonEquals checking x, y, z");
 
                                 result = ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
-                                expected = Math.abs(dPhi) <= epsilon && Math.abs(dTheta) <= epsilon;
+                                expected = Math.abs(dDirZ) <= epsilon && Math.abs(dDirY) <= epsilon;
                                 assertEquals(expected, result, "result of epsilonEquals checking phi and theta");
                                 // Create an alternative ray
-                                other = new Ray3d(ray.x + dX, ray.y + dY, ray.z + dZ, Math.PI + ray.phi + dPhi,
-                                        Math.PI - ray.theta + dTheta);
+                                other = new Ray3d(ray.x + dX, ray.y + dY, ray.z + dZ, Math.PI - ray.dirY + dDirY,
+                                        Math.PI + ray.dirZ + dDirZ);
                                 result = ray.epsilonEquals(other, epsilon, Double.POSITIVE_INFINITY);
                                 expected = Math.abs(dX) <= epsilon && Math.abs(dY) <= epsilon && Math.abs(dZ) <= epsilon;
                                 assertEquals(expected, result, "result of epsilonEquals checking x, y, z");
 
                                 result = ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
-                                expected = Math.abs(dPhi) <= Double.POSITIVE_INFINITY && Math.abs(Math.PI + dTheta) <= epsilon;
+                                expected = Math.abs(dDirZ) <= Double.POSITIVE_INFINITY && Math.abs(Math.PI + dDirY) <= epsilon;
                                 if (result != expected)
                                 {
                                     System.out.println("Oops: compare " + ray + " to " + other + " using epsilonEquals("
