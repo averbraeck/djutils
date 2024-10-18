@@ -281,7 +281,7 @@ public class LineSegment3dTest
     public void testToExcel() throws NumberFormatException
     {
         LineSegment3d segment = new LineSegment3d(1, 2, 3, 20, 10, 5);
-        String result = Export.toExcel(segment);
+        String result = Export.toTsv(segment);
         String[] lines = result.split("\n");
         assertEquals(2, lines.length, "result is two lines");
         for (int lineNo = 0; lineNo < lines.length; lineNo++)

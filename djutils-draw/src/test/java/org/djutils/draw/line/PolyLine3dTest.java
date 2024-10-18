@@ -1611,7 +1611,7 @@ public class PolyLine3dTest
         Point3d[] points = new Point3d[] {new Point3d(123.456, 345.678, 901.234), new Point3d(234.567, 456.789, 12.345),
                 new Point3d(-12.345, -34.567, 45.678)};
         PolyLine3d pl = new PolyLine3d(points);
-        String[] out = Export.toExcel(pl).split("\\n");
+        String[] out = Export.toTsv(pl).split("\\n");
         assertEquals(points.length, out.length, "Excel output consists of one line per point");
         for (int index = 0; index < points.length; index++)
         {

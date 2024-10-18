@@ -1336,7 +1336,7 @@ public class PolyLine2dTest
         Point2d[] points =
                 new Point2d[] {new Point2d(123.456, 345.678), new Point2d(234.567, 456.789), new Point2d(-12.345, -34.567)};
         PolyLine2d pl = new PolyLine2d(points);
-        String[] out = Export.toExcel(pl).split("\\n");
+        String[] out = Export.toTsv(pl).split("\\n");
         assertEquals(points.length, out.length, "Excel output consists of one line per point");
         for (int index = 0; index < points.length; index++)
         {

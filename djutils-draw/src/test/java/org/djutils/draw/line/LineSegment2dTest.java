@@ -250,7 +250,7 @@ public class LineSegment2dTest
     public void testExports() throws NumberFormatException
     {
         LineSegment2d segment = new LineSegment2d(1, 2, 20, 10);
-        String result = Export.toExcel(segment);
+        String result = Export.toTsv(segment);
         String[] lines = result.split("\n");
         assertEquals(2, lines.length, "result is two lines");
         for (int lineNo = 0; lineNo < lines.length; lineNo++)

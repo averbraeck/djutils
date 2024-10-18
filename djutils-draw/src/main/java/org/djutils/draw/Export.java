@@ -76,21 +76,21 @@ public final class Export
     }
 
     /**
-     * Convert a LineSegment2d to something that Excel can easily plot.
+     * Convert a LineSegment2d into something that a TSV parser can handle.
      * @param lineSegment LineSegment2d; the line segment to convert
-     * @return String; the line segment in a format that Excel can easily plot
+     * @return String; the line segment in TSV format
      */
-    public static String toExcel(final LineSegment2d lineSegment)
+    public static String toTsv(final LineSegment2d lineSegment)
     {
         return lineSegment.startX + "\t" + lineSegment.startY + "\n" + lineSegment.endX + "\t" + lineSegment.endY + "\n";
     }
 
     /**
-     * Convert a PolyLine2d to something that Excel can easily plot.
+     * Convert a PolyLine2d into something that a TSV parser can handle.
      * @param polyLine PolyLine2d; the polyline to convert
-     * @return String; the polyline in a format that Excel can easily plot
+     * @return String; the polyline in TSV format
      */
-    public static String toExcel(final PolyLine2d polyLine)
+    public static String toTsv(final PolyLine2d polyLine)
     {
         StringBuffer s = new StringBuffer();
         for (int i = 0; i < polyLine.size(); i++)
@@ -101,11 +101,11 @@ public final class Export
     }
 
     /**
-     * Convert a Polygon2d to something that Excel can easily plot.
+     * Convert a Polygon2d into something that a TSV parser can handle.
      * @param polygon Polygon2d; the polygon to convert
-     * @return String; the polygon in a format that Excel can easily plot
+     * @return String; the polygon in TSV format
      */
-    public static String toExcel(final Polygon2d polygon)
+    public static String toTsv(final Polygon2d polygon)
     {
         StringBuffer s = new StringBuffer();
         for (int i = 0; i < polygon.size(); i++)
@@ -117,22 +117,22 @@ public final class Export
     }
 
     /**
-     * Convert a LineSegment3d to something that Excel can easily plot.
+     * Convert a LineSegment3d into something that a TSV parser can handle.
      * @param lineSegment LineSegment3d; the line segment to convert
-     * @return String; the line segment in a format that Excel can easily plot
+     * @return String; the line segment in TSV format
      */
-    public static String toExcel(final LineSegment3d lineSegment)
+    public static String toTsv(final LineSegment3d lineSegment)
     {
         return lineSegment.startX + "\t" + lineSegment.startY + "\t" + lineSegment.startZ + "\n" + lineSegment.endX + "\t"
                 + lineSegment.endY + "\t" + lineSegment.endZ + "\n";
     }
 
     /**
-     * Convert a PolyLine3d to something that Excel can easyly plot.
+     * Convert a PolyLine3d into something that a TSV parser can handle.
      * @param polyline PolyLine3d; the polyline to convert
-     * @return String; the polyline in a format that Excel can easily plot
+     * @return String; the polyline in TSV format
      */
-    public static String toExcel(final PolyLine3d polyline)
+    public static String toTsv(final PolyLine3d polyline)
     {
         StringBuffer s = new StringBuffer();
         for (int i = 0; i < polyline.size(); i++)
@@ -143,11 +143,11 @@ public final class Export
     }
 
     /**
-     * Convert a Polygon3d to something that Excel can easily plot.
+     * Convert a Polygon3d into something that a TSV parser can handle.
      * @param polygon Polygon3d; the polygon to convert
-     * @return String; the polygon in a format that Excel can easily plot
+     * @return String; the polygon in TSV format
      */
-    public static String toExcel(final Polygon3d polygon)
+    public static String toTsv(final Polygon3d polygon)
     {
         StringBuffer s = new StringBuffer();
         for (int i = 0; i < polygon.size(); i++)
