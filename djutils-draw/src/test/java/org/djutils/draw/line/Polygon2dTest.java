@@ -41,6 +41,8 @@ public class Polygon2dTest
 
         Polygon2d polygon = new Polygon2d(x, y);
         checkPolygon("constructed from arrays", x, y, polygon, actualSurface, true);
+        Polygon2d p2 = new Polygon2d(polygon);
+        checkPolygon("constructed from existing polygon", x, y, p2, actualSurface, true);
         Polygon2d reversed = polygon.reverse();
         assertEquals(-actualSurface, reversed.surface(), Math.ulp(-actualSurface), "surface of reversed polygon");
         assertTrue(reversed.isConvex(), "reversed polygon is also convex");

@@ -28,6 +28,7 @@ public class OrientedPoint3dTest
      * Test the OrientedPoint3d construction methods.
      */
     @Test
+    @SuppressWarnings("checkstyle:methodlength")
     public void testOrientedPoint3dConstruction()
     {
         OrientedPoint3d p = new OrientedPoint3d(10.0, -20.0, 5.2);

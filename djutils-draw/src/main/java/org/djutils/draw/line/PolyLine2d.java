@@ -363,6 +363,20 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             }
         };
     }
+    
+    /**
+     * Construct a new PolyLine2d from an existing one. This constructor is primarily intended for use in extending classes.
+     * @param polyLine PolyLine2d; the existing PolyLine2d.
+     */
+    public PolyLine2d(final PolyLine2d polyLine)
+    {
+        this.x = polyLine.x;
+        this.y = polyLine.y;
+        this.lengthIndexedLine = polyLine.lengthIndexedLine;
+        this.length = polyLine.length;
+        this.bounds = polyLine.bounds;
+        this.startHeading = polyLine.startHeading;
+    }
 
     /** {@inheritDoc} */
     @Override

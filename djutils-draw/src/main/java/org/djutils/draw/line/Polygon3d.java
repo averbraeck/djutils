@@ -221,6 +221,15 @@ public class Polygon3d extends PolyLine3d
         this(PolyLine3d.cleanPoints(filterDuplicates, pointList.iterator()));
     }
 
+    /**
+     * Construct a new Polygon3d from an existing one. This constructor is primarily intended for use in extending classes.
+     * @param polygon Polygon3d; the existing Polygon3d
+     */
+    public Polygon3d(final Polygon3d polygon)
+    {
+        super(polygon);
+    }
+
     /** {@inheritDoc} */
     @Override
     public double getLength()

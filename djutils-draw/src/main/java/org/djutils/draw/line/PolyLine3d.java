@@ -333,6 +333,22 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         };
     }
 
+    /**
+     * Construct a new PolyLine3d from an existing one. This constructor is primarily intended for use in extending classes.
+     * @param polyLine PolyLine3d; the existing PolyLine3d.
+     */
+    public PolyLine3d(final PolyLine3d polyLine)
+    {
+        this.x = polyLine.x;
+        this.y = polyLine.y;
+        this.z = polyLine.z;
+        this.lengthIndexedLine = polyLine.lengthIndexedLine;
+        this.length = polyLine.length;
+        this.bounds = polyLine.bounds;
+        this.startPhi = polyLine.startPhi;
+        this.startTheta = polyLine.startTheta;
+    }
+
     /** {@inheritDoc} */
     @Override
     public PolyLine3d instantiate(final List<Point3d> pointList) throws NullPointerException, DrawRuntimeException

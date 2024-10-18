@@ -52,9 +52,11 @@ public class Polygon3dTest
         assertTrue(polygon.toString().startsWith("Polygon3d"), "toString returns something descriptive");
         assertTrue(polygon.toString().indexOf(polygon.toString(true)) > 0, "toString can suppress the class name");
         checkPolygon("constructed from arrays", x, y, z, polygon);
+        Polygon3d p2 = new Polygon3d(polygon);
+        checkPolygon("constructed from existing polygon", x, y, z, p2);
         Polygon3d otherPolygon = new Polygon3d(polygon.get(0), polygon.get(1), polygon.get(2), polygon.get(0));
-        assertEquals(polygon, otherPolygon, "polygon constructed from all points of existing polygon with first point duplicated at end is equal "
-                        + "to original");
+        assertEquals(polygon, otherPolygon, "polygon constructed from all points of existing polygon with first point "
+                + "duplicated at end is equal to original");
         // Make a Polygon3d from Point3d where last point differs from first only in y
         new Polygon3d(polygon.get(0), polygon.get(1), polygon.get(2), new Point3d(polygon.get(0).x, 123, polygon.get(0).z));
         // Make a Polygon3d from Point3d where last point differs from first only in z

@@ -538,7 +538,7 @@ public class Transform3dTest
 
         // rotate 45 degrees in the XY-plane and then translate to (10, 20)
         // note that to do FIRST rotation and THEN translation, the steps have to be built in the OPPOSITE order
-        // since matrix multiplication operates from RIGHT to LEFT.  
+        // since matrix multiplication operates from RIGHT to LEFT.
         transform = new Transform3d();
         transform.translate(10, 20, 0);
         transform.rotZ(Math.toRadians(45.0));
@@ -609,7 +609,7 @@ public class Transform3dTest
      * @throws IllegalArgumentException if that happens uncaught; this test has failed
      */
     @Test
-    @SuppressWarnings({ "unlikely-arg-type" })
+    @SuppressWarnings({"unlikely-arg-type"})
     public void testHashCodeAndEquals()
             throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
     {
@@ -622,7 +622,7 @@ public class Transform3dTest
         for (int index = 0; index < 16; index++)
         {
             // Alter one element in the mat array at a time and expect the hash code to change and equals to return false.
-            for (double alteration : new double[] { -100, -10, -Math.PI, -0.1, 0.3, Math.E, 123 })
+            for (double alteration : new double[] {-100, -10, -Math.PI, -0.1, 0.3, Math.E, 123})
             {
                 Transform3d other = new Transform3d();
                 Field matrix = other.getClass().getDeclaredField("mat");
@@ -630,8 +630,8 @@ public class Transform3dTest
                 double[] matrixValues = (double[]) matrix.get(other);
                 matrixValues[index] = alteration;
                 assertNotEquals(reference, other, "Modified transform should not be equals");
-                assertNotEquals(reference.hashCode(), other.hashCode(), "HashCode should be different (or it does not take all elements of the internal array "
-                                + "into account");
+                assertNotEquals(reference.hashCode(), other.hashCode(), "HashCode should be different "
+                        + "(or it does not take all elements of the internal array into account");
             }
         }
         assertTrue(reference.equals(reference), "equal to itself");

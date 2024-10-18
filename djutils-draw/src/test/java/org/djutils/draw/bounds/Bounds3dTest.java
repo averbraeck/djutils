@@ -419,6 +419,7 @@ public class Bounds3dTest
      * @throws NullPointerException when that happens uncaught; this test has failed
      */
     @Test
+    @SuppressWarnings("checkstyle:methodlength")
     public void methodTest() throws NullPointerException, IllegalArgumentException, DrawRuntimeException
     {
         PolyLine3d l3d = new PolyLine3d(new Point3d(10, 10, 10), new Point3d(30, -20, 40), new Point3d(-40, 100, 0));

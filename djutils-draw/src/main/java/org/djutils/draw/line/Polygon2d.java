@@ -201,6 +201,15 @@ public class Polygon2d extends PolyLine2d
     {
         this(PolyLine2d.cleanPoints(filterDuplicates, pointList.iterator()));
     }
+    
+    /**
+     * Construct a new Polygon2d from an existing one. This constructor is primarily intended for use in extending classes.
+     * @param polygon Polygon2d; the existing Polygon2d
+     */
+    public Polygon2d(final Polygon2d polygon)
+    {
+        super(polygon);
+    }
 
     /**
      * Determine if this Polygon is convex. Returns bogus result for self-intersecting polygons. Derived from
