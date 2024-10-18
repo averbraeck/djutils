@@ -20,7 +20,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Drawable2d>
+public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 {
     /** */
     private static final long serialVersionUID = 20200829L;
@@ -260,8 +260,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Drawable2
     @Override
     public Iterator<Point2d> getPoints()
     {
-        Point2d[] array = new Point2d[] { new Point2d(this.minX, this.minY), new Point2d(this.minX, this.maxY),
-                new Point2d(this.maxX, this.minY), new Point2d(this.maxX, this.maxY) };
+        Point2d[] array = new Point2d[] {new Point2d(this.minX, this.minY), new Point2d(this.minX, this.maxY),
+                new Point2d(this.maxX, this.minY), new Point2d(this.maxX, this.maxY)};
         return Arrays.stream(array).iterator();
     }
 
@@ -295,11 +295,10 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Drawable2
 
     /** {@inheritDoc} */
     @Override
-    public boolean contains(final Drawable2d drawable) throws NullPointerException
+    public boolean contains(final Bounds2d otherBounds) throws NullPointerException
     {
-        Throw.whenNull(drawable, "drawable cannot be null");
-        Bounds2d bounds = drawable.getBounds();
-        return contains(bounds.minX, bounds.minY) && contains(bounds.maxX, bounds.maxY);
+        Throw.whenNull(otherBounds, "otherBounds cannot be null");
+        return contains(otherBounds.minX, otherBounds.minY) && contains(otherBounds.maxX, otherBounds.maxY);
     }
 
     /**
@@ -324,20 +323,19 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d, Drawable2
 
     /** {@inheritDoc} */
     @Override
-    public boolean covers(final Drawable2d drawable) throws NullPointerException
+    public boolean covers(final Bounds2d otherBounds) throws NullPointerException
     {
-        Throw.whenNull(drawable, "drawable cannot be null");
-        Bounds2d bounds = drawable.getBounds();
-        return covers(bounds.minX, bounds.minY) && covers(bounds.maxX, bounds.maxY);
+        Throw.whenNull(otherBounds, "drawable cannot be null");
+        return covers(otherBounds.minX, otherBounds.minY) && covers(otherBounds.maxX, otherBounds.maxY);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean disjoint(final Drawable2d drawable) throws NullPointerException
+    public boolean disjoint(final Bounds2d otherBounds) throws NullPointerException
     {
-        Throw.whenNull(drawable, "drawable cannot be null");
-        Bounds2d bounds = drawable.getBounds();
-        return bounds.minX > this.maxX || bounds.maxX < this.minX || bounds.minY > this.maxY || bounds.maxY < this.minY;
+        Throw.whenNull(otherBounds, "drawable cannot be null");
+        return otherBounds.minX > this.maxX || otherBounds.maxX < this.minX || otherBounds.minY > this.maxY
+                || otherBounds.maxY < this.minY;
     }
 
     /** {@inheritDoc} */

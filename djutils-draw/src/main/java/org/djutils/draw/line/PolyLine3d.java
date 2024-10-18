@@ -504,16 +504,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
             // Insert point 1 of this; it MUST be different from point 0; so we don't have to test for anything.
             list.add(1, get(1));
         }
-        try
-        {
-            return new PolyLine3d(list);
-        }
-        catch (DrawRuntimeException exception)
-        {
-            // Cannot happen
-            CategoryLogger.always().error(exception);
-            throw new Error(exception);
-        }
+        return new PolyLine3d(list);
     }
 
     /**
@@ -632,14 +623,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     {
         if (position >= 0.0 && position <= getLength())
         {
-            try
-            {
-                return getLocation(position);
-            }
-            catch (DrawRuntimeException exception)
-            {
-                // cannot happen
-            }
+            return getLocation(position);
         }
 
         // position before start point -- extrapolate using direction from first point to second point of this PolyLine2d
@@ -794,16 +778,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     @Override
     public Point3d closestPointOnPolyLine(final Point3d point)
     {
-        try
-        {
-            return getLocation(projectOrthogonalFractional(point, true) * getLength());
-        }
-        catch (DrawRuntimeException e)
-        {
-            // Cannot happen
-            e.printStackTrace();
-            return null;
-        }
+        return getLocation(projectOrthogonalFractional(point, true) * getLength());
     }
 
     /**
@@ -935,15 +910,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
             }
         }
         // else: rounding error
-        try
-        {
-            return instantiate(pointList);
-        }
-        catch (DrawRuntimeException exception)
-        {
-            CategoryLogger.always().error(exception, "interval " + start + ".." + end + " too short");
-            throw new DrawRuntimeException("interval " + start + ".." + end + "too short");
-        }
+        return instantiate(pointList);
     }
 
     /** {@inheritDoc} */
@@ -977,15 +944,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
             points.add(new Point3d(point2d, bestInReference.z));
             start = bestIndex;
         }
-        try
-        {
-            return new PolyLine3d(points);
-        }
-        catch (DrawRuntimeException dre) // Cannot happen
-        {
-            dre.printStackTrace();
-            return null;
-        }
+        return new PolyLine3d(points);
     }
 
     /** {@inheritDoc} */

@@ -59,8 +59,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
      */
-    PolyLine2d(final boolean copyNeeded, final double[] x, final double[] y)
-            throws NullPointerException, DrawRuntimeException
+    PolyLine2d(final boolean copyNeeded, final double[] x, final double[] y) throws NullPointerException, DrawRuntimeException
     {
         Throw.whenNull(x, "x array may not be null");
         Throw.whenNull(y, "y array may not be null");
@@ -363,7 +362,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             }
         };
     }
-    
+
     /**
      * Construct a new PolyLine2d from an existing one. This constructor is primarily intended for use in extending classes.
      * @param polyLine PolyLine2d; the existing PolyLine2d.
@@ -509,16 +508,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             // Insert point 1 of this; it MUST be different from point 0; so we don't have to test for anything.
             list.add(1, get(1));
         }
-        try
-        {
-            return new PolyLine2d(list);
-        }
-        catch (DrawRuntimeException exception)
-        {
-            // Cannot happen
-            CategoryLogger.always().error(exception);
-            throw new Error(exception);
-        }
+        return new PolyLine2d(list);
     }
 
     /**
@@ -612,16 +602,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     {
         if (position >= 0.0 && position <= getLength())
         {
-            try
-            {
-                return getLocation(position);
-            }
-            catch (DrawRuntimeException exception)
-            {
-                // Cannot happen
-                CategoryLogger.always().error(exception);
-                throw new Error(exception);
-            }
+            return getLocation(position);
         }
 
         // position before start point -- extrapolate using direction from first point to second point of this PolyLine2d
@@ -770,16 +751,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     @Override
     public Point2d closestPointOnPolyLine(final Point2d point)
     {
-        try
-        {
-            return getLocation(projectOrthogonalFractional(point, true) * getLength());
-        }
-        catch (DrawRuntimeException exception)
-        {
-            // Cannot happen
-            CategoryLogger.always().error(exception);
-            throw new Error(exception);
-        }
+        return getLocation(projectOrthogonalFractional(point, true) * getLength());
     }
 
     /**
@@ -911,15 +883,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             }
         }
         // else rounding error
-        try
-        {
-            return instantiate(pointList);
-        }
-        catch (DrawRuntimeException exception)
-        {
-            CategoryLogger.always().error(exception, "interval " + start + ".." + end + " too short");
-            throw new DrawRuntimeException("interval " + start + ".." + end + "too short");
-        }
+        return instantiate(pointList);
     }
 
     /** {@inheritDoc} */
@@ -1159,15 +1123,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
                 index--;
             }
         }
-        try
-        {
-            return new PolyLine2d(true, tempPoints);
-        }
-        catch (DrawRuntimeException exception)
-        {
-            exception.printStackTrace();
-        }
-        return null;
+        return new PolyLine2d(true, tempPoints);
     }
 
     /** {@inheritDoc} */

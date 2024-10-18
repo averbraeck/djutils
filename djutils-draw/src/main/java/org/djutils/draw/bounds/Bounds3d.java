@@ -19,7 +19,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Point3d, Drawable3d>
+public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Point3d>
 {
     /** */
     private static final long serialVersionUID = 2020829L;
@@ -276,10 +276,10 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     public Iterator<Point3d> getPoints()
     {
         Point3d[] array =
-                new Point3d[] { new Point3d(this.minX, this.minY, this.minZ), new Point3d(this.minX, this.minY, this.maxZ),
+                new Point3d[] {new Point3d(this.minX, this.minY, this.minZ), new Point3d(this.minX, this.minY, this.maxZ),
                         new Point3d(this.minX, this.maxY, this.minZ), new Point3d(this.minX, this.maxY, this.maxZ),
                         new Point3d(this.maxX, this.minY, this.minZ), new Point3d(this.maxX, this.minY, this.maxZ),
-                        new Point3d(this.maxX, this.maxY, this.minZ), new Point3d(this.maxX, this.maxY, this.maxZ) };
+                        new Point3d(this.maxX, this.maxY, this.minZ), new Point3d(this.maxX, this.maxY, this.maxZ)};
         return Arrays.stream(array).iterator();
     }
 
@@ -315,11 +315,11 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /** {@inheritDoc} */
     @Override
-    public boolean contains(final Drawable3d drawable) throws NullPointerException
+    public boolean contains(final Bounds3d otherBounds) throws NullPointerException
     {
-        Throw.whenNull(drawable, "drawable cannot be null");
-        Bounds3d bounds = drawable.getBounds();
-        return contains(bounds.minX, bounds.minY, bounds.minZ) && contains(bounds.maxX, bounds.maxY, bounds.maxZ);
+        Throw.whenNull(otherBounds, "drawable cannot be null");
+        return contains(otherBounds.minX, otherBounds.minY, otherBounds.minZ)
+                && contains(otherBounds.maxX, otherBounds.maxY, otherBounds.maxZ);
     }
 
     /**
@@ -347,21 +347,20 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /** {@inheritDoc} */
     @Override
-    public boolean covers(final Drawable3d drawable)
+    public boolean covers(final Bounds3d otherBounds)
     {
-        Throw.whenNull(drawable, "drawable cannot be null");
-        Bounds3d bounds = drawable.getBounds();
-        return covers(bounds.minX, bounds.minY, bounds.minZ) && covers(bounds.maxX, bounds.maxY, bounds.maxZ);
+        Throw.whenNull(otherBounds, "otherBounds cannot be null");
+        return covers(otherBounds.minX, otherBounds.minY, otherBounds.minZ)
+                && covers(otherBounds.maxX, otherBounds.maxY, otherBounds.maxZ);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean disjoint(final Drawable3d drawable)
+    public boolean disjoint(final Bounds3d otherBounds)
     {
-        Throw.whenNull(drawable, "drawable cannot be null");
-        Bounds3d bounds = drawable.getBounds();
-        return bounds.minX > this.maxX || bounds.maxX < this.minX || bounds.minY > this.maxY || bounds.maxY < this.minY
-                || bounds.minZ > this.maxZ || bounds.maxZ < this.minZ;
+        Throw.whenNull(otherBounds, "otherBounds cannot be null");
+        return otherBounds.minX > this.maxX || otherBounds.maxX < this.minX || otherBounds.minY > this.maxY
+                || otherBounds.maxY < this.minY || otherBounds.minZ > this.maxZ || otherBounds.maxZ < this.minZ;
     }
 
     /** {@inheritDoc} */
