@@ -37,11 +37,11 @@ public interface Project<P extends Point<P>>
 
     /**
      * Project a point onto this object. For PolyLines and Polygons, there may be multiple valid solutions. In that case the
-     * solution that lies on the closest segment is returned. If there is no valid solution on the closest segment, null is
+     * solution that lies on the closest segment is returned. If there is no valid solution on the closest segment, NaN is
      * returned.
      * @param point P; the point
      * @return double; the fractional position of the projection of the point (may be NaN if no sensible projection is
-     *         possible). If the result is not null; the result lies somewhere on this object.
+     *         possible). If the result is not NaN; the result lies somewhere on this object.
      * @throws NullPointerException when point is null;
      */
     double projectOrthogonalFractional(P point) throws NullPointerException;
