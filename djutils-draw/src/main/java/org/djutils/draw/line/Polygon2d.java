@@ -274,7 +274,7 @@ public class Polygon2d extends PolyLine2d
             double curPointX = getX(i);
             double curPointY = getY(i);
             // Combined 4 if statements into one; I trust that the java compiler will short-circuit this nicely
-            if (y >= Math.min(prevPointY, curPointY) && y <= Math.max(prevPointY, curPointY)
+            if (y > Math.min(prevPointY, curPointY) && y <= Math.max(prevPointY, curPointY)
                     && x <= Math.max(prevPointX, curPointX) && prevPointY != curPointY)
             {
                 double xIntersection = (y - prevPointY) * (curPointX - prevPointX) / (curPointY - prevPointY) + prevPointX;

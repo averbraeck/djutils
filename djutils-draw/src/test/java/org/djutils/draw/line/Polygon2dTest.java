@@ -563,4 +563,15 @@ public class Polygon2dTest
         }
     }
 
+    /**
+     * Test issue 15; simple polygon should contain a specified point, but the contains method says it does not.
+     */
+    @Test
+    public void testIssue15()
+    {
+        Polygon2d polygon = new Polygon2d(new Point2d(0, -1), new Point2d(1000, 1), new Point2d(1000, -3), new Point2d(0, -5));
+        Point2d point = new Point2d(1, -3);
+        assertTrue(polygon.contains(point));
+    }
+
 }
