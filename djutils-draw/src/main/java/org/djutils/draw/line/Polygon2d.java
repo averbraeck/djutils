@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds2d;
