@@ -1658,8 +1658,8 @@ public class PolyLine3dTest
     {
         PolyLine3d line = new PolyLine3d(new Point3d[] {new Point3d(1, 2, 3), new Point3d(4, 6, 8), new Point3d(8, 9, 10)});
         assertTrue(line.toString().startsWith("PolyLine3d ["), "toString returns something descriptive");
-        assertFalse(line.toString().contains("startPhi"), "toString does not contain startPhi");
-        assertFalse(line.toString().contains("startTheta"), "toString does not contain startTheta");
+        assertFalse(line.toString().contains("startDirY"), "toString does not contain startDirY");
+        assertFalse(line.toString().contains("startDirZ"), "toString does not contain startDirZ");
         assertTrue(line.toString().indexOf(line.toString(true)) > 0, "toString can suppress the class name");
 
         // Verify that hashCode. Check that the result depends on the actual coordinates.
@@ -1786,7 +1786,7 @@ public class PolyLine3dTest
             double direction = Math.toDegrees(ray.dirZ);
             if (step > 0)
             {
-                assertEquals(prevDir, direction, 2, "phi changes very little at step " + step);
+                assertEquals(prevDir, direction, 2, "dirZ changes very little at step " + step);
             }
             prevDir = Math.toDegrees(ray.dirZ);
         }
@@ -1802,7 +1802,7 @@ public class PolyLine3dTest
             double direction = Math.toDegrees(ray.dirZ);
             if (step > 0)
             {
-                assertEquals(prevDir, direction, 2, "phi changes very little at step " + step);
+                assertEquals(prevDir, direction, 2, "dirZ changes very little at step " + step);
             }
             prevDir = Math.toDegrees(ray.dirZ);
         }
@@ -1827,7 +1827,7 @@ public class PolyLine3dTest
             double direction = Math.toDegrees(ray.dirZ);
             if (step > 0)
             {
-                assertEquals(prevDir, direction, 4, "phi changes very little at step " + step);
+                assertEquals(prevDir, direction, 4, "dirZ changes very little at step " + step);
             }
             prevDir = Math.toDegrees(ray.dirZ);
         }
@@ -1846,8 +1846,8 @@ public class PolyLine3dTest
             assertEquals(ray1.x, ray2.x, 0.001, "rays are almost equal in x");
             assertEquals(ray1.y, ray2.y, 0.001, "rays are almost equal in y");
             assertEquals(ray1.z, ray2.z, 0.001, "rays are almost equal in z");
-            assertEquals(ray1.dirZ, ray2.dirZ, 0.0001, "rays are almost equal in phi");
-            assertEquals(ray1.dirY, ray2.dirY, 0.0001, "rays are almost equal in theta");
+            assertEquals(ray1.dirY, ray2.dirY, 0.0001, "rays are almost equal in dirY");
+            assertEquals(ray1.dirZ, ray2.dirZ, 0.0001, "rays are almost equal in dirZ");
         }
 
         assertEquals(bezier, bezier.offsetLine(0, 0), "offset by zero returns original");
@@ -1863,7 +1863,7 @@ public class PolyLine3dTest
     {
         try
         {
-            new PolyLine3d(Double.NaN, 2, 2.5, 3, -1);
+            new PolyLine3d(Double.NaN, 2, 2.5, -1, 3);
             fail("NaN should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -1873,7 +1873,7 @@ public class PolyLine3dTest
 
         try
         {
-            new PolyLine3d(1, Double.NaN, 2.5, 3, -1);
+            new PolyLine3d(1, Double.NaN, 2.5, -1, 3);
             fail("NaN should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -1883,7 +1883,7 @@ public class PolyLine3dTest
 
         try
         {
-            new PolyLine3d(1, 2, Double.NaN, 3, -1);
+            new PolyLine3d(1, 2, Double.NaN, -1, 3);
             fail("NaN should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -1893,7 +1893,7 @@ public class PolyLine3dTest
 
         try
         {
-            new PolyLine3d(1, 2, 2.5, Double.NaN, -1);
+            new PolyLine3d(1, 2, 2.5, -1, Double.NaN);
             fail("NaN should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -1903,7 +1903,7 @@ public class PolyLine3dTest
 
         try
         {
-            new PolyLine3d(1, 2, 2.5, 3, Double.NaN);
+            new PolyLine3d(1, 2, 2.5, Double.NaN, 3);
             fail("NaN should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -1913,7 +1913,7 @@ public class PolyLine3dTest
 
         try
         {
-            new PolyLine3d(1, 2, 2.5, Double.POSITIVE_INFINITY, -1);
+            new PolyLine3d(1, 2, 2.5, -1, Double.POSITIVE_INFINITY);
             fail("NaN should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -1923,7 +1923,7 @@ public class PolyLine3dTest
 
         try
         {
-            new PolyLine3d(1, 2, 2.5, 3, Double.POSITIVE_INFINITY);
+            new PolyLine3d(1, 2, 2.5, Double.POSITIVE_INFINITY, 3);
             fail("NaN should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -1933,7 +1933,7 @@ public class PolyLine3dTest
 
         try
         {
-            new PolyLine3d(1, 2, 2.5, Double.NEGATIVE_INFINITY, -1);
+            new PolyLine3d(1, 2, 2.5, -1, Double.NEGATIVE_INFINITY);
             fail("NaN should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -1943,7 +1943,7 @@ public class PolyLine3dTest
 
         try
         {
-            new PolyLine3d(1, 2, 2.5, 3, Double.NEGATIVE_INFINITY);
+            new PolyLine3d(1, 2, 2.5, Double.NEGATIVE_INFINITY, 3);
             fail("NaN should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -1951,7 +1951,7 @@ public class PolyLine3dTest
             // Ignore expected exception
         }
 
-        PolyLine3d l = new PolyLine3d(1, 2, 2.5, -1, 3);
+        PolyLine3d l = new PolyLine3d(1, 2, 2.5, 3, -1);
         assertEquals(0, l.getLength(), 0, "length is 0");
         assertEquals(1, l.size(), "size is 1");
         assertEquals(1, l.getX(0), 0, "getX(0) is 1");
@@ -1983,7 +1983,7 @@ public class PolyLine3dTest
 
         try
         {
-            new PolyLine3d(new Point3d(1, 2, 2.5), Double.NaN, -1);
+            new PolyLine3d(new Point3d(1, 2, 2.5), -1, Double.NaN);
             fail("NaN should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -1993,7 +1993,7 @@ public class PolyLine3dTest
 
         try
         {
-            new PolyLine3d(new Point3d(1, 2, 2.5), 3, Double.NaN);
+            new PolyLine3d(new Point3d(1, 2, 2.5), Double.NaN, 3);
             fail("NaN should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -2077,7 +2077,7 @@ public class PolyLine3dTest
             }
         }
 
-        l = new PolyLine3d(new Point3d(1, 2, 2.5), -1, 3);
+        l = new PolyLine3d(new Point3d(1, 2, 2.5), 3, -1);
         assertEquals(0, l.getLength(), 0, "length is 0");
         assertEquals(1, l.size(), "size is 1");
         assertEquals(1, l.getX(0), 0, "getX(0) is 1");
@@ -2104,12 +2104,12 @@ public class PolyLine3dTest
         assertEquals(2.5, r.getZ(), 0, "z at 0 is 2.5");
 
         PolyLine3d notEqual = new PolyLine3d(1, 2, 2.5, 4, -1);
-        assertNotEquals(l, notEqual, "Check that the equals method verifies the startPhi");
+        assertNotEquals(l, notEqual, "Check that the equals method verifies the startDirY");
         notEqual = new PolyLine3d(1, 2, 2.5, 3, -2);
-        assertNotEquals(l, notEqual, "Check that the equals method verifies the startTheta");
+        assertNotEquals(l, notEqual, "Check that the equals method verifies the startDirZ");
 
-        assertTrue(l.toString().contains("startPhi"), "toString contains startPhi");
-        assertTrue(l.toString().contains("startTheta"), "toString contains startTheta");
+        assertTrue(l.toString().contains("startDirY"), "toString contains startDirY");
+        assertTrue(l.toString().contains("startDirZ"), "toString contains startDirZ");
     }
 
     /**

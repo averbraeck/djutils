@@ -61,8 +61,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     PolyLine2d(final boolean copyNeeded, final double[] x, final double[] y) throws NullPointerException, DrawRuntimeException
     {
-        Throw.whenNull(x, "x array may not be null");
-        Throw.whenNull(y, "y array may not be null");
+        Throw.whenNull(x, "x");
+        Throw.whenNull(y, "y");
         Throw.when(x.length != y.length, DrawRuntimeException.class, "x and y arrays must have same length");
         Throw.when(x.length < 2, DrawRuntimeException.class, "Need at least two points");
         this.x = copyNeeded ? Arrays.copyOf(x, x.length) : x;
@@ -121,7 +121,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     public PolyLine2d(final Point2d p, final double heading) throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(p, "p may not be null").x, p.y, heading);
+        this(Throw.whenNull(p, "p").x, p.y, heading);
     }
 
     /**
@@ -132,7 +132,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     public PolyLine2d(final Ray2d r) throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(r, "r may not be NaN").x, r.y, r.dirZ);
+        this(Throw.whenNull(r, "r").x, r.y, r.dirZ);
     }
 
     /**
@@ -158,7 +158,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     public PolyLine2d(final Point2d[] points) throws NullPointerException, DrawRuntimeException
     {
-        this(false, makeArray(Throw.whenNull(points, "points may not be null"), p -> p.x), makeArray(points, p -> p.y));
+        this(false, makeArray(Throw.whenNull(points, "points"), p -> p.x), makeArray(points, p -> p.y));
     }
 
     /**
@@ -189,8 +189,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     public PolyLine2d(final Point2d point1, final Point2d point2, final Point2d... otherPoints)
             throws NullPointerException, DrawRuntimeException
     {
-        this(spliceArray(Throw.whenNull(point1, "point1 may not be null"), Throw.whenNull(point2, "point2 may not be null"),
-                otherPoints));
+        this(spliceArray(Throw.whenNull(point1, "point1"), Throw.whenNull(point2, "point2"), otherPoints));
     }
 
     /**
@@ -224,7 +223,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     public PolyLine2d(final Iterator<Point2d> iterator) throws NullPointerException, DrawRuntimeException
     {
-        this(iteratorToList(Throw.whenNull(iterator, "iterator cannot be null")));
+        this(iteratorToList(Throw.whenNull(iterator, "iterator")));
     }
 
     /**
@@ -236,7 +235,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     public PolyLine2d(final List<Point2d> pointList) throws DrawRuntimeException, NullPointerException
     {
-        this(pointList.toArray(new Point2d[Throw.whenNull(pointList, "pointList may not be null").size()]));
+        this(pointList.toArray(new Point2d[Throw.whenNull(pointList, "pointList").size()]));
     }
 
     /**
@@ -248,7 +247,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     public PolyLine2d(final Path2D path) throws DrawRuntimeException, NullPointerException
     {
-        this(path2DtoArray(Throw.whenNull(path, "path may not be null")));
+        this(path2DtoArray(Throw.whenNull(path, "path")));
     }
 
     /**
@@ -327,7 +326,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     static Iterator<Point2d> cleanPoints(final boolean filter, final Iterator<Point2d> iterator)
     {
-        Throw.whenNull(iterator, "Iterator may not be null");
+        Throw.whenNull(iterator, "Iterator");
         Throw.when(!iterator.hasNext(), DrawRuntimeException.class, "Iterator has no points to return");
         if (!filter)
         {
@@ -681,7 +680,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     private double projectOrthogonalFractional(final Point2d point, final Boolean limitHandling)
     {
-        Throw.whenNull(point, "point may not be null");
+        Throw.whenNull(point, "point");
         double result = Double.NaN;
         if (this.lengthIndexedLine.length == 1)
         {
@@ -764,7 +763,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     private Point2d projectOrthogonal(final Point2d point, final Boolean limitHandling)
     {
-        Throw.whenNull(point, "point may not be null");
+        Throw.whenNull(point, "point");
         if (this.lengthIndexedLine.length == 1) // Handle degenerate case
         {
             // limitHandling == true is not handled because it cannot happen
@@ -1155,8 +1154,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     @Override
     public PolyLine2d transitionLine(final PolyLine2d endLine, final TransitionFunction transition) throws DrawRuntimeException
     {
-        Throw.whenNull(endLine, "endLine may not be null");
-        Throw.whenNull(transition, "transition may not be null");
+        Throw.whenNull(endLine, "endLine");
+        Throw.whenNull(transition, "transition");
         List<Point2d> pointList = new ArrayList<>();
         int indexInStart = 0;
         int indexInEnd = 0;
@@ -1200,7 +1199,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     public double projectRay(final Ray2d ray) throws NullPointerException
     {
-        Throw.whenNull(ray, "ray may not be null");
+        Throw.whenNull(ray, "ray");
         double bestDistance = Double.POSITIVE_INFINITY;
         double positionAtBestDistance = Double.NaN;
         // Point2d prevPoint = null;

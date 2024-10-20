@@ -57,7 +57,7 @@ public class Point2d implements Drawable2d, Point<Point2d>
      */
     public Point2d(final double[] xy) throws NullPointerException, IllegalArgumentException
     {
-        this(checkLengthIsTwo(Throw.whenNull(xy, "xy-point cannot be null"))[0], xy[1]);
+        this(checkLengthIsTwo(Throw.whenNull(xy, "xy"))[0], xy[1]);
     }
 
     /**
@@ -68,7 +68,7 @@ public class Point2d implements Drawable2d, Point<Point2d>
      */
     public Point2d(final Point2D point) throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(point, "point cannot be null");
+        Throw.whenNull(point, "point");
         Throw.when(Double.isNaN(point.getX()) || Double.isNaN(point.getY()), IllegalArgumentException.class,
                 "Coordinate must be a number (not NaN)");
         this.x = point.getX();
@@ -105,7 +105,7 @@ public class Point2d implements Drawable2d, Point<Point2d>
     @Override
     public double distance(final Point2d otherPoint)
     {
-        Throw.whenNull(otherPoint, "point cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint");
         return Math.hypot(otherPoint.x - this.x, otherPoint.y - this.y);
     }
 
@@ -113,7 +113,7 @@ public class Point2d implements Drawable2d, Point<Point2d>
     @Override
     public double distanceSquared(final Point2d otherPoint) throws NullPointerException
     {
-        Throw.whenNull(otherPoint, "point cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint");
         double dx = this.x - otherPoint.x;
         double dy = this.y - otherPoint.y;
         return dx * dx + dy * dy;
@@ -197,7 +197,7 @@ public class Point2d implements Drawable2d, Point<Point2d>
     @Override
     public Point2d interpolate(final Point2d otherPoint, final double fraction)
     {
-        Throw.whenNull(otherPoint, "otherPoint cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
         return new Point2d((1.0 - fraction) * this.x + fraction * otherPoint.x,
                 (1.0 - fraction) * this.y + fraction * otherPoint.y);
@@ -207,7 +207,7 @@ public class Point2d implements Drawable2d, Point<Point2d>
     @Override
     public boolean epsilonEquals(final Point2d otherPoint, final double epsilon)
     {
-        Throw.whenNull(otherPoint, "otherPoint cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint");
         if (Math.abs(this.x - otherPoint.x) > epsilon)
         {
             return false;
@@ -389,8 +389,8 @@ public class Point2d implements Drawable2d, Point<Point2d>
     @Override
     public Point2d closestPointOnSegment(final Point2d segmentPoint1, final Point2d segmentPoint2)
     {
-        Throw.whenNull(segmentPoint1, "linePoint1 may not be null");
-        Throw.whenNull(segmentPoint2, "linePoint2 may not be null");
+        Throw.whenNull(segmentPoint1, "segmentPoint1");
+        Throw.whenNull(segmentPoint2, "segmentPoint2");
         return closestPointOnSegment(segmentPoint1.x, segmentPoint1.y, segmentPoint2.x, segmentPoint2.y);
     }
 
@@ -500,8 +500,8 @@ public class Point2d implements Drawable2d, Point<Point2d>
     public Point2d closestPointOnLine(final Point2d linePoint1, final Point2d linePoint2)
             throws NullPointerException, DrawRuntimeException
     {
-        Throw.whenNull(linePoint1, "linePoint1 may not be null");
-        Throw.whenNull(linePoint2, "linePoint2 may not be null");
+        Throw.whenNull(linePoint1, "linePoint1");
+        Throw.whenNull(linePoint2, "linePoint2");
         return closestPointOnLine(linePoint1.x, linePoint1.y, linePoint2.x, linePoint2.y);
     }
 
@@ -538,8 +538,8 @@ public class Point2d implements Drawable2d, Point<Point2d>
     public static final List<Point2d> circleIntersections(final Point2d center1, final double radius1, final Point2d center2,
             final double radius2) throws NullPointerException, DrawRuntimeException
     {
-        Throw.whenNull(center1, "center1 may not be null");
-        Throw.whenNull(center2, "center2 may not be null");
+        Throw.whenNull(center1, "center1");
+        Throw.whenNull(center2, "center2");
         Throw.when(radius1 < 0 || radius2 < 0, DrawRuntimeException.class, "radius may not be less than 0");
         Throw.when(center1.equals(center2) && radius1 == radius2, DrawRuntimeException.class, "Circles must be different");
         List<Point2d> result = new ArrayList<>();

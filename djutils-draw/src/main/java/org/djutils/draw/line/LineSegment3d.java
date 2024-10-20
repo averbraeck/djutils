@@ -85,7 +85,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
     public LineSegment3d(final Point3d start, final double endX, final double endY, final double endZ)
             throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(start, "start point may not be null").x, start.y, start.z, endX, endY, endZ);
+        this(Throw.whenNull(start, "start").x, start.y, start.z, endX, endY, endZ);
     }
 
     /**
@@ -100,7 +100,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
     public LineSegment3d(final double startX, final double startY, final double startZ, final Point3d end)
             throws NullPointerException, DrawRuntimeException
     {
-        this(startX, startY, startZ, Throw.whenNull(end, "end point may not be null").x, end.y, end.z);
+        this(startX, startY, startZ, Throw.whenNull(end, "end").x, end.y, end.z);
     }
 
     /**
@@ -145,7 +145,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
     @Override
     public Iterator<? extends Point3d> getPoints()
     {
-        return Arrays.stream(new Point3d[] { getStartPoint(), getEndPoint() }).iterator();
+        return Arrays.stream(new Point3d[] {getStartPoint(), getEndPoint()}).iterator();
     }
 
     /** {@inheritDoc} */
@@ -189,7 +189,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
     @Override
     public Point3d closestPointOnSegment(final Point3d point)
     {
-        Throw.whenNull(point, "point may not be null");
+        Throw.whenNull(point, "point");
         return point.closestPointOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ, true, true);
     }
 
@@ -204,7 +204,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
     @Override
     public Point3d projectOrthogonal(final Point3d point) throws NullPointerException
     {
-        Throw.whenNull(point, "point may not be null");
+        Throw.whenNull(point, "point");
         return point.closestPointOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ, null, null);
     }
 
@@ -212,7 +212,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
     @Override
     public Point3d projectOrthogonalExtended(final Point3d point) throws NullPointerException
     {
-        Throw.whenNull(point, "point may not be null");
+        Throw.whenNull(point, "point");
         return point.closestPointOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ);
     }
 
@@ -220,7 +220,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
     @Override
     public double projectOrthogonalFractional(final Point3d point) throws NullPointerException
     {
-        Throw.whenNull(point, "point may not be null");
+        Throw.whenNull(point, "point");
         return point.fractionalPositionOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ, null,
                 null);
     }
@@ -229,7 +229,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
     @Override
     public double projectOrthogonalFractionalExtended(final Point3d point) throws NullPointerException
     {
-        Throw.whenNull(point, "point may not be null");
+        Throw.whenNull(point, "point");
         return point.fractionalPositionOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ, false,
                 false);
     }

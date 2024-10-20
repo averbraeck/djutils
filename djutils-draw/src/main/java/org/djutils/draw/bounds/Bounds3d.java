@@ -87,7 +87,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      */
     public Bounds3d(final Iterator<? extends Point3d> points)
     {
-        Throw.whenNull(points, "points may not be null");
+        Throw.whenNull(points, "points");
         Throw.when(!points.hasNext(), IllegalArgumentException.class, "need at least one point");
         Point3d point = points.next();
         double tempMinX = point.x;
@@ -122,7 +122,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      */
     public Bounds3d(final Point3d[] points) throws NullPointerException, IllegalArgumentException
     {
-        this(Arrays.stream(Throw.whenNull(points, "points may not be null")).iterator());
+        this(Arrays.stream(Throw.whenNull(points, "points")).iterator());
     }
 
     /**
@@ -132,7 +132,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      */
     public Bounds3d(final Drawable3d drawable3d) throws NullPointerException
     {
-        this(Throw.whenNull(drawable3d, "drawable3d may not be null").getPoints());
+        this(Throw.whenNull(drawable3d, "drawable3d").getPoints());
     }
 
     /**
@@ -193,7 +193,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      */
     static Drawable3d[] ensureHasOne(final Drawable3d[] drawable3dArray) throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(drawable3dArray, "Array may not be null");
+        Throw.whenNull(drawable3dArray, "drawable3dArray");
         Throw.when(drawable3dArray.length == 0, IllegalArgumentException.class, "Array must contain at least one value");
         return drawable3dArray;
     }
@@ -309,7 +309,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     @Override
     public boolean contains(final Point3d point)
     {
-        Throw.whenNull(point, "point cannot be null");
+        Throw.whenNull(point, "point");
         return contains(point.x, point.y, point.z);
     }
 
@@ -317,7 +317,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     @Override
     public boolean contains(final Bounds3d otherBounds) throws NullPointerException
     {
-        Throw.whenNull(otherBounds, "drawable cannot be null");
+        Throw.whenNull(otherBounds, "otherBounds");
         return contains(otherBounds.minX, otherBounds.minY, otherBounds.minZ)
                 && contains(otherBounds.maxX, otherBounds.maxY, otherBounds.maxZ);
     }
@@ -341,7 +341,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     @Override
     public boolean covers(final Point3d point)
     {
-        Throw.whenNull(point, "point cannot be null");
+        Throw.whenNull(point, "point");
         return covers(point.x, point.y, point.z);
     }
 
@@ -349,7 +349,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     @Override
     public boolean covers(final Bounds3d otherBounds)
     {
-        Throw.whenNull(otherBounds, "otherBounds cannot be null");
+        Throw.whenNull(otherBounds, "otherBounds");
         return covers(otherBounds.minX, otherBounds.minY, otherBounds.minZ)
                 && covers(otherBounds.maxX, otherBounds.maxY, otherBounds.maxZ);
     }
@@ -358,7 +358,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     @Override
     public boolean disjoint(final Bounds3d otherBounds)
     {
-        Throw.whenNull(otherBounds, "otherBounds cannot be null");
+        Throw.whenNull(otherBounds, "otherBounds");
         return otherBounds.minX > this.maxX || otherBounds.maxX < this.minX || otherBounds.minY > this.maxY
                 || otherBounds.maxY < this.minY || otherBounds.minZ > this.maxZ || otherBounds.maxZ < this.minZ;
     }
@@ -374,7 +374,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     @Override
     public Bounds3d intersection(final Bounds3d otherBounds3d)
     {
-        Throw.whenNull(otherBounds3d, "otherBounds3d cannot be null");
+        Throw.whenNull(otherBounds3d, "otherBounds3d");
         if (disjoint(otherBounds3d))
         {
             return null;

@@ -31,41 +31,42 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
      * @param x double; the x coordinate of the finite end point of the ray
      * @param y double; the y coordinate of the finite end point of the ray
      * @param z double; the z coordinate of the finite end point of the ray
-     * @param phi double; the angle from the positive X axis direction in radians.
-     * @param theta double; the angle from the positive Z axis direction in radians
-     * @throws DrawRuntimeException when phi is NaN
+     * @param dirY double; the angle from the positive Z axis direction in radians (the complement of the slope)
+     * @param dirZ double; the angle from the positive X axis direction in radians
+     * @throws IllegalArgumentException when <cite>dirY</cite>, or <cite>dirZ</cite> is NaN (should be impossible)
      */
-    public Ray3d(final double x, final double y, final double z, final double phi, final double theta)
-            throws DrawRuntimeException
+    public Ray3d(final double x, final double y, final double z, final double dirY, final double dirZ)
+            throws IllegalArgumentException
     {
-        super(x, y, z, phi, theta);
+        super(x, y, z, dirY, dirZ);
     }
 
     /**
-     * Create a new Ray3d from x, y, and z coordinates packed in a double array of three elements and direction phi,theta.
+     * Create a new Ray3d from x, y, and z coordinates packed in a double array of three elements and direction dirY,dirZ.
      * @param xyz double[]; the <cite>x</cite>, <cite>y</cite> and <cite>z</cite> coordinates in that order
-     * @param phi double; the counter-clockwise rotation around the point in radians
-     * @param theta double; the complement of the slope
+     * @param dirY double; the angle from the positive Z axis direction in radians (the complement of the slope)
+     * @param dirZ double; the angle from the positive X axis direction in radians
      * @throws NullPointerException when <cite>xyx</cite> is null
-     * @throws IllegalArgumentException when the length of the <cite>xyz</cite> array is not 3, or contains a NaN value, or phi,
-     *             or theta is NaN
+     * @throws IllegalArgumentException when the length of the <cite>xyz</cite> array is not 3, or contains a NaN value, or
+     *             <cite>dirY</cite>, or <cite>dirZ</cite> is NaN
      */
-    public Ray3d(final double[] xyz, final double phi, final double theta) throws NullPointerException, IllegalArgumentException
+    public Ray3d(final double[] xyz, final double dirY, final double dirZ) throws NullPointerException, IllegalArgumentException
     {
-        super(xyz, phi, theta);
+        super(xyz, dirY, dirZ);
     }
 
     /**
      * Construct a new Ray3d.
      * @param point Point3d; the finite end point of the ray
-     * @param phi double; the angle from the positive X axis direction in radians.
-     * @param theta double; the angle from the positive Z axis direction in radians
+     * @param dirY double; the angle from the positive Z axis direction in radians (the complement of the slope)
+     * @param dirZ double; the angle from the positive X axis direction in radians
      * @throws NullPointerException when point is null
-     * @throws DrawRuntimeException when phi is NaN, or theta is NaN
+     * @throws IllegalArgumentException when <cite>dirY</cite>, or <cite>dirZ</cite> is NaN
      */
-    public Ray3d(final Point3d point, final double phi, final double theta) throws NullPointerException, DrawRuntimeException
+    public Ray3d(final Point3d point, final double dirY, final double dirZ)
+            throws NullPointerException, IllegalArgumentException
     {
-        super(point, phi, theta);
+        super(point, dirY, dirZ);
     }
 
     /**
@@ -106,11 +107,11 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param z double; the z coordinate
-     * @param orientation double[]; the two direction values (theta and phi) in a double array containing theta and phi in that
-     *            order. Theta is the angle from the positive x-axis to the projection of the direction in the x-y-plane. Phi is
-     *            the rotation from the positive z-axis to the direction.
-     * @throws NullPointerException when <code>orientation</code> is null, or contains a NaN value
-     * @throws IllegalArgumentException when the length of the <code>direction</code> array is not 2
+     * @param orientation double[]; the two direction values in a double array containing dirY and dirZ in that order. DirY is
+     *            the rotation from the positive z-axis to the direction. DirZ is the angle from the positive x-axis to the
+     *            projection of the direction in the x-y-plane.
+     * @throws NullPointerException when <code>orientation</code> is null
+     * @throws IllegalArgumentException when the length of the <code>direction</code> array is not 2, or contains a NaN value
      */
     public Ray3d(final double x, final double y, final double z, final double[] orientation)
             throws NullPointerException, IllegalArgumentException
@@ -122,7 +123,7 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
      * Create a new Rayt3d from x, y, and z coordinates packed in a double array of three elements and a direction specified
      * using a double array of two elements.
      * @param xyz double[]; the <cite>x</cite>, <cite>y</cite> and <cite>z</cite> coordinates in that order
-     * @param orientation double[]; the two orientation angles <cite>phi</cite> and <cite>theta</cite> in that order
+     * @param orientation double[]; the two orientation angles <cite>dirY</cite> and <cite>dirZ</cite> in that order
      * @throws NullPointerException when <cite>xyx</cite> or <cite>orientation</cite> is null
      * @throws IllegalArgumentException when the length of the <cite>xyx</cite> array is not 3 or the length of the
      *             <cite>orientation</cite> array is not 2
@@ -191,14 +192,14 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
     @Override
     public Iterator<DirectedPoint3d> getPoints()
     {
-        double sinPhi = Math.sin(this.dirZ);
-        double cosPhi = Math.cos(this.dirZ);
-        double sinTheta = Math.sin(this.dirY);
-        double cosTheta = Math.cos(this.dirY);
+        double sinDirZ = Math.sin(this.dirZ);
+        double cosDirZ = Math.cos(this.dirZ);
+        double sinDirY = Math.sin(this.dirY);
+        double cosDirY = Math.cos(this.dirY);
         DirectedPoint3d[] array = new DirectedPoint3d[] {this,
-                new DirectedPoint3d(cosPhi * sinTheta == 0 ? this.x : cosPhi * sinTheta * Double.POSITIVE_INFINITY,
-                        cosPhi * sinPhi == 0 ? this.y : cosPhi * sinPhi * Double.POSITIVE_INFINITY,
-                        cosTheta == 0 ? this.z : cosTheta * Double.POSITIVE_INFINITY, this.dirZ, this.dirY)};
+                new DirectedPoint3d(cosDirZ * sinDirY == 0 ? this.x : cosDirZ * sinDirY * Double.POSITIVE_INFINITY,
+                        cosDirZ * sinDirZ == 0 ? this.y : cosDirZ * sinDirZ * Double.POSITIVE_INFINITY,
+                        cosDirY == 0 ? this.z : cosDirY * Double.POSITIVE_INFINITY, this.dirZ, this.dirY)};
         return Arrays.stream(array).iterator();
     }
 
@@ -206,15 +207,15 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
     @Override
     public Bounds3d getBounds()
     {
-        double sinPhi = Math.sin(this.dirZ);
-        double cosPhi = Math.cos(this.dirZ);
-        double sinTheta = Math.sin(this.dirY);
-        double cosTheta = Math.cos(this.dirY);
-        return new Bounds3d(cosPhi * sinTheta >= 0 ? this.x : Double.NEGATIVE_INFINITY,
-                cosPhi * sinTheta <= 0 ? this.x : Double.POSITIVE_INFINITY,
-                sinPhi * sinTheta >= 0 ? this.y : Double.NEGATIVE_INFINITY,
-                sinPhi * sinTheta <= 0 ? this.y : Double.POSITIVE_INFINITY, cosTheta >= 0 ? this.z : Double.NEGATIVE_INFINITY,
-                cosTheta <= 0 ? this.z : Double.POSITIVE_INFINITY);
+        double sinDirZ = Math.sin(this.dirZ);
+        double cosDirZ = Math.cos(this.dirZ);
+        double sinDirY = Math.sin(this.dirY);
+        double cosDirY = Math.cos(this.dirY);
+        return new Bounds3d(cosDirZ * sinDirY >= 0 ? this.x : Double.NEGATIVE_INFINITY,
+                cosDirZ * sinDirY <= 0 ? this.x : Double.POSITIVE_INFINITY,
+                sinDirZ * sinDirY >= 0 ? this.y : Double.NEGATIVE_INFINITY,
+                sinDirZ * sinDirY <= 0 ? this.y : Double.POSITIVE_INFINITY, cosDirY >= 0 ? this.z : Double.NEGATIVE_INFINITY,
+                cosDirY <= 0 ? this.z : Double.POSITIVE_INFINITY);
     }
 
     /** {@inheritDoc} */
@@ -239,9 +240,9 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
     {
         Throw.when(Double.isNaN(position) || Double.isInfinite(position), DrawRuntimeException.class,
                 "position must be finite");
-        double sinTheta = Math.sin(this.dirY);
-        double dX = Math.cos(this.dirZ) * sinTheta;
-        double dY = Math.sin(this.dirZ) * sinTheta;
+        double sinDirY = Math.sin(this.dirY);
+        double dX = Math.cos(this.dirZ) * sinDirY;
+        double dY = Math.sin(this.dirZ) * sinDirY;
         double dZ = Math.cos(this.dirY);
         return new Ray3d(this.x + dX * position, this.y + dY * position, this.z + dZ * position, this.dirY, this.dirZ);
     }
@@ -250,50 +251,50 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
     @Override
     public Point3d closestPointOnRay(final Point3d point) throws NullPointerException
     {
-        Throw.whenNull(point, "point may not be null");
-        double sinTheta = Math.sin(this.dirY);
-        return point.closestPointOnLine(this.x, this.y, this.z, this.x + Math.cos(this.dirZ) * sinTheta,
-                this.y + Math.sin(this.dirZ) * sinTheta, this.z + Math.cos(this.dirY), true, false);
+        Throw.whenNull(point, "point");
+        double sinDirY = Math.sin(this.dirY);
+        return point.closestPointOnLine(this.x, this.y, this.z, this.x + Math.cos(this.dirZ) * sinDirY,
+                this.y + Math.sin(this.dirZ) * sinDirY, this.z + Math.cos(this.dirY), true, false);
     }
 
     /** {@inheritDoc} */
     @Override
     public Point3d projectOrthogonal(final Point3d point) throws NullPointerException
     {
-        Throw.whenNull(point, "point may not be null");
-        double sinTheta = Math.sin(this.dirY);
-        return point.closestPointOnLine(this.x, this.y, this.z, this.x + Math.cos(this.dirZ) * sinTheta,
-                this.y + Math.sin(this.dirZ) * sinTheta, this.z + Math.cos(this.dirY), null, false);
+        Throw.whenNull(point, "point");
+        double sinDirY = Math.sin(this.dirY);
+        return point.closestPointOnLine(this.x, this.y, this.z, this.x + Math.cos(this.dirZ) * sinDirY,
+                this.y + Math.sin(this.dirZ) * sinDirY, this.z + Math.cos(this.dirY), null, false);
     }
 
     /** {@inheritDoc} */
     @Override
     public Point3d projectOrthogonalExtended(final Point3d point)
     {
-        Throw.whenNull(point, "point may not be null");
-        double sinTheta = Math.sin(this.dirY);
-        return point.closestPointOnLine(getX(), getY(), getZ(), getX() + Math.cos(this.dirZ) * sinTheta,
-                getY() + Math.sin(this.dirZ) * sinTheta, getZ() + Math.cos(this.dirY), false, false);
+        Throw.whenNull(point, "point");
+        double sinDirY = Math.sin(this.dirY);
+        return point.closestPointOnLine(getX(), getY(), getZ(), getX() + Math.cos(this.dirZ) * sinDirY,
+                getY() + Math.sin(this.dirZ) * sinDirY, getZ() + Math.cos(this.dirY), false, false);
     }
 
     /** {@inheritDoc} */
     @Override
     public double projectOrthogonalFractional(final Point3d point) throws NullPointerException
     {
-        Throw.whenNull(point, "point may not be null");
-        double sinTheta = Math.sin(this.dirY);
-        return point.fractionalPositionOnLine(this.x, this.y, this.z, this.x + Math.cos(this.dirZ) * sinTheta,
-                this.y + Math.sin(this.dirZ) * sinTheta, this.z + Math.cos(this.dirY), null, false);
+        Throw.whenNull(point, "point");
+        double sinDirY = Math.sin(this.dirY);
+        return point.fractionalPositionOnLine(this.x, this.y, this.z, this.x + Math.cos(this.dirZ) * sinDirY,
+                this.y + Math.sin(this.dirZ) * sinDirY, this.z + Math.cos(this.dirY), null, false);
     }
 
     /** {@inheritDoc} */
     @Override
     public double projectOrthogonalFractionalExtended(final Point3d point) throws NullPointerException
     {
-        Throw.whenNull(point, "point may not be null");
-        double sinTheta = Math.sin(this.dirY);
-        return point.fractionalPositionOnLine(getX(), getY(), getZ(), getX() + Math.cos(this.dirZ) * sinTheta,
-                getY() + Math.sin(this.dirZ) * sinTheta, getZ() + Math.cos(this.dirY), false, false);
+        Throw.whenNull(point, "point");
+        double sinDirY = Math.sin(this.dirY);
+        return point.fractionalPositionOnLine(getX(), getY(), getZ(), getX() + Math.cos(this.dirZ) * sinDirY,
+                getY() + Math.sin(this.dirZ) * sinDirY, getZ() + Math.cos(this.dirY), false, false);
     }
 
     /** {@inheritDoc} */
@@ -307,9 +308,9 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
-        String format = String.format("%1$s[x=%2$s, y=%2$s, z=%2$s, phi=%2$s, theta=%2$s]",
+        String format = String.format("%1$s[x=%2$s, y=%2$s, z=%2$s, dirY=%2$s, dirZ=%2$s]",
                 doNotIncludeClassName ? "" : "Ray3d ", doubleFormat);
-        return String.format(Locale.US, format, this.x, this.y, this.z, this.dirZ, this.dirY);
+        return String.format(Locale.US, format, this.x, this.y, this.z, this.dirY, this.dirZ);
     }
 
     /** {@inheritDoc} */

@@ -46,8 +46,8 @@ public class DirectedPoint3dTest
         assertEquals(p.x, dp.x, 0, "x matches");
         assertEquals(p.y, dp.y, 0, "y matches");
         assertEquals(p.z, dp.z, 0, "z matches");
-        assertEquals(p.dirZ, dp.dirZ, 0, "phi matches");
-        assertEquals(p.dirY, dp.dirY, 0, "theta matches");
+        assertEquals(p.dirZ, dp.dirZ, 0, "dirZ matches");
+        assertEquals(p.dirY, dp.dirY, 0, "dirY matches");
         assertFalse(it.hasNext(), "iterator is now exhausted");
         DirectedPoint3d neg = dp.neg();
         assertEquals(-1, neg.x, 0, "x is negated");

@@ -71,7 +71,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
     public LineSegment2d(final Point2d start, final double endX, final double endY)
             throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(start, "start point may not be null").x, start.y, endX, endY);
+        this(Throw.whenNull(start, "start").x, start.y, endX, endY);
     }
 
     /**
@@ -85,7 +85,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
     public LineSegment2d(final double startX, final double startY, final Point2d end)
             throws NullPointerException, DrawRuntimeException
     {
-        this(startX, startY, Throw.whenNull(end, "end point may not be null").x, end.y);
+        this(startX, startY, Throw.whenNull(end, "end").x, end.y);
     }
 
     /**
@@ -97,8 +97,8 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
      */
     public LineSegment2d(final Point2d start, final Point2d end) throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(start, "start point may not be null").x, start.y,
-                Throw.whenNull(end, "end point may not be null").x, end.y);
+        this(Throw.whenNull(start, "start").x, start.y,
+                Throw.whenNull(end, "end").x, end.y);
     }
 
     /** {@inheritDoc} */
@@ -160,7 +160,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
     @Override
     public Point2d closestPointOnSegment(final Point2d point) throws NullPointerException
     {
-        Throw.whenNull(point, "point may not be null");
+        Throw.whenNull(point, "point");
         return point.closestPointOnLine(this.startX, this.startY, this.endX, this.endY, true, true);
     }
     
@@ -175,7 +175,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
     @Override
     public Point2d projectOrthogonal(final Point2d point) throws NullPointerException
     {
-        Throw.whenNull(point, "point may not be null");
+        Throw.whenNull(point, "point");
         return point.closestPointOnLine(this.startX, this.startY, this.endX, this.endY, null, null);
     }
 
@@ -183,7 +183,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
     @Override
     public Point2d projectOrthogonalExtended(final Point2d point)
     {
-        Throw.whenNull(point, "point may not be null");
+        Throw.whenNull(point, "point");
         return point.closestPointOnLine(this.startX, this.startY, this.endX, this.endY, false, false);
     }
 
@@ -191,7 +191,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
     @Override
     public double projectOrthogonalFractional(final Point2d point) throws NullPointerException
     {
-        Throw.whenNull(point, "point may not be null");
+        Throw.whenNull(point, "point");
         return point.fractionalPositionOnLine(this.startX, this.startY, this.endX, this.endY, null, null);
     }
 
@@ -199,7 +199,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
     @Override
     public double projectOrthogonalFractionalExtended(final Point2d point) throws NullPointerException
     {
-        Throw.whenNull(point, "point may not be null");
+        Throw.whenNull(point, "point");
         return point.fractionalPositionOnLine(this.startX, this.startY, this.endX, this.endY, false, false);
     }
 

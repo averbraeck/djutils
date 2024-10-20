@@ -1487,7 +1487,7 @@ public class PolyLine2dTest
             double direction = Math.toDegrees(ray.dirZ);
             if (step > 0)
             {
-                assertEquals(prevDir, direction, 2, "phi changes very little at step " + step);
+                assertEquals(prevDir, direction, 2, "dirZ changes very little at step " + step);
             }
             prevDir = Math.toDegrees(ray.dirZ);
         }
@@ -1503,7 +1503,7 @@ public class PolyLine2dTest
             double direction = Math.toDegrees(ray.dirZ);
             if (step > 0)
             {
-                assertEquals(prevDir, direction, 2, "phi changes very little at step " + step);
+                assertEquals(prevDir, direction, 2, "dirZ changes very little at step " + step);
             }
             prevDir = Math.toDegrees(ray.dirZ);
         }
@@ -1528,7 +1528,7 @@ public class PolyLine2dTest
             double direction = Math.toDegrees(ray.dirZ);
             if (step > 0)
             {
-                assertEquals(prevDir, direction, 4, "phi changes very little at step " + step);
+                assertEquals(prevDir, direction, 4, "dirZ changes very little at step " + step);
             }
             prevDir = Math.toDegrees(ray.dirZ);
         }
@@ -1546,7 +1546,7 @@ public class PolyLine2dTest
             Ray2d ray2 = cosineSmoothTransitioningLine2.getLocation(step * cosineSmoothTransitioningLine2.getLength() / 1000);
             assertEquals(ray1.x, ray2.x, 0.001, "rays are almost equal in x");
             assertEquals(ray1.y, ray2.y, 0.001, "rays are almost equal in y");
-            assertEquals(ray1.dirZ, ray2.dirZ, 0.0001, "rays are almost equal in phi");
+            assertEquals(ray1.dirZ, ray2.dirZ, 0.0001, "rays are almost equal in dirZ");
         }
 
         assertEquals(bezier, bezier.offsetLine(0, 0), "offset by zero returns original");

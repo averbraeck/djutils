@@ -38,7 +38,7 @@ public class DirectedPoint2dTest
         DirectedPoint2d dp = new DirectedPoint2d(1, 2, 3);
         assertEquals(1, dp.getX(), 0.0, "x can be retrieved");
         assertEquals(2, dp.getY(), 0.0, "y can be retrieved");
-        assertEquals(3, dp.getDirZ(), 0.0, "Phi can be retrieved");
+        assertEquals(3, dp.getDirZ(), 0.0, "DirZ can be retrieved");
         assertEquals(1, dp.size(), "size is 1");
         Iterator<? extends DirectedPoint2d> it = dp.getPoints();
         assertTrue(it.hasNext(), "iterator has at least one point to provide");

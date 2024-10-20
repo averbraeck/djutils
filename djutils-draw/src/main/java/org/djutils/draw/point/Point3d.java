@@ -61,7 +61,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
      */
     public Point3d(final double[] xyz) throws NullPointerException, IllegalArgumentException
     {
-        this(checkLengthIsThree(Throw.whenNull(xyz, "xyz-point cannot be null"))[0], xyz[1], xyz[2]);
+        this(checkLengthIsThree(Throw.whenNull(xyz, "xyz"))[0], xyz[1], xyz[2]);
     }
 
     /**
@@ -73,7 +73,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
      */
     public Point3d(final Point2d point, final double z) throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(point, "point cannot be null");
+        Throw.whenNull(point, "point");
         Throw.when(Double.isNaN(z), IllegalArgumentException.class, "Coordinate must be a number (not NaN)");
         this.x = point.x;
         this.y = point.y;
@@ -89,7 +89,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
      */
     public Point3d(final Point2D point, final double z) throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(point, "point cannot be null");
+        Throw.whenNull(point, "point");
         Throw.when(Double.isNaN(point.getX()) || Double.isNaN(point.getY()), IllegalArgumentException.class,
                 "Coordinate must be a number (not NaN)");
         Throw.when(Double.isNaN(z), IllegalArgumentException.class, "Coordinate must be a number (not NaN)");
@@ -137,7 +137,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
     @Override
     public double distanceSquared(final Point3d otherPoint) throws NullPointerException
     {
-        Throw.whenNull(otherPoint, "point cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint");
         double dx = this.x - otherPoint.x;
         double dy = this.y - otherPoint.y;
         double dz = this.z - otherPoint.z;
@@ -148,7 +148,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
     @Override
     public double distance(final Point3d otherPoint) throws NullPointerException
     {
-        Throw.whenNull(otherPoint, "otherPoint cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint");
         return Math.sqrt(distanceSquared(otherPoint));
     }
 
@@ -237,7 +237,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
     @Override
     public Point3d interpolate(final Point3d point, final double fraction)
     {
-        Throw.whenNull(point, "point cannot be null");
+        Throw.whenNull(point, "point");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
         return new Point3d((1.0 - fraction) * this.x + fraction * point.x, (1.0 - fraction) * this.y + fraction * point.y,
                 (1.0 - fraction) * this.z + fraction * point.z);
@@ -248,7 +248,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
     @Override
     public boolean epsilonEquals(final Point3d otherPoint, final double epsilon)
     {
-        Throw.whenNull(otherPoint, "otherPoint cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint");
         if (Math.abs(this.x - otherPoint.x) > epsilon)
         {
             return false;
@@ -275,8 +275,8 @@ public class Point3d implements Drawable3d, Point<Point3d>
     @Override
     public final Point3d closestPointOnSegment(final Point3d segmentPoint1, final Point3d segmentPoint2)
     {
-        Throw.whenNull(segmentPoint1, "segmentPoint1 may not be null");
-        Throw.whenNull(segmentPoint2, "segmentPoint2 may not be null");
+        Throw.whenNull(segmentPoint1, "segmentPoint1");
+        Throw.whenNull(segmentPoint2, "segmentPoint2");
         return closestPointOnSegment(segmentPoint1.x, segmentPoint1.y, segmentPoint1.z, segmentPoint2.x, segmentPoint2.y,
                 segmentPoint2.z);
     }
@@ -400,8 +400,8 @@ public class Point3d implements Drawable3d, Point<Point3d>
     public final Point3d closestPointOnLine(final Point3d linePoint1, final Point3d linePoint2)
             throws NullPointerException, DrawRuntimeException
     {
-        Throw.whenNull(linePoint1, "linePoint1 may not be null");
-        Throw.whenNull(linePoint2, "linePoint2 may not be null");
+        Throw.whenNull(linePoint1, "linePoint1");
+        Throw.whenNull(linePoint2, "linePoint2");
         return closestPointOnLine(linePoint1.x, linePoint1.y, linePoint1.z, linePoint2.x, linePoint2.y, linePoint2.z);
     }
 
@@ -442,7 +442,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
      */
     final double horizontalDirection(final Point3d otherPoint) throws NullPointerException
     {
-        Throw.whenNull(otherPoint, "point cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint");
         return Math.atan2(otherPoint.y - this.y, otherPoint.x - this.x);
     }
 
@@ -454,7 +454,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
      */
     final double verticalDirection(final Point3d otherPoint) throws NullPointerException
     {
-        Throw.whenNull(otherPoint, "point cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint");
         return Math.atan2(Math.hypot(otherPoint.y - this.y, otherPoint.x - this.x), otherPoint.z - this.z);
     }
 
@@ -466,7 +466,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
      */
     final double horizontalDistanceSquared(final Point3d otherPoint)
     {
-        Throw.whenNull(otherPoint, "point cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint");
         double dx = this.x - otherPoint.x;
         double dy = this.y - otherPoint.y;
         return dx * dx + dy * dy;

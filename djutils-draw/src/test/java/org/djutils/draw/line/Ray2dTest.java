@@ -35,10 +35,10 @@ public class Ray2dTest
     @Test
     public void testConstructors()
     {
-        verifyRay("Constructor from x, y, phi", new Ray2d(1, 2, 3), 1, 2, 3);
-        verifyRay("Constructor from [x, y], phi", new Ray2d(new double[] {1, 2}, 3), 1, 2, 3);
-        verifyRay("Constructor from Point2D.Double(x, y), phi", new Ray2d(new Point2D.Double(1, 2), 3), 1, 2, 3);
-        verifyRay("Constructor from Point2d, phi", new Ray2d(new Point2d(0.1, 0.2), -0.3), 0.1, 0.2, -0.3);
+        verifyRay("Constructor from x, y, dirZ", new Ray2d(1, 2, 3), 1, 2, 3);
+        verifyRay("Constructor from [x, y], dirZ", new Ray2d(new double[] {1, 2}, 3), 1, 2, 3);
+        verifyRay("Constructor from Point2D.Double(x, y), dirZ", new Ray2d(new Point2D.Double(1, 2), 3), 1, 2, 3);
+        verifyRay("Constructor from Point2d, dirZ", new Ray2d(new Point2d(0.1, 0.2), -0.3), 0.1, 0.2, -0.3);
         verifyRay("Constructor from x, y, throughX, throughY", new Ray2d(1, 2, 3, 5), 1, 2, Math.atan2(3, 2));
         verifyRay("Constructor from x, y, throughX, throughY", new Ray2d(1, 2, 1, 5), 1, 2, Math.atan2(3, 0));
         verifyRay("Constructor from x, y, throughX, throughY", new Ray2d(1, 2, 3, 2), 1, 2, Math.atan2(0, 2));
@@ -143,31 +143,32 @@ public class Ray2dTest
      * @param ray Ray2d; the Ray2d
      * @param expectedX double; the expected x value
      * @param expectedY double; the expected y value
-     * @param expectedPhi double; the expected phi value
+     * @param expectedDirZ double; the expected dirZ value
      */
     private void verifyRay(final String description, final Ray2d ray, final double expectedX, final double expectedY,
-            final double expectedPhi)
+            final double expectedDirZ)
     {
         assertEquals(expectedX, ray.getX(), 0.0001, description + " getX");
         assertEquals(expectedX, ray.x, 0.0001, description + " x");
         assertEquals(expectedY, ray.getY(), 0.0001, description + " getY");
         assertEquals(expectedY, ray.y, 0.0001, description + " y");
-        assertEquals(expectedPhi, ray.getDirZ(), 0.0001, description + " getPhi");
-        assertEquals(expectedPhi, ray.dirZ, 0.0001, description + " phi");
+        assertEquals(expectedDirZ, ray.getDirZ(), 0.0001, description + " getDirZ");
+        assertEquals(expectedDirZ, ray.dirZ, 0.0001, description + " dirZ");
         Point2d startPoint = ray.getEndPoint();
         assertEquals(expectedX, startPoint.x, 0.0001, description + " getStartPoint x");
         assertEquals(expectedY, startPoint.y, 0.0001, description + " getStartPoint y");
         Ray2d negated = ray.neg();
         assertEquals(-expectedX, negated.x, 0.0001, description + " neg x");
         assertEquals(-expectedY, negated.y, 0.0001, description + " neg y");
-        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), negated.dirZ, 0.0001, description + " neg phi");
+        assertEquals(AngleUtil.normalizeAroundZero(expectedDirZ + Math.PI), negated.dirZ, 0.0001, description + " neg dirZ");
         Ray2d flipped = ray.flip();
         assertEquals(expectedX, flipped.getX(), 0.0001, description + " getX");
         assertEquals(expectedX, flipped.x, 0.0001, description + " x");
         assertEquals(expectedY, flipped.getY(), 0.0001, description + " getY");
         assertEquals(expectedY, flipped.y, 0.0001, description + " y");
-        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), flipped.getDirZ(), 0.0001, description + " getPhi");
-        assertEquals(AngleUtil.normalizeAroundZero(expectedPhi + Math.PI), flipped.dirZ, 0.0001, description + " phi");
+        assertEquals(AngleUtil.normalizeAroundZero(expectedDirZ + Math.PI), flipped.getDirZ(), 0.0001,
+                description + " getDirZ");
+        assertEquals(AngleUtil.normalizeAroundZero(expectedDirZ + Math.PI), flipped.dirZ, 0.0001, description + " dirZ");
         assertEquals(2, ray.size(), description + " size");
         Iterator<DirectedPoint2d> iterator = ray.getPoints();
         // First result of iterator is the finite end point (but this is not a hard promise)
@@ -318,15 +319,15 @@ public class Ray2dTest
             // Ignore expected exception
         }
 
-        for (double phi : new double[] {0, 1, 2, 3, 4, 5, -1, -2, Math.PI})
+        for (double dirZ : new double[] {0, 1, 2, 3, 4, 5, -1, -2, Math.PI})
         {
-            Ray2d ray = new Ray2d(1, 2, phi);
+            Ray2d ray = new Ray2d(1, 2, dirZ);
             for (double position : new double[] {0, 10, 0.1, -2})
             {
                 Ray2d result = ray.getLocationExtended(position);
                 assertEquals(Math.abs(position), ray.distance(result), 0.001,
                         "result is position distance away from base of ray");
-                assertEquals(ray.dirZ, result.dirZ, 0.00001, "result has same phi as ray");
+                assertEquals(ray.dirZ, result.dirZ, 0.00001, "result has same dirZ as ray");
                 assertTrue(ray.epsilonEquals(result.getLocationExtended(-position), 0.0001),
                         "Reverse position on result yields ray");
                 if (position > 0)
@@ -489,25 +490,25 @@ public class Ray2dTest
         {
             for (double dY : deltas)
             {
-                for (double dPhi : deltas)
+                for (double dDirZ : deltas)
                 {
-                    Ray2d other = new Ray2d(ray.x + dX, ray.y + dY, ray.dirZ + dPhi);
+                    Ray2d other = new Ray2d(ray.x + dX, ray.y + dY, ray.dirZ + dDirZ);
                     for (double epsilon : new double[] {0, 0.125, 0.5, 0.9, 1.0, 1.1})
                     {
-                        // System.out.println(String.format("dX=%f, dY=%f, dPhi=%f, epsilon=%f", dX, dY, dPhi, epsilon));
+                        // System.out.println(String.format("dX=%f, dY=%f, dDirZ=%f, epsilon=%f", dX, dY, dDirZ, epsilon));
                         boolean result = ray.epsilonEquals(other, epsilon, Double.POSITIVE_INFINITY);
                         boolean expected = Math.abs(dX) <= epsilon && Math.abs(dY) <= epsilon;
                         assertEquals(expected, result, "result of epsilonEquals checking x, y, z");
 
                         result = ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
-                        expected = Math.abs(dPhi) <= epsilon;
+                        expected = Math.abs(dDirZ) <= epsilon;
                         if (result != expected)
                         {
                             System.out.println("epsilongEquals rotation mismatch: ray=" + ray + ", other=" + other
                                     + ", epsilongRotation=" + epsilon + ", result=" + result);
                             ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
                         }
-                        assertEquals(expected, result, "result of epsilonEquals checking phi");
+                        assertEquals(expected, result, "result of epsilonEquals checking dirZ");
                     }
                 }
             }
@@ -531,7 +532,7 @@ public class Ray2dTest
 
         assertNotEquals(ray.hashCode(), new Ray2d(2, 2, 12, 12), "hashCode depends on x");
         assertNotEquals(ray.hashCode(), new Ray2d(1, 3, 11, 13), "hashCode depends on y");
-        assertNotEquals(ray.hashCode(), new Ray2d(1, 2, 11, 10), "hashCode depends on phi");
+        assertNotEquals(ray.hashCode(), new Ray2d(1, 2, 11, 10), "hashCode depends on dirZ");
     }
 
 }

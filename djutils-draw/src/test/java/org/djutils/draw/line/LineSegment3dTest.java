@@ -169,9 +169,9 @@ public class LineSegment3dTest
                 assertEquals(position, dp.distance(startPoint), 0.0001, "distance from start point");
                 assertEquals(segment.getLength() - position, dp.distance(endPoint), 0.0001, "distance from end point");
                 assertEquals(startPoint.project().directionTo(endPoint.project()), dp.dirZ, 0.0001,
-                        "direction of directedPoint phi");
+                        "direction of directedPoint dirZ");
                 assertEquals(Math.atan2(endPoint.z - startPoint.z, segment.project().getLength()), dp.dirY, 0.0001,
-                        "direction of directedPoint theta");
+                        "direction of directedPoint dirY");
             }
             Ray3d ray = segment.getLocationExtended(position);
             assertEquals(Math.abs(position), ray.distance(startPoint), 0.0001, "distance from start point");

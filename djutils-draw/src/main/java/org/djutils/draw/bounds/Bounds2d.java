@@ -78,7 +78,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
      */
     public Bounds2d(final Iterator<? extends Point2d> points)
     {
-        Throw.whenNull(points, "points may not be null");
+        Throw.whenNull(points, "points");
         Throw.when(!points.hasNext(), IllegalArgumentException.class, "need at least one point");
         Point2d point = points.next();
         double tempMinX = point.x;
@@ -107,7 +107,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
      */
     public Bounds2d(final Point2d[] points) throws NullPointerException, IllegalArgumentException
     {
-        this(Arrays.stream(Throw.whenNull(points, "points may not be null")).iterator());
+        this(Arrays.stream(Throw.whenNull(points, "points")).iterator());
     }
 
     /**
@@ -117,7 +117,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
      */
     public Bounds2d(final Drawable2d drawable2d) throws NullPointerException
     {
-        this(Throw.whenNull(drawable2d, "drawable2d may not be null").getPoints());
+        this(Throw.whenNull(drawable2d, "drawable2d").getPoints());
     }
 
     /**
@@ -140,7 +140,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
      */
     static Drawable2d[] ensureHasOne(final Drawable2d[] drawable2dArray) throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(drawable2dArray, "Array may not be null");
+        Throw.whenNull(drawable2dArray, "drawable2dArray");
         Throw.when(drawable2dArray.length == 0, IllegalArgumentException.class, "Array must contain at least one value");
         return drawable2dArray;
     }
@@ -289,7 +289,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     @Override
     public boolean contains(final Point2d point)
     {
-        Throw.whenNull(point, "point cannot be null");
+        Throw.whenNull(point, "point");
         return contains(point.x, point.y);
     }
 
@@ -297,7 +297,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     @Override
     public boolean contains(final Bounds2d otherBounds) throws NullPointerException
     {
-        Throw.whenNull(otherBounds, "otherBounds cannot be null");
+        Throw.whenNull(otherBounds, "otherBounds");
         return contains(otherBounds.minX, otherBounds.minY) && contains(otherBounds.maxX, otherBounds.maxY);
     }
 
@@ -317,7 +317,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     @Override
     public boolean covers(final Point2d point)
     {
-        Throw.whenNull(point, "point cannot be null");
+        Throw.whenNull(point, "point");
         return covers(point.x, point.y);
     }
 
@@ -325,7 +325,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     @Override
     public boolean covers(final Bounds2d otherBounds) throws NullPointerException
     {
-        Throw.whenNull(otherBounds, "drawable cannot be null");
+        Throw.whenNull(otherBounds, "otherBounds");
         return covers(otherBounds.minX, otherBounds.minY) && covers(otherBounds.maxX, otherBounds.maxY);
     }
 
@@ -333,7 +333,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     @Override
     public boolean disjoint(final Bounds2d otherBounds) throws NullPointerException
     {
-        Throw.whenNull(otherBounds, "drawable cannot be null");
+        Throw.whenNull(otherBounds, "otherBounds");
         return otherBounds.minX > this.maxX || otherBounds.maxX < this.minX || otherBounds.minY > this.maxY
                 || otherBounds.maxY < this.minY;
     }
@@ -349,7 +349,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     @Override
     public Bounds2d intersection(final Bounds2d otherBounds2d)
     {
-        Throw.whenNull(otherBounds2d, "otherBounds2d cannot be null");
+        Throw.whenNull(otherBounds2d, "otherBounds2d");
         if (disjoint(otherBounds2d))
         {
             return null;

@@ -213,7 +213,7 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
     public OrientedPoint3d interpolate(final OrientedPoint3d otherPoint, final double fraction)
             throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(otherPoint, "otherPoint cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
         if (0.0 == fraction)
         {
@@ -312,7 +312,7 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
     public boolean epsilonEquals(final OrientedPoint3d other, final double epsilonCoordinate, final double epsilonRotation)
             throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(other, "other point cannot be null");
+        Throw.whenNull(other, "other");
         if (Math.abs(this.x - other.x) > epsilonCoordinate)
         {
             return false;

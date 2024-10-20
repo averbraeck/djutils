@@ -35,8 +35,7 @@ public class Polygon2d extends PolyLine2d
      */
     public Polygon2d(final double[] x, final double[] y) throws DrawRuntimeException
     {
-        super(fixClosingPointX(Throw.whenNull(x, "x may not be null"), Throw.whenNull(y, "y may not be null")),
-                fixClosingPointY(x, y));
+        super(fixClosingPointX(Throw.whenNull(x, "x"), Throw.whenNull(y, "y")), fixClosingPointY(x, y));
     }
 
     /**
@@ -92,8 +91,7 @@ public class Polygon2d extends PolyLine2d
     public Polygon2d(final Point2d point1, final Point2d point2, final Point2d... otherPoints)
             throws NullPointerException, DrawRuntimeException
     {
-        super(Throw.whenNull(point1, "point1 may not be null"), Throw.whenNull(point2, "point2 may not be null"),
-                fixClosingPoint(point1, otherPoints));
+        super(Throw.whenNull(point1, "point1"), Throw.whenNull(point2, "point2"), fixClosingPoint(point1, otherPoints));
     }
 
     /**
@@ -128,7 +126,7 @@ public class Polygon2d extends PolyLine2d
      */
     public Polygon2d(final List<Point2d> points) throws NullPointerException, DrawRuntimeException
     {
-        super(fixClosingPoint(true, Throw.whenNull(points, "points may not be null")));
+        super(fixClosingPoint(true, Throw.whenNull(points, "points")));
 
     }
 
@@ -175,7 +173,7 @@ public class Polygon2d extends PolyLine2d
      */
     public Polygon2d(final Iterator<Point2d> iterator)
     {
-        this(fixClosingPoint(false, iteratorToList(Throw.whenNull(iterator, "iterator cannot be null"))));
+        this(fixClosingPoint(false, iteratorToList(Throw.whenNull(iterator, "iterator"))));
     }
 
     /**
@@ -200,7 +198,7 @@ public class Polygon2d extends PolyLine2d
     {
         this(PolyLine2d.cleanPoints(filterDuplicates, pointList.iterator()));
     }
-    
+
     /**
      * Construct a new Polygon2d from an existing one. This constructor is primarily intended for use in extending classes.
      * @param polygon Polygon2d; the existing Polygon2d

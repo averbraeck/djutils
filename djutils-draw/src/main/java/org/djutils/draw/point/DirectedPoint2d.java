@@ -41,7 +41,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     public DirectedPoint2d(final double x, final double y, final double dirZ) throws IllegalArgumentException
     {
         super(x, y);
-        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "phi must be a number (not NaN)");
+        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "dirZ must be a number (not NaN)");
         this.dirZ = dirZ;
     }
 
@@ -55,7 +55,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     public DirectedPoint2d(final double[] xy, final double dirZ) throws IllegalArgumentException
     {
         super(xy);
-        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "phi must be a number (not NaN)");
+        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "dirZ must be a number (not NaN)");
         this.dirZ = dirZ;
     }
 
@@ -68,7 +68,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     public DirectedPoint2d(final Point2D point, final double dirZ) throws IllegalArgumentException
     {
         super(point);
-        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "phi must be a number (not NaN)");
+        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "dirZ must be a number (not NaN)");
         this.dirZ = dirZ;
     }
 
@@ -102,7 +102,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
      * Build the direction.
      * @param dX double; x difference
      * @param dY double; y difference
-     * @return double; the computed value of phi
+     * @return double; the computed value of dirZ
      */
     private static double buildDirection(final double dX, final double dY)
     {
@@ -122,7 +122,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     public DirectedPoint2d(final Point2d point, final double throughX, final double throughY)
             throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(point, "point may not be null").x, point.y, throughX, throughY);
+        this(Throw.whenNull(point, "point").x, point.y, throughX, throughY);
     }
 
     /** {@inheritDoc} */
@@ -186,7 +186,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     public DirectedPoint2d interpolate(final DirectedPoint2d otherPoint, final double fraction)
             throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(otherPoint, "otherPoint cannot be null");
+        Throw.whenNull(otherPoint, "otherPoint");
         Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
         if (0.0 == fraction)
         {
@@ -249,7 +249,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     public boolean epsilonEquals(final DirectedPoint2d other, final double epsilonCoordinate, final double epsilonRotation)
             throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(other, "other point cannot be null");
+        Throw.whenNull(other, "other");
         Throw.when(epsilonCoordinate < 0 || epsilonRotation < 0, IllegalArgumentException.class,
                 "epsilonCoordinate and epsilongRotation may not be negative");
         Throw.when(Double.isNaN(epsilonCoordinate) || Double.isNaN(epsilonRotation), IllegalArgumentException.class,

@@ -222,8 +222,8 @@ public final class Bezier
     private static Point2d[] createControlPoints(final Ray2d start, final Ray2d end, final double shape, final boolean weighted)
             throws DrawRuntimeException
     {
-        Throw.whenNull(start, "start point may not be null");
-        Throw.whenNull(end, "end point may not be null");
+        Throw.whenNull(start, "start");
+        Throw.whenNull(end, "end");
         Throw.when(start.distanceSquared(end) == 0, DrawRuntimeException.class,
                 "Cannot create control points if start and end points coincide");
         Throw.when(Double.isNaN(shape) || shape <= 0 || Double.isInfinite(shape), DrawRuntimeException.class,
@@ -294,7 +294,7 @@ public final class Bezier
         for (int i = 0; i < points.length; i++)
         {
             Point2d p = points[i];
-            Throw.whenNull(p, "points contains a null value");
+            Throw.whenNull(p, "points may not contain a null value");
             px[i] = p.x;
             py[i] = p.y;
         }
@@ -350,7 +350,7 @@ public final class Bezier
         for (int i = 0; i < points.length; i++)
         {
             Point2d p = points[i];
-            Throw.whenNull(p, "points contains a null value");
+            Throw.whenNull(p, "points may not contain a null value");
             px[i] = p.x;
             py[i] = p.y;
         }
@@ -584,8 +584,8 @@ public final class Bezier
      */
     private static Point3d[] createControlPoints(final Ray3d start, final Ray3d end, final double shape, final boolean weighted)
     {
-        Throw.whenNull(start, "start point may not be null");
-        Throw.whenNull(end, "end point may not be null");
+        Throw.whenNull(start, "start");
+        Throw.whenNull(end, "end");
         Throw.when(start.distanceSquared(end) == 0, DrawRuntimeException.class,
                 "Cannot create control points if start and end points coincide");
         Throw.when(Double.isNaN(shape) || shape <= 0 || Double.isInfinite(shape), DrawRuntimeException.class,
@@ -726,7 +726,7 @@ public final class Bezier
         for (int i = 0; i < points.length; i++)
         {
             Point3d p = points[i];
-            Throw.whenNull(p, "points contains a null value");
+            Throw.whenNull(p, "points may not contain a null value");
             px[i] = p.x;
             py[i] = p.y;
             pz[i] = p.z;

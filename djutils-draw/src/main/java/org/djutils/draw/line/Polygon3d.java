@@ -33,8 +33,8 @@ public class Polygon3d extends PolyLine3d
      */
     public Polygon3d(final double[] x, final double[] y, final double[] z) throws DrawRuntimeException
     {
-        super(fixClosingPointX(Throw.whenNull(x, "x may not be null"), Throw.whenNull(y, "y may not be null"),
-                Throw.whenNull(z, "z may not be null")), fixClosingPointY(x, y, z), fixClosingPointZ(x, y, z));
+        super(fixClosingPointX(Throw.whenNull(x, "x"), Throw.whenNull(y, "y"), Throw.whenNull(z, "z")),
+                fixClosingPointY(x, y, z), fixClosingPointZ(x, y, z));
     }
 
     /**
@@ -96,8 +96,8 @@ public class Polygon3d extends PolyLine3d
      */
     public Polygon3d(final Point3d[] points) throws NullPointerException, DrawRuntimeException
     {
-        this(PolyLine3d.makeArray(Throw.whenNull(points, "points may not be null"), p -> p.x),
-                PolyLine3d.makeArray(points, p -> p.y), PolyLine3d.makeArray(points, p -> p.z));
+        this(PolyLine3d.makeArray(Throw.whenNull(points, "points"), p -> p.x), PolyLine3d.makeArray(points, p -> p.y),
+                PolyLine3d.makeArray(points, p -> p.z));
     }
 
     /**
@@ -112,8 +112,7 @@ public class Polygon3d extends PolyLine3d
     public Polygon3d(final Point3d point1, final Point3d point2, final Point3d... otherPoints)
             throws NullPointerException, DrawRuntimeException
     {
-        super(Throw.whenNull(point1, "point1 may not be null"), Throw.whenNull(point2, "point2 may not be null"),
-                fixClosingPoint(point1, otherPoints));
+        super(Throw.whenNull(point1, "point1"), Throw.whenNull(point2, "point2"), fixClosingPoint(point1, otherPoints));
     }
 
     /**
@@ -148,7 +147,7 @@ public class Polygon3d extends PolyLine3d
      */
     public Polygon3d(final List<Point3d> points) throws NullPointerException, DrawRuntimeException
     {
-        super(fixClosingPoint(true, Throw.whenNull(points, "points may not be null")));
+        super(fixClosingPoint(true, Throw.whenNull(points, "points")));
 
     }
 
@@ -195,7 +194,7 @@ public class Polygon3d extends PolyLine3d
      */
     public Polygon3d(final Iterator<Point3d> iterator)
     {
-        this(fixClosingPoint(false, iteratorToList(Throw.whenNull(iterator, "iterator cannot be null"))));
+        this(fixClosingPoint(false, iteratorToList(Throw.whenNull(iterator, "iterator"))));
     }
 
     /**

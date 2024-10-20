@@ -47,7 +47,7 @@ public class Ray3dTest
         verifyRay("Constructor from x, y, z, [dirY, dirZ]", new Ray3d(1, 2, 3, new double[] {4, 5}), 1, 2, 3, 4, 5);
         verifyRay("Constructor from [x, y, z], [dirY, dirZ]", new Ray3d(new double[] {1, 2, 3}, new double[] {4, 5}), 1, 2, 3,
                 4, 5);
-        verifyRay("Constructor from Point3d, phi, theta", new Ray3d(new Point3d(0.1, 0.2, 0.3), -0.4, -0.5), 0.1, 0.2, 0.3,
+        verifyRay("Constructor from Point3d, dirY, dirZ", new Ray3d(new Point3d(0.1, 0.2, 0.3), -0.4, -0.5), 0.1, 0.2, 0.3,
                 -0.4, -0.5);
         verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 4, 6, 15), 1, 2, 3,
                 Math.atan2(5, 12), Math.atan2(4, 3));
@@ -77,7 +77,7 @@ public class Ray3dTest
         try
         {
             new Ray3d(1, 2, 3, Double.NaN, 0);
-            fail("NaN for phy should have thrown a DrawRuntimeException");
+            fail("NaN for dirY should have thrown a DrawRuntimeException");
         }
         catch (IllegalArgumentException dre)
         {
@@ -87,7 +87,7 @@ public class Ray3dTest
         try
         {
             new Ray3d(1, 2, 3, 0, Double.NaN);
-            fail("NaN for theta should have thrown a DrawRuntimeException");
+            fail("NaN for dirZ should have thrown a DrawRuntimeException");
         }
         catch (IllegalArgumentException dre)
         {
@@ -176,8 +176,8 @@ public class Ray3dTest
      * @param expectedX double; the expected x value
      * @param expectedY double; the expected y value
      * @param expectedZ double; the expected z value
-     * @param expectedDirY double; the expected theta value
-     * @param expectedDirZ double; the expected phi value
+     * @param expectedDirY double; the expected dirY value
+     * @param expectedDirZ double; the expected dirZ value
      */
     private void verifyRay(final String description, final Ray3d ray, final double expectedX, final double expectedY,
             final double expectedZ, final double expectedDirY, final double expectedDirZ)
@@ -330,7 +330,7 @@ public class Ray3dTest
         verifyBounds(new Ray3d(1, 2, 3, -1, -1).getBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
 
-        // TODO theta values at boundaries and outside of [0..PI/2]
+        // TODO dirY values at boundaries and outside of [0..PI/2]
     }
 
     /**
@@ -468,13 +468,13 @@ public class Ray3dTest
                     if (position > 0)
                     {
                         // TODO verify that it is on positive side of ray
-                        assertEquals(ray.dirZ, result.dirZ, 0.0001, "result lies in on ray (phi)");
-                        assertEquals(ray.dirY, result.dirY, 0.0001, "result lies on ray (theta)");
+                        assertEquals(ray.dirY, result.dirY, 0.0001, "result lies on ray (dirY)");
+                        assertEquals(ray.dirZ, result.dirZ, 0.0001, "result lies in on ray (dirZ)");
                     }
                     if (position < 0)
                     {
-                        assertEquals(result.dirZ, ray.dirZ, 0.0001, "ray lies on result (phi)");
-                        assertEquals(result.dirY, ray.dirY, 0.0001, "ray lies on result (theta)");
+                        assertEquals(result.dirY, ray.dirY, 0.0001, "ray lies on result (dirY)");
+                        assertEquals(result.dirZ, ray.dirZ, 0.0001, "ray lies on result (dirZ)");
                     }
                 }
             }
@@ -656,7 +656,7 @@ public class Ray3dTest
 
                                 result = ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
                                 expected = Math.abs(dDirZ) <= epsilon && Math.abs(dDirY) <= epsilon;
-                                assertEquals(expected, result, "result of epsilonEquals checking phi and theta");
+                                assertEquals(expected, result, "result of epsilonEquals checking dirY and dirZ");
                                 // Create an alternative ray
                                 other = new Ray3d(ray.x + dX, ray.y + dY, ray.z + dZ, Math.PI - ray.dirY + dDirY,
                                         Math.PI + ray.dirZ + dDirZ);
@@ -672,7 +672,7 @@ public class Ray3dTest
                                             + Double.POSITIVE_INFINITY + "," + epsilon + ")");
                                     ray.epsilonEquals(other, Double.POSITIVE_INFINITY, epsilon);
                                 }
-                                assertEquals(expected, result, "result of epsilonEquals checking phi and theta");
+                                assertEquals(expected, result, "result of epsilonEquals checking dirY and dirZ");
                             }
                         }
                     }
@@ -691,8 +691,8 @@ public class Ray3dTest
         assertEquals(ray, ray, "equal to itself");
         assertNotEquals(ray, null, "not equal to null");
         assertNotEquals(ray, new OrientedPoint3d(1, 2, 3), "not equal to different object with same parent class");
-        assertNotEquals(ray, new Ray3d(1, 2, 3, 11, 10, 13), "not equal to ray with different phi");
-        assertNotEquals(ray, new Ray3d(1, 2, 3, 11, 12, 10), "not equal to ray with different theta");
+        assertNotEquals(ray, new Ray3d(1, 2, 3, 11, 12, 10), "not equal to ray with different dirY");
+        assertNotEquals(ray, new Ray3d(1, 2, 3, 11, 10, 13), "not equal to ray with different dirZ");
         assertNotEquals(ray, new Ray3d(2, 2, 3, 12, 12, 13), "not equal to ray with different start x");
         assertNotEquals(ray, new Ray3d(1, 3, 3, 11, 13, 13), "not equal to ray with different start y");
         assertEquals(ray, new Ray3d(1, 2, 3, 21, 22, 23), "equal to ray with same x, y and direction");
@@ -700,8 +700,8 @@ public class Ray3dTest
         assertNotEquals(ray.hashCode(), new Ray3d(2, 2, 3, 12, 12, 13), "hashCode depends on x");
         assertNotEquals(ray.hashCode(), new Ray3d(1, 3, 3, 11, 13, 13), "hashCode depends on y");
         assertNotEquals(ray.hashCode(), new Ray3d(1, 2, 4, 11, 12, 14), "hashCode depends on y");
-        assertNotEquals(ray.hashCode(), new Ray3d(1, 2, 3, 11, 10, 13), "hashCode depends on phi");
-        assertNotEquals(ray.hashCode(), new Ray3d(1, 2, 3, 11, 12, 10), "hashCode depends on theta");
+        assertNotEquals(ray.hashCode(), new Ray3d(1, 2, 3, 11, 12, 10), "hashCode depends on dirY");
+        assertNotEquals(ray.hashCode(), new Ray3d(1, 2, 3, 11, 10, 13), "hashCode depends on dirZ");
     }
 
 }

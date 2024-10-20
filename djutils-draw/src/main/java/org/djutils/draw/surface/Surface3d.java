@@ -49,11 +49,12 @@ public class Surface3d implements Drawable3d
      *            second index iterates over the points of a single triangle. The range of the second index must be 3. It is
      *            expected that all points appear multiple times in the points array, but never within the same sub-array.
      * @throws NullPointerException when points is null, or any element in points is null
-     * @throws DrawRuntimeException when points is empty, or any element in points does not contain exactly three different points
+     * @throws DrawRuntimeException when points is empty, or any element in points does not contain exactly three different
+     *             points
      */
     public Surface3d(final Point3d[][] points) throws NullPointerException, DrawRuntimeException
     {
-        Throw.whenNull(points, "points may not be null");
+        Throw.whenNull(points, "points");
         Throw.when(points.length == 0, DrawRuntimeException.class, "points must have at least one element");
         this.indices = new int[points.length * 3];
         // Figure out how many points are unique
@@ -61,7 +62,7 @@ public class Surface3d implements Drawable3d
         for (int triangle = 0; triangle < points.length; triangle++)
         {
             Point3d[] trianglePoints = points[triangle];
-            Throw.whenNull(trianglePoints, "Element in points may not be null");
+            Throw.whenNull(trianglePoints, "Element in trianglePoints may not be null");
             Throw.when(trianglePoints.length != 3, DrawRuntimeException.class,
                     "Triangle %d contain wrong number of points (should be 3, got %d", triangle, trianglePoints.length);
             Point3d prevPoint = trianglePoints[2];

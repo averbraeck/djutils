@@ -69,7 +69,7 @@ public final class ConvexHull
     public static Polygon2d convexHull(final Collection<Drawable2d> drawableCollection)
             throws NullPointerException, IllegalArgumentException
     {
-        Throw.whenNull(drawableCollection, "drawableCollection may not be null");
+        Throw.whenNull(drawableCollection, "drawableCollection");
         Throw.when(drawableCollection.isEmpty(), DrawRuntimeException.class, "drawableCollection may not be empty");
         return convexHull(Bounds2d.pointsOf(drawableCollection));
     }
@@ -129,7 +129,7 @@ public final class ConvexHull
     public static Polygon2d convexHullAlshamrani(final List<Point2d> list) throws NullPointerException, DrawRuntimeException
     {
         // Find the four extreme points
-        Throw.whenNull(list, "list may not be null");
+        Throw.whenNull(list, "list");
         Throw.when(list.size() < 1, DrawRuntimeException.class, "Too few points in list");
         Point2d minX = list.get(0); // Initialize to the first point in list to avoid checking for null on each iteration
         Point2d minY = list.get(0);

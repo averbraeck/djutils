@@ -33,7 +33,8 @@ public interface Ray<R extends Ray<R, D, P>, D extends Directed<D>, P extends Po
 
     /**
      * Flip the direction of the Ray (creates and returns a new Ray instance).
-     * @return R; Ray at the same location, but with phi incremented by &pi; and theta (in case of a Ray3d) subtracted from &pi;
+     * @return R; Ray at the same location, but with <cite>dirZ</cite> (in case of a Ray3d) incremented by &pi; and
+     *         <cite>dirY</cite> subtracted from &pi;
      */
     R flip();
 
