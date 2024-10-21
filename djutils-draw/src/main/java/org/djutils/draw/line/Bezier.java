@@ -410,16 +410,7 @@ public final class Bezier
             prevT = nextT;
             prevPoint = nextPoint;
         }
-        try
-        {
-            return new PolyLine2d(result.values().iterator());
-        }
-        catch (NullPointerException | DrawRuntimeException e)
-        {
-            // Cannot happen? Really?
-            e.printStackTrace();
-            throw new DrawRuntimeException(e);
-        }
+        return new PolyLine2d(result.values().iterator());
     }
 
     /**
@@ -789,16 +780,7 @@ public final class Bezier
             prevT = nextT;
             prevPoint = nextPoint;
         }
-        try
-        {
-            return new PolyLine3d(result.values().iterator());
-        }
-        catch (NullPointerException | DrawRuntimeException e)
-        {
-            // Cannot happen? Really?
-            e.printStackTrace();
-            throw new DrawRuntimeException(e);
-        }
+        return new PolyLine3d(result.values().iterator());
     }
 
     /**

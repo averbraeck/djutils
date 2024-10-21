@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Export;
 import org.djutils.draw.point.Point2d;
@@ -727,7 +730,31 @@ public class BezierTest
         {
             // Ignore expected exception
         }
+    }
 
+    /**
+     * Test the factorial method.
+     * @throws SecurityException if that happens, this test has failed
+     * @throws NoSuchMethodException if that happens, this test has failed
+     * @throws InvocationTargetException if that happens, this test has failed
+     * @throws IllegalArgumentException if that happens, this test has failed
+     * @throws IllegalAccessException if that happens, this test has failed
+     */
+    @Test
+    public void testFactorial() throws NoSuchMethodException, SecurityException, IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException
+    {
+        Class<?> bezierClass = Bezier.class;
+        Method factorialMethod = bezierClass.getDeclaredMethod("factorial", int.class);
+        factorialMethod.setAccessible(true);
+        double expected = 1;
+        for (int i = 1; i < 100; i++)
+        {
+            expected *= i;
+            double result = (double) factorialMethod.invoke(null, i);
+            // System.out.println(result);
+            assertEquals(expected, result, expected / 1e10, "factorial");
+        }
     }
 
 }
