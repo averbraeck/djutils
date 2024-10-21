@@ -300,7 +300,7 @@ public class BezierTest
         for (int step = 0; step <= numberOfPoints; step++)
         {
             double fraction = 1.0 * step / numberOfPoints;
-            Ray2d referenceRay = reference.getLocationFraction(fraction);
+            Ray2d referenceRay = new Ray2d(reference.getLocationFraction(fraction));
             double position = candidate.projectRay(referenceRay);
             Point2d pointAtPosition = candidate.getLocation(position);
             double positionError = referenceRay.distance(pointAtPosition);
@@ -331,8 +331,8 @@ public class BezierTest
         for (int step = 0; step <= numberOfPoints; step++)
         {
             double fraction = 1.0 * step / numberOfPoints;
-            Ray3d referenceRay = reference.getLocationFraction(fraction);
-            Ray3d candidateRay = candidate.getLocationFraction(fraction);
+            Ray3d referenceRay = new Ray3d(reference.getLocationFraction(fraction));
+            Ray3d candidateRay = new Ray3d(candidate.getLocationFraction(fraction));
             double positionError = referenceRay.distance(candidateRay);
             if (positionError >= epsilon)
             {

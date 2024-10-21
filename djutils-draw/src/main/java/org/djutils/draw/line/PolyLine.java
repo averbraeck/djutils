@@ -160,34 +160,34 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
     /**
      * Get the location at a position on the line, with its direction. Position should be between 0.0 and line length.
      * @param position double; the position on the line for which to calculate the point on the line
-     * @return R; a Ray at the position on the line, pointing in the direction of the line at that position. If the position is
-     *         at (or very near) a point on this PolyLine, the direction is either the direction before, or the direction after
-     *         that point
+     * @return D; a DirectedPoint at the position on the line, pointing in the direction of the line at that position. If the
+     *         position is at (or very near) a point on this PolyLine, the direction is either the direction before, or the
+     *         direction after that point
      * @throws DrawRuntimeException when position is NaN, less than 0.0, or more than line length.
      */
-    R getLocation(double position) throws DrawRuntimeException;
+    D getLocation(double position) throws DrawRuntimeException;
 
     /**
      * Get the location at a position on the line, with its direction. Position can be below 0 or more than the line length. In
      * that case, the position will be extrapolated in the direction of the line at its start or end.
      * @param position double; the position on the line for which to calculate the point on, before, or after the line
-     * @return R; a Ray at the position on the line, pointing in the direction of the line at that position. If the position is
-     *         at (or very near) a point on this PolyLine, the direction is either the direction before, or the direction after
-     *         that point. If the position is before the start point of this PolyLine, the direction is towards the start point.
-     *         If the position is beyond the end of this PolyLine, the direction is the direction of the last segment of this
-     *         PolyLine.
+     * @return D; a DirectedPoint at the position on the line, pointing in the direction of the line at that position. If the
+     *         position is at (or very near) a point on this PolyLine, the direction is either the direction before, or the
+     *         direction after that point. If the position is before the start point of this PolyLine, the direction is towards
+     *         the start point. If the position is beyond the end of this PolyLine, the direction is the direction of the last
+     *         segment of this PolyLine.
      */
-    R getLocationExtended(double position);
+    D getLocationExtended(double position);
 
     /**
      * Get the location at a fraction of the line, with its direction. Fraction should be between 0.0 and 1.0.
      * @param fraction double; the fraction for which to calculate the point on the line
-     * @return R; a Ray at the position on the line, pointing in the direction of the line at that position. If the position is
-     *         at (or very near) a point on this PolyLine, the direction is either the direction before, or the direction after
-     *         that point
+     * @return D; a DirectedPoint at the position on the line, pointing in the direction of the line at that position. If the
+     *         position is at (or very near) a point on this PolyLine, the direction is either the direction before, or the
+     *         direction after that point
      * @throws DrawRuntimeException when fraction less than 0.0 or more than 1.0.
      */
-    default R getLocationFraction(final double fraction) throws DrawRuntimeException
+    default D getLocationFraction(final double fraction) throws DrawRuntimeException
     {
         if (fraction < 0.0 || fraction > 1.0)
         {
@@ -200,14 +200,14 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      * Get the location at a fraction of the line, with its direction. Fraction should be between 0.0 and 1.0.
      * @param fraction double; the fraction for which to calculate the point on the line
      * @param tolerance double; the delta from 0.0 and 1.0 that will be forgiven
-     * @return R; a Ray at the position on the line, pointing in the direction of the line at that position. If the position is
-     *         at (or very near) a point on this PolyLine, the direction is either the direction before, or the direction after
-     *         that point. If the position is before the start point of this PolyLine, the direction is towards the start point.
-     *         If the position is beyond the end of this PolyLine, the direction is the direction of the last segment of this
-     *         PolyLine.
+     * @return D; a DirectedPoint at the position on the line, pointing in the direction of the line at that position. If the
+     *         position is at (or very near) a point on this PolyLine, the direction is either the direction before, or the
+     *         direction after that point. If the position is before the start point of this PolyLine, the direction is towards
+     *         the start point. If the position is beyond the end of this PolyLine, the direction is the direction of the last
+     *         segment of this PolyLine.
      * @throws DrawRuntimeException when fraction less than 0.0 or more than 1.0.
      */
-    default R getLocationFraction(final double fraction, final double tolerance) throws DrawRuntimeException
+    default D getLocationFraction(final double fraction, final double tolerance) throws DrawRuntimeException
     {
         if (fraction < -tolerance || fraction > 1.0 + tolerance)
         {
@@ -221,13 +221,13 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
     /**
      * Get the location at a fraction of the line (or outside the line), with its direction.
      * @param fraction double; the fraction for which to calculate the point on the line
-     * @return R; a Ray at the position on the line, pointing in the direction of the line at that position. If the position is
-     *         at (or very near) a point on this PolyLine, the direction is either the direction before, or the direction after
-     *         that point. If the position is before the start point of this PolyLine, the direction is towards the start point.
-     *         If the position is beyond the end of this PolyLine, the direction is the direction of the last segment of this
-     *         PolyLine.
+     * @return D; a DirectedPoint at the position on the line, pointing in the direction of the line at that position. If the
+     *         position is at (or very near) a point on this PolyLine, the direction is either the direction before, or the
+     *         direction after that point. If the position is before the start point of this PolyLine, the direction is towards
+     *         the start point. If the position is beyond the end of this PolyLine, the direction is the direction of the last
+     *         segment of this PolyLine.
      */
-    default R getLocationFractionExtended(final double fraction)
+    default D getLocationFractionExtended(final double fraction)
     {
         return getLocationExtended(fraction * getLength());
     }

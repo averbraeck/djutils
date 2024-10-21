@@ -97,8 +97,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
      */
     public LineSegment2d(final Point2d start, final Point2d end) throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(start, "start").x, start.y,
-                Throw.whenNull(end, "end").x, end.y);
+        this(Throw.whenNull(start, "start").x, start.y, Throw.whenNull(end, "end").x, end.y);
     }
 
     /** {@inheritDoc} */
@@ -126,7 +125,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
     @Override
     public Iterator<? extends Point2d> getPoints()
     {
-        return Arrays.stream(new Point2d[] { getStartPoint(), getEndPoint() }).iterator();
+        return Arrays.stream(new Point2d[] {getStartPoint(), getEndPoint()}).iterator();
     }
 
     /** {@inheritDoc} */
@@ -146,14 +145,15 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
 
     /** {@inheritDoc} */
     @Override
-    public Ray2d getLocationExtended(final double position) throws DrawRuntimeException
+    public DirectedPoint2d getLocationExtended(final double position) throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(position) || Double.isInfinite(position), DrawRuntimeException.class,
                 "position must be finite");
         double dX = this.endX - this.startX;
         double dY = this.endY - this.startY;
         double length = Math.hypot(dX, dY);
-        return new Ray2d(this.startX + position * dX / length, this.startY + position * dY / length, Math.atan2(dY, dX));
+        return new DirectedPoint2d(this.startX + position * dX / length, this.startY + position * dY / length,
+                Math.atan2(dY, dX));
     }
 
     /** {@inheritDoc} */
@@ -163,7 +163,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
         Throw.whenNull(point, "point");
         return point.closestPointOnLine(this.startX, this.startY, this.endX, this.endY, true, true);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public LineSegment2d reverse()

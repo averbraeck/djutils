@@ -155,10 +155,10 @@ public class LineSegment2dTest
                 assertEquals(segment.getLength() - position, dp.distance(endPoint), 0.0001, "distance from end point");
                 assertEquals(startPoint.directionTo(endPoint), dp.dirZ, 0.0001, "direction of ray");
             }
-            Ray2d ray = segment.getLocationExtended(position);
-            assertEquals(Math.abs(position), ray.distance(startPoint), 0.0001, "distance from start point");
-            assertEquals(Math.abs(segment.getLength() - position), ray.distance(endPoint), 0.0001, "distance from end point");
-            assertEquals(startPoint.directionTo(endPoint), ray.dirZ, 0.0001, "direction of ray");
+            DirectedPoint2d dp = segment.getLocationExtended(position);
+            assertEquals(Math.abs(position), dp.distance(startPoint), 0.0001, "distance from start point");
+            assertEquals(Math.abs(segment.getLength() - position), dp.distance(endPoint), 0.0001, "distance from end point");
+            assertEquals(startPoint.directionTo(endPoint), dp.dirZ, 0.0001, "direction of ray");
         }
     }
 

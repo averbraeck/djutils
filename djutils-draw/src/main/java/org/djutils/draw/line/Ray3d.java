@@ -160,6 +160,15 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
         super(point, throughPoint);
     }
 
+    /**
+     * Construct a new Ray3d.
+     * @param directedPoint DirectedPoint3d; point and direction of the new Ray3d
+     */
+    public Ray3d(final DirectedPoint3d directedPoint)
+    {
+        this(directedPoint, directedPoint.dirY, directedPoint.dirZ);
+    }
+
     /** {@inheritDoc} */
     @Override
     public final double getDirY()

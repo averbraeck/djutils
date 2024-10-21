@@ -152,13 +152,14 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Construct a degenerate PolyLine3d (consisting of only one point).
-     * @param r Ray3d; point, <cite>dirY</cite> and <cite>dirZ</cite> of the degenerate PolyLine3d
+     * @param directedPoint3d DirectedPoint3d; point, <cite>dirY</cite> and <cite>dirZ</cite> of the degenerate PolyLine3d
      * @throws NullPointerException when <cite>p</cite> is null
      * @throws DrawRuntimeException when <cite>dirY</cite> or <cite>dirZ</cite> is infinite (should not be possible)
      */
-    public PolyLine3d(final Ray3d r) throws NullPointerException, DrawRuntimeException
+    public PolyLine3d(final DirectedPoint3d directedPoint3d) throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(r, "r").x, r.y, r.z, r.dirY, r.dirZ);
+        this(Throw.whenNull(directedPoint3d, "r").x, directedPoint3d.y, directedPoint3d.z, directedPoint3d.dirY,
+                directedPoint3d.dirZ);
     }
 
     /**
@@ -619,7 +620,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /** {@inheritDoc} */
     @Override
-    public final Ray3d getLocationExtended(final double position)
+    public final DirectedPoint3d getLocationExtended(final double position)
     {
         if (position >= 0.0 && position <= this.length)
         {
@@ -630,7 +631,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         if (position < 0.0)
         {
             double fraction = position / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
-            return new Ray3d(this.x[0] + fraction * (this.x[1] - this.x[0]), this.y[0] + fraction * (this.y[1] - this.y[0]),
+            return new DirectedPoint3d(this.x[0] + fraction * (this.x[1] - this.x[0]), this.y[0] + fraction * (this.y[1] - this.y[0]),
                     this.z[0] + fraction * (this.z[1] - this.z[0]), this.x[1], this.y[1], this.z[1]);
         }
 
@@ -646,11 +647,11 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
             if (--n2 < 0)
             {
                 CategoryLogger.always().error("lengthIndexedLine of {} is invalid", this);
-                return new Ray3d(this.x[n1], this.y[n1], this.z[n1], 0.0, 0.0); // Bogus direction
+                return new DirectedPoint3d(this.x[n1], this.y[n1], this.z[n1], 0.0, 0.0); // Bogus direction
             }
             fraction = len / (this.lengthIndexedLine[n1] - this.lengthIndexedLine[n2]);
         }
-        return new Ray3d(this.x[n1] + fraction * (this.x[n1] - this.x[n2]), this.y[n1] + fraction * (this.y[n1] - this.y[n2]),
+        return new DirectedPoint3d(this.x[n1] + fraction * (this.x[n1] - this.x[n2]), this.y[n1] + fraction * (this.y[n1] - this.y[n2]),
                 this.z[n1] + fraction * (this.z[n1] - this.z[n2]),
                 Math.atan2(Math.hypot(this.x[n1] - this.x[n2], this.y[n1] - this.y[n2]), this.z[n1] - this.z[n2]),
                 Math.atan2(this.y[n1] - this.y[n2], this.x[n1] - this.x[n2]));
@@ -658,7 +659,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /** {@inheritDoc} */
     @Override
-    public final Ray3d getLocation(final double position) throws DrawRuntimeException
+    public final DirectedPoint3d getLocation(final double position) throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(position), DrawRuntimeException.class, "position may not be NaN");
         Throw.when(position < 0.0 || position > this.length, DrawRuntimeException.class,
@@ -670,11 +671,11 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
             {
                 return new Ray3d(this.x[0], this.y[0], this.z[0], this.startDirZ, this.startDirY);
             }
-            return new Ray3d(this.x[0], this.y[0], this.z[0], this.x[1], this.y[1], this.z[1]);
+            return new DirectedPoint3d(this.x[0], this.y[0], this.z[0], this.x[1], this.y[1], this.z[1]);
         }
         if (position == this.length)
         {
-            return new Ray3d(this.x[this.x.length - 1], this.y[this.x.length - 1], this.z[this.x.length - 1],
+            return new DirectedPoint3d(this.x[this.x.length - 1], this.y[this.x.length - 1], this.z[this.x.length - 1],
                     2 * this.x[this.x.length - 1] - this.x[this.x.length - 2],
                     2 * this.y[this.x.length - 1] - this.y[this.x.length - 2],
                     2 * this.z[this.x.length - 1] - this.z[this.x.length - 2]);
@@ -690,7 +691,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         // remainder = position - this.lengthIndexedLine[index];
         // fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
         // }
-        return new Ray3d(this.x[index] + fraction * (this.x[index + 1] - this.x[index]),
+        return new DirectedPoint3d(this.x[index] + fraction * (this.x[index + 1] - this.x[index]),
                 this.y[index] + fraction * (this.y[index + 1] - this.y[index]),
                 this.z[index] + fraction * (this.z[index + 1] - this.z[index]), 2 * this.x[index + 1] - this.x[index],
                 2 * this.y[index + 1] - this.y[index], 2 * this.z[index + 1] - this.z[index]);
@@ -715,7 +716,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
             {
                 return 0.0;
             }
-            result = getLocation(0.0).projectOrthogonalFractionalExtended(point);
+            result = new Ray3d(getLocation(0.0)).projectOrthogonalFractionalExtended(point);
             if (null == limitHandling)
             {
                 return result == 0.0 ? 0.0 : Double.NaN;
@@ -796,7 +797,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         if (this.lengthIndexedLine.length == 1) // Handle degenerate case
         {
             // limitHandling == true is not handled because it cannot happen
-            Point3d result = this.getLocation(0.0).projectOrthogonalExtended(point);
+            Point3d result = new Ray3d(getLocation(0.0)).projectOrthogonalExtended(point);
             if (null == limitHandling)
             {
                 return result.x != this.x[0] || result.y != this.y[0] || result.z != this.z[0] ? null : get(0);

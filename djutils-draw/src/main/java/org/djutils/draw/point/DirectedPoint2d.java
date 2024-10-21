@@ -213,7 +213,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
         Throw.when(Double.isNaN(rotateZ), IllegalArgumentException.class, "deltaDirZ must be a number (not NaN)");
         return new DirectedPoint2d(this.x, this.y, AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
-
+    
     /** {@inheritDoc} */
     @Override
     public double getDirZ()

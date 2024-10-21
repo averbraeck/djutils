@@ -126,13 +126,13 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a degenerate PolyLine2d (consisting of only one point).
-     * @param r Ray2d; point and heading of the degenerate PolyLine2d
+     * @param directedPoint2d DirectedPoint2d; point and heading (DirZ) of the degenerate PolyLine2d
      * @throws NullPointerException when p is null
-     * @throws DrawRuntimeException when heading is infinite
+     * @throws DrawRuntimeException when heading is NaN or infinite
      */
-    public PolyLine2d(final Ray2d r) throws NullPointerException, DrawRuntimeException
+    public PolyLine2d(final DirectedPoint2d directedPoint2d) throws NullPointerException, DrawRuntimeException
     {
-        this(Throw.whenNull(r, "r").x, r.y, r.dirZ);
+        this(Throw.whenNull(directedPoint2d, "r").x, directedPoint2d.y, directedPoint2d.dirZ);
     }
 
     /**
@@ -597,7 +597,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /** {@inheritDoc} */
     @Override
-    public final Ray2d getLocationExtended(final double position)
+    public final DirectedPoint2d getLocationExtended(final double position)
     {
         if (position >= 0.0 && position <= this.length)
         {
@@ -608,7 +608,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         if (position < 0.0)
         {
             double fraction = position / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
-            return new Ray2d(this.x[0] + fraction * (this.x[1] - this.x[0]), this.y[0] + fraction * (this.y[1] - this.y[0]),
+            return new DirectedPoint2d(this.x[0] + fraction * (this.x[1] - this.x[0]), this.y[0] + fraction * (this.y[1] - this.y[0]),
                     this.x[1], this.y[1]);
         }
 
@@ -624,17 +624,17 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             if (--n2 < 0)
             {
                 CategoryLogger.always().error("lengthIndexedLine of {} is invalid", this);
-                return new Ray2d(this.x[n1], this.y[n1], 0.0); // Bogus direction
+                return new DirectedPoint2d(this.x[n1], this.y[n1], 0.0); // Bogus direction
             }
             fraction = len / (this.lengthIndexedLine[n1] - this.lengthIndexedLine[n2]);
         }
-        return new Ray2d(this.x[n1] + fraction * (this.x[n1] - this.x[n2]), this.y[n1] + fraction * (this.y[n1] - this.y[n2]),
+        return new DirectedPoint2d(this.x[n1] + fraction * (this.x[n1] - this.x[n2]), this.y[n1] + fraction * (this.y[n1] - this.y[n2]),
                 Math.atan2(this.y[n1] - this.y[n2], this.x[n1] - this.x[n2]));
     }
 
     /** {@inheritDoc} */
     @Override
-    public final Ray2d getLocation(final double position) throws DrawRuntimeException
+    public final DirectedPoint2d getLocation(final double position) throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(position), DrawRuntimeException.class, "position may not be NaN");
         Throw.when(position < 0.0 || position > this.length, DrawRuntimeException.class,
@@ -644,13 +644,13 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         {
             if (this.lengthIndexedLine.length == 1) // Extra special case; degenerate PolyLine2d
             {
-                return new Ray2d(this.x[0], this.y[0], this.startHeading);
+                return new DirectedPoint2d(this.x[0], this.y[0], this.startHeading);
             }
-            return new Ray2d(this.x[0], this.y[0], this.x[1], this.y[1]);
+            return new DirectedPoint2d(this.x[0], this.y[0], this.x[1], this.y[1]);
         }
         if (position == this.length)
         {
-            return new Ray2d(this.x[this.x.length - 1], this.y[this.x.length - 1],
+            return new DirectedPoint2d(this.x[this.x.length - 1], this.y[this.x.length - 1],
                     2 * this.x[this.x.length - 1] - this.x[this.x.length - 2],
                     2 * this.y[this.x.length - 1] - this.y[this.x.length - 2]);
         }
@@ -665,7 +665,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         // remainder = position - this.lengthIndexedLine[index];
         // fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
         // }
-        return new Ray2d(this.x[index] + fraction * (this.x[index + 1] - this.x[index]),
+        return new DirectedPoint2d(this.x[index] + fraction * (this.x[index + 1] - this.x[index]),
                 this.y[index] + fraction * (this.y[index + 1] - this.y[index]), 2 * this.x[index + 1] - this.x[index],
                 2 * this.y[index + 1] - this.y[index]);
     }
@@ -689,7 +689,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             {
                 return 0.0;
             }
-            result = getLocation(0.0).projectOrthogonalFractionalExtended(point);
+            result = new Ray2d(getLocation(0.0)).projectOrthogonalFractionalExtended(point);
             if (null == limitHandling)
             {
                 return result == 0.0 ? 0.0 : Double.NaN;
@@ -767,7 +767,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         if (this.lengthIndexedLine.length == 1) // Handle degenerate case
         {
             // limitHandling == true is not handled because it cannot happen
-            Point2d result = this.getLocation(0.0).projectOrthogonalExtended(point);
+            Point2d result = new Ray2d(this.getLocation(0.0)).projectOrthogonalExtended(point);
             if (null == limitHandling)
             {
                 return result.x != this.x[0] || result.y != this.y[0] ? null : get(0);

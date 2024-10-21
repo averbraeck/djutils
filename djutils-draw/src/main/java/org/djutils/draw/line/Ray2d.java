@@ -125,6 +125,15 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     {
         this(Throw.whenNull(point, "point").x, point.y, Throw.whenNull(throughPoint, "throughPoint").x, throughPoint.y);
     }
+    
+    /**
+     * Construct a new Ray2d.
+     * @param directedPoint DirectedPoint2d; point and direction of the new Ray2d
+     */
+    public Ray2d(final DirectedPoint2d directedPoint)
+    {
+        this(directedPoint, directedPoint.dirZ);
+    }
 
     /** {@inheritDoc} */
     @Override

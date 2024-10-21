@@ -173,7 +173,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
 
     /** {@inheritDoc} */
     @Override
-    public Ray3d getLocationExtended(final double position) throws DrawRuntimeException
+    public DirectedPoint3d getLocationExtended(final double position) throws DrawRuntimeException
     {
         Throw.when(Double.isNaN(position) || Double.isInfinite(position), DrawRuntimeException.class,
                 "position must be finite");
@@ -181,7 +181,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
         double dY = this.endY - this.startY;
         double dZ = this.endZ - this.startZ;
         double length = Math.sqrt(dX * dX + dY * dY + dZ * dZ);
-        return new Ray3d(this.startX + position * dX / length, this.startY + position * dY / length,
+        return new DirectedPoint3d(this.startX + position * dX / length, this.startY + position * dY / length,
                 this.startZ + position * dZ / length, Math.atan2(dZ, Math.hypot(dX, dY)), Math.atan2(dY, dX));
     }
 
