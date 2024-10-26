@@ -20,7 +20,7 @@ import picocli.CommandLine.Option;
  * source code and binary code of this software is proprietary information of Delft University of Technology.
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
  */
-public class TestCLICommandLine
+public class TestCliCommandLine
 {
     /** */
     @Command(description = "Test program for CLI", name = "Program", mixinStandardHelpOptions = true, version = "1.0")

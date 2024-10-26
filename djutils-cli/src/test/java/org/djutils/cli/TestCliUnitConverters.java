@@ -108,7 +108,7 @@ import picocli.CommandLine.Option;
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
  */
 @SuppressWarnings("checkstyle:visibilitymodifier")
-public class TestCLIUnitConverters
+public class TestCliUnitConverters
 {
     /** */
     @Command(description = "Test program for CLI", name = "Program", mixinStandardHelpOptions = true, version = "1.0")
