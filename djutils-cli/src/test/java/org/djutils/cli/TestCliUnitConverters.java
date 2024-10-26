@@ -302,6 +302,7 @@ public class TestCliUnitConverters
      * @throws IllegalArgumentException on error
      * @throws NoSuchFieldException on error
      */
+    @SuppressWarnings("checkstyle:methodlength")
     @Test
     public void testCli() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
