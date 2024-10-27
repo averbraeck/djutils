@@ -88,14 +88,6 @@ public final class CliUtil
         /** the locale. */
         @Option(names = {"--locale"}, defaultValue = "en-US", description = "locale for variables with units.")
         private String locale;
-
-        /**
-         * @return the locale from --locale
-         */
-        String getLocale()
-        {
-            return this.locale;
-        }
     }
 
     /** Retrieval class to provide a --locale option, and a default locale. */
