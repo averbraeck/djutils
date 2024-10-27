@@ -15,6 +15,14 @@ public class CliException extends Exception
     private static final long serialVersionUID = 20190813L;
 
     /**
+     * Standard CliException without explanation.
+     */
+    public CliException()
+    {
+        super();
+    }
+
+    /**
      * @param message String; the description of the exception
      */
     public CliException(final String message)
