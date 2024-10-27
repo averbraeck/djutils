@@ -53,14 +53,12 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
         this.eventProducer = eventProducer;
     }
 
-    /** {@inheritDoc} */
     @Override
     public EventListenerMap getEventListenerMap() throws RemoteException
     {
         return this.eventProducer.getEventListenerMap();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void initialize()
     {
@@ -78,7 +76,6 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void notify(final Event event)
     {
@@ -133,7 +130,6 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
         this.eventProducer.fireEvent(StatisticsEvents.WEIGHTED_SAMPLE_STDEV_EVENT, getWeightedSampleStDev());
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {

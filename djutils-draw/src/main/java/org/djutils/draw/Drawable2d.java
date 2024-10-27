@@ -20,7 +20,6 @@ public interface Drawable2d extends Drawable<Point2d>
      */
     Bounds2d getBounds();
 
-    /** {@inheritDoc} */
     @Override
     default int getDimensions()
     {

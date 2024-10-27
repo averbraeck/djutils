@@ -33,7 +33,6 @@ public class TestCliSuperclass
             return this.port;
         }
 
-        /** {@inheritDoc} */
         @Override
         public void check() throws Exception
         {

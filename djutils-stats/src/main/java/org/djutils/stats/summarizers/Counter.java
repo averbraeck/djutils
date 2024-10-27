@@ -50,7 +50,6 @@ public class Counter implements Statistic
         return this.count;
     }
 
-    /** {@inheritDoc} */
     @Override
     public long getN()
     {
@@ -85,7 +84,6 @@ public class Counter implements Statistic
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getDescription()
     {
@@ -102,7 +100,6 @@ public class Counter implements Statistic
                 + "-".repeat(72);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String reportLine()
     {
@@ -118,7 +115,6 @@ public class Counter implements Statistic
         return "-".repeat(72);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {

@@ -44,7 +44,6 @@ public class FloatMatrixSerializer<U extends Unit<U>, S extends FloatScalar<U, S
         super(FieldTypes.FLOAT_32_UNIT_MATRIX, "Djunits_FloatMatrix", 2);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size(final M afm) throws SerializationException
     {
@@ -58,7 +57,6 @@ public class FloatMatrixSerializer<U extends Unit<U>, S extends FloatScalar<U, S
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serialize(final M afm, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
             throws SerializationException
@@ -82,7 +80,6 @@ public class FloatMatrixSerializer<U extends Unit<U>, S extends FloatScalar<U, S
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public M deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil) throws SerializationException
     {

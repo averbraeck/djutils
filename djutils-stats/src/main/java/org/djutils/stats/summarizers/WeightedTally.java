@@ -59,7 +59,6 @@ public class WeightedTally implements TallyStatistic
         initialize();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void initialize()
     {
@@ -118,28 +117,24 @@ public class WeightedTally implements TallyStatistic
         return value;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getDescription()
     {
         return this.description;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getMax()
     {
         return this.max;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getMin()
     {
         return this.min;
     }
 
-    /** {@inheritDoc} */
     @Override
     public long getN()
     {
@@ -246,7 +241,6 @@ public class WeightedTally implements TallyStatistic
                 "Weighted Tally name", "n", "w.mean", "w.st.dev", "min obs", "max obs") + "-".repeat(113);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String reportLine()
     {
@@ -264,7 +258,6 @@ public class WeightedTally implements TallyStatistic
         return "-".repeat(113);
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()

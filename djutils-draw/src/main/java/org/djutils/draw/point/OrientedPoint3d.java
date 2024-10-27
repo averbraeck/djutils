@@ -150,7 +150,6 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
         this(xyz, checkOrientationVector(orientation), orientation[1], orientation[2]);
     }
 
-    /** {@inheritDoc} */
     @Override
     public OrientedPoint3d translate(final double dx, final double dy) throws IllegalArgumentException
     {
@@ -158,7 +157,6 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
         return new OrientedPoint3d(this.x + dx, this.y + dy, this.z, this.dirX, this.dirY, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public OrientedPoint3d translate(final double dx, final double dy, final double dz) throws IllegalArgumentException
     {
@@ -167,14 +165,12 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
         return new OrientedPoint3d(this.x + dx, this.y + dy, this.z + dz, this.dirX, this.dirY, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public OrientedPoint3d scale(final double factor) throws IllegalArgumentException
     {
         return new OrientedPoint3d(this.x * factor, this.y * factor, this.z * factor, this.dirX, this.dirY, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public OrientedPoint3d neg()
     {
@@ -182,14 +178,12 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
                 AngleUtil.normalizeAroundZero(this.dirY + Math.PI), AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
     }
 
-    /** {@inheritDoc} */
     @Override
     public OrientedPoint3d abs()
     {
         return new OrientedPoint3d(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z), this.dirX, this.dirY, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public OrientedPoint3d normalize() throws DrawRuntimeException
     {
@@ -263,42 +257,36 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
                 AngleUtil.normalizeAroundZero(this.dirY + rotateY), AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getDirX()
     {
         return this.dirX;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getDirY()
     {
         return this.dirY;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getDirZ()
     {
         return this.dirZ;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<OrientedPoint3d> getPoints()
     {
         return Arrays.stream(new OrientedPoint3d[] {this}).iterator();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {
         return toString("%f", false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
@@ -307,7 +295,6 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
         return String.format(Locale.US, format, this.x, this.y, this.z, this.dirX, this.dirY, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean epsilonEquals(final OrientedPoint3d other, final double epsilonCoordinate, final double epsilonRotation)
             throws NullPointerException, IllegalArgumentException
@@ -340,7 +327,6 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
@@ -356,7 +342,6 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:needbraces")
     public boolean equals(final Object obj)

@@ -12,14 +12,12 @@ package org.djutils.data.serialization;
  */
 public class StringSerializer implements SpecificTextSerializer<String>
 {
-    /** {@inheritDoc} */
     @Override
     public String serialize(final String value, final String unit)
     {
         return value == null ? null : value.toString();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String deserialize(final Class<String> type, final String text, final String unit)
     {

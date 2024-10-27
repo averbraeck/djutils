@@ -42,7 +42,6 @@ public class DoubleVectorSerializer<U extends Unit<U>, S extends DoubleScalar<U,
         super(FieldTypes.DOUBLE_64_UNIT_ARRAY, "Djunits_DoubleVector", 1);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size(final V adv) throws SerializationException
     {
@@ -56,7 +55,6 @@ public class DoubleVectorSerializer<U extends Unit<U>, S extends DoubleScalar<U,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serialize(final V adv, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
             throws SerializationException
@@ -76,7 +74,6 @@ public class DoubleVectorSerializer<U extends Unit<U>, S extends DoubleScalar<U,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public V deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil) throws SerializationException
     {

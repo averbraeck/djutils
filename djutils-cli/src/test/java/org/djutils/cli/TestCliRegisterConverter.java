@@ -95,7 +95,6 @@ public class TestCliRegisterConverter
      */
     public static class LatLonConverter implements ITypeConverter<LatLon>
     {
-        /** {@inheritDoc} */
         @Override
         public LatLon convert(final String value) throws Exception
         {

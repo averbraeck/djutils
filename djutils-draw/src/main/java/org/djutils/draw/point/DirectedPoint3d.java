@@ -203,7 +203,6 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
                 throughPoint.z);
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint3d translate(final double dx, final double dy) throws IllegalArgumentException
     {
@@ -211,7 +210,6 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
         return new DirectedPoint3d(this.x + dx, this.y + dy, this.z, this.dirY, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint3d translate(final double dx, final double dy, final double dz) throws IllegalArgumentException
     {
@@ -220,14 +218,12 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
         return new DirectedPoint3d(this.x + dx, this.y + dy, this.z + dz, this.dirY, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint3d scale(final double factor) throws IllegalArgumentException
     {
         return new DirectedPoint3d(this.x * factor, this.y * factor, this.z * factor, this.dirY, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint3d neg()
     {
@@ -235,14 +231,12 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
                 AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint3d abs()
     {
         return new DirectedPoint3d(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z), this.dirY, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint3d normalize() throws DrawRuntimeException
     {
@@ -311,35 +305,30 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
                 AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getDirZ()
     {
         return this.dirZ;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getDirY()
     {
         return this.dirY;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<? extends DirectedPoint3d> getPoints()
     {
         return Arrays.stream(new DirectedPoint3d[] {this}).iterator();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {
         return toString("%f", false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
@@ -348,7 +337,6 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
         return String.format(Locale.US, format, this.x, this.y, this.z, this.dirY, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean epsilonEquals(final DirectedPoint3d other, final double epsilonCoordinate, final double epsilonRotation)
             throws NullPointerException, IllegalArgumentException
@@ -381,7 +369,6 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
@@ -391,7 +378,6 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:needbraces")
     public boolean equals(final Object obj)

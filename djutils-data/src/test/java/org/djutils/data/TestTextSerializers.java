@@ -221,28 +221,24 @@ public class TestTextSerializers
         /** */
         private static final long serialVersionUID = 1L;
 
-        /** {@inheritDoc} */
         @Override
         public int intValue()
         {
             return 0;
         }
 
-        /** {@inheritDoc} */
         @Override
         public long longValue()
         {
             return 0L;
         }
 
-        /** {@inheritDoc} */
         @Override
         public float floatValue()
         {
             return 0.0f;
         }
 
-        /** {@inheritDoc} */
         @Override
         public double doubleValue()
         {

@@ -135,28 +135,24 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
         this(directedPoint, directedPoint.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double getDirZ()
     {
         return this.dirZ;
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint2d getEndPoint()
     {
         return this;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size()
     {
         return 2;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<DirectedPoint2d> getPoints()
     {
@@ -168,7 +164,6 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
         return Arrays.stream(array).iterator();
     }
 
-    /** {@inheritDoc} */
     @Override
     public Bounds2d getBounds()
     {
@@ -178,21 +173,18 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
                 sinDirZ >= 0 ? this.y : Double.NEGATIVE_INFINITY, sinDirZ <= 0 ? this.y : Double.POSITIVE_INFINITY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Ray2d neg()
     {
         return new Ray2d(-this.x, -this.y, AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
     }
 
-    /** {@inheritDoc} */
     @Override
     public Ray2d flip()
     {
         return new Ray2d(this.x, this.y, AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
     }
 
-    /** {@inheritDoc} */
     @Override
     public Ray2d getLocationExtended(final double position) throws DrawRuntimeException
     {
@@ -201,7 +193,6 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
         return new Ray2d(this.x + Math.cos(this.dirZ) * position, this.y + Math.sin(this.dirZ) * position, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d closestPointOnRay(final Point2d point) throws NullPointerException
     {
@@ -211,7 +202,6 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
         return point.closestPointOnLine(this.x, this.y, this.x + dX, this.y + dY, true, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d projectOrthogonal(final Point2d point) throws NullPointerException
     {
@@ -220,7 +210,6 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
                 false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d projectOrthogonalExtended(final Point2d point)
     {
@@ -229,7 +218,6 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
                 false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double projectOrthogonalFractional(final Point2d point) throws NullPointerException
     {
@@ -238,7 +226,6 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
                 false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double projectOrthogonalFractionalExtended(final Point2d point) throws NullPointerException
     {
@@ -247,14 +234,12 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
                 false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {
         return toString("%f", false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
@@ -262,14 +247,12 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
         return String.format(Locale.US, format, this.x, this.y, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
         return super.hashCode();
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:needbraces")
     public boolean equals(final Object obj)

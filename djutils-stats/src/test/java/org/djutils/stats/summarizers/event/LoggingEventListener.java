@@ -32,7 +32,6 @@ public class LoggingEventListener implements EventListener
         this.lastEvent = null;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void notify(final Event event) throws RemoteException
     {

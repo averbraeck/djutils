@@ -256,7 +256,6 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
         return iterator;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<Point2d> getPoints()
     {
@@ -265,7 +264,6 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
         return Arrays.stream(array).iterator();
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size()
     {
@@ -285,7 +283,6 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
         return x > this.minX && x < this.maxX && y > this.minY && y < this.maxY;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean contains(final Point2d point)
     {
@@ -293,7 +290,6 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
         return contains(point.x, point.y);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean contains(final Bounds2d otherBounds) throws NullPointerException
     {
@@ -313,7 +309,6 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
         return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean covers(final Point2d point)
     {
@@ -321,7 +316,6 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
         return covers(point.x, point.y);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean covers(final Bounds2d otherBounds) throws NullPointerException
     {
@@ -329,7 +323,6 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
         return covers(otherBounds.minX, otherBounds.minY) && covers(otherBounds.maxX, otherBounds.maxY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean disjoint(final Bounds2d otherBounds) throws NullPointerException
     {
@@ -338,14 +331,12 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
                 || otherBounds.maxY < this.minY;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean intersects(final Bounds2d otherBounds2d) throws NullPointerException
     {
         return !disjoint(otherBounds2d);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Bounds2d intersection(final Bounds2d otherBounds2d)
     {
@@ -367,35 +358,30 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
         return new Rectangle2D.Double(this.minX, this.minY, this.maxX - this.minX, this.maxY - this.minY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getMinX()
     {
         return this.minX;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getMaxX()
     {
         return this.maxX;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getMinY()
     {
         return this.minY;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getMaxY()
     {
         return this.maxY;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d midPoint()
     {
@@ -411,21 +397,18 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
         return getDeltaX() * getDeltaY();
     }
 
-    /** {@inheritDoc} */
     @Override
     public Bounds2d getBounds()
     {
         return this;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {
         return toString("%f");
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
@@ -434,7 +417,6 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
         return String.format(Locale.US, format, this.minX, this.maxX, this.minY, this.maxY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
@@ -452,7 +434,6 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
         return result;
     }
 
-    /** {@inheritDoc} */
     @SuppressWarnings("checkstyle:needbraces")
     @Override
     public boolean equals(final Object obj)

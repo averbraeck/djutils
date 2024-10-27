@@ -25,14 +25,12 @@ public class FloatScalarSerializer<U extends Unit<U>, S extends FloatScalar<U, S
         super(FieldTypes.FLOAT_32_UNIT, "Djunits_FloatScalar");
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size(final S afs) throws SerializationException
     {
         return 2 + 4;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serialize(final S afs, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
             throws SerializationException
@@ -42,7 +40,6 @@ public class FloatScalarSerializer<U extends Unit<U>, S extends FloatScalar<U, S
         endianUtil.encodeFloat(v, buffer, pointer.getAndIncrement(4));
     }
 
-    /** {@inheritDoc} */
     @Override
     public S deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil) throws SerializationException
     {

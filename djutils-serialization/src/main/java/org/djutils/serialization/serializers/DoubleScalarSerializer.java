@@ -25,14 +25,12 @@ public class DoubleScalarSerializer<U extends Unit<U>, S extends DoubleScalar<U,
         super(FieldTypes.DOUBLE_64_UNIT, "Djunits_DoubleScalar");
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size(final S ads) throws SerializationException
     {
         return 2 + 8;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serialize(final S ads, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
             throws SerializationException
@@ -42,7 +40,6 @@ public class DoubleScalarSerializer<U extends Unit<U>, S extends DoubleScalar<U,
         endianUtil.encodeDouble(v, buffer, pointer.getAndIncrement(8));
     }
 
-    /** {@inheritDoc} */
     @Override
     public S deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil) throws SerializationException
     {

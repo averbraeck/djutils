@@ -12,14 +12,12 @@ package org.djutils.data.serialization;
  */
 public class ShortSerializer implements SpecificTextSerializer<Short>
 {
-    /** {@inheritDoc} */
     @Override
     public String serialize(final Short value, final String unit)
     {
         return value == null ? null : String.valueOf(value.shortValue());
     }
 
-    /** {@inheritDoc} */
     @Override
     public Short deserialize(final Class<Short> type, final String text, final String unit)
     {

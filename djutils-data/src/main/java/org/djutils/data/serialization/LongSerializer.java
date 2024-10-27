@@ -12,14 +12,12 @@ package org.djutils.data.serialization;
  */
 public class LongSerializer implements SpecificTextSerializer<Long>
 {
-    /** {@inheritDoc} */
     @Override
     public String serialize(final Long value, final String unit)
     {
         return value == null ? null : String.valueOf(value.longValue());
     }
 
-    /** {@inheritDoc} */
     @Override
     public Long deserialize(final Class<Long> type, final String text, final String unit)
     {

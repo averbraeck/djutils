@@ -12,14 +12,12 @@ package org.djutils.data.serialization;
  */
 public class BooleanSerializer implements SpecificTextSerializer<Boolean>
 {
-    /** {@inheritDoc} */
     @Override
     public String serialize(final Boolean value, final String unit)
     {
         return value == null ? null : value.toString();
     }
 
-    /** {@inheritDoc} */
     @Override
     public Boolean deserialize(final Class<Boolean> type, final String text, final String unit)
     {

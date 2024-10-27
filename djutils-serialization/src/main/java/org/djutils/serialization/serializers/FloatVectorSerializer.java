@@ -42,7 +42,6 @@ public class FloatVectorSerializer<U extends Unit<U>, S extends FloatScalar<U, S
         super(FieldTypes.FLOAT_32_UNIT_ARRAY, "Djunits_FloatVector", 1);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size(final V afv) throws SerializationException
     {
@@ -56,7 +55,6 @@ public class FloatVectorSerializer<U extends Unit<U>, S extends FloatScalar<U, S
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serialize(final V afv, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
             throws SerializationException
@@ -76,7 +74,6 @@ public class FloatVectorSerializer<U extends Unit<U>, S extends FloatScalar<U, S
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public V deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil) throws SerializationException
     {

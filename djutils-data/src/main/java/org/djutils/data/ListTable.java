@@ -36,14 +36,12 @@ public class ListTable extends Table
         super(id, description, columns);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<Row> iterator()
     {
         return this.rows.iterator();
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean isEmpty()
     {

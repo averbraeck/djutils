@@ -12,7 +12,6 @@ import org.djutils.stats.summarizers.Tally;
  */
 public class NoStorageAccumulator implements QuantileAccumulator
 {
-    /** {@inheritDoc} */
     @Override
     public double register(final double value)
     {
@@ -20,7 +19,6 @@ public class NoStorageAccumulator implements QuantileAccumulator
         return value;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getQuantile(final Tally tally, final double probability)
     {
@@ -31,7 +29,6 @@ public class NoStorageAccumulator implements QuantileAccumulator
                 probability);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getCumulativeProbability(final Tally tally, final double quantile) throws IllegalArgumentException
     {
@@ -42,14 +39,12 @@ public class NoStorageAccumulator implements QuantileAccumulator
         return DistNormalTable.getCumulativeProbability(tally.getPopulationMean(), tally.getPopulationStDev(), quantile);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {
         return "NoStorageAccumulator";
     }
 
-    /** {@inheritDoc} */
     @Override
     public void initialize()
     {

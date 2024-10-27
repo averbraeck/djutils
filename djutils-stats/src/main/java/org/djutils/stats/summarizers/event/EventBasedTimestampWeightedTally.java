@@ -56,14 +56,12 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
         this.eventProducer = eventProducer;
     }
 
-    /** {@inheritDoc} */
     @Override
     public EventListenerMap getEventListenerMap() throws RemoteException
     {
         return this.eventProducer.getEventListenerMap();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void initialize()
     {
@@ -81,7 +79,6 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void notify(final Event event)
     {
@@ -220,7 +217,6 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
         fireTimedEvent(StatisticsEvents.TIMED_WEIGHTED_SAMPLE_STDEV_EVENT, getWeightedSampleStDev(), castedTimestamp);
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()

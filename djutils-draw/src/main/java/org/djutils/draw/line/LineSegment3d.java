@@ -116,21 +116,18 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
                 Throw.whenNull(end, "end point may not be null").x, end.y, end.z);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d getStartPoint()
     {
         return new Point3d(this.startX, this.startY, this.startZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d getEndPoint()
     {
         return new Point3d(this.endX, this.endY, this.endZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getLength()
     {
@@ -141,21 +138,18 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
         return Math.sqrt(dX * dX + dY * dY + dZ * dZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<? extends Point3d> getPoints()
     {
         return Arrays.stream(new Point3d[] {getStartPoint(), getEndPoint()}).iterator();
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size()
     {
         return 2;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Bounds3d getBounds()
     {
@@ -164,14 +158,12 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
                 Math.max(this.startZ, this.endZ));
     }
 
-    /** {@inheritDoc} */
     @Override
     public LineSegment2d project() throws DrawRuntimeException
     {
         return new LineSegment2d(this.startX, this.startY, this.endX, this.endY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint3d getLocationExtended(final double position) throws DrawRuntimeException
     {
@@ -185,7 +177,6 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
                 this.startZ + position * dZ / length, Math.atan2(dZ, Math.hypot(dX, dY)), Math.atan2(dY, dX));
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d closestPointOnSegment(final Point3d point)
     {
@@ -193,14 +184,12 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
         return point.closestPointOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ, true, true);
     }
 
-    /** {@inheritDoc} */
     @Override
     public LineSegment3d reverse()
     {
         return new LineSegment3d(this.endX, this.endY, this.endZ, this.startX, this.startY, this.startZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d projectOrthogonal(final Point3d point) throws NullPointerException
     {
@@ -208,7 +197,6 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
         return point.closestPointOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ, null, null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d projectOrthogonalExtended(final Point3d point) throws NullPointerException
     {
@@ -216,7 +204,6 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
         return point.closestPointOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double projectOrthogonalFractional(final Point3d point) throws NullPointerException
     {
@@ -225,7 +212,6 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
                 null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double projectOrthogonalFractionalExtended(final Point3d point) throws NullPointerException
     {
@@ -234,14 +220,12 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
                 false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {
         return toString("%f", false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
@@ -250,7 +234,6 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
         return String.format(Locale.US, format, this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
@@ -272,7 +255,6 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:needbraces")
     public boolean equals(final Object obj)

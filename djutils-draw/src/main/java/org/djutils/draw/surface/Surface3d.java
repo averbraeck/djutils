@@ -99,7 +99,6 @@ public class Surface3d implements Drawable3d
         this.bounds = new Bounds3d(getPoints());
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<? extends Point3d> getPoints()
     {
@@ -107,14 +106,12 @@ public class Surface3d implements Drawable3d
         {
             private int current = 0;
 
-            /** {@inheritDoc} */
             @Override
             public boolean hasNext()
             {
                 return this.current < size();
             }
 
-            /** {@inheritDoc} */
             @Override
             public Point3d next()
             {
@@ -126,21 +123,18 @@ public class Surface3d implements Drawable3d
         };
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size()
     {
         return this.indices.length;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Bounds3d getBounds()
     {
         return this.bounds;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Drawable2d project() throws DrawRuntimeException
     {
@@ -148,14 +142,12 @@ public class Surface3d implements Drawable3d
                 + "of triangles in the 2D plane");
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {
         return toString("%f", false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
@@ -182,7 +174,6 @@ public class Surface3d implements Drawable3d
         return result.toString();
     }
 
-    /** {@inheritDoc} */
     @SuppressWarnings("checkstyle:designforextension")
     @Override
     public int hashCode()
@@ -196,7 +187,6 @@ public class Surface3d implements Drawable3d
         return result;
     }
 
-    /** {@inheritDoc} */
     @SuppressWarnings({"checkstyle:designforextension", "checkstyle:needbraces"})
     @Override
     public boolean equals(final Object obj)

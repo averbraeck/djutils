@@ -63,7 +63,6 @@ public class Pointer
         this.offset += increment;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {

@@ -36,21 +36,18 @@ class F2 implements Function
         this.f2 = f2;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getId()
     {
         return this.id;
     }
 
-    /** {@inheritDoc} */
     @Override
     public MetaData getMetaData()
     {
         return this.metaData;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Object function(final Object[] arguments) throws RuntimeException
     {

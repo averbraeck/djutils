@@ -388,7 +388,6 @@ public class Polygon2d extends PolyLine2d
         return result / 2;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getLength()
     {
@@ -396,7 +395,6 @@ public class Polygon2d extends PolyLine2d
         return super.getLength() + Math.hypot(getX(size() - 1) - getX(0), getY(size() - 1) - getY(0));
     }
 
-    /** {@inheritDoc} */
     @Override
     public LineSegment2d getSegment(final int index)
     {
@@ -408,7 +406,6 @@ public class Polygon2d extends PolyLine2d
         return new LineSegment2d(getX(index), getY(index), getX(0), getY(0));
     }
 
-    /** {@inheritDoc} */
     @Override
     public Polygon2d reverse()
     {
@@ -427,14 +424,12 @@ public class Polygon2d extends PolyLine2d
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     public final String toString()
     {
         return toString("%f", false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {

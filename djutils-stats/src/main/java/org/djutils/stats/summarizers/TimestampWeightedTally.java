@@ -43,7 +43,6 @@ public class TimestampWeightedTally extends WeightedTally
         super(description);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void initialize()
     {
@@ -200,7 +199,6 @@ public class TimestampWeightedTally extends WeightedTally
                 + "-".repeat(126);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String reportLine()
     {
@@ -218,7 +216,6 @@ public class TimestampWeightedTally extends WeightedTally
         return "-".repeat(126);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {

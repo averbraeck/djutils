@@ -110,14 +110,12 @@ public class Point3d implements Drawable3d, Point<Point3d>
         return xyz;
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double getX()
     {
         return this.x;
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double getY()
     {
@@ -133,7 +131,6 @@ public class Point3d implements Drawable3d, Point<Point3d>
         return this.z;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double distanceSquared(final Point3d otherPoint) throws NullPointerException
     {
@@ -144,7 +141,6 @@ public class Point3d implements Drawable3d, Point<Point3d>
         return dx * dx + dy * dy + dz * dz;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double distance(final Point3d otherPoint) throws NullPointerException
     {
@@ -152,21 +148,18 @@ public class Point3d implements Drawable3d, Point<Point3d>
         return Math.sqrt(distanceSquared(otherPoint));
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size()
     {
         return 1;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<? extends Point3d> getPoints()
     {
         return Arrays.stream(new Point3d[] {this}).iterator();
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d project() throws DrawRuntimeException
     {
@@ -202,7 +195,6 @@ public class Point3d implements Drawable3d, Point<Point3d>
         return new Point3d(this.x + dx, this.y + dy, this.z + dz);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d scale(final double factor) throws IllegalArgumentException
     {
@@ -210,21 +202,18 @@ public class Point3d implements Drawable3d, Point<Point3d>
         return new Point3d(this.x * factor, this.y * factor, this.z * factor);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d neg()
     {
         return scale(-1.0);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d abs()
     {
         return new Point3d(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z));
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d normalize() throws DrawRuntimeException
     {
@@ -233,7 +222,6 @@ public class Point3d implements Drawable3d, Point<Point3d>
         return this.scale(1.0 / length);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d interpolate(final Point3d point, final double fraction)
     {
@@ -244,7 +232,6 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean epsilonEquals(final Point3d otherPoint, final double epsilon)
     {
@@ -264,14 +251,12 @@ public class Point3d implements Drawable3d, Point<Point3d>
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Bounds3d getBounds()
     {
         return new Bounds3d(this);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final Point3d closestPointOnSegment(final Point3d segmentPoint1, final Point3d segmentPoint2)
     {
@@ -395,7 +380,6 @@ public class Point3d implements Drawable3d, Point<Point3d>
         return closestPointOnLine(p1X, p1Y, p1Z, p2X, p2Y, p2Z, true, true);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final Point3d closestPointOnLine(final Point3d linePoint1, final Point3d linePoint2)
             throws NullPointerException, DrawRuntimeException
@@ -483,7 +467,6 @@ public class Point3d implements Drawable3d, Point<Point3d>
         return Math.sqrt(horizontalDistanceSquared(otherPoint));
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()
@@ -491,7 +474,6 @@ public class Point3d implements Drawable3d, Point<Point3d>
         return toString("%f");
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
@@ -499,7 +481,6 @@ public class Point3d implements Drawable3d, Point<Point3d>
         return String.format(Locale.US, format, this.x, this.y, this.z);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
@@ -515,7 +496,6 @@ public class Point3d implements Drawable3d, Point<Point3d>
         return result;
     }
 
-    /** {@inheritDoc} */
     @SuppressWarnings("checkstyle:needbraces")
     @Override
     public boolean equals(final Object obj)

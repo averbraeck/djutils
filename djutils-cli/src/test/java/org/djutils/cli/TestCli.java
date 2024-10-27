@@ -42,7 +42,6 @@ public class TestCli
             return this.noOption;
         }
 
-        /** {@inheritDoc} */
         @Override
         public void check() throws Exception
         {
@@ -67,7 +66,6 @@ public class TestCli
             return this.timeout;
         }
 
-        /** {@inheritDoc} */
         @Override
         public void check() throws Exception
         {

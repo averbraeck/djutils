@@ -337,7 +337,6 @@ public class Transform3d implements Cloneable
         return new Bounds3d(transform(boundingBox.getPoints()));
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
@@ -347,7 +346,6 @@ public class Transform3d implements Cloneable
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:needbraces")
     public boolean equals(final Object obj)
@@ -364,7 +362,6 @@ public class Transform3d implements Cloneable
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {

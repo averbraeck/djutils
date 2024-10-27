@@ -87,21 +87,18 @@ public class Point2d implements Drawable2d, Point<Point2d>
         return xy;
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double getX()
     {
         return this.x;
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double getY()
     {
         return this.y;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double distance(final Point2d otherPoint)
     {
@@ -109,7 +106,6 @@ public class Point2d implements Drawable2d, Point<Point2d>
         return Math.hypot(otherPoint.x - this.x, otherPoint.y - this.y);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double distanceSquared(final Point2d otherPoint) throws NullPointerException
     {
@@ -119,14 +115,12 @@ public class Point2d implements Drawable2d, Point<Point2d>
         return dx * dx + dy * dy;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size()
     {
         return 1;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<? extends Point2d> getPoints()
     {
@@ -162,7 +156,6 @@ public class Point2d implements Drawable2d, Point<Point2d>
         return new Point3d(this.x + dx, this.y + dy, dz);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d scale(final double factor)
     {
@@ -170,21 +163,18 @@ public class Point2d implements Drawable2d, Point<Point2d>
         return new Point2d(this.x * factor, this.y * factor);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d neg()
     {
         return scale(-1.0);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d abs()
     {
         return new Point2d(Math.abs(this.x), Math.abs(this.y));
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d normalize() throws DrawRuntimeException
     {
@@ -193,7 +183,6 @@ public class Point2d implements Drawable2d, Point<Point2d>
         return this.scale(1.0 / length);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d interpolate(final Point2d otherPoint, final double fraction)
     {
@@ -203,7 +192,6 @@ public class Point2d implements Drawable2d, Point<Point2d>
                 (1.0 - fraction) * this.y + fraction * otherPoint.y);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean epsilonEquals(final Point2d otherPoint, final double epsilon)
     {
@@ -219,7 +207,6 @@ public class Point2d implements Drawable2d, Point<Point2d>
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Bounds2d getBounds()
     {
@@ -385,7 +372,6 @@ public class Point2d implements Drawable2d, Point<Point2d>
                 segment2.startY, segment2.endX, segment2.endY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d closestPointOnSegment(final Point2d segmentPoint1, final Point2d segmentPoint2)
     {
@@ -495,7 +481,6 @@ public class Point2d implements Drawable2d, Point<Point2d>
         return closestPointOnLine(p1X, p1Y, p2X, p2Y, true, true);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d closestPointOnLine(final Point2d linePoint1, final Point2d linePoint2)
             throws NullPointerException, DrawRuntimeException
@@ -589,14 +574,12 @@ public class Point2d implements Drawable2d, Point<Point2d>
         return new Point2D.Double(this.x, this.y);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {
         return toString("%f");
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
@@ -604,7 +587,6 @@ public class Point2d implements Drawable2d, Point<Point2d>
         return String.format(Locale.US, format, this.x, this.y);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
@@ -618,7 +600,6 @@ public class Point2d implements Drawable2d, Point<Point2d>
         return result;
     }
 
-    /** {@inheritDoc} */
     @SuppressWarnings("checkstyle:needbraces")
     @Override
     public boolean equals(final Object obj)

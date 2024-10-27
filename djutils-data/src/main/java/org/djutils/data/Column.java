@@ -87,7 +87,6 @@ public class Column<T> implements Identifiable, Serializable
         this(id, description, valueType, null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getId()
     {
@@ -121,14 +120,12 @@ public class Column<T> implements Identifiable, Serializable
         return this.unit;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
         return Objects.hash(this.id);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean equals(final Object obj)
     {
@@ -148,7 +145,6 @@ public class Column<T> implements Identifiable, Serializable
         return Objects.equals(this.id, other.id);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {

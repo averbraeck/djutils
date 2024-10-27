@@ -51,14 +51,12 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
         this.eventProducer = eventProducer;
     }
 
-    /** {@inheritDoc} */
     @Override
     public EventListenerMap getEventListenerMap() throws RemoteException
     {
         return this.eventProducer.getEventListenerMap();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void initialize()
     {
@@ -76,7 +74,6 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void notify(final Event event)
     {
@@ -92,7 +89,6 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
         register(value);
     }
 
-    /** {@inheritDoc} */
     @Override
     public long register(final long value)
     {

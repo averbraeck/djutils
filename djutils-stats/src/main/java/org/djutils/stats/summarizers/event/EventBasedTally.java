@@ -78,14 +78,12 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
         this.eventProducer = eventProducer;
     }
 
-    /** {@inheritDoc} */
     @Override
     public EventListenerMap getEventListenerMap() throws RemoteException
     {
         return this.eventProducer.getEventListenerMap();
     }
 
-    /** {@inheritDoc} */
     @Override
     public void initialize()
     {
@@ -103,7 +101,6 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:designforextension")
     public void notify(final Event event)
@@ -116,7 +113,6 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
         register(value);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double register(final double value)
     {
@@ -160,7 +156,6 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
         this.eventProducer.fireEvent(StatisticsEvents.SAMPLE_STDEV_EVENT, getSampleStDev());
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()

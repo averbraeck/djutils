@@ -12,14 +12,12 @@ package org.djutils.data.serialization;
  */
 public class ByteSerializer implements SpecificTextSerializer<Byte>
 {
-    /** {@inheritDoc} */
     @Override
     public String serialize(final Byte value, final String unit)
     {
         return value == null ? null : String.valueOf(value.byteValue());
     }
 
-    /** {@inheritDoc} */
     @Override
     public Byte deserialize(final Class<Byte> type, final String text, final String unit)
     {

@@ -73,7 +73,6 @@ public class Row
         return this.values;
     }
     
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
@@ -83,7 +82,6 @@ public class Row
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean equals(final Object obj)
     {
@@ -103,7 +101,6 @@ public class Row
         return Arrays.deepEquals(this.values, other.values);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {

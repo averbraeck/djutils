@@ -1325,7 +1325,6 @@ public class TestEval
             this.values = map;
         }
 
-        /** {@inheritDoc} */
         @Override
         public Object lookup(final String name)
         {

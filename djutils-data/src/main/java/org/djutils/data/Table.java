@@ -55,7 +55,6 @@ public abstract class Table implements Iterable<Row>, Identifiable
         this.columns = new ImmutableArrayList<>(columns);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getId()
     {
@@ -202,7 +201,6 @@ public abstract class Table implements Iterable<Row>, Identifiable
      */
     public abstract boolean isEmpty();
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {

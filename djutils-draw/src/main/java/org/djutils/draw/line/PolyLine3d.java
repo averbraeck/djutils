@@ -350,7 +350,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         this.startDirZ = polyLine.startDirZ;
     }
 
-    /** {@inheritDoc} */
     @Override
     public PolyLine3d instantiate(final List<Point3d> pointList) throws NullPointerException, DrawRuntimeException
     {
@@ -369,28 +368,24 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size()
     {
         return this.x.length;
     }
 
-    /** {@inheritDoc} */
     @Override
     public final Point3d get(final int i) throws IndexOutOfBoundsException
     {
         return new Point3d(this.x[i], this.y[i], this.z[i]);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double getX(final int i) throws IndexOutOfBoundsException
     {
         return this.x[i];
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double getY(final int i) throws IndexOutOfBoundsException
     {
@@ -408,7 +403,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         return this.z[index];
     }
 
-    /** {@inheritDoc} */
     @Override
     public LineSegment3d getSegment(final int index)
     {
@@ -417,21 +411,18 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
                 this.z[index + 1]);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double lengthAtIndex(final int index)
     {
         return this.lengthIndexedLine[index];
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getLength()
     {
         return this.length;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<Point3d> getPoints()
     {
@@ -439,14 +430,12 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         {
             private int nextIndex = 0;
 
-            /** {@inheritDoc} */
             @Override
             public boolean hasNext()
             {
                 return this.nextIndex < size();
             }
 
-            /** {@inheritDoc} */
             @Override
             public Point3d next()
             {
@@ -455,14 +444,12 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         };
     }
 
-    /** {@inheritDoc} */
     @Override
     public Bounds3d getBounds()
     {
         return this.bounds;
     }
 
-    /** {@inheritDoc} */
     @Override
     public final PolyLine3d noiseFilteredLine(final double noiseLevel)
     {
@@ -593,7 +580,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         return new PolyLine3d(points);
     }
 
-    /** {@inheritDoc} */
     @Override
     public PolyLine2d project() throws DrawRuntimeException
     {
@@ -618,7 +604,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         return new PolyLine2d(false, this.x, this.y); // The x and y arrays are immutable; so we can safely share them
     }
 
-    /** {@inheritDoc} */
     @Override
     public final DirectedPoint3d getLocationExtended(final double position)
     {
@@ -657,7 +642,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
                 Math.atan2(this.y[n1] - this.y[n2], this.x[n1] - this.x[n2]));
     }
 
-    /** {@inheritDoc} */
     @Override
     public final DirectedPoint3d getLocation(final double position) throws DrawRuntimeException
     {
@@ -776,7 +760,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         return result / this.length;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d closestPointOnPolyLine(final Point3d point)
     {
@@ -813,35 +796,30 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         return getLocationExtended(fraction * this.length);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d projectOrthogonal(final Point3d point) throws NullPointerException
     {
         return projectOrthogonal(point, null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d projectOrthogonalExtended(final Point3d point) throws NullPointerException
     {
         return projectOrthogonal(point, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double projectOrthogonalFractional(final Point3d point) throws NullPointerException
     {
         return projectOrthogonalFractional(point, null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double projectOrthogonalFractionalExtended(final Point3d point) throws NullPointerException
     {
         return projectOrthogonalFractional(point, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public PolyLine3d extract(final double start, final double end) throws DrawRuntimeException
     {
@@ -915,7 +893,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         return instantiate(pointList);
     }
 
-    /** {@inheritDoc} */
     @Override
     public PolyLine3d offsetLine(final double offset, final double circlePrecision, final double offsetMinimumFilterValue,
             final double offsetMaximumFilterValue, final double offsetFilterRatio, final double minimumOffset)
@@ -949,7 +926,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         return new PolyLine3d(points);
     }
 
-    /** {@inheritDoc} */
     @Override
     public PolyLine3d offsetLine(final double offsetAtStart, final double offsetAtEnd, final double circlePrecision,
             final double offsetMinimumFilterValue, final double offsetMaximumFilterValue, final double offsetFilterRatio,
@@ -974,7 +950,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public PolyLine3d transitionLine(final PolyLine3d endLine, final TransitionFunction transition) throws DrawRuntimeException
     {
@@ -1010,7 +985,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         return new PolyLine3d(true, pointList);
     }
 
-    /** {@inheritDoc} */
     @Override
     public PolyLine3d truncate(final double position) throws DrawRuntimeException
     {
@@ -1057,14 +1031,12 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         return new PolyLine3d(truncatedX, truncatedY, truncatedZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {
         return toString("%f", false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
@@ -1088,7 +1060,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         return result.toString();
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
@@ -1105,7 +1076,6 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         return result;
     }
 
-    /** {@inheritDoc} */
     @SuppressWarnings("checkstyle:needbraces")
     @Override
     public boolean equals(final Object obj)

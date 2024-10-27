@@ -25,21 +25,18 @@ public class RmiErrorEventProducer implements EventProducer
     /** The collection of interested listeners. */
     private EventListenerMap eventListenerMap = new EventListenerMap();
 
-    /** {@inheritDoc} */
     @Override
     public EventListenerMap getEventListenerMap()
     {
         return this.eventListenerMap;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void fireEvent(final EventType eventType) throws RemoteException
     {
         throw new RemoteException("planned");
     }
 
-    /** {@inheritDoc} */
     @Override
     public void fireEvent(final EventType eventType, final Serializable value) throws RemoteException
     {

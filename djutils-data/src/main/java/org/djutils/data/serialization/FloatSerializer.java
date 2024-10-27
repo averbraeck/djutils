@@ -12,14 +12,12 @@ package org.djutils.data.serialization;
  */
 public class FloatSerializer implements SpecificTextSerializer<Float>
 {
-    /** {@inheritDoc} */
     @Override
     public String serialize(final Float value, final String unit)
     {
         return value == null ? null : String.valueOf(value.floatValue());
     }
 
-    /** {@inheritDoc} */
     @Override
     public Float deserialize(final Class<Float> type, final String text, final String unit)
     {

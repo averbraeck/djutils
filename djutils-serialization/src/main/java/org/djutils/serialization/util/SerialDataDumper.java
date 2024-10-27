@@ -79,7 +79,6 @@ public class SerialDataDumper extends Dumper<SerialDataDumper>
         return serialDataDumper(endianUtil, 0, bytes);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {

@@ -130,7 +130,6 @@ public final class CliUnitConverters
      */
     public static class ABSOLUTETEMPERATURE implements ITypeConverter<AbsoluteTemperature>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public AbsoluteTemperature convert(final String value) throws Exception
@@ -144,7 +143,6 @@ public final class CliUnitConverters
      */
     public static class ABSORBEDDOSE implements ITypeConverter<AbsorbedDose>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public AbsorbedDose convert(final String value) throws Exception
@@ -158,7 +156,6 @@ public final class CliUnitConverters
      */
     public static class ACCELERATION implements ITypeConverter<Acceleration>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Acceleration convert(final String value) throws Exception
@@ -172,7 +169,6 @@ public final class CliUnitConverters
      */
     public static class AMOUNTOFSUBSTANCE implements ITypeConverter<AmountOfSubstance>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public AmountOfSubstance convert(final String value) throws Exception
@@ -186,7 +182,6 @@ public final class CliUnitConverters
      */
     public static class ANGLE implements ITypeConverter<Angle>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Angle convert(final String value) throws Exception
@@ -200,7 +195,6 @@ public final class CliUnitConverters
      */
     public static class ANGULARACCELERATION implements ITypeConverter<AngularAcceleration>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public AngularAcceleration convert(final String value) throws Exception
@@ -214,7 +208,6 @@ public final class CliUnitConverters
      */
     public static class ANGULARVELOCITY implements ITypeConverter<AngularVelocity>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public AngularVelocity convert(final String value) throws Exception
@@ -228,7 +221,6 @@ public final class CliUnitConverters
      */
     public static class AREA implements ITypeConverter<Area>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Area convert(final String value) throws Exception
@@ -242,7 +234,6 @@ public final class CliUnitConverters
      */
     public static class CATALYTICACTIVITY implements ITypeConverter<CatalyticActivity>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public CatalyticActivity convert(final String value) throws Exception
@@ -256,7 +247,6 @@ public final class CliUnitConverters
      */
     public static class DENSITY implements ITypeConverter<Density>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Density convert(final String value) throws Exception
@@ -270,7 +260,6 @@ public final class CliUnitConverters
      */
     public static class DIMENSIONLESS implements ITypeConverter<Dimensionless>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Dimensionless convert(final String value) throws Exception
@@ -284,7 +273,6 @@ public final class CliUnitConverters
      */
     public static class DIRECTION implements ITypeConverter<Direction>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Direction convert(final String value) throws Exception
@@ -298,7 +286,6 @@ public final class CliUnitConverters
      */
     public static class DURATION implements ITypeConverter<Duration>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Duration convert(final String value) throws Exception
@@ -312,7 +299,6 @@ public final class CliUnitConverters
      */
     public static class ELECTRICALCAPACITANCE implements ITypeConverter<ElectricalCapacitance>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public ElectricalCapacitance convert(final String value) throws Exception
@@ -326,7 +312,6 @@ public final class CliUnitConverters
      */
     public static class ELECTRICALCHARGE implements ITypeConverter<ElectricalCharge>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public ElectricalCharge convert(final String value) throws Exception
@@ -340,7 +325,6 @@ public final class CliUnitConverters
      */
     public static class ELECTRICALCONDUCTANCE implements ITypeConverter<ElectricalConductance>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public ElectricalConductance convert(final String value) throws Exception
@@ -354,7 +338,6 @@ public final class CliUnitConverters
      */
     public static class ELECTRICALCURRENT implements ITypeConverter<ElectricalCurrent>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public ElectricalCurrent convert(final String value) throws Exception
@@ -368,7 +351,6 @@ public final class CliUnitConverters
      */
     public static class ELECTRICALINDUCTANCE implements ITypeConverter<ElectricalInductance>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public ElectricalInductance convert(final String value) throws Exception
@@ -382,7 +364,6 @@ public final class CliUnitConverters
      */
     public static class ELECTRICALPOTENTIAL implements ITypeConverter<ElectricalPotential>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public ElectricalPotential convert(final String value) throws Exception
@@ -396,7 +377,6 @@ public final class CliUnitConverters
      */
     public static class ELECTRICALRESISTANCE implements ITypeConverter<ElectricalResistance>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public ElectricalResistance convert(final String value) throws Exception
@@ -410,7 +390,6 @@ public final class CliUnitConverters
      */
     public static class ENERGY implements ITypeConverter<Energy>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Energy convert(final String value) throws Exception
@@ -424,7 +403,6 @@ public final class CliUnitConverters
      */
     public static class EQUIVALENTDOSE implements ITypeConverter<EquivalentDose>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public EquivalentDose convert(final String value) throws Exception
@@ -438,7 +416,6 @@ public final class CliUnitConverters
      */
     public static class FLOWMASS implements ITypeConverter<FlowMass>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public FlowMass convert(final String value) throws Exception
@@ -452,7 +429,6 @@ public final class CliUnitConverters
      */
     public static class FLOWVOLUME implements ITypeConverter<FlowVolume>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public FlowVolume convert(final String value) throws Exception
@@ -466,7 +442,6 @@ public final class CliUnitConverters
      */
     public static class FORCE implements ITypeConverter<Force>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Force convert(final String value) throws Exception
@@ -480,7 +455,6 @@ public final class CliUnitConverters
      */
     public static class FREQUENCY implements ITypeConverter<Frequency>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Frequency convert(final String value) throws Exception
@@ -494,7 +468,6 @@ public final class CliUnitConverters
      */
     public static class ILLUMINANCE implements ITypeConverter<Illuminance>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Illuminance convert(final String value) throws Exception
@@ -508,7 +481,6 @@ public final class CliUnitConverters
      */
     public static class LENGTH implements ITypeConverter<Length>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Length convert(final String value) throws Exception
@@ -522,7 +494,6 @@ public final class CliUnitConverters
      */
     public static class LINEARDENSITY implements ITypeConverter<LinearDensity>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public LinearDensity convert(final String value) throws Exception
@@ -536,7 +507,6 @@ public final class CliUnitConverters
      */
     public static class LUMINOUSFLUX implements ITypeConverter<LuminousFlux>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public LuminousFlux convert(final String value) throws Exception
@@ -550,7 +520,6 @@ public final class CliUnitConverters
      */
     public static class LUMINOUSINTENSITY implements ITypeConverter<LuminousIntensity>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public LuminousIntensity convert(final String value) throws Exception
@@ -564,7 +533,6 @@ public final class CliUnitConverters
      */
     public static class MAGNETICFLUX implements ITypeConverter<MagneticFlux>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public MagneticFlux convert(final String value) throws Exception
@@ -578,7 +546,6 @@ public final class CliUnitConverters
      */
     public static class MAGNETICFLUXDENSITY implements ITypeConverter<MagneticFluxDensity>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public MagneticFluxDensity convert(final String value) throws Exception
@@ -592,7 +559,6 @@ public final class CliUnitConverters
      */
     public static class MASS implements ITypeConverter<Mass>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Mass convert(final String value) throws Exception
@@ -606,7 +572,6 @@ public final class CliUnitConverters
      */
     public static class MOMENTUM implements ITypeConverter<Momentum>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Momentum convert(final String value) throws Exception
@@ -620,7 +585,6 @@ public final class CliUnitConverters
      */
     public static class POSITION implements ITypeConverter<Position>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Position convert(final String value) throws Exception
@@ -634,7 +598,6 @@ public final class CliUnitConverters
      */
     public static class POWER implements ITypeConverter<Power>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Power convert(final String value) throws Exception
@@ -648,7 +611,6 @@ public final class CliUnitConverters
      */
     public static class PRESSURE implements ITypeConverter<Pressure>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Pressure convert(final String value) throws Exception
@@ -662,7 +624,6 @@ public final class CliUnitConverters
      */
     public static class RADIOACTIVITY implements ITypeConverter<RadioActivity>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public RadioActivity convert(final String value) throws Exception
@@ -676,7 +637,6 @@ public final class CliUnitConverters
      */
     public static class SOLIDANGLE implements ITypeConverter<SolidAngle>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public SolidAngle convert(final String value) throws Exception
@@ -690,7 +650,6 @@ public final class CliUnitConverters
      */
     public static class SPEED implements ITypeConverter<Speed>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Speed convert(final String value) throws Exception
@@ -704,7 +663,6 @@ public final class CliUnitConverters
      */
     public static class TEMPERATURE implements ITypeConverter<Temperature>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Temperature convert(final String value) throws Exception
@@ -718,7 +676,6 @@ public final class CliUnitConverters
      */
     public static class TIME implements ITypeConverter<Time>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Time convert(final String value) throws Exception
@@ -732,7 +689,6 @@ public final class CliUnitConverters
      */
     public static class TORQUE implements ITypeConverter<Torque>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Torque convert(final String value) throws Exception
@@ -746,7 +702,6 @@ public final class CliUnitConverters
      */
     public static class VOLUME implements ITypeConverter<Volume>
     {
-        /** {@inheritDoc} */
         @Override
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Volume convert(final String value) throws Exception

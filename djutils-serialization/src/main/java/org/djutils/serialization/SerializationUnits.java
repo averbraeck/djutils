@@ -371,7 +371,6 @@ public class SerializationUnits implements Serializable
         return this.siUnit;
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:designforextension")
     public int hashCode()
@@ -386,7 +385,6 @@ public class SerializationUnits implements Serializable
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings({"checkstyle:designforextension", "needbraces"})
     public boolean equals(final Object obj)
@@ -431,7 +429,6 @@ public class SerializationUnits implements Serializable
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:designforextension")
     public String toString()

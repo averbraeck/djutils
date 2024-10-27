@@ -44,7 +44,6 @@ public class TDigestAccumulator implements QuantileAccumulator
         this(DEFAULT_COMPRESSION);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double register(final double value)
     {
@@ -53,7 +52,6 @@ public class TDigestAccumulator implements QuantileAccumulator
         return value;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getQuantile(final Tally tally, final double probability)
     {
@@ -63,21 +61,18 @@ public class TDigestAccumulator implements QuantileAccumulator
         return this.tDigest.quantile(probability);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getCumulativeProbability(final Tally tally, final double quantile)
     {
         return this.tDigest.cdf(quantile);
     }
 
-    /** {@inheritDoc} */
     @Override
     public void initialize()
     {
         this.tDigest = TDigest.createDigest(this.compression);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final String toString()
     {

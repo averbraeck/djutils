@@ -376,42 +376,36 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         this.startHeading = polyLine.startHeading;
     }
 
-    /** {@inheritDoc} */
     @Override
     public PolyLine2d instantiate(final List<Point2d> pointList) throws NullPointerException, DrawRuntimeException
     {
         return new PolyLine2d(pointList);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size()
     {
         return this.x.length;
     }
 
-    /** {@inheritDoc} */
     @Override
     public final Point2d get(final int i) throws IndexOutOfBoundsException
     {
         return new Point2d(this.x[i], this.y[i]);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double getX(final int i) throws IndexOutOfBoundsException
     {
         return this.x[i];
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double getY(final int i) throws IndexOutOfBoundsException
     {
         return this.y[i];
     }
 
-    /** {@inheritDoc} */
     @Override
     public LineSegment2d getSegment(final int index)
     {
@@ -419,21 +413,18 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         return new LineSegment2d(this.x[index], this.y[index], this.x[index + 1], this.y[index + 1]);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double lengthAtIndex(final int index)
     {
         return this.lengthIndexedLine[index];
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getLength()
     {
         return this.length;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<Point2d> getPoints()
     {
@@ -441,14 +432,12 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         {
             private int nextIndex = 0;
 
-            /** {@inheritDoc} */
             @Override
             public boolean hasNext()
             {
                 return this.nextIndex < size();
             }
 
-            /** {@inheritDoc} */
             @Override
             public Point2d next()
             {
@@ -457,14 +446,12 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         };
     }
 
-    /** {@inheritDoc} */
     @Override
     public Bounds2d getBounds()
     {
         return this.bounds;
     }
 
-    /** {@inheritDoc} */
     @Override
     public final PolyLine2d noiseFilteredLine(final double noiseLevel)
     {
@@ -595,7 +582,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         return new PolyLine2d(points);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final DirectedPoint2d getLocationExtended(final double position)
     {
@@ -632,7 +618,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
                 Math.atan2(this.y[n1] - this.y[n2], this.x[n1] - this.x[n2]));
     }
 
-    /** {@inheritDoc} */
     @Override
     public final DirectedPoint2d getLocation(final double position) throws DrawRuntimeException
     {
@@ -746,7 +731,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         return result / this.length;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d closestPointOnPolyLine(final Point2d point)
     {
@@ -783,35 +767,30 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         return getLocationExtended(fraction * this.length);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d projectOrthogonal(final Point2d point) throws NullPointerException
     {
         return projectOrthogonal(point, null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d projectOrthogonalExtended(final Point2d point) throws NullPointerException
     {
         return projectOrthogonal(point, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double projectOrthogonalFractional(final Point2d point) throws NullPointerException
     {
         return projectOrthogonalFractional(point, null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double projectOrthogonalFractionalExtended(final Point2d point) throws NullPointerException
     {
         return projectOrthogonalFractional(point, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public PolyLine2d extract(final double start, final double end) throws DrawRuntimeException
     {
@@ -885,7 +864,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         return instantiate(pointList);
     }
 
-    /** {@inheritDoc} */
     @Override
     public PolyLine2d truncate(final double position) throws DrawRuntimeException
     {
@@ -929,7 +907,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         return new PolyLine2d(truncatedX, truncatedY);
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:methodlength")
     public PolyLine2d offsetLine(final double offset, final double circlePrecision, final double offsetMinimumFilterValue,
@@ -1125,7 +1102,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         return new PolyLine2d(true, tempPoints);
     }
 
-    /** {@inheritDoc} */
     @Override
     public PolyLine2d offsetLine(final double offsetAtStart, final double offsetAtEnd, final double circlePrecision,
             final double offsetMinimumFilterValue, final double offsetMaximumFilterValue, final double offsetFilterRatio,
@@ -1150,7 +1126,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         });
     }
 
-    /** {@inheritDoc} */
     @Override
     public PolyLine2d transitionLine(final PolyLine2d endLine, final TransitionFunction transition) throws DrawRuntimeException
     {
@@ -1240,14 +1215,12 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {
         return toString("%f", false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
@@ -1270,7 +1243,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         return result.toString();
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
@@ -1284,7 +1256,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         return result;
     }
 
-    /** {@inheritDoc} */
     @SuppressWarnings("checkstyle:needbraces")
     @Override
     public boolean equals(final Object obj)

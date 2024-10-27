@@ -44,7 +44,6 @@ public class DoubleMatrixSerializer<U extends Unit<U>, S extends DoubleScalar<U,
         super(FieldTypes.DOUBLE_64_UNIT_MATRIX, "Djunits_DoubleMatrix", 2);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size(final M adm) throws SerializationException
     {
@@ -58,7 +57,6 @@ public class DoubleMatrixSerializer<U extends Unit<U>, S extends DoubleScalar<U,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public void serialize(final M adm, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
             throws SerializationException
@@ -82,7 +80,6 @@ public class DoubleMatrixSerializer<U extends Unit<U>, S extends DoubleScalar<U,
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public M deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil) throws SerializationException
     {

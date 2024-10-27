@@ -12,14 +12,12 @@ package org.djutils.data.serialization;
  */
 public class CharacterSerializer implements SpecificTextSerializer<Character>
 {
-    /** {@inheritDoc} */
     @Override
     public String serialize(final Character value, final String unit)
     {
         return value == null ? null : String.valueOf(value.charValue());
     }
 
-    /** {@inheritDoc} */
     @Override
     public Character deserialize(final Class<Character> type, final String text, final String unit)
     {

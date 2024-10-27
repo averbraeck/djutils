@@ -27,7 +27,6 @@ public class FullStorageAccumulator implements QuantileAccumulator
         // Nothing to do here
     }
 
-    /** {@inheritDoc} */
     @Override
     public double register(final double value)
     {
@@ -49,7 +48,6 @@ public class FullStorageAccumulator implements QuantileAccumulator
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getQuantile(final Tally tally, final double probability)
     {
@@ -68,7 +66,6 @@ public class FullStorageAccumulator implements QuantileAccumulator
         return v1 * (doubleIndex - index) + v0 * (1.0 - (doubleIndex - index));
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getCumulativeProbability(final Tally tally, final double quantile)
     {
@@ -144,14 +141,12 @@ public class FullStorageAccumulator implements QuantileAccumulator
         return (adjust + upperBound + lowerBound) / this.accumulator.size() / 2; // cases 4, 5 and 6
     }
     
-    /** {@inheritDoc} */
     @Override
     public void initialize()
     {
         this.accumulator.clear();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {

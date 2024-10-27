@@ -271,7 +271,6 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
         return iterator;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<Point3d> getPoints()
     {
@@ -283,7 +282,6 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
         return Arrays.stream(array).iterator();
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size()
     {
@@ -305,7 +303,6 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
         return x > this.minX && x < this.maxX && y > this.minY && y < this.maxY && z > this.minZ && z < this.maxZ;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean contains(final Point3d point)
     {
@@ -313,7 +310,6 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
         return contains(point.x, point.y, point.z);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean contains(final Bounds3d otherBounds) throws NullPointerException
     {
@@ -337,7 +333,6 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
         return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY && z >= this.minZ && z <= this.maxZ;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean covers(final Point3d point)
     {
@@ -345,7 +340,6 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
         return covers(point.x, point.y, point.z);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean covers(final Bounds3d otherBounds)
     {
@@ -354,7 +348,6 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
                 && covers(otherBounds.maxX, otherBounds.maxY, otherBounds.maxZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean disjoint(final Bounds3d otherBounds)
     {
@@ -363,14 +356,12 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
                 || otherBounds.maxY < this.minY || otherBounds.minZ > this.maxZ || otherBounds.maxZ < this.minZ;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean intersects(final Bounds3d otherBounds3d)
     {
         return !disjoint(otherBounds3d);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Bounds3d intersection(final Bounds3d otherBounds3d)
     {
@@ -384,7 +375,6 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
                 Math.max(this.minZ, otherBounds3d.minZ), Math.min(this.maxZ, otherBounds3d.maxZ));
     }
 
-    /** {@inheritDoc} */
     @Override
     public Bounds2d project()
     {
@@ -409,28 +399,24 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
         return getDeltaX() * getDeltaY() * getDeltaZ();
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getMinX()
     {
         return this.minX;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getMaxX()
     {
         return this.maxX;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getMinY()
     {
         return this.minY;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getMaxY()
     {
@@ -455,28 +441,24 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
         return this.maxZ;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d midPoint()
     {
         return new Point3d((this.minX + this.maxX) / 2, (this.minY + this.maxY) / 2, (this.minZ + this.maxZ) / 2);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Bounds3d getBounds()
     {
         return this;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {
         return toString("%f", false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
@@ -485,7 +467,6 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
         return String.format(Locale.US, format, this.minX, this.maxX, this.minY, this.maxY, this.minZ, this.maxZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
@@ -507,7 +488,6 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
         return result;
     }
 
-    /** {@inheritDoc} */
     @SuppressWarnings("checkstyle:needbraces")
     @Override
     public boolean equals(final Object obj)

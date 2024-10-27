@@ -117,7 +117,6 @@ public class FixedBinsAccumulator implements QuantileAccumulator
         return this.minimumBinCenter + bin * this.binWidth;
     }
 
-    /** {@inheritDoc} */
     @Override
     public double register(final double value)
     {
@@ -158,7 +157,6 @@ public class FixedBinsAccumulator implements QuantileAccumulator
         }
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getQuantile(final Tally tally, final double probability)
     {
@@ -183,7 +181,6 @@ public class FixedBinsAccumulator implements QuantileAccumulator
         return 0; // cannot happen
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getCumulativeProbability(final Tally tally, final double quantile) throws IllegalArgumentException
     {
@@ -207,7 +204,6 @@ public class FixedBinsAccumulator implements QuantileAccumulator
         return 1.0 * this.cumulatives[bin] / this.totalCount + (floatBin - bin - 0.5) * this.accumulator[bin] / this.totalCount;
     }
 
-    /** {@inheritDoc} */
     @Override
     public void initialize()
     {
@@ -218,7 +214,6 @@ public class FixedBinsAccumulator implements QuantileAccumulator
         this.totalCount = 0;
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {

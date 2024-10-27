@@ -229,7 +229,6 @@ public class Polygon3d extends PolyLine3d
         super(polygon);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getLength()
     {
@@ -238,7 +237,6 @@ public class Polygon3d extends PolyLine3d
                 + Math.hypot(Math.hypot(getX(size() - 1) - getX(0), getY(size() - 1) - getY(0)), getZ(size() - 1) - getZ(0));
     }
 
-    /** {@inheritDoc} */
     @Override
     public LineSegment3d getSegment(final int index)
     {
@@ -250,7 +248,6 @@ public class Polygon3d extends PolyLine3d
         return new LineSegment3d(getX(index), getY(index), getZ(index), getX(0), getY(0), getZ(0));
     }
 
-    /** {@inheritDoc} */
     @Override
     public Polygon2d project() throws DrawRuntimeException
     {
@@ -275,21 +272,18 @@ public class Polygon3d extends PolyLine3d
         return new Polygon2d(projectedX, projectedY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Polygon3d reverse()
     {
         return new Polygon3d(super.reverse().getPoints());
     }
 
-    /** {@inheritDoc} */
     @Override
     public final String toString()
     {
         return toString("%f", false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {

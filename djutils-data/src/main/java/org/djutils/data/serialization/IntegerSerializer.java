@@ -12,14 +12,12 @@ package org.djutils.data.serialization;
  */
 public class IntegerSerializer implements SpecificTextSerializer<Integer>
 {
-    /** {@inheritDoc} */
     @Override
     public String serialize(final Integer value, final String unit)
     {
         return value == null ? null : String.valueOf(value.intValue());
     }
 
-    /** {@inheritDoc} */
     @Override
     public Integer deserialize(final Class<Integer> type, final String text, final String unit)
     {

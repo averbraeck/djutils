@@ -169,35 +169,30 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
         this(directedPoint, directedPoint.dirY, directedPoint.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double getDirY()
     {
         return this.dirY;
     }
 
-    /** {@inheritDoc} */
     @Override
     public final double getDirZ()
     {
         return this.dirZ;
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint3d getEndPoint()
     {
         return this;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size()
     {
         return 2;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<DirectedPoint3d> getPoints()
     {
@@ -212,7 +207,6 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
         return Arrays.stream(array).iterator();
     }
 
-    /** {@inheritDoc} */
     @Override
     public Bounds3d getBounds()
     {
@@ -227,7 +221,6 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
                 cosDirY <= 0 ? this.z : Double.POSITIVE_INFINITY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Ray3d neg()
     {
@@ -235,7 +228,6 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
                 AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
     }
 
-    /** {@inheritDoc} */
     @Override
     public Ray3d flip()
     {
@@ -243,7 +235,6 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
                 AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
     }
 
-    /** {@inheritDoc} */
     @Override
     public Ray3d getLocationExtended(final double position) throws DrawRuntimeException
     {
@@ -256,7 +247,6 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
         return new Ray3d(this.x + dX * position, this.y + dY * position, this.z + dZ * position, this.dirY, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d closestPointOnRay(final Point3d point) throws NullPointerException
     {
@@ -266,7 +256,6 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
                 this.y + Math.sin(this.dirZ) * sinDirY, this.z + Math.cos(this.dirY), true, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d projectOrthogonal(final Point3d point) throws NullPointerException
     {
@@ -276,7 +265,6 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
                 this.y + Math.sin(this.dirZ) * sinDirY, this.z + Math.cos(this.dirY), null, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point3d projectOrthogonalExtended(final Point3d point)
     {
@@ -286,7 +274,6 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
                 getY() + Math.sin(this.dirZ) * sinDirY, getZ() + Math.cos(this.dirY), false, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double projectOrthogonalFractional(final Point3d point) throws NullPointerException
     {
@@ -296,7 +283,6 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
                 this.y + Math.sin(this.dirZ) * sinDirY, this.z + Math.cos(this.dirY), null, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double projectOrthogonalFractionalExtended(final Point3d point) throws NullPointerException
     {
@@ -306,14 +292,12 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
                 getY() + Math.sin(this.dirZ) * sinDirY, getZ() + Math.cos(this.dirY), false, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {
         return toString("%f", false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
@@ -322,14 +306,12 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
         return String.format(Locale.US, format, this.x, this.y, this.z, this.dirY, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
         return super.hashCode();
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:needbraces")
     public boolean equals(final Object obj)

@@ -125,7 +125,6 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
         this(Throw.whenNull(point, "point").x, point.y, throughX, throughY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint2d translate(final double dx, final double dy) throws IllegalArgumentException
     {
@@ -133,14 +132,12 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
         return new DirectedPoint2d(this.x + dx, this.y + dy, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint3d translate(final double dx, final double dy, final double z) throws IllegalArgumentException
     {
         return new DirectedPoint3d(this.x + dx, this.y + dy, z, 0, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint2d scale(final double factor) throws IllegalArgumentException
     {
@@ -148,21 +145,18 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
         return new DirectedPoint2d(this.x * factor, this.y * factor, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint2d neg()
     {
         return new DirectedPoint2d(-this.x, -this.y, AngleUtil.normalizeAroundZero(this.dirZ + Math.PI));
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint2d abs()
     {
         return new DirectedPoint2d(Math.abs(this.x), Math.abs(this.y), this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint2d normalize()
     {
@@ -214,28 +208,24 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
         return new DirectedPoint2d(this.x, this.y, AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
     
-    /** {@inheritDoc} */
     @Override
     public double getDirZ()
     {
         return this.dirZ;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<? extends DirectedPoint2d> getPoints()
     {
         return Arrays.stream(new DirectedPoint2d[] {this}).iterator();
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {
         return toString("%f", false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
@@ -244,7 +234,6 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
         return String.format(Locale.US, format, this.x, this.y, this.dirZ);
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean epsilonEquals(final DirectedPoint2d other, final double epsilonCoordinate, final double epsilonRotation)
             throws NullPointerException, IllegalArgumentException
@@ -269,7 +258,6 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
         return true;
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
@@ -279,7 +267,6 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:needbraces")
     public boolean equals(final Object obj)

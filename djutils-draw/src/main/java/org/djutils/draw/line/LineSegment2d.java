@@ -100,42 +100,36 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
         this(Throw.whenNull(start, "start").x, start.y, Throw.whenNull(end, "end").x, end.y);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d getStartPoint()
     {
         return new Point2d(this.startX, this.startY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d getEndPoint()
     {
         return new Point2d(this.endX, this.endY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double getLength()
     {
         return Math.hypot(this.endX - this.startX, this.endY - this.startY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Iterator<? extends Point2d> getPoints()
     {
         return Arrays.stream(new Point2d[] {getStartPoint(), getEndPoint()}).iterator();
     }
 
-    /** {@inheritDoc} */
     @Override
     public int size()
     {
         return 2;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Bounds2d getBounds()
     {
@@ -143,7 +137,6 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
                 Math.min(this.startY, this.endY), Math.max(this.startY, this.endY));
     }
 
-    /** {@inheritDoc} */
     @Override
     public DirectedPoint2d getLocationExtended(final double position) throws DrawRuntimeException
     {
@@ -156,7 +149,6 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
                 Math.atan2(dY, dX));
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d closestPointOnSegment(final Point2d point) throws NullPointerException
     {
@@ -164,14 +156,12 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
         return point.closestPointOnLine(this.startX, this.startY, this.endX, this.endY, true, true);
     }
 
-    /** {@inheritDoc} */
     @Override
     public LineSegment2d reverse()
     {
         return new LineSegment2d(this.endX, this.endY, this.startX, this.startY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d projectOrthogonal(final Point2d point) throws NullPointerException
     {
@@ -179,7 +169,6 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
         return point.closestPointOnLine(this.startX, this.startY, this.endX, this.endY, null, null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public Point2d projectOrthogonalExtended(final Point2d point)
     {
@@ -187,7 +176,6 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
         return point.closestPointOnLine(this.startX, this.startY, this.endX, this.endY, false, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double projectOrthogonalFractional(final Point2d point) throws NullPointerException
     {
@@ -195,7 +183,6 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
         return point.fractionalPositionOnLine(this.startX, this.startY, this.endX, this.endY, null, null);
     }
 
-    /** {@inheritDoc} */
     @Override
     public double projectOrthogonalFractionalExtended(final Point2d point) throws NullPointerException
     {
@@ -203,14 +190,12 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
         return point.fractionalPositionOnLine(this.startX, this.startY, this.endX, this.endY, false, false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString()
     {
         return toString("%f", false);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String toString(final String doubleFormat, final boolean doNotIncludeClassName)
     {
@@ -219,7 +204,6 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
         return String.format(Locale.US, format, this.startX, this.startY, this.endX, this.endY);
     }
 
-    /** {@inheritDoc} */
     @Override
     public int hashCode()
     {
@@ -237,7 +221,6 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
         return result;
     }
 
-    /** {@inheritDoc} */
     @Override
     @SuppressWarnings("checkstyle:needbraces")
     public boolean equals(final Object obj)

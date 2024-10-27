@@ -12,14 +12,12 @@ package org.djutils.data.serialization;
  */
 public class DoubleSerializer implements SpecificTextSerializer<Double>
 {
-    /** {@inheritDoc} */
     @Override
     public String serialize(final Double value, final String unit)
     {
         return value == null ? null : String.valueOf(value.doubleValue());
     }
 
-    /** {@inheritDoc} */
     @Override
     public Double deserialize(final Class<Double> type, final String text, final String unit)
     {

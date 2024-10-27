@@ -52,21 +52,18 @@ class F0 implements Function
         this(id, constantResult.getClass(), metaData, (f) -> constantResult);
     }
 
-    /** {@inheritDoc} */
     @Override
     public String getId()
     {
         return this.id;
     }
 
-    /** {@inheritDoc} */
     @Override
     public MetaData getMetaData()
     {
         return this.metaData;
     }
 
-    /** {@inheritDoc} */
     @Override
     public Object function(final Object[] arguments) throws RuntimeException
     {
