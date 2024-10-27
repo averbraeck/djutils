@@ -3,6 +3,7 @@ package org.djutils.cli;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.djutils.reflection.ClassUtil;
@@ -15,6 +16,7 @@ import picocli.CommandLine.IVersionProvider;
 import picocli.CommandLine.Model.ArgSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParseResult;
+import picocli.CommandLine.Unmatched;
 
 /**
  * CliUtil offers a helper method to display --help and --version without starting the program. The method is used as follows:
@@ -80,6 +82,42 @@ import picocli.CommandLine.ParseResult;
  */
 public final class CliUtil
 {
+    /** Mixin class to provide a --locale option, and a default locale. */
+    static class InitLocale
+    {
+        /** the locale. */
+        @Option(names = {"--locale"}, defaultValue = "en-US", description = "locale for variables with units.")
+        private String locale;
+
+        /**
+         * @return the locale from --locale
+         */
+        String getLocale()
+        {
+            return this.locale;
+        }
+    }
+
+    /** Retrieval class to provide a --locale option, and a default locale. */
+    static class RetrieveLocale
+    {
+        /** the locale. */
+        @Option(names = {"--locale"}, defaultValue = "en-US", description = "locale for variables with units.")
+        private String locale;
+
+        /**
+         * @return the locale from --locale
+         */
+        String getLocale()
+        {
+            return this.locale;
+        }
+
+        /** The other options. */
+        @Unmatched
+        private List<String> remainder;
+    }
+
     /** Utility class constructor. */
     private CliUtil()
     {
@@ -114,15 +152,20 @@ public final class CliUtil
 
     /**
      * Parse the given CommandLine object, that has been generated for a program. Register Unit converters, parse the command
-     * line, catch --help, --version and errors. If the program implements the Checkable interface, it calls the "check" method
-     * of the class that can take care of further checks of the CLI arguments. Potentially, check() can also provide other
-     * initialization of the program to be executed, but this can better be provided by other methods in main(). The method will
-     * exit on requesting help or version information, or when the arguments are not complete or not correct.
+     * line, catch --help, --version, --locale, and errors. If the program implements the Checkable interface, it calls the
+     * "check" method of the class that can take care of further checks of the CLI arguments. Potentially, check() can also
+     * provide other initialization of the program to be executed, but this can better be provided by other methods in main().
+     * The method will exit on requesting help or version information, or when the arguments are not complete or not correct.
      * @param commandLine CommandLine; the CommandLine object for the program with the &#64;Option information
      * @param args String[]; the arguments from the command line
      */
+    @SuppressWarnings("checkstyle:methodlength")
     public static void execute(final CommandLine commandLine, final String[] args)
     {
+        // Issue #13. add the --locale option
+        var initLocale = new InitLocale();
+        commandLine.addMixin("locale", initLocale);
+
         // set-up a new provider for default @Option values that can be overridden
         CommandLine.IDefaultValueProvider vp = new CommandLine.IDefaultValueProvider()
         {
@@ -178,7 +221,7 @@ public final class CliUtil
             });
         }
 
-        // set-up the version provider that provides a version number that can be overridden
+        // set-up the description provider that provides a description that can be overridden
         Map<String, IHelpSectionRenderer> helpMap = commandLine.getHelpSectionMap();
         final IHelpSectionRenderer defaultDescriptionRenderer = helpMap.get("description");
         helpMap.put("description", new IHelpSectionRenderer()
@@ -209,7 +252,27 @@ public final class CliUtil
         // register the DJUNITS converters
         CliUnitConverters.registerAll(commandLine);
 
-        // parse the command line arguments and handle errors
+        // Issue #13. set the locale, and store the old one
+        Locale saveLocale = Locale.getDefault();
+        RetrieveLocale retrieveLocale = new RetrieveLocale();
+        CommandLine cmdLocale = new CommandLine(retrieveLocale);
+        cmdLocale.parseArgs(args);
+        String[] localeParts = retrieveLocale.getLocale().contains("_") ? retrieveLocale.getLocale().split("_")
+                : retrieveLocale.getLocale().split("-");
+        if (localeParts.length == 1)
+        {
+            Locale.setDefault(new Locale(localeParts[0]));
+        }
+        else if (localeParts.length == 2)
+        {
+            Locale.setDefault(new Locale(localeParts[0], localeParts[1]));
+        }
+        else
+        {
+            Locale.setDefault(new Locale(localeParts[0], localeParts[1], localeParts[2]));
+        }
+
+        // parse the command line arguments and handle errors, now based on the set locale
         commandLine.getCommandSpec().parser().collectErrors(true);
         ParseResult parseResult = commandLine.parseArgs(args);
         List<Exception> parseErrors = parseResult.errors();
@@ -248,6 +311,9 @@ public final class CliUtil
                 System.exit(-1);
             }
         }
+
+        // Issue #13. reset the locale
+        Locale.setDefault(saveLocale);
     }
 
     /**
