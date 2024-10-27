@@ -20,9 +20,9 @@
     <module>djutils-cli</module>
     <module>djutils-data</module>
     <module>djutils-draw</module>
+    <module>djutils-eval</module>
     <module>djutils-serialization</module>
     <module>djutils-stats</module>
-    <module>djutils-eval</module>
   </modules>
 
   <properties>
@@ -32,6 +32,7 @@
     <maven.compiler.target>${jdk.version}</maven.compiler.target>
 
     <djutils.version>${project.version}</djutils.version>
+    <djutils-base.version>2.2.3</djutils-base.version>
     <picocli.version>4.7.6</picocli.version>
     <djunits.version>5.1.4</djunits.version>
     <tinylog.version>1.3.6</tinylog.version>
@@ -80,7 +81,7 @@
     <dependency>
       <groupId>org.djutils</groupId>
       <artifactId>djutils-base</artifactId>
-      <version>2.2.1</version>
+      <version>${djutils-base.version}</version>
     </dependency>
   </dependencies>
   
