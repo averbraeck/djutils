@@ -34,7 +34,7 @@
     <djutils.version>${project.version}</djutils.version>
     <djutils-base.version>2.2.3</djutils-base.version>
     <picocli.version>4.7.6</picocli.version>
-    <djunits.version>5.1.4</djunits.version>
+    <djunits.version>5.1.5</djunits.version>
     <tinylog.version>1.3.6</tinylog.version>
     <junit.version>5.11.0</junit.version>
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
