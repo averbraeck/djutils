@@ -2,15 +2,18 @@ package org.djutils.cli;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Locale;
 
 import org.djunits.unit.DurationUnit;
 import org.djunits.value.vdouble.scalar.Duration;
 import org.junit.jupiter.api.Test;
 
-import com.github.stefanbirkner.systemlambda.SystemLambda;
-
+import mockit.Mock;
+import mockit.MockUp;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -145,6 +148,15 @@ public class TestCliLocale
     @Test
     public void testCliError() throws Exception
     {
+        new MockUp<System>()
+        {
+            @Mock
+            public void exit(final int value)
+            {
+                throw new RuntimeException(String.valueOf(value));
+            }
+        };
+
         Options options = new Options();
         Locale saveLocale = Locale.getDefault();
 
@@ -152,16 +164,27 @@ public class TestCliLocale
         Locale locale = Locale.US;
         Locale.setDefault(locale);
         var argsErr = new String[] {"--duration", "0.5sx"};
-        String errorText = "";
-        errorText = SystemLambda.tapSystemErr(() ->
+
+        PrintStream oldPrintStream = System.err;
+        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+        System.setErr(new PrintStream(errContent));
+        try
         {
-            SystemLambda.catchSystemExit(() ->
-            { CliUtil.execute(options, argsErr); });
-        });
-        assertTrue(errorText.startsWith("Invalid value"), "Error text should start with 'Invalid value': " + errorText);
-        assertTrue(errorText.contains("cannot convert"), "Error text should contain 'cannot convert': " + errorText);
-        assertTrue(errorText.contains("IllegalArgumentException"),
-                "Error text should contain 'IllegalArgumentException': " + errorText);
+            CliUtil.execute(options, argsErr);
+            fail("calling CliUtil.execute did not exit when it should");
+        }
+        catch (RuntimeException e)
+        {
+            String errorText = errContent.toString();
+            assertTrue(errorText.startsWith("Invalid value"), "Error text should start with 'Invalid value': " + errorText);
+            assertTrue(errorText.contains("cannot convert"), "Error text should contain 'cannot convert': " + errorText);
+            assertTrue(errorText.contains("IllegalArgumentException"),
+                    "Error text should contain 'IllegalArgumentException': " + errorText);
+        }
+        finally
+        {
+            System.setErr(oldPrintStream);
+        }
 
         Locale.setDefault(saveLocale);
     }

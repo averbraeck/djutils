@@ -3,10 +3,13 @@ package org.djutils.cli;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import org.junit.jupiter.api.Test;
 
-import com.github.stefanbirkner.systemlambda.SystemLambda;
-
+import mockit.Mock;
+import mockit.MockUp;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -54,27 +57,43 @@ public class TestCliHelpVersion
     @Test
     public void testCliHelp() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
+        new MockUp<System>()
+        {
+            @Mock
+            public void exit(final int value)
+            {
+                throw new RuntimeException(String.valueOf(value));
+            }
+        };
+
         // System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
         String[] args = new String[] {"--help"};
         Options options = new Options();
         CliUtil.changeCommandVersion(options, "2.0");
         CliUtil.changeCommandName(options, "Program2");
         CliUtil.changeCommandDescription(options, "2nd version of program");
-        String helpText = "";
+
+        PrintStream oldPrintStream = System.out;
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
         try
         {
-            helpText = SystemLambda.tapSystemOut(() ->
-            {
-                SystemLambda.catchSystemExit(() ->
-                { CliUtil.execute(options, args); });
-            });
+            CliUtil.execute(options, args);
+            fail("calling CliUtil.execute did not exit when it should");
+        }
+        catch (RuntimeException e)
+        {
+            assertTrue(outContent.toString().contains("Program2"));
+            assertTrue(outContent.toString().contains("2nd version of program"));
         }
         catch (Exception e)
         {
-            fail("Requesting help caused exception", e);
+            fail("CliUtil.execute caused exception", e);
         }
-        assertTrue(helpText.contains("Program2"));
-        assertTrue(helpText.contains("2nd version of program"));
+        finally
+        {
+            System.setOut(oldPrintStream);
+        }
 
         // clean the override map
         CliUtil.overrideMap.clear();
@@ -90,25 +109,41 @@ public class TestCliHelpVersion
     @Test
     public void testCliVersion() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
+        new MockUp<System>()
+        {
+            @Mock
+            public void exit(final int value)
+            {
+                throw new RuntimeException(String.valueOf(value));
+            }
+        };
+
         String[] args = new String[] {"-V"};
         Options options = new Options();
         CliUtil.changeCommandVersion(options, "2.0");
         CliUtil.changeCommandName(options, "Program2");
         CliUtil.changeCommandDescription(options, "2nd version of program");
-        String versionText = "";
+
+        PrintStream oldPrintStream = System.out;
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
         try
         {
-            versionText = SystemLambda.tapSystemOut(() ->
-            {
-                SystemLambda.catchSystemExit(() ->
-                { CliUtil.execute(options, args); });
-            });
+            CliUtil.execute(options, args);
+            fail("calling CliUtil.execute did not exit when it should");
+        }
+        catch (RuntimeException e)
+        {
+            assertTrue(outContent.toString().contains("2.0"));
         }
         catch (Exception e)
         {
-            fail("Requesting help caused exception", e);
+            fail("CliUtil.execute caused exception", e);
         }
-        assertTrue(versionText.contains("2.0"));
+        finally
+        {
+            System.setOut(oldPrintStream);
+        }
 
         // clean the override map
         CliUtil.overrideMap.clear();
@@ -120,22 +155,34 @@ public class TestCliHelpVersion
     @Test
     public void testCliWrongValue()
     {
+        new MockUp<System>()
+        {
+            @Mock
+            public void exit(final int value)
+            {
+                throw new RuntimeException(String.valueOf(value));
+            }
+        };
+
         String[] args = new String[] {"-p", "120000"};
         Options options = new Options();
-        String errorText = "";
+
+        PrintStream oldPrintStream = System.err;
+        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+        System.setErr(new PrintStream(errContent));
         try
         {
-            errorText = SystemLambda.tapSystemErr(() ->
-            {
-                SystemLambda.catchSystemExit(() ->
-                { CliUtil.execute(options, args); });
-            });
+            CliUtil.execute(options, args);
+            fail("calling CliUtil.execute did not exit when it should");
         }
-        catch (Exception e)
+        catch (RuntimeException e)
         {
-            fail("calling CliUtil.execute caused exception", e);
+            assertTrue(errContent.toString().startsWith("Port should be between 1 and 65535"));
         }
-        assertTrue(errorText.startsWith("Port should be between 1 and 65535"));
+        finally
+        {
+            System.setErr(oldPrintStream);
+        }
     }
 
     /**
@@ -144,23 +191,35 @@ public class TestCliHelpVersion
     @Test
     public void testCliWrongOption()
     {
+        new MockUp<System>()
+        {
+            @Mock
+            public void exit(final int value)
+            {
+                throw new RuntimeException(String.valueOf(value));
+            }
+        };
+
         String[] args = new String[] {"--wrongOption=50"};
         Options options = new Options();
-        String errorText = "";
+
+        PrintStream oldPrintStream = System.err;
+        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+        System.setErr(new PrintStream(errContent));
         try
         {
-            errorText = SystemLambda.tapSystemErr(() ->
-            {
-                SystemLambda.catchSystemExit(() ->
-                { CliUtil.execute(options, args); });
-            });
+            CliUtil.execute(options, args);
+            fail("calling CliUtil.execute did not exit when it should");
         }
-        catch (Exception e)
+        catch (RuntimeException e)
         {
-            fail("calling CliUtil.execute caused exception", e);
+            assertTrue(errContent.toString().contains("Unknown option:"));
+            assertTrue(errContent.toString().contains("--wrongOption=50"));
         }
-        assertTrue(errorText.contains("Unknown option:"));
-        assertTrue(errorText.contains("--wrongOption=50"));
+        finally
+        {
+            System.setErr(oldPrintStream);
+        }
     }
 
 }
