@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.djutils</groupId>
     <artifactId>djutils-parent</artifactId>
-    <version>2.2.3</version>
+    <version>2.3.0</version>
   </parent>
 
   <artifactId>djutils-cli</artifactId>
