@@ -1,24 +1,26 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <groupId>org.djutils</groupId>
     <artifactId>djutils-parent</artifactId>
     <version>2.2.3</version>
   </parent>
-  
+
   <artifactId>djutils-cli</artifactId>
-  
+
   <name>DJUTILS CLI utilities</name>
   <description>DJUTILS command line interface utilities</description>
 
   <dependencies>
 
     <dependency>
-        <groupId>com.github.stefanbirkner</groupId>
-        <artifactId>system-lambda</artifactId>
-        <version>1.2.1</version>
-        <scope>test</scope>
+      <groupId>org.jmockit</groupId>
+      <artifactId>jmockit</artifactId>
+      <version>1.49</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -37,5 +39,19 @@
     </dependency>
 
   </dependencies>
-  
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven.surefire.version}</version>
+        <configuration>
+          <argLine>
+            -javaagent:"${settings.localRepository}"/org/jmockit/jmockit/1.49/jmockit-1.49.jar
+          </argLine>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
