@@ -127,10 +127,10 @@ public class TestCliLocale
         args = new String[] {"--duration", "0,5s", "--locale", "no_NO"};
         CliUtil.execute(options, args);
         assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
-        args = new String[] {"--duration", "0,5s", "--locale", "no_NO_NY"};
+        args = new String[] {"--duration", "0.5s", "--locale", "no_NO_NY"};
         CliUtil.execute(options, args);
         assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
-        args = new String[] {"--duration", "0,5s", "--locale", "no-NO-NY"};
+        args = new String[] {"--duration", "0.5s", "--locale", "no-NO-NY"};
         CliUtil.execute(options, args);
         assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
         assertEquals(locale, Locale.getDefault());
