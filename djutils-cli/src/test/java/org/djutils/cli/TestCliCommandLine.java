@@ -4,10 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import org.junit.jupiter.api.Test;
 
-import com.github.stefanbirkner.systemlambda.SystemLambda;
-
+import mockit.Mock;
+import mockit.MockUp;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -56,6 +59,15 @@ public class TestCliCommandLine
     @Test
     public void testCli() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
+        new MockUp<System>()
+        {
+            @Mock
+            public void exit(final int value)
+            {
+                throw new RuntimeException(String.valueOf(value));
+            }
+        };
+
         // test CliUtil with CommandLine
         String[] args = new String[] {"-p", "2400"};
         Options options = new Options();
@@ -70,19 +82,22 @@ public class TestCliCommandLine
         final String[] argsErr = new String[] {"-p", "240000"};
         options = new Options();
         final CommandLine cmdErr = new CommandLine(options);
-        String errorText = "";
+
+        PrintStream oldPrintStream = System.err;
+        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+        System.setErr(new PrintStream(errContent));
         try
         {
-            errorText = SystemLambda.tapSystemErr(() ->
-            {
-                SystemLambda.catchSystemExit(() ->
-                { CliUtil.execute(cmdErr, argsErr); });
-            });
+            CliUtil.execute(cmdErr, argsErr);
+            fail("calling CliUtil.execute did not exit when it should");
         }
-        catch (Exception e)
+        catch (RuntimeException e)
         {
-            fail("calling CliUtil.execute caused exception", e);
+            assertTrue(errContent.toString().startsWith("Port should be between 1 and 65535"));
         }
-        assertTrue(errorText.startsWith("Port should be between 1 and 65535"));
+        finally
+        {
+            System.setErr(oldPrintStream);
+        }
     }
 }
