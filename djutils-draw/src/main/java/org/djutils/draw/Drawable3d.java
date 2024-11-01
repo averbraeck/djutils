@@ -20,7 +20,6 @@ public interface Drawable3d extends Drawable<Point3d>
      */
     Bounds3d getBounds();
 
-    /** {@inheritDoc} */
     @Override
     default int getDimensions()
     {
@@ -30,10 +29,10 @@ public interface Drawable3d extends Drawable<Point3d>
     /**
      * Project the object onto the z=0 plane.
      * @return Drawable2d; the projected object
-     * @throws DrawRuntimeException when projecting onto the z=0 plane results in an invalid object. E.g. a Line3d that consists
-     *             of points that all have the exact same x and y coordinates cannot be a line after projecting on the z=0
-     *             plane.
+     * @throws InvalidProjectionException when projecting onto the z=0 plane results in an invalid object. E.g. a Line3d that
+     *             consists of points that all have the exact same x and y coordinates cannot be a line after projecting on the
+     *             z=0 plane.
      */
-    Drawable2d project() throws DrawRuntimeException;
+    Drawable2d project() throws InvalidProjectionException;
 
 }
