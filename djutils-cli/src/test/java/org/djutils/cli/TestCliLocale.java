@@ -130,12 +130,10 @@ public class TestCliLocale
         args = new String[] {"--duration", "0,5s", "--locale", "no_NO"};
         CliUtil.execute(options, args);
         assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
-        args = new String[] {"--duration", "0.5s", "--locale", "no_NO_NY"};
+        // Issue #50. This locale is not constant between Java versions and even Java releases of the same version
+        args = new String[] {"--duration", "10s", "--locale", "no_NO_NY"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
-        args = new String[] {"--duration", "0.5s", "--locale", "no-NO-NY"};
-        CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(10.0, DurationUnit.SECOND), options.getDuration());
         assertEquals(locale, Locale.getDefault());
 
         Locale.setDefault(saveLocale);
