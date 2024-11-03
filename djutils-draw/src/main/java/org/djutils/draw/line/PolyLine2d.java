@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
@@ -25,7 +27,8 @@ import org.djutils.logger.CategoryLogger;
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray2d, DirectedPoint2d, LineSegment2d>
 {
@@ -594,8 +597,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         if (position < 0.0)
         {
             double fraction = position / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
-            return new DirectedPoint2d(this.x[0] + fraction * (this.x[1] - this.x[0]), this.y[0] + fraction * (this.y[1] - this.y[0]),
-                    this.x[1], this.y[1]);
+            return new DirectedPoint2d(this.x[0] + fraction * (this.x[1] - this.x[0]),
+                    this.y[0] + fraction * (this.y[1] - this.y[0]), this.x[1], this.y[1]);
         }
 
         // position beyond end point -- extrapolate using the direction from the before last point to the last point of this
@@ -614,7 +617,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             }
             fraction = len / (this.lengthIndexedLine[n1] - this.lengthIndexedLine[n2]);
         }
-        return new DirectedPoint2d(this.x[n1] + fraction * (this.x[n1] - this.x[n2]), this.y[n1] + fraction * (this.y[n1] - this.y[n2]),
+        return new DirectedPoint2d(this.x[n1] + fraction * (this.x[n1] - this.x[n2]),
+                this.y[n1] + fraction * (this.y[n1] - this.y[n2]),
                 Math.atan2(this.y[n1] - this.y[n2], this.x[n1] - this.x[n2]));
     }
 
@@ -1159,6 +1163,78 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             }
         }
         return new PolyLine2d(true, pointList);
+    }
+
+    @Override
+    public final PolyLine2d offsetLine(final double[] relativeFractions, final double[] offsets,
+            final double offsetMinimumFilterValue) throws DrawRuntimeException
+    {
+        Throw.whenNull(relativeFractions, "relativeFraction may not be null");
+        Throw.whenNull(offsets, "offsets may not be null");
+        Throw.when(relativeFractions.length < 2, DrawRuntimeException.class, "size of relativeFractions must be >= 2");
+        Throw.when(relativeFractions.length != offsets.length, DrawRuntimeException.class,
+                "size of relativeFractions must be equal to size of offsets");
+        Throw.when(relativeFractions[0] < 0, DrawRuntimeException.class, "relativeFractions may not start before 0");
+        Throw.when(relativeFractions[relativeFractions.length - 1] > 1, DrawRuntimeException.class,
+                "relativeFractions may not end beyond 1");
+        List<Double> fractionsList = DoubleStream.of(relativeFractions).boxed().collect(Collectors.toList());
+        List<Double> offsetsList = DoubleStream.of(offsets).boxed().collect(Collectors.toList());
+        if (relativeFractions[0] != 0)
+        {
+            fractionsList.add(0, 0.0);
+            offsetsList.add(0, 0.0);
+        }
+        if (relativeFractions[relativeFractions.length - 1] < 1.0)
+        {
+            fractionsList.add(1.0);
+            offsetsList.add(0.0);
+        }
+        PolyLine2d[] offsetLine = new PolyLine2d[fractionsList.size()];
+        for (int i = 0; i < fractionsList.size(); i++)
+        {
+            offsetLine[i] = offsetLine(offsetsList.get(i));
+        }
+        List<Point2d> out = new ArrayList<>();
+        Point2d prevCoordinate = null;
+        for (int i = 0; i < offsetsList.size() - 1; i++)
+        {
+            Throw.when(fractionsList.get(i + 1) <= fractionsList.get(i), DrawRuntimeException.class,
+                    "fractions must be in ascending order");
+            PolyLine2d startGeometry = offsetLine[i].extractFractional(fractionsList.get(i), fractionsList.get(i + 1));
+            PolyLine2d endGeometry = offsetLine[i + 1].extractFractional(fractionsList.get(i), fractionsList.get(i + 1));
+            double firstLength = startGeometry.getLength();
+            double secondLength = endGeometry.getLength();
+            int firstIndex = 0;
+            int secondIndex = 0;
+            while (firstIndex < startGeometry.size() && secondIndex < endGeometry.size())
+            {
+                double firstRatio = firstIndex < startGeometry.size() ? startGeometry.lengthAtIndex(firstIndex) / firstLength
+                        : Double.MAX_VALUE;
+                double secondRatio = secondIndex < endGeometry.size() ? endGeometry.lengthAtIndex(secondIndex) / secondLength
+                        : Double.MAX_VALUE;
+                double ratio;
+                if (firstRatio < secondRatio)
+                {
+                    ratio = firstRatio;
+                    firstIndex++;
+                }
+                else
+                {
+                    ratio = secondRatio;
+                    secondIndex++;
+                }
+                Point2d firstCoordinate = startGeometry.getLocation(ratio * firstLength);
+                Point2d secondCoordinate = endGeometry.getLocation(ratio * secondLength);
+                Point2d resultCoordinate = new Point2d((1 - ratio) * firstCoordinate.x + ratio * secondCoordinate.x,
+                        (1 - ratio) * firstCoordinate.y + ratio * secondCoordinate.y);
+                if (null == prevCoordinate || resultCoordinate.distance(prevCoordinate) > offsetMinimumFilterValue)
+                {
+                    out.add(resultCoordinate);
+                    prevCoordinate = resultCoordinate;
+                }
+            }
+        }
+        return new PolyLine2d(out);
     }
 
     /**

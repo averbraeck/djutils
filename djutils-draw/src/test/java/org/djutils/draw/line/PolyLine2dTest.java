@@ -20,6 +20,8 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Export;
 import org.djutils.draw.Transform2d;
 import org.djutils.draw.bounds.Bounds2d;
+import org.djutils.draw.curve.BezierCubic2d;
+import org.djutils.draw.curve.Flattener2d;
 import org.djutils.draw.line.PolyLine.TransitionFunction;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
@@ -34,7 +36,8 @@ import org.junit.jupiter.api.Test;
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class PolyLine2dTest
 {
@@ -1235,7 +1238,8 @@ public class PolyLine2dTest
                 outerDesignLine.get(10).directionTo(outerDesignLine.get(11)));
         Ray2d to = new Ray2d(innerDesignLine.get(80).x, innerDesignLine.get(80).y,
                 innerDesignLine.get(80).directionTo(innerDesignLine.get(81)));
-        transitionLine = Bezier.cubic(from, to);
+        // transitionLine = Bezier.cubic(from, to);
+        transitionLine = new BezierCubic2d(from, to).toPolyLine(new Flattener2d.NumSegments(64));
         // System.out.print("Bezier: " + transitionLine.toPlot());
         projections = new ArrayList<>();
         Point2d prev = null;
@@ -1477,7 +1481,8 @@ public class PolyLine2dTest
     public void testTransitionLine()
     {
         // Create a Bezier with a 90 degree change of direction starting in X direction, ending in Y direction
-        PolyLine2d bezier = Bezier.cubic(64, new Ray2d(-5, 0, 0, 0), new Ray2d(0, 5, 0, 7));
+        PolyLine2d bezier =
+                new BezierCubic2d(new Ray2d(-5, 0, 0, 0), new Ray2d(0, 5, 0, 7)).toPolyLine(new Flattener2d.NumSegments(64));
         // System.out.print("c1,0,0" + bezier1.project().toPlot());
         double length = bezier.getLength();
         double prevDir = Double.NaN;

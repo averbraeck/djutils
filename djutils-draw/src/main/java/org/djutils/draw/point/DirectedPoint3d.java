@@ -7,11 +7,13 @@ import java.util.Objects;
 
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.Directed3d;
+import org.djutils.draw.Direction3d;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Throw;
 
 /**
- * DirectedPoint3d.java.
+ * A DirectedPoint3d is a point in 3d space that additionally carries a direction in 3d i.c. dirY (similar to tilt; measured as
+ * an angle from the positive z-direction) and dirZ (similar to pan; measured as an angle from the positive x-direction).
  * <p>
  * Copyright (c) 2023-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -19,7 +21,8 @@ import org.djutils.exceptions.Throw;
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint3d>
 {
@@ -35,13 +38,14 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
     public final double dirZ;
 
     /**
-     * Create a new DirectedPoint3d with x, y, and z coordinates and orientation dirX,dirY,dirZ.
+     * Create a new DirectedPoint3d with x, y, and z coordinates and orientation dirY,dirZ.
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param z double; the z coordinate
      * @param dirY double; the complement of the slope
      * @param dirZ double; the counter-clockwise rotation around the point in radians
-     * @throws IllegalArgumentException when x, y, z, dirX, dirY, or dirZ is NaN
+     * @throws IllegalArgumentException when <cite>x</cite>, <cite>y</cite>, <cite>z</cite>, <cite>dirY</cite>, or
+     *             <cite>dirZ</cite> is NaN
      */
     public DirectedPoint3d(final double x, final double y, final double z, final double dirY, final double dirZ)
             throws IllegalArgumentException
@@ -73,11 +77,22 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
     }
 
     /**
+     * Create a new DirectedPoint3d from another Point3d and and direction Direction3d.
+     * @param point Point3d; the point from which this OrientedPoint3d will be instantiated
+     * @param direction Direction3d; the direction
+     * @throws NullPointerException when direction is null
+     */
+    public DirectedPoint3d(final Point3d point, final Direction3d direction) throws NullPointerException
+    {
+        this(point.x, point.y, point.z, Throw.whenNull(direction, "direction").dirY, direction.dirZ);
+    }
+
+    /**
      * Create a new DirectedPoint3d from another Point3d and and direction dirY,dirZ.
      * @param point Point3d; the point from which this OrientedPoint3d will be instantiated
      * @param dirY double; the complement of the slope
      * @param dirZ double; the counter-clockwise rotation around the point in radians
-     * @throws IllegalArgumentException when dirX, dirY, or dirZ is NaN
+     * @throws IllegalArgumentException when dirY, or dirZ is NaN
      */
     public DirectedPoint3d(final Point3d point, final double dirY, final double dirZ) throws IllegalArgumentException
     {
@@ -280,7 +295,7 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * Return a new DirectedPoint3d with an in-place rotation around the z-axis by the provided rotateZ. The resulting rotation
      * will be normalized between -&pi; and &pi;.
      * @param rotateZ double; the rotation around the z-axis
-     * @return DirectedPoint3d; a new point with the same coordinates, dirX and dirY and modified dirZ
+     * @return DirectedPoint3d; a new point with the same coordinates, dirY and modified dirZ
      * @throws IllegalArgumentException when rotateZ is NaN
      */
     public DirectedPoint3d rotate(final double rotateZ) throws IllegalArgumentException

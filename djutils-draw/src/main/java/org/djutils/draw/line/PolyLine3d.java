@@ -24,7 +24,8 @@ import org.djutils.logger.CategoryLogger;
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray3d, DirectedPoint3d, LineSegment3d>
 {
@@ -616,8 +617,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
         if (position < 0.0)
         {
             double fraction = position / (this.lengthIndexedLine[1] - this.lengthIndexedLine[0]);
-            return new DirectedPoint3d(this.x[0] + fraction * (this.x[1] - this.x[0]), this.y[0] + fraction * (this.y[1] - this.y[0]),
-                    this.z[0] + fraction * (this.z[1] - this.z[0]), this.x[1], this.y[1], this.z[1]);
+            return new DirectedPoint3d(this.x[0] + fraction * (this.x[1] - this.x[0]),
+                    this.y[0] + fraction * (this.y[1] - this.y[0]), this.z[0] + fraction * (this.z[1] - this.z[0]), this.x[1],
+                    this.y[1], this.z[1]);
         }
 
         // position beyond end point -- extrapolate using the direction from the before last point to the last point of this
@@ -636,8 +638,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
             }
             fraction = len / (this.lengthIndexedLine[n1] - this.lengthIndexedLine[n2]);
         }
-        return new DirectedPoint3d(this.x[n1] + fraction * (this.x[n1] - this.x[n2]), this.y[n1] + fraction * (this.y[n1] - this.y[n2]),
-                this.z[n1] + fraction * (this.z[n1] - this.z[n2]),
+        return new DirectedPoint3d(this.x[n1] + fraction * (this.x[n1] - this.x[n2]),
+                this.y[n1] + fraction * (this.y[n1] - this.y[n2]), this.z[n1] + fraction * (this.z[n1] - this.z[n2]),
                 Math.atan2(Math.hypot(this.x[n1] - this.x[n2], this.y[n1] - this.y[n2]), this.z[n1] - this.z[n2]),
                 Math.atan2(this.y[n1] - this.y[n2], this.x[n1] - this.x[n2]));
     }
@@ -898,8 +900,24 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
             final double offsetMaximumFilterValue, final double offsetFilterRatio, final double minimumOffset)
             throws IllegalArgumentException
     {
-        PolyLine2d flat = project().offsetLine(offset, circlePrecision, offsetMinimumFilterValue, offsetMaximumFilterValue,
-                offsetFilterRatio, minimumOffset);
+        return restoreElevation(project().offsetLine(offset, circlePrecision, offsetMinimumFilterValue,
+                offsetMaximumFilterValue, offsetFilterRatio, minimumOffset));
+    }
+
+    @Override
+    public PolyLine3d offsetLine(final double[] relativeFractions, final double[] offsets,
+            final double offsetMinimumFilterValue) throws DrawRuntimeException
+    {
+        return restoreElevation(project().offsetLine(relativeFractions, offsets, offsetMinimumFilterValue));
+    }
+
+    /**
+     * Approximate the z-values of a PolyLine that was made 2d in order to apply some modification.
+     * @param flat PolyLine2d; the modified 2d PolyLine
+     * @return PolyLine3d; the PolyLine with approximately restored z-values
+     */
+    private PolyLine3d restoreElevation(final PolyLine2d flat)
+    {
         List<Point3d> points = new ArrayList<>();
         int start = 0;
         for (int index = 0; index < flat.size(); index++)

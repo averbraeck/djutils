@@ -12,7 +12,8 @@ import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Throw;
 
 /**
- * DirectedPoint2d.java.
+ * A DirectedPoint2d is a Point2d that additionally carries a direction in 2d-space (dirZ). This is <b>not</b> the direction
+ * that the point is when viewed from the origin (0,0).
  * <p>
  * Copyright (c) 2023-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -20,7 +21,8 @@ import org.djutils.exceptions.Throw;
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint2d>
 {
@@ -108,6 +110,19 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     {
         Throw.when(0 == dX && 0 == dY, IllegalArgumentException.class, "Through point may not be equal to point");
         return Math.atan2(dY, dX);
+    }
+
+    /**
+     * Construct a new DirectedPoint2d from a Point2d and a point that the direction goes through.
+     * @param point Point2d; the point
+     * @param throughPoint Poin2d; the point that the direction goes through
+     * @throws NullPointerException when point is null
+     * @throws DrawRuntimeException when <cite>throughX</cite> == <cite>point.x</cite> and <cite>throughY</cite> ==
+     *             <cite>point.y</cite>, or any through-value is NaN
+     */
+    public DirectedPoint2d(final Point2d point, final Point2d throughPoint) throws NullPointerException, DrawRuntimeException
+    {
+        this(Throw.whenNull(point, "point").x, point.y, Throw.whenNull(throughPoint, "throughPoint").x, throughPoint.y);
     }
 
     /**
@@ -207,7 +222,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
         Throw.when(Double.isNaN(rotateZ), IllegalArgumentException.class, "deltaDirZ must be a number (not NaN)");
         return new DirectedPoint2d(this.x, this.y, AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
-    
+
     @Override
     public double getDirZ()
     {

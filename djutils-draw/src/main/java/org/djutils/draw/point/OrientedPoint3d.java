@@ -10,17 +10,18 @@ import org.djutils.draw.Oriented3d;
 import org.djutils.exceptions.Throw;
 
 /**
- * A OrientedPoint3d is an immutable point with an x, y, and z coordinate, stored with double precision plus a 3d orientation.
- * The orientation is specified by the rotations around the x, y, and z-axis. A number of constructors and methods are provided
- * for cases where only the rotation around the z-axis is of importance. Orientation in 3D is stored as three double values
- * dirX,dirY,dirZ. This class does <b>not</b> prescribe a particular order in which these rotations are to be applied. (Applying
- * rotations is <b>not</b> commutative, so this <i>is</i> important.)
+ * A OrientedPoint3d is a point with an x, y, and z coordinate, plus a 3d orientation. The orientation is specified by the
+ * rotations around the x, y, and z-axis. A number of constructors and methods are provided for cases where only the rotation
+ * around the z-axis is of importance. Orientation in 3D is stored as three double values dirX,dirY,dirZ. This class does
+ * <b>not</b> prescribe a particular order in which these rotations are to be applied. (Applying rotations is <b>not</b>
+ * commutative, so this <i>is</i> important.)
  * <p>
  * Copyright (c) 2020-2024 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<OrientedPoint3d>
 {

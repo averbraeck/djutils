@@ -1,7 +1,7 @@
 package org.djutils.draw;
 
 /**
- * Directed2d.java.
+ * Interface for objects that have a direction in the XY-plane.
  * <p>
  * Copyright (c) 2023-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -9,7 +9,8 @@ package org.djutils.draw;
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  * @param <D> the Directed type
  */
 public interface Directed2d<D extends Directed<D>> extends Directed<D>
@@ -19,5 +20,5 @@ public interface Directed2d<D extends Directed<D>> extends Directed<D>
      * @return double; dirZ
      */
     double getDirZ();
-    
+
 }

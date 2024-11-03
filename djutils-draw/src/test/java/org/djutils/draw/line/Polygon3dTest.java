@@ -31,9 +31,9 @@ public class Polygon3dTest
     @Test
     public void testConstructors()
     {
-        double[] x = new double[] { 1, 3, 5 };
-        double[] y = new double[] { 2, 1, 10 };
-        double[] z = new double[] { 2, 3, 4 };
+        double[] x = new double[] {1, 3, 5};
+        double[] y = new double[] {2, 1, 10};
+        double[] z = new double[] {2, 3, 4};
 
         Polygon3d polygon = new Polygon3d(x, y, z);
         checkPolygon("constructed from arrays", x, y, z, polygon);
@@ -46,9 +46,9 @@ public class Polygon3dTest
             assertEquals(z[index], p.z, 0.0001, "reversed z");
         }
 
-        x = new double[] { 1, 3, 5, 1 };
-        y = new double[] { 2, 1, 10, 2 };
-        z = new double[] { 2, 3, 4, 2 };
+        x = new double[] {1, 3, 5, 1};
+        y = new double[] {2, 1, 10, 2};
+        z = new double[] {2, 3, 4, 2};
         polygon = new Polygon3d(x, y, z); // Last point is duplicate of first point; should be handled gracefully
         assertTrue(polygon.toString().startsWith("Polygon3d"), "toString returns something descriptive");
         assertTrue(polygon.toString().indexOf(polygon.toString(true)) > 0, "toString can suppress the class name");
@@ -63,23 +63,23 @@ public class Polygon3dTest
         // Make a Polygon3d from Point3d where last point differs from first only in z
         new Polygon3d(polygon.get(0), polygon.get(1), polygon.get(2), new Point3d(polygon.get(0).x, polygon.get(0).y, 123));
 
-        x = new double[] { 1, 3, 1 }; // x coordinate of last point matches that of first
-        y = new double[] { 2, 1, 10 }; // not true for y coordinates
-        z = new double[] { 2, 3, 2 }; // true for z
+        x = new double[] {1, 3, 1}; // x coordinate of last point matches that of first
+        y = new double[] {2, 1, 10}; // not true for y coordinates
+        z = new double[] {2, 3, 2}; // true for z
         polygon = new Polygon3d(x, y, z);
         // System.out.println(polygon);
         checkPolygon("constructed from arrays with first and last x equal", x, y, z, polygon);
 
-        x = new double[] { 1, 3, 1 }; // x coordinate of last point matches that of first
-        y = new double[] { 2, 1, 2 }; // same for y
-        z = new double[] { 2, 3, 4 }; // not true for z
+        x = new double[] {1, 3, 1}; // x coordinate of last point matches that of first
+        y = new double[] {2, 1, 2}; // same for y
+        z = new double[] {2, 3, 4}; // not true for z
         polygon = new Polygon3d(x, y, z);
         // System.out.println(polygon);
         checkPolygon("constructed from arrays with first and last x equal", x, y, z, polygon);
 
-        x = new double[] { 1, 3, 5, 3 };
-        y = new double[] { 2, 2, 10, 10 };
-        z = new double[] { 4, 4, 4, 4 };
+        x = new double[] {1, 3, 5, 3};
+        y = new double[] {2, 2, 10, 10};
+        z = new double[] {4, 4, 4, 4};
         polygon = new Polygon3d(x, y, z);
         checkPolygon("constructed from arrays", x, y, z, polygon);
         // convert the points of polygon to an array of Point3d
@@ -96,12 +96,12 @@ public class Polygon3dTest
 
         list.add(list.get(0));
         otherPolygon = new Polygon3d(list.iterator());
-        assertEquals(polygon,
-                otherPolygon, "Polygon created from polygon points and duplicate of first point at end is equal to original polygon");
+        assertEquals(polygon, otherPolygon,
+                "Polygon created from polygon points and duplicate of first point at end is equal to original polygon");
 
         otherPolygon = new Polygon3d(list);
-        assertEquals(polygon,
-                otherPolygon, "Polygon created from polygon points and duplicate of first point at end is equal to original polygon");
+        assertEquals(polygon, otherPolygon,
+                "Polygon created from polygon points and duplicate of first point at end is equal to original polygon");
         // Add a point that only differs in y
         list.add(new Point3d(list.get(0).x, 123, list.get(0).z));
         new Polygon3d(list.iterator());
@@ -148,7 +148,7 @@ public class Polygon3dTest
 
         try
         {
-            new Polygon3d(new double[] { 1, 2, 3 }, new double[] { 1, 2, 3 }, new double[] { 1, 2, 3, 4 });
+            new Polygon3d(new double[] {1, 2, 3}, new double[] {1, 2, 3}, new double[] {1, 2, 3, 4});
             fail("unequal length of coordinate array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -158,7 +158,7 @@ public class Polygon3dTest
 
         try
         {
-            new Polygon3d(new double[] { 1, 2, 3 }, new double[] { 1, 2, 3, 4 }, new double[] { 1, 2, 3 });
+            new Polygon3d(new double[] {1, 2, 3}, new double[] {1, 2, 3, 4}, new double[] {1, 2, 3});
             fail("unequal length of coordinate array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -168,7 +168,7 @@ public class Polygon3dTest
 
         try
         {
-            new Polygon3d(new double[] { 1, 2, 3, 4 }, new double[] { 1, 2, 3 }, new double[] { 1, 2, 3 });
+            new Polygon3d(new double[] {1, 2, 3, 4}, new double[] {1, 2, 3}, new double[] {1, 2, 3});
             fail("unequal length of coordinate array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -178,7 +178,7 @@ public class Polygon3dTest
 
         try
         {
-            new Polygon3d(null, new double[] { 1, 2, 3 }, new double[] { 1, 2, 3 });
+            new Polygon3d(null, new double[] {1, 2, 3}, new double[] {1, 2, 3});
             fail("null for x array hould have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -188,7 +188,7 @@ public class Polygon3dTest
 
         try
         {
-            new Polygon3d(new double[] { 1, 2, 3 }, null, new double[] { 1, 2, 3 });
+            new Polygon3d(new double[] {1, 2, 3}, null, new double[] {1, 2, 3});
             fail("null for x array hould have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -198,7 +198,7 @@ public class Polygon3dTest
 
         try
         {
-            new Polygon3d(new double[] { 1, 2, 3 }, new double[] { 1, 2, 3 }, null);
+            new Polygon3d(new double[] {1, 2, 3}, new double[] {1, 2, 3}, null);
             fail("null for x array hould have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -208,7 +208,7 @@ public class Polygon3dTest
 
         try
         {
-            new Polygon3d(new double[] { 1 }, new double[] { 1 }, new double[] { 1 });
+            new Polygon3d(new double[] {1}, new double[] {1}, new double[] {1});
             fail("too short coordinate array should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -239,7 +239,7 @@ public class Polygon3dTest
         try
         {
             new Polygon3d(new Point3d(1, 2, 3), new Point3d(3, 2, 5),
-                    new Point3d[] { new Point3d(1, 2, 3), new Point3d(1, 2, 3) });
+                    new Point3d[] {new Point3d(1, 2, 3), new Point3d(1, 2, 3)});
             fail("two identical points at end, matching first point should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -260,7 +260,7 @@ public class Polygon3dTest
         }
 
     }
-    
+
     /**
      * Test the filtering constructors.
      */
@@ -277,9 +277,9 @@ public class Polygon3dTest
         {
             // Ignore expected exception
         }
-        
-        assertEquals(2, new Polygon3d(true, points).size(), "After filtering; there are two points left"); 
-        
+
+        assertEquals(2, new Polygon3d(true, points).size(), "After filtering; there are two points left");
+
         List<Point3d> list = Arrays.asList(points);
         try
         {
@@ -290,8 +290,8 @@ public class Polygon3dTest
         {
             // Ignore expected exception
         }
-        
-        assertEquals(2, new Polygon3d(true, list).size(), "After filtering; there are two points left"); 
+
+        assertEquals(2, new Polygon3d(true, list).size(), "After filtering; there are two points left");
     }
 
     /**
@@ -392,8 +392,8 @@ public class Polygon3dTest
     @Test
     public void testExports()
     {
-        Point3d[] points = new Point3d[] { new Point3d(123.456, 345.678, 901.234), new Point3d(234.567, 456.789, 12.345),
-                new Point3d(-12.345, -34.567, 45.678) };
+        Point3d[] points = new Point3d[] {new Point3d(123.456, 345.678, 901.234), new Point3d(234.567, 456.789, 12.345),
+                new Point3d(-12.345, -34.567, 45.678)};
         Polygon3d pl = new Polygon3d(points);
         String[] out = Export.toTsv(pl).split("\\n");
         assertEquals(points.length + 1, out.length, "Excel output consists of one line per point plus one");

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
 
+import org.djutils.draw.Direction3d;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.bounds.Bounds3d;
@@ -18,7 +19,8 @@ import org.djutils.exceptions.Throw;
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class Point3d implements Drawable3d, Point<Point3d>
 {
@@ -255,6 +257,18 @@ public class Point3d implements Drawable3d, Point<Point3d>
     public Bounds3d getBounds()
     {
         return new Bounds3d(this);
+    }
+
+    /**
+     * Return the direction to another Point3d.
+     * @param otherPoint Point3d; the other point
+     * @return Direction3d; the direction to the other point in Radians (towards infinite X is 0; towards infinite Y is &pi; /
+     *         2; etc.). If the points are identical; this method returns NaN.
+     */
+    public Direction3d directionTo(final Point3d otherPoint)
+    {
+        return new Direction3d(Math.atan2(Math.hypot(otherPoint.x - this.x, otherPoint.y - this.y), otherPoint.z - this.z),
+                Math.atan2(otherPoint.y - this.y, otherPoint.x - this.x));
     }
 
     @Override

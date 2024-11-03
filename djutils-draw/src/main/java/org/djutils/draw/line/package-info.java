@@ -1,5 +1,5 @@
 /**
- * The d1 package provides an interface and different implementations for lines. <br>
+ * The line package provides an interface and different implementations for lines. <br>
  * Various types of line are implemented:
  * <ul>
  * <li>LineSegment: straight connection between two points</li>
@@ -14,6 +14,7 @@
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 package org.djutils.draw.line;

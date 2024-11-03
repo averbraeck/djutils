@@ -26,7 +26,8 @@ import org.junit.jupiter.api.Test;
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class Bounds2dTest
 {
@@ -436,7 +437,7 @@ public class Bounds2dTest
             // Ignore expected exception
         }
 
-        double[] shifts = new double[] { -200, -5, 0, 5, 200 };
+        double[] shifts = new double[] {-200, -5, 0, 5, 200};
         for (double dx : shifts)
         {
             for (double dy : shifts)

@@ -15,13 +15,14 @@ import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
 
 /**
- * Surface3d.java. Triangulated surface in 3D space.
+ * Triangulated surface in 3D space.
  * <p>
  * Copyright (c) 2021-2024 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class Surface3d implements Drawable3d
 {

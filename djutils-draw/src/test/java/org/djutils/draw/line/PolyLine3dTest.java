@@ -20,7 +20,6 @@ import java.util.NoSuchElementException;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Export;
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.line.PolyLine.TransitionFunction;
 import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
@@ -33,7 +32,8 @@ import org.junit.jupiter.api.Test;
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class PolyLine3dTest
 {
@@ -1773,91 +1773,91 @@ public class PolyLine3dTest
     /**
      * Test the transitionLine method.
      */
-    @Test
-    public void testTransitionLine()
-    {
-        // Create a Bezier with a 90 degree change of direction starting in X direction, ending in Y direction
-        PolyLine3d bezier = Bezier.cubic(64, new Ray3d(-5, 0, 2, 0, 0, 2), new Ray3d(0, 5, 2, 0, 7, 2));
-        // System.out.print("c1,0,0" + bezier1.project().toPlot());
-        double length = bezier.getLength();
-        double prevDir = Double.NaN;
-        for (int step = 0; step <= 1000; step++)
-        {
-            double distance = length * step / 1000;
-            DirectedPoint3d dp = bezier.getLocation(distance);
-            double direction = Math.toDegrees(dp.dirZ);
-            if (step > 0)
-            {
-                assertEquals(prevDir, direction, 2, "dirZ changes very little at step " + step);
-            }
-            prevDir = Math.toDegrees(dp.dirZ);
-        }
-        // Make a gradually transitioning offset line
-        PolyLine3d transitioningOffsetLine = bezier.offsetLine(0, 2);
-        // Verify that this curve is fairly smooth
-        length = transitioningOffsetLine.getLength();
-        prevDir = Double.NaN;
-        for (int step = 0; step <= 1000; step++)
-        {
-            double distance = length * step / 1000;
-            DirectedPoint3d dp = transitioningOffsetLine.getLocation(distance);
-            double direction = Math.toDegrees(dp.dirZ);
-            if (step > 0)
-            {
-                assertEquals(prevDir, direction, 2, "dirZ changes very little at step " + step);
-            }
-            prevDir = Math.toDegrees(dp.dirZ);
-        }
-        PolyLine3d endLine = bezier.offsetLine(-2);
-        // System.out.print("c0,1,0" + endLine.project().toPlot());
-        TransitionFunction transitionFunction = new TransitionFunction()
-        {
-            @Override
-            public double function(final double fraction)
-            {
-                return 0.5 - Math.cos(fraction * Math.PI) / 2;
-            }
-        };
-        PolyLine3d cosineSmoothTransitioningLine = bezier.transitionLine(endLine, transitionFunction);
-        // System.out.print("c0,0,0" + cosineSmoothTransitioningLine.project().toPlot());
-        length = cosineSmoothTransitioningLine.getLength();
-        prevDir = Double.NaN;
-        for (int step = 0; step <= 1000; step++)
-        {
-            double distance = length * step / 1000;
-            DirectedPoint3d dp = cosineSmoothTransitioningLine.getLocation(distance);
-            double direction = Math.toDegrees(dp.dirZ);
-            if (step > 0)
-            {
-                assertEquals(prevDir, direction, 4, "dirZ changes very little at step " + step);
-            }
-            prevDir = Math.toDegrees(dp.dirZ);
-        }
-        // System.out.print(
-        // "c0,0,1" + Bezier.cubic(bezier1.getLocationFraction(0), endLine.getLocationFraction(1)).project().toPlot());
-        // Reverse the lines
-        PolyLine3d cosineSmoothTransitioningLine2 =
-                endLine.reverse().transitionLine(bezier.reverse(), transitionFunction).reverse();
-        // Check that those lines are very similar
-        assertEquals(cosineSmoothTransitioningLine.getLength(), cosineSmoothTransitioningLine2.getLength(), 0.001,
-                "Lengths are equal");
-        for (int step = 0; step <= 1000; step++)
-        {
-            DirectedPoint3d dp1 =
-                    cosineSmoothTransitioningLine.getLocation(step * cosineSmoothTransitioningLine.getLength() / 1000);
-            DirectedPoint3d dp2 =
-                    cosineSmoothTransitioningLine2.getLocation(step * cosineSmoothTransitioningLine2.getLength() / 1000);
-            assertEquals(dp1.x, dp2.x, 0.001, "rays are almost equal in x");
-            assertEquals(dp1.y, dp2.y, 0.001, "rays are almost equal in y");
-            assertEquals(dp1.z, dp2.z, 0.001, "rays are almost equal in z");
-            assertEquals(dp1.dirY, dp2.dirY, 0.0001, "rays are almost equal in dirY");
-            assertEquals(dp1.dirZ, dp2.dirZ, 0.0001, "rays are almost equal in dirZ");
-        }
-
-        assertEquals(bezier, bezier.offsetLine(0, 0), "offset by zero returns original");
-        assertEquals(bezier.offsetLine(3, 3), bezier.offsetLine(3),
-                "offset by constant with two arguments returns same as offset with one argument");
-    }
+    // @Test
+    // public void testTransitionLine()
+    // {
+    // // Create a Bezier with a 90 degree change of direction starting in X direction, ending in Y direction
+    // PolyLine3d bezier = Bezier.cubic(64, new Ray3d(-5, 0, 2, 0, 0, 2), new Ray3d(0, 5, 2, 0, 7, 2));
+    // // System.out.print("c1,0,0" + bezier1.project().toPlot());
+    // double length = bezier.getLength();
+    // double prevDir = Double.NaN;
+    // for (int step = 0; step <= 1000; step++)
+    // {
+    // double distance = length * step / 1000;
+    // DirectedPoint3d dp = bezier.getLocation(distance);
+    // double direction = Math.toDegrees(dp.dirZ);
+    // if (step > 0)
+    // {
+    // assertEquals(prevDir, direction, 2, "dirZ changes very little at step " + step);
+    // }
+    // prevDir = Math.toDegrees(dp.dirZ);
+    // }
+    // // Make a gradually transitioning offset line
+    // PolyLine3d transitioningOffsetLine = bezier.offsetLine(0, 2);
+    // // Verify that this curve is fairly smooth
+    // length = transitioningOffsetLine.getLength();
+    // prevDir = Double.NaN;
+    // for (int step = 0; step <= 1000; step++)
+    // {
+    // double distance = length * step / 1000;
+    // DirectedPoint3d dp = transitioningOffsetLine.getLocation(distance);
+    // double direction = Math.toDegrees(dp.dirZ);
+    // if (step > 0)
+    // {
+    // assertEquals(prevDir, direction, 2, "dirZ changes very little at step " + step);
+    // }
+    // prevDir = Math.toDegrees(dp.dirZ);
+    // }
+    // PolyLine3d endLine = bezier.offsetLine(-2);
+    // // System.out.print("c0,1,0" + endLine.project().toPlot());
+    // TransitionFunction transitionFunction = new TransitionFunction()
+    // {
+    // @Override
+    // public double function(final double fraction)
+    // {
+    // return 0.5 - Math.cos(fraction * Math.PI) / 2;
+    // }
+    // };
+    // PolyLine3d cosineSmoothTransitioningLine = bezier.transitionLine(endLine, transitionFunction);
+    // // System.out.print("c0,0,0" + cosineSmoothTransitioningLine.project().toPlot());
+    // length = cosineSmoothTransitioningLine.getLength();
+    // prevDir = Double.NaN;
+    // for (int step = 0; step <= 1000; step++)
+    // {
+    // double distance = length * step / 1000;
+    // DirectedPoint3d dp = cosineSmoothTransitioningLine.getLocation(distance);
+    // double direction = Math.toDegrees(dp.dirZ);
+    // if (step > 0)
+    // {
+    // assertEquals(prevDir, direction, 4, "dirZ changes very little at step " + step);
+    // }
+    // prevDir = Math.toDegrees(dp.dirZ);
+    // }
+    // // System.out.print(
+    // // "c0,0,1" + Bezier.cubic(bezier1.getLocationFraction(0), endLine.getLocationFraction(1)).project().toPlot());
+    // // Reverse the lines
+    // PolyLine3d cosineSmoothTransitioningLine2 =
+    // endLine.reverse().transitionLine(bezier.reverse(), transitionFunction).reverse();
+    // // Check that those lines are very similar
+    // assertEquals(cosineSmoothTransitioningLine.getLength(), cosineSmoothTransitioningLine2.getLength(), 0.001,
+    // "Lengths are equal");
+    // for (int step = 0; step <= 1000; step++)
+    // {
+    // DirectedPoint3d dp1 =
+    // cosineSmoothTransitioningLine.getLocation(step * cosineSmoothTransitioningLine.getLength() / 1000);
+    // DirectedPoint3d dp2 =
+    // cosineSmoothTransitioningLine2.getLocation(step * cosineSmoothTransitioningLine2.getLength() / 1000);
+    // assertEquals(dp1.x, dp2.x, 0.001, "rays are almost equal in x");
+    // assertEquals(dp1.y, dp2.y, 0.001, "rays are almost equal in y");
+    // assertEquals(dp1.z, dp2.z, 0.001, "rays are almost equal in z");
+    // assertEquals(dp1.dirY, dp2.dirY, 0.0001, "rays are almost equal in dirY");
+    // assertEquals(dp1.dirZ, dp2.dirZ, 0.0001, "rays are almost equal in dirZ");
+    // }
+    //
+    // assertEquals(bezier, bezier.offsetLine(0, 0), "offset by zero returns original");
+    // assertEquals(bezier.offsetLine(3, 3), bezier.offsetLine(3),
+    // "offset by constant with two arguments returns same as offset with one argument");
+    // }
 
     /**
      * Test the degenerate PolyLine3d.

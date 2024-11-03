@@ -22,7 +22,8 @@ import org.junit.jupiter.api.Test;
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class Surface3dTest
 {
@@ -54,7 +55,7 @@ public class Surface3dTest
 
         try
         {
-            new Surface3d(new Point3d[][] { { new Point3d(1, 2, 3) } });
+            new Surface3d(new Point3d[][] {{new Point3d(1, 2, 3)}});
             fail("triangle with only one point should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -64,7 +65,7 @@ public class Surface3dTest
 
         try
         {
-            new Surface3d(new Point3d[][] { { new Point3d(1, 2, 3), new Point3d(4, 5, 6) } });
+            new Surface3d(new Point3d[][] {{new Point3d(1, 2, 3), new Point3d(4, 5, 6)}});
             fail("triangle with only two points should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -75,7 +76,7 @@ public class Surface3dTest
         try
         {
             new Surface3d(new Point3d[][] {
-                    { new Point3d(1, 2, 3), new Point3d(4, 5, 6), new Point3d(7, 8, 9), new Point3d(10, 11, 12) } });
+                    {new Point3d(1, 2, 3), new Point3d(4, 5, 6), new Point3d(7, 8, 9), new Point3d(10, 11, 12)}});
             fail("triangle with four points should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -85,7 +86,7 @@ public class Surface3dTest
 
         try
         {
-            new Surface3d(new Point3d[][] { { new Point3d(1, 2, 3), new Point3d(4, 5, 6), new Point3d(1, 2, 3) } });
+            new Surface3d(new Point3d[][] {{new Point3d(1, 2, 3), new Point3d(4, 5, 6), new Point3d(1, 2, 3)}});
             fail("triangle with duplicate point should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -95,7 +96,7 @@ public class Surface3dTest
 
         try
         {
-            new Surface3d(new Point3d[][] { { new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(7, 8, 9) } });
+            new Surface3d(new Point3d[][] {{new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(7, 8, 9)}});
             fail("triangle with duplicate point should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -105,7 +106,7 @@ public class Surface3dTest
 
         try
         {
-            new Surface3d(new Point3d[][] { { new Point3d(1, 2, 3), new Point3d(4, 5, 6), new Point3d(4, 5, 6) } });
+            new Surface3d(new Point3d[][] {{new Point3d(1, 2, 3), new Point3d(4, 5, 6), new Point3d(4, 5, 6)}});
             fail("triangle with duplicate point should have thrown a DrawRuntimeException");
         }
         catch (DrawRuntimeException dre)
@@ -116,9 +117,9 @@ public class Surface3dTest
         Point3d[][] points = new Point3d[10][];
         for (int triangle = 0; triangle < points.length; triangle++)
         {
-            points[triangle] = new Point3d[] { new Point3d(triangle, triangle + 1, triangle + 2),
+            points[triangle] = new Point3d[] {new Point3d(triangle, triangle + 1, triangle + 2),
                     new Point3d(triangle + 10, triangle + 11, triangle + 12),
-                    new Point3d(triangle + 10, triangle + 11, triangle - 12) };
+                    new Point3d(triangle + 10, triangle + 11, triangle - 12)};
         }
         Surface3d surface3d = new Surface3d(points);
         assertEquals(points.length * 3, surface3d.size(), "size");
@@ -174,23 +175,23 @@ public class Surface3dTest
         // Triangulate a cube
         Point3d[][] cubePoints = new Point3d[12][];
         // bottom; minimal z
-        cubePoints[0] = new Point3d[] { new Point3d(-1, -1, -1), new Point3d(-1, 1, -1), new Point3d(1, 1, -1) };
-        cubePoints[1] = new Point3d[] { new Point3d(1, 1, -1), new Point3d(1, -1, -1), new Point3d(-1, -1, -1) };
+        cubePoints[0] = new Point3d[] {new Point3d(-1, -1, -1), new Point3d(-1, 1, -1), new Point3d(1, 1, -1)};
+        cubePoints[1] = new Point3d[] {new Point3d(1, 1, -1), new Point3d(1, -1, -1), new Point3d(-1, -1, -1)};
         // left; minimal x
-        cubePoints[2] = new Point3d[] { new Point3d(-1, -1, -1), new Point3d(-1, 1, -1), new Point3d(-1, 1, 1) };
-        cubePoints[3] = new Point3d[] { new Point3d(-1, 1, 1), new Point3d(-1, -1, 1), new Point3d(-1, -1, -1) };
+        cubePoints[2] = new Point3d[] {new Point3d(-1, -1, -1), new Point3d(-1, 1, -1), new Point3d(-1, 1, 1)};
+        cubePoints[3] = new Point3d[] {new Point3d(-1, 1, 1), new Point3d(-1, -1, 1), new Point3d(-1, -1, -1)};
         // front; minimal y
-        cubePoints[4] = new Point3d[] { new Point3d(-1, -1, -1), new Point3d(1, -1, -1), new Point3d(1, -1, 1) };
-        cubePoints[5] = new Point3d[] { new Point3d(1, -1, 1), new Point3d(-1, -1, 1), new Point3d(-1, -1, -1) };
+        cubePoints[4] = new Point3d[] {new Point3d(-1, -1, -1), new Point3d(1, -1, -1), new Point3d(1, -1, 1)};
+        cubePoints[5] = new Point3d[] {new Point3d(1, -1, 1), new Point3d(-1, -1, 1), new Point3d(-1, -1, -1)};
         // top; maximal z
-        cubePoints[6] = new Point3d[] { new Point3d(-1, -1, 1), new Point3d(-1, 1, 1), new Point3d(1, 1, 1) };
-        cubePoints[7] = new Point3d[] { new Point3d(1, 1, 1), new Point3d(1, -1, 1), new Point3d(-1, -1, 1) };
+        cubePoints[6] = new Point3d[] {new Point3d(-1, -1, 1), new Point3d(-1, 1, 1), new Point3d(1, 1, 1)};
+        cubePoints[7] = new Point3d[] {new Point3d(1, 1, 1), new Point3d(1, -1, 1), new Point3d(-1, -1, 1)};
         // right; maximal x
-        cubePoints[8] = new Point3d[] { new Point3d(1, -1, -1), new Point3d(1, 1, -1), new Point3d(1, 1, 1) };
-        cubePoints[9] = new Point3d[] { new Point3d(1, 1, 1), new Point3d(1, -1, 1), new Point3d(1, -1, -1) };
+        cubePoints[8] = new Point3d[] {new Point3d(1, -1, -1), new Point3d(1, 1, -1), new Point3d(1, 1, 1)};
+        cubePoints[9] = new Point3d[] {new Point3d(1, 1, 1), new Point3d(1, -1, 1), new Point3d(1, -1, -1)};
         // rear; maximal y
-        cubePoints[10] = new Point3d[] { new Point3d(-1, 1, -1), new Point3d(1, 1, -1), new Point3d(1, 1, 1) };
-        cubePoints[11] = new Point3d[] { new Point3d(1, 1, 1), new Point3d(-1, 1, 1), new Point3d(-1, 1, -1) };
+        cubePoints[10] = new Point3d[] {new Point3d(-1, 1, -1), new Point3d(1, 1, -1), new Point3d(1, 1, 1)};
+        cubePoints[11] = new Point3d[] {new Point3d(1, 1, 1), new Point3d(-1, 1, 1), new Point3d(-1, 1, -1)};
         surface3d = new Surface3d(cubePoints);
         assertEquals(36, surface3d.size(), "size (number of points in 12 triangles) is 36");
         assertEquals(new Bounds3d(-1, 1, -1, 1, -1, 1), surface3d.getBounds(), "bounds");
@@ -223,8 +224,8 @@ public class Surface3dTest
     @Test
     public void testHashCodeAndEquals()
     {
-        Point3d[][] referencePoints = new Point3d[][] { { new Point3d(1, 2, 3), new Point3d(4, 5, 6), new Point3d(7, 8, 9) },
-                { new Point3d(11, 12, 13), new Point3d(14, 15, 16), new Point3d(17, 18, 19) } };
+        Point3d[][] referencePoints = new Point3d[][] {{new Point3d(1, 2, 3), new Point3d(4, 5, 6), new Point3d(7, 8, 9)},
+                {new Point3d(11, 12, 13), new Point3d(14, 15, 16), new Point3d(17, 18, 19)}};
         Surface3d referenceSurface = new Surface3d(referencePoints);
         assertTrue(referenceSurface.equals(referenceSurface), "Equal to itself");
         assertFalse(referenceSurface.equals(null), "Not equal to null");

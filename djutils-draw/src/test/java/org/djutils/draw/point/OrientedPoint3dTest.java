@@ -20,7 +20,8 @@ import org.junit.jupiter.api.Test;
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class OrientedPoint3dTest
 {
@@ -42,7 +43,7 @@ public class OrientedPoint3dTest
         assertEquals(0.0, p.dirY, 1E-6, "dirY");
         assertEquals(0.0, p.dirZ, 1E-6, "dirZ");
 
-        p = new OrientedPoint3d(new double[] { -18.7, 3.4, 5.6 });
+        p = new OrientedPoint3d(new double[] {-18.7, 3.4, 5.6});
         assertEquals(-18.7, p.x, 1E-6, "x");
         assertEquals(3.4, p.y, 1E-6, "y");
         assertEquals(5.6, p.z, 1E-6, "z");
@@ -58,7 +59,7 @@ public class OrientedPoint3dTest
         assertEquals(-0.2, p.getDirY(), 1E-6, "dirY");
         assertEquals(3.1415926, p.getDirZ(), 1E-6, "dirZ");
 
-        p = new OrientedPoint3d(new double[] { -18.7, 3.4, 5.6 }, 0.1, -0.2, Math.PI);
+        p = new OrientedPoint3d(new double[] {-18.7, 3.4, 5.6}, 0.1, -0.2, Math.PI);
         assertEquals(-18.7, p.x, 1E-6, "x");
         assertEquals(3.4, p.y, 1E-6, "y");
         assertEquals(5.6, p.z, 1E-6, "z");
@@ -69,7 +70,7 @@ public class OrientedPoint3dTest
         assertEquals(-0.2, p.dirY, 1E-6, "dirY");
         assertEquals(3.1415926, p.dirZ, 1E-6, "dirZ");
 
-        p = new OrientedPoint3d(new Point3d(new double[] { -18.7, 3.4, 5.6 }), 0.1, -0.2, Math.PI);
+        p = new OrientedPoint3d(new Point3d(new double[] {-18.7, 3.4, 5.6}), 0.1, -0.2, Math.PI);
         assertEquals(-18.7, p.x, 1E-6, "x");
         assertEquals(3.4, p.y, 1E-6, "y");
         assertEquals(5.6, p.z, 1E-6, "z");
@@ -167,8 +168,8 @@ public class OrientedPoint3dTest
             // Ignore expected exception
         }
 
-        double[] p3Arr = new double[] { 5.0, 6.0, 7.0 };
-        double[] rotArr = new double[] { 0.1, -0.2, 0.3 };
+        double[] p3Arr = new double[] {5.0, 6.0, 7.0};
+        double[] rotArr = new double[] {0.1, -0.2, 0.3};
         p = new OrientedPoint3d(5.0, 6.0, 7.0, rotArr);
         assertEquals(5.0, p.x, 0, "x");
         assertEquals(6.0, p.y, 0, "y");
@@ -199,7 +200,7 @@ public class OrientedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new OrientedPoint3d(0.1, 0.2, 0.3, new double[] { 0.1, 0.2 });
+                new OrientedPoint3d(0.1, 0.2, 0.3, new double[] {0.1, 0.2});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -208,7 +209,7 @@ public class OrientedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new OrientedPoint3d(0.1, 0.2, 0.3, new double[] { 0.1, 0.2, 0.3, 0.4 });
+                new OrientedPoint3d(0.1, 0.2, 0.3, new double[] {0.1, 0.2, 0.3, 0.4});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -226,7 +227,7 @@ public class OrientedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new OrientedPoint3d(new double[] { 0.1, 0.2 });
+                new OrientedPoint3d(new double[] {0.1, 0.2});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -235,7 +236,7 @@ public class OrientedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new OrientedPoint3d(new double[] { 0.1, 0.2, 0.3, 0.4 });
+                new OrientedPoint3d(new double[] {0.1, 0.2, 0.3, 0.4});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -244,7 +245,7 @@ public class OrientedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new OrientedPoint3d(new double[] { 1, 2, 3 }, new double[] { 0.1, 0.2 });
+                new OrientedPoint3d(new double[] {1, 2, 3}, new double[] {0.1, 0.2});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
@@ -253,7 +254,7 @@ public class OrientedPoint3dTest
             @Override
             public void execute() throws Throwable
             {
-                new OrientedPoint3d(new double[] { 1, 2, 3 }, new double[] { 0.1, 0.2, 0.3, 0.4 });
+                new OrientedPoint3d(new double[] {1, 2, 3}, new double[] {0.1, 0.2, 0.3, 0.4});
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 

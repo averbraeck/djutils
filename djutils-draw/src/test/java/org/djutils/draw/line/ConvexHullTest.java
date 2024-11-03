@@ -27,7 +27,8 @@ import org.junit.jupiter.api.Test;
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class ConvexHullTest
 {
@@ -107,11 +108,11 @@ public class ConvexHullTest
             {
                 // Ignore expected exception
             }
-            
+
             // Verify that the provided array was not modified.
             assertEquals(1, points.size(), "points still contains one point");
             assertEquals(testPoint, points.get(0), "points still contains testPoint");
-            
+
             points = new ArrayList<>();
             points.add(testPoint);
             points.add(testPoint);
@@ -124,7 +125,7 @@ public class ConvexHullTest
             {
                 // Ignore expected exception
             }
-            
+
             // Verify that the provided array was not modified.
             assertEquals(2, points.size(), "points still contains one point");
             assertEquals(testPoint, points.get(0), "first points is testPoint");

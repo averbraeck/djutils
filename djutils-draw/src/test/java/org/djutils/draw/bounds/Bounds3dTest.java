@@ -25,7 +25,8 @@ import org.junit.jupiter.api.Test;
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class Bounds3dTest
 {
@@ -539,7 +540,7 @@ public class Bounds3dTest
             // Ignore expected exception
         }
 
-        double[] shifts = new double[] { -200, -5, 0, 5, 200 };
+        double[] shifts = new double[] {-200, -5, 0, 5, 200};
         for (double dx : shifts)
         {
             for (double dy : shifts)
@@ -566,33 +567,45 @@ public class Bounds3dTest
             }
         }
         assertEquals(bb, bb.getBounds(), "getBounds returns this");
-        assertNotEquals(bb.hashCode(), new Bounds3d(bb.getMinX() + 1, bb.getMaxX(), bb.getMinY(), bb.getMaxY(), bb.getMinZ(), bb.getMaxZ()),
+        assertNotEquals(bb.hashCode(),
+                new Bounds3d(bb.getMinX() + 1, bb.getMaxX(), bb.getMinY(), bb.getMaxY(), bb.getMinZ(), bb.getMaxZ()),
                 "HashCode uses minX");
-        assertNotEquals(bb.hashCode(), new Bounds3d(bb.getMinX(), bb.getMaxX() + 1, bb.getMinY(), bb.getMaxY(), bb.getMinZ(), bb.getMaxZ()),
+        assertNotEquals(bb.hashCode(),
+                new Bounds3d(bb.getMinX(), bb.getMaxX() + 1, bb.getMinY(), bb.getMaxY(), bb.getMinZ(), bb.getMaxZ()),
                 "HashCode uses maxX");
-        assertNotEquals(bb.hashCode(), new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY() + 1, bb.getMaxY(), bb.getMinZ(), bb.getMaxZ()),
+        assertNotEquals(bb.hashCode(),
+                new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY() + 1, bb.getMaxY(), bb.getMinZ(), bb.getMaxZ()),
                 "HashCode uses minY");
-        assertNotEquals(bb.hashCode(), new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY(), bb.getMaxY() + 1, bb.getMinZ(), bb.getMaxZ()),
+        assertNotEquals(bb.hashCode(),
+                new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY(), bb.getMaxY() + 1, bb.getMinZ(), bb.getMaxZ()),
                 "HashCode uses maxY");
-        assertNotEquals(bb.hashCode(), new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY(), bb.getMaxY(), bb.getMinZ() + 1, bb.getMaxZ()),
+        assertNotEquals(bb.hashCode(),
+                new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY(), bb.getMaxY(), bb.getMinZ() + 1, bb.getMaxZ()),
                 "HashCode uses minZ");
-        assertNotEquals(bb.hashCode(), new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY(), bb.getMaxY() + 1, bb.getMinZ(), bb.getMaxZ() + 1),
+        assertNotEquals(bb.hashCode(),
+                new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY(), bb.getMaxY() + 1, bb.getMinZ(), bb.getMaxZ() + 1),
                 "HashCode uses maxZ");
 
         assertFalse(bb.equals(null), "equals checks for null");
         assertFalse(bb.equals("string"), "equals checks for different kind of object");
-        assertFalse(bb
-                .equals(new Bounds3d(bb.getMinX() + 1, bb.getMaxX(), bb.getMinY(), bb.getMaxY(), bb.getMinZ(), bb.getMaxZ())), "equals checks minX");
-        assertFalse(bb
-                .equals(new Bounds3d(bb.getMinX(), bb.getMaxX() + 1, bb.getMinY(), bb.getMaxY(), bb.getMinZ(), bb.getMaxZ())), "equals checks maxX");
-        assertFalse(bb
-                .equals(new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY() + 1, bb.getMaxY(), bb.getMinZ(), bb.getMaxZ())), "equals checks minY");
-        assertFalse(bb
-                .equals(new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY(), bb.getMaxY() + 1, bb.getMinZ(), bb.getMaxZ())), "equals checks maxy");
-        assertFalse(bb
-                .equals(new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY(), bb.getMaxY(), bb.getMinZ() + 1, bb.getMaxZ())), "equals checks minZ");
-        assertFalse(bb
-                .equals(new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY(), bb.getMaxY(), bb.getMinZ(), bb.getMaxZ() + 1)), "equals checks maxZ");
+        assertFalse(
+                bb.equals(new Bounds3d(bb.getMinX() + 1, bb.getMaxX(), bb.getMinY(), bb.getMaxY(), bb.getMinZ(), bb.getMaxZ())),
+                "equals checks minX");
+        assertFalse(
+                bb.equals(new Bounds3d(bb.getMinX(), bb.getMaxX() + 1, bb.getMinY(), bb.getMaxY(), bb.getMinZ(), bb.getMaxZ())),
+                "equals checks maxX");
+        assertFalse(
+                bb.equals(new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY() + 1, bb.getMaxY(), bb.getMinZ(), bb.getMaxZ())),
+                "equals checks minY");
+        assertFalse(
+                bb.equals(new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY(), bb.getMaxY() + 1, bb.getMinZ(), bb.getMaxZ())),
+                "equals checks maxy");
+        assertFalse(
+                bb.equals(new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY(), bb.getMaxY(), bb.getMinZ() + 1, bb.getMaxZ())),
+                "equals checks minZ");
+        assertFalse(
+                bb.equals(new Bounds3d(bb.getMinX(), bb.getMaxX(), bb.getMinY(), bb.getMaxY(), bb.getMinZ(), bb.getMaxZ() + 1)),
+                "equals checks maxZ");
         assertTrue(bb.equals(new Bounds3d(bb)), "equals to copy of itself");
 
         Bounds2d projection = bb.project();

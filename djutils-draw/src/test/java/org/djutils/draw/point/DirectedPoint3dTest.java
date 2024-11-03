@@ -22,14 +22,15 @@ import org.junit.jupiter.api.Test;
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class DirectedPoint3dTest
 {
     /**
      * Test the methods that are not covered by the Ray2dTest.
      */
-    @SuppressWarnings({ "unlikely-arg-type" })
+    @SuppressWarnings({"unlikely-arg-type"})
     @Test
     public void testMethods()
     {
@@ -248,7 +249,7 @@ public class DirectedPoint3dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-         Try.testFail(new Try.Execution()
+        Try.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable

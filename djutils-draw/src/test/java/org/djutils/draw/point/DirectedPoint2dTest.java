@@ -24,7 +24,8 @@ import org.junit.jupiter.api.Test;
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class DirectedPoint2dTest
 {
@@ -267,7 +268,7 @@ public class DirectedPoint2dTest
         assertEquals(2.8, out.y, 1E-6, "y");
         assertEquals(-Math.PI / 7, out.getDirZ(), 1E-6, "dirZ");
 
-        out = p.rotate(- Math.PI / 4);
+        out = p.rotate(-Math.PI / 4);
         assertEquals(-0.1, out.x, 1E-6, "x");
         assertEquals(-0.2, out.y, 1E-6, "y");
         assertEquals(-Math.PI / 7 - Math.PI / 4, out.getDirZ(), 1E-6, "dirZ");

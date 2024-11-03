@@ -14,7 +14,8 @@ import org.junit.jupiter.api.Test;
  * @version $Revision: 847 $, $LastChangedDate: 2020-01-17 15:57:08 +0100 (Fri, 17 Jan 2020) $, by $Author: pknoppers $, initial
  *          version 27 sep. 2015 <br>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class DrawRuntimeExceptionTest
 {

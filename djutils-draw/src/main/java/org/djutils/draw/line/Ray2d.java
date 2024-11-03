@@ -14,13 +14,14 @@ import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
 
 /**
- * Ray2d is a half-line; it has one end point with finite coordinates; the other end point is infinitely far away.
+ * Ray2d is a half-line in 2d; it has one end point with finite coordinates; the other end point is infinitely far away.
  * <p>
  * Copyright (c) 2020-2024 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, DirectedPoint2d, Point2d>
 {
@@ -125,7 +126,7 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     {
         this(Throw.whenNull(point, "point").x, point.y, Throw.whenNull(throughPoint, "throughPoint").x, throughPoint.y);
     }
-    
+
     /**
      * Construct a new Ray2d.
      * @param directedPoint DirectedPoint2d; point and direction of the new Ray2d

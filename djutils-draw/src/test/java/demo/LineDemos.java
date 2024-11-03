@@ -16,7 +16,8 @@ import org.djutils.draw.point.Point2d;
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public final class LineDemos
 {
@@ -68,7 +69,7 @@ public final class LineDemos
             System.out.println("segment " + index + ": " + polyLine2d.getSegment(index));
         }
 
-        System.out.print(Export.toPlot( polyLine2d));
+        System.out.print(Export.toPlot(polyLine2d));
 
         System.out.println("PolyLine: " + polyLine2d);
         System.out.println("closest point to (0,1): " + polyLine2d.closestPointOnPolyLine(new Point2d(0, 1)));

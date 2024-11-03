@@ -1,4 +1,4 @@
-package org.djutils.draw.line;
+package org.djutils.draw.curve;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -9,6 +9,17 @@ import java.lang.reflect.Method;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Export;
+import org.djutils.draw.curve.Bezier;
+import org.djutils.draw.curve.Bezier2d;
+import org.djutils.draw.curve.Bezier3d;
+import org.djutils.draw.curve.BezierCubic2d;
+import org.djutils.draw.curve.BezierCubic3d;
+import org.djutils.draw.curve.Flattener2d;
+import org.djutils.draw.curve.Flattener3d;
+import org.djutils.draw.line.PolyLine2d;
+import org.djutils.draw.line.PolyLine3d;
+import org.djutils.draw.line.Ray2d;
+import org.djutils.draw.line.Ray3d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.junit.jupiter.api.Test;
@@ -19,6 +30,7 @@ import org.junit.jupiter.api.Test;
  * Copyright (c) 2013-2024 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://opentrafficsim.org/docs/v2/license.html">OpenTrafficSim License</a>.
  * </p>
+ * @version $Revision$, $LastChangedDate$, by $Author$, initial version Jan 2, 2017 <br>
  * @author <a href="https://www.tbm.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @author <a href="https://www.transport.citg.tudelft.nl">Wouter Schakel</a>
@@ -40,7 +52,7 @@ public class BezierTest
         Point2d to = new Point2d(0, 10);
         for (int n : new int[] {2, 3, 4, 100})
         {
-            PolyLine2d line = Bezier.cubic(n, from, control1, control2, to);
+            PolyLine2d line = new BezierCubic2d(from, control1, control2, to).toPolyLine(new Flattener2d.NumSegments(n - 1));
             assertTrue(line.size() == n, "result has n points");
             assertTrue(line.get(0).equals(from), "result starts with from");
             assertTrue(line.get(line.size() - 1).equals(to), "result ends with to");
@@ -51,13 +63,14 @@ public class BezierTest
                 assertTrue(p.y > 0 && p.y < 15, "y of intermediate point has reasonable value");
             }
         }
-        for (int n = -1; n <= 1; n++)
+        for (int n = -1; n < 1; n++)
         {
             try
             {
-                Bezier.cubic(n, from, control1, control2, to);
+                new BezierCubic2d(from, control1, control2, to).toPolyLine(new Flattener2d.NumSegments(n));
+                fail("Illegal number of segments should have thrown an IllegalArgumentException");
             }
-            catch (DrawRuntimeException e)
+            catch (IllegalArgumentException iae)
             {
                 // Ignore expected exception
             }
@@ -70,7 +83,9 @@ public class BezierTest
                 {
                     Ray2d start = new Ray2d(from.x, from.y, Math.PI / 2);
                     Ray2d end = new Ray2d(to.x, to.y, Math.PI);
-                    PolyLine2d line = 1.0 == shape ? Bezier.cubic(n, start, end) : Bezier.cubic(n, start, end, shape, weighted);
+                    BezierCubic2d cbc =
+                            1.0 == shape ? new BezierCubic2d(start, end) : new BezierCubic2d(start, end, shape, weighted);
+                    PolyLine2d line = cbc.toPolyLine(new Flattener2d.NumSegments(n));
                     for (int i = 1; i < line.size() - 1; i++)
                     {
                         Point2d p = line.get(i);
@@ -80,15 +95,11 @@ public class BezierTest
                 }
             }
         }
-        // Pity that the value 64 is private in the Bezier class.
-        assertEquals(64, Bezier.cubic(new Ray2d(from.x, from.y, Math.PI / 2), new Ray2d(to.x, to.y, -Math.PI / 2)).size(),
-                "Number of points is 64");
-        assertEquals(64, Bezier.bezier(from, control1, control2, to).size(), "Number of points is 64");
         control1 = new Point2d(5, 0);
         control2 = new Point2d(0, 5);
         for (int n : new int[] {2, 3, 4, 100})
         {
-            PolyLine2d line = Bezier.cubic(n, from, control1, control2, to);
+            PolyLine2d line = new BezierCubic2d(from, control1, control2, to).toPolyLine(new Flattener2d.NumSegments(n));
             for (int i = 1; i < line.size() - 1; i++)
             {
                 Point2d p = line.get(i);
@@ -99,7 +110,8 @@ public class BezierTest
         }
         for (int n : new int[] {2, 3, 4, 100})
         {
-            PolyLine2d line = Bezier.cubic(n, new Ray2d(from.x, from.y, Math.PI), new Ray2d(to.x, to.y, Math.PI / 2));
+            PolyLine2d line = new BezierCubic2d(new Ray2d(from.x, from.y, Math.PI), new Ray2d(to.x, to.y, Math.PI / 2))
+                    .toPolyLine(new Flattener2d.NumSegments(n));
             for (int i = 1; i < line.size() - 1; i++)
             {
                 Point2d p = line.get(i);
@@ -117,170 +129,152 @@ public class BezierTest
         Point2d c1Auto = new Point2d(start.x + autoDistance, start.y);
         Point2d c2Auto = new Point2d(end.x - autoDistance, end.y);
         // Should produce a right leaning S shape; something between a slash and an S
-        PolyLine2d reference = Bezier.bezier(256, start, c1, c2, end);
-        PolyLine2d referenceAuto = Bezier.bezier(256, start, c1Auto, c2Auto, end);
+        PolyLine2d reference = new BezierCubic2d(start, c1, c2, end).toPolyLine(new Flattener2d.NumSegments(256));
+        PolyLine2d referenceAuto = new BezierCubic2d(start, c1Auto, c2Auto, end).toPolyLine(new Flattener2d.NumSegments(256));
         // System.out.print("ref " + reference.toPlot());
         Ray2d startRay = new Ray2d(start, start.directionTo(c1));
         Ray2d endRay = new Ray2d(end, c2.directionTo(end));
         for (double epsilonPosition : new double[] {3, 1, 0.1, 0.05, 0.02})
         {
             // System.out.println("epsilonPosition " + epsilonPosition);
-            PolyLine2d line = Bezier.bezier(epsilonPosition, start, end);
+            PolyLine2d line = new Bezier2d(start, end).toPolyLine(new Flattener2d.MaxDeviation(epsilonPosition));
             assertEquals(2, line.size(), "Bezier from two points should be 2-point poly line");
             assertEquals(start, line.getFirst(), "Start point should be start");
             assertEquals(end, line.getLast(), "End point shoujld be end");
-            line = Bezier.bezier(epsilonPosition, start, c1, c2, end);
-            // System.out.print("epsilonPosition " + epsilonPosition + " yields " + line.toPlot());
-            // for (int percent = 0; percent <= 100; percent++)
-            // {
-            // Ray2d ray = reference.getLocationFraction(percent / 100.0);
-            // double position = line.projectRay(ray);
-            // Point2d pointAtPosition = line.getLocation(position);
-            // double positionError = ray.distance(pointAtPosition);
-            // System.out.print(String.format(" %.3f", positionError));
-            // if (positionError >= epsilonPosition)
-            // {
-            // System.out.println();
-            // System.out.println("percent " + percent + ", on " + ray + " projected to " + pointAtPosition
-            // + " positionError " + positionError);
-            // }
-            // assertTrue("Actual error " + positionError + " exceeds epsilon " + epsilonPosition,
-            // positionError < epsilonPosition);
-            // }
-            // System.out.println();
+            line = new Bezier2d(start, c1, c2, end).toPolyLine(new Flattener2d.MaxDeviation(epsilonPosition));
             compareBeziers("bezier with 2 explicit control points", reference, line, 100, epsilonPosition);
-            line = Bezier.cubic(epsilonPosition, start, c1, c2, end);
+            line = new BezierCubic2d(start, c1, c2, end).toPolyLine(new Flattener2d.MaxDeviation(epsilonPosition));
             compareBeziers("cubic with 2 explicit control points", reference, line, 100, epsilonPosition);
-            line = Bezier.cubic(epsilonPosition, startRay, endRay);
+            line = new BezierCubic2d(startRay, endRay).toPolyLine(new Flattener2d.MaxDeviation(epsilonPosition));
             compareBeziers("cubic with automatic control points", referenceAuto, line, 100, epsilonPosition);
         }
 
         try
         {
-            Bezier.cubic(0.1, startRay, endRay, 0, true);
-            fail("Illegal shape value should have thrown a DrawRuntimeException");
+            new BezierCubic2d(startRay, endRay, 0, true);
+            fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.cubic(0.1, startRay, endRay, 0);
-            fail("Illegal shape value should have thrown a DrawRuntimeException");
+            new BezierCubic2d(startRay, endRay, 0);
+            fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.cubic(0.1, startRay, endRay, -1);
-            fail("Illegal shape value should have thrown a DrawRuntimeException");
+            new BezierCubic2d(startRay, endRay, -1);
+            fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.cubic(0.1, startRay, endRay, -1, true);
-            fail("Illegal shape value should have thrown a DrawRuntimeException");
+            new BezierCubic2d(startRay, endRay, -1, true);
+            fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.cubic(0.1, startRay, endRay, Double.NaN, true);
-            fail("Illegal shape value should have thrown a DrawRuntimeException");
+            new BezierCubic2d(startRay, endRay, Double.NaN, true);
+            fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.cubic(0.1, startRay, endRay, Double.NaN);
-            fail("Illegal shape value should have thrown a DrawRuntimeException");
+            new BezierCubic2d(startRay, endRay, Double.NaN);
+            fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.cubic(0.1, startRay, endRay, Double.POSITIVE_INFINITY);
-            fail("Illegal shape value should have thrown a DrawRuntimeException");
+            new BezierCubic2d(startRay, endRay, Double.POSITIVE_INFINITY);
+            fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.cubic(0.1, startRay, endRay, Double.POSITIVE_INFINITY, true);
-            fail("Illegal shape value should have thrown a DrawRuntimeException");
+            new BezierCubic2d(startRay, endRay, Double.POSITIVE_INFINITY, true);
+            fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.bezier(0.1, new Point2d[] {start});
-            fail("Too few points have thrown a DrawRuntimeException");
+            new Bezier2d(new Point2d[] {start});
+            fail("Too few points have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.bezier(0.1, new Point2d[] {});
-            fail("Too few points have thrown a DrawRuntimeException");
+            new Bezier2d(new Point2d[] {});
+            fail("Too few points have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.bezier(0, start, c1, c2, end);
-            fail("illegal epsilon have thrown a DrawRuntimeException");
+            new Bezier2d(start, c1, c2, end).toPolyLine(new Flattener2d.MaxDeviation(0));
+            fail("illegal epsilon have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.bezier(-0.1, start, c1, c2, end);
-            fail("illegal epsilon have thrown a DrawRuntimeException");
+            new Bezier2d(start, c1, c2, end).toPolyLine(new Flattener2d.MaxDeviation(-0.1));
+            fail("illegal epsilon have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.bezier(Double.NaN, start, c1, c2, end);
-            fail("illegal epsilon have thrown a DrawRuntimeException");
+            new Bezier2d(start, c1, c2, end).toPolyLine(new Flattener2d.MaxDeviation(Double.NaN));
+            fail("illegal epsilon have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
@@ -333,14 +327,16 @@ public class BezierTest
         for (int step = 0; step <= numberOfPoints; step++)
         {
             double fraction = 1.0 * step / numberOfPoints;
-            Ray3d referenceRay = new Ray3d(reference.getLocationFraction(fraction));
-            Ray3d candidateRay = new Ray3d(candidate.getLocationFraction(fraction));
-            double positionError = referenceRay.distance(candidateRay);
+            Point3d referencePoint = reference.getLocationFraction(fraction);
+            Point3d candidatePont = candidate.getLocationFraction(fraction);
+            double positionError = referencePoint.distance(candidatePont);
             if (positionError >= epsilon)
             {
-                System.out.println("Comparing at fraction " + fraction + ", on " + referenceRay + " compared to " + candidateRay
-                        + " positionError " + positionError);
-                System.out.print("connection: " + Export.toPlot(new PolyLine3d(referenceRay, candidateRay).project()));
+                System.out.println(Export.toPlot(reference.project()));
+                System.out.println(Export.toPlot(candidate.project()));
+                System.out.println("Comparing at fraction " + fraction + ", on " + referencePoint + " compared to "
+                        + candidatePont + " positionError " + positionError + " (should be below " + epsilon + ")");
+                System.out.print("connection: " + Export.toPlot(new PolyLine3d(referencePoint, candidatePont).project()));
                 System.out.print("reference: " + Export.toPlot(reference.project()));
                 System.out.print("candidate: " + Export.toPlot(candidate.project()));
             }
@@ -361,7 +357,7 @@ public class BezierTest
         Point3d to = new Point3d(0, 10, 30);
         for (int n : new int[] {2, 3, 4, 100})
         {
-            PolyLine3d line = Bezier.cubic(n, from, control1, control2, to);
+            PolyLine3d line = new BezierCubic3d(from, control1, control2, to).toPolyLine(new Flattener3d.NumSegments(n - 1));
             assertTrue(line.size() == n, "result has n points");
             assertTrue(line.get(0).equals(from), "result starts with from");
             assertTrue(line.get(line.size() - 1).equals(to), "result ends with to");
@@ -374,13 +370,14 @@ public class BezierTest
                 assertTrue(p.y > 0 && p.y < 15, "y of intermediate point has reasonable value");
             }
         }
-        for (int n = -1; n <= 1; n++)
+        for (int n = -1; n < 1; n++)
         {
             try
             {
-                Bezier.cubic(n, from, control1, control2, to);
+                new BezierCubic3d(from, control1, control2, to).toPolyLine(new Flattener3d.NumSegments(n));
+                fail("Illegal number of segments should have thrown an IllegalArgumentException");
             }
-            catch (DrawRuntimeException e)
+            catch (IllegalArgumentException iae)
             {
                 // Ignore expected exception
             }
@@ -393,7 +390,9 @@ public class BezierTest
                 {
                     Ray3d start = new Ray3d(from.x, from.y, from.z, Math.PI / 3, Math.PI / 2);
                     Ray3d end = new Ray3d(to.x, to.y, to.z, 0, Math.PI);
-                    PolyLine3d line = 1.0 == shape ? Bezier.cubic(n, start, end) : Bezier.cubic(n, start, end, shape, weighted);
+                    BezierCubic3d cbc =
+                            1.0 == shape ? new BezierCubic3d(start, end) : new BezierCubic3d(start, end, shape, weighted);
+                    PolyLine3d line = cbc.toPolyLine(new Flattener3d.NumSegments(n));
                     for (int i = 1; i < line.size() - 1; i++)
                     {
                         Point3d p = line.get(i);
@@ -405,15 +404,11 @@ public class BezierTest
                 }
             }
         }
-        // Pity that the value 64 is private in the Bezier class.
-        assertEquals(64, Bezier.cubic(new Ray3d(from.x, from.y, from.z, Math.PI / 2, -Math.PI / 2),
-                new Ray3d(to.x, to.y, to.z, Math.PI, -Math.PI / 2)).size(), "Number of points is 64");
-        assertEquals(64, Bezier.bezier(from, control1, control2, to).size(), "Number of points is 64");
         control1 = new Point3d(5, 0, 10);
         control2 = new Point3d(0, 5, 20);
         for (int n : new int[] {2, 3, 4, 100})
         {
-            PolyLine3d line = Bezier.cubic(n, from, control1, control2, to);
+            PolyLine3d line = new BezierCubic3d(from, control1, control2, to).toPolyLine(new Flattener3d.NumSegments(n));
             assertEquals(from.x, line.getFirst().x, 0, "from x");
             assertEquals(from.y, line.getFirst().y, 0, "from y");
             assertEquals(from.z, line.getFirst().z, 0, "from z");
@@ -431,8 +426,8 @@ public class BezierTest
         }
         for (int n : new int[] {2, 3, 4, 100})
         {
-            PolyLine3d line = Bezier.cubic(n, new Ray3d(from.x, from.y, from.z, Math.PI / 2, Math.PI / 2),
-                    new Ray3d(to.x, to.y, to.z, 0, Math.PI / 2));
+            PolyLine3d line = new BezierCubic3d(new Ray3d(from.x, from.y, from.z, Math.PI / 2, Math.PI / 2),
+                    new Ray3d(to.x, to.y, to.z, 0, Math.PI / 2)).toPolyLine(new Flattener3d.NumSegments(n));
             for (int i = 0; i < line.size(); i++)
             {
                 Point3d p = line.get(i);
@@ -452,41 +447,24 @@ public class BezierTest
         Point3d c1Auto = new Point3d(start.x + autoDistance, start.y, 2);
         Point3d c2Auto = new Point3d(end.x - autoDistance, end.y, 2);
         // Should produce a right leaning S shape; something between a slash and an S
-        PolyLine3d reference = Bezier.bezier(256, start, c1, c2, end);
-        PolyLine3d referenceAuto = Bezier.bezier(256, start, c1Auto, c2Auto, end);
+        PolyLine3d reference = new BezierCubic3d(start, c1, c2, end).toPolyLine(new Flattener3d.NumSegments(256));
+        PolyLine3d referenceAuto = new BezierCubic3d(start, c1Auto, c2Auto, end).toPolyLine(new Flattener3d.NumSegments(256));
         // System.out.print("ref " + reference.toPlot());
         Ray3d startRay = new Ray3d(start, c1);
         Ray3d endRay = new Ray3d(end, c2).flip();
         for (double epsilonPosition : new double[] {3, 1, 0.1, 0.05, 0.02})
         {
             // System.out.println("epsilonPosition " + epsilonPosition);
-            PolyLine3d line = Bezier.bezier(epsilonPosition, start, end);
+            PolyLine3d line = new Bezier3d(start, end).toPolyLine(new Flattener3d.MaxDeviation(epsilonPosition));
             assertEquals(2, line.size(), "Bezier from two points should be 2-point poly line");
             assertEquals(start, line.getFirst(), "Start point should be start");
-            assertEquals(end, line.getLast(), "End point shoujld be end");
-            line = Bezier.bezier(epsilonPosition, start, c1, c2, end);
-            // System.out.print("epsilonPosition " + epsilonPosition + " yields " + line.toPlot());
-            // for (int percent = 0; percent <= 100; percent++)
-            // {
-            // Ray2d ray = reference.getLocationFraction(percent / 100.0);
-            // double position = line.projectRay(ray);
-            // Point2d pointAtPosition = line.getLocation(position);
-            // double positionError = ray.distance(pointAtPosition);
-            // System.out.print(String.format(" %.3f", positionError));
-            // if (positionError >= epsilonPosition)
-            // {
-            // System.out.println();
-            // System.out.println("percent " + percent + ", on " + ray + " projected to " + pointAtPosition
-            // + " positionError " + positionError);
-            // }
-            // assertTrue("Actual error " + positionError + " exceeds epsilon " + epsilonPosition,
-            // positionError < epsilonPosition);
-            // }
-            // System.out.println();
+            assertEquals(end, line.getLast(), "End point should be end");
+            // System.out.println("epsilonPosition is " + epsilonPosition);
+            line = new Bezier3d(start, c1, c2, end).toPolyLine(new Flattener3d.MaxDeviation(epsilonPosition));
             compareBeziers("bezier with 2 explicit control points", reference, line, 100, epsilonPosition);
-            line = Bezier.cubic(epsilonPosition, start, c1, c2, end);
+            line = new BezierCubic3d(start, c1, c2, end).toPolyLine(new Flattener3d.MaxDeviation(epsilonPosition));
             compareBeziers("cubic with 2 explicit control points", reference, line, 100, epsilonPosition);
-            line = Bezier.cubic(epsilonPosition, startRay, endRay);
+            line = new BezierCubic3d(startRay, endRay).toPolyLine(new Flattener3d.MaxDeviation(epsilonPosition));
             compareBeziers("cubic with automatic control points", referenceAuto, line, 100, epsilonPosition);
         }
 
@@ -505,7 +483,7 @@ public class BezierTest
         Point2d cp2 = new Point2d(3.5, 14.5);
         try
         {
-            Bezier.cubic(null, ray2);
+            new BezierCubic2d(null, ray2);
             fail("null should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -515,7 +493,7 @@ public class BezierTest
 
         try
         {
-            Bezier.cubic(ray1, null);
+            new BezierCubic2d(ray1, null);
             fail("null should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -525,87 +503,87 @@ public class BezierTest
 
         try
         {
-            Bezier.cubic(ray1, ray2);
-            fail("Coinciding start and end points should have thrown a DrawRuntimeException");
+            new BezierCubic2d(ray1, ray2);
+            fail("Coinciding start and end points should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, ray1, ray3, -1);
-            fail("Illegal shape value should have thrown a DrawRuntimeException");
+            new BezierCubic2d(ray1, ray3, -1);
+            fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, ray1, ray3, Double.NaN);
-            fail("Illegal shape value should have thrown a DrawRuntimeException");
+            new BezierCubic2d(ray1, ray3, Double.NaN);
+            fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, ray1, ray3, Double.POSITIVE_INFINITY);
-            fail("Illegal shape value should have thrown a DrawRuntimeException");
+            new BezierCubic2d(ray1, ray3, Double.POSITIVE_INFINITY);
+            fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
-        PolyLine2d result = Bezier.bezier(2, ray1, ray3); // Should succeed
-        assertEquals(2, result.size(), "size should be 2");
+        PolyLine2d result = new Bezier2d(ray1, ray3).toPolyLine(new Flattener2d.NumSegments(1)); // Should succeed
+        assertEquals(2, result.size(), "size should be 1 segment (2 points)");
         assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
         assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
-        result = Bezier.bezier(ray1, ray3); // Should succeed
-        assertEquals(Bezier.DEFAULT_BEZIER_SIZE, result.size(), "size should be default");
+        result = new Bezier2d(ray1, ray3).toPolyLine(new Flattener2d.NumSegments(64)); // Should succeed
+        assertEquals(64 + 1, result.size(), "size should be 65");
         assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
         assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
         try
         {
-            Bezier.bezier(1, ray1, ray3);
-            fail("size smaller than 2 should have thrown a DrawRuntimeException");
+            new Bezier2d(ray1, ray3).toPolyLine(new Flattener2d.NumSegments(0));
+            fail("size smaller than 1 segment should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.bezier(ray1);
-            fail("cannot make a Bezier from only one point; should have thrown a DrawRuntimeException");
+            new Bezier2d(ray1);
+            fail("cannot make a Bezier from only one point; should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
-        result = Bezier.cubic(2, ray1, cp1, cp2, ray3);
-        assertEquals(2, result.size(), "size should be 2");
+        result = new BezierCubic2d(ray1, cp1, cp2, ray3).toPolyLine(new Flattener2d.NumSegments(1));
+        assertEquals(2, result.size(), "size should be 2 segment, 2 points");
         assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
         assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
-        result = Bezier.cubic(4, ray1, cp1, cp2, ray3);
-        assertEquals(4, result.size(), "size should be 4");
+        result = new BezierCubic2d(ray1, cp1, cp2, ray3).toPolyLine(new Flattener2d.NumSegments(4));
+        assertEquals(5, result.size(), "size should be 4 segments, 5 ponts");
         assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
         assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
 
         try
         {
-            Bezier.cubic(1, ray1, cp1, cp2, ray3);
-            fail("Cannot construct a Bezier approximation that has only one point");
+            new BezierCubic2d(ray1, cp1, cp2, ray3).toPolyLine(new Flattener2d.NumSegments(0));
+            fail("Cannot construct a Bezier approximation that has zero segments");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
@@ -625,7 +603,7 @@ public class BezierTest
         Point3d cp2 = new Point3d(3.5, 14.5, 9);
         try
         {
-            Bezier.cubic(null, ray2);
+            new BezierCubic3d(null, ray2);
             fail("null should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -635,7 +613,7 @@ public class BezierTest
 
         try
         {
-            Bezier.cubic(ray1, null);
+            new BezierCubic3d(ray1, null);
             fail("null should have thrown a NullPointerException");
         }
         catch (NullPointerException npe)
@@ -645,87 +623,78 @@ public class BezierTest
 
         try
         {
-            Bezier.cubic(ray1, ray2);
-            fail("Coinciding start and end points should have thrown a DrawRuntimeException");
+            new BezierCubic3d(ray1, ray2);
+            fail("Coinciding start and end points should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, ray1, ray3, -1);
-            fail("Illegal shape value should have thrown a DrawRuntimeException");
+            new BezierCubic3d(ray1, ray3, Double.NaN);
+            fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, ray1, ray3, Double.NaN);
-            fail("Illegal shape value should have thrown a DrawRuntimeException");
+            new BezierCubic3d(ray1, ray3, Double.POSITIVE_INFINITY);
+            fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        PolyLine3d result = new BezierCubic3d(ray1, ray3).toPolyLine(new Flattener3d.NumSegments(1)); // Should
+                                                                                                      // succeed
+        assertEquals(2, result.size(), "size should be 2 points (1 segment)");
+        assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
+        assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
+        result = new BezierCubic3d(ray1, ray3).toPolyLine(new Flattener3d.NumSegments(64)); // Should succeed
+        assertEquals(64 + 1, result.size(), "size should be 65 (number of segments + 1)");
+        assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
+        assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
+        try
+        {
+            new BezierCubic3d(ray1, ray3).toPolyLine(new Flattener3d.NumSegments(0));
+            fail("size smaller than 1 segment should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
         try
         {
-            Bezier.cubic(Bezier.DEFAULT_BEZIER_SIZE, ray1, ray3, Double.POSITIVE_INFINITY);
-            fail("Illegal shape value should have thrown a DrawRuntimeException");
+            new Bezier3d(ray1);
+            fail("cannot make a Bezier from only one point; should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }
 
-        PolyLine3d result = Bezier.bezier(2, ray1, ray3); // Should succeed
+        result = new BezierCubic3d(ray1, cp1, cp2, ray3).toPolyLine(new Flattener3d.NumSegments(1));
         assertEquals(2, result.size(), "size should be 2");
         assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
         assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
-        result = Bezier.bezier(ray1, ray3); // Should succeed
-        assertEquals(Bezier.DEFAULT_BEZIER_SIZE, result.size(), "size should be default");
-        assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
-        assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
-        try
-        {
-            Bezier.bezier(1, ray1, ray3);
-            fail("size smaller than 2 should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
-
-        try
-        {
-            Bezier.bezier(ray1);
-            fail("cannot make a Bezier from only one point; should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
-
-        result = Bezier.cubic(2, ray1, cp1, cp2, ray3);
-        assertEquals(2, result.size(), "size should be 2");
-        assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
-        assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
-        result = Bezier.cubic(4, ray1, cp1, cp2, ray3);
+        result = new BezierCubic3d(ray1, cp1, cp2, ray3).toPolyLine(new Flattener3d.NumSegments(3));
         assertEquals(4, result.size(), "size should be 4");
         assertEquals(0, ray1.distanceSquared(result.getFirst()), 0, "start of result is at start");
         assertEquals(0, ray3.distanceSquared(result.getLast()), 0, "end of result is at start");
 
         try
         {
-            Bezier.cubic(1, ray1, cp1, cp2, ray3);
+            new BezierCubic3d(ray1, cp1, cp2, ray3).toPolyLine(new Flattener3d.NumSegments(0));
             fail("Cannot construct a Bezier approximation that has only one point");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException iae)
         {
             // Ignore expected exception
         }

@@ -15,7 +15,8 @@ import org.djutils.draw.point.Point;
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  * @param <L> the PolyLine type (2d or 3d)
  * @param <P> The matching Point type (2d or 3d)
  * @param <D> The matching Directed type (2d or 3d)
@@ -394,6 +395,21 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      */
     L offsetLine(double offsetAtStart, double offsetAtEnd, double circlePrecision, double offsetMinimumFilterValue,
             double offsetMaximumFilterValue, double offsetFilterRatio, double minimumOffset)
+            throws IllegalArgumentException, DrawRuntimeException;
+
+    /**
+     * Create a line at linearly varying offset from this line. The offset may change linearly from its initial value at the
+     * start of the reference line via a number of intermediate offsets at intermediate positions to its final offset value at
+     * the end of the reference line.
+     * @param relativeFractions positional fractions for which the offsets have to be generated
+     * @param offsets offsets at the relative positions (positive value is Left, negative value is Right)
+     * @param offsetMinimumFilterValue double; noise in the reference line less than this value is filtered
+     * @return the PolyLine2d of the line at multi-linearly changing offset of the reference line
+     * @throws DrawRuntimeException when this method fails to create the offset line
+     * @throws IllegalArgumentException when <cite>relativeFractions</cite> is too short, or differs in length from
+     *             <cite>offsets</cite>
+     */
+    L offsetLine(double[] relativeFractions, double[] offsets, double offsetMinimumFilterValue)
             throws IllegalArgumentException, DrawRuntimeException;
 
     /**

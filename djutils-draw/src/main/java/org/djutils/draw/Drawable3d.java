@@ -10,7 +10,8 @@ import org.djutils.draw.point.Point3d;
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
 public interface Drawable3d extends Drawable<Point3d>
 {
@@ -29,10 +30,10 @@ public interface Drawable3d extends Drawable<Point3d>
     /**
      * Project the object onto the z=0 plane.
      * @return Drawable2d; the projected object
-     * @throws InvalidProjectionException when projecting onto the z=0 plane results in an invalid object. E.g. a Line3d that
-     *             consists of points that all have the exact same x and y coordinates cannot be a line after projecting on the
-     *             z=0 plane.
+     * @throws DrawRuntimeException when projecting onto the z=0 plane results in an invalid object. E.g. a Line3d that consists
+     *             of points that all have the exact same x and y coordinates cannot be a line after projecting on the z=0
+     *             plane.
      */
-    Drawable2d project() throws InvalidProjectionException;
+    Drawable2d project() throws DrawRuntimeException;
 
 }
