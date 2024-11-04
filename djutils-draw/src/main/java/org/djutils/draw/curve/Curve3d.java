@@ -17,8 +17,8 @@ interface Curve3d extends Curve<DirectedPoint3d, Direction3d>
 {
 
     /**
-     * Start direction of this ContinuousLine.
-     * @return start direction of this ContinuousLine
+     * Start direction of this Curve3d.
+     * @return start direction of this Curve3d
      */
     @Override
     default Direction3d getStartDirection()
@@ -27,8 +27,8 @@ interface Curve3d extends Curve<DirectedPoint3d, Direction3d>
     }
 
     /**
-     * End direction of this ContinuousLine.
-     * @return end direction of this ContinuousLine
+     * End direction of this Curve3d.
+     * @return end direction of this Curve3d
      */
     @Override
     default Direction3d getEndDirection()

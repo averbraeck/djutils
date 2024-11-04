@@ -28,7 +28,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
 {
 
     /**
-     * Flatten a continuous line into a PolyLine.
+     * Flatten a Flattable3d into a PolyLine.
      * @param line line function.
      * @return PolyLine2d; flattened line.
      */

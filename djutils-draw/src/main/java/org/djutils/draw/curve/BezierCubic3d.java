@@ -8,7 +8,7 @@ import org.djutils.exceptions.Throw;
 /**
  * Continuous definition of a cubic B&eacute;zier curves in 3d. This extends from the more general {@code Bezier} as certain
  * methods are applied to calculate e.g. the roots, that are specific to cubic B&eacute;zier curves. With such information this
- * class can also specify information to be a {@code ContinuousLine}.
+ * class can also specify information to be a {@code Curve}.
  * <p>
  * Copyright (c) 2023-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is

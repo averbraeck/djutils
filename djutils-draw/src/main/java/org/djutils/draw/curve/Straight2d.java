@@ -131,8 +131,7 @@ public class Straight2d implements Curve2d, OffsetFlattable2d
     @Override
     public String toString()
     {
-        return "ContinuousStraight [startPoint=" + this.startPoint + ", endPoint=" + this.endPoint + ", length=" + this.length
-                + "]";
+        return "Straight [startPoint=" + this.startPoint + ", endPoint=" + this.endPoint + ", length=" + this.length + "]";
     }
 
 }

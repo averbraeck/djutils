@@ -28,7 +28,7 @@ import org.djutils.exceptions.Throw;
 public interface OffsetFlattener2d extends Flattener2d
 {
     /**
-     * Flatten a continuous line into a PolyLine while applying lateral offsets.
+     * Flatten a OffsetFlattable2d curve into a PolyLine2d while applying lateral offsets.
      * @param line line function
      * @param fld FractionalLengthData the lateral offset to apply
      * @return PolyLine2d; flattened line

@@ -22,14 +22,14 @@ package org.djutils.draw.curve;
 public interface Curve<DP, DIR>
 {
     /**
-     * Start point of this ContinuousLine.
-     * @return start point of this ContinuousLine.
+     * Start point of this Curve.
+     * @return start point of this Curve
      */
     DP getStartPoint();
 
     /**
-     * End point of this ContinuousLine.
-     * @return end point of this ContinuousLine.
+     * End point of this Curve.
+     * @return end point of this Curve
      */
     DP getEndPoint();
 
@@ -40,14 +40,14 @@ public interface Curve<DP, DIR>
     double getLength();
 
     /**
-     * Start direction of this ContinuousLine.
-     * @return start direction of this ContinuousLine
+     * Start direction of this Curve.
+     * @return start direction of this Curve
      */
     DIR getStartDirection();
 
     /**
-     * End direction of this ContinuousLine.
-     * @return end direction of this ContinuousLine
+     * End direction of this Curve.
+     * @return end direction of this Curve
      */
     DIR getEndDirection();
 }

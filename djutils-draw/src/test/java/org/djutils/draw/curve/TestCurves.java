@@ -153,7 +153,7 @@ public class TestCurves
         {
             // Ignore expected exception
         }
-        assertTrue(new Straight2d(new DirectedPoint2d(2, 5, 1), 3).toString().startsWith("ContinuousStraight ["),
+        assertTrue(new Straight2d(new DirectedPoint2d(2, 5, 1), 3).toString().startsWith("Straight ["),
                 "toString returns something descriptive");
     }
 

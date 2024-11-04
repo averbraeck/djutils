@@ -72,8 +72,8 @@ public interface Flattener2d extends Flattener<Flattener2d, Flattable2d, PolyLin
     /**
      * Check the position error at a point.
      * @param medianPoint Point2d; point at the median t value
-     * @param prevPoint Point2d; point at the start of the current segment (should be on the continuous curve)
-     * @param nextPoint Point2d; point at the end of the current segment (should be on the continuous curve)
+     * @param prevPoint Point2d; point at the start of the current segment (should be on the Flattable2d)
+     * @param nextPoint Point2d; point at the end of the current segment (should be on the Flattable2d)
      * @param maxDeviation double; maximum allowed position error
      * @return boolean; <cite>true</cite> if the position error exceeds <cite>maxDeviation</cite>; <cite>false</cite> if the
      *         position error does not exceed <cite>maxDeviation</cite>

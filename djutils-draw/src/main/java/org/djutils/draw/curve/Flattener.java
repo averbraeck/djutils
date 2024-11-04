@@ -27,9 +27,9 @@ public interface Flattener<F extends Flattener<F, FL, PL, P>, FL extends Flattab
         PL extends PolyLine<?, P, ?, ?, ?>, P extends Point<P>>
 {
     /**
-     * Flatten a continuous line into a PolyLine.
+     * Flatten a Flattable line into a PolyLine.
      * @param line line function.
-     * @return PolyLine2d; flattened line.
+     * @return PolyLine; flattened line.
      */
     default PL flatten(final FL line)
     {

@@ -20,8 +20,8 @@ public interface OffsetFlattable2d extends Flattable2d
 {
 
     /**
-     * Flatten this continuous line while offsetting with the provided continuous line offset into a PolyLine2d. Implementations
-     * should use the flattener when relevant and possible.
+     * Flatten a OffsetFlattable line while offsetting with the provided continuous line offset into a PolyLine2d.
+     * Implementations should use the flattener when relevant and possible.
      * @param flattener OffsetFlattener
      * @param offsets offset data
      * @return PolyLine2d; approximation of this line with offset as a PolyLine2d
@@ -62,9 +62,8 @@ public interface OffsetFlattable2d extends Flattable2d
     }
 
     /**
-     * Convert a position along the curve to a t-value in the <cite>OffsetFlattableLine2d</cite> domain. For
-     * <cite>ContinuousArc</cite> and <cite>ContinuousStraight</cite>, these t-values are the same. For
-     * <cite>ContinuousBezierCubic</cite> they're not.
+     * Convert a position along the curve to a t-value in the <cite>OffsetFlattableLine2d</cite> domain. For <cite>Arc</cite>
+     * and <cite>Straight</cite>, these t-values are the same. For <cite>BezierCubic</cite> they're not.
      * @param position t-value in the <cite>FractionalLengthData</cite> domain
      * @return double; t-value in the <cite>OffsetFlattableLine2d</cite> domain
      */

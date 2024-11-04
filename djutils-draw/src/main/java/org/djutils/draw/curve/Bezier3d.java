@@ -7,9 +7,8 @@ import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
 
 /**
- * Continuous definition of a B&eacute;zier curve in 3d. Note that this class does not implement {@code ContinuousLine}. This
- * class is simply a helper class for (and a super of) {@code ContinuousBezierCubic}, which uses this class to determine
- * curvature, offset lines, etc.
+ * Continuous definition of a B&eacute;zier curve in 3d. This class is simply a helper class for (and a super of)
+ * {@code BezierCubic3d}, which uses this class to determine curvature, offset lines, etc.
  * <p>
  * Copyright (c) 2023-2024 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://opentrafficsim.org/docs/license.html">OpenTrafficSim License</a>.
@@ -31,7 +30,7 @@ public class Bezier3d implements Flattable3d
     private final double[] z;
 
     /**
-     * Create a continuous B&eacute;zier curve of any order.
+     * Create a B&eacute;zier curve of any order.
      * @param points Point2d... shape points that define the B&eacute;zier curve
      */
     public Bezier3d(final Point3d... points)
@@ -52,7 +51,7 @@ public class Bezier3d implements Flattable3d
     }
 
     /**
-     * Create a continuous B&eacute;zier curve of any order.
+     * Create a B&eacute;zier curve of any order.
      * @param x double[]; the x-coordinates of the points that define the B&eacute;zier curve
      * @param y double[]; the y-coordinates of the points that define the B&eacute;zier curve
      * @param z double[]; the z-coordinates of the points that define the B&eacute;zier curve
@@ -63,7 +62,7 @@ public class Bezier3d implements Flattable3d
     }
 
     /**
-     * Construct a continuous B&eacute;zier curve of any order, optionally checking the lengths of the provided arrays.
+     * Construct a B&eacute;zier curve of any order, optionally checking the lengths of the provided arrays.
      * @param checkLengths boolean; if true; check the lengths of the <cite>x</cite> and <cite>y</cite> arrays; if false; do not
      *            check those lengths
      * @param x double[]; the x-coordinates of the points that define the B&eacute;zier curve
@@ -182,7 +181,7 @@ public class Bezier3d implements Flattable3d
     @Override
     public String toString()
     {
-        return "ContinuousBezier [x=" + Arrays.toString(this.x) + ", y=" + Arrays.toString(this.y) + "]";
+        return "Bezier3d [x=" + Arrays.toString(this.x) + ", y=" + Arrays.toString(this.y) + "]";
     }
 
 }

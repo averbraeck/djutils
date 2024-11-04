@@ -16,20 +16,20 @@ interface Curve2d extends Curve<DirectedPoint2d, Double>
 {
 
     /**
-     * Start curvature of this ContinuousLine..
-     * @return start curvature of this ContinuousLine.
+     * Start curvature of this Curve2d..
+     * @return start curvature of this Curve2d.
      */
     double getStartCurvature();
 
     /**
-     * End curvature of this ContinuousLine..
-     * @return end curvature of this ContinuousLine.
+     * End curvature of this Curve2d..
+     * @return end curvature of this Curve2d
      */
     double getEndCurvature();
 
     /**
-     * Start radius of this ContinuousLine..
-     * @return start radius of this ContinuousLine.
+     * Start radius of this Curve2d..
+     * @return start radius of this Curve2d
      */
     default double getStartRadius()
     {
@@ -37,8 +37,8 @@ interface Curve2d extends Curve<DirectedPoint2d, Double>
     }
 
     /**
-     * End radius of this ContinuousLine..
-     * @return end radius of this ContinuousLine.
+     * End radius of this Curve2d..
+     * @return end radius of this Curve2d
      */
     default double getEndRadius()
     {
@@ -46,8 +46,8 @@ interface Curve2d extends Curve<DirectedPoint2d, Double>
     }
 
     /**
-     * Start direction of this ContinuousLine.
-     * @return start direction of this ContinuousLine
+     * Start direction of this Curve2d.
+     * @return start direction of this Curve2d
      */
     @Override
     default Double getStartDirection()
@@ -56,8 +56,8 @@ interface Curve2d extends Curve<DirectedPoint2d, Double>
     }
 
     /**
-     * End direction of this ContinuousLine.
-     * @return end direction of this ContinuousLine
+     * End direction of this Curve2d.
+     * @return end direction of this Curve2d
      */
     @Override
     default Double getEndDirection()

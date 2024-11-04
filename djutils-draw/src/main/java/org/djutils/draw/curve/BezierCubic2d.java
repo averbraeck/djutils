@@ -85,8 +85,10 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
     }
 
     /**
-     * Construct a ContinuousBezierCubic from start to end with two generated control points at half the distance between start
-     * and end. TODO Explain better.
+     * Construct a BezierCubic2d from start to end with two generated control points at half the distance between start and end.
+     * This constructor creates two control points. The first of these is offset from <code>start</code> in the direction of the
+     * <code>start</code> and at a distance from <code>start</code> equal to half the distance from <code>start</code> to
+     * <code>end</code>. The second is placed in a similar relation to <code>end</code>.
      * @param start Ray2d; the start point and start direction of the B&eacute;zier curve
      * @param end Ray2d; the end point and end direction of the B&eacute;zier curve
      */
@@ -96,7 +98,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
     }
 
     /**
-     * Construct a ContinuousBezierCubic from start to end with two generated control points at half the distance between start
+     * Construct a BezierCubic2d from start to end with two generated control points at half the distance between start
      * and end.
      * @param start Ray2d; the start point and start direction of the B&eacute;zier curve
      * @param end Ray2d; the end point and end direction of the B&eacute;zier curve
@@ -109,7 +111,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
     }
 
     /**
-     * Construct a ContinuousBezierCubic from start to end with two generated control points at half the distance between start
+     * Construct a BezierCubic2d from start to end with two generated control points at half the distance between start
      * and end and .
      * @param start Ray2d; the start point and start direction of the B&eacute;zier curve
      * @param end Ray2d; the end point and end direction of the B&eacute;zier curve
@@ -375,9 +377,9 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
     }
 
     /**
-     * Wrapper for two ContinuousBezierCubic2d.
-     * @param first ContinuousBezierCubic2d; the part before the split point
-     * @param remainder ContinuousBezierCubic2d; the part after the split point
+     * Wrapper for two BezierCubic2d.
+     * @param first BezierCubic2d; the part before the split point
+     * @param remainder BezierCubic2d; the part after the split point
      */
     private record SplitBeziers(BezierCubic2d first, BezierCubic2d remainder)
     {
@@ -495,10 +497,16 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
         NavigableMap<Double, Boundary> splits0 = new TreeMap<>(); // splits0 & splits because splits0 must be effectively final
         if (!straight)
         {
-            getRoots().forEach((t) -> splits0.put(t, Boundary.ROOT));
-            getInflections().forEach((t) -> splits0.put(t, Boundary.INFLECTION));
+            getRoots().forEach((
+                    t
+            ) -> splits0.put(t, Boundary.ROOT));
+            getInflections().forEach((
+                    t
+            ) -> splits0.put(t, Boundary.INFLECTION));
         }
-        getOffsetT(fld.getFractionalLengths().toSet()).forEach((t) -> splits0.put(t, Boundary.KINK));
+        getOffsetT(fld.getFractionalLengths().toSet()).forEach((
+                t
+        ) -> splits0.put(t, Boundary.KINK));
         NavigableMap<Double, Boundary> splits = splits0.subMap(1e-6, false, 1.0 - 1e-6, false);
 
         // Initialize loop variables
@@ -579,7 +587,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
         // double lastDirection = Double.NaN;
         // for (Double fraction = this.segments.firstKey(); fraction != null; fraction = this.segments.higherKey(fraction))
         // {
-        // ContinuousBezierCubic2d cbc = this.segments.get(fraction);
+        // BezierCubic2d cbc = this.segments.get(fraction);
         // System.out.print(String.format("%20.18f: %10.10s ", fraction, splits.get(fraction)));
         // if (cbc != null)
         // {
@@ -757,7 +765,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
     @Override
     public String toString()
     {
-        return "ContinuousBezierCubic2d [startPoint=" + this.startPoint + ", endPoint=" + this.endPoint + ", controlPoint1="
+        return "BezierCubic2d [startPoint=" + this.startPoint + ", endPoint=" + this.endPoint + ", controlPoint1="
                 + new Point2d(getX(1), getY(1)) + ", controlPoint2=" + new Point2d(getX(2), getY(2)) + ", length=" + this.length
                 + ", startDirZ=" + getStartPoint().dirZ + " (" + getPoint(0).directionTo(getPoint(1)) + "), endir="
                 + getEndPoint().dirZ + " (" + getPoint(2).directionTo(getPoint(3)) + ")]";

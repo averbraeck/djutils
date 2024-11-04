@@ -113,10 +113,10 @@ public class Arc2d implements Curve2d, OffsetFlattable2d
     }
 
     /**
-     * Compute the point at the provided fraction of this ContinuousArc while applying the provided lateral offset.
-     * @param fraction double; the fraction along this ContinuousArc
+     * Compute the point at the provided fraction of this Arc while applying the provided lateral offset.
+     * @param fraction double; the fraction along this Arc
      * @param offset double; the lateral offset to apply
-     * @return Point2d; the point at the provided fraction of this ContinuousArc with the provided lateral offset applied
+     * @return Point2d; the point at the provided fraction of this Arc with the provided lateral offset applied
      */
     private Point2d getPoint(final double fraction, final double offset)
     {
@@ -196,7 +196,7 @@ public class Arc2d implements Curve2d, OffsetFlattable2d
     @Override
     public String toString()
     {
-        return "ContinuousArc [startPoint=" + this.startPoint + ", radius=" + this.radius + ", angle=" + this.angle + ", left="
+        return "Arc [startPoint=" + this.startPoint + ", radius=" + this.radius + ", angle=" + this.angle + ", left="
                 + (this.sign > 0.0) + "]";
     }
 

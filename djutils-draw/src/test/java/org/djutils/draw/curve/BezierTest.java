@@ -588,6 +588,9 @@ public class BezierTest
             // Ignore expected exception
         }
 
+        // Finally, test the toString method
+        assertTrue(new BezierCubic2d(ray1, cp1, cp2, ray3).toString().startsWith("BezierCubic2d ["),
+                "toString method returns something descriptive");
     }
 
     /**
