@@ -584,28 +584,6 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
         }
         this.segments.put(1.0, null); // so we can interpolate t values along segments
         this.fldForSegments = fld;
-        // double lastDirection = Double.NaN;
-        // for (Double fraction = this.segments.firstKey(); fraction != null; fraction = this.segments.higherKey(fraction))
-        // {
-        // BezierCubic2d cbc = this.segments.get(fraction);
-        // System.out.print(String.format("%20.18f: %10.10s ", fraction, splits.get(fraction)));
-        // if (cbc != null)
-        // {
-        // System.out.print(cbc.getStartPoint() + " " + cbc.getEndPoint() + " " + cbc.length);
-        // if ((!Double.isNaN(lastDirection))
-        // && (Math.abs(AngleUtil.normalizeAroundZero(lastDirection - cbc.getStartPoint().dirZ))) > 0.01)
-        // {
-        // System.out.print(" DIRECTION MISMATCH");
-        // }
-        // System.out.println();
-        // lastDirection = cbc.getEndPoint().dirZ;
-        // }
-        // else
-        // {
-        // System.out.println("null");
-        // }
-        // }
-        // System.out.println("finished updating segments");
     }
 
     @Override

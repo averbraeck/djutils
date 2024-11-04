@@ -9,13 +9,6 @@ import java.lang.reflect.Method;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Export;
-import org.djutils.draw.curve.Bezier;
-import org.djutils.draw.curve.Bezier2d;
-import org.djutils.draw.curve.Bezier3d;
-import org.djutils.draw.curve.BezierCubic2d;
-import org.djutils.draw.curve.BezierCubic3d;
-import org.djutils.draw.curve.Flattener2d;
-import org.djutils.draw.curve.Flattener3d;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.line.PolyLine3d;
 import org.djutils.draw.line.Ray2d;
@@ -357,7 +350,8 @@ public class BezierTest
         Point3d to = new Point3d(0, 10, 30);
         for (int n : new int[] {2, 3, 4, 100})
         {
-            PolyLine3d line = new BezierCubic3d(from, control1, control2, to).toPolyLine(new Flattener3d.NumSegments(n - 1));
+            BezierCubic3d cbc = new BezierCubic3d(from, control1, control2, to);
+            PolyLine3d line = cbc.toPolyLine(new Flattener3d.NumSegments(n - 1));
             assertTrue(line.size() == n, "result has n points");
             assertTrue(line.get(0).equals(from), "result starts with from");
             assertTrue(line.get(line.size() - 1).equals(to), "result ends with to");
@@ -369,6 +363,8 @@ public class BezierTest
                 assertTrue(p.x > 0 && p.x < 15, "x of intermediate point has reasonable value");
                 assertTrue(p.y > 0 && p.y < 15, "y of intermediate point has reasonable value");
             }
+            assertEquals(from.directionTo(control1), cbc.getStartDirection(), "start direction is reported");
+            assertEquals(control2.directionTo(to), cbc.getEndDirection(), "end direction is reported");
         }
         for (int n = -1; n < 1; n++)
         {

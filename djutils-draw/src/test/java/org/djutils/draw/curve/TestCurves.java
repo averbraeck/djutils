@@ -260,9 +260,7 @@ public class TestCurves
             // Ignore expected exception
         }
         new Arc2d(new DirectedPoint2d(1, 2, 3), 10, true, 0); // is allowed
-        assertTrue(new Arc2d(new DirectedPoint2d(1, 2, 3), 10, true, 1).toString().startsWith("ContinuousArc ["),
-                "toString returns something descriptive");
-        assertTrue(new Arc2d(new DirectedPoint2d(1, 2, 3), 10, false, 1).toString().startsWith("ContinuousArc ["),
+        assertTrue(new Arc2d(new DirectedPoint2d(1, 2, 3), 10, true, 1).toString().startsWith("Arc ["),
                 "toString returns something descriptive");
     }
 
