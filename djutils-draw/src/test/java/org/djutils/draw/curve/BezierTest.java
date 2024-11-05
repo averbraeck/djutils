@@ -272,6 +272,26 @@ public class BezierTest
             // Ignore expected exception
         }
 
+        try
+        {
+            new BezierCubic2d(new Point2d[] {new Point2d(1, 2), new Point2d(3, 4), new Point2d(5, 6)});
+            fail("too few points should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new BezierCubic2d(new Point2d[] {new Point2d(1, 2), new Point2d(3, 4), new Point2d(5, 6), new Point2d(7, 8),
+                    new Point2d(9, 10)});
+            fail("too many points should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
     }
 
     /**

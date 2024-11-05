@@ -2,14 +2,11 @@ package org.djutils.draw.curve;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Random;
 
 import org.djutils.base.AngleUtil;
-import org.djutils.draw.curve.Clothoid2d;
-import org.djutils.draw.curve.Flattener2d;
-import org.djutils.draw.curve.OffsetFlattener2d;
-import org.djutils.draw.curve.PieceWiseLinearOffset2d;
 import org.djutils.draw.curve.Flattener2d.NumSegments;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.DirectedPoint2d;
@@ -60,11 +57,56 @@ public class ClothoidTest
             DirectedPoint2d end =
                     new DirectedPoint2d(r.nextDouble() * 10.0, r.nextDouble() * 10.0, (r.nextDouble() * 2 - 1) * Math.PI);
             Clothoid2d clothoid = new Clothoid2d(start, end);
+            // System.out.println("start=" + start + ", end=" + end + " clothoid=" + clothoid);
+            // FIXME does not work assertEquals(start.dirZ, clothoid.getDirection(0.0), 0.0001, "start direction");
+            // FIXME does not work assertEquals(end.dirZ, clothoid.getDirection(1.0), 0.00001, "end direction");
             PolyLine2d line = clothoid.toPolyLine(new Flattener2d.NumSegments(64));
             verifyLine(start, clothoid, line, null, null, null);
             assertTrue(clothoid.getAppliedShape().equals("Arc") || clothoid.getAppliedShape().equals("Clothoid"),
                     "Clothoid identifies itself correctly");
         }
+    }
+
+    /**
+     * Test remaining aspects of the Clothoid constructors.
+     */
+    @Test
+    public void testClothoidConstructors()
+    {
+        try
+        {
+            new Clothoid2d(new DirectedPoint2d(1, 2, 3), -0.5, 10.0, 4.0);
+            fail("Negative a should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            Clothoid2d.withLength(new DirectedPoint2d(1, 2, 3), -0.5, 10.0, 4.0);
+            fail("Negative length should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+
+        // Degenerate Clothoid (straight)
+        DirectedPoint2d start = new DirectedPoint2d(0, 10, 0);
+        DirectedPoint2d end = new DirectedPoint2d(20, 10, 0);
+        Clothoid2d cl2d = new Clothoid2d(start, end);
+        assertEquals(0, cl2d.getDirection(0.0), 0.00001, "start direction of degenerate Clothoid");
+        assertEquals(0, cl2d.getDirection(0.5), 0.00001, "direction half way of degenerate Clothoid");
+        assertEquals(0, cl2d.getDirection(1.0), 0.00001, "direction at end of degenerate Clothoid");
+        assertEquals(0, cl2d.getPoint(0.0).distance(start), 0.00001, "start point of degenerate Clothoid");
+        assertEquals(0, cl2d.getPoint(1.0).distance(end), 0.00001, "end point of degenerate Clothoid");
+        PolyLine2d pl = cl2d.toPolyLine(new Flattener2d.NumSegments(10));
+        // Should make a simple 2-point poly line
+        assertEquals(2, pl.size(), "polyline has two points");
+        assertEquals(0, pl.get(0).distance(start), 0.00001, "polyline starts at start");
+        assertEquals(0, pl.get(1).distance(end), 0.00001, "polyline ends at end");
     }
 
     /**
@@ -166,9 +208,11 @@ public class ClothoidTest
                 "Start location deviates");
         assertEquals(0.0, Math.hypot(clothoid.getEndPoint().x - line.get(line.size() - 1).x,
                 clothoid.getEndPoint().y - line.get(line.size() - 1).y), DISTANCE_TOLERANCE, "End location deviates");
-        assertEquals(0.0, AngleUtil.normalizeAroundZero(start.dirZ - getAngle(line, 0)), ANGLE_TOLERANCE,
+        assertEquals(0.0, AngleUtil.normalizeAroundZero(start.dirZ - line.get(0).directionTo(line.get(1))), ANGLE_TOLERANCE,
                 "Start direction deviates");
-        assertEquals(0.0, AngleUtil.normalizeAroundZero(clothoid.getEndPoint().dirZ - getAngle(line, line.size() - 2)),
+        assertEquals(0.0,
+                AngleUtil.normalizeAroundZero(
+                        clothoid.getEndPoint().dirZ - line.get(line.size() - 2).directionTo(line.get(line.size() - 1))),
                 ANGLE_TOLERANCE, "End direction deviates");
         assertEquals(0.0, start.distance(clothoid.getStartPoint()), DISTANCE_TOLERANCE, "Start location deviates");
         double lengthRatio = line.getLength() / clothoid.getLength();
@@ -229,17 +273,6 @@ public class ClothoidTest
                 }
             }
         }
-    }
-
-    /**
-     * Return the angle of a segment of a PolyLine2d.
-     * @param line PolyLine2d; the PolyLine2d
-     * @param segment int; the segment number
-     * @return angle of the line segment
-     */
-    private static double getAngle(final PolyLine2d line, final int segment)
-    {
-        return Math.atan2(line.get(segment + 1).y - line.get(segment).y, line.get(segment + 1).x - line.get(segment).x);
     }
 
 }

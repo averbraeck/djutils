@@ -2,6 +2,7 @@ package org.djutils.draw;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,7 @@ public class DirectionTest
         d1 = new Direction3d(2, 3);
         assertEquals(2, d1.getDirY(), 0, "dirY can be retrieve");
         assertEquals(3, d1.getDirZ(), 0, "dirZ can be retrieve");
+        assertTrue(d1.toString().startsWith("Direction3d ["), "toString method returns something descriptive");
         // test the exceptions
         try
         {

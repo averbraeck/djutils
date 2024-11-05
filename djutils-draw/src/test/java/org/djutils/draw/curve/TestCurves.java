@@ -14,14 +14,6 @@ import java.util.TreeMap;
 
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.Export;
-import org.djutils.draw.curve.Arc2d;
-import org.djutils.draw.curve.BezierCubic2d;
-import org.djutils.draw.curve.Flattener2d;
-import org.djutils.draw.curve.Flattable2d;
-import org.djutils.draw.curve.OffsetFlattener2d;
-import org.djutils.draw.curve.PieceWiseLinearOffset2d;
-import org.djutils.draw.curve.Straight2d;
-import org.djutils.draw.curve.OffsetFlattable2d;
 import org.djutils.draw.line.LineSegment2d;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.line.Ray2d;
@@ -41,7 +33,8 @@ import org.junit.jupiter.api.Test;
  * TODO also with maxAngle flattener and non-declared kink
  * <p>
  * TODO test flattener with curve that has a kink
- * </p><p>
+ * </p>
+ * <p>
  * TODO test Bezier3d
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
@@ -673,6 +666,51 @@ public class TestCurves
                 }
             }
         }
+    }
+    
+    /**
+     * Check the startRadius and endRadius of CubicBezier2d and getT.
+     */
+    @Test
+    public void testCubicbezierRadiusAndSome()
+    {
+        // Check that the curvature functions return something sensible
+        // https://stackoverflow.com/questions/1734745/how-to-create-circle-with-b%C3%A9zier-curves
+        double controlDistance = (4.0 / 3) * Math.tan(Math.PI / 8);
+        BezierCubic2d bcb = new BezierCubic2d(new Point2d(1, 0), new Point2d(1, controlDistance),
+                new Point2d(controlDistance, 1), new Point2d(0, 1));
+        assertEquals(1.0, bcb.getStartRadius(), 0.03, "start radius of cubic bezier approximation of unit circle");
+        assertEquals(1.0, bcb.getEndRadius(), 0.03, "end radius of cubic bezier approximation of unit circle");
+        bcb = new BezierCubic2d(new Point2d(1, 0), new Point2d(1, -controlDistance),
+                new Point2d(controlDistance, -1), new Point2d(0, -1));
+        assertEquals(-1.0, bcb.getStartRadius(), 0.03, "start radius of cubic bezier approximation of unit circle");
+        assertEquals(-1.0, bcb.getEndRadius(), 0.03, "end radius of cubic bezier approximation of unit circle");
+        assertEquals(0.0, bcb.getT(0.0), 0.0, "getT is exact at 0.0");
+        assertEquals(0.0, bcb.getT(0.001 * bcb.getLength()), 0.1, "getT is close to 0.0 for small input");
+        assertEquals(0.5, bcb.getT(0.5 * bcb.getLength()), 0.01, "getT is close to 0.5 halfway on symmetrical Bezier");
+        assertEquals(1.0, bcb.getT(0.999 * bcb.getLength()), 0.1, "getT is close to 1.0 for input close to 1.0");
+        assertEquals(1.0, bcb.getT(bcb.getLength()), 0.0, "getT is exact at 1.0");
+        
+        try
+        {
+            bcb.split(-0.0001);
+            fail("Negative split point should have thrown IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+        
+        try
+        {
+            bcb.split(1.0001);
+            fail("Split point beyond 1.0 should have thrown IllegalArgumentException");
+        }
+        catch (IllegalArgumentException iae)
+        {
+            // Ignore expected exception
+        }
+        
     }
 
     /**

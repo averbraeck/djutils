@@ -483,7 +483,6 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
         {
             return;
         }
-        // System.out.println("Updating segments for " + this);
         // Detect straight line
         double ang1 = Math.atan2(getY(1) - getY(0), getX(1) - getX(0));
         double ang2 = Math.atan2(getY(3) - getY(1), getX(3) - getX(1));

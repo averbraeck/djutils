@@ -546,6 +546,14 @@ public class Clothoid2d implements Curve2d, OffsetFlattable2d
     @Override
     public Double getDirection(final double fraction)
     {
+        if (this.arc != null)
+        {
+            return this.arc.getDirection(fraction);
+        }
+        else if (this.straight != null)
+        {
+            return this.straight.getDirection(fraction);
+        }
         return getDirectionForAlpha(this.alphaMin + fraction * (this.alphaMax - this.alphaMin));
     }
 
