@@ -97,11 +97,11 @@ public class Surface3d implements Drawable3d
                 this.z[index] = point3d.z;
             }
         }
-        this.bounds = new Bounds3d(getPoints());
+        this.bounds = new Bounds3d(iterator());
     }
 
     @Override
-    public Iterator<? extends Point3d> getPoints()
+    public Iterator<Point3d> iterator()
     {
         return new Iterator<Point3d>()
         {

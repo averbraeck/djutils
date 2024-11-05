@@ -123,7 +123,7 @@ public class Point2d implements Drawable2d, Point<Point2d>
     }
 
     @Override
-    public Iterator<? extends Point2d> getPoints()
+    public Iterator<Point2d> iterator()
     {
         return Arrays.stream(new Point2d[] {this}).iterator();
     }

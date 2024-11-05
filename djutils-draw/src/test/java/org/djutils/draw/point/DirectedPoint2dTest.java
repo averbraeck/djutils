@@ -41,12 +41,11 @@ public class DirectedPoint2dTest
         assertEquals(2, dp.getY(), 0.0, "y can be retrieved");
         assertEquals(3, dp.getDirZ(), 0.0, "DirZ can be retrieved");
         assertEquals(1, dp.size(), "size is 1");
-        Iterator<? extends DirectedPoint2d> it = dp.getPoints();
+        Iterator<Point2d> it = dp.iterator();
         assertTrue(it.hasNext(), "iterator has at least one point to provide");
-        DirectedPoint2d p = it.next();
+        Point2d p = it.next();
         assertEquals(p.x, dp.x, 0, "x matches");
         assertEquals(p.y, dp.y, 0, "y matches");
-        assertEquals(p.dirZ, dp.dirZ, 0, "dirZ matches");
         assertFalse(it.hasNext(), "iterator is now exhausted");
         DirectedPoint2d neg = dp.neg();
         assertEquals(-1, neg.x, 0, "x is negated");
@@ -238,7 +237,7 @@ public class DirectedPoint2dTest
         assertEquals(0.2, out.y, 1E-6, "y");
         assertEquals(-Math.PI / 7, out.getDirZ(), 1E-6, "dirZ");
 
-        Iterator<? extends Point2d> i = p.getPoints();
+        Iterator<Point2d> i = p.iterator();
         assertTrue(i.hasNext(), "iterator has one point");
         assertEquals(p, i.next(), "iterator returns p");
         assertFalse(i.hasNext(), "iterator does not have another point");

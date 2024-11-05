@@ -13,7 +13,6 @@ import java.util.NoSuchElementException;
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.OrientedPoint3d;
 import org.djutils.draw.point.Point3d;
 import org.junit.jupiter.api.Test;
@@ -217,7 +216,7 @@ public class Ray3dTest
                 description + " getDirY");
         assertEquals(AngleUtil.normalizeAroundZero(Math.PI - expectedDirY), flipped.dirY, 0.0001, description + " dirY");
         assertEquals(2, ray.size(), description + " size");
-        Iterator<DirectedPoint3d> iterator = ray.getPoints();
+        Iterator<Point3d> iterator = ray.iterator();
         // First result of iterator is the finite end point (but this is not a hard promise)
         assertTrue(iterator.hasNext());
         Point3d point = iterator.next();

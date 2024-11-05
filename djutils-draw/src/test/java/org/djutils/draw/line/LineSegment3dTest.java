@@ -87,7 +87,7 @@ public class LineSegment3dTest
         assertEquals(Math.hypot(Math.hypot(expectedEndX - expectedStartX, expectedEndY - expectedStartY),
                 expectedEndZ - expectedStartZ), segment.getLength(), 0.0001, description + " length");
         assertEquals(2, segment.size(), description + " size is 2");
-        Iterator<? extends Point3d> iterator = segment.getPoints();
+        Iterator<Point3d> iterator = segment.iterator();
         assertTrue(iterator.hasNext(), description + " iterator has data");
         Point3d point = iterator.next();
         assertEquals(expectedStartX, point.x, 0.0001, description + " iterator first point x");

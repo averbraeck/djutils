@@ -123,7 +123,7 @@ public class Surface3dTest
         }
         Surface3d surface3d = new Surface3d(points);
         assertEquals(points.length * 3, surface3d.size(), "size");
-        Iterator<? extends Point3d> iterator = surface3d.getPoints();
+        Iterator<? extends Point3d> iterator = surface3d.iterator();
         assertNotNull(iterator, "iterator is not null");
         for (int triangle = 0; triangle < points.length; triangle++)
         {

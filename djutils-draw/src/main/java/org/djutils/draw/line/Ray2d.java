@@ -155,13 +155,12 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     }
 
     @Override
-    public Iterator<DirectedPoint2d> getPoints()
+    public Iterator<Point2d> iterator()
     {
         double cosDirZ = Math.cos(this.dirZ);
         double sinDirZ = Math.sin(this.dirZ);
-        DirectedPoint2d[] array =
-                new DirectedPoint2d[] {this, new DirectedPoint2d(cosDirZ == 0 ? this.x : cosDirZ * Double.POSITIVE_INFINITY,
-                        sinDirZ == 0 ? this.y : sinDirZ * Double.POSITIVE_INFINITY, this.dirZ)};
+        Point2d[] array = new Point2d[] {this, new Point2d(cosDirZ == 0 ? this.x : cosDirZ * Double.POSITIVE_INFINITY,
+                sinDirZ == 0 ? this.y : sinDirZ * Double.POSITIVE_INFINITY)};
         return Arrays.stream(array).iterator();
     }
 

@@ -120,7 +120,7 @@ public final class TransformDemos
         PolyLine2d line = new PolyLine2d(new Point2d(1, 2), new Point2d(2, 3), new Point2d(5, 0));
         System.out.println(line);
         Transform2d transform = new Transform2d().scale(2, 3);
-        PolyLine2d transformedLine = new PolyLine2d(transform.transform(line.getPoints()));
+        PolyLine2d transformedLine = new PolyLine2d(transform.transform(line.iterator()));
         System.out.println(transformedLine);
     }
 }

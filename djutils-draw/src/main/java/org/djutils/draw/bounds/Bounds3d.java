@@ -133,7 +133,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      */
     public Bounds3d(final Drawable3d drawable3d) throws NullPointerException
     {
-        this(Throw.whenNull(drawable3d, "drawable3d").getPoints());
+        this(Throw.whenNull(drawable3d, "drawable3d").iterator());
     }
 
     /**
@@ -162,7 +162,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
             private int nextArgument = 0;
 
             /** Iterator over the Point2d objects in the current Drawable2d. */
-            private Iterator<? extends Point3d> currentIterator = ensureHasOne(drawable3d)[0].getPoints();
+            private Iterator<? extends Point3d> currentIterator = ensureHasOne(drawable3d)[0].iterator();
 
             @Override
             public boolean hasNext()
@@ -179,7 +179,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
                 }
                 // Move to next Drawable2d
                 this.nextArgument++;
-                this.currentIterator = drawable3d[this.nextArgument].getPoints();
+                this.currentIterator = drawable3d[this.nextArgument].iterator();
                 return this.currentIterator.next(); // Cannot fail because every Drawable has at least one point
             }
         };
@@ -226,7 +226,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
             private Iterator<Drawable3d> collectionIterator = ensureHasOne(drawableCollection.iterator());
 
             /** Iterator that generates Point2d objects for the currently selected element of the collection. */
-            private Iterator<? extends Point3d> currentIterator = this.collectionIterator.next().getPoints();
+            private Iterator<? extends Point3d> currentIterator = this.collectionIterator.next().iterator();
 
             @Override
             public boolean hasNext()
@@ -246,7 +246,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
                 {
                     if (this.collectionIterator.hasNext())
                     {
-                        this.currentIterator = this.collectionIterator.next().getPoints();
+                        this.currentIterator = this.collectionIterator.next().iterator();
                     }
                     else
                     {
@@ -273,7 +273,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     }
 
     @Override
-    public Iterator<Point3d> getPoints()
+    public Iterator<Point3d> iterator()
     {
         Point3d[] array =
                 new Point3d[] {new Point3d(this.minX, this.minY, this.minZ), new Point3d(this.minX, this.minY, this.maxZ),

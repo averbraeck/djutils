@@ -429,7 +429,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     @Override
-    public Iterator<Point2d> getPoints()
+    public Iterator<Point2d> iterator()
     {
         return new Iterator<Point2d>()
         {

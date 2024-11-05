@@ -2,7 +2,6 @@ package org.djutils.draw;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.djutils.draw.point.Point;
@@ -18,14 +17,8 @@ import org.djutils.draw.point.Point;
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  * @param <P> The point type (2d or 3d)
  */
-public interface Drawable<P extends Point<P>> extends Serializable
+public interface Drawable<P extends Point<P>> extends Serializable, Iterable<P>
 {
-    /**
-     * Retrieve, or generate all points that make up the object.
-     * @return Iterable&lt;Point2d&gt;; an iterator that generates all points that make up the object
-     */
-    Iterator<? extends P> getPoints();
-
     /**
      * Create a list of all points that make up this Drawable. This method is expensive as a new list is constructed on each
      * invocation.
@@ -34,7 +27,7 @@ public interface Drawable<P extends Point<P>> extends Serializable
     default List<P> getPointList()
     {
         List<P> result = new ArrayList<>(size());
-        getPoints().forEachRemaining(result::add);
+        iterator().forEachRemaining(result::add);
         return result;
     }
 

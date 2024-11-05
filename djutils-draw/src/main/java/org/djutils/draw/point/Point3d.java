@@ -157,7 +157,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
     }
 
     @Override
-    public Iterator<? extends Point3d> getPoints()
+    public Iterator<Point3d> iterator()
     {
         return Arrays.stream(new Point3d[] {this}).iterator();
     }

@@ -1,7 +1,5 @@
 package demo;
 
-import java.util.Iterator;
-
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.line.LineSegment2d;
 import org.djutils.draw.point.Point2d;
@@ -35,21 +33,21 @@ public final class DrawableDemos
     {
         Point2d p = new Point2d(12.34, 23.45);
         System.out.println("The iterator of a point yields one point (the point itself):");
-        for (Iterator<? extends Point2d> iterator = p.getPoints(); iterator.hasNext();)
+        for (Point2d pp : p)
         {
-            System.out.println(iterator.next());
+            System.out.println(pp);
         }
         LineSegment2d ls = new LineSegment2d(12.34, 23.45, 34.56, 45.67);
         System.out.println("The iterator of a line segment yields two points (the start point and the end point):");
-        for (Iterator<? extends Point2d> iterator = ls.getPoints(); iterator.hasNext();)
+        for (Point2d pp : ls)
         {
-            System.out.println(iterator.next());
+            System.out.println(pp);
         }
         Bounds3d b = new Bounds3d(12.34, 23.45, 34.56, 45.67, 56.78, 67.89);
         System.out.println("The iterator of a bounds3d yields eight points (the vertices of the bounds):");
-        for (Iterator<? extends Point3d> iterator = b.getPoints(); iterator.hasNext();)
+        for (Point3d pp : b)
         {
-            System.out.println(iterator.next());
+            System.out.println(pp);
         }
 
         Point2d point2d = new Point2d(12.34, 23.45);

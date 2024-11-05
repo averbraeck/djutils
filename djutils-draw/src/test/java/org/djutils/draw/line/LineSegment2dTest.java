@@ -76,7 +76,7 @@ public class LineSegment2dTest
         assertEquals(Math.hypot(expectedEndX - expectedStartX, expectedEndY - expectedStartY), segment.getLength(), 0.0001,
                 description + " length");
         assertEquals(2, segment.size(), description + " size is 2");
-        Iterator<? extends Point2d> iterator = segment.getPoints();
+        Iterator<Point2d> iterator = segment.iterator();
         assertTrue(iterator.hasNext(), description + " iterator has data");
         Point2d point = iterator.next();
         assertEquals(expectedStartX, point.x, 0.0001, description + " iterator first point x");

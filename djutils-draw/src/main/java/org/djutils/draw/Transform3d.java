@@ -335,7 +335,7 @@ public class Transform3d implements Cloneable
      */
     public Bounds3d transform(final Bounds3d boundingBox)
     {
-        return new Bounds3d(transform(boundingBox.getPoints()));
+        return new Bounds3d(transform(boundingBox.iterator()));
     }
 
     @Override

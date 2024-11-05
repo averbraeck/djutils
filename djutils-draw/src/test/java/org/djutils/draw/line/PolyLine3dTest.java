@@ -150,7 +150,7 @@ public class PolyLine3dTest
         PolyLine3d line = new PolyLine3d(list);
         verifyPoints(line, points);
         // Convert it to Point3d[], create another Line3d from that and check that
-        verifyPoints(new PolyLine3d(line.getPoints()), points);
+        verifyPoints(new PolyLine3d(line.iterator()), points);
         assertEquals(0.0, line.lengthAtIndex(0), 0, "length at index 0");
         double length = 0;
         for (int i = 1; i < points.length; i++)
@@ -1093,7 +1093,7 @@ public class PolyLine3dTest
             assertEquals(array[i], line.get(i), "i-th point");
         }
         int nextIndex = 0;
-        for (Iterator<Point3d> iterator = line.getPoints(); iterator.hasNext();)
+        for (Iterator<Point3d> iterator = line.iterator(); iterator.hasNext();)
         {
             assertEquals(array[nextIndex++], iterator.next(), "i-th point from line iterator");
         }
@@ -1510,7 +1510,7 @@ public class PolyLine3dTest
                 "line is not equal to a different line");
         assertFalse(line.equals(null), "line is not equal to null");
         assertFalse(line.equals("unlikely"), "line is not equal to a different kind of object");
-        assertTrue(line.equals(new PolyLine3d(line.getPoints())), "Line is equal to line from same set of points");
+        assertTrue(line.equals(new PolyLine3d(line.iterator())), "Line is equal to line from same set of points");
         // Make a line that differs only in the very last point
         Point3d[] otherArray = Arrays.copyOf(array, array.length);
         otherArray[otherArray.length - 1] = new Point3d(otherArray[otherArray.length - 1].x,
@@ -1698,7 +1698,7 @@ public class PolyLine3dTest
                 "equals checks y");
         assertNotEquals(line, new PolyLine3d(new Point3d[] {new Point3d(1, 2, 3), new Point3d(4, 6, 8), new Point3d(8, 9, 11)}),
                 "equals checks z");
-        assertTrue(line.equals(new PolyLine3d(line.getPoints())), "Line is equal to line from same set of points");
+        assertTrue(line.equals(new PolyLine3d(line.iterator())), "Line is equal to line from same set of points");
     }
 
     /**

@@ -84,7 +84,7 @@ public class Polygon3dTest
         checkPolygon("constructed from arrays", x, y, z, polygon);
         // convert the points of polygon to an array of Point3d
         List<Point3d> list = new ArrayList<>();
-        polygon.getPoints().forEachRemaining(list::add);
+        polygon.iterator().forEachRemaining(list::add);
         otherPolygon = new Polygon3d(list);
         assertEquals(polygon, otherPolygon, "Polygon created from polygon points is equal to original polygon");
         otherPolygon = new Polygon3d(list.get(0), list.get(1), list.get(2), list.get(3));

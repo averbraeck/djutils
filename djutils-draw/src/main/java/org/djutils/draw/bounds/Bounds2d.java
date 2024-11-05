@@ -118,7 +118,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
      */
     public Bounds2d(final Drawable2d drawable2d) throws NullPointerException
     {
-        this(Throw.whenNull(drawable2d, "drawable2d").getPoints());
+        this(Throw.whenNull(drawable2d, "drawable2d").iterator());
     }
 
     /**
@@ -161,7 +161,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
             private int nextArgument = 0;
 
             /** Iterator over the Point2d objects in the current Drawable2d. */
-            private Iterator<? extends Point2d> currentIterator = ensureHasOne(drawable2d)[0].getPoints();
+            private Iterator<? extends Point2d> currentIterator = ensureHasOne(drawable2d)[0].iterator();
 
             @Override
             public boolean hasNext()
@@ -178,7 +178,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
                 }
                 // Move to next Drawable2d
                 this.nextArgument++;
-                this.currentIterator = drawable2d[this.nextArgument].getPoints();
+                this.currentIterator = drawable2d[this.nextArgument].iterator();
                 return this.currentIterator.next(); // Cannot fail because every Drawable has at least one point
             }
         };
@@ -211,7 +211,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
             private Iterator<Drawable2d> collectionIterator = ensureHasOne(drawableCollection.iterator());
 
             /** Iterator that generates Point2d objects for the currently selected element of the collection. */
-            private Iterator<? extends Point2d> currentIterator = this.collectionIterator.next().getPoints();
+            private Iterator<? extends Point2d> currentIterator = this.collectionIterator.next().iterator();
 
             @Override
             public boolean hasNext()
@@ -231,7 +231,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
                 {
                     if (this.collectionIterator.hasNext())
                     {
-                        this.currentIterator = this.collectionIterator.next().getPoints();
+                        this.currentIterator = this.collectionIterator.next().iterator();
                     }
                     else
                     {
@@ -257,8 +257,9 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
         return iterator;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public Iterator<Point2d> getPoints()
+    public Iterator<Point2d> iterator()
     {
         Point2d[] array = new Point2d[] {new Point2d(this.minX, this.minY), new Point2d(this.minX, this.maxY),
                 new Point2d(this.maxX, this.minY), new Point2d(this.maxX, this.maxY)};

@@ -318,7 +318,7 @@ public class Polygon2d extends PolyLine2d
         }
 
         // step 2: quick check to see if any of the points of this polygon lies inside the other polygon
-        for (Iterator<Point2d> iterator = getPoints(); iterator.hasNext();)
+        for (Iterator<Point2d> iterator = iterator(); iterator.hasNext();)
         {
             if (other.contains(iterator.next()))
             {
@@ -327,7 +327,7 @@ public class Polygon2d extends PolyLine2d
         }
 
         // step 3: quick check to see if any of the points of the other polygon lies inside this polygon
-        for (Iterator<Point2d> iterator = other.getPoints(); iterator.hasNext();)
+        for (Iterator<Point2d> iterator = other.iterator(); iterator.hasNext();)
         {
             if (contains(iterator.next()))
             {
@@ -410,7 +410,7 @@ public class Polygon2d extends PolyLine2d
     @Override
     public Polygon2d reverse()
     {
-        return new Polygon2d(super.reverse().getPoints());
+        return new Polygon2d(super.reverse().iterator());
     }
 
     /**

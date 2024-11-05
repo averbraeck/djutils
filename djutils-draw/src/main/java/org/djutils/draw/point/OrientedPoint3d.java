@@ -277,9 +277,9 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
     }
 
     @Override
-    public Iterator<OrientedPoint3d> getPoints()
+    public Iterator<Point3d> iterator()
     {
-        return Arrays.stream(new OrientedPoint3d[] {this}).iterator();
+        return Arrays.stream(new Point3d[] {this}).iterator();
     }
 
     @Override

@@ -171,7 +171,7 @@ public class Ray2dTest
                 description + " getDirZ");
         assertEquals(AngleUtil.normalizeAroundZero(expectedDirZ + Math.PI), flipped.dirZ, 0.0001, description + " dirZ");
         assertEquals(2, ray.size(), description + " size");
-        Iterator<DirectedPoint2d> iterator = ray.getPoints();
+        Iterator<Point2d> iterator = ray.iterator();
         // First result of iterator is the finite end point (but this is not a hard promise)
         assertTrue(iterator.hasNext());
         Point2d point = iterator.next();

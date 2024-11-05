@@ -120,7 +120,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
     }
 
     @Override
-    public Iterator<? extends Point2d> getPoints()
+    public Iterator<Point2d> iterator()
     {
         return Arrays.stream(new Point2d[] {getStartPoint(), getEndPoint()}).iterator();
     }

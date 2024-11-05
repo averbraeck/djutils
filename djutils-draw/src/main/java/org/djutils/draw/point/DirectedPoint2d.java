@@ -230,9 +230,9 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     }
 
     @Override
-    public Iterator<? extends DirectedPoint2d> getPoints()
+    public Iterator<Point2d> iterator()
     {
-        return Arrays.stream(new DirectedPoint2d[] {this}).iterator();
+        return Arrays.stream(new Point2d[] {this}).iterator();
     }
 
     @Override

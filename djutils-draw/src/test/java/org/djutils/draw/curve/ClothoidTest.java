@@ -64,6 +64,16 @@ public class ClothoidTest
             verifyLine(start, clothoid, line, null, null, null);
             assertTrue(clothoid.getAppliedShape().equals("Arc") || clothoid.getAppliedShape().equals("Clothoid"),
                     "Clothoid identifies itself correctly");
+            if (clothoid.getAppliedShape().equals("Arc"))
+            {
+                assertEquals(0, clothoid.getPoint(0.0).distance(start), 0.0001, "start point of clothoid became an arc");
+                assertEquals(0, clothoid.getPoint(1.0).distance(end), 0.0001, "end point of clothoid became an arc");
+                Point2d midPoint = clothoid.getPoint(0.5);
+                assertEquals(midPoint.distance(start), midPoint.distance(end), 0.0001,
+                        "mid point has same distance to start as it has to end");
+                assertEquals(start.dirZ, clothoid.getDirection(0.0), 0.01, "start direction of clothoid that became an arc");
+                assertEquals(end.dirZ, clothoid.getDirection(1.0), 0.01, "end direction of clothoid that became an arc");
+            }
         }
     }
 

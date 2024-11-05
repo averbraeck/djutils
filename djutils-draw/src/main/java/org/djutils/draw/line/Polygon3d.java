@@ -276,7 +276,7 @@ public class Polygon3d extends PolyLine3d
     @Override
     public Polygon3d reverse()
     {
-        return new Polygon3d(super.reverse().getPoints());
+        return new Polygon3d(super.reverse().iterator());
     }
 
     @Override

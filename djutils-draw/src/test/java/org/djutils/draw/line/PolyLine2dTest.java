@@ -145,7 +145,7 @@ public class PolyLine2dTest
         }
         PolyLine2d line = new PolyLine2d(list);
         verifyPointsAndSegments(line, points);
-        verifyPointsAndSegments(new PolyLine2d(line.getPoints()), points);
+        verifyPointsAndSegments(new PolyLine2d(line.iterator()), points);
         assertEquals(0.0, line.lengthAtIndex(0), 0, "length at index 0");
         double length = 0;
         for (int i = 1; i < points.length; i++)
@@ -438,7 +438,7 @@ public class PolyLine2dTest
             assertEquals(array[i], line.get(i), "i-th point");
         }
         int nextIndex = 0;
-        for (Iterator<Point2d> iterator = line.getPoints(); iterator.hasNext();)
+        for (Iterator<Point2d> iterator = line.iterator(); iterator.hasNext();)
         {
             assertEquals(array[nextIndex++], iterator.next(), "i-th point from line iterator");
         }
@@ -835,7 +835,7 @@ public class PolyLine2dTest
                 "line is not equal to a different line");
         assertFalse(line.equals(null), "line is not equal to null");
         assertFalse(line.equals("unlikely"), "line is not equal to a different kind of object");
-        assertTrue(line.equals(new PolyLine2d(line.getPoints())), "Line is equal to line from same set of points");
+        assertTrue(line.equals(new PolyLine2d(line.iterator())), "Line is equal to line from same set of points");
         // Make a line that differs only in the very last point
         Point2d[] otherArray = Arrays.copyOf(array, array.length);
         otherArray[otherArray.length - 1] =
@@ -1209,9 +1209,8 @@ public class PolyLine2dTest
         // System.out.print("outer design line: " + outerDesignLine.toPlot());
         // System.out.print("transition line: " + transitionLine.toPlot());
         List<Point2d> projections = new ArrayList<>();
-        for (Iterator<Point2d> iterator = transitionLine.getPoints(); iterator.hasNext();)
+        for (Point2d p : transitionLine)
         {
-            Point2d p = iterator.next();
             if (p instanceof Ray2d)
             {
                 Ray2d ray = (Ray2d) p;
@@ -1243,9 +1242,8 @@ public class PolyLine2dTest
         // System.out.print("Bezier: " + transitionLine.toPlot());
         projections = new ArrayList<>();
         Point2d prev = null;
-        for (Iterator<Point2d> iterator = transitionLine.getPoints(); iterator.hasNext();)
+        for (Point2d p : transitionLine)
         {
-            Point2d p = iterator.next();
             if (prev != null)
             {
                 Ray2d ray = new Ray2d(prev, prev.directionTo(p));
@@ -1700,7 +1698,7 @@ public class PolyLine2dTest
                 "equals checks x");
         assertNotEquals(line, new PolyLine2d(new Point2d[] {new Point2d(1, 2), new Point2d(4, 7), new Point2d(8, 9)}),
                 "equals checks y");
-        assertTrue(line.equals(new PolyLine2d(line.getPoints())), "Line is equal to line from same set of points");
+        assertTrue(line.equals(new PolyLine2d(line.iterator())), "Line is equal to line from same set of points");
     }
 
     /**

@@ -346,7 +346,7 @@ public class OrientedPoint3dTest
         assertEquals(-Math.PI / 4, p.abs().getDirY(), 1E-6);
         assertEquals(Math.PI / 2, p.abs().getDirZ(), 1E-6);
 
-        Iterator<OrientedPoint3d> i = p.getPoints();
+        Iterator<Point3d> i = p.iterator();
         assertTrue(i.hasNext(), "iterator has one point");
         assertEquals(p, i.next(), "iterator returns p");
         assertFalse(i.hasNext(), "iterator does not have another point");

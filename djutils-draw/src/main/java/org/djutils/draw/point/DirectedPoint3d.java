@@ -333,9 +333,9 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
     }
 
     @Override
-    public Iterator<? extends DirectedPoint3d> getPoints()
+    public Iterator<Point3d> iterator()
     {
-        return Arrays.stream(new DirectedPoint3d[] {this}).iterator();
+        return Arrays.stream(new Point3d[] {this}).iterator();
     }
 
     @Override

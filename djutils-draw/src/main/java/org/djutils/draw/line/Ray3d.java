@@ -195,16 +195,16 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
     }
 
     @Override
-    public Iterator<DirectedPoint3d> getPoints()
+    public Iterator<Point3d> iterator()
     {
         double sinDirZ = Math.sin(this.dirZ);
         double cosDirZ = Math.cos(this.dirZ);
         double sinDirY = Math.sin(this.dirY);
         double cosDirY = Math.cos(this.dirY);
-        DirectedPoint3d[] array = new DirectedPoint3d[] {this,
-                new DirectedPoint3d(cosDirZ * sinDirY == 0 ? this.x : cosDirZ * sinDirY * Double.POSITIVE_INFINITY,
+        Point3d[] array = new Point3d[] {this,
+                new Point3d(cosDirZ * sinDirY == 0 ? this.x : cosDirZ * sinDirY * Double.POSITIVE_INFINITY,
                         cosDirZ * sinDirZ == 0 ? this.y : cosDirZ * sinDirZ * Double.POSITIVE_INFINITY,
-                        cosDirY == 0 ? this.z : cosDirY * Double.POSITIVE_INFINITY, this.dirZ, this.dirY)};
+                        cosDirY == 0 ? this.z : cosDirY * Double.POSITIVE_INFINITY)};
         return Arrays.stream(array).iterator();
     }
 

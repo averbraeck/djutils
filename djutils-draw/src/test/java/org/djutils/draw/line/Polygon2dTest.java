@@ -78,7 +78,7 @@ public class Polygon2dTest
         assertEquals(-actualSurface, polygon.reverse().surface(), Math.ulp(-actualSurface), "surface of reversed polygon");
         // convert the points of polygon to an array of Point2d
         List<Point2d> list = new ArrayList<>();
-        polygon.getPoints().forEachRemaining(list::add);
+        polygon.iterator().forEachRemaining(list::add);
         otherPolygon = new Polygon2d(list);
         assertEquals(polygon, otherPolygon, "Polygon created from polygon points is equal to original polygon");
         otherPolygon = new Polygon2d(list.get(0), list.get(1), list.get(2), list.get(3));
@@ -443,15 +443,15 @@ public class Polygon2dTest
         // Test all cases of co-linear edges
         Polygon2d one = new Polygon2d(new Point2d(3, 4), new Point2d(4, 3), new Point2d(4, -3), new Point2d(3, -4),
                 new Point2d(-3, -4), new Point2d(-4, -3), new Point2d(-4, 3), new Point2d(-3, 4));
-        Polygon2d two = new Polygon2d(new Transform2d().translate(8, 0).transform(one.getPoints()));
+        Polygon2d two = new Polygon2d(new Transform2d().translate(8, 0).transform(one.iterator()));
         assertTrue(one.intersects(two), "shapes hit");
-        two = new Polygon2d(new Transform2d().translate(8, 2).transform(one.getPoints()));
+        two = new Polygon2d(new Transform2d().translate(8, 2).transform(one.iterator()));
         assertTrue(one.intersects(two), "shapes hit");
-        two = new Polygon2d(new Transform2d().translate(8, 6).transform(one.getPoints()));
+        two = new Polygon2d(new Transform2d().translate(8, 6).transform(one.iterator()));
         assertTrue(one.intersects(two), "shapes hit");
-        two = new Polygon2d(new Transform2d().translate(7.75, 6.25).transform(one.getPoints()));
+        two = new Polygon2d(new Transform2d().translate(7.75, 6.25).transform(one.iterator()));
         assertTrue(one.intersects(two), "shapes hit");
-        two = new Polygon2d(new Transform2d().translate(7, 7).transform(one.getPoints()));
+        two = new Polygon2d(new Transform2d().translate(7, 7).transform(one.iterator()));
         assertTrue(one.intersects(two), "shapes hit");
 
     }

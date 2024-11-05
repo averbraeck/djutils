@@ -247,7 +247,7 @@ public class Transform2d implements Cloneable
      */
     public Bounds2d transform(final Bounds2d boundingRectangle)
     {
-        return new Bounds2d(transform(boundingRectangle.getPoints()));
+        return new Bounds2d(transform(boundingRectangle.iterator()));
     }
 
     @Override

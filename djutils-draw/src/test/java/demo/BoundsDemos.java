@@ -42,7 +42,7 @@ public final class BoundsDemos
         Bounds2d b2 = new Bounds2d(12.3, 23.4); // Arguments are ranges, symmetrically around 0.0
         System.out.println("b2: " + b2);
         PolyLine2d line = new PolyLine2d(new Point2d(1, 2), new Point2d(3, 4), new Point2d(-5, 12));
-        Bounds2d b3 = new Bounds2d(line.getPoints()); // Argument is Iterator&lt;Point2d&gt;
+        Bounds2d b3 = new Bounds2d(line.iterator()); // Argument is Iterator&lt;Point2d&gt;
         System.out.println("b3: " + b3);
         Bounds2d b4 = line.getBounds(); // Of course, the PolyLine2d can create a Bounds2d by itself
         System.out.println("b4: " + b4);
@@ -59,7 +59,7 @@ public final class BoundsDemos
         System.out.println("b7: " + b7);
 
         Bounds2d bounds = new Bounds2d(new Ray2d(1, 2, Math.toRadians(45)));
-        for (Iterator<Point2d> iterator = bounds.getPoints(); iterator.hasNext();)
+        for (Iterator<Point2d> iterator = bounds.iterator(); iterator.hasNext();)
         {
             System.out.println(iterator.next());
         }
