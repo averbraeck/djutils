@@ -55,9 +55,9 @@ public class DirectionTest
         try
         {
             new Direction3d(Double.NaN, 0);
-            fail("NaN value should have thrown an IllegalArgumentException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -66,7 +66,7 @@ public class DirectionTest
             new Direction3d(Double.POSITIVE_INFINITY, 0);
             fail("infinity value should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -75,16 +75,16 @@ public class DirectionTest
             new Direction3d(Double.NEGATIVE_INFINITY, 0);
             fail("infinity value should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
         try
         {
             new Direction3d(0, Double.NaN);
-            fail("NaN value should have thrown an IllegalArgumentException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -93,7 +93,7 @@ public class DirectionTest
             new Direction3d(0, Double.POSITIVE_INFINITY);
             fail("infinity value should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -102,7 +102,7 @@ public class DirectionTest
             new Direction3d(0, Double.NEGATIVE_INFINITY);
             fail("infinity value should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }

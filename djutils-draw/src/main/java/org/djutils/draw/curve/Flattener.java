@@ -30,6 +30,7 @@ public interface Flattener<F extends Flattener<F, FL, PL, P>, FL extends Flattab
      * Flatten a Flattable line into a PolyLine.
      * @param line line function.
      * @return PolyLine; flattened line.
+     * @throws NullPointerException when <code>line</code> is <code>null</code>
      */
     default PL flatten(final FL line)
     {
@@ -44,7 +45,7 @@ public interface Flattener<F extends Flattener<F, FL, PL, P>, FL extends Flattab
      */
     default void loadKink(final NavigableMap<Double, P> map, final double kink, final FL line)
     {
-        Throw.when(kink < 0.0 || kink > 1.0, IllegalArgumentException.class, "Kinks must all be between 0.0 and 1.0, (got {})",
+        Throw.when(kink < 0.0 || kink > 1.0, IllegalArgumentException.class, "Kinks must all be between 0.0 and 1.0, (got %f)",
                 kink);
         if (map.containsKey(kink))
         {

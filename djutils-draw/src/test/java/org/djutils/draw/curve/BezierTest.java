@@ -147,7 +147,7 @@ public class BezierTest
             new BezierCubic2d(startRay, endRay, 0, true);
             fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -157,7 +157,7 @@ public class BezierTest
             new BezierCubic2d(startRay, endRay, 0);
             fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -167,7 +167,7 @@ public class BezierTest
             new BezierCubic2d(startRay, endRay, -1);
             fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -177,7 +177,7 @@ public class BezierTest
             new BezierCubic2d(startRay, endRay, -1, true);
             fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -185,9 +185,9 @@ public class BezierTest
         try
         {
             new BezierCubic2d(startRay, endRay, Double.NaN, true);
-            fail("Illegal shape value should have thrown an IllegalArgumentException");
+            fail("Illegal shape value should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -195,9 +195,9 @@ public class BezierTest
         try
         {
             new BezierCubic2d(startRay, endRay, Double.NaN);
-            fail("Illegal shape value should have thrown an IllegalArgumentException");
+            fail("Illegal shape value should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -207,7 +207,7 @@ public class BezierTest
             new BezierCubic2d(startRay, endRay, Double.POSITIVE_INFINITY);
             fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -217,7 +217,7 @@ public class BezierTest
             new BezierCubic2d(startRay, endRay, Double.POSITIVE_INFINITY, true);
             fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -227,7 +227,7 @@ public class BezierTest
             new Bezier2d(new Point2d[] {start});
             fail("Too few points have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -237,7 +237,7 @@ public class BezierTest
             new Bezier2d(new Point2d[] {});
             fail("Too few points have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -247,7 +247,7 @@ public class BezierTest
             new Bezier2d(start, c1, c2, end).toPolyLine(new Flattener2d.MaxDeviation(0));
             fail("illegal epsilon have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -257,7 +257,7 @@ public class BezierTest
             new Bezier2d(start, c1, c2, end).toPolyLine(new Flattener2d.MaxDeviation(-0.1));
             fail("illegal epsilon have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -265,9 +265,9 @@ public class BezierTest
         try
         {
             new Bezier2d(start, c1, c2, end).toPolyLine(new Flattener2d.MaxDeviation(Double.NaN));
-            fail("illegal epsilon have thrown an IllegalArgumentException");
+            fail("illegal epsilon have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -277,7 +277,7 @@ public class BezierTest
             new BezierCubic2d(new Point2d[] {new Point2d(1, 2), new Point2d(3, 4), new Point2d(5, 6)});
             fail("too few points should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -288,7 +288,7 @@ public class BezierTest
                     new Point2d(9, 10)});
             fail("too many points should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -502,7 +502,7 @@ public class BezierTest
             new BezierCubic2d(null, ray2);
             fail("null should have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -512,7 +512,7 @@ public class BezierTest
             new BezierCubic2d(ray1, null);
             fail("null should have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -522,7 +522,7 @@ public class BezierTest
             new BezierCubic2d(ray1, ray2);
             fail("Coinciding start and end points should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -532,7 +532,7 @@ public class BezierTest
             new BezierCubic2d(ray1, ray3, -1);
             fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -540,9 +540,9 @@ public class BezierTest
         try
         {
             new BezierCubic2d(ray1, ray3, Double.NaN);
-            fail("Illegal shape value should have thrown an IllegalArgumentException");
+            fail("Illegal shape value should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -552,7 +552,7 @@ public class BezierTest
             new BezierCubic2d(ray1, ray3, Double.POSITIVE_INFINITY);
             fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -570,7 +570,7 @@ public class BezierTest
             new Bezier2d(ray1, ray3).toPolyLine(new Flattener2d.NumSegments(0));
             fail("size smaller than 1 segment should have thrown a IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -580,7 +580,7 @@ public class BezierTest
             new Bezier2d(ray1);
             fail("cannot make a Bezier from only one point; should have thrown a IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -625,7 +625,7 @@ public class BezierTest
             new BezierCubic3d(null, ray2);
             fail("null should have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -635,7 +635,7 @@ public class BezierTest
             new BezierCubic3d(ray1, null);
             fail("null should have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -645,7 +645,7 @@ public class BezierTest
             new BezierCubic3d(ray1, ray2);
             fail("Coinciding start and end points should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -653,9 +653,9 @@ public class BezierTest
         try
         {
             new BezierCubic3d(ray1, ray3, Double.NaN);
-            fail("Illegal shape value should have thrown an IllegalArgumentException");
+            fail("Illegal shape value should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -665,7 +665,7 @@ public class BezierTest
             new BezierCubic3d(ray1, ray3, Double.POSITIVE_INFINITY);
             fail("Illegal shape value should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -684,7 +684,7 @@ public class BezierTest
             new BezierCubic3d(ray1, ray3).toPolyLine(new Flattener3d.NumSegments(0));
             fail("size smaller than 1 segment should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -694,7 +694,7 @@ public class BezierTest
             new Bezier3d(ray1);
             fail("cannot make a Bezier from only one point; should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -713,7 +713,7 @@ public class BezierTest
             new BezierCubic3d(ray1, cp1, cp2, ray3).toPolyLine(new Flattener3d.NumSegments(0));
             fail("Cannot construct a Bezier approximation that has only one point");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }

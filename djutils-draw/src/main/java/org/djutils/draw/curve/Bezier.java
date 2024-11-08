@@ -57,12 +57,13 @@ public final class Bezier
     }
 
     /**
-     * Calculate the B&eacute;zier point of degree n, with B(t) = Sum(i = 0..n) [C(n, i) * (1 - t)<sup>n-i</sup> t<sup>i</sup>
-     * P<sub>i</sub>], where C(n, k) is the binomial coefficient defined by n! / ( k! (n-k)! ), ! being the factorial operator.
+     * Calculate the B&eacute;zier point of degree n, with B(t) = &Sigma;(i = 0..n) [C(n, i) * (1 - t)<sup>n-i</sup>
+     * t<sup>i</sup> P<sub>i</sub>], where C(n, k) is the binomial coefficient defined by n! / ( k! (n-k)! ), ! being the
+     * factorial operator.
      * @param t double; the fraction
-     * @param p double...; the points of the curve, where the first and last are begin and end point, and the intermediate ones
+     * @param p double...; the points of the curve, where the first and last are begin and end point, and all intermediate ones
      *            are control points
-     * @return the B&eacute;zier value B(t) of degree n, where n is the number of points in the array
+     * @return the B&eacute;zier value B(t) of degree n, where n is the number of points in the <code>p</code> array
      */
     @SuppressWarnings("checkstyle:methodname")
     static double Bn(final double t, final double... p)
@@ -82,7 +83,7 @@ public final class Bezier
     /**
      * Calculate factorial(k), which is k * (k-1) * (k-2) * ... * 1. For factorials up to 20, a lookup table is used.
      * @param k int; the parameter
-     * @return factorial(k)
+     * @return k!
      */
     private static double factorial(final int k)
     {

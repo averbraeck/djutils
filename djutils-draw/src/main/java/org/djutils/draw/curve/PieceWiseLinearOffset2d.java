@@ -26,25 +26,26 @@ import org.djutils.immutablecollections.ImmutableTreeSet;
 public class PieceWiseLinearOffset2d implements Iterable<Double>
 {
 
-    /** Underlying data. */
+    /** The underlying data. */
     private final NavigableMap<Double, Double> data = new TreeMap<>();
 
     /**
      * Create FractionalLengthData from an array of double values.
-     * @param data fractional length - value pairs. Fractional lengths do not need to be in order.
-     * @throws IllegalArgumentException when the number of input values is not even or 0.
-     * @throws IllegalArgumentException when a fractional value is not in the range [0, 1].
+     * @param data fractional length - value pairs. Fractional lengths do not need to be in order
+     * @throws NullPointerException when <code>data</code> is <code>null</code>
+     * @throws IllegalArgumentException when the number of input values is not even or 0, or a fractional value is not in the
+     *             range [0, 1], or an offset value is not finite, or multiple values are provided for the same fraction
      */
-    public PieceWiseLinearOffset2d(final double... data) throws IllegalArgumentException
+    public PieceWiseLinearOffset2d(final double... data)
     {
         Throw.when(data.length < 2 || data.length % 2 > 0, IllegalArgumentException.class,
-                "Number of input values must be even and at least 2.");
+                "Number of input values must be even and at least 2");
         for (int i = 0; i < data.length; i = i + 2)
         {
             Throw.when(data[i] < 0.0 || data[i] > 1.0, IllegalArgumentException.class,
-                    "Fractional length %s is outside of range [0 ... 1].", data[i]);
+                    "Fractional length %f is outside of range [0 ... 1]", data[i]);
             Throw.when(1 / data[0] < 0, IllegalArgumentException.class, "Fractional length data may not contain -0.0 fraction");
-            Throw.when(!Double.isFinite(data[i + 1]), IllegalArgumentException.class, "values must be finite (got {})",
+            Throw.when(!Double.isFinite(data[i + 1]), IllegalArgumentException.class, "values must be finite (got %f)",
                     data[i + 1]);
             Throw.when(this.data.get(data[i]) != null, IllegalArgumentException.class, "Duplicate fraction is not permitted");
             this.data.put(data[i], data[i + 1]);
@@ -54,12 +55,12 @@ public class PieceWiseLinearOffset2d implements Iterable<Double>
     /**
      * Create FractionalLengthData from a Map of key-value pairs.
      * @param data fractional length - value pairs. Fractional lengths do not need to be in order.
-     * @throws IllegalArgumentException when the input data is null or empty.
-     * @throws IllegalArgumentException when a fractional value is not in the range [0, 1].
+     * @throws IllegalArgumentException when the input data is null or empty, or a fractional value is not in the range [0, 1],
+     *             or an offset value is not finite
      */
-    public PieceWiseLinearOffset2d(final Map<Double, Double> data) throws IllegalArgumentException
+    public PieceWiseLinearOffset2d(final Map<Double, Double> data)
     {
-        Throw.when(data == null || data.isEmpty(), IllegalArgumentException.class, "Input data is empty or null.");
+        Throw.when(data == null || data.isEmpty(), IllegalArgumentException.class, "Input data is empty or null");
         for (Entry<Double, Double> entry : data.entrySet())
         {
             Double key = entry.getKey();
@@ -69,7 +70,7 @@ public class PieceWiseLinearOffset2d implements Iterable<Double>
             Throw.when(1 / key < 0, IllegalArgumentException.class, "Fractional length data may not contain -0.0 fraction");
             Double value = entry.getValue();
             Throw.whenNull(value, "value in provided map may not be null");
-            Throw.when(!Double.isFinite(value), IllegalArgumentException.class, "values must be finite (got {})", value);
+            Throw.when(!Double.isFinite(value), IllegalArgumentException.class, "values must be finite (got %f)", value);
             Throw.when(this.data.get(key) != null, IllegalArgumentException.class, "Duplicate fraction is not permitted");
             this.data.put(key, value);
         }
@@ -79,7 +80,7 @@ public class PieceWiseLinearOffset2d implements Iterable<Double>
      * Returns the data at given fractional length. If only data beyond the fractional length is available, the first available
      * value is returned. If only data before the fractional length is available, the last available value is returned.
      * Otherwise data is linearly interpolated.
-     * @param fractionalLength fractional length, may be outside range [0 ... 1].
+     * @param fractionalLength fractional length, may be outside range [0, 1].
      * @return interpolated or extended value.
      */
     public double get(final double fractionalLength)
@@ -105,7 +106,7 @@ public class PieceWiseLinearOffset2d implements Iterable<Double>
 
     /**
      * Returns the derivative of the data with respect to fractional length.
-     * @param fractionalLength fractional length, may be outside range [0 ... 1].
+     * @param fractionalLength fractional length, may be outside range [0, 1].
      * @return derivative of the data with respect to fractional length.
      */
     public double getDerivative(final double fractionalLength)
@@ -129,8 +130,9 @@ public class PieceWiseLinearOffset2d implements Iterable<Double>
     }
 
     /**
-     * Returns the fractional lengths in the underlying data.
-     * @return fractional lengths in the underlying data.
+     * Returns the fractional lengths in the underlying data. TODO get rid of this expensive method (callers should be rewritten
+     * to use the <code>iterator()</code>)
+     * @return fractional lengths in the underlying data
      */
     public ImmutableNavigableSet<Double> getFractionalLengths()
     {
@@ -138,8 +140,9 @@ public class PieceWiseLinearOffset2d implements Iterable<Double>
     }
 
     /**
-     * Returns the values in the underlying data.
-     * @return values in the underlying data.
+     * Returns the values in the underlying data. TODO get rid of this method. Let callers use the iterator and the
+     * <code>get()</code> method.
+     * @return values in the underlying data
      */
     public ImmutableSet<Double> getValues()
     {
@@ -148,7 +151,7 @@ public class PieceWiseLinearOffset2d implements Iterable<Double>
 
     /**
      * Returns fractional lengths in array form, including 0.0 and 1.0.
-     * @return fractional lengths.
+     * @return fractional lengths
      */
     public double[] getFractionalLengthsAsArray()
     {
@@ -163,8 +166,9 @@ public class PieceWiseLinearOffset2d implements Iterable<Double>
     }
 
     /**
-     * Returns fractional lengths in array form, including values at 0.0 and 1.0.
-     * @return fractional lengths.
+     * Returns fractional lengths in array form, including values at 0.0 and 1.0. TODO get rid of this method. Let callers use
+     * the iterator and the <code>get()</code> method.
+     * @return fractional lengths
      */
     public double[] getValuesAsArray()
     {
@@ -203,10 +207,10 @@ public class PieceWiseLinearOffset2d implements Iterable<Double>
      * Create FractionalLengthData.
      * @param data fractional length - value pairs. Fractional lengths do not need to be in order.
      * @return fractional length data.
-     * @throws IllegalArgumentException when the number of input values is not even or 0.
-     * @throws IllegalArgumentException when a fractional value is not in the range [0 ... 1].
+     * @throws IllegalArgumentException when the number of input values is not even or 0, or when a fractional value is not in
+     *             the range [0, 1].
      */
-    public static PieceWiseLinearOffset2d of(final double... data) throws IllegalArgumentException
+    public static PieceWiseLinearOffset2d of(final double... data)
     {
         return new PieceWiseLinearOffset2d(data);
     }

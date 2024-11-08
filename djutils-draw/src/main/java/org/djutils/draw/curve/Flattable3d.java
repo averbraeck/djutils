@@ -19,22 +19,9 @@ import org.djutils.draw.point.Point3d;
 interface Flattable3d extends Flattable<Flattener3d, PolyLine3d, Point3d, Direction3d>
 {
 
-    /**
-     * Returns the point at the given fraction. The fraction may represent any parameter, such as <i>t</i> in a B&eacute;zier
-     * curve, <i>s</i> in a Clothoid, or simply the fraction of length.
-     * @param fraction double; the fraction
-     * @return Point3d; the point at the given fraction
-     */
     @Override
     Point3d getPoint(double fraction);
 
-    /**
-     * Returns the direction at the given fraction. The fraction may represent any parameter, such as <i>t</i> in a
-     * B&eacute;zier curve, <i>s</i> in a Clothoid, or simply the fraction of length. The default implementation performs a
-     * numerical approach by looking at the direction between the points at fraction, and a point 1e-6 away.
-     * @param fraction double; the fraction
-     * @return double; the direction at the given fraction
-     */
     @Override
     default Direction3d getDirection(final double fraction)
     {

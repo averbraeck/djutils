@@ -1,6 +1,5 @@
 package org.djutils.draw.point;
 
-import java.awt.geom.Point2D;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
@@ -44,12 +43,13 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param z double; the z coordinate
-     * @throws IllegalArgumentException when x or y or z is NaN
+     * @throws ArithmeticException when <code>x</code> or <code>y</code> or <code>z</code> is <code>NaN</code>
      */
     public Point3d(final double x, final double y, final double z)
     {
-        Throw.when(Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z), IllegalArgumentException.class,
-                "Coordinate must be a number (not NaN)");
+        Throw.whenNaN(x, "x");
+        Throw.whenNaN(y, "y");
+        Throw.whenNaN(z, "z");
         this.x = x;
         this.y = y;
         this.z = z;
@@ -58,8 +58,9 @@ public class Point3d implements Drawable3d, Point<Point3d>
     /**
      * Create a new Point3d from x, y and z coordinates provided as values in a double array.
      * @param xyz double[]; the x, y and z coordinates
-     * @throws NullPointerException when xyz is null
-     * @throws IllegalArgumentException when the length of xyz is not 3, or a coordinate is NaN
+     * @throws NullPointerException when <code>xyz</code> is <code>null</code>
+     * @throws IllegalArgumentException when the length of <code>xyz</code> is not 3
+     * @throws ArithmeticException when <code>xyz</code> contains a <code>NaN</code> value
      */
     public Point3d(final double[] xyz) throws NullPointerException, IllegalArgumentException
     {
@@ -70,13 +71,13 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * Create a new Point3d from x, y stored in a java.awt.geom.Point2D and double z.
      * @param point Point2d; a java.awt.geom.Point2D
      * @param z double; the z coordinate
-     * @throws NullPointerException when point is null
-     * @throws IllegalArgumentException when z is NaN
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
+     * @throws ArithmeticException when <code>z</code> is <code>NaN</code>
      */
-    public Point3d(final Point2d point, final double z) throws NullPointerException, IllegalArgumentException
+    public Point3d(final Point2d point, final double z)
     {
         Throw.whenNull(point, "point");
-        Throw.when(Double.isNaN(z), IllegalArgumentException.class, "Coordinate must be a number (not NaN)");
+        Throw.whenNaN(z, "z");
         this.x = point.x;
         this.y = point.y;
         this.z = z;
@@ -84,17 +85,18 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Create an immutable point from x, y obtained from a AWT Point2D and double z.
-     * @param point Point2D; an AWT Point2D
+     * @param point Point2D; a java.awt.geom.Point2D
      * @param z double; the z coordinate
-     * @throws NullPointerException when point is null
-     * @throws IllegalArgumentException when point has a NaN coordinate, or z is NaN
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
+     * @throws ArithmeticException when <code>point</code> has a <code>NaN</code> coordinate, or <code>z</code> is
+     *             <code>NaN</code>
      */
-    public Point3d(final Point2D point, final double z) throws NullPointerException, IllegalArgumentException
+    public Point3d(final java.awt.geom.Point2D point, final double z)
     {
         Throw.whenNull(point, "point");
-        Throw.when(Double.isNaN(point.getX()) || Double.isNaN(point.getY()), IllegalArgumentException.class,
-                "Coordinate must be a number (not NaN)");
-        Throw.when(Double.isNaN(z), IllegalArgumentException.class, "Coordinate must be a number (not NaN)");
+        Throw.whenNaN(point.getX(), "point.getX()");
+        Throw.whenNaN(point.getY(), "point.getY()");
+        Throw.whenNaN(z, "z");
         this.x = point.getX();
         this.y = point.getY();
         this.z = z;
@@ -104,11 +106,12 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * Throw an IllegalArgumentException if the length of the provided array is not three.
      * @param xyz double[]; the provided array
      * @return double[]; the provided array
-     * @throws IllegalArgumentException when length of xyz is not three
+     * @throws NullPointerException when <code>xyz</code> is <code>null</code>
+     * @throws IllegalArgumentException when length of <code>xyz</code> is not 3
      */
-    private static double[] checkLengthIsThree(final double[] xyz) throws IllegalArgumentException
+    private static double[] checkLengthIsThree(final double[] xyz)
     {
-        Throw.when(xyz.length != 3, IllegalArgumentException.class, "Length of xy-array must be 2");
+        Throw.when(xyz.length != 3, IllegalArgumentException.class, "Length of xyz-array must be 3");
         return xyz;
     }
 
@@ -169,38 +172,39 @@ public class Point3d implements Drawable3d, Point<Point3d>
     }
 
     /**
-     * Return a new Point3d with a translation by the provided dx and dy.
-     * @param dx double; the x translation
-     * @param dy double; the y translation
-     * @return Point3D; a new point with the translated coordinates
-     * @throws IllegalArgumentException when dx, or dy is NaN
+     * Return a new Point3d with a translation by the provided dX and dY and preserved z value.
+     * @param dX double; the x translation
+     * @param dY double; the y translation
+     * @return Point3D; a new point with the translated coordinates and the same <code>z</code> value
+     * @throws ArithmeticException when <code>dX</code>, or <code>dY</code> is <code>NaN</code>
      */
-    public Point3d translate(final double dx, final double dy) throws IllegalArgumentException
+    public Point3d translate(final double dX, final double dY) throws ArithmeticException
     {
-        Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class,
-                "Translation must be number (not NaN)");
-        return new Point3d(this.x + dx, this.y + dy, this.z);
+        Throw.whenNaN(dX, "dX");
+        Throw.whenNaN(dY, "dY");
+        return new Point3d(this.x + dX, this.y + dY, this.z);
     }
 
     /**
      * Return a new Point3d with a translation by the provided dx, dy and dz.
-     * @param dx double; the x translation
-     * @param dy double; the y translation
-     * @param dz double; the z translation
+     * @param dX double; the x translation
+     * @param dY double; the y translation
+     * @param dZ double; the z translation
      * @return Point3d; a new point with the translated coordinates
-     * @throws IllegalArgumentException when dx, dy, or dz is NaN
+     * @throws ArithmeticException when <code>dX</code>, <code>dY</code>, or <code>dZ</code> is <code>NaN</code>
      */
-    public Point3d translate(final double dx, final double dy, final double dz) throws IllegalArgumentException
+    public Point3d translate(final double dX, final double dY, final double dZ)
     {
-        Throw.when(Double.isNaN(dx) || Double.isNaN(dy) || Double.isNaN(dz), IllegalArgumentException.class,
-                "dx, dy and dz must be numbers (not NaN)");
-        return new Point3d(this.x + dx, this.y + dy, this.z + dz);
+        Throw.whenNaN(dX, "dX");
+        Throw.whenNaN(dY, "dY");
+        Throw.whenNaN(dZ, "dZ");
+        return new Point3d(this.x + dX, this.y + dY, this.z + dZ);
     }
 
     @Override
-    public Point3d scale(final double factor) throws IllegalArgumentException
+    public Point3d scale(final double factor)
     {
-        Throw.when(Double.isNaN(factor), IllegalArgumentException.class, "factor must be a number (not NaN)");
+        Throw.whenNaN(factor, "factor");
         return new Point3d(this.x * factor, this.y * factor, this.z * factor);
     }
 
@@ -228,7 +232,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
     public Point3d interpolate(final Point3d point, final double fraction)
     {
         Throw.whenNull(point, "point");
-        Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
+        Throw.whenNaN(fraction, "fraction");
         return new Point3d((1.0 - fraction) * this.x + fraction * point.x, (1.0 - fraction) * this.y + fraction * point.y,
                 (1.0 - fraction) * this.z + fraction * point.z);
 
@@ -263,7 +267,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * Return the direction to another Point3d.
      * @param otherPoint Point3d; the other point
      * @return Direction3d; the direction to the other point in Radians (towards infinite X is 0; towards infinite Y is &pi; /
-     *         2; etc.). If the points are identical; this method returns NaN.
+     *         2; etc.). If the points are identical; this method returns <code>NaN</code>.
      */
     public Direction3d directionTo(final Point3d otherPoint)
     {
@@ -288,18 +292,21 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * @param p2X double; the x coordinate of the second point on the line
      * @param p2Y double; the y coordinate of the second point on the line
      * @param p2Z double; the z coordinate of the second point on the line
-     * @param lowLimitHandling Boolean; controls handling of results that lie before the first point of the line. If null; this
-     *            method returns null; else if true; this method returns (p1X,p1Y); else (lowLimitHandling is false); this
-     *            method will return the closest point on the line
-     * @param highLimitHandling Boolean; controls the handling of results that lie beyond the second point of the line. If null;
-     *            this method returns null; else if true; this method returns (p2X,p2Y); else (highLimitHandling is false); this
-     *            method will return the closest point on the line
-     * @return Point3d; the closest point on the line after applying the indicated limit handling; so the result can be null
-     * @throws DrawRuntimeException when any of the arguments is NaN
+     * @param lowLimitHandling Boolean; controls handling of results that lie before the first point of the line. If
+     *            <code>null</code>; this method returns <code>null</code>; else if <code>true</code>; this method returns
+     *            (p1X,p1Y); else (lowLimitHandling is <code>false</code>); this method will return the closest point on the
+     *            line
+     * @param highLimitHandling Boolean; controls the handling of results that lie beyond the second point of the line. If
+     *            <code>null</code>; this method returns <code>null</code>; else if <code>true</code>; this method returns
+     *            (p2X,p2Y); else (highLimitHandling is <code>false</code>); this method will return the closest point on the
+     *            line
+     * @return Point3d; the closest point on the line after applying the indicated limit handling; so the result can be
+     *         <code>null</code>
+     * @throws ArithmeticException when any of the arguments is <code>NaN</code>
      */
     @SuppressWarnings("checkstyle:parameternumber")
     public Point3d closestPointOnLine(final double p1X, final double p1Y, final double p1Z, final double p2X, final double p2Y,
-            final double p2Z, final Boolean lowLimitHandling, final Boolean highLimitHandling) throws DrawRuntimeException
+            final double p2Z, final Boolean lowLimitHandling, final Boolean highLimitHandling)
     {
         double fraction = fractionalPositionOnLine(p1X, p1Y, p1Z, p2X, p2Y, p2Z, lowLimitHandling, highLimitHandling);
         if (Double.isNaN(fraction))
@@ -323,26 +330,26 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * @param p2Y double; the y coordinate of the second point on the line
      * @param p2Z double; the z coordinate of the second point on the line
      * @param lowLimitHandling Boolean; controls handling of results that lie before the first point of the line. If null; this
-     *            method returns NaN; else if true; this method returns 0.0; else (lowLimitHandling is false); this results &lt;
-     *            0.0 are returned
+     *            method returns <code>NaN</code>; else if <code>true</code>; this method returns 0.0; else (lowLimitHandling is
+     *            false); this results &lt; 0.0 are returned
      * @param highLimitHandling Boolean; controls the handling of results that lie beyond the second point of the line. If null;
-     *            this method returns NaN; else if true; this method returns 1.0; else (highLimitHandling is false); results
-     *            &gt; 1.0 are returned
+     *            this method returns <code>NaN</code>; else if <code>true</code>; this method returns 1.0; else
+     *            (highLimitHandling is <code>false</code>); results &gt; 1.0 are returned
      * @return double; the fractional position of the closest point on the line. Results within the range 0.0 .. 1.0 are always
      *         returned as is.. A result &lt; 0.0 is subject to lowLimitHandling. A result &gt; 1.0 is subject to
      *         highLimitHandling
-     * @throws DrawRuntimeException when any of the arguments is NaN
+     * @throws DrawRuntimeException when any of the arguments is <code>NaN</code>
      */
     @SuppressWarnings("checkstyle:parameternumber")
     public double fractionalPositionOnLine(final double p1X, final double p1Y, final double p1Z, final double p2X,
             final double p2Y, final double p2Z, final Boolean lowLimitHandling, final Boolean highLimitHandling)
-            throws DrawRuntimeException
     {
         double dX = p2X - p1X;
         double dY = p2Y - p1Y;
         double dZ = p2Z - p1Z;
-        Throw.when(Double.isNaN(dX) || Double.isNaN(dY) || Double.isNaN(dZ), DrawRuntimeException.class,
-                "NaN values not permitted");
+        Throw.whenNaN(dX, "dX");
+        Throw.whenNaN(dY, "dY");
+        Throw.whenNaN(dZ, "dZ");
         if (0 == dX && 0 == dY && 0 == dZ)
         {
             return 0.0;
@@ -384,19 +391,18 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * @param p2X double; the x coordinate of the end point of the line segment
      * @param p2Y double; the y coordinate of the end point of the line segment
      * @param p2Z double; the y coordinate of the end point of the line segment
-     * @return P; either <cite>segmentPoint1</cite>, or <cite>segmentPoint2</cite> or a new Point2d that lies somewhere in
+     * @return P; either <code>segmentPoint1</code>, or <code>segmentPoint2</code> or a new Point2d that lies somewhere in
      *         between those two.
-     * @throws DrawRuntimeException when any of the parameters is NaN
+     * @throws ArithmeticException when any of the parameters is <code>NaN</code>
      */
     public final Point3d closestPointOnSegment(final double p1X, final double p1Y, final double p1Z, final double p2X,
-            final double p2Y, final double p2Z) throws DrawRuntimeException
+            final double p2Y, final double p2Z)
     {
         return closestPointOnLine(p1X, p1Y, p1Z, p2X, p2Y, p2Z, true, true);
     }
 
     @Override
     public final Point3d closestPointOnLine(final Point3d linePoint1, final Point3d linePoint2)
-            throws NullPointerException, DrawRuntimeException
     {
         Throw.whenNull(linePoint1, "linePoint1");
         Throw.whenNull(linePoint2, "linePoint2");
@@ -417,7 +423,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * @throws DrawRuntimeException when the points on the line are identical
      */
     public final Point3d closestPointOnLine(final double p1X, final double p1Y, final double p1Z, final double p2X,
-            final double p2Y, final double p2Z) throws DrawRuntimeException
+            final double p2Y, final double p2Z)
     {
         Throw.when(p1X == p2X && p1Y == p2Y && p1Z == p2Z, DrawRuntimeException.class, "degenerate line not allowed");
         return closestPointOnLine(p1X, p1Y, p1Z, p2X, p2Y, p2Z, false, false);
@@ -436,9 +442,9 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * Return the direction to another point, in radians, ignoring the z-coordinate.
      * @param otherPoint Point3d; the other point
      * @return double; the direction of the projection of the point in the x-y plane to another point, in radians
-     * @throws NullPointerException when <code>point</code> is null
+     * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      */
-    final double horizontalDirection(final Point3d otherPoint) throws NullPointerException
+    final double horizontalDirection(final Point3d otherPoint)
     {
         Throw.whenNull(otherPoint, "otherPoint");
         return Math.atan2(otherPoint.y - this.y, otherPoint.x - this.x);
@@ -448,9 +454,9 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * Return the direction with respect to the Z axis to another point, in radians.
      * @param otherPoint Point3d; the other point
      * @return double; the direction with respect to the Z axis to another point, in radians
-     * @throws NullPointerException when <code>point</code> is null
+     * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      */
-    final double verticalDirection(final Point3d otherPoint) throws NullPointerException
+    final double verticalDirection(final Point3d otherPoint)
     {
         Throw.whenNull(otherPoint, "otherPoint");
         return Math.atan2(Math.hypot(otherPoint.y - this.y, otherPoint.x - this.x), otherPoint.z - this.z);
@@ -460,7 +466,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * Return the squared distance between the coordinates of this point and the provided point, ignoring the z-coordinate.
      * @param otherPoint Point3d; the other point
      * @return double; the squared distance between this point and the other point, ignoring the z-coordinate
-     * @throws NullPointerException when point is null
+     * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      */
     final double horizontalDistanceSquared(final Point3d otherPoint)
     {
@@ -474,7 +480,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * Return the Euclidean distance between this point and the provided point, ignoring the z-coordinate.
      * @param otherPoint Point3d; the other point
      * @return double; the Euclidean distance between this point and the other point, ignoring the z-coordinate
-     * @throws NullPointerException when point is null
+     * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      */
     final double horizontalDistance(final Point3d otherPoint)
     {

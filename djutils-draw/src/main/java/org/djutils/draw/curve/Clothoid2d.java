@@ -10,10 +10,10 @@ import org.djutils.exceptions.Try;
 /**
  * Continuous definition of a clothoid in 2d. The following definitions are available:
  * <ul>
- * <li>A clothoid between two <i>DirectedPoint2d</i>s.</li>
- * <li>A clothoid originating from a <i>DirectedPoint2d</i> with start curvature, end curvature, and <i>length</i>
+ * <li>A clothoid between two <code>DirectedPoint2d</code>s.</li>
+ * <li>A clothoid originating from a <code>DirectedPoint2d</code> with start curvature, end curvature, and <code>length</code>
  * specified.</li>
- * <li>A clothoid originating from a <i>DirectedPoint2d</i> with start curvature, end curvature, and <i>A-value</i>
+ * <li>A clothoid originating from a <code>DirectedPoint2d</code> with start curvature, end curvature, and <code>A-value</code>
  * specified.</li>
  * </ul>
  * This class is based on:
@@ -113,15 +113,16 @@ public class Clothoid2d implements Curve2d, OffsetFlattable2d
      * If the points approximate a straight line or circle, with a tolerance of up 1/10th of a degree, those respective lines
      * are created. The numerical approximation of the underlying Fresnel integral is different from the paper. See
      * {@code Clothoid.fresnel()}.
-     * @param startPoint start point.
-     * @param endPoint end point.
+     * @param startPoint start point
+     * @param endPoint end point
+     * @throws NullPointerException when <code>startPoint</code>, or <code>endPoint</code> is <code>null</code>
      * @see <a href="https://www.sciencedirect.com/science/article/pii/S0377042713006286">Connor and Krivodonova (2014)</a>
      * @see <a href="https://www.sciencedirect.com/science/article/pii/S0377042704000925">Waltona and Meek (2009)</a>
      */
     public Clothoid2d(final DirectedPoint2d startPoint, final DirectedPoint2d endPoint)
     {
-        Throw.whenNull(startPoint, "Start point may not be null.");
-        Throw.whenNull(endPoint, "End point may not be null.");
+        Throw.whenNull(startPoint, "startPoint");
+        Throw.whenNull(endPoint, "endPoint");
         this.startPoint = startPoint;
         this.endPoint = endPoint;
 
@@ -255,14 +256,16 @@ public class Clothoid2d implements Curve2d, OffsetFlattable2d
 
     /**
      * Create clothoid from one point based on curvature and A-value.
-     * @param startPoint start point.
-     * @param a A-value.
-     * @param startCurvature start curvature.
-     * @param endCurvature end curvature;
+     * @param startPoint start point
+     * @param a A-value
+     * @param startCurvature start curvature
+     * @param endCurvature end curvature
+     * @throws NullPointerException when <code>startPoint</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>a &le; 0.0</code>
      */
     public Clothoid2d(final DirectedPoint2d startPoint, final double a, final double startCurvature, final double endCurvature)
     {
-        Throw.whenNull(startPoint, "Start point may not be null.");
+        Throw.whenNull(startPoint, "startPoint");
         Throw.when(a <= 0.0, IllegalArgumentException.class, "A value must be above 0.");
         this.startPoint = startPoint;
         // Scale 'a', due to parameter conversion between C(alpha)/S(alpha) and C(t)/S(t); t = sqrt(2*alpha/pi).
@@ -323,6 +326,8 @@ public class Clothoid2d implements Curve2d, OffsetFlattable2d
      * @param startCurvature start curvature.
      * @param endCurvature end curvature;
      * @return clothoid based on curvature and length.
+     * @throws NullPointerException when <code>startPoint</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>length &le; 0.0</code>
      */
     public static Clothoid2d withLength(final DirectedPoint2d startPoint, final double length, final double startCurvature,
             final double endCurvature)
@@ -334,8 +339,8 @@ public class Clothoid2d implements Curve2d, OffsetFlattable2d
 
     /**
      * Performs alpha to t variable change.
-     * @param alpha alpha value, must be positive.
-     * @return t value (length along the Fresnel integral, also known as x).
+     * @param alpha alpha value, must be positive
+     * @return t value (length along the Fresnel integral, also known as x)
      */
     private static double alphaToT(final double alpha)
     {
@@ -500,9 +505,9 @@ public class Clothoid2d implements Curve2d, OffsetFlattable2d
 
     /**
      * Returns a point on the clothoid at a fraction of curvature along the clothoid.
-     * @param fraction fraction of curvature along the clothoid.
-     * @param offset offset relative to radius.
-     * @return point on the clothoid at a fraction of curvature along the clothoid.
+     * @param fraction fraction of curvature along the clothoid
+     * @param offset offset relative to radius
+     * @return point on the clothoid at a fraction of curvature along the clothoid
      */
     private Point2d getPoint(final double fraction, final double offset)
     {
@@ -559,8 +564,8 @@ public class Clothoid2d implements Curve2d, OffsetFlattable2d
 
     /**
      * Returns the direction at given alpha.
-     * @param alpha alpha.
-     * @return direction at given alpha.
+     * @param alpha alpha
+     * @return direction at given alpha
      */
     private double getDirectionForAlpha(final double alpha)
     {
@@ -592,7 +597,7 @@ public class Clothoid2d implements Curve2d, OffsetFlattable2d
     @Override
     public PolyLine2d toPolyLine(final OffsetFlattener2d flattener, final PieceWiseLinearOffset2d offsets)
     {
-        Throw.whenNull(offsets, "Offsets may not be null.");
+        Throw.whenNull(offsets, "offsets");
         if (this.straight != null)
         {
             return this.straight.toPolyLine(flattener, offsets);
@@ -614,7 +619,7 @@ public class Clothoid2d implements Curve2d, OffsetFlattable2d
     /**
      * Returns whether the shape was applied as a Clothoid, an Arc, or as a Straight, depending on start and end position and
      * direction.
-     * @return "Clothoid", "Arc" or "Straight".
+     * @return "Clothoid", "Arc" or "Straight"
      */
     public String getAppliedShape()
     {
@@ -931,10 +936,10 @@ final class Fresnel
 
     /**
      * Evaluate numerator or denominator of rational approximation.
-     * @param t value along the clothoid.
-     * @param coef rational approximation coefficients.
-     * @param sign sign of exponent, +1 for Cartesian rational approximation, -1 for polar approximation.
-     * @return numerator or denominator of rational approximation.
+     * @param t value along the clothoid
+     * @param coef rational approximation coefficients
+     * @param sign sign of exponent, +1 for Cartesian rational approximation, -1 for polar approximation
+     * @return numerator or denominator of rational approximation
      */
     private static double ratioEval(final double t, final double[] coef, final double sign)
     {

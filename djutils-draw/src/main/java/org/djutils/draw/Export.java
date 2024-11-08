@@ -35,6 +35,7 @@ public final class Export
      * Convert a LineSegment2d to Peter's plot format.
      * @param lineSegment LineSegment2d; the line segment to convert
      * @return String; the line segment in Peter's plot format
+     * @throws NullPointerException when <code>lineSegment</code> is <code>null</code>
      */
     public static String toPlot(final LineSegment2d lineSegment)
     {
@@ -46,6 +47,7 @@ public final class Export
      * Convert a PolyLine2d to Peter's plot format.
      * @param polyLine PolyLine2d; the polyline to convert
      * @return String; the polyline in Peter's plot format
+     * @throws NullPointerException when <code>polyLine</code> is <code>null</code>
      */
     public static String toPlot(final PolyLine2d polyLine)
     {
@@ -63,6 +65,7 @@ public final class Export
      * Convert a Polygon2d into Peter's plot format.
      * @param polygon Polygon2d; the polygon to convert
      * @return String; the polygon in Peter's plot format
+     * @throws NullPointerException when <code>polygon</code> is <code>null</code>
      */
     public static String toPlot(final Polygon2d polygon)
     {
@@ -81,6 +84,7 @@ public final class Export
      * Convert a LineSegment2d into something that a TSV parser can handle.
      * @param lineSegment LineSegment2d; the line segment to convert
      * @return String; the line segment in TSV format
+     * @throws NullPointerException when <code>lineSegment</code> is <code>null</code>
      */
     public static String toTsv(final LineSegment2d lineSegment)
     {
@@ -91,6 +95,7 @@ public final class Export
      * Convert a PolyLine2d into something that a TSV parser can handle.
      * @param polyLine PolyLine2d; the polyline to convert
      * @return String; the polyline in TSV format
+     * @throws NullPointerException when <code>polyLine</code> is <code>null</code>
      */
     public static String toTsv(final PolyLine2d polyLine)
     {
@@ -106,6 +111,7 @@ public final class Export
      * Convert a Polygon2d into something that a TSV parser can handle.
      * @param polygon Polygon2d; the polygon to convert
      * @return String; the polygon in TSV format
+     * @throws NullPointerException when <code>polygon</code> is <code>null</code>
      */
     public static String toTsv(final Polygon2d polygon)
     {
@@ -122,6 +128,7 @@ public final class Export
      * Convert a LineSegment3d into something that a TSV parser can handle.
      * @param lineSegment LineSegment3d; the line segment to convert
      * @return String; the line segment in TSV format
+     * @throws NullPointerException when <code>lineSegment</code> is <code>null</code>
      */
     public static String toTsv(final LineSegment3d lineSegment)
     {
@@ -133,6 +140,7 @@ public final class Export
      * Convert a PolyLine3d into something that a TSV parser can handle.
      * @param polyline PolyLine3d; the polyline to convert
      * @return String; the polyline in TSV format
+     * @throws NullPointerException when <code>polyline</code> is <code>null</code>
      */
     public static String toTsv(final PolyLine3d polyline)
     {
@@ -148,6 +156,7 @@ public final class Export
      * Convert a Polygon3d into something that a TSV parser can handle.
      * @param polygon Polygon3d; the polygon to convert
      * @return String; the polygon in TSV format
+     * @throws NullPointerException when <code>polygon</code> is <code>null</code>
      */
     public static String toTsv(final Polygon3d polygon)
     {

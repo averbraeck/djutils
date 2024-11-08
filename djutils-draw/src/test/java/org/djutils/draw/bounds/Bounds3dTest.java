@@ -42,9 +42,9 @@ public class Bounds3dTest
         try
         {
             new Bounds3d(Double.NaN, 0, 0, 0, 0, 0);
-            fail("Nan should have thrown an IllegalArgumentException");
+            fail("Nan should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -52,9 +52,9 @@ public class Bounds3dTest
         try
         {
             new Bounds3d(0, Double.NaN, 0, 0, 0, 0);
-            fail("Nan should have thrown an IllegalArgumentException");
+            fail("Nan should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -62,9 +62,9 @@ public class Bounds3dTest
         try
         {
             new Bounds3d(0, 0, Double.NaN, 0, 0, 0);
-            fail("Nan should have thrown an IllegalArgumentException");
+            fail("Nan should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -72,9 +72,9 @@ public class Bounds3dTest
         try
         {
             new Bounds3d(0, 0, 0, Double.NaN, 0, 0);
-            fail("Nan should have thrown an IllegalArgumentException");
+            fail("Nan should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -82,9 +82,9 @@ public class Bounds3dTest
         try
         {
             new Bounds3d(0, 0, 0, 0, Double.NaN, 0);
-            fail("Nan should have thrown an IllegalArgumentException");
+            fail("Nan should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -92,9 +92,9 @@ public class Bounds3dTest
         try
         {
             new Bounds3d(0, 0, 0, 0, 0, Double.NaN);
-            fail("Nan should have thrown an IllegalArgumentException");
+            fail("Nan should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -104,7 +104,7 @@ public class Bounds3dTest
             new Bounds3d(2, -2, 0, 0, 0, 0);
             fail("Negative x-range should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -114,7 +114,7 @@ public class Bounds3dTest
             new Bounds3d(0, 0, 2, -2, 0, 0);
             fail("Negative y-range should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -124,7 +124,7 @@ public class Bounds3dTest
             new Bounds3d(0, 0, 0, 0, 2, -2);
             fail("Negative z-range should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -134,7 +134,7 @@ public class Bounds3dTest
             new Bounds3d(new Drawable3d[] {});
             fail("Empty array should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -150,9 +150,9 @@ public class Bounds3dTest
         try
         {
             new Bounds3d(Double.NaN, 0, 0);
-            fail("Nan should have thrown an IllegalArgumentException");
+            fail("Nan should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -160,9 +160,9 @@ public class Bounds3dTest
         try
         {
             new Bounds3d(0, Double.NaN, 0);
-            fail("Nan should have thrown an IllegalArgumentException");
+            fail("Nan should have thrown an IllegalArgumenArithmeticExceptiontException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -170,9 +170,9 @@ public class Bounds3dTest
         try
         {
             new Bounds3d(0, 0, Double.NaN);
-            fail("Nan should have thrown an IllegalArgumentException");
+            fail("Nan should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -182,7 +182,7 @@ public class Bounds3dTest
             new Bounds3d(-3, 0, 0);
             fail("Negative x-range should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -192,7 +192,7 @@ public class Bounds3dTest
             new Bounds3d(0, -3, 0);
             fail("Negative y-range should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -202,7 +202,7 @@ public class Bounds3dTest
             new Bounds3d(0, 0, -3);
             fail("Negative z-range should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -441,9 +441,9 @@ public class Bounds3dTest
         try
         {
             bb.contains(Double.NaN, 0, 0);
-            fail("NaN should have thrown an IllegalArgumentException");
+            fail("NaN should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -451,9 +451,9 @@ public class Bounds3dTest
         try
         {
             bb.contains(0, Double.NaN, 0);
-            fail("NaN should have thrown an IllegalArgumentException");
+            fail("NaN should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -461,9 +461,9 @@ public class Bounds3dTest
         try
         {
             bb.contains(0, 0, Double.NaN);
-            fail("NaN should have thrown an IllegalArgumentException");
+            fail("NaN should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -478,7 +478,7 @@ public class Bounds3dTest
             bb.covers((Bounds3d) null);
             fail("Should have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -486,9 +486,9 @@ public class Bounds3dTest
         try
         {
             bb.covers(Double.NaN, 0, 0);
-            fail("Should have thrown an IllegalArgumentException");
+            fail("Should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -496,9 +496,9 @@ public class Bounds3dTest
         try
         {
             bb.covers(0, Double.NaN, 0);
-            fail("Should have thrown an IllegalArgumentException");
+            fail("Should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -506,9 +506,9 @@ public class Bounds3dTest
         try
         {
             bb.covers(0, 0, Double.NaN);
-            fail("Should have thrown an IllegalArgumentException");
+            fail("Should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }

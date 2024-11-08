@@ -25,6 +25,7 @@ public interface OffsetFlattable2d extends Flattable2d
      * @param flattener OffsetFlattener
      * @param offsets offset data
      * @return PolyLine2d; approximation of this line with offset as a PolyLine2d
+     * @throws NullPointerException when <code>flattener</code>, or <code>offsets</code> is <code>null</code>
      */
     PolyLine2d toPolyLine(OffsetFlattener2d flattener, PieceWiseLinearOffset2d offsets);
 
@@ -33,7 +34,7 @@ public interface OffsetFlattable2d extends Flattable2d
      * curve, <i>s</i> in a Clothoid, or simply the fraction of length.
      * @param fraction double; the fraction
      * @param fld FractionalLengthData; provides fraction-dependent lateral offset to the point
-     * @return Point2d; the point at the given fraction
+     * @return Point2d; the point at the given <code>fraction</code>
      */
     Point2d getPoint(double fraction, PieceWiseLinearOffset2d fld);
 
@@ -43,7 +44,7 @@ public interface OffsetFlattable2d extends Flattable2d
      * numerical approach by looking at the direction between the points at fraction, and a point 1e-6 away.
      * @param fraction double; the fraction
      * @param fld FractionalLengthData; provides fraction-dependent lateral offset to the curve
-     * @return double; the direction at the given fraction
+     * @return double; the direction at the given <code>fraction</code>
      */
     default double getDirection(final double fraction, final PieceWiseLinearOffset2d fld)
     {
@@ -62,10 +63,10 @@ public interface OffsetFlattable2d extends Flattable2d
     }
 
     /**
-     * Convert a position along the curve to a t-value in the <cite>OffsetFlattableLine2d</cite> domain. For <cite>Arc</cite>
-     * and <cite>Straight</cite>, these t-values are the same. For <cite>BezierCubic</cite> they're not.
-     * @param position t-value in the <cite>FractionalLengthData</cite> domain
-     * @return double; t-value in the <cite>OffsetFlattableLine2d</cite> domain
+     * Convert a position along the curve to a t-value in the <code>OffsetFlattableLine2d</code> domain. For <code>Arc</code>
+     * and <code>Straight</code>, these t-values are the same. For <code>BezierCubic</code> they're not.
+     * @param position t-value in the <code>FractionalLengthData</code> domain
+     * @return double; t-value in the <code>OffsetFlattableLine2d</code> domain
      */
     default double getT(final double position)
     {

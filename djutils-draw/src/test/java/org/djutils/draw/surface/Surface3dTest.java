@@ -38,7 +38,7 @@ public class Surface3dTest
             new Surface3d(null);
             fail("null points should have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -46,9 +46,9 @@ public class Surface3dTest
         try
         {
             new Surface3d(new Point3d[][] {});
-            fail("empty points should have thrown a DrawRuntimeException");
+            fail("empty points should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -56,9 +56,9 @@ public class Surface3dTest
         try
         {
             new Surface3d(new Point3d[][] {{new Point3d(1, 2, 3)}});
-            fail("triangle with only one point should have thrown a DrawRuntimeException");
+            fail("triangle with only one point should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -66,9 +66,9 @@ public class Surface3dTest
         try
         {
             new Surface3d(new Point3d[][] {{new Point3d(1, 2, 3), new Point3d(4, 5, 6)}});
-            fail("triangle with only two points should have thrown a DrawRuntimeException");
+            fail("triangle with only two points should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -77,9 +77,9 @@ public class Surface3dTest
         {
             new Surface3d(new Point3d[][] {
                     {new Point3d(1, 2, 3), new Point3d(4, 5, 6), new Point3d(7, 8, 9), new Point3d(10, 11, 12)}});
-            fail("triangle with four points should have thrown a DrawRuntimeException");
+            fail("triangle with four points should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -87,9 +87,9 @@ public class Surface3dTest
         try
         {
             new Surface3d(new Point3d[][] {{new Point3d(1, 2, 3), new Point3d(4, 5, 6), new Point3d(1, 2, 3)}});
-            fail("triangle with duplicate point should have thrown a DrawRuntimeException");
+            fail("triangle with duplicate point should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -97,9 +97,9 @@ public class Surface3dTest
         try
         {
             new Surface3d(new Point3d[][] {{new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(7, 8, 9)}});
-            fail("triangle with duplicate point should have thrown a DrawRuntimeException");
+            fail("triangle with duplicate point should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -107,9 +107,9 @@ public class Surface3dTest
         try
         {
             new Surface3d(new Point3d[][] {{new Point3d(1, 2, 3), new Point3d(4, 5, 6), new Point3d(4, 5, 6)}});
-            fail("triangle with duplicate point should have thrown a DrawRuntimeException");
+            fail("triangle with duplicate point should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }

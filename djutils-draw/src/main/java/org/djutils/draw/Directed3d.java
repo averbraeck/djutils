@@ -10,8 +10,8 @@ package org.djutils.draw;
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * <p>
  * There are two naming conventions for phi and theta. Djutils draw uses neither to stay clear of this confusion. The angle from
- * the positive z-axis to the projection of the direction on the x-y-plane is named <cite>dirY</cite>. The angle from the
- * positive x-axis to the projection of the direction in the x-y-plane is named <cite>dirZ</cite>.
+ * the positive z-axis to the projection of the direction on the x-y-plane is named <code>dirY</code>. The angle from the
+ * positive x-axis to the projection of the direction in the x-y-plane is named <code>dirZ</code>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>

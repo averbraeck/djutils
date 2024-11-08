@@ -27,7 +27,7 @@ public class Transform3d implements Cloneable
      * Multiply a 4x4 matrix (stored as a 16-value array by row) with a 4-value vector.
      * @param m double[]; the matrix
      * @param v double[]; the vector
-     * @return double[4]; the result of m x v
+     * @return double[4]; the result of <code>m x v</code>
      */
     protected static double[] mulMatVec(final double[] m, final double[] v)
     {
@@ -43,7 +43,7 @@ public class Transform3d implements Cloneable
      * Multiply a 4x4 matrix (stored as a 16-value array by row) with a 3-value vector and a 1 for the 4th value.
      * @param m double[]; the matrix
      * @param v double[]; the vector
-     * @return double[3]; the result of m x (v1, v2, v3, 1), with the last value left out
+     * @return double[3]; the result of <code>m x (v1, v2, v3, 1)</code>, with the last value left out
      */
     protected static double[] mulMatVec3(final double[] m, final double[] v)
     {
@@ -59,7 +59,7 @@ public class Transform3d implements Cloneable
      * Multiply a 4x4 matrix (stored as a 16-value array by row) with another 4x4-matrix.
      * @param m1 double[]; the first matrix
      * @param m2 double[]; the second matrix
-     * @return double[16]; the result of m1 x m2
+     * @return double[16]; the result of <code>m1 x m2</code>
      */
     protected static double[] mulMatMat(final double[] m1, final double[] m2)
     {
@@ -90,7 +90,7 @@ public class Transform3d implements Cloneable
      * @param tx double; the translation value for the x-coordinates
      * @param ty double; the translation value for the y-coordinates
      * @param tz double; the translation value for the z-coordinates
-     * @return Transform3d; the new transformation matrix after applying this transform
+     * @return Transform3d; the new transformation matrix after applying the transform
      */
     public Transform3d translate(final double tx, final double ty, final double tz)
     {
@@ -106,7 +106,7 @@ public class Transform3d implements Cloneable
      * Translate coordinates by a the x, y, and z values contained in a Point. Note that to carry out multiple operations, the
      * steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @param point Point3d; the point containing the x, y, and z translation values
-     * @return Transform3d; the new transformation matrix after applying this transform
+     * @return Transform3d; the new transformation matrix after applying the transform
      */
     public Transform3d translate(final Point3d point)
     {
@@ -125,7 +125,7 @@ public class Transform3d implements Cloneable
      * @param sx double; the scale factor for the x-coordinates
      * @param sy double; the scale factor for the y-coordinates
      * @param sz double; the scale factor for the z-coordinates
-     * @return Transform3d; the new transformation matrix after applying this transform
+     * @return Transform3d; the new transformation matrix after applying the transform
      */
     public Transform3d scale(final double sx, final double sy, final double sz)
     {
@@ -141,7 +141,7 @@ public class Transform3d implements Cloneable
      * The Euler rotation around the x-axis with an angle in radians. Note that to carry out multiple operations, the steps have
      * to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @param angle double; the angle to rotate the coordinates with with around the x-axis
-     * @return Transform3d; the new transformation matrix after applying this transform
+     * @return Transform3d; the new transformation matrix after applying the transform
      */
     public Transform3d rotX(final double angle)
     {
@@ -159,7 +159,7 @@ public class Transform3d implements Cloneable
      * The Euler rotation around the y-axis with an angle in radians. Note that to carry out multiple operations, the steps have
      * to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @param angle double; the angle to rotate the coordinates with with around the y-axis
-     * @return Transform3d; the new transformation matrix after applying this transform
+     * @return Transform3d; the new transformation matrix after applying the transform
      */
     public Transform3d rotY(final double angle)
     {
@@ -177,7 +177,7 @@ public class Transform3d implements Cloneable
      * The Euler rotation around the z-axis with an angle in radians. Note that to carry out multiple operations, the steps have
      * to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
      * @param angle double; the angle to rotate the coordinates with with around the z-axis
-     * @return Transform3d; the new transformation matrix after applying this transform
+     * @return Transform3d; the new transformation matrix after applying the transform
      */
     public Transform3d rotZ(final double angle)
     {
@@ -198,7 +198,7 @@ public class Transform3d implements Cloneable
      * multiplication operates from RIGHT to LEFT.
      * @param sx double; the shear factor in the x-direction for z=1
      * @param sy double; the shear factor in the y-direction for z=1
-     * @return Transform3d; the new transformation matrix after applying this transform
+     * @return Transform3d; the new transformation matrix after applying the transform
      */
     public Transform3d shearXY(final double sx, final double sy)
     {
@@ -217,7 +217,7 @@ public class Transform3d implements Cloneable
      * multiplication operates from RIGHT to LEFT.
      * @param sy double; the shear factor in the y-direction for x=1
      * @param sz double; the shear factor in the z-direction for x=1
-     * @return Transform3d; the new transformation matrix after applying this transform
+     * @return Transform3d; the new transformation matrix after applying the transform
      */
     public Transform3d shearYZ(final double sy, final double sz)
     {
@@ -236,7 +236,7 @@ public class Transform3d implements Cloneable
      * multiplication operates from RIGHT to LEFT.
      * @param sx double; the shear factor in the y-direction for y=1
      * @param sz double; the shear factor in the z-direction for y=1
-     * @return Transform3d; the new transformation matrix after applying this transform
+     * @return Transform3d; the new transformation matrix after applying the transform
      */
     public Transform3d shearXZ(final double sx, final double sz)
     {
@@ -251,7 +251,7 @@ public class Transform3d implements Cloneable
     /**
      * The reflection of the x-coordinate, by mirroring it in the yz-plane (the plane with x=0). Note that to carry out multiple
      * operations, the steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
-     * @return Transform3d; the new transformation matrix after applying this transform
+     * @return Transform3d; the new transformation matrix after applying the transform
      */
     public Transform3d reflectX()
     {
@@ -262,7 +262,7 @@ public class Transform3d implements Cloneable
     /**
      * The reflection of the y-coordinate, by mirroring it in the xz-plane (the plane with y=0). Note that to carry out multiple
      * operations, the steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
-     * @return Transform3d; the new transformation matrix after applying this transform
+     * @return Transform3d; the new transformation matrix after applying the transform
      */
     public Transform3d reflectY()
     {
@@ -273,7 +273,7 @@ public class Transform3d implements Cloneable
     /**
      * The reflection of the z-coordinate, by mirroring it in the xy-plane (the plane with z=0). Note that to carry out multiple
      * operations, the steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
-     * @return Transform3d; the new transformation matrix after applying this transform
+     * @return Transform3d; the new transformation matrix after applying the transform
      */
     public Transform3d reflectZ()
     {

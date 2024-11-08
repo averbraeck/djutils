@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.djutils.base.AngleUtil;
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.OrientedPoint3d;
 import org.djutils.draw.point.Point3d;
@@ -77,9 +76,9 @@ public class Ray3dTest
         try
         {
             new Ray3d(1, 2, 3, Double.NaN, 0);
-            fail("NaN for dirY should have thrown a DrawRuntimeException");
+            fail("NaN for dirY should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -87,9 +86,9 @@ public class Ray3dTest
         try
         {
             new Ray3d(1, 2, 3, 0, Double.NaN);
-            fail("NaN for dirZ should have thrown a DrawRuntimeException");
+            fail("NaN for dirZ should have thrown a ArithmeticException");
         }
-        catch (IllegalArgumentException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -99,7 +98,7 @@ public class Ray3dTest
             new Ray3d((Point3d) null, 1, 2);
             fail("null for point should have thrown a NullPointerException");
         }
-        catch (NullPointerException dre)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -109,7 +108,7 @@ public class Ray3dTest
             new Ray3d(1, 2, 3, 1, 2, 3);
             fail("Same coordinates for through point should have thrown a DrawRuntimeException");
         }
-        catch (IllegalArgumentException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -119,7 +118,7 @@ public class Ray3dTest
             new Ray3d(1, 2, 3, new Point3d(1, 2, 3));
             fail("Same coordinates for through point should have thrown a DrawRuntimeException");
         }
-        catch (IllegalArgumentException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -129,7 +128,7 @@ public class Ray3dTest
             new Ray3d(new Point3d(1, 2, 3), 1, 2, 3);
             fail("Same coordinates for through point should have thrown a DrawRuntimeException");
         }
-        catch (IllegalArgumentException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -139,7 +138,7 @@ public class Ray3dTest
             new Ray3d(1, 2, 3, (Point3d) null);
             fail("null for through point should have thrown a NullPointerException");
         }
-        catch (NullPointerException dre)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -149,7 +148,7 @@ public class Ray3dTest
             new Ray3d(null, new Point3d(4, 5, 6));
             fail("null for point should have thrown a NullPointerException");
         }
-        catch (NullPointerException dre)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -159,7 +158,7 @@ public class Ray3dTest
             new Ray3d(new Point3d(1, 2, 3), null);
             fail("null for through point should have thrown a NullPointerException");
         }
-        catch (NullPointerException dre)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -385,9 +384,9 @@ public class Ray3dTest
         try
         {
             new Ray3d(1, 2, 3, 1, 0.5).getLocation(Double.NaN);
-            fail("NaN position should have thrown a DrawRuntimeException");
+            fail("NaN position should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -395,9 +394,9 @@ public class Ray3dTest
         try
         {
             new Ray3d(1, 2, 3, 1, 0.5).getLocation(-1);
-            fail("Negative position should have thrown a DrawRuntimeException");
+            fail("Negative position should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -405,9 +404,9 @@ public class Ray3dTest
         try
         {
             new Ray3d(1, 2, 3, 1, 0.5).getLocation(Double.POSITIVE_INFINITY);
-            fail("Infited position should have thrown a DrawRuntimeException");
+            fail("Infite position should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -415,9 +414,9 @@ public class Ray3dTest
         try
         {
             new Ray3d(1, 2, 3, 1, 0.5).getLocation(Double.NEGATIVE_INFINITY);
-            fail("Infinte position should have thrown a DrawRuntimeException");
+            fail("Infinte position should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -425,9 +424,9 @@ public class Ray3dTest
         try
         {
             new Ray3d(1, 2, 3, 1, 0.5).getLocationExtended(Double.POSITIVE_INFINITY);
-            fail("Infinite position should have thrown a DrawRuntimeException");
+            fail("Infinite position should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -435,9 +434,9 @@ public class Ray3dTest
         try
         {
             new Ray3d(1, 2, 3, 1, 0.5).getLocationExtended(Double.NEGATIVE_INFINITY);
-            fail("Infinite position should have thrown a DrawRuntimeException");
+            fail("Infinite position should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -445,9 +444,9 @@ public class Ray3dTest
         try
         {
             new Ray3d(1, 2, 3, 1, 0.5).getLocationExtended(Double.NaN);
-            fail("NaN position should have thrown a DrawRuntimeException");
+            fail("NaN position should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -618,9 +617,9 @@ public class Ray3dTest
         try
         {
             ray.epsilonEquals(ray, Double.NaN, 1);
-            fail("NaN epsilonCoordinate should have thrown an IllegalArgumentException");
+            fail("NaN epsilonCoordinate should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException npe)
+        catch (ArithmeticException ae)
         {
             // Ignore expected exception
         }
@@ -628,9 +627,9 @@ public class Ray3dTest
         try
         {
             ray.epsilonEquals(ray, 1, Double.NaN);
-            fail("NaN epsilonDirection should have thrown an IllegalArgumentException");
+            fail("NaN epsilonDirection should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException npe)
+        catch (ArithmeticException ae)
         {
             // Ignore expected exception
         }

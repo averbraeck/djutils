@@ -54,8 +54,9 @@ public interface Drawable<P extends Point<P>> extends Serializable, Iterable<P>
     /**
      * Produce a String describing the Drawable.
      * @param doubleFormat String; a format string (something like "%6.3f") which will be used to render every coordinate value)
-     * @param doNotIncludeClassName boolean; if true; the output of toString is <b>not</b> prefixed by the class name. This is
-     *            useful for concatenating the textual representation of lots of Drawables (e.g. an array, or a List).
+     * @param doNotIncludeClassName boolean; if <code>true</code>; the output of <code>toString</code> is <b>not</b> prefixed by
+     *            the class name. This is useful for concatenating the textual representation of lots of Drawables (e.g. an
+     *            array, or a List).
      * @return String; textual representation of the Drawable
      */
     String toString(String doubleFormat, boolean doNotIncludeClassName);
@@ -72,8 +73,9 @@ public interface Drawable<P extends Point<P>> extends Serializable, Iterable<P>
 
     /**
      * Produce a String describing the Drawable.
-     * @param doNotIncludeClassName boolean; if true; the output of toString is <b>not</b> prefixed by the class name. This is
-     *            useful for concatenating the textual representation of lots of Drawables (e.g. an array, or a List).
+     * @param doNotIncludeClassName boolean; if <code>true</code>; the output of <code>toString</code> is <b>not</b> prefixed by
+     *            the class name. This is useful for concatenating the textual representation of lots of Drawables (e.g. an
+     *            array, or a List).
      * @return String; textual representation of the Drawable
      */
     default String toString(final boolean doNotIncludeClassName)

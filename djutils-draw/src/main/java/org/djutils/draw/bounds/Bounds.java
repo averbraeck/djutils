@@ -20,25 +20,25 @@ public interface Bounds<B extends Bounds<B, P>, P extends Point<P>>
 {
     /**
      * Return the absolute lower bound for x.
-     * @return double; the absolute lower bound for x
+     * @return double; the absolute lower bound for <code>x</code>
      */
     double getMinX();
 
     /**
      * Return the absolute upper bound for x.
-     * @return double; the absolute upper bound for x
+     * @return double; the absolute upper bound for <code>x</code>
      */
     double getMaxX();
 
     /**
      * Return the absolute lower bound for y.
-     * @return double; the absolute lower bound for y
+     * @return double; the absolute lower bound for <code>y</code>
      */
     double getMinY();
 
     /**
      * Return the absolute upper bound for y.
-     * @return double; the absolute upper bound for y
+     * @return double; the absolute upper bound for <code>y</code>
      */
     double getMaxY();
 
@@ -62,60 +62,61 @@ public interface Bounds<B extends Bounds<B, P>, P extends Point<P>>
 
     /**
      * Return the mid point of this Bounds object.
-     * @return P; the mid point of this Bounds object
+     * @return P; the mid point of this <code>Bounds</code> object
      */
     P midPoint();
 
     /**
      * Check if a point is contained in this Bounds.
      * @param point P; the point
-     * @return boolean; true if the point is within this Bounds; false if the point is not within this Bounds, or on an edge of
-     *         this Bounds
-     * @throws NullPointerException when point is null
+     * @return boolean; <code>true</code> if the point is within this Bounds; <code>false</code> if the point is not within this
+     *         Bounds, or on an edge of this Bounds
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
-    boolean contains(P point) throws NullPointerException;
+    boolean contains(P point);
 
     /**
      * Check if this Bounds completely contains another Bounds. If any point of the other Bounds lies on an edge (2d) or surface
-     * (3d) of this Bounds, this method returns false.
+     * (3d) of this Bounds, this method returns <code>false</code>.
      * @param otherBounds B; the Bounds to check for complete containment within this Bounds.
-     * @return boolean; false if any point of D is on or outside one of the borders of this Bounds; true when all points of D
-     *         are contained within this Bounds.
-     * @throws NullPointerException when drawable2d is null
+     * @return boolean; <code>false</code> if any point of D is on or outside one of the borders of this Bounds;
+     *         <code>true</code> when all points of D are contained within this Bounds.
+     * @throws NullPointerException when <code>otherBounds</code> is <code>null</code>
      */
-    boolean contains(B otherBounds) throws NullPointerException;
+    boolean contains(B otherBounds);
 
     /**
      * Check if this Bounds covers or touches a point.
      * @param point P; the Point for which to check if it is covered/touched by this Bounds
      * @return boolean; whether this Bounds covers or touches the point
-     * @throws NullPointerException when point is null
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
-    boolean covers(P point) throws NullPointerException;
+    boolean covers(P point);
 
     /**
      * Check if no part of a Bounds is outside this Bounds. The edges/surfaces of this Bounds are considered inside.
      * @param otherBounds B; the Bounds for which to check if it is covered by this Bounds
      * @return boolean; whether this Bounds contains the provided Bounds, including overlapping borders
-     * @throws NullPointerException when otherBounds is null
+     * @throws NullPointerException when <code>otherBounds</code> is <code>null</code>
      */
-    boolean covers(B otherBounds) throws NullPointerException;
+    boolean covers(B otherBounds);
 
     /**
      * Return whether a Bounds is disjoint from this Bounds. Touching at an edge is <b>not</b> considered disjoint. A Bounds
      * that completely surrounds this Bounds is <b>not</b> disjoint.
      * @param otherBounds B; the other Bounds
-     * @return boolean; true if the drawable is disjoint from this Bounds, or only touches an edge; false if any point of the
-     *         other Bounds is inside this Bounds, or the other Bounds surrounds this Bounds
-     * @throws NullPointerException when bounds is null
+     * @return boolean; <code>true</code> if the drawable is disjoint from this Bounds, or only touches an edge;
+     *         <code>false</code> if any point of the other Bounds is inside this Bounds, or the other Bounds surrounds this
+     *         Bounds
+     * @throws NullPointerException when <code>otherBounds</code> is <code>null</code>
      */
-    boolean disjoint(B otherBounds) throws NullPointerException;
+    boolean disjoint(B otherBounds);
 
     /**
      * Return whether this Bounds intersects another Bounds. Touching at an edge is considered intersecting.
      * @param otherBounds B; the other Bounds
      * @return boolean; whether this bounding box/rectangle intersects the other Bounds
-     * @throws NullPointerException when otherBounds is null
+     * @throws NullPointerException when <code>otherBounds</code> is <code>null</code>
      */
     boolean intersects(B otherBounds);
 
@@ -124,8 +125,8 @@ public interface Bounds<B extends Bounds<B, P>, P extends Point<P>>
      * there is no intersection, null is returned.
      * @param otherBounds B; the other Bounds
      * @return Bounds; the intersecting Bounds of this Bounds and another Bounds. Touching at the edge is not seen as
-     *         intersecting. If not intersecting; null is returned
-     * @throws NullPointerException when otherBounds is null
+     *         intersecting. If not intersecting; <code>null</code> is returned
+     * @throws NullPointerException when <code>otherBounds</code> is <code>null</code>
      */
     B intersection(B otherBounds);
 

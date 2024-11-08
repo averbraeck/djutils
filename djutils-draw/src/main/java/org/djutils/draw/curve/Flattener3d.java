@@ -27,11 +27,6 @@ import org.djutils.exceptions.Throw;
 public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLine3d, Point3d>
 {
 
-    /**
-     * Flatten a Flattable3d into a PolyLine.
-     * @param line line function.
-     * @return PolyLine2d; flattened line.
-     */
     @Override
     default PolyLine3d flatten(final Flattable3d line)
     {
@@ -45,10 +40,10 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
      * @param prevT double; t of preceding inserted point
      * @param medianT double; t of point currently considered for insertion
      * @param nextT double; t of following inserted point
-     * @param prevPoint Point3d; point on <cite>line</cite> at <cite>prevT</cite>
-     * @param nextPoint Point3d; point on <cite>line</cite> at <cite>nextT</cite>
-     * @return boolean; <cite>true</cite> if there is an inflection point between <cite>prevT</cite> and <cite>nextT</cite>;
-     *         <cite>false</cite> if there is no inflection point between <cite>prevT</cite> and <cite>nextT</cite>
+     * @param prevPoint Point3d; point on <code>line</code> at <code>prevT</code>
+     * @param nextPoint Point3d; point on <code>line</code> at <code>nextT</code>
+     * @return boolean; <code>true</code> if there is an inflection point between <code>prevT</code> and <code>nextT</code>;
+     *         <code>false</code> if there is no inflection point between <code>prevT</code> and <code>nextT</code>
      */
     private static boolean checkZigZag(final Flattable3d line, final double prevT, final double medianT, final double nextT,
             final Point3d prevPoint, final Point3d nextPoint)
@@ -62,7 +57,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
     }
 
     /**
-     * Flattener based on number of segments.
+     * Flattener that approximates the <code>Flattable3d</code> with a specified number of segments.
      */
     class NumSegments implements Flattener3d
     {
@@ -70,8 +65,9 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
         private final int numSegments;
 
         /**
-         * Construct a NumSegments flattener.
+         * Construct a flattener that approximates the <code>Flattable2d</code> with a specified number of segments.
          * @param numSegments int; number of segments to use in the construction of the PolyLine2d.
+         * @throws IllegalArgumentException when <code>numSegments &lt; 1</code>
          */
         public NumSegments(final int numSegments)
         {
@@ -80,9 +76,9 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
         }
 
         @Override
-        public PolyLine3d flatten(final Flattable3d line)
+        public PolyLine3d flatten(final Flattable3d line) throws NullPointerException
         {
-            Throw.whenNull(line, "Line function may not be null.");
+            Throw.whenNull(line, "Line function may not be null");
             List<Point3d> points = new ArrayList<>(this.numSegments + 1);
             for (int i = 0; i <= this.numSegments; i++)
             {
@@ -94,7 +90,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
     }
 
     /**
-     * Flattener based on maximum deviation.
+     * Flattener that limits the distance between the <code>Flattable3d</code> and the <code>PolyLine3d</code>.
      */
     class MaxDeviation implements Flattener3d
     {
@@ -102,20 +98,22 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
         private final double maxDeviation;
 
         /**
-         * Construct a new MaxDeviation flattener.
+         * Construct a flattener that limits the distance between the <code>Flattable3d</code> and the <code>PolyLine3d</code>.
          * @param maxDeviation maximum deviation, must be above 0.0.
+         * @throws ArithmeticException when <code>maxDeviation</code> is <code>NaN</code>
+         * @throws IllegalArgumentException when <code>maxDeviation &le; 0.0</code>
          */
         public MaxDeviation(final double maxDeviation)
         {
-            Throw.when(maxDeviation <= 0.0 || Double.isNaN(maxDeviation), IllegalArgumentException.class,
-                    "Maximum deviation must be above 0.0 and finite");
+            Throw.whenNaN(maxDeviation, "maxDeviation");
+            Throw.when(maxDeviation <= 0.0, IllegalArgumentException.class, "Maximum deviation must be above 0.0 and finite");
             this.maxDeviation = maxDeviation;
         }
 
         @Override
-        public PolyLine3d flatten(final Flattable3d line)
+        public PolyLine3d flatten(final Flattable3d line) throws NullPointerException
         {
-            Throw.whenNull(line, "Line function may not be null.");
+            Throw.whenNull(line, "Line function may not be null");
             NavigableMap<Double, Point3d> result = new TreeMap<>();
             loadKinks(result, line);
 
@@ -154,7 +152,8 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
     }
 
     /**
-     * Flattener based on maximum deviation and maximum angle.
+     * Flattener that limits the distance <b>and</b> angle difference between the <code>Flattable3d</code> and the
+     * <code>PolyLine3d</code>.
      */
     class MaxDeviationAndAngle implements Flattener3d
     {
@@ -165,21 +164,24 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
         private final double maxAngle;
 
         /**
-         * Constructor.
-         * @param maxDeviation maximum deviation, must be above 0.0.
-         * @param maxAngle maximum angle, must be above 0.0.
+         * Construct a flattener that limits the distance <b>and</b> angle difference between the <code>Flattable3d</code> and
+         * the <code>PolyLine3d</code>.
+         * @param maxDeviation maximum deviation, must be above 0.0
+         * @param maxAngle maximum angle, must be above 0.0
+         * @throws ArithmeticException when <code>maxDeviation</code>, or <code>maxAngle</code> is <code>NaN</code>
+         * @throws IllegalArgumentException when <code>maxDeviation &le; 0.0</code>, or <code>maxAngle &le; 0.0</code>
          */
         MaxDeviationAndAngle(final double maxDeviation, final double maxAngle)
         {
-            Throw.when(maxDeviation <= 0.0 || Double.isNaN(maxDeviation), IllegalArgumentException.class,
-                    "Maximum deviation must be above 0.0 and finite");
+            Throw.whenNaN(maxDeviation, "maxDeviation");
+            Throw.when(maxDeviation <= 0.0, IllegalArgumentException.class, "Maximum deviation must be above 0.0 and finite");
             Throw.when(maxAngle <= 0.0, IllegalArgumentException.class, "Maximum angle must be above 0.0");
             this.maxDeviation = maxDeviation;
             this.maxAngle = maxAngle;
         }
 
         @Override
-        public PolyLine3d flatten(final Flattable3d line)
+        public PolyLine3d flatten(final Flattable3d line) throws NullPointerException
         {
             NavigableMap<Double, Point3d> result = new TreeMap<>();
             loadKinks(result, line);
@@ -223,7 +225,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
                     directions.put(medianT, line.getDirection(medianT));
                     iterationsAtSinglePoint++;
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t={}). Likely there is an (unreported) kink in the FlattableLine.",
+                            + "around the same point (t=%f). Likely there is an (unreported) kink in the FlattableLine.",
                             medianT);
                     continue;
                 }
@@ -247,7 +249,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
     }
 
     /**
-     * Flattener based on maximum angle.
+     * Flattener that limits the angle difference between the <code>Flattable3d</code> and the <code>PolyLine3d</code>.
      */
     class MaxAngle implements Flattener3d
     {
@@ -255,8 +257,9 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
         private final double maxAngle;
 
         /**
-         * Constructor.
-         * @param maxAngle maximum angle.
+         * Construct a flattener that limits the angle difference between the <code>Flattable3d</code> and the
+         * <code>PolyLine3d</code>.
+         * @param maxAngle maximum angle
          */
         MaxAngle(final double maxAngle)
         {
@@ -308,7 +311,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
                         System.out.println("Breakpoint here");
                     }
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t={}). Likely there is an (unreported) kink in the FlattableLine.",
+                            + "around the same point (t=%f). Likely there is an (unreported) kink in the FlattableLine.",
                             medianT);
                     continue;
                 }

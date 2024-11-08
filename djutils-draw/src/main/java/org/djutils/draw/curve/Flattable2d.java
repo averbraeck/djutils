@@ -18,13 +18,6 @@ import org.djutils.draw.point.Point2d;
 public interface Flattable2d extends Flattable<Flattener2d, PolyLine2d, Point2d, Double>
 {
 
-    /**
-     * Returns the direction at the given fraction. The fraction may represent any parameter, such as <i>t</i> in a
-     * B&eacute;zier curve, <i>s</i> in a Clothoid, or simply the fraction of length. The default implementation performs a
-     * numerical approach by looking at the direction between the points at fraction, and a point 1e-6 away.
-     * @param fraction double; the fraction
-     * @return double; the direction at the given fraction
-     */
     @Override
     default Double getDirection(final double fraction)
     {

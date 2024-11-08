@@ -119,9 +119,9 @@ public class Polygon3dTest
         try
         {
             new Polygon3d(list);
-            fail("last two points equal to first point should have thrown a DrawRuntimeException");
+            fail("last two points equal to first point should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -129,9 +129,9 @@ public class Polygon3dTest
         try
         {
             polygon.getSegment(-1);
-            fail("Negative index should have thrown a DrawRuntimeException");
+            fail("Negative index should have thrown an IndexOutOfBoundsException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IndexOutOfBoundsException e)
         {
             // Ignore expected exception
         }
@@ -139,9 +139,9 @@ public class Polygon3dTest
         try
         {
             polygon.getSegment(polygon.size());
-            fail("index equal to size (or more) should have thrown a DrawRuntimeException");
+            fail("index equal to size (or more) should have thrown an IndexOutOfBoundsException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IndexOutOfBoundsException e)
         {
             // Ignore expected exception
         }
@@ -149,9 +149,9 @@ public class Polygon3dTest
         try
         {
             new Polygon3d(new double[] {1, 2, 3}, new double[] {1, 2, 3}, new double[] {1, 2, 3, 4});
-            fail("unequal length of coordinate array should have thrown a DrawRuntimeException");
+            fail("unequal length of coordinate array should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -159,9 +159,9 @@ public class Polygon3dTest
         try
         {
             new Polygon3d(new double[] {1, 2, 3}, new double[] {1, 2, 3, 4}, new double[] {1, 2, 3});
-            fail("unequal length of coordinate array should have thrown a DrawRuntimeException");
+            fail("unequal length of coordinate array should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -169,9 +169,9 @@ public class Polygon3dTest
         try
         {
             new Polygon3d(new double[] {1, 2, 3, 4}, new double[] {1, 2, 3}, new double[] {1, 2, 3});
-            fail("unequal length of coordinate array should have thrown a DrawRuntimeException");
+            fail("unequal length of coordinate array should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -181,7 +181,7 @@ public class Polygon3dTest
             new Polygon3d(null, new double[] {1, 2, 3}, new double[] {1, 2, 3});
             fail("null for x array hould have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -191,7 +191,7 @@ public class Polygon3dTest
             new Polygon3d(new double[] {1, 2, 3}, null, new double[] {1, 2, 3});
             fail("null for x array hould have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -201,7 +201,7 @@ public class Polygon3dTest
             new Polygon3d(new double[] {1, 2, 3}, new double[] {1, 2, 3}, null);
             fail("null for x array hould have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -209,9 +209,9 @@ public class Polygon3dTest
         try
         {
             new Polygon3d(new double[] {1}, new double[] {1}, new double[] {1});
-            fail("too short coordinate array should have thrown a DrawRuntimeException");
+            fail("too short coordinate array should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -219,9 +219,9 @@ public class Polygon3dTest
         try
         {
             new Polygon3d(new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d[] {});
-            fail("too short coordinate array should have thrown a DrawRuntimeException");
+            fail("too short coordinate array should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -229,9 +229,9 @@ public class Polygon3dTest
         try
         {
             new Polygon3d(new Point3d(1, 2, 3), new Point3d(1, 2, 3), (Point3d[]) null);
-            fail("too short coordinate array should have thrown a DrawRuntimeException");
+            fail("too short coordinate array should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -240,9 +240,9 @@ public class Polygon3dTest
         {
             new Polygon3d(new Point3d(1, 2, 3), new Point3d(3, 2, 5),
                     new Point3d[] {new Point3d(1, 2, 3), new Point3d(1, 2, 3)});
-            fail("two identical points at end, matching first point should have thrown a DrawRuntimeException");
+            fail("two identical points at end, matching first point should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -252,9 +252,9 @@ public class Polygon3dTest
         try
         {
             new Polygon3d(list);
-            fail("too short list should have thrown a DrawRuntimeException");
+            fail("too short list should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -271,9 +271,9 @@ public class Polygon3dTest
         try
         {
             new Polygon3d(false, points);
-            fail("duplicate point should have thrown a DrawRuntimeException");
+            fail("duplicate point should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -284,9 +284,9 @@ public class Polygon3dTest
         try
         {
             new Polygon3d(false, list);
-            fail("duplicate point should have thrown a DrawRuntimeException");
+            fail("duplicate point should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -350,7 +350,7 @@ public class Polygon3dTest
             l22x.project();
             fail("Projecting a polygon3d that entirely projects to one point should have thrown an exception");
         }
-        catch (DrawRuntimeException dre)
+        catch (DrawRuntimeException e)
         {
             // Ignore expected exception
         }

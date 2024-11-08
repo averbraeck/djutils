@@ -51,13 +51,20 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      * @param maxY double; the upper bound for y
      * @param minZ double; the lower bound for z
      * @param maxZ double; the upper bound for z
-     * @throws IllegalArgumentException when lower bounds are larger than upper boundingBox or any bound is NaN
+     * @throws ArithmeticException when <code>minX</code>, <code>maxX</code>, <code>minY</code>,
+     *             <code>maxY</code>,<code>minZ</code>, or <code>maxZ</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when <code>minX</code> &gt; <code>maxX</code>, <code>minY</code> &gt; <code>maxY</code>,
+     *             or <code>minZ</code> &gt; <code>maxZ</code>
      */
     public Bounds3d(final double minX, final double maxX, final double minY, final double maxY, final double minZ,
             final double maxZ)
     {
-        Throw.when(Double.isNaN(minX) || Double.isNaN(maxX) || Double.isNaN(minY) || Double.isNaN(maxY) || Double.isNaN(minZ)
-                || Double.isNaN(maxZ), IllegalArgumentException.class, "Nan boundary value not permitted");
+        Throw.whenNaN(minX, "minX");
+        Throw.whenNaN(maxX, "maxX");
+        Throw.whenNaN(minY, "minY");
+        Throw.whenNaN(maxY, "maxY");
+        Throw.whenNaN(minZ, "minZ");
+        Throw.whenNaN(maxZ, "maxZ");
         Throw.when(minX > maxX || minY > maxY || minZ > maxZ, IllegalArgumentException.class,
                 "lower bound for each dimension should be less than or equal to its upper bound");
         this.minX = minX;
@@ -73,7 +80,9 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      * @param deltaX double; the deltaX value around the origin
      * @param deltaY double; the deltaY value around the origin
      * @param deltaZ double; the deltaZ value around the origin
-     * @throws IllegalArgumentException when one of the delta values is less than zero
+     * @throws ArithmeticException when <code>deltaX</code>, <code>deltaY</code>, or <code>deltaZ</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when <code>deltaX</code>, <code>deltaY</code>, or <code>deltaZ</code> &lt;
+     *             <code><0.0</code>
      */
     public Bounds3d(final double deltaX, final double deltaY, final double deltaZ)
     {
@@ -83,8 +92,8 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     /**
      * Construct a Bounds3d from some collection of points, finding the lowest and highest x and y coordinates.
      * @param points Iterator&lt;? extends Point3d&gt;; the array of points to construct a Bounds3d from
-     * @throws NullPointerException when points is null
-     * @throws IllegalArgumentException when zero points are provided
+     * @throws NullPointerException when <code>points</code> is <code>null</code>
+     * @throws IllegalArgumentException when the <code>points</code> iterator provides zero points
      */
     public Bounds3d(final Iterator<? extends Point3d> points)
     {
@@ -118,10 +127,10 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     /**
      * Construct a Bounds3d from an array of Point3d, finding the lowest and highest x, y and z coordinates.
      * @param points Point3d[]; the points to construct a Bounds3d from
-     * @throws NullPointerException when points is null
+     * @throws NullPointerException when <code>points</code> is <code>null</code>
      * @throws IllegalArgumentException when zero points are provided
      */
-    public Bounds3d(final Point3d[] points) throws NullPointerException, IllegalArgumentException
+    public Bounds3d(final Point3d[] points)
     {
         this(Arrays.stream(Throw.whenNull(points, "points")).iterator());
     }
@@ -129,7 +138,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     /**
      * Construct a Bounds3d for a Drawable3d.
      * @param drawable3d Drawable3d; any object that implements the Drawable2d interface
-     * @throws NullPointerException when area is null
+     * @throws NullPointerException when <code>drawable3d</code> is <code>null</code>
      */
     public Bounds3d(final Drawable3d drawable3d) throws NullPointerException
     {
@@ -139,10 +148,11 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     /**
      * Construct a Bounds3d for several Drawable2d objects.
      * @param drawable3d Drawable3d...; the Drawable2d objects
-     * @throws NullPointerException when the array is null, or contains a null value
-     * @throws IllegalArgumentException when the length of the array is 0
+     * @throws NullPointerException when the <code>drawable3d</code> array is <code>null</code>, or contains a <code>null</code>
+     *             value
+     * @throws IllegalArgumentException when the length of the <code>drawable3d</code> array is 0
      */
-    public Bounds3d(final Drawable3d... drawable3d) throws NullPointerException, IllegalArgumentException
+    public Bounds3d(final Drawable3d... drawable3d)
     {
         this(pointsOf(drawable3d));
     }
@@ -151,8 +161,8 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      * Return an iterator that will return all points of one or more Drawable objects.
      * @param drawable3d Drawable3d...; the Drawable objects
      * @return Iterator&lt;P&gt;; iterator that will return all points of the Drawable objects
-     * @throws NullPointerException when drawable is null, or contains a null value
-     * @throws IllegalArgumentException when drawable is empty
+     * @throws NullPointerException when <code>drawable3darray</code> is <code>null</code>
+     * @throws IllegalArgumentException when the <code>drawable3dArray</code> contains 0 elements
      */
     public static Iterator<Point3d> pointsOf(final Drawable3d... drawable3d)
     {
@@ -189,10 +199,10 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      * Verify that the array contains at least one entry.
      * @param drawable3dArray Drawable3d[]; array of Drawable2d objects
      * @return Drawable3d[]; the array
-     * @throws NullPointerException when the array is null
-     * @throws IllegalArgumentException when the array contains 0 elements
+     * @throws NullPointerException when the <code>drawable3dArray</code> is <code>null</code>
+     * @throws IllegalArgumentException when the <code>drawable3dArray</code> contains 0 elements
      */
-    static Drawable3d[] ensureHasOne(final Drawable3d[] drawable3dArray) throws NullPointerException, IllegalArgumentException
+    static Drawable3d[] ensureHasOne(final Drawable3d[] drawable3dArray)
     {
         Throw.whenNull(drawable3dArray, "drawable3dArray");
         Throw.when(drawable3dArray.length == 0, IllegalArgumentException.class, "Array must contain at least one value");
@@ -202,10 +212,11 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     /**
      * Construct a Bounds3d for a Collection of Drawable2d objects.
      * @param drawableCollection Collection&lt;Drawable2d&gt;; the collection
-     * @throws NullPointerException when the collection is null, or contains null values
-     * @throws IllegalArgumentException when the collection is empty
+     * @throws NullPointerException when the <code>drawableCollection</code> is <code>null</code>, or contains <code>null</code>
+     *             values
+     * @throws IllegalArgumentException when the <code>drawableCollection</code> is empty
      */
-    public Bounds3d(final Collection<Drawable3d> drawableCollection) throws NullPointerException, IllegalArgumentException
+    public Bounds3d(final Collection<Drawable3d> drawableCollection)
     {
         this(pointsOf(drawableCollection));
     }
@@ -214,11 +225,11 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      * Return an iterator that will return all points of one or more Drawable3d objects.
      * @param drawableCollection Collection&lt;Drawable3d&gt;; the collection of Drawable2d objects
      * @return Iterator&lt;P&gt;; iterator that will return all points of the Drawable objects
-     * @throws NullPointerException when drawableCollection is null, or contains a null value
-     * @throws IllegalArgumentException when drawableCollection is empty
+     * @throws NullPointerException when the <code>drawableCollection</code> is <code>null</code>, or contains a
+     *             <code>null</code> value
+     * @throws IllegalArgumentException when the <code>drawableCollection</code> is empty
      */
     public static Iterator<Point3d> pointsOf(final Collection<Drawable3d> drawableCollection)
-            throws NullPointerException, IllegalArgumentException
     {
         return new Iterator<Point3d>()
         {
@@ -262,11 +273,11 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      * Verify that the iterator has something to return.
      * @param iterator Iterator&lt;Drawable2d&gt;; the iterator
      * @return Iterator&lt;Drawable3d&gt;; the iterator
-     * @throws NullPointerException when the iterator is null
-     * @throws IllegalArgumentException when the hasNext method of the iterator returns false
+     * @throws NullPointerException when the <code>iterator</code> is <code>null</code>
+     * @throws IllegalArgumentException when the <code>hasNext</code> method of the <code>iterator</code> returns
+     *             <code>false</code> before even one <code>Drawable2d</code> was delivered
      */
     static Iterator<Drawable3d> ensureHasOne(final Iterator<Drawable3d> iterator)
-            throws NullPointerException, IllegalArgumentException
     {
         Throw.when(!iterator.hasNext(), IllegalArgumentException.class, "Collection may not be empty");
         return iterator;
@@ -295,12 +306,13 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      * @param y double; the y-coordinate of the point
      * @param z double; the z-coordinate of the point
      * @return boolean; whether this Bounds3d contains the point
-     * @throws IllegalArgumentException when any of the coordinates is NaN
+     * @throws ArithmeticException when <code>x</code>, or <code>y</code> is <code>NaN</code>
      */
-    public boolean contains(final double x, final double y, final double z) throws IllegalArgumentException
+    public boolean contains(final double x, final double y, final double z)
     {
-        Throw.when(Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z), IllegalArgumentException.class,
-                "coordinates must be numbers (not NaN)");
+        Throw.whenNaN(x, "x");
+        Throw.whenNaN(y, "y");
+        Throw.whenNaN(z, "z");
         return x > this.minX && x < this.maxX && y > this.minY && y < this.maxY && z > this.minZ && z < this.maxZ;
     }
 
@@ -320,17 +332,18 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     }
 
     /**
-     * Check if this Bounds3d contains a point. Covers returns true when the point is on a face of this Bounds3d.
+     * Check if this Bounds3d contains a point. Covers returns <code>true</code> when the point is on a face of this Bounds3d.
      * @param x double; the x-coordinate of the point
      * @param y double; the y-coordinate of the point
      * @param z double; the z-coordinate of the point
      * @return boolean; whether the bounding box contains the point, including the faces
-     * @throws IllegalArgumentException when any of the coordinates is NaN
+     * @throws ArithmeticException when <code>x</code>, <code>y</code>, or <code>z</code> is <citeNaN</code>
      */
-    public boolean covers(final double x, final double y, final double z) throws IllegalArgumentException
+    public boolean covers(final double x, final double y, final double z)
     {
-        Throw.when(Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(z), IllegalArgumentException.class,
-                "coordinates must be numbers (not NaN)");
+        Throw.whenNaN(x, "x");
+        Throw.whenNaN(y, "y");
+        Throw.whenNaN(z, "z");
         return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY && z >= this.minZ && z <= this.maxZ;
     }
 

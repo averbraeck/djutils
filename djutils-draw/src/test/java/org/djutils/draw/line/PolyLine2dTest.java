@@ -54,9 +54,9 @@ public class PolyLine2dTest
         try
         {
             runConstructors(points);
-            fail("Should have thrown a DrawRuntimeException");
+            fail("Should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException exception)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -69,9 +69,9 @@ public class PolyLine2dTest
                 try
                 {
                     runConstructors(points);
-                    fail("Should have thrown a DrawRuntimeException");
+                    fail("Should have thrown a IllegalArgumentException");
                 }
-                catch (DrawRuntimeException exception)
+                catch (IllegalArgumentException e)
                 {
                     // Ignore expected exception
                 }
@@ -87,9 +87,9 @@ public class PolyLine2dTest
                             try
                             {
                                 runConstructors(points);
-                                fail("Should have thrown a DrawRuntimeException");
+                                fail("Should have thrown a IllegalArgumentException");
                             }
-                            catch (DrawRuntimeException exception)
+                            catch (IllegalArgumentException e)
                             {
                                 // Ignore expected exception
                             }
@@ -110,9 +110,9 @@ public class PolyLine2dTest
                                         try
                                         {
                                             runConstructors(points);
-                                            fail("Should have thrown a DrawRuntimeException");
+                                            fail("Should have thrown a IllegalArgumentException");
                                         }
-                                        catch (DrawRuntimeException exception)
+                                        catch (IllegalArgumentException e)
                                         {
                                             // Ignore expected exception
                                         }
@@ -275,9 +275,9 @@ public class PolyLine2dTest
         try
         {
             new PolyLine2d(path);
-            fail("unsupported SEG_CUBICTO should have thrown an exception");
+            fail("unsupported SEG_CUBICTO should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -285,11 +285,10 @@ public class PolyLine2dTest
 
     /**
      * Test all constructors of a Line2d.
-     * @throws DrawRuntimeException if that happens uncaught; this test has failed
-     * @throws DrawRuntimeException if that happens uncaught; this test has failed
+     * @throws RuntimeException if that happens uncaught; this test has failed
      */
     @Test
-    public void testConstructors() throws DrawRuntimeException, DrawRuntimeException
+    public void testConstructors() throws RuntimeException
     {
         runConstructors(new Point2d[] {new Point2d(1.2, 3.4), new Point2d(2.3, 4.5), new Point2d(3.4, 5.6)});
 
@@ -300,7 +299,7 @@ public class PolyLine2dTest
             {
                 new PolyLine2d(new double[] {1, 2, 3}, new double[] {4, 5});
             }
-        }, "double arrays of unequal length should have thrown a DrawRuntimeException", DrawRuntimeException.class);
+        }, "double arrays of unequal length should have thrown a IllegalArgumentException", IllegalArgumentException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -309,7 +308,7 @@ public class PolyLine2dTest
             {
                 new PolyLine2d(new double[] {1, 2}, new double[] {3, 4, 5});
             }
-        }, "double arrays of unequal length should have thrown a DrawRuntimeException", DrawRuntimeException.class);
+        }, "double arrays of unequal length should have thrown a IllegalArgumentException", IllegalArgumentException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -346,7 +345,7 @@ public class PolyLine2dTest
             {
                 new PolyLine2d(shortList);
             }
-        }, "empty list should have thrown a DrawRuntimeException", DrawRuntimeException.class);
+        }, "empty list should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
         shortList.add(new Point2d(1, 2));
         Try.testFail(new Try.Execution()
@@ -356,7 +355,7 @@ public class PolyLine2dTest
             {
                 new PolyLine2d(shortList);
             }
-        }, "one-point list should have thrown a DrawRuntimeException", DrawRuntimeException.class);
+        }, "one-point list should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
         Point2d p1 = new Point2d(1, 2);
         Point2d p2 = new Point2d(3, 4);
@@ -382,7 +381,7 @@ public class PolyLine2dTest
             {
                 new PolyLine2d(new Point2d[] {});
             }
-        }, "empty array should have thrown a DrawRuntimeException", DrawRuntimeException.class);
+        }, "empty array should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -391,7 +390,7 @@ public class PolyLine2dTest
             {
                 new PolyLine2d(new Point2d[] {new Point2d(1, 2)});
             }
-        }, "single point should have thrown a DrawRuntimeException", DrawRuntimeException.class);
+        }, "single point should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -400,7 +399,7 @@ public class PolyLine2dTest
             {
                 new PolyLine2d(new Point2d[] {new Point2d(1, 2), new Point2d(1, 2)});
             }
-        }, "duplicate point should have thrown a DrawRuntimeException", DrawRuntimeException.class);
+        }, "duplicate point should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -409,7 +408,7 @@ public class PolyLine2dTest
             {
                 new PolyLine2d(new Point2d[] {new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4)});
             }
-        }, "duplicate point should have thrown a DrawRuntimeException", DrawRuntimeException.class);
+        }, "duplicate point should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -418,7 +417,7 @@ public class PolyLine2dTest
             {
                 new PolyLine2d(new Point2d[] {new Point2d(-1, -2), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4)});
             }
-        }, "duplicate point should have thrown a DrawRuntimeException", DrawRuntimeException.class);
+        }, "duplicate point should have thrown an IllegalArgumentException", IllegalArgumentException.class);
     }
 
     /**
@@ -526,7 +525,7 @@ public class PolyLine2dTest
             {
                 new PolyLine2d(true, new Point2d[] {new Point2d(1, 2)});
             }
-        }, "Too short array should have thrown a DrawRuntimeException", DrawRuntimeException.class);
+        }, "Too short array should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -535,7 +534,7 @@ public class PolyLine2dTest
             {
                 new PolyLine2d(true, new Point2d[] {new Point2d(1, 2), new Point2d(1, 2)});
             }
-        }, "All duplicate points in array should have thrown a DrawRuntimeException", DrawRuntimeException.class);
+        }, "All duplicate points in array should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -544,7 +543,7 @@ public class PolyLine2dTest
             {
                 new PolyLine2d(true, new Point2d[] {new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2)});
             }
-        }, "All duplicate points in array should have thrown a DrawRuntimeException", DrawRuntimeException.class);
+        }, "All duplicate points in array should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
         array = new Point2d[] {new Point2d(1, 2), new Point2d(4, 6), new Point2d(8, 9)};
         line = new PolyLine2d(array);
@@ -552,9 +551,9 @@ public class PolyLine2dTest
         try
         {
             line.getLocation(-0.1);
-            fail("negative location should have thrown a DrawRuntimeException");
+            fail("negative location should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -565,9 +564,9 @@ public class PolyLine2dTest
         try
         {
             line.getLocation(length + 0.1);
-            fail("location beyond length should have thrown a DrawRuntimeException");
+            fail("location beyond length should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException dere)
         {
             // Ignore expected exception
         }
@@ -575,9 +574,9 @@ public class PolyLine2dTest
         try
         {
             line.getLocation(-0.1);
-            fail("negative location should have thrown a DrawRuntimeException");
+            fail("negative location should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -587,9 +586,9 @@ public class PolyLine2dTest
         try
         {
             line.getLocationFraction(1.1);
-            fail("location beyond length should have thrown a DrawRuntimeException");
+            fail("location beyond length should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException de)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -597,9 +596,9 @@ public class PolyLine2dTest
         try
         {
             line.getLocationFraction(-0.1);
-            fail("negative location should have thrown a DrawRuntimeException");
+            fail("negative location should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -672,9 +671,9 @@ public class PolyLine2dTest
                         try
                         {
                             line.getLocationFraction(result);
-                            fail("illegal fraction should have thrown a DrawRuntimeException");
+                            fail("illegal fraction should have thrown an IllegalArgumentException");
                         }
-                        catch (DrawRuntimeException dre)
+                        catch (IllegalArgumentException e)
                         {
                             // Ignore expected exception
                         }
@@ -721,9 +720,9 @@ public class PolyLine2dTest
         try
         {
             line.getLocationFraction(-.011, 0.01);
-            fail("fraction outside tolerance should have thrown a DrawRuntimeException");
+            fail("fraction outside tolerance should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -731,9 +730,9 @@ public class PolyLine2dTest
         try
         {
             line.getLocationFraction(1.011, 0.01);
-            fail("fraction outside tolerance should have thrown a DrawRuntimeException");
+            fail("fraction outside tolerance should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -749,9 +748,9 @@ public class PolyLine2dTest
                 try
                 {
                     line.truncate(to);
-                    fail("illegal truncate should have thrown a DrawRuntimeException");
+                    fail("illegal truncate should have thrown an IllegalArgumentException");
                 }
-                catch (DrawRuntimeException dre)
+                catch (IllegalArgumentException e)
                 {
                     // Ignore expected exception
                 }
@@ -769,9 +768,9 @@ public class PolyLine2dTest
                     try
                     {
                         line.extract(from, to);
-                        fail("Illegal range should have thrown a DrawRuntimeException");
+                        fail("Illegal range should have thrown an IllegalArgumentException");
                     }
-                    catch (DrawRuntimeException dre)
+                    catch (IllegalArgumentException e)
                     {
                         // Ignore expected exception
                     }
@@ -798,9 +797,9 @@ public class PolyLine2dTest
         try
         {
             line.extract(Double.NaN, 10.0);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -808,9 +807,9 @@ public class PolyLine2dTest
         try
         {
             line.extract(0.0, Double.NaN);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -878,18 +877,18 @@ public class PolyLine2dTest
         try
         {
             PolyLine2d.concatenate(l0, l2);
-            fail("Gap should have throw a DrawRuntimeException");
+            fail("Gap should have throw an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
         try
         {
             PolyLine2d.concatenate();
-            fail("concatenate of empty list should have thrown a DrawRuntimeException");
+            fail("concatenate of empty list should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -922,7 +921,7 @@ public class PolyLine2dTest
                         {
                             PolyLine2d.concatenate(tolerance, l0, otherLine, thirdLine);
                         }
-                        catch (DrawRuntimeException dre)
+                        catch (DrawRuntimeException e)
                         {
                             fail("concatenation with error " + actualError + " and tolerance " + tolerance
                                     + " should not have failed");
@@ -933,16 +932,18 @@ public class PolyLine2dTest
                         try
                         {
                             PolyLine2d.concatenate(tolerance, l0, otherLine);
+                            fail("concatenating disjunct polylines should have thrown an IllegalArgumentException");
                         }
-                        catch (DrawRuntimeException dre)
+                        catch (IllegalArgumentException e)
                         {
                             // Ignore expected exception
                         }
                         try
                         {
                             PolyLine2d.concatenate(tolerance, l0, otherLine, thirdLine);
+                            fail("concatenating disjunct polylines should have thrown an IllegalArgumentException");
                         }
-                        catch (DrawRuntimeException dre)
+                        catch (IllegalArgumentException e)
                         {
                             // Ignore expected exception
                         }
@@ -980,7 +981,7 @@ public class PolyLine2dTest
                     {
                         line.offsetLine(Double.NaN);
                     }
-                }, "NaN offset should have thrown an IllegalArgumentException", IllegalArgumentException.class);
+                }, "NaN offset should have thrown an ArithmeticException", ArithmeticException.class);
 
                 assertEquals(line, line.offsetLine(0), "offset 0 yields the reference line");
                 // System.out.print("reference line " + line.toPlot());
@@ -1052,7 +1053,7 @@ public class PolyLine2dTest
                         PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO,
                         PolyLine.DEFAULT_OFFSET_PRECISION);
             }
-        }, "NaN circle precision should have thrown an IllegalArgumentException", IllegalArgumentException.class);
+        }, "NaN circle precision should have thrown an ArithmeticException", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -1072,7 +1073,7 @@ public class PolyLine2dTest
                 line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, Double.NaN, PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE,
                         PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
             }
-        }, "NaN offsetMinimumFilterValue should have thrown an IllegalArgumentException", IllegalArgumentException.class);
+        }, "NaN offsetMinimumFilterValue should have thrown an ArithmeticException", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -1104,7 +1105,7 @@ public class PolyLine2dTest
                 line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE, Double.NaN,
                         PolyLine.DEFAULT_OFFSET_FILTER_RATIO, PolyLine.DEFAULT_OFFSET_PRECISION);
             }
-        }, "NaN offsetMaximumfilterValue should have thrown an IllegalArgumentException", IllegalArgumentException.class);
+        }, "NaN offsetMaximumfilterValue should have thrown an ArithmeticException", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -1124,7 +1125,7 @@ public class PolyLine2dTest
                 line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
                         PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, Double.NaN, PolyLine.DEFAULT_OFFSET_PRECISION);
             }
-        }, "NaN offsetFilterRatio should have thrown an IllegalArgumentException", IllegalArgumentException.class);
+        }, "NaN offsetFilterRatio should have thrown an ArithmeticException", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -1144,7 +1145,7 @@ public class PolyLine2dTest
                 line.offsetLine(1, PolyLine.DEFAULT_CIRCLE_PRECISION, PolyLine.DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
                         PolyLine.DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, PolyLine.DEFAULT_OFFSET_FILTER_RATIO, Double.NaN);
             }
-        }, "NaN offsetPrecision should have thrown an IllegalArgumentException", IllegalArgumentException.class);
+        }, "NaN offsetPrecision should have thrown an ArithmeticException", ArithmeticException.class);
     }
 
     /**
@@ -1350,7 +1351,7 @@ public class PolyLine2dTest
                 double x = Double.parseDouble(fields[0].trim());
                 assertEquals(points[index].x, x, 0.001, "x matches");
             }
-            catch (NumberFormatException nfe)
+            catch (NumberFormatException e)
             {
                 fail("First field " + fields[0] + " does not parse as a double");
             }
@@ -1359,7 +1360,7 @@ public class PolyLine2dTest
                 double y = Double.parseDouble(fields[1].trim());
                 assertEquals(points[index].y, y, 0.001, "y matches");
             }
-            catch (NumberFormatException nfe)
+            catch (NumberFormatException e)
             {
                 fail("Second field " + fields[1] + " does not parse as a double");
             }
@@ -1381,7 +1382,7 @@ public class PolyLine2dTest
                 double x = Double.parseDouble(fields[0].trim());
                 assertEquals(points[index].x, x, 0.001, "x matches");
             }
-            catch (NumberFormatException nfe)
+            catch (NumberFormatException e)
             {
                 fail("First field " + fields[0] + " does not parse as a double");
             }
@@ -1390,7 +1391,7 @@ public class PolyLine2dTest
                 double y = Double.parseDouble(fields[1].trim());
                 assertEquals(points[index].y, y, 0.001, "y matches");
             }
-            catch (NumberFormatException nfe)
+            catch (NumberFormatException e)
             {
                 fail("Second field " + fields[1] + " does not parse as a double");
             }
@@ -1451,9 +1452,9 @@ public class PolyLine2dTest
                 try
                 {
                     line.getSegment(i);
-                    fail("Too large index should have thrown a DrawRuntimeException");
+                    fail("Too large index should have thrown an IndexOutOfBoundsException");
                 }
-                catch (DrawRuntimeException dre)
+                catch (IndexOutOfBoundsException e)
                 {
                     // Ignore expected exception
                 }
@@ -1461,9 +1462,9 @@ public class PolyLine2dTest
                 try
                 {
                     line.getSegment(-1);
-                    fail("Negative index should have thrown a DrawRuntimeException");
+                    fail("Negative index should have thrown an IndexOutOfBoundsException");
                 }
-                catch (DrawRuntimeException dre)
+                catch (IndexOutOfBoundsException e)
                 {
                     // Ignore expected exception
                 }
@@ -1573,7 +1574,7 @@ public class PolyLine2dTest
             new PolyLine2d(true, tooShort);
             fail("Array with no points should have thrown an exception");
         }
-        catch (DrawRuntimeException dre)
+        catch (DrawRuntimeException e)
         {
             // Ignore expected exception
         }
@@ -1584,7 +1585,7 @@ public class PolyLine2dTest
             new PolyLine2d(true, tooShort);
             fail("Array with one point should have thrown an exception");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -1710,9 +1711,9 @@ public class PolyLine2dTest
         try
         {
             new PolyLine2d(Double.NaN, 2, 3);
-            fail("NaN should have thrown a DrawRuntimeException");
+            fail("NaN should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -1720,9 +1721,9 @@ public class PolyLine2dTest
         try
         {
             new PolyLine2d(1, Double.NaN, 3);
-            fail("NaN should have thrown a DrawRuntimeException");
+            fail("NaN should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -1730,9 +1731,9 @@ public class PolyLine2dTest
         try
         {
             new PolyLine2d(1, 2, Double.NaN);
-            fail("NaN should have thrown a DrawRuntimeException");
+            fail("NaN should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -1740,9 +1741,9 @@ public class PolyLine2dTest
         try
         {
             new PolyLine2d(1, 2, Double.POSITIVE_INFINITY);
-            fail("NaN should have thrown a DrawRuntimeException");
+            fail("POSITIVE_INFINITY should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -1750,9 +1751,9 @@ public class PolyLine2dTest
         try
         {
             new PolyLine2d(1, 2, Double.NEGATIVE_INFINITY);
-            fail("NaN should have thrown a DrawRuntimeException");
+            fail("NEGATIVE_INFINITY should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -1770,9 +1771,9 @@ public class PolyLine2dTest
         try
         {
             l.getLocation(0.1);
-            fail("location at position != 0 should have thrown a DrawRuntimeException");
+            fail("location at position != 0 should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -1780,9 +1781,9 @@ public class PolyLine2dTest
         try
         {
             l.getLocation(-0.1);
-            fail("location at position != 0 should have thrown a DrawRuntimeException");
+            fail("location at position != 0 should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -1790,9 +1791,9 @@ public class PolyLine2dTest
         try
         {
             new PolyLine2d(new Point2d(1, 2), Double.NaN);
-            fail("NaN should have thrown a DrawRuntimeException");
+            fail("NaN should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -1802,7 +1803,7 @@ public class PolyLine2dTest
             new PolyLine2d((Ray2d) null);
             fail("null pointer should have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -1841,9 +1842,8 @@ public class PolyLine2dTest
                 {
                     assertNull(l.projectOrthogonal(testPoint),
                             "For non-nice directions nonExtended projection will return null if point does not match");
-                    assertTrue(Double.isNaN(l.projectOrthogonalFractional(testPoint)),
-                            "For non-nice directions non-extended fractional projection will return NaN if point does "
-                                    + "not match");
+                    assertTrue(Double.isNaN(l.projectOrthogonalFractional(testPoint)), "For non-nice directions "
+                            + "non-extended fractional projection will return NaN if point does not match");
                     if (new Ray2d(l.getLocation(0.0)).projectOrthogonalFractional(testPoint) > 0)
                     {
                         assertTrue(Double.POSITIVE_INFINITY == l.projectOrthogonalFractionalExtended(testPoint),

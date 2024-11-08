@@ -32,7 +32,7 @@ public interface Flattable<F extends Flattener<F, ?, PL, P>, PL extends PolyLine
     /**
      * Flatten a Flattable2d into a PolyLine2d. Implementations should use the flattener when relevant and possible.
      * @param flattener Flattener2d; flattener
-     * @return PolyLine2d; approximation of this line as a PolyLine2d
+     * @return PolyLine2d; approximation of this line as a <code>PolyLine2d</code>
      */
     PL toPolyLine(F flattener);
 
@@ -40,14 +40,14 @@ public interface Flattable<F extends Flattener<F, ?, PL, P>, PL extends PolyLine
      * Returns the point at the given fraction of this Flattable. The fraction may represent any parameter, such as <i>t</i> in
      * a B&eacute;zier curve, <i>s</i> in a Clothoid, or simply the fraction of length.
      * @param fraction double; the fraction
-     * @return P; the point at the given fraction
+     * @return P; the point at the given <code>fraction</code>
      */
     P getPoint(double fraction);
 
     /**
      * If this Flattable has kinks, this method must return the fractions where those kinks occur. The <code>default</code>
      * implementation works for Flattables that have <b>no</b> kinks.
-     * @return Set&lt;Double&gt; the fractions where kinks in the offset function occur, may be empty or null
+     * @return Set&lt;Double&gt; the fractions where kinks in the offset function occur, may be empty or <code>null</code>
      */
     default Set<Double> getKinks()
     {
@@ -59,7 +59,7 @@ public interface Flattable<F extends Flattener<F, ?, PL, P>, PL extends PolyLine
      * B&eacute;zier curve, <i>s</i> in a Clothoid, or simply the fraction of length. The default implementation performs a
      * numerical approach by looking at the direction between the points at fraction, and a point 1e-6 away.
      * @param fraction double; the fraction
-     * @return double; the direction at the given fraction
+     * @return double; the direction at the given <code>fraction</code>
      */
     DIR getDirection(double fraction);
 

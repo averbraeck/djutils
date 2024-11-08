@@ -19,13 +19,13 @@ import org.djutils.draw.Drawable;
 public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
 {
     /**
-     * Return the x-coordinate. When the point is not in Cartesian space, a calculation to Cartesian space has to be made.
+     * Return the x-coordinate.
      * @return double; the x-coordinate
      */
     double getX();
 
     /**
-     * Return the y-coordinate. When the point is not in Cartesian space, a calculation to Cartesian space has to be made.
+     * Return the y-coordinate.
      * @return double; the y-coordinate
      */
     double getY();
@@ -34,18 +34,21 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
      * Return a new Point with the coordinates of this point scaled by the provided factor.
      * @param factor double; the scale factor
      * @return Point; a new point with the coordinates of this point scaled by the provided factor
-     * @throws IllegalArgumentException when factor is NaN
+     * @throws ArithmeticException when <code>factor</code> is <code>NaN</code>
      */
-    P scale(double factor) throws IllegalArgumentException;
+    P scale(double factor);
 
     /**
-     * Return a new Point with negated coordinate values. If this is a DirectedPoint, dirY and dirZ are negated.
+     * Return a new Point with negated coordinate values. If this is a <code>DirectedPoint</code>, <code>dirY</code> (in case
+     * this is a <code>DirectedPoint3d</code) and
+     * <code>dirZ</code> are negated.
      * @return Point; a new point with negated coordinate values
      */
     P neg();
 
     /**
-     * Return a new Point with absolute coordinate values. If this is a DirectedPoint, dirY and dirZ are copied unchanged.
+     * Return a new Point with absolute coordinate values. If this is a <code>DirectedPoint</code>, <code>dirY</code> (in case
+     * this is a <code>DirectedPoint3d</code> and <code>dirZ</code> are copied unchanged.
      * @return Point; a new point with absolute coordinate values
      */
     P abs();
@@ -68,9 +71,9 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
      * Return the squared distance between this point and the provided point.
      * @param otherPoint P; the other point
      * @return double; the squared distance between this point and the other point
-     * @throws NullPointerException when otherPoint is null
+     * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      */
-    double distanceSquared(P otherPoint) throws NullPointerException;
+    double distanceSquared(P otherPoint);
 
     /**
      * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
@@ -80,8 +83,8 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
      *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
      *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
      * @return P; the point that is <code>fraction</code> away on the line between this point and the other point
-     * @throws NullPointerException when point is null
-     * @throws IllegalArgumentException when fraction is NaN
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
+     * @throws ArithmeticException when <code>fraction</code> is <code>NaN</code>
      */
     P interpolate(P otherPoint, double fraction);
 
@@ -92,11 +95,11 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
      * Bourke</a>.
      * @param segmentPoint1 P; start of line segment
      * @param segmentPoint2 P; end of line segment
-     * @return P; either <cite>segmentPoint1</cite>, or <cite>segmentPoint2</cite> or a new Point2d that lies somewhere in
+     * @return P; either <code>segmentPoint1</code>, or <code>segmentPoint2</code> or a new Point2d that lies somewhere in
      *         between those two.
-     * @throws NullPointerException when segmentPoint2, or segmentPoint2 is null
+     * @throws NullPointerException when <code>segmentPoint2</code>, or <code>segmentPoint2</code> is <code>null</code>
      */
-    P closestPointOnSegment(P segmentPoint1, P segmentPoint2) throws NullPointerException;
+    P closestPointOnSegment(P segmentPoint1, P segmentPoint2);
 
     /**
      * Project a point on a line. <br>
@@ -104,19 +107,23 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
      * Bourke</a>.
      * @param linePoint1 P; point on the line
      * @param linePoint2 P; another point on the line
-     * @return Point2d; a point on the line that goes through <cite>linePoint1</cite> and <cite>linePoint2</cite>
-     * @throws NullPointerException when linePoint1 is null, or linePoint2 is null
-     * @throws DrawRuntimeException when <cite>linePoint1</cite> is at the same location as <cite>linePoint2</cite>
+     * @return Point2d; a point on the line that goes through <code>linePoint1</code> and <code>linePoint2</code>
+     * @throws NullPointerException when <code>linePoint1</code> is <code>null</code>, or <code>linePoint2</code> is
+     *             <code>null</code>
+     * @throws IllegalArgumentException when <code>linePoint1</code> is at the same location as <code>linePoint2</code>
      */
-    P closestPointOnLine(P linePoint1, P linePoint2) throws NullPointerException, DrawRuntimeException;
+    P closestPointOnLine(P linePoint1, P linePoint2);
 
     /**
-     * A comparison with another point that returns true of each of the coordinates is less than epsilon apart.
+     * A comparison with another point that returns<code>true</code> of each of the coordinates is less than epsilon apart.
      * @param otherPoint P; the point to compare with
      * @param epsilon double; the upper bound of difference for one of the coordinates
-     * @return boolean; true if both x, y and z (if a Point3d) are less than epsilon apart, otherwise false
-     * @throws NullPointerException when other is null
+     * @return boolean;<code>true</code> if both x, y and z (if a Point3d) are less than epsilon apart, otherwise
+     *         <code>false</code>
+     * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
+     * @throws ArithmeticException when <code>epsilon</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when <code>epsilon</code> &lt; <code>0.0</code>
      */
-    boolean epsilonEquals(P otherPoint, double epsilon) throws NullPointerException;
+    boolean epsilonEquals(P otherPoint, double epsilon);
 
 }

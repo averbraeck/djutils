@@ -55,19 +55,19 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a new PolyLine2d from an array of double x values and an array of double y values.
-     * @param copyNeeded boolean; if true; a deep copy of the points array is stored instead of the provided array
+     * @param copyNeeded boolean; if<code>true</code>; a deep copy of the points array is stored instead of the provided array
      * @param x double[]; the x-coordinates of the points
      * @param y double[]; the y-coordinates of the points
-     * @throws NullPointerException when iterator is null
-     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
-     *             adjacent points)
+     * @throws NullPointerException when <code>iterator</code> is <code>null</code>
+     * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points), or <code>x</code> and <code>y</code> have different length
      */
-    PolyLine2d(final boolean copyNeeded, final double[] x, final double[] y) throws NullPointerException, DrawRuntimeException
+    PolyLine2d(final boolean copyNeeded, final double[] x, final double[] y)
     {
         Throw.whenNull(x, "x");
         Throw.whenNull(y, "y");
-        Throw.when(x.length != y.length, DrawRuntimeException.class, "x and y arrays must have same length");
-        Throw.when(x.length < 2, DrawRuntimeException.class, "Need at least two points");
+        Throw.when(x.length != y.length, IllegalArgumentException.class, "x and y arrays must have same length");
+        Throw.when(x.length < 2, IllegalArgumentException.class, "Need at least two points");
         this.x = copyNeeded ? Arrays.copyOf(x, x.length) : x;
         this.y = copyNeeded ? Arrays.copyOf(y, y.length) : y;
         double minX = x[0];
@@ -84,7 +84,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             maxY = Math.max(maxY, y[i]);
             if (x[i - 1] == x[i] && y[i - 1] == y[i])
             {
-                throw new DrawRuntimeException(
+                throw new IllegalArgumentException(
                         "Degenerate PolyLine2d; point " + (i - 1) + " has the same x and y as point " + i);
             }
             this.lengthIndexedLine[i] = this.lengthIndexedLine[i - 1] + Math.hypot(x[i] - x[i - 1], y[i] - y[i - 1]);
@@ -99,14 +99,15 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * @param x double; the x-coordinate
      * @param y double; the y-coordinate
      * @param heading double; the heading in radians
-     * @throws DrawRuntimeException when x, y, or heading is NaN, or heading is infinite
+     * @throws ArithmeticException when <code>x</code>, <code>y</code>, or <code>heading</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when or heading is infinite
      */
-    public PolyLine2d(final double x, final double y, final double heading) throws DrawRuntimeException
+    public PolyLine2d(final double x, final double y, final double heading)
     {
-        Throw.when(Double.isNaN(x), DrawRuntimeException.class, "x may not be NaN");
-        Throw.when(Double.isNaN(y), DrawRuntimeException.class, "y may not be NaN");
-        Throw.when(Double.isNaN(heading), DrawRuntimeException.class, "heading may not be NaN");
-        Throw.when(Double.isInfinite(heading), DrawRuntimeException.class, "heading must be finite");
+        Throw.whenNaN(x, "x");
+        Throw.whenNaN(y, "y");
+        Throw.whenNaN(heading, "heading");
+        Throw.when(Double.isInfinite(heading), IllegalArgumentException.class, "heading must be finite");
         this.x = new double[] {x};
         this.y = new double[] {y};
         this.startHeading = heading;
@@ -119,10 +120,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * Construct a degenerate PolyLine2d (consisting of only one point).
      * @param p Point2d; the point of the degenerate PolyLine2d
      * @param heading double; the heading in radians
-     * @throws NullPointerException when p is null
-     * @throws DrawRuntimeException when heading is NaN, or heading is infinite
+     * @throws NullPointerException when <code>p</code> is <code>null</code>
+     * @throws ArithmeticException when <code>heading</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when <code>heading</code> is infinite
      */
-    public PolyLine2d(final Point2d p, final double heading) throws NullPointerException, DrawRuntimeException
+    public PolyLine2d(final Point2d p, final double heading)
     {
         this(Throw.whenNull(p, "p").x, p.y, heading);
     }
@@ -130,10 +132,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Construct a degenerate PolyLine2d (consisting of only one point).
      * @param directedPoint2d DirectedPoint2d; point and heading (DirZ) of the degenerate PolyLine2d
-     * @throws NullPointerException when p is null
-     * @throws DrawRuntimeException when heading is NaN or infinite
+     * @throws NullPointerException when <code>p</code> is <code>null</code>
+     * @throws ArithmeticException when <code>heading</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when <code>heading</code> is infinite
      */
-    public PolyLine2d(final DirectedPoint2d directedPoint2d) throws NullPointerException, DrawRuntimeException
+    public PolyLine2d(final DirectedPoint2d directedPoint2d)
     {
         this(Throw.whenNull(directedPoint2d, "r").x, directedPoint2d.y, directedPoint2d.dirZ);
     }
@@ -143,11 +146,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * parameters.
      * @param x double[]; the x-coordinates of the points
      * @param y double[]; the y-coordinates of the points
-     * @throws NullPointerException when iterator is null
-     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
-     *             adjacent points)
+     * @throws NullPointerException when any of the arrays is <code>null</code>
+     * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points, or the arrays do not have the same length)
      */
-    public PolyLine2d(final double[] x, final double[] y) throws NullPointerException, DrawRuntimeException
+    public PolyLine2d(final double[] x, final double[] y)
     {
         this(true, x, y);
     }
@@ -155,11 +158,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Construct a new PolyLine2d from an array of Point2d.
      * @param points Point2d[]; the array of points to construct this PolyLine2d from.
-     * @throws NullPointerException when the array is null
-     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
+     * @throws NullPointerException when the array is <code>null</code>
+     * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
      */
-    public PolyLine2d(final Point2d[] points) throws NullPointerException, DrawRuntimeException
+    public PolyLine2d(final Point2d[] points)
     {
         this(false, makeArray(Throw.whenNull(points, "points"), p -> p.x), makeArray(points, p -> p.y));
     }
@@ -184,13 +187,13 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * Construct a new PolyLine2d from two or more Point2d arguments.
      * @param point1 Point2d; starting point of the PolyLine2d
      * @param point2 Point2d; second point of the PolyLine2d
-     * @param otherPoints Point2d...; additional points of the PolyLine2d (may be null, or have zero length)
-     * @throws NullPointerException when point1 is null or point2 is null, or otherPoints contains a null value
-     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
+     * @param otherPoints Point2d...; additional points of the PolyLine2d (may be <code>null</code>, or have zero length)
+     * @throws NullPointerException when <code>point1</code>, or <code>point2</code> is <code>null</code>, or
+     *             <code>otherPoints</code> contains a <code>null</code> value
+     * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
      */
     public PolyLine2d(final Point2d point1, final Point2d point2, final Point2d... otherPoints)
-            throws NullPointerException, DrawRuntimeException
     {
         this(spliceArray(Throw.whenNull(point1, "point1"), Throw.whenNull(point2, "point2"), otherPoints));
     }
@@ -199,8 +202,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * Construct an array of Point2d from two points plus an array of Point2d.
      * @param point1 Point2d; the first point (ends up at index 0 of the result)
      * @param point2 Point2d; the second point (ends up at index 1 of the result)
-     * @param otherPoints Point2d...; may be null, may be empty. If non empty, the elements in otherPoints end up at index 2 and
-     *            up in the result
+     * @param otherPoints Point2d...; may be <code>null</code>, may be empty. If non empty, the elements in
+     *            <code>otherPoints</code> end up at index 2 and up in the result
      * @return Point2d[]; the combined array
      */
     private static Point2d[] spliceArray(final Point2d point1, final Point2d point2, final Point2d... otherPoints)
@@ -221,10 +224,10 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Construct a new PolyLine2d from an iterator that yields Point2d objects.
      * @param iterator Iterator&lt;Point2d&gt;; iterator that will provide all points that constitute the new PolyLine2d
-     * @throws NullPointerException when iterator is null, or yields a null
-     * @throws DrawRuntimeException when the iterator provides too few points, or some adjacent identical points)
+     * @throws NullPointerException when <code>iterator</code> is <code>null</code>, or yields a <code>null</code> value
+     * @throws IllegalArgumentException when the iterator provides too few points, or some adjacent identical points)
      */
-    public PolyLine2d(final Iterator<Point2d> iterator) throws NullPointerException, DrawRuntimeException
+    public PolyLine2d(final Iterator<Point2d> iterator)
     {
         this(iteratorToList(Throw.whenNull(iterator, "iterator")));
     }
@@ -232,11 +235,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Construct a new PolyLine2d from a List&lt;Point2d&gt;.
      * @param pointList List&lt;Point2d&gt;; the list of points to construct the new PolyLine2d from.
-     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
+     * @throws NullPointerException when <code>pointList</code> is <code>null</code>, or contains a <code>null</code> value
+     * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
-     * @throws NullPointerException when pointList is null, or contains a null value
      */
-    public PolyLine2d(final List<Point2d> pointList) throws DrawRuntimeException, NullPointerException
+    public PolyLine2d(final List<Point2d> pointList)
     {
         this(pointList.toArray(new Point2d[Throw.whenNull(pointList, "pointList").size()]));
     }
@@ -244,11 +247,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Construct a new PolyLine2d from a Path2D.
      * @param path Path2D; the Path2D to construct this PolyLine2d from.
-     * @throws DrawRuntimeException when the provided points do not constitute a valid line (too few points or identical
+     * @throws NullPointerException when <code>path</code> is <code>null</code>
+     * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
-     * @throws NullPointerException when path is null
      */
-    public PolyLine2d(final Path2D path) throws DrawRuntimeException, NullPointerException
+    public PolyLine2d(final Path2D path)
     {
         this(path2DtoArray(Throw.whenNull(path, "path")));
     }
@@ -257,9 +260,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * Convert a path2D to a Point2d[] array to construct the line.
      * @param path Path2D; the path to convert
      * @return Point2d[]; an array of points based on MOVETO and LINETO elements of the Path2D
-     * @throws DrawRuntimeException when the pathIterator of the path returns an unsupported command
+     * @throws NullPointerException when <code>path</code> is <code>null</code>
+     * @throws IllegalArgumentException when the <code>pathIterator</code> of the <code>path</code> returns an unsupported
+     *             command
      */
-    private static Point2d[] path2DtoArray(final Path2D path) throws DrawRuntimeException
+    private static Point2d[] path2DtoArray(final Path2D path)
     {
         List<Point2d> result = new ArrayList<>();
         for (PathIterator pi = path.getPathIterator(null); !pi.isDone(); pi.next())
@@ -280,7 +285,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             }
             else
             {
-                throw new DrawRuntimeException("path2DtoArray only handles SEG_MOVETO, SEG_LINETO and SEG_CLOSE");
+                throw new IllegalArgumentException("path2DtoArray only handles SEG_MOVETO, SEG_LINETO and SEG_CLOSE");
             }
         }
         return result.toArray(new Point2d[result.size() - 1]);
@@ -289,7 +294,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Build a list from the Point2d objects that an iterator provides.
      * @param iterator Iterator&lt;Point2d&gt;; the iterator that will provide the points
-     * @return List&lt;Point2d&gt;; a list of the points provided by the iterator
+     * @return List&lt;Point2d&gt;; a list of the points provided by the <code>iterator</code>
      */
     protected static List<Point2d> iteratorToList(final Iterator<Point2d> iterator)
     {
@@ -300,37 +305,40 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Create a new PolyLine2d, optionally filtering out repeating successive points.
-     * @param filterDuplicates boolean; if true; filter out successive repeated points; otherwise do not filter
-     * @param points Point2d...; the coordinates of the line as Point2d
-     * @throws DrawRuntimeException when number of points &lt; 2
+     * @param filterDuplicates boolean; if<code>true</code>; filter out successive repeated points; otherwise do not filter
+     * @param points Point2d...; the coordinates of the line in <code>Point2d</code> objects
+     * @throws NullPointerException when <code>points</code> is <code>null</code>
+     * @throws IllegalArgumentException when number of points &lt; 2
      */
-    public PolyLine2d(final boolean filterDuplicates, final Point2d... points) throws DrawRuntimeException
+    public PolyLine2d(final boolean filterDuplicates, final Point2d... points)
     {
         this(PolyLine2d.cleanPoints(filterDuplicates, Arrays.stream(points).iterator()));
     }
 
     /**
      * Create a new PolyLine2d, optionally filtering out repeating successive points.
-     * @param filterDuplicates boolean; if true; filter out successive repeated points; otherwise do not filter
-     * @param pointList List&lt;Point2d&gt;; list of the coordinates of the line as Point3d; any duplicate points in this list
-     *            are removed (this method may modify the provided list)
-     * @throws DrawRuntimeException when number of non-equal points &lt; 2
+     * @param filterDuplicates boolean; if<code>true</code>; filter out successive repeated points; otherwise do not filter
+     * @param pointList List&lt;Point2d&gt;; list of the coordinates of the line in <code>Point2d</code> objects; any duplicate
+     *            points in this list are removed (this method may modify the provided list)
+     * @throws NullPointerException when <code>pointList</code> is <code>null</code>
+     * @throws IllegalArgumentException when number of non-equal points &lt; 2
      */
-    public PolyLine2d(final boolean filterDuplicates, final List<Point2d> pointList) throws DrawRuntimeException
+    public PolyLine2d(final boolean filterDuplicates, final List<Point2d> pointList)
     {
         this(PolyLine2d.cleanPoints(filterDuplicates, pointList.iterator()));
     }
 
     /**
      * Return an iterator that optionally skips identical successive points.
-     * @param filter boolean; if true; filter out identical successive points; if false; do not filter
+     * @param filter boolean; if<code>true</code>; filter out identical successive points; if <code>false</code>; do not filter
      * @param iterator Iterator&lt;Point2d&gt;; iterator that generates points, potentially with successive duplicates
      * @return Iterator&lt;Point2d&gt;; iterator that skips identical successive points
+     * @throws NullPointerException when <code>iterator</code> is <code>null</code>
      */
     static Iterator<Point2d> cleanPoints(final boolean filter, final Iterator<Point2d> iterator)
     {
         Throw.whenNull(iterator, "Iterator");
-        Throw.when(!iterator.hasNext(), DrawRuntimeException.class, "Iterator has no points to return");
+        Throw.when(!iterator.hasNext(), DrawRuntimeException.class, "the provided iterator has no points to return");
         if (!filter)
         {
             return iterator;
@@ -367,7 +375,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a new PolyLine2d from an existing one. This constructor is primarily intended for use in extending classes.
-     * @param polyLine PolyLine2d; the existing PolyLine2d.
+     * @param polyLine PolyLine2d; the existing <code>PolyLine2d</code>
      */
     public PolyLine2d(final PolyLine2d polyLine)
     {
@@ -380,7 +388,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     @Override
-    public PolyLine2d instantiate(final List<Point2d> pointList) throws NullPointerException, DrawRuntimeException
+    public PolyLine2d instantiate(final List<Point2d> pointList)
     {
         return new PolyLine2d(pointList);
     }
@@ -392,19 +400,19 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     @Override
-    public final Point2d get(final int i) throws IndexOutOfBoundsException
+    public final Point2d get(final int i)
     {
         return new Point2d(this.x[i], this.y[i]);
     }
 
     @Override
-    public final double getX(final int i) throws IndexOutOfBoundsException
+    public final double getX(final int i)
     {
         return this.x[i];
     }
 
     @Override
-    public final double getY(final int i) throws IndexOutOfBoundsException
+    public final double getY(final int i)
     {
         return this.y[i];
     }
@@ -412,7 +420,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     @Override
     public LineSegment2d getSegment(final int index)
     {
-        Throw.when(index < 0 || index >= this.x.length - 1, DrawRuntimeException.class, "index must be in range 0..size() - 1");
+        Throw.when(index < 0 || index >= this.x.length - 1, IndexOutOfBoundsException.class,
+                "index must be in range [0, size() - 1), got %d", index);
         return new LineSegment2d(this.x[index], this.y[index], this.x[index + 1], this.y[index + 1]);
     }
 
@@ -505,9 +514,10 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * @param lines PolyLine2d...; One or more PolyLine2d objects. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
      *            match the first of the second, etc.
      * @return PolyLine2d
-     * @throws DrawRuntimeException if zero lines are given, or when there is a gap between consecutive lines
+     * @throws NullPointerException when <code>lines</code> is <code>null</code>
+     * @throws IllegalArgumentException if zero lines are given, or when there is a gap between consecutive lines
      */
-    public static PolyLine2d concatenate(final PolyLine2d... lines) throws DrawRuntimeException
+    public static PolyLine2d concatenate(final PolyLine2d... lines)
     {
         return concatenate(0.0, lines);
     }
@@ -518,14 +528,14 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * @param line1 PolyLine2d; first line
      * @param line2 PolyLine2d; second line
      * @return PolyLine2d; the concatenation of the two lines
-     * @throws DrawRuntimeException when there is a gap larger than tolerance between the two lines
+     * @throws NullPointerException when <code>line1</code>, or <code>line2</code> is <code>null</code>
+     * @throws IllegalArgumentException when there is a gap larger than <code>tolerance</code> between the two lines
      */
     public static PolyLine2d concatenate(final double tolerance, final PolyLine2d line1, final PolyLine2d line2)
-            throws DrawRuntimeException
     {
         if (line1.getLast().distance(line2.getFirst()) > tolerance)
         {
-            throw new DrawRuntimeException("Lines are not connected: " + line1.getLast() + " to " + line2.getFirst()
+            throw new IllegalArgumentException("Lines are not connected: " + line1.getLast() + " to " + line2.getFirst()
                     + " distance is " + line1.getLast().distance(line2.getFirst()) + " > " + tolerance);
         }
         int size = line1.size() + line2.size() - 1;
@@ -548,14 +558,15 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * @param lines PolyLine2d...; one or more PolyLine2d objects. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
      *            match the first of the second within the provided tolerance value, etc.
      * @return PolyLine2d; the concatenation of the lines
-     * @throws DrawRuntimeException if zero lines are given, or when there is a gap larger than tolerance between consecutive
-     *             lines
+     * @throws NullPointerException when <code>lines</code> is <code>null</code>, or contains a <code>null</code> value
+     * @throws IllegalArgumentException if zero lines are given, or when there is a gap larger than <code>tolerance</code>
+     *             between consecutive lines
      */
-    public static PolyLine2d concatenate(final double tolerance, final PolyLine2d... lines) throws DrawRuntimeException
+    public static PolyLine2d concatenate(final double tolerance, final PolyLine2d... lines)
     {
         if (0 == lines.length)
         {
-            throw new DrawRuntimeException("Empty argument list");
+            throw new IllegalArgumentException("Empty argument list");
         }
         else if (1 == lines.length)
         {
@@ -566,7 +577,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         {
             if (lines[i - 1].getLast().distance(lines[i].getFirst()) > tolerance)
             {
-                throw new DrawRuntimeException(
+                throw new IllegalArgumentException(
                         "Lines are not connected: " + lines[i - 1].getLast() + " to " + lines[i].getFirst() + " distance is "
                                 + lines[i - 1].getLast().distance(lines[i].getFirst()) + " > " + tolerance);
             }
@@ -623,11 +634,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     @Override
-    public final DirectedPoint2d getLocation(final double position) throws DrawRuntimeException
+    public final DirectedPoint2d getLocation(final double position)
     {
-        Throw.when(Double.isNaN(position), DrawRuntimeException.class, "position may not be NaN");
-        Throw.when(position < 0.0 || position > this.length, DrawRuntimeException.class,
-                "getLocation for line: position < 0.0 or > line length. Position = " + position + "; length = " + this.length);
+        Throw.whenNaN(position, "position");
+        Throw.when(position < 0.0 || position > this.length, IllegalArgumentException.class,
+                "illegal location (got %f, valid range is [0.0, %f])", position, this.length);
         // handle special cases: position == 0.0, or position == length
         if (position == 0.0)
         {
@@ -662,10 +673,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Perform the orthogonal projection operation.
      * @param point Point2d; the point to project
-     * @param limitHandling Boolean; if Null; results outside the interval 0.0 .. 1.0 are replaced by NaN, if false, results
-     *            outside that interval are returned as is; if true results outside the interval are truncated to the interval
-     *            and therefore not truly orthogonal
-     * @return double; the fractional position on this PolyLine2d that is closest to point, or NaN
+     * @param limitHandling Boolean; if <code>Null</code>; results outside the interval 0.0 .. 1.0 are replaced by
+     *            <code>NaN</code>, if <code>false</code>, results outside that interval are returned as is; if
+     *            <code>true</code> results outside the interval are truncated to the interval and therefore not truly
+     *            orthogonal
+     * @return double; the fractional position on this <code>PolyLine2d</code> that is closest to point, or <code>NaN</code>
      */
     private double projectOrthogonalFractional(final Point2d point, final Boolean limitHandling)
     {
@@ -744,10 +756,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Perform the project orthogonal operation.
      * @param point Point2d; the point to project
-     * @param limitHandling Boolean; if Null; results outside this PolyLin2de are replaced by Null, if false, results outside
-     *            that interval are returned as is; if true results outside this PolyLine2d are truncated to the first or last
-     *            point of this PolyLine2d and therefore not truly orthogonal
-     * @return Point2d; the orthogonal projection of point on this PolyLine2d
+     * @param limitHandling Boolean; if Null; results outside this <code>PolyLine2d</code> are replaced by Null, if
+     *            <code>false</code>, results outside that interval are returned as is; if<code>true</code> results outside this
+     *            <code>PolyLine2d</code> are truncated to the first or last point of this <code>PolyLine2d</code> and therefore
+     *            not truly orthogonal
+     * @return Point2d; the orthogonal projection of point on this <code>PolyLine2d</code>
      */
     private Point2d projectOrthogonal(final Point2d point, final Boolean limitHandling)
     {
@@ -796,13 +809,12 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     @Override
-    public PolyLine2d extract(final double start, final double end) throws DrawRuntimeException
+    public PolyLine2d extract(final double start, final double end)
     {
-        if (Double.isNaN(start) || Double.isNaN(end) || start < 0 || start >= end || end > this.length)
-        {
-            throw new DrawRuntimeException(
-                    "Bad interval (" + start + ".." + end + "; length of this PolyLine2d is " + this.length + ")");
-        }
+        Throw.whenNaN(start, "start");
+        Throw.whenNaN(end, "end");
+        Throw.when(start < 0 || start >= end || end > this.length, IllegalArgumentException.class,
+                "Bad interval (%f..%f; length of this PolyLine2d is %f)", start, end, this.length);
         double cumulativeLength = 0;
         double nextCumulativeLength = 0;
         double segmentLength = 0;
@@ -869,13 +881,10 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     @Override
-    public PolyLine2d truncate(final double position) throws DrawRuntimeException
+    public PolyLine2d truncate(final double position)
     {
-        if (position <= 0.0 || position > this.length)
-        {
-            throw new DrawRuntimeException("truncate for line: position <= 0.0 or > line length. Position = " + position
-                    + ". Length = " + this.length + " m.");
-        }
+        Throw.when(position <= 0.0 || position > this.length, IllegalArgumentException.class,
+                "illegal position (got %f should be in range (0.0, %f])", position, this.length);
 
         // handle special case: position == length
         if (position == this.length)
@@ -915,18 +924,18 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     @SuppressWarnings("checkstyle:methodlength")
     public PolyLine2d offsetLine(final double offset, final double circlePrecision, final double offsetMinimumFilterValue,
             final double offsetMaximumFilterValue, final double offsetFilterRatio, final double minimumOffset)
-            throws IllegalArgumentException
     {
-        Throw.when(Double.isNaN(offset), IllegalArgumentException.class, "Offset may not be NaN");
-        Throw.when(Double.isNaN(circlePrecision) || circlePrecision <= 0, IllegalArgumentException.class,
-                "bad circlePrecision");
-        Throw.when(Double.isNaN(offsetMinimumFilterValue) || offsetMinimumFilterValue <= 0, IllegalArgumentException.class,
-                "bad offsetMinimumFilterValue");
-        Throw.when(Double.isNaN(offsetMaximumFilterValue) || offsetMaximumFilterValue <= 0, IllegalArgumentException.class,
-                "bad offsetMaximumFilterValue");
-        Throw.when(Double.isNaN(offsetFilterRatio) || offsetFilterRatio <= 0, IllegalArgumentException.class,
-                "bad offsetFilterRatio");
-        Throw.when(Double.isNaN(minimumOffset) || minimumOffset <= 0, IllegalArgumentException.class, "bad minimumOffset");
+        Throw.whenNaN(offset, "offset");
+        Throw.whenNaN(circlePrecision, "circlePrecision");
+        Throw.when(circlePrecision <= 0, IllegalArgumentException.class, "bad circlePrecision");
+        Throw.whenNaN(offsetMinimumFilterValue, "offsetMinimumFilterValue");
+        Throw.when(offsetMinimumFilterValue <= 0, IllegalArgumentException.class, "bad offsetMinimumFilterValue");
+        Throw.whenNaN(offsetMaximumFilterValue, "offsetMaximumFilterValue");
+        Throw.when(offsetMaximumFilterValue <= 0, IllegalArgumentException.class, "bad offsetMaximumFilterValue");
+        Throw.whenNaN(offsetFilterRatio, "offsetFilterRatio");
+        Throw.when(offsetFilterRatio <= 0, IllegalArgumentException.class, "bad offsetFilterRatio");
+        Throw.whenNaN(minimumOffset, "minimumOffset");
+        Throw.when(minimumOffset <= 0, IllegalArgumentException.class, "bad minimumOffset");
         Throw.when(offsetMinimumFilterValue >= offsetMaximumFilterValue, IllegalArgumentException.class,
                 "bad offset filter values; minimum must be less than maximum");
         double bufferOffset = Math.abs(offset);
@@ -1109,7 +1118,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     @Override
     public PolyLine2d offsetLine(final double offsetAtStart, final double offsetAtEnd, final double circlePrecision,
             final double offsetMinimumFilterValue, final double offsetMaximumFilterValue, final double offsetFilterRatio,
-            final double minimumOffset) throws IllegalArgumentException, DrawRuntimeException
+            final double minimumOffset)
     {
         if (offsetAtStart == offsetAtEnd)
         {
@@ -1131,7 +1140,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     @Override
-    public PolyLine2d transitionLine(final PolyLine2d endLine, final TransitionFunction transition) throws DrawRuntimeException
+    public PolyLine2d transitionLine(final PolyLine2d endLine, final TransitionFunction transition)
     {
         Throw.whenNull(endLine, "endLine");
         Throw.whenNull(transition, "transition");
@@ -1167,7 +1176,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     @Override
     public final PolyLine2d offsetLine(final double[] relativeFractions, final double[] offsets,
-            final double offsetMinimumFilterValue) throws DrawRuntimeException
+            final double offsetMinimumFilterValue)
     {
         Throw.whenNull(relativeFractions, "relativeFraction may not be null");
         Throw.whenNull(offsets, "offsets may not be null");
@@ -1238,17 +1247,17 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     /**
-     * Find a location on this PolyLine2d that is a reasonable projection of a Ray on this line. The result (if not NaN) lies on
-     * a line perpendicular to the direction of the Ray and on some segment of this PolyLine. This method attempts to give
-     * continuous results for continuous changes of the Ray that must be projected. There are cases where this is simply
-     * impossible, or the optimal result is ambiguous. In these cases this method will return something that is hopefully good
-     * enough.
+     * Find a location on this PolyLine2d that is a reasonable projection of a Ray on this line. The result (if not
+     * <code>NaN</code>) lies on a line perpendicular to the direction of the <code>Ray</code> and on some segment of this
+     * <code>PolyLine</code>. This method attempts to give continuous results for continuous changes of the <code>Ray</code>
+     * that must be projected. There are cases where this is simply impossible, or the optimal result is ambiguous. In these
+     * cases this method will return something that is hopefully good enough.
      * @param ray Ray2d; the Ray
-     * @return double; length along this PolyLine (some value between 0 and the length of this PolyLine) where ray projects, or
-     *         NaN if there is no solution
-     * @throws NullPointerException when ray is null
+     * @return double; length along this <code>PolyLine</code> (some value between 0 and the length of this
+     *         <code>PolyLine</code>) where <code>ray</code> projects, or <code>NaN</code> if there is no solution
+     * @throws NullPointerException when <code>ray</code> is <code>null</code>
      */
-    public double projectRay(final Ray2d ray) throws NullPointerException
+    public double projectRay(final Ray2d ray)
     {
         Throw.whenNull(ray, "ray");
         double bestDistance = Double.POSITIVE_INFINITY;
@@ -1278,7 +1287,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a Path2D from this PolyLine2d. The result is NOT cached (in the current implementation).
-     * @return Path2D; newly construct Path2D consisting solely of straight segments.
+     * @return Path2D; newly constructed <code>Path2D</code> consisting solely of straight segments.
      */
     public Path2D toPath2D()
     {

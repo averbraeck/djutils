@@ -45,20 +45,12 @@ interface Curve2d extends Curve<DirectedPoint2d, Double>
         return 1.0 / getEndCurvature();
     }
 
-    /**
-     * Start direction of this Curve2d.
-     * @return start direction of this Curve2d
-     */
     @Override
     default Double getStartDirection()
     {
         return getStartPoint().dirZ;
     }
 
-    /**
-     * End direction of this Curve2d.
-     * @return end direction of this Curve2d
-     */
     @Override
     default Double getEndDirection()
     {

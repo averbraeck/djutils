@@ -42,23 +42,27 @@ public interface OffsetFlattener2d extends Flattener2d
      * Load one kink in the map of fractions and points.
      * @param map NavigableMap<Double, Point2d> the map
      * @param kink double; the fraction where the kink occurs
-     * @param line FlattableLine; the line that can compute the point
-     * @param fld FractionalLengthData; offset data (may be null)
+     * @param line OffsetFlattableLine2d; the line that can compute the point for each <code>kink</code> position
+     * @param fld FractionalLengthData; offset data
+     * @throws NullPointerException when <code>map</code> is <code>null</code>, <code>kink</code> is <code>null</code>,
+     *             <code>line</code> is <code>null</code>, or <code>fld</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>kink &lt; 0.0</code>, or <code>kink &gt; 1.0</code>
      */
     private static void loadKink(final NavigableMap<Double, Point2d> map, final double kink, final OffsetFlattable2d line,
             final PieceWiseLinearOffset2d fld)
     {
-        Throw.when(kink < 0.0 || kink > 1.0, IllegalArgumentException.class, "Kinks must all be between 0.0 and 1.0, (got {})",
+        Throw.when(kink < 0.0 || kink > 1.0, IllegalArgumentException.class, "Kinks must all be between 0.0 and 1.0, (got %f)",
                 kink);
         if (kink == 0.0 || kink == 1.0)
         {
-            return;
+            return; // Already loaded by <code>loadKinks</code>
         }
         if (map.containsKey(kink))
         {
             return;
         }
-        double kinkFraction = line.getT(kink * line.getLength());
+
+        double kinkFraction = line.getT(kink * line.getLength()); // Translate fraction on fld to fraction on line
         Point2d kinkPoint = line.getPoint(kinkFraction, fld);
         // System.out.println("# Processing kink at " + kink + ", getT " + kinkFraction + " point " + kinkPoint);
         map.put(kinkFraction, kinkPoint);
@@ -67,8 +71,8 @@ public interface OffsetFlattener2d extends Flattener2d
     /**
      * Load the kinks into the navigable map (including the start point and the end point).
      * @param map navigableMap<Double, Point2d>; the navigable map
-     * @param line FlattableLine; the FlattableLine that can yield a Point2d for every kink position
-     * @param fld FractionalLengthData; offset data (may be null)
+     * @param line OffsetFlattableLine2d; the OffsetFlattableLine2d
+     * @param fld FractionalLengthData2d; the offset data
      */
     private static void loadKinks(final NavigableMap<Double, Point2d> map, final OffsetFlattable2d line,
             final PieceWiseLinearOffset2d fld)
@@ -93,15 +97,15 @@ public interface OffsetFlattener2d extends Flattener2d
      * Check for an inflection point by creating additional points at one quarter and three quarters. If these are on opposite
      * sides of the line from prevPoint to nextPoint; there must be an inflection point.
      * https://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
-     * @param line FlattableLine
+     * @param line OffsetFlattableLine2d
      * @param prevT double; t of preceding inserted point
      * @param medianT double; t of point currently considered for insertion
      * @param nextT double; t of following inserted point
-     * @param prevPoint Point2d; point on <cite>line</cite> at <cite>prevT</cite>
-     * @param nextPoint Point2d; point on <cite>line</cite> at <cite>nextT</cite>
-     * @param fld FractionalLengthData; information about lateral offsets (may be null)
-     * @return boolean; <cite>true</cite> if there is an inflection point between <cite>prevT</cite> and <cite>nextT</cite>;
-     *         <cite>false</cite> if there is no inflection point between <cite>prevT</cite> and <cite>nextT</cite>
+     * @param prevPoint Point2d; point on <code>line</code> at <code>prevT</code>
+     * @param nextPoint Point2d; point on <code>line</code> at <code>nextT</code>
+     * @param fld FractionalLengthData2d; information about lateral offsets (may be  <code>null</code>)
+     * @return boolean; <code>true</code> if there is an inflection point between <code>prevT</code> and <code>nextT</code>;
+     *         <code>false</code> if there is no inflection point between <code>prevT</code> and <code>nextT</code>
      */
     private static boolean checkInflectionPoint(final OffsetFlattable2d line, final double prevT, final double medianT,
             final double nextT, final Point2d prevPoint, final Point2d nextPoint, final PieceWiseLinearOffset2d fld)
@@ -116,7 +120,7 @@ public interface OffsetFlattener2d extends Flattener2d
     }
 
     /**
-     * Flattener based on number of segments.
+     * Flattener that approximates the <code>OffsetFlattable2d</code> with a specified number of segments.
      */
     class NumSegments implements OffsetFlattener2d
     {
@@ -124,8 +128,9 @@ public interface OffsetFlattener2d extends Flattener2d
         private final int numSegments;
 
         /**
-         * Construct a NumSegments flattener.
-         * @param numSegments int; number of segments to use in the construction of the PolyLine2d.
+         * Construct a flattener that approximates the <code>OffsetFlattable2d</code> with a specified number of segments.
+         * @param numSegments int; number of segments to use in the construction of the <code>PolyLine2d</code>
+         * @throws IllegalArgumentException when <code>numSegments &lt; 1</code>
          */
         public NumSegments(final int numSegments)
         {
@@ -134,9 +139,9 @@ public interface OffsetFlattener2d extends Flattener2d
         }
 
         @Override
-        public PolyLine2d flatten(final OffsetFlattable2d line, final PieceWiseLinearOffset2d fld)
+        public PolyLine2d flatten(final OffsetFlattable2d line, final PieceWiseLinearOffset2d fld) throws NullPointerException
         {
-            Throw.whenNull(line, "Line function may not be null.");
+            Throw.whenNull(line, "Line function may not be null");
             List<Point2d> points = new ArrayList<>(this.numSegments + 1);
             for (int i = 0; i <= this.numSegments; i++)
             {
@@ -148,7 +153,7 @@ public interface OffsetFlattener2d extends Flattener2d
     }
 
     /**
-     * Flattener based on maximum deviation.
+     * Flattener that limits the distance between the <code>Flattable2d</code> and the <code>PolyLine2d</code>.
      */
     class MaxDeviation implements OffsetFlattener2d
     {
@@ -156,8 +161,11 @@ public interface OffsetFlattener2d extends Flattener2d
         private final double maxDeviation;
 
         /**
-         * Construct a new MaxDeviation flattener.
-         * @param maxDeviation maximum deviation, must be above 0.0.
+         * Construct a flattener that limits the distance between the <code>OffsetFlattable2d</code> and the
+         * <code>PolyLine2d</code>.
+         * @param maxDeviation maximum deviation, must be above 0.0
+         * @throws ArithmeticException when <code>maxDeviation</code> is <code>NaN</code>
+         * @throws IllegalArgumentException when <code>maxDeviation &le; 0.0</code>
          */
         public MaxDeviation(final double maxDeviation)
         {
@@ -168,7 +176,7 @@ public interface OffsetFlattener2d extends Flattener2d
         @Override
         public PolyLine2d flatten(final OffsetFlattable2d line, final PieceWiseLinearOffset2d fld)
         {
-            Throw.whenNull(line, "Line function may not be null.");
+            Throw.whenNull(line, "Line function may not be null");
             NavigableMap<Double, Point2d> result = new TreeMap<>();
             OffsetFlattener2d.loadKinks(result, line, fld);
 
@@ -215,7 +223,8 @@ public interface OffsetFlattener2d extends Flattener2d
     }
 
     /**
-     * Flattener based on maximum deviation and maximum angle.
+     * Flattener that limits distance <b>and</b> angle difference between the <code>Flattable2d</code> and the
+     * <code>PolyLine2d</code>.
      */
     class MaxDeviationAndAngle implements OffsetFlattener2d
     {
@@ -226,9 +235,12 @@ public interface OffsetFlattener2d extends Flattener2d
         private final double maxAngle;
 
         /**
-         * Constructor.
-         * @param maxDeviation maximum deviation, must be above 0.0.
-         * @param maxAngle maximum angle, must be above 0.0.
+         * Construct a flattener that limits distance <b>and</b> angle difference between the <code>OffsetFlattable2d</code> and
+         * the <code>PolyLine2d</code>.
+         * @param maxDeviation maximum deviation, must be above 0.0
+         * @param maxAngle maximum angle, must be above 0.0
+         * @throws ArithmeticException when <code>maxDeviation</code>, or <code>maxAngle</code> is <code>NaN</code>
+         * @throws IllegalArgumentException when <code>maxDeviation &le; 0.0</code>, or <code>maxAngle &le; 0.0</code>
          */
         public MaxDeviationAndAngle(final double maxDeviation, final double maxAngle)
         {
@@ -287,7 +299,7 @@ public interface OffsetFlattener2d extends Flattener2d
                     directions.put(medianT, line.getDirection(medianT, fld));
                     iterationsAtSinglePoint++;
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t={}). Likely there is an (unreported) kink in the FlattableLine.",
+                            + "around the same point (t=%f). Likely there is an (unreported) kink in the FlattableLine.",
                             medianT);
                     continue;
                 }
@@ -312,7 +324,7 @@ public interface OffsetFlattener2d extends Flattener2d
     }
 
     /**
-     * Flattener based on maximum angle.
+     * Flattener that limits the angle difference between the <code>Flattable2d</code> and the <code>PolyLine2d</code>.
      */
     class MaxAngle implements OffsetFlattener2d
     {
@@ -320,8 +332,11 @@ public interface OffsetFlattener2d extends Flattener2d
         private final double maxAngle;
 
         /**
-         * Constructor.
+         * Construct a flattener that limits the angle difference between the <code>Flattable2d</code> and the
+         * <code>PolyLine2d</code>.
          * @param maxAngle maximum angle.
+         * @throws ArithmeticException when <code>maxAngle</code> is <code>NaN</code>
+         * @throws IllegalArgumentException when <code>maxAngle &le; 0.0</code>
          */
         public MaxAngle(final double maxAngle)
         {
@@ -335,7 +350,7 @@ public interface OffsetFlattener2d extends Flattener2d
             NavigableMap<Double, Point2d> result = new TreeMap<>();
             OffsetFlattener2d.loadKinks(result, line, fld);
             Map<Double, Double> directions = new LinkedHashMap<>();
-            directions.put(0.0, line.getDirection(0.0, fld)); // can't do ULP before 0.0
+            directions.put(0.0, line.getDirection(0.0, fld)); // directions can't do ULP before 0.0
             Set<Double> kinks = new HashSet<>();
             for (double kink : result.keySet())
             {
@@ -385,7 +400,7 @@ public interface OffsetFlattener2d extends Flattener2d
                     }
                     */
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t={}). Likely there is an (unreported) kink in the FlattableLine.",
+                            + "around the same point (t=%f). Likely there is an (unreported) kink in the FlattableLine.",
                             medianT);
                     continue;
                 }

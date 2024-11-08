@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.DirectedPoint2d;
@@ -49,12 +48,11 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
      * @param startY double; the y-coordinate of the start point
      * @param endX double; the x-coordinate of the end point
      * @param endY double; the y-coordinate of the end point
-     * @throws DrawRuntimeException when (startX,startY) is equals end (endX,endY)
+     * @throws IllegalArgumentException when <code>(startX,startY)</code> is the same as<code>(endX,endY)</code>
      */
     public LineSegment2d(final double startX, final double startY, final double endX, final double endY)
-            throws DrawRuntimeException
     {
-        Throw.when(startX == endX && startY == endY, DrawRuntimeException.class, "Start and end may not be equal");
+        Throw.when(startX == endX && startY == endY, IllegalArgumentException.class, "Start and end may not be equal");
         this.startX = startX;
         this.startY = startY;
         this.endX = endX;
@@ -66,11 +64,10 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
      * @param start Point2d; the start point
      * @param endX double; the x-coordinate of the end point
      * @param endY double; the y-coordinate of the end point
-     * @throws NullPointerException when start is null
-     * @throws DrawRuntimeException when start has the exact coordinates endX, endY
+     * @throws NullPointerException when <code>start</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>start</code> has the exact coordinates <code>(endX,endY)</code>
      */
     public LineSegment2d(final Point2d start, final double endX, final double endY)
-            throws NullPointerException, DrawRuntimeException
     {
         this(Throw.whenNull(start, "start").x, start.y, endX, endY);
     }
@@ -80,11 +77,11 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
      * @param startX double; the x-coordinate of the start point
      * @param startY double; the y-coordinate of the start point
      * @param end Point2d; the end point
-     * @throws NullPointerException when end is null
-     * @throws DrawRuntimeException when end has the exact coordinates startX, startY
+     * @throws NullPointerException when <code>end</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>end</code> has the exact coordinates <code>(startX,startY)</code>
      */
     public LineSegment2d(final double startX, final double startY, final Point2d end)
-            throws NullPointerException, DrawRuntimeException
+            throws NullPointerException, IllegalArgumentException
     {
         this(startX, startY, Throw.whenNull(end, "end").x, end.y);
     }
@@ -93,10 +90,10 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
      * Construct a new LineSegment2d from two Point2d objects.
      * @param start Point2d; the start point
      * @param end Point2d; the end point
-     * @throws NullPointerException when start is null
-     * @throws DrawRuntimeException when start has the exact coordinates endX, endY
+     * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>start</code> has the same coordinates as <code>end</code>
      */
-    public LineSegment2d(final Point2d start, final Point2d end) throws NullPointerException, DrawRuntimeException
+    public LineSegment2d(final Point2d start, final Point2d end)
     {
         this(Throw.whenNull(start, "start").x, start.y, Throw.whenNull(end, "end").x, end.y);
     }
@@ -139,10 +136,10 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
     }
 
     @Override
-    public DirectedPoint2d getLocationExtended(final double position) throws DrawRuntimeException
+    public DirectedPoint2d getLocationExtended(final double position)
     {
-        Throw.when(Double.isNaN(position) || Double.isInfinite(position), DrawRuntimeException.class,
-                "position must be finite");
+        Throw.whenNaN(position, "position");
+        Throw.when(Double.isInfinite(position), IllegalArgumentException.class, "position must be finite");
         double dX = this.endX - this.startX;
         double dY = this.endY - this.startY;
         double length = Math.hypot(dX, dY);
@@ -151,7 +148,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
     }
 
     @Override
-    public Point2d closestPointOnSegment(final Point2d point) throws NullPointerException
+    public Point2d closestPointOnSegment(final Point2d point)
     {
         Throw.whenNull(point, "point");
         return point.closestPointOnLine(this.startX, this.startY, this.endX, this.endY, true, true);
@@ -164,7 +161,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
     }
 
     @Override
-    public Point2d projectOrthogonal(final Point2d point) throws NullPointerException
+    public Point2d projectOrthogonal(final Point2d point)
     {
         Throw.whenNull(point, "point");
         return point.closestPointOnLine(this.startX, this.startY, this.endX, this.endY, null, null);
@@ -178,14 +175,14 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
     }
 
     @Override
-    public double projectOrthogonalFractional(final Point2d point) throws NullPointerException
+    public double projectOrthogonalFractional(final Point2d point)
     {
         Throw.whenNull(point, "point");
         return point.fractionalPositionOnLine(this.startX, this.startY, this.endX, this.endY, null, null);
     }
 
     @Override
-    public double projectOrthogonalFractionalExtended(final Point2d point) throws NullPointerException
+    public double projectOrthogonalFractionalExtended(final Point2d point)
     {
         Throw.whenNull(point, "point");
         return point.fractionalPositionOnLine(this.startX, this.startY, this.endX, this.endY, false, false);

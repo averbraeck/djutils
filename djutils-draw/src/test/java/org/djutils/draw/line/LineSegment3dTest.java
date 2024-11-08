@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Iterator;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Export;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.DirectedPoint3d;
@@ -44,9 +43,9 @@ public class LineSegment3dTest
         try
         {
             new LineSegment3d(1, 2, 3, 1, 2, 3);
-            fail("idential start and end should have thrown a DrawRuntimeException");
+            fail("idential start and end should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -123,9 +122,9 @@ public class LineSegment3dTest
         try
         {
             segment.getLocation(Double.NaN);
-            fail("NaN position should have thrown a DrawRuntimeException");
+            fail("NaN position should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -133,9 +132,9 @@ public class LineSegment3dTest
         try
         {
             segment.getLocationExtended(Double.POSITIVE_INFINITY);
-            fail("Infinity position should have thrown a DrawRuntimeException");
+            fail("Infinity position should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -143,9 +142,9 @@ public class LineSegment3dTest
         try
         {
             segment.getLocationExtended(Double.NEGATIVE_INFINITY);
-            fail("Infinity position should have thrown a DrawRuntimeException");
+            fail("Infinity position should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -157,9 +156,9 @@ public class LineSegment3dTest
                 try
                 {
                     segment.getLocation(position);
-                    fail("position out of bounds should have thrown a DrawRuntimeException");
+                    fail("position out of bounds should have thrown a IllegalArgumentException");
                 }
-                catch (DrawRuntimeException dre)
+                catch (IllegalArgumentException e)
                 {
                     // Ignore expected exception
                 }

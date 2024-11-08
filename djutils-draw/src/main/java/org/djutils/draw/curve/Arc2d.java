@@ -29,30 +29,29 @@ public class Arc2d implements Curve2d, OffsetFlattable2d
     private final double angle;
 
     /** Sign to use for offsets and angles, which depends on the left/right direction. */
-    private double sign;
+    private final double sign;
 
     /** Center point of circle, as calculated in constructor. */
     private final Point2d center;
 
     /**
      * Define arc by starting point, radius, curve direction, and angle.
-     * @param startPoint DirectedPoint2d; starting point.
-     * @param radius radius (must be positive).
-     * @param left left curve, or right.
-     * @param angle angle of arc (must be positive).
+     * @param startPoint DirectedPoint2d; starting point
+     * @param radius radius (must be positive)
+     * @param left <code>true</code>for left turning curve; <code>false</code> for for right turning curve
+     * @param angle angle of arc (must be positive)
      */
     public Arc2d(final DirectedPoint2d startPoint, final double radius, final boolean left, final double angle)
     {
-        Throw.whenNull(startPoint, "Start point may not be null.");
-        Throw.when(radius < 0.0, IllegalArgumentException.class, "Radius must be positive.");
-        Throw.when(angle < 0.0, IllegalArgumentException.class, "Angle must be positive.");
+        Throw.whenNull(startPoint, "startPoint");
+        Throw.when(radius < 0.0, IllegalArgumentException.class, "radius must be positive");
+        Throw.when(angle < 0.0, IllegalArgumentException.class, "angle must be positive");
         this.startPoint = startPoint;
         this.radius = radius;
         this.sign = left ? 1.0 : -1.0;
         this.angle = angle;
         double dx = Math.cos(startPoint.dirZ) * this.sign * radius;
         double dy = Math.sin(startPoint.dirZ) * this.sign * radius;
-
         this.center = new Point2d(startPoint.x - dy, startPoint.y + dx);
     }
 
@@ -96,7 +95,7 @@ public class Arc2d implements Curve2d, OffsetFlattable2d
 
     /**
      * Does this arc bend to the left?
-     * @return boolean; true if this arc bends to the left; false if this arc bends to the right
+     * @return boolean; <codetrue</code> if this Arc bends to the left; <code>false</code> if this Arc bends to the right
      */
     public boolean isLeft()
     {
@@ -104,8 +103,8 @@ public class Arc2d implements Curve2d, OffsetFlattable2d
     }
 
     /**
-     * Retrieve the total change of direction on this arc.
-     * @return double; the total change of direction on this arc
+     * Retrieve the total change of direction on this Arc.
+     * @return double; the total change of direction on this Arc
      */
     public double getAngle()
     {
@@ -176,14 +175,14 @@ public class Arc2d implements Curve2d, OffsetFlattable2d
     @Override
     public PolyLine2d toPolyLine(final Flattener2d flattener)
     {
-        Throw.whenNull(flattener, "Flattener may not be null.");
+        Throw.whenNull(flattener, "Flattener");
         return flattener.flatten(this);
     }
 
     @Override
     public PolyLine2d toPolyLine(final OffsetFlattener2d flattener, final PieceWiseLinearOffset2d offsets)
     {
-        Throw.whenNull(offsets, "Offsets may not be null.");
+        Throw.whenNull(offsets, "Offsets");
         return flattener.flatten(this, offsets);
     }
 

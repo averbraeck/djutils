@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
@@ -32,50 +31,37 @@ public class Polygon2d extends PolyLine2d
      * Construct a new Polygon2d.
      * @param x double[]; the x coordinates of the points
      * @param y double[]; the y coordinates of the points
-     * @throws DrawRuntimeException when any two successive points are equal, or when there are too few points
+     * @throws NullPointerException when <code>x</code>, or <code>y</code> is <code>null</code>
+     * @throws IllegalArgumentException when any two successive points are equal, or when there are too few points, or when the
+     *             lengths of the coordinate arrays are not equal
      */
-    public Polygon2d(final double[] x, final double[] y) throws DrawRuntimeException
+    public Polygon2d(final double[] x, final double[] y)
     {
-        super(fixClosingPointX(Throw.whenNull(x, "x"), Throw.whenNull(y, "y")), fixClosingPointY(x, y));
+        super(fixClosingPoint(Throw.whenNull(x, "x"), Throw.whenNull(y, "y")), fixClosingPoint(y, x));
     }
 
     /**
-     * Ensure that the last point is not equal to the first. Remove the last point if necessary.
-     * @param x double[]; the x coordinates of the points
-     * @param y double[]; the y coordinates of the points
-     * @return double[]; the x coordinates of the points (possibly a copy with the last element removed)
+     * Ensure that the last pair of values in two arrays are not equal to the first pair. Remove the last pair if necessary.
+     * @param a double[]; the a array
+     * @param b double[]; the b array
+     * @return double[]; the <code>a</code> array (possibly a copy with the last element removed)
      */
-    private static double[] fixClosingPointX(final double[] x, final double[] y)
+    private static double[] fixClosingPoint(final double[] a, final double[] b)
     {
-        if (x.length > 1 && y.length == x.length && x[0] == x[x.length - 1] && y[0] == y[x.length - 1])
+        if (a.length > 1 && b.length == a.length && a[0] == a[a.length - 1] && b[0] == b[a.length - 1])
         {
-            return Arrays.copyOf(x, x.length - 1);
+            return Arrays.copyOf(a, a.length - 1);
         }
-        return x;
-    }
-
-    /**
-     * Ensure that the last point is not equal to the first. Remove the last point if necessary.
-     * @param x double[]; the x coordinates of the points
-     * @param y double[]; the y coordinates of the points
-     * @return double[]; the y coordinates of the points (possibly a copy with the last element removed)
-     */
-    private static double[] fixClosingPointY(final double[] x, final double[] y)
-    {
-        if (x.length > 1 && y.length == x.length && x[0] == x[x.length - 1] && y[0] == y[x.length - 1])
-        {
-            return Arrays.copyOf(y, x.length - 1);
-        }
-        return y;
+        return a;
     }
 
     /**
      * Construct a new Polygon2d.
      * @param points Point2d[]; array of Point2d objects.
-     * @throws NullPointerException when points is null
-     * @throws DrawRuntimeException when points is too short, or contains successive duplicate points
+     * @throws NullPointerException when <code>points</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>points</code> is too short, or contains successive duplicate points
      */
-    public Polygon2d(final Point2d[] points) throws NullPointerException, DrawRuntimeException
+    public Polygon2d(final Point2d[] points)
     {
         this(PolyLine2d.makeArray(points, p -> p.x), PolyLine2d.makeArray(points, p -> p.y));
     }
@@ -84,13 +70,13 @@ public class Polygon2d extends PolyLine2d
      * Construct a new Polygon2d.
      * @param point1 Point2d; the first point of the new Polygon2d
      * @param point2 Point2d; the second point of the new Polygon2d
-     * @param otherPoints Point2d[]; all remaining points of the new Polygon2d (may be null)
-     * @throws NullPointerException when point1 or point2 is null
-     * @throws DrawRuntimeException when point1 is equal to the last point of otherPoints, or any two successive points are
-     *             equal
+     * @param otherPoints Point2d[]; all remaining points of the new Polygon2d (may be <code>null</code>)
+     * @throws NullPointerException when <code>point1</code> or <code>point2</code> is <code>null</code>, or
+     *             <code>otherPoints</code> contains a <code>null</code> value
+     * @throws IllegalArgumentException when <code>point1</code> is equal to the last entry of <code>otherPoints</code>, or any
+     *             two successive points are equal
      */
     public Polygon2d(final Point2d point1, final Point2d point2, final Point2d... otherPoints)
-            throws NullPointerException, DrawRuntimeException
     {
         super(Throw.whenNull(point1, "point1"), Throw.whenNull(point2, "point2"), fixClosingPoint(point1, otherPoints));
     }
@@ -98,8 +84,8 @@ public class Polygon2d extends PolyLine2d
     /**
      * Ensure that the last point of otherPoints is not equal to point1. Remove the last point if necessary.
      * @param point1 Point2d; the first point of a new Polygon2d
-     * @param otherPoints Point2d[]; the remaining points of a new Polygon2d (may be null)
-     * @return Point2d[]; otherPoints (possibly a copy thereof with the last entry removed)
+     * @param otherPoints Point2d[]; the remaining points of a new Polygon2d (may be <code>null</code>)
+     * @return Point2d[]; <code>otherPoints</code> (possibly a copy thereof with the last entry removed)
      */
     private static Point2d[] fixClosingPoint(final Point2d point1, final Point2d[] otherPoints)
     {
@@ -114,7 +100,7 @@ public class Polygon2d extends PolyLine2d
             result = Arrays.copyOf(otherPoints, result.length - 1);
             lastPoint = result[result.length - 1];
         }
-        Throw.when(point1.x == lastPoint.x && point1.y == lastPoint.y, DrawRuntimeException.class,
+        Throw.when(point1.x == lastPoint.x && point1.y == lastPoint.y, IllegalArgumentException.class,
                 "Before last point and last point are at same location");
         return result;
     }
@@ -122,10 +108,10 @@ public class Polygon2d extends PolyLine2d
     /**
      * Construct a new Polygon2d from a list of Point2d objects.
      * @param points List&lt;Point2d&gt;; the list of points
-     * @throws NullPointerException when points is null
-     * @throws DrawRuntimeException when points is too short, or the last two points are at the same location
+     * @throws NullPointerException when <code>points</code> is <code>null</code>, or contains a <code>null</code> value
+     * @throws IllegalArgumentException when <code>points</code> is too short, or the last two points are at the same location
      */
-    public Polygon2d(final List<Point2d> points) throws NullPointerException, DrawRuntimeException
+    public Polygon2d(final List<Point2d> points)
     {
         super(fixClosingPoint(true, Throw.whenNull(points, "points")));
 
@@ -133,17 +119,17 @@ public class Polygon2d extends PolyLine2d
 
     /**
      * Ensure that the last point in the list is different from the first point by possibly removing the last point.
-     * @param doNotModifyList boolean; if true; the list of points will not be modified (if the last point is to be removed; the
-     *            entire list up to the last point is duplicated)
+     * @param doNotModifyList boolean; if <code>true</code>; the list of points will not be modified (if the last point is to be
+     *            removed; the entire list up to the last point is duplicated)
      * @param points List&lt;Point2d&gt;; the list of points
      * @return List&lt;Point2d&gt;; the fixed list
-     * @throws DrawRuntimeException when the (resulting) list is too short, or the before last and last point of points have the
-     *             same coordinates
+     * @throws NullPointerException when <code>points</code> is <code>null</code>
+     * @throws IllegalArgumentException when the (resulting) list is too short, or the before last and last point of points have
+     *             the same coordinates
      */
     private static List<Point2d> fixClosingPoint(final boolean doNotModifyList, final List<Point2d> points)
-            throws DrawRuntimeException
     {
-        Throw.when(points.size() < 2, DrawRuntimeException.class, "Need at least two points");
+        Throw.when(points.size() < 2, IllegalArgumentException.class, "Need at least two points");
         Point2d firstPoint = points.get(0);
         Point2d lastPoint = points.get(points.size() - 1);
         List<Point2d> result = points;
@@ -163,7 +149,7 @@ public class Polygon2d extends PolyLine2d
             }
             lastPoint = result.get(result.size() - 1);
         }
-        Throw.when(firstPoint.x == lastPoint.x && firstPoint.y == lastPoint.y, DrawRuntimeException.class,
+        Throw.when(firstPoint.x == lastPoint.x && firstPoint.y == lastPoint.y, IllegalArgumentException.class,
                 "Before last point and last point are at same location");
         return result;
     }
@@ -171,6 +157,10 @@ public class Polygon2d extends PolyLine2d
     /**
      * Construct a new Polygon2d from an iterator that yields Point2d.
      * @param iterator Iterator&lt;Point2d&gt;; the iterator
+     * @throws NullPointerException when <code>iterator</code> is <code>null</code>, or the iterator returns a <code>null</code>
+     *             value
+     * @throws IllegalArgumentException when the <code>iterator</code> yields too few points, or the before last and last point
+     *             have the same coordinates
      */
     public Polygon2d(final Iterator<Point2d> iterator)
     {
@@ -179,23 +169,25 @@ public class Polygon2d extends PolyLine2d
 
     /**
      * Create a new Polygon2d, optionally filtering out repeating successive points.
-     * @param filterDuplicates boolean; if true; filter out successive repeated points; otherwise do not filter
-     * @param points Point2d...; the coordinates of the polygon as Point2d
-     * @throws DrawRuntimeException when number of points &lt; 2
+     * @param filterDuplicates boolean; if <code>true</code>; filter out successive repeated points; otherwise do not filter
+     * @param points Point2d...; the coordinates of the polygon in Point2d objects
+     * @throws NullPointerException when <code>points</code> contains a <code>null</code> value
+     * @throws IllegalArgumentException when number of points (after filtering) &lt; 2
      */
-    public Polygon2d(final boolean filterDuplicates, final Point2d... points) throws DrawRuntimeException
+    public Polygon2d(final boolean filterDuplicates, final Point2d... points)
     {
         this(PolyLine2d.cleanPoints(filterDuplicates, Arrays.stream(points).iterator()));
     }
 
     /**
      * Create a new Polygon2d, optionally filtering out repeating successive points.
-     * @param filterDuplicates boolean; if true; filter out successive repeated points; otherwise do not filter
-     * @param pointList List&lt;Point2d&gt;; list of the coordinates of the line as Point3d; any duplicate points in this list
-     *            are removed (this method may modify the provided list)
-     * @throws DrawRuntimeException when number of non-equal points &lt; 2
+     * @param filterDuplicates boolean; if<code>true</code>; filter out successive repeated points; otherwise do not filter
+     * @param pointList List&lt;Point2d&gt;; list of the coordinates of the line in Point2d objects; any duplicate points in
+     *            this list are removed (this method may modify the provided list)
+     * @throws NullPointerException when <code>pointList</code> contains a <code>null</code> value
+     * @throws IllegalArgumentException when number of non-equal points &lt; 2
      */
-    public Polygon2d(final boolean filterDuplicates, final List<Point2d> pointList) throws DrawRuntimeException
+    public Polygon2d(final boolean filterDuplicates, final List<Point2d> pointList)
     {
         this(PolyLine2d.cleanPoints(filterDuplicates, pointList.iterator()));
     }
@@ -203,6 +195,7 @@ public class Polygon2d extends PolyLine2d
     /**
      * Construct a new Polygon2d from an existing one. This constructor is primarily intended for use in extending classes.
      * @param polygon Polygon2d; the existing Polygon2d
+     * @throws NullPointerException when <code>polygon</code> is <code>null</code>
      */
     public Polygon2d(final Polygon2d polygon)
     {
@@ -212,7 +205,8 @@ public class Polygon2d extends PolyLine2d
     /**
      * Determine if this Polygon is convex. Returns bogus result for self-intersecting polygons. Derived from
      * <a href="http://paulbourke.net/geometry/polygonmesh/source2.c">Convex by Paul Bourke</a>
-     * @return boolean; true if this Polygon2d is convex; false if this Polygon2d is concave
+     * @return boolean; <code>true</code> if this <code>Polygon2d</code> is convex; <code>false</code> if this
+     *         <code>Polygon2d</code> is concave
      */
     public final boolean isConvex()
     {
@@ -241,8 +235,9 @@ public class Polygon2d extends PolyLine2d
     /**
      * Determine if a point is inside this Polygon. Returns bogus results for self-intersecting polygons.
      * @param point Point2d; the point
-     * @return boolean; true if the point is inside this polygon, false if the point is outside this polygon. Results are
-     *         ill-defined for points on the edges of this Polygon.
+     * @return boolean; <code>true</code> if the point is inside this <code>Polygon2d</code>, <code>false</code> if the point is
+     *         outside this <code>Polygon2d</code>. Results are ill-defined for points on the edges of this
+     *         <code>Polygon2d</code>.
      */
     public boolean contains(final Point2d point)
     {
@@ -254,8 +249,9 @@ public class Polygon2d extends PolyLine2d
      * <a href="http://paulbourke.net/geometry/polygonmesh/">Polygons and meshes by Paul Bourke</a>
      * @param x double; the x-coordinate of the point
      * @param y double; the y-coordinate of the point
-     * @return boolean; true if the point is inside this polygon, false if the point is outside this polygon. Results are
-     *         ill-defined for points on the edges of this Polygon.
+     * @return boolean; <code>true</code> if the point is inside this <code>Polygon2d</code>, <code>false</code> if the point is
+     *         outside this <code>Polygon2d</code>. Results are ill-defined for points on the edges of this
+     *         <code>Polygon2d</code>.
      */
     public boolean contains(final double x, final double y)
     {
@@ -290,8 +286,9 @@ public class Polygon2d extends PolyLine2d
     /**
      * Determine if this Polygon completely contains a Bounds2d object. If this Polygon self-intersects, the results is bogus.
      * @param bounds Bounds2d; the Bounds2d object
-     * @return boolean; true if the Bounds2d object is completely contained in this Polygon; false if any part (or all) of the
-     *         Bounds2d object is outside this Polygon. If the Bounds2d object touches this Polygon the results are ill-defined.
+     * @return boolean; <code>true</code> if the <code>Bounds2d</code> object is completely contained in this
+     *         <code>Polygon2d</code>; <code>false</code> if any part (or all) of the Bounds2d object is outside this
+     *         <code>Polygon2d</code>. If the Bounds2d object touches this <code>Polygon2d</code> the results are ill-defined.
      */
     public boolean contains(final Bounds2d bounds)
     {
@@ -305,9 +302,10 @@ public class Polygon2d extends PolyLine2d
     }
 
     /**
-     * Determine if this Polygon intersects another Polygon.
-     * @param other Polygon2d; the other Polygon
-     * @return boolean; true if the polygons intersect; false if the polygons are disjunct. Ill-defined if the polygons touch.
+     * Determine if this Polygon2d intersects another Polygon2d.
+     * @param other Polygon2d; the other Polygon2d
+     * @return boolean; <code>true</code> if the polygons intersect; <code>false</code> if the polygons are disjunct.
+     *         Ill-defined if the polygons touch.
      */
     public boolean intersects(final Polygon2d other)
     {
@@ -368,7 +366,7 @@ public class Polygon2d extends PolyLine2d
     /**
      * Compute the surface of this Polygon2d. Sign of the result reflects the winding-ness of this this Polygon2d. If this
      * Polygon2d self-intersects, the result is bogus.
-     * @return double; the surface of this Polygon2d
+     * @return double; the surface of this <code>Polygon2d</code>
      */
     public double surface()
     {
@@ -403,7 +401,8 @@ public class Polygon2d extends PolyLine2d
         {
             return super.getSegment(index);
         }
-        Throw.when(index != size() - 1, DrawRuntimeException.class, "index must be in range 0..size() - 1");
+        Throw.when(index != size() - 1, IndexOutOfBoundsException.class, "index must be in range [0..size() - 1] (got %d)",
+                index);
         return new LineSegment2d(getX(index), getY(index), getX(0), getY(0));
     }
 

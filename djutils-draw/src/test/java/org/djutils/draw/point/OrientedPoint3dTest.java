@@ -81,9 +81,9 @@ public class OrientedPoint3dTest
         try
         {
             new OrientedPoint3d(0, 0, 0, Double.NaN, 0, 0);
-            fail("NaN rotation should have thrown an IllegalArgumentException");
+            fail("NaN rotation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -91,9 +91,9 @@ public class OrientedPoint3dTest
         try
         {
             new OrientedPoint3d(0, 0, 0, 0, Double.NaN, 0);
-            fail("NaN rotation should have thrown an IllegalArgumentException");
+            fail("NaN rotation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -101,9 +101,9 @@ public class OrientedPoint3dTest
         try
         {
             new OrientedPoint3d(0, 0, 0, 0, 0, Double.NaN);
-            fail("NaN rotation should have thrown an IllegalArgumentException");
+            fail("NaN rotation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -111,9 +111,9 @@ public class OrientedPoint3dTest
         try
         {
             new OrientedPoint3d(new double[3], Double.NaN, 0, 0);
-            fail("NaN rotation should have thrown an IllegalArgumentException");
+            fail("NaN rotation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -121,9 +121,9 @@ public class OrientedPoint3dTest
         try
         {
             new OrientedPoint3d(new double[3], 0, Double.NaN, 0);
-            fail("NaN rotation should have thrown an IllegalArgumentException");
+            fail("NaN rotation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -131,9 +131,9 @@ public class OrientedPoint3dTest
         try
         {
             new OrientedPoint3d(new double[3], 0, 0, Double.NaN);
-            fail("NaN rotation should have thrown an IllegalArgumentException");
+            fail("NaN rotation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -141,9 +141,9 @@ public class OrientedPoint3dTest
         try
         {
             new OrientedPoint3d(new Point3d(1, 2, 3), Double.NaN, 0, 0);
-            fail("NaN rotation should have thrown an IllegalArgumentException");
+            fail("NaN rotation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -151,9 +151,9 @@ public class OrientedPoint3dTest
         try
         {
             new OrientedPoint3d(new Point3d(1, 2, 3), 0, Double.NaN, 0);
-            fail("NaN rotation should have thrown an IllegalArgumentException");
+            fail("NaN rotation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -161,9 +161,9 @@ public class OrientedPoint3dTest
         try
         {
             new OrientedPoint3d(new Point3d(1, 2, 3), 0, 0, Double.NaN);
-            fail("NaN rotation should have thrown an IllegalArgumentException");
+            fail("NaN rotation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -378,9 +378,9 @@ public class OrientedPoint3dTest
         try
         {
             p.translate(Double.NaN, 2);
-            fail("NaN value should have thrown an IllegalArgumentException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -388,9 +388,9 @@ public class OrientedPoint3dTest
         try
         {
             p.translate(1, Double.NaN);
-            fail("NaN value should have thrown an IllegalArgumentException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -398,9 +398,9 @@ public class OrientedPoint3dTest
         try
         {
             p.translate(Double.NaN, 2, 3);
-            fail("NaN value should have thrown an IllegalArgumentException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -408,9 +408,9 @@ public class OrientedPoint3dTest
         try
         {
             p.translate(1, Double.NaN, 3);
-            fail("NaN value should have thrown an IllegalArgumentException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -418,9 +418,9 @@ public class OrientedPoint3dTest
         try
         {
             p.translate(1, 2, Double.NaN);
-            fail("NaN value should have thrown an IllegalArgumentException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -499,7 +499,7 @@ public class OrientedPoint3dTest
             {
                 new OrientedPoint3d(0.0, 0.0, 0.0, Math.PI / 4.0, Math.PI / 4.0, Math.PI / 4.0).normalize();
             }
-        }, "Should throw DRtE", DrawRuntimeException.class);
+        }, "Should throw exception", DrawRuntimeException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -508,7 +508,7 @@ public class OrientedPoint3dTest
             {
                 p1.rotate(Double.NaN, 0, 0);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw exception", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -517,7 +517,7 @@ public class OrientedPoint3dTest
             {
                 p1.rotate(0, Double.NaN, 0);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw exception", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -526,7 +526,7 @@ public class OrientedPoint3dTest
             {
                 p1.rotate(0, 0, Double.NaN);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw exception", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -535,7 +535,7 @@ public class OrientedPoint3dTest
             {
                 p1.translate(Double.NaN, 2);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw exception", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -544,7 +544,7 @@ public class OrientedPoint3dTest
             {
                 p1.translate(1, Double.NaN);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw exception", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -553,7 +553,7 @@ public class OrientedPoint3dTest
             {
                 p1.translate(Double.NaN, 2, 3);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw exception", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -562,7 +562,7 @@ public class OrientedPoint3dTest
             {
                 p1.translate(1, Double.NaN, 3);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw exception", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -571,7 +571,7 @@ public class OrientedPoint3dTest
             {
                 p1.translate(1, 2, Double.NaN);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw exception", ArithmeticException.class);
 
     }
 

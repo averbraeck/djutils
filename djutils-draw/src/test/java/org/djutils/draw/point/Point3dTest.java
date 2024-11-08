@@ -52,9 +52,9 @@ public class Point3dTest
         try
         {
             new Point3d(Double.NaN, 0, 0);
-            fail("NaN should have thrown an IllegalArgumentException");
+            fail("NaN should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -62,9 +62,9 @@ public class Point3dTest
         try
         {
             new Point3d(0, Double.NaN, 0);
-            fail("NaN should have thrown an IllegalArgumentException");
+            fail("NaN should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -72,9 +72,9 @@ public class Point3dTest
         try
         {
             new Point3d(0, 0, Double.NaN);
-            fail("NaN should have thrown an IllegalArgumentException");
+            fail("NaN should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -145,7 +145,7 @@ public class Point3dTest
             {
                 new Point3d(new Point2D.Double(Double.NaN, 2), 0);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw ArithmeticException", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -154,7 +154,7 @@ public class Point3dTest
             {
                 new Point3d(new Point2D.Double(1, Double.NaN), 0);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw ArithmeticException", ArithmeticException.class);
 
         // equals and hashCode
         assertTrue(p.equals(p));
@@ -245,9 +245,9 @@ public class Point3dTest
         try
         {
             p.translate(Double.NaN, 2.0);
-            fail("NaN translation should have thrown an IllegalArgumentException");
+            fail("NaN translation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -255,9 +255,9 @@ public class Point3dTest
         try
         {
             p.translate(1.0, Double.NaN);
-            fail("NaN translation should have thrown an IllegalArgumentException");
+            fail("NaN translation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -265,9 +265,9 @@ public class Point3dTest
         try
         {
             p.translate(Double.NaN, 2.0, 3.0);
-            fail("NaN translation should have thrown an IllegalArgumentException");
+            fail("NaN translation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -275,9 +275,9 @@ public class Point3dTest
         try
         {
             p.translate(1.0, Double.NaN, 3.0);
-            fail("NaN translation should have thrown an IllegalArgumentException");
+            fail("NaN translation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -285,9 +285,9 @@ public class Point3dTest
         try
         {
             p.translate(1.0, 2.0, Double.NaN);
-            fail("NaN translation should have thrown an IllegalArgumentException");
+            fail("NaN translation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -534,7 +534,7 @@ public class Point3dTest
             p1.closestPointOnLine(null, new Point3d(5, 6, 7));
             fail("null should have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -544,7 +544,7 @@ public class Point3dTest
             p1.closestPointOnLine(new Point3d(5, 6, 7), null);
             fail("null should have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -552,9 +552,9 @@ public class Point3dTest
         try
         {
             p1.closestPointOnSegment(Double.NaN, 7, 8, 9, 10, 11);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -562,9 +562,9 @@ public class Point3dTest
         try
         {
             p1.closestPointOnSegment(6, Double.NaN, 8, 9, 10, 11);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -572,9 +572,9 @@ public class Point3dTest
         try
         {
             p1.closestPointOnSegment(6, 7, Double.NaN, 9, 10, 11);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -582,9 +582,9 @@ public class Point3dTest
         try
         {
             p1.closestPointOnSegment(6, 7, 8, Double.NaN, 10, 11);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -592,9 +592,9 @@ public class Point3dTest
         try
         {
             p1.closestPointOnSegment(6, 7, 8, 9, Double.NaN, 11);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -602,9 +602,9 @@ public class Point3dTest
         try
         {
             p1.closestPointOnSegment(6, 7, 8, 9, 10, Double.NaN);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -612,9 +612,9 @@ public class Point3dTest
         try
         {
             p1.closestPointOnLine(Double.NaN, 7, 8, 9, 10, 11);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -622,9 +622,9 @@ public class Point3dTest
         try
         {
             p1.closestPointOnLine(6, Double.NaN, 8, 9, 10, 11);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException dere)
         {
             // Ignore expected exception
         }
@@ -632,9 +632,9 @@ public class Point3dTest
         try
         {
             p1.closestPointOnLine(6, 7, Double.NaN, 9, 10, 11);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -642,9 +642,9 @@ public class Point3dTest
         try
         {
             p1.closestPointOnLine(6, 7, 8, Double.NaN, 10, 11);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -652,9 +652,9 @@ public class Point3dTest
         try
         {
             p1.closestPointOnLine(6, 7, 8, 9, Double.NaN, 11);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -662,9 +662,9 @@ public class Point3dTest
         try
         {
             p1.closestPointOnLine(6, 7, 8, 9, 10, Double.NaN);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }

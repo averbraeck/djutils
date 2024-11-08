@@ -17,44 +17,44 @@ public interface Project<P extends Point<P>>
 {
     /**
      * Project a point onto this object. For PolyLines and Polygons, there may be multiple valid solutions. In that case the
-     * solution that lies on the closest segment is returned. If there is no valid solution on the closest segment, null is
-     * returned.
+     * solution that lies on the closest segment is returned. If there is no valid solution on the closest segment,
+     * <code>null</code> is returned.
      * @param point P; the point
-     * @return P; the projection of the point (may be null if no sensible projection is possible). If the result is not null;
-     *         the result lies somewhere on this object.
-     * @throws NullPointerException when point is null;
+     * @return P; the projection of the point (may be null if no sensible projection is possible). If the result is not
+     *         <code>null</code>; the result lies somewhere on this object.
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
-    P projectOrthogonal(P point) throws NullPointerException;
+    P projectOrthogonal(P point);
 
     /**
      * Project a point onto this object. For PolyLines and Polygons, there may be multiple valid solutions. In that case the
      * solution that lies on the closest segment is returned.
      * @param point P; the point
-     * @return P; the projection of the point. This result cannot be null, but it may not lie on this object, but, in stead, lie
-     *         on a line, or plane that extends this object
-     * @throws NullPointerException when point is null;
+     * @return P; the projection of the point. This result cannot be <code>null</code>, but it may not lie on this object, but,
+     *         in stead, lie on a line, or plane that extends this object
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
-    P projectOrthogonalExtended(P point) throws NullPointerException;
+    P projectOrthogonalExtended(P point);
 
     /**
      * Project a point onto this object. For PolyLines and Polygons, there may be multiple valid solutions. In that case the
-     * solution that lies on the closest segment is returned. If there is no valid solution on the closest segment, NaN is
-     * returned.
+     * solution that lies on the closest segment is returned. If there is no valid solution on the closest segment,
+     * <code>NaN</code> is returned.
      * @param point P; the point
-     * @return double; the fractional position of the projection of the point (may be NaN if no sensible projection is
-     *         possible). If the result is not NaN; the result lies somewhere on this object.
-     * @throws NullPointerException when point is null;
+     * @return double; the fractional position of the projection of the point (may be <code>NaN</code> if no sensible projection
+     *         is possible). If the result is not <code>NaN</code>; the result lies somewhere on this object.
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
-    double projectOrthogonalFractional(P point) throws NullPointerException;
+    double projectOrthogonalFractional(P point);
 
     /**
      * Project a point onto this object. For PolyLines and Polygons, there may be multiple valid solutions. In that case the
      * solution that lies on the closest segment is returned.
      * @param point P; the point
-     * @return double; the fractional position of the projection of the point. This result cannot be NaN, but it may be outside
-     *         the range 0.0 .. 1.0.
-     * @throws NullPointerException when point is null;
+     * @return double; the fractional position of the projection of the point. This result cannot be <code>NaN</code>, but it
+     *         may be outside the range 0.0 .. 1.0.
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
-    double projectOrthogonalFractionalExtended(P point) throws NullPointerException;
+    double projectOrthogonalFractionalExtended(P point);
 
 }

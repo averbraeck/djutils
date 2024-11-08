@@ -37,6 +37,8 @@ public class BezierCubic3d extends Bezier3d implements Curve3d
      * @param control1 first intermediate shape point.
      * @param control2 second intermediate shape point.
      * @param end end point.
+     * @throws NullPointerException when <code>start</code>, <code>control1</code>, <code>control2</code>, or <code>end</code>
+     *             is <code>null</code>
      */
     public BezierCubic3d(final Point3d start, final Point3d control1, final Point3d control2, final Point3d end)
     {
@@ -49,11 +51,24 @@ public class BezierCubic3d extends Bezier3d implements Curve3d
     /**
      * Create a cubic B&eacute;zier curve.
      * @param points Point2d[]; array containing four Point2d objects
+     * @throws NullPointerException when <code>points</code> is <code>null</code>, or contains a <code>null</code> value
+     * @throws IllegalArgumentException when length of <code>points</code> is not equal to <code>4</code>
      */
     public BezierCubic3d(final Point3d[] points)
     {
         this(checkArray(points)[0], points[1], points[2], points[3]);
+    }
 
+    /**
+     * Verify that a Point3d[] contains exactly 4 elements.
+     * @param points Point3d[]; the array to check
+     * @return Point3d[]; the provided array
+     * @throws IllegalArgumentException when length of <code>points</code> is not <code>4</code>
+     */
+    private static Point3d[] checkArray(final Point3d[] points)
+    {
+        Throw.when(points.length != 4, IllegalArgumentException.class, "points must contain exactly 4 Point2d objects");
+        return points;
     }
 
     /**
@@ -61,6 +76,8 @@ public class BezierCubic3d extends Bezier3d implements Curve3d
      * start and end.
      * @param start Ray3d; the start point and start direction of the B&eacute;zier curve
      * @param end Ray3d; the end point and end direction of the B&eacute;zier curve
+     * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>start</code> and <code>end</code> are at the same location
      */
     public BezierCubic3d(final Ray3d start, final Ray3d end)
     {
@@ -74,21 +91,13 @@ public class BezierCubic3d extends Bezier3d implements Curve3d
      * @param end Ray3d; the end point and end direction of the B&eacute;zier curve
      * @param shape shape factor; 1 = control points at half the distance between start and end, &gt; 1 results in a pointier
      *            shape, &lt; 1 results in a flatter shape, value should be above 0 and finite
+     * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>start</code> and <code>end</code> are at the same location,
+     *             <code>shape &le; 0</code>, <code>shape</code> is <code>NaN</code>, or infinite
      */
     public BezierCubic3d(final Ray3d start, final Ray3d end, final double shape)
     {
         this(start, end, shape, false);
-    }
-
-    /**
-     * Verify that a Point3d[] contains exactly 4 elements.
-     * @param points Point3d[]; the array to check
-     * @return Point3d[]; the provided array
-     */
-    private static Point3d[] checkArray(final Point3d[] points)
-    {
-        Throw.when(points.length != 4, IllegalArgumentException.class, "points must contain exactly 4 Point2d objects");
-        return points;
     }
 
     /**
@@ -99,8 +108,12 @@ public class BezierCubic3d extends Bezier3d implements Curve3d
      * @param shape shape factor; 1 = control points at half the distance between start and end, &gt; 1 results in a pointier
      *            shape, &lt; 1 results in a flatter shape, value should be above 0 and finite
      * @param weighted boolean; control point distance relates to distance to projected point on extended line from other end
+     * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>start</code> and <code>end</code> are at the same location,
+     *             <code>shape &le; 0</code>, <code>shape</code> is <code>NaN</code>, or infinite
      */
     public BezierCubic3d(final Ray3d start, final Ray3d end, final double shape, final boolean weighted)
+
     {
         this(createControlPoints(start, end, shape, weighted));
     }
@@ -113,6 +126,9 @@ public class BezierCubic3d extends Bezier3d implements Curve3d
      *            pointier B&eacute;zier curve
      * @param weighted boolean;
      * @return Point3d[]; an array of four Point3d elements: start, the first control point, the second control point, end.
+     * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>start</code> and <code>end</code> are at the same location,
+     *             <code>shape &le; 0</code>, <code>shape</code> is <code>NaN</code>, or infinite
      */
     private static Point3d[] createControlPoints(final Ray3d start, final Ray3d end, final double shape, final boolean weighted)
     {
@@ -120,7 +136,8 @@ public class BezierCubic3d extends Bezier3d implements Curve3d
         Throw.whenNull(end, "end");
         Throw.when(start.distanceSquared(end) == 0, IllegalArgumentException.class,
                 "Cannot create control points if start and end points coincide");
-        Throw.when(Double.isNaN(shape) || shape <= 0 || Double.isInfinite(shape), IllegalArgumentException.class,
+        Throw.whenNaN(shape, "shape");
+        Throw.when(shape <= 0 || Double.isInfinite(shape), IllegalArgumentException.class,
                 "shape must be a finite, positive value");
 
         Point3d control1;

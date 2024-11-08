@@ -54,6 +54,8 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
      * @param control1 first intermediate shape point.
      * @param control2 second intermediate shape point.
      * @param end end point.
+     * @throws NullPointerException when <code>start</code>, <code>control1</code>, <code>control2</code>, or <code>end</code>
+     *             is <code>null</code>
      */
     public BezierCubic2d(final Point2d start, final Point2d control1, final Point2d control2, final Point2d end)
     {
@@ -66,17 +68,20 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
     /**
      * Create a cubic B&eacute;zier curve.
      * @param points Point2d[]; array containing four Point2d objects
+     * @throws NullPointerException when <code>points</code> is <code>null</code>, or contains a <code>null</code> value
+     * @throws IllegalArgumentException when length of <code>points</code> is not equal to <code>4</code>
      */
     public BezierCubic2d(final Point2d[] points)
     {
         this(checkArray(points)[0], points[1], points[2], points[3]);
-
     }
 
     /**
      * Verify that a Point2d[] contains exactly 4 elements.
      * @param points Point2d[]; the array to check
      * @return Point2d[]; the provided array
+     * @throws NullPointerException when <code>points</code> is <code>null</code>, or contains a <code>null</code> value
+     * @throws IllegalArgumentException when length of <code>points</code> is not equal to <code>4</code>
      */
     private static Point2d[] checkArray(final Point2d[] points)
     {
@@ -91,6 +96,8 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
      * <code>end</code>. The second is placed in a similar relation to <code>end</code>.
      * @param start Ray2d; the start point and start direction of the B&eacute;zier curve
      * @param end Ray2d; the end point and end direction of the B&eacute;zier curve
+     * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>start</code> and <code>end</code> are at the same location
      */
     public BezierCubic2d(final Ray2d start, final Ray2d end)
     {
@@ -98,12 +105,14 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
     }
 
     /**
-     * Construct a BezierCubic2d from start to end with two generated control points at half the distance between start
-     * and end.
+     * Construct a BezierCubic2d from start to end with two generated control points at half the distance between start and end.
      * @param start Ray2d; the start point and start direction of the B&eacute;zier curve
      * @param end Ray2d; the end point and end direction of the B&eacute;zier curve
      * @param shape shape factor; 1 = control points at half the distance between start and end, &gt; 1 results in a pointier
      *            shape, &lt; 1 results in a flatter shape, value should be above 0 and finite
+     * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>start</code> and <code>end</code> are at the same location,
+     *             <code>shape &le; 0</code>, <code>shape</code> is <code>NaN</code>, or infinite
      */
     public BezierCubic2d(final Ray2d start, final Ray2d end, final double shape)
     {
@@ -111,13 +120,16 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
     }
 
     /**
-     * Construct a BezierCubic2d from start to end with two generated control points at half the distance between start
-     * and end and .
+     * Construct a BezierCubic2d from start to end with two generated control points at half the distance between start and end
+     * and .
      * @param start Ray2d; the start point and start direction of the B&eacute;zier curve
      * @param end Ray2d; the end point and end direction of the B&eacute;zier curve
      * @param shape double; the shape; higher values put the generated control points further away from end and result in a
      *            pointier B&eacute;zier curve
      * @param weighted boolean;
+     * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>start</code> and <code>end</code> are at the same location,
+     *             <code>shape &le; 0</code>, <code>shape</code> is <code>NaN</code>, or infinite
      */
     public BezierCubic2d(final Ray2d start, final Ray2d end, final double shape, final boolean weighted)
     {
@@ -135,6 +147,9 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
      *            pointier B&eacute;zier curve
      * @param weighted boolean;
      * @return Point2d[]; an array of four Point2d elements: start, the first control point, the second control point, end.
+     * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>start</code> and <code>end</code> are at the same location,
+     *             <code>shape &le; 0</code>, <code>shape</code> is <code>NaN</code>, or infinite
      */
     private static Point2d[] createControlPoints(final Ray2d start, final Ray2d end, final double shape, final boolean weighted)
     {
@@ -142,7 +157,8 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
         Throw.whenNull(end, "end");
         Throw.when(start.distanceSquared(end) == 0, IllegalArgumentException.class,
                 "Cannot create control points if start and end points coincide");
-        Throw.when(Double.isNaN(shape) || shape <= 0 || Double.isInfinite(shape), IllegalArgumentException.class,
+        Throw.whenNaN(shape, "shape");
+        Throw.when(shape <= 0 || Double.isInfinite(shape), IllegalArgumentException.class,
                 "shape must be a finite, positive value");
 
         Point2d control1;
@@ -254,19 +270,12 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
             roots.add((-by + sqrtDiscriminant) / ay2);
             roots.add((-by - sqrtDiscriminant) / ay2);
         }
-
-        // System.out.println("Roots in " + this);
-        // for (Double root : roots)
-        // {
-        // System.out.println("\t" + root + " " + getPoint(root));
-        // }
-
         // Only roots in range (0.0 ... 1.0) are valid and useful
         return roots.subSet(0.0, false, 1.0, false);
     }
 
     /**
-     * Returns the inflection t values, where curvature changes sign.
+     * Returns the inflection t values; these are the points where curvature changes sign.
      * @return set of inflection t values, sorted and in the range (0, 1)
      */
     private SortedSet<Double> getInflections()
@@ -322,7 +331,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
     /**
      * Returns the offset t values.
      * @param fractions length fractions at which offsets are defined.
-     * @return set of offset t values, sorted and in the range (0, 1), exclusive.
+     * @return set of offset t values, sorted and only those in the range <code>(0, 1)</code>
      */
     private SortedSet<Double> getOffsetT(final Set<Double> fractions)
     {
@@ -377,7 +386,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
     }
 
     /**
-     * Wrapper for two BezierCubic2d.
+     * Wrapper for two BezierCubic2d objects.
      * @param first BezierCubic2d; the part before the split point
      * @param remainder BezierCubic2d; the part after the split point
      */
@@ -387,8 +396,9 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
 
     /**
      * Splits the B&eacute;zier in two B&eacute;zier curves of the same order.
-     * @param t t value along the B&eacute;zier curve to apply the split.
-     * @return SplitBeziers; the B&eacute;zier curve before t, and the B&eacute;zier curve after t.
+     * @param t t value along the B&eacute;zier curve to apply the split
+     * @return SplitBeziers; the B&eacute;zier curve before t, and the B&eacute;zier curve after t
+     * @throws IllegalArgumentException when <code>t &lt; 0.0</code>, or <code>t &gt; 1.0</code>
      */
     public SplitBeziers split(final double t)
     {
@@ -446,13 +456,13 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
         }
     }
 
-    /** The derivative B&eacute;zier used to computer the direction at some t value. */
+    /** The derivative B&eacute;zier used to compute the direction at some t value. */
     private Bezier2d derivative = null;
 
     @Override
     public PolyLine2d toPolyLine(final Flattener2d flattener)
     {
-        Throw.whenNull(flattener, "Flattener may not be null.");
+        Throw.whenNull(flattener, "Flattener may not be null");
         if (null == this.derivative)
         {
             this.derivative = derivative();
@@ -465,7 +475,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
      * roots, where the derivative of either the x-component or y-component is 0, such that we obtain C-shaped scalable
      * segments, 2) inflections, where the curvature changes sign and the offset and offset angle need to flip sign, and 3)
      * offset fractions so that the intended offset segments can be adhered to. Note that C-shaped segments can be scaled
-     * similar to a circle arc, whereas S-shaped segments have no trivial scaling and are thus split.
+     * similar to a circle arc, whereas S-shaped segments have no trivial scaling and thus must be split.
      */
     private NavigableMap<Double, BezierCubic2d> segments;
 
@@ -478,7 +488,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
      */
     private void updateSegments(final PieceWiseLinearOffset2d fld)
     {
-        Throw.whenNull(fld, "Offsets may not be null.");
+        Throw.whenNull(fld, "Offsets may not be null");
         if (fld.equals(this.fldForSegments))
         {
             return;
@@ -630,20 +640,20 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
     @Override
     public PolyLine2d toPolyLine(final OffsetFlattener2d flattener, final PieceWiseLinearOffset2d fld)
     {
-        Throw.whenNull(fld, "Offsets may not be null.");
-        Throw.whenNull(flattener, "Flattener may not be null.");
+        Throw.whenNull(fld, "fld");
+        Throw.whenNull(flattener, "flattener");
 
         return flattener.flatten(this, fld);
     }
 
     /**
      * Creates the offset B&eacute;zier curve of a B&eacute;zier segment. These segments are part of the offset procedure.
-     * @param offsets offsets as defined for the entire B&eacute;zier.
-     * @param lengthSoFar cumulative length of all previously split off segments.
-     * @param lengthTotal length of full B&eacute;zier.
+     * @param offsets offsets as defined for the entire B&eacute;zier
+     * @param lengthSoFar cumulative length of all previously split off segments
+     * @param lengthTotal length of full B&eacute;zier
      * @param sig sign of offset and offset slope
-     * @param last {@code true} for the last B&eacute;zier segment.
-     * @return offset B&eacute;zier.
+     * @param last must be <code>true</code> for the last B&eacute;zier segment; <code>false</code> for all other segments
+     * @return offset B&eacute;zier
      */
     private BezierCubic2d offset(final PieceWiseLinearOffset2d offsets, final double lengthSoFar, final double lengthTotal,
             final double sig, final boolean last)
@@ -749,7 +759,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
     }
 
     /**
-     * The various discontinuities/boundaries of a B&eacute;zier curve.
+     * The three types of discontinuities/boundaries of a B&eacute;zier curve.
      */
     private enum Boundary
     {

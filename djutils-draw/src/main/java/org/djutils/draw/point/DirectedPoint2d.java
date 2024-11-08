@@ -1,6 +1,5 @@
 package org.djutils.draw.point;
 
-import java.awt.geom.Point2D;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
@@ -38,39 +37,42 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
      * @param x double; the x coordinate
      * @param y double; the y coordinate
      * @param dirZ double; the counter-clockwise rotation around the point in radians
-     * @throws IllegalArgumentException when any coordinate or dirZ is NaN
+     * @throws IllegalArgumentException when any coordinate or <code>dirZ</code> is <code>NaN</code>
      */
-    public DirectedPoint2d(final double x, final double y, final double dirZ) throws IllegalArgumentException
+    public DirectedPoint2d(final double x, final double y, final double dirZ)
     {
         super(x, y);
-        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "dirZ must be a number (not NaN)");
+        Throw.whenNaN(dirZ, "dirZ");
         this.dirZ = dirZ;
     }
 
     /**
      * Construct a new DirectedPoint2d from an x and y coordinates in a double[] and a direction.
-     * @param xy double[]; the <cite>x</cite> and <cite>y</cite> coordinates in that order
+     * @param xy double[]; the <code>x</code> and <code>y</code> coordinates in that order
      * @param dirZ double; the counter-clockwise rotation around the point in radians
-     * @throws NullPointerException when xy is null
-     * @throws IllegalArgumentException when the dimension of xy is not 2 or any value in xy is NaN or rotZ is NaN
+     * @throws NullPointerException when <code>xy</code> is <code>null</code>
+     * @throws ArithmeticException when any value in <code>xy</code> is <code>NaN</code> or <code>rotZ</code> is
+     *             <code>NaN</code>
+     * @throws IllegalArgumentException when the length of <code>xy</code> is not 2
      */
-    public DirectedPoint2d(final double[] xy, final double dirZ) throws IllegalArgumentException
+    public DirectedPoint2d(final double[] xy, final double dirZ)
     {
         super(xy);
-        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "dirZ must be a number (not NaN)");
+        Throw.whenNaN(dirZ, "dirZ");
         this.dirZ = dirZ;
     }
 
     /**
      * Construct a new DirectedPoint2d from an AWT Point2D and a direction.
-     * @param point Point2D; an AWT Point2D
+     * @param point Point2D; java.awt.geom.Point2D
      * @param dirZ double; the counter-clockwise rotation around the point in radians
-     * @throws IllegalArgumentException when any coordinate in point is NaN, or rotZ is NaN
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
+     * @throws ArithmeticException when <code>rotZ</code> is <code>NaN</code>
      */
-    public DirectedPoint2d(final Point2D point, final double dirZ) throws IllegalArgumentException
+    public DirectedPoint2d(final java.awt.geom.Point2D point, final double dirZ)
     {
         super(point);
-        Throw.when(Double.isNaN(dirZ), IllegalArgumentException.class, "dirZ must be a number (not NaN)");
+        Throw.whenNaN(dirZ, "dirZ");
         this.dirZ = dirZ;
     }
 
@@ -78,9 +80,10 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
      * Construct a new DirectedPoint2d from a Point2d and a direction.
      * @param point Point2d; a point (with or without orientation)
      * @param dirZ double; the counter-clockwise rotation around the point in radians
-     * @throws IllegalArgumentException when rotZ is NaN
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
+     * @throws ArithmeticException when <code>rotZ</code> is <code>NaN</code>
      */
-    public DirectedPoint2d(final Point2d point, final double dirZ) throws IllegalArgumentException
+    public DirectedPoint2d(final Point2d point, final double dirZ)
     {
         this(point.x, point.y, dirZ);
     }
@@ -91,11 +94,10 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
      * @param y double; the y coordinate of the of the new DirectedPoint
      * @param throughX double; the x-coordinate of a point that the direction goes through
      * @param throughY double; the y-coordinate of a point that the direction goes through
-     * @throws DrawRuntimeException when <cite>throughX</cite> == <cite>x</cite> and <cite>throughY</cite> == <cite>y</cite>, or
-     *             any through-value is NaN
+     * @throws ArithmeticException when <code>throughX</code>, or <code>throughY</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>throughX == x</code> and <code>throughY == y</code>
      */
     public DirectedPoint2d(final double x, final double y, final double throughX, final double throughY)
-            throws DrawRuntimeException
     {
         this(x, y, buildDirection(throughX - x, throughY - y));
     }
@@ -105,6 +107,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
      * @param dX double; x difference
      * @param dY double; y difference
      * @return double; the computed value of dirZ
+     * @throws IllegalArgumentException when <code>dX == 0.0</code> and <code>dY == 0.0</code>
      */
     private static double buildDirection(final double dX, final double dY)
     {
@@ -116,11 +119,12 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
      * Construct a new DirectedPoint2d from a Point2d and a point that the direction goes through.
      * @param point Point2d; the point
      * @param throughPoint Poin2d; the point that the direction goes through
-     * @throws NullPointerException when point is null
-     * @throws DrawRuntimeException when <cite>throughX</cite> == <cite>point.x</cite> and <cite>throughY</cite> ==
-     *             <cite>point.y</cite>, or any through-value is NaN
+     * @throws NullPointerException when <code>point</code> is <code>null</code>, or <code>throughPoint</code> ==
+     *             <code>null</code>
+     * @throws IllegalArgumentException when <code>throughX == point.x</code> and <code>throughY ==
+     *             point.y</code>
      */
-    public DirectedPoint2d(final Point2d point, final Point2d throughPoint) throws NullPointerException, DrawRuntimeException
+    public DirectedPoint2d(final Point2d point, final Point2d throughPoint)
     {
         this(Throw.whenNull(point, "point").x, point.y, Throw.whenNull(throughPoint, "throughPoint").x, throughPoint.y);
     }
@@ -130,33 +134,33 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
      * @param point Point2d; the point
      * @param throughX double; the x coordinate of a point that the direction goes through
      * @param throughY double; the y coordinate of a point that the direction goes through
-     * @throws NullPointerException when point is null
-     * @throws DrawRuntimeException when <cite>throughX</cite> == <cite>point.x</cite> and <cite>throughY</cite> ==
-     *             <cite>point.y</cite>, or any through-value is NaN
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
+     * @throws ArithmeticException when <code>throughX</code>, or <code>throughY</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when <code>throughX == point.x</code> and <code>throughY ==
+     *             point.y</code>
      */
     public DirectedPoint2d(final Point2d point, final double throughX, final double throughY)
-            throws NullPointerException, DrawRuntimeException
     {
         this(Throw.whenNull(point, "point").x, point.y, throughX, throughY);
     }
 
     @Override
-    public DirectedPoint2d translate(final double dx, final double dy) throws IllegalArgumentException
+    public DirectedPoint2d translate(final double dX, final double dY)
     {
-        Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class, "translation may not be NaN");
-        return new DirectedPoint2d(this.x + dx, this.y + dy, this.dirZ);
+        return new DirectedPoint2d(this.x + dX, this.y + dY, this.dirZ);
     }
 
     @Override
-    public DirectedPoint3d translate(final double dx, final double dy, final double z) throws IllegalArgumentException
+    public DirectedPoint3d translate(final double dX, final double dY, final double z)
+            throws ArithmeticException, IllegalArgumentException
     {
-        return new DirectedPoint3d(this.x + dx, this.y + dy, z, 0, this.dirZ);
+        return new DirectedPoint3d(this.x + dX, this.y + dY, z, 0, this.dirZ);
     }
 
     @Override
     public DirectedPoint2d scale(final double factor) throws IllegalArgumentException
     {
-        Throw.when(Double.isNaN(factor), IllegalArgumentException.class, "factor must be a number (not NaN)");
+        Throw.whenNaN(factor, "factor");
         return new DirectedPoint2d(this.x * factor, this.y * factor, this.dirZ);
     }
 
@@ -173,7 +177,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
     }
 
     @Override
-    public DirectedPoint2d normalize()
+    public DirectedPoint2d normalize() throws DrawRuntimeException
     {
         double length = Math.sqrt(this.x * this.x + this.y * this.y);
         Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0)");
@@ -189,14 +193,13 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
      *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
      *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
      * @return DirectedPoint2d; a new OrientedPoint2d at the requested fraction
-     * @throws NullPointerException when otherPoint is null
-     * @throws IllegalArgumentException when fraction is NaN
+     * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
+     * @throws ArithmeticException when <code>fraction</code> is <code>NaN</code>
      */
     public DirectedPoint2d interpolate(final DirectedPoint2d otherPoint, final double fraction)
-            throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(otherPoint, "otherPoint");
-        Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
+        Throw.whenNaN(fraction, "fraction");
         if (0.0 == fraction)
         {
             return this;
@@ -215,11 +218,11 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
      * is normalized between -&pi; and &pi;.
      * @param rotateZ double; the rotation around the z-axis
      * @return DirectedPoint2d; a new point with the same coordinates and applied rotation
-     * @throws IllegalArgumentException when deltaRotZ is NaN
+     * @throws ArithmeticException when <code>rotateZ</code> is <code>NaN</code>
      */
-    public DirectedPoint2d rotate(final double rotateZ) throws IllegalArgumentException
+    public DirectedPoint2d rotate(final double rotateZ)
     {
-        Throw.when(Double.isNaN(rotateZ), IllegalArgumentException.class, "deltaDirZ must be a number (not NaN)");
+        Throw.whenNaN(rotateZ, "rotateZ");
         return new DirectedPoint2d(this.x, this.y, AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
 
@@ -254,10 +257,10 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
             throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(other, "other");
+        Throw.whenNaN(epsilonCoordinate, "epsilonCoordinate");
+        Throw.whenNaN(epsilonRotation, "epsilonRotation");
         Throw.when(epsilonCoordinate < 0 || epsilonRotation < 0, IllegalArgumentException.class,
-                "epsilonCoordinate and epsilongRotation may not be negative");
-        Throw.when(Double.isNaN(epsilonCoordinate) || Double.isNaN(epsilonRotation), IllegalArgumentException.class,
-                "epsilonCoordinate and epsilongRotation may not be NaN");
+                "epsilonCoordinate and epsilonRotation may not be negative");
         if (Math.abs(this.x - other.x) > epsilonCoordinate)
         {
             return false;

@@ -32,6 +32,8 @@ public class Bezier3d implements Flattable3d
     /**
      * Create a B&eacute;zier curve of any order.
      * @param points Point2d... shape points that define the B&eacute;zier curve
+     * @throws NullPointerException when <code>points</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>points</code> has &lt; 2 elements
      */
     public Bezier3d(final Point3d... points)
     {
@@ -42,7 +44,7 @@ public class Bezier3d implements Flattable3d
         int index = 0;
         for (Point3d point : points)
         {
-            Throw.whenNull(point, "One of the points is null.");
+            Throw.whenNull(point, "One of the points is null");
             this.x[index] = point.x;
             this.y[index] = point.y;
             this.z[index] = point.z;
@@ -55,6 +57,9 @@ public class Bezier3d implements Flattable3d
      * @param x double[]; the x-coordinates of the points that define the B&eacute;zier curve
      * @param y double[]; the y-coordinates of the points that define the B&eacute;zier curve
      * @param z double[]; the z-coordinates of the points that define the B&eacute;zier curve
+     * @throws NullPointerException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>null</code>
+     * @throws IllegalArgumentException when the length of the <code>x</code> array is not equal to the length of the
+     *             <code>y</code> array, or not equal to the length of the <code>z</code> array, or less than <code>2</code>
      */
     public Bezier3d(final double[] x, final double[] y, final double[] z)
     {
@@ -63,11 +68,15 @@ public class Bezier3d implements Flattable3d
 
     /**
      * Construct a B&eacute;zier curve of any order, optionally checking the lengths of the provided arrays.
-     * @param checkLengths boolean; if true; check the lengths of the <cite>x</cite> and <cite>y</cite> arrays; if false; do not
-     *            check those lengths
+     * @param checkLengths boolean; if <code>true</code>; check the lengths of the <code>x</code> and <code>y</code> arrays; if
+     *            <code>false</code>; do not check those lengths
      * @param x double[]; the x-coordinates of the points that define the B&eacute;zier curve
      * @param y double[]; the y-coordinates of the points that define the B&eacute;zier curve
      * @param z double[]; the z-coordinates of the points that define the B&eacute;zier curve
+     * @throws NullPointerException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>null</code>
+     * @throws IllegalArgumentException when the length of the <code>x</code> array is not equal to the length of the
+     *             <code>y</code> array, or not equal to the length of the <code>z</code> array, or less than <code>2</code> and
+     *             <code>checkLengths</code> is <code>true</code>
      */
     private Bezier3d(final boolean checkLengths, final double[] x, final double[] y, final double[] z)
     {
@@ -85,6 +94,7 @@ public class Bezier3d implements Flattable3d
     /**
      * Returns the derivative for a B&eacute;zier, which is a B&eacute;zier of 1 order lower.
      * @return derivative B&eacute;zier
+     * @throws IllegalStateException when the order of <code>this Bezier2d</code> is <code>1</code>
      */
     public Bezier3d derivative()
     {
@@ -113,7 +123,8 @@ public class Bezier3d implements Flattable3d
     }
 
     /**
-     * Returns the estimated length using the method of numerical approach of Legendre-Gauss, which is quite accurate.
+     * Returns the estimated path length of this B&eacute;zier curve using the method of numerical approach of Legendre-Gauss,
+     * which is quite accurate.
      * @return estimated length.
      */
     public double length()
@@ -134,6 +145,7 @@ public class Bezier3d implements Flattable3d
      * Retrieve the x-coordinate of the i'th point of this B&eacute;zier curve.
      * @param i int; the index
      * @return double; the x-coordinate of the i'th point of this B&eacute;zier curve
+     * @throws IndexOutOfBoundsException when <code>i &lt; 0</code>, or <code>i &ge; size()</code>
      */
     public double getX(final int i)
     {
@@ -144,6 +156,7 @@ public class Bezier3d implements Flattable3d
      * Retrieve the y-coordinate of the i'th point of this B&eacute;zier curve.
      * @param i int; the index
      * @return double; the y-coordinate of the i'th point of this B&eacute;zier curve
+     * @throws IndexOutOfBoundsException when <code>i &lt; 0</code>, or <code>i &ge; size()</code>
      */
     public double getY(final int i)
     {
@@ -153,6 +166,7 @@ public class Bezier3d implements Flattable3d
     /**
      * Retrieve the z-coordinate of the i'th point of this B&eacute;zier curve.
      * @param i int; the index
+     * @throws IndexOutOfBoundsException when <code>i &lt; 0</code>, or <code>i &ge; size()</code>
      * @return double; the z-coordinate of the i'th point of this B&eacute;zier curve
      */
     public double getZ(final int i)
@@ -181,7 +195,8 @@ public class Bezier3d implements Flattable3d
     @Override
     public String toString()
     {
-        return "Bezier3d [x=" + Arrays.toString(this.x) + ", y=" + Arrays.toString(this.y) + "]";
+        return "Bezier3d [x=" + Arrays.toString(this.x) + ", y=" + Arrays.toString(this.y) + ", z=" + Arrays.toString(this.z)
+                + "]";
     }
 
 }

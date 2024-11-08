@@ -1,7 +1,6 @@
 package org.djutils.draw.line;
 
 import org.djutils.draw.Directed;
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.point.Point;
 import org.djutils.exceptions.Throw;
 
@@ -34,8 +33,8 @@ public interface Ray<R extends Ray<R, D, P>, D extends Directed<D>, P extends Po
 
     /**
      * Flip the direction of the Ray (creates and returns a new Ray instance).
-     * @return R; Ray at the same location, but with <cite>dirZ</cite> (in case of a Ray3d) incremented by &pi; and
-     *         <cite>dirY</cite> subtracted from &pi;
+     * @return R; Ray at the same location, but with <code>dirZ</code> (in case of a Ray3d) incremented by &pi; and
+     *         <code>dirY</code> subtracted from &pi;
      */
     R flip();
 
@@ -43,11 +42,14 @@ public interface Ray<R extends Ray<R, D, P>, D extends Directed<D>, P extends Po
      * Get the location at a position on the line, with its direction. Position must be a positive, finite value
      * @param position double; the position on the line for which to calculate the point on the line
      * @return R; a ray with the same direction as this ray (even if the direction of this ray is not normalized)
-     * @throws DrawRuntimeException when position less than 0.0, infinite, or NaN.
+     * @throws ArithmeticException when <code>position</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when <code>position</code> &lt; <code>0.0</code>, or infinite
      */
-    default R getLocation(final double position) throws DrawRuntimeException
+    default R getLocation(final double position)
     {
-        Throw.when(Double.isNaN(position) || position < 0, DrawRuntimeException.class, "position must be finite and positive");
+        Throw.whenNaN(position, "position");
+        Throw.when(position < 0 || Double.isInfinite(position), IllegalArgumentException.class,
+                "position must be finite and positive");
         return getLocationExtended(position);
     }
 
@@ -55,19 +57,20 @@ public interface Ray<R extends Ray<R, D, P>, D extends Directed<D>, P extends Po
      * Get the location at a position on the line, with its direction. Position must be a finite value
      * @param position double; the position on the line for which to calculate the point on the line
      * @return R; a ray with the same direction as this ray
-     * @throws DrawRuntimeException when position infinite, or NaN.
+     * @throws ArithmeticException when <code>position</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when <code>position</code> infinite
      */
-    R getLocationExtended(double position) throws DrawRuntimeException;
+    R getLocationExtended(double position);
 
     /**
      * Project a Point on a Ray. If the the projected points lies outside the ray, the start point of the ray is returned.
      * Otherwise the closest point on the ray is returned. <br>
-     * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
+     * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code published by Paul
      * Bourke</a>.
      * @param point P; the point to project onto the segment
-     * @return D; either the start point, or DirectedPoint that lies somewhere on this Ray.
-     * @throws NullPointerException when point is null
+     * @return D; either the start point, or DirectedPoint that lies somewhere on this Ray
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
-    P closestPointOnRay(P point) throws NullPointerException;
+    P closestPointOnRay(P point);
 
 }

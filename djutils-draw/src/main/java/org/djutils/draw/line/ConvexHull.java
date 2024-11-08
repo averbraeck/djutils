@@ -52,10 +52,10 @@ public final class ConvexHull
      * Compute the convex hull of one or more Drawable2d objects.
      * @param drawable2d Drawable2d...; the Drawable2d objects
      * @return Polygon2d; the convex hull of the Drawable2d objects
-     * @throws NullPointerException when any of the drawable2d object is null
+     * @throws NullPointerException when any of the drawable2d object is <code>null</code>
      * @throws IllegalArgumentException when zero arguments are provided
      */
-    public static Polygon2d convexHull(final Drawable2d... drawable2d) throws NullPointerException, IllegalArgumentException
+    public static Polygon2d convexHull(final Drawable2d... drawable2d)
     {
         return convexHull(Bounds2d.pointsOf(drawable2d));
     }
@@ -64,11 +64,11 @@ public final class ConvexHull
      * Construct a Bounds2d for a Collection of Drawable2d objects.
      * @param drawableCollection Collection&lt;Drawable2d&gt;; the collection
      * @return Polygon2d; the convex hull of the Drawable2d objects
-     * @throws NullPointerException when the collection is null, or contains null values
-     * @throws IllegalArgumentException when the collection is empty
+     * @throws NullPointerException when the <code>drawableCollection</code> is <code>null</code>, or contains a
+     *             <code>null</code> value
+     * @throws IllegalArgumentException when the <code>drawableCollection</code> is empty
      */
     public static Polygon2d convexHull(final Collection<Drawable2d> drawableCollection)
-            throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(drawableCollection, "drawableCollection");
         Throw.when(drawableCollection.isEmpty(), DrawRuntimeException.class, "drawableCollection may not be empty");
@@ -90,11 +90,11 @@ public final class ConvexHull
      * @param a Point2d; point a
      * @param b Point2d; point b
      * @param c Point2d; point c
-     * @return boolean; true if the turn at b is counter clockwise; false if there is not turn; or it is clockwise
+     * @return boolean; <code>true</code> if the turn at b is counter clockwise; <code>false</code> if there is not turn; or it
+     *         is clockwise
      */
     private static boolean ccw(final Point2d a, final Point2d b, final Point2d c)
     {
-        // System.out.println("left " + ((b.x - a.x) * (c.y - a.y)) + ", right " + ((b.y - a.y) * (c.x - a.x)));
         return ((b.x - a.x) * (c.y - a.y)) > ((b.y - a.y) * (c.x - a.x));
     }
 
@@ -124,14 +124,14 @@ public final class ConvexHull
      * Hull Computation</a>.
      * @param list List&lt;Point2d&gt;; list of the points (will not be modified)
      * @return Polygon2d; the convex hull of the points
-     * @throws NullPointerException when the list is null
-     * @throws DrawRuntimeException when the list contains too few points
+     * @throws NullPointerException when the <code>list</code> is <code>null</code>
+     * @throws IllegalArgumentException when the <code>list</code> contains too few points
      */
-    public static Polygon2d convexHullAlshamrani(final List<Point2d> list) throws NullPointerException, DrawRuntimeException
+    public static Polygon2d convexHullAlshamrani(final List<Point2d> list)
     {
         // Find the four extreme points
         Throw.whenNull(list, "list");
-        Throw.when(list.size() < 1, DrawRuntimeException.class, "Too few points in list");
+        Throw.when(list.size() < 1, IllegalArgumentException.class, "Too few points in list");
         Point2d minX = list.get(0); // Initialize to the first point in list to avoid checking for null on each iteration
         Point2d minY = list.get(0);
         Point2d maxX = list.get(0);
@@ -219,11 +219,6 @@ public final class ConvexHull
                 }
             }
         }
-        // System.out.println(String.format("minX %s, minY %s, maxX %s, maxY %s", minX, minY, maxX, maxY));
-        // System.out.println(String.format("total: %d, ll: %d (%.0f%%), lr: %d (%.0f%%), ur: %d (%.0f%%), ul: %d (%.0f%%)",
-        // list.size(), lowerLeft.size(), 100.0 * lowerLeft.size() / list.size(), lowerRight.size(),
-        // 100.0 * lowerRight.size() / list.size(), upperRight.size(), 100.0 * upperRight.size() / list.size(),
-        // upperLeft.size(), 100.0 * upperLeft.size() / list.size()));
         Collections.sort(lowerLeft, forwardComparator);
         Collections.sort(lowerRight, forwardComparator);
         Collections.sort(upperRight, reverseComparator);
@@ -258,10 +253,10 @@ public final class ConvexHull
      * of points!
      * @param list List&lt;Point2d&gt;; list of the points (will be modified)
      * @return Polygon2d; the convex hull of the points
-     * @throws NullPointerException when the list is null
-     * @throws DrawRuntimeException when the list contains too few points
+     * @throws NullPointerException when the <code>list</code> is <code>null</code>
+     * @throws IllegalArgumentException when the <code>list</code> contains too few points
      */
-    public static Polygon2d convexHullMonotone(final List<Point2d> list) throws NullPointerException, DrawRuntimeException
+    public static Polygon2d convexHullMonotone(final List<Point2d> list)
     {
         Collections.sort(list, new Comparator<Point2d>()
         {
@@ -301,7 +296,7 @@ public final class ConvexHull
         {
             result.remove(result.size() - 1);
         }
-        // else; zero points; the constructor of the Polygon2d will throw a DrawRuntimeException
+        // else; zero points; the constructor of the Polygon2d will throw an IllegalArgumentException
         return new Polygon2d(result);
     }
 

@@ -59,12 +59,12 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
      * @param endX double; the x-coordinate of the end point
      * @param endY double; the y-coordinate of the end point
      * @param endZ double; the z-coordinate of the end point
-     * @throws DrawRuntimeException when (startX,startY) is equals end (endX,endY)
+     * @throws IllegalArgumentException when <code>(startX,startY,startZ)</code> is equal to <code>(endX,endY,endZ)</code>
      */
     public LineSegment3d(final double startX, final double startY, final double startZ, final double endX, final double endY,
-            final double endZ) throws DrawRuntimeException
+            final double endZ)
     {
-        Throw.when(startX == endX && startY == endY && startZ == endZ, DrawRuntimeException.class,
+        Throw.when(startX == endX && startY == endY && startZ == endZ, IllegalArgumentException.class,
                 "Start and end may not be equal");
         this.startX = startX;
         this.startY = startY;
@@ -80,11 +80,10 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
      * @param endX double; the x-coordinate of the end point
      * @param endY double; the y-coordinate of the end point
      * @param endZ double; the z-coordinate of the end point
-     * @throws NullPointerException when start is null
-     * @throws DrawRuntimeException when start has the exact coordinates endX, endY
+     * @throws NullPointerException when <code>start</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>start</code> has the exact coordinates <code>(endX,endY,endZ)</code>
      */
     public LineSegment3d(final Point3d start, final double endX, final double endY, final double endZ)
-            throws NullPointerException, DrawRuntimeException
     {
         this(Throw.whenNull(start, "start").x, start.y, start.z, endX, endY, endZ);
     }
@@ -95,11 +94,10 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
      * @param startY double; the y-coordinate of the start point
      * @param startZ double; the z-coordinate of the start point
      * @param end Point3d; the end point
-     * @throws NullPointerException when end is null
-     * @throws DrawRuntimeException when end has the exact coordinates startX, startY, startZ
+     * @throws NullPointerException when <code>end</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>end</code> has the exact coordinates <code>(startX,startY,startZ</code>
      */
     public LineSegment3d(final double startX, final double startY, final double startZ, final Point3d end)
-            throws NullPointerException, DrawRuntimeException
     {
         this(startX, startY, startZ, Throw.whenNull(end, "end").x, end.y, end.z);
     }
@@ -108,10 +106,10 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
      * Construct a new LineSegment3d from two Point3d objects.
      * @param start Point3d; the start point
      * @param end Point3d; the end point
-     * @throws NullPointerException when start is null
-     * @throws DrawRuntimeException when start has the exact coordinates endX, endY, endZ
+     * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>start</code> has the same coordinates as <code>end</code>
      */
-    public LineSegment3d(final Point3d start, final Point3d end) throws NullPointerException, DrawRuntimeException
+    public LineSegment3d(final Point3d start, final Point3d end)
     {
         this(Throw.whenNull(start, "start point may not be null").x, start.y, start.z,
                 Throw.whenNull(end, "end point may not be null").x, end.y, end.z);
@@ -166,10 +164,10 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
     }
 
     @Override
-    public DirectedPoint3d getLocationExtended(final double position) throws DrawRuntimeException
+    public DirectedPoint3d getLocationExtended(final double position) throws IllegalArgumentException
     {
-        Throw.when(Double.isNaN(position) || Double.isInfinite(position), DrawRuntimeException.class,
-                "position must be finite");
+        Throw.whenNaN(position, "position");
+        Throw.when(Double.isInfinite(position), IllegalArgumentException.class, "position must be finite");
         double dX = this.endX - this.startX;
         double dY = this.endY - this.startY;
         double dZ = this.endZ - this.startZ;
@@ -192,21 +190,21 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
     }
 
     @Override
-    public Point3d projectOrthogonal(final Point3d point) throws NullPointerException
+    public Point3d projectOrthogonal(final Point3d point)
     {
         Throw.whenNull(point, "point");
         return point.closestPointOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ, null, null);
     }
 
     @Override
-    public Point3d projectOrthogonalExtended(final Point3d point) throws NullPointerException
+    public Point3d projectOrthogonalExtended(final Point3d point)
     {
         Throw.whenNull(point, "point");
         return point.closestPointOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ);
     }
 
     @Override
-    public double projectOrthogonalFractional(final Point3d point) throws NullPointerException
+    public double projectOrthogonalFractional(final Point3d point)
     {
         Throw.whenNull(point, "point");
         return point.fractionalPositionOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ, null,
@@ -214,7 +212,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
     }
 
     @Override
-    public double projectOrthogonalFractionalExtended(final Point3d point) throws NullPointerException
+    public double projectOrthogonalFractionalExtended(final Point3d point)
     {
         Throw.whenNull(point, "point");
         return point.fractionalPositionOnLine(this.startX, this.startY, this.startZ, this.endX, this.endY, this.endZ, false,

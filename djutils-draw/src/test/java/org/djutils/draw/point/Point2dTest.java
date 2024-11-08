@@ -48,9 +48,9 @@ public class Point2dTest
         try
         {
             new Point2d(Double.NaN, 0);
-            fail("NaN should have thrown an IllegalArgumentException");
+            fail("NaN should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -58,9 +58,9 @@ public class Point2dTest
         try
         {
             new Point2d(0, Double.NaN);
-            fail("NaN should have thrown an IllegalArgumentException");
+            fail("NaN should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -118,7 +118,7 @@ public class Point2dTest
             {
                 new Point2d(new Point2D.Double(Double.NaN, 2));
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw ArithmeticException", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -127,7 +127,7 @@ public class Point2dTest
             {
                 new Point2d(new Point2D.Double(1, Double.NaN));
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw ArithmeticException", ArithmeticException.class);
 
         // equals and hashCode
         assertTrue(p.equals(p));
@@ -194,9 +194,9 @@ public class Point2dTest
         try
         {
             p.translate(Double.NaN, 2.0);
-            fail("NaN translation should have thrown an IllegalArgumentException");
+            fail("NaN translation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -204,9 +204,9 @@ public class Point2dTest
         try
         {
             p.translate(1.0, Double.NaN);
-            fail("NaN translation should have thrown an IllegalArgumentException");
+            fail("NaN translation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -263,9 +263,9 @@ public class Point2dTest
         try
         {
             p1.translate(Double.NaN, 2.0);
-            fail("NaN translation should have thrown an IllegalArgumentException");
+            fail("NaN translation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -273,9 +273,9 @@ public class Point2dTest
         try
         {
             p1.translate(1.0, Double.NaN);
-            fail("NaN translation should have thrown an IllegalArgumentException");
+            fail("NaN translation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -283,9 +283,9 @@ public class Point2dTest
         try
         {
             p1.translate(Double.NaN, 2.0, 3.0);
-            fail("NaN translation should have thrown an IllegalArgumentException");
+            fail("NaN translation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -293,9 +293,9 @@ public class Point2dTest
         try
         {
             p1.translate(1.0, Double.NaN, 3.0);
-            fail("NaN translation should have thrown an IllegalArgumentException");
+            fail("NaN translation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -303,9 +303,9 @@ public class Point2dTest
         try
         {
             p1.translate(1.0, 2.0, Double.NaN);
-            fail("NaN translation should have thrown an IllegalArgumentException");
+            fail("NaN translation should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -665,7 +665,7 @@ public class Point2dTest
             p1.closestPointOnLine(null, new Point2d(5, 6));
             fail("null should have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -675,7 +675,7 @@ public class Point2dTest
             p1.closestPointOnLine(new Point2d(5, 6), null);
             fail("null should have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -683,9 +683,9 @@ public class Point2dTest
         try
         {
             p1.closestPointOnSegment(Double.NaN, 7, 8, 9);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -693,9 +693,9 @@ public class Point2dTest
         try
         {
             p1.closestPointOnSegment(6, Double.NaN, 8, 9);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown na ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -703,9 +703,9 @@ public class Point2dTest
         try
         {
             p1.closestPointOnSegment(6, 7, Double.NaN, 9);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -713,9 +713,9 @@ public class Point2dTest
         try
         {
             p1.closestPointOnSegment(6, 7, 8, Double.NaN);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -723,9 +723,9 @@ public class Point2dTest
         try
         {
             p1.closestPointOnLine(Double.NaN, 7, 8, 9);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown a ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -733,9 +733,9 @@ public class Point2dTest
         try
         {
             p1.closestPointOnLine(6, Double.NaN, 8, 9);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -743,9 +743,9 @@ public class Point2dTest
         try
         {
             p1.closestPointOnLine(6, 7, Double.NaN, 9);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -753,9 +753,9 @@ public class Point2dTest
         try
         {
             p1.closestPointOnLine(6, 7, 8, Double.NaN);
-            fail("NaN value should have thrown a DrawRuntimeException");
+            fail("NaN value should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -763,9 +763,9 @@ public class Point2dTest
         try
         {
             p1.closestPointOnLine(6, 7, 6, 7);
-            fail("identical points should have thrown a DrawRuntimeException");
+            fail("identical points should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -798,9 +798,9 @@ public class Point2dTest
                                     try
                                     {
                                         Point2d.circleIntersections(p1, r1, p2, r2);
-                                        fail("Identical circles should have thrown a DrawRuntimeException");
+                                        fail("Identical circles should have thrown an IllegalArgumentException");
                                     }
-                                    catch (DrawRuntimeException dre)
+                                    catch (IllegalArgumentException e)
                                     {
                                         // Ignore expected exception
                                     }
@@ -850,9 +850,9 @@ public class Point2dTest
         try
         {
             Point2d.circleIntersections(new Point2d(1, 2), -1, new Point2d(3, 4), 2);
-            fail("negative radius should have thrown a DrawRuntimeException");
+            fail("negative radius should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -860,9 +860,9 @@ public class Point2dTest
         try
         {
             Point2d.circleIntersections(new Point2d(1, 2), 5, new Point2d(3, 4), -2);
-            fail("negative radius should have thrown a DrawRuntimeException");
+            fail("negative radius should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }

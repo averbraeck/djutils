@@ -16,20 +16,12 @@ import org.djutils.draw.point.DirectedPoint3d;
 interface Curve3d extends Curve<DirectedPoint3d, Direction3d>
 {
 
-    /**
-     * Start direction of this Curve3d.
-     * @return start direction of this Curve3d
-     */
     @Override
     default Direction3d getStartDirection()
     {
         return getStartPoint().getDir();
     }
 
-    /**
-     * End direction of this Curve3d.
-     * @return end direction of this Curve3d
-     */
     @Override
     default Direction3d getEndDirection()
     {

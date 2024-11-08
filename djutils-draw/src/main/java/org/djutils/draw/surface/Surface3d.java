@@ -49,14 +49,14 @@ public class Surface3d implements Drawable3d
      * @param points Point3d[][]; two dimensional array of points. The first index iterates over the individual triangles; the
      *            second index iterates over the points of a single triangle. The range of the second index must be 3. It is
      *            expected that all points appear multiple times in the points array, but never within the same sub-array.
-     * @throws NullPointerException when points is null, or any element in points is null
-     * @throws DrawRuntimeException when points is empty, or any element in points does not contain exactly three different
-     *             points
+     * @throws NullPointerException when <code>points</code> is <code>null</code>, or contains a <code>null</code> value
+     * @throws IllegalArgumentException when points is empty, or any element in <code>points</code> does not contain exactly
+     *             three different points
      */
-    public Surface3d(final Point3d[][] points) throws NullPointerException, DrawRuntimeException
+    public Surface3d(final Point3d[][] points) throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(points, "points");
-        Throw.when(points.length == 0, DrawRuntimeException.class, "points must have at least one element");
+        Throw.when(points.length == 0, IllegalArgumentException.class, "points must have at least one element");
         this.indices = new int[points.length * 3];
         // Figure out how many points are unique
         Map<Point3d, Integer> indexMap = new LinkedHashMap<>();
@@ -64,14 +64,14 @@ public class Surface3d implements Drawable3d
         {
             Point3d[] trianglePoints = points[triangle];
             Throw.whenNull(trianglePoints, "Element in trianglePoints may not be null");
-            Throw.when(trianglePoints.length != 3, DrawRuntimeException.class,
+            Throw.when(trianglePoints.length != 3, IllegalArgumentException.class,
                     "Triangle %d contain wrong number of points (should be 3, got %d", triangle, trianglePoints.length);
             Point3d prevPoint = trianglePoints[2];
             for (int i = 0; i < 3; i++)
             {
                 Point3d point = trianglePoints[i];
                 // The next check is not good enough when this constructor can be fed a subclass of Point3d
-                Throw.when(point.equals(prevPoint), DrawRuntimeException.class, "Triangle %d contains duplicate point",
+                Throw.when(point.equals(prevPoint), IllegalArgumentException.class, "Triangle %d contains duplicate point",
                         triangle);
                 Integer currentIndex = indexMap.get(point);
                 if (currentIndex == null)

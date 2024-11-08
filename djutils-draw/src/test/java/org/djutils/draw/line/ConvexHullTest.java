@@ -82,7 +82,7 @@ public class ConvexHullTest
                 chi.run(null);
                 fail("should have thrown a NullPointerException");
             }
-            catch (NullPointerException npe)
+            catch (NullPointerException e)
             {
                 // Ignore expected exception
             }
@@ -90,9 +90,9 @@ public class ConvexHullTest
             try
             {
                 chi.run(new ArrayList<>());
-                fail("Empty list should have thrown a DrawRuntimeException");
+                fail("Empty list should have thrown an IllegalArgumentException");
             }
-            catch (DrawRuntimeException dre)
+            catch (IllegalArgumentException e)
             {
                 // Ignore expected exception
             }
@@ -102,9 +102,9 @@ public class ConvexHullTest
             try
             {
                 chi.run(points);
-                fail("List with only one point should have thrown a DrawRuntimeException");
+                fail("List with only one point should have thrown an IllegalArgumentException");
             }
-            catch (DrawRuntimeException dre)
+            catch (IllegalArgumentException e)
             {
                 // Ignore expected exception
             }
@@ -119,9 +119,9 @@ public class ConvexHullTest
             try
             {
                 chi.run(points);
-                fail("List with only two identical should have thrown a DrawRuntimeException");
+                fail("List with only two identical should have thrown an IllegalArgumentException");
             }
-            catch (DrawRuntimeException dre)
+            catch (IllegalArgumentException e)
             {
                 // Ignore expected exception
             }
@@ -136,7 +136,7 @@ public class ConvexHullTest
             ConvexHull.convexHull(new LinkedHashSet<Drawable2d>());
             fail("empty collection should have thrown a DrawRuntimeException");
         }
-        catch (DrawRuntimeException dre)
+        catch (DrawRuntimeException e)
         {
             // Ignore expected exception
         }
@@ -146,7 +146,7 @@ public class ConvexHullTest
             ConvexHull.convexHull((Collection<Drawable2d>) null);
             fail("null collection should have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -317,9 +317,9 @@ public class ConvexHullTest
          * @param points List&lt;Point2d&gt;; the points for which the convex hull must be constructed
          * @return Polygon2d; the convex hull of the points
          * @throws NullPointerException when list is null
-         * @throws DrawRuntimeException when list is empty
+         * @throws IllegalArgumentException when list is empty
          */
-        Polygon2d run(List<Point2d> points) throws NullPointerException, DrawRuntimeException;
+        Polygon2d run(List<Point2d> points) throws NullPointerException, IllegalArgumentException;
     }
 
 }

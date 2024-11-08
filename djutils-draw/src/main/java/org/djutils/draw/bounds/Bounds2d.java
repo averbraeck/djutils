@@ -1,6 +1,5 @@
 package org.djutils.draw.bounds;
 
-import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -44,13 +43,18 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
      * @param maxX double; the upper bound for x
      * @param minY double; the lower bound for y
      * @param maxY double; the upper bound for y
-     * @throws IllegalArgumentException when a lower bound is larger than the corresponding upper bound, or any of the bounds is
-     *             NaN
+     * @throws ArithmeticException when <code>minX</code>, <code>maxX</code>, <code>minY</code>, or <code>maxY</code> is
+     *             <code>NaN</code>
+     * @throws IllegalArgumentException when <code>minX</code> &gt; <code>maxX</code>, or <code>minY</code> &gt;
+     *             <code>maxY</code>
      */
-    public Bounds2d(final double minX, final double maxX, final double minY, final double maxY) throws IllegalArgumentException
+    public Bounds2d(final double minX, final double maxX, final double minY, final double maxY)
+            throws ArithmeticException, IllegalArgumentException
     {
-        Throw.when(Double.isNaN(minX) || Double.isNaN(maxX) || Double.isNaN(minY) || Double.isNaN(maxY),
-                IllegalArgumentException.class, "bounds must be numbers (not NaN)");
+        Throw.whenNaN(minX, "minX");
+        Throw.whenNaN(maxX, "maxX");
+        Throw.whenNaN(minY, "minY");
+        Throw.whenNaN(maxY, "maxY");
         Throw.when(minX > maxX || minY > maxY, IllegalArgumentException.class,
                 "lower bound for each dimension should be less than or equal to its upper bound");
         this.minX = minX;
@@ -63,7 +67,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
      * Constructs a new Bounds2d around the origin (0, 0).
      * @param deltaX double; the deltaX value around the origin
      * @param deltaY double; the deltaY value around the origin
-     * @throws IllegalArgumentException when one of the delta values is less than zero
+     * @throws ArithmeticException when <code>deltaX</code>, or <code>deltaY</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when <code>deltaX</code>, or <code>deltaY</code> &lt; <code><0.0</code>
      */
     public Bounds2d(final double deltaX, final double deltaY)
     {
@@ -74,8 +79,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
      * Construct a Bounds2d from some collection of points, finding the lowest and highest x and y coordinates.
      * @param points Iterator&lt;? extends Point2d&gt;; Iterator that will generate all the points for which to construct a
      *            Bounds2d
-     * @throws NullPointerException when points is null
-     * @throws IllegalArgumentException when the iterator provides zero points
+     * @throws NullPointerException when <code>points</code> is <code>null</code>
+     * @throws IllegalArgumentException when the <code>points</code> iterator provides zero points
      */
     public Bounds2d(final Iterator<? extends Point2d> points)
     {
@@ -103,10 +108,10 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     /**
      * Construct a Bounds2d from an array of Point2d, finding the lowest and highest x and y coordinates.
      * @param points Point2d[]; the points to construct a Bounds2d from
-     * @throws NullPointerException when points is null
+     * @throws NullPointerException when <code>points</code> is <code>null</code>
      * @throws IllegalArgumentException when zero points are provided
      */
-    public Bounds2d(final Point2d[] points) throws NullPointerException, IllegalArgumentException
+    public Bounds2d(final Point2d[] points)
     {
         this(Arrays.stream(Throw.whenNull(points, "points")).iterator());
     }
@@ -114,9 +119,9 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     /**
      * Construct a Bounds2d for a Drawable2d.
      * @param drawable2d Drawable2d; any object that implements the Drawable2d interface
-     * @throws NullPointerException when drawable2d is null
+     * @throws NullPointerException when <code>drawable2d</code> is <code>null</code>
      */
-    public Bounds2d(final Drawable2d drawable2d) throws NullPointerException
+    public Bounds2d(final Drawable2d drawable2d)
     {
         this(Throw.whenNull(drawable2d, "drawable2d").iterator());
     }
@@ -124,10 +129,11 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     /**
      * Construct a Bounds2d for several Drawable2d objects.
      * @param drawable2d Drawable2d...; the Drawable2d objects
-     * @throws NullPointerException when the array is null, or contains a null value
-     * @throws IllegalArgumentException when the length of the array is 0
+     * @throws NullPointerException when the <code>drawable2d</code> array is <code>null</code>, or contains a <code>null</code>
+     *             value
+     * @throws IllegalArgumentException when the length of the <code>drawable2d</code> array is 0
      */
-    public Bounds2d(final Drawable2d... drawable2d) throws NullPointerException, IllegalArgumentException
+    public Bounds2d(final Drawable2d... drawable2d)
     {
         this(pointsOf(drawable2d));
     }
@@ -136,10 +142,10 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
      * Verify that the array contains at least one entry.
      * @param drawable2dArray Drawable2d[]; array of Drawable2d objects
      * @return Drawable2d[]; the array
-     * @throws NullPointerException when the array is null
-     * @throws IllegalArgumentException when the array contains 0 elements
+     * @throws NullPointerException when <code>drawable2darray</code> is <code>null</code>
+     * @throws IllegalArgumentException when the <code>drawable2dArray</code> contains 0 elements
      */
-    static Drawable2d[] ensureHasOne(final Drawable2d[] drawable2dArray) throws NullPointerException, IllegalArgumentException
+    static Drawable2d[] ensureHasOne(final Drawable2d[] drawable2dArray)
     {
         Throw.whenNull(drawable2dArray, "drawable2dArray");
         Throw.when(drawable2dArray.length == 0, IllegalArgumentException.class, "Array must contain at least one value");
@@ -150,8 +156,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
      * Return an iterator that will return all points of one or more Drawable objects.
      * @param drawable2d Drawable2d...; the Drawable objects
      * @return Iterator&lt;P&gt;; iterator that will return all points of the Drawable objects
-     * @throws NullPointerException when drawable is null, or contains a null value
-     * @throws IllegalArgumentException when drawable is empty
+     * @throws NullPointerException when <code>drawable2d</code> is <code>null</code>, or contains a <code>null</code> value
+     * @throws IllegalArgumentException when <code>drawable2d</code> is empty
      */
     public static Iterator<Point2d> pointsOf(final Drawable2d... drawable2d)
     {
@@ -187,10 +193,11 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     /**
      * Construct a Bounds2d for a Collection of Drawable2d objects.
      * @param drawableCollection Collection&lt;Drawable2d&gt;; the collection
-     * @throws NullPointerException when the collection is null, or contains null values
-     * @throws IllegalArgumentException when the collection is empty
+     * @throws NullPointerException when the <code>drawableCollection</code> is <code>null</code>, or contains a
+     *             <code>null</code> value
+     * @throws IllegalArgumentException when the <code>drawableCollection</code> is empty
      */
-    public Bounds2d(final Collection<Drawable2d> drawableCollection) throws NullPointerException, IllegalArgumentException
+    public Bounds2d(final Collection<Drawable2d> drawableCollection)
     {
         this(pointsOf(drawableCollection));
     }
@@ -199,11 +206,11 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
      * Return an iterator that will return all points of one or more Drawable2d objects.
      * @param drawableCollection Collection&lt;Drawable2d&gt;; the collection of Drawable2d objects
      * @return Iterator&lt;P&gt;; iterator that will return all points of the Drawable objects
-     * @throws NullPointerException when drawableCollection is null, or contains a null value
-     * @throws IllegalArgumentException when drawableCollection is empty
+     * @throws NullPointerException when the <code>drawableCollection</code> is <code>null</code>, or contains a
+     *             <code>null</code> value
+     * @throws IllegalArgumentException when the <code>drawableCollection</code> is empty
      */
     public static Iterator<Point2d> pointsOf(final Collection<Drawable2d> drawableCollection)
-            throws NullPointerException, IllegalArgumentException
     {
         return new Iterator<Point2d>()
         {
@@ -247,11 +254,11 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
      * Verify that the iterator has something to return.
      * @param iterator Iterator&lt;Drawable2d&gt;; the iterator
      * @return Iterator&lt;Drawable2d&gt;; the iterator
-     * @throws NullPointerException when the iterator is null
-     * @throws IllegalArgumentException when the hasNext method of the iterator returns false
+     * @throws NullPointerException when the <code>iterator</code> is <code>null</code>
+     * @throws IllegalArgumentException when the <code>hasNext</code> method of the <code>iterator</code> returns
+     *             <code>false</code> before even one <code>Drawable2d</code> was delivered
      */
     public static Iterator<Drawable2d> ensureHasOne(final Iterator<Drawable2d> iterator)
-            throws NullPointerException, IllegalArgumentException
     {
         Throw.when(!iterator.hasNext(), IllegalArgumentException.class, "Collection may not be empty");
         return iterator;
@@ -277,11 +284,12 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
      * @param x double; the x-coordinate of the point
      * @param y double; the y-coordinate of the point
      * @return boolean; whether this Bounds2d contains the point
-     * @throws IllegalArgumentException when any of the coordinates is NaN
+     * @throws ArithmeticException when <code>x</code>, or <code>y</code> is <code>NaN</code>
      */
-    public boolean contains(final double x, final double y) throws IllegalArgumentException
+    public boolean contains(final double x, final double y)
     {
-        Throw.when(Double.isNaN(x) || Double.isNaN(y), IllegalArgumentException.class, "coordinates must be numbers (not NaN)");
+        Throw.whenNaN(x, "x");
+        Throw.whenNaN(y, "y");
         return x > this.minX && x < this.maxX && y > this.minY && y < this.maxY;
     }
 
@@ -300,14 +308,16 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     }
 
     /**
-     * Check if this Bounds2d covers a point. Covers returns true when the point is on, or inside this Bounds2d.
+     * Check if this Bounds2d covers a point. Covers returns <code>true</code> when the point is on, or inside this Bounds2d.
      * @param x double; the x-coordinate of the point
      * @param y double; the y-coordinate of the point
      * @return boolean; whether this Bounds2d, including its borders, contains the point
+     * @throws ArithmeticException when <code>x</code>, or <code>y</code> is <code>NaN</code>
      */
     public boolean covers(final double x, final double y)
     {
-        Throw.when(Double.isNaN(x) || Double.isNaN(y), IllegalArgumentException.class, "coordinates must be numbers (not NaN)");
+        Throw.whenNaN(x, "x");
+        Throw.whenNaN(y, "y");
         return x >= this.minX && x <= this.maxX && y >= this.minY && y <= this.maxY;
     }
 
@@ -319,14 +329,14 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     }
 
     @Override
-    public boolean covers(final Bounds2d otherBounds) throws NullPointerException
+    public boolean covers(final Bounds2d otherBounds)
     {
         Throw.whenNull(otherBounds, "otherBounds");
         return covers(otherBounds.minX, otherBounds.minY) && covers(otherBounds.maxX, otherBounds.maxY);
     }
 
     @Override
-    public boolean disjoint(final Bounds2d otherBounds) throws NullPointerException
+    public boolean disjoint(final Bounds2d otherBounds)
     {
         Throw.whenNull(otherBounds, "otherBounds");
         return otherBounds.minX > this.maxX || otherBounds.maxX < this.minX || otherBounds.minY > this.maxY
@@ -334,7 +344,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     }
 
     @Override
-    public boolean intersects(final Bounds2d otherBounds2d) throws NullPointerException
+    public boolean intersects(final Bounds2d otherBounds2d)
     {
         return !disjoint(otherBounds2d);
     }
@@ -353,11 +363,11 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Return an AWT Rectangle2D that covers the same area as this Bounds2d.
-     * @return Rectangle2D; the rectangle that covers the same area as this Bounds2d
+     * @return java.awt.geom.Rectangle2D; the rectangle that covers the same area as this Bounds2d
      */
-    public Rectangle2D toRectangle2D()
+    public java.awt.geom.Rectangle2D toRectangle2D()
     {
-        return new Rectangle2D.Double(this.minX, this.minY, this.maxX - this.minX, this.maxY - this.minY);
+        return new java.awt.geom.Rectangle2D.Double(this.minX, this.minY, this.maxX - this.minX, this.maxY - this.minY);
     }
 
     @Override

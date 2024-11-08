@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.djutils.base.AngleUtil;
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
@@ -56,9 +55,9 @@ public class Ray2dTest
         try
         {
             new Ray2d(1, 2, Double.NaN);
-            fail("NaN for phy should have thrown a IllegalArgumentException");
+            fail("NaN for phy should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException ae)
         {
             // Ignore expected exception
         }
@@ -253,9 +252,9 @@ public class Ray2dTest
         try
         {
             new Ray2d(1, 2, 1).getLocation(Double.NaN);
-            fail("NaN position should have thrown a DrawRuntimeException");
+            fail("NaN position should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -263,9 +262,9 @@ public class Ray2dTest
         try
         {
             new Ray2d(1, 2, 1).getLocation(-1);
-            fail("Negative position should have thrown a DrawRuntimeException");
+            fail("Negative position should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -275,7 +274,7 @@ public class Ray2dTest
             new Ray2d(1, 2, 1).getLocation(Double.POSITIVE_INFINITY);
             fail("Infinite position should have thrown a DrawRuntimeException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -285,7 +284,7 @@ public class Ray2dTest
             new Ray2d(1, 2, 1).getLocation(Double.NEGATIVE_INFINITY);
             fail("Infinite position should have thrown a DrawRuntimeException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -293,9 +292,9 @@ public class Ray2dTest
         try
         {
             new Ray2d(1, 2, 1).getLocationExtended(Double.POSITIVE_INFINITY);
-            fail("Infinite position should have thrown a DrawRuntimeException");
+            fail("Infinite position should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -303,9 +302,9 @@ public class Ray2dTest
         try
         {
             new Ray2d(1, 2, 1).getLocationExtended(Double.NEGATIVE_INFINITY);
-            fail("Infinite position should have thrown a DrawRuntimeException");
+            fail("Infinite position should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -313,9 +312,9 @@ public class Ray2dTest
         try
         {
             new Ray2d(1, 2, 1).getLocationExtended(Double.NaN);
-            fail("NaN position should have thrown a DrawRuntimeException");
+            fail("NaN position should have thrown an ArithmeticException");
         }
-        catch (DrawRuntimeException dre)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -441,7 +440,7 @@ public class Ray2dTest
             ray.epsilonEquals((Ray2d) null, 1, 1);
             fail("Null pointer should have thrown a NullPointerException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -451,7 +450,7 @@ public class Ray2dTest
             ray.epsilonEquals(ray, -0.1, 1);
             fail("Negative epsilonCoordinate should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException npe)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -461,7 +460,7 @@ public class Ray2dTest
             ray.epsilonEquals(ray, 1, -0.1);
             fail("Negative epsilonDirection should have thrown an IllegalArgumentException");
         }
-        catch (IllegalArgumentException npe)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -469,9 +468,9 @@ public class Ray2dTest
         try
         {
             ray.epsilonEquals(ray, Double.NaN, 1);
-            fail("NaN epsilonCoordinate should have thrown an IllegalArgumentException");
+            fail("NaN epsilonCoordinate should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException npe)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -479,9 +478,9 @@ public class Ray2dTest
         try
         {
             ray.epsilonEquals(ray, 1, Double.NaN);
-            fail("NaN epsilonDirection should have thrown an IllegalArgumentException");
+            fail("NaN epsilonDirection should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException npe)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }

@@ -16,8 +16,9 @@ package org.djutils.draw.curve;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
- * @param <DP> the DirectedPoint type
- * @param <DIR> the direction type. In 2d this is a Double; in 3d this is a Direction3d object
+ * @param <DP> the <code>DirectedPoint</code> type
+ * @param <DIR> the direction type. In 2d this is a <code>java.lang.Double</code>; in 3d this is a <code>Direction3d</code>
+ *            object
  */
 public interface Curve<DP, DIR>
 {
@@ -50,4 +51,5 @@ public interface Curve<DP, DIR>
      * @return end direction of this Curve
      */
     DIR getEndDirection();
+    
 }

@@ -44,15 +44,14 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * @param z double; the z coordinate
      * @param dirY double; the complement of the slope
      * @param dirZ double; the counter-clockwise rotation around the point in radians
-     * @throws IllegalArgumentException when <cite>x</cite>, <cite>y</cite>, <cite>z</cite>, <cite>dirY</cite>, or
-     *             <cite>dirZ</cite> is NaN
+     * @throws ArithmeticException when <code>x</code>, <code>y</code>, <code>z</code>, <code>dirY</code>, or <code>dirZ</code>
+     *             is <code>NaN</code>
      */
     public DirectedPoint3d(final double x, final double y, final double z, final double dirY, final double dirZ)
-            throws IllegalArgumentException
     {
         super(x, y, z);
-        Throw.when(Double.isNaN(dirY) || Double.isNaN(dirZ), IllegalArgumentException.class,
-                "dirY and dirZ must be numbers (not NaN)");
+        Throw.whenNaN(dirY, "dirY");
+        Throw.whenNaN(dirZ, "dirZ");
         this.dirZ = dirZ;
         this.dirY = dirY;
     }
@@ -62,16 +61,15 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * @param xyz double[]; the x, y and z coordinates
      * @param dirY double; the complement of the slope
      * @param dirZ double; the counter-clockwise rotation around the point in radians
-     * @throws NullPointerException when <cite>xyx</cite> is null
-     * @throws IllegalArgumentException when the length of the <cite>xyz</cite> array is not 3, or contains a NaN value, or
-     *             <cite>dirY</cite>, or <cite>dirZ</cite> is NaN
+     * @throws NullPointerException when <code>xyx</code> is <code>null</code>
+     * @throws IllegalArgumentException when the length of the <code>xyz</code> array is not 3, or contains a <code>NaN</code>
+     *             value, or <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
      */
     public DirectedPoint3d(final double[] xyz, final double dirY, final double dirZ)
-            throws NullPointerException, IllegalArgumentException
     {
         super(xyz);
-        Throw.when(Double.isNaN(dirY) || Double.isNaN(dirZ), IllegalArgumentException.class,
-                "dirY and dirZ must be numbers (not NaN)");
+        Throw.whenNaN(dirY, "dirY");
+        Throw.whenNaN(dirZ, "dirZ");
         this.dirY = dirY;
         this.dirZ = dirZ;
     }
@@ -80,9 +78,9 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * Create a new DirectedPoint3d from another Point3d and and direction Direction3d.
      * @param point Point3d; the point from which this OrientedPoint3d will be instantiated
      * @param direction Direction3d; the direction
-     * @throws NullPointerException when direction is null
+     * @throws NullPointerException when <code>point</code>, or <code>direction</code> is <code>null</code>
      */
-    public DirectedPoint3d(final Point3d point, final Direction3d direction) throws NullPointerException
+    public DirectedPoint3d(final Point3d point, final Direction3d direction)
     {
         this(point.x, point.y, point.z, Throw.whenNull(direction, "direction").dirY, direction.dirZ);
     }
@@ -92,9 +90,9 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * @param point Point3d; the point from which this OrientedPoint3d will be instantiated
      * @param dirY double; the complement of the slope
      * @param dirZ double; the counter-clockwise rotation around the point in radians
-     * @throws IllegalArgumentException when dirY, or dirZ is NaN
+     * @throws ArithmeticException when <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
      */
-    public DirectedPoint3d(final Point3d point, final double dirY, final double dirZ) throws IllegalArgumentException
+    public DirectedPoint3d(final Point3d point, final double dirY, final double dirZ)
     {
         this(point.x, point.y, point.z, dirY, dirZ);
     }
@@ -107,11 +105,13 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * @param throughX double; the x-coordinate of a point that the direction goes through
      * @param throughY double; the y-coordinate of a point that the direction goes through
      * @param throughZ double; the z-coordinate of a point that the direction goes through
-     * @throws DrawRuntimeException when <cite>throughX</cite> == <cite>x</cite> and <cite>throughY</cite> == <cite>y</cite> and
-     *             <cite>throughZ</cite> == <cite>z</cite>, or any through-value is NaN
+     * @throws ArithmeticException when <code>z</code>, <code>y</code>, <code>z</code>, <code>throughX</code>,
+     *             <code>throughY</code>, or <code>throughZ</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when <code>throughX</code> == <code>x</code> and <code>throughY</code> == <code>y</code>
+     *             and <code>throughZ</code> == <code>z</code>
      */
     public DirectedPoint3d(final double x, final double y, final double z, final double throughX, final double throughY,
-            final double throughZ) throws DrawRuntimeException
+            final double throughZ)
     {
         this(x, y, z, buildDirectionVector(throughX - x, throughY - y, throughZ - z));
     }
@@ -122,6 +122,8 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * @param dY double; y difference
      * @param dZ double; z difference
      * @return double[]; a two-element array containing dirY and dirZ
+     * @throws IllegalArgumentException when <code>dX</code> == <code>0.0</code> and <code>dY</code> == <code>0.0</code> and
+     *             <code>dZ</code> == <code>0.0</code>
      */
     private static double[] buildDirectionVector(final double dX, final double dY, final double dZ)
     {
@@ -135,11 +137,13 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * @param throughX double; the x coordinate of a point that the direction goes through
      * @param throughY double; the y coordinate of a point that the direction goes through
      * @param throughZ double; the z coordinate of a point that the direction goes through
-     * @throws DrawRuntimeException when <cite>throughX</cite> == <cite>point.x</cite> and <cite>throughY</cite> ==
-     *             <cite>point.y</cite> and <cite>throughZ</cite> == <cite>point.z</cite>, or any through-value is NaN
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
+     * @throws ArithmeticException when <code>throughX</code>, or <code>throughY</code>, or <code>throughZ</code> is
+     *             <code>NaN</code>
+     * @throws IllegalArgumentException when <code>throughX</code> == <code>point.x</code> and <code>throughY</code> ==
+     *             <code>point.y</code> and <code>throughZ</code> == <code>point.z</code>
      */
     public DirectedPoint3d(final Point3d point, final double throughX, final double throughY, final double throughZ)
-            throws DrawRuntimeException
     {
         this(Throw.whenNull(point, "point").x, point.y, point.z, throughX, throughY, throughZ);
     }
@@ -148,11 +152,10 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * Verify that a double array is not null, has two elements.
      * @param orientation double[]; the array to check
      * @return double; the first element of the argument
-     * @throws NullPointerException when <code>orientation</code> is null
+     * @throws NullPointerException when <code>orientation</code> is <code>null</code>
      * @throws IllegalArgumentException when the length of the <code>orientation</code> array is not 2
      */
     private static double checkOrientationVector(final double[] orientation)
-            throws NullPointerException, IllegalArgumentException
     {
         Throw.when(orientation.length != 2, IllegalArgumentException.class, "length of orientation array must be 2");
         return orientation[0];
@@ -167,11 +170,13 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * @param orientation double[]; the two direction values (dirY and dirZ) in a double array containing dirY and dirZ in that
      *            order. DirY is the rotation from the positive z-axis to the direction. DirZ is the angle from the positive
      *            x-axis to the projection of the direction in the x-y-plane.
-     * @throws NullPointerException when <code>orientation</code> is null
-     * @throws IllegalArgumentException when the length of the <code>direction</code> array is not 2, or contains a NaN value
+     * @throws NullPointerException when <code>orientation</code> is <code>null</code>
+     * @throws ArithmeticException when <code>x</code>, <code>y</code>, <code>z</code> is <code>NaN</code>, or
+     *             <code>orientation</code> contains a <code>NaN</code> value
+     * @throws IllegalArgumentException when the length of the <code>direction</code> array is not 2, or contains a
+     *             <code>NaN</code> value
      */
     public DirectedPoint3d(final double x, final double y, final double z, final double[] orientation)
-            throws NullPointerException, IllegalArgumentException
     {
         this(x, y, z, checkOrientationVector(orientation), orientation[1]);
     }
@@ -179,13 +184,14 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
     /**
      * Create a new OrientedPoint3d from x, y and z coordinates packed in a double array of three elements and a direction
      * specified using a double array of two elements.
-     * @param xyz double[]; the <cite>x</cite>, <cite>y</cite> and <cite>z</cite> coordinates in that order
-     * @param orientation double[]; the two orientation angles <cite>dirY</cite> and <cite>dirZ</cite> in that order
-     * @throws NullPointerException when <cite>xyx</cite> or <cite>orientation</cite> is null
-     * @throws IllegalArgumentException when the length of the <cite>xyx</cite> array is not 3 or the length of the
-     *             <cite>orientation</cite> array is not 2
+     * @param xyz double[]; the <code>x</code>, <code>y</code> and <code>z</code> coordinates in that order
+     * @param orientation double[]; the two orientation angles <code>dirY</code> and <code>dirZ</code> in that order
+     * @throws NullPointerException when <code>xyx</code> or <code>orientation</code> is <code>null</code>
+     * @throws ArithmeticException when <code>xyz</code>, or <code>orientation</code> contains a <code>NaN</code> value
+     * @throws IllegalArgumentException when the length of the <code>xyx</code> array is not 3 or the length of the
+     *             <code>orientation</code> array is not 2
      */
-    public DirectedPoint3d(final double[] xyz, final double[] orientation) throws NullPointerException, IllegalArgumentException
+    public DirectedPoint3d(final double[] xyz, final double[] orientation)
     {
         this(xyz, checkOrientationVector(orientation), orientation[1]);
     }
@@ -196,11 +202,11 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * @param y double; the y coordinate of the new DirectedPoint3d
      * @param z double; the z coordinate of the new DirectedPoint3d
      * @param throughPoint Point3d; a point that the direction goes through
-     * @throws NullPointerException when throughPoint is null
-     * @throws DrawRuntimeException when throughPoint is exactly at (x, y, z)
+     * @throws NullPointerException when <code>throughPoint</code> is <code>null</code>
+     * @throws ArithmeticException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when <code>throughPoint</code> is exactly at <code>(x y,z)</code>
      */
     public DirectedPoint3d(final double x, final double y, final double z, final Point3d throughPoint)
-            throws NullPointerException, DrawRuntimeException
     {
         this(x, y, z, Throw.whenNull(throughPoint, "througPoint").x, throughPoint.y, throughPoint.z);
     }
@@ -209,32 +215,35 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * Construct a new DirectedPoint3d.
      * @param point Point3d; the location of the new DirectedPoint3d
      * @param throughPoint Point3d; another point that the direction goes through
-     * @throws NullPointerException when point is null or throughPoint is null
-     * @throws DrawRuntimeException when throughPoint is exactly at point
+     * @throws NullPointerException when <code>point</code> is <code>null</code> or <code>throughPoint</code> is
+     *             <code>null</code>
+     * @throws IllegalArgumentException when <code>throughPoint</code> is exactly at <code>point</code>
      */
-    public DirectedPoint3d(final Point3d point, final Point3d throughPoint) throws NullPointerException, DrawRuntimeException
+    public DirectedPoint3d(final Point3d point, final Point3d throughPoint)
     {
         this(Throw.whenNull(point, "point").x, point.y, point.z, Throw.whenNull(throughPoint, "throughPoint").x, throughPoint.y,
                 throughPoint.z);
     }
 
     @Override
-    public DirectedPoint3d translate(final double dx, final double dy) throws IllegalArgumentException
+    public DirectedPoint3d translate(final double dX, final double dY)
     {
-        Throw.when(Double.isNaN(dx) || Double.isNaN(dy), IllegalArgumentException.class, "translation may not contain NaN");
-        return new DirectedPoint3d(this.x + dx, this.y + dy, this.z, this.dirY, this.dirZ);
+        Throw.whenNaN(dX, "dX");
+        Throw.whenNaN(dY, "dY");
+        return new DirectedPoint3d(this.x + dX, this.y + dY, this.z, this.dirY, this.dirZ);
     }
 
     @Override
-    public DirectedPoint3d translate(final double dx, final double dy, final double dz) throws IllegalArgumentException
+    public DirectedPoint3d translate(final double dX, final double dY, final double dZ)
     {
-        Throw.when(Double.isNaN(dx) || Double.isNaN(dy) || Double.isNaN(dz), IllegalArgumentException.class,
-                "Translation may not contain NaN");
-        return new DirectedPoint3d(this.x + dx, this.y + dy, this.z + dz, this.dirY, this.dirZ);
+        Throw.whenNaN(dX, "dX");
+        Throw.whenNaN(dY, "dY");
+        Throw.whenNaN(dZ, "dZ");
+        return new DirectedPoint3d(this.x + dX, this.y + dY, this.z + dZ, this.dirY, this.dirZ);
     }
 
     @Override
-    public DirectedPoint3d scale(final double factor) throws IllegalArgumentException
+    public DirectedPoint3d scale(final double factor)
     {
         return new DirectedPoint3d(this.x * factor, this.y * factor, this.z * factor, this.dirY, this.dirZ);
     }
@@ -264,19 +273,18 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * Interpolate towards another DirectedPoint3d with a fraction. It is allowed for fraction to be less than zero or larger
      * than 1. In that case the interpolation turns into an extrapolation. DirY and dirZ are interpolated/extrapolated using the
      * interpolateShortest method.
-     * @param otherPoint OrientedPoint3d; the other point
+     * @param otherPoint DirectedPoint3d; the other point
      * @param fraction double; the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
      *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
      *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
-     * @return DirectedPoint3d; a new OrientedPoint3d at the requested fraction
-     * @throws NullPointerException when otherPoint is null
-     * @throws IllegalArgumentException when fraction is NaN
+     * @return DirectedPoint3d; a new <code>DirectedPoint3d</code> at the requested <code>fraction</code>
+     * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
+     * @throws ArithmeticException when <code>fraction</code> is <code>NaN</code>
      */
     public DirectedPoint3d interpolate(final DirectedPoint3d otherPoint, final double fraction)
-            throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(otherPoint, "otherPoint");
-        Throw.when(Double.isNaN(fraction), IllegalArgumentException.class, "fraction must be a number (not NaN)");
+        Throw.whenNaN(fraction, "fraction");
         if (0.0 == fraction)
         {
             return this;
@@ -295,27 +303,27 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * Return a new DirectedPoint3d with an in-place rotation around the z-axis by the provided rotateZ. The resulting rotation
      * will be normalized between -&pi; and &pi;.
      * @param rotateZ double; the rotation around the z-axis
-     * @return DirectedPoint3d; a new point with the same coordinates, dirY and modified dirZ
-     * @throws IllegalArgumentException when rotateZ is NaN
+     * @return DirectedPoint3d; a new point with the same coordinates, <code>dirY</code> and modified <code>dirZ</code>
+     * @throws ArithmeticException when <code>rotateZ</code> is <code>NaN</code>
      */
-    public DirectedPoint3d rotate(final double rotateZ) throws IllegalArgumentException
+    public DirectedPoint3d rotate(final double rotateZ)
     {
-        Throw.when(Double.isNaN(rotateZ), IllegalArgumentException.class, "rotateZ must be a number (not NaN)");
+        Throw.whenNaN(rotateZ, "rotateZ");
         return new DirectedPoint3d(this.x, this.y, this.z, this.dirY, AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
 
     /**
-     * Return a new OrientedPoint3d point with an in-place rotation by the provided rotateY, and rotateZ. The resulting
+     * Return a new DirectedPoint3d point with an in-place rotation by the provided rotateY, and rotateZ. The resulting
      * rotations will be normalized between -&pi; and &pi;.
      * @param rotateY double; the rotation around the y-axis
      * @param rotateZ double; the rotation around the z-axis
      * @return DirectedPoint3d; a new point with the same coordinates and applied rotations
-     * @throws IllegalArgumentException when any of the rotations is NaN
+     * @throws ArithmeticException when <code>rotateY</code>, or <code>rotateZ</code> is <code>NaN</code>
      */
-    public DirectedPoint3d rotate(final double rotateY, final double rotateZ) throws IllegalArgumentException
+    public DirectedPoint3d rotate(final double rotateY, final double rotateZ)
     {
-        Throw.when(Double.isNaN(rotateY) || Double.isNaN(rotateZ), IllegalArgumentException.class,
-                "rotateY and rotateZ must be a numbers (not NaN)");
+        Throw.whenNaN(rotateY, "rotateY");
+        Throw.whenNaN(rotateZ, "rotateZ");
         return new DirectedPoint3d(this.x, this.y, this.z, AngleUtil.normalizeAroundZero(this.dirY + rotateY),
                 AngleUtil.normalizeAroundZero(this.dirZ + rotateZ));
     }
@@ -359,8 +367,8 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
         Throw.whenNull(other, "other");
         Throw.when(epsilonCoordinate < 0 || epsilonRotation < 0, IllegalArgumentException.class,
                 "epsilonCoordinate and epsilonRotation may not be negative");
-        Throw.when(Double.isNaN(epsilonCoordinate) || Double.isNaN(epsilonRotation), IllegalArgumentException.class,
-                "epsilonCoordinate and epsilonRotation may not be NaN");
+        Throw.whenNaN(epsilonCoordinate, "epsilonCoordinate");
+        Throw.whenNaN(epsilonRotation, "epsilonRotation");
         if (Math.abs(this.x - other.x) > epsilonCoordinate)
         {
             return false;

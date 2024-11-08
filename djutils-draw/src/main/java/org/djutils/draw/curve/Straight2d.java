@@ -32,10 +32,12 @@ public class Straight2d implements Curve2d, OffsetFlattable2d
      * Constructor.
      * @param startPoint start point.
      * @param length length.
+     * @throws NullPointerException when <code>startPoint</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>length &le; 0.0</code>
      */
     public Straight2d(final DirectedPoint2d startPoint, final double length)
     {
-        Throw.whenNull(startPoint, "Start point may not be null.");
+        Throw.whenNull(startPoint, "startPoint");
         Throw.when(length <= 0.0, IllegalArgumentException.class, "Length must be above 0.");
         this.startPoint = startPoint;
         this.endPoint = new Ray2d(startPoint).getLocation(length);
@@ -109,7 +111,7 @@ public class Straight2d implements Curve2d, OffsetFlattable2d
     /**
      * Offset a PolyLine2d based on variable offset. A straight uses no segments, other than for varying offset.
      * @param offsets offsets, should contain keys 0.0 and 1.0.
-     * @return offset poly-line.
+     * @return offset <code>PolyLine2d</code>
      */
     public PolyLine2d offset(final PieceWiseLinearOffset2d offsets)
     {

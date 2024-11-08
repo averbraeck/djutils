@@ -89,9 +89,9 @@ public class DirectedPoint2dTest
         try
         {
             new DirectedPoint2d(Double.NaN, 0, 0);
-            fail("NaN coordinate should have thrown an IllegalArgumentException");
+            fail("NaN coordinate should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -99,9 +99,9 @@ public class DirectedPoint2dTest
         try
         {
             new DirectedPoint2d(0, Double.NaN, 0);
-            fail("NaN coordinate should have thrown an IllegalArgumentException");
+            fail("NaN coordinate should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -109,9 +109,9 @@ public class DirectedPoint2dTest
         try
         {
             new DirectedPoint2d(0, 0, Double.NaN);
-            fail("NaN coordinate should have thrown an IllegalArgumentException");
+            fail("NaN coordinate should have thrown an ArithmeticException");
         }
-        catch (IllegalArgumentException iae)
+        catch (ArithmeticException e)
         {
             // Ignore expected exception
         }
@@ -306,7 +306,7 @@ public class DirectedPoint2dTest
             {
                 new DirectedPoint2d(0.0, 0.0, Math.PI / 4.0).normalize();
             }
-        }, "Should throw DRtE", DrawRuntimeException.class);
+        }, "Should throw exception", DrawRuntimeException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -315,7 +315,7 @@ public class DirectedPoint2dTest
             {
                 p1.translate(Double.NaN, 2);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw ArithmeticException", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -324,7 +324,7 @@ public class DirectedPoint2dTest
             {
                 p1.translate(1, Double.NaN);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw ArithmeticException", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -333,7 +333,7 @@ public class DirectedPoint2dTest
             {
                 p1.translate(Double.NaN, 2, 3);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw ArithmeticException", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -342,7 +342,7 @@ public class DirectedPoint2dTest
             {
                 p1.translate(1, Double.NaN, 3);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw ArithmeticException", ArithmeticException.class);
 
         Try.testFail(new Try.Execution()
         {
@@ -351,7 +351,7 @@ public class DirectedPoint2dTest
             {
                 p1.translate(1, 2, Double.NaN);
             }
-        }, "Should throw IAE", IllegalArgumentException.class);
+        }, "Should throw ArithmeticException", ArithmeticException.class);
 
     }
 

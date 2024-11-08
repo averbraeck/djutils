@@ -32,12 +32,13 @@ public interface Oriented<O extends Oriented<O>>
      *            if you do not want to check the coordinates
      * @param epsilonDirection double; the upper bound of difference for the direction(s); use Double.POSITIVE_INFINITY if you
      *            do not want to check the angles
-     * @return boolean; true if x, y, and z are less than epsilonCoordinate apart, and rotX, rotY and rotZ are less than
-     *         epsilonRotation apart, otherwise false
-     * @throws NullPointerException when other is null
-     * @throws IllegalArgumentException epsilonCoordinate or epsilonRotation is NaN or negative
+     * @return boolean; <code>true</code> if <code>x</code>, <code>y</code>, and <code>z</code> are less than
+     *         <code>epsilonCoordinate</code> apart, and <code>rotX</code>, <code>rotY</code> and <code>rotZ</code> are less
+     *         than <code>epsilonRotation</code> apart, otherwise <code>false</code>
+     * @throws NullPointerException when <code>other</code> is <code>null</code>
+     * @throws ArithmeticException when <code>epsilonCoordinate</code> or <code>epsilonRotation</code> is <code>NaN</code>
+     * @throws IllegalArgumentException <code>epsilonCoordinate</code> or <code>epsilonRotation</code> is negative
      */
-    boolean epsilonEquals(O other, double epsilonCoordinate, double epsilonDirection)
-            throws NullPointerException, IllegalArgumentException;
+    boolean epsilonEquals(O other, double epsilonCoordinate, double epsilonDirection);
 
 }
