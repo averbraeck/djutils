@@ -28,13 +28,13 @@ public interface Flattener<F extends Flattener<F, C, PL, P>, C extends Curve<?, 
 {
     /**
      * Flatten a Flattable line into a PolyLine.
-     * @param line line function.
+     * @param curve curve function.
      * @return PolyLine; flattened line.
-     * @throws NullPointerException when <code>line</code> is <code>null</code>
+     * @throws NullPointerException when <code>curve</code> is <code>null</code>
      */
-    default PL flatten(final C line)
+    default PL flatten(final C curve)
     {
-        return flatten(line);
+        return flatten(curve);
     }
 
     /**

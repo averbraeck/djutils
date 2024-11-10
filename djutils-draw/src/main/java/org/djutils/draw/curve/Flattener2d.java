@@ -31,22 +31,22 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
      * Check for an inflection point by creating additional points at one quarter and three quarters. If these are on opposite
      * sides of the line from prevPoint to nextPoint; there must be an inflection point.
      * https://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
-     * @param line FlattableLine2d
+     * @param curve FlattableLine2d
      * @param prevT double; t of preceding inserted point
      * @param medianT double; t of point currently considered for insertion
      * @param nextT double; t of following inserted point
-     * @param prevPoint Point2d; point on <code>line</code> at <code>prevT</code>
-     * @param nextPoint Point2d; point on <code>line</code> at <code>nextT</code>
+     * @param prevPoint Point2d; point on <code>curve</code> at <code>prevT</code>
+     * @param nextPoint Point2d; point on <code>curve</code> at <code>nextT</code>
      * @return boolean; <code>true</code> if there is an inflection point between <code>prevT</code> and <code>nextT</code>;
      *         <code>false</code> if there is no inflection point between <code>prevT</code> and <code>nextT</code>
      */
-    private static boolean checkInflectionPoint(final Curve2d line, final double prevT, final double medianT,
+    private static boolean checkInflectionPoint(final Curve2d curve, final double prevT, final double medianT,
             final double nextT, final Point2d prevPoint, final Point2d nextPoint)
     {
-        Point2d oneQuarter = line.getPoint((prevT + medianT) / 2);
+        Point2d oneQuarter = curve.getPoint((prevT + medianT) / 2);
         int sign1 = (int) Math.signum((nextPoint.x - prevPoint.x) * (oneQuarter.y - prevPoint.y)
                 - (nextPoint.y - prevPoint.y) * (oneQuarter.x - prevPoint.x));
-        Point2d threeQuarter = line.getPoint((nextT + medianT) / 2);
+        Point2d threeQuarter = curve.getPoint((nextT + medianT) / 2);
         int sign2 = (int) Math.signum((nextPoint.x - prevPoint.x) * (threeQuarter.y - prevPoint.y)
                 - (nextPoint.y - prevPoint.y) * (threeQuarter.x - prevPoint.x));
         return sign1 != sign2;
@@ -120,14 +120,14 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
         }
 
         @Override
-        public PolyLine2d flatten(final Curve2d line) throws NullPointerException
+        public PolyLine2d flatten(final Curve2d curve) throws NullPointerException
         {
-            Throw.whenNull(line, "Line function may not be null");
+            Throw.whenNull(curve, "Line function may not be null");
             List<Point2d> points = new ArrayList<>(this.numSegments + 1);
             for (int i = 0; i <= this.numSegments; i++)
             {
                 double fraction = ((double) i) / this.numSegments;
-                points.add(line.getPoint(fraction));
+                points.add(curve.getPoint(fraction));
             }
             return new PolyLine2d(points);
         }
@@ -155,11 +155,11 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
         }
 
         @Override
-        public PolyLine2d flatten(final Curve2d line)
+        public PolyLine2d flatten(final Curve2d curve)
         {
-            Throw.whenNull(line, "Line function may not be null");
+            Throw.whenNull(curve, "curve");
             NavigableMap<Double, Point2d> result = new TreeMap<>();
-            loadKnots(result, line);
+            loadKnots(result, curve);
 
             // Walk along all point pairs and see if additional points need to be inserted
             double prevT = result.firstKey();
@@ -170,7 +170,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                 double nextT = entry.getKey();
                 Point2d nextPoint = entry.getValue();
                 double medianT = (prevT + nextT) / 2;
-                Point2d medianPoint = line.getPoint(medianT);
+                Point2d medianPoint = curve.getPoint(medianT);
 
                 // Check max deviation
                 if (checkPositionError(medianPoint, prevPoint, nextPoint, this.maxDeviation))
@@ -181,13 +181,13 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                 }
 
                 if (prevPoint.distance(nextPoint) > this.maxDeviation
-                        && Flattener2d.checkInflectionPoint(line, prevT, medianT, nextT, prevPoint, nextPoint))
+                        && Flattener2d.checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
                     result.put(medianT, medianPoint);
                     continue;
                 }
-                if (Flattener2d.checkLoopBack(line.getDirection(prevT), line.getDirection(nextT)))
+                if (Flattener2d.checkLoopBack(curve.getDirection(prevT), curve.getDirection(nextT)))
                 {
                     // The curve loops back onto itself. Inserting the halfway point should prevent missing out a major detour
                     // This check is NOT needed in the MaxDeviationAndAngle flattener.
@@ -231,15 +231,15 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
         }
 
         @Override
-        public PolyLine2d flatten(final Curve2d line) throws NullPointerException
+        public PolyLine2d flatten(final Curve2d curve) throws NullPointerException
         {
             NavigableMap<Double, Point2d> result = new TreeMap<>();
-            loadKnots(result, line);
+            loadKnots(result, curve);
             Map<Double, Double> directions = new LinkedHashMap<>();
             Set<Double> knots = new HashSet<>();
             for (double fraction : result.keySet())
             {
-                directions.put(fraction, line.getDirection(fraction));
+                directions.put(fraction, curve.getDirection(fraction));
                 knots.add(fraction);
             }
 
@@ -253,14 +253,14 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                 double nextT = entry.getKey();
                 Point2d nextPoint = entry.getValue();
                 double medianT = (prevT + nextT) / 2;
-                Point2d medianPoint = line.getPoint(medianT);
+                Point2d medianPoint = curve.getPoint(medianT);
 
                 // Check max deviation
                 if (checkPositionError(medianPoint, prevPoint, nextPoint, this.maxDeviation))
                 {
                     // We need to insert another point
                     result.put(medianT, medianPoint);
-                    directions.put(medianT, line.getDirection(medianT));
+                    directions.put(medianT, curve.getDirection(medianT));
                     continue;
                 }
 
@@ -270,7 +270,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                 {
                     // We need to insert another point
                     result.put(medianT, medianPoint);
-                    directions.put(medianT, line.getDirection(medianT));
+                    directions.put(medianT, curve.getDirection(medianT));
                     iterationsAtSinglePoint++;
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
                             + "around the same point (t=%f). Likely there is an (unreported) knot in the FlattableLine.",
@@ -280,18 +280,18 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                 iterationsAtSinglePoint = 0;
 
                 if (prevPoint.distance(nextPoint) > this.maxDeviation
-                        && Flattener2d.checkInflectionPoint(line, prevT, medianT, nextT, prevPoint, nextPoint))
+                        && Flattener2d.checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
                     result.put(medianT, medianPoint);
-                    directions.put(medianT, line.getDirection(medianT));
+                    directions.put(medianT, curve.getDirection(medianT));
                     continue;
                 }
                 prevT = nextT;
                 prevPoint = nextPoint;
                 if (knots.contains(prevT))
                 {
-                    directions.put(prevT, line.getDirection(prevT + Math.ulp(prevT)));
+                    directions.put(prevT, curve.getDirection(prevT + Math.ulp(prevT)));
                 }
             }
             return new PolyLine2d(result.values().iterator());
@@ -320,18 +320,18 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
         }
 
         @Override
-        public PolyLine2d flatten(final Curve2d line) throws NullPointerException
+        public PolyLine2d flatten(final Curve2d curve) throws NullPointerException
         {
             NavigableMap<Double, Point2d> result = new TreeMap<>();
-            loadKnots(result, line);
+            loadKnots(result, curve);
             Map<Double, Double> directions = new LinkedHashMap<>();
-            directions.put(0.0, line.getDirection(0.0)); // directions can't do ULP before 0.0
+            directions.put(0.0, curve.getDirection(0.0)); // directions can't do ULP before 0.0
             Set<Double> knots = new HashSet<>();
             for (double knot : result.keySet())
             {
                 if (knot > 0)
                 {
-                    directions.put(knot, line.getDirection(knot - Math.ulp(knot)));
+                    directions.put(knot, curve.getDirection(knot - Math.ulp(knot)));
                 }
                 if (knot != 0.0 && knot != 1.0)
                 {
@@ -354,9 +354,9 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                         this.maxAngle))
                 {
                     // We need to insert another point
-                    Point2d medianPoint = line.getPoint(medianT);
+                    Point2d medianPoint = curve.getPoint(medianT);
                     result.put(medianT, medianPoint);
-                    directions.put(medianT, line.getDirection(medianT));
+                    directions.put(medianT, curve.getDirection(medianT));
                     iterationsAtSinglePoint++;
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
                             + "around the same point (t=%f). Likely there is an (unreported) knot in the FlattableLine.",
@@ -364,19 +364,19 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                     continue;
                 }
                 iterationsAtSinglePoint = 0;
-                if (Flattener2d.checkInflectionPoint(line, prevT, medianT, nextT, prevPoint, nextPoint))
+                if (Flattener2d.checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
-                    Point2d medianPoint = line.getPoint(medianT);
+                    Point2d medianPoint = curve.getPoint(medianT);
                     result.put(medianT, medianPoint);
-                    directions.put(medianT, line.getDirection(medianT));
+                    directions.put(medianT, curve.getDirection(medianT));
                     continue;
                 }
                 prevT = nextT;
                 prevPoint = nextPoint;
                 if (knots.contains(prevT))
                 {
-                    directions.put(prevT, line.getDirection(prevT + Math.ulp(prevT)));
+                    directions.put(prevT, curve.getDirection(prevT + Math.ulp(prevT)));
                 }
             }
             return new PolyLine2d(result.values().iterator());

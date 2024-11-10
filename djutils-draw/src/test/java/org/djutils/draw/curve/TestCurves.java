@@ -273,7 +273,7 @@ public class TestCurves
     /**
      * Verify the number of segments and the location of the points on a flattened OffsetFlattableLine2d.
      * @param curve OffsetFlattableLine2d
-     * @param of FractionalLengthData (may be null)
+     * @param of ContinuousPiecewiseLinearFunction (may be null)
      * @param flattened PolyLine2d
      * @param numSegments int; the number of segments that the flattened OffsetFlattableLine2d should have
      */
@@ -320,7 +320,7 @@ public class TestCurves
     /**
      * Verify the lateral precision of a flattened continuous FlattableLine2d.
      * @param curve FlattableLine2d
-     * @param of FractionalLengthData
+     * @param of ContinuousPiecewiseLinearFunction
      * @param flattened PolyLine2d
      * @param precision double
      */
@@ -387,7 +387,7 @@ public class TestCurves
      * @param flattened PolyLine2d
      * @param line Object
      * @param fraction double
-     * @param of FractionalLengthData (may be null)
+     * @param of ContinuousPiecewiseLinearFunction (may be null)
      */
     public static void printSituation(final int segment, final double positionOnSegment, final PolyLine2d flattened,
             final Object line, final double fraction, final ContinuousPiecewiseLinearFunction of)
@@ -515,10 +515,10 @@ public class TestCurves
 
     /**
      * Verify that a flattened FlattableLine2d has no knots sharper than specified, except at the boundary points in the
-     * FractionalLengthData.
+     * ContinuousPiecewiseLinearFunction.
      * @param flattened PolyLine2d
      * @param curve OffsetFlattableLine2d
-     * @param of FractionalLengthData
+     * @param of ContinuousPiecewiseLinearFunction
      * @param anglePrecision double
      */
     public static void verifyMaxAngleDeviation(final PolyLine2d flattened, final OffsetCurve2d curve,

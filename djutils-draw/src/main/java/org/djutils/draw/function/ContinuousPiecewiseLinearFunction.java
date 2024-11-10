@@ -29,7 +29,7 @@ public class ContinuousPiecewiseLinearFunction
     private final NavigableMap<Double, Double> data = new TreeMap<>();
 
     /**
-     * Create FractionalLengthData from an array of double values.
+     * Create ContinuousPiecewiseLinearFunction from an array of double values.
      * @param data fractional length - value pairs. Fractional lengths do not need to be in order
      * @throws NullPointerException when <code>data</code> is <code>null</code>
      * @throws IllegalArgumentException when the number of input values is not even or 0, or a fractional value is not in the
@@ -52,7 +52,7 @@ public class ContinuousPiecewiseLinearFunction
     }
 
     /**
-     * Create FractionalLengthData from a Map of key-value pairs.
+     * Create ContinuousPiecewiseLinearFunction from a Map of key-value pairs.
      * @param data fractional length - value pairs. Fractional lengths do not need to be in order.
      * @throws IllegalArgumentException when the input data is null or empty, or a fractional value is not in the range [0, 1],
      *             or an offset value is not finite
@@ -148,7 +148,7 @@ public class ContinuousPiecewiseLinearFunction
     }
 
     /**
-     * Create FractionalLengthData.
+     * Create ContinuousPiecewiseLinearFunction.
      * @param data fractional length - value pairs. Fractional lengths do not need to be in order.
      * @return fractional length data.
      * @throws IllegalArgumentException when the number of input values is not even or 0, or when a fractional value is not in

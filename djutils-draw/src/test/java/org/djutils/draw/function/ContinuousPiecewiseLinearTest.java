@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 public class ContinuousPiecewiseLinearTest
 {
     /**
-     * Test the FractionalLengthData class.
+     * Test the ContinuousPiecewiseLinearFunction class.
      */
     @Test
     public void testContinuousPiecewiseLinearFunction()
@@ -118,7 +118,7 @@ public class ContinuousPiecewiseLinearTest
     }
 
     /**
-     * Test the various constructors of FractionalLengthData.
+     * Test the various constructors of ContinuousPiecewiseLinearFunction.
      * @param problem String; description of the problem with the input data that the test should detect
      * @param in double... input for the constructors
      */

@@ -489,12 +489,12 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
      */
     private NavigableMap<Double, BezierCubic2d> segments;
 
-    /** The FractionalLengthData for which segments were created. */
+    /** The offset data for which segments were created. */
     private ContinuousPiecewiseLinearFunction ofForSegments = null;
 
     /**
-     * Check if the current segment map matches the provided FractionalLengthData. If not; rebuild the segments to match.
-     * @param of FractionalLengthData;
+     * Check if the current segment map matches the provided offset data. If not; rebuild the segments to match.
+     * @param of offset data;
      */
     private void updateSegments(final ContinuousPiecewiseLinearFunction of)
     {

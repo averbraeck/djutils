@@ -30,7 +30,7 @@ public interface OffsetCurve2d extends Curve2d
      * Returns the point at the given fraction. The fraction may represent any parameter, such as <i>t</i> in a B&eacute;zier
      * curve, <i>s</i> in a Clothoid, or simply the fraction of length.
      * @param fraction double; the fraction
-     * @param of FractionalLengthData; provides fraction-dependent lateral offset to the point
+     * @param of offset data; provides fraction-dependent lateral offset to the point
      * @return Point2d; the point at the given <code>fraction</code>
      */
     Point2d getPoint(double fraction, ContinuousPiecewiseLinearFunction of);
@@ -40,7 +40,7 @@ public interface OffsetCurve2d extends Curve2d
      * B&eacute;zier curve, <i>s</i> in a Clothoid, or simply the fraction of length. The default implementation performs a
      * numerical approach by looking at the direction between the points at fraction, and a point 1e-6 away.
      * @param fraction double; the fraction
-     * @param of FractionalLengthData; provides fraction-dependent lateral offset to the curve
+     * @param of offset data; provides fraction-dependent lateral offset to the curve
      * @return double; the direction at the given <code>fraction</code>
      */
     default double getDirection(final double fraction, final ContinuousPiecewiseLinearFunction of)
@@ -62,8 +62,8 @@ public interface OffsetCurve2d extends Curve2d
     /**
      * Convert a position along the curve to a t-value in the <code>OffsetFlattableLine2d</code> domain. For <code>Arc</code>
      * and <code>Straight</code>, these t-values are the same. For <code>BezierCubic</code> they're not.
-     * @param position t-value in the <code>FractionalLengthData</code> domain
-     * @return double; t-value in the <code>OffsetFlattableLine2d</code> domain
+     * @param position t-value in the <code>ContinuousPiecewiseLinearFunction</code> domain
+     * @return double; t-value in the <code>ContinuousPiecewiseLinearFunction</code> domain
      */
     default double getT(final double position)
     {

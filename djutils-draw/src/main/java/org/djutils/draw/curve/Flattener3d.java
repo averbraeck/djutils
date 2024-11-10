@@ -28,29 +28,29 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
 {
 
     @Override
-    default PolyLine3d flatten(final Curve3d line)
+    default PolyLine3d flatten(final Curve3d curve)
     {
-        return flatten(line);
+        return flatten(curve);
     }
 
     /**
      * Check for an inflection point by creating additional points at one quarter and three quarters. If these are on opposite
      * sides of the line from prevPoint to nextPoint; there must be an inflection point.
-     * @param line FlattableLine
+     * @param curve FlattableLine
      * @param prevT double; t of preceding inserted point
      * @param medianT double; t of point currently considered for insertion
      * @param nextT double; t of following inserted point
-     * @param prevPoint Point3d; point on <code>line</code> at <code>prevT</code>
-     * @param nextPoint Point3d; point on <code>line</code> at <code>nextT</code>
+     * @param prevPoint Point3d; point on <code>curve</code> at <code>prevT</code>
+     * @param nextPoint Point3d; point on <code>curve</code> at <code>nextT</code>
      * @return boolean; <code>true</code> if there is an inflection point between <code>prevT</code> and <code>nextT</code>;
      *         <code>false</code> if there is no inflection point between <code>prevT</code> and <code>nextT</code>
      */
-    private static boolean checkZigZag(final Curve3d line, final double prevT, final double medianT, final double nextT,
+    private static boolean checkZigZag(final Curve3d curve, final double prevT, final double medianT, final double nextT,
             final Point3d prevPoint, final Point3d nextPoint)
     {
-        Point3d oneQuarter = line.getPoint((prevT + medianT) / 2);
+        Point3d oneQuarter = curve.getPoint((prevT + medianT) / 2);
         Direction3d oneQDir = oneQuarter.directionTo(oneQuarter.closestPointOnSegment(prevPoint, nextPoint));
-        Point3d threeQuarter = line.getPoint((nextT + medianT) / 2);
+        Point3d threeQuarter = curve.getPoint((nextT + medianT) / 2);
         Direction3d threeQDir = threeQuarter.directionTo(threeQuarter.closestPointOnSegment(prevPoint, nextPoint));
         Double angle = oneQDir.directionDifference(threeQDir);
         return angle > Math.PI / 2; // Projection direction varies by more than 90 degrees
@@ -76,14 +76,14 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
         }
 
         @Override
-        public PolyLine3d flatten(final Curve3d line) throws NullPointerException
+        public PolyLine3d flatten(final Curve3d curve) throws NullPointerException
         {
-            Throw.whenNull(line, "Line function may not be null");
+            Throw.whenNull(curve, "curve");
             List<Point3d> points = new ArrayList<>(this.numSegments + 1);
             for (int i = 0; i <= this.numSegments; i++)
             {
                 double fraction = ((double) i) / this.numSegments;
-                points.add(line.getPoint(fraction));
+                points.add(curve.getPoint(fraction));
             }
             return new PolyLine3d(points);
         }
@@ -111,11 +111,11 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
         }
 
         @Override
-        public PolyLine3d flatten(final Curve3d line) throws NullPointerException
+        public PolyLine3d flatten(final Curve3d curve) throws NullPointerException
         {
-            Throw.whenNull(line, "Line function may not be null");
+            Throw.whenNull(curve, "curve");
             NavigableMap<Double, Point3d> result = new TreeMap<>();
-            loadKnots(result, line);
+            loadKnots(result, curve);
 
             // Walk along all point pairs and see if additional points need to be inserted
             double prevT = result.firstKey();
@@ -126,7 +126,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
                 double nextT = entry.getKey();
                 Point3d nextPoint = entry.getValue();
                 double medianT = (prevT + nextT) / 2;
-                Point3d medianPoint = line.getPoint(medianT);
+                Point3d medianPoint = curve.getPoint(medianT);
 
                 // Check max deviation
                 Point3d projectedPoint = medianPoint.closestPointOnSegment(prevPoint, nextPoint);
@@ -137,10 +137,10 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
                     result.put(medianT, medianPoint);
                     continue;
                 }
-                if (Flattener3d.checkZigZag(line, prevT, medianT, nextT, prevPoint, nextPoint))
+                if (Flattener3d.checkZigZag(curve, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is probably an inflection point, inserting the halfway point should take care of this
-                    Point3d midPoint = line.getPoint(medianT);
+                    Point3d midPoint = curve.getPoint(medianT);
                     result.put(medianT, midPoint);
                     continue;
                 }
@@ -181,15 +181,15 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
         }
 
         @Override
-        public PolyLine3d flatten(final Curve3d line) throws NullPointerException
+        public PolyLine3d flatten(final Curve3d curve) throws NullPointerException
         {
             NavigableMap<Double, Point3d> result = new TreeMap<>();
-            loadKnots(result, line);
+            loadKnots(result, curve);
             Map<Double, Direction3d> directions = new LinkedHashMap<>();
             Set<Double> knots = new HashSet<>();
             for (double fraction : result.keySet())
             {
-                directions.put(fraction, line.getDirection(fraction));
+                directions.put(fraction, curve.getDirection(fraction));
                 knots.add(fraction);
             }
 
@@ -203,7 +203,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
                 double nextT = entry.getKey();
                 Point3d nextPoint = entry.getValue();
                 double medianT = (prevT + nextT) / 2;
-                Point3d medianPoint = line.getPoint(medianT);
+                Point3d medianPoint = curve.getPoint(medianT);
 
                 // Check max deviation
                 Point3d projectedPoint = medianPoint.closestPointOnSegment(prevPoint, nextPoint);
@@ -212,7 +212,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
                 {
                     // We need to insert another point
                     result.put(medianT, medianPoint);
-                    directions.put(medianT, line.getDirection(medianT));
+                    directions.put(medianT, curve.getDirection(medianT));
                     continue;
                 }
 
@@ -222,7 +222,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
                 {
                     // We need to insert another point
                     result.put(medianT, medianPoint);
-                    directions.put(medianT, line.getDirection(medianT));
+                    directions.put(medianT, curve.getDirection(medianT));
                     iterationsAtSinglePoint++;
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
                             + "around the same point (t=%f). Likely there is an (unreported) knot in the FlattableLine.",
@@ -230,10 +230,10 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
                     continue;
                 }
                 iterationsAtSinglePoint = 0;
-                if (Flattener3d.checkZigZag(line, prevT, medianT, nextT, prevPoint, nextPoint))
+                if (Flattener3d.checkZigZag(curve, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is probably an inflection point, inserting the halfway point should take care of this
-                    Point3d midPoint = line.getPoint(medianT);
+                    Point3d midPoint = curve.getPoint(medianT);
                     result.put(medianT, midPoint);
                     continue;
                 }
@@ -241,7 +241,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
                 prevPoint = nextPoint;
                 if (knots.contains(prevT))
                 {
-                    directions.put(prevT, line.getDirection(prevT + Math.ulp(prevT)));
+                    directions.put(prevT, curve.getDirection(prevT + Math.ulp(prevT)));
                 }
             }
             return new PolyLine3d(result.values().iterator());
@@ -268,15 +268,15 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
         }
 
         @Override
-        public PolyLine3d flatten(final Curve3d line)
+        public PolyLine3d flatten(final Curve3d curve)
         {
             NavigableMap<Double, Point3d> result = new TreeMap<>();
-            loadKnots(result, line);
+            loadKnots(result, curve);
             Map<Double, Direction3d> directions = new LinkedHashMap<>();
             Set<Double> knots = new HashSet<>();
             for (double knot : result.keySet())
             {
-                directions.put(knot, line.getDirection(knot));
+                directions.put(knot, curve.getDirection(knot));
                 if (knot != 0.0 && knot != 1.0)
                 {
                     knots.add(knot);
@@ -298,9 +298,9 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
                 if (Math.abs(angle) >= this.maxAngle)
                 {
                     // We need to insert another point
-                    Point3d medianPoint = line.getPoint(medianT);
+                    Point3d medianPoint = curve.getPoint(medianT);
                     result.put(medianT, medianPoint);
-                    directions.put(medianT, line.getDirection(medianT));
+                    directions.put(medianT, curve.getDirection(medianT));
                     iterationsAtSinglePoint++;
                     if (iterationsAtSinglePoint > 20)
                     {
@@ -316,10 +316,10 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
                     continue;
                 }
                 iterationsAtSinglePoint = 0;
-                if (Flattener3d.checkZigZag(line, prevT, medianT, nextT, prevPoint, nextPoint))
+                if (Flattener3d.checkZigZag(curve, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is probably an inflection point, inserting the halfway point should take care of this
-                    Point3d midPoint = line.getPoint(medianT);
+                    Point3d midPoint = curve.getPoint(medianT);
                     result.put(medianT, midPoint);
                     continue;
                 }
@@ -327,7 +327,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
                 prevPoint = nextPoint;
                 if (knots.contains(prevT))
                 {
-                    directions.put(prevT, line.getDirection(prevT + Math.ulp(prevT)));
+                    directions.put(prevT, curve.getDirection(prevT + Math.ulp(prevT)));
                 }
             }
             return new PolyLine3d(result.values().iterator());
