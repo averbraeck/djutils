@@ -16,7 +16,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class Straight2d implements Curve2d, OffsetFlattable2d
+public class Straight2d implements Curve2d, OffsetCurve2d
 {
 
     /** Start point with direction. */
@@ -56,13 +56,19 @@ public class Straight2d implements Curve2d, OffsetFlattable2d
         return this.endPoint;
     }
 
-    @Override
+    /**
+     * Start curvature of this Straight.
+     * @return start curvature of this Straight
+     */
     public double getStartCurvature()
     {
         return 0.0;
     }
 
-    @Override
+    /**
+     * End curvature of this Straight.
+     * @return end curvature of this Straight
+     */
     public double getEndCurvature()
     {
         return 0.0;

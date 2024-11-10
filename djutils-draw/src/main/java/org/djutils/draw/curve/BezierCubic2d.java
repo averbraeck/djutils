@@ -33,7 +33,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  * @see <a href="https://pomax.github.io/bezierinfo/">B&eacute;zier info</a>
  */
-public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2d
+public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, Curvature
 {
 
     /** Angle below which segments are seen as straight. */
@@ -226,12 +226,20 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetFlattable2
         return this.endPoint;
     }
 
+     /**
+     * Start curvature of this Curve2d..
+     * @return start curvature of this Curve2d.
+     */
     @Override
     public double getStartCurvature()
     {
         return curvature(0.0);
     }
 
+     /**
+     * End curvature of this Curve2d..
+     * @return end curvature of this Curve2d
+     */
     @Override
     public double getEndCurvature()
     {

@@ -5,7 +5,7 @@
  * have an end point <br>
  * have a defined direction at the start point<br>
  * have a defined direction at the end point<br>
- * may have kinks along the way.
+ * may have knots along the way.
  * <p>
  * Copyright (c) 2023-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is

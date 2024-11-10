@@ -33,7 +33,7 @@ import org.djutils.exceptions.Try;
  * @see <a href="https://www.sciencedirect.com/science/article/pii/S0377042713006286">Connor and Krivodonova (2014)</a>
  * @see <a href="https://www.sciencedirect.com/science/article/pii/S0377042704000925">Waltona and Meek (2009)</a>
  */
-public class Clothoid2d implements Curve2d, OffsetFlattable2d
+public class Clothoid2d implements Curve2d, OffsetCurve2d
 {
 
     /** Threshold to consider input to be a trivial straight or circle arc. The value is 1/10th of a degree. */
@@ -430,25 +430,37 @@ public class Clothoid2d implements Curve2d, OffsetFlattable2d
         return this.endPoint;
     }
 
-    @Override
+    /**
+    * Start curvature of this Clothoid.
+    * @return start curvature of this Clothoid
+    */
     public double getStartCurvature()
     {
         return this.startCurvature;
     }
 
-    @Override
+    /**
+    * End curvature of this Clothoid.
+    * @return end curvature of this Clothoid
+    */
     public double getEndCurvature()
     {
         return this.endCurvature;
     }
 
-    @Override
+     /**
+     * Start radius of this Clothoid.
+     * @return start radius of this Clothoid
+     */
     public double getStartRadius()
     {
         return 1.0 / this.startCurvature;
     }
 
-    @Override
+     /**
+     * End radius of this Clothoid.
+     * @return end radius of this Clothoid
+     */
     public double getEndRadius()
     {
         return 1.0 / this.endCurvature;

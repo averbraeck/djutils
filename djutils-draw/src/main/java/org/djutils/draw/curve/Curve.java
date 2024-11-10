@@ -1,5 +1,10 @@
 package org.djutils.draw.curve;
 
+import java.util.Set;
+
+import org.djutils.draw.line.PolyLine;
+import org.djutils.draw.point.Point;
+
 /**
  * A continuous curve defines a line in an exact manner, from which numerically approximated polylines can be derived. The
  * continuous definition is useful to accurately connect different lines, e.g. based on the direction of the point where they
@@ -19,8 +24,11 @@ package org.djutils.draw.curve;
  * @param <DP> the <code>DirectedPoint</code> type
  * @param <DIR> the direction type. In 2d this is a <code>java.lang.Double</code>; in 3d this is a <code>Direction3d</code>
  *            object
+ * @param <P> the <code>Point</code> type
+ * @param <F> the <code>Flattener</code> type
+ * @param <PL> the <code>PolyLine</code> type
  */
-public interface Curve<DP, DIR>
+public interface Curve<DP, DIR, P extends Point<P>, F extends Flattener<F, ?, PL, P>, PL extends PolyLine<?, P, ?, ?, ?>>
 {
     /**
      * Start point of this Curve.
@@ -51,5 +59,39 @@ public interface Curve<DP, DIR>
      * @return end direction of this Curve
      */
     DIR getEndDirection();
-    
+
+    /**
+     * Flatten a Flattable2d into a PolyLine2d. Implementations should use the flattener when relevant and possible.
+     * @param flattener Flattener2d; flattener
+     * @return PolyLine2d; approximation of this line as a <code>PolyLine2d</code>
+     */
+    PL toPolyLine(F flattener);
+
+    /**
+     * Returns the point at the given fraction of this Flattable. The fraction may represent any parameter, such as <i>t</i> in
+     * a B&eacute;zier curve, <i>s</i> in a Clothoid, or simply the fraction of length.
+     * @param fraction double; the fraction
+     * @return P; the point at the given <code>fraction</code>
+     */
+    P getPoint(double fraction);
+
+    /**
+     * If this Flattable has knots, this method must return the fractions where those knots occur. The <code>default</code>
+     * implementation works for Flattables that have <b>no</b> knots.
+     * @return Set&lt;Double&gt; the fractions where knots in the offset function occur, may be empty or <code>null</code>
+     */
+    default Set<Double> getKnots()
+    {
+        return null;
+    }
+
+    /**
+     * Returns the direction at the given fraction. The fraction may represent any parameter, such as <i>t</i> in a
+     * B&eacute;zier curve, <i>s</i> in a Clothoid, or simply the fraction of length. The default implementation performs a
+     * numerical approach by looking at the direction between the points at fraction, and a point 1e-6 away.
+     * @param fraction double; the fraction
+     * @return double; the direction at the given <code>fraction</code>
+     */
+    DIR getDirection(double fraction);
+
 }

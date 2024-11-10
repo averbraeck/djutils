@@ -18,7 +18,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  * @see <a href="https://pomax.github.io/bezierinfo/">B&eacute;zier info</a>
  */
-public class Bezier3d implements Flattable3d
+public class Bezier3d implements Curve3d
 {
     /** The x-coordinates of the points of this B&eacute;zier. */
     private final double[] x;

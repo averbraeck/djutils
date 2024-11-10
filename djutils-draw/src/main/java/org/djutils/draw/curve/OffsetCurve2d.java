@@ -4,23 +4,19 @@ import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.Point2d;
 
 /**
- * An OffsetFlattable2d has the required methods to allow it to be converted to a PolyLine2d with a piece-wise-linear offset
- * using an OffsetF2dlattener.
+ * OffsetCurve2d.java.
  * <p>
- * Copyright (c) 2023-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2023-2023 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
- * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
- * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public interface OffsetFlattable2d extends Flattable2d
+public interface OffsetCurve2d extends Curve2d
 {
-
     /**
-     * Flatten a OffsetFlattable line while offsetting with the provided continuous line offset into a PolyLine2d.
+     * Flatten a OffsetCurve while offsetting with the provided continuous line offset into a PolyLine2d.
      * Implementations should use the flattener when relevant and possible.
      * @param flattener OffsetFlattener
      * @param offsets offset data

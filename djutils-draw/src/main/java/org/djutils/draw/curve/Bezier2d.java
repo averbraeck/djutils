@@ -18,7 +18,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  * @see <a href="https://pomax.github.io/bezierinfo/">B&eacute;zier info</a>
  */
-public class Bezier2d implements Flattable2d
+public class Bezier2d implements Curve2d
 {
 
     /** The x-coordinates of the points of this B&eacute;zier. */
@@ -160,7 +160,7 @@ public class Bezier2d implements Flattable2d
     {
         return new Point2d(Bezier.Bn(t, this.x), Bezier.Bn(t, this.y));
     }
-
+    
     @Override
     public double getLength()
     {

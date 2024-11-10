@@ -1,7 +1,9 @@
 package org.djutils.draw.curve;
 
 import org.djutils.draw.Direction3d;
+import org.djutils.draw.line.PolyLine3d;
 import org.djutils.draw.point.DirectedPoint3d;
+import org.djutils.draw.point.Point3d;
 
 /**
  * This interface narrows down the interface of continuous curves for 3d use.
@@ -13,8 +15,20 @@ import org.djutils.draw.point.DirectedPoint3d;
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-interface Curve3d extends Curve<DirectedPoint3d, Direction3d>
+interface Curve3d extends Curve<DirectedPoint3d, Direction3d, Point3d, Flattener3d, PolyLine3d>
 {
+
+    @Override
+    default DirectedPoint3d getStartPoint()
+    {
+        return new DirectedPoint3d(getPoint(0.0), getDirection(0.0));
+    }
+
+    @Override
+    default DirectedPoint3d getEndPoint()
+    {
+        return new DirectedPoint3d(getPoint(1.0), getDirection(1.0));
+    }
 
     @Override
     default Direction3d getStartDirection()
@@ -26,6 +40,23 @@ interface Curve3d extends Curve<DirectedPoint3d, Direction3d>
     default Direction3d getEndDirection()
     {
         return getEndPoint().getDir();
+    }
+
+    @Override
+    default Direction3d getDirection(final double fraction)
+    {
+        Point3d p1, p2;
+        if (fraction < 0.5) // to prevent going above 1.0
+        {
+            p1 = getPoint(fraction);
+            p2 = getPoint(fraction + 1e-6);
+        }
+        else
+        {
+            p1 = getPoint(fraction - 1e-6);
+            p2 = getPoint(fraction);
+        }
+        return p1.directionTo(p2);
     }
 
 }

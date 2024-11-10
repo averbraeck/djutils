@@ -24,11 +24,11 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLine3d, Point3d>
+public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d, Point3d>
 {
 
     @Override
-    default PolyLine3d flatten(final Flattable3d line)
+    default PolyLine3d flatten(final Curve3d line)
     {
         return flatten(line);
     }
@@ -45,7 +45,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
      * @return boolean; <code>true</code> if there is an inflection point between <code>prevT</code> and <code>nextT</code>;
      *         <code>false</code> if there is no inflection point between <code>prevT</code> and <code>nextT</code>
      */
-    private static boolean checkZigZag(final Flattable3d line, final double prevT, final double medianT, final double nextT,
+    private static boolean checkZigZag(final Curve3d line, final double prevT, final double medianT, final double nextT,
             final Point3d prevPoint, final Point3d nextPoint)
     {
         Point3d oneQuarter = line.getPoint((prevT + medianT) / 2);
@@ -76,7 +76,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
         }
 
         @Override
-        public PolyLine3d flatten(final Flattable3d line) throws NullPointerException
+        public PolyLine3d flatten(final Curve3d line) throws NullPointerException
         {
             Throw.whenNull(line, "Line function may not be null");
             List<Point3d> points = new ArrayList<>(this.numSegments + 1);
@@ -111,11 +111,11 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
         }
 
         @Override
-        public PolyLine3d flatten(final Flattable3d line) throws NullPointerException
+        public PolyLine3d flatten(final Curve3d line) throws NullPointerException
         {
             Throw.whenNull(line, "Line function may not be null");
             NavigableMap<Double, Point3d> result = new TreeMap<>();
-            loadKinks(result, line);
+            loadKnots(result, line);
 
             // Walk along all point pairs and see if additional points need to be inserted
             double prevT = result.firstKey();
@@ -181,16 +181,16 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
         }
 
         @Override
-        public PolyLine3d flatten(final Flattable3d line) throws NullPointerException
+        public PolyLine3d flatten(final Curve3d line) throws NullPointerException
         {
             NavigableMap<Double, Point3d> result = new TreeMap<>();
-            loadKinks(result, line);
+            loadKnots(result, line);
             Map<Double, Direction3d> directions = new LinkedHashMap<>();
-            Set<Double> kinks = new HashSet<>();
+            Set<Double> knots = new HashSet<>();
             for (double fraction : result.keySet())
             {
                 directions.put(fraction, line.getDirection(fraction));
-                kinks.add(fraction);
+                knots.add(fraction);
             }
 
             // Walk along all point pairs and see if additional points need to be inserted
@@ -225,7 +225,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
                     directions.put(medianT, line.getDirection(medianT));
                     iterationsAtSinglePoint++;
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t=%f). Likely there is an (unreported) kink in the FlattableLine.",
+                            + "around the same point (t=%f). Likely there is an (unreported) knot in the FlattableLine.",
                             medianT);
                     continue;
                 }
@@ -239,7 +239,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
                 }
                 prevT = nextT;
                 prevPoint = nextPoint;
-                if (kinks.contains(prevT))
+                if (knots.contains(prevT))
                 {
                     directions.put(prevT, line.getDirection(prevT + Math.ulp(prevT)));
                 }
@@ -268,18 +268,18 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
         }
 
         @Override
-        public PolyLine3d flatten(final Flattable3d line)
+        public PolyLine3d flatten(final Curve3d line)
         {
             NavigableMap<Double, Point3d> result = new TreeMap<>();
-            loadKinks(result, line);
+            loadKnots(result, line);
             Map<Double, Direction3d> directions = new LinkedHashMap<>();
-            Set<Double> kinks = new HashSet<>();
-            for (double kink : result.keySet())
+            Set<Double> knots = new HashSet<>();
+            for (double knot : result.keySet())
             {
-                directions.put(kink, line.getDirection(kink));
-                if (kink != 0.0 && kink != 1.0)
+                directions.put(knot, line.getDirection(knot));
+                if (knot != 0.0 && knot != 1.0)
                 {
-                    kinks.add(kink);
+                    knots.add(knot);
                 }
             }
             // Walk along all point pairs and see if additional points need to be inserted
@@ -311,7 +311,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
                         System.out.println("Breakpoint here");
                     }
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t=%f). Likely there is an (unreported) kink in the FlattableLine.",
+                            + "around the same point (t=%f). Likely there is an (unreported) knot in the FlattableLine.",
                             medianT);
                     continue;
                 }
@@ -325,7 +325,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Flattable3d, PolyLin
                 }
                 prevT = nextT;
                 prevPoint = nextPoint;
-                if (kinks.contains(prevT))
+                if (knots.contains(prevT))
                 {
                     directions.put(prevT, line.getDirection(prevT + Math.ulp(prevT)));
                 }

@@ -81,8 +81,8 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      * @param deltaY double; the deltaY value around the origin
      * @param deltaZ double; the deltaZ value around the origin
      * @throws ArithmeticException when <code>deltaX</code>, <code>deltaY</code>, or <code>deltaZ</code> is <code>NaN</code>
-     * @throws IllegalArgumentException when <code>deltaX</code>, <code>deltaY</code>, or <code>deltaZ</code> &lt;
-     *             <code><0.0</code>
+     * @throws IllegalArgumentException when <code>deltaX &lt; 0.0</code>, <code>deltaY &lt; 0.0</code>, or <code>deltaZ &lt;
+     *             0.0</code>
      */
     public Bounds3d(final double deltaX, final double deltaY, final double deltaZ)
     {
@@ -337,7 +337,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
      * @param y double; the y-coordinate of the point
      * @param z double; the z-coordinate of the point
      * @return boolean; whether the bounding box contains the point, including the faces
-     * @throws ArithmeticException when <code>x</code>, <code>y</code>, or <code>z</code> is <citeNaN</code>
+     * @throws ArithmeticException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>NaN</code>
      */
     public boolean covers(final double x, final double y, final double z)
     {

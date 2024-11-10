@@ -1,8 +1,5 @@
 package org.djutils.draw.curve;
 
-import static org.djutils.draw.curve.Flattener2d.checkDirectionError;
-import static org.djutils.draw.curve.Flattener2d.checkPositionError;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -27,7 +24,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public interface Flattener2d extends Flattener<Flattener2d, Flattable2d, PolyLine2d, Point2d>
+public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d, Point2d>
 {
 
     /**
@@ -43,7 +40,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Flattable2d, PolyLin
      * @return boolean; <code>true</code> if there is an inflection point between <code>prevT</code> and <code>nextT</code>;
      *         <code>false</code> if there is no inflection point between <code>prevT</code> and <code>nextT</code>
      */
-    private static boolean checkInflectionPoint(final Flattable2d line, final double prevT, final double medianT,
+    private static boolean checkInflectionPoint(final Curve2d line, final double prevT, final double medianT,
             final double nextT, final Point2d prevPoint, final Point2d nextPoint)
     {
         Point2d oneQuarter = line.getPoint((prevT + medianT) / 2);
@@ -123,7 +120,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Flattable2d, PolyLin
         }
 
         @Override
-        public PolyLine2d flatten(final Flattable2d line) throws NullPointerException
+        public PolyLine2d flatten(final Curve2d line) throws NullPointerException
         {
             Throw.whenNull(line, "Line function may not be null");
             List<Point2d> points = new ArrayList<>(this.numSegments + 1);
@@ -158,11 +155,11 @@ public interface Flattener2d extends Flattener<Flattener2d, Flattable2d, PolyLin
         }
 
         @Override
-        public PolyLine2d flatten(final Flattable2d line)
+        public PolyLine2d flatten(final Curve2d line)
         {
             Throw.whenNull(line, "Line function may not be null");
             NavigableMap<Double, Point2d> result = new TreeMap<>();
-            loadKinks(result, line);
+            loadKnots(result, line);
 
             // Walk along all point pairs and see if additional points need to be inserted
             double prevT = result.firstKey();
@@ -234,16 +231,16 @@ public interface Flattener2d extends Flattener<Flattener2d, Flattable2d, PolyLin
         }
 
         @Override
-        public PolyLine2d flatten(final Flattable2d line) throws NullPointerException
+        public PolyLine2d flatten(final Curve2d line) throws NullPointerException
         {
             NavigableMap<Double, Point2d> result = new TreeMap<>();
-            loadKinks(result, line);
+            loadKnots(result, line);
             Map<Double, Double> directions = new LinkedHashMap<>();
-            Set<Double> kinks = new HashSet<>();
+            Set<Double> knots = new HashSet<>();
             for (double fraction : result.keySet())
             {
                 directions.put(fraction, line.getDirection(fraction));
-                kinks.add(fraction);
+                knots.add(fraction);
             }
 
             // Walk along all point pairs and see if additional points need to be inserted
@@ -276,7 +273,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Flattable2d, PolyLin
                     directions.put(medianT, line.getDirection(medianT));
                     iterationsAtSinglePoint++;
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t=%f). Likely there is an (unreported) kink in the FlattableLine.",
+                            + "around the same point (t=%f). Likely there is an (unreported) knot in the FlattableLine.",
                             medianT);
                     continue;
                 }
@@ -292,7 +289,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Flattable2d, PolyLin
                 }
                 prevT = nextT;
                 prevPoint = nextPoint;
-                if (kinks.contains(prevT))
+                if (knots.contains(prevT))
                 {
                     directions.put(prevT, line.getDirection(prevT + Math.ulp(prevT)));
                 }
@@ -323,22 +320,22 @@ public interface Flattener2d extends Flattener<Flattener2d, Flattable2d, PolyLin
         }
 
         @Override
-        public PolyLine2d flatten(final Flattable2d line) throws NullPointerException
+        public PolyLine2d flatten(final Curve2d line) throws NullPointerException
         {
             NavigableMap<Double, Point2d> result = new TreeMap<>();
-            loadKinks(result, line);
+            loadKnots(result, line);
             Map<Double, Double> directions = new LinkedHashMap<>();
             directions.put(0.0, line.getDirection(0.0)); // directions can't do ULP before 0.0
-            Set<Double> kinks = new HashSet<>();
-            for (double kink : result.keySet())
+            Set<Double> knots = new HashSet<>();
+            for (double knot : result.keySet())
             {
-                if (kink > 0)
+                if (knot > 0)
                 {
-                    directions.put(kink, line.getDirection(kink - Math.ulp(kink)));
+                    directions.put(knot, line.getDirection(knot - Math.ulp(knot)));
                 }
-                if (kink != 0.0 && kink != 1.0)
+                if (knot != 0.0 && knot != 1.0)
                 {
-                    kinks.add(kink);
+                    knots.add(knot);
                 }
             }
             // Walk along all point pairs and see if additional points need to be inserted
@@ -362,7 +359,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Flattable2d, PolyLin
                     directions.put(medianT, line.getDirection(medianT));
                     iterationsAtSinglePoint++;
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t=%f). Likely there is an (unreported) kink in the FlattableLine.",
+                            + "around the same point (t=%f). Likely there is an (unreported) knot in the FlattableLine.",
                             medianT);
                     continue;
                 }
@@ -377,7 +374,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Flattable2d, PolyLin
                 }
                 prevT = nextT;
                 prevPoint = nextPoint;
-                if (kinks.contains(prevT))
+                if (knots.contains(prevT))
                 {
                     directions.put(prevT, line.getDirection(prevT + Math.ulp(prevT)));
                 }

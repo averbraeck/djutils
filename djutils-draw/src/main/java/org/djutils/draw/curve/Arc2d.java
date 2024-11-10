@@ -16,7 +16,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class Arc2d implements Curve2d, OffsetFlattable2d
+public class Arc2d implements Curvature, Curve2d, OffsetCurve2d
 {
 
     /** Starting point. */
@@ -95,7 +95,7 @@ public class Arc2d implements Curve2d, OffsetFlattable2d
 
     /**
      * Does this arc bend to the left?
-     * @return boolean; <codetrue</code> if this Arc bends to the left; <code>false</code> if this Arc bends to the right
+     * @return boolean; <code>true</code> if this Arc bends to the left; <code>false</code> if this Arc bends to the right
      */
     public boolean isLeft()
     {

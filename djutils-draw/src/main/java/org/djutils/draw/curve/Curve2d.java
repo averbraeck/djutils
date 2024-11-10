@@ -1,6 +1,8 @@
 package org.djutils.draw.curve;
 
+import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.DirectedPoint2d;
+import org.djutils.draw.point.Point2d;
 
 /**
  * This interface narrows down the interface of continuous curves for 2d use.
@@ -12,37 +14,50 @@ import org.djutils.draw.point.DirectedPoint2d;
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-interface Curve2d extends Curve<DirectedPoint2d, Double>
+interface Curve2d extends Curve<DirectedPoint2d, Double, Point2d, Flattener2d, PolyLine2d>
 {
 
-    /**
-     * Start curvature of this Curve2d..
-     * @return start curvature of this Curve2d.
-     */
-    double getStartCurvature();
+    // /**
+    // * Start curvature of this Curve2d..
+    // * @return start curvature of this Curve2d.
+    // */
+    // double getStartCurvature();
+    //
+    // /**
+    // * End curvature of this Curve2d..
+    // * @return end curvature of this Curve2d
+    // */
+    // double getEndCurvature();
+    //
+    // /**
+    // * Start radius of this Curve2d..
+    // * @return start radius of this Curve2d
+    // */
+    // default double getStartRadius()
+    // {
+    // return 1.0 / getStartCurvature();
+    // }
+    //
+    // /**
+    // * End radius of this Curve2d..
+    // * @return end radius of this Curve2d
+    // */
+    // default double getEndRadius()
+    // {
+    // return 1.0 / getEndCurvature();
+    // }
+    //
 
-    /**
-     * End curvature of this Curve2d..
-     * @return end curvature of this Curve2d
-     */
-    double getEndCurvature();
-
-    /**
-     * Start radius of this Curve2d..
-     * @return start radius of this Curve2d
-     */
-    default double getStartRadius()
+    @Override
+    default DirectedPoint2d getStartPoint()
     {
-        return 1.0 / getStartCurvature();
+        return new DirectedPoint2d(getPoint(0.0), getDirection(0.0));
     }
 
-    /**
-     * End radius of this Curve2d..
-     * @return end radius of this Curve2d
-     */
-    default double getEndRadius()
+    @Override
+    default DirectedPoint2d getEndPoint()
     {
-        return 1.0 / getEndCurvature();
+        return new DirectedPoint2d(getPoint(1.0), getDirection(1.0));
     }
 
     @Override
@@ -57,4 +72,21 @@ interface Curve2d extends Curve<DirectedPoint2d, Double>
         return getEndPoint().dirZ;
     }
 
+    @Override
+    default Double getDirection(final double fraction)
+    {
+        Point2d p1, p2;
+        if (fraction < 0.5) // to prevent going above 1.0
+        {
+            p1 = getPoint(fraction);
+            p2 = getPoint(fraction + 1e-6);
+        }
+        else
+        {
+            p1 = getPoint(fraction - 1e-6);
+            p2 = getPoint(fraction);
+        }
+        return p1.directionTo(p2);
+    }
+    
 }

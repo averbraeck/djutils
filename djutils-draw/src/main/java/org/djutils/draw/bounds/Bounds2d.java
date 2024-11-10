@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
 
+import org.djutils.draw.bounds.Bounds;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
@@ -68,7 +69,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
      * @param deltaX double; the deltaX value around the origin
      * @param deltaY double; the deltaY value around the origin
      * @throws ArithmeticException when <code>deltaX</code>, or <code>deltaY</code> is <code>NaN</code>
-     * @throws IllegalArgumentException when <code>deltaX</code>, or <code>deltaY</code> &lt; <code><0.0</code>
+     * @throws IllegalArgumentException when <code>deltaX &lt; 0.0</code>, or <code>deltaY &lt; 0.0</code>
      */
     public Bounds2d(final double deltaX, final double deltaY)
     {

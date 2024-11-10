@@ -30,9 +30,9 @@ import org.junit.jupiter.api.Test;
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
  * </p>
- * TODO also with maxAngle flattener and non-declared kink
+ * TODO also with maxAngle flattener and non-declared knot
  * <p>
- * TODO test flattener with curve that has a kink
+ * TODO test flattener with curve that has a knot
  * </p>
  * <p>
  * TODO test Bezier3d
@@ -74,8 +74,6 @@ public class TestCurves
                         assertEquals(dirZ, cs.getEndPoint().dirZ, 0.00001, "end dirZ");
                         assertEquals(cs.getEndCurvature(), 0, 0, "end curvature");
                         assertEquals(length, cs.getLength(), 0.00001, "length");
-                        assertTrue(Double.isInfinite(cs.getStartRadius()), "start radius is infinite");
-                        assertTrue(Double.isInfinite(cs.getEndRadius()), "end radius is infinite");
                         PolyLine2d flattened = cs.toPolyLine(null);
                         assertEquals(2, flattened.size(), "size of flattened is 2 points");
                         assertEquals(x, flattened.get(0).x, 0, "start of flattened x");
@@ -95,7 +93,7 @@ public class TestCurves
                         PieceWiseLinearOffset2d fld = new PieceWiseLinearOffset2d(transition);
                         flattened = cs.toPolyLine(null, fld);
                         assertEquals(3, flattened.size(),
-                                "size of flattened line with one offset kink along the way is 3 points");
+                                "size of flattened line with one offset knot along the way is 3 points");
                         assertEquals(x, flattened.get(0).x, 0, "start of flattened x");
                         assertEquals(y, flattened.get(0).y, 0, "start of flattened y");
                         assertEquals(x + length * 0.2 * Math.cos(dirZ) - fld.get(0.2) * Math.sin(dirZ), flattened.getX(1),
@@ -263,7 +261,7 @@ public class TestCurves
      * @param flattened PolyLine2d
      * @param numSegments int; the number of segments that the flattened FlattableLine2d should have
      */
-    private static void verifyNumSegments(final Flattable2d curve, final PolyLine2d flattened, final int numSegments)
+    private static void verifyNumSegments(final Curve2d curve, final PolyLine2d flattened, final int numSegments)
     {
         assertEquals(numSegments, flattened.size() - 1, "Number of segments");
         for (int i = 0; i <= numSegments; i++)
@@ -283,7 +281,7 @@ public class TestCurves
      * @param flattened PolyLine2d
      * @param numSegments int; the number of segments that the flattened OffsetFlattableLine2d should have
      */
-    private static void verifyNumSegments(final OffsetFlattable2d curve, final PieceWiseLinearOffset2d fld,
+    private static void verifyNumSegments(final OffsetCurve2d curve, final PieceWiseLinearOffset2d fld,
             final PolyLine2d flattened, final int numSegments)
     {
         assertEquals(numSegments, flattened.size() - 1, "Number of segments");
@@ -305,7 +303,7 @@ public class TestCurves
      * @param flattened PolyLine2d
      * @param precision double
      */
-    private static void verifyMaxDeviation(final Flattable2d curve, final PolyLine2d flattened, final double precision)
+    private static void verifyMaxDeviation(final Curve2d curve, final PolyLine2d flattened, final double precision)
     {
         int steps = 100;
         for (int step = 0; step <= steps; step++)
@@ -330,7 +328,7 @@ public class TestCurves
      * @param flattened PolyLine2d
      * @param precision double
      */
-    private static void verifyMaxDeviation(final OffsetFlattable2d curve, final PieceWiseLinearOffset2d fld,
+    private static void verifyMaxDeviation(final OffsetCurve2d curve, final PieceWiseLinearOffset2d fld,
             final PolyLine2d flattened, final double precision)
     {
         double fraction = 0.0;
@@ -403,14 +401,14 @@ public class TestCurves
         if (null != fld)
         {
             System.out.print("c0,1,0 "
-                    + Export.toPlot(((OffsetFlattable2d) line).toPolyLine(new OffsetFlattener2d.MaxDeviation(0.01), fld)));
+                    + Export.toPlot(((OffsetCurve2d) line).toPolyLine(new OffsetFlattener2d.MaxDeviation(0.01), fld)));
         }
-        System.out.print("c0,1,1 " + Export.toPlot(((Flattable2d) line).toPolyLine(new Flattener2d.MaxDeviation(0.01))));
+        System.out.print("c0,1,1 " + Export.toPlot(((Curve2d) line).toPolyLine(new Flattener2d.MaxDeviation(0.01))));
         Point2d pointAtFraction =
-                null != fld ? ((OffsetFlattable2d) line).getPoint(fraction, fld) : ((Flattable2d) line).getPoint(fraction);
-        double faDir = null != fld ? ((OffsetFlattable2d) line).getDirection(fraction, fld)
-                : ((Flattable2d) line).getDirection(fraction);
-        System.out.print("# flattableLineDirection=" + faDir);
+                null != fld ? ((OffsetCurve2d) line).getPoint(fraction, fld) : ((Curve2d) line).getPoint(fraction);
+        double faDir = null != fld ? ((OffsetCurve2d) line).getDirection(fraction, fld)
+                : ((Curve2d) line).getDirection(fraction);
+        System.out.print("# curveDirection=" + faDir);
         if (segment >= 0)
         {
             double flattenedDir = flattened.get(segment).directionTo(flattened.get(segment + 1));
@@ -457,15 +455,15 @@ public class TestCurves
         System.out.println("\nc0,0,1 M0,0L " + pointAtFraction.x + "," + pointAtFraction.y);
         if (null != fld)
         {
-            System.out.print("# Kinks in ofl2d domain:");
-            OffsetFlattable2d ofl2d = (OffsetFlattable2d) line;
+            System.out.print("# Knots in ofl2d domain:");
+            OffsetCurve2d ofl2d = (OffsetCurve2d) line;
             for (Iterator<Double> iterator = fld.iterator(); iterator.hasNext();)
             {
-                double kink = iterator.next();
-                if (kink != 0.0 && kink != 1.0)
+                double knot = iterator.next();
+                if (knot != 0.0 && knot != 1.0)
                 {
-                    double t = ofl2d.getT(kink * ofl2d.getLength());
-                    System.out.println("\tkink at " + kink + " -> fraction " + t + " point " + ofl2d.getPoint(t, fld));
+                    double t = ofl2d.getT(knot * ofl2d.getLength());
+                    System.out.println("\tknot at " + knot + " -> fraction " + t + " point " + ofl2d.getPoint(t, fld));
                 }
             }
         }
@@ -479,7 +477,7 @@ public class TestCurves
      * @param curve FlattableLine2d
      * @param anglePrecision double
      */
-    public static void verifyMaxAngleDeviation(final PolyLine2d flattened, final Flattable2d curve, final double anglePrecision)
+    public static void verifyMaxAngleDeviation(final PolyLine2d flattened, final Curve2d curve, final double anglePrecision)
     {
         double fraction = 0.0;
         for (int step = 0; step < flattened.size() - 1; step++)
@@ -520,14 +518,14 @@ public class TestCurves
     }
 
     /**
-     * Verify that a flattened FlattableLine2d has no kinks sharper than specified, except at the boundary points in the
+     * Verify that a flattened FlattableLine2d has no knots sharper than specified, except at the boundary points in the
      * FractionalLengthData.
      * @param flattened PolyLine2d
      * @param curve OffsetFlattableLine2d
      * @param fld FractionalLengthData
      * @param anglePrecision double
      */
-    public static void verifyMaxAngleDeviation(final PolyLine2d flattened, final OffsetFlattable2d curve,
+    public static void verifyMaxAngleDeviation(final PolyLine2d flattened, final OffsetCurve2d curve,
             final PieceWiseLinearOffset2d fld, final double anglePrecision)
     {
         double fraction = 0.0;
@@ -556,18 +554,18 @@ public class TestCurves
                         fraction = midFraction;
                     }
                 }
-                // Check if there is a kink very close to fraction
-                Double kink = null;
+                // Check if there is a knot very close to fraction
+                Double knot = null;
                 for (Iterator<Double> iterator = fld.iterator(); iterator.hasNext();)
                 {
-                    kink = iterator.next();
-                    if (kink != 0.0 && kink != 1.0 && Math.abs(curve.getT(kink * curve.getLength()) - fraction) <= veryClose)
+                    knot = iterator.next();
+                    if (knot != 0.0 && knot != 1.0 && Math.abs(curve.getT(knot * curve.getLength()) - fraction) <= veryClose)
                     {
                         break;
                     }
-                    kink = null;
+                    knot = null;
                 }
-                if (kink == null)
+                if (knot == null)
                 {
                     double faDir = curve.getDirection(fraction, fld);
                     if (Math.abs(AngleUtil.normalizeAroundZero(flattenedDir - faDir)) > anglePrecision * FUDGE_FACTOR)

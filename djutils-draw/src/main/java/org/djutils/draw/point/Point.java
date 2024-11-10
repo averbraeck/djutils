@@ -40,8 +40,7 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
 
     /**
      * Return a new Point with negated coordinate values. If this is a <code>DirectedPoint</code>, <code>dirY</code> (in case
-     * this is a <code>DirectedPoint3d</code) and
-     * <code>dirZ</code> are negated.
+     * this is a <code>DirectedPoint3d</code> and <code>dirZ</code> are negated.
      * @return Point; a new point with negated coordinate values
      */
     P neg();

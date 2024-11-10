@@ -33,62 +33,62 @@ public interface OffsetFlattener2d extends Flattener2d
      * @param fld FractionalLengthData the lateral offset to apply
      * @return PolyLine2d; flattened line
      */
-    default PolyLine2d flatten(final OffsetFlattable2d line, final PieceWiseLinearOffset2d fld)
+    default PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d fld)
     {
         return flatten(line, fld);
     }
 
     /**
-     * Load one kink in the map of fractions and points.
+     * Load one knot in the map of fractions and points.
      * @param map NavigableMap<Double, Point2d> the map
-     * @param kink double; the fraction where the kink occurs
-     * @param line OffsetFlattableLine2d; the line that can compute the point for each <code>kink</code> position
+     * @param knot double; the fraction where the knot occurs
+     * @param line OffsetFlattableLine2d; the line that can compute the point for each <code>knot</code> position
      * @param fld FractionalLengthData; offset data
-     * @throws NullPointerException when <code>map</code> is <code>null</code>, <code>kink</code> is <code>null</code>,
+     * @throws NullPointerException when <code>map</code> is <code>null</code>, <code>knot</code> is <code>null</code>,
      *             <code>line</code> is <code>null</code>, or <code>fld</code> is <code>null</code>
-     * @throws IllegalArgumentException when <code>kink &lt; 0.0</code>, or <code>kink &gt; 1.0</code>
+     * @throws IllegalArgumentException when <code>knot &lt; 0.0</code>, or <code>knot &gt; 1.0</code>
      */
-    private static void loadKink(final NavigableMap<Double, Point2d> map, final double kink, final OffsetFlattable2d line,
+    private static void loadKink(final NavigableMap<Double, Point2d> map, final double knot, final OffsetCurve2d line,
             final PieceWiseLinearOffset2d fld)
     {
-        Throw.when(kink < 0.0 || kink > 1.0, IllegalArgumentException.class, "Kinks must all be between 0.0 and 1.0, (got %f)",
-                kink);
-        if (kink == 0.0 || kink == 1.0)
+        Throw.when(knot < 0.0 || knot > 1.0, IllegalArgumentException.class, "Kinks must all be between 0.0 and 1.0, (got %f)",
+                knot);
+        if (knot == 0.0 || knot == 1.0)
         {
             return; // Already loaded by <code>loadKinks</code>
         }
-        if (map.containsKey(kink))
+        if (map.containsKey(knot))
         {
             return;
         }
 
-        double kinkFraction = line.getT(kink * line.getLength()); // Translate fraction on fld to fraction on line
-        Point2d kinkPoint = line.getPoint(kinkFraction, fld);
-        // System.out.println("# Processing kink at " + kink + ", getT " + kinkFraction + " point " + kinkPoint);
-        map.put(kinkFraction, kinkPoint);
+        double knotFraction = line.getT(knot * line.getLength()); // Translate fraction on fld to fraction on line
+        Point2d knotPoint = line.getPoint(knotFraction, fld);
+        // System.out.println("# Processing knot at " + knot + ", getT " + knotFraction + " point " + knotPoint);
+        map.put(knotFraction, knotPoint);
     }
 
     /**
-     * Load the kinks into the navigable map (including the start point and the end point).
+     * Load the knots into the navigable map (including the start point and the end point).
      * @param map navigableMap<Double, Point2d>; the navigable map
      * @param line OffsetFlattableLine2d; the OffsetFlattableLine2d
      * @param fld FractionalLengthData2d; the offset data
      */
-    private static void loadKinks(final NavigableMap<Double, Point2d> map, final OffsetFlattable2d line,
+    private static void loadKinks(final NavigableMap<Double, Point2d> map, final OffsetCurve2d line,
             final PieceWiseLinearOffset2d fld)
     {
         map.put(0.0, line.getPoint(0.0, fld));
-        Set<Double> kinks = line.getKinks();
-        if (null != kinks)
+        Set<Double> knots = line.getKnots();
+        if (null != knots)
         {
-            for (double kink : kinks)
+            for (double knot : knots)
             {
-                loadKink(map, kink, line, fld);
+                loadKink(map, knot, line, fld);
             }
         }
-        for (double kink : fld)
+        for (double knot : fld)
         {
-            loadKink(map, kink, line, fld);
+            loadKink(map, knot, line, fld);
         }
         map.put(1.0, line.getPoint(1.0, fld));
     }
@@ -103,11 +103,11 @@ public interface OffsetFlattener2d extends Flattener2d
      * @param nextT double; t of following inserted point
      * @param prevPoint Point2d; point on <code>line</code> at <code>prevT</code>
      * @param nextPoint Point2d; point on <code>line</code> at <code>nextT</code>
-     * @param fld FractionalLengthData2d; information about lateral offsets (may be  <code>null</code>)
+     * @param fld FractionalLengthData2d; information about lateral offsets (may be <code>null</code>)
      * @return boolean; <code>true</code> if there is an inflection point between <code>prevT</code> and <code>nextT</code>;
      *         <code>false</code> if there is no inflection point between <code>prevT</code> and <code>nextT</code>
      */
-    private static boolean checkInflectionPoint(final OffsetFlattable2d line, final double prevT, final double medianT,
+    private static boolean checkInflectionPoint(final OffsetCurve2d line, final double prevT, final double medianT,
             final double nextT, final Point2d prevPoint, final Point2d nextPoint, final PieceWiseLinearOffset2d fld)
     {
         Point2d oneQuarter = line.getPoint((prevT + medianT) / 2, fld);
@@ -139,7 +139,7 @@ public interface OffsetFlattener2d extends Flattener2d
         }
 
         @Override
-        public PolyLine2d flatten(final OffsetFlattable2d line, final PieceWiseLinearOffset2d fld) throws NullPointerException
+        public PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d fld) throws NullPointerException
         {
             Throw.whenNull(line, "Line function may not be null");
             List<Point2d> points = new ArrayList<>(this.numSegments + 1);
@@ -174,7 +174,7 @@ public interface OffsetFlattener2d extends Flattener2d
         }
 
         @Override
-        public PolyLine2d flatten(final OffsetFlattable2d line, final PieceWiseLinearOffset2d fld)
+        public PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d fld)
         {
             Throw.whenNull(line, "Line function may not be null");
             NavigableMap<Double, Point2d> result = new TreeMap<>();
@@ -251,20 +251,20 @@ public interface OffsetFlattener2d extends Flattener2d
         }
 
         @Override
-        public PolyLine2d flatten(final OffsetFlattable2d line, final PieceWiseLinearOffset2d fld)
+        public PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d fld)
         {
             NavigableMap<Double, Point2d> result = new TreeMap<>();
             OffsetFlattener2d.loadKinks(result, line, fld);
             Map<Double, Double> directions = new LinkedHashMap<>();
             directions.put(0.0, line.getDirection(0.0, fld));
-            Set<Double> kinks = new HashSet<>();
+            Set<Double> knots = new HashSet<>();
             for (double fraction : result.keySet())
             {
                 if (fraction > 0)
                 {
                     directions.put(fraction, line.getDirection(fraction - Math.ulp(fraction), fld));
                 }
-                kinks.add(fraction);
+                knots.add(fraction);
             }
 
             // Walk along all point pairs and see if additional points need to be inserted
@@ -299,7 +299,7 @@ public interface OffsetFlattener2d extends Flattener2d
                     directions.put(medianT, line.getDirection(medianT, fld));
                     iterationsAtSinglePoint++;
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t=%f). Likely there is an (unreported) kink in the FlattableLine.",
+                            + "around the same point (t=%f). Likely there is an (unreported) knot in the FlattableLine.",
                             medianT);
                     continue;
                 }
@@ -314,7 +314,7 @@ public interface OffsetFlattener2d extends Flattener2d
                 }
                 prevT = nextT;
                 prevPoint = nextPoint;
-                if (prevT < 1.0 && kinks.contains(prevT))
+                if (prevT < 1.0 && knots.contains(prevT))
                 {
                     directions.put(prevT, line.getDirection(prevT + Math.ulp(prevT), fld));
                 }
@@ -345,22 +345,22 @@ public interface OffsetFlattener2d extends Flattener2d
         }
 
         @Override
-        public PolyLine2d flatten(final OffsetFlattable2d line, final PieceWiseLinearOffset2d fld)
+        public PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d fld)
         {
             NavigableMap<Double, Point2d> result = new TreeMap<>();
             OffsetFlattener2d.loadKinks(result, line, fld);
             Map<Double, Double> directions = new LinkedHashMap<>();
             directions.put(0.0, line.getDirection(0.0, fld)); // directions can't do ULP before 0.0
-            Set<Double> kinks = new HashSet<>();
-            for (double kink : result.keySet())
+            Set<Double> knots = new HashSet<>();
+            for (double knot : result.keySet())
             {
-                if (kink > 0)
+                if (knot > 0)
                 {
-                    directions.put(kink, line.getDirection(kink - Math.ulp(kink), fld));
+                    directions.put(knot, line.getDirection(knot - Math.ulp(knot), fld));
                 }
-                if (kink != 0.0 && kink != 1.0)
+                if (knot != 0.0 && knot != 1.0)
                 {
-                    kinks.add(kink);
+                    knots.add(knot);
                 }
             }
             // Walk along all point pairs and see if additional points need to be inserted
@@ -378,29 +378,13 @@ public interface OffsetFlattener2d extends Flattener2d
                 if (checkDirectionError(prevPoint.directionTo(nextPoint), directions.get(prevT), directions.get(nextT),
                         this.maxAngle))
                 {
-                    // System.out.println("Inserting point between " + prevPoint + " (dir=" + directions.get(prevT) + ") and "
-                    // + nextPoint + " (dir=" + directions.get(nextT) + ") count=" + iterationsAtSinglePoint
-                    // + ", segment angle=" + prevPoint.directionTo(nextPoint));
                     // We need to insert another point
                     Point2d medianPoint = line.getPoint(medianT, fld);
                     result.put(medianT, medianPoint);
                     directions.put(medianT, line.getDirection(medianT, fld));
                     iterationsAtSinglePoint++;
-                    /*-
-                    if (iterationsAtSinglePoint == 20)
-                    {
-                        System.out.println("# prevT=" + prevT + ", prevPoint=" + prevPoint + " nextT=" + prevT + ", nextPoint="
-                                + nextPoint + ", distance=" + prevPoint.distance(nextPoint));
-                        System.out.println("c0,0,0" + Export.toPlot(line.toPolyLine2d(new Flattener2d.NumSegments(1000))));
-                        System.out.println(
-                                "c1,0,0" + Export.toPlot(line.toPolyLine2d(new OffsetFlattener2d.NumSegments(5000), fld)));
-                        System.out.println("c0,0,1 " + Export.toPlot(new LineSegment2d(new Point2d(0, 0), prevPoint)));
-                        System.out.println("c0,0,1 " + Export.toPlot(new LineSegment2d(new Point2d(0, 0), nextPoint)));
-                        System.out.println("Breakpoint  here");
-                    }
-                    */
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t=%f). Likely there is an (unreported) kink in the FlattableLine.",
+                            + "around the same point (t=%f). Likely there is an (unreported) knot in the FlattableLine.",
                             medianT);
                     continue;
                 }
@@ -415,7 +399,7 @@ public interface OffsetFlattener2d extends Flattener2d
                 }
                 prevT = nextT;
                 prevPoint = nextPoint;
-                if (kinks.contains(prevT))
+                if (knots.contains(prevT))
                 {
                     directions.put(prevT, line.getDirection(prevT + Math.ulp(prevT), fld));
                 }
