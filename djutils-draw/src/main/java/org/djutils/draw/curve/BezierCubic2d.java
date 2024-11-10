@@ -62,7 +62,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
         super(start, control1, control2, end);
         this.startPoint = new DirectedPoint2d(start, control1);
         this.endPoint = new DirectedPoint2d(end, control2.directionTo(end));
-        this.length = length();
+        this.length = super.getLength();
     }
 
     /**
@@ -344,7 +344,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
     private SortedSet<Double> getOffsetT(final Set<Double> fractions)
     {
         TreeSet<Double> crossSections = new TreeSet<>();
-        double lenTot = length();
+        double lenTot = getLength();
         for (Double f : fractions)
         {
             if (f > 0.0 && f < 1.0)
@@ -380,7 +380,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
         {
             t1 = (t2 + t0) / 2.0;
             SplitBeziers parts = split(t1);
-            double len1 = parts.first.length();
+            double len1 = parts.first.getLength();
             if (len1 < position)
             {
                 t0 = t1;
@@ -488,16 +488,16 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
     private NavigableMap<Double, BezierCubic2d> segments;
 
     /** The FractionalLengthData for which segments were created. */
-    private PieceWiseLinearOffset2d fldForSegments = null;
+    private PieceWiseLinearOffset2d ofForSegments = null;
 
     /**
      * Check if the current segment map matches the provided FractionalLengthData. If not; rebuild the segments to match.
-     * @param fld FractionalLengthData;
+     * @param of FractionalLengthData;
      */
-    private void updateSegments(final PieceWiseLinearOffset2d fld)
+    private void updateSegments(final PieceWiseLinearOffset2d of)
     {
-        Throw.whenNull(fld, "Offsets may not be null");
-        if (fld.equals(this.fldForSegments))
+        Throw.whenNull(of, "Offsets may not be null");
+        if (of.equals(this.ofForSegments))
         {
             return;
         }
@@ -521,7 +521,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
                     t
             ) -> splits0.put(t, Boundary.INFLECTION));
         }
-        getOffsetT(fld.getFractionalLengths().toSet()).forEach((
+        getOffsetT(of.getFractionalLengths().toSet()).forEach((
                 t
         ) -> splits0.put(t, Boundary.KINK));
         NavigableMap<Double, Boundary> splits = splits0.subMap(1e-6, false, 1.0 - 1e-6, false);
@@ -529,8 +529,8 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
         // Initialize loop variables
         // Work on a copy of the offset fractions, so we can remove each we use.
         // Skip t == 0.0 while collecting the split points -on- this B&eacute;zier
-        NavigableSet<Double> fCrossSectionRemain = fld.getFractionalLengths().toSet().tailSet(0.0, false);
-        double lengthTotal = length();
+        NavigableSet<Double> fCrossSectionRemain = of.getFractionalLengths().toSet().tailSet(0.0, false);
+        double lengthTotal = getLength();
         BezierCubic2d currentBezier = this;
         // System.out.println("Current bezier is " + this);
         double lengthSoFar = 0.0;
@@ -541,7 +541,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
         double tStart = 0.0;
         if (splits.isEmpty())
         {
-            this.segments.put(tStart, currentBezier.offset(fld, lengthSoFar, lengthTotal, sig, true));
+            this.segments.put(tStart, currentBezier.offset(of, lengthSoFar, lengthTotal, sig, true));
         }
         while (typeIterator.hasNext())
         {
@@ -575,7 +575,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
 
             // Split B&eacute;zier curve, and add offset of first part
             SplitBeziers parts = currentBezier.split(t);
-            BezierCubic2d segment = parts.first.offset(fld, lengthSoFar, lengthTotal, sig, false);
+            BezierCubic2d segment = parts.first.offset(of, lengthSoFar, lengthTotal, sig, false);
             // System.out.println("Offset segment at " + tStart + ": " + segment);
             this.segments.put(tStart, segment);
 
@@ -590,7 +590,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
             // Append last segment, or loop again with remainder
             if (!typeIterator.hasNext())
             {
-                BezierCubic2d lastSegment = parts.remainder.offset(fld, lengthSoFar, lengthTotal, sig, true);
+                BezierCubic2d lastSegment = parts.remainder.offset(of, lengthSoFar, lengthTotal, sig, true);
                 // System.out.println("Offset last segment at " + tStart + ": " + lastSegment);
                 this.segments.put(tStart, lastSegment);
             }
@@ -600,13 +600,13 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
             }
         }
         this.segments.put(1.0, null); // so we can interpolate t values along segments
-        this.fldForSegments = fld;
+        this.ofForSegments = of;
     }
 
     @Override
-    public Point2d getPoint(final double fraction, final PieceWiseLinearOffset2d fld)
+    public Point2d getPoint(final double fraction, final PieceWiseLinearOffset2d of)
     {
-        updateSegments(fld);
+        updateSegments(of);
         Entry<Double, BezierCubic2d> entry;
         double nextT;
         if (fraction == 1.0)
@@ -624,9 +624,9 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
     }
 
     @Override
-    public double getDirection(final double fraction, final PieceWiseLinearOffset2d fld)
+    public double getDirection(final double fraction, final PieceWiseLinearOffset2d of)
     {
-        updateSegments(fld);
+        updateSegments(of);
         Entry<Double, BezierCubic2d> entry = BezierCubic2d.this.segments.floorEntry(fraction);
         if (entry.getValue() == null)
         {
@@ -646,12 +646,12 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
     }
 
     @Override
-    public PolyLine2d toPolyLine(final OffsetFlattener2d flattener, final PieceWiseLinearOffset2d fld)
+    public PolyLine2d toPolyLine(final OffsetFlattener2d flattener, final PieceWiseLinearOffset2d of)
     {
-        Throw.whenNull(fld, "fld");
+        Throw.whenNull(of, "fld");
         Throw.whenNull(flattener, "flattener");
 
-        return flattener.flatten(this, fld);
+        return flattener.flatten(this, of);
     }
 
     /**

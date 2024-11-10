@@ -90,25 +90,25 @@ public class TestCurves
                             assertEquals(flattened.get(0).directionTo(flattened.get(1)), direction, 0.00001,
                                     "Direction matches");
                         }
-                        PieceWiseLinearOffset2d fld = new PieceWiseLinearOffset2d(transition);
-                        flattened = cs.toPolyLine(null, fld);
+                        PieceWiseLinearOffset2d of = new PieceWiseLinearOffset2d(transition);
+                        flattened = cs.toPolyLine(null, of);
                         assertEquals(3, flattened.size(),
                                 "size of flattened line with one offset knot along the way is 3 points");
                         assertEquals(x, flattened.get(0).x, 0, "start of flattened x");
                         assertEquals(y, flattened.get(0).y, 0, "start of flattened y");
-                        assertEquals(x + length * 0.2 * Math.cos(dirZ) - fld.get(0.2) * Math.sin(dirZ), flattened.getX(1),
+                        assertEquals(x + length * 0.2 * Math.cos(dirZ) - of.get(0.2) * Math.sin(dirZ), flattened.getX(1),
                                 0.0001, "x of intermediate point");
-                        assertEquals(y + length * 0.2 * Math.sin(dirZ) + fld.get(0.2) * Math.cos(dirZ), flattened.getY(1),
+                        assertEquals(y + length * 0.2 * Math.sin(dirZ) + of.get(0.2) * Math.cos(dirZ), flattened.getY(1),
                                 0.0001, "x of intermediate point");
-                        assertEquals(x + length * 1.0 * Math.cos(dirZ) - fld.get(1.0) * Math.sin(dirZ), flattened.getX(2),
+                        assertEquals(x + length * 1.0 * Math.cos(dirZ) - of.get(1.0) * Math.sin(dirZ), flattened.getX(2),
                                 0.0001, "x of intermediate point");
-                        assertEquals(y + length * 1.0 * Math.sin(dirZ) + fld.get(1.0) * Math.cos(dirZ), flattened.getY(2),
+                        assertEquals(y + length * 1.0 * Math.sin(dirZ) + of.get(1.0) * Math.cos(dirZ), flattened.getY(2),
                                 0.0001, "x of intermediate point");
                         for (int step = 0; step <= steps; step++)
                         {
                             double fraction = 1.0 * step / steps;
-                            Point2d position = cs.getPoint(fraction, fld);
-                            double direction = cs.getDirection(fraction, fld);
+                            Point2d position = cs.getPoint(fraction, of);
+                            double direction = cs.getDirection(fraction, of);
                             Point2d closest = flattened.closestPointOnPolyLine(position);
                             assertEquals(0, position.distance(closest), 0.01, "Point at fraction lies on flattened line");
                             if (fraction < 0.2)
@@ -209,21 +209,21 @@ public class TestCurves
                                 // Only check transitions for radius of arc > 2 and length of arc > 2
                                 if (radius > 2 && ca.getLength() > 2)
                                 {
-                                    PieceWiseLinearOffset2d fld = new PieceWiseLinearOffset2d(transition);
+                                    PieceWiseLinearOffset2d of = new PieceWiseLinearOffset2d(transition);
                                     // Test the NumSegments flattener with offsets
-                                    flattened = ca.toPolyLine(new OffsetFlattener2d.NumSegments(30), fld);
-                                    verifyNumSegments(ca, fld, flattened, 30);
+                                    flattened = ca.toPolyLine(new OffsetFlattener2d.NumSegments(30), of);
+                                    verifyNumSegments(ca, of, flattened, 30);
                                     // Test the MaxDeviation flattener with offsets
-                                    flattened = ca.toPolyLine(new OffsetFlattener2d.MaxDeviation(precision), fld);
-                                    verifyMaxDeviation(ca, fld, flattened, precision);
+                                    flattened = ca.toPolyLine(new OffsetFlattener2d.MaxDeviation(precision), of);
+                                    verifyMaxDeviation(ca, of, flattened, precision);
                                     // Test the MaxAngle flattener with offsets
-                                    flattened = ca.toPolyLine(new OffsetFlattener2d.MaxAngle(anglePrecision), fld);
-                                    verifyMaxAngleDeviation(flattened, ca, fld, anglePrecision);
+                                    flattened = ca.toPolyLine(new OffsetFlattener2d.MaxAngle(anglePrecision), of);
+                                    verifyMaxAngleDeviation(flattened, ca, of, anglePrecision);
                                     // Test the MaxDeviationAndAngle flattener with offsets
                                     flattened = ca.toPolyLine(
-                                            new OffsetFlattener2d.MaxDeviationAndAngle(precision, anglePrecision), fld);
-                                    verifyMaxDeviation(ca, fld, flattened, precision);
-                                    verifyMaxAngleDeviation(flattened, ca, fld, anglePrecision);
+                                            new OffsetFlattener2d.MaxDeviationAndAngle(precision, anglePrecision), of);
+                                    verifyMaxDeviation(ca, of, flattened, precision);
+                                    verifyMaxAngleDeviation(flattened, ca, of, anglePrecision);
                                 }
                             }
                         }
@@ -277,18 +277,18 @@ public class TestCurves
     /**
      * Verify the number of segments and the location of the points on a flattened OffsetFlattableLine2d.
      * @param curve OffsetFlattableLine2d
-     * @param fld FractionalLengthData (may be null)
+     * @param of FractionalLengthData (may be null)
      * @param flattened PolyLine2d
      * @param numSegments int; the number of segments that the flattened OffsetFlattableLine2d should have
      */
-    private static void verifyNumSegments(final OffsetCurve2d curve, final PieceWiseLinearOffset2d fld,
+    private static void verifyNumSegments(final OffsetCurve2d curve, final PieceWiseLinearOffset2d of,
             final PolyLine2d flattened, final int numSegments)
     {
         assertEquals(numSegments, flattened.size() - 1, "Number of segments");
         for (int i = 0; i <= numSegments; i++)
         {
             double fraction = i * 1.0 / numSegments;
-            Point2d expectedPoint = curve.getPoint(fraction, fld);
+            Point2d expectedPoint = curve.getPoint(fraction, of);
             Point2d actualPoint = flattened.get(i);
             assertEquals(expectedPoint, actualPoint, "Point in flattened line matches point generated by the continuous arc");
         }
@@ -324,11 +324,11 @@ public class TestCurves
     /**
      * Verify the lateral precision of a flattened continuous FlattableLine2d.
      * @param curve FlattableLine2d
-     * @param fld FractionalLengthData
+     * @param of FractionalLengthData
      * @param flattened PolyLine2d
      * @param precision double
      */
-    private static void verifyMaxDeviation(final OffsetCurve2d curve, final PieceWiseLinearOffset2d fld,
+    private static void verifyMaxDeviation(final OffsetCurve2d curve, final PieceWiseLinearOffset2d of,
             final PolyLine2d flattened, final double precision)
     {
         double fraction = 0.0;
@@ -350,7 +350,7 @@ public class TestCurves
                 while (highFraction - fraction > veryClose)
                 {
                     double midFraction = (fraction + highFraction) / 2;
-                    Point2d midPoint = curve.getPoint(midFraction, fld);
+                    Point2d midPoint = curve.getPoint(midFraction, of);
                     double dir = midPoint.directionTo(pointOnSegment);
                     double dirDifference = Math.abs(AngleUtil.normalizeAroundZero(flattenedDir - dir));
                     if (dirDifference < Math.PI / 4)
@@ -372,12 +372,12 @@ public class TestCurves
                 }
             }
             fraction = (fractionAtStartOfSegment + fractionAtEndOfSegment) / 2; // Take the middle
-            Point2d curvePoint = curve.getPoint(fraction, fld);
+            Point2d curvePoint = curve.getPoint(fraction, of);
             double actualDistance = curvePoint.distance(lineSegment.closestPointOnSegment(curvePoint));
             if (actualDistance > precision * FUDGE_FACTOR)
             {
-                printSituation(step, 0.5, flattened, curve, fraction, fld);
-                curve.toPolyLine(new OffsetFlattener2d.MaxDeviation(precision), fld);
+                printSituation(step, 0.5, flattened, curve, fraction, of);
+                curve.toPolyLine(new OffsetFlattener2d.MaxDeviation(precision), of);
             }
             assertEquals(0, actualDistance, precision * FUDGE_FACTOR, "point on OffsetFlattableLine2d is close to PolyLine2d");
             fraction = fractionAtEndOfSegment;
@@ -391,22 +391,22 @@ public class TestCurves
      * @param flattened PolyLine2d
      * @param line Object
      * @param fraction double
-     * @param fld FractionalLengthData (may be null)
+     * @param of FractionalLengthData (may be null)
      */
     public static void printSituation(final int segment, final double positionOnSegment, final PolyLine2d flattened,
-            final Object line, final double fraction, final PieceWiseLinearOffset2d fld)
+            final Object line, final double fraction, final PieceWiseLinearOffset2d of)
     {
         System.out.println("# " + line);
         System.out.print(Export.toPlot(flattened));
-        if (null != fld)
+        if (null != of)
         {
             System.out.print("c0,1,0 "
-                    + Export.toPlot(((OffsetCurve2d) line).toPolyLine(new OffsetFlattener2d.MaxDeviation(0.01), fld)));
+                    + Export.toPlot(((OffsetCurve2d) line).toPolyLine(new OffsetFlattener2d.MaxDeviation(0.01), of)));
         }
         System.out.print("c0,1,1 " + Export.toPlot(((Curve2d) line).toPolyLine(new Flattener2d.MaxDeviation(0.01))));
         Point2d pointAtFraction =
-                null != fld ? ((OffsetCurve2d) line).getPoint(fraction, fld) : ((Curve2d) line).getPoint(fraction);
-        double faDir = null != fld ? ((OffsetCurve2d) line).getDirection(fraction, fld)
+                null != of ? ((OffsetCurve2d) line).getPoint(fraction, of) : ((Curve2d) line).getPoint(fraction);
+        double faDir = null != of ? ((OffsetCurve2d) line).getDirection(fraction, of)
                 : ((Curve2d) line).getDirection(fraction);
         System.out.print("# curveDirection=" + faDir);
         if (segment >= 0)
@@ -453,17 +453,17 @@ public class TestCurves
             System.out.print(String.format(" %7.4f", flattened.get(i).y));
         }
         System.out.println("\nc0,0,1 M0,0L " + pointAtFraction.x + "," + pointAtFraction.y);
-        if (null != fld)
+        if (null != of)
         {
             System.out.print("# Knots in ofl2d domain:");
             OffsetCurve2d ofl2d = (OffsetCurve2d) line;
-            for (Iterator<Double> iterator = fld.iterator(); iterator.hasNext();)
+            for (Iterator<Double> iterator = of.iterator(); iterator.hasNext();)
             {
                 double knot = iterator.next();
                 if (knot != 0.0 && knot != 1.0)
                 {
                     double t = ofl2d.getT(knot * ofl2d.getLength());
-                    System.out.println("\tknot at " + knot + " -> fraction " + t + " point " + ofl2d.getPoint(t, fld));
+                    System.out.println("\tknot at " + knot + " -> fraction " + t + " point " + ofl2d.getPoint(t, of));
                 }
             }
         }
@@ -522,11 +522,11 @@ public class TestCurves
      * FractionalLengthData.
      * @param flattened PolyLine2d
      * @param curve OffsetFlattableLine2d
-     * @param fld FractionalLengthData
+     * @param of FractionalLengthData
      * @param anglePrecision double
      */
     public static void verifyMaxAngleDeviation(final PolyLine2d flattened, final OffsetCurve2d curve,
-            final PieceWiseLinearOffset2d fld, final double anglePrecision)
+            final PieceWiseLinearOffset2d of, final double anglePrecision)
     {
         double fraction = 0.0;
         for (int step = 0; step < flattened.size() - 1; step++)
@@ -542,7 +542,7 @@ public class TestCurves
                 while (highFraction - fraction > veryClose)
                 {
                     double midFraction = (fraction + highFraction) / 2;
-                    Point2d midPoint = curve.getPoint(midFraction, fld);
+                    Point2d midPoint = curve.getPoint(midFraction, of);
                     double dir = flattenPoint.directionTo(midPoint);
                     double dirDifference = Math.abs(AngleUtil.normalizeAroundZero(flattenedDir - dir));
                     if (dirDifference < Math.PI / 2)
@@ -556,7 +556,7 @@ public class TestCurves
                 }
                 // Check if there is a knot very close to fraction
                 Double knot = null;
-                for (Iterator<Double> iterator = fld.iterator(); iterator.hasNext();)
+                for (Iterator<Double> iterator = of.iterator(); iterator.hasNext();)
                 {
                     knot = iterator.next();
                     if (knot != 0.0 && knot != 1.0 && Math.abs(curve.getT(knot * curve.getLength()) - fraction) <= veryClose)
@@ -567,12 +567,12 @@ public class TestCurves
                 }
                 if (knot == null)
                 {
-                    double faDir = curve.getDirection(fraction, fld);
+                    double faDir = curve.getDirection(fraction, of);
                     if (Math.abs(AngleUtil.normalizeAroundZero(flattenedDir - faDir)) > anglePrecision * FUDGE_FACTOR)
                     {
-                        printSituation(step, positionOnSegment, flattened, curve, fraction, fld);
-                        curve.getDirection(fraction, fld);
-                        curve.toPolyLine(new OffsetFlattener2d.MaxAngle(anglePrecision), fld);
+                        printSituation(step, positionOnSegment, flattened, curve, fraction, of);
+                        curve.getDirection(fraction, of);
+                        curve.toPolyLine(new OffsetFlattener2d.MaxAngle(anglePrecision), of);
                     }
                     assertEquals(0, AngleUtil.normalizeAroundZero(flattenedDir - faDir), anglePrecision * FUDGE_FACTOR,
                             "direction difference should be less than anglePrecision");
@@ -638,24 +638,24 @@ public class TestCurves
                                 // Only check transitions for radius of arc > 2 and length of arc > 2
                                 if (cbc.getStartRadius() > 2 && cbc.getLength() > 2)
                                 {
-                                    PieceWiseLinearOffset2d fld = new PieceWiseLinearOffset2d(transition);
+                                    PieceWiseLinearOffset2d of = new PieceWiseLinearOffset2d(transition);
                                     // Test the NumSegments flattener with offsets
-                                    flattened = cbc.toPolyLine(new OffsetFlattener2d.NumSegments(30), fld);
-                                    verifyNumSegments(cbc, fld, flattened, 30);
+                                    flattened = cbc.toPolyLine(new OffsetFlattener2d.NumSegments(30), of);
+                                    verifyNumSegments(cbc, of, flattened, 30);
                                     // Test the MaxDeviation flattener with offsets
-                                    flattened = cbc.toPolyLine(new OffsetFlattener2d.MaxDeviation(precision), fld);
+                                    flattened = cbc.toPolyLine(new OffsetFlattener2d.MaxDeviation(precision), of);
                                     if (Math.abs(AngleUtil.normalizeAroundZero(meanDir - dirZ)) < 2
                                             && Math.abs(AngleUtil.normalizeAroundZero(meanDir - dirZ2)) < 2)
                                     {
                                         // Test with offsets only for shapes that we expect to be smooth
-                                        verifyMaxDeviation(cbc, fld, flattened, precision);
-                                        flattened = cbc.toPolyLine(new OffsetFlattener2d.MaxAngle(anglePrecision), fld);
-                                        verifyMaxAngleDeviation(flattened, cbc, fld, anglePrecision);
+                                        verifyMaxDeviation(cbc, of, flattened, precision);
+                                        flattened = cbc.toPolyLine(new OffsetFlattener2d.MaxAngle(anglePrecision), of);
+                                        verifyMaxAngleDeviation(flattened, cbc, of, anglePrecision);
                                         // Test the MaxDeviationAndAngle flattener with offsets
                                         flattened = cbc.toPolyLine(
-                                                new OffsetFlattener2d.MaxDeviationAndAngle(precision, anglePrecision), fld);
-                                        verifyMaxDeviation(cbc, fld, flattened, precision);
-                                        verifyMaxAngleDeviation(flattened, cbc, fld, anglePrecision);
+                                                new OffsetFlattener2d.MaxDeviationAndAngle(precision, anglePrecision), of);
+                                        verifyMaxDeviation(cbc, of, flattened, precision);
+                                        verifyMaxAngleDeviation(flattened, cbc, of, anglePrecision);
                                     }
                                 }
                             }
@@ -748,31 +748,31 @@ public class TestCurves
             // Ignore expected exception
         }
 
-        PieceWiseLinearOffset2d fld = new PieceWiseLinearOffset2d(0.1, 2, 0.7, 5);
-        assertEquals(2, fld.get(0.0), 0.000001, "get for data with key lower than first entry returns first value");
-        assertEquals(5, fld.get(1.0), 0.000001, "get for at first key higher than last entry returns first value");
-        assertEquals(2, fld.get(0.1), 0.000001, "get at first key returns first value");
-        assertEquals(5, fld.get(0.7), 0.000001, "get at last key returns first value");
-        assertEquals(2 + (5 - 2) * (0.3 - 0.1) / (0.7 - 0.1), fld.get(0.3), 0.00001, "Value between point interpolates");
-        assertEquals(3 / 0.6, fld.getDerivative(0.11), 0.00001, "get derivative works between the entries");
-        assertEquals(3 / 0.6, fld.getDerivative(0.69), 0.00001, "get derivative works between the entries");
-        assertEquals(0, fld.getDerivative(0.09), 0, "get derivative returns 0 outside the range of entries");
-        assertEquals(0, fld.getDerivative(0.71), 0, "get derivative returns 0 outside the range of entries");
-        assertEquals(2, fld.size(), "size is returned");
-        ImmutableSet<Double> returnedValues = fld.getValues();
+        PieceWiseLinearOffset2d of = new PieceWiseLinearOffset2d(0.1, 2, 0.7, 5);
+        assertEquals(2, of.get(0.0), 0.000001, "get for data with key lower than first entry returns first value");
+        assertEquals(5, of.get(1.0), 0.000001, "get for at first key higher than last entry returns first value");
+        assertEquals(2, of.get(0.1), 0.000001, "get at first key returns first value");
+        assertEquals(5, of.get(0.7), 0.000001, "get at last key returns first value");
+        assertEquals(2 + (5 - 2) * (0.3 - 0.1) / (0.7 - 0.1), of.get(0.3), 0.00001, "Value between point interpolates");
+        assertEquals(3 / 0.6, of.getDerivative(0.11), 0.00001, "get derivative works between the entries");
+        assertEquals(3 / 0.6, of.getDerivative(0.69), 0.00001, "get derivative works between the entries");
+        assertEquals(0, of.getDerivative(0.09), 0, "get derivative returns 0 outside the range of entries");
+        assertEquals(0, of.getDerivative(0.71), 0, "get derivative returns 0 outside the range of entries");
+        assertEquals(2, of.size(), "size is returned");
+        ImmutableSet<Double> returnedValues = of.getValues();
         assertEquals(2, returnedValues.size(), "getValues returned set of correct size");
         assertTrue(returnedValues.contains(2.0), "value 2.0 is among returned values");
         assertTrue(returnedValues.contains(5.0), "value 2.0 is among returned values");
 
-        fld = new PieceWiseLinearOffset2d(0.0, 0.0, 0.2, 1.0, 1.0, 2.0);
+        of = new PieceWiseLinearOffset2d(0.0, 0.0, 0.2, 1.0, 1.0, 2.0);
         int index = 0;
-        for (Double value : fld)
+        for (Double value : of)
         {
             assertEquals(index == 0 ? 0.0 : index == 1 ? 0.2 : 1.0, value, 0.0, "offset is returned");
             index++;
         }
 
-        Iterator<Double> iterator = fld.iterator();
+        Iterator<Double> iterator = of.iterator();
         assertTrue(iterator.hasNext(), "first offset is available");
         assertEquals(0.0, iterator.next(), "first offset is returned");
         assertTrue(iterator.hasNext(), "second offset is available");
@@ -790,9 +790,9 @@ public class TestCurves
             // Ignore expected exception
         }
 
-        fld = PieceWiseLinearOffset2d.of(0.3, 6);
-        assertEquals(1, fld.size(), "size matches");
-        returnedValues = fld.getValues();
+        of = PieceWiseLinearOffset2d.of(0.3, 6);
+        assertEquals(1, of.size(), "size matches");
+        returnedValues = of.getValues();
         assertEquals(1, returnedValues.size(), "getValues returned set of correct size");
         assertTrue(returnedValues.contains(6.0), "returned set contains expected value");
     }

@@ -133,9 +133,9 @@ public class Arc2d implements Curvature, Curve2d, OffsetCurve2d
     }
 
     @Override
-    public Point2d getPoint(final double fraction, final PieceWiseLinearOffset2d fld)
+    public Point2d getPoint(final double fraction, final PieceWiseLinearOffset2d of)
     {
-        return getPoint(fraction, fld.get(fraction));
+        return getPoint(fraction, of.get(fraction));
     }
 
     @Override
@@ -145,7 +145,7 @@ public class Arc2d implements Curvature, Curve2d, OffsetCurve2d
     }
 
     @Override
-    public double getDirection(final double fraction, final PieceWiseLinearOffset2d fld)
+    public double getDirection(final double fraction, final PieceWiseLinearOffset2d of)
     {
         /*-
          * x = cos(phi) * (r - s(phi))
@@ -164,8 +164,8 @@ public class Arc2d implements Curvature, Curve2d, OffsetCurve2d
         double phi = (Arc2d.this.startPoint.dirZ + Arc2d.this.sign * (Arc2d.this.angle * fraction - Math.PI / 2));
         double sinPhi = Math.sin(phi);
         double cosPhi = Math.cos(phi);
-        double sPhi = Arc2d.this.sign * fld.get(fraction);
-        double sPhiD = fld.getDerivative(fraction) / Arc2d.this.angle;
+        double sPhi = Arc2d.this.sign * of.get(fraction);
+        double sPhiD = of.getDerivative(fraction) / Arc2d.this.angle;
         double dx = -sinPhi * (Arc2d.this.radius - sPhi) - cosPhi * sPhiD;
         double dy = cosPhi * (Arc2d.this.radius - sPhi) - sinPhi * sPhiD;
         double direction = Math.atan2(Arc2d.this.sign * dy, Arc2d.this.sign * dx);

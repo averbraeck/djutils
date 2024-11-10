@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
 
-import org.djutils.draw.bounds.Bounds;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;

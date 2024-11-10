@@ -30,12 +30,12 @@ public interface OffsetFlattener2d extends Flattener2d
     /**
      * Flatten a OffsetFlattable2d curve into a PolyLine2d while applying lateral offsets.
      * @param line line function
-     * @param fld FractionalLengthData the lateral offset to apply
+     * @param of FractionalLengthData the lateral offset to apply
      * @return PolyLine2d; flattened line
      */
-    default PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d fld)
+    default PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d of)
     {
-        return flatten(line, fld);
+        return flatten(line, of);
     }
 
     /**
@@ -43,13 +43,13 @@ public interface OffsetFlattener2d extends Flattener2d
      * @param map NavigableMap<Double, Point2d> the map
      * @param knot double; the fraction where the knot occurs
      * @param line OffsetFlattableLine2d; the line that can compute the point for each <code>knot</code> position
-     * @param fld FractionalLengthData; offset data
+     * @param of FractionalLengthData; offset data
      * @throws NullPointerException when <code>map</code> is <code>null</code>, <code>knot</code> is <code>null</code>,
-     *             <code>line</code> is <code>null</code>, or <code>fld</code> is <code>null</code>
+     *             <code>line</code> is <code>null</code>, or <code>of</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>knot &lt; 0.0</code>, or <code>knot &gt; 1.0</code>
      */
     private static void loadKink(final NavigableMap<Double, Point2d> map, final double knot, final OffsetCurve2d line,
-            final PieceWiseLinearOffset2d fld)
+            final PieceWiseLinearOffset2d of)
     {
         Throw.when(knot < 0.0 || knot > 1.0, IllegalArgumentException.class, "Kinks must all be between 0.0 and 1.0, (got %f)",
                 knot);
@@ -63,7 +63,7 @@ public interface OffsetFlattener2d extends Flattener2d
         }
 
         double knotFraction = line.getT(knot * line.getLength()); // Translate fraction on fld to fraction on line
-        Point2d knotPoint = line.getPoint(knotFraction, fld);
+        Point2d knotPoint = line.getPoint(knotFraction, of);
         // System.out.println("# Processing knot at " + knot + ", getT " + knotFraction + " point " + knotPoint);
         map.put(knotFraction, knotPoint);
     }
@@ -72,25 +72,25 @@ public interface OffsetFlattener2d extends Flattener2d
      * Load the knots into the navigable map (including the start point and the end point).
      * @param map navigableMap<Double, Point2d>; the navigable map
      * @param line OffsetFlattableLine2d; the OffsetFlattableLine2d
-     * @param fld FractionalLengthData2d; the offset data
+     * @param of FractionalLengthData2d; the offset data
      */
     private static void loadKinks(final NavigableMap<Double, Point2d> map, final OffsetCurve2d line,
-            final PieceWiseLinearOffset2d fld)
+            final PieceWiseLinearOffset2d of)
     {
-        map.put(0.0, line.getPoint(0.0, fld));
+        map.put(0.0, line.getPoint(0.0, of));
         Set<Double> knots = line.getKnots();
         if (null != knots)
         {
             for (double knot : knots)
             {
-                loadKink(map, knot, line, fld);
+                loadKink(map, knot, line, of);
             }
         }
-        for (double knot : fld)
+        for (double knot : of)
         {
-            loadKink(map, knot, line, fld);
+            loadKink(map, knot, line, of);
         }
-        map.put(1.0, line.getPoint(1.0, fld));
+        map.put(1.0, line.getPoint(1.0, of));
     }
 
     /**
@@ -103,17 +103,17 @@ public interface OffsetFlattener2d extends Flattener2d
      * @param nextT double; t of following inserted point
      * @param prevPoint Point2d; point on <code>line</code> at <code>prevT</code>
      * @param nextPoint Point2d; point on <code>line</code> at <code>nextT</code>
-     * @param fld FractionalLengthData2d; information about lateral offsets (may be <code>null</code>)
+     * @param of FractionalLengthData2d; information about lateral offsets (may be <code>null</code>)
      * @return boolean; <code>true</code> if there is an inflection point between <code>prevT</code> and <code>nextT</code>;
      *         <code>false</code> if there is no inflection point between <code>prevT</code> and <code>nextT</code>
      */
     private static boolean checkInflectionPoint(final OffsetCurve2d line, final double prevT, final double medianT,
-            final double nextT, final Point2d prevPoint, final Point2d nextPoint, final PieceWiseLinearOffset2d fld)
+            final double nextT, final Point2d prevPoint, final Point2d nextPoint, final PieceWiseLinearOffset2d of)
     {
-        Point2d oneQuarter = line.getPoint((prevT + medianT) / 2, fld);
+        Point2d oneQuarter = line.getPoint((prevT + medianT) / 2, of);
         int sign1 = (int) Math.signum((nextPoint.x - prevPoint.x) * (oneQuarter.y - prevPoint.y)
                 - (nextPoint.y - prevPoint.y) * (oneQuarter.x - prevPoint.x));
-        Point2d threeQuarter = line.getPoint((nextT + medianT) / 2, fld);
+        Point2d threeQuarter = line.getPoint((nextT + medianT) / 2, of);
         int sign2 = (int) Math.signum((nextPoint.x - prevPoint.x) * (threeQuarter.y - prevPoint.y)
                 - (nextPoint.y - prevPoint.y) * (threeQuarter.x - prevPoint.x));
         return sign1 != sign2;
@@ -174,11 +174,11 @@ public interface OffsetFlattener2d extends Flattener2d
         }
 
         @Override
-        public PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d fld)
+        public PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d of)
         {
             Throw.whenNull(line, "Line function may not be null");
             NavigableMap<Double, Point2d> result = new TreeMap<>();
-            OffsetFlattener2d.loadKinks(result, line, fld);
+            OffsetFlattener2d.loadKinks(result, line, of);
 
             // Walk along all point pairs and see if additional points need to be inserted
             double prevT = result.firstKey();
@@ -189,7 +189,7 @@ public interface OffsetFlattener2d extends Flattener2d
                 double nextT = entry.getKey();
                 Point2d nextPoint = entry.getValue();
                 double medianT = (prevT + nextT) / 2;
-                Point2d medianPoint = line.getPoint(medianT, fld);
+                Point2d medianPoint = line.getPoint(medianT, of);
 
                 // Check max deviation
                 Point2d projectedPoint = medianPoint.closestPointOnSegment(prevPoint, nextPoint);
@@ -202,7 +202,7 @@ public interface OffsetFlattener2d extends Flattener2d
                 }
 
                 if (prevPoint.distance(nextPoint) > this.maxDeviation
-                        && OffsetFlattener2d.checkInflectionPoint(line, prevT, medianT, nextT, prevPoint, nextPoint, fld))
+                        && OffsetFlattener2d.checkInflectionPoint(line, prevT, medianT, nextT, prevPoint, nextPoint, of))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
                     result.put(medianT, medianPoint);
@@ -345,18 +345,18 @@ public interface OffsetFlattener2d extends Flattener2d
         }
 
         @Override
-        public PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d fld)
+        public PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d of)
         {
             NavigableMap<Double, Point2d> result = new TreeMap<>();
-            OffsetFlattener2d.loadKinks(result, line, fld);
+            OffsetFlattener2d.loadKinks(result, line, of);
             Map<Double, Double> directions = new LinkedHashMap<>();
-            directions.put(0.0, line.getDirection(0.0, fld)); // directions can't do ULP before 0.0
+            directions.put(0.0, line.getDirection(0.0, of)); // directions can't do ULP before 0.0
             Set<Double> knots = new HashSet<>();
             for (double knot : result.keySet())
             {
                 if (knot > 0)
                 {
-                    directions.put(knot, line.getDirection(knot - Math.ulp(knot), fld));
+                    directions.put(knot, line.getDirection(knot - Math.ulp(knot), of));
                 }
                 if (knot != 0.0 && knot != 1.0)
                 {
@@ -379,9 +379,9 @@ public interface OffsetFlattener2d extends Flattener2d
                         this.maxAngle))
                 {
                     // We need to insert another point
-                    Point2d medianPoint = line.getPoint(medianT, fld);
+                    Point2d medianPoint = line.getPoint(medianT, of);
                     result.put(medianT, medianPoint);
-                    directions.put(medianT, line.getDirection(medianT, fld));
+                    directions.put(medianT, line.getDirection(medianT, of));
                     iterationsAtSinglePoint++;
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
                             + "around the same point (t=%f). Likely there is an (unreported) knot in the FlattableLine.",
@@ -389,19 +389,19 @@ public interface OffsetFlattener2d extends Flattener2d
                     continue;
                 }
                 iterationsAtSinglePoint = 0;
-                if (OffsetFlattener2d.checkInflectionPoint(line, prevT, medianT, nextT, prevPoint, nextPoint, fld))
+                if (OffsetFlattener2d.checkInflectionPoint(line, prevT, medianT, nextT, prevPoint, nextPoint, of))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
-                    Point2d medianPoint = line.getPoint(medianT, fld);
+                    Point2d medianPoint = line.getPoint(medianT, of);
                     result.put(medianT, medianPoint);
-                    directions.put(medianT, line.getDirection(medianT, fld));
+                    directions.put(medianT, line.getDirection(medianT, of));
                     continue;
                 }
                 prevT = nextT;
                 prevPoint = nextPoint;
                 if (knots.contains(prevT))
                 {
-                    directions.put(prevT, line.getDirection(prevT + Math.ulp(prevT), fld));
+                    directions.put(prevT, line.getDirection(prevT + Math.ulp(prevT), of));
                 }
             }
             return new PolyLine2d(result.values().iterator());

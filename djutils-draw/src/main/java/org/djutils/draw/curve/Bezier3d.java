@@ -180,10 +180,17 @@ public class Bezier3d implements Curve3d
         return new Point3d(Bezier.Bn(t, this.x), Bezier.Bn(t, this.y), Bezier.Bn(t, this.z));
     }
 
+    /** Cache the result of the getLength method. */
+    private double cachedLength = -1;
+    
     @Override
     public double getLength()
     {
-        return this.length();
+        if (this.cachedLength < 0)
+        {
+            this.cachedLength = length();
+        }
+        return this.cachedLength;
     }
 
     @Override

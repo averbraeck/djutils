@@ -547,17 +547,17 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
     }
 
     @Override
-    public Point2d getPoint(final double fraction, final PieceWiseLinearOffset2d fld)
+    public Point2d getPoint(final double fraction, final PieceWiseLinearOffset2d of)
     {
         if (this.arc != null)
         {
-            return this.arc.getPoint(fraction, fld);
+            return this.arc.getPoint(fraction, of);
         }
         else if (this.straight != null)
         {
-            return this.straight.getPoint(fraction, fld);
+            return this.straight.getPoint(fraction, of);
         }
-        return getPoint(fraction, fld.get(fraction));
+        return getPoint(fraction, of.get(fraction));
     }
 
     @Override

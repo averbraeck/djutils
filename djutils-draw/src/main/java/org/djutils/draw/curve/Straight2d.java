@@ -103,9 +103,9 @@ public class Straight2d implements Curve2d, OffsetCurve2d
     }
 
     @Override
-    public Point2d getPoint(final double fraction, final PieceWiseLinearOffset2d fld)
+    public Point2d getPoint(final double fraction, final PieceWiseLinearOffset2d of)
     {
-        return getPoint(fraction, fld.get(fraction));
+        return getPoint(fraction, of.get(fraction));
     }
 
     @Override

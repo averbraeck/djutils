@@ -29,31 +29,31 @@ public interface OffsetCurve2d extends Curve2d
      * Returns the point at the given fraction. The fraction may represent any parameter, such as <i>t</i> in a B&eacute;zier
      * curve, <i>s</i> in a Clothoid, or simply the fraction of length.
      * @param fraction double; the fraction
-     * @param fld FractionalLengthData; provides fraction-dependent lateral offset to the point
+     * @param of FractionalLengthData; provides fraction-dependent lateral offset to the point
      * @return Point2d; the point at the given <code>fraction</code>
      */
-    Point2d getPoint(double fraction, PieceWiseLinearOffset2d fld);
+    Point2d getPoint(double fraction, PieceWiseLinearOffset2d of);
 
     /**
      * Returns the direction at the given fraction. The fraction may represent any parameter, such as <i>t</i> in a
      * B&eacute;zier curve, <i>s</i> in a Clothoid, or simply the fraction of length. The default implementation performs a
      * numerical approach by looking at the direction between the points at fraction, and a point 1e-6 away.
      * @param fraction double; the fraction
-     * @param fld FractionalLengthData; provides fraction-dependent lateral offset to the curve
+     * @param of FractionalLengthData; provides fraction-dependent lateral offset to the curve
      * @return double; the direction at the given <code>fraction</code>
      */
-    default double getDirection(final double fraction, final PieceWiseLinearOffset2d fld)
+    default double getDirection(final double fraction, final PieceWiseLinearOffset2d of)
     {
         Point2d p1, p2;
         if (fraction < 0.5) // to prevent going above 1.0
         {
-            p1 = getPoint(fraction, fld);
-            p2 = getPoint(fraction + 1e-6, fld);
+            p1 = getPoint(fraction, of);
+            p2 = getPoint(fraction + 1e-6, of);
         }
         else
         {
-            p1 = getPoint(fraction - 1e-6, fld);
-            p2 = getPoint(fraction, fld);
+            p1 = getPoint(fraction - 1e-6, of);
+            p2 = getPoint(fraction, of);
         }
         return p1.directionTo(p2);
     }

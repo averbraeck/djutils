@@ -43,8 +43,8 @@ public interface Curve<DP, DIR, P extends Point<P>, F extends Flattener<F, ?, PL
     DP getEndPoint();
 
     /**
-     * Return the length of this line.
-     * @return double; length of this line
+     * Return the length of this Curve.
+     * @return double; length of this Curve
      */
     double getLength();
 

@@ -119,7 +119,7 @@ public class Bezier2d implements Curve2d
      * which is quite accurate.
      * @return estimated length.
      */
-    public double length()
+    private double length()
     {
         double len = 0.0;
         Bezier2d derivativeBezier = derivative();
@@ -161,10 +161,17 @@ public class Bezier2d implements Curve2d
         return new Point2d(Bezier.Bn(t, this.x), Bezier.Bn(t, this.y));
     }
     
+    /** Cache the result of the getLength method. */
+    private double cachedLength = -1;
+    
     @Override
     public double getLength()
     {
-        return this.length();
+        if (this.cachedLength < 0)
+        {
+            this.cachedLength = length();
+        }
+        return this.cachedLength;
     }
 
     /**
@@ -192,6 +199,7 @@ public class Bezier2d implements Curve2d
         return flattener.flatten(this);
     }
 
+    // If toString is regenerated, take care to remove cashedLength from the result.
     @Override
     public String toString()
     {
