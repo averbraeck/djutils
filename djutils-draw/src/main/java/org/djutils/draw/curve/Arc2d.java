@@ -1,6 +1,7 @@
 package org.djutils.draw.curve;
 
 import org.djutils.base.AngleUtil;
+import org.djutils.draw.function.ContinuousPiecewiseLinearFunction;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
@@ -133,7 +134,7 @@ public class Arc2d implements Curvature, Curve2d, OffsetCurve2d
     }
 
     @Override
-    public Point2d getPoint(final double fraction, final PieceWiseLinearOffset2d of)
+    public Point2d getPoint(final double fraction, final ContinuousPiecewiseLinearFunction of)
     {
         return getPoint(fraction, of.get(fraction));
     }
@@ -145,7 +146,7 @@ public class Arc2d implements Curvature, Curve2d, OffsetCurve2d
     }
 
     @Override
-    public double getDirection(final double fraction, final PieceWiseLinearOffset2d of)
+    public double getDirection(final double fraction, final ContinuousPiecewiseLinearFunction of)
     {
         /*-
          * x = cos(phi) * (r - s(phi))
@@ -180,7 +181,7 @@ public class Arc2d implements Curvature, Curve2d, OffsetCurve2d
     }
 
     @Override
-    public PolyLine2d toPolyLine(final OffsetFlattener2d flattener, final PieceWiseLinearOffset2d offsets)
+    public PolyLine2d toPolyLine(final OffsetFlattener2d flattener, final ContinuousPiecewiseLinearFunction offsets)
     {
         Throw.whenNull(offsets, "Offsets");
         return flattener.flatten(this, offsets);

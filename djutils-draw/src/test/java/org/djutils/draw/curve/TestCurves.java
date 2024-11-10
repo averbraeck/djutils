@@ -1,25 +1,21 @@
 package org.djutils.draw.curve;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.NavigableMap;
-import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.Export;
+import org.djutils.draw.function.ContinuousPiecewiseLinearFunction;
 import org.djutils.draw.line.LineSegment2d;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.line.Ray2d;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
-import org.djutils.immutablecollections.ImmutableSet;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -90,7 +86,7 @@ public class TestCurves
                             assertEquals(flattened.get(0).directionTo(flattened.get(1)), direction, 0.00001,
                                     "Direction matches");
                         }
-                        PieceWiseLinearOffset2d of = new PieceWiseLinearOffset2d(transition);
+                        ContinuousPiecewiseLinearFunction of = new ContinuousPiecewiseLinearFunction(transition);
                         flattened = cs.toPolyLine(null, of);
                         assertEquals(3, flattened.size(),
                                 "size of flattened line with one offset knot along the way is 3 points");
@@ -209,7 +205,7 @@ public class TestCurves
                                 // Only check transitions for radius of arc > 2 and length of arc > 2
                                 if (radius > 2 && ca.getLength() > 2)
                                 {
-                                    PieceWiseLinearOffset2d of = new PieceWiseLinearOffset2d(transition);
+                                    ContinuousPiecewiseLinearFunction of = new ContinuousPiecewiseLinearFunction(transition);
                                     // Test the NumSegments flattener with offsets
                                     flattened = ca.toPolyLine(new OffsetFlattener2d.NumSegments(30), of);
                                     verifyNumSegments(ca, of, flattened, 30);
@@ -281,7 +277,7 @@ public class TestCurves
      * @param flattened PolyLine2d
      * @param numSegments int; the number of segments that the flattened OffsetFlattableLine2d should have
      */
-    private static void verifyNumSegments(final OffsetCurve2d curve, final PieceWiseLinearOffset2d of,
+    private static void verifyNumSegments(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction of,
             final PolyLine2d flattened, final int numSegments)
     {
         assertEquals(numSegments, flattened.size() - 1, "Number of segments");
@@ -328,7 +324,7 @@ public class TestCurves
      * @param flattened PolyLine2d
      * @param precision double
      */
-    private static void verifyMaxDeviation(final OffsetCurve2d curve, final PieceWiseLinearOffset2d of,
+    private static void verifyMaxDeviation(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction of,
             final PolyLine2d flattened, final double precision)
     {
         double fraction = 0.0;
@@ -394,7 +390,7 @@ public class TestCurves
      * @param of FractionalLengthData (may be null)
      */
     public static void printSituation(final int segment, final double positionOnSegment, final PolyLine2d flattened,
-            final Object line, final double fraction, final PieceWiseLinearOffset2d of)
+            final Object line, final double fraction, final ContinuousPiecewiseLinearFunction of)
     {
         System.out.println("# " + line);
         System.out.print(Export.toPlot(flattened));
@@ -457,9 +453,9 @@ public class TestCurves
         {
             System.out.print("# Knots in ofl2d domain:");
             OffsetCurve2d ofl2d = (OffsetCurve2d) line;
-            for (Iterator<Double> iterator = of.iterator(); iterator.hasNext();)
+            for (Iterator<ContinuousPiecewiseLinearFunction.TupleSt> iterator = of.iterator(); iterator.hasNext();)
             {
-                double knot = iterator.next();
+                double knot = iterator.next().s();
                 if (knot != 0.0 && knot != 1.0)
                 {
                     double t = ofl2d.getT(knot * ofl2d.getLength());
@@ -526,7 +522,7 @@ public class TestCurves
      * @param anglePrecision double
      */
     public static void verifyMaxAngleDeviation(final PolyLine2d flattened, final OffsetCurve2d curve,
-            final PieceWiseLinearOffset2d of, final double anglePrecision)
+            final ContinuousPiecewiseLinearFunction of, final double anglePrecision)
     {
         double fraction = 0.0;
         for (int step = 0; step < flattened.size() - 1; step++)
@@ -556,9 +552,9 @@ public class TestCurves
                 }
                 // Check if there is a knot very close to fraction
                 Double knot = null;
-                for (Iterator<Double> iterator = of.iterator(); iterator.hasNext();)
+                for (Iterator<ContinuousPiecewiseLinearFunction.TupleSt> iterator = of.iterator(); iterator.hasNext();)
                 {
-                    knot = iterator.next();
+                    knot = iterator.next().s();
                     if (knot != 0.0 && knot != 1.0 && Math.abs(curve.getT(knot * curve.getLength()) - fraction) <= veryClose)
                     {
                         break;
@@ -638,7 +634,7 @@ public class TestCurves
                                 // Only check transitions for radius of arc > 2 and length of arc > 2
                                 if (cbc.getStartRadius() > 2 && cbc.getLength() > 2)
                                 {
-                                    PieceWiseLinearOffset2d of = new PieceWiseLinearOffset2d(transition);
+                                    ContinuousPiecewiseLinearFunction of = new ContinuousPiecewiseLinearFunction(transition);
                                     // Test the NumSegments flattener with offsets
                                     flattened = cbc.toPolyLine(new OffsetFlattener2d.NumSegments(30), of);
                                     verifyNumSegments(cbc, of, flattened, 30);
@@ -709,148 +705,6 @@ public class TestCurves
             // Ignore expected exception
         }
         
-    }
-
-    /**
-     * Test the FractionalLengthData class.
-     */
-    @Test
-    public void testFractionalLengthData()
-    {
-        testFldConstructors("Zero values should have thrown an IllegalArgumentException");
-        testFldConstructors("Odd number of values should have thrown an IllegalArgumentException", 0.1);
-        testFldConstructors("Odd number of values should have thrown an IllegalArgumentException", 0.1, 5.0, 0.3);
-        testFldConstructors("Negative fractional position should have thrown an IllegalArgumentException", -0.1, 2.0);
-        testFldConstructors("Fractional position > 1.0 should have thrown an IllegalArgumentException", 1.1, 2.0);
-        testFldConstructors("-0.0 fractional position should have thrown an IllegalArgumentException", -0.0, 2.0);
-        testFldConstructors("value must be finite", 0.2, Double.NaN);
-        testFldConstructors("value must be finite", 0.2, Double.NEGATIVE_INFINITY);
-        testFldConstructors("value must be finite", 0.2, Double.POSITIVE_INFINITY);
-
-        try
-        {
-            new PieceWiseLinearOffset2d((Map<Double, Double>) null);
-            fail("null map should have thrown an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
-        Map<Double, Double> map = new HashMap<>();
-        map.put(null, 3.0);
-        try
-        {
-            new PieceWiseLinearOffset2d(map);
-            fail("null key in map should have thrown an IllegalArgumentException");
-        }
-        catch (NullPointerException npe)
-        {
-            // Ignore expected exception
-        }
-
-        PieceWiseLinearOffset2d of = new PieceWiseLinearOffset2d(0.1, 2, 0.7, 5);
-        assertEquals(2, of.get(0.0), 0.000001, "get for data with key lower than first entry returns first value");
-        assertEquals(5, of.get(1.0), 0.000001, "get for at first key higher than last entry returns first value");
-        assertEquals(2, of.get(0.1), 0.000001, "get at first key returns first value");
-        assertEquals(5, of.get(0.7), 0.000001, "get at last key returns first value");
-        assertEquals(2 + (5 - 2) * (0.3 - 0.1) / (0.7 - 0.1), of.get(0.3), 0.00001, "Value between point interpolates");
-        assertEquals(3 / 0.6, of.getDerivative(0.11), 0.00001, "get derivative works between the entries");
-        assertEquals(3 / 0.6, of.getDerivative(0.69), 0.00001, "get derivative works between the entries");
-        assertEquals(0, of.getDerivative(0.09), 0, "get derivative returns 0 outside the range of entries");
-        assertEquals(0, of.getDerivative(0.71), 0, "get derivative returns 0 outside the range of entries");
-        assertEquals(2, of.size(), "size is returned");
-        ImmutableSet<Double> returnedValues = of.getValues();
-        assertEquals(2, returnedValues.size(), "getValues returned set of correct size");
-        assertTrue(returnedValues.contains(2.0), "value 2.0 is among returned values");
-        assertTrue(returnedValues.contains(5.0), "value 2.0 is among returned values");
-
-        of = new PieceWiseLinearOffset2d(0.0, 0.0, 0.2, 1.0, 1.0, 2.0);
-        int index = 0;
-        for (Double value : of)
-        {
-            assertEquals(index == 0 ? 0.0 : index == 1 ? 0.2 : 1.0, value, 0.0, "offset is returned");
-            index++;
-        }
-
-        Iterator<Double> iterator = of.iterator();
-        assertTrue(iterator.hasNext(), "first offset is available");
-        assertEquals(0.0, iterator.next(), "first offset is returned");
-        assertTrue(iterator.hasNext(), "second offset is available");
-        assertEquals(0.2, iterator.next(), "second offset is returned");
-        assertTrue(iterator.hasNext(), "third offset is available");
-        assertEquals(1.0, iterator.next(), "third offset is returned");
-        assertFalse(iterator.hasNext(), "iterator is now exhausted");
-        try
-        {
-            iterator.next();
-            fail("exhausted iterator should have thrown a NoSuchElementException");
-        }
-        catch (NoSuchElementException nsee)
-        {
-            // Ignore expected exception
-        }
-
-        of = PieceWiseLinearOffset2d.of(0.3, 6);
-        assertEquals(1, of.size(), "size matches");
-        returnedValues = of.getValues();
-        assertEquals(1, returnedValues.size(), "getValues returned set of correct size");
-        assertTrue(returnedValues.contains(6.0), "returned set contains expected value");
-    }
-
-    /**
-     * Test the various constructors of FractionalLengthData.
-     * @param problem String; description of the problem with the input data that the test should detect
-     * @param in double... input for the constructors
-     */
-    static void testFldConstructors(final String problem, final double... in)
-    {
-        try
-        {
-            new PieceWiseLinearOffset2d(in);
-            fail(problem);
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
-        Map<Double, Double> map = new HashMap<>();
-        for (int i = 0; i < in.length; i += 2)
-        {
-            map.put(in[i], i + 1 < in.length ? in[i + 1] : null);
-        }
-        if (in.length % 2 == 0)
-        {
-            try
-            {
-                new PieceWiseLinearOffset2d(map);
-                fail(problem);
-            }
-            catch (IllegalArgumentException iae)
-            {
-                // Ignore expected exception
-            }
-        }
-        else
-        {
-            try
-            {
-                new PieceWiseLinearOffset2d(map);
-                fail(problem);
-            }
-            catch (NullPointerException npe)
-            {
-                // Ignore expected exception
-            }
-        }
-        try
-        {
-            PieceWiseLinearOffset2d.of(in);
-            fail(problem);
-        }
-        catch (IllegalArgumentException iae)
-        {
-            // Ignore expected exception
-        }
     }
 
 }

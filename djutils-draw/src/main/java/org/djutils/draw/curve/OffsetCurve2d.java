@@ -1,5 +1,6 @@
 package org.djutils.draw.curve;
 
+import org.djutils.draw.function.ContinuousPiecewiseLinearFunction;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.Point2d;
 
@@ -23,7 +24,7 @@ public interface OffsetCurve2d extends Curve2d
      * @return PolyLine2d; approximation of this line with offset as a PolyLine2d
      * @throws NullPointerException when <code>flattener</code>, or <code>offsets</code> is <code>null</code>
      */
-    PolyLine2d toPolyLine(OffsetFlattener2d flattener, PieceWiseLinearOffset2d offsets);
+    PolyLine2d toPolyLine(OffsetFlattener2d flattener, ContinuousPiecewiseLinearFunction offsets);
 
     /**
      * Returns the point at the given fraction. The fraction may represent any parameter, such as <i>t</i> in a B&eacute;zier
@@ -32,7 +33,7 @@ public interface OffsetCurve2d extends Curve2d
      * @param of FractionalLengthData; provides fraction-dependent lateral offset to the point
      * @return Point2d; the point at the given <code>fraction</code>
      */
-    Point2d getPoint(double fraction, PieceWiseLinearOffset2d of);
+    Point2d getPoint(double fraction, ContinuousPiecewiseLinearFunction of);
 
     /**
      * Returns the direction at the given fraction. The fraction may represent any parameter, such as <i>t</i> in a
@@ -42,7 +43,7 @@ public interface OffsetCurve2d extends Curve2d
      * @param of FractionalLengthData; provides fraction-dependent lateral offset to the curve
      * @return double; the direction at the given <code>fraction</code>
      */
-    default double getDirection(final double fraction, final PieceWiseLinearOffset2d of)
+    default double getDirection(final double fraction, final ContinuousPiecewiseLinearFunction of)
     {
         Point2d p1, p2;
         if (fraction < 0.5) // to prevent going above 1.0

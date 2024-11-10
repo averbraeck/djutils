@@ -11,6 +11,7 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.djutils.draw.function.ContinuousPiecewiseLinearFunction;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
@@ -33,7 +34,7 @@ public interface OffsetFlattener2d extends Flattener2d
      * @param of FractionalLengthData the lateral offset to apply
      * @return PolyLine2d; flattened line
      */
-    default PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d of)
+    default PolyLine2d flatten(final OffsetCurve2d line, final ContinuousPiecewiseLinearFunction of)
     {
         return flatten(line, of);
     }
@@ -49,7 +50,7 @@ public interface OffsetFlattener2d extends Flattener2d
      * @throws IllegalArgumentException when <code>knot &lt; 0.0</code>, or <code>knot &gt; 1.0</code>
      */
     private static void loadKink(final NavigableMap<Double, Point2d> map, final double knot, final OffsetCurve2d line,
-            final PieceWiseLinearOffset2d of)
+            final ContinuousPiecewiseLinearFunction of)
     {
         Throw.when(knot < 0.0 || knot > 1.0, IllegalArgumentException.class, "Kinks must all be between 0.0 and 1.0, (got %f)",
                 knot);
@@ -75,7 +76,7 @@ public interface OffsetFlattener2d extends Flattener2d
      * @param of FractionalLengthData2d; the offset data
      */
     private static void loadKinks(final NavigableMap<Double, Point2d> map, final OffsetCurve2d line,
-            final PieceWiseLinearOffset2d of)
+            final ContinuousPiecewiseLinearFunction of)
     {
         map.put(0.0, line.getPoint(0.0, of));
         Set<Double> knots = line.getKnots();
@@ -86,9 +87,9 @@ public interface OffsetFlattener2d extends Flattener2d
                 loadKink(map, knot, line, of);
             }
         }
-        for (double knot : of)
+        for (ContinuousPiecewiseLinearFunction.TupleSt knot : of)
         {
-            loadKink(map, knot, line, of);
+            loadKink(map, knot.s(), line, of);
         }
         map.put(1.0, line.getPoint(1.0, of));
     }
@@ -108,7 +109,7 @@ public interface OffsetFlattener2d extends Flattener2d
      *         <code>false</code> if there is no inflection point between <code>prevT</code> and <code>nextT</code>
      */
     private static boolean checkInflectionPoint(final OffsetCurve2d line, final double prevT, final double medianT,
-            final double nextT, final Point2d prevPoint, final Point2d nextPoint, final PieceWiseLinearOffset2d of)
+            final double nextT, final Point2d prevPoint, final Point2d nextPoint, final ContinuousPiecewiseLinearFunction of)
     {
         Point2d oneQuarter = line.getPoint((prevT + medianT) / 2, of);
         int sign1 = (int) Math.signum((nextPoint.x - prevPoint.x) * (oneQuarter.y - prevPoint.y)
@@ -139,7 +140,7 @@ public interface OffsetFlattener2d extends Flattener2d
         }
 
         @Override
-        public PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d fld) throws NullPointerException
+        public PolyLine2d flatten(final OffsetCurve2d line, final ContinuousPiecewiseLinearFunction fld) throws NullPointerException
         {
             Throw.whenNull(line, "Line function may not be null");
             List<Point2d> points = new ArrayList<>(this.numSegments + 1);
@@ -174,7 +175,7 @@ public interface OffsetFlattener2d extends Flattener2d
         }
 
         @Override
-        public PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d of)
+        public PolyLine2d flatten(final OffsetCurve2d line, final ContinuousPiecewiseLinearFunction of)
         {
             Throw.whenNull(line, "Line function may not be null");
             NavigableMap<Double, Point2d> result = new TreeMap<>();
@@ -251,7 +252,7 @@ public interface OffsetFlattener2d extends Flattener2d
         }
 
         @Override
-        public PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d fld)
+        public PolyLine2d flatten(final OffsetCurve2d line, final ContinuousPiecewiseLinearFunction fld)
         {
             NavigableMap<Double, Point2d> result = new TreeMap<>();
             OffsetFlattener2d.loadKinks(result, line, fld);
@@ -345,7 +346,7 @@ public interface OffsetFlattener2d extends Flattener2d
         }
 
         @Override
-        public PolyLine2d flatten(final OffsetCurve2d line, final PieceWiseLinearOffset2d of)
+        public PolyLine2d flatten(final OffsetCurve2d line, final ContinuousPiecewiseLinearFunction of)
         {
             NavigableMap<Double, Point2d> result = new TreeMap<>();
             OffsetFlattener2d.loadKinks(result, line, of);

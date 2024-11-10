@@ -1,4 +1,4 @@
-package org.djutils.draw.curve;
+package org.djutils.draw.function;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -8,9 +8,7 @@ import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 import org.djutils.exceptions.Throw;
-import org.djutils.immutablecollections.ImmutableLinkedHashSet;
 import org.djutils.immutablecollections.ImmutableNavigableSet;
-import org.djutils.immutablecollections.ImmutableSet;
 import org.djutils.immutablecollections.ImmutableTreeSet;
 
 /**
@@ -23,7 +21,8 @@ import org.djutils.immutablecollections.ImmutableTreeSet;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class PieceWiseLinearOffset2d implements Iterable<Double>
+public class ContinuousPiecewiseLinearFunction
+        implements Iterable<org.djutils.draw.function.ContinuousPiecewiseLinearFunction.TupleSt>
 {
 
     /** The underlying data. */
@@ -36,7 +35,7 @@ public class PieceWiseLinearOffset2d implements Iterable<Double>
      * @throws IllegalArgumentException when the number of input values is not even or 0, or a fractional value is not in the
      *             range [0, 1], or an offset value is not finite, or multiple values are provided for the same fraction
      */
-    public PieceWiseLinearOffset2d(final double... data)
+    public ContinuousPiecewiseLinearFunction(final double... data)
     {
         Throw.when(data.length < 2 || data.length % 2 > 0, IllegalArgumentException.class,
                 "Number of input values must be even and at least 2");
@@ -58,7 +57,7 @@ public class PieceWiseLinearOffset2d implements Iterable<Double>
      * @throws IllegalArgumentException when the input data is null or empty, or a fractional value is not in the range [0, 1],
      *             or an offset value is not finite
      */
-    public PieceWiseLinearOffset2d(final Map<Double, Double> data)
+    public ContinuousPiecewiseLinearFunction(final Map<Double, Double> data)
     {
         Throw.when(data == null || data.isEmpty(), IllegalArgumentException.class, "Input data is empty or null");
         for (Entry<Double, Double> entry : data.entrySet())
@@ -140,61 +139,6 @@ public class PieceWiseLinearOffset2d implements Iterable<Double>
     }
 
     /**
-     * Returns the values in the underlying data. TODO get rid of this method. Let callers use the iterator and the
-     * <code>get()</code> method.
-     * @return values in the underlying data
-     */
-    public ImmutableSet<Double> getValues()
-    {
-        return new ImmutableLinkedHashSet<>(this.data.values());
-    }
-
-    /**
-     * Returns fractional lengths in array form, including 0.0 and 1.0.
-     * @return fractional lengths
-     */
-    public double[] getFractionalLengthsAsArray()
-    {
-        NavigableMap<Double, Double> full = fullRange();
-        double[] fractionalLengths = new double[full.size()];
-        int i = 0;
-        for (double f : full.navigableKeySet())
-        {
-            fractionalLengths[i++] = f;
-        }
-        return fractionalLengths;
-    }
-
-    /**
-     * Returns fractional lengths in array form, including values at 0.0 and 1.0. TODO get rid of this method. Let callers use
-     * the iterator and the <code>get()</code> method.
-     * @return fractional lengths
-     */
-    public double[] getValuesAsArray()
-    {
-        NavigableMap<Double, Double> full = fullRange();
-        double[] values = new double[full.size()];
-        int i = 0;
-        for (double f : full.navigableKeySet())
-        {
-            values[i++] = full.get(f);
-        }
-        return values;
-    }
-
-    /**
-     * Returns the data including entries at 0.0 and 1.0.
-     * @return data with fill range.
-     */
-    private NavigableMap<Double, Double> fullRange()
-    {
-        NavigableMap<Double, Double> full = new TreeMap<>(this.data);
-        full.put(0.0, full.firstEntry().getValue());
-        full.put(1.0, full.lastEntry().getValue());
-        return full;
-    }
-
-    /**
      * Returns the number of data points.
      * @return number of data points.
      */
@@ -210,17 +154,17 @@ public class PieceWiseLinearOffset2d implements Iterable<Double>
      * @throws IllegalArgumentException when the number of input values is not even or 0, or when a fractional value is not in
      *             the range [0, 1].
      */
-    public static PieceWiseLinearOffset2d of(final double... data)
+    public static ContinuousPiecewiseLinearFunction of(final double... data)
     {
-        return new PieceWiseLinearOffset2d(data);
+        return new ContinuousPiecewiseLinearFunction(data);
     }
 
     @Override
-    public Iterator<Double> iterator()
+    public Iterator<TupleSt> iterator()
     {
-        return new Iterator<Double>()
+        return new Iterator<TupleSt>()
         {
-            private Double nextEntry = PieceWiseLinearOffset2d.this.data.firstKey();
+            private Entry<Double, Double> nextEntry = ContinuousPiecewiseLinearFunction.this.data.firstEntry();
 
             @Override
             public boolean hasNext()
@@ -229,14 +173,22 @@ public class PieceWiseLinearOffset2d implements Iterable<Double>
             }
 
             @Override
-            public Double next()
+            public TupleSt next()
             {
-                Double result = this.nextEntry;
-                Throw.when(null == result, NoSuchElementException.class, "Iterator is exhausted");
-                this.nextEntry = PieceWiseLinearOffset2d.this.data.higherKey(result);
+                Throw.when(null == this.nextEntry, NoSuchElementException.class, "Iterator is exhausted");
+                TupleSt result = new TupleSt(this.nextEntry.getKey(), this.nextEntry.getValue());
+                this.nextEntry = ContinuousPiecewiseLinearFunction.this.data.higherEntry(result.s);
                 return result;
             }
         };
     }
 
+    /**
+     * Wrapper for domain and function value pair.
+     * @param s double; value in range [0.0, 1.0]
+     * @param t double; value of the function for <code>s</code>
+     */
+    public record TupleSt(double s, double t)
+    {
+    }
 }

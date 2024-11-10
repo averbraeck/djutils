@@ -1,5 +1,6 @@
 package org.djutils.draw.curve;
 
+import org.djutils.draw.function.ContinuousPiecewiseLinearFunction;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.line.Ray2d;
 import org.djutils.draw.point.DirectedPoint2d;
@@ -103,7 +104,7 @@ public class Straight2d implements Curve2d, OffsetCurve2d
     }
 
     @Override
-    public Point2d getPoint(final double fraction, final PieceWiseLinearOffset2d of)
+    public Point2d getPoint(final double fraction, final ContinuousPiecewiseLinearFunction of)
     {
         return getPoint(fraction, of.get(fraction));
     }
@@ -119,13 +120,22 @@ public class Straight2d implements Curve2d, OffsetCurve2d
      * @param offsets offsets, should contain keys 0.0 and 1.0.
      * @return offset <code>PolyLine2d</code>
      */
-    public PolyLine2d offset(final PieceWiseLinearOffset2d offsets)
+    public PolyLine2d offset(final ContinuousPiecewiseLinearFunction offsets)
     {
-        return toPolyLine(null).offsetLine(offsets.getFractionalLengthsAsArray(), offsets.getValuesAsArray(), 0.0);
+        double[] lengths = new double[offsets.size()];
+        double[] values = new double[offsets.size()];
+        int index = 0;
+        for (ContinuousPiecewiseLinearFunction.TupleSt tuple : offsets)
+        {
+            lengths[index] = tuple.s();
+            values[index] = tuple.t();
+            index++;
+        }
+        return toPolyLine(null).offsetLine(lengths, values, 0.0);
     }
 
     @Override
-    public PolyLine2d toPolyLine(final OffsetFlattener2d flattener, final PieceWiseLinearOffset2d offsets)
+    public PolyLine2d toPolyLine(final OffsetFlattener2d flattener, final ContinuousPiecewiseLinearFunction offsets)
     {
         return offset(offsets);
     }
