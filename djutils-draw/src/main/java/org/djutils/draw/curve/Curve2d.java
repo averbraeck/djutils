@@ -17,37 +17,6 @@ import org.djutils.draw.point.Point2d;
 interface Curve2d extends Curve<DirectedPoint2d, Double, Point2d, Flattener2d, PolyLine2d>
 {
 
-    // /**
-    // * Start curvature of this Curve2d..
-    // * @return start curvature of this Curve2d.
-    // */
-    // double getStartCurvature();
-    //
-    // /**
-    // * End curvature of this Curve2d..
-    // * @return end curvature of this Curve2d
-    // */
-    // double getEndCurvature();
-    //
-    // /**
-    // * Start radius of this Curve2d..
-    // * @return start radius of this Curve2d
-    // */
-    // default double getStartRadius()
-    // {
-    // return 1.0 / getStartCurvature();
-    // }
-    //
-    // /**
-    // * End radius of this Curve2d..
-    // * @return end radius of this Curve2d
-    // */
-    // default double getEndRadius()
-    // {
-    // return 1.0 / getEndCurvature();
-    // }
-    //
-
     @Override
     default DirectedPoint2d getStartPoint()
     {

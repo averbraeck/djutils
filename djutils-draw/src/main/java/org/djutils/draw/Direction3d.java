@@ -70,6 +70,10 @@ public class Direction3d
      */
     public double directionDifference(final Direction3d otherDirection)
     {
+        if (null == otherDirection)
+        {
+            System.out.println("WTF");
+        }
         double sinDirY = Math.sin(this.dirY);
         double uX = Math.cos(this.dirZ) * sinDirY;
         double uY = Math.sin(this.dirZ) * sinDirY;
@@ -78,7 +82,12 @@ public class Direction3d
         double oX = Math.cos(otherDirection.dirZ) * otherSinDirY;
         double oY = Math.sin(otherDirection.dirZ) * otherSinDirY;
         double oZ = Math.cos(otherDirection.dirY);
-        return (Math.acos(uX * oX + uY * oY + uZ * oZ));
+        double cosine = uX * oX + uY * oY + uZ * oZ;
+        if (Math.abs(cosine) > 1.0 && Math.abs(cosine) < 1.0 + 10 * Math.ulp(1.0))
+        {
+            cosine = Math.signum(cosine); // Fix rounding error
+        }
+        return (Math.acos(cosine));
     }
 
     @Override

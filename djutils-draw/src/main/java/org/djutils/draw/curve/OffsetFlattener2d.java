@@ -29,10 +29,10 @@ import org.djutils.exceptions.Throw;
 public interface OffsetFlattener2d extends Flattener2d
 {
     /**
-     * Flatten a OffsetFlattable2d curve into a PolyLine2d while applying lateral offsets.
-     * @param curve line function
+     * Flatten a OffsetCurve2d curve into a PolyLine2d while applying lateral offsets.
+     * @param curve OffsetCurve2d; the curve
      * @param of the lateral offset to apply
-     * @return PolyLine2d; flattened line
+     * @return PolyLine2d; flattened curve
      */
     default PolyLine2d flatten(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction of)
     {
@@ -43,7 +43,7 @@ public interface OffsetFlattener2d extends Flattener2d
      * Load one knot in the map of fractions and points.
      * @param map NavigableMap<Double, Point2d> the map
      * @param knot double; the fraction where the knot occurs
-     * @param curve OffsetFlattableLine2d; the curve that can compute the point for each <code>knot</code> position
+     * @param curve OffsetCurve2d; the curve that can compute the point for each <code>knot</code> position
      * @param of offset data
      * @throws NullPointerException when <code>map</code> is <code>null</code>, <code>knot</code> is <code>null</code>,
      *             <code>curve</code> is <code>null</code>, or <code>of</code> is <code>null</code>
@@ -72,7 +72,7 @@ public interface OffsetFlattener2d extends Flattener2d
     /**
      * Load the knots into the navigable map (including the start point and the end point).
      * @param map navigableMap<Double, Point2d>; the navigable map
-     * @param curve OffsetFlattableLine2d; the curve
+     * @param curve OffsetCurve2d; the curve
      * @param of ContinuousPiecewiseLinearFunction; the offset data
      */
     private static void loadKinks(final NavigableMap<Double, Point2d> map, final OffsetCurve2d curve,
@@ -96,9 +96,10 @@ public interface OffsetFlattener2d extends Flattener2d
 
     /**
      * Check for an inflection point by creating additional points at one quarter and three quarters. If these are on opposite
-     * sides of the line from prevPoint to nextPoint; there must be an inflection point.
+     * sides of the <code>OffsetCurve2d</code> from <code>prevPoint</code> to <code>nextPoint</code>; there must be an
+     * inflection point.
      * https://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
-     * @param curve OffsetFlattableLine2d
+     * @param curve OffsetCurve2d
      * @param prevT double; t of preceding inserted point
      * @param medianT double; t of point currently considered for insertion
      * @param nextT double; t of following inserted point
@@ -121,7 +122,7 @@ public interface OffsetFlattener2d extends Flattener2d
     }
 
     /**
-     * Flattener that approximates the <code>OffsetFlattable2d</code> with a specified number of segments.
+     * Flattener that approximates the <code>OffsetCurve2d</code> with a specified number of segments.
      */
     class NumSegments implements OffsetFlattener2d
     {
@@ -129,7 +130,7 @@ public interface OffsetFlattener2d extends Flattener2d
         private final int numSegments;
 
         /**
-         * Construct a flattener that approximates the <code>OffsetFlattable2d</code> with a specified number of segments.
+         * Construct a flattener that approximates the <code>OffsetCurve2d</code> with a specified number of segments.
          * @param numSegments int; number of segments to use in the construction of the <code>PolyLine2d</code>
          * @throws IllegalArgumentException when <code>numSegments &lt; 1</code>
          */
@@ -155,7 +156,7 @@ public interface OffsetFlattener2d extends Flattener2d
     }
 
     /**
-     * Flattener that limits the distance between the <code>Flattable2d</code> and the <code>PolyLine2d</code>.
+     * Flattener that limits the distance between the <code>OffsetCurvee2d</code> and the <code>PolyLine2d</code>.
      */
     class MaxDeviation implements OffsetFlattener2d
     {
@@ -163,7 +164,7 @@ public interface OffsetFlattener2d extends Flattener2d
         private final double maxDeviation;
 
         /**
-         * Construct a flattener that limits the distance between the <code>OffsetFlattable2d</code> and the
+         * Construct a flattener that limits the distance between the <code>OffsetCurve2d</code> and the
          * <code>PolyLine2d</code>.
          * @param maxDeviation maximum deviation, must be above 0.0
          * @throws ArithmeticException when <code>maxDeviation</code> is <code>NaN</code>
@@ -225,7 +226,7 @@ public interface OffsetFlattener2d extends Flattener2d
     }
 
     /**
-     * Flattener that limits distance <b>and</b> angle difference between the <code>Flattable2d</code> and the
+     * Flattener that limits distance <b>and</b> angle difference between the <code>OffsetCurve2d</code> and the
      * <code>PolyLine2d</code>.
      */
     class MaxDeviationAndAngle implements OffsetFlattener2d
@@ -237,7 +238,7 @@ public interface OffsetFlattener2d extends Flattener2d
         private final double maxAngle;
 
         /**
-         * Construct a flattener that limits distance <b>and</b> angle difference between the <code>OffsetFlattable2d</code> and
+         * Construct a flattener that limits distance <b>and</b> angle difference between the <code>OffsetCurve2d</code> and
          * the <code>PolyLine2d</code>.
          * @param maxDeviation maximum deviation, must be above 0.0
          * @param maxAngle maximum angle, must be above 0.0
@@ -301,7 +302,7 @@ public interface OffsetFlattener2d extends Flattener2d
                     directions.put(medianT, curve.getDirection(medianT, fld));
                     iterationsAtSinglePoint++;
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t=%f). Likely there is an (unreported) knot in the FlattableLine.",
+                            + "around the same point (t=%f). Likely there is an (unreported) knot in the OffsetCurve2d.",
                             medianT);
                     continue;
                 }
@@ -334,7 +335,7 @@ public interface OffsetFlattener2d extends Flattener2d
         private final double maxAngle;
 
         /**
-         * Construct a flattener that limits the angle difference between the <code>Flattable2d</code> and the
+         * Construct a flattener that limits the angle difference between the <code>OffsetCurve2d</code> and the
          * <code>PolyLine2d</code>.
          * @param maxAngle maximum angle.
          * @throws ArithmeticException when <code>maxAngle</code> is <code>NaN</code>
@@ -386,7 +387,7 @@ public interface OffsetFlattener2d extends Flattener2d
                     directions.put(medianT, curve.getDirection(medianT, of));
                     iterationsAtSinglePoint++;
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t=%f). Likely there is an (unreported) knot in the FlattableLine.",
+                            + "around the same point (t=%f). Likely there is an (unreported) knot in the OffsetCurve2d.",
                             medianT);
                     continue;
                 }

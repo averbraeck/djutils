@@ -1,6 +1,7 @@
 package org.djutils.draw;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -119,5 +120,18 @@ public class DirectionTest
         assertNotEquals(d1.hashCode(), d2.hashCode(), "hashcodes should be different");
         assertNotEquals(d1, "string", "not equal to some totally different object");
         assertNotEquals(d1, null, "not equal to null");
+    }
+
+    /**
+     * This combination of directions yielded NaN as direction difference.
+     */
+    @Test
+    public void failedInEarlierVersion()
+    {
+        Direction3d d1 = new Direction3d(1.5372527991761364, 2.7393445505611886);
+        Direction3d d2 = new Direction3d(1.604339854413657, -0.4022481030286039);
+        double angle = d1.directionDifference(d2);
+        // System.out.println(angle);
+        assertFalse(Double.isNaN(angle), "angle difference should not be NaN");
     }
 }

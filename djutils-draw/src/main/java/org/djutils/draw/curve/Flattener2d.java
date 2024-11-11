@@ -29,9 +29,9 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
 
     /**
      * Check for an inflection point by creating additional points at one quarter and three quarters. If these are on opposite
-     * sides of the line from prevPoint to nextPoint; there must be an inflection point.
+     * sides of the curve2d from prevPoint to nextPoint; there must be an inflection point.
      * https://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
-     * @param curve FlattableLine2d
+     * @param curve Curve2d
      * @param prevT double; t of preceding inserted point
      * @param medianT double; t of point currently considered for insertion
      * @param nextT double; t of following inserted point
@@ -40,8 +40,8 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
      * @return boolean; <code>true</code> if there is an inflection point between <code>prevT</code> and <code>nextT</code>;
      *         <code>false</code> if there is no inflection point between <code>prevT</code> and <code>nextT</code>
      */
-    private static boolean checkInflectionPoint(final Curve2d curve, final double prevT, final double medianT,
-            final double nextT, final Point2d prevPoint, final Point2d nextPoint)
+    private static boolean checkInflection(final Curve2d curve, final double prevT, final double medianT, final double nextT,
+            final Point2d prevPoint, final Point2d nextPoint)
     {
         Point2d oneQuarter = curve.getPoint((prevT + medianT) / 2);
         int sign1 = (int) Math.signum((nextPoint.x - prevPoint.x) * (oneQuarter.y - prevPoint.y)
@@ -67,8 +67,8 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
     /**
      * Check the position error at a point.
      * @param medianPoint Point2d; point at the median t value
-     * @param prevPoint Point2d; point at the start of the current segment (should be on the Flattable2d)
-     * @param nextPoint Point2d; point at the end of the current segment (should be on the Flattable2d)
+     * @param prevPoint Point2d; point at the start of the current segment (should be on the Curve2d)
+     * @param nextPoint Point2d; point at the end of the current segment (should be on the Curve2d)
      * @param maxDeviation double; maximum allowed position error
      * @return boolean; <code>true</code> if the position error exceeds <code>maxDeviation</code>; <code>false</code> if the
      *         position error does not exceed <code>maxDeviation</code>
@@ -77,8 +77,8 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
             final double maxDeviation)
     {
         Point2d projectedPoint = medianPoint.closestPointOnSegment(prevPoint, nextPoint);
-        double errorPosition = medianPoint.distance(projectedPoint);
-        return errorPosition > maxDeviation;
+        double positionError = medianPoint.distance(projectedPoint);
+        return positionError > maxDeviation;
     }
 
     /**
@@ -101,7 +101,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
     }
 
     /**
-     * Flattener that approximates the <code>Flattable2d</code> with a specified number of segments.
+     * Flattener that approximates the <code>Curve2d</code> with a specified number of segments.
      */
     class NumSegments implements Flattener2d
     {
@@ -109,7 +109,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
         private final int numSegments;
 
         /**
-         * Construct a flattener that approximates the <code>Flattable2d</code> with a specified number of segments.
+         * Construct a flattener that approximates the <code>Curve2d</code> with a specified number of segments.
          * @param numSegments int; number of segments to use in the construction of the <code>PolyLine2d</code>
          * @throws IllegalArgumentException when <code>numSegments &lt; 1</code>
          */
@@ -122,7 +122,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
         @Override
         public PolyLine2d flatten(final Curve2d curve) throws NullPointerException
         {
-            Throw.whenNull(curve, "Line function may not be null");
+            Throw.whenNull(curve, "curve");
             List<Point2d> points = new ArrayList<>(this.numSegments + 1);
             for (int i = 0; i <= this.numSegments; i++)
             {
@@ -134,7 +134,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
     }
 
     /**
-     * Flattener that limits the distance between the <code>Flattable2d</code> and the <code>PolyLine2d</code>.
+     * Flattener that limits the distance between the <code>Curve2d</code> and the <code>PolyLine2d</code>.
      */
     class MaxDeviation implements Flattener2d
     {
@@ -142,12 +142,12 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
         private final double maxDeviation;
 
         /**
-         * Construct a flattener that limits the distance between the <code>Flattable2d</code> and the <code>PolyLine2d</code>.
+         * Construct a flattener that limits the distance between the <code>Curve2d</code> and the <code>PolyLine2d</code>.
          * @param maxDeviation maximum deviation, must be above 0.0
          * @throws ArithmeticException when <code>maxDeviation</code> is <code>NaN</code>
          * @throws IllegalArgumentException when <code>maxDeviation &le; 0.0</code>
          */
-        public MaxDeviation(final double maxDeviation) throws ArithmeticException, IllegalArgumentException
+        public MaxDeviation(final double maxDeviation)
         {
             Throw.whenNaN(maxDeviation, "maxDeviation");
             Throw.when(maxDeviation <= 0.0, IllegalArgumentException.class, "Maximum deviation must be above 0.0 and finite");
@@ -171,7 +171,6 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                 Point2d nextPoint = entry.getValue();
                 double medianT = (prevT + nextT) / 2;
                 Point2d medianPoint = curve.getPoint(medianT);
-
                 // Check max deviation
                 if (checkPositionError(medianPoint, prevPoint, nextPoint, this.maxDeviation))
                 {
@@ -179,9 +178,8 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                     result.put(medianT, medianPoint);
                     continue;
                 }
-
                 if (prevPoint.distance(nextPoint) > this.maxDeviation
-                        && Flattener2d.checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint))
+                        && Flattener2d.checkInflection(curve, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
                     result.put(medianT, medianPoint);
@@ -202,7 +200,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
     }
 
     /**
-     * Flattener that limits distance <b>and</b> angle difference between the <code>Flattable2d</code> and the
+     * Flattener that limits the distance <b>and</b> angle difference between the <code>Curve2d</code> and the
      * <code>PolyLine2d</code>.
      */
     class MaxDeviationAndAngle implements Flattener2d
@@ -214,7 +212,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
         private final double maxAngle;
 
         /**
-         * Construct a flattener that limits distance <b>and</b> angle difference between the <code>Flattable2d</code> and the
+         * Construct a flattener that limits the distance <b>and</b> angle difference between the <code>curve2d</code> and the
          * <code>PolyLine2d</code>.
          * @param maxDeviation maximum deviation, must be above 0.0
          * @param maxAngle maximum angle, must be above 0.0
@@ -224,6 +222,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
         public MaxDeviationAndAngle(final double maxDeviation, final double maxAngle)
         {
             Throw.whenNaN(maxDeviation, "maxDeviation");
+            Throw.whenNaN(maxAngle, "maxAngle");
             Throw.when(maxDeviation <= 0.0, IllegalArgumentException.class, "Maximum deviation must be above 0.0");
             Throw.when(maxAngle <= 0.0, IllegalArgumentException.class, "Maximum angle must be above 0.0");
             this.maxDeviation = maxDeviation;
@@ -254,7 +253,6 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                 Point2d nextPoint = entry.getValue();
                 double medianT = (prevT + nextT) / 2;
                 Point2d medianPoint = curve.getPoint(medianT);
-
                 // Check max deviation
                 if (checkPositionError(medianPoint, prevPoint, nextPoint, this.maxDeviation))
                 {
@@ -263,7 +261,6 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                     directions.put(medianT, curve.getDirection(medianT));
                     continue;
                 }
-
                 // Check max angle
                 if (checkDirectionError(prevPoint.directionTo(nextPoint), directions.get(prevT), directions.get(nextT),
                         this.maxAngle))
@@ -272,15 +269,15 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                     result.put(medianT, medianPoint);
                     directions.put(medianT, curve.getDirection(medianT));
                     iterationsAtSinglePoint++;
-                    Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t=%f). Likely there is an (unreported) knot in the FlattableLine.",
+                    Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class,
+                            "Required a new point 50 times "
+                                    + "around the same point (t=%f). Likely there is an (unreported) knot in the Curve2d.",
                             medianT);
                     continue;
                 }
                 iterationsAtSinglePoint = 0;
-
                 if (prevPoint.distance(nextPoint) > this.maxDeviation
-                        && Flattener2d.checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint))
+                        && Flattener2d.checkInflection(curve, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
                     result.put(medianT, medianPoint);
@@ -299,7 +296,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
     }
 
     /**
-     * Flattener that limits the angle difference between the <code>Flattable2d</code> and the <code>PolyLine2d</code>.
+     * Flattener that limits the angle difference between the <code>Curve2d</code> and the <code>PolyLine2d</code>.
      */
     class MaxAngle implements Flattener2d
     {
@@ -307,20 +304,20 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
         private final double maxAngle;
 
         /**
-         * Construct a flattener that limits the angle difference between the <code>Flattable2d</code> and the
-         * <code>PolyLine2d</code>.
+         * Flattener that limits the angle difference between the <code>Curve2d</code> and the <code>PolyLine2d</code>.
          * @param maxAngle maximum angle.
          * @throws ArithmeticException when <code>maxAngle</code> is <code>NaN</code>
          * @throws IllegalArgumentException when <code>maxAngle &le; 0.0</code>
          */
         public MaxAngle(final double maxAngle)
         {
+            Throw.whenNaN(maxAngle, "maxAngle");
             Throw.when(maxAngle <= 0.0, IllegalArgumentException.class, "Maximum angle must be above 0.0");
             this.maxAngle = maxAngle;
         }
 
         @Override
-        public PolyLine2d flatten(final Curve2d curve) throws NullPointerException
+        public PolyLine2d flatten(final Curve2d curve)
         {
             NavigableMap<Double, Point2d> result = new TreeMap<>();
             loadKnots(result, curve);
@@ -338,6 +335,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                     knots.add(knot);
                 }
             }
+            
             // Walk along all point pairs and see if additional points need to be inserted
             double prevT = result.firstKey();
             Point2d prevPoint = result.get(prevT);
@@ -358,13 +356,14 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                     result.put(medianT, medianPoint);
                     directions.put(medianT, curve.getDirection(medianT));
                     iterationsAtSinglePoint++;
-                    Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t=%f). Likely there is an (unreported) knot in the FlattableLine.",
+                    Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class,
+                            "Required a new point 50 times "
+                                    + "around the same point (t=%f). Likely there is an (unreported) knot in the Curve2d.",
                             medianT);
                     continue;
                 }
                 iterationsAtSinglePoint = 0;
-                if (Flattener2d.checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint))
+                if (Flattener2d.checkInflection(curve, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
                     Point2d medianPoint = curve.getPoint(medianT);

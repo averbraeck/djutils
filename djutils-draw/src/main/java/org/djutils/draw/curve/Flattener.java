@@ -27,9 +27,9 @@ public interface Flattener<F extends Flattener<F, C, PL, P>, C extends Curve<?, 
         PL extends PolyLine<?, P, ?, ?, ?>, P extends Point<P>>
 {
     /**
-     * Flatten a Flattable line into a PolyLine.
-     * @param curve curve function.
-     * @return PolyLine; flattened line.
+     * Flatten a Curve into a PolyLine.
+     * @param curve C; the curve
+     * @return PolyLine; flattened line
      * @throws NullPointerException when <code>curve</code> is <code>null</code>
      */
     default PL flatten(final C curve)
@@ -41,9 +41,9 @@ public interface Flattener<F extends Flattener<F, C, PL, P>, C extends Curve<?, 
      * Load one knot in the map of fractions and points.
      * @param map NavigableMap&lt;Double, P&gt;; the map
      * @param knot double; the fraction where the knot occurs
-     * @param line FlattableLine2d; the line that can compute the point
+     * @param curve C; the curve that can compute the point
      */
-    default void loadKink(final NavigableMap<Double, P> map, final double knot, final C line)
+    default void loadKnot(final NavigableMap<Double, P> map, final double knot, final C curve)
     {
         Throw.when(knot < 0.0 || knot > 1.0, IllegalArgumentException.class, "Kinks must all be between 0.0 and 1.0, (got %f)",
                 knot);
@@ -51,26 +51,26 @@ public interface Flattener<F extends Flattener<F, C, PL, P>, C extends Curve<?, 
         {
             return;
         }
-        map.put(knot, line.getPoint(knot));
+        map.put(knot, curve.getPoint(knot));
     }
 
     /**
      * Load the knots into the navigable map (including the start point and the end point).
      * @param map navigableMap&lt;Double, P&gt;; the navigable map
-     * @param line FlattableLine; the FlattableLine that can yield a Point2d for every knot position
+     * @param curve C; the curve that can yield a Point for every knot position
      */
-    default void loadKnots(final NavigableMap<Double, P> map, final C line)
+    default void loadKnots(final NavigableMap<Double, P> map, final C curve)
     {
-        map.put(0.0, line.getPoint(0.0));
-        Set<Double> knots = line.getKnots();
+        map.put(0.0, curve.getPoint(0.0));
+        Set<Double> knots = curve.getKnots();
         if (null != knots)
         {
             for (double knot : knots)
             {
-                loadKink(map, knot, line);
+                loadKnot(map, knot, curve);
             }
         }
-        map.put(1.0, line.getPoint(1.0));
+        map.put(1.0, curve.getPoint(1.0));
     }
 
 }

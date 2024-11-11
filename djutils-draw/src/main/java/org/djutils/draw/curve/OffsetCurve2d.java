@@ -17,11 +17,11 @@ import org.djutils.draw.point.Point2d;
 public interface OffsetCurve2d extends Curve2d
 {
     /**
-     * Flatten a OffsetCurve while offsetting with the provided continuous line offset into a PolyLine2d.
+     * Flatten a Curve2d while offsetting with the provided continuous offset into a PolyLine2d.
      * Implementations should use the flattener when relevant and possible.
      * @param flattener OffsetFlattener
      * @param offsets offset data
-     * @return PolyLine2d; approximation of this line with offset as a PolyLine2d
+     * @return PolyLine2d; approximation of this <code>curve2d</code> with offset as a <code>PolyLine2d</code>
      * @throws NullPointerException when <code>flattener</code>, or <code>offsets</code> is <code>null</code>
      */
     PolyLine2d toPolyLine(OffsetFlattener2d flattener, ContinuousPiecewiseLinearFunction offsets);
@@ -60,7 +60,7 @@ public interface OffsetCurve2d extends Curve2d
     }
 
     /**
-     * Convert a position along the curve to a t-value in the <code>OffsetFlattableLine2d</code> domain. For <code>Arc</code>
+     * Convert a position along the curve to a t-value in the <code>OffsetCurve2d</code> domain. For <code>Arc</code>
      * and <code>Straight</code>, these t-values are the same. For <code>BezierCubic</code> they're not.
      * @param position t-value in the <code>ContinuousPiecewiseLinearFunction</code> domain
      * @return double; t-value in the <code>ContinuousPiecewiseLinearFunction</code> domain

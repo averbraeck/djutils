@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import org.djutils.base.AngleUtil;
+import org.djutils.draw.Direction3d;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.DirectedPoint3d;
@@ -41,30 +42,34 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
     }
 
     /**
-     * Create a new Ray3d from x, y, and z coordinates packed in a double array of three elements and direction dirY,dirZ.
-     * @param xyz double[]; the <code>x</code>, <code>y</code> and <code>z</code> coordinates in that order
-     * @param dirY double; the angle from the positive Z axis direction in radians (the complement of the slope)
-     * @param dirZ double; the angle from the positive X axis direction in radians
-     * @throws NullPointerException when <code>xyx</code> is <code>null</code>
-     * @throws IllegalArgumentException when the length of the <code>xyz</code> array is not 3, or contains a <code>NaN</code>
-     *             value, or <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
+     * Create a new Ray3d with x, y, and z coordinates and orientation specified using a double array of three elements
+     * (containing dirX,dirY,dirZ in that order).
+     * @param x double; the x coordinate
+     * @param y double; the y coordinate
+     * @param z double; the z coordinate
+     * @param directionVector double[]; the two direction angles in a double array containing dirY and dirZ in that order. DirY
+     *            is the rotation from the positive z-axis to the direction. DirZ is the angle from the positive x-axis to the
+     *            projection of the direction in the x-y-plane.
+     * @throws NullPointerException when <code>direction</code> is <code>null</code>
+     * @throws ArithmeticException when the <code>directionVector</code> array contains a <code>NaN</code> value
+     * @throws IllegalArgumentException when the length of the <code>directionVector</code> array is not 2
      */
-    public Ray3d(final double[] xyz, final double dirY, final double dirZ)
+    public Ray3d(final double x, final double y, final double z, final double[] directionVector)
     {
-        super(xyz, dirY, dirZ);
+        super(x, y, z, directionVector);
     }
 
     /**
      * Construct a new Ray3d.
-     * @param point Point3d; the finite end point of the ray
-     * @param dirY double; the angle from the positive Z axis direction in radians (the complement of the slope)
-     * @param dirZ double; the angle from the positive X axis direction in radians
-     * @throws NullPointerException when <code>point</code> is <code>null</code>
-     * @throws IllegalArgumentException when <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
+     * @param x double; the x coordinate of the finite end point of the ray
+     * @param y double; the y coordinate of the finite end point of the ray
+     * @param z double; the z coordinate of the finite end point of the ray
+     * @param dir Direction3d; the direction
+     * @throws IllegalArgumentException when <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code> (should be impossible)
      */
-    public Ray3d(final Point3d point, final double dirY, final double dirZ)
+    public Ray3d(final double x, final double y, final double z, final Direction3d dir)
     {
-        super(point, dirY, dirZ);
+        super(x, y, z, dir);
     }
 
     /**
@@ -88,6 +93,87 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
 
     /**
      * Construct a new Ray3d.
+     * @param x double; the x coordinate of the finite end point of the ray
+     * @param y double; the y coordinate of the finite end point of the ray
+     * @param z double; the z coordinate of the finite end point of the ray
+     * @param throughPoint Point3d; another point on the ray
+     * @throws NullPointerException when <code>throughPoint</code> is <code>null</code>
+     * @throws ArithmeticException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>NaN</code>
+     * @throws IllegalArgumentException when <code>throughPoint</code> is exactly at <code>(x, y)</code>
+     */
+    public Ray3d(final double x, final double y, final double z, final Point3d throughPoint)
+    {
+        super(x, y, z, throughPoint);
+    }
+
+    /**
+     * Create a new Ray3d from x, y, and z coordinates packed in a double array of three elements and direction dirY,dirZ.
+     * @param xyz double[]; the <code>x</code>, <code>y</code> and <code>z</code> coordinates in that order
+     * @param dirY double; the angle from the positive Z axis direction in radians (the complement of the slope)
+     * @param dirZ double; the angle from the positive X axis direction in radians
+     * @throws NullPointerException when <code>xyx</code> is <code>null</code>
+     * @throws IllegalArgumentException when the length of the <code>xyz</code> array is not 3, or contains a <code>NaN</code>
+     *             value, or <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
+     */
+    public Ray3d(final double[] xyz, final double dirY, final double dirZ)
+    {
+        super(xyz, dirY, dirZ);
+    }
+
+    /**
+     * Create a new Ray3d from x, y, and z coordinates packed in a double array of three elements and direction dirY,dirZ.
+     * @param xyz double[]; the <code>x</code>, <code>y</code> and <code>z</code> coordinates in that order
+     * @param directionVector double[]; the two direction angles <code>dirY</code> and <code>dirZ</code> in that order
+     * @throws NullPointerException when <code>xyz</code>, or <code>directionVector</code> is <code>null</code>
+     * @throws ArithmeticException when <code>xyz</code>, or <code>directionVector</code> contains a <code>NaN</code> value
+     * @throws IllegalArgumentException when the length of the <code>xyx</code> is not 3 or the length of the
+     *             <code>directionVector</code> is not 2
+     */
+    public Ray3d(final double[] xyz, final double[] directionVector)
+    {
+        super(xyz, directionVector);
+    }
+
+    /**
+     * Create a new Rayt3d from x, y, and z coordinates packed in a double array of three elements and a direction specified
+     * using a double array of two elements.
+     * @param xyz double[]; the <code>x</code>, <code>y</code> and <code>z</code> coordinates in that order
+     * @param dir Direction3d; the direction
+     * @throws NullPointerException when <code>xyx</code> array or <code>dir</code> is <code>null</code>
+     * @throws ArithmeticException when the <code>xyz</code> arraycontains a <code>NaN</code> value
+     * @throws IllegalArgumentException when the length of the <code>xyx</code> array is not 3
+     */
+    public Ray3d(final double[] xyz, final Direction3d dir)
+    {
+        super(xyz, dir);
+    }
+
+    /**
+     * Construct a new Ray3d.
+     * @param point Point3d; the finite end point of the ray
+     * @param dirY double; the angle from the positive Z axis direction in radians (the complement of the slope)
+     * @param dirZ double; the angle from the positive X axis direction in radians
+     * @throws NullPointerException when <code>point</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
+     */
+    public Ray3d(final Point3d point, final double dirY, final double dirZ)
+    {
+        super(point, dirY, dirZ);
+    }
+
+    /**
+     * Construct a new Ray3d.
+     * @param point Point3d; the finite end point of the ray
+     * @param dir Direction3d; the direction
+     * @throws NullPointerException when <code>point</code> is <code>null</code>, or <code>dir</code> is <code>null</code>
+     */
+    public Ray3d(final Point3d point, final Direction3d dir)
+    {
+        super(point, dir);
+    }
+
+    /**
+     * Construct a new Ray3d.
      * @param point Point3d; the finite end point of the ray
      * @param throughX double; the x coordinate of another point on the ray
      * @param throughY double; the y coordinate of another point on the ray
@@ -101,55 +187,6 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
     public Ray3d(final Point3d point, final double throughX, final double throughY, final double throughZ)
     {
         super(point, throughX, throughY, throughZ);
-    }
-
-    /**
-     * Create a new Ray3d with x, y, and z coordinates and orientation specified using a double array of three elements
-     * (containing dirX,dirY,dirZ in that order).
-     * @param x double; the x coordinate
-     * @param y double; the y coordinate
-     * @param z double; the z coordinate
-     * @param orientation double[]; the two direction values in a double array containing dirY and dirZ in that order. DirY is
-     *            the rotation from the positive z-axis to the direction. DirZ is the angle from the positive x-axis to the
-     *            projection of the direction in the x-y-plane.
-     * @throws NullPointerException when <code>orientation</code> is <code>null</code>
-     * @throws ArithmeticException when the <code>direction</code> array contains a <code>NaN</code> value
-     * @throws IllegalArgumentException when the length of the <code>direction</code> array is not 2
-     */
-    public Ray3d(final double x, final double y, final double z, final double[] orientation)
-    {
-        super(x, y, z, orientation);
-    }
-
-    /**
-     * Create a new Rayt3d from x, y, and z coordinates packed in a double array of three elements and a direction specified
-     * using a double array of two elements.
-     * @param xyz double[]; the <code>x</code>, <code>y</code> and <code>z</code> coordinates in that order
-     * @param orientation double[]; the two orientation angles <code>dirY</code> and <code>dirZ</code> in that order
-     * @throws NullPointerException when <code>xyx</code> array or <code>orientation</code> array is <code>null</code>
-     * @throws ArithmeticException when the <code>xyz</code> array, or the <code>orientation</code> array contains a
-     *             <code>NaN</code> value
-     * @throws IllegalArgumentException when the length of the <code>xyx</code> array is not 3 or the length of the
-     *             <code>orientation</code> array is not 2
-     */
-    public Ray3d(final double[] xyz, final double[] orientation)
-    {
-        super(xyz, orientation);
-    }
-
-    /**
-     * Construct a new Ray3d.
-     * @param x double; the x coordinate of the finite end point of the ray
-     * @param y double; the y coordinate of the finite end point of the ray
-     * @param z double; the z coordinate of the finite end point of the ray
-     * @param throughPoint Point3d; another point on the ray
-     * @throws NullPointerException when <code>throughPoint</code> is <code>null</code>
-     * @throws ArithmeticException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>NaN</code>
-     * @throws IllegalArgumentException when <code>throughPoint</code> is exactly at <code>(x, y)</code>
-     */
-    public Ray3d(final double x, final double y, final double z, final Point3d throughPoint)
-    {
-        super(x, y, z, throughPoint);
     }
 
     /**

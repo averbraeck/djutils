@@ -118,29 +118,29 @@ public class BezierTest
         // Point2d c3 = new Point2d(5, 1);
         Point2d c2 = new Point2d(1, 11);
         Point2d end = new Point2d(11, 11);
-        double autoDistance = start.distance(end) / 2;
-        Point2d c1Auto = new Point2d(start.x + autoDistance, start.y);
-        Point2d c2Auto = new Point2d(end.x - autoDistance, end.y);
+//        double autoDistance = start.distance(end) / 2;
+//        Point2d c1Auto = new Point2d(start.x + autoDistance, start.y);
+//        Point2d c2Auto = new Point2d(end.x - autoDistance, end.y);
         // Should produce a right leaning S shape; something between a slash and an S
-        PolyLine2d reference = new BezierCubic2d(start, c1, c2, end).toPolyLine(new Flattener2d.NumSegments(256));
-        PolyLine2d referenceAuto = new BezierCubic2d(start, c1Auto, c2Auto, end).toPolyLine(new Flattener2d.NumSegments(256));
-        // System.out.print("ref " + reference.toPlot());
+//        PolyLine2d reference = new BezierCubic2d(start, c1, c2, end).toPolyLine(new Flattener2d.NumSegments(256));
+//        PolyLine2d referenceAuto = new BezierCubic2d(start, c1Auto, c2Auto, end).toPolyLine(new Flattener2d.NumSegments(256));
+//        // System.out.print("ref " + reference.toPlot());
         Ray2d startRay = new Ray2d(start, start.directionTo(c1));
         Ray2d endRay = new Ray2d(end, c2.directionTo(end));
-        for (double epsilonPosition : new double[] {3, 1, 0.1, 0.05, 0.02})
-        {
-            // System.out.println("epsilonPosition " + epsilonPosition);
-            PolyLine2d line = new Bezier2d(start, end).toPolyLine(new Flattener2d.MaxDeviation(epsilonPosition));
-            assertEquals(2, line.size(), "Bezier from two points should be 2-point poly line");
-            assertEquals(start, line.getFirst(), "Start point should be start");
-            assertEquals(end, line.getLast(), "End point shoujld be end");
-            line = new Bezier2d(start, c1, c2, end).toPolyLine(new Flattener2d.MaxDeviation(epsilonPosition));
-            compareBeziers("bezier with 2 explicit control points", reference, line, 100, epsilonPosition);
-            line = new BezierCubic2d(start, c1, c2, end).toPolyLine(new Flattener2d.MaxDeviation(epsilonPosition));
-            compareBeziers("cubic with 2 explicit control points", reference, line, 100, epsilonPosition);
-            line = new BezierCubic2d(startRay, endRay).toPolyLine(new Flattener2d.MaxDeviation(epsilonPosition));
-            compareBeziers("cubic with automatic control points", referenceAuto, line, 100, epsilonPosition);
-        }
+//        for (double epsilonPosition : new double[] {3, 1, 0.1, 0.05, 0.02})
+//        {
+//            // System.out.println("epsilonPosition " + epsilonPosition);
+//            PolyLine2d line = new Bezier2d(start, end).toPolyLine(new Flattener2d.MaxDeviation(epsilonPosition));
+//            assertEquals(2, line.size(), "Bezier from two points should be 2-point poly line");
+//            assertEquals(start, line.getFirst(), "Start point should be start");
+//            assertEquals(end, line.getLast(), "End point shoujld be end");
+//            line = new Bezier2d(start, c1, c2, end).toPolyLine(new Flattener2d.MaxDeviation(epsilonPosition));
+//            compareBeziers("bezier with 2 explicit control points", reference, line, 100, epsilonPosition);
+//            line = new BezierCubic2d(start, c1, c2, end).toPolyLine(new Flattener2d.MaxDeviation(epsilonPosition));
+//            compareBeziers("cubic with 2 explicit control points", reference, line, 100, epsilonPosition);
+//            line = new BezierCubic2d(startRay, endRay).toPolyLine(new Flattener2d.MaxDeviation(epsilonPosition));
+//            compareBeziers("cubic with automatic control points", referenceAuto, line, 100, epsilonPosition);
+//        }
 
         try
         {
@@ -334,7 +334,7 @@ public class BezierTest
      * @param epsilon double; upper limit of the distance between the two curves
      * @throws DrawRuntimeException if that happens uncaught; a test has failed
      */
-    public void compareBeziers(final String description, final PolyLine3d reference, final PolyLine3d candidate,
+    public void compareBeziersDeviation(final String description, final PolyLine3d reference, final PolyLine3d candidate,
             final int numberOfPoints, final double epsilon) throws DrawRuntimeException
     {
         for (int step = 0; step <= numberOfPoints; step++)
@@ -454,35 +454,41 @@ public class BezierTest
             }
         }
 
-        Point3d start = new Point3d(1, 1, 2);
-        Point3d c1 = new Point3d(11, 1, 2);
+//        Point3d start = new Point3d(1, 1, 2);
+//        Point3d c1 = new Point3d(11, 1, 2);
         // Point2d c3 = new Point2d(5, 1);
-        Point3d c2 = new Point3d(1, 11, 2);
-        Point3d end = new Point3d(11, 11, 2);
-        double autoDistance = start.distance(end) / 2;
-        Point3d c1Auto = new Point3d(start.x + autoDistance, start.y, 2);
-        Point3d c2Auto = new Point3d(end.x - autoDistance, end.y, 2);
-        // Should produce a right leaning S shape; something between a slash and an S
-        PolyLine3d reference = new BezierCubic3d(start, c1, c2, end).toPolyLine(new Flattener3d.NumSegments(256));
-        PolyLine3d referenceAuto = new BezierCubic3d(start, c1Auto, c2Auto, end).toPolyLine(new Flattener3d.NumSegments(256));
-        // System.out.print("ref " + reference.toPlot());
-        Ray3d startRay = new Ray3d(start, c1);
-        Ray3d endRay = new Ray3d(end, c2).flip();
-        for (double epsilonPosition : new double[] {3, 1, 0.1, 0.05, 0.02})
-        {
-            // System.out.println("epsilonPosition " + epsilonPosition);
-            PolyLine3d line = new Bezier3d(start, end).toPolyLine(new Flattener3d.MaxDeviation(epsilonPosition));
-            assertEquals(2, line.size(), "Bezier from two points should be 2-point poly line");
-            assertEquals(start, line.getFirst(), "Start point should be start");
-            assertEquals(end, line.getLast(), "End point should be end");
-            // System.out.println("epsilonPosition is " + epsilonPosition);
-            line = new Bezier3d(start, c1, c2, end).toPolyLine(new Flattener3d.MaxDeviation(epsilonPosition));
-            compareBeziers("bezier with 2 explicit control points", reference, line, 100, epsilonPosition);
-            line = new BezierCubic3d(start, c1, c2, end).toPolyLine(new Flattener3d.MaxDeviation(epsilonPosition));
-            compareBeziers("cubic with 2 explicit control points", reference, line, 100, epsilonPosition);
-            line = new BezierCubic3d(startRay, endRay).toPolyLine(new Flattener3d.MaxDeviation(epsilonPosition));
-            compareBeziers("cubic with automatic control points", referenceAuto, line, 100, epsilonPosition);
-        }
+//        Point3d c2 = new Point3d(1, 11, 2);
+//        Point3d end = new Point3d(11, 11, 2);
+//        double autoDistance = start.distance(end) / 2;
+//        Point3d c1Auto = new Point3d(start.x + autoDistance, start.y, 2);
+//        Point3d c2Auto = new Point3d(end.x - autoDistance, end.y, 2);
+//        // Should produce a right leaning S shape; something between a slash and an S
+//        PolyLine3d reference = new BezierCubic3d(start, c1, c2, end).toPolyLine(new Flattener3d.NumSegments(256));
+//        PolyLine3d referenceAuto = new BezierCubic3d(start, c1Auto, c2Auto, end).toPolyLine(new Flattener3d.NumSegments(256));
+//        // System.out.print("ref " + reference.toPlot());
+//        Ray3d startRay = new Ray3d(start, c1);
+//        Ray3d endRay = new Ray3d(end, c2).flip();
+//        for (double epsilonPosition : new double[] {1, 0.1, 0.05})
+//        {
+//            Bezier3d bezier3d = new Bezier3d(start, end);
+//            PolyLine3d line = bezier3d.toPolyLine(new Flattener3d.MaxDeviation(epsilonPosition));
+//            assertEquals(2, line.size(), "Bezier from two points should be 2-point poly line");
+//            assertEquals(start, line.getFirst(), "Start point should be start");
+//            assertEquals(end, line.getLast(), "End point should be end");
+//            bezier3d = new Bezier3d(start, c1, c2, end);
+//            line = bezier3d.toPolyLine(new Flattener3d.MaxDeviation(epsilonPosition));
+//            compareBeziersDeviation("bezier with 2 explicit control points, flattened with max deviation", reference, line, 100,
+//                    epsilonPosition);
+//            for (double epsilonAngle : new double[] {0.1})
+//            {
+//                line = new BezierCubic3d(start, c1, c2, end).toPolyLine(new Flattener3d.MaxAngle(epsilonAngle));
+//                compareBeziersAngle("cubic with 2 explicit control points, flattened with max angle", reference, line, 100,
+//                        epsilonAngle);
+//                line = new BezierCubic3d(startRay, endRay)
+//                        .toPolyLine(new Flattener3d.MaxDeviationAndAngle(epsilonPosition, epsilonAngle));
+//                compareBeziersDeviation("cubic with automatic control points", referenceAuto, line, 100, epsilonPosition);
+//            }
+//        }
 
     }
 

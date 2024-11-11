@@ -155,7 +155,7 @@ public class Ray3dTest
 
         try
         {
-            new Ray3d(new Point3d(1, 2, 3), null);
+            new Ray3d(new Point3d(1, 2, 3), (Point3d) null);
             fail("null for through point should have thrown a NullPointerException");
         }
         catch (NullPointerException e)
