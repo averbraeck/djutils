@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.djutils.base.AngleUtil;
+import org.djutils.draw.Direction3d;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.OrientedPoint3d;
 import org.djutils.draw.point.Point3d;
@@ -43,11 +44,16 @@ public class Ray3dTest
         verifyRay("negative z", new Ray3d(0, 0, 0, 0, 0, -1), 0, 0, 0, Math.PI, 0);
         verifyRay("Constructor from x, y, z, dirY, dirZ", new Ray3d(1, 2, 3, 4, 5), 1, 2, 3, 4, 5);
         verifyRay("Constructor from [x, y, z], dirY, dirZ", new Ray3d(new double[] {1, 2, 3}, 4, 5), 1, 2, 3, 4, 5);
+        Direction3d dir = new Direction3d(4, 5);
+        verifyRay("Constructor from [x, y, z], dir", new Ray3d(new double[] {1, 2, 3}, dir), 1, 2, 3, 4, 5);
         verifyRay("Constructor from x, y, z, [dirY, dirZ]", new Ray3d(1, 2, 3, new double[] {4, 5}), 1, 2, 3, 4, 5);
+        verifyRay("Constructor from x, y, z, dir", new Ray3d(1, 2, 3, dir), 1, 2, 3, 4, 5);
         verifyRay("Constructor from [x, y, z], [dirY, dirZ]", new Ray3d(new double[] {1, 2, 3}, new double[] {4, 5}), 1, 2, 3,
                 4, 5);
         verifyRay("Constructor from Point3d, dirY, dirZ", new Ray3d(new Point3d(0.1, 0.2, 0.3), -0.4, -0.5), 0.1, 0.2, 0.3,
                 -0.4, -0.5);
+        dir = new Direction3d(-0.4, -0.5);
+        verifyRay("Constructor from Point3d, dir", new Ray3d(new Point3d(0.1, 0.2, 0.3), dir), 0.1, 0.2, 0.3, -0.4, -0.5);
         verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 4, 6, 15), 1, 2, 3,
                 Math.atan2(5, 12), Math.atan2(4, 3));
         verifyRay("Constructor from x, y, z, throughX, throughY, throughZ", new Ray3d(1, 2, 3, 1, 6, 15), 1, 2, 3,
