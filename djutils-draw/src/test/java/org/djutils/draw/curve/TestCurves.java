@@ -1210,6 +1210,28 @@ public class TestCurves
             // Ignore expected exception
         }
 
+        try
+        {
+            new Bezier2d(new Point2d(1, 2));
+            fail("Too short array of Point2s for a Bezier2d should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new Bezier2d(new double[] {1}, new double[] {2});
+            fail("Too short arrays for a Bezier2d should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+
+        new Bezier2d(new double[] {1, 2}, new double[] {2, 3}); // Should succeed
+
         Bezier2d b2d = new Bezier2d(new Point2d(1, 2), new Point2d(12, 13));
         assertEquals(2, b2d.size(), "Size is reported");
         assertEquals(1, b2d.getX(0), "x[0]");

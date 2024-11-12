@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 import org.djutils.base.AngleUtil;
 import org.djutils.draw.Direction3d;
 import org.djutils.draw.bounds.Bounds3d;
+import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.OrientedPoint3d;
 import org.djutils.draw.point.Point3d;
 import org.junit.jupiter.api.Test;
@@ -165,6 +166,16 @@ public class Ray3dTest
             fail("null for through point should have thrown a NullPointerException");
         }
         catch (NullPointerException e)
+        {
+            // Ignore expected exception
+        }
+        
+        try
+        {
+            new Ray3d(1, 2, 3, new double[] {0.5});
+            fail("too short directionVector should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -701,6 +712,7 @@ public class Ray3dTest
         assertNotEquals(ray, new Ray3d(2, 2, 3, 12, 12, 13), "not equal to ray with different start x");
         assertNotEquals(ray, new Ray3d(1, 3, 3, 11, 13, 13), "not equal to ray with different start y");
         assertEquals(ray, new Ray3d(1, 2, 3, 21, 22, 23), "equal to ray with same x, y and direction");
+        assertNotEquals(ray, "not a ray", "not equal to an different kind of object");
 
         assertNotEquals(ray.hashCode(), new Ray3d(2, 2, 3, 12, 12, 13), "hashCode depends on x");
         assertNotEquals(ray.hashCode(), new Ray3d(1, 3, 3, 11, 13, 13), "hashCode depends on y");
