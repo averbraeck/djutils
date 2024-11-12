@@ -228,7 +228,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
         return this.endPoint;
     }
 
-     /**
+    /**
      * Start curvature of this Curve2d..
      * @return start curvature of this Curve2d.
      */
@@ -238,7 +238,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
         return curvature(0.0);
     }
 
-     /**
+    /**
      * End curvature of this Curve2d..
      * @return end curvature of this Curve2d
      */
@@ -516,16 +516,10 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
         NavigableMap<Double, Boundary> splits0 = new TreeMap<>(); // splits0 & splits because splits0 must be effectively final
         if (!straight)
         {
-            getRoots().forEach((
-                    t
-            ) -> splits0.put(t, Boundary.ROOT));
-            getInflections().forEach((
-                    t
-            ) -> splits0.put(t, Boundary.INFLECTION));
+            getRoots().forEach((t) -> splits0.put(t, Boundary.ROOT));
+            getInflections().forEach((t) -> splits0.put(t, Boundary.INFLECTION));
         }
-        getOffsetT(of.getFractionalLengths()).forEach((
-                t
-        ) -> splits0.put(t, Boundary.KNOT));
+        getOffsetT(of.getFractionalLengths()).forEach((t) -> splits0.put(t, Boundary.KNOT));
         NavigableMap<Double, Boundary> splits = splits0.subMap(1e-6, false, 1.0 - 1e-6, false);
 
         // Initialize loop variables
@@ -665,8 +659,8 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
      * @param last must be <code>true</code> for the last B&eacute;zier segment; <code>false</code> for all other segments
      * @return offset B&eacute;zier
      */
-    private BezierCubic2d offset(final ContinuousPiecewiseLinearFunction offsets, final double lengthSoFar, final double lengthTotal,
-            final double sig, final boolean last)
+    private BezierCubic2d offset(final ContinuousPiecewiseLinearFunction offsets, final double lengthSoFar,
+            final double lengthTotal, final double sig, final boolean last)
     {
         double offsetStart = sig * offsets.get(lengthSoFar / lengthTotal);
         double offsetEnd = sig * offsets.get((lengthSoFar + getLength()) / lengthTotal);
