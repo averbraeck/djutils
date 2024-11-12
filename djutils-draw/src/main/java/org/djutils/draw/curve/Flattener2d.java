@@ -28,7 +28,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
 {
 
     /**
-     * Check for an inflection point by creating additional points at one quarter and three quarters. If these are on opposite
+     * Check for an inflection point by computing additional points at one quarter and three quarters. If these are on opposite
      * sides of the curve2d from prevPoint to nextPoint; there must be an inflection point.
      * https://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
      * @param curve Curve2d
@@ -335,7 +335,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                     knots.add(knot);
                 }
             }
-            
+
             // Walk along all point pairs and see if additional points need to be inserted
             double prevT = result.firstKey();
             Point2d prevPoint = result.get(prevT);
@@ -356,9 +356,8 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
                     result.put(medianT, medianPoint);
                     directions.put(medianT, curve.getDirection(medianT));
                     iterationsAtSinglePoint++;
-                    Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class,
-                            "Required a new point 50 times "
-                                    + "around the same point (t=%f). Likely there is an (unreported) knot in the Curve2d.",
+                    Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 "
+                            + "times around the same point (t=%f). Likely there is an (unreported) knot in the Curve2d.",
                             medianT);
                     continue;
                 }

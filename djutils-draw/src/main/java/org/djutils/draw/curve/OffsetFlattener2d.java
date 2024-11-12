@@ -1,6 +1,7 @@
 package org.djutils.draw.curve;
 
 import static org.djutils.draw.curve.Flattener2d.checkDirectionError;
+import static org.djutils.draw.curve.Flattener2d.checkPositionError;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -49,24 +50,17 @@ public interface OffsetFlattener2d extends Flattener2d
      *             <code>curve</code> is <code>null</code>, or <code>of</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>knot &lt; 0.0</code>, or <code>knot &gt; 1.0</code>
      */
-    private static void loadKink(final NavigableMap<Double, Point2d> map, final double knot, final OffsetCurve2d curve,
+    default void loadKnot(final NavigableMap<Double, Point2d> map, final double knot, final OffsetCurve2d curve,
             final ContinuousPiecewiseLinearFunction of)
     {
         Throw.when(knot < 0.0 || knot > 1.0, IllegalArgumentException.class, "Knots must all be between 0.0 and 1.0, (got %f)",
                 knot);
-        if (knot == 0.0 || knot == 1.0)
-        {
-            return; // Already loaded by <code>loadKnots</code>
-        }
-        if (map.containsKey(knot))
+        double t = curve.getT(knot * curve.getLength());
+        if (map.containsKey(t))
         {
             return;
         }
-
-        double knotFraction = curve.getT(knot * curve.getLength()); // Translate fraction on of to fraction on curve
-        Point2d knotPoint = curve.getPoint(knotFraction, of);
-        // System.out.println("# Processing knot at " + knot + ", getT " + knotFraction + " point " + knotPoint);
-        map.put(knotFraction, knotPoint);
+        map.put(t, curve.getPoint(t, of));
     }
 
     /**
@@ -75,7 +69,7 @@ public interface OffsetFlattener2d extends Flattener2d
      * @param curve OffsetCurve2d; the curve
      * @param of ContinuousPiecewiseLinearFunction; the offset data
      */
-    private static void loadKinks(final NavigableMap<Double, Point2d> map, final OffsetCurve2d curve,
+    default void loadKnots(final NavigableMap<Double, Point2d> map, final OffsetCurve2d curve,
             final ContinuousPiecewiseLinearFunction of)
     {
         map.put(0.0, curve.getPoint(0.0, of));
@@ -84,18 +78,18 @@ public interface OffsetFlattener2d extends Flattener2d
         {
             for (double knot : knots)
             {
-                loadKink(map, knot, curve, of);
+                loadKnot(map, knot, curve, of);
             }
         }
         for (ContinuousPiecewiseLinearFunction.TupleSt knot : of)
         {
-            loadKink(map, knot.s(), curve, of);
+            loadKnot(map, knot.s(), curve, of);
         }
         map.put(1.0, curve.getPoint(1.0, of));
     }
 
     /**
-     * Check for an inflection point by creating additional points at one quarter and three quarters. If these are on opposite
+     * Check for an inflection point by computing additional points at one quarter and three quarters. If these are on opposite
      * sides of the <code>OffsetCurve2d</code> from <code>prevPoint</code> to <code>nextPoint</code>; there must be an
      * inflection point.
      * https://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
@@ -142,9 +136,8 @@ public interface OffsetFlattener2d extends Flattener2d
 
         @Override
         public PolyLine2d flatten(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction fld)
-                throws NullPointerException
         {
-            Throw.whenNull(curve, "Line function may not be null");
+            Throw.whenNull(curve, "curve");
             List<Point2d> points = new ArrayList<>(this.numSegments + 1);
             for (int i = 0; i <= this.numSegments; i++)
             {
@@ -164,7 +157,7 @@ public interface OffsetFlattener2d extends Flattener2d
         private final double maxDeviation;
 
         /**
-         * Construct a flattener that limits the distance between the <code>OffsetCurve2d</code> and the
+         * Construct an OffsetFlattener that limits the distance between the <code>OffsetCurve2d</code> and the
          * <code>PolyLine2d</code>.
          * @param maxDeviation maximum deviation, must be above 0.0
          * @throws ArithmeticException when <code>maxDeviation</code> is <code>NaN</code>
@@ -172,16 +165,17 @@ public interface OffsetFlattener2d extends Flattener2d
          */
         public MaxDeviation(final double maxDeviation)
         {
-            Throw.when(maxDeviation <= 0.0, IllegalArgumentException.class, "Maximum deviation must be above 0.0.");
+            Throw.whenNaN(maxDeviation, "maxDeviation");
+            Throw.when(maxDeviation <= 0.0, IllegalArgumentException.class, "Maximum deviation must be above 0.0 and finite");
             this.maxDeviation = maxDeviation;
         }
 
         @Override
         public PolyLine2d flatten(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction of)
         {
-            Throw.whenNull(curve, "Line function may not be null");
+            Throw.whenNull(curve, "curve");
             NavigableMap<Double, Point2d> result = new TreeMap<>();
-            OffsetFlattener2d.loadKinks(result, curve, of);
+            loadKnots(result, curve, of);
 
             // Walk along all point pairs and see if additional points need to be inserted
             double prevT = result.firstKey();
@@ -193,17 +187,13 @@ public interface OffsetFlattener2d extends Flattener2d
                 Point2d nextPoint = entry.getValue();
                 double medianT = (prevT + nextT) / 2;
                 Point2d medianPoint = curve.getPoint(medianT, of);
-
                 // Check max deviation
-                Point2d projectedPoint = medianPoint.closestPointOnSegment(prevPoint, nextPoint);
-                double errorPosition = medianPoint.distance(projectedPoint);
-                if (errorPosition >= this.maxDeviation)
+                if (checkPositionError(medianPoint, prevPoint, nextPoint, this.maxDeviation))
                 {
                     // We need to insert another point
                     result.put(medianT, medianPoint);
                     continue;
                 }
-
                 if (prevPoint.distance(nextPoint) > this.maxDeviation
                         && OffsetFlattener2d.checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint, of))
                 {
@@ -226,7 +216,7 @@ public interface OffsetFlattener2d extends Flattener2d
     }
 
     /**
-     * Flattener that limits distance <b>and</b> angle difference between the <code>OffsetCurve2d</code> and the
+     * OffsetFlattener that limits distance <b>and</b> angle difference between the <code>OffsetCurve2d</code> and the
      * <code>PolyLine2d</code>.
      */
     class MaxDeviationAndAngle implements OffsetFlattener2d
@@ -238,8 +228,8 @@ public interface OffsetFlattener2d extends Flattener2d
         private final double maxAngle;
 
         /**
-         * Construct a flattener that limits distance <b>and</b> angle difference between the <code>OffsetCurve2d</code> and
-         * the <code>PolyLine2d</code>.
+         * Construct a flattener that limits distance <b>and</b> angle difference between the <code>OffsetCurve2d</code> and the
+         * <code>PolyLine2d</code>.
          * @param maxDeviation maximum deviation, must be above 0.0
          * @param maxAngle maximum angle, must be above 0.0
          * @throws ArithmeticException when <code>maxDeviation</code>, or <code>maxAngle</code> is <code>NaN</code>
@@ -247,6 +237,8 @@ public interface OffsetFlattener2d extends Flattener2d
          */
         public MaxDeviationAndAngle(final double maxDeviation, final double maxAngle)
         {
+            Throw.whenNaN(maxDeviation, "maxDeviation");
+            Throw.whenNaN(maxAngle, "maxAngle");
             Throw.when(maxDeviation <= 0.0, IllegalArgumentException.class, "Maximum deviation must be above 0.0.");
             Throw.when(maxAngle <= 0.0, IllegalArgumentException.class, "Maximum angle must be above 0.0.");
             this.maxDeviation = maxDeviation;
@@ -254,20 +246,23 @@ public interface OffsetFlattener2d extends Flattener2d
         }
 
         @Override
-        public PolyLine2d flatten(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction fld)
+        public PolyLine2d flatten(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction of)
         {
             NavigableMap<Double, Point2d> result = new TreeMap<>();
-            OffsetFlattener2d.loadKinks(result, curve, fld);
+            loadKnots(result, curve, of);
             Map<Double, Double> directions = new LinkedHashMap<>();
-            directions.put(0.0, curve.getDirection(0.0, fld));
+            directions.put(0.0, curve.getDirection(0.0, of)); // directions can't do ULP before 0.0
             Set<Double> knots = new HashSet<>();
-            for (double fraction : result.keySet())
+            for (double knot : result.keySet())
             {
-                if (fraction > 0)
+                if (knot > 0)
                 {
-                    directions.put(fraction, curve.getDirection(fraction - Math.ulp(fraction), fld));
+                    directions.put(knot, curve.getDirection(knot - Math.ulp(knot), of));
                 }
-                knots.add(fraction);
+                if (knot != 0.0 && knot != 1.0)
+                {
+                    knots.add(knot);
+                }
             }
 
             // Walk along all point pairs and see if additional points need to be inserted
@@ -280,26 +275,22 @@ public interface OffsetFlattener2d extends Flattener2d
                 double nextT = entry.getKey();
                 Point2d nextPoint = entry.getValue();
                 double medianT = (prevT + nextT) / 2;
-                Point2d medianPoint = curve.getPoint(medianT, fld);
-
+                Point2d medianPoint = curve.getPoint(medianT, of);
                 // Check max deviation
-                Point2d projectedPoint = medianPoint.closestPointOnSegment(prevPoint, nextPoint);
-                double errorPosition = medianPoint.distance(projectedPoint);
-                if (errorPosition >= this.maxDeviation)
+                if (checkPositionError(medianPoint, prevPoint, nextPoint, this.maxDeviation))
                 {
                     // We need to insert another point
                     result.put(medianT, medianPoint);
-                    directions.put(medianT, curve.getDirection(medianT, fld));
+                    directions.put(medianT, curve.getDirection(medianT, of));
                     continue;
                 }
-
                 // Check max angle
                 if (checkDirectionError(prevPoint.directionTo(nextPoint), directions.get(prevT), directions.get(nextT),
                         this.maxAngle))
                 {
                     // We need to insert another point
                     result.put(medianT, medianPoint);
-                    directions.put(medianT, curve.getDirection(medianT, fld));
+                    directions.put(medianT, curve.getDirection(medianT, of));
                     iterationsAtSinglePoint++;
                     Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
                             + "around the same point (t=%f). Likely there is an (unreported) knot in the OffsetCurve2d.",
@@ -307,19 +298,19 @@ public interface OffsetFlattener2d extends Flattener2d
                     continue;
                 }
                 iterationsAtSinglePoint = 0;
-
-                if (OffsetFlattener2d.checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint, fld))
+                if (prevPoint.distance(nextPoint) > this.maxDeviation
+                        && OffsetFlattener2d.checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint, of))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
                     result.put(medianT, medianPoint);
-                    directions.put(medianT, curve.getDirection(medianT, fld));
+                    directions.put(medianT, curve.getDirection(medianT, of));
                     continue;
                 }
                 prevT = nextT;
                 prevPoint = nextPoint;
                 if (prevT < 1.0 && knots.contains(prevT))
                 {
-                    directions.put(prevT, curve.getDirection(prevT + Math.ulp(prevT), fld));
+                    directions.put(prevT, curve.getDirection(prevT + Math.ulp(prevT), of));
                 }
             }
             return new PolyLine2d(result.values().iterator());
@@ -327,7 +318,7 @@ public interface OffsetFlattener2d extends Flattener2d
     }
 
     /**
-     * Flattener that limits the angle difference between the <code>Flattable2d</code> and the <code>PolyLine2d</code>.
+     * OffsetFlattener that limits the angle difference between the <code>OffsetCurve2d</code> and the <code>PolyLine2d</code>.
      */
     class MaxAngle implements OffsetFlattener2d
     {
@@ -343,6 +334,7 @@ public interface OffsetFlattener2d extends Flattener2d
          */
         public MaxAngle(final double maxAngle)
         {
+            Throw.whenNaN(maxAngle, "maxAngle");
             Throw.when(maxAngle <= 0.0, IllegalArgumentException.class, "Maximum angle must be above 0.0.");
             this.maxAngle = maxAngle;
         }
@@ -351,7 +343,7 @@ public interface OffsetFlattener2d extends Flattener2d
         public PolyLine2d flatten(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction of)
         {
             NavigableMap<Double, Point2d> result = new TreeMap<>();
-            OffsetFlattener2d.loadKinks(result, curve, of);
+            loadKnots(result, curve, of);
             Map<Double, Double> directions = new LinkedHashMap<>();
             directions.put(0.0, curve.getDirection(0.0, of)); // directions can't do ULP before 0.0
             Set<Double> knots = new HashSet<>();
@@ -366,6 +358,7 @@ public interface OffsetFlattener2d extends Flattener2d
                     knots.add(knot);
                 }
             }
+
             // Walk along all point pairs and see if additional points need to be inserted
             double prevT = result.firstKey();
             Point2d prevPoint = result.get(prevT);
@@ -386,8 +379,8 @@ public interface OffsetFlattener2d extends Flattener2d
                     result.put(medianT, medianPoint);
                     directions.put(medianT, curve.getDirection(medianT, of));
                     iterationsAtSinglePoint++;
-                    Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 times "
-                            + "around the same point (t=%f). Likely there is an (unreported) knot in the OffsetCurve2d.",
+                    Throw.when(iterationsAtSinglePoint == 50, IllegalArgumentException.class, "Required a new point 50 "
+                            + "times around the same point (t=%f). Likely there is an (unreported) knot in the OffsetCurve2d.",
                             medianT);
                     continue;
                 }

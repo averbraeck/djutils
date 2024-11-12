@@ -992,6 +992,16 @@ public class TestCurves
 
             try
             {
+                new OffsetFlattener2d.NumSegments(badAmount);
+                fail("fewer than 1 segments should have thrown an IllegalArgumentException");
+            }
+            catch (IllegalArgumentException e)
+            {
+                // Ignore expected exception
+            }
+
+            try
+            {
                 new Flattener3d.NumSegments(badAmount);
                 fail("fewer than 1 segments should have thrown an IllegalArgumentException");
             }
@@ -1005,6 +1015,16 @@ public class TestCurves
             try
             {
                 new Flattener2d.MaxAngle(badAmount);
+                fail("angle tolerance <= 0 should have thrown an IllegalArgumentException");
+            }
+            catch (IllegalArgumentException e)
+            {
+                // Ignore expected exception
+            }
+
+            try
+            {
+                new OffsetFlattener2d.MaxAngle(badAmount);
                 fail("angle tolerance <= 0 should have thrown an IllegalArgumentException");
             }
             catch (IllegalArgumentException e)
@@ -1034,6 +1054,16 @@ public class TestCurves
 
             try
             {
+                new OffsetFlattener2d.MaxDeviationAndAngle(1.0, badAmount);
+                fail("angle tolerance <= 0 should have thrown an IllegalArgumentException");
+            }
+            catch (IllegalArgumentException e)
+            {
+                // Ignore expected exception
+            }
+
+            try
+            {
                 new Flattener3d.MaxDeviationAndAngle(1.0, badAmount);
                 fail("angle tolerance <= 0 should have thrown an IllegalArgumentException");
             }
@@ -1054,6 +1084,16 @@ public class TestCurves
 
             try
             {
+                new OffsetFlattener2d.MaxDeviationAndAngle(badAmount, 0.1);
+                fail("deviation tolerance <= 0 should have thrown an IllegalArgumentException");
+            }
+            catch (IllegalArgumentException e)
+            {
+                // Ignore expected exception
+            }
+
+            try
+            {
                 new Flattener3d.MaxDeviationAndAngle(badAmount, 0.1);
                 fail("deviation tolerance <= 0 should have thrown an IllegalArgumentException");
             }
@@ -1065,6 +1105,16 @@ public class TestCurves
             try
             {
                 new Flattener2d.MaxDeviation(badAmount);
+                fail("deviation tolerance <= 0 should have thrown an IllegalArgumentException");
+            }
+            catch (IllegalArgumentException e)
+            {
+                // Ignore expected exception
+            }
+
+            try
+            {
+                new OffsetFlattener2d.MaxDeviation(badAmount);
                 fail("deviation tolerance <= 0 should have thrown an IllegalArgumentException");
             }
             catch (IllegalArgumentException e)
@@ -1095,6 +1145,16 @@ public class TestCurves
 
         try
         {
+            new OffsetFlattener2d.MaxAngle(Double.NaN);
+            fail("angle tolerance NaN should have thrown an ArithmeticException");
+        }
+        catch (ArithmeticException e)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
             new Flattener3d.MaxAngle(Double.NaN);
             fail("angle tolerance NaN should have thrown an ArithmeticException");
         }
@@ -1106,6 +1166,16 @@ public class TestCurves
         try
         {
             new Flattener2d.MaxDeviationAndAngle(1.0, Double.NaN);
+            fail("angle tolerance NaN should have thrown an ArithmeticException");
+        }
+        catch (ArithmeticException e)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new OffsetFlattener2d.MaxDeviationAndAngle(1.0, Double.NaN);
             fail("angle tolerance NaN should have thrown an ArithmeticException");
         }
         catch (ArithmeticException e)
@@ -1135,6 +1205,16 @@ public class TestCurves
 
         try
         {
+            new OffsetFlattener2d.MaxDeviationAndAngle(Double.NaN, 0.1);
+            fail("angle tolerance NaN should have thrown an ArithmeticException");
+        }
+        catch (ArithmeticException e)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
             new Flattener3d.MaxDeviationAndAngle(Double.NaN, 0.1);
             fail("angle tolerance NaN should have thrown an ArithmeticException");
         }
@@ -1146,6 +1226,16 @@ public class TestCurves
         try
         {
             new Flattener2d.MaxDeviation(Double.NaN);
+            fail("deviation tolerance NaN should have thrown an ArithmeticException");
+        }
+        catch (ArithmeticException e)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new OffsetFlattener2d.MaxDeviation(Double.NaN);
             fail("deviation tolerance NaN should have thrown an ArithmeticException");
         }
         catch (ArithmeticException e)

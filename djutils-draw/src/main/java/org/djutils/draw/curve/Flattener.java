@@ -45,7 +45,7 @@ public interface Flattener<F extends Flattener<F, C, PL, P>, C extends Curve<?, 
      */
     default void loadKnot(final NavigableMap<Double, P> map, final double knot, final C curve)
     {
-        Throw.when(knot < 0.0 || knot > 1.0, IllegalArgumentException.class, "Kinks must all be between 0.0 and 1.0, (got %f)",
+        Throw.when(knot < 0.0 || knot > 1.0, IllegalArgumentException.class, "Knots must all be between 0.0 and 1.0, (got %f)",
                 knot);
         if (map.containsKey(knot))
         {

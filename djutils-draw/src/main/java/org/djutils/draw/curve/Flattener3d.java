@@ -34,7 +34,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
     }
 
     /**
-     * Check for an inflection point by creating additional points at one quarter and three quarters. If these are on opposite
+     * Check for an inflection point by computing additional points at one quarter and three quarters. If these are on opposite
      * sides of the curve3d from prevPoint to nextPoint; there must be an inflection point.
      * @param curve Curve3d
      * @param prevT double; t of preceding inserted point
@@ -339,7 +339,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
                     knots.add(knot);
                 }
             }
-            
+
             // Walk along all point pairs and see if additional points need to be inserted
             double prevT = result.firstKey();
             Point3d prevPoint = result.get(prevT);
