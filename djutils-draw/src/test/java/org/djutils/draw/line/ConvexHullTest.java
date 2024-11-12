@@ -322,4 +322,22 @@ public class ConvexHullTest
         Polygon2d run(List<Point2d> points) throws NullPointerException, IllegalArgumentException;
     }
 
+    /**
+     * Problem reported by mtarik34b.
+     */
+    @Test
+    public void alshamraniProblem()
+    {
+        List<Point2d> pointList = new ArrayList<>();
+        pointList.add(new Point2d(70, 300));
+        pointList.add(new Point2d(120, 190));
+        pointList.add(new Point2d(320, 60));
+        pointList.add(new Point2d(280, 240));
+        Polygon2d expectedResult = ConvexHull.convexHullMonotone(pointList);
+        Polygon2d actualResult = ConvexHull.convexHullAlshamrani(pointList);
+        // System.out.println(Export.toPlot(expectedResult));
+        // System.out.println(Export.toPlot(actualResult));
+        // assertEquals(expectedResult, actualResult, "Hmm");
+    }
+
 }
