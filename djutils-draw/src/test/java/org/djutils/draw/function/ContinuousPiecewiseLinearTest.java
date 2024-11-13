@@ -46,13 +46,14 @@ public class ContinuousPiecewiseLinearTest
         testContinuousPiecewiseLinearFunctionConstructors("value must be finite", 0.2, Double.NaN);
         testContinuousPiecewiseLinearFunctionConstructors("value must be finite", 0.2, Double.NEGATIVE_INFINITY);
         testContinuousPiecewiseLinearFunctionConstructors("value must be finite", 0.2, Double.POSITIVE_INFINITY);
+        testContinuousPiecewiseLinearFunctionConstructors("no duplicate key", 0.2, 1, 0.5, 5, 0.2, 3);
 
         try
         {
             new ContinuousPiecewiseLinearFunction((Map<Double, Double>) null);
-            fail("null map should have thrown an IllegalArgumentException");
+            fail("null map should have thrown an NullPointerException");
         }
-        catch (IllegalArgumentException iae)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -63,7 +64,7 @@ public class ContinuousPiecewiseLinearTest
             new ContinuousPiecewiseLinearFunction(map);
             fail("null key in map should have thrown an IllegalArgumentException");
         }
-        catch (NullPointerException npe)
+        catch (NullPointerException e)
         {
             // Ignore expected exception
         }
@@ -74,8 +75,10 @@ public class ContinuousPiecewiseLinearTest
         assertEquals(2, of.get(0.1), 0.000001, "get at first key returns first value");
         assertEquals(5, of.get(0.7), 0.000001, "get at last key returns first value");
         assertEquals(2 + (5 - 2) * (0.3 - 0.1) / (0.7 - 0.1), of.get(0.3), 0.00001, "Value between point interpolates");
+        assertEquals(0.0, of.getDerivative(0.0), 0.00001, "get derivative works at 0.0");
         assertEquals(3 / 0.6, of.getDerivative(0.11), 0.00001, "get derivative works between the entries");
         assertEquals(3 / 0.6, of.getDerivative(0.69), 0.00001, "get derivative works between the entries");
+        assertEquals(0.0, of.getDerivative(1.0), 0.00001, "get derivative works at 1.0");
         assertEquals(0, of.getDerivative(0.09), 0, "get derivative returns 0 outside the range of entries");
         assertEquals(0, of.getDerivative(0.71), 0, "get derivative returns 0 outside the range of entries");
         assertEquals(2, of.size(), "size is returned");
@@ -108,7 +111,7 @@ public class ContinuousPiecewiseLinearTest
             iterator.next();
             fail("exhausted iterator should have thrown a NoSuchElementException");
         }
-        catch (NoSuchElementException nsee)
+        catch (NoSuchElementException e)
         {
             // Ignore expected exception
         }
@@ -129,25 +132,33 @@ public class ContinuousPiecewiseLinearTest
             new ContinuousPiecewiseLinearFunction(in);
             fail(problem);
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
         Map<Double, Double> map = new HashMap<>();
+        boolean duplicateKey = false;
         for (int i = 0; i < in.length; i += 2)
         {
+            if (map.containsKey(in[i]))
+            {
+                duplicateKey = true;
+            }
             map.put(in[i], i + 1 < in.length ? in[i + 1] : null);
         }
         if (in.length % 2 == 0)
         {
-            try
+            if (!duplicateKey)
             {
-                new ContinuousPiecewiseLinearFunction(map);
-                fail(problem);
-            }
-            catch (IllegalArgumentException iae)
-            {
-                // Ignore expected exception
+                try
+                {
+                    new ContinuousPiecewiseLinearFunction(map);
+                    fail(problem);
+                }
+                catch (IllegalArgumentException e)
+                {
+                    // Ignore expected exception
+                }
             }
         }
         else
@@ -157,7 +168,7 @@ public class ContinuousPiecewiseLinearTest
                 new ContinuousPiecewiseLinearFunction(map);
                 fail(problem);
             }
-            catch (NullPointerException npe)
+            catch (NullPointerException e)
             {
                 // Ignore expected exception
             }
@@ -167,7 +178,7 @@ public class ContinuousPiecewiseLinearTest
             ContinuousPiecewiseLinearFunction.of(in);
             fail(problem);
         }
-        catch (IllegalArgumentException iae)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }

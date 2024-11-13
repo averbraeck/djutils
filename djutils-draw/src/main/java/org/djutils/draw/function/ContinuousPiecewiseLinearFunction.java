@@ -59,7 +59,8 @@ public class ContinuousPiecewiseLinearFunction
      */
     public ContinuousPiecewiseLinearFunction(final Map<Double, Double> data)
     {
-        Throw.when(data == null || data.isEmpty(), IllegalArgumentException.class, "Input data is empty or null");
+        Throw.whenNull(data, "data");
+        Throw.when(data.isEmpty(), IllegalArgumentException.class, "Input data is empty");
         for (Entry<Double, Double> entry : data.entrySet())
         {
             Double key = entry.getKey();
@@ -70,7 +71,6 @@ public class ContinuousPiecewiseLinearFunction
             Double value = entry.getValue();
             Throw.whenNull(value, "value in provided map may not be null");
             Throw.when(!Double.isFinite(value), IllegalArgumentException.class, "values must be finite (got %f)", value);
-            Throw.when(this.data.get(key) != null, IllegalArgumentException.class, "Duplicate fraction is not permitted");
             this.data.put(key, value);
         }
     }
@@ -126,16 +126,6 @@ public class ContinuousPiecewiseLinearFunction
             return 0.0;
         }
         return (ceiling.getValue() - floor.getValue()) / (ceiling.getKey() - floor.getKey());
-    }
-
-    /**
-     * Returns the fractional lengths in the underlying data. TODO get rid of this expensive method (callers should be rewritten
-     * to use the <code>iterator()</code>)
-     * @return fractional lengths in the underlying data
-     */
-    public ImmutableNavigableSet<Double> getFractionalLengths()
-    {
-        return new ImmutableTreeSet<>(this.data.keySet());
     }
 
     /**

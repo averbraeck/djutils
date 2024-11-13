@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.NavigableSet;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -17,8 +18,6 @@ import org.djutils.draw.line.Ray2d;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
-import org.djutils.immutablecollections.ImmutableSet;
-import org.djutils.immutablecollections.ImmutableTreeSet;
 
 /**
  * Continuous definition of a cubic B&eacute;zier curves in 2d. This extends from the more general {@code Bezier} as certain
@@ -343,18 +342,36 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
      * @param fractions length fractions at which offsets are defined.
      * @return set of offset t values, sorted and only those in the range <code>(0, 1)</code>
      */
-    private SortedSet<Double> getOffsetT(final ImmutableSet<Double> fractions)
+    private SortedSet<Double> getOffsetT(final Set<Double> fractions)
     {
-        TreeSet<Double> crossSections = new TreeSet<>();
-        double lenTot = getLength();
+        TreeSet<Double> result = new TreeSet<>();
         for (Double f : fractions)
         {
             if (f > 0.0 && f < 1.0)
             {
-                crossSections.add(getT(f * lenTot));
+                result.add(getT(f * getLength()));
             }
         }
-        return crossSections;
+        return result;
+    }
+    
+    /**
+     * Returns the offset t values.
+     * @param fractions Iterable&lt;Double&gt;; yields the fractions at which offsets are defined.
+     * @return set of offset t values, sorted and only those in the range <code>(0, 1)</code>
+     */
+    private SortedSet<Double> getOffsetT(final Iterable<ContinuousPiecewiseLinearFunction.TupleSt> fractions)
+    {
+        TreeSet<Double> result = new TreeSet<>();
+        for (ContinuousPiecewiseLinearFunction.TupleSt tuple : fractions)
+        {
+            double f = tuple.s();
+            if (f > 0.0 && f < 1.0)
+            {
+                result.add(getT(f * getLength()));
+            }
+        }
+        return result;
     }
 
     /**
@@ -519,13 +536,20 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
             getRoots().forEach((t) -> splits0.put(t, Boundary.ROOT));
             getInflections().forEach((t) -> splits0.put(t, Boundary.INFLECTION));
         }
-        getOffsetT(of.getFractionalLengths()).forEach((t) -> splits0.put(t, Boundary.KNOT));
+        getOffsetT(of).forEach((t) -> splits0.put(t, Boundary.KNOT));
         NavigableMap<Double, Boundary> splits = splits0.subMap(1e-6, false, 1.0 - 1e-6, false);
 
         // Initialize loop variables
         // Work on a copy of the offset fractions, so we can remove each we use.
         // Skip t == 0.0 while collecting the split points -on- this B&eacute;zier
-        NavigableSet<Double> fCrossSectionRemain = of.getFractionalLengths().toSet().tailSet(0.0, false);
+        NavigableSet<Double> fCrossSectionRemain = new TreeSet<>();
+        for (ContinuousPiecewiseLinearFunction.TupleSt tuple : of)
+        {
+            if (tuple.s() > 0.0)
+            {
+                fCrossSectionRemain.add(tuple.s());
+            }
+        }
         double lengthTotal = getLength();
         BezierCubic2d currentBezier = this;
         // System.out.println("Current bezier is " + this);
@@ -561,7 +585,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
                 double fSoFar = lengthSoFar / lengthTotal;
                 double fFirst = fCrossSectionRemain.pollFirst(); // fraction in total B&eacute;zier curve
                 fCrossSection.add((fFirst - fSoFar) / (1.0 - fSoFar)); // add fraction in remaining B&eacute;zier curve
-                SortedSet<Double> offsets = currentBezier.getOffsetT(new ImmutableTreeSet<Double>(fCrossSection));
+                SortedSet<Double> offsets = currentBezier.getOffsetT(fCrossSection);
                 t = offsets.first();
             }
             if (t < 1e-10)

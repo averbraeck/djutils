@@ -67,13 +67,10 @@ public class Direction3d
      * https://www.cuemath.com/geometry/angle-between-vectors/
      * @param otherDirection Direction3d; the other Direction3d
      * @return double the angle in Radians
+     * @throws NullPointerException when <code>otherDirection</code> is <code>null</code>
      */
     public double directionDifference(final Direction3d otherDirection)
     {
-        if (null == otherDirection)
-        {
-            System.out.println("WTF");
-        }
         double sinDirY = Math.sin(this.dirY);
         double uX = Math.cos(this.dirZ) * sinDirY;
         double uY = Math.sin(this.dirZ) * sinDirY;

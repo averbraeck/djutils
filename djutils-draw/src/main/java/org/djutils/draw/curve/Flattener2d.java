@@ -94,8 +94,6 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
     static boolean checkDirectionError(final double segmentDirection, final double curveDirectionAtStart,
             final double curveDirectionAtEnd, final double maxDirectionDeviation)
     {
-        // System.out.println("segmentDirection=" + segmentDirection + ", curveDirectionAtStart=" + curveDirectionAtStart
-        // + ", curveDirectionAtEnd=" + curveDirectionAtEnd);
         return (Math.abs(AngleUtil.normalizeAroundZero(segmentDirection - curveDirectionAtStart)) > maxDirectionDeviation)
                 || Math.abs(AngleUtil.normalizeAroundZero(segmentDirection - curveDirectionAtEnd)) >= maxDirectionDeviation;
     }
