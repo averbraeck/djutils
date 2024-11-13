@@ -293,6 +293,11 @@ public class BezierTest
         {
             // Ignore expected exception
         }
+
+        // Make a totally straight BezierCubic2d and check the curvature
+        Bezier2d bc2d =
+                new Bezier2d(new Point2d(0, 0), new Point2d(0, 0), new Point2d(0, 0), new Point2d(0, 0));
+        assertTrue(bc2d.curvature(0.2) == Double.POSITIVE_INFINITY, "curvature of a straight curve is infinite");
     }
 
     /**
@@ -512,6 +517,16 @@ public class BezierTest
         // }
         // }
 
+        double[] x = new double[] {1, 2, 3};
+        double[] y = new double[] {3, 5, 3};
+        double[] z = new double[] {7, 4, 4};
+        Bezier3d b3d = new Bezier3d(x, y, z);
+        for (int i = 0; i < 3; i++)
+        {
+            assertEquals(x[i], b3d.getX(i), 0.00001, "x");
+            assertEquals(y[i], b3d.getY(i), 0.00001, "y");
+            assertEquals(z[i], b3d.getZ(i), 0.00001, "z");
+        }
     }
 
     /**
