@@ -336,6 +336,17 @@ public class Point2dTest
                 p1.distanceSquared(null);
             }
         }, "Should throw NPE", NullPointerException.class);
+        
+        Point2d p = new Point2d(1, 2);
+        Try.testFail(new Try.Execution()
+        {
+            
+            @Override
+            public void execute() throws Throwable
+            {
+                p.epsilonEquals(p, -0.1);
+            }
+        }, "Should throw IllegalArgumentException", IllegalArgumentException.class);
     }
 
     /**

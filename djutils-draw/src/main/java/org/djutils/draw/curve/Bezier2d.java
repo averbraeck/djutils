@@ -160,10 +160,10 @@ public class Bezier2d implements Curve2d
     {
         return new Point2d(Bezier.Bn(t, this.x), Bezier.Bn(t, this.y));
     }
-    
+
     /** Cache the result of the getLength method. */
     private double cachedLength = -1;
-    
+
     @Override
     public double getLength()
     {

@@ -106,11 +106,11 @@ public class Bezier3d implements Curve3d
         double[] dz = new double[n];
         for (int i = 0; i < n; i++)
         {
-            dx[i] = n * this.x[i + 1] - this.x[i];
-            dy[i] = n * this.y[i + 1] - this.y[i];
-            dz[i] = n * this.z[i + 1] - this.z[i];
+            dx[i] = n * (this.x[i + 1] - this.x[i]);
+            dy[i] = n * (this.y[i + 1] - this.y[i]);
+            dz[i] = n * (this.z[i + 1] - this.z[i]);
         }
-        return new Bezier3d(dx, dy, dz);
+        return new Bezier3d(false, dx, dy, dz);
     }
 
     /**
@@ -182,7 +182,7 @@ public class Bezier3d implements Curve3d
 
     /** Cache the result of the getLength method. */
     private double cachedLength = -1;
-    
+
     @Override
     public double getLength()
     {
