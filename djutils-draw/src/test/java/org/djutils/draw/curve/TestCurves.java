@@ -2,6 +2,7 @@ package org.djutils.draw.curve;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -257,7 +258,7 @@ public class TestCurves
         new Arc2d(new DirectedPoint2d(1, 2, 3), 10, true, 0); // is allowed
         assertTrue(new Arc2d(new DirectedPoint2d(1, 2, 3), 10, true, 1).toString().startsWith("Arc ["),
                 "toString returns something descriptive");
-        
+
         Arc2d arc2d = new Arc2d(new DirectedPoint2d(1, 2, 3), 10, true, 1.5);
         assertEquals(1.5, arc2d.getAngle(), 0.00001, "Angle is returned");
         assertTrue(arc2d.isLeft(), "arc is left");
@@ -1331,19 +1332,24 @@ public class TestCurves
         assertEquals(Math.sqrt(2 * 11 * 11), b2d.getLength(), 0.00001, "Length is reported");
         assertEquals(Math.sqrt(2 * 11 * 11), b2d.getLength(), 0.00001, "Length is reported from the cache");
         assertTrue(b2d.toString().startsWith("Bezier2d ["), "toString returns something descriptive");
+        assertEquals(Math.sqrt(11 * 11 + 11 * 11), b2d.getLength(), 0.0001, "Length of 2-point (degenerate) Bezier");
         Bezier2d derivative = b2d.derivative();
-        try
-        {
-            derivative.getLength();
-            fail("getLength of derivative of order 2 Bezier2d should fail");
-        }
-        catch (IllegalStateException e)
-        {
-            // Ignore expected exception
-        }
-
+        assertEquals(0, derivative.getLength(), 0.0, "Length of 1st derivative");
+        Bezier2d derivative2 = derivative.derivative();
+        assertEquals(0, derivative2.getLength(), 0.0, "Length of 2nd derivative");
+        Bezier2d derivative3 = derivative2.derivative();
+        assertEquals(derivative2, derivative3, "No more change");
+        // Hash code and equals
+        assertTrue(b2d.equals(b2d));
+        assertFalse(b2d.equals(null));
+        assertFalse(b2d.equals("not a bezier"));
+        assertFalse(b2d.equals(new Bezier2d(new Point2d(1, 2), new Point2d(12, 14))));
+        assertFalse(b2d.equals(new Bezier2d(new Point2d(3, 2), new Point2d(12, 13))));
+        assertTrue(b2d.equals(new Bezier2d(new Point2d(1, 2), new Point2d(12, 13))));
+        assertNotEquals(b2d.hashCode(), new Bezier2d(new Point2d(1, 2), new Point2d(12, 14)).hashCode());
+        assertNotEquals(b2d.hashCode(), new Bezier2d(new Point2d(3, 2), new Point2d(12, 13)).hashCode());
     }
-    
+
     /**
      * Test the various constructors of Bezier3d.
      */
@@ -1371,17 +1377,24 @@ public class TestCurves
         assertEquals(Math.sqrt(3 * 11 * 11), b3d.getLength(), 0.00001, "Length is reported");
         assertEquals(Math.sqrt(3 * 11 * 11), b3d.getLength(), 0.00001, "Length is reported from the cache");
         assertTrue(b3d.toString().startsWith("Bezier3d ["), "toString returns something descriptive");
+        assertEquals(Math.sqrt(11 * 11 + 11 * 11 + 11 * 11), b3d.getLength(), 0.0001, "Length of 2-point (degenerate) Bezier");
         Bezier3d derivative = b3d.derivative();
-        try
-        {
-            derivative.getLength();
-            fail("getLength of derivative of order 2 Bezier3d should fail");
-        }
-        catch (IllegalStateException e)
-        {
-            // Ignore expected exception
-        }
-
+        assertEquals(0, derivative.getLength(), 0.0, "Length of 1st derivative");
+        Bezier3d derivative2 = derivative.derivative();
+        assertEquals(0, derivative2.getLength(), 0.0, "Length of 2nd derivative");
+        Bezier3d derivative3 = derivative2.derivative();
+        assertEquals(derivative2, derivative3, "No more change");
+        // Hash code and equals
+        assertTrue(b3d.equals(b3d));
+        assertFalse(b3d.equals(null));
+        assertFalse(b3d.equals("not a bezier"));
+        assertFalse(b3d.equals(new Bezier3d(new Point3d(1, 2, 3), new Point3d(12, 14, 14))));
+        assertFalse(b3d.equals(new Bezier3d(new Point3d(3, 2, 3), new Point3d(12, 13, 14))));
+        assertFalse(b3d.equals(new Bezier3d(new Point3d(1, 2, 5), new Point3d(12, 13, 14))));
+        assertTrue(b3d.equals(new Bezier3d(new Point3d(1, 2, 3), new Point3d(12, 13, 14))));
+        assertNotEquals(b3d.hashCode(), new Bezier3d(new Point3d(1, 2, 3), new Point3d(12, 14, 14)).hashCode());
+        assertNotEquals(b3d.hashCode(), new Bezier3d(new Point3d(3, 2, 3), new Point3d(12, 13, 14)).hashCode());
+        assertNotEquals(b3d.hashCode(), new Bezier3d(new Point3d(1, 2, 5), new Point3d(12, 13, 14)).hashCode());
     }
-    
+
 }

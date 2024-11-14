@@ -68,6 +68,10 @@ public final class Bezier
     @SuppressWarnings("checkstyle:methodname")
     static double Bn(final double t, final double... p)
     {
+        if (p.length == 0)
+        {
+            return 0.0;
+        }
         double b = 0.0;
         double m = (1.0 - t);
         int n = p.length - 1;
@@ -97,6 +101,26 @@ public final class Bezier
             f = f * i;
         }
         return f;
+    }
+
+    /**
+     * Returns the derivative for one dimension of a B&eacute;zier, which is a B&eacute;zier of 1 order lower.
+     * @param in double[]; coefficients of one dimension of a B&eacute;zier
+     * @return double[]; coefficients of one dimension of the derivative B&eacute;zier
+     */
+    public static double[] derivative(final double[] in)
+    {
+        if (in.length == 0) // Derivative of a zero order B&eacute;zier is a zero order B&eacute;zier
+        {
+            return in; //  No need to create a new one
+        }
+        int n = in.length - 1;
+        double[] result = new double[n];
+        for (int i = 0; i < n; i++)
+        {
+            result[i] = n * (in[i + 1] - in[i]);
+        }
+        return result;
     }
 
 }

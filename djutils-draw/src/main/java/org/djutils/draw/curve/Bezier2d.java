@@ -92,17 +92,7 @@ public class Bezier2d implements Curve2d
      */
     public Bezier2d derivative()
     {
-        Throw.when(this.x.length < 2, IllegalStateException.class,
-                "Cannot make derivative of B&eacute;zier with fewer than 2 points");
-        int n = this.x.length - 1;
-        double[] dx = new double[n];
-        double[] dy = new double[n];
-        for (int i = 0; i < n; i++)
-        {
-            dx[i] = n * (this.x[i + 1] - this.x[i]);
-            dy[i] = n * (this.y[i + 1] - this.y[i]);
-        }
-        return new Bezier2d(false, dx, dy);
+        return new Bezier2d(false, Bezier.derivative(this.x), Bezier.derivative(this.y));
     }
 
     /**
@@ -204,6 +194,30 @@ public class Bezier2d implements Curve2d
     public String toString()
     {
         return "Bezier2d [x=" + Arrays.toString(this.x) + ", y=" + Arrays.toString(this.y) + "]";
+    }
+
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.hashCode(this.x);
+        result = prime * result + Arrays.hashCode(this.y);
+        return result;
+    }
+
+    @Override
+    @SuppressWarnings("checkstyle:needbraces")
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Bezier2d other = (Bezier2d) obj;
+        return Arrays.equals(this.x, other.x) && Arrays.equals(this.y, other.y);
     }
 
 }

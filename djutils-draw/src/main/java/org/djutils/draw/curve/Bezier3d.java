@@ -98,19 +98,7 @@ public class Bezier3d implements Curve3d
      */
     public Bezier3d derivative()
     {
-        Throw.when(this.x.length < 2, IllegalStateException.class,
-                "Cannot make derivative of B&eacute;zier with fewer than 2 points");
-        int n = this.x.length - 1;
-        double[] dx = new double[n];
-        double[] dy = new double[n];
-        double[] dz = new double[n];
-        for (int i = 0; i < n; i++)
-        {
-            dx[i] = n * (this.x[i + 1] - this.x[i]);
-            dy[i] = n * (this.y[i + 1] - this.y[i]);
-            dz[i] = n * (this.z[i + 1] - this.z[i]);
-        }
-        return new Bezier3d(false, dx, dy, dz);
+        return new Bezier3d(false, Bezier.derivative(this.x), Bezier.derivative(this.y), Bezier.derivative(this.z));
     }
 
     /**
@@ -204,6 +192,31 @@ public class Bezier3d implements Curve3d
     {
         return "Bezier3d [x=" + Arrays.toString(this.x) + ", y=" + Arrays.toString(this.y) + ", z=" + Arrays.toString(this.z)
                 + "]";
+    }
+
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.hashCode(this.x);
+        result = prime * result + Arrays.hashCode(this.y);
+        result = prime * result + Arrays.hashCode(this.z);
+        return result;
+    }
+
+    @Override
+    @SuppressWarnings("checkstyle:needbraces")
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Bezier3d other = (Bezier3d) obj;
+        return Arrays.equals(this.x, other.x) && Arrays.equals(this.y, other.y) && Arrays.equals(this.z, other.z);
     }
 
 }
