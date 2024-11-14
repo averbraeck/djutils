@@ -24,82 +24,38 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d, Point3d>
+public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d, Point3d, Direction3d>
 {
+    /**
+     * Flatten a Curve3d into a PolyLine3d.
+     * @param curve Curve2d; the curve
+     * @return PolyLine2d; flattened line
+     * @throws NullPointerException when <code>curve</code> is <code>null</code>
+     */
+    PolyLine3d flatten(Curve3d curve);
 
     @Override
-    default PolyLine3d flatten(final Curve3d curve)
-    {
-        return flatten(curve);
-    }
-
-    /**
-     * Check for an inflection point by computing additional points at one quarter and three quarters. If these are on opposite
-     * sides of the curve3d from prevPoint to nextPoint; there must be an inflection point.
-     * @param curve Curve3d
-     * @param prevT double; t of preceding inserted point
-     * @param medianT double; t of point currently considered for insertion
-     * @param nextT double; t of following inserted point
-     * @param prevPoint Point3d; point on <code>curve</code> at <code>prevT</code>
-     * @param nextPoint Point3d; point on <code>curve</code> at <code>nextT</code>
-     * @return boolean; <code>true</code> if there is an inflection point between <code>prevT</code> and <code>nextT</code>;
-     *         <code>false</code> if there is no inflection point between <code>prevT</code> and <code>nextT</code>
-     */
-    private static boolean checkInflection(final Curve3d curve, final double prevT, final double medianT, final double nextT,
-            final Point3d prevPoint, final Point3d nextPoint)
+    default boolean checkInflectionPoint(final FlattableCurve<Point3d, Direction3d> curve, final double prevT,
+            final double medianT, final double nextT, final Point3d prevPoint, final Point3d nextPoint)
     {
         Point3d oneQuarter = curve.getPoint((prevT + medianT) / 2);
         Direction3d oneQDir = oneQuarter.directionTo(oneQuarter.closestPointOnSegment(prevPoint, nextPoint));
         Point3d threeQuarter = curve.getPoint((nextT + medianT) / 2);
         Direction3d threeQDir = threeQuarter.directionTo(threeQuarter.closestPointOnSegment(prevPoint, nextPoint));
         Double angle = oneQDir.directionDifference(threeQDir);
-        return angle > Math.PI / 2; // Projection direction varies by more than 90 degrees
+        return angle > Math.PI / 2; // Direction varies by more than 90 degrees
     }
 
-    /**
-     * Check for a direction change of more than 90 degrees. If that happens, the MaxDeviation flattener must zoom in closer.
-     * @param prevDirection double; the direction at the preceding (already added) point
-     * @param nextDirection double; the direction at the succeeding (already added) point
-     * @return boolean; <code>true</code> if the curve changes direction by more than 90 degrees; <code>false</code> if the
-     *         curve does not change direction by more than 90 degrees
-     */
-    static boolean checkLoopBack(final Direction3d prevDirection, final Direction3d nextDirection)
+    @Override
+    default boolean checkLoopBack(final Direction3d prevDirection, final Direction3d nextDirection)
     {
         return prevDirection.directionDifference(nextDirection) > Math.PI / 2;
     }
 
-    /**
-     * Check the position error at a point.
-     * @param medianPoint Point3d; point at the median t value
-     * @param prevPoint Point3d; point at the start of the current segment (should be on the Curve3d)
-     * @param nextPoint Point3d; point at the end of the current segment (should be on the Curve3d)
-     * @param maxDeviation double; maximum allowed position error
-     * @return boolean; <code>true</code> if the position error exceeds <code>maxDeviation</code>; <code>false</code> if the
-     *         position error does not exceed <code>maxDeviation</code>
-     */
-    static boolean checkPositionError(final Point3d medianPoint, final Point3d prevPoint, final Point3d nextPoint,
-            final double maxDeviation)
-    {
-        Point3d projectedPoint = medianPoint.closestPointOnSegment(prevPoint, nextPoint);
-        double positionError = medianPoint.distance(projectedPoint);
-        return positionError > maxDeviation;
-    }
-
-    /**
-     * Check direction difference at the start and end of a segment.
-     * @param segmentDirection double; direction of the segment
-     * @param curveDirectionAtStart double; direction of the curve at the start of the segment
-     * @param curveDirectionAtEnd double; direction of the curve at the end of the segment
-     * @param maxDirectionDeviation double; maximum permitted direction difference
-     * @return boolean; <code>true</code> if the direction difference at the start and the end of the segment is smaller than
-     *         <code>maxDirectionDeviation</code>; <code>false</code> if the direction difference at the start, or the end of
-     *         the segment equals or exceeds <code>maxDirectionDeviation</code>
-     */
-    static boolean checkDirectionError(final Direction3d segmentDirection, final Direction3d curveDirectionAtStart,
+    @Override
+    default boolean checkDirectionError(final Direction3d segmentDirection, final Direction3d curveDirectionAtStart,
             final Direction3d curveDirectionAtEnd, final double maxDirectionDeviation)
     {
-        // System.out.println("segmentDirection=" + segmentDirection + ", curveDirectionAtStart=" + curveDirectionAtStart
-        // + ", curveDirectionAtEnd=" + curveDirectionAtEnd);
         return (segmentDirection.directionDifference(curveDirectionAtStart) > maxDirectionDeviation
                 || segmentDirection.directionDifference(curveDirectionAtEnd) > maxDirectionDeviation);
     }
@@ -183,13 +139,13 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
                     continue;
                 }
                 if (prevPoint.distance(nextPoint) > this.maxDeviation
-                        && Flattener3d.checkInflection(curve, prevT, medianT, nextT, prevPoint, nextPoint))
+                        && checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
                     result.put(medianT, medianPoint);
                     continue;
                 }
-                if (Flattener3d.checkLoopBack(curve.getDirection(prevT), curve.getDirection(nextT)))
+                if (checkLoopBack(curve.getDirection(prevT), curve.getDirection(nextT)))
                 {
                     // The curve loops back onto itself. Inserting the halfway point should prevent missing out a major detour
                     // This check is NOT needed in the MaxDeviationAndAngle flattener.
@@ -281,7 +237,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
                 }
                 iterationsAtSinglePoint = 0;
                 if (prevPoint.distance(nextPoint) > this.maxDeviation
-                        && Flattener3d.checkInflection(curve, prevT, medianT, nextT, prevPoint, nextPoint))
+                        && checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
                     result.put(medianT, medianPoint);
@@ -367,7 +323,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
                     continue;
                 }
                 iterationsAtSinglePoint = 0;
-                if (Flattener3d.checkInflection(curve, prevT, medianT, nextT, prevPoint, nextPoint))
+                if (checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
                     Point3d medianPoint = curve.getPoint(medianT);

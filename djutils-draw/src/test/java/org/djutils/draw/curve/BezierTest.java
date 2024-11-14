@@ -389,8 +389,10 @@ public class BezierTest
                 assertTrue(p.x > 0 && p.x < 15, "x of intermediate point has reasonable value");
                 assertTrue(p.y > 0 && p.y < 15, "y of intermediate point has reasonable value");
             }
-            assertEquals(from.directionTo(control1), cbc.getStartDirection(), "start direction is reported");
-            assertEquals(control2.directionTo(to), cbc.getEndDirection(), "end direction is reported");
+            assertEquals(from.directionTo(control1).dirY, cbc.getStartDirection().dirY, 0.0001, "start direction is reported");
+            assertEquals(from.directionTo(control1).dirZ, cbc.getStartDirection().dirZ, 0.0001, "start direction is reported");
+            assertEquals(control2.directionTo(to).dirY, cbc.getEndDirection().dirY, 0.0001, "end direction is reported");
+            assertEquals(control2.directionTo(to).dirZ, cbc.getEndDirection().dirZ, 0.0001, "end direction is reported");
         }
         for (int n = -1; n < 1; n++)
         {

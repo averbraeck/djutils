@@ -28,7 +28,7 @@ import org.djutils.draw.point.Point;
  * @param <F> the <code>Flattener</code> type
  * @param <PL> the <code>PolyLine</code> type
  */
-public interface Curve<DP, DIR, P extends Point<P>, F extends Flattener<F, ?, PL, P>, PL extends PolyLine<?, P, ?, ?, ?>>
+public interface Curve<DP, DIR, P extends Point<P>, F extends Flattener<F, ?, PL, P, DIR>, PL extends PolyLine<?, P, ?, ?, ?>>
 {
     /**
      * Start point of this Curve.

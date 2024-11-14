@@ -45,18 +45,6 @@ public class Straight2d implements Curve2d, OffsetCurve2d
         this.length = length;
     }
 
-    @Override
-    public DirectedPoint2d getStartPoint()
-    {
-        return this.startPoint;
-    }
-
-    @Override
-    public DirectedPoint2d getEndPoint()
-    {
-        return this.endPoint;
-    }
-
     /**
      * Start curvature of this Straight.
      * @return start curvature of this Straight

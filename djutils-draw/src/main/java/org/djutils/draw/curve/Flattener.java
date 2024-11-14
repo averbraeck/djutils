@@ -22,21 +22,11 @@ import org.djutils.exceptions.Throw;
  * @param <C> the Curve type
  * @param <PL> the PolyLine type
  * @param <P> the Point type
+ * @param <DIR> the Direction type
  */
-public interface Flattener<F extends Flattener<F, C, PL, P>, C extends Curve<?, ?, P, F, PL>,
-        PL extends PolyLine<?, P, ?, ?, ?>, P extends Point<P>>
+public interface Flattener<F extends Flattener<F, C, PL, P, DIR>, C extends Curve<?, ?, P, F, PL>,
+        PL extends PolyLine<?, P, ?, ?, ?>, P extends Point<P>, DIR>
 {
-    /**
-     * Flatten a Curve into a PolyLine.
-     * @param curve C; the curve
-     * @return PolyLine; flattened line
-     * @throws NullPointerException when <code>curve</code> is <code>null</code>
-     */
-    default PL flatten(final C curve)
-    {
-        return flatten(curve);
-    }
-
     /**
      * Load one knot in the map of fractions and points.
      * @param map NavigableMap&lt;Double, P&gt;; the map
@@ -71,6 +61,92 @@ public interface Flattener<F extends Flattener<F, C, PL, P>, C extends Curve<?, 
             }
         }
         map.put(1.0, curve.getPoint(1.0));
+    }
+
+    /**
+     * Report if the medianPoint is too far from the line segment from prevPoint to nextPoint.
+     * @param medianPoint P
+     * @param prevPoint P
+     * @param nextPoint P
+     * @param maxDeviation double
+     * @return boolean; <code>true</code> if the <code>medianPoint</code> is too far from the line segment; <code>false</code>
+     *         if the <code>medianPoint</code> is close enough to the line segment
+     */
+    default boolean checkPositionError(final P medianPoint, final P prevPoint, final P nextPoint, final double maxDeviation)
+    {
+        P projectedPoint = medianPoint.closestPointOnSegment(prevPoint, nextPoint);
+        double positionError = medianPoint.distance(projectedPoint);
+        return positionError > maxDeviation;
+    }
+
+    /**
+     * Check for a direction change of more than 90 degrees. If that happens, the MaxDeviation flattener must zoom in closer.
+     * @param prevDirection DIR; the direction at the preceding (already added) point
+     * @param nextDirection DIR; the direction at the succeeding (already added) point
+     * @return boolean; <code>true</code> if the curve changes direction by more than 90 degrees; <code>false</code> if the
+     *         curve does not change direction by more than 90 degrees
+     */
+    boolean checkLoopBack(DIR prevDirection, DIR nextDirection);
+
+    /**
+     * Check direction difference at the start and end of a segment.
+     * @param segmentDirection double; direction of the segment
+     * @param curveDirectionAtStart double; direction of the curve at the start of the segment
+     * @param curveDirectionAtEnd double; direction of the curve at the end of the segment
+     * @param maxDirectionDeviation double; maximum permitted direction difference
+     * @return boolean; <code>true</code> if the direction difference at the start and the end of the segment is smaller than
+     *         <code>maxDirectionDeviation</code>; <code>false</code> if the direction difference at the start, or the end of
+     *         the segment equals or exceeds <code>maxDirectionDeviation</code>
+     */
+    boolean checkDirectionError(DIR segmentDirection, DIR curveDirectionAtStart, DIR curveDirectionAtEnd,
+            double maxDirectionDeviation);
+
+    /**
+     * Check for an inflection point by computing additional points at one quarter and three quarters. If these are on opposite
+     * sides of the curve2d from prevPoint to nextPoint; there must be an inflection point. This default implementation is
+     * <b>only for the 2d case</b>.
+     * https://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
+     * @param curve Curve2d
+     * @param prevT double; t of preceding inserted point
+     * @param medianT double; t of point currently considered for insertion
+     * @param nextT double; t of following inserted point
+     * @param prevPoint Point2d; point on <code>curve</code> at <code>prevT</code>
+     * @param nextPoint Point2d; point on <code>curve</code> at <code>nextT</code>
+     * @return boolean; <code>true</code> if there is an inflection point between <code>prevT</code> and <code>nextT</code>;
+     *         <code>false</code> if there is no inflection point between <code>prevT</code> and <code>nextT</code>
+     */
+    default boolean checkInflectionPoint(final FlattableCurve<P, DIR> curve, final double prevT, final double medianT,
+            final double nextT, final P prevPoint, final P nextPoint)
+    {
+        P oneQuarter = curve.getPoint((prevT + medianT) / 2);
+        int sign1 = (int) Math.signum((nextPoint.getX() - prevPoint.getX()) * (oneQuarter.getY() - prevPoint.getY())
+                - (nextPoint.getY() - prevPoint.getY()) * (oneQuarter.getX() - prevPoint.getX()));
+        P threeQuarter = curve.getPoint((nextT + medianT) / 2);
+        int sign2 = (int) Math.signum((nextPoint.getX() - prevPoint.getX()) * (threeQuarter.getY() - prevPoint.getY())
+                - (nextPoint.getY() - prevPoint.getY()) * (threeQuarter.getX() - prevPoint.getX()));
+        return sign1 != sign2;
+    }
+
+    /**
+     * Interface for getPoint and getDirection that hide whether or not an offset is applied.
+     * @param <P> the Point type
+     * @param <DIR> the Direction type
+     */
+    interface FlattableCurve<P, DIR>
+    {
+        /**
+         * Get a Point for some fraction along the Curve.
+         * @param fraction double;
+         * @return P; the point at the <code>fraction</code>
+         */
+        P getPoint(double fraction);
+
+        /**
+         * Get the direction at some fraction along the Curve.
+         * @param fraction double;
+         * @return DIR; the direction at the <code>fraction</code>
+         */
+        DIR getDirection(double fraction);
     }
 
 }

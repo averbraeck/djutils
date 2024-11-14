@@ -71,7 +71,7 @@ public class TestCurves
                         Straight2d cs = new Straight2d(dp, length);
                         assertEquals(x, cs.getStartPoint().x, 0.0, "start x");
                         assertEquals(y, cs.getStartPoint().y, 0.0, "start y");
-                        assertEquals(dirZ, cs.getStartPoint().dirZ, 0.0, "start dirZ");
+                        assertEquals(dirZ, cs.getStartPoint().dirZ, 0.00001, "start dirZ");
                         assertEquals(cs.getStartCurvature(), 0, 0, "start curvature");
                         assertEquals(x + Math.cos(dirZ) * length, cs.getEndPoint().x, 0.00001, "end x");
                         assertEquals(y + Math.sin(dirZ) * length, cs.getEndPoint().y, 0.00001, "end y");
@@ -176,8 +176,8 @@ public class TestCurves
                             for (double a : new double[] {1, 0.1, 2, 5})
                             {
                                 Arc2d ca = new Arc2d(dp, radius, left, a);
-                                assertEquals(x, ca.getStartPoint().x, 0, "start x");
-                                assertEquals(y, ca.getStartPoint().y, 0, "start y");
+                                assertEquals(x, ca.getStartPoint().x, 0.00001, "start x");
+                                assertEquals(y, ca.getStartPoint().y, 0.00001, "start y");
                                 assertEquals(dirZ, ca.getStartPoint().dirZ, 0, "start dirZ");
                                 assertEquals(radius, ca.getStartRadius(), 0.000001, "start radius");
                                 assertEquals(radius, ca.getEndRadius(), 0.000001, "end radius");
@@ -921,9 +921,9 @@ public class TestCurves
                                                 assertEquals(x, cbc.getStartPoint().x, 0, "start x");
                                                 assertEquals(y, cbc.getStartPoint().y, 0, "start y");
                                                 assertEquals(z, cbc.getStartPoint().z, 0, "start y");
-                                                assertEquals(dirZ, cbc.getStartPoint().dirZ, 0.00001, "start dirZ");
-                                                assertEquals(dirY, cbc.getStartDirection().dirY, 0.00001, "start direction");
-                                                assertEquals(dirZ, cbc.getStartDirection().dirZ, 0.00001, "start direction");
+                                                assertEquals(dirZ, cbc.getStartPoint().dirZ, 0.0001, "start dirZ");
+                                                assertEquals(dirY, cbc.getStartDirection().dirY, 0.0001, "start direction");
+                                                assertEquals(dirZ, cbc.getStartDirection().dirZ, 0.0001, "start direction");
                                                 assertEquals(x2, cbc.getEndPoint().x, 0.000001, "end x");
                                                 assertEquals(y2, cbc.getEndPoint().y, 0.000001, "end y");
                                                 assertEquals(z2, cbc.getEndPoint().z, 0.000001, "end y");

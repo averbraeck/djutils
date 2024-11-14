@@ -57,20 +57,6 @@ public class Arc2d implements Curvature, Curve2d, OffsetCurve2d
     }
 
     @Override
-    public DirectedPoint2d getStartPoint()
-    {
-        return this.startPoint;
-    }
-
-    @Override
-    public DirectedPoint2d getEndPoint()
-    {
-        Point2d point = getPoint(1.0);
-        double dirZ = AngleUtil.normalizeAroundZero(this.startPoint.dirZ + this.sign * this.angle);
-        return new DirectedPoint2d(point.x, point.y, dirZ);
-    }
-
-    @Override
     public double getStartCurvature()
     {
         return 1.0 / this.radius;

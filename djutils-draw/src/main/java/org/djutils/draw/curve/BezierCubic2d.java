@@ -215,18 +215,6 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
         return m3 * p[0] + 3.0 * t * m2 * p[1] + 3.0 * t2 * m * p[2] + t3 * p[3];
     }
 
-    @Override
-    public DirectedPoint2d getStartPoint()
-    {
-        return this.startPoint;
-    }
-
-    @Override
-    public DirectedPoint2d getEndPoint()
-    {
-        return this.endPoint;
-    }
-
     /**
      * Start curvature of this Curve2d..
      * @return start curvature of this Curve2d.

@@ -1,7 +1,6 @@
 package org.djutils.draw.curve;
 
 import org.djutils.draw.line.Ray3d;
-import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
 
@@ -22,12 +21,6 @@ import org.djutils.exceptions.Throw;
  */
 public class BezierCubic3d extends Bezier3d implements Curve3d
 {
-    /** Start point with direction. */
-    private final DirectedPoint3d startPoint;
-
-    /** End point with direction. */
-    private final DirectedPoint3d endPoint;
-
     /** Length. */
     private final double length;
 
@@ -43,8 +36,6 @@ public class BezierCubic3d extends Bezier3d implements Curve3d
     public BezierCubic3d(final Point3d start, final Point3d control1, final Point3d control2, final Point3d end)
     {
         super(start, control1, control2, end);
-        this.startPoint = new DirectedPoint3d(start, control1);
-        this.endPoint = new DirectedPoint3d(end, control2.directionTo(end));
         this.length = length();
     }
 
@@ -162,18 +153,6 @@ public class BezierCubic3d extends Bezier3d implements Curve3d
             control2 = end.getLocationExtended(-distance);
         }
         return new Point3d[] {start, control1, control2, end};
-    }
-
-    @Override
-    public DirectedPoint3d getStartPoint()
-    {
-        return this.startPoint;
-    }
-
-    @Override
-    public DirectedPoint3d getEndPoint()
-    {
-        return this.endPoint;
     }
 
     @Override

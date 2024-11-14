@@ -1,5 +1,6 @@
 package org.djutils.draw.curve;
 
+import org.djutils.draw.curve.Flattener.FlattableCurve;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
@@ -14,7 +15,7 @@ import org.djutils.draw.point.Point2d;
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-interface Curve2d extends Curve<DirectedPoint2d, Double, Point2d, Flattener2d, PolyLine2d>
+interface Curve2d extends Curve<DirectedPoint2d, Double, Point2d, Flattener2d, PolyLine2d>, FlattableCurve<Point2d, Double>
 {
 
     @Override

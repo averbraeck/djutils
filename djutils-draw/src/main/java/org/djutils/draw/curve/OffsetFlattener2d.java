@@ -1,8 +1,5 @@
 package org.djutils.draw.curve;
 
-import static org.djutils.draw.curve.Flattener2d.checkDirectionError;
-import static org.djutils.draw.curve.Flattener2d.checkPositionError;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -12,6 +9,7 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.djutils.base.AngleUtil;
 import org.djutils.draw.function.ContinuousPiecewiseLinearFunction;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.Point2d;
@@ -27,7 +25,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public interface OffsetFlattener2d extends Flattener2d
+public interface OffsetFlattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d, Point2d, Double>
 {
     /**
      * Flatten a OffsetCurve2d curve into a PolyLine2d while applying lateral offsets.
@@ -35,10 +33,7 @@ public interface OffsetFlattener2d extends Flattener2d
      * @param of the lateral offset to apply
      * @return PolyLine2d; flattened curve
      */
-    default PolyLine2d flatten(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction of)
-    {
-        return flatten(curve, of);
-    }
+    PolyLine2d flatten(OffsetCurve2d curve, ContinuousPiecewiseLinearFunction of);
 
     /**
      * Load one knot in the map of fractions and points.
@@ -88,31 +83,43 @@ public interface OffsetFlattener2d extends Flattener2d
         map.put(1.0, curve.getPoint(1.0, of));
     }
 
-    /**
-     * Check for an inflection point by computing additional points at one quarter and three quarters. If these are on opposite
-     * sides of the <code>OffsetCurve2d</code> from <code>prevPoint</code> to <code>nextPoint</code>; there must be an
-     * inflection point.
-     * https://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line
-     * @param curve OffsetCurve2d
-     * @param prevT double; t of preceding inserted point
-     * @param medianT double; t of point currently considered for insertion
-     * @param nextT double; t of following inserted point
-     * @param prevPoint Point2d; point on <code>curve</code> at <code>prevT</code>
-     * @param nextPoint Point2d; point on <code>curve</code> at <code>nextT</code>
-     * @param of ContinuousPiecewiseLinearFunction; information about lateral offsets (may be <code>null</code>)
-     * @return boolean; <code>true</code> if there is an inflection point between <code>prevT</code> and <code>nextT</code>;
-     *         <code>false</code> if there is no inflection point between <code>prevT</code> and <code>nextT</code>
-     */
-    private static boolean checkInflectionPoint(final OffsetCurve2d curve, final double prevT, final double medianT,
-            final double nextT, final Point2d prevPoint, final Point2d nextPoint, final ContinuousPiecewiseLinearFunction of)
+    @Override
+    default boolean checkLoopBack(final Double prevDirection, final Double nextDirection)
     {
-        Point2d oneQuarter = curve.getPoint((prevT + medianT) / 2, of);
-        int sign1 = (int) Math.signum((nextPoint.x - prevPoint.x) * (oneQuarter.y - prevPoint.y)
-                - (nextPoint.y - prevPoint.y) * (oneQuarter.x - prevPoint.x));
-        Point2d threeQuarter = curve.getPoint((nextT + medianT) / 2, of);
-        int sign2 = (int) Math.signum((nextPoint.x - prevPoint.x) * (threeQuarter.y - prevPoint.y)
-                - (nextPoint.y - prevPoint.y) * (threeQuarter.x - prevPoint.x));
-        return sign1 != sign2;
+        return Math.abs(AngleUtil.normalizeAroundZero(nextDirection - prevDirection)) > Math.PI / 2;
+    }
+
+    @Override
+    default boolean checkDirectionError(final Double segmentDirection, final Double curveDirectionAtStart,
+            final Double curveDirectionAtEnd, final double maxDirectionDeviation)
+    {
+        return (Math.abs(AngleUtil.normalizeAroundZero(segmentDirection - curveDirectionAtStart)) > maxDirectionDeviation)
+                || Math.abs(AngleUtil.normalizeAroundZero(segmentDirection - curveDirectionAtEnd)) >= maxDirectionDeviation;
+    }
+
+    /**
+     * Make a FlattableCurve object.
+     * @param curve OffsetCurve2d;
+     * @param of ContinuousPiecewiseLinearFunction;
+     * @return Flattener.FlattableCurve&lt;Point2d, Double
+     */
+    default Flattener.FlattableCurve<Point2d, Double> makeFlattableCurve(final OffsetCurve2d curve,
+            final ContinuousPiecewiseLinearFunction of)
+    {
+        return new Flattener.FlattableCurve<Point2d, Double>()
+        {
+            @Override
+            public Point2d getPoint(final double fraction)
+            {
+                return curve.getPoint(fraction, of);
+            }
+
+            @Override
+            public Double getDirection(final double fraction)
+            {
+                return curve.getDirection(fraction, of);
+            }
+        };
     }
 
     /**
@@ -135,14 +142,14 @@ public interface OffsetFlattener2d extends Flattener2d
         }
 
         @Override
-        public PolyLine2d flatten(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction fld)
+        public PolyLine2d flatten(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction of)
         {
             Throw.whenNull(curve, "curve");
             List<Point2d> points = new ArrayList<>(this.numSegments + 1);
             for (int i = 0; i <= this.numSegments; i++)
             {
                 double fraction = ((double) i) / this.numSegments;
-                points.add(curve.getPoint(fraction, fld));
+                points.add(curve.getPoint(fraction, of));
             }
             return new PolyLine2d(points);
         }
@@ -174,6 +181,7 @@ public interface OffsetFlattener2d extends Flattener2d
         public PolyLine2d flatten(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction of)
         {
             Throw.whenNull(curve, "curve");
+            Flattener.FlattableCurve<Point2d, Double> fc = makeFlattableCurve(curve, of);
             NavigableMap<Double, Point2d> result = new TreeMap<>();
             loadKnots(result, curve, of);
 
@@ -195,13 +203,13 @@ public interface OffsetFlattener2d extends Flattener2d
                     continue;
                 }
                 if (prevPoint.distance(nextPoint) > this.maxDeviation
-                        && OffsetFlattener2d.checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint, of))
+                        && checkInflectionPoint(fc, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
                     result.put(medianT, medianPoint);
                     continue;
                 }
-                if (Flattener2d.checkLoopBack(curve.getDirection(prevT), curve.getDirection(nextT)))
+                if (checkLoopBack(curve.getDirection(prevT), curve.getDirection(nextT)))
                 {
                     // The curve loops back onto itself. Inserting the halfway point should prevent missing out a major detour
                     // This check is NOT needed in the MaxDeviationAndAngle flattener.
@@ -248,6 +256,8 @@ public interface OffsetFlattener2d extends Flattener2d
         @Override
         public PolyLine2d flatten(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction of)
         {
+            Throw.whenNull(curve, "curve");
+            Flattener.FlattableCurve<Point2d, Double> fc = makeFlattableCurve(curve, of);
             NavigableMap<Double, Point2d> result = new TreeMap<>();
             loadKnots(result, curve, of);
             Map<Double, Double> directions = new LinkedHashMap<>();
@@ -299,7 +309,7 @@ public interface OffsetFlattener2d extends Flattener2d
                 }
                 iterationsAtSinglePoint = 0;
                 if (prevPoint.distance(nextPoint) > this.maxDeviation
-                        && OffsetFlattener2d.checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint, of))
+                        && checkInflectionPoint(fc, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
                     result.put(medianT, medianPoint);
@@ -342,6 +352,8 @@ public interface OffsetFlattener2d extends Flattener2d
         @Override
         public PolyLine2d flatten(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction of)
         {
+            Throw.whenNull(curve, "curve");
+            Flattener.FlattableCurve<Point2d, Double> fc = makeFlattableCurve(curve, of);
             NavigableMap<Double, Point2d> result = new TreeMap<>();
             loadKnots(result, curve, of);
             Map<Double, Double> directions = new LinkedHashMap<>();
@@ -385,7 +397,7 @@ public interface OffsetFlattener2d extends Flattener2d
                     continue;
                 }
                 iterationsAtSinglePoint = 0;
-                if (OffsetFlattener2d.checkInflectionPoint(curve, prevT, medianT, nextT, prevPoint, nextPoint, of))
+                if (checkInflectionPoint(fc, prevT, medianT, nextT, prevPoint, nextPoint))
                 {
                     // There is an inflection point, inserting the halfway point should take care of this
                     Point2d medianPoint = curve.getPoint(medianT, of);

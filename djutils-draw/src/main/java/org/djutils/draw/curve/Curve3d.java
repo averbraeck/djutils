@@ -1,6 +1,7 @@
 package org.djutils.draw.curve;
 
 import org.djutils.draw.Direction3d;
+import org.djutils.draw.curve.Flattener.FlattableCurve;
 import org.djutils.draw.line.PolyLine3d;
 import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point3d;
@@ -15,7 +16,8 @@ import org.djutils.draw.point.Point3d;
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-interface Curve3d extends Curve<DirectedPoint3d, Direction3d, Point3d, Flattener3d, PolyLine3d>
+interface Curve3d
+        extends Curve<DirectedPoint3d, Direction3d, Point3d, Flattener3d, PolyLine3d>, FlattableCurve<Point3d, Direction3d>
 {
 
     @Override
