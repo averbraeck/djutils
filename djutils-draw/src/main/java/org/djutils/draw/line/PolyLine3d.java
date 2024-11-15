@@ -64,7 +64,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
      * @param z double[]; the z-coordinates of the points
      * @throws NullPointerException when <code>iterator</code> is <code>null</code>
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
-     *             adjacent points, or are not the same length)
+     *             adjacent points, or or <code>x</code> and <code>y</code> and <code>z</code> differ in length)
      */
     private PolyLine3d(final boolean copyNeeded, final double[] x, final double[] y, final double[] z)
     {

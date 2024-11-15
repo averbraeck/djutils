@@ -60,7 +60,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * @param y double[]; the y-coordinates of the points
      * @throws NullPointerException when <code>iterator</code> is <code>null</code>
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
-     *             adjacent points), or <code>x</code> and <code>y</code> have different length
+     *             adjacent points), or <code>x</code> and <code>y</code> differ in length
      */
     PolyLine2d(final boolean copyNeeded, final double[] x, final double[] y)
     {
