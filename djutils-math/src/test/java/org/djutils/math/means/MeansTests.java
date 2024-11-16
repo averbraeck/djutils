@@ -10,9 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.djutils.math.means.ArithmeticMean;
-import org.djutils.math.means.GeometricMean;
-import org.djutils.math.means.HarmonicMean;
 import org.junit.jupiter.api.Test;
 
 /**
