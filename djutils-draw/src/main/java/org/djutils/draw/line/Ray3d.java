@@ -4,13 +4,13 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
 
-import org.djutils.base.AngleUtil;
 import org.djutils.draw.Direction3d;
 import org.djutils.draw.Drawable3d;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
+import org.djutils.math.AngleUtil;
 
 /**
  * Ray3d is a half-line in 3d; it has one end point with non-infinite coordinates; the other end point is infinitely far away.

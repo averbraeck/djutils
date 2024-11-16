@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
 
-import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Oriented3d;
 import org.djutils.exceptions.Throw;
+import org.djutils.math.AngleUtil;
 
 /**
  * A OrientedPoint3d is a point with an x, y, and z coordinate, plus a 3d orientation. The orientation is specified by the

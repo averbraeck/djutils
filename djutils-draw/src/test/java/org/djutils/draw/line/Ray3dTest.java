@@ -10,12 +10,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.djutils.base.AngleUtil;
 import org.djutils.draw.Direction3d;
 import org.djutils.draw.bounds.Bounds3d;
-import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.OrientedPoint3d;
 import org.djutils.draw.point.Point3d;
+import org.djutils.math.AngleUtil;
 import org.junit.jupiter.api.Test;
 
 /**

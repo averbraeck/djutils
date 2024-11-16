@@ -1,11 +1,11 @@
 package org.djutils.draw.curve;
 
-import org.djutils.base.AngleUtil;
 import org.djutils.draw.function.ContinuousPiecewiseLinearFunction;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
+import org.djutils.math.AngleUtil;
 
 /**
  * Continuous definition of an arc in 2d.

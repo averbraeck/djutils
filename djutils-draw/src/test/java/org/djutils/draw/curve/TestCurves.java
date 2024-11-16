@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
-import org.djutils.base.AngleUtil;
 import org.djutils.draw.Direction3d;
 import org.djutils.draw.Export;
 import org.djutils.draw.function.ContinuousPiecewiseLinearFunction;
@@ -23,6 +22,7 @@ import org.djutils.draw.line.Ray3d;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
+import org.djutils.math.AngleUtil;
 import org.junit.jupiter.api.Test;
 
 /**

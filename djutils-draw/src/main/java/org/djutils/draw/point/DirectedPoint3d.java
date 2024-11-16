@@ -5,11 +5,11 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Objects;
 
-import org.djutils.base.AngleUtil;
 import org.djutils.draw.Directed3d;
 import org.djutils.draw.Direction3d;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Throw;
+import org.djutils.math.AngleUtil;
 
 /**
  * A DirectedPoint3d is a point in 3d space that additionally carries a direction in 3d i.c. dirY (similar to tilt; measured as

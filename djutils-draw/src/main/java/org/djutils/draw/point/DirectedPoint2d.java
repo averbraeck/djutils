@@ -5,10 +5,10 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Objects;
 
-import org.djutils.base.AngleUtil;
 import org.djutils.draw.Directed2d;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Throw;
+import org.djutils.math.AngleUtil;
 
 /**
  * A DirectedPoint2d is a Point2d that additionally carries a direction in 2d-space (dirZ). This is <b>not</b> the direction

@@ -8,8 +8,6 @@ import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 import org.djutils.exceptions.Throw;
-import org.djutils.immutablecollections.ImmutableNavigableSet;
-import org.djutils.immutablecollections.ImmutableTreeSet;
 
 /**
  * Container for piece-wise linear offsets, defined by the offsets at particular fractional positions.

@@ -6,12 +6,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Random;
 
-import org.djutils.base.AngleUtil;
 import org.djutils.draw.curve.Flattener2d.NumSegments;
 import org.djutils.draw.function.ContinuousPiecewiseLinearFunction;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
+import org.djutils.math.AngleUtil;
 import org.junit.jupiter.api.Test;
 
 /**

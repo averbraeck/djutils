@@ -8,9 +8,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.djutils.base.AngleUtil;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Try;
+import org.djutils.math.AngleUtil;
 import org.junit.jupiter.api.Test;
 
 /**

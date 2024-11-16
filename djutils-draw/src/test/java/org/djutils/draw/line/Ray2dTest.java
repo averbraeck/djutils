@@ -11,10 +11,10 @@ import java.awt.geom.Point2D;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.djutils.base.AngleUtil;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
+import org.djutils.math.AngleUtil;
 import org.junit.jupiter.api.Test;
 
 /**

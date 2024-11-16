@@ -9,10 +9,10 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.djutils.base.AngleUtil;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
+import org.djutils.math.AngleUtil;
 
 /**
  * Flattens a Curve2d in to a PolyLine2d.
