@@ -1,6 +1,6 @@
 package org.djutils.math.complex;
 
-import org.djutils.base.AngleUtil;
+import org.djutils.math.AngleUtil;
 
 /**
  * ComplexMath.java. Math with complex operands and results. <br>
