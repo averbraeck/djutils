@@ -110,6 +110,12 @@
 
       <dependency>
         <groupId>org.djutils</groupId>
+        <artifactId>djutils-math</artifactId>
+        <version>${djutils.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.djutils</groupId>
         <artifactId>djutils-serialization</artifactId>
         <version>${djutils.version}</version>
       </dependency>
@@ -117,6 +123,12 @@
       <dependency>
         <groupId>org.djutils</groupId>
         <artifactId>djutils-stats</artifactId>
+        <version>${djutils.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.djutils</groupId>
+        <artifactId>djutils-swing</artifactId>
         <version>${djutils.version}</version>
       </dependency>
 
@@ -293,8 +305,10 @@
             <offlineLink><url>https://djutils.org/docs/latest/djutils-data/apidocs/</url></offlineLink>
             <offlineLink><url>https://djutils.org/docs/latest/djutils-draw/apidocs/</url></offlineLink>
             <offlineLink><url>https://djutils.org/docs/latest/djutils-eval/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-math/apidocs/</url></offlineLink>
             <offlineLink><url>https://djutils.org/docs/latest/djutils-serialization/apidocs/</url></offlineLink>
             <offlineLink><url>https://djutils.org/docs/latest/djutils-stats/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-swing/apidocs/</url></offlineLink>
             <offlineLink><url>https://junit.org/junit5/docs/current/api/</url></offlineLink>
             <offlineLink><url>https://javadoc.io/doc/jakarta.annotation/jakarta.annotation-api/latest/jakarta.annotation/</url></offlineLink>
             <offlineLink><url>https://picocli.info/apidocs/</url></offlineLink>
@@ -543,8 +557,10 @@
             <offlineLink><url>https://djutils.org/docs/latest/djutils-data/apidocs/</url></offlineLink>
             <offlineLink><url>https://djutils.org/docs/latest/djutils-draw/apidocs/</url></offlineLink>
             <offlineLink><url>https://djutils.org/docs/latest/djutils-eval/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-math/apidocs/</url></offlineLink>
             <offlineLink><url>https://djutils.org/docs/latest/djutils-serialization/apidocs/</url></offlineLink>
             <offlineLink><url>https://djutils.org/docs/latest/djutils-stats/apidocs/</url></offlineLink>
+            <offlineLink><url>https://djutils.org/docs/latest/djutils-swing/apidocs/</url></offlineLink>
             <offlineLink><url>https://junit.org/junit5/docs/current/api/</url></offlineLink>
             <offlineLink><url>https://javadoc.io/doc/jakarta.annotation/jakarta.annotation-api/latest/jakarta.annotation/</url></offlineLink>
             <offlineLink><url>https://picocli.info/apidocs/</url></offlineLink>
