@@ -1,4 +1,4 @@
-package org.djutils.complex;
+package org.djutils.math.complex;
 
 import org.djutils.base.AngleUtil;
 

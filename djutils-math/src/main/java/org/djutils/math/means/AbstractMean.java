@@ -1,4 +1,4 @@
-package org.djutils.means;
+package org.djutils.math.means;
 
 import java.util.Collection;
 import java.util.Iterator;

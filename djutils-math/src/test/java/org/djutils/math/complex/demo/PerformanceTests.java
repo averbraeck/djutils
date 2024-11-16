@@ -1,6 +1,6 @@
-package org.djutils.complex.demo;
+package org.djutils.math.complex.demo;
 
-import org.djutils.complex.Complex;
+import org.djutils.math.complex.Complex;
 
 /**
  * PerformanceTests.java. <br>

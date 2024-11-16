@@ -1,4 +1,4 @@
-package org.djutils.means;
+package org.djutils.math.means;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.djutils.math.means.ArithmeticMean;
+import org.djutils.math.means.GeometricMean;
+import org.djutils.math.means.HarmonicMean;
 import org.junit.jupiter.api.Test;
 
 /**

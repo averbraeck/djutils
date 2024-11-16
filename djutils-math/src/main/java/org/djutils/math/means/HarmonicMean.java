@@ -1,4 +1,4 @@
-package org.djutils.means;
+package org.djutils.math.means;
 
 /**
  * Compute the harmonic (weighted) mean of a set of values.

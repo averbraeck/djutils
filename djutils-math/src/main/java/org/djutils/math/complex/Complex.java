@@ -1,4 +1,4 @@
-package org.djutils.complex;
+package org.djutils.math.complex;
 
 /**
  * Complex.java. Immutable complex numbers. This implementation stores the real and imaginary component as a double value. These

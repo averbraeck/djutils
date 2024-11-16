@@ -1,4 +1,4 @@
-package org.djutils.means;
+package org.djutils.math.means;
 
 /**
  * Compute the geometric (weighted) mean of a set of values. Geometric mean can not handle negative or zero values.

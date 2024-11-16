@@ -1,7 +1,7 @@
-package org.djutils.complex.demo;
+package org.djutils.math.complex.demo;
 
-import org.djutils.complex.Complex;
-import org.djutils.complex.ComplexMath;
+import org.djutils.math.complex.Complex;
+import org.djutils.math.complex.ComplexMath;
 
 /**
  * ComplexDemo.java. <br>

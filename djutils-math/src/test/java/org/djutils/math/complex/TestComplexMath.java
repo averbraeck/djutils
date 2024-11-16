@@ -1,8 +1,10 @@
-package org.djutils.complex;
+package org.djutils.math.complex;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.djutils.base.AngleUtil;
+import org.djutils.math.complex.Complex;
+import org.djutils.math.complex.ComplexMath;
 import org.junit.jupiter.api.Test;
 
 /**

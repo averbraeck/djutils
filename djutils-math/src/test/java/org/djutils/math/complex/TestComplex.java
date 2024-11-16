@@ -1,4 +1,4 @@
-package org.djutils.complex;
+package org.djutils.math.complex;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.djutils.base.AngleUtil;
+import org.djutils.math.complex.Complex;
 import org.junit.jupiter.api.Test;
 
 /**

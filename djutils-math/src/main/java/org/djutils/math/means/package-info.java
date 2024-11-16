@@ -7,4 +7,4 @@
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/staff/p.knoppers/">Peter Knoppers</a>
  */
-package org.djutils.means;
+package org.djutils.math.means;

@@ -1,4 +1,4 @@
-package org.djutils.means;
+package org.djutils.math.means;
 
 /**
  * Compute arithmetic (weighted) mean of a set of values.
