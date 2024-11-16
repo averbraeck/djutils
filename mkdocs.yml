@@ -75,9 +75,9 @@ nav:
     - DJUTILS-DRAW documentation: https://djutils.org/docs/latest/djutils-draw/index.html
     - DJUTILS-DRAW API: https://djutils.org/docs/latest/djutils-draw/apidocs/index.html
   - DJUTILS-MATH project:
-    - Complex numbers: djutils/complex-numbers.md
-    - Complex math: djutils/complex-math.md
-    - Means package: djutils/means.md
+    - Complex numbers: djutils-math/complex-numbers.md
+    - Complex math: djutils-math/complex-math.md
+    - Means package: djutils-math/means.md
     - DJUTILS-MATH documentation: https://djutils.org/docs/latest/djutils-math/index.html
     - DJUTILS-MATH API: https://djutils.org/docs/latest/djutils-math/apidocs/index.html
   - DJUTILS-STATS project:
