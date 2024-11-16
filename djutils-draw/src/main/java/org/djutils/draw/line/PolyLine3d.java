@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 import org.djutils.draw.DrawRuntimeException;
@@ -59,6 +58,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     /**
      * Construct a new PolyLine3d from an array of double x values, an array of double y values and an array of double z values.
      * @param copyNeeded boolean; if<code>true</code>; a deep copy of the points array is stored instead of the provided array
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
      * @param x double[]; the x-coordinates of the points
      * @param y double[]; the y-coordinates of the points
      * @param z double[]; the z-coordinates of the points
@@ -66,41 +66,39 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points, or or <code>x</code> and <code>y</code> and <code>z</code> differ in length)
      */
-    private PolyLine3d(final boolean copyNeeded, final double[] x, final double[] y, final double[] z)
+    private PolyLine3d(final boolean copyNeeded, final double epsilon, final double[] x, final double[] y, final double[] z)
     {
-        Throw.whenNull(x, "x");
-        Throw.whenNull(y, "y");
-        Throw.whenNull(y, "z");
         Throw.when(x.length != y.length || x.length != z.length, IllegalArgumentException.class,
                 "x, y  and z arrays must have same length");
+        double[][] filtered = filterNearDuplicates(epsilon, x, y, z);
         Throw.when(x.length < 2, IllegalArgumentException.class, "Need at least two points");
-        this.x = copyNeeded ? Arrays.copyOf(x, x.length) : x;
-        this.y = copyNeeded ? Arrays.copyOf(y, y.length) : y;
-        this.z = copyNeeded ? Arrays.copyOf(z, z.length) : z;
-        double minX = x[0];
-        double minY = y[0];
-        double minZ = z[0];
-        double maxX = x[0];
-        double maxY = y[0];
-        double maxZ = z[0];
-        this.lengthIndexedLine = new double[x.length];
+        this.x = copyNeeded && filtered[0].length == x.length ? Arrays.copyOf(x, x.length) : filtered[0];
+        this.y = copyNeeded && filtered[0].length == x.length ? Arrays.copyOf(y, y.length) : filtered[1];
+        this.z = copyNeeded && filtered[0].length == x.length ? Arrays.copyOf(z, z.length) : filtered[2];
+        double minX = this.x[0];
+        double minY = this.y[0];
+        double minZ = this.z[0];
+        double maxX = this.x[0];
+        double maxY = this.y[0];
+        double maxZ = this.z[0];
+        this.lengthIndexedLine = new double[this.x.length];
         this.lengthIndexedLine[0] = 0.0;
-        for (int i = 1; i < x.length; i++)
+        for (int i = 1; i < this.x.length; i++)
         {
-            minX = Math.min(minX, x[i]);
-            minY = Math.min(minY, y[i]);
-            minZ = Math.min(minZ, z[i]);
-            maxX = Math.max(maxX, x[i]);
-            maxY = Math.max(maxY, y[i]);
-            maxZ = Math.max(maxZ, z[i]);
-            if (x[i - 1] == x[i] && y[i - 1] == y[i] && (z[i - 1] == z[i]))
+            minX = Math.min(minX, this.x[i]);
+            minY = Math.min(minY, this.y[i]);
+            minZ = Math.min(minZ, this.z[i]);
+            maxX = Math.max(maxX, this.x[i]);
+            maxY = Math.max(maxY, this.y[i]);
+            maxZ = Math.max(maxZ, this.z[i]);
+            if (this.x[i - 1] == this.x[i] && this.y[i - 1] == this.y[i] && (this.z[i - 1] == this.z[i]))
             {
                 throw new IllegalArgumentException(
                         "Degenerate PolyLine2d; point " + (i - 1) + " has the same x, y and z as point " + i);
             }
             // There should be a varargs Math.hypot implementation
-            this.lengthIndexedLine[i] =
-                    this.lengthIndexedLine[i - 1] + Math.hypot(Math.hypot(x[i] - x[i - 1], y[i] - y[i - 1]), z[i] - z[i - 1]);
+            this.lengthIndexedLine[i] = this.lengthIndexedLine[i - 1]
+                    + Math.hypot(Math.hypot(this.x[i] - this.x[i - 1], this.y[i] - this.y[i - 1]), this.z[i] - this.z[i - 1]);
         }
         this.length = this.lengthIndexedLine[this.lengthIndexedLine.length - 1];
         this.bounds = new Bounds3d(minX, maxX, minY, maxY, minZ, maxZ);
@@ -175,7 +173,22 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
      */
     public PolyLine3d(final double[] x, final double[] y, final double[] z)
     {
-        this(true, x, y, z);
+        this(NO_FILTER, x, y, z);
+    }
+
+    /**
+     * Construct a new PolyLine3d from an array of Point2d. This constructor makes a deep copy of the parameters.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param x double[]; the x-coordinates of the points
+     * @param y double[]; the y-coordinates of the points
+     * @param z double[]; the z-coordinates of the points
+     * @throws NullPointerException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>null</code>
+     * @throws IllegalArgumentException when the provided coordinate values do not constitute a valid line (too few points or
+     *             identical adjacent points, or the arrays are not the same length)
+     */
+    public PolyLine3d(final double epsilon, final double[] x, final double[] y, final double[] z)
+    {
+        this(true, epsilon, x, y, z);
     }
 
     /**
@@ -187,7 +200,20 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
      */
     public PolyLine3d(final Point3d[] points)
     {
-        this(false, makeArray(Throw.whenNull(points, "points"), p -> p.x), makeArray(points, p -> p.y),
+        this(NO_FILTER, points);
+    }
+
+    /**
+     * Construct a new PolyLine3d from an array of Point3d.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param points Point3d[]; the array of points to construct this PolyLine3d from.
+     * @throws NullPointerException when the <code>points</code> array is <code>null</code>
+     * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
+     */
+    public PolyLine3d(final double epsilon, final Point3d[] points)
+    {
+        this(false, epsilon, makeArray(Throw.whenNull(points, "points"), p -> p.x), makeArray(points, p -> p.y),
                 makeArray(points, p -> p.z));
     }
 
@@ -219,7 +245,23 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
      */
     public PolyLine3d(final Point3d point1, final Point3d point2, final Point3d... otherPoints)
     {
-        this(spliceArray(point1, point2, otherPoints));
+        this(NO_FILTER, point1, point2, otherPoints);
+    }
+
+    /**
+     * Construct a new PolyLine3d from two or more Point3d arguments.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param point1 Point3d; starting point of the PolyLine3d
+     * @param point2 Point3d; second point of the PolyLine3d
+     * @param otherPoints Point3d...; additional points of the PolyLine3d (may be <code>null</code>, or have zero length)
+     * @throws NullPointerException when <code>point1</code>, or <code>point2</code> is <code>null</code>, or
+     *             <code>otherPoints</code> contains a <code>null</code> value
+     * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
+     */
+    public PolyLine3d(final double epsilon, final Point3d point1, final Point3d point2, final Point3d... otherPoints)
+    {
+        this(epsilon, spliceArray(point1, point2, otherPoints));
     }
 
     /**
@@ -255,7 +297,20 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
      */
     public PolyLine3d(final Iterator<Point3d> iterator)
     {
-        this(iteratorToList(Throw.whenNull(iterator, "iterator")));
+        this(NO_FILTER, iterator);
+    }
+
+    /**
+     * Construct a new PolyLine3d from an iterator that yields Point3d objects.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param iterator Iterator&lt;Point3d&gt;; iterator that will provide all points that constitute the new PolyLine3d
+     * @throws NullPointerException when <code>iterator</code> is <code>null</code>, or yields a <code>null</code> value
+     * @throws IllegalArgumentException when the <code>iterator</code> provides too few points, or some adjacent identical
+     *             points)
+     */
+    public PolyLine3d(final double epsilon, final Iterator<Point3d> iterator)
+    {
+        this(epsilon, iteratorToList(Throw.whenNull(iterator, "iterator")));
     }
 
     /**
@@ -267,78 +322,20 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
      */
     public PolyLine3d(final List<Point3d> pointList)
     {
-        this(pointList.toArray(new Point3d[Throw.whenNull(pointList, "pointList").size()]));
+        this(NO_FILTER, pointList);
     }
 
     /**
-     * Create a new PolyLine3d, optionally filtering out repeating successive points.
-     * @param filterDuplicates boolean; if<code>true</code>; filter out successive repeated points; otherwise do not filter
-     * @param points Point3d...; the coordinates of the line as Point2d
-     * @throws NullPointerException when <code>points</code> is <code>null</code>, or contains a <code>null</code> value
-     * @throws IllegalArgumentException when number of points &lt; 2
-     */
-    public PolyLine3d(final boolean filterDuplicates, final Point3d... points)
-    {
-        this(PolyLine3d.cleanPoints(filterDuplicates, Arrays.stream(points).iterator()));
-    }
-
-    /**
-     * Create a new PolyLine3d, optionally filtering out repeating successive points.
-     * @param filterDuplicates boolean; if<code>true</code>; filter out successive repeated points; otherwise do not filter
-     * @param pointList List&lt;Point3d&gt;; list of the coordinates of the line in <code>Point3d</code> objects; any duplicate
-     *            points in this list are removed (this method may modify the provided <code>pointList</code>)
+     * Construct a new PolyLine3d from a List&lt;Point3d&gt;.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param pointList List&lt;Point3d&gt;; the list of points to construct the new PolyLine3d from.
      * @throws NullPointerException when <code>pointList</code> is <code>null</code>, or contains a <code>null</code> value
-     * @throws IllegalArgumentException when number of non-equal points &lt; 2
+     * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
      */
-    public PolyLine3d(final boolean filterDuplicates, final List<Point3d> pointList)
+    public PolyLine3d(final double epsilon, final List<Point3d> pointList)
     {
-        this(PolyLine3d.cleanPoints(filterDuplicates, pointList.iterator()));
-    }
-
-    /**
-     * Return an iterator that optionally skips identical successive points.
-     * @param filter boolean; if<code>true</code>; filter out identical successive points; if <code>false</code>; do not filter
-     * @param iterator Iterator&lt;Point3d&gt;; iterator that generates points, potentially with successive duplicates
-     * @return Iterator&lt;Point3d&gt;; iterator that skips identical successive points
-     * @throws NullPointerException when <code>iterator</code> is <code>null</code>, or yields a <code>null</code> value
-     * @throws IllegalArgumentException when <code>iterator</code> returns no points at all
-     */
-    static Iterator<Point3d> cleanPoints(final boolean filter, final Iterator<Point3d> iterator)
-    {
-        Throw.whenNull(iterator, "Iterator");
-        Throw.when(!iterator.hasNext(), IllegalArgumentException.class, "Iterator has no points to return");
-        if (!filter)
-        {
-            return iterator;
-        }
-        return new Iterator<Point3d>()
-        {
-            private Point3d currentPoint = iterator.next();
-
-            @Override
-            public boolean hasNext()
-            {
-                return this.currentPoint != null;
-            }
-
-            @Override
-            public Point3d next()
-            {
-                Throw.when(this.currentPoint == null, NoSuchElementException.class, "Out of input");
-                Point3d result = this.currentPoint;
-                this.currentPoint = null;
-                while (iterator.hasNext())
-                {
-                    this.currentPoint = iterator.next();
-                    if (result.x != this.currentPoint.x || result.y != this.currentPoint.y || result.z != this.currentPoint.z)
-                    {
-                        break;
-                    }
-                    this.currentPoint = null;
-                }
-                return result;
-            }
-        };
+        this(epsilon, pointList.toArray(new Point3d[Throw.whenNull(pointList, "pointList").size()]));
     }
 
     /**
@@ -359,9 +356,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     }
 
     @Override
-    public PolyLine3d instantiate(final List<Point3d> pointList) throws NullPointerException, IllegalArgumentException
+    public PolyLine3d instantiate(final double epsilon, final List<Point3d> pointList)
     {
-        return new PolyLine3d(pointList);
+        return new PolyLine3d(epsilon, pointList);
     }
 
     /**
@@ -590,29 +587,17 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     }
 
     @Override
-    public PolyLine2d project() throws DrawRuntimeException
+    public PolyLine2d project()
     {
-        double[] projectedX = new double[this.x.length];
-        double[] projectedY = new double[this.x.length];
-        int nextIndex = 0;
-        for (int i = 0; i < this.x.length; i++)
+        for (int i = 1; i < size(); i++)
         {
-            if (i > 0 && this.x[i] == this.x[i - 1] && this.y[i] == this.y[i - 1])
+            if (this.x[i] != this.x[0] || this.y[i] != this.y[0])
             {
-                continue;
-                // TODO; rewrite so that the arrays are only copied when they need to be shortened
+                break;
             }
-            projectedX[nextIndex] = this.x[i];
-            projectedY[nextIndex] = this.y[i];
-            nextIndex++;
+            Throw.when(i == size() - 1, DrawRuntimeException.class, "all points project onto the same point");
         }
-        Throw.when(nextIndex < 2, DrawRuntimeException.class,
-                "projection yielded too few points to construct a valid PolyLine2d");
-        if (nextIndex < projectedX.length)
-        {
-            return new PolyLine2d(false, Arrays.copyOf(projectedX, nextIndex), Arrays.copyOf(projectedY, nextIndex));
-        }
-        return new PolyLine2d(false, this.x, this.y); // The x and y arrays are immutable; so we can safely share them
+        return new PolyLine2d(false, 0.0, this.x, this.y);
     }
 
     @Override
@@ -1012,7 +997,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
                 indexInEnd++;
             }
         }
-        return new PolyLine3d(true, pointList);
+        return new PolyLine3d(0.0, pointList);
     }
 
     @Override

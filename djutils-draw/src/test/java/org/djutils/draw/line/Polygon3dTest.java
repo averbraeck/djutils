@@ -270,7 +270,7 @@ public class Polygon3dTest
         Point3d[] points = new Point3d[] {new Point3d(1, 2, 3), new Point3d(1, 2, 3), new Point3d(4, 5, 6)};
         try
         {
-            new Polygon3d(false, points);
+            new Polygon3d(PolyLine.NO_FILTER, points);
             fail("duplicate point should have thrown a IllegalArgumentException");
         }
         catch (IllegalArgumentException e)
@@ -278,12 +278,12 @@ public class Polygon3dTest
             // Ignore expected exception
         }
 
-        assertEquals(2, new Polygon3d(true, points).size(), "After filtering; there are two points left");
+        assertEquals(2, new Polygon3d(0.0, points).size(), "After filtering; there are two points left");
 
         List<Point3d> list = Arrays.asList(points);
         try
         {
-            new Polygon3d(false, list);
+            new Polygon3d(PolyLine.NO_FILTER, list);
             fail("duplicate point should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException e)
@@ -291,7 +291,7 @@ public class Polygon3dTest
             // Ignore expected exception
         }
 
-        assertEquals(2, new Polygon3d(true, list).size(), "After filtering; there are two points left");
+        assertEquals(2, new Polygon3d(0.0, list).size(), "After filtering; there are two points left");
     }
 
     /**

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Export;
@@ -485,25 +484,25 @@ public class PolyLine2dTest
         assertEquals(line, filtered, "Filtering a two-point line returns that line");
 
         array = new Point2d[] {new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4)};
-        line = new PolyLine2d(true, array);
+        line = new PolyLine2d(0.0, array);
         assertEquals(2, line.size(), "cleaned line has 2 points");
         assertEquals(array[0], line.getFirst(), "first point");
         assertEquals(array[array.length - 1], line.getLast(), "last point");
 
         array = new Point2d[] {new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4), new Point2d(3, 4)};
-        line = new PolyLine2d(true, array);
+        line = new PolyLine2d(0.0, array);
         assertEquals(2, line.size(), "cleaned line has 2 points");
         assertEquals(array[0], line.getFirst(), "first point");
         assertEquals(array[array.length - 1], line.getLast(), "last point");
 
         array = new Point2d[] {new Point2d(0, -1), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4)};
-        line = new PolyLine2d(true, array);
+        line = new PolyLine2d(0.0, array);
         assertEquals(3, line.size(), "cleaned line has 2 points");
         assertEquals(array[0], line.getFirst(), "first point");
         assertEquals(array[array.length - 1], line.getLast(), "last point");
 
         array = new Point2d[] {new Point2d(0, -1), new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2), new Point2d(3, 4)};
-        line = new PolyLine2d(true, array);
+        line = new PolyLine2d(0.0, array);
         assertEquals(3, line.size(), "cleaned line has 3 points");
         assertEquals(array[0], line.getFirst(), "first point");
         assertEquals(array[1], line.get(1), "mid point");
@@ -514,16 +513,16 @@ public class PolyLine2dTest
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(true, new Point2d[0]);
+                new PolyLine2d(new Point2d[0]);
             }
-        }, "Too short array should have thrown a DrawRuntimeException", DrawRuntimeException.class);
+        }, "Too short array should have thrown a IllegalArgumentException", IllegalArgumentException.class);
 
         Try.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(true, new Point2d[] {new Point2d(1, 2)});
+                new PolyLine2d(new Point2d[] {new Point2d(1, 2)});
             }
         }, "Too short array should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
@@ -532,7 +531,7 @@ public class PolyLine2dTest
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(true, new Point2d[] {new Point2d(1, 2), new Point2d(1, 2)});
+                new PolyLine2d(new Point2d[] {new Point2d(1, 2), new Point2d(1, 2)});
             }
         }, "All duplicate points in array should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
@@ -541,7 +540,7 @@ public class PolyLine2dTest
             @Override
             public void execute() throws Throwable
             {
-                new PolyLine2d(true, new Point2d[] {new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2)});
+                new PolyLine2d(new Point2d[] {new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2)});
             }
         }, "All duplicate points in array should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
@@ -1571,10 +1570,10 @@ public class PolyLine2dTest
         Point2d[] tooShort = new Point2d[] {};
         try
         {
-            new PolyLine2d(true, tooShort);
-            fail("Array with no points should have thrown an exception");
+            new PolyLine2d(tooShort);
+            fail("Array with no points should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException e)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }
@@ -1582,8 +1581,8 @@ public class PolyLine2dTest
         tooShort = new Point2d[] {new Point2d(1, 2)};
         try
         {
-            new PolyLine2d(true, tooShort);
-            fail("Array with one point should have thrown an exception");
+            new PolyLine2d(tooShort);
+            fail("Array with one point should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException e)
         {
@@ -1593,74 +1592,17 @@ public class PolyLine2dTest
         Point2d p0 = new Point2d(1, 2);
         Point2d p1 = new Point2d(4, 5);
         Point2d[] points = new Point2d[] {p0, p1};
-        PolyLine2d result = new PolyLine2d(true, points);
+        PolyLine2d result = new PolyLine2d(points);
         assertTrue(p0.equals(result.get(0)), "first point is p0");
         assertTrue(p1.equals(result.get(1)), "second point is p1");
         Point2d p1Same = new Point2d(4, 5);
-        result = new PolyLine2d(true, new Point2d[] {p0, p0, p0, p0, p1Same, p0, p1, p1, p1Same, p1, p1});
+        result = new PolyLine2d(0.0, new Point2d[] {p0, p0, p0, p0, p1Same, p0, p1, p1, p1Same, p1, p1});
         assertEquals(4, result.size(), "result should contain 4 points");
         assertTrue(p0.equals(result.get(0)), "first point is p0");
         assertTrue(p1.equals(result.get(1)), "second point is p1");
-        assertTrue(p0.equals(result.get(0)), "third point is p0");
-        assertTrue(p1.equals(result.get(1)), "last point is p1");
-        new PolyLine2d(true, new Point2d[] {p0, new Point2d(1, 3)});
-
-        try
-        {
-            PolyLine2d.cleanPoints(true, null);
-            fail("null iterator should have thrown a NullPointerException");
-        }
-        catch (NullPointerException npe)
-        {
-            // Ignore expected exception
-        }
-
-        try
-        {
-            PolyLine2d.cleanPoints(true, new Iterator<Point2d>()
-            {
-                @Override
-                public boolean hasNext()
-                {
-                    return false;
-                }
-
-                @Override
-                public Point2d next()
-                {
-                    return null;
-                }
-            });
-            fail("Iterator that has no data should have thrown a DrawRuntimeException");
-        }
-        catch (DrawRuntimeException dre)
-        {
-            // Ignore expected exception
-        }
-
-        Iterator<Point2d> iterator = PolyLine2d.cleanPoints(true, Arrays.stream(new Point2d[] {new Point2d(1, 2)}).iterator());
-        iterator.next(); // should work
-        assertFalse(iterator.hasNext(), "iterator should now be out of data");
-        try
-        {
-            iterator.next();
-            fail("Iterator that has no nore data should have thrown a NoSuchElementException");
-        }
-        catch (NoSuchElementException nse)
-        {
-            // Ignore expected exception
-        }
-
-        // Check that cleanPoints with false indeed does not filter
-        iterator = PolyLine2d.cleanPoints(false,
-                Arrays.stream(new Point2d[] {new Point2d(1, 2), new Point2d(1, 2), new Point2d(1, 2)}).iterator());
-        assertTrue(iterator.hasNext(), "iterator has initial point");
-        iterator.next();
-        assertTrue(iterator.hasNext(), "iterator has second point");
-        iterator.next();
-        assertTrue(iterator.hasNext(), "iterator has second point");
-        iterator.next();
-        assertFalse(iterator.hasNext(), "iterator has no more data");
+        assertTrue(p0.equals(result.get(2)), "third point is p0");
+        assertTrue(p1.equals(result.get(3)), "last point is p1");
+        new PolyLine2d(new Point2d[] {p0, new Point2d(1, 3)}); // should succeed
     }
 
     /**

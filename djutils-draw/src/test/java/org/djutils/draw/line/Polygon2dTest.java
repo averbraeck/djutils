@@ -243,7 +243,7 @@ public class Polygon2dTest
         Point2d[] points = new Point2d[] {new Point2d(1, 2), new Point2d(1, 2), new Point2d(4, 5)};
         try
         {
-            new Polygon2d(false, points);
+            new Polygon2d(PolyLine.NO_FILTER, points);
             fail("duplicate point should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException e)
@@ -251,12 +251,12 @@ public class Polygon2dTest
             // Ignore expected exception
         }
 
-        assertEquals(2, new Polygon2d(true, points).size(), "After filtering; there are two points left");
+        assertEquals(2, new Polygon2d(0.0, points).size(), "After filtering; there are two points left");
 
         List<Point2d> list = Arrays.asList(points);
         try
         {
-            new Polygon2d(false, list);
+            new Polygon2d(PolyLine.NO_FILTER, list);
             fail("duplicate point should have thrown an IllegalArgumentException");
         }
         catch (IllegalArgumentException e)
@@ -264,7 +264,7 @@ public class Polygon2dTest
             // Ignore expected exception
         }
 
-        assertEquals(2, new Polygon2d(true, list).size(), "After filtering; there are two points left");
+        assertEquals(2, new Polygon2d(0.0, list).size(), "After filtering; there are two points left");
     }
 
     /**

@@ -37,7 +37,21 @@ public class Polygon2d extends PolyLine2d
      */
     public Polygon2d(final double[] x, final double[] y)
     {
-        super(fixClosingPoint(Throw.whenNull(x, "x"), Throw.whenNull(y, "y")), fixClosingPoint(y, x));
+        this(NO_FILTER, x, y);
+    }
+
+    /**
+     * Construct a new Polygon2d.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param x double[]; the x coordinates of the points
+     * @param y double[]; the y coordinates of the points
+     * @throws NullPointerException when <code>x</code>, or <code>y</code> is <code>null</code>
+     * @throws IllegalArgumentException when any two successive points are equal, or when there are too few points, or when the
+     *             lengths of the coordinate arrays are not equal
+     */
+    public Polygon2d(final double epsilon, final double[] x, final double[] y)
+    {
+        super(epsilon, fixClosingPoint(Throw.whenNull(x, "x"), Throw.whenNull(y, "y")), fixClosingPoint(y, x));
     }
 
     /**
@@ -63,7 +77,19 @@ public class Polygon2d extends PolyLine2d
      */
     public Polygon2d(final Point2d[] points)
     {
-        this(PolyLine2d.makeArray(points, p -> p.x), PolyLine2d.makeArray(points, p -> p.y));
+        this(NO_FILTER, points);
+    }
+
+    /**
+     * Construct a new Polygon2d.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param points Point2d[]; array of Point2d objects.
+     * @throws NullPointerException when <code>points</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>points</code> is too short, or contains successive duplicate points
+     */
+    public Polygon2d(final double epsilon, final Point2d[] points)
+    {
+        this(epsilon, PolyLine2d.makeArray(points, p -> p.x), PolyLine2d.makeArray(points, p -> p.y));
     }
 
     /**
@@ -78,7 +104,24 @@ public class Polygon2d extends PolyLine2d
      */
     public Polygon2d(final Point2d point1, final Point2d point2, final Point2d... otherPoints)
     {
-        super(Throw.whenNull(point1, "point1"), Throw.whenNull(point2, "point2"), fixClosingPoint(point1, otherPoints));
+        this(NO_FILTER, point1, point2, otherPoints);
+    }
+
+    /**
+     * Construct a new Polygon2d.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param point1 Point2d; the first point of the new Polygon2d
+     * @param point2 Point2d; the second point of the new Polygon2d
+     * @param otherPoints Point2d[]; all remaining points of the new Polygon2d (may be <code>null</code>)
+     * @throws NullPointerException when <code>point1</code> or <code>point2</code> is <code>null</code>, or
+     *             <code>otherPoints</code> contains a <code>null</code> value
+     * @throws IllegalArgumentException when <code>point1</code> is equal to the last entry of <code>otherPoints</code>, or any
+     *             two successive points are equal
+     */
+    public Polygon2d(final double epsilon, final Point2d point1, final Point2d point2, final Point2d... otherPoints)
+    {
+        super(epsilon, Throw.whenNull(point1, "point1"), Throw.whenNull(point2, "point2"),
+                fixClosingPoint(point1, otherPoints));
     }
 
     /**
@@ -113,8 +156,19 @@ public class Polygon2d extends PolyLine2d
      */
     public Polygon2d(final List<Point2d> points)
     {
-        super(fixClosingPoint(true, Throw.whenNull(points, "points")));
+        this(NO_FILTER, points);
+    }
 
+    /**
+     * Construct a new Polygon2d from a list of Point2d objects.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param points List&lt;Point2d&gt;; the list of points
+     * @throws NullPointerException when <code>points</code> is <code>null</code>, or contains a <code>null</code> value
+     * @throws IllegalArgumentException when <code>points</code> is too short, or the last two points are at the same location
+     */
+    public Polygon2d(final double epsilon, final List<Point2d> points)
+    {
+        super(epsilon, fixClosingPoint(true, Throw.whenNull(points, "points")));
     }
 
     /**
@@ -164,32 +218,21 @@ public class Polygon2d extends PolyLine2d
      */
     public Polygon2d(final Iterator<Point2d> iterator)
     {
-        this(fixClosingPoint(false, iteratorToList(Throw.whenNull(iterator, "iterator"))));
+        this(NO_FILTER, iterator);
     }
 
     /**
-     * Create a new Polygon2d, optionally filtering out repeating successive points.
-     * @param filterDuplicates boolean; if <code>true</code>; filter out successive repeated points; otherwise do not filter
-     * @param points Point2d...; the coordinates of the polygon in Point2d objects
-     * @throws NullPointerException when <code>points</code> contains a <code>null</code> value
-     * @throws IllegalArgumentException when number of points (after filtering) &lt; 2
+     * Construct a new Polygon2d from an iterator that yields Point2d.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param iterator Iterator&lt;Point2d&gt;; the iterator
+     * @throws NullPointerException when <code>iterator</code> is <code>null</code>, or the iterator returns a <code>null</code>
+     *             value
+     * @throws IllegalArgumentException when the <code>iterator</code> yields too few points, or the before last and last point
+     *             have the same coordinates
      */
-    public Polygon2d(final boolean filterDuplicates, final Point2d... points)
+    public Polygon2d(final double epsilon, final Iterator<Point2d> iterator)
     {
-        this(PolyLine2d.cleanPoints(filterDuplicates, Arrays.stream(points).iterator()));
-    }
-
-    /**
-     * Create a new Polygon2d, optionally filtering out repeating successive points.
-     * @param filterDuplicates boolean; if<code>true</code>; filter out successive repeated points; otherwise do not filter
-     * @param pointList List&lt;Point2d&gt;; list of the coordinates of the line in Point2d objects; any duplicate points in
-     *            this list are removed (this method may modify the provided list)
-     * @throws NullPointerException when <code>pointList</code> contains a <code>null</code> value
-     * @throws IllegalArgumentException when number of non-equal points &lt; 2
-     */
-    public Polygon2d(final boolean filterDuplicates, final List<Point2d> pointList)
-    {
-        this(PolyLine2d.cleanPoints(filterDuplicates, pointList.iterator()));
+        this(epsilon, fixClosingPoint(false, iteratorToList(Throw.whenNull(iterator, "iterator"))));
     }
 
     /**

@@ -34,8 +34,21 @@ public class Polygon3d extends PolyLine3d
      */
     public Polygon3d(final double[] x, final double[] y, final double[] z)
     {
-        super(fixClosingPoint(Throw.whenNull(x, "x"), Throw.whenNull(y, "y"), Throw.whenNull(z, "z")), fixClosingPoint(y, x, z),
-                fixClosingPoint(z, x, y));
+        this(NO_FILTER, x, y, z);
+    }
+
+    /**
+     * Construct a new Polygon3d.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param x double[]; the x coordinates of the points
+     * @param y double[]; the y coordinates of the points
+     * @param z double[]; the z coordinates of the points
+     * @throws IllegalArgumentException when any two successive points are equal, or when there are too few points
+     */
+    public Polygon3d(final double epsilon, final double[] x, final double[] y, final double[] z)
+    {
+        super(epsilon, fixClosingPoint(Throw.whenNull(x, "x"), Throw.whenNull(y, "y"), Throw.whenNull(z, "z")),
+                fixClosingPoint(y, x, z), fixClosingPoint(z, x, y));
     }
 
     /**
@@ -63,7 +76,19 @@ public class Polygon3d extends PolyLine3d
      */
     public Polygon3d(final Point3d[] points)
     {
-        this(PolyLine3d.makeArray(Throw.whenNull(points, "points"), p -> p.x), PolyLine3d.makeArray(points, p -> p.y),
+        this(NO_FILTER, points);
+    }
+
+    /**
+     * Construct a new Polygon3d.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param points Point3d[]; array of Point3d objects.
+     * @throws NullPointerException when <code>points</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>points</code> is too short, or contains successive duplicate points
+     */
+    public Polygon3d(final double epsilon, final Point3d[] points)
+    {
+        this(epsilon, PolyLine3d.makeArray(Throw.whenNull(points, "points"), p -> p.x), PolyLine3d.makeArray(points, p -> p.y),
                 PolyLine3d.makeArray(points, p -> p.z));
     }
 
@@ -79,7 +104,23 @@ public class Polygon3d extends PolyLine3d
      */
     public Polygon3d(final Point3d point1, final Point3d point2, final Point3d... otherPoints)
     {
-        super(Throw.whenNull(point1, "point1"), Throw.whenNull(point2, "point2"), fixClosingPoint(point1, otherPoints));
+        this(NO_FILTER, point1, point2, otherPoints);
+    }
+
+    /**
+     * Construct a new Polygon3d.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param point1 Point3d; the first point of the new Polygon3d
+     * @param point2 Point3d; the second point of the new Polygon3d
+     * @param otherPoints Point3d[]; all remaining points of the new Polygon3d (may be null)
+     * @throws NullPointerException when <code>point1</code> or <code>point2</code> is <code>null</code>, or contains a
+     *             <code>null</code> value
+     * @throws IllegalArgumentException when <code>point1</code> is equal to the last point of <code>otherPoints</code>, or any
+     *             two successive points are equal
+     */
+    public Polygon3d(final double epsilon, final Point3d point1, final Point3d point2, final Point3d... otherPoints)
+    {
+        super(epsilon, Throw.whenNull(point1, "point1"), Throw.whenNull(point2, "point2"), fixClosingPoint(point1, otherPoints));
     }
 
     /**
@@ -114,8 +155,19 @@ public class Polygon3d extends PolyLine3d
      */
     public Polygon3d(final List<Point3d> points)
     {
-        super(fixClosingPoint(true, Throw.whenNull(points, "points")));
+        this(NO_FILTER, points);
+    }
 
+    /**
+     * Construct a new Polygon3d from a list of Point3d objects.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param points List&lt;Point3d&gt;; the list of points
+     * @throws NullPointerException when <code>points</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>points</code> is too short, or the last two points are at the same location
+     */
+    public Polygon3d(final double epsilon, final List<Point3d> points)
+    {
+        super(epsilon, fixClosingPoint(true, Throw.whenNull(points, "points")));
     }
 
     /**
@@ -161,32 +213,17 @@ public class Polygon3d extends PolyLine3d
      */
     public Polygon3d(final Iterator<Point3d> iterator)
     {
-        this(fixClosingPoint(false, iteratorToList(Throw.whenNull(iterator, "iterator"))));
+        this(NO_FILTER, iterator);
     }
 
     /**
-     * Create a new Polygon3d, optionally filtering out repeating successive points.
-     * @param filterDuplicates boolean; if<code>true</code>; filter out successive repeated points; otherwise do not filter
-     * @param points Point3d...; the coordinates of the polygon as Point3d #throws NullPointerException when <code>points</code>
-     *            is <code>null</code>
-     * @throws IllegalArgumentException when the length of <code>points &lt; 2</code>
+     * Construct a new Polygon3d from an iterator that yields Point3d.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param iterator Iterator&lt;Point3d&gt;; the iterator
      */
-    public Polygon3d(final boolean filterDuplicates, final Point3d... points)
+    public Polygon3d(final double epsilon, final Iterator<Point3d> iterator)
     {
-        this(PolyLine3d.cleanPoints(filterDuplicates, Arrays.stream(points).iterator()));
-    }
-
-    /**
-     * Create a new Polygon3d, optionally filtering out repeating successive points.
-     * @param filterDuplicates boolean; if<code>true</code>; filter out successive repeated points; otherwise do not filter
-     * @param pointList List&lt;Point3d&gt;; list of the coordinates of the line as Point3d; any duplicate points in this list
-     *            are removed (this method may modify the provided list) #throws NullPointerException when
-     *            <code>pointList</code> is <code>null</code>
-     * @throws IllegalArgumentException when number of non-equal points &lt; 2
-     */
-    public Polygon3d(final boolean filterDuplicates, final List<Point3d> pointList)
-    {
-        this(PolyLine3d.cleanPoints(filterDuplicates, pointList.iterator()));
+        this(epsilon, fixClosingPoint(false, iteratorToList(Throw.whenNull(iterator, "iterator"))));
     }
 
     /**

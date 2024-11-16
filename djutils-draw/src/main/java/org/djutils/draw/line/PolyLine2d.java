@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
@@ -56,38 +55,39 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Construct a new PolyLine2d from an array of double x values and an array of double y values.
      * @param copyNeeded boolean; if<code>true</code>; a deep copy of the points array is stored instead of the provided array
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
      * @param x double[]; the x-coordinates of the points
      * @param y double[]; the y-coordinates of the points
      * @throws NullPointerException when <code>iterator</code> is <code>null</code>
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points), or <code>x</code> and <code>y</code> differ in length
      */
-    PolyLine2d(final boolean copyNeeded, final double[] x, final double[] y)
+    PolyLine2d(final boolean copyNeeded, final double epsilon, final double[] x, final double[] y)
     {
-        Throw.whenNull(x, "x");
-        Throw.whenNull(y, "y");
         Throw.when(x.length != y.length, IllegalArgumentException.class, "x and y arrays must have same length");
         Throw.when(x.length < 2, IllegalArgumentException.class, "Need at least two points");
-        this.x = copyNeeded ? Arrays.copyOf(x, x.length) : x;
-        this.y = copyNeeded ? Arrays.copyOf(y, y.length) : y;
+        double[][] filtered = filterNearDuplicates(epsilon, x, y);
+        this.x = copyNeeded && filtered[0].length == x.length ? Arrays.copyOf(x, x.length) : filtered[0];
+        this.y = copyNeeded && filtered[0].length == x.length ? Arrays.copyOf(y, y.length) : filtered[1];
         double minX = x[0];
         double minY = y[0];
         double maxX = x[0];
         double maxY = y[0];
-        this.lengthIndexedLine = new double[x.length];
+        this.lengthIndexedLine = new double[this.x.length];
         this.lengthIndexedLine[0] = 0.0;
-        for (int i = 1; i < x.length; i++)
+        for (int i = 1; i < this.x.length; i++)
         {
-            minX = Math.min(minX, x[i]);
-            minY = Math.min(minY, y[i]);
-            maxX = Math.max(maxX, x[i]);
-            maxY = Math.max(maxY, y[i]);
-            if (x[i - 1] == x[i] && y[i - 1] == y[i])
+            minX = Math.min(minX, this.x[i]);
+            minY = Math.min(minY, this.y[i]);
+            maxX = Math.max(maxX, this.x[i]);
+            maxY = Math.max(maxY, this.y[i]);
+            if (this.x[i - 1] == this.x[i] && this.y[i - 1] == this.y[i])
             {
                 throw new IllegalArgumentException(
-                        "Degenerate PolyLine2d; point " + (i - 1) + " has the same x and y as point " + i);
+                        "Degenerate PolyLine2d; point " + (i - 1) + " has the same x, y and z as point " + i);
             }
-            this.lengthIndexedLine[i] = this.lengthIndexedLine[i - 1] + Math.hypot(x[i] - x[i - 1], y[i] - y[i - 1]);
+            this.lengthIndexedLine[i] =
+                    this.lengthIndexedLine[i - 1] + Math.hypot(this.x[i] - this.x[i - 1], this.y[i] - this.y[i - 1]);
         }
         this.length = this.lengthIndexedLine[this.lengthIndexedLine.length - 1];
         this.bounds = new Bounds2d(minX, maxX, minY, maxY);
@@ -138,7 +138,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     public PolyLine2d(final DirectedPoint2d directedPoint2d)
     {
-        this(Throw.whenNull(directedPoint2d, "r").x, directedPoint2d.y, directedPoint2d.dirZ);
+        this(Throw.whenNull(directedPoint2d, "directedPoint2d").x, directedPoint2d.y, directedPoint2d.dirZ);
     }
 
     /**
@@ -152,7 +152,22 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     public PolyLine2d(final double[] x, final double[] y)
     {
-        this(true, x, y);
+        this(NO_FILTER, x, y);
+    }
+
+    /**
+     * Construct a new PolyLine2d from an array of x-values and an array of y-values. This constructor makes a deep copy of the
+     * parameters.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param x double[]; the x-coordinates of the points
+     * @param y double[]; the y-coordinates of the points
+     * @throws NullPointerException when any of the arrays is <code>null</code>
+     * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points, or the arrays do not have the same length)
+     */
+    public PolyLine2d(final double epsilon, final double[] x, final double[] y)
+    {
+        this(true, epsilon, x, y);
     }
 
     /**
@@ -164,7 +179,20 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     public PolyLine2d(final Point2d[] points)
     {
-        this(false, makeArray(Throw.whenNull(points, "points"), p -> p.x), makeArray(points, p -> p.y));
+        this(NO_FILTER, points);
+    }
+
+    /**
+     * Construct a new PolyLine2d from an array of Point2d.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param points Point2d[]; the array of points to construct this PolyLine2d from.
+     * @throws NullPointerException when the array is <code>null</code>
+     * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
+     */
+    public PolyLine2d(final double epsilon, final Point2d[] points)
+    {
+        this(false, epsilon, makeArray(Throw.whenNull(points, "points"), p -> p.x), makeArray(points, p -> p.y));
     }
 
     /**
@@ -199,6 +227,22 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     /**
+     * Construct a new PolyLine2d from two or more Point2d arguments.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param point1 Point2d; starting point of the PolyLine2d
+     * @param point2 Point2d; second point of the PolyLine2d
+     * @param otherPoints Point2d...; additional points of the PolyLine2d (may be <code>null</code>, or have zero length)
+     * @throws NullPointerException when <code>point1</code>, or <code>point2</code> is <code>null</code>, or
+     *             <code>otherPoints</code> contains a <code>null</code> value
+     * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
+     */
+    public PolyLine2d(final double epsilon, final Point2d point1, final Point2d point2, final Point2d... otherPoints)
+    {
+        this(epsilon, spliceArray(Throw.whenNull(point1, "point1"), Throw.whenNull(point2, "point2"), otherPoints));
+    }
+
+    /**
      * Construct an array of Point2d from two points plus an array of Point2d.
      * @param point1 Point2d; the first point (ends up at index 0 of the result)
      * @param point2 Point2d; the second point (ends up at index 1 of the result)
@@ -229,7 +273,19 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     public PolyLine2d(final Iterator<Point2d> iterator)
     {
-        this(iteratorToList(Throw.whenNull(iterator, "iterator")));
+        this(NO_FILTER, iterator);
+    }
+
+    /**
+     * Construct a new PolyLine2d from an iterator that yields Point2d objects.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param iterator Iterator&lt;Point2d&gt;; iterator that will provide all points that constitute the new PolyLine2d
+     * @throws NullPointerException when <code>iterator</code> is <code>null</code>, or yields a <code>null</code> value
+     * @throws IllegalArgumentException when the iterator provides too few points, or some adjacent identical points)
+     */
+    public PolyLine2d(final double epsilon, final Iterator<Point2d> iterator)
+    {
+        this(epsilon, iteratorToList(Throw.whenNull(iterator, "iterator")));
     }
 
     /**
@@ -241,7 +297,20 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     public PolyLine2d(final List<Point2d> pointList)
     {
-        this(pointList.toArray(new Point2d[Throw.whenNull(pointList, "pointList").size()]));
+        this(NO_FILTER, pointList);
+    }
+
+    /**
+     * Construct a new PolyLine2d from a List&lt;Point2d&gt;.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param pointList List&lt;Point2d&gt;; the list of points to construct the new PolyLine2d from.
+     * @throws NullPointerException when <code>pointList</code> is <code>null</code>, or contains a <code>null</code> value
+     * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
+     */
+    public PolyLine2d(final double epsilon, final List<Point2d> pointList)
+    {
+        this(epsilon, pointList.toArray(new Point2d[Throw.whenNull(pointList, "pointList").size()]));
     }
 
     /**
@@ -253,7 +322,20 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      */
     public PolyLine2d(final Path2D path)
     {
-        this(path2DtoArray(Throw.whenNull(path, "path")));
+        this(NO_FILTER, path);
+    }
+
+    /**
+     * Construct a new PolyLine2d from a Path2D.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param path Path2D; the Path2D to construct this PolyLine2d from.
+     * @throws NullPointerException when <code>path</code> is <code>null</code>
+     * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
+     *             adjacent points)
+     */
+    public PolyLine2d(final double epsilon, final Path2D path)
+    {
+        this(epsilon, path2DtoArray(Throw.whenNull(path, "path")));
     }
 
     /**
@@ -304,76 +386,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     /**
-     * Create a new PolyLine2d, optionally filtering out repeating successive points.
-     * @param filterDuplicates boolean; if<code>true</code>; filter out successive repeated points; otherwise do not filter
-     * @param points Point2d...; the coordinates of the line in <code>Point2d</code> objects
-     * @throws NullPointerException when <code>points</code> is <code>null</code>
-     * @throws IllegalArgumentException when number of points &lt; 2
-     */
-    public PolyLine2d(final boolean filterDuplicates, final Point2d... points)
-    {
-        this(PolyLine2d.cleanPoints(filterDuplicates, Arrays.stream(points).iterator()));
-    }
-
-    /**
-     * Create a new PolyLine2d, optionally filtering out repeating successive points.
-     * @param filterDuplicates boolean; if<code>true</code>; filter out successive repeated points; otherwise do not filter
-     * @param pointList List&lt;Point2d&gt;; list of the coordinates of the line in <code>Point2d</code> objects; any duplicate
-     *            points in this list are removed (this method may modify the provided list)
-     * @throws NullPointerException when <code>pointList</code> is <code>null</code>
-     * @throws IllegalArgumentException when number of non-equal points &lt; 2
-     */
-    public PolyLine2d(final boolean filterDuplicates, final List<Point2d> pointList)
-    {
-        this(PolyLine2d.cleanPoints(filterDuplicates, pointList.iterator()));
-    }
-
-    /**
-     * Return an iterator that optionally skips identical successive points.
-     * @param filter boolean; if<code>true</code>; filter out identical successive points; if <code>false</code>; do not filter
-     * @param iterator Iterator&lt;Point2d&gt;; iterator that generates points, potentially with successive duplicates
-     * @return Iterator&lt;Point2d&gt;; iterator that skips identical successive points
-     * @throws NullPointerException when <code>iterator</code> is <code>null</code>
-     */
-    static Iterator<Point2d> cleanPoints(final boolean filter, final Iterator<Point2d> iterator)
-    {
-        Throw.whenNull(iterator, "Iterator");
-        Throw.when(!iterator.hasNext(), DrawRuntimeException.class, "the provided iterator has no points to return");
-        if (!filter)
-        {
-            return iterator;
-        }
-        return new Iterator<Point2d>()
-        {
-            private Point2d currentPoint = iterator.next();
-
-            @Override
-            public boolean hasNext()
-            {
-                return this.currentPoint != null;
-            }
-
-            @Override
-            public Point2d next()
-            {
-                Throw.when(this.currentPoint == null, NoSuchElementException.class, "Out of input");
-                Point2d result = this.currentPoint;
-                this.currentPoint = null;
-                while (iterator.hasNext())
-                {
-                    this.currentPoint = iterator.next();
-                    if (result.x != this.currentPoint.x || result.y != this.currentPoint.y)
-                    {
-                        break;
-                    }
-                    this.currentPoint = null;
-                }
-                return result;
-            }
-        };
-    }
-
-    /**
      * Construct a new PolyLine2d from an existing one. This constructor is primarily intended for use in extending classes.
      * @param polyLine PolyLine2d; the existing <code>PolyLine2d</code>
      */
@@ -388,9 +400,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     @Override
-    public PolyLine2d instantiate(final List<Point2d> pointList)
+    public PolyLine2d instantiate(final double epsilon, final List<Point2d> pointList)
     {
-        return new PolyLine2d(pointList);
+        return new PolyLine2d(epsilon, pointList);
     }
 
     @Override
@@ -1112,7 +1124,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
                 index--;
             }
         }
-        return new PolyLine2d(true, tempPoints);
+        return new PolyLine2d(NO_FILTER, tempPoints);
     }
 
     @Override
@@ -1171,7 +1183,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
                 indexInEnd++;
             }
         }
-        return new PolyLine2d(true, pointList);
+        return new PolyLine2d(NO_FILTER, pointList);
     }
 
     @Override

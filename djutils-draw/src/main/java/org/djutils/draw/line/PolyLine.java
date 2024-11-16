@@ -27,6 +27,9 @@ import org.djutils.exceptions.Throw;
 public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>, R extends Ray<R, D, P>, D extends Directed<D>,
         LS extends LineSegment<P, D>> extends Drawable<P>, Project<P>
 {
+    /** Use this value for <code>epsilon</code> to disable all filtering. */
+    double NO_FILTER = -1.0;
+
     /**
      * Constructor that can be accessed as a method (used to implement default methods in this interface).
      * @param pointList List&lt;P&gt;; a list of points
@@ -35,7 +38,21 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      * @throws IllegalArgumentException when <code>pointList</code> has fewer than two points or contains successive duplicate
      *             points
      */
-    L instantiate(List<P> pointList);
+    default L instantiate(final List<P> pointList)
+    {
+        return instantiate(NO_FILTER, pointList);
+    }
+
+    /**
+     * Constructor that can be accessed as a method (used to implement default methods in this interface).
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
+     * @param pointList List&lt;P&gt;; a list of points
+     * @return L; the new PolyLine
+     * @throws NullPointerException when <code>pointList</code> is <code>null</code>
+     * @throws IllegalArgumentException when <code>pointList</code> has fewer than two points or contains successive duplicate
+     *             points
+     */
+    L instantiate(double epsilon, List<P> pointList);
 
     /**
      * Construct a new PolyLine that is equal to this line except for segments that are shorter than the
@@ -424,9 +441,9 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
 
     /**
      * Make a transition line from this PolyLine to another PolyLine using a user specified function.
-     * @param endLine L; the other PolyLine
-     * @param transition TransitionFunction; how the results changes from this line to the other line
-     * @return L; a transition between this PolyLine and the other PolyLine
+     * @param endLine the other PolyLine
+     * @param transition defines how the results changes from this <code>line</code> to the <code>endLine</code>
+     * @return a transition between this PolyLine and the other PolyLine
      * @throws ArithmeticException when the transition function returns <code>NaN</code> at some point
      * @throws DrawRuntimeException when construction of some point along the way fails
      */
@@ -440,11 +457,80 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
         /**
          * Function that returns some value for inputs between 0.0 and 1.0. For a smooth transition, this function should return
          * 0.0 for input 0.0 and 1.0 for input 1.0 and be continuous and smooth.
-         * @param fraction double; the input for the function
-         * @return double; a ratio between 0.0 and 1.0 (values outside this domain are not an error, but will cause the
-         *         transition line to go outside the range of the reference line and the other line)
+         * @param fraction the input for the function
+         * @return a ratio between 0.0 and 1.0 (values outside this domain are not an error, but will cause the transition line
+         *         to go outside the range of the reference line and the other line)
          */
         double function(double fraction);
+    }
+
+    /**
+     * Filter adjacent points that are (near) duplicates. Works for any number of dimensions.
+     * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out). To
+     *            filter out only exactly identical points, specify <code>0.0</code>. To disable all filtering, specify a
+     *            <code>NO_FILTER</code> value for <code>epsilon</code>
+     * @param coordinates double[][] the coordinates of the points. First index is the dimension (0 for x, etc), second index is
+     *            the rank of the point
+     * @return filtered coordinates of the points in the same format as <code>coordinates</code>
+     */
+    default double[][] filterNearDuplicates(final double epsilon, final double[]... coordinates)
+    {
+        if (NO_FILTER == epsilon)
+        {
+            return coordinates;
+        }
+        Throw.when(epsilon < 0, IllegalArgumentException.class,
+                "epsilon may not be < 0 (except -1.0 to indicate no filtering)");
+        double epsilonSquared = epsilon * epsilon;
+        // count the number of points that will be preserved
+        int count = 1;
+        int prevIndex = 0;
+        for (int index = 1; index < coordinates[0].length; index++)
+        {
+            double distanceSquared = 0.0;
+            for (int dimension = 0; dimension < coordinates.length; dimension++)
+            {
+                double distance = coordinates[dimension][index] - coordinates[dimension][prevIndex];
+                distanceSquared += distance * distance;
+            }
+            if (distanceSquared > epsilonSquared)
+            {
+                prevIndex = index;
+                count++;
+            }
+        }
+        if (count == coordinates[0].length || coordinates[0].length == 2)
+        {
+            return coordinates; // Nothing to filter
+        }
+        // Found (near) duplicates to filter
+        double[][] result = new double[coordinates.length][count];
+        // Copy the first set of coordinates
+        for (int dimension = 0; dimension < coordinates.length; dimension++)
+        {
+            result[dimension][0] = coordinates[dimension][0];
+        }
+        int next = 1;
+        prevIndex = 0;
+        for (int index = 1; index < coordinates[0].length; index++)
+        {
+            double distanceSquared = 0.0;
+            for (int dimension = 0; dimension < coordinates.length; dimension++)
+            {
+                double distance = coordinates[dimension][index] - coordinates[dimension][prevIndex];
+                distanceSquared += distance * distance;
+            }
+            if (distanceSquared > epsilonSquared)
+            {
+                for (int dimension = 0; dimension < coordinates.length; dimension++)
+                {
+                    result[dimension][next] = coordinates[dimension][index];
+                }
+                prevIndex = index;
+                next++;
+            }
+        }
+        return result;
     }
 
 }
