@@ -10,6 +10,8 @@ DJUTILS-MATH - Java math utility classes.
 
     * The classes in the org.djutils.math.complex package contain complex numbers.
     
+    * The classes in the org.djutils.math.means package calculate different types of means (arithmetic, geometric, harmonic).
+    
     * The classes in the org.djutils.math.polynomialroots package contain root finding algorithms.
     
     []
