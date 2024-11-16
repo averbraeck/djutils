@@ -1,14 +1,16 @@
                    -------------------------------------
-                   DJUTILS-CLI
+                   DJUTILS-MATH
                    -------------------------------------
-                   February, 2020
+                   November, 2024
                    -------------------------------------
                    
-DJUTILS-CLI - Command Line Interface (CLI) utility classes.
+DJUTILS-MATH - Java math utility classes.
 
-	DJUTILS-CLI is a set of utilities for easy handling of command line interface options.
+	DJUTILS-MATH is a set of utilities with math utilities, such as complex analysis and root finding.
 
-    * The classes in the org.djutils.cli package take care of command line argument parsing using picocli.
+    * The classes in the org.djutils.math.complex package contain complex numbers.
+    
+    * The classes in the org.djutils.math.polynomialroots package contain root finding algorithms.
     
     []
 
