@@ -26,8 +26,8 @@ import org.djutils.exceptions.Throw;
 
 /**
  * MultiSlider implements a slider with multiple thumbs. The MultiSlider is implemented by drawing a number of sliders on top of
- * each other using an Swing OverlayManager, and passing the mouse events from a glass pane on top to the correct slider(s)
- * underneath.
+ * each other using an Swing {@code OverlayManager}, and passing the mouse events from a glass pane on top to the correct
+ * slider(s). The class is a {@code ChangeListener} to listen to the changes of individual sliders underneath.
  * <p>
  * Several models exist to indicate whether thumbs can pass each other or not, or be on top of each other or not.
  * </p>
@@ -96,14 +96,23 @@ public class MultiSlider extends JComponent implements ChangeListener
         // make the sliders and show them. Slider 0 at the bottom. This one will get ticks, etc.
         setLayout(new OverlayLayout(this));
         this.sliders = new JSlider[initialValues.length];
-        for (int i = 0; i < initialValues.length; i++)
+        for (int i = initialValues.length - 1; i >= 0; i--)
         {
             var slider = new JSlider(orientation, min, max, initialValues[i]);
             this.sliders[i] = slider;
             slider.setOpaque(false);
+            if (i == 0)
+            {
+                slider.setPaintTrack(true);
+            }
+            else
+            {
+                slider.setPaintTrack(false);
+            }
+
             add(slider);
 
-            // add this model as a change listener for all slider events
+            // add this class as a change listener for all slider events of the individual sliders
             slider.addChangeListener(this);
         }
     }
@@ -343,7 +352,7 @@ public class MultiSlider extends JComponent implements ChangeListener
     }
 
     /**
-     * Returns the "extent" from the <code>BoundedRangeModel</code>. This represents the range of values "covered" by the knob.
+     * Returns the "extent" from the <code>BoundedRangeModel</code>. This represents the range of values "covered" by the thumb.
      * @return an int representing the extent
      */
     public int getExtent()
@@ -352,8 +361,8 @@ public class MultiSlider extends JComponent implements ChangeListener
     }
 
     /**
-     * Sets the size of the range "covered" by the knob for all underlying slider objects. Most look and feel implementations
-     * will change the value by this amount if the user clicks on either side of the knob. This method just forwards the new
+     * Sets the size of the range "covered" by the thumb for all underlying slider objects. Most look and feel implementations
+     * will change the value by this amount if the user clicks on either side of the thumb. This method just forwards the new
      * extent value to the model.
      * <p>
      * The data model (an instance of {@code BoundedRangeModel}) handles any mathematical issues arising from assigning faulty
@@ -362,7 +371,7 @@ public class MultiSlider extends JComponent implements ChangeListener
      * If the new extent value is different from the previous extent value, all change listeners are notified.
      * @param extent the new extent
      */
-    @BeanProperty(bound = false, expert = true, description = "Size of the range covered by the knob.")
+    @BeanProperty(bound = false, expert = true, description = "Size of the range covered by the thumb.")
     public void setExtent(final int extent)
     {
         for (var slider : this.sliders)
@@ -575,8 +584,8 @@ public class MultiSlider extends JComponent implements ChangeListener
     }
 
     /**
-     * Returns true if the knob (and the data value it represents) resolve to the closest tick mark next to where the user
-     * positioned the knob.
+     * Returns true if the thumb (and the data value it represents) resolve to the closest tick mark next to where the user
+     * positioned the thumb.
      * @return true if the value snaps to the nearest tick mark, else false
      */
     public boolean getSnapToTicks()
@@ -585,11 +594,11 @@ public class MultiSlider extends JComponent implements ChangeListener
     }
 
     /**
-     * Specifying true makes the knob (and the data value it represents) resolve to the closest tick mark next to where the user
-     * positioned the knob. By default, this property is {@code false}.
-     * @param b true to snap the knob to the nearest tick mark
+     * Specifying true makes the thumb (and the data value it represents) resolve to the closest tick mark next to where the
+     * user positioned the thumb. By default, this property is {@code false}.
+     * @param b true to snap the thumb to the nearest tick mark
      */
-    @BeanProperty(description = "If true snap the knob to the nearest tick mark.")
+    @BeanProperty(description = "If true snap the thumb to the nearest tick mark.")
     public void setSnapToTicks(final boolean b)
     {
         boolean oldValue = getSnapToTicks();
@@ -643,10 +652,7 @@ public class MultiSlider extends JComponent implements ChangeListener
     public void setPaintTrack(final boolean b)
     {
         boolean oldValue = getPaintTrack();
-        for (var slider : this.sliders)
-        {
-            slider.setPaintTrack(b);
-        }
+        this.sliders[0].setPaintTrack(b);
         firePropertyChange("paintTrack", oldValue, b);
     }
 
