@@ -27,30 +27,31 @@ public class MultiSliderDemo extends JFrame
     public MultiSliderDemo()
     {
         setPreferredSize(new Dimension(640, 320));
-        var elementNames = new String[] {"a", "b", "c", "d"};
-        var values = new Double[] {0.2, 0.2, 0.2, 0.4};
         var multiSlider = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {25, 50, 75});
-//        multiSlider.setMajorTickSpacing(25);
-//        multiSlider.setMinorTickSpacing(5);
-//        multiSlider.setPaintTicks(true);
-//        multiSlider.setPaintLabels(true);
+        multiSlider.setMajorTickSpacing(25);
+        multiSlider.setMinorTickSpacing(5);
+        multiSlider.setPaintTicks(true);
+        multiSlider.setPaintLabels(true);
         getContentPane().add(multiSlider);
-        
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-        
-//        multiSlider.addChangeListener(new ChangeListener()
-//        {
-//            @Override
-//            public void stateChanged(final ChangeEvent e)
-//            {
-//                MultiSlider s = (MultiSlider) e.getSource();
-//                System.out.println(s.getValue());
-//            }
-//        });
+
+        multiSlider.addChangeListener(new ChangeListener()
+        {
+            @Override
+            public void stateChanged(final ChangeEvent e)
+            {
+                MultiSlider s = (MultiSlider) e.getSource();
+                for (int i = 0; i < s.getNumberOfThumbs(); i++)
+                {
+                    System.out.println("Thumb " + i + ": " + s.getValue(i));
+                }
+            }
+        });
     }
 
     /**
