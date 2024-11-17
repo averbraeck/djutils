@@ -9,7 +9,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.beans.BeanProperty;
-import java.io.Serializable;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -40,7 +39,7 @@ import org.djutils.exceptions.Throw;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class MultiSlider extends JComponent
+public class MultiSlider extends JComponent implements ChangeListener
 {
     /** */
     private static final long serialVersionUID = 1L;
@@ -49,15 +48,8 @@ public class MultiSlider extends JComponent
     private JSlider[] sliders;
 
     /**
-     * The changeListener (no suffix) is the listener we add to the slider's model. This listener is initialized to the
-     * {@code ChangeListener} returned from {@code createChangeListener}, which by default just forwards events to
-     * {@code ChangeListener}s (if any) added directly to the slider.
-     */
-    private ChangeListener changeListener = createChangeListener();
-
-    /**
-     * Only one <code>ChangeEvent</code> is needed per slider instance since the event's only (read-only) state is the source
-     * property. The source of events generated here is always "this". The event is lazily created the first time that an event
+     * Only one <code>ChangeEvent</code> is needed for the {@code MultiSlider} since the event's only (read-only) state is the
+     * source property. The source of events generated here is always "this". The event is created the first time that an event
      * notification is fired.
      */
     private transient ChangeEvent changeEvent = null;
@@ -110,6 +102,9 @@ public class MultiSlider extends JComponent
             this.sliders[i] = slider;
             slider.setOpaque(false);
             add(slider);
+
+            // add this model as a change listener for all slider events
+            slider.addChangeListener(this);
         }
     }
 
@@ -129,6 +124,12 @@ public class MultiSlider extends JComponent
     public int getNumberOfThumbs()
     {
         return this.sliders.length;
+    }
+
+    @Override
+    public void stateChanged(final ChangeEvent e)
+    {
+        fireStateChanged();
     }
 
     /**
@@ -177,32 +178,7 @@ public class MultiSlider extends JComponent
     }
 
     /**
-     * We pass Change events along to the listeners with the the slider (instead of the model itself) as the event source.
-     */
-    @SuppressWarnings("serial")
-    private class ModelListener implements ChangeListener, Serializable
-    {
-        @Override
-        public void stateChanged(final ChangeEvent e)
-        {
-            fireStateChanged();
-        }
-    }
-
-    /**
-     * Subclasses that want to handle {@code ChangeEvent}s from the model differently can override this to return an instance of
-     * a custom <code>ChangeListener</code> implementation. The default {@code ChangeListener} simply calls the
-     * {@code fireStateChanged} method to forward {@code ChangeEvent}s to the {@code ChangeListener}s that have been added
-     * directly to the slider.
-     * @return a instance of new {@code ChangeListener}
-     */
-    protected ChangeListener createChangeListener()
-    {
-        return new ModelListener();
-    }
-
-    /**
-     * Adds a ChangeListener to the slider.
+     * Adds a ChangeListener to the multislider.
      * @param listener the ChangeListener to add
      */
     public void addChangeListener(final ChangeListener listener)
@@ -211,7 +187,7 @@ public class MultiSlider extends JComponent
     }
 
     /**
-     * Removes a ChangeListener from the slider.
+     * Removes a ChangeListener from the multislider.
      * @param listener the ChangeListener to remove
      */
     public void removeChangeListener(final ChangeListener listener)
@@ -220,7 +196,7 @@ public class MultiSlider extends JComponent
     }
 
     /**
-     * Returns an array of all the <code>ChangeListener</code>s added to this JSlider with addChangeListener().
+     * Returns an array of all the <code>ChangeListener</code>s added to this MultiSlider with addChangeListener().
      * @return all of the <code>ChangeListener</code>s added or an empty array if no listeners have been added
      */
     @BeanProperty(bound = false)
@@ -230,14 +206,16 @@ public class MultiSlider extends JComponent
     }
 
     /**
-     * Send a {@code ChangeEvent}, whose source is this {@code JSlider}, to all {@code ChangeListener}s that have registered
-     * interest in {@code ChangeEvent}s. This method is called each time a {@code ChangeEvent} is received from the model.
+     * Send a {@code ChangeEvent}, whose source is this {@code MultiSlider}, to all {@code ChangeListener}s that have registered
+     * interest in {@code ChangeEvent}s. This method is called each time a {@code ChangeEvent} is received from the model of one
+     * of the underlying sliders.
      * <p>
      * The event instance is created if necessary, and stored in {@code changeEvent}.
      * </p>
      */
     protected void fireStateChanged()
     {
+        // Note that the listener array has the classes at the even places, and the listeners at the odd places (yuck).
         Object[] listeners = this.listenerList.getListenerList();
         for (int i = listeners.length - 2; i >= 0; i -= 2)
         {
@@ -502,7 +480,7 @@ public class MultiSlider extends JComponent
     }
 
     /**
-     * Returns true if the value-range shown for the slider is reversed,
+     * Returns true if the value-range shown for the slider is reversed.
      * @return true if the slider values are reversed from their normal order
      */
     public boolean getInverted()
@@ -715,10 +693,14 @@ public class MultiSlider extends JComponent
         /** the pointer to the multislider object. */
         private final MultiSlider multiSlider;
 
+        /** ddebug info or not. */
+        private static final boolean DEBUG = false;
+
         /**
          * Create a glass pane on top of the sliders.
          * @param multiSlider the multislider for which this is the glass pane
          */
+        @SuppressWarnings("checkstyle:needbraces")
         public DispatcherPane(final MultiSlider multiSlider)
         {
             this.multiSlider = multiSlider;
@@ -740,7 +722,8 @@ public class MultiSlider extends JComponent
                         {
                             return;
                         }
-                        System.out.println("Slider[" + (i++) + "] - point: " + pSlider);
+                        if (DEBUG)
+                            System.out.println("Slider[" + (i++) + "] - point: " + pSlider);
                         MouseEvent meSlider = new MouseEvent((Component) e.getSource(), e.getID(), e.getWhen(),
                                 e.getModifiersEx(), pSlider.x, pSlider.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
                         slider.dispatchEvent(meSlider);
@@ -751,12 +734,14 @@ public class MultiSlider extends JComponent
                 public void mouseReleased(final MouseEvent e)
                 {
                     // Note that a mouse release should ALWAYS be communicated, also when it is outside of the slider
-                    System.out.println("Release: " + e.getX() + ", " + e.getY());
+                    if (DEBUG)
+                        System.out.println("Release: " + e.getX() + ", " + e.getY());
                     int i = 0;
                     for (var slider : DispatcherPane.this.multiSlider.getSliders())
                     {
                         Point pSlider = SwingUtilities.convertPoint(DispatcherPane.this, e.getPoint(), slider);
-                        System.out.println("Slider[" + (i++) + "] - point: " + pSlider);
+                        if (DEBUG)
+                            System.out.println("Slider[" + (i++) + "] - point: " + pSlider);
                         MouseEvent meSlider = new MouseEvent((Component) e.getSource(), e.getID(), e.getWhen(),
                                 e.getModifiersEx(), pSlider.x, pSlider.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
                         slider.dispatchEvent(meSlider);
@@ -766,7 +751,8 @@ public class MultiSlider extends JComponent
                 @Override
                 public void mousePressed(final MouseEvent e)
                 {
-                    System.out.println("Press: " + e.getX() + ", " + e.getY());
+                    if (DEBUG)
+                        System.out.println("Press: " + e.getX() + ", " + e.getY());
                     dispatch(e);
                 }
 
@@ -774,12 +760,14 @@ public class MultiSlider extends JComponent
                 public void mouseExited(final MouseEvent e)
                 {
                     // Note that a mouse exited should ALWAYS be communicated, also when it is outside of the slider
-                    System.out.println("Exit: " + e.getX() + ", " + e.getY());
+                    if (DEBUG)
+                        System.out.println("Exit: " + e.getX() + ", " + e.getY());
                     int i = 0;
                     for (var slider : DispatcherPane.this.multiSlider.getSliders())
                     {
                         Point pSlider = SwingUtilities.convertPoint(DispatcherPane.this, e.getPoint(), slider);
-                        System.out.println("Slider[" + (i++) + "] - point: " + pSlider);
+                        if (DEBUG)
+                            System.out.println("Slider[" + (i++) + "] - point: " + pSlider);
                         MouseEvent meSlider = new MouseEvent((Component) e.getSource(), e.getID(), e.getWhen(),
                                 e.getModifiersEx(), pSlider.x, pSlider.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
                         slider.dispatchEvent(meSlider);
@@ -789,14 +777,16 @@ public class MultiSlider extends JComponent
                 @Override
                 public void mouseEntered(final MouseEvent e)
                 {
-                    System.out.println("Enter: " + e.getX() + ", " + e.getY());
+                    if (DEBUG)
+                        System.out.println("Enter: " + e.getX() + ", " + e.getY());
                     dispatch(e);
                 }
 
                 @Override
                 public void mouseClicked(final MouseEvent e)
                 {
-                    System.out.println("Click: " + e.getX() + ", " + e.getY());
+                    if (DEBUG)
+                        System.out.println("Click: " + e.getX() + ", " + e.getY());
                     dispatch(e);
                 }
             });
@@ -806,7 +796,8 @@ public class MultiSlider extends JComponent
                 @Override
                 public void mouseDragged(final MouseEvent e)
                 {
-                    System.out.println("Drag: " + e.getX() + ", " + e.getY());
+                    if (DEBUG)
+                        System.out.println("Drag: " + e.getX() + ", " + e.getY());
                     int i = 0;
                     for (var slider : DispatcherPane.this.multiSlider.getSliders())
                     {
@@ -816,7 +807,8 @@ public class MultiSlider extends JComponent
                         {
                             return;
                         }
-                        System.out.println("Slider[" + (i++) + "] - point: " + pSlider);
+                        if (DEBUG)
+                            System.out.println("Slider[" + (i++) + "] - point: " + pSlider);
                         MouseEvent meSlider = new MouseEvent((Component) e.getSource(), e.getID(), e.getWhen(),
                                 e.getModifiersEx(), pSlider.x, pSlider.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
                         slider.dispatchEvent(meSlider);
