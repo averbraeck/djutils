@@ -90,7 +90,6 @@ public class MultiSlider extends JComponent implements ChangeListener
 
         // put a glass pane on top that dispatches the mouse event to all panes
         DispatcherPane dp = new DispatcherPane(this);
-        dp.setPreferredSize(new Dimension(640, 320));
         add(dp);
 
         // make the sliders and show them. Slider 0 at the bottom. This one will get ticks, etc.
@@ -115,6 +114,9 @@ public class MultiSlider extends JComponent implements ChangeListener
             // add this class as a change listener for all slider events of the individual sliders
             slider.addChangeListener(this);
         }
+        
+        dp.setPreferredSize(new Dimension(this.sliders[0].getSize()));
+        invalidate();
     }
 
     /**
@@ -124,6 +126,16 @@ public class MultiSlider extends JComponent implements ChangeListener
     protected JSlider[] getSliders()
     {
         return this.sliders;
+    }
+
+    /**
+     * Return an individual slider with index i.
+     * @param i the index for which to retrieve the slider
+     * @return the individual slider with index i
+     */
+    public JSlider getSlider(final int i)
+    {
+        return this.sliders[i];
     }
 
     /**
@@ -688,7 +700,7 @@ public class MultiSlider extends JComponent implements ChangeListener
 
     /**
      * The DispatcherPane class, which is a glass pane sitting on top of the sliders to dispatch the mouse event to the correct
-     * slider class. Note that the mouse coordinates are relative to the component itself, so a translation is often needed. The
+     * slider class. Note that the mouse coordinates are relative to the component itself, so a translation might be needed. The
      * <code>SwingUtilities.convertPoint()</code> method can make the conversion.
      */
     protected static class DispatcherPane extends JComponent
@@ -698,15 +710,112 @@ public class MultiSlider extends JComponent implements ChangeListener
 
         /** the pointer to the multislider object. */
         private final MultiSlider multiSlider;
+        
+        /** the current slider number in process. */
+        protected int busySlider = -1;
 
-        /** ddebug info or not. */
-        private static final boolean DEBUG = false;
+        /**
+         * Calculate x (horizontal) or y (vertical) of thumb[i].
+         * @param i the slider number
+         * @return the x (horizontal) or y (vertical) of thumb[i]
+         */
+        int thumbPosition(final int i)
+        {
+            // TODO: check if it works when slider is reversed
+            JSlider slider = this.multiSlider.getSlider(i);
+            int value = slider.getValue();
+            int min = slider.getMinimum();
+            int max = slider.getMaximum();
+            if (slider.getOrientation() == SwingConstants.HORIZONTAL)
+            {
+                int w = slider.getWidth();
+                // System.out.println("ThumbPosition[w] " + i + " = " + (int) (1.0 * w * value / (max - min)));
+                return (int) (1.0 * w * value / (max - min));
+            }
+            else
+            {
+                int h = slider.getHeight();
+                // System.out.println("thumbPosition[h] " + i + " = " + (int) (1.0 * h * value / (max - min)));
+                return (int) (1.0 * h * value / (max - min));
+            }
+        }
+
+        /**
+         * Return the closest slider number based on x (horizontal) or y (vertical) of the thumbs.
+         * @param p the point (e.g., of a mouse position)
+         * @return the index of the closest slider
+         */
+        int closestSliderIndex(final Point p)
+        {
+            if (this.busySlider >= 0)
+            {
+                return this.busySlider;
+            }
+            
+            // TODO: check if it works when slider is reversed
+            int ret = -1;
+            int mindist = Integer.MAX_VALUE;
+            if (this.multiSlider.getOrientation() == SwingConstants.HORIZONTAL)
+            {
+                for (int i = 0; i < this.multiSlider.getNumberOfThumbs(); i++)
+                {
+                    int pos = thumbPosition(i);
+                    int dist = Math.abs(pos - p.x);
+                    if (dist < mindist)
+                    {
+                        mindist = dist;
+                        ret = i;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < this.multiSlider.getNumberOfThumbs(); i++)
+                {
+                    int pos = thumbPosition(i);
+                    int dist = Math.abs(pos - p.y);
+                    if (dist < mindist)
+                    {
+                        mindist = dist;
+                        ret = i;
+                    }
+                }
+                ret = this.multiSlider.getNumberOfThumbs() - ret - 1;
+            }
+            this.busySlider = ret;
+            return ret;
+        }
+
+        /**
+         * @param e the MouseEvent to dispatch to the sliders.
+         * @param always indicates whether we always need to send the event
+         */
+        void dispatch(final MouseEvent e, final boolean always)
+        {
+            var slider = DispatcherPane.this.multiSlider.getSlider(0);
+            Point pSlider = SwingUtilities.convertPoint(DispatcherPane.this, e.getPoint(), slider);
+            if (always || (pSlider.x >= 0 && pSlider.x <= slider.getSize().width && pSlider.y >= 0
+                    && pSlider.y <= slider.getSize().height))
+            {
+                int index = closestSliderIndex(pSlider);
+                MouseEvent meSlider = new MouseEvent((Component) e.getSource(), e.getID(), e.getWhen(), e.getModifiersEx(),
+                        pSlider.x, pSlider.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
+                DispatcherPane.this.multiSlider.getSlider(index).dispatchEvent(meSlider);
+            }
+        }
+        
+        /**
+         * Reset the busy slider -- action over.
+         */
+        void resetBusySlider()
+        {
+            this.busySlider = -1;
+        }
 
         /**
          * Create a glass pane on top of the sliders.
          * @param multiSlider the multislider for which this is the glass pane
          */
-        @SuppressWarnings("checkstyle:needbraces")
         public DispatcherPane(final MultiSlider multiSlider)
         {
             this.multiSlider = multiSlider;
@@ -714,86 +823,39 @@ public class MultiSlider extends JComponent implements ChangeListener
 
             addMouseListener(new MouseListener()
             {
-                /**
-                 * @param e the MouseEvent to dispatch to the sliders.
-                 */
-                private void dispatch(final MouseEvent e)
-                {
-                    int i = 0;
-                    for (var slider : DispatcherPane.this.multiSlider.getSliders())
-                    {
-                        Point pSlider = SwingUtilities.convertPoint(DispatcherPane.this, e.getPoint(), slider);
-                        if (pSlider.x < 0 || pSlider.x > slider.getSize().width || pSlider.y < 0
-                                || pSlider.y > slider.getSize().height)
-                        {
-                            return;
-                        }
-                        if (DEBUG)
-                            System.out.println("Slider[" + (i++) + "] - point: " + pSlider);
-                        MouseEvent meSlider = new MouseEvent((Component) e.getSource(), e.getID(), e.getWhen(),
-                                e.getModifiersEx(), pSlider.x, pSlider.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
-                        slider.dispatchEvent(meSlider);
-                    }
-                }
-
                 @Override
                 public void mouseReleased(final MouseEvent e)
                 {
                     // Note that a mouse release should ALWAYS be communicated, also when it is outside of the slider
-                    if (DEBUG)
-                        System.out.println("Release: " + e.getX() + ", " + e.getY());
-                    int i = 0;
-                    for (var slider : DispatcherPane.this.multiSlider.getSliders())
-                    {
-                        Point pSlider = SwingUtilities.convertPoint(DispatcherPane.this, e.getPoint(), slider);
-                        if (DEBUG)
-                            System.out.println("Slider[" + (i++) + "] - point: " + pSlider);
-                        MouseEvent meSlider = new MouseEvent((Component) e.getSource(), e.getID(), e.getWhen(),
-                                e.getModifiersEx(), pSlider.x, pSlider.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
-                        slider.dispatchEvent(meSlider);
-                    }
+                    dispatch(e, true);
+                    resetBusySlider();
                 }
 
                 @Override
                 public void mousePressed(final MouseEvent e)
                 {
-                    if (DEBUG)
-                        System.out.println("Press: " + e.getX() + ", " + e.getY());
-                    dispatch(e);
+                    dispatch(e, false);
                 }
 
                 @Override
                 public void mouseExited(final MouseEvent e)
                 {
                     // Note that a mouse exited should ALWAYS be communicated, also when it is outside of the slider
-                    if (DEBUG)
-                        System.out.println("Exit: " + e.getX() + ", " + e.getY());
-                    int i = 0;
-                    for (var slider : DispatcherPane.this.multiSlider.getSliders())
-                    {
-                        Point pSlider = SwingUtilities.convertPoint(DispatcherPane.this, e.getPoint(), slider);
-                        if (DEBUG)
-                            System.out.println("Slider[" + (i++) + "] - point: " + pSlider);
-                        MouseEvent meSlider = new MouseEvent((Component) e.getSource(), e.getID(), e.getWhen(),
-                                e.getModifiersEx(), pSlider.x, pSlider.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
-                        slider.dispatchEvent(meSlider);
-                    }
+                    dispatch(e, true);
+                    resetBusySlider();
                 }
 
                 @Override
                 public void mouseEntered(final MouseEvent e)
                 {
-                    if (DEBUG)
-                        System.out.println("Enter: " + e.getX() + ", " + e.getY());
-                    dispatch(e);
+                    // no action
                 }
 
                 @Override
                 public void mouseClicked(final MouseEvent e)
                 {
-                    if (DEBUG)
-                        System.out.println("Click: " + e.getX() + ", " + e.getY());
-                    dispatch(e);
+                    dispatch(e, false);
+                    resetBusySlider();
                 }
             });
 
@@ -802,23 +864,7 @@ public class MultiSlider extends JComponent implements ChangeListener
                 @Override
                 public void mouseDragged(final MouseEvent e)
                 {
-                    if (DEBUG)
-                        System.out.println("Drag: " + e.getX() + ", " + e.getY());
-                    int i = 0;
-                    for (var slider : DispatcherPane.this.multiSlider.getSliders())
-                    {
-                        Point pSlider = SwingUtilities.convertPoint(DispatcherPane.this, e.getPoint(), slider);
-                        if (pSlider.x < 0 || pSlider.x > slider.getSize().width || pSlider.y < 0
-                                || pSlider.y > slider.getSize().height)
-                        {
-                            return;
-                        }
-                        if (DEBUG)
-                            System.out.println("Slider[" + (i++) + "] - point: " + pSlider);
-                        MouseEvent meSlider = new MouseEvent((Component) e.getSource(), e.getID(), e.getWhen(),
-                                e.getModifiersEx(), pSlider.x, pSlider.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
-                        slider.dispatchEvent(meSlider);
-                    }
+                    dispatch(e, false);
                 }
 
                 @Override
@@ -826,18 +872,6 @@ public class MultiSlider extends JComponent implements ChangeListener
                 {
                     // Note: possibly we can trigger an 'mouse entered' when the mouse enters the slider pane,
                     // and a 'mouse exited' when the mouse exits the slider pane.
-                    for (var slider : DispatcherPane.this.multiSlider.getSliders())
-                    {
-                        Point pSlider = SwingUtilities.convertPoint(DispatcherPane.this, e.getPoint(), slider);
-                        if (pSlider.x < 0 || pSlider.x > slider.getSize().width || pSlider.y < 0
-                                || pSlider.y > slider.getSize().height)
-                        {
-                            return;
-                        }
-                        MouseEvent meSlider = new MouseEvent((Component) e.getSource(), e.getID(), e.getWhen(),
-                                e.getModifiersEx(), pSlider.x, pSlider.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
-                        slider.dispatchEvent(meSlider);
-                    }
                 }
             });
         }
