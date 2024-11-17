@@ -31,6 +31,7 @@ public class MultiSliderDemo extends JFrame
         getContentPane().setLayout(new BorderLayout(10, 10));
 
         var horSlider = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {25, 50, 75});
+        // horSlider.setUI(new BasicSliderUI());
         horSlider.setMajorTickSpacing(25);
         horSlider.setMinorTickSpacing(5);
         horSlider.setPaintTicks(true);
@@ -38,10 +39,12 @@ public class MultiSliderDemo extends JFrame
         getContentPane().add(horSlider, BorderLayout.NORTH);
         
         var vertSlider = new MultiSlider(SwingConstants.VERTICAL, 0, 1000, new int[] {400, 600});
+        // vertSlider.setUI(new MetalSliderUI());
         vertSlider.setMajorTickSpacing(250);
         vertSlider.setMinorTickSpacing(50);
         vertSlider.setPaintTicks(true);
         vertSlider.setPaintLabels(true);
+        vertSlider.setPaintTrack(true);
         getContentPane().add(vertSlider, BorderLayout.WEST);
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
