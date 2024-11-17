@@ -47,6 +47,12 @@ public class MultiSlider extends JComponent implements ChangeListener
     /** the sliders that are stacked on top of each other. */
     private JSlider[] sliders;
 
+    /** the current slider number in process (e.g., drag operation, mouse down). */
+    private transient int busySlider = -1;
+
+    /** whether an operation is busy or not. */
+    private transient boolean busy = false;
+
     /**
      * Only one <code>ChangeEvent</code> is needed for the {@code MultiSlider} since the event's only (read-only) state is the
      * source property. The source of events generated here is always "this". The event is created the first time that an event
@@ -113,8 +119,11 @@ public class MultiSlider extends JComponent implements ChangeListener
 
             // add this class as a change listener for all slider events of the individual sliders
             slider.addChangeListener(this);
+            
+            // ensure movability of the slider by setting it  again
+            slider.setValue(initialValues[i]);
         }
-        
+
         dp.setPreferredSize(new Dimension(this.sliders[0].getSize()));
         invalidate();
     }
@@ -145,6 +154,56 @@ public class MultiSlider extends JComponent implements ChangeListener
     public int getNumberOfThumbs()
     {
         return this.sliders.length;
+    }
+
+    /**
+     * Indicate that slider i is busy (e.g., mouse-down or a drag operation).
+     * @param i the slider number that is busy
+     */
+    protected void setBusySlider(final int i)
+    {
+        this.busySlider = i;
+    }
+
+    /**
+     * Return whether slider i is busy (e.g., mouse-down or a drag operation).
+     * @param i the slider number to check
+     * @return whether slier i is busy or not
+     */
+    protected boolean isBusySlider(final int i)
+    {
+        return this.busySlider == i;
+    }
+
+    /**
+     * Return which slider is busy (e.g., mouse-down or a drag operation). The function returns -1 if no slider is busy.
+     * @return the slider number of the busy slider, or -1 if no slider is busy with an action
+     */
+    protected int getBusySlider()
+    {
+        return this.busySlider;
+    }
+
+    /**
+     * Return whether one of the sliders is busy (e.g., mouse-down or a drag operation). Note that the 'busy' flag is set BEFORE
+     * the mouse event (e.g., mouse released, mouse exited) is handled. This means that when 'busy' is true, no operation is
+     * taking place.
+     * @return whether one of the sliders is busy or not
+     */
+    public boolean isBusy()
+    {
+        return this.busy;
+    }
+
+    /**
+     * Set whether one of the sliders is busy (e.g., mouse-down or a drag operation). Note that the 'busy' flag has to be set
+     * BEFORE the mouse event (e.g., mouse released, mouse exited) is handled. This means that when 'busy' is true, no operation
+     * is taking place.
+     * @param busy set whether one of the sliders is busy or not
+     */
+    protected void setBusy(final boolean busy)
+    {
+        this.busy = busy;
     }
 
     @Override
@@ -709,10 +768,7 @@ public class MultiSlider extends JComponent implements ChangeListener
         private static final long serialVersionUID = 1L;
 
         /** the pointer to the multislider object. */
-        private final MultiSlider multiSlider;
-        
-        /** the current slider number in process. */
-        protected int busySlider = -1;
+        protected final MultiSlider multiSlider;
 
         /**
          * Calculate x (horizontal) or y (vertical) of thumb[i].
@@ -747,11 +803,11 @@ public class MultiSlider extends JComponent implements ChangeListener
          */
         int closestSliderIndex(final Point p)
         {
-            if (this.busySlider >= 0)
+            if (this.multiSlider.getBusySlider() >= 0)
             {
-                return this.busySlider;
+                return this.multiSlider.getBusySlider();
             }
-            
+
             // TODO: check if it works when slider is reversed
             int ret = -1;
             int mindist = Integer.MAX_VALUE;
@@ -782,7 +838,7 @@ public class MultiSlider extends JComponent implements ChangeListener
                 }
                 ret = this.multiSlider.getNumberOfThumbs() - ret - 1;
             }
-            this.busySlider = ret;
+            this.multiSlider.setBusySlider(ret);
             return ret;
         }
 
@@ -803,13 +859,24 @@ public class MultiSlider extends JComponent implements ChangeListener
                 DispatcherPane.this.multiSlider.getSlider(index).dispatchEvent(meSlider);
             }
         }
-        
+
         /**
-         * Reset the busy slider -- action over.
+         * Reset the busy slider -- action over. Call this method BEFORE processing the MouseEvent. In that way, the
+         * ChangeListener will fire a StateChange while the busy slider is -1 -- indicating that there is a final value.
          */
         void resetBusySlider()
         {
-            this.busySlider = -1;
+            this.multiSlider.setBusySlider(-1);
+        }
+
+        /**
+         * Indicate whether the multislider is busy with handling an action (e.g., drag, mouse down). Note that the busy flag has
+         * to be set BEFORE the mouse event is handled, to allow a listener to the ChangeEvent to only react when an action is completed. 
+         * @param b whether the multislider is busy with handling an action or not
+         */
+        void setBusy(final boolean b)
+        {
+            this.multiSlider.setBusy(b);
         }
 
         /**
@@ -827,6 +894,7 @@ public class MultiSlider extends JComponent implements ChangeListener
                 public void mouseReleased(final MouseEvent e)
                 {
                     // Note that a mouse release should ALWAYS be communicated, also when it is outside of the slider
+                    setBusy(false);
                     dispatch(e, true);
                     resetBusySlider();
                 }
@@ -834,6 +902,7 @@ public class MultiSlider extends JComponent implements ChangeListener
                 @Override
                 public void mousePressed(final MouseEvent e)
                 {
+                    setBusy(true);
                     dispatch(e, false);
                 }
 
@@ -841,6 +910,7 @@ public class MultiSlider extends JComponent implements ChangeListener
                 public void mouseExited(final MouseEvent e)
                 {
                     // Note that a mouse exited should ALWAYS be communicated, also when it is outside of the slider
+                    setBusy(false);
                     dispatch(e, true);
                     resetBusySlider();
                 }
@@ -854,6 +924,7 @@ public class MultiSlider extends JComponent implements ChangeListener
                 @Override
                 public void mouseClicked(final MouseEvent e)
                 {
+                    setBusy(false);
                     dispatch(e, false);
                     resetBusySlider();
                 }
@@ -864,6 +935,7 @@ public class MultiSlider extends JComponent implements ChangeListener
                 @Override
                 public void mouseDragged(final MouseEvent e)
                 {
+                    setBusy(true);
                     dispatch(e, false);
                 }
 
