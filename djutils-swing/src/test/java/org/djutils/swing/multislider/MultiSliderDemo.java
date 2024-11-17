@@ -1,9 +1,17 @@
 package org.djutils.swing.multislider;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -28,7 +36,12 @@ public class MultiSliderDemo extends JFrame
     public MultiSliderDemo()
     {
         setPreferredSize(new Dimension(640, 640));
-        getContentPane().setLayout(new BorderLayout(10, 10));
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout(10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        panel.setOpaque(false);
+        getContentPane().add(panel);
+        getContentPane().setBackground(new Color(204, 255, 204));
 
         var horSlider = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {25, 50, 75});
         // horSlider.setUI(new BasicSliderUI());
@@ -36,17 +49,40 @@ public class MultiSliderDemo extends JFrame
         horSlider.setMinorTickSpacing(5);
         horSlider.setPaintTicks(true);
         horSlider.setPaintLabels(true);
-        getContentPane().add(horSlider, BorderLayout.NORTH);
-        
-        var vertSlider = new MultiSlider(SwingConstants.VERTICAL, 0, 1000, new int[] {400, 600});
+        panel.add(horSlider, BorderLayout.NORTH);
+
+        var vertSlider = new MultiSlider(SwingConstants.VERTICAL, 0, 100, new int[] {40, 60});
         // vertSlider.setUI(new MetalSliderUI());
-        vertSlider.setMajorTickSpacing(250);
-        vertSlider.setMinorTickSpacing(50);
+        vertSlider.setMajorTickSpacing(20);
+        vertSlider.setMinorTickSpacing(5);
         vertSlider.setPaintTicks(true);
         vertSlider.setPaintLabels(true);
         vertSlider.setPaintTrack(true);
-        getContentPane().add(vertSlider, BorderLayout.WEST);
-        
+        panel.add(vertSlider, BorderLayout.WEST);
+
+        var button = new JButton("RESET");
+        button.setPreferredSize(new Dimension(100, 25));
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        panel.add(buttonPanel, BorderLayout.EAST);
+        buttonPanel.add(Box.createVerticalGlue());
+        buttonPanel.add(button);
+        buttonPanel.add(Box.createVerticalGlue());
+        buttonPanel.setOpaque(false);
+        button.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(final ActionEvent e)
+            {
+                horSlider.setValue(0, 25);
+                horSlider.setValue(1, 50);
+                horSlider.setValue(2, 75);
+
+                vertSlider.setValue(0, 40);
+                vertSlider.setValue(1, 60);
+            }
+        });
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         pack();
@@ -65,7 +101,7 @@ public class MultiSliderDemo extends JFrame
                 }
             }
         });
-        
+
         vertSlider.addChangeListener(new ChangeListener()
         {
             @Override
