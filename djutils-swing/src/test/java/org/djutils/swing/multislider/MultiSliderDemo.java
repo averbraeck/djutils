@@ -33,6 +33,7 @@ public class MultiSliderDemo extends JFrame
     private static final long serialVersionUID = 1L;
 
     /** */
+    @SuppressWarnings("checkstyle:needbraces")
     public MultiSliderDemo()
     {
         setPreferredSize(new Dimension(640, 640));
@@ -97,7 +98,8 @@ public class MultiSliderDemo extends JFrame
                 MultiSlider s = (MultiSlider) e.getSource();
                 for (int i = 0; i < s.getNumberOfThumbs(); i++)
                 {
-                    System.out.println("Horizontal Thumb " + i + ": " + s.getValue(i));
+                    if (!s.isBusy())
+                        System.out.println("Horizontal Thumb " + i + ": " + s.getValue(i));
                 }
             }
         });
@@ -110,7 +112,8 @@ public class MultiSliderDemo extends JFrame
                 MultiSlider s = (MultiSlider) e.getSource();
                 for (int i = 0; i < s.getNumberOfThumbs(); i++)
                 {
-                    System.out.println("Vertical Thumb " + i + ": " + s.getValue(i));
+                    if (!s.isBusy())
+                        System.out.println("Vertical Thumb " + i + ": " + s.getValue(i));
                 }
             }
         });
