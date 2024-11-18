@@ -37,7 +37,7 @@ public interface OffsetFlattener2d extends Flattener<Flattener2d, Curve2d, PolyL
 
     /**
      * Load one knot in the map of fractions and points.
-     * @param map NavigableMap<Double, Point2d> the map
+     * @param map the map
      * @param knot the fraction where the knot occurs
      * @param curve the curve that can compute the point for each <code>knot</code> position
      * @param of offset data
@@ -60,7 +60,7 @@ public interface OffsetFlattener2d extends Flattener<Flattener2d, Curve2d, PolyL
 
     /**
      * Load the knots into the navigable map (including the start point and the end point).
-     * @param map navigableMap<Double, Point2d>; the navigable map
+     * @param map the navigable map
      * @param curve the curve
      * @param of the offset data
      */
@@ -101,7 +101,7 @@ public interface OffsetFlattener2d extends Flattener<Flattener2d, Curve2d, PolyL
      * Make a FlattableCurve object.
      * @param curve the curve
      * @param of the offset function
-     * @return Flattener.FlattableCurve&lt;Point2d, Double
+     * @return the flattable curve
      */
     default Flattener.FlattableCurve<Point2d, Double> makeFlattableCurve(final OffsetCurve2d curve,
             final ContinuousPiecewiseLinearFunction of)
