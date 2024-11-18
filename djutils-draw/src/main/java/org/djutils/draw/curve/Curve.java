@@ -44,7 +44,7 @@ public interface Curve<DP, DIR, P extends Point<P>, F extends Flattener<F, ?, PL
 
     /**
      * Return the length of this Curve.
-     * @return double; length of this Curve
+     * @return length of this Curve
      */
     double getLength();
 
@@ -62,16 +62,16 @@ public interface Curve<DP, DIR, P extends Point<P>, F extends Flattener<F, ?, PL
 
     /**
      * Flatten a Curve into a PolyLine. Implementations should use the flattener when relevant and possible.
-     * @param flattener Flattener; the flattener
-     * @return PolyLine; approximation of this <code>Curve</code> as a <code>PolyLine</code>
+     * @param flattener the flattener
+     * @return approximation of this <code>Curve</code> as a <code>PolyLine</code>
      */
     PL toPolyLine(F flattener);
 
     /**
      * Returns the point at the given fraction of this Curve. The fraction may represent any parameter, such as <i>t</i> in
      * a B&eacute;zier curve, <i>s</i> in a Clothoid, or simply the fraction of length.
-     * @param fraction double; the fraction
-     * @return P; the point at the given <code>fraction</code>
+     * @param fraction the fraction
+     * @return the point at the given <code>fraction</code>
      */
     P getPoint(double fraction);
 
@@ -89,8 +89,8 @@ public interface Curve<DP, DIR, P extends Point<P>, F extends Flattener<F, ?, PL
      * Returns the direction at the given fraction. The fraction may represent any parameter, such as <i>t</i> in a
      * B&eacute;zier curve, <i>s</i> in a Clothoid, or simply the fraction of length. The default implementation performs a
      * numerical approach by looking at the direction between the points at fraction, and a point 1e-6 away.
-     * @param fraction double; the fraction
-     * @return double; the direction at the given <code>fraction</code>
+     * @param fraction the fraction
+     * @return the direction at the given <code>fraction</code>
      */
     DIR getDirection(double fraction);
 

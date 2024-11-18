@@ -15,8 +15,8 @@ public interface RetrieveValue
     /**
      * Look up a variable and return its value. Numeric values should be returned as a DoubleScalar of some kind. Logical values
      * should be returned as a Boolean.
-     * @param name String; name of the variable
-     * @return Object; the value of the variable
+     * @param name name of the variable
+     * @return the value of the variable
      */
     Object lookup(final String name);
     

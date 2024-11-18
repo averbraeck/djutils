@@ -27,9 +27,9 @@ public class ListTable extends Table
 
     /**
      * Constructor.
-     * @param id String; id
-     * @param description String; description
-     * @param columns Collection&lt;Column&lt;?&gt;&gt;; columns
+     * @param id id
+     * @param description description
+     * @param columns columns
      */
     public ListTable(final String id, final String description, final Collection<Column<?>> columns)
     {
@@ -50,7 +50,7 @@ public class ListTable extends Table
 
     /**
      * Adds a row to the table.
-     * @param data Map&lt;String, Object&gt;; data with values given per column
+     * @param data data with values given per column
      * @throws IllegalArgumentException when the size or data types in the data map do not comply to the columns
      */
     public void addRow(final Map<Column<?>, Object> data)
@@ -72,7 +72,7 @@ public class ListTable extends Table
 
     /**
      * Adds a row to the table.
-     * @param data Map&lt;String, Object&gt;; data with values given per column id
+     * @param data data with values given per column id
      * @throws IllegalArgumentException when the size or data types in the data map do not comply to the columns
      */
     public void addRowByColumnIds(final Map<String, Object> data)
@@ -96,7 +96,7 @@ public class ListTable extends Table
     /**
      * Adds a row to the table. The order in which the elements in the array are offered should be the same as the order of the
      * columns.
-     * @param data Object[]; row data
+     * @param data row data
      * @throws IllegalArgumentException when the size, order or data types in the {@code Object[]} do not comply to the columns
      */
     public void addRow(final Object[] data)
@@ -115,8 +115,8 @@ public class ListTable extends Table
 
     /**
      * Checks whether the type of a value is suitable for a column.
-     * @param column Column&lt;?&gt;; column.
-     * @param value Object; value.
+     * @param column column.
+     * @param value value.
      */
     private void checkValueType(final Column<?> column, final Object value)
     {

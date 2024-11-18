@@ -25,8 +25,8 @@ public class Transform2d implements Cloneable
 
     /**
      * Multiply a 3x3 matrix (stored as a 9-value array by row) with a 4-value vector.
-     * @param m double[]; the matrix
-     * @param v double[]; the vector
+     * @param m the matrix
+     * @param v the vector
      * @return double[3]; the result of <code>m x v</code>
      */
     protected static double[] mulMatVec(final double[] m, final double[] v)
@@ -41,8 +41,8 @@ public class Transform2d implements Cloneable
 
     /**
      * Multiply a 3x3 matrix (stored as a 9-value array by row) with a 3-value vector and a 1 for the 3rd value.
-     * @param m double[]; the matrix
-     * @param v double[]; the vector
+     * @param m the matrix
+     * @param v the vector
      * @return double[2]; the result of <code>m x (v1, v2, 1)</code>, with the last value left out
      */
     protected static double[] mulMatVec2(final double[] m, final double[] v)
@@ -57,8 +57,8 @@ public class Transform2d implements Cloneable
 
     /**
      * Multiply a 3x3 matrix (stored as a 9-value array by row) with another 3x3-matrix.
-     * @param m1 double[]; the first matrix
-     * @param m2 double[]; the second matrix
+     * @param m1 the first matrix
+     * @param m2 the second matrix
      * @return double[9]; the result of <code>m1 x m2</code>
      */
     protected static double[] mulMatMat(final double[] m1, final double[] m2)
@@ -76,7 +76,7 @@ public class Transform2d implements Cloneable
 
     /**
      * Get a safe copy of the affine transformation matrix.
-     * @return double[]; a safe copy of the affine transformation matrix
+     * @return a safe copy of the affine transformation matrix
      */
     public double[] getMat()
     {
@@ -86,9 +86,9 @@ public class Transform2d implements Cloneable
     /**
      * Transform coordinates by a vector (tx, ty). Note that to carry out multiple operations, the steps have to be built in the
      * OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
-     * @param tx double; the translation value for the x-coordinates
-     * @param ty double; the translation value for the y-coordinates
-     * @return Transform2d; the new transformation matrix after applying the transform
+     * @param tx the translation value for the x-coordinates
+     * @param ty the translation value for the y-coordinates
+     * @return the new transformation matrix after applying the transform
      */
     public Transform2d translate(final double tx, final double ty)
     {
@@ -103,8 +103,8 @@ public class Transform2d implements Cloneable
     /**
      * Translate coordinates by a the x and y values contained in a Point2d. Note that to carry out multiple operations, the
      * steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
-     * @param point Point2d; the point containing the x and y translation values
-     * @return Transform2d; the new transformation matrix after applying the transform
+     * @param point the point containing the x and y translation values
+     * @return the new transformation matrix after applying the transform
      */
     public Transform2d translate(final Point2d point)
     {
@@ -120,9 +120,9 @@ public class Transform2d implements Cloneable
      * Scale all coordinates with a factor for x, and y. A scale factor of 1 leaves the coordinate unchanged. Note that to carry
      * out multiple operations, the steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT
      * to LEFT.
-     * @param sx double; the scale factor for the x-coordinates
-     * @param sy double; the scale factor for the y-coordinates
-     * @return Transform2d; the new transformation matrix after applying the transform
+     * @param sx the scale factor for the x-coordinates
+     * @param sy the scale factor for the y-coordinates
+     * @return the new transformation matrix after applying the transform
      */
     public Transform2d scale(final double sx, final double sy)
     {
@@ -137,8 +137,8 @@ public class Transform2d implements Cloneable
     /**
      * The rotation around the origin with an angle in radians. Note that to carry out multiple operations, the steps have to be
      * built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
-     * @param angle double; the angle to rotate the coordinates with with around the origin
-     * @return Transform2d; the new transformation matrix after applying the transform
+     * @param angle the angle to rotate the coordinates with with around the origin
+     * @return the new transformation matrix after applying the transform
      */
     public Transform2d rotation(final double angle)
     {
@@ -157,9 +157,9 @@ public class Transform2d implements Cloneable
      * an x-coordinate with another value is translated by x*sx. Similarly, a y-coordinate with a value of 1 is translated by xy
      * and a y-coordinate with another value is translated by y*sy. Note that to carry out multiple operations, the steps have
      * to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
-     * @param sx double; the shear factor in the x-direction
-     * @param sy double; the shear factor in the y-direction
-     * @return Transform2d; the new transformation matrix after applying the transform
+     * @param sx the shear factor in the x-direction
+     * @param sy the shear factor in the y-direction
+     * @return the new transformation matrix after applying the transform
      */
     public Transform2d shear(final double sx, final double sy)
     {
@@ -174,7 +174,7 @@ public class Transform2d implements Cloneable
     /**
      * The reflection of the x-coordinate, by mirroring it in the yz-plane (the plane with x=0). Note that to carry out multiple
      * operations, the steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
-     * @return Transform2d; the new transformation matrix after applying the transform
+     * @return the new transformation matrix after applying the transform
      */
     public Transform2d reflectX()
     {
@@ -185,7 +185,7 @@ public class Transform2d implements Cloneable
     /**
      * The reflection of the y-coordinate, by mirroring it in the xz-plane (the plane with y=0). Note that to carry out multiple
      * operations, the steps have to be built in the OPPOSITE order since matrix multiplication operates from RIGHT to LEFT.
-     * @return Transform2d; the new transformation matrix after applying the transform
+     * @return the new transformation matrix after applying the transform
      */
     public Transform2d reflectY()
     {
@@ -196,7 +196,7 @@ public class Transform2d implements Cloneable
     /**
      * Apply the stored transform on the xy-vector and return the transformed vector. For speed reasons, no checks on correct
      * size of the vector is done.
-     * @param xy double[]; double[2] the provided vector
+     * @param xy double[2] the provided vector
      * @return double[2]; the transformed vector
      */
     public double[] transform(final double[] xy)
@@ -206,8 +206,8 @@ public class Transform2d implements Cloneable
 
     /**
      * Apply the stored transform on the provided point and return a point with the transformed coordinate.
-     * @param point Point2d; the point to be transformed
-     * @return Point2d; a point with the transformed coordinates
+     * @param point the point to be transformed
+     * @return a point with the transformed coordinates
      */
     public Point2d transform(final Point2d point)
     {
@@ -216,8 +216,8 @@ public class Transform2d implements Cloneable
 
     /**
      * Apply the stored transform on the points generated by the provided pointIterator.
-     * @param pointIterator Iterator&lt;Point2d&gt;; generates the points to be transformed
-     * @return Iterator&lt;Point2d&gt;; an iterator that will generator all transformed points
+     * @param pointIterator generates the points to be transformed
+     * @return an iterator that will generator all transformed points
      */
     public Iterator<Point2d> transform(final Iterator<Point2d> pointIterator)
     {
@@ -242,8 +242,8 @@ public class Transform2d implements Cloneable
      * Apply the stored transform on the provided Bounds2d and return a new Bounds2d with the bounds of the transformed
      * coordinates. All 4 corner points have to be transformed, since we do not know which of the 4 points will result in the
      * lowest and highest x and y coordinates.
-     * @param boundingRectangle Bounds2d; the bounds to be transformed
-     * @return Bounds2d; the new bounds based on the transformed coordinates
+     * @param boundingRectangle the bounds to be transformed
+     * @return the new bounds based on the transformed coordinates
      */
     public Bounds2d transform(final Bounds2d boundingRectangle)
     {

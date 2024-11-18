@@ -26,7 +26,7 @@ public final class TallyDemo
 
     /**
      * Demonstrate the basic use of a Tally.
-     * @param args String[]; the command line arguments (not used)
+     * @param args the command line arguments (not used)
      */
     public static void main(final String[] args)
     {

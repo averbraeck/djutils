@@ -355,11 +355,11 @@ public class Transform2dTest
 
     /**
      * Check bounds values.
-     * @param b Bounds2d; the box to test
-     * @param minX double; expected value
-     * @param maxX double; expected value
-     * @param minY double; expected value
-     * @param maxY double; expected value
+     * @param b the box to test
+     * @param minX expected value
+     * @param maxX expected value
+     * @param minY expected value
+     * @param maxY expected value
      */
     private void testBounds2d(final Bounds2d b, final double minX, final double maxX, final double minY, final double maxY)
     {

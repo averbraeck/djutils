@@ -24,7 +24,7 @@ public final class PerformanceTests
 
     /**
      * Measure performance of atan2, hypot, sine and cosine.
-     * @param args String[]; the command line arguments (not used)
+     * @param args the command line arguments (not used)
      */
     public static void main(final String[] args)
     {
@@ -171,9 +171,9 @@ public final class PerformanceTests
 
     /**
      * Implementation of hypot taken from https://stackoverflow.com/questions/3764978/why-hypot-function-is-so-slow .
-     * @param px double; x
-     * @param py double; y
-     * @return double; the hypot of x, and y
+     * @param px x
+     * @param py y
+     * @return the hypot of x, and y
      */
     public static double hypotA(final double px, final double py)
     {
@@ -225,8 +225,8 @@ public final class PerformanceTests
 
     /**
      * <b>hypot</b>.
-     * @param px double; x
-     * @param py double; y
+     * @param px x
+     * @param py y
      * @return sqrt(x*x +y*y) without intermediate overflow or underflow.
      * Note {@link Math#hypot} is unnecessarily slow. This returns the identical result to Math.hypot with reasonable run times
      *       (~40 nsec vs. 800 nsec).
@@ -309,9 +309,9 @@ public final class PerformanceTests
     /**
      * Better implementation of the hypotenuse function (faster and more accurate than the one in the java Math library). <br>
      * Derived from <a href="https://arxiv.org/abs/1904.09481">An improved algorithm for hypot(a, b) by Carlos F. Borges</a>.
-     * @param x double; the x value
-     * @param y double; the y value
-     * @return double; hypot(x, y)
+     * @param x the x value
+     * @param y the y value
+     * @return hypot(x, y)
      */
     public static double hypotC(final double x, final double y)
     {

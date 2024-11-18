@@ -17,10 +17,10 @@ public abstract class ArrayOrMatrixSerializer<T extends Object, E extends Object
 
     /**
      * Construct a new ArrayOrMatrixSerializere.
-     * @param type byte; the field type (returned by the <code>fieldType</code> method)
-     * @param elementSize int; the number of bytes needed to encode one additional array, or matrix element
-     * @param dataClassName String; returned by the dataClassName method
-     * @param numberOfDimensions int; should be 1 for array serializer and 2 for matrix serializer
+     * @param type the field type (returned by the <code>fieldType</code> method)
+     * @param elementSize the number of bytes needed to encode one additional array, or matrix element
+     * @param dataClassName returned by the dataClassName method
+     * @param numberOfDimensions should be 1 for array serializer and 2 for matrix serializer
      */
     ArrayOrMatrixSerializer(final byte type, final int elementSize, final String dataClassName, final int numberOfDimensions)
     {
@@ -31,7 +31,7 @@ public abstract class ArrayOrMatrixSerializer<T extends Object, E extends Object
 
     /**
      * Return the number of bytes needed to encode one additional element.
-     * @return int; the number of bytes needed to encode one additional element
+     * @return the number of bytes needed to encode one additional element
      */
     public final int getElementSize()
     {
@@ -40,7 +40,7 @@ public abstract class ArrayOrMatrixSerializer<T extends Object, E extends Object
 
     /**
      * Return the number of dimensions of the stored data.
-     * @return int; 1 for array, 2 for matrix
+     * @return 1 for array, 2 for matrix
      */
     @Override
     public final int getNumberOfDimensions()
@@ -50,19 +50,19 @@ public abstract class ArrayOrMatrixSerializer<T extends Object, E extends Object
 
     /**
      * Serializer for one array or matrix element (without type prefix) must be implemented in implementing sub classes.
-     * @param object E; the object to serialize
-     * @param buffer byte[]; the byte buffer for the serialized object
-     * @param offset int; index in byte buffer where first serialized byte must be stored
-     * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
+     * @param object the object to serialize
+     * @param buffer the byte buffer for the serialized object
+     * @param offset index in byte buffer where first serialized byte must be stored
+     * @param endianUtil selects bigEndian or littleEndian encoding
      */
     public abstract void serializeElement(E object, byte[] buffer, int offset, EndianUtil endianUtil);
 
     /**
      * Deserializer for one array or matrix element (without type prefix) must be implemented in implementing sub classes.
-     * @param buffer byte[]; the byte buffer from which the object is to be deserialized
-     * @param offset int; index in byte buffer where first byte of the object is stored
-     * @param endianUtil EndianUtil; selects bigEndian or littleEndian encoding
-     * @return E; the deserialized object
+     * @param buffer the byte buffer from which the object is to be deserialized
+     * @param offset index in byte buffer where first byte of the object is stored
+     * @param endianUtil selects bigEndian or littleEndian encoding
+     * @return the deserialized object
      */
     public abstract E deSerializeElement(byte[] buffer, int offset, EndianUtil endianUtil);
 

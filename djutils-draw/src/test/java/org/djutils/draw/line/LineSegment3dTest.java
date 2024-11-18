@@ -58,14 +58,14 @@ public class LineSegment3dTest
 
     /**
      * Check that a segment has all the right values.
-     * @param description String; description of the test
-     * @param segment Segment3d; the segment
-     * @param expectedStartX double; the expected x value for the start of the segment
-     * @param expectedStartY double; the expected y value for the start of the segment
-     * @param expectedStartZ double; the expected z value for the start of the segment
-     * @param expectedEndX double; the expected x value for the end of the segment
-     * @param expectedEndY double; the expected y value for the end of the segment
-     * @param expectedEndZ double; the expected y value for the end of the segment
+     * @param description description of the test
+     * @param segment the segment
+     * @param expectedStartX the expected x value for the start of the segment
+     * @param expectedStartY the expected y value for the start of the segment
+     * @param expectedStartZ the expected z value for the start of the segment
+     * @param expectedEndX the expected x value for the end of the segment
+     * @param expectedEndY the expected y value for the end of the segment
+     * @param expectedEndZ the expected y value for the end of the segment
      */
     public void verifySegment(final String description, final LineSegment3d segment, final double expectedStartX,
             final double expectedStartY, final double expectedStartZ, final double expectedEndX, final double expectedEndY,

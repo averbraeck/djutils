@@ -42,10 +42,10 @@ public class Column<T> implements Identifiable, Serializable
 
     /**
      * Make a new column for a table with an id, description, type, and unit.
-     * @param id String; id of the column
-     * @param description String; description of the column
-     * @param valueType Class&lt;T&gt;; value type of the column
-     * @param unit String; unit, may be {@code null}
+     * @param id id of the column
+     * @param description description of the column
+     * @param valueType value type of the column
+     * @param unit unit, may be {@code null}
      */
     @SuppressWarnings("unchecked")
     public Column(final String id, final String description, final Class<T> valueType, final String unit)
@@ -78,9 +78,9 @@ public class Column<T> implements Identifiable, Serializable
 
     /**
      * Make a new column for a table with an id, description, type. The unit is blank (null).
-     * @param id String; id of the column
-     * @param description String; description of the column
-     * @param valueType Class&lt;T&gt;; value type of the column
+     * @param id id of the column
+     * @param description description of the column
+     * @param valueType value type of the column
      */
     public Column(final String id, final String description, final Class<T> valueType)
     {
@@ -95,7 +95,7 @@ public class Column<T> implements Identifiable, Serializable
 
     /**
      * Returns the column description.
-     * @return String; column description
+     * @return column description
      */
     public String getDescription()
     {
@@ -104,7 +104,7 @@ public class Column<T> implements Identifiable, Serializable
 
     /**
      * Returns the type of the values in the column.
-     * @return Class&lt;?&gt;; type of the values in the column
+     * @return type of the values in the column
      */
     public Class<T> getValueType()
     {
@@ -113,7 +113,7 @@ public class Column<T> implements Identifiable, Serializable
 
     /**
      * Returns the unit of the column. Data is written an read using this unit.
-     * @return String; unit of the column
+     * @return unit of the column
      */
     public String getUnit()
     {

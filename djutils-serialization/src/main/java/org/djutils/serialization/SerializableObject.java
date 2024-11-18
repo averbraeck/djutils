@@ -17,7 +17,7 @@ public interface SerializableObject<T>
     /**
      * Make all elements that need to be serialized available as a list. The size of this list and the types of the elements in
      * it <b>must</b> be consistent. Meaning that the size of the list and content types of the list are always the same.
-     * @return List&lt;Object&gt;; list of the elements that need to serialized
+     * @return list of the elements that need to serialized
      */
     List<Object> exportAsList();
 

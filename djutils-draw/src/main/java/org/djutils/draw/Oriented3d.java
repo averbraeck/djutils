@@ -15,13 +15,13 @@ public interface Oriented3d<O extends Oriented<O>> extends Oriented<O>
 {
     /**
      * Return the rotation around the x-axis in radians.
-     * @return double; the rotation around the x-axis in radians
+     * @return the rotation around the x-axis in radians
      */
     double getDirX();
 
     /**
      * Return the rotation around the y-axis in radians.
-     * @return double; the rotation around the y-axis in radians
+     * @return the rotation around the y-axis in radians
      */
     double getDirY();
 

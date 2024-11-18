@@ -134,8 +134,8 @@ public final class CliUtil
      * further checks of the CLI arguments. Potentially, check() can also provide other initialization of the program to be
      * executed, but this can better be provided by other methods in main(). The method will exit on requesting help or version
      * information, or when the arguments are not complete or not correct.
-     * @param program Object; the potentially checkable program with the &#64;Option information
-     * @param args String[]; the arguments from the command line
+     * @param program the potentially checkable program with the &#64;Option information
+     * @param args the arguments from the command line
      */
     public static void execute(final Object program, final String[] args)
     {
@@ -148,8 +148,8 @@ public final class CliUtil
      * "check" method of the class that can take care of further checks of the CLI arguments. Potentially, check() can also
      * provide other initialization of the program to be executed, but this can better be provided by other methods in main().
      * The method will exit on requesting help or version information, or when the arguments are not complete or not correct.
-     * @param commandLine CommandLine; the CommandLine object for the program with the &#64;Option information
-     * @param args String[]; the arguments from the command line
+     * @param commandLine the CommandLine object for the program with the &#64;Option information
+     * @param args the arguments from the command line
      */
     @SuppressWarnings("checkstyle:methodlength")
     public static void execute(final CommandLine commandLine, final String[] args)
@@ -310,10 +310,10 @@ public final class CliUtil
 
     /**
      * Change the value of a property of an already present &#64;Option annotation of a field in a class or superclass.
-     * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
-     * @param fieldName String; the field for which the defaultValue in &#64;Option should be changed
-     * @param propertyName String; the name of the property to change the value of
-     * @param newValue Object; the new value of the property
+     * @param programClass the class of the program for which the options should be changed
+     * @param fieldName the field for which the defaultValue in &#64;Option should be changed
+     * @param propertyName the name of the property to change the value of
+     * @param newValue the new value of the property
      * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
      * @throws NoSuchFieldException when the field with the name does not exist in the program object
      */
@@ -333,10 +333,10 @@ public final class CliUtil
 
     /**
      * Change the value of a property of an already present &#64;Option annotation of a field in a class or superclass.
-     * @param program Object; the program for which the options should be changed
-     * @param fieldName String; the field for which the defaultValue in &#64;Option should be changed
-     * @param propertyName String; the name of the property to change the value of
-     * @param newValue Object; the new value of the property
+     * @param program the program for which the options should be changed
+     * @param fieldName the field for which the defaultValue in &#64;Option should be changed
+     * @param propertyName the name of the property to change the value of
+     * @param newValue the new value of the property
      * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
      * @throws NoSuchFieldException when the field with the name does not exist in the program object
      */
@@ -349,9 +349,9 @@ public final class CliUtil
     /**
      * Change the default value of an already present &#64;Option annotation of the "defaultValue" field in a class or
      * superclass.
-     * @param program Object; the program for which the options should be changed
-     * @param fieldName String; the field for which the defaultValue in &#64;Option should be changed
-     * @param newDefaultValue String; the new value of the defaultValue
+     * @param program the program for which the options should be changed
+     * @param fieldName the field for which the defaultValue in &#64;Option should be changed
+     * @param newDefaultValue the new value of the defaultValue
      * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
      * @throws NoSuchFieldException when the field with the name does not exist in the program object
      */
@@ -364,9 +364,9 @@ public final class CliUtil
     /**
      * Change the default value of an already present &#64;Option annotation of the "defaultValue" field in a class or
      * superclass.
-     * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
-     * @param fieldName String; the field for which the defaultValue in &#64;Option should be changed
-     * @param newDefaultValue String; the new value of the defaultValue
+     * @param programClass the class of the program for which the options should be changed
+     * @param fieldName the field for which the defaultValue in &#64;Option should be changed
+     * @param newDefaultValue the new value of the defaultValue
      * @throws CliException when the field cannot be found, or when the &#64;Option annotation is not present in the field
      * @throws NoSuchFieldException when the field with the name does not exist in the program object
      */
@@ -378,9 +378,9 @@ public final class CliUtil
 
     /**
      * Change the value of a property of an already present &#64;Command annotation in a class or superclass of that class.
-     * @param program Object; the program for which the cli property should be changed
-     * @param propertyName String; the name of the property to change the value of
-     * @param newValue Object; the new value of the property
+     * @param program the program for which the cli property should be changed
+     * @param propertyName the name of the property to change the value of
+     * @param newValue the new value of the property
      * @throws CliException when the class is not annotated with &#64;Command
      */
     private static void changeCommandProperty(final Object program, final String propertyName, final Object newValue)
@@ -391,9 +391,9 @@ public final class CliUtil
 
     /**
      * Change the value of a property of an already present &#64;Command annotation in a class or superclass of that class.
-     * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
-     * @param propertyName String; the name of the property to change the value of
-     * @param newValue Object; the new value of the property
+     * @param programClass the class of the program for which the options should be changed
+     * @param propertyName the name of the property to change the value of
+     * @param newValue the new value of the property
      * @throws CliException when the class is not annotated with &#64;Command
      */
     private static void changeCommandProperty(final Class<?> programClass, final String propertyName, final Object newValue)
@@ -407,8 +407,8 @@ public final class CliUtil
     /**
      * Change the value of the 'name' property of an already present &#64;Command annotation in a class or superclass of that
      * class.
-     * @param program Object; the program for which the cli property should be changed
-     * @param newName String; the new value of the name
+     * @param program the program for which the cli property should be changed
+     * @param newName the new value of the name
      * @throws CliException when the class is not annotated with &#64;Command
      */
     public static void changeCommandName(final Object program, final String newName) throws CliException
@@ -419,8 +419,8 @@ public final class CliUtil
     /**
      * Change the value of the 'name' property of an already present &#64;Command annotation in a class or superclass of that
      * class.
-     * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
-     * @param newName String; the new value of the name
+     * @param programClass the class of the program for which the options should be changed
+     * @param newName the new value of the name
      * @throws CliException when the class is not annotated with &#64;Command
      */
     public static void changeCommandName(final Class<?> programClass, final String newName) throws CliException
@@ -431,8 +431,8 @@ public final class CliUtil
     /**
      * Change the value of the 'description' property of an already present &#64;Command annotation in a class or superclass of
      * that class.
-     * @param program Object; the program for which the cli property should be changed
-     * @param newDescription String; the new value of the description
+     * @param program the program for which the cli property should be changed
+     * @param newDescription the new value of the description
      * @throws CliException when the class is not annotated with &#64;Command
      */
     public static void changeCommandDescription(final Object program, final String newDescription) throws CliException
@@ -443,8 +443,8 @@ public final class CliUtil
     /**
      * Change the value of the 'description' property of an already present &#64;Command annotation in a class or superclass of
      * that class.
-     * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
-     * @param newDescription String; the new value of the description
+     * @param programClass the class of the program for which the options should be changed
+     * @param newDescription the new value of the description
      * @throws CliException when the class is not annotated with &#64;Command
      */
     public static void changeCommandDescription(final Class<?> programClass, final String newDescription) throws CliException
@@ -455,8 +455,8 @@ public final class CliUtil
     /**
      * Change the value of the 'version' property of an already present &#64;Command annotation in a class or superclass of that
      * class.
-     * @param program Object; the program for which the cli property should be changed
-     * @param newVersion String; the new value of the version
+     * @param program the program for which the cli property should be changed
+     * @param newVersion the new value of the version
      * @throws CliException when the class is not annotated with &#64;Command
      */
     public static void changeCommandVersion(final Object program, final String newVersion) throws CliException
@@ -467,8 +467,8 @@ public final class CliUtil
     /**
      * Change the value of the 'version' property of an already present &#64;Command annotation in a class or superclass of that
      * class.
-     * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
-     * @param newVersion String; the new value of the version
+     * @param programClass the class of the program for which the options should be changed
+     * @param newVersion the new value of the version
      * @throws CliException when the class is not annotated with &#64;Command
      */
     public static void changeCommandVersion(final Class<?> programClass, final String newVersion) throws CliException
@@ -478,8 +478,8 @@ public final class CliUtil
 
     /**
      * Return the &#64;Command annotation of a class or one of its superclasses.
-     * @param programClass Class&lt;?&gt;; the class of the program for which the annotation should be retrieved
-     * @return Command; the &#64;Command annotation of the class or one of its superclasses
+     * @param programClass the class of the program for which the annotation should be retrieved
+     * @return the &#64;Command annotation of the class or one of its superclasses
      * @throws CliException when the class or one of its superclasses is not annotated with &#64;Command
      */
     public static Command getCommandAnnotation(final Class<?> programClass) throws CliException
@@ -489,8 +489,8 @@ public final class CliUtil
 
     /**
      * Return the &#64;Command annotation of a class or one of its superclasses.
-     * @param programClass Class&lt;?&gt;; the class of the program for which the annotation should be retrieved
-     * @return Class&lt;?&gt;; the class or superclass in which the &#64;Command annotation was found
+     * @param programClass the class of the program for which the annotation should be retrieved
+     * @return the class or superclass in which the &#64;Command annotation was found
      * @throws CliException when the class or one of its superclasses is not annotated with &#64;Command
      */
     public static Class<?> getCommandAnnotationClass(final Class<?> programClass) throws CliException
@@ -510,7 +510,7 @@ public final class CliUtil
     }
 
     /**
-     * @param programClass Class&lt;?&gt;; the class for which to retrieve the version. The class should be annotated with
+     * @param programClass the class for which to retrieve the version. The class should be annotated with
      *            &#64;Command
      * @return String[] the version string
      * @throws CliException when the class is not annotated with &#64;Command
@@ -531,7 +531,7 @@ public final class CliUtil
     }
 
     /**
-     * @param program Object; the program for which to retrieve the version. The program's class should be annotated with
+     * @param program the program for which to retrieve the version. The program's class should be annotated with
      *            &#64;Command
      * @return String[] the version string
      * @throws CliException when the class is not annotated with &#64;Command
@@ -542,7 +542,7 @@ public final class CliUtil
     }
 
     /**
-     * @param programClass Class&lt;?&gt;; the class for which to retrieve the program name. The class should be annotated with
+     * @param programClass the class for which to retrieve the program name. The class should be annotated with
      *            &#64;Command
      * @return String the name string
      * @throws CliException when the class is not annotated with &#64;Command
@@ -558,7 +558,7 @@ public final class CliUtil
     }
 
     /**
-     * @param program Object; the program for which to retrieve the program name. The program's class should be annotated with
+     * @param program the program for which to retrieve the program name. The program's class should be annotated with
      *            &#64;Command
      * @return String the name string
      * @throws CliException when the class is not annotated with &#64;Command
@@ -569,7 +569,7 @@ public final class CliUtil
     }
 
     /**
-     * @param programClass Class&lt;?&gt;; the class for which to retrieve the description. The class should be annotated with
+     * @param programClass the class for which to retrieve the description. The class should be annotated with
      *            &#64;Command
      * @return String[] the description string
      * @throws CliException when the class is not annotated with &#64;Command
@@ -590,7 +590,7 @@ public final class CliUtil
     }
 
     /**
-     * @param program Object; the program for which to retrieve the description. The program's class should be annotated with
+     * @param program the program for which to retrieve the description. The program's class should be annotated with
      *            &#64;Command
      * @return String[] the description string
      * @throws CliException when the class is not annotated with &#64;Command
@@ -602,10 +602,10 @@ public final class CliUtil
 
     /**
      * Make the override key for an option property.
-     * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
-     * @param fieldName String; the field for which the defaultValue in &#64;Option should be changed
-     * @param propertyName String; the name of the property to change the value of
-     * @return String; the override key for an option property
+     * @param programClass the class of the program for which the options should be changed
+     * @param fieldName the field for which the defaultValue in &#64;Option should be changed
+     * @param propertyName the name of the property to change the value of
+     * @return the override key for an option property
      */
     static String makeOverrideKeyProperty(final Class<?> programClass, final String fieldName, final String propertyName)
     {
@@ -614,9 +614,9 @@ public final class CliUtil
 
     /**
      * Make the override key for the Command annotation.
-     * @param programClass Class&lt;?&gt;; the class of the program for which the options should be changed
-     * @param propertyName String; the name of the annotation property to change the value of
-     * @return String; the override key for an option property
+     * @param programClass the class of the program for which the options should be changed
+     * @param propertyName the name of the annotation property to change the value of
+     * @return the override key for an option property
      */
     static String makeOverrideKeyCommand(final Class<?> programClass, final String propertyName)
     {

@@ -30,7 +30,7 @@ public class AccumulatorTest
 
     /**
      * test null and wrong probabilities on an accumulator.
-     * @param acc QuantileAccumulator; the accumulator to test
+     * @param acc the accumulator to test
      */
     private void testErrors(final QuantileAccumulator acc)
     {

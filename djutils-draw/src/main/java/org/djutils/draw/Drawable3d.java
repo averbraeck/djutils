@@ -17,7 +17,7 @@ public interface Drawable3d extends Drawable<Point3d>
 {
     /**
      * Retrieve the bounding box of the object.
-     * @return Bounds3d; the bounding box of the object
+     * @return the bounding box of the object
      */
     Bounds3d getBounds();
 
@@ -29,7 +29,7 @@ public interface Drawable3d extends Drawable<Point3d>
 
     /**
      * Project the object onto the z=0 plane.
-     * @return Drawable2d; the projected object
+     * @return the projected object
      * @throws DrawRuntimeException when projecting onto the <code>z=0</code> plane results in an invalid object. E.g. a Line3d
      *             that consists of points that all have the exact same <code>x</code> and <code>y</code> coordinates cannot be
      *             a line after projecting on the <code>z=0</code> plane.

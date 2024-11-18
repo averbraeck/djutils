@@ -45,12 +45,12 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Construct a Bounds3d by providing all lower and upper bounds.
-     * @param minX double; the lower bound for x
-     * @param maxX double; the upper bound for x
-     * @param minY double; the lower bound for y
-     * @param maxY double; the upper bound for y
-     * @param minZ double; the lower bound for z
-     * @param maxZ double; the upper bound for z
+     * @param minX the lower bound for x
+     * @param maxX the upper bound for x
+     * @param minY the lower bound for y
+     * @param maxY the upper bound for y
+     * @param minZ the lower bound for z
+     * @param maxZ the upper bound for z
      * @throws ArithmeticException when <code>minX</code>, <code>maxX</code>, <code>minY</code>,
      *             <code>maxY</code>,<code>minZ</code>, or <code>maxZ</code> is <code>NaN</code>
      * @throws IllegalArgumentException when <code>minX</code> &gt; <code>maxX</code>, <code>minY</code> &gt; <code>maxY</code>,
@@ -77,9 +77,9 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Constructs a new Bounds3d around the origin (0, 0, 0).
-     * @param deltaX double; the deltaX value around the origin
-     * @param deltaY double; the deltaY value around the origin
-     * @param deltaZ double; the deltaZ value around the origin
+     * @param deltaX the deltaX value around the origin
+     * @param deltaY the deltaY value around the origin
+     * @param deltaZ the deltaZ value around the origin
      * @throws ArithmeticException when <code>deltaX</code>, <code>deltaY</code>, or <code>deltaZ</code> is <code>NaN</code>
      * @throws IllegalArgumentException when <code>deltaX &lt; 0.0</code>, <code>deltaY &lt; 0.0</code>, or <code>deltaZ &lt;
      *             0.0</code>
@@ -91,7 +91,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Construct a Bounds3d from some collection of points, finding the lowest and highest x and y coordinates.
-     * @param points Iterator&lt;? extends Point3d&gt;; the array of points to construct a Bounds3d from
+     * @param points the array of points to construct a Bounds3d from
      * @throws NullPointerException when <code>points</code> is <code>null</code>
      * @throws IllegalArgumentException when the <code>points</code> iterator provides zero points
      */
@@ -126,7 +126,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Construct a Bounds3d from an array of Point3d, finding the lowest and highest x, y and z coordinates.
-     * @param points Point3d[]; the points to construct a Bounds3d from
+     * @param points the points to construct a Bounds3d from
      * @throws NullPointerException when <code>points</code> is <code>null</code>
      * @throws IllegalArgumentException when zero points are provided
      */
@@ -137,7 +137,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Construct a Bounds3d for a Drawable3d.
-     * @param drawable3d Drawable3d; any object that implements the Drawable2d interface
+     * @param drawable3d any object that implements the Drawable2d interface
      * @throws NullPointerException when <code>drawable3d</code> is <code>null</code>
      */
     public Bounds3d(final Drawable3d drawable3d) throws NullPointerException
@@ -147,7 +147,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Construct a Bounds3d for several Drawable2d objects.
-     * @param drawable3d Drawable3d...; the Drawable2d objects
+     * @param drawable3d the Drawable2d objects
      * @throws NullPointerException when the <code>drawable3d</code> array is <code>null</code>, or contains a <code>null</code>
      *             value
      * @throws IllegalArgumentException when the length of the <code>drawable3d</code> array is 0
@@ -159,8 +159,8 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Return an iterator that will return all points of one or more Drawable objects.
-     * @param drawable3d Drawable3d...; the Drawable objects
-     * @return Iterator&lt;P&gt;; iterator that will return all points of the Drawable objects
+     * @param drawable3d the Drawable objects
+     * @return iterator that will return all points of the Drawable objects
      * @throws NullPointerException when <code>drawable3darray</code> is <code>null</code>
      * @throws IllegalArgumentException when the <code>drawable3dArray</code> contains 0 elements
      */
@@ -197,8 +197,8 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Verify that the array contains at least one entry.
-     * @param drawable3dArray Drawable3d[]; array of Drawable2d objects
-     * @return Drawable3d[]; the array
+     * @param drawable3dArray array of Drawable2d objects
+     * @return the array
      * @throws NullPointerException when the <code>drawable3dArray</code> is <code>null</code>
      * @throws IllegalArgumentException when the <code>drawable3dArray</code> contains 0 elements
      */
@@ -211,7 +211,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Construct a Bounds3d for a Collection of Drawable2d objects.
-     * @param drawableCollection Collection&lt;Drawable2d&gt;; the collection
+     * @param drawableCollection the collection
      * @throws NullPointerException when the <code>drawableCollection</code> is <code>null</code>, or contains <code>null</code>
      *             values
      * @throws IllegalArgumentException when the <code>drawableCollection</code> is empty
@@ -223,8 +223,8 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Return an iterator that will return all points of one or more Drawable3d objects.
-     * @param drawableCollection Collection&lt;Drawable3d&gt;; the collection of Drawable2d objects
-     * @return Iterator&lt;P&gt;; iterator that will return all points of the Drawable objects
+     * @param drawableCollection the collection of Drawable2d objects
+     * @return iterator that will return all points of the Drawable objects
      * @throws NullPointerException when the <code>drawableCollection</code> is <code>null</code>, or contains a
      *             <code>null</code> value
      * @throws IllegalArgumentException when the <code>drawableCollection</code> is empty
@@ -271,8 +271,8 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Verify that the iterator has something to return.
-     * @param iterator Iterator&lt;Drawable2d&gt;; the iterator
-     * @return Iterator&lt;Drawable3d&gt;; the iterator
+     * @param iterator the iterator
+     * @return the iterator
      * @throws NullPointerException when the <code>iterator</code> is <code>null</code>
      * @throws IllegalArgumentException when the <code>hasNext</code> method of the <code>iterator</code> returns
      *             <code>false</code> before even one <code>Drawable2d</code> was delivered
@@ -302,10 +302,10 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Check if this Bounds3d contains a point. Contains returns false when the point is on the surface of this Bounds3d.
-     * @param x double; the x-coordinate of the point
-     * @param y double; the y-coordinate of the point
-     * @param z double; the z-coordinate of the point
-     * @return boolean; whether this Bounds3d contains the point
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @param z the z-coordinate of the point
+     * @return whether this Bounds3d contains the point
      * @throws ArithmeticException when <code>x</code>, or <code>y</code> is <code>NaN</code>
      */
     public boolean contains(final double x, final double y, final double z)
@@ -333,10 +333,10 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Check if this Bounds3d contains a point. Covers returns <code>true</code> when the point is on a face of this Bounds3d.
-     * @param x double; the x-coordinate of the point
-     * @param y double; the y-coordinate of the point
-     * @param z double; the z-coordinate of the point
-     * @return boolean; whether the bounding box contains the point, including the faces
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @param z the z-coordinate of the point
+     * @return whether the bounding box contains the point, including the faces
      * @throws ArithmeticException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>NaN</code>
      */
     public boolean covers(final double x, final double y, final double z)
@@ -397,7 +397,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Return the extent of this Bounds3d in the z-direction.
-     * @return double; the extent of this Bounds3d in the z-direction
+     * @return the extent of this Bounds3d in the z-direction
      */
     public double getDeltaZ()
     {
@@ -406,7 +406,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Return the volume of this Bounds3d.
-     * @return double; the volume of this Bounds3d
+     * @return the volume of this Bounds3d
      */
     public double getVolume()
     {
@@ -439,7 +439,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Return the lower bound for z.
-     * @return double; the lower bound for z
+     * @return the lower bound for z
      */
     public double getMinZ()
     {
@@ -448,7 +448,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
 
     /**
      * Return the upper bound for z.
-     * @return double; the upper bound for z
+     * @return the upper bound for z
      */
     public double getMaxZ()
     {

@@ -37,9 +37,9 @@ public final class ConvexHull
 
     /**
      * Compute the convex hull of a collection of Point2d objects.
-     * @param iterator Iterator&lt;Point2d&gt;; iterator that shall return all the points for which the convex hull is to be
+     * @param iterator iterator that shall return all the points for which the convex hull is to be
      *            computed
-     * @return Polygon2d; the convex hull of the points
+     * @return the convex hull of the points
      */
     public static Polygon2d convexHull(final Iterator<Point2d> iterator)
     {
@@ -50,8 +50,8 @@ public final class ConvexHull
 
     /**
      * Compute the convex hull of one or more Drawable2d objects.
-     * @param drawable2d Drawable2d...; the Drawable2d objects
-     * @return Polygon2d; the convex hull of the Drawable2d objects
+     * @param drawable2d the Drawable2d objects
+     * @return the convex hull of the Drawable2d objects
      * @throws NullPointerException when any of the drawable2d object is <code>null</code>
      * @throws IllegalArgumentException when zero arguments are provided
      */
@@ -62,8 +62,8 @@ public final class ConvexHull
 
     /**
      * Construct a Bounds2d for a Collection of Drawable2d objects.
-     * @param drawableCollection Collection&lt;Drawable2d&gt;; the collection
-     * @return Polygon2d; the convex hull of the Drawable2d objects
+     * @param drawableCollection the collection
+     * @return the convex hull of the Drawable2d objects
      * @throws NullPointerException when the <code>drawableCollection</code> is <code>null</code>, or contains a
      *             <code>null</code> value
      * @throws IllegalArgumentException when the <code>drawableCollection</code> is empty
@@ -77,8 +77,8 @@ public final class ConvexHull
 
     /**
      * Compute the convex hull of a list of Point2d objects. The input list will not be modified.
-     * @param list List&lt;Point2d&gt;; the list of Point2d objects
-     * @return Polygon2d; the convex hull of the points
+     * @param list the list of Point2d objects
+     * @return the convex hull of the points
      */
     public static Polygon2d convexHull(final List<Point2d> list)
     {
@@ -87,10 +87,10 @@ public final class ConvexHull
 
     /**
      * Return whether moving from a through b to c, the turn at b is counter-clockwise.
-     * @param a Point2d; point a
-     * @param b Point2d; point b
-     * @param c Point2d; point c
-     * @return boolean; <code>true</code> if the turn at b is counter clockwise; <code>false</code> if there is not turn; or it
+     * @param a point a
+     * @param b point b
+     * @param c point c
+     * @return <code>true</code> if the turn at b is counter clockwise; <code>false</code> if there is not turn; or it
      *         is clockwise
      */
     private static boolean ccw(final Point2d a, final Point2d b, final Point2d c)
@@ -101,8 +101,8 @@ public final class ConvexHull
     /**
      * Repeatedly remove the last point if not counter clockwise with new point; then add the new point. If the new point is
      * equal to the last point in the list; do nothing.
-     * @param list List&lt;Point2d&gt;; the list of points
-     * @param newPoint Point2d; the point that will be added.
+     * @param list the list of points
+     * @param newPoint the point that will be added.
      */
     private static void cleanAndAppend(final List<Point2d> list, final Point2d newPoint)
     {
@@ -122,8 +122,8 @@ public final class ConvexHull
      * Implementation of the convex hull algorithm by Reham Alshamrani c.s.; see
      * <a href="https://www.sciencedirect.com/science/article/pii/S1877050920304750">A Preprocessing Technique for Fast Convex
      * Hull Computation</a>.
-     * @param list List&lt;Point2d&gt;; list of the points (will not be modified)
-     * @return Polygon2d; the convex hull of the points
+     * @param list list of the points (will not be modified)
+     * @return the convex hull of the points
      * @throws NullPointerException when the <code>list</code> is <code>null</code>
      * @throws IllegalArgumentException when the <code>list</code> contains too few points
      */
@@ -251,8 +251,8 @@ public final class ConvexHull
     /**
      * Implementation of Andrew's Monotone Chain convex hull algorithm. This implementation (sorts) modifies the provided list
      * of points!
-     * @param list List&lt;Point2d&gt;; list of the points (will be modified)
-     * @return Polygon2d; the convex hull of the points
+     * @param list list of the points (will be modified)
+     * @return the convex hull of the points
      * @throws NullPointerException when the <code>list</code> is <code>null</code>
      * @throws IllegalArgumentException when the <code>list</code> contains too few points
      */

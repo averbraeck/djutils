@@ -38,8 +38,8 @@ public class Complex
 
     /**
      * Construct a new complex number.
-     * @param re double; real component of the new complex number
-     * @param im double; imaginary component of the new complex number
+     * @param re real component of the new complex number
+     * @param im imaginary component of the new complex number
      */
     public Complex(final double re, final double im)
     {
@@ -49,7 +49,7 @@ public class Complex
 
     /**
      * Construct a new complex number with specified real component and zero imaginary component.
-     * @param re double; the real component of the new complex number
+     * @param re the real component of the new complex number
      */
     public Complex(final double re)
     {
@@ -59,7 +59,7 @@ public class Complex
 
     /**
      * Retrieve the real component of this complex number.
-     * @return double; the real component of this complex number
+     * @return the real component of this complex number
      */
     public double getRe()
     {
@@ -68,7 +68,7 @@ public class Complex
 
     /**
      * Retrieve the imaginary component of this complex number.
-     * @return double; the imaginary component of this complex number
+     * @return the imaginary component of this complex number
      */
     public double getIm()
     {
@@ -77,7 +77,7 @@ public class Complex
 
     /**
      * Compute and return the norm, or radius, or absolute value of this complex number.
-     * @return double; the norm, or radius, or absolute value of this complex number. Due to the fact that in this
+     * @return the norm, or radius, or absolute value of this complex number. Due to the fact that in this
      *         implementation of complex numbers, all values are stored as a real an imaginary double value; the result may
      *         overflow to Double.POSITIVE_INFINITY, even though both the real and imaginary part of the complex number can be
      *         represented.
@@ -97,9 +97,9 @@ public class Complex
     /**
      * Better implementation of the hypotenuse function (faster and more accurate than the one in the java Math library). <br>
      * Derived from <a href="https://arxiv.org/abs/1904.09481">An improved algorithm for hypot(a, b) by Carlos F. Borges</a>.
-     * @param x double; the x value
-     * @param y double; the y value
-     * @return double; hypot(x, y)
+     * @param x the x value
+     * @param y the y value
+     * @return hypot(x, y)
      */
     public static double hypot(final double x, final double y)
     {
@@ -148,7 +148,7 @@ public class Complex
 
     /**
      * Compute and return the phase or phi of this complex number.
-     * @return double; the phase or phi of this complex number in Radians. Due to the fact that in this implementation of
+     * @return the phase or phi of this complex number in Radians. Due to the fact that in this implementation of
      *         complex numbers, all values are stored as a real and imaginary value; the result of this method is always
      *         normalized to the interval (-&pi;,&pi;].
      */
@@ -159,7 +159,7 @@ public class Complex
 
     /**
      * Determine if this Complex has an imaginary component of zero.
-     * @return boolean; true if the imaginary component of this Complex number is 0.0; false if the imaginary component of this
+     * @return true if the imaginary component of this Complex number is 0.0; false if the imaginary component of this
      *         Complex number is not 0.0.
      */
     public boolean isReal()
@@ -169,7 +169,7 @@ public class Complex
 
     /**
      * Determine if this Complex has a real component of zero.
-     * @return boolean; true if the real component of this Complex number is 0.0; false if the real component of this Complex
+     * @return true if the real component of this Complex number is 0.0; false if the real component of this Complex
      *         number is not 0.0
      */
     public boolean isImaginary()
@@ -179,7 +179,7 @@ public class Complex
 
     /**
      * Construct the complex conjugate of this Complex.
-     * @return Complex; the complex conjugate of this
+     * @return the complex conjugate of this
      */
     public Complex conjugate()
     {
@@ -188,8 +188,8 @@ public class Complex
 
     /**
      * Rotate this Complex by an angle.
-     * @param angle double; the angle (in Radians)
-     * @return complex; the result of the rotation
+     * @param angle the angle (in Radians)
+     * @return the result of the rotation
      */
     public Complex rotate(final double angle)
     {
@@ -200,8 +200,8 @@ public class Complex
 
     /**
      * Add this Complex and another Complex.
-     * @param rightOperand Complex; the other Complex
-     * @return Complex; the sum of this Complex and the other Complex
+     * @param rightOperand the other Complex
+     * @return the sum of this Complex and the other Complex
      */
     public Complex plus(final Complex rightOperand)
     {
@@ -210,8 +210,8 @@ public class Complex
 
     /**
      * Add a scalar to this Complex.
-     * @param rightOperand double; the scalar
-     * @return Complex; the sum of this Complex and the scalar
+     * @param rightOperand the scalar
+     * @return the sum of this Complex and the scalar
      */
     public Complex plus(final double rightOperand)
     {
@@ -220,8 +220,8 @@ public class Complex
 
     /**
      * Subtract another Complex from this Complex.
-     * @param rightOperand Complex; the other Complex
-     * @return Complex; the difference of this Complex and the other Complex
+     * @param rightOperand the other Complex
+     * @return the difference of this Complex and the other Complex
      */
     public Complex minus(final Complex rightOperand)
     {
@@ -230,8 +230,8 @@ public class Complex
 
     /**
      * Subtract a scalar from this Complex.
-     * @param rightOperand double; the scalar
-     * @return Complex; the difference of this Complex and the scalar
+     * @param rightOperand the scalar
+     * @return the difference of this Complex and the scalar
      */
     public Complex minus(final double rightOperand)
     {
@@ -240,8 +240,8 @@ public class Complex
 
     /**
      * Multiply this Complex with another Complex.
-     * @param rightOperand Complex; the right hand side operand
-     * @return Complex; the product of this Complex and the other Complex
+     * @param rightOperand the right hand side operand
+     * @return the product of this Complex and the other Complex
      */
     public Complex times(final Complex rightOperand)
     {
@@ -251,8 +251,8 @@ public class Complex
 
     /**
      * Multiply this Complex with a scalar.
-     * @param rightOperand double; the right hand side operand
-     * @return Complex; the product of this Complex and the scalar
+     * @param rightOperand the right hand side operand
+     * @return the product of this Complex and the scalar
      */
     public Complex times(final double rightOperand)
     {
@@ -262,7 +262,7 @@ public class Complex
     /**
      * Compute the reciprocal of this Complex. If this is zero, the result will have the re field set to
      * Double.POSITIVE_INFINITY and the imaginary part set to NEGATIVE_INFINITY.
-     * @return Complex; the reciprocal of this Complex (1 / this)
+     * @return the reciprocal of this Complex (1 / this)
      */
     public Complex reciprocal()
     {
@@ -277,8 +277,8 @@ public class Complex
     /**
      * Divide this Complex by another Complex. Division by ZERO yields a Complex with re set to Infinity if this.re != 0 and NaN
      * if this.re == 0 and im set to Infinity if this.im != 0 and NaN if this.im == 0.
-     * @param rightOperand Complex; the right hand side operand
-     * @return Complex; the ratio of this Complex and the right hand side operand
+     * @param rightOperand the right hand side operand
+     * @return the ratio of this Complex and the right hand side operand
      */
     public Complex divideBy(final Complex rightOperand)
     {
@@ -292,8 +292,8 @@ public class Complex
     /**
      * Divide this Complex by a scalar. Division by 0.0 yields a Complex with re set to Infinity if this.re != 0 and NaN if
      * this.re == 0 and im set to Infinity if this.im != 0 and NaN if this.im == 0.
-     * @param rightOperand double; the scalar right hand side operand
-     * @return Complex; the ratio of this Complex and the right hand side operand
+     * @param rightOperand the scalar right hand side operand
+     * @return the ratio of this Complex and the right hand side operand
      */
     public Complex divideBy(final double rightOperand)
     {

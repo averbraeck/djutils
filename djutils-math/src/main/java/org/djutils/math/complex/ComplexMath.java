@@ -25,8 +25,8 @@ public final class ComplexMath
     /**
      * Principal square root of a Complex operand. The principal square root of a complex number has a non-negative real
      * component.
-     * @param z Complex; the operand
-     * @return Complex; the principal square root of the operand
+     * @param z the operand
+     * @return the principal square root of the operand
      */
     public static Complex sqrt(final Complex z)
     {
@@ -37,8 +37,8 @@ public final class ComplexMath
     /**
      * Principal cube root of a Complex operand. The principal cube root of a complex number has <i>the most positive</i>. real
      * component.
-     * @param z Complex; the operand
-     * @return Complex; the principal cube root of the operand
+     * @param z the operand
+     * @return the principal cube root of the operand
      */
     public static Complex cbrt(final Complex z)
     {
@@ -49,8 +49,8 @@ public final class ComplexMath
 
     /**
      * Exponential function of a Complex operand.
-     * @param z Complex; the operand
-     * @return Complex; the result of the exponential function applied to the operand
+     * @param z the operand
+     * @return the result of the exponential function applied to the operand
      */
     public static Complex exp(final Complex z)
     {
@@ -61,8 +61,8 @@ public final class ComplexMath
     /**
      * Principal value of the natural logarithm of a Complex operand. See
      * <a href="https://en.wikipedia.org/wiki/Complex_logarithm">Wikipedia Complex logarithm</a>.
-     * @param z Complex; the operand
-     * @return Complex; the principal value of the natural logarithm of the Complex operand
+     * @param z the operand
+     * @return the principal value of the natural logarithm of the Complex operand
      */
     public static Complex ln(final Complex z)
     {
@@ -72,8 +72,8 @@ public final class ComplexMath
     /**
      * Sine function of a Complex operand. See <a href="https://proofwiki.org/wiki/Sine_of_Complex_Number">ProofWiki Sine of
      * Complex Number</a>.
-     * @param z Complex; the operand
-     * @return Complex; the result of the sine function applied to the operand
+     * @param z the operand
+     * @return the result of the sine function applied to the operand
      */
     public static Complex sin(final Complex z)
     {
@@ -83,8 +83,8 @@ public final class ComplexMath
     /**
      * Cosine function of Complex operand. See <a href="https://proofwiki.org/wiki/Cosine_of_Complex_Number">ProofWiki Cosine of
      * Complex Number</a>.
-     * @param z Complex; the operand
-     * @return Complex; the result of the cosine function applied to the operand
+     * @param z the operand
+     * @return the result of the cosine function applied to the operand
      */
     public static Complex cos(final Complex z)
     {
@@ -94,8 +94,8 @@ public final class ComplexMath
     /**
      * Tangent function of a Complex operand. See <a href="https://proofwiki.org/wiki/Tangent_of_Complex_Number">ProofWiki
      * Tangent of Complex Number</a>.
-     * @param z Complex; the operand
-     * @return Complex; the result of the tangent function applied to the operand
+     * @param z the operand
+     * @return the result of the tangent function applied to the operand
      */
     public static Complex tan(final Complex z)
     {
@@ -106,8 +106,8 @@ public final class ComplexMath
 
     /**
      * Hyperbolic sine function of a Complex operand.
-     * @param z Complex; the operand
-     * @return Complex; the result of the sinh function applied to the operand
+     * @param z the operand
+     * @return the result of the sinh function applied to the operand
      */
     public static Complex sinh(final Complex z)
     {
@@ -116,8 +116,8 @@ public final class ComplexMath
 
     /**
      * Hyperbolic cosine function of Complex operand.
-     * @param z Complex; the operand
-     * @return Complex; the result of the cosh function applied to the operand
+     * @param z the operand
+     * @return the result of the cosh function applied to the operand
      */
     public static Complex cosh(final Complex z)
     {
@@ -128,8 +128,8 @@ public final class ComplexMath
      * Hyperbolic tangent function of a Complex operand. Based on
      * <a href="https://proofwiki.org/wiki/Hyperbolic_Tangent_of_Complex_Number">ProofWiki: Hyperbolic Tangent of Complex
      * Number, Formulation 4</a>.
-     * @param z Complex; the operand
-     * @return Complex; the result of the tanh function applied to the operand
+     * @param z the operand
+     * @return the result of the tanh function applied to the operand
      */
     public static Complex tanh(final Complex z)
     {
@@ -143,8 +143,8 @@ public final class ComplexMath
      * Inverse sine function of a Complex operand. Derived from <a href=
      * "http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/src/lib/libm/complex/casin.c?rev=1.1&amp;content-type=text/plain">NetBSD
      * Complex casin.c</a>.
-     * @param z Complex; the operand
-     * @return Complex; the result of the asin function applied to the operand
+     * @param z the operand
+     * @return the result of the asin function applied to the operand
      */
     public static Complex asin(final Complex z)
     {
@@ -162,8 +162,8 @@ public final class ComplexMath
      * Inverse cosine function of a Complex operand. Derived from <a href=
      * "http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/src/lib/libm/complex/cacos.c?rev=1.1&amp;content-type=text/plain">NetBSD
      * Complex cacos.c</a>.
-     * @param z Complex; the operand
-     * @return Complex; the result of the acos function applied to the operand
+     * @param z the operand
+     * @return the result of the acos function applied to the operand
      */
     public static Complex acos(final Complex z)
     {
@@ -178,8 +178,8 @@ public final class ComplexMath
      * Inverse tangent function of a Complex operand. Derived from <a href=
      * "http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/src/lib/libm/complex/catan.c?rev=1.2&amp;content-type=text/plain">NetBSD
      * Complex catan.c</a>.
-     * @param z Complex; the operand
-     * @return Complex; the result of the atan function applied to the operand
+     * @param z the operand
+     * @return the result of the atan function applied to the operand
      */
     public static Complex atan(final Complex z)
     {
@@ -210,8 +210,8 @@ public final class ComplexMath
 
     /**
      * Inverse hyperbolic sine of a Complex operand.
-     * @param z Complex; the operand
-     * @return Complex; the result of the asinh function applied to the operand
+     * @param z the operand
+     * @return the result of the asinh function applied to the operand
      */
     public static Complex asinh(final Complex z)
     {
@@ -220,8 +220,8 @@ public final class ComplexMath
 
     /**
      * Inverse hyperbolic cosine of a Complex operand.
-     * @param z Complex; the operand
-     * @return Complex; the result of the acosh function applied to the operand
+     * @param z the operand
+     * @return the result of the acosh function applied to the operand
      */
     public static Complex acosh(final Complex z)
     {
@@ -232,8 +232,8 @@ public final class ComplexMath
      * Inverse hyperbolic tangent of a Complex operand. Derived from
      * <a href="http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/src/lib/libm/complex/catanh.c?rev=1.1&amp;content-type=text/plain">
      * NetBSD Complex catanh.c</a>.
-     * @param z Complex; the operand
-     * @return Complex; the result of the atanh function applied to the operand
+     * @param z the operand
+     * @return the result of the atanh function applied to the operand
      */
     public static Complex atanh(final Complex z)
     {

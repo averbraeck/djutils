@@ -63,12 +63,12 @@ public final class CsvData
      * The metadata consists of a CSV file with three columns: the id, the description, and the class. The first row after the
      * header contains the id, description, and class of the data table itself. The second and further rows contain information
      * about the columns of the data table.
-     * @param writer Writer; the writer that writes the data, e.g. to a file
-     * @param metaWriter Writer; the writer for the metadata
-     * @param table Table; the data table to write
-     * @param separator char; the delimiter to use for separating entries
-     * @param quotechar char; the character to use for quoted elements
-     * @param lineDelimiter String; the line terminator to use, can be LineDelimiter.CR, LF, CRLF or PLATFORM
+     * @param writer the writer that writes the data, e.g. to a file
+     * @param metaWriter the writer for the metadata
+     * @param table the data table to write
+     * @param separator the delimiter to use for separating entries
+     * @param quotechar the character to use for quoted elements
+     * @param lineDelimiter the line terminator to use, can be LineDelimiter.CR, LF, CRLF or PLATFORM
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -84,13 +84,13 @@ public final class CsvData
      * CSV file with three columns: the id, the description, and the class. The first row after the header contains the id,
      * description, and class of the data table itself. The second and further rows contain information about the columns of the
      * data table.
-     * @param writer Writer; the writer that writes the data, e.g. to a file
-     * @param csvName String; name of the csv file within the zip file
-     * @param metaName String; name of the meta data file within the zip file
-     * @param table Table; the data table to write
-     * @param separator char; the delimiter to use for separating entries
-     * @param quotechar char; the character to use for quoted elements
-     * @param lineDelimiter String; the line terminator to use, can be LineDelimiter.CR, LF, CRLF or PLATFORM
+     * @param writer the writer that writes the data, e.g. to a file
+     * @param csvName name of the csv file within the zip file
+     * @param metaName name of the meta data file within the zip file
+     * @param table the data table to write
+     * @param separator the delimiter to use for separating entries
+     * @param quotechar the character to use for quoted elements
+     * @param lineDelimiter the line terminator to use, can be LineDelimiter.CR, LF, CRLF or PLATFORM
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -107,10 +107,10 @@ public final class CsvData
      * CSV file with three columns: the id, the description, and the class. The first row after the header contains the id,
      * description, and class of the data table itself. The second and further rows contain information about the columns of the
      * data table.
-     * @param writer Writer; the writer that writes the data, e.g. to a file
-     * @param csvName String; name of the CSV file within the zip file
-     * @param metaName String; name of the meta data file within the zip file
-     * @param table Table; the data table to write
+     * @param writer the writer that writes the data, e.g. to a file
+     * @param csvName name of the CSV file within the zip file
+     * @param metaName name of the meta data file within the zip file
+     * @param table the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -122,12 +122,12 @@ public final class CsvData
 
     /**
      * Writes the meta data.
-     * @param metaWriter Writer; the writer for the metadata
-     * @param closeWriter boolean; whether to close the stream
-     * @param table Table; the data table to write
-     * @param separator char; the delimiter to use for separating entries
-     * @param quotechar char; the character to use for quoted elements
-     * @param lineDelimiter String; the line terminator to use, can be LineDelimiter.CR, LF, CRLF or PLATFORM
+     * @param metaWriter the writer for the metadata
+     * @param closeWriter whether to close the stream
+     * @param table the data table to write
+     * @param separator the delimiter to use for separating entries
+     * @param quotechar the character to use for quoted elements
+     * @param lineDelimiter the line terminator to use, can be LineDelimiter.CR, LF, CRLF or PLATFORM
      * @throws IOException on I/O error when writing the data
      */
     private static void writeMeta(final Writer metaWriter, final boolean closeWriter, final Table table, final char separator,
@@ -164,12 +164,12 @@ public final class CsvData
 
     /**
      * Writes the data.
-     * @param writer Writer; the writer that writes the data, e.g. to a file
-     * @param closeWriter boolean; whether to close the stream
-     * @param table Table; the data table to write
-     * @param separator char; the delimiter to use for separating entries
-     * @param quotechar char; the character to use for quoted elements
-     * @param lineDelimiter String; the line terminator to use, can be LineDelimiter.CR, LF, CRLF or PLATFORM
+     * @param writer the writer that writes the data, e.g. to a file
+     * @param closeWriter whether to close the stream
+     * @param table the data table to write
+     * @param separator the delimiter to use for separating entries
+     * @param quotechar the character to use for quoted elements
+     * @param lineDelimiter the line terminator to use, can be LineDelimiter.CR, LF, CRLF or PLATFORM
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -216,9 +216,9 @@ public final class CsvData
      * The metadata consists of a CSV file with three columns: the id, the description, and the class. The first row after the
      * header contains the id, description, and class of the data table itself. The second and further rows contain information
      * about the columns of the data table. The line ending used will be CRLF which is RFC 4180 compliant.
-     * @param writer Writer; the writer that writes the data, e.g. to a file
-     * @param metaWriter Writer; the writer for the metadata
-     * @param table Table; the data table to write
+     * @param writer the writer that writes the data, e.g. to a file
+     * @param metaWriter the writer for the metadata
+     * @param table the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -230,9 +230,9 @@ public final class CsvData
 
     /**
      * Write the data from the data table in CSV format.
-     * @param filename String; the file name to write the data to
-     * @param metaFilename String; the file name to write the metadata to
-     * @param table Table; the data table to write
+     * @param filename the file name to write the data to
+     * @param metaFilename the file name to write the metadata to
+     * @param table the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -247,11 +247,11 @@ public final class CsvData
 
     /**
      * Read the data from the CSV-file into the data table. Use the metadata to reconstruct the data table.
-     * @param reader Reader; the reader that can read the data, e.g. from a file
-     * @param metaReader Reader; the writer for the metadata
+     * @param reader the reader that can read the data, e.g. from a file
+     * @param metaReader the writer for the metadata
      * @return Table the data table reconstructed from the meta data and filled with the data
-     * @param separator char; the delimiter to use for separating entries
-     * @param quotechar char; the character to use for quoted elements
+     * @param separator the delimiter to use for separating entries
+     * @param quotechar the character to use for quoted elements
      * @throws IOException when the CSV data was not formatted right
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -361,8 +361,8 @@ public final class CsvData
 
     /**
      * Read the data from the CSV-file into the data table. Use the metadata to reconstruct the data table.
-     * @param reader Reader; the reader that can read the data, e.g. from a file
-     * @param metaReader Reader; the writer for the metadata
+     * @param reader the reader that can read the data, e.g. from a file
+     * @param metaReader the writer for the metadata
      * @return Table the data table reconstructed from the meta data and filled with the data
      * @throws IOException when the CSV data was not formatted right
      * @throws TextSerializationException on unknown data type for serialization
@@ -374,8 +374,8 @@ public final class CsvData
 
     /**
      * Read the data from the CSV-file into the data table. Use the metadata to reconstruct the data table.
-     * @param filename String; the file name to read the data from
-     * @param metaFilename String; the file name to read the metadata from
+     * @param filename the file name to read the data from
+     * @param metaFilename the file name to read the metadata from
      * @return Table the data table reconstructed from the meta data and filled with the data
      * @throws IOException when the CSV data was not formatted right
      * @throws TextSerializationException on unknown data type for serialization
@@ -392,9 +392,9 @@ public final class CsvData
     /**
      * Read the data from a CSV-file inside a zip file. The metadata file should be in the same zipfile. Use the metadata to
      * reconstruct the data table.
-     * @param fileName String; file name of the zip file
-     * @param csvName String; name of the CSV-file, without path
-     * @param metaName String; name of the metadata file, without path
+     * @param fileName file name of the zip file
+     * @param csvName name of the CSV-file, without path
+     * @param metaName name of the metadata file, without path
      * @return Table the data table reconstructed from the meta data and filled with the data
      * @throws IOException when the CSV data was not formatted right
      * @throws TextSerializationException on unknown data type for serialization
@@ -408,11 +408,11 @@ public final class CsvData
     /**
      * Read the data from a CSV-file inside a zip file. The metadata file should be in the same zipfile. Use the metadata to
      * reconstruct the data table.
-     * @param fileName String; file name of the zip file
-     * @param csvName String; name of the CSV-file, without path
-     * @param metaName String; name of the metadata file, without path
-     * @param separator char; the delimiter to use for separating entries
-     * @param quotechar char; the character to use for quoted elements
+     * @param fileName file name of the zip file
+     * @param csvName name of the CSV-file, without path
+     * @param metaName name of the metadata file, without path
+     * @param separator the delimiter to use for separating entries
+     * @param quotechar the character to use for quoted elements
      * @return Table the data table reconstructed from the meta data and filled with the data
      * @throws IOException when the CSV data was not formatted right
      * @throws TextSerializationException on unknown data type for serialization

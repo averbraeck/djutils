@@ -36,8 +36,8 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
 
     /**
      * Constructs a new EventBasedTally.
-     * @param description String; the description of this tally
-     * @param quantileAccumulator QuantileAccumulator; the input series accumulator that can approximate or compute quantiles.
+     * @param description the description of this tally
+     * @param quantileAccumulator the input series accumulator that can approximate or compute quantiles.
      */
     public EventBasedTally(final String description, final QuantileAccumulator quantileAccumulator)
     {
@@ -46,7 +46,7 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
 
     /**
      * Convenience constructor that uses a NoStorageAccumulator to estimate quantiles.
-     * @param description String; the description of this tally
+     * @param description the description of this tally
      */
     public EventBasedTally(final String description)
     {
@@ -56,8 +56,8 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
     /**
      * Construct a new EventBasedCounter with a specific EventProducer, e.g. a remote one. The Tally uses uses a
      * NoStorageAccumulator to estimate quantiles.
-     * @param description String; the description for this counter
-     * @param eventProducer EventProducer; the EventProducer to embed and use in this statistic
+     * @param description the description for this counter
+     * @param eventProducer the EventProducer to embed and use in this statistic
      */
     public EventBasedTally(final String description, final EventProducer eventProducer)
     {
@@ -66,9 +66,9 @@ public class EventBasedTally extends Tally implements EventProducer, EventListen
 
     /**
      * Construct a new EventBasedCounter with a specific EventProducer, e.g. a remote one.
-     * @param description String; the description for this counter
-     * @param quantileAccumulator QuantileAccumulator; the input series accumulator that can approximate or compute quantiles.
-     * @param eventProducer EventProducer; the EventProducer to embed and use in this statistic
+     * @param description the description for this counter
+     * @param quantileAccumulator the input series accumulator that can approximate or compute quantiles.
+     * @param eventProducer the EventProducer to embed and use in this statistic
      */
     public EventBasedTally(final String description, final QuantileAccumulator quantileAccumulator,
             final EventProducer eventProducer)

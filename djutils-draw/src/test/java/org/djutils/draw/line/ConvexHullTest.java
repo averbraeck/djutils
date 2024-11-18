@@ -35,7 +35,7 @@ public class ConvexHullTest
 
     /**
      * Create the map of all convex hull implementations.
-     * @return Map&lt;String, ConvexHullImplementation&gt;; the map of all convex hull implementations
+     * @return the map of all convex hull implementations
      */
     public static Map<String, ConvexHullImplementation> getImplementations()
     {
@@ -228,7 +228,7 @@ public class ConvexHullTest
 
     /**
      * Compare performance.
-     * @param args String[]; the command line arguments (not used)
+     * @param args the command line arguments (not used)
      * @throws IOException ...
      */
     public static void main(final String[] args) throws IOException
@@ -284,9 +284,9 @@ public class ConvexHullTest
 
     /**
      * Check that all implementations of convex hull give the expected result.
-     * @param implementations Map&lt;String, ConvexHullImplementation&gt;; the implementations to check
-     * @param in List&lt;Point2d&gt;; the input for the convex hull implementations
-     * @param expectedResult Polygon2d; the expected result
+     * @param implementations the implementations to check
+     * @param in the input for the convex hull implementations
+     * @param expectedResult the expected result
      */
     public static void checkImplementations(final Map<String, ConvexHullImplementation> implementations, final List<Point2d> in,
             final Polygon2d expectedResult)
@@ -314,8 +314,8 @@ public class ConvexHullTest
     {
         /**
          * Run a particular implementation of the convex hull algorithm.
-         * @param points List&lt;Point2d&gt;; the points for which the convex hull must be constructed
-         * @return Polygon2d; the convex hull of the points
+         * @param points the points for which the convex hull must be constructed
+         * @return the convex hull of the points
          * @throws NullPointerException when list is null
          * @throws IllegalArgumentException when list is empty
          */

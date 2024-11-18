@@ -40,9 +40,9 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Create a new Point from x, y and z coordinates provided as double arguments.
-     * @param x double; the x coordinate
-     * @param y double; the y coordinate
-     * @param z double; the z coordinate
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param z the z coordinate
      * @throws ArithmeticException when <code>x</code> or <code>y</code> or <code>z</code> is <code>NaN</code>
      */
     public Point3d(final double x, final double y, final double z)
@@ -57,7 +57,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Create a new Point3d from x, y and z coordinates provided as values in a double array.
-     * @param xyz double[]; the x, y and z coordinates
+     * @param xyz the x, y and z coordinates
      * @throws NullPointerException when <code>xyz</code> is <code>null</code>
      * @throws IllegalArgumentException when the length of <code>xyz</code> is not 3
      * @throws ArithmeticException when <code>xyz</code> contains a <code>NaN</code> value
@@ -69,8 +69,8 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Create a new Point3d from x, y stored in a java.awt.geom.Point2D and double z.
-     * @param point Point2d; a java.awt.geom.Point2D
-     * @param z double; the z coordinate
+     * @param point a java.awt.geom.Point2D
+     * @param z the z coordinate
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      * @throws ArithmeticException when <code>z</code> is <code>NaN</code>
      */
@@ -85,8 +85,8 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Create an immutable point from x, y obtained from a AWT Point2D and double z.
-     * @param point Point2D; a java.awt.geom.Point2D
-     * @param z double; the z coordinate
+     * @param point a java.awt.geom.Point2D
+     * @param z the z coordinate
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      * @throws ArithmeticException when <code>point</code> has a <code>NaN</code> coordinate, or <code>z</code> is
      *             <code>NaN</code>
@@ -104,8 +104,8 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Throw an IllegalArgumentException if the length of the provided array is not three.
-     * @param xyz double[]; the provided array
-     * @return double[]; the provided array
+     * @param xyz the provided array
+     * @return the provided array
      * @throws NullPointerException when <code>xyz</code> is <code>null</code>
      * @throws IllegalArgumentException when length of <code>xyz</code> is not 3
      */
@@ -129,7 +129,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Return the z-coordinate.
-     * @return double; the z-coordinate
+     * @return the z-coordinate
      */
     public final double getZ()
     {
@@ -173,9 +173,9 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Return a new Point3d with a translation by the provided dX and dY and preserved z value.
-     * @param dX double; the x translation
-     * @param dY double; the y translation
-     * @return Point3D; a new point with the translated coordinates and the same <code>z</code> value
+     * @param dX the x translation
+     * @param dY the y translation
+     * @return a new point with the translated coordinates and the same <code>z</code> value
      * @throws ArithmeticException when <code>dX</code>, or <code>dY</code> is <code>NaN</code>
      */
     public Point3d translate(final double dX, final double dY) throws ArithmeticException
@@ -187,10 +187,10 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Return a new Point3d with a translation by the provided dx, dy and dz.
-     * @param dX double; the x translation
-     * @param dY double; the y translation
-     * @param dZ double; the z translation
-     * @return Point3d; a new point with the translated coordinates
+     * @param dX the x translation
+     * @param dY the y translation
+     * @param dZ the z translation
+     * @return a new point with the translated coordinates
      * @throws ArithmeticException when <code>dX</code>, <code>dY</code>, or <code>dZ</code> is <code>NaN</code>
      */
     public Point3d translate(final double dX, final double dY, final double dZ)
@@ -265,8 +265,8 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Return the direction to another Point3d.
-     * @param otherPoint Point3d; the other point
-     * @return Direction3d; the direction to the other point in Radians (towards infinite X is 0; towards infinite Y is &pi; /
+     * @param otherPoint the other point
+     * @return the direction to the other point in Radians (towards infinite X is 0; towards infinite Y is &pi; /
      *         2; etc.). If the points are identical; this method returns <code>NaN</code>.
      */
     public Direction3d directionTo(final Point3d otherPoint)
@@ -286,21 +286,21 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Compute the closest point on a line with optional limiting of the result on either end.
-     * @param p1X double; the x coordinate of the first point on the line
-     * @param p1Y double; the y coordinate of the first point on the line
-     * @param p1Z double; the z coordinate of the first point on the line
-     * @param p2X double; the x coordinate of the second point on the line
-     * @param p2Y double; the y coordinate of the second point on the line
-     * @param p2Z double; the z coordinate of the second point on the line
-     * @param lowLimitHandling Boolean; controls handling of results that lie before the first point of the line. If
+     * @param p1X the x coordinate of the first point on the line
+     * @param p1Y the y coordinate of the first point on the line
+     * @param p1Z the z coordinate of the first point on the line
+     * @param p2X the x coordinate of the second point on the line
+     * @param p2Y the y coordinate of the second point on the line
+     * @param p2Z the z coordinate of the second point on the line
+     * @param lowLimitHandling controls handling of results that lie before the first point of the line. If
      *            <code>null</code>; this method returns <code>null</code>; else if <code>true</code>; this method returns
      *            (p1X,p1Y); else (lowLimitHandling is <code>false</code>); this method will return the closest point on the
      *            line
-     * @param highLimitHandling Boolean; controls the handling of results that lie beyond the second point of the line. If
+     * @param highLimitHandling controls the handling of results that lie beyond the second point of the line. If
      *            <code>null</code>; this method returns <code>null</code>; else if <code>true</code>; this method returns
      *            (p2X,p2Y); else (highLimitHandling is <code>false</code>); this method will return the closest point on the
      *            line
-     * @return Point3d; the closest point on the line after applying the indicated limit handling; so the result can be
+     * @return the closest point on the line after applying the indicated limit handling; so the result can be
      *         <code>null</code>
      * @throws ArithmeticException when any of the arguments is <code>NaN</code>
      */
@@ -323,19 +323,19 @@ public class Point3d implements Drawable3d, Point<Point3d>
     /**
      * Compute the fractional position of the closest point on a line with optional limiting of the result on either end. If the
      * line has length 0; this method returns 0.0.
-     * @param p1X double; the x coordinate of the first point on the line
-     * @param p1Y double; the y coordinate of the first point on the line
-     * @param p1Z double; the z coordinate of the first point on the line
-     * @param p2X double; the x coordinate of the second point on the line
-     * @param p2Y double; the y coordinate of the second point on the line
-     * @param p2Z double; the z coordinate of the second point on the line
-     * @param lowLimitHandling Boolean; controls handling of results that lie before the first point of the line. If null; this
+     * @param p1X the x coordinate of the first point on the line
+     * @param p1Y the y coordinate of the first point on the line
+     * @param p1Z the z coordinate of the first point on the line
+     * @param p2X the x coordinate of the second point on the line
+     * @param p2Y the y coordinate of the second point on the line
+     * @param p2Z the z coordinate of the second point on the line
+     * @param lowLimitHandling controls handling of results that lie before the first point of the line. If null; this
      *            method returns <code>NaN</code>; else if <code>true</code>; this method returns 0.0; else (lowLimitHandling is
      *            false); this results &lt; 0.0 are returned
-     * @param highLimitHandling Boolean; controls the handling of results that lie beyond the second point of the line. If null;
+     * @param highLimitHandling controls the handling of results that lie beyond the second point of the line. If null;
      *            this method returns <code>NaN</code>; else if <code>true</code>; this method returns 1.0; else
      *            (highLimitHandling is <code>false</code>); results &gt; 1.0 are returned
-     * @return double; the fractional position of the closest point on the line. Results within the range 0.0 .. 1.0 are always
+     * @return the fractional position of the closest point on the line. Results within the range 0.0 .. 1.0 are always
      *         returned as is.. A result &lt; 0.0 is subject to lowLimitHandling. A result &gt; 1.0 is subject to
      *         highLimitHandling
      * @throws DrawRuntimeException when any of the arguments is <code>NaN</code>
@@ -385,13 +385,13 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * the line segment is returned. Otherwise the returned point lies between the end points of the line segment. <br>
      * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
      * Bourke</a>.
-     * @param p1X double; the x coordinate of the start point of the line segment
-     * @param p1Y double; the y coordinate of the start point of the line segment
-     * @param p1Z double; the z coordinate of the start point of the line segment
-     * @param p2X double; the x coordinate of the end point of the line segment
-     * @param p2Y double; the y coordinate of the end point of the line segment
-     * @param p2Z double; the y coordinate of the end point of the line segment
-     * @return P; either <code>segmentPoint1</code>, or <code>segmentPoint2</code> or a new Point2d that lies somewhere in
+     * @param p1X the x coordinate of the start point of the line segment
+     * @param p1Y the y coordinate of the start point of the line segment
+     * @param p1Z the z coordinate of the start point of the line segment
+     * @param p2X the x coordinate of the end point of the line segment
+     * @param p2Y the y coordinate of the end point of the line segment
+     * @param p2Z the y coordinate of the end point of the line segment
+     * @return either <code>segmentPoint1</code>, or <code>segmentPoint2</code> or a new Point2d that lies somewhere in
      *         between those two.
      * @throws ArithmeticException when any of the parameters is <code>NaN</code>
      */
@@ -413,13 +413,13 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * Project a point on a line. <br>
      * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
      * Bourke</a>.
-     * @param p1X double; the x coordinate of a point of the line
-     * @param p1Y double; the y coordinate of a point of the line
-     * @param p1Z double; the z coordinate of a point on the line
-     * @param p2X double; the x coordinate of another point on the line
-     * @param p2Y double; the y coordinate of another point on the line
-     * @param p2Z double; the z coordinate of another point on the line
-     * @return Point3d; a point on the line that goes through the points
+     * @param p1X the x coordinate of a point of the line
+     * @param p1Y the y coordinate of a point of the line
+     * @param p1Z the z coordinate of a point on the line
+     * @param p2X the x coordinate of another point on the line
+     * @param p2Y the y coordinate of another point on the line
+     * @param p2Z the z coordinate of another point on the line
+     * @return a point on the line that goes through the points
      * @throws DrawRuntimeException when the points on the line are identical
      */
     public final Point3d closestPointOnLine(final double p1X, final double p1Y, final double p1Z, final double p2X,
@@ -431,7 +431,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Return the direction of the point in radians with respect to the origin, ignoring the z-coordinate.
-     * @return double; the direction of the projection of the point in the x-y plane with respect to the origin, in radians
+     * @return the direction of the projection of the point in the x-y plane with respect to the origin, in radians
      */
     final double horizontalDirection()
     {
@@ -440,8 +440,8 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Return the direction to another point, in radians, ignoring the z-coordinate.
-     * @param otherPoint Point3d; the other point
-     * @return double; the direction of the projection of the point in the x-y plane to another point, in radians
+     * @param otherPoint the other point
+     * @return the direction of the projection of the point in the x-y plane to another point, in radians
      * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      */
     final double horizontalDirection(final Point3d otherPoint)
@@ -452,8 +452,8 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Return the direction with respect to the Z axis to another point, in radians.
-     * @param otherPoint Point3d; the other point
-     * @return double; the direction with respect to the Z axis to another point, in radians
+     * @param otherPoint the other point
+     * @return the direction with respect to the Z axis to another point, in radians
      * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      */
     final double verticalDirection(final Point3d otherPoint)
@@ -464,8 +464,8 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Return the squared distance between the coordinates of this point and the provided point, ignoring the z-coordinate.
-     * @param otherPoint Point3d; the other point
-     * @return double; the squared distance between this point and the other point, ignoring the z-coordinate
+     * @param otherPoint the other point
+     * @return the squared distance between this point and the other point, ignoring the z-coordinate
      * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      */
     final double horizontalDistanceSquared(final Point3d otherPoint)
@@ -478,8 +478,8 @@ public class Point3d implements Drawable3d, Point<Point3d>
 
     /**
      * Return the Euclidean distance between this point and the provided point, ignoring the z-coordinate.
-     * @param otherPoint Point3d; the other point
-     * @return double; the Euclidean distance between this point and the other point, ignoring the z-coordinate
+     * @param otherPoint the other point
+     * @return the Euclidean distance between this point and the other point, ignoring the z-coordinate
      * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      */
     final double horizontalDistance(final Point3d otherPoint)

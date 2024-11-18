@@ -122,7 +122,7 @@ public class ContinuousPiecewiseLinearTest
 
     /**
      * Test the various constructors of ContinuousPiecewiseLinearFunction.
-     * @param problem String; description of the problem with the input data that the test should detect
+     * @param problem description of the problem with the input data that the test should detect
      * @param in double... input for the constructors
      */
     static void testContinuousPiecewiseLinearFunctionConstructors(final String problem, final double... in)

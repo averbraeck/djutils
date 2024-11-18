@@ -28,7 +28,7 @@ public class TDigestAccumulator implements QuantileAccumulator
 
     /**
      * Construct a new TDigestAccumulator.
-     * @param compression int; the number of bins to compress the data into
+     * @param compression the number of bins to compress the data into
      */
     public TDigestAccumulator(final int compression)
     {

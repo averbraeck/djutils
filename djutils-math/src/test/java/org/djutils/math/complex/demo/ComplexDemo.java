@@ -25,7 +25,7 @@ public final class ComplexDemo
 
     /**
      * Demonstrate the Complex class.
-     * @param args String[]; the command line arguments (not used).
+     * @param args the command line arguments (not used).
      */
     public static void main(final String[] args)
     {

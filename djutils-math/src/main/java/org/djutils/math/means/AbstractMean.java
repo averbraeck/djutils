@@ -41,14 +41,14 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
 
     /**
      * Returns the weighted mean of accumulated data.
-     * @return double; weighted mean of accumulated data
+     * @return weighted mean of accumulated data
      */
     public abstract double getMean();
 
     /**
      * Accumulate some data.
-     * @param value double; the value to add to the <code>weightedSumOfValues</code>
-     * @param weight double; the weight to assign to the <code>value</code>
+     * @param value the value to add to the <code>weightedSumOfValues</code>
+     * @param weight the weight to assign to the <code>value</code>
      */
     final void increment(final double value, final double weight)
     {
@@ -58,7 +58,7 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
 
     /**
      * Returns the weighted sum of available data. Meaning varies per type of mean.
-     * @return double; weighted sum of accumulated data
+     * @return weighted sum of accumulated data
      */
     public final double getSum()
     {
@@ -67,7 +67,7 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
 
     /**
      * Returns the sum of the weights.
-     * @return double; sum of the weights
+     * @return sum of the weights
      */
     public final double getSumOfWeights()
     {
@@ -76,9 +76,9 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
 
     /**
      * Adds a value with weight.
-     * @param value V; the value
-     * @param weight W; the weight
-     * @return this AbstractMean&lt;MT, V, W&gt;; for method chaining
+     * @param value the value
+     * @param weight the weight
+     * @return for method chaining
      */
     public final AbstractMean<MT, V, W> add(final V value, final W weight)
     {
@@ -87,9 +87,9 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
 
     /**
      * Adds a value with weight.
-     * @param value V; the value
-     * @param weight Number; the weight
-     * @return this AbstractMean&lt;MT, V, W&gt;; for method chaining
+     * @param value the value
+     * @param weight the weight
+     * @return for method chaining
      */
     protected abstract AbstractMean<MT, V, W> addImpl(V value, Number weight);
 
@@ -98,8 +98,8 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
 
     /**
      * Add a value with weight 1.
-     * @param value V; the value
-     * @return this AbstractMean&lt;MT, V, W&gt;; for method chaining
+     * @param value the value
+     * @return for method chaining
      */
     public final AbstractMean<MT, V, W> add(final V value)
     {
@@ -109,9 +109,9 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
     /**
      * Adds weighted values. Note that iteration order is pivotal in correct operations. This method should not be used with
      * instances of {@code HashMap} or {@code HashSet}.
-     * @param values Iterable&lt;V&gt;; values
-     * @param weights Iterable&lt;W&gt;; weights
-     * @return this AbstractMean&lt;MT, V, W&gt;; for method chaining
+     * @param values values
+     * @param weights weights
+     * @return for method chaining
      * @throws IllegalArgumentException if the number of values is not equal to the number of weights
      */
     public final AbstractMean<MT, V, W> add(final Iterable<V> values, final Iterable<W> weights) throws IllegalArgumentException
@@ -129,9 +129,9 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
 
     /**
      * Adds weighted values.
-     * @param values V[]; values
-     * @param weights W[]; weights
-     * @return this AbstractMean&lt;MT, V, W&gt;; for method chaining
+     * @param values values
+     * @param weights weights
+     * @return for method chaining
      * @throws IllegalArgumentException if the number of values is not equal to the number of weights
      */
     public final AbstractMean<MT, V, W> add(final V[] values, final W[] weights) throws IllegalArgumentException
@@ -146,8 +146,8 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
 
     /**
      * Adds each key value from a map weighted with the mapped to value.
-     * @param map Map&lt;V, W&gt;; map
-     * @return this AbstractMean&lt;MT, V, W&gt;; for method chaining
+     * @param map map
+     * @return for method chaining
      */
     public final AbstractMean<MT, V, W> add(final Map<V, W> map)
     {
@@ -160,9 +160,9 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
 
     /**
      * Adds each value with a weight obtained by calling the provided <code>weights</code> function.
-     * @param collection Collection&lt;V&gt;; values
-     * @param weights Function&lt;V, W&gt;; weights
-     * @return this AbstractMean&lt;MT, V, W&gt;; for method chaining
+     * @param collection values
+     * @param weights weights
+     * @return for method chaining
      */
     public final AbstractMean<MT, V, W> add(final Collection<V> collection, final Function<V, W> weights)
     {
@@ -176,11 +176,11 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
     /**
      * Adds each value (obtained by calling the <code>values</code> function on each object in a Collection) with a weight
      * (obtained by calling the <code> weights</code> function on the same object from the Collection).
-     * @param collection Collection&lt;S&gt;; collection of source objects
-     * @param values Function&lt;S, V&gt;; values
-     * @param weights Function&lt;S, W&gt;; weights
+     * @param collection collection of source objects
+     * @param values values
+     * @param weights weights
      * @param <S> type of source object
-     * @return this AbstractMean&lt;MT, V, W&gt;; for method chaining
+     * @return for method chaining
      */
     public final <S> AbstractMean<MT, V, W> add(final Collection<S> collection, final Function<S, V> values,
             final Function<S, W> weights)
@@ -194,8 +194,8 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
 
     /**
      * Add values with weight 1.
-     * @param values Iterable&lt;V&gt;; the values to add
-     * @return this AbstractMean&lt;MT, V, W&gt;; for method chaining
+     * @param values the values to add
+     * @return for method chaining
      */
     public final AbstractMean<MT, V, W> add(final Iterable<V> values)
     {
@@ -209,8 +209,8 @@ public abstract class AbstractMean<MT, V extends Number, W extends Number>
 
     /**
      * Add values with weight 1.
-     * @param values V[]; the values to add
-     * @return this AbstractMean&lt;MT, V, W&gt;; for method chaining
+     * @param values the values to add
+     * @return for method chaining
      */
     public final AbstractMean<MT, V, W> add(final V[] values)
     {

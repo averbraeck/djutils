@@ -19,8 +19,8 @@ public interface Project<P extends Point<P>>
      * Project a point onto this object. For PolyLines and Polygons, there may be multiple valid solutions. In that case the
      * solution that lies on the closest segment is returned. If there is no valid solution on the closest segment,
      * <code>null</code> is returned.
-     * @param point P; the point
-     * @return P; the projection of the point (may be null if no sensible projection is possible). If the result is not
+     * @param point the point
+     * @return the projection of the point (may be null if no sensible projection is possible). If the result is not
      *         <code>null</code>; the result lies somewhere on this object.
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
@@ -29,8 +29,8 @@ public interface Project<P extends Point<P>>
     /**
      * Project a point onto this object. For PolyLines and Polygons, there may be multiple valid solutions. In that case the
      * solution that lies on the closest segment is returned.
-     * @param point P; the point
-     * @return P; the projection of the point. This result cannot be <code>null</code>, but it may not lie on this object, but,
+     * @param point the point
+     * @return the projection of the point. This result cannot be <code>null</code>, but it may not lie on this object, but,
      *         in stead, lie on a line, or plane that extends this object
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
@@ -40,8 +40,8 @@ public interface Project<P extends Point<P>>
      * Project a point onto this object. For PolyLines and Polygons, there may be multiple valid solutions. In that case the
      * solution that lies on the closest segment is returned. If there is no valid solution on the closest segment,
      * <code>NaN</code> is returned.
-     * @param point P; the point
-     * @return double; the fractional position of the projection of the point (may be <code>NaN</code> if no sensible projection
+     * @param point the point
+     * @return the fractional position of the projection of the point (may be <code>NaN</code> if no sensible projection
      *         is possible). If the result is not <code>NaN</code>; the result lies somewhere on this object.
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
@@ -50,8 +50,8 @@ public interface Project<P extends Point<P>>
     /**
      * Project a point onto this object. For PolyLines and Polygons, there may be multiple valid solutions. In that case the
      * solution that lies on the closest segment is returned.
-     * @param point P; the point
-     * @return double; the fractional position of the projection of the point. This result cannot be <code>NaN</code>, but it
+     * @param point the point
+     * @return the fractional position of the projection of the point. This result cannot be <code>NaN</code>, but it
      *         may be outside the range 0.0 .. 1.0.
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      */

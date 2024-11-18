@@ -21,7 +21,7 @@ public interface OffsetCurve2d extends Curve2d
      * Implementations should use the flattener when relevant and possible.
      * @param flattener OffsetFlattener
      * @param offsets offset data
-     * @return PolyLine2d; approximation of this <code>curve2d</code> with offset as a <code>PolyLine2d</code>
+     * @return approximation of this <code>curve2d</code> with offset as a <code>PolyLine2d</code>
      * @throws NullPointerException when <code>flattener</code>, or <code>offsets</code> is <code>null</code>
      */
     PolyLine2d toPolyLine(OffsetFlattener2d flattener, ContinuousPiecewiseLinearFunction offsets);
@@ -29,9 +29,9 @@ public interface OffsetCurve2d extends Curve2d
     /**
      * Returns the point at the given fraction. The fraction may represent any parameter, such as <i>t</i> in a B&eacute;zier
      * curve, <i>s</i> in a Clothoid, or simply the fraction of length.
-     * @param fraction double; the fraction
-     * @param of offset data; provides fraction-dependent lateral offset to the point
-     * @return Point2d; the point at the given <code>fraction</code>
+     * @param fraction the fraction
+     * @param of provides fraction-dependent lateral offset to the point
+     * @return the point at the given <code>fraction</code>
      */
     Point2d getPoint(double fraction, ContinuousPiecewiseLinearFunction of);
 
@@ -39,9 +39,9 @@ public interface OffsetCurve2d extends Curve2d
      * Returns the direction at the given fraction. The fraction may represent any parameter, such as <i>t</i> in a
      * B&eacute;zier curve, <i>s</i> in a Clothoid, or simply the fraction of length. The default implementation performs a
      * numerical approach by looking at the direction between the points at fraction, and a point 1e-6 away.
-     * @param fraction double; the fraction
-     * @param of offset data; provides fraction-dependent lateral offset to the curve
-     * @return double; the direction at the given <code>fraction</code>
+     * @param fraction the fraction
+     * @param of provides fraction-dependent lateral offset to the curve
+     * @return the direction at the given <code>fraction</code>
      */
     default double getDirection(final double fraction, final ContinuousPiecewiseLinearFunction of)
     {
@@ -63,7 +63,7 @@ public interface OffsetCurve2d extends Curve2d
      * Convert a position along the curve to a t-value in the <code>OffsetCurve2d</code> domain. For <code>Arc</code>
      * and <code>Straight</code>, these t-values are the same. For <code>BezierCubic</code> they're not.
      * @param position t-value in the <code>ContinuousPiecewiseLinearFunction</code> domain
-     * @return double; t-value in the <code>ContinuousPiecewiseLinearFunction</code> domain
+     * @return t-value in the <code>ContinuousPiecewiseLinearFunction</code> domain
      */
     default double getT(final double position)
     {

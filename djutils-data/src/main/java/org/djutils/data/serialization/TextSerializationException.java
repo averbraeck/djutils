@@ -25,8 +25,8 @@ public class TextSerializationException extends Exception
 
     /**
      * Constructor for TextSerializationException.
-     * @param message String; explanation of the exception
-     * @param cause Throwable; underlying exception
+     * @param message explanation of the exception
+     * @param cause underlying exception
      */
     public TextSerializationException(final String message, final Throwable cause)
     {
@@ -35,7 +35,7 @@ public class TextSerializationException extends Exception
 
     /**
      * Constructor for TextSerializationException.
-     * @param message String; explanation of the exception
+     * @param message explanation of the exception
      */
     public TextSerializationException(final String message)
     {
@@ -44,7 +44,7 @@ public class TextSerializationException extends Exception
 
     /**
      * Constructor for TextSerializationException.
-     * @param cause Throwable; underlying exception
+     * @param cause underlying exception
      */
     public TextSerializationException(final Throwable cause)
     {

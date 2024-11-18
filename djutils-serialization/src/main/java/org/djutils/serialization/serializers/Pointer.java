@@ -16,7 +16,7 @@ public class Pointer
 
     /**
      * Construct a new Pointer with specified initial offset.
-     * @param initialOffset int; the initial offset
+     * @param initialOffset the initial offset
      */
     Pointer(final int initialOffset)
     {
@@ -33,7 +33,7 @@ public class Pointer
 
     /**
      * Retrieve the offset.
-     * @return int; the offset
+     * @return the offset
      */
     public int get()
     {
@@ -43,8 +43,8 @@ public class Pointer
     /**
      * Retrieve the current value of offset and increment it. The returned value is the value <b>before</b> applying the
      * increment.
-     * @param increment int; the amount by which the offset must be incremented
-     * @return int; the offset (before the increment was added)
+     * @param increment the amount by which the offset must be incremented
+     * @return the offset (before the increment was added)
      */
     public int getAndIncrement(final int increment)
     {
@@ -55,7 +55,7 @@ public class Pointer
 
     /**
      * Increment the offset.
-     * @param increment int; the amount by which the offset must be incremented
+     * @param increment the amount by which the offset must be incremented
      */
     public void inc(final int increment)
     {

@@ -20,7 +20,7 @@ public class Calculator
 {
     /**
      * Demonstrate the Eval class. Program entry point.
-     * @param args String ...; the command line arguments
+     * @param args the command line arguments
      */
     public static void main(final String... args)
     {
@@ -88,7 +88,7 @@ public class Calculator
 
     /**
      * Print expression followed by the result.
-     * @param expression String; expression to evaluate
+     * @param expression expression to evaluate
      */
     public static void doEval(final String expression)
     {
@@ -97,8 +97,8 @@ public class Calculator
     
     /**
      * Print expression followed by the result.
-     * @param expression String; the expression to evaluate
-     * @param valuePool RetrieveValue; variable pool
+     * @param expression the expression to evaluate
+     * @param valuePool variable pool
      */
     public static void doEval(final String expression, final RetrieveValue valuePool)
     {

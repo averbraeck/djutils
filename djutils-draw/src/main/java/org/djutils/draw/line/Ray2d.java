@@ -29,9 +29,9 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
 
     /**
      * Construct a new Ray2d.
-     * @param x double; the x coordinate of the finite end point of the ray
-     * @param y double; the y coordinate of the finite end point of the ray
-     * @param dirZ double; the angle from the positive X axis direction in radians.
+     * @param x the x coordinate of the finite end point of the ray
+     * @param y the y coordinate of the finite end point of the ray
+     * @param dirZ the angle from the positive X axis direction in radians.
      * @throws ArithmeticException when <code>dirZ</code> is <code>NaN</code>
      */
     public Ray2d(final double x, final double y, final double dirZ)
@@ -41,8 +41,8 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
 
     /**
      * Construct a new Ray2d from x and y coordinates in a double[] and a direction.
-     * @param xy double[]; the <code>x</code> and <code>y</code> coordinates of the finite end point in that order
-     * @param dirZ double; the counter-clockwise rotation around the point in radians
+     * @param xy the <code>x</code> and <code>y</code> coordinates of the finite end point in that order
+     * @param dirZ the counter-clockwise rotation around the point in radians
      * @throws NullPointerException when <code>xy</code> is <code>null</code>
      * @throws ArithmeticException when <code>xy</code> contains <code>NaN</code>, or rotZ is <code>NaN</code>
      * @throws IllegalArgumentException when the length of <code>xy</code> is not 2, or <code>dirZ</code> is infinite
@@ -54,8 +54,8 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
 
     /**
      * Construct a new Ray2d from an AWT Point2D and a direction.
-     * @param point Point2D; an AWT Point2D
-     * @param dirZ double; the counter-clockwise rotation around the point in radians
+     * @param point an AWT Point2D
+     * @param dirZ the counter-clockwise rotation around the point in radians
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      * @throws ArithmeticException when any coordinate in <code>point</code> is <code>NaN</code>, or <code>rotZ</code> is
      *             <code>NaN</code>
@@ -67,8 +67,8 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
 
     /**
      * Construct a new Ray2d from a Point2d and a direction.
-     * @param point Point2d; the finite end point of the ray
-     * @param dirZ double; the angle from the positive X axis direction in radians.
+     * @param point the finite end point of the ray
+     * @param dirZ the angle from the positive X axis direction in radians.
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      * @throws ArithmeticException when <code>dirZ</code> is <code>NaN</code>
      */
@@ -79,10 +79,10 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
 
     /**
      * Construct a new Ray2d.
-     * @param x double; the x coordinate of the finite end point of the ray
-     * @param y double; the y coordinate of the finite end point of the ray
-     * @param throughX double; the x coordinate of another point on the ray
-     * @param throughY double; the y coordinate of another point on the ray
+     * @param x the x coordinate of the finite end point of the ray
+     * @param y the y coordinate of the finite end point of the ray
+     * @param throughX the x coordinate of another point on the ray
+     * @param throughY the y coordinate of another point on the ray
      * @throws IllegalArgumentException when <code>throughX == x</code> and <code>throughY ==
      *             y</code>
      * @throws ArithmeticException when any <code>throughX</code> or <code>throughY</code> is <code>NaN</code>
@@ -94,9 +94,9 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
 
     /**
      * Construct a new Ray2d.
-     * @param point Point2d; the finite end point of the ray
-     * @param throughX double; the x coordinate of another point on the ray
-     * @param throughY double; the y coordinate of another point on the ray
+     * @param point the finite end point of the ray
+     * @param throughX the x coordinate of another point on the ray
+     * @param throughY the y coordinate of another point on the ray
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      * @throws ArithmeticException when any <code>throughX</code>, or <code>throughY</code> is <code>NaN</code>
      * @throws IllegalArgumentException when <code>throughX == x</code> and <code>throughY ==
@@ -109,9 +109,9 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
 
     /**
      * Construct a new Ray2d.
-     * @param x double; the x coordinate of the finite end point of the ray
-     * @param y double; the y coordinate of the finite end point of the ray
-     * @param throughPoint Point2d; another point on the ray
+     * @param x the x coordinate of the finite end point of the ray
+     * @param y the y coordinate of the finite end point of the ray
+     * @param throughPoint another point on the ray
      * @throws NullPointerException when <code>throughPoint</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>throughPoint</code> is exactly at (x, y)
      */
@@ -122,8 +122,8 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
 
     /**
      * Construct a new Ray2d.
-     * @param point Point2d; the finite end point of the ray
-     * @param throughPoint Point2d; another point on the ray
+     * @param point the finite end point of the ray
+     * @param throughPoint another point on the ray
      * @throws NullPointerException when <code>throughPoint</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>throughPoint</code> is exactly at <code>(x,y)</code>
      */
@@ -134,7 +134,7 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
 
     /**
      * Construct a new Ray2d.
-     * @param directedPoint DirectedPoint2d; point and direction of the new Ray2d
+     * @param directedPoint point and direction of the new Ray2d
      */
     public Ray2d(final DirectedPoint2d directedPoint)
     {

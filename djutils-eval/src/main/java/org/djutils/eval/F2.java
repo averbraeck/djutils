@@ -25,9 +25,9 @@ class F2 implements Function
 
     /**
      * Construct a new two-argument function.
-     * @param id String; name of the function as it must be written in expressions
-     * @param metaData MetaData; meta data of the function
-     * @param f2 TwoArgumentFunction; two argument function
+     * @param id name of the function as it must be written in expressions
+     * @param metaData meta data of the function
+     * @param f2 two argument function
      */
     F2(final String id, final MetaData metaData, final TwoArgumentFunction f2)
     {
@@ -61,10 +61,10 @@ class F2 implements Function
     {
         /**
          * Prototype of the two-argument function
-         * @param functionData Function; meta data of the function
-         * @param argument1 Object; the first argument of the function
-         * @param argument2 Object; the second argument of the function
-         * @return Object; the result type of the function
+         * @param functionData meta data of the function
+         * @param argument1 the first argument of the function
+         * @param argument2 the second argument of the function
+         * @return the result type of the function
          */
         Object execute(Function functionData, Object argument1, Object argument2);
 

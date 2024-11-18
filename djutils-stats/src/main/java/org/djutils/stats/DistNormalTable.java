@@ -26,9 +26,9 @@ public final class DistNormalTable
 
     /**
      * Returns the cumulative probability of the x-value.
-     * @param mu double; mean value
-     * @param sigma double; standard deviation
-     * @param x double; the observation x
+     * @param mu mean value
+     * @param sigma standard deviation
+     * @param x the observation x
      * @return double the cumulative probability
      * @throws IllegalArgumentException when sigma less than 0
      */
@@ -57,9 +57,9 @@ public final class DistNormalTable
 
     /**
      * Returns the x-value of the given cumulativePropability. Result range is limited to approximately 6 sigma.
-     * @param mu double; mean value
-     * @param sigma double; standard deviation
-     * @param cumulativeProbability double; the cumulative probability
+     * @param mu mean value
+     * @param sigma standard deviation
+     * @param cumulativeProbability the cumulative probability
      * @return double the x-value that corresponds closely to the given cumulative probability
      * @throws IllegalArgumentException when sigma less than 0, or when cumulative probability not between 0 and 1 (inclusive)
      */

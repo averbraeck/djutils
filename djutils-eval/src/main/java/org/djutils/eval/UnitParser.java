@@ -16,9 +16,9 @@ public interface UnitParser
 {
     /**
      * Parse a user-specific unit.
-     * @param value double; the value (already parsed; expressed in the unit)
-     * @param unit String; the unit specification
-     * @return DoubleScalar&lt;?,?&gt;; the resulting (strongly typed) value, or null if the user-specified parser cannot handle
+     * @param value the value (already parsed; expressed in the unit)
+     * @param unit the unit specification
+     * @return the resulting (strongly typed) value, or null if the user-specified parser cannot handle
      *         the provided unit
      */
     DoubleScalar<?, ?> parseUnit(final double value, final String unit);

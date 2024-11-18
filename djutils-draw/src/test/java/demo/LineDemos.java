@@ -31,7 +31,7 @@ public final class LineDemos
 
     /**
      * Demonstrate the line classes.
-     * @param args String[]; the command line arguments (not used)
+     * @param args the command line arguments (not used)
      * @throws DrawRuntimeException ...
      */
     public static void main(final String[] args) throws DrawRuntimeException

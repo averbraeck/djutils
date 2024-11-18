@@ -22,7 +22,7 @@ public class Volume3d implements Serializable
 
     /**
      * Return the lines making up the wireframe of this object.
-     * @return List&lt;Line&gt;; the A list of lines making up the wireframe of the object
+     * @return the A list of lines making up the wireframe of the object
      */
     public List<PolyLine3d> getWireframeLines()
     {

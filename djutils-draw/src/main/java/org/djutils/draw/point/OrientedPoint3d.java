@@ -34,9 +34,9 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
 
     /**
      * Create a new OrientedPoint3d with x, y, and z coordinates and direction 0,0,0.
-     * @param x double; the x coordinate
-     * @param y double; the y coordinate
-     * @param z double; the z coordinate
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param z the z coordinate
      * @throws IllegalArgumentException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>NaN</code>
      */
     public OrientedPoint3d(final double x, final double y, final double z)
@@ -46,12 +46,12 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
 
     /**
      * Create a new OrientedPoint3d with x, y, and z coordinates and orientation dirX,dirY,dirZ.
-     * @param x double; the x coordinate
-     * @param y double; the y coordinate
-     * @param z double; the z coordinate
-     * @param dirX double; the direction as rotation around the x-axis with the point as the center
-     * @param dirY double; the direction as rotation around the y-axis with the point as the center
-     * @param dirZ double; the direction as rotation around the z-axis with the point as the center
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param z the z coordinate
+     * @param dirX the direction as rotation around the x-axis with the point as the center
+     * @param dirY the direction as rotation around the y-axis with the point as the center
+     * @param dirZ the direction as rotation around the z-axis with the point as the center
      * @throws ArithmeticException when <code>x</code>, <code>y</code>, <code>z</code>, <code>dirX</code>, <code>dirY</code>, or
      *             <code>dirZ</code> is <code>NaN</code>
      */
@@ -65,7 +65,7 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
 
     /**
      * Create a new OrientedPoint3d with x, y, and z coordinates and direction 0,0,0.
-     * @param xyz double[]; the x, y and z coordinates
+     * @param xyz the x, y and z coordinates
      * @throws NullPointerException when <code>xyz</code> is <code>null</code>
      * @throws IllegalArgumentException when the length of the <code>xyx</code> array is not 3
      * @throws IllegalArgumentException when the <code>xyx</code> array contains a <code>NaN</code> value
@@ -78,10 +78,10 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
 
     /**
      * Create a new OrientedPoint3d with x, y, and z coordinates and orientation dirX,dirY,dirZ.
-     * @param xyz double[]; the x, y and z coordinates
-     * @param dirX double; the direction as rotation around the x-axis with the point as the center
-     * @param dirY double; the direction as rotation around the y-axis with the point as the center
-     * @param dirZ double; the direction as rotation around the z-axis with the point as the center
+     * @param xyz the x, y and z coordinates
+     * @param dirX the direction as rotation around the x-axis with the point as the center
+     * @param dirY the direction as rotation around the y-axis with the point as the center
+     * @param dirZ the direction as rotation around the z-axis with the point as the center
      * @throws NullPointerException when <code>xyx</code> is <code>null</code>
      * @throws IllegalArgumentException when the length of the xyz array is not 3
      * @throws ArithmeticException when <code>xyz</code> contains a <code>NaN</code> value, or <code>dirX</code>,
@@ -97,10 +97,10 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
 
     /**
      * Create a new OrientedPoint3d from another point and specified orientation dirX,dirY,dirZ.
-     * @param point Point3d; the point from which this OrientedPoint3d will be instantiated
-     * @param dirX double; the direction as rotation around the x-axis with the point as the center
-     * @param dirY double; the direction as rotation around the y-axis with the point as the center
-     * @param dirZ double; the direction as rotation around the z-axis with the point as the center
+     * @param point the point from which this OrientedPoint3d will be instantiated
+     * @param dirX the direction as rotation around the x-axis with the point as the center
+     * @param dirY the direction as rotation around the y-axis with the point as the center
+     * @param dirZ the direction as rotation around the z-axis with the point as the center
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      * @throws ArithmeticException when <code>dirX</code>, <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
      */
@@ -111,8 +111,8 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
 
     /**
      * Verify that a double array is not null, has three elements.
-     * @param orientation double[]; the array to check
-     * @return double; the first element of the argument
+     * @param orientation the array to check
+     * @return the first element of the argument
      * @throws NullPointerException when <code>orientation</code> is <code>null</code>
      * @throws IllegalArgumentException when the length of the <code>orientation</code> array is not 3
      */
@@ -125,10 +125,10 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
     /**
      * Create a new OrientedPoint3d with x, y, and z coordinates and orientation specified using a double array of three
      * elements (containing dirX,dirY,dirZ in that order).
-     * @param x double; the x coordinate
-     * @param y double; the y coordinate
-     * @param z double; the z coordinate
-     * @param orientation double[]; the three orientation values as rotations around the x,y,z-axes in a double array containing
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param z the z coordinate
+     * @param orientation the three orientation values as rotations around the x,y,z-axes in a double array containing
      *            dirX,dirY,dirZ in that order
      * @throws NullPointerException when <code>rotation</code> is <code>null</code>
      * @throws IllegalArgumentException when the length of the <code>direction</code> array is not 3
@@ -141,8 +141,8 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
     /**
      * Create a new OrientedPoint3d with x, y, and z coordinates packed in a double array and orientation specified using a
      * double array of three elements (containing dirX,dirY,dirZ in that order).
-     * @param xyz double[]; the x, y and z coordinates in that order
-     * @param orientation double[]; the three orientation values as rotations around the x,y,z-axes in a double array containing
+     * @param xyz the x, y and z coordinates in that order
+     * @param orientation the three orientation values as rotations around the x,y,z-axes in a double array containing
      *            dirX,dirY,dirZ in that order
      * @throws NullPointerException when <code>xyx</code> or <code>direction</code> is <code>null</code>
      * @throws IllegalArgumentException when the length of the <code>xyx</code> array or the length of the
@@ -201,11 +201,11 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
      * Interpolate towards another OrientedPoint3d with a fraction. It is allowed for fraction to be less than zero or larger
      * than 1. In that case the interpolation turns into an extrapolation. DirX, dirY and dirZ are interpolated/extrapolated
      * using the interpolateShortest method.
-     * @param otherPoint OrientedPoint3d; the other point
-     * @param fraction double; the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
+     * @param otherPoint the other point
+     * @param fraction the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
      *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
      *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
-     * @return OrientedPoint3d; a new <code>OrientedPoint3d</code> at the requested <code>fraction</code>
+     * @return a new <code>OrientedPoint3d</code> at the requested <code>fraction</code>
      * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      * @throws ArithmeticException when <code>fraction</code> is <code>NaN</code>
      */
@@ -231,8 +231,8 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
     /**
      * Return a new OrientedPoint3d with an in-place rotation around the z-axis by the provided rotateZ. The resulting rotation
      * will be normalized between -&pi; and &pi;.
-     * @param rotateZ double; the rotation around the z-axis
-     * @return OrientedPoint3d; a new point with the same coordinates, <code>dirX</code> and <code>dirY</code> and modified
+     * @param rotateZ the rotation around the z-axis
+     * @return a new point with the same coordinates, <code>dirX</code> and <code>dirY</code> and modified
      *         <code>dirZ</code>
      * @throws ArithmeticException when <code>rotateZ</code> is <code>NaN</code>
      */
@@ -247,10 +247,10 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
     /**
      * Return a new OrientedPoint3d point with an in-place rotation by the provided rotateX, rotateY, and rotateZ. The resulting
      * rotations will be normalized between -&pi; and &pi;.
-     * @param rotateX double; the rotation around the x-axis
-     * @param rotateY double; the rotation around the y-axis
-     * @param rotateZ double; the rotation around the z-axis
-     * @return OrientedPoint3d; a new point with the same coordinates and applied rotations
+     * @param rotateX the rotation around the x-axis
+     * @param rotateY the rotation around the y-axis
+     * @param rotateZ the rotation around the z-axis
+     * @return a new point with the same coordinates and applied rotations
      * @throws ArithmeticException when any of the rotations is <code>NaN</code>
      */
     public OrientedPoint3d rotate(final double rotateX, final double rotateY, final double rotateZ)

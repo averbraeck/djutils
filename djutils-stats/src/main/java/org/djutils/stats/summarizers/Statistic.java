@@ -21,29 +21,29 @@ public interface Statistic extends Serializable
 
     /**
      * Returns the description of the statistic.
-     * @return String; the description of the statistic
+     * @return the description of the statistic
      */
     String getDescription();
 
     /**
      * Return the current number of observations.
-     * @return long; the number of observations
+     * @return the number of observations
      */
     long getN();
 
     /**
      * Return a string representing a line with important statistics values for this statistic, for a textual table with a
      * monospaced font that can contain multiple statistics.
-     * @return String; line with most important values of the statistic
+     * @return line with most important values of the statistic
      */
     String reportLine();
 
     /**
      * Return a formatted string with 2 digits precision for a floating point value that fits the number of characters. The
      * formatter will fall back to scientific notation when the value does not fit with floating point notation.
-     * @param value double; the value to format
-     * @param numberCharacters int; the number of characters for the result
-     * @return String; a string representation with the given number of characters
+     * @param value the value to format
+     * @param numberCharacters the number of characters for the result
+     * @return a string representation with the given number of characters
      */
     default String formatFixed(final double value, final int numberCharacters)
     {

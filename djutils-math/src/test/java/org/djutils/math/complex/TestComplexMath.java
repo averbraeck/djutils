@@ -300,8 +300,8 @@ public class TestComplexMath
     /**
      * Copied from <a href="https://forgetcode.com/java/1746-asinh-return-the-hyperbolic-sine-of-value-as-a-argument">Forget
      * Code asinh</a>.
-     * @param x double; the argument
-     * @return double; the inverse hyperbolic cosine of x
+     * @param x the argument
+     * @return the inverse hyperbolic cosine of x
      */
     public static double doubleAsinh(final double x)
     {
@@ -311,8 +311,8 @@ public class TestComplexMath
     /**
      * Copied from <a href="https://forgetcode.com/Java/1747-acosh-Return-the-hyperbolic-Cosine-of-value-as-a-Argument">Forget
      * Code acosh</a>.
-     * @param x double; the argument
-     * @return double; the inverse hyperbolic cosine of x
+     * @param x the argument
+     * @return the inverse hyperbolic cosine of x
      */
     public static double doubleAcosh(final double x)
     {
@@ -320,7 +320,7 @@ public class TestComplexMath
     }
 
     /**
-     * @param c Complex;
+     * @param c a complex number
      * @return String
      */
     public static String printComplex(final Complex c)

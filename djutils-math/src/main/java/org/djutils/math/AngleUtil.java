@@ -24,8 +24,8 @@ public final class AngleUtil
     /**
      * Normalize an angle (in radians) in a 2&pi; wide interval around &pi;, resulting in angles in the 0 to 2&pi; interval. An
      * angle value of NaN or Infinity returns NaN.
-     * @param angle double; the angle in radians to normalize
-     * @return double; the normalized angle in radians
+     * @param angle the angle in radians to normalize
+     * @return the normalized angle in radians
      */
     public static double normalizeAroundPi(final double angle)
     {
@@ -35,8 +35,8 @@ public final class AngleUtil
     /**
      * Normalize an angle (in radians) in a 2&pi; wide interval around 0, resulting in angles in the -&pi; to &pi; interval. An
      * angle value of NaN or Infinity returns NaN.
-     * @param angle double; the angle in radians to normalize
-     * @return double; the normalized angle in radians
+     * @param angle the angle in radians to normalize
+     * @return the normalized angle in radians
      */
     public static double normalizeAroundZero(final double angle)
     {
@@ -46,9 +46,9 @@ public final class AngleUtil
     /**
      * Return whether two angles (in radians) are less than epsilon apart. The method returns true, for instance when
      * epsilonEquals(-Math.PI, Math.PI, 1E-6) is called, since the -PI and +PI angles have the same angle.
-     * @param angle1 double; the first angle in radians
-     * @param angle2 double; the second angle in radians
-     * @param epsilon double; the precision
+     * @param angle1 the first angle in radians
+     * @param angle2 the second angle in radians
+     * @param epsilon the precision
      * @return whether the two angles are less than epsilon apart
      */
     public static boolean epsilonEquals(final double angle1, final double angle2, final double epsilon)
@@ -69,9 +69,9 @@ public final class AngleUtil
      * normalized between -&pi; and &pi;. This means that the halfway interpolation between 0 and 2&pi; and between 2&pi; and 0
      * are both 0, since the two angles are the same. Likewise, the halfway interpolation between -&pi; and &pi; is +/- &pi;
      * where the sign depends on rounding.
-     * @param angle1 double; the first angle in radians
-     * @param angle2 double; the second angle in radians
-     * @param fraction double; the fraction for interpolation; 0.5 is halfway
+     * @param angle1 the first angle in radians
+     * @param angle2 the second angle in radians
+     * @param fraction the fraction for interpolation; 0.5 is halfway
      * @return the normalized angle between angle1 and angle2
      */
     public static double interpolateClockwise(final double angle1, final double angle2, final double fraction)
@@ -87,10 +87,10 @@ public final class AngleUtil
 
     /**
      * Interpolate between two angles taking the <i>shortest way</i>.
-     * @param angle1 double; the first angle in radians
-     * @param angle2 double; the second angle in radians
-     * @param fraction double; the fraction for interpolation; 0.5 is halfway, 0.0 returns angle1, 1.0 returns angle2.
-     * @return double; The interpolated angle, normalized around zero. If any input angle is not normalized around zero the
+     * @param angle1 the first angle in radians
+     * @param angle2 the second angle in radians
+     * @param fraction the fraction for interpolation; 0.5 is halfway, 0.0 returns angle1, 1.0 returns angle2.
+     * @return The interpolated angle, normalized around zero. If any input angle is not normalized around zero the
      *         result will still be normalized, and the exact equality at fraction is 0.0 or 1.0 may not hold. When the
      *         difference between angle1 and angle2 is very close to an odd multiple of PI, the <i>shortest way</i> between
      *         those angles is ill-defined. The result of this method reflects this (fundamental) problem.

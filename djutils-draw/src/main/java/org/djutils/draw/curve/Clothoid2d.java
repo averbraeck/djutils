@@ -325,7 +325,7 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
      * @param startPoint start point.
      * @param length Length of the resulting clothoid.
      * @param startCurvature start curvature.
-     * @param endCurvature end curvature;
+     * @param endCurvature end curvature
      * @return clothoid based on curvature and length.
      * @throws NullPointerException when <code>startPoint</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>length &le; 0.0</code>
@@ -353,7 +353,7 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
      * @param phi1 phi1.
      * @param phi2 phi2.
      * @param cShape C-shaped, or S-shaped otherwise.
-     * @return theta value; the number of radians that is moved on to a side of the full clothoid.
+     * @return the number of radians that is moved on to a side of the full clothoid.
      */
     private static double getTheta(final double phi1, final double phi2, final boolean cShape)
     {

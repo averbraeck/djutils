@@ -270,7 +270,7 @@ public class TestCurves
      * Verify the number of segments and the location of the points on a flattened FlattableLine2d.
      * @param curve FlattableLine2d
      * @param flattened PolyLine2d
-     * @param numSegments int; the number of segments that the flattened FlattableLine2d should have
+     * @param numSegments the number of segments that the flattened FlattableLine2d should have
      */
     private static void verifyNumSegments(final Curve2d curve, final PolyLine2d flattened, final int numSegments)
     {
@@ -289,7 +289,7 @@ public class TestCurves
      * @param curve OffsetFlattableLine2d
      * @param of ContinuousPiecewiseLinearFunction (may be null)
      * @param flattened PolyLine2d
-     * @param numSegments int; the number of segments that the flattened OffsetFlattableLine2d should have
+     * @param numSegments the number of segments that the flattened OffsetFlattableLine2d should have
      */
     private static void verifyNumSegments(final OffsetCurve2d curve, final ContinuousPiecewiseLinearFunction of,
             final PolyLine2d flattened, final int numSegments)
@@ -308,7 +308,7 @@ public class TestCurves
      * Verify the number of segments and the location of the points on a flattened FlattableLine2d.
      * @param curve FlattableLine3d
      * @param flattened PolyLine3d
-     * @param numSegments int; the number of segments that the flattened FlattableLine2d should have
+     * @param numSegments the number of segments that the flattened FlattableLine2d should have
      */
     private static void verifyNumSegments(final Curve3d curve, final PolyLine3d flattened, final int numSegments)
     {
@@ -438,7 +438,7 @@ public class TestCurves
 
     /**
      * Print things for debugging.
-     * @param segment int; the step along the curve or the polyLine2d
+     * @param segment the step along the curve or the polyLine2d
      * @param positionOnSegment double
      * @param flattened PolyLine2d
      * @param curve Object
@@ -525,7 +525,7 @@ public class TestCurves
 
     /**
      * Print things for debugging.
-     * @param segment int; the step along the curve or the polyLine2d
+     * @param segment the step along the curve or the polyLine2d
      * @param positionOnSegment double
      * @param flattened PolyLine3d
      * @param curve Curve3d

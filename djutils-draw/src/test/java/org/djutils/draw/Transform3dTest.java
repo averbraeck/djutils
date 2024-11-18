@@ -549,13 +549,13 @@ public class Transform3dTest
 
     /**
      * Check bounds values.
-     * @param b Bounds3d; the box to test
-     * @param minX double; expected value
-     * @param maxX double; expected value
-     * @param minY double; expected value
-     * @param maxY double; expected value
-     * @param minZ double; expected value
-     * @param maxZ double; expected value
+     * @param b the box to test
+     * @param minX expected value
+     * @param maxX expected value
+     * @param minY expected value
+     * @param maxY expected value
+     * @param minZ expected value
+     * @param maxZ expected value
      */
     private void testBounds3d(final Bounds3d b, final double minX, final double maxX, final double minY, final double maxY,
             final double minZ, final double maxZ)
@@ -579,7 +579,7 @@ public class Transform3dTest
 
     /**
      * Check what transform does to a unit vector.
-     * @param args String[]; not used
+     * @param args not used
      */
     public static void main(final String[] args)
     {

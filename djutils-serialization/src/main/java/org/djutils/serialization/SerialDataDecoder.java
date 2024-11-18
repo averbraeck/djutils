@@ -63,7 +63,7 @@ public class SerialDataDecoder implements Decoder
 
     /**
      * Construct a new SerialDataDecoder.
-     * @param endianUtil EndianUtil; the endian util to use to decode multi-byte values
+     * @param endianUtil the endian util to use to decode multi-byte values
      */
     public SerialDataDecoder(final EndianUtil endianUtil)
     {
@@ -470,7 +470,7 @@ public class SerialDataDecoder implements Decoder
 
     /**
      * Allocate a buffer for the next data element (or two).
-     * @param dataElementSize int; size of the buffer
+     * @param dataElementSize size of the buffer
      */
     private void prepareForDataElement(final int dataElementSize)
     {

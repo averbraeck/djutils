@@ -186,13 +186,13 @@ public class Ray3dTest
 
     /**
      * Verify all fields of a Ray3d with a tolerance of 0.0001.
-     * @param description String; description of the test
-     * @param ray Ray3d; the Ray3d
-     * @param expectedX double; the expected x value
-     * @param expectedY double; the expected y value
-     * @param expectedZ double; the expected z value
-     * @param expectedDirY double; the expected dirY value
-     * @param expectedDirZ double; the expected dirZ value
+     * @param description description of the test
+     * @param ray the Ray3d
+     * @param expectedX the expected x value
+     * @param expectedY the expected y value
+     * @param expectedZ the expected z value
+     * @param expectedDirY the expected dirY value
+     * @param expectedDirZ the expected dirZ value
      */
     private void verifyRay(final String description, final Ray3d ray, final double expectedX, final double expectedY,
             final double expectedZ, final double expectedDirY, final double expectedDirZ)
@@ -350,13 +350,13 @@ public class Ray3dTest
 
     /**
      * Verify a Bounds object.
-     * @param bounds Bounds3d; the Bounds object to verify
-     * @param expectedMinX double; the expected minimum x value
-     * @param expectedMinY double; the expected minimum y value
-     * @param expectedMinZ double; the expected minimum z value
-     * @param expectedMaxX double; the expected maximum x value
-     * @param expectedMaxY double; the expected maximum y value
-     * @param expectedMaxZ double; the expected maximum z value
+     * @param bounds the Bounds object to verify
+     * @param expectedMinX the expected minimum x value
+     * @param expectedMinY the expected minimum y value
+     * @param expectedMinZ the expected minimum z value
+     * @param expectedMaxX the expected maximum x value
+     * @param expectedMaxY the expected maximum y value
+     * @param expectedMaxZ the expected maximum z value
      */
     private void verifyBounds(final Bounds3d bounds, final double expectedMinX, final double expectedMinY,
             final double expectedMinZ, final double expectedMaxX, final double expectedMaxY, final double expectedMaxZ)
@@ -371,9 +371,9 @@ public class Ray3dTest
 
     /**
      * Verify one element of a Bounds.
-     * @param expected double; expected value
-     * @param got double; obtained value
-     * @param name String; name of the field
+     * @param expected expected value
+     * @param got obtained value
+     * @param name name of the field
      */
     private void verifyBound(final double expected, final double got, final String name)
     {

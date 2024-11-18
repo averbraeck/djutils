@@ -73,7 +73,7 @@ public final class CliUnitConverters
 
     /**
      * Register all DJUNITS converters for a CommandLine.
-     * @param cmd CommandLine; the CommandLine for which the DJUNITS converters should be registered
+     * @param cmd the CommandLine for which the DJUNITS converters should be registered
      */
     @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
     public static void registerAll(final CommandLine cmd)

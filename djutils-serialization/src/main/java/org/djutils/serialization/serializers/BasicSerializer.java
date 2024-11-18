@@ -20,8 +20,8 @@ public abstract class BasicSerializer<T extends Object> implements Serializer<T>
 
     /**
      * Construct the BasicSerializer.
-     * @param type byte; the field type (returned by the <code>fieldType</code> method)
-     * @param dataClassName String; returned by the dataClassName method
+     * @param type the field type (returned by the <code>fieldType</code> method)
+     * @param dataClassName returned by the dataClassName method
      */
     public BasicSerializer(final byte type, final String dataClassName)
     {

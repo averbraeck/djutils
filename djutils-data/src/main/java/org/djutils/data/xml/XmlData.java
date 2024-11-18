@@ -78,8 +78,8 @@ public final class XmlData
 
     /**
      * Write the data from the data table in XML format.
-     * @param writer Writer; the writer that writes the data, e.g. to a file
-     * @param dataTable Table; the data table to write
+     * @param writer the writer that writes the data, e.g. to a file
+     * @param dataTable the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      * @throws XMLStreamException on XML write error
@@ -183,8 +183,8 @@ public final class XmlData
 
     /**
      * Write the data from the data table in XML format.
-     * @param filename String; the file name to write the data to
-     * @param dataTable Table; the data table to write
+     * @param filename the file name to write the data to
+     * @param dataTable the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      * @throws XMLStreamException on XML write error
@@ -200,7 +200,7 @@ public final class XmlData
 
     /**
      * Read the data from the XML-file into the data table. Use the metadata to reconstruct the data table.
-     * @param reader Reader; the reader that can read the data, e.g. from a file
+     * @param reader the reader that can read the data, e.g. from a file
      * @return dataTable the data table reconstructed from the meta data and filled with the data
      * @throws IOException on I/O error when reading the data
      * @throws TextSerializationException on unknown data type for serialization
@@ -327,8 +327,8 @@ public final class XmlData
 
     /**
      * Read from the XML file until a START_ELEMENT with the id equal to the provided tag is encountered.
-     * @param xmlr XMLStreamReader; the XML stream reader
-     * @param tag String; the tag to retrieve
+     * @param xmlr the XML stream reader
+     * @param tag the tag to retrieve
      * @throws XMLStreamException on error reading from the XML stream
      * @throws IOException when the stream ended without finding the tag
      */
@@ -352,10 +352,10 @@ public final class XmlData
      * Read from the XML file until a START_ELEMENT with the id equal to the provided tag is encountered, or until the
      * stopEndTag is reached. This can be used to get the starting tag in a repeat group. When the starting tag is found, the
      * method returns true. When the end tag of the repeat group is found, false is returned.
-     * @param xmlr XMLStreamReader; the XML stream reader
-     * @param tag String; the tag to retrieve, usually a tag in a repeat group
-     * @param stopEndTag String; the tag to indicate the end of the repeat group
-     * @return true when the tag in the repeat group was found; false when the stop tag was found
+     * @param xmlr the XML stream reader
+     * @param tag the tag to retrieve, usually a tag in a repeat group
+     * @param stopEndTag the tag to indicate the end of the repeat group
+     * @return false when the stop tag was found
      * @throws XMLStreamException on error reading from the XML stream
      * @throws IOException when the stream ended without finding the tag or the stop tag
      */
@@ -386,8 +386,8 @@ public final class XmlData
     /**
      * Read the attributes into an array and return the array. The position of each attribute is indicated by the vararg
      * parameter 'attributes'.
-     * @param xmlr XMLStreamReader; the XML stream reader
-     * @param attributes String...; the attributes that are expected
+     * @param xmlr the XML stream reader
+     * @param attributes the attributes that are expected
      * @return the array of atribute values, in the order of the vararg parameter 'attributes'
      * @throws XMLStreamException on error reading from the XML stream
      * @throws IOException when the current element does not contain the right (number of) attributes
@@ -417,7 +417,7 @@ public final class XmlData
 
     /**
      * Read the data from the XML-file into the data table. Use the metadata to reconstruct the data table.
-     * @param filename String; the file name to read the data from
+     * @param filename the file name to read the data from
      * @return dataTable the data table reconstructed from the meta data and filled with the data
      * @throws IOException on I/O error when reading the data
      * @throws TextSerializationException on unknown data type for serialization

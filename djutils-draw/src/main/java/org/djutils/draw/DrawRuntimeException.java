@@ -25,7 +25,7 @@ public class DrawRuntimeException extends RuntimeException
 
     /**
      * Create a runtime drawing exception with a custom message.
-     * @param message String; the custom message.
+     * @param message the custom message.
      */
     public DrawRuntimeException(final String message)
     {
@@ -34,7 +34,7 @@ public class DrawRuntimeException extends RuntimeException
 
     /**
      * Create a runtime drawing exception with an underlying cause.
-     * @param cause Throwable; the cause of this exception to be thrown
+     * @param cause the cause of this exception to be thrown
      */
     public DrawRuntimeException(final Throwable cause)
     {
@@ -43,8 +43,8 @@ public class DrawRuntimeException extends RuntimeException
 
     /**
      * Create a runtime drawing exception with a custom message and an underlying cause.
-     * @param message String; the custom message
-     * @param cause Throwable; the cause of this exception to be thrown
+     * @param message the custom message
+     * @param cause the cause of this exception to be thrown
      */
     public DrawRuntimeException(final String message, final Throwable cause)
     {

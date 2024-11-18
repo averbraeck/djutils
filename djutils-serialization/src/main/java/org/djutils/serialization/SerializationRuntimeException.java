@@ -23,7 +23,7 @@ public class SerializationRuntimeException extends RuntimeException
 
     /**
      * Create a serialization exception.
-     * @param message String; the message
+     * @param message the message
      */
     public SerializationRuntimeException(final String message)
     {
@@ -32,7 +32,7 @@ public class SerializationRuntimeException extends RuntimeException
 
     /**
      * Create a serialization exception.
-     * @param cause Throwable; the exception that caused the serialization exception
+     * @param cause the exception that caused the serialization exception
      */
     public SerializationRuntimeException(final Throwable cause)
     {
@@ -41,8 +41,8 @@ public class SerializationRuntimeException extends RuntimeException
 
     /**
      * Create a serialization exception.
-     * @param message String; the message
-     * @param cause Throwable; the exception that caused the serialization exception
+     * @param message the message
+     * @param cause the exception that caused the serialization exception
      */
     public SerializationRuntimeException(final String message, final Throwable cause)
     {
@@ -51,10 +51,10 @@ public class SerializationRuntimeException extends RuntimeException
 
     /**
      * Create a serialization exception.
-     * @param message String; the message
-     * @param cause Throwable; the exception that caused the serialization exception
-     * @param enableSuppression boolean; to enable suppressions or not
-     * @param writableStackTrace boolean; to have a writable stack trace or not
+     * @param message the message
+     * @param cause the exception that caused the serialization exception
+     * @param enableSuppression to enable suppressions or not
+     * @param writableStackTrace to have a writable stack trace or not
      */
     public SerializationRuntimeException(final String message, final Throwable cause, final boolean enableSuppression,
             final boolean writableStackTrace)

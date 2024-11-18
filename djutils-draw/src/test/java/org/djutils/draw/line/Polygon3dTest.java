@@ -358,11 +358,11 @@ public class Polygon3dTest
 
     /**
      * Verify the various properties of a Polygon3d.
-     * @param where String; description of the test
-     * @param x double[]; the expected x coordinates
-     * @param y double[]; the expected y coordinates
-     * @param z double[]; the expected z coordinates
-     * @param polygon Polygon3d; the Polygon3d
+     * @param where description of the test
+     * @param x the expected x coordinates
+     * @param y the expected y coordinates
+     * @param z the expected z coordinates
+     * @param polygon the Polygon3d
      */
     private void checkPolygon(final String where, final double[] x, final double[] y, final double[] z, final Polygon3d polygon)
     {

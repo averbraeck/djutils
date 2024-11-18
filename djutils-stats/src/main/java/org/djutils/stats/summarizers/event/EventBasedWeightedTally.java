@@ -34,7 +34,7 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
 
     /**
      * Construct a new WeightedTally with a description.
-     * @param description String; the description of this WeightedTally
+     * @param description the description of this WeightedTally
      */
     public EventBasedWeightedTally(final String description)
     {
@@ -43,8 +43,8 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
 
     /**
      * Construct a new WeightedTally with a description.
-     * @param description String; the description of this WeightedTally
-     * @param eventProducer EventProducer; the EventProducer to embed and use in this statistic
+     * @param description the description of this WeightedTally
+     * @param eventProducer the EventProducer to embed and use in this statistic
      */
     public EventBasedWeightedTally(final String description, final EventProducer eventProducer)
     {
@@ -88,9 +88,9 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
 
     /**
      * Process one observed weighted value.
-     * @param weight double; the weight of the value to process
-     * @param value double; the value to process
-     * @return double; the value
+     * @param weight the weight of the value to process
+     * @param value the value to process
+     * @return the value
      */
     @Override
     public double register(final double weight, final double value)

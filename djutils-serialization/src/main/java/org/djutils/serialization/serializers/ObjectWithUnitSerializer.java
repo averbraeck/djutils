@@ -19,8 +19,8 @@ public abstract class ObjectWithUnitSerializer<U extends Unit<U>, T> extends Obj
 {
     /**
      * Construct a new ObjectWithUnitSerializer.
-     * @param type byte; the field type (returned by the <code>fieldType</code> method)
-     * @param dataClassName String; returned by the dataClassName method
+     * @param type the field type (returned by the <code>fieldType</code> method)
+     * @param dataClassName returned by the dataClassName method
      */
     public ObjectWithUnitSerializer(final byte type, final String dataClassName)
     {
@@ -29,10 +29,10 @@ public abstract class ObjectWithUnitSerializer<U extends Unit<U>, T> extends Obj
 
     /**
      * Code a unit, including MoneyUnits.
-     * @param unit U; the unit to code in the byte array
-     * @param message byte[]; the byte array
-     * @param pointer Pointer; the start pointer in the byte array
-     * @param endianUtil EndianUtil; encoder to use for multi-byte values
+     * @param unit the unit to code in the byte array
+     * @param message the byte array
+     * @param pointer the start pointer in the byte array
+     * @param endianUtil encoder to use for multi-byte values
      */
     protected void encodeUnit(final U unit, final byte[] message, final Pointer pointer, final EndianUtil endianUtil)
     {
@@ -44,9 +44,9 @@ public abstract class ObjectWithUnitSerializer<U extends Unit<U>, T> extends Obj
 
     /**
      * Retrieve and decode a DJUNITS unit.
-     * @param buffer byte[]; the encoded data
-     * @param pointer Pointer; position in the encoded data where the unit is to be decoded from
-     * @param endianUtil EndianUtil; decoder for multi-byte values
+     * @param buffer the encoded data
+     * @param pointer position in the encoded data where the unit is to be decoded from
+     * @param endianUtil decoder for multi-byte values
      * @return Unit
      */
     @SuppressWarnings("unchecked")

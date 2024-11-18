@@ -54,9 +54,9 @@ public class Bezier3d implements Curve3d
 
     /**
      * Create a B&eacute;zier curve of any order.
-     * @param x double[]; the x-coordinates of the points that define the B&eacute;zier curve
-     * @param y double[]; the y-coordinates of the points that define the B&eacute;zier curve
-     * @param z double[]; the z-coordinates of the points that define the B&eacute;zier curve
+     * @param x the x-coordinates of the points that define the B&eacute;zier curve
+     * @param y the y-coordinates of the points that define the B&eacute;zier curve
+     * @param z the z-coordinates of the points that define the B&eacute;zier curve
      * @throws NullPointerException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>null</code>
      * @throws IllegalArgumentException when the length of the <code>x</code> array is not equal to the length of the
      *             <code>y</code> array, or not equal to the length of the <code>z</code> array, or less than <code>2</code>
@@ -68,11 +68,11 @@ public class Bezier3d implements Curve3d
 
     /**
      * Construct a B&eacute;zier curve of any order, optionally checking the lengths of the provided arrays.
-     * @param checkLengths boolean; if <code>true</code>; check the lengths of the <code>x</code> and <code>y</code> arrays; if
+     * @param checkLengths if <code>true</code>; check the lengths of the <code>x</code> and <code>y</code> arrays; if
      *            <code>false</code>; do not check those lengths
-     * @param x double[]; the x-coordinates of the points that define the B&eacute;zier curve
-     * @param y double[]; the y-coordinates of the points that define the B&eacute;zier curve
-     * @param z double[]; the z-coordinates of the points that define the B&eacute;zier curve
+     * @param x the x-coordinates of the points that define the B&eacute;zier curve
+     * @param y the y-coordinates of the points that define the B&eacute;zier curve
+     * @param z the z-coordinates of the points that define the B&eacute;zier curve
      * @throws NullPointerException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>null</code>
      * @throws IllegalArgumentException when the length of the <code>x</code> array is not equal to the length of the
      *             <code>y</code> array, or not equal to the length of the <code>z</code> array, or less than <code>2</code> and
@@ -103,7 +103,7 @@ public class Bezier3d implements Curve3d
 
     /**
      * Return the number of points (or x-y pairs) that this B&eacute;zier curve is based on.
-     * @return int; the number of points (or x-y pairs) that this B&eacute;zier curve is based on
+     * @return the number of points (or x-y pairs) that this B&eacute;zier curve is based on
      */
     public int size()
     {
@@ -131,8 +131,8 @@ public class Bezier3d implements Curve3d
 
     /**
      * Retrieve the x-coordinate of the i'th point of this B&eacute;zier curve.
-     * @param i int; the index
-     * @return double; the x-coordinate of the i'th point of this B&eacute;zier curve
+     * @param i the index
+     * @return the x-coordinate of the i'th point of this B&eacute;zier curve
      * @throws IndexOutOfBoundsException when <code>i &lt; 0</code>, or <code>i &ge; size()</code>
      */
     public double getX(final int i)
@@ -142,8 +142,8 @@ public class Bezier3d implements Curve3d
 
     /**
      * Retrieve the y-coordinate of the i'th point of this B&eacute;zier curve.
-     * @param i int; the index
-     * @return double; the y-coordinate of the i'th point of this B&eacute;zier curve
+     * @param i the index
+     * @return the y-coordinate of the i'th point of this B&eacute;zier curve
      * @throws IndexOutOfBoundsException when <code>i &lt; 0</code>, or <code>i &ge; size()</code>
      */
     public double getY(final int i)
@@ -153,9 +153,9 @@ public class Bezier3d implements Curve3d
 
     /**
      * Retrieve the z-coordinate of the i'th point of this B&eacute;zier curve.
-     * @param i int; the index
+     * @param i the index
      * @throws IndexOutOfBoundsException when <code>i &lt; 0</code>, or <code>i &ge; size()</code>
-     * @return double; the z-coordinate of the i'th point of this B&eacute;zier curve
+     * @return the z-coordinate of the i'th point of this B&eacute;zier curve
      */
     public double getZ(final int i)
     {

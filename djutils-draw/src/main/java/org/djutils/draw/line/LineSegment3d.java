@@ -53,12 +53,12 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
 
     /**
      * Construct a new LineSegment3d from six coordinates.
-     * @param startX double; the x-coordinate of the start point
-     * @param startY double; the y-coordinate of the start point
-     * @param startZ double; the z-coordinate of the start point
-     * @param endX double; the x-coordinate of the end point
-     * @param endY double; the y-coordinate of the end point
-     * @param endZ double; the z-coordinate of the end point
+     * @param startX the x-coordinate of the start point
+     * @param startY the y-coordinate of the start point
+     * @param startZ the z-coordinate of the start point
+     * @param endX the x-coordinate of the end point
+     * @param endY the y-coordinate of the end point
+     * @param endZ the z-coordinate of the end point
      * @throws IllegalArgumentException when <code>(startX,startY,startZ)</code> is equal to <code>(endX,endY,endZ)</code>
      */
     public LineSegment3d(final double startX, final double startY, final double startZ, final double endX, final double endY,
@@ -76,10 +76,10 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
 
     /**
      * Construct a new LineSegment3d from a Point3d and three coordinates.
-     * @param start Point3d; the start point
-     * @param endX double; the x-coordinate of the end point
-     * @param endY double; the y-coordinate of the end point
-     * @param endZ double; the z-coordinate of the end point
+     * @param start the start point
+     * @param endX the x-coordinate of the end point
+     * @param endY the y-coordinate of the end point
+     * @param endZ the z-coordinate of the end point
      * @throws NullPointerException when <code>start</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>start</code> has the exact coordinates <code>(endX,endY,endZ)</code>
      */
@@ -90,10 +90,10 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
 
     /**
      * Construct a new LineSegment3d from three coordinates and a Point3d.
-     * @param startX double; the x-coordinate of the start point
-     * @param startY double; the y-coordinate of the start point
-     * @param startZ double; the z-coordinate of the start point
-     * @param end Point3d; the end point
+     * @param startX the x-coordinate of the start point
+     * @param startY the y-coordinate of the start point
+     * @param startZ the z-coordinate of the start point
+     * @param end the end point
      * @throws NullPointerException when <code>end</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>end</code> has the exact coordinates <code>(startX,startY,startZ</code>
      */
@@ -104,8 +104,8 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
 
     /**
      * Construct a new LineSegment3d from two Point3d objects.
-     * @param start Point3d; the start point
-     * @param end Point3d; the end point
+     * @param start the start point
+     * @param end the end point
      * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>start</code> has the same coordinates as <code>end</code>
      */

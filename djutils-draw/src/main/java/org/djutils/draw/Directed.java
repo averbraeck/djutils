@@ -16,16 +16,16 @@ public interface Directed<D extends Directed<D>>
 {
     /**
      * Return a new D with negated coordinate values. Adds 180 degrees (pi radians) to the rotation(s) and normalizes them.
-     * @return D; a new D with negated coordinate values and a rotation in the opposite direction
+     * @return a new D with negated coordinate values and a rotation in the opposite direction
      */
     D neg();
 
     /**
      * Compare this Directed with another Directed with specified tolerances in the coordinates and the angles.
-     * @param other D; the Directed to compare to
-     * @param epsilonCoordinate double; the upper bound of difference for one of the coordinates; use Double.POSITIVE_INFINITY
+     * @param other the Directed to compare to
+     * @param epsilonCoordinate the upper bound of difference for one of the coordinates; use Double.POSITIVE_INFINITY
      *            if you do not want to check the coordinates
-     * @param epsilonDirection double; the upper bound of difference for the direction(s); use Double.POSITIVE_INFINITY if you
+     * @param epsilonDirection the upper bound of difference for the direction(s); use Double.POSITIVE_INFINITY if you
      *            do not want to check the angles
      * @return boolean;<code>true</code> if <code>x</code>, <code>y</code>, and <code>z</code> are less than
      *         <code>epsilonCoordinate</code> apart, and <code>rotX</code>, <code>rotY</code> and <code>rotZ</code> are less

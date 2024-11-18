@@ -24,9 +24,9 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
 
     /**
      * Construct a new serializer for Djunits arrays or matrices.
-     * @param type byte; the field type (returned by the <code>fieldType</code> method)
-     * @param dataClassName String; returned by the dataClassName method
-     * @param numberOfDimensions int; should be 1 for array serializer and 2 for matrix serializer
+     * @param type the field type (returned by the <code>fieldType</code> method)
+     * @param dataClassName returned by the dataClassName method
+     * @param numberOfDimensions should be 1 for array serializer and 2 for matrix serializer
      */
     public ArrayOrMatrixWithUnitSerializer(final byte type, final String dataClassName, final int numberOfDimensions)
     {
@@ -56,10 +56,10 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
 
     /**
      * Code a unit, including MoneyUnits.
-     * @param unit U; the unit to code in the byte array
-     * @param message byte[]; the byte array
-     * @param pointer Pointer; the start pointer in the byte array
-     * @param endianUtil EndianUtil; encoder to use for multi-byte values
+     * @param unit the unit to code in the byte array
+     * @param message the byte array
+     * @param pointer the start pointer in the byte array
+     * @param endianUtil encoder to use for multi-byte values
      */
     protected void encodeUnit(final U unit, final byte[] message, final Pointer pointer, final EndianUtil endianUtil)
     {
@@ -71,9 +71,9 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
 
     /**
      * Retrieve and decode a DJUNITS unit.
-     * @param buffer byte[]; the encoded data
-     * @param pointer Pointer; position in the encoded data where the unit is to be decoded from
-     * @param endianUtil EndianUtil; decoder for multi-byte values
+     * @param buffer the encoded data
+     * @param pointer position in the encoded data where the unit is to be decoded from
+     * @param endianUtil decoder for multi-byte values
      * @return Unit
      */
     @SuppressWarnings("unchecked")

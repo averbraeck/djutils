@@ -269,12 +269,12 @@ public class Polygon2dTest
 
     /**
      * Verify the various properties of a Polygon2d.
-     * @param where String; description of the test
-     * @param x double[]; the expected x coordinates
-     * @param y double[]; the expected y coordinates
-     * @param polygon Polygon2d; the Polygon2d
-     * @param expectedSurface double; the expected surface of the polygon
-     * @param isConvex boolean; the expected value returned by the isConvex method
+     * @param where description of the test
+     * @param x the expected x coordinates
+     * @param y the expected y coordinates
+     * @param polygon the Polygon2d
+     * @param expectedSurface the expected surface of the polygon
+     * @param isConvex the expected value returned by the isConvex method
      */
     private void checkPolygon(final String where, final double[] x, final double[] y, final Polygon2d polygon,
             final double expectedSurface, final boolean isConvex)
@@ -350,11 +350,11 @@ public class Polygon2dTest
 
     /**
      * Construct a list of Point2d spread out regularly over a circle.
-     * @param centerX double; center X of the circle
-     * @param centerY double; center Y of the circle
-     * @param radius double; radius of the circle
-     * @param size int; number of points in the polygon
-     * @return List&lt;OTSPoin3D&gt;; the points that lie on a regular polygon
+     * @param centerX center X of the circle
+     * @param centerY center Y of the circle
+     * @param radius radius of the circle
+     * @param size number of points in the polygon
+     * @return the points that lie on a regular polygon
      */
     private List<Point2d> makePolygon(final double centerX, final double centerY, final double radius, final int size)
     {
@@ -457,9 +457,9 @@ public class Polygon2dTest
 
     /**
      * Test code used in the contains tests. Only works for the parallelogram that is used in those tests.
-     * @param x int; the X coordinate
-     * @param y int; the Y coordinate
-     * @return boolean; true if (x,y) is inside the parallelogram; false if (x,y) is not inside the parallelogram
+     * @param x the X coordinate
+     * @param y the Y coordinate
+     * @return true if (x,y) is inside the parallelogram; false if (x,y) is not inside the parallelogram
      */
     private boolean pointInParallelogram(final int x, final int y)
     {

@@ -139,11 +139,11 @@ public class Ray2dTest
 
     /**
      * Verify all fields of a Ray2d with a tolerance of 0.0001.
-     * @param description String; description of the test
-     * @param ray Ray2d; the Ray2d
-     * @param expectedX double; the expected x value
-     * @param expectedY double; the expected y value
-     * @param expectedDirZ double; the expected dirZ value
+     * @param description description of the test
+     * @param ray the Ray2d
+     * @param expectedX the expected x value
+     * @param expectedY the expected y value
+     * @param expectedDirZ the expected dirZ value
      */
     private void verifyRay(final String description, final Ray2d ray, final double expectedX, final double expectedY,
             final double expectedDirZ)
@@ -228,11 +228,11 @@ public class Ray2dTest
 
     /**
      * Verify a Bounds object.
-     * @param bounds Bounds2d; the Bounds object to verify
-     * @param expectedMinX double; the expected minimum x value
-     * @param expectedMinY double; the expected minimum y value
-     * @param expectedMaxX double; the expected maximum x value
-     * @param expectedMaxY double; the expected maximum y value
+     * @param bounds the Bounds object to verify
+     * @param expectedMinX the expected minimum x value
+     * @param expectedMinY the expected minimum y value
+     * @param expectedMaxX the expected maximum x value
+     * @param expectedMaxY the expected maximum y value
      */
     private void verifyBounds(final Bounds2d bounds, final double expectedMinX, final double expectedMinY,
             final double expectedMaxX, final double expectedMaxY)

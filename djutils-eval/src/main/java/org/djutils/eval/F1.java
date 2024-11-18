@@ -28,10 +28,10 @@ class F1 implements Function
 
     /**
      * Construct a new one-argument function.
-     * @param id String; name of the function as it must be written in expressions
-     * @param resultClass Class&lt;?&gt;; the type of the result of the function
-     * @param metaData MetaData; meta data of the function
-     * @param f1 OneArgumentFunction; one argument function
+     * @param id name of the function as it must be written in expressions
+     * @param resultClass the type of the result of the function
+     * @param metaData meta data of the function
+     * @param f1 one argument function
      */
     F1(final String id, final Class<?> resultClass, final MetaData metaData, final OneArgumentFunction f1)
     {
@@ -66,9 +66,9 @@ class F1 implements Function
     {
         /**
          * Prototype of the one-argument function
-         * @param functionData Function; meta data of the function
-         * @param argument Object; the argument of the function
-         * @return Object; the result type of the function
+         * @param functionData meta data of the function
+         * @param argument the argument of the function
+         * @return the result type of the function
          */
         Object execute(Function functionData, Object argument);
 

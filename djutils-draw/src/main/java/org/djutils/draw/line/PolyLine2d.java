@@ -54,10 +54,10 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a new PolyLine2d from an array of double x values and an array of double y values.
-     * @param copyNeeded boolean; if<code>true</code>; a deep copy of the points array is stored instead of the provided array
+     * @param copyNeeded if<code>true</code>; a deep copy of the points array is stored instead of the provided array
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
-     * @param x double[]; the x-coordinates of the points
-     * @param y double[]; the y-coordinates of the points
+     * @param x the x-coordinates of the points
+     * @param y the y-coordinates of the points
      * @throws NullPointerException when <code>iterator</code> is <code>null</code>
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points), or <code>x</code> and <code>y</code> differ in length
@@ -96,9 +96,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a degenerate PolyLine2d (consisting of only one point).
-     * @param x double; the x-coordinate
-     * @param y double; the y-coordinate
-     * @param heading double; the heading in radians
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @param heading the heading in radians
      * @throws ArithmeticException when <code>x</code>, <code>y</code>, or <code>heading</code> is <code>NaN</code>
      * @throws IllegalArgumentException when or heading is infinite
      */
@@ -118,8 +118,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a degenerate PolyLine2d (consisting of only one point).
-     * @param p Point2d; the point of the degenerate PolyLine2d
-     * @param heading double; the heading in radians
+     * @param p the point of the degenerate PolyLine2d
+     * @param heading the heading in radians
      * @throws NullPointerException when <code>p</code> is <code>null</code>
      * @throws ArithmeticException when <code>heading</code> is <code>NaN</code>
      * @throws IllegalArgumentException when <code>heading</code> is infinite
@@ -131,7 +131,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a degenerate PolyLine2d (consisting of only one point).
-     * @param directedPoint2d DirectedPoint2d; point and heading (DirZ) of the degenerate PolyLine2d
+     * @param directedPoint2d point and heading (DirZ) of the degenerate PolyLine2d
      * @throws NullPointerException when <code>p</code> is <code>null</code>
      * @throws ArithmeticException when <code>heading</code> is <code>NaN</code>
      * @throws IllegalArgumentException when <code>heading</code> is infinite
@@ -144,8 +144,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Construct a new PolyLine2d from an array of x-values and an array of y-values. This constructor makes a deep copy of the
      * parameters.
-     * @param x double[]; the x-coordinates of the points
-     * @param y double[]; the y-coordinates of the points
+     * @param x the x-coordinates of the points
+     * @param y the y-coordinates of the points
      * @throws NullPointerException when any of the arrays is <code>null</code>
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points, or the arrays do not have the same length)
@@ -159,8 +159,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * Construct a new PolyLine2d from an array of x-values and an array of y-values. This constructor makes a deep copy of the
      * parameters.
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
-     * @param x double[]; the x-coordinates of the points
-     * @param y double[]; the y-coordinates of the points
+     * @param x the x-coordinates of the points
+     * @param y the y-coordinates of the points
      * @throws NullPointerException when any of the arrays is <code>null</code>
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points, or the arrays do not have the same length)
@@ -172,7 +172,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a new PolyLine2d from an array of Point2d.
-     * @param points Point2d[]; the array of points to construct this PolyLine2d from.
+     * @param points the array of points to construct this PolyLine2d from.
      * @throws NullPointerException when the array is <code>null</code>
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
@@ -185,7 +185,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Construct a new PolyLine2d from an array of Point2d.
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
-     * @param points Point2d[]; the array of points to construct this PolyLine2d from.
+     * @param points the array of points to construct this PolyLine2d from.
      * @throws NullPointerException when the array is <code>null</code>
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
@@ -197,9 +197,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Make an array of double an fill it with the appropriate coordinate of points.
-     * @param points Point2d[]; array of points
-     * @param getter Function&lt;Point2d, Double&gt;; function that obtains the intended coordinate
-     * @return double[]; array of double filled with the requested coordinate values
+     * @param points array of points
+     * @param getter function that obtains the intended coordinate
+     * @return array of double filled with the requested coordinate values
      */
     protected static double[] makeArray(final Point2d[] points, final Function<Point2d, Double> getter)
     {
@@ -213,9 +213,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a new PolyLine2d from two or more Point2d arguments.
-     * @param point1 Point2d; starting point of the PolyLine2d
-     * @param point2 Point2d; second point of the PolyLine2d
-     * @param otherPoints Point2d...; additional points of the PolyLine2d (may be <code>null</code>, or have zero length)
+     * @param point1 starting point of the PolyLine2d
+     * @param point2 second point of the PolyLine2d
+     * @param otherPoints additional points of the PolyLine2d (may be <code>null</code>, or have zero length)
      * @throws NullPointerException when <code>point1</code>, or <code>point2</code> is <code>null</code>, or
      *             <code>otherPoints</code> contains a <code>null</code> value
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
@@ -229,9 +229,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Construct a new PolyLine2d from two or more Point2d arguments.
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
-     * @param point1 Point2d; starting point of the PolyLine2d
-     * @param point2 Point2d; second point of the PolyLine2d
-     * @param otherPoints Point2d...; additional points of the PolyLine2d (may be <code>null</code>, or have zero length)
+     * @param point1 starting point of the PolyLine2d
+     * @param point2 second point of the PolyLine2d
+     * @param otherPoints additional points of the PolyLine2d (may be <code>null</code>, or have zero length)
      * @throws NullPointerException when <code>point1</code>, or <code>point2</code> is <code>null</code>, or
      *             <code>otherPoints</code> contains a <code>null</code> value
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
@@ -244,11 +244,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct an array of Point2d from two points plus an array of Point2d.
-     * @param point1 Point2d; the first point (ends up at index 0 of the result)
-     * @param point2 Point2d; the second point (ends up at index 1 of the result)
-     * @param otherPoints Point2d...; may be <code>null</code>, may be empty. If non empty, the elements in
+     * @param point1 the first point (ends up at index 0 of the result)
+     * @param point2 the second point (ends up at index 1 of the result)
+     * @param otherPoints may be <code>null</code>, may be empty. If non empty, the elements in
      *            <code>otherPoints</code> end up at index 2 and up in the result
-     * @return Point2d[]; the combined array
+     * @return the combined array
      */
     private static Point2d[] spliceArray(final Point2d point1, final Point2d point2, final Point2d... otherPoints)
     {
@@ -267,7 +267,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a new PolyLine2d from an iterator that yields Point2d objects.
-     * @param iterator Iterator&lt;Point2d&gt;; iterator that will provide all points that constitute the new PolyLine2d
+     * @param iterator iterator that will provide all points that constitute the new PolyLine2d
      * @throws NullPointerException when <code>iterator</code> is <code>null</code>, or yields a <code>null</code> value
      * @throws IllegalArgumentException when the iterator provides too few points, or some adjacent identical points)
      */
@@ -279,7 +279,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Construct a new PolyLine2d from an iterator that yields Point2d objects.
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
-     * @param iterator Iterator&lt;Point2d&gt;; iterator that will provide all points that constitute the new PolyLine2d
+     * @param iterator iterator that will provide all points that constitute the new PolyLine2d
      * @throws NullPointerException when <code>iterator</code> is <code>null</code>, or yields a <code>null</code> value
      * @throws IllegalArgumentException when the iterator provides too few points, or some adjacent identical points)
      */
@@ -290,7 +290,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a new PolyLine2d from a List&lt;Point2d&gt;.
-     * @param pointList List&lt;Point2d&gt;; the list of points to construct the new PolyLine2d from.
+     * @param pointList the list of points to construct the new PolyLine2d from.
      * @throws NullPointerException when <code>pointList</code> is <code>null</code>, or contains a <code>null</code> value
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
@@ -303,7 +303,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Construct a new PolyLine2d from a List&lt;Point2d&gt;.
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
-     * @param pointList List&lt;Point2d&gt;; the list of points to construct the new PolyLine2d from.
+     * @param pointList the list of points to construct the new PolyLine2d from.
      * @throws NullPointerException when <code>pointList</code> is <code>null</code>, or contains a <code>null</code> value
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
@@ -315,7 +315,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a new PolyLine2d from a Path2D.
-     * @param path Path2D; the Path2D to construct this PolyLine2d from.
+     * @param path the Path2D to construct this PolyLine2d from.
      * @throws NullPointerException when <code>path</code> is <code>null</code>
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
@@ -328,7 +328,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Construct a new PolyLine2d from a Path2D.
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
-     * @param path Path2D; the Path2D to construct this PolyLine2d from.
+     * @param path the Path2D to construct this PolyLine2d from.
      * @throws NullPointerException when <code>path</code> is <code>null</code>
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
@@ -340,8 +340,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Convert a path2D to a Point2d[] array to construct the line.
-     * @param path Path2D; the path to convert
-     * @return Point2d[]; an array of points based on MOVETO and LINETO elements of the Path2D
+     * @param path the path to convert
+     * @return an array of points based on MOVETO and LINETO elements of the Path2D
      * @throws NullPointerException when <code>path</code> is <code>null</code>
      * @throws IllegalArgumentException when the <code>pathIterator</code> of the <code>path</code> returns an unsupported
      *             command
@@ -375,8 +375,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Build a list from the Point2d objects that an iterator provides.
-     * @param iterator Iterator&lt;Point2d&gt;; the iterator that will provide the points
-     * @return List&lt;Point2d&gt;; a list of the points provided by the <code>iterator</code>
+     * @param iterator the iterator that will provide the points
+     * @return a list of the points provided by the <code>iterator</code>
      */
     protected static List<Point2d> iteratorToList(final Iterator<Point2d> iterator)
     {
@@ -387,7 +387,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a new PolyLine2d from an existing one. This constructor is primarily intended for use in extending classes.
-     * @param polyLine PolyLine2d; the existing <code>PolyLine2d</code>
+     * @param polyLine the existing <code>PolyLine2d</code>
      */
     public PolyLine2d(final PolyLine2d polyLine)
     {
@@ -523,7 +523,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Concatenate several PolyLine2d instances.
-     * @param lines PolyLine2d...; One or more PolyLine2d objects. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
+     * @param lines One or more PolyLine2d objects. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
      *            match the first of the second, etc.
      * @return PolyLine2d
      * @throws NullPointerException when <code>lines</code> is <code>null</code>
@@ -536,10 +536,10 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Concatenate two PolyLine2d instances. This method is separate for efficiency reasons.
-     * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
-     * @param line1 PolyLine2d; first line
-     * @param line2 PolyLine2d; second line
-     * @return PolyLine2d; the concatenation of the two lines
+     * @param tolerance the tolerance between the end point of a line and the first point of the next line
+     * @param line1 first line
+     * @param line2 second line
+     * @return the concatenation of the two lines
      * @throws NullPointerException when <code>line1</code>, or <code>line2</code> is <code>null</code>
      * @throws IllegalArgumentException when there is a gap larger than <code>tolerance</code> between the two lines
      */
@@ -566,10 +566,10 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Concatenate several PolyLine2d instances.
-     * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
-     * @param lines PolyLine2d...; one or more PolyLine2d objects. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
+     * @param tolerance the tolerance between the end point of a line and the first point of the next line
+     * @param lines one or more PolyLine2d objects. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
      *            match the first of the second within the provided tolerance value, etc.
-     * @return PolyLine2d; the concatenation of the lines
+     * @return the concatenation of the lines
      * @throws NullPointerException when <code>lines</code> is <code>null</code>, or contains a <code>null</code> value
      * @throws IllegalArgumentException if zero lines are given, or when there is a gap larger than <code>tolerance</code>
      *             between consecutive lines
@@ -684,12 +684,12 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Perform the orthogonal projection operation.
-     * @param point Point2d; the point to project
-     * @param limitHandling Boolean; if <code>Null</code>; results outside the interval 0.0 .. 1.0 are replaced by
+     * @param point the point to project
+     * @param limitHandling if <code>Null</code>; results outside the interval 0.0 .. 1.0 are replaced by
      *            <code>NaN</code>, if <code>false</code>, results outside that interval are returned as is; if
      *            <code>true</code> results outside the interval are truncated to the interval and therefore not truly
      *            orthogonal
-     * @return double; the fractional position on this <code>PolyLine2d</code> that is closest to point, or <code>NaN</code>
+     * @return the fractional position on this <code>PolyLine2d</code> that is closest to point, or <code>NaN</code>
      */
     private double projectOrthogonalFractional(final Point2d point, final Boolean limitHandling)
     {
@@ -767,12 +767,12 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Perform the project orthogonal operation.
-     * @param point Point2d; the point to project
-     * @param limitHandling Boolean; if Null; results outside this <code>PolyLine2d</code> are replaced by Null, if
+     * @param point the point to project
+     * @param limitHandling if Null; results outside this <code>PolyLine2d</code> are replaced by Null, if
      *            <code>false</code>, results outside that interval are returned as is; if<code>true</code> results outside this
      *            <code>PolyLine2d</code> are truncated to the first or last point of this <code>PolyLine2d</code> and therefore
      *            not truly orthogonal
-     * @return Point2d; the orthogonal projection of point on this <code>PolyLine2d</code>
+     * @return the orthogonal projection of point on this <code>PolyLine2d</code>
      */
     private Point2d projectOrthogonal(final Point2d point, final Boolean limitHandling)
     {
@@ -1264,8 +1264,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * <code>PolyLine</code>. This method attempts to give continuous results for continuous changes of the <code>Ray</code>
      * that must be projected. There are cases where this is simply impossible, or the optimal result is ambiguous. In these
      * cases this method will return something that is hopefully good enough.
-     * @param ray Ray2d; the Ray
-     * @return double; length along this <code>PolyLine</code> (some value between 0 and the length of this
+     * @param ray the Ray
+     * @return length along this <code>PolyLine</code> (some value between 0 and the length of this
      *         <code>PolyLine</code>) where <code>ray</code> projects, or <code>NaN</code> if there is no solution
      * @throws NullPointerException when <code>ray</code> is <code>null</code>
      */
@@ -1299,7 +1299,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Construct a Path2D from this PolyLine2d. The result is NOT cached (in the current implementation).
-     * @return Path2D; newly constructed <code>Path2D</code> consisting solely of straight segments.
+     * @return newly constructed <code>Path2D</code> consisting solely of straight segments.
      */
     public Path2D toPath2D()
     {

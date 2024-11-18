@@ -20,20 +20,20 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
 {
     /**
      * Return the x-coordinate.
-     * @return double; the x-coordinate
+     * @return the x-coordinate
      */
     double getX();
 
     /**
      * Return the y-coordinate.
-     * @return double; the y-coordinate
+     * @return the y-coordinate
      */
     double getY();
 
     /**
      * Return a new Point with the coordinates of this point scaled by the provided factor.
-     * @param factor double; the scale factor
-     * @return Point; a new point with the coordinates of this point scaled by the provided factor
+     * @param factor the scale factor
+     * @return a new point with the coordinates of this point scaled by the provided factor
      * @throws ArithmeticException when <code>factor</code> is <code>NaN</code>
      */
     P scale(double factor);
@@ -41,35 +41,35 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
     /**
      * Return a new Point with negated coordinate values. If this is a <code>DirectedPoint</code>, <code>dirY</code> (in case
      * this is a <code>DirectedPoint3d</code> and <code>dirZ</code> are negated.
-     * @return Point; a new point with negated coordinate values
+     * @return a new point with negated coordinate values
      */
     P neg();
 
     /**
      * Return a new Point with absolute coordinate values. If this is a <code>DirectedPoint</code>, <code>dirY</code> (in case
      * this is a <code>DirectedPoint3d</code> and <code>dirZ</code> are copied unchanged.
-     * @return Point; a new point with absolute coordinate values
+     * @return a new point with absolute coordinate values
      */
     P abs();
 
     /**
      * Return a new Point with a distance of 1 to the origin.
-     * @return Point; the normalized point
+     * @return the normalized point
      * @throws DrawRuntimeException when point is the origin, and no length can be established for scaling
      */
     P normalize() throws DrawRuntimeException;
 
     /**
      * Return the distance to another point.
-     * @param otherPoint P; P the other point
-     * @return double; the distance (2d or 3d as applicable) to the other point
+     * @param otherPoint P the other point
+     * @return the distance (2d or 3d as applicable) to the other point
      */
     double distance(P otherPoint);
 
     /**
      * Return the squared distance between this point and the provided point.
-     * @param otherPoint P; the other point
-     * @return double; the squared distance between this point and the other point
+     * @param otherPoint the other point
+     * @return the squared distance between this point and the other point
      * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      */
     double distanceSquared(P otherPoint);
@@ -77,11 +77,11 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
     /**
      * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
      * that case the interpolation turns into an extrapolation.
-     * @param otherPoint P; the other point
-     * @param fraction double; the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
+     * @param otherPoint the other point
+     * @param fraction the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
      *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
      *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
-     * @return P; the point that is <code>fraction</code> away on the line between this point and the other point
+     * @return the point that is <code>fraction</code> away on the line between this point and the other point
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      * @throws ArithmeticException when <code>fraction</code> is <code>NaN</code>
      */
@@ -92,9 +92,9 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
      * the line segment is returned. Otherwise the returned point lies between the end points of the line segment. <br>
      * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
      * Bourke</a>.
-     * @param segmentPoint1 P; start of line segment
-     * @param segmentPoint2 P; end of line segment
-     * @return P; either <code>segmentPoint1</code>, or <code>segmentPoint2</code> or a new Point2d that lies somewhere in
+     * @param segmentPoint1 start of line segment
+     * @param segmentPoint2 end of line segment
+     * @return either <code>segmentPoint1</code>, or <code>segmentPoint2</code> or a new Point2d that lies somewhere in
      *         between those two.
      * @throws NullPointerException when <code>segmentPoint2</code>, or <code>segmentPoint2</code> is <code>null</code>
      */
@@ -104,9 +104,9 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
      * Project a point on a line. <br>
      * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code provided by Paul
      * Bourke</a>.
-     * @param linePoint1 P; point on the line
-     * @param linePoint2 P; another point on the line
-     * @return Point2d; a point on the line that goes through <code>linePoint1</code> and <code>linePoint2</code>
+     * @param linePoint1 point on the line
+     * @param linePoint2 another point on the line
+     * @return a point on the line that goes through <code>linePoint1</code> and <code>linePoint2</code>
      * @throws NullPointerException when <code>linePoint1</code> is <code>null</code>, or <code>linePoint2</code> is
      *             <code>null</code>
      * @throws IllegalArgumentException when <code>linePoint1</code> is at the same location as <code>linePoint2</code>
@@ -115,8 +115,8 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
 
     /**
      * A comparison with another point that returns<code>true</code> of each of the coordinates is less than epsilon apart.
-     * @param otherPoint P; the point to compare with
-     * @param epsilon double; the upper bound of difference for one of the coordinates
+     * @param otherPoint the point to compare with
+     * @param epsilon the upper bound of difference for one of the coordinates
      * @return boolean;<code>true</code> if both x, y and z (if a Point3d) are less than epsilon apart, otherwise
      *         <code>false</code>
      * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>

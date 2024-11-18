@@ -17,7 +17,7 @@ public interface Drawable2d extends Drawable<Point2d>
 {
     /**
      * Retrieve the bounding rectangle of the object.
-     * @return Bounds2d; the bounding box of the object
+     * @return the bounding box of the object
      */
     Bounds2d getBounds();
 

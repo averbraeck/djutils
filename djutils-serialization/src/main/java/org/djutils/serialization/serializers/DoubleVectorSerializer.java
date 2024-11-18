@@ -99,9 +99,9 @@ public class DoubleVectorSerializer<U extends Unit<U>, S extends DoubleScalar<U,
      * Instantiate the DoubleVector based on its unit. Loose check for types on the compiler. This allows the unit to be
      * specified as a Unit&lt;?&gt; type.<br>
      * <b>Note</b> that it is possible to make mistakes with anonymous units.
-     * @param data DoubleVectorData; the values
-     * @param unit Unit&lt;?&gt;; the unit in which the value is expressed
-     * @return V; an instantiated DoubleVector with the provided displayUunit
+     * @param data the values
+     * @param unit the unit in which the value is expressed
+     * @return an instantiated DoubleVector with the provided displayUunit
      * @param <U> the unit type
      * @param <S> the scalar type
      * @param <V> the vector type

@@ -34,9 +34,9 @@ public abstract class Table implements Iterable<Row>, Identifiable
 
     /**
      * Constructor.
-     * @param id String; id
-     * @param description String; description
-     * @param columns Collection&lt;Column&lt;?&gt;&gt;; columns
+     * @param id id
+     * @param description description
+     * @param columns columns
      * @throws NullPointerException when id, description or columns is null
      * @throws IllegalArgumentException when id is empty, duplicate column ids, or there are zero columns
      */
@@ -81,8 +81,8 @@ public abstract class Table implements Iterable<Row>, Identifiable
 
     /**
      * Return a specific column.
-     * @param columnNumber int; number of the column.
-     * @return Column&lt;?&gt;; column.
+     * @param columnNumber number of the column.
+     * @return column.
      * @throws IllegalArgumentException if the column number is &lt; 0 or &gt; {@code getNumberOfColumns() - 1}. 
      */
     public Column<?> getColumn(final int columnNumber)
@@ -101,8 +101,8 @@ public abstract class Table implements Iterable<Row>, Identifiable
 
     /**
      * Returns the number of the column in this table.
-     * @param column Column&lt;?&gt;; column.
-     * @return int; column number.
+     * @param column column.
+     * @return column number.
      * @throws IllegalArgumentException if the column is not in the table.
      */
     public int getColumnNumber(final Column<?> column)
@@ -114,8 +114,8 @@ public abstract class Table implements Iterable<Row>, Identifiable
 
     /**
      * Returns the number of the column with given id.
-     * @param columnId String; column id.
-     * @return int; column number.
+     * @param columnId column id.
+     * @return column number.
      * @throws IllegalArgumentException if the column is not in the table.
      */
     public int getColumnNumber(final String columnId)
@@ -132,7 +132,7 @@ public abstract class Table implements Iterable<Row>, Identifiable
 
     /**
      * Return the column ids as a String[].
-     * @return String[]; the column ids
+     * @return the column ids
      */
     public String[] getColumnIds()
     {

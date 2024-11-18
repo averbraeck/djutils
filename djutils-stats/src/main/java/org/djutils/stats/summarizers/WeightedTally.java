@@ -50,7 +50,7 @@ public class WeightedTally implements TallyStatistic
 
     /**
      * Construct a new WeightedTally with a description.
-     * @param description String; the description of this WeightedTally
+     * @param description the description of this WeightedTally
      */
     public WeightedTally(final String description)
     {
@@ -76,9 +76,9 @@ public class WeightedTally implements TallyStatistic
 
     /**
      * Process one observed weighted value.
-     * @param weight double; the weight of the value to process
-     * @param value double; the value to process
-     * @return double; the value
+     * @param weight the weight of the value to process
+     * @param value the value to process
+     * @return the value
      */
     public double register(final double weight, final double value)
     {
@@ -143,7 +143,7 @@ public class WeightedTally implements TallyStatistic
 
     /**
      * Retrieve the current weighted sample mean of all observations since the initialization.
-     * @return double; the current weighted sample mean
+     * @return the current weighted sample mean
      */
     public double getWeightedSampleMean()
     {
@@ -159,7 +159,7 @@ public class WeightedTally implements TallyStatistic
 
     /**
      * Retrieve the current weighted mean of all observations since the initialization.
-     * @return double; the current weighted mean
+     * @return the current weighted mean
      */
     public double getWeightedPopulationMean()
     {
@@ -168,7 +168,7 @@ public class WeightedTally implements TallyStatistic
 
     /**
      * Retrieve the current weighted sample standard deviation of the observations.
-     * @return double; the current weighted sample standard deviation
+     * @return the current weighted sample standard deviation
      */
     public double getWeightedSampleStDev()
     {
@@ -184,7 +184,7 @@ public class WeightedTally implements TallyStatistic
 
     /**
      * Retrieve the current weighted standard deviation of the observations.
-     * @return double; the current weighted standard deviation
+     * @return the current weighted standard deviation
      */
     public double getWeightedPopulationStDev()
     {
@@ -196,7 +196,7 @@ public class WeightedTally implements TallyStatistic
 
     /**
      * Retrieve the current weighted sample variance of the observations.
-     * @return double; the current weighted sample variance of the observations
+     * @return the current weighted sample variance of the observations
      */
     public double getWeightedSampleVariance()
     {
@@ -212,7 +212,7 @@ public class WeightedTally implements TallyStatistic
 
     /**
      * Retrieve the current weighted variance of the observations.
-     * @return double; the current weighted variance of the observations
+     * @return the current weighted variance of the observations
      */
     public double getWeightedPopulationVariance()
     {
@@ -224,7 +224,7 @@ public class WeightedTally implements TallyStatistic
 
     /**
      * Retrieve the current weighted sum of the values of the observations.
-     * @return double; the current weighted sum of the values of the observations
+     * @return the current weighted sum of the values of the observations
      */
     public double getWeightedSum()
     {
@@ -233,7 +233,7 @@ public class WeightedTally implements TallyStatistic
 
     /**
      * Return a string representing a header for a textual table with a monospaced font that can contain multiple statistics.
-     * @return String; header for the textual table.
+     * @return header for the textual table.
      */
     public static String reportHeader()
     {
@@ -251,7 +251,7 @@ public class WeightedTally implements TallyStatistic
 
     /**
      * Return a string representing a footer for a textual table with a monospaced font that can contain multiple statistics.
-     * @return String; footer for the textual table
+     * @return footer for the textual table
      */
     public static String reportFooter()
     {

@@ -32,8 +32,8 @@ public class FloatScalarSerializer<U extends Unit<U>, S extends FloatScalar<U, S
 
     /**
      * Serialize an Scalar value to text in such a way that it can be deserialized with the corresponding deserializer.
-     * @param value Object; the scalar to serialize
-     * @return String; a string representation of the value that can later be deserialized
+     * @param value the scalar to serialize
+     * @return a string representation of the value that can later be deserialized
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -56,8 +56,8 @@ public class FloatScalarSerializer<U extends Unit<U>, S extends FloatScalar<U, S
 
     /**
      * Deserialize a String to the correct Scalar value. The method caches the valueOf(String) method for repeated use.
-     * @param text String; the text to deserialize
-     * @return S; the reconstructed scalar
+     * @param text the text to deserialize
+     * @return the reconstructed scalar
      */
     @SuppressWarnings("unchecked")
     @Override

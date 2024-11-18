@@ -28,10 +28,10 @@ class F0 implements Function
 
     /**
      * Construct a new zero argument function.
-     * @param id String; name of the function as it must be written in expressions
-     * @param resultClass Class&lt;?&gt;; the type of the result of the function
-     * @param metaData MetaData; meta data of the function
-     * @param f0 ZeroArgumentFunction; zero argument function
+     * @param id name of the function as it must be written in expressions
+     * @param resultClass the type of the result of the function
+     * @param metaData meta data of the function
+     * @param f0 zero argument function
      */
     F0(final String id, final Class<?> resultClass, final MetaData metaData, final ZeroArgumentFunction f0)
     {
@@ -43,9 +43,9 @@ class F0 implements Function
 
     /**
      * Construct a new zero-argument function with constant result.
-     * @param id String; name of the function as it must be written in expressions
-     * @param constantResult Object; the result of the zero argument function
-     * @param metaData MetaData; meta data of the function
+     * @param id name of the function as it must be written in expressions
+     * @param constantResult the result of the zero argument function
+     * @param metaData meta data of the function
      */
     F0(final String id, final Object constantResult, final MetaData metaData)
     {
@@ -77,8 +77,8 @@ class F0 implements Function
     {
         /**
          * Prototype of the zero-argument function
-         * @param functionData Function; meta data of the function
-         * @return Object; the result type of the function
+         * @param functionData meta data of the function
+         * @return the result type of the function
          */
         Object execute(Function functionData);
     }

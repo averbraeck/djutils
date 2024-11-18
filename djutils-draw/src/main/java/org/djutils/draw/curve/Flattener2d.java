@@ -28,8 +28,8 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
 {
     /**
      * Flatten a Curve2d into a PolyLine2d.
-     * @param curve Curve2d; the curve
-     * @return PolyLine2d; flattened line
+     * @param curve the curve
+     * @return flattened line
      * @throws NullPointerException when <code>curve</code> is <code>null</code>
      */
     PolyLine2d flatten(Curve2d curve);
@@ -58,7 +58,7 @@ public interface Flattener2d extends Flattener<Flattener2d, Curve2d, PolyLine2d,
 
         /**
          * Construct a flattener that approximates the <code>Curve2d</code> with a specified number of segments.
-         * @param numSegments int; number of segments to use in the construction of the <code>PolyLine2d</code>
+         * @param numSegments number of segments to use in the construction of the <code>PolyLine2d</code>
          * @throws IllegalArgumentException when <code>numSegments &lt; 1</code>
          */
         public NumSegments(final int numSegments)

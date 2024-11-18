@@ -37,7 +37,7 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
 
     /**
      * constructs a new EventBasedTimestampWeightedTally with a description.
-     * @param description String; the description of this EventBasedTimestampWeightedTally
+     * @param description the description of this EventBasedTimestampWeightedTally
      */
     public EventBasedTimestampWeightedTally(final String description)
     {
@@ -46,8 +46,8 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
 
     /**
      * Construct a new EventBasedTimestampWeightedTally with a description.
-     * @param description String; the description of this WeightedTally
-     * @param eventProducer EventProducer; the EventProducer to embed and use in this statistic
+     * @param description the description of this WeightedTally
+     * @param eventProducer the EventProducer to embed and use in this statistic
      */
     public EventBasedTimestampWeightedTally(final String description, final EventProducer eventProducer)
     {
@@ -119,9 +119,9 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
     /**
      * Process one observed Calender-based value. The time used will be the Calendar's time in milliseconds. Silently ignore
      * when a value is registered, but tally is not active, i.e. when endObservations() has been called.
-     * @param timestamp Calendar; the Calendar object representing the timestamp
-     * @param value double; the value to process
-     * @return double; the value
+     * @param timestamp the Calendar object representing the timestamp
+     * @param value the value to process
+     * @return the value
      * @throws NullPointerException when timestamp is null
      * @throws IllegalArgumentException when value is NaN
      * @throws IllegalArgumentException when given timestamp is before last timestamp
@@ -149,9 +149,9 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
     /**
      * Process one observed Number-based value. Silently ignore when a value is registered, but tally is not active, i.e. when
      * endObservations() has been called.
-     * @param timestamp Number; the object representing the timestamp
-     * @param value double; the value to process
-     * @return double; the value
+     * @param timestamp the object representing the timestamp
+     * @param value the value to process
+     * @return the value
      * @throws NullPointerException when timestamp is null
      * @throws IllegalArgumentException when value is NaN or timestamp is NaN
      * @throws IllegalArgumentException when given timestamp is before last timestamp
@@ -180,9 +180,9 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
      * Explicit;y override the double value method signature of WeightedTally to call the right method.<br>
      * Process one observed double value. Silently ignore when a value is registered, but tally is not active, i.e. when
      * endObservations() has been called.
-     * @param timestamp Number; the object representing the timestamp
-     * @param value double; the value to process
-     * @return double; the value
+     * @param timestamp the object representing the timestamp
+     * @param value the value to process
+     * @return the value
      * @throws NullPointerException when timestamp is null
      * @throws IllegalArgumentException when value is NaN or timestamp is NaN
      * @throws IllegalArgumentException when given timestamp is before last timestamp
@@ -196,7 +196,7 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
     /**
      * Method that can be overridden to fire own events or additional events when registering an observation.
      * @param <T> a type for the timestamp that is Serializable and Comparable
-     * @param timestamp T; the timestamp to use in the TimedEvents
+     * @param timestamp the timestamp to use in the TimedEvents
      * @throws RemoteException on network error
      */
     protected <T extends Serializable & Comparable<T>> void fireEvents(final Serializable timestamp) throws RemoteException

@@ -208,9 +208,9 @@ public class ClothoidTest
      * @param start theoretical start point.
      * @param clothoid created clothoid.
      * @param line flattened line.
-     * @param startCurvature Double; start curvature, may be {@code null} if no theoretical value available.
-     * @param endCurvature Double; end curvature, may be {@code null} if no theoretical value available.
-     * @param a Double; A-value, may be {@code null} if no theoretical value available.
+     * @param startCurvature start curvature, may be {@code null} if no theoretical value available.
+     * @param endCurvature end curvature, may be {@code null} if no theoretical value available.
+     * @param a A-value, may be {@code null} if no theoretical value available.
      */
     private void verifyLine(final DirectedPoint2d start, final Clothoid2d clothoid, final PolyLine2d line,
             final Double startCurvature, final Double endCurvature, final Double a)

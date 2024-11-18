@@ -36,7 +36,7 @@ public class TimestampWeightedTally extends WeightedTally
 
     /**
      * constructs a new TimestampWeightedTally with a description.
-     * @param description String; the description of this TimestampWeightedTally
+     * @param description the description of this TimestampWeightedTally
      */
     public TimestampWeightedTally(final String description)
     {
@@ -58,7 +58,7 @@ public class TimestampWeightedTally extends WeightedTally
 
     /**
      * Return whether the statistic is active (accepting observations) or not.
-     * @return boolean; whether the statistic is active (accepting observations) or not
+     * @return whether the statistic is active (accepting observations) or not
      */
     public boolean isActive()
     {
@@ -69,7 +69,7 @@ public class TimestampWeightedTally extends WeightedTally
      * End the observations and closes the last interval of observations. After ending, no more observations will be accepted.
      * Calling this method will create an extra observation, and corresponding events for the EventBased implementations of this
      * interface will be called.
-     * @param timestamp Number; the Number object representing the final timestamp
+     * @param timestamp the Number object representing the final timestamp
      */
     public void endObservations(final Number timestamp)
     {
@@ -81,7 +81,7 @@ public class TimestampWeightedTally extends WeightedTally
      * End the observations and closes the last interval of observations. After ending, no more observations will be accepted.
      * Calling this method will create an extra observation, and corresponding events for the EventBased implementations of this
      * interface will be called.
-     * @param timestamp Calendar; the Calendar object representing the final timestamp
+     * @param timestamp the Calendar object representing the final timestamp
      */
     public void endObservations(final Calendar timestamp)
     {
@@ -91,7 +91,7 @@ public class TimestampWeightedTally extends WeightedTally
 
     /**
      * Return the last observed value.
-     * @return double; the last observed value
+     * @return the last observed value
      */
     public double getLastValue()
     {
@@ -101,9 +101,9 @@ public class TimestampWeightedTally extends WeightedTally
     /**
      * Process one observed Calender-based value. The time used will be the Calendar's time in milliseconds. Silently ignore
      * when a value is registered, but tally is not active, i.e. when endObservations() has been called.
-     * @param timestamp Calendar; the Calendar object representing the timestamp
-     * @param value double; the value to process
-     * @return double; the value
+     * @param timestamp the Calendar object representing the timestamp
+     * @param value the value to process
+     * @return the value
      * @throws NullPointerException when timestamp is null
      * @throws IllegalArgumentException when value is NaN
      * @throws IllegalArgumentException when given timestamp is before last timestamp
@@ -117,9 +117,9 @@ public class TimestampWeightedTally extends WeightedTally
     /**
      * Process one observed Number-based value. Silently ignore when a value is registered, but tally is not active, i.e. when
      * endObservations() has been called.
-     * @param timestamp Number; the object representing the timestamp
-     * @param value double; the value to process
-     * @return double; the value
+     * @param timestamp the object representing the timestamp
+     * @param value the value to process
+     * @return the value
      * @throws NullPointerException when timestamp is null
      * @throws IllegalArgumentException when value is NaN or timestamp is NaN
      * @throws IllegalArgumentException when given timestamp is before last timestamp
@@ -133,9 +133,9 @@ public class TimestampWeightedTally extends WeightedTally
      * Explicit;y override the double value method signature of WeightedTally to call the right method.<br>
      * Process one observed double value. Silently ignore when a value is registered, but tally is not active, i.e. when
      * endObservations() has been called.
-     * @param timestamp Number; the object representing the timestamp
-     * @param value double; the value to process
-     * @return double; the value
+     * @param timestamp the object representing the timestamp
+     * @param value the value to process
+     * @return the value
      * @throws NullPointerException when timestamp is null
      * @throws IllegalArgumentException when value is NaN or timestamp is NaN
      * @throws IllegalArgumentException when given timestamp is before last timestamp
@@ -149,9 +149,9 @@ public class TimestampWeightedTally extends WeightedTally
     /**
      * Process one observed Number-based value. Silently ignore when a value is registered, but tally is not active, i.e. when
      * endObservations() has been called.
-     * @param timestamp Number; the object representing the timestamp
-     * @param value double; the value to process
-     * @return double; the value
+     * @param timestamp the object representing the timestamp
+     * @param value the value to process
+     * @return the value
      * @throws NullPointerException when timestamp is null
      * @throws IllegalArgumentException when value is NaN or timestamp is NaN
      * @throws IllegalArgumentException when given timestamp is before last timestamp
@@ -189,7 +189,7 @@ public class TimestampWeightedTally extends WeightedTally
 
     /**
      * Return a string representing a header for a textual table with a monospaced font that can contain multiple statistics.
-     * @return String; header for the textual table.
+     * @return header for the textual table.
      */
     public static String reportHeader()
     {
@@ -209,7 +209,7 @@ public class TimestampWeightedTally extends WeightedTally
 
     /**
      * Return a string representing a footer for a textual table with a monospaced font that can contain multiple statistics.
-     * @return String; footer for the textual table
+     * @return footer for the textual table
      */
     public static String reportFooter()
     {

@@ -197,9 +197,9 @@ public class Eval
 
     /**
      * Set or replace the RetrieveValue object of this evaluator.
-     * @param retrieveValue RetrieveValue; the new RetrieveValue object (may be null to only delete the currently active
+     * @param retrieveValue the new RetrieveValue object (may be null to only delete the currently active
      *            RetrieveValue object).
-     * @return Eval; this (for easy method chaining)
+     * @return this (for easy method chaining)
      */
     public Eval setRetrieveValue(final RetrieveValue retrieveValue)
     {
@@ -210,8 +210,8 @@ public class Eval
     /**
      * Install a unit parser (or replace or remove a previously installed unit parser). A user supplied unit parser takes
      * precedence over the built-in unit parser (that can only handle SI strings; see SIDimensions.of).
-     * @param unitParser UnitParser; the new unit parser or null to remove a previously installed unit parser
-     * @return Eval; this (for easy method chainging)
+     * @param unitParser the new unit parser or null to remove a previously installed unit parser
+     * @return this (for easy method chainging)
      */
     public Eval setUnitParser(final UnitParser unitParser)
     {
@@ -223,8 +223,8 @@ public class Eval
 
     /**
      * Evaluate a mathematical expression
-     * @param expression String; the expression
-     * @return Object; The value of the evaluated expression
+     * @param expression the expression
+     * @return The value of the evaluated expression
      * @throws RuntimeException when the expression cannot be evaluated
      */
     public Object evaluate(final String expression) throws RuntimeException
@@ -234,8 +234,8 @@ public class Eval
 
     /**
      * Evaluate a mathematical expression, check that the result is a logical value and return that value as a Boolean
-     * @param expression String; the expression
-     * @return Boolean; the result of the expression
+     * @param expression the expression
+     * @return the result of the expression
      * @throws RuntimeException when the expression could not be evaluated, or the result is not a logical value
      */
     public Boolean evaluateAsBoolean(final String expression) throws RuntimeException
@@ -251,8 +251,8 @@ public class Eval
     /**
      * Evaluate a mathematical expression, check that the result is a floating point value and return that value as a double. If
      * the result is strongly typed (some DJUNITS quantity), the SI value is returned.
-     * @param expression String; the expression
-     * @return double; the result of the expression
+     * @param expression the expression
+     * @return the result of the expression
      * @throws RuntimeException when the expression could not be evaluated, or the result is not a logical value
      */
     public double evaluateAsDouble(final String expression) throws RuntimeException
@@ -267,7 +267,7 @@ public class Eval
 
     /**
      * Create and return a collection of all built in functions.
-     * @return Collection&lt;Function&gt;; all built in functions
+     * @return all built in functions
      */
     public Collection<Function> builtInFunctions()
     {
@@ -277,8 +277,8 @@ public class Eval
     /**
      * Install a map of user-defined functions. If a built-in function has the same name as a user-defined function; the
      * user-defined function takes precedence.
-     * @param userDefinedFunctionMap Map&lt;String, Function&gt;; map that maps the name of the function to a Function object
-     * @return Eval; this (for easy method chaining)
+     * @param userDefinedFunctionMap map that maps the name of the function to a Function object
+     * @return this (for easy method chaining)
      */
     public Eval setUserDefinedFunctions(final Map<String, Function> userDefinedFunctionMap)
     {
@@ -288,8 +288,8 @@ public class Eval
 
     /**
      * Evaluate one expression.
-     * @param expression String; the expression to evaluate
-     * @return Object; the result of the evaluation (DoubleScalar or Boolean)
+     * @param expression the expression to evaluate
+     * @return the result of the evaluation (DoubleScalar or Boolean)
      * @throws RuntimeException when the expression could not be evaluated, or the result is not a logical value
      */
     public Object evaluateExpression(final String expression) throws RuntimeException
@@ -341,7 +341,7 @@ public class Eval
 
     /**
      * Evaluate the left-hand-side of a binary operation.
-     * @param bindingStrength int; the binding strength of a pending binary operation (0 if no binary operation is pending)
+     * @param bindingStrength the binding strength of a pending binary operation (0 if no binary operation is pending)
      * @throws RuntimeException on error
      */
     private void evalLhs(final int bindingStrength) throws RuntimeException
@@ -411,7 +411,7 @@ public class Eval
     /**
      * Evaluate the right hand sid of a mathematical expression. Stop at a closing parenthesis, or a binary operator that does
      * not have a higher binding strength than the argument.
-     * @param bindingStrength int; if the next token is a binary operator with a lower or equal binding strength; return without
+     * @param bindingStrength if the next token is a binary operator with a lower or equal binding strength; return without
      *            consuming that token.
      * @throws RuntimeException when the expression is mathematically unsound
      */
@@ -673,9 +673,9 @@ public class Eval
     {
         /**
          * Compare two double values.
-         * @param argument1 double; the left argument of the comparator
-         * @param argument2 double; the right argument of the comparator
-         * @return Object; the result type of the function
+         * @param argument1 the left argument of the comparator
+         * @param argument2 the right argument of the comparator
+         * @return the result type of the function
          */
         Object execute(double argument1, double argument2);
 
@@ -683,7 +683,7 @@ public class Eval
 
     /**
      * Pop two operands from the stack and compare them using the provided comparator lambda expression
-     * @param comparator CompareValues; a function that compares two DoubleScalar values.
+     * @param comparator a function that compares two DoubleScalar values.
      */
     private void compareDoubleScalars(final CompareValues comparator)
     {
@@ -700,7 +700,7 @@ public class Eval
 
     /**
      * Throw an exception because the expression cannot be evaluated.
-     * @param description String; description of the problem
+     * @param description description of the problem
      * @throws RuntimeException always thrown
      */
     private void throwException(final String description) throws RuntimeException
@@ -710,7 +710,7 @@ public class Eval
 
     /**
      * Skip the "then" or the "else" part of a conditional expression.
-     * @param thenPart boolean; if true; skip the then part (i.e. skip until a ':'); if false; skip the else part (i.e. until
+     * @param thenPart if true; skip the then part (i.e. skip until a ':'); if false; skip the else part (i.e. until
      *            end of expression of a binary operator)
      */
     private void skip(final boolean thenPart)
@@ -828,9 +828,9 @@ public class Eval
 
     /**
      * Perform the power operation on the two arguments and return the result
-     * @param base Object; the base operand of the power operation
-     * @param exponent Object; the exponent of the power operation
-     * @return Object; the result of the power operation
+     * @param base the base operand of the power operation
+     * @param exponent the exponent of the power operation
+     * @return the result of the power operation
      */
     private Object performPower(final Object base, final Object exponent)
     {
@@ -849,9 +849,9 @@ public class Eval
 
     /**
      * Perform the atan2 function on the two arguments and return the result
-     * @param y Object; should be some kind of DoubleScalarRel
-     * @param x Object; should be some kind of DoubleScalarRel with the same SiDimensions as y
-     * @return Object; in fact a DoubleScalarRel with a quantity matching Dimensionless
+     * @param y should be some kind of DoubleScalarRel
+     * @param x should be some kind of DoubleScalarRel with the same SiDimensions as y
+     * @return in fact a DoubleScalarRel with a quantity matching Dimensionless
      */
     private Object performAtan2(final Object y, final Object x)
     {
@@ -1007,7 +1007,7 @@ public class Eval
     /**
      * Parse a number and convert it to a SIScalar. If it is followed by an SI unit string inside square brackets, parse it into
      * the correct type.
-     * @return DoubleScalar&lt;?,?&gt;; the value of the parsed number or value
+     * @return the value of the parsed number or value
      */
     private DoubleScalar<?, ?> handleNumber()
     {
@@ -1111,7 +1111,7 @@ public class Eval
     /**
      * Process a function call, a variable interpolation, or a mathematical, or physical constant. Precondition: this.position
      * points to the first letter of the name of the function, variable, or constant.
-     * @return Object; the value of the function, variable, or mathematical or physical constant
+     * @return the value of the function, variable, or mathematical or physical constant
      */
     private Object handleFunctionOrVariableOrNamedConstant()
     {
@@ -1235,7 +1235,7 @@ public class Eval
 
     /**
      * Push one object onto the evaluation stack.
-     * @param object Object; the object to push onto the evaluation stack
+     * @param object the object to push onto the evaluation stack
      */
     private void push(final Object object)
     {
@@ -1244,7 +1244,7 @@ public class Eval
 
     /**
      * Pop one object from the evaluation stack. Throw exception when stack underflows
-     * @return Object; the object popped from the evaluation stack
+     * @return the object popped from the evaluation stack
      * @throws RuntimeException when the stack is currently empty
      */
     private Object pop() throws RuntimeException
@@ -1258,9 +1258,9 @@ public class Eval
 
     /**
      * Convert an object to a Dimensionless if possible, or complain.
-     * @param functionData Function; meta data of the function that wants a Dimensionless
-     * @param object Object; object that supposedly can be converted to a Dimensionless
-     * @return Dimensionless; the result
+     * @param functionData meta data of the function that wants a Dimensionless
+     * @param object object that supposedly can be converted to a Dimensionless
+     * @return the result
      */
     private Dimensionless checkDimensionless(final Function functionData, final Object object)
     {
@@ -1278,8 +1278,8 @@ public class Eval
 
     /**
      * Retrieve the SIDimensions of a DoubleScalar.
-     * @param doubleScalar DoubleScalar&lt;?,?&gt;; the DoubleScalar
-     * @return SIDimensions; the SIDimensions object that describes the quantity of the DoubleScalar
+     * @param doubleScalar the DoubleScalar
+     * @return the SIDimensions object that describes the quantity of the DoubleScalar
      */
     private static SIDimensions getDimensions(final DoubleScalar<?, ?> doubleScalar)
     {
@@ -1288,8 +1288,8 @@ public class Eval
 
     /**
      * Retrieve the SIDimensions of a unit.
-     * @param unit Unit&lt;?&gt;; the unit
-     * @return SIDimensions; the SIDimensions unit
+     * @param unit the unit
+     * @return the SIDimensions unit
      */
     private static SIDimensions getDimensions(final Unit<?> unit)
     {

@@ -17,7 +17,7 @@ public interface Function extends Identifiable
 {   
     /**
      * Return the name of the function.
-     * @return String; the name of the function 
+     * @return the name of the function 
      */
     default String getName()
     {
@@ -25,7 +25,7 @@ public interface Function extends Identifiable
     }
     /**
      * Return a textual description of the function.
-     * @return String; description of the function (may use html tags).
+     * @return description of the function (may use html tags).
      */
     default String getDescription()
     {
@@ -34,14 +34,14 @@ public interface Function extends Identifiable
     
     /**
      * Specifies the types of the arguments expected by the function.
-     * @return MetaData; specification of the arguments expected by the function
+     * @return specification of the arguments expected by the function
      */
     MetaData getMetaData();
     
     /**
      * The function itself.
-     * @param arguments Object[]; the arguments of the function
-     * @return Object; the result of the function (must currently be either some type of DoubleScalar or Boolean).
+     * @param arguments the arguments of the function
+     * @return the result of the function (must currently be either some type of DoubleScalar or Boolean).
      * @throws RuntimeException thrown when the function is unable to produce a result
      */
     Object function(Object[] arguments) throws RuntimeException;

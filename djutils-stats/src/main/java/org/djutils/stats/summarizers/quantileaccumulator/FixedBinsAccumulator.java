@@ -39,11 +39,11 @@ public class FixedBinsAccumulator implements QuantileAccumulator
 
     /**
      * Construct a new FullStorageAccumulator.
-     * @param minimumBinCenter double; center value of bin for minimum value of range (minimum value in range is
+     * @param minimumBinCenter center value of bin for minimum value of range (minimum value in range is
      *            <code>minimumBinCenter - binWidth / 2</code>, maximum value in range is
      *            <code>minimumBinCenter + binWidth * (binCount - 0.5)</code>)
-     * @param binWidth double; width of each bin
-     * @param binCount int; number of bins
+     * @param binWidth width of each bin
+     * @param binCount number of bins
      */
     public FixedBinsAccumulator(final double minimumBinCenter, final double binWidth, final int binCount)
     {
@@ -62,7 +62,7 @@ public class FixedBinsAccumulator implements QuantileAccumulator
 
     /**
      * Retrieve the bin width.
-     * @return double; the bin width
+     * @return the bin width
      */
     public double getBinWidth()
     {
@@ -71,7 +71,7 @@ public class FixedBinsAccumulator implements QuantileAccumulator
 
     /**
      * Retrieve the bin count.
-     * @return int; the bin count
+     * @return the bin count
      */
     public int getBinCount()
     {
@@ -80,7 +80,7 @@ public class FixedBinsAccumulator implements QuantileAccumulator
 
     /**
      * Retrieve the total number of registered values.
-     * @return long; the total number of registered values
+     * @return the total number of registered values
      */
     public long getN()
     {
@@ -89,7 +89,7 @@ public class FixedBinsAccumulator implements QuantileAccumulator
 
     /**
      * Retrieve the number of registered values that were below the range of this FixedBinsAccumulator.
-     * @return long; the number of registered values that were below the range of this FixedBinsAccumulator
+     * @return the number of registered values that were below the range of this FixedBinsAccumulator
      */
     public long getBelowCount()
     {
@@ -98,7 +98,7 @@ public class FixedBinsAccumulator implements QuantileAccumulator
 
     /**
      * Retrieve the number of registered values that were above the range of this FixedBinsAccumulator.
-     * @return long; the number of registered values that were above the range of this FixedBinsAccumulator
+     * @return the number of registered values that were above the range of this FixedBinsAccumulator
      */
     public long getAboveCount()
     {
@@ -108,7 +108,7 @@ public class FixedBinsAccumulator implements QuantileAccumulator
     /**
      * Return the center of a particular bin.
      * @param bin int the bin number
-     * @return double; the center of requested bin
+     * @return the center of requested bin
      */
     public double getBinCenter(final int bin)
     {

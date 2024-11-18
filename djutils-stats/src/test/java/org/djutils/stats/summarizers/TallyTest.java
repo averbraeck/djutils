@@ -310,10 +310,10 @@ public class TallyTest
 
     /**
      * Generate normally distributed values. Derived from https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
-     * @param mu double; mean
-     * @param sigma double; standard deviation
-     * @param random Random; entropy source
-     * @return double; one pseudo random value
+     * @param mu mean
+     * @param sigma standard deviation
+     * @param random entropy source
+     * @return one pseudo random value
      */
     double generateGaussianNoise(final double mu, final double sigma, final Random random)
     {

@@ -29,17 +29,17 @@ public interface OffsetFlattener2d extends Flattener<Flattener2d, Curve2d, PolyL
 {
     /**
      * Flatten a OffsetCurve2d curve into a PolyLine2d while applying lateral offsets.
-     * @param curve OffsetCurve2d; the curve
+     * @param curve the curve
      * @param of the lateral offset to apply
-     * @return PolyLine2d; flattened curve
+     * @return flattened curve
      */
     PolyLine2d flatten(OffsetCurve2d curve, ContinuousPiecewiseLinearFunction of);
 
     /**
      * Load one knot in the map of fractions and points.
      * @param map NavigableMap<Double, Point2d> the map
-     * @param knot double; the fraction where the knot occurs
-     * @param curve OffsetCurve2d; the curve that can compute the point for each <code>knot</code> position
+     * @param knot the fraction where the knot occurs
+     * @param curve the curve that can compute the point for each <code>knot</code> position
      * @param of offset data
      * @throws NullPointerException when <code>map</code> is <code>null</code>, <code>knot</code> is <code>null</code>,
      *             <code>curve</code> is <code>null</code>, or <code>of</code> is <code>null</code>
@@ -61,8 +61,8 @@ public interface OffsetFlattener2d extends Flattener<Flattener2d, Curve2d, PolyL
     /**
      * Load the knots into the navigable map (including the start point and the end point).
      * @param map navigableMap<Double, Point2d>; the navigable map
-     * @param curve OffsetCurve2d; the curve
-     * @param of ContinuousPiecewiseLinearFunction; the offset data
+     * @param curve the curve
+     * @param of the offset data
      */
     default void loadKnots(final NavigableMap<Double, Point2d> map, final OffsetCurve2d curve,
             final ContinuousPiecewiseLinearFunction of)
@@ -99,8 +99,8 @@ public interface OffsetFlattener2d extends Flattener<Flattener2d, Curve2d, PolyL
 
     /**
      * Make a FlattableCurve object.
-     * @param curve OffsetCurve2d;
-     * @param of ContinuousPiecewiseLinearFunction;
+     * @param curve the curve
+     * @param of the offset function
      * @return Flattener.FlattableCurve&lt;Point2d, Double
      */
     default Flattener.FlattableCurve<Point2d, Double> makeFlattableCurve(final OffsetCurve2d curve,
@@ -132,7 +132,7 @@ public interface OffsetFlattener2d extends Flattener<Flattener2d, Curve2d, PolyL
 
         /**
          * Construct a flattener that approximates the <code>OffsetCurve2d</code> with a specified number of segments.
-         * @param numSegments int; number of segments to use in the construction of the <code>PolyLine2d</code>
+         * @param numSegments number of segments to use in the construction of the <code>PolyLine2d</code>
          * @throws IllegalArgumentException when <code>numSegments &lt; 1</code>
          */
         public NumSegments(final int numSegments)

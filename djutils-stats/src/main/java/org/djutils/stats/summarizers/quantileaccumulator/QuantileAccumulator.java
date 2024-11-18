@@ -10,17 +10,17 @@ public interface QuantileAccumulator
 {
     /**
      * Ingest one value with weight 1. Should be called only from the Tally object and AFTER processing the value in the tally.
-     * @param value double; the value
-     * @return double; the registered value
+     * @param value the value
+     * @return the registered value
      * @throws IllegalArgumentException when the registered value is NaN
      */
     double register(double value);
 
     /**
      * Compute (or approximate) the value that corresponds to the given fraction (percentile).
-     * @param tally Tally; the tally object that accumulates mean, minimum, maximum, count, etc.
-     * @param probability double; value between 0.0 and 1.0 (both inclusive)
-     * @return double; the computed or approximated quantile value
+     * @param tally the tally object that accumulates mean, minimum, maximum, count, etc.
+     * @param probability value between 0.0 and 1.0 (both inclusive)
+     * @return the computed or approximated quantile value
      * @throws IllegalArgumentException when the probability is less than 0 or larger than 1
      * @throws NullPointerException when tally is null
      */
@@ -28,9 +28,9 @@ public interface QuantileAccumulator
     
     /**
      * Get, or estimate fraction of registered values between -infinity up to and including a given quantile.
-     * @param tally Tally; the tally object that accumulates mean, minimum, maximum, count, etc.
-     * @param quantile double; the given quantile
-     * @return double; the estimated or observed fraction of registered values between -infinity up to and including the given
+     * @param tally the tally object that accumulates mean, minimum, maximum, count, etc.
+     * @param quantile the given quantile
+     * @return the estimated or observed fraction of registered values between -infinity up to and including the given
      *         quantile. When this QuantileAccumulator has registered zero values; this method shall return NaN.
      * @throws IllegalArgumentException when quantile is NaN
      */

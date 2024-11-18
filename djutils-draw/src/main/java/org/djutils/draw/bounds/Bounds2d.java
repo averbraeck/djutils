@@ -39,10 +39,10 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Construct a Bounds2d by providing its lower and upper bounds in both dimensions.
-     * @param minX double; the lower bound for x
-     * @param maxX double; the upper bound for x
-     * @param minY double; the lower bound for y
-     * @param maxY double; the upper bound for y
+     * @param minX the lower bound for x
+     * @param maxX the upper bound for x
+     * @param minY the lower bound for y
+     * @param maxY the upper bound for y
      * @throws ArithmeticException when <code>minX</code>, <code>maxX</code>, <code>minY</code>, or <code>maxY</code> is
      *             <code>NaN</code>
      * @throws IllegalArgumentException when <code>minX</code> &gt; <code>maxX</code>, or <code>minY</code> &gt;
@@ -65,8 +65,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Constructs a new Bounds2d around the origin (0, 0).
-     * @param deltaX double; the deltaX value around the origin
-     * @param deltaY double; the deltaY value around the origin
+     * @param deltaX the deltaX value around the origin
+     * @param deltaY the deltaY value around the origin
      * @throws ArithmeticException when <code>deltaX</code>, or <code>deltaY</code> is <code>NaN</code>
      * @throws IllegalArgumentException when <code>deltaX &lt; 0.0</code>, or <code>deltaY &lt; 0.0</code>
      */
@@ -77,7 +77,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Construct a Bounds2d from some collection of points, finding the lowest and highest x and y coordinates.
-     * @param points Iterator&lt;? extends Point2d&gt;; Iterator that will generate all the points for which to construct a
+     * @param points Iterator that will generate all the points for which to construct a
      *            Bounds2d
      * @throws NullPointerException when <code>points</code> is <code>null</code>
      * @throws IllegalArgumentException when the <code>points</code> iterator provides zero points
@@ -107,7 +107,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Construct a Bounds2d from an array of Point2d, finding the lowest and highest x and y coordinates.
-     * @param points Point2d[]; the points to construct a Bounds2d from
+     * @param points the points to construct a Bounds2d from
      * @throws NullPointerException when <code>points</code> is <code>null</code>
      * @throws IllegalArgumentException when zero points are provided
      */
@@ -118,7 +118,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Construct a Bounds2d for a Drawable2d.
-     * @param drawable2d Drawable2d; any object that implements the Drawable2d interface
+     * @param drawable2d any object that implements the Drawable2d interface
      * @throws NullPointerException when <code>drawable2d</code> is <code>null</code>
      */
     public Bounds2d(final Drawable2d drawable2d)
@@ -128,7 +128,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Construct a Bounds2d for several Drawable2d objects.
-     * @param drawable2d Drawable2d...; the Drawable2d objects
+     * @param drawable2d the Drawable2d objects
      * @throws NullPointerException when the <code>drawable2d</code> array is <code>null</code>, or contains a <code>null</code>
      *             value
      * @throws IllegalArgumentException when the length of the <code>drawable2d</code> array is 0
@@ -140,8 +140,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Verify that the array contains at least one entry.
-     * @param drawable2dArray Drawable2d[]; array of Drawable2d objects
-     * @return Drawable2d[]; the array
+     * @param drawable2dArray array of Drawable2d objects
+     * @return the array
      * @throws NullPointerException when <code>drawable2darray</code> is <code>null</code>
      * @throws IllegalArgumentException when the <code>drawable2dArray</code> contains 0 elements
      */
@@ -154,8 +154,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Return an iterator that will return all points of one or more Drawable objects.
-     * @param drawable2d Drawable2d...; the Drawable objects
-     * @return Iterator&lt;P&gt;; iterator that will return all points of the Drawable objects
+     * @param drawable2d the Drawable objects
+     * @return iterator that will return all points of the Drawable objects
      * @throws NullPointerException when <code>drawable2d</code> is <code>null</code>, or contains a <code>null</code> value
      * @throws IllegalArgumentException when <code>drawable2d</code> is empty
      */
@@ -192,7 +192,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Construct a Bounds2d for a Collection of Drawable2d objects.
-     * @param drawableCollection Collection&lt;Drawable2d&gt;; the collection
+     * @param drawableCollection the collection
      * @throws NullPointerException when the <code>drawableCollection</code> is <code>null</code>, or contains a
      *             <code>null</code> value
      * @throws IllegalArgumentException when the <code>drawableCollection</code> is empty
@@ -204,8 +204,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Return an iterator that will return all points of one or more Drawable2d objects.
-     * @param drawableCollection Collection&lt;Drawable2d&gt;; the collection of Drawable2d objects
-     * @return Iterator&lt;P&gt;; iterator that will return all points of the Drawable objects
+     * @param drawableCollection the collection of Drawable2d objects
+     * @return iterator that will return all points of the Drawable objects
      * @throws NullPointerException when the <code>drawableCollection</code> is <code>null</code>, or contains a
      *             <code>null</code> value
      * @throws IllegalArgumentException when the <code>drawableCollection</code> is empty
@@ -252,8 +252,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Verify that the iterator has something to return.
-     * @param iterator Iterator&lt;Drawable2d&gt;; the iterator
-     * @return Iterator&lt;Drawable2d&gt;; the iterator
+     * @param iterator the iterator
+     * @return the iterator
      * @throws NullPointerException when the <code>iterator</code> is <code>null</code>
      * @throws IllegalArgumentException when the <code>hasNext</code> method of the <code>iterator</code> returns
      *             <code>false</code> before even one <code>Drawable2d</code> was delivered
@@ -281,9 +281,9 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Check if this Bounds2d contains a point. Contains considers a point <b>on</b> the border of this Bounds2d to be outside.
-     * @param x double; the x-coordinate of the point
-     * @param y double; the y-coordinate of the point
-     * @return boolean; whether this Bounds2d contains the point
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @return whether this Bounds2d contains the point
      * @throws ArithmeticException when <code>x</code>, or <code>y</code> is <code>NaN</code>
      */
     public boolean contains(final double x, final double y)
@@ -309,9 +309,9 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Check if this Bounds2d covers a point. Covers returns <code>true</code> when the point is on, or inside this Bounds2d.
-     * @param x double; the x-coordinate of the point
-     * @param y double; the y-coordinate of the point
-     * @return boolean; whether this Bounds2d, including its borders, contains the point
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @return whether this Bounds2d, including its borders, contains the point
      * @throws ArithmeticException when <code>x</code>, or <code>y</code> is <code>NaN</code>
      */
     public boolean covers(final double x, final double y)
@@ -402,7 +402,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Return the area of this Bounds2d.
-     * @return double; the area of this Bounds2d
+     * @return the area of this Bounds2d
      */
     public double getArea()
     {

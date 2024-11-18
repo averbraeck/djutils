@@ -65,9 +65,9 @@ public class Straight2d implements Curve2d, OffsetCurve2d
 
     /**
      * Return the point at the given fraction and the given lateral offset.
-     * @param fraction double; fraction along this line
-     * @param offset double; lateral offset (to the left)
-     * @return Point2d; the point at the given fraction and lateral offset
+     * @param fraction fraction along this line
+     * @param offset lateral offset (to the left)
+     * @return the point at the given fraction and lateral offset
      */
     private Point2d getPoint(final double fraction, final double offset)
     {

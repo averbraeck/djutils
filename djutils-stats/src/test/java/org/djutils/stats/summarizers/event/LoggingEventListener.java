@@ -40,7 +40,7 @@ public class LoggingEventListener implements EventListener
     }
 
     /**
-     * @return Event; the last received event
+     * @return the last received event
      */
     public Event getLastEvent()
     {

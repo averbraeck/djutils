@@ -29,8 +29,8 @@ public class Direction3d
 
     /**
      * Construct a Direction3d.
-     * @param dirY double; the dirY component for the new Direction3d
-     * @param dirZ double; the dirZ component for the new Direction3d
+     * @param dirY the dirY component for the new Direction3d
+     * @param dirZ the dirZ component for the new Direction3d
      * @throws ArithmeticException when <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
      * @throws IllegalArgumentException when <code>dirY</code>, or <code>dirZ</code> is infinite
      */
@@ -46,7 +46,7 @@ public class Direction3d
 
     /**
      * Retrieve the dirY component of this Direction3d.
-     * @return double; the <code>dirY</code> component of this <code>Direction3d</code>
+     * @return the <code>dirY</code> component of this <code>Direction3d</code>
      */
     public double getDirY()
     {
@@ -55,7 +55,7 @@ public class Direction3d
 
     /**
      * Retrieve the dirZ component of this Direction3d.
-     * @return double; the <code>dirZ</code> component of this <code>Direction3d</code>
+     * @return the <code>dirZ</code> component of this <code>Direction3d</code>
      */
     public double getDirZ()
     {
@@ -65,7 +65,7 @@ public class Direction3d
     /**
      * Determine the angle between this Direction3d and another Direction3d. Liberally based on
      * https://www.cuemath.com/geometry/angle-between-vectors/
-     * @param otherDirection Direction3d; the other Direction3d
+     * @param otherDirection the other Direction3d
      * @return double the angle in Radians
      * @throws NullPointerException when <code>otherDirection</code> is <code>null</code>
      */

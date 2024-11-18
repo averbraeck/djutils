@@ -18,8 +18,8 @@ public interface SpecificTextSerializer<T> extends TextSerializer<T>
      * Serialize a value to text in such a way that it can be deserialized with the corresponding deserializer. Note that
      * {@code null} values for value <b>are allowed</b>. A {@code null} values stands for an empty column value in a CVS-file, a
      * missing tag in an XML-file, etc. This version of the serialize method ignores the unit. 
-     * @param value T; the value to serialize, may be {@code null}
-     * @return String; a string representation of the value that can later be deserialized, or {@code null}to denote a missing
+     * @param value the value to serialize, may be {@code null}
+     * @return a string representation of the value that can later be deserialized, or {@code null}to denote a missing
      *         value
      */
     default String serialize(final T value)
@@ -32,8 +32,8 @@ public interface SpecificTextSerializer<T> extends TextSerializer<T>
      * unit, and the class is known and fixed (and not checked). Note that {@code null} values for text <b>are allowed</b>. A
      * {@code null} values stands for an empty column value in a CVS-file, a missing tag in an XML-file, etc. In this way, we
      * can explicitly show values that were not specified in the file.
-     * @param text String; the string to deserialize, may be {@code null}
-     * @return T; an instance of the object created with the corresponding serializer, may be {@code null} when a value was not
+     * @param text the string to deserialize, may be {@code null}
+     * @return an instance of the object created with the corresponding serializer, may be {@code null} when a value was not
      *         specified in the source from which the deserializer was called
      */
     default T deserialize(final String text)

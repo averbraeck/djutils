@@ -14,13 +14,13 @@ public interface TallyStatistic extends Statistic
 {
     /**
      * Returns the maximum value of any given observation, or NaN when no observations were registered.
-     * @return double; the maximum value of any given observation
+     * @return the maximum value of any given observation
      */
     double getMax();
 
     /**
      * Returns the minimum value of any given observation, or NaN when no observations were registered.
-     * @return double; the minimum value of any given observation
+     * @return the minimum value of any given observation
      */
     double getMin();
 

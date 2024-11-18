@@ -173,8 +173,8 @@ public class ContinuousPiecewiseLinearFunction
 
     /**
      * Wrapper for domain and function value pair.
-     * @param s double; value in range [0.0, 1.0]
-     * @param t double; value of the function for <code>s</code>
+     * @param s value in range [0.0, 1.0]
+     * @param t value of the function for <code>s</code>
      */
     public record TupleSt(double s, double t)
     {

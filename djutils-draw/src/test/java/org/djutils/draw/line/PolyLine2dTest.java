@@ -131,7 +131,7 @@ public class PolyLine2dTest
 
     /**
      * Test all the constructors of PolyLine2d.
-     * @param points Point2d[]; array of Point2d to test with
+     * @param points array of Point2d to test with
      * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
     private void runConstructors(final Point2d[] points) throws DrawRuntimeException
@@ -1425,8 +1425,8 @@ public class PolyLine2dTest
 
     /**
      * Verify that a Line2d contains the same points as an array of Point2d.
-     * @param line Line2d; the OTS line
-     * @param points Point2d[]; the OTSPoint array
+     * @param line the OTS line
+     * @param points the OTSPoint array
      * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
     private void verifyPointsAndSegments(final PolyLine2d line, final Point2d[] points) throws DrawRuntimeException

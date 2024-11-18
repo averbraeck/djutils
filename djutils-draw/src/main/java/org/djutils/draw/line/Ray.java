@@ -21,27 +21,27 @@ public interface Ray<R extends Ray<R, D, P>, D extends Directed<D>, P extends Po
 {
     /**
      * Get the finite end point of this Ray.
-     * @return P; the finite end point of this Ray
+     * @return the finite end point of this Ray
      */
     D getEndPoint();
 
     /**
      * Retrieve the angle from the positive X axis direction in radians.
-     * @return double; the angle from the positive X axis direction in radians
+     * @return the angle from the positive X axis direction in radians
      */
     double getDirZ();
 
     /**
      * Flip the direction of the Ray (creates and returns a new Ray instance).
-     * @return R; Ray at the same location, but with <code>dirZ</code> (in case of a Ray3d) incremented by &pi; and
+     * @return Ray at the same location, but with <code>dirZ</code> (in case of a Ray3d) incremented by &pi; and
      *         <code>dirY</code> subtracted from &pi;
      */
     R flip();
 
     /**
      * Get the location at a position on the line, with its direction. Position must be a positive, finite value
-     * @param position double; the position on the line for which to calculate the point on the line
-     * @return R; a ray with the same direction as this ray (even if the direction of this ray is not normalized)
+     * @param position the position on the line for which to calculate the point on the line
+     * @return a ray with the same direction as this ray (even if the direction of this ray is not normalized)
      * @throws ArithmeticException when <code>position</code> is <code>NaN</code>
      * @throws IllegalArgumentException when <code>position</code> &lt; <code>0.0</code>, or infinite
      */
@@ -55,8 +55,8 @@ public interface Ray<R extends Ray<R, D, P>, D extends Directed<D>, P extends Po
 
     /**
      * Get the location at a position on the line, with its direction. Position must be a finite value
-     * @param position double; the position on the line for which to calculate the point on the line
-     * @return R; a ray with the same direction as this ray
+     * @param position the position on the line for which to calculate the point on the line
+     * @return a ray with the same direction as this ray
      * @throws ArithmeticException when <code>position</code> is <code>NaN</code>
      * @throws IllegalArgumentException when <code>position</code> infinite
      */
@@ -67,8 +67,8 @@ public interface Ray<R extends Ray<R, D, P>, D extends Directed<D>, P extends Po
      * Otherwise the closest point on the ray is returned. <br>
      * Adapted from <a href="http://paulbourke.net/geometry/pointlineplane/DistancePoint.java">example code published by Paul
      * Bourke</a>.
-     * @param point P; the point to project onto the segment
-     * @return D; either the start point, or DirectedPoint that lies somewhere on this Ray
+     * @param point the point to project onto the segment
+     * @return either the start point, or DirectedPoint that lies somewhere on this Ray
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
     P closestPointOnRay(P point);

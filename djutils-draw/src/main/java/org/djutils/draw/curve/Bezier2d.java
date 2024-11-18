@@ -52,8 +52,8 @@ public class Bezier2d implements Curve2d
 
     /**
      * Create a B&eacute;zier curve of any order.
-     * @param x double[]; the x-coordinates of the points that define the B&eacute;zier curve
-     * @param y double[]; the y-coordinates of the points that define the B&eacute;zier curve
+     * @param x the x-coordinates of the points that define the B&eacute;zier curve
+     * @param y the y-coordinates of the points that define the B&eacute;zier curve
      * @throws NullPointerException when <code>x</code>, or <code>y</code> is <code>null</code>
      * @throws IllegalArgumentException when the length of the <code>x</code> array is not equal to the length of the
      *             <code>y</code> array, or less than <code>2</code>
@@ -65,10 +65,10 @@ public class Bezier2d implements Curve2d
 
     /**
      * Construct a B&eacute;zier curve of any order, optionally checking the lengths of the provided arrays.
-     * @param checkLengths boolean; if <code>true</code>; check the lengths of the <code>x</code> and <code>y</code> arrays; if
+     * @param checkLengths if <code>true</code>; check the lengths of the <code>x</code> and <code>y</code> arrays; if
      *            <code>false</code>; do not check those lengths
-     * @param x double[]; the x-coordinates of the points that define the B&eacute;zier curve
-     * @param y double[]; the y-coordinates of the points that define the B&eacute;zier curve
+     * @param x the x-coordinates of the points that define the B&eacute;zier curve
+     * @param y the y-coordinates of the points that define the B&eacute;zier curve
      * @throws NullPointerException when <code>x</code>, or <code>y</code> is <code>null</code>
      * @throws IllegalArgumentException when the length of <code>x</code> is not equal to the length of <code>y</code>, or less
      *             than <code>2</code> and <code>checkLengths</code> is <code>true</code>
@@ -97,7 +97,7 @@ public class Bezier2d implements Curve2d
 
     /**
      * Return the number of points (or x-y pairs) that this B&eacute;zier curve is based on.
-     * @return int; the number of points (or x-y pairs) that this B&eacute;zier curve is based on
+     * @return the number of points (or x-y pairs) that this B&eacute;zier curve is based on
      */
     public int size()
     {
@@ -125,8 +125,8 @@ public class Bezier2d implements Curve2d
 
     /**
      * Retrieve the x-coordinate of the i'th point of this B&eacute;zier curve.
-     * @param i int; the index
-     * @return double; the x-coordinate of the i'th point of this B&eacute;zier curve
+     * @param i the index
+     * @return the x-coordinate of the i'th point of this B&eacute;zier curve
      * @throws IndexOutOfBoundsException when <code>i &lt; 0</code>, or <code>i &ge; size()</code>
      */
     public double getX(final int i)
@@ -136,8 +136,8 @@ public class Bezier2d implements Curve2d
 
     /**
      * Retrieve the y-coordinate of the i'th point of this B&eacute;zier curve.
-     * @param i int; the index
-     * @return double; the y-coordinate of the i'th point of this B&eacute;zier curve
+     * @param i the index
+     * @return the y-coordinate of the i'th point of this B&eacute;zier curve
      * @throws IndexOutOfBoundsException when <code>i &lt; 0</code>, or <code>i &ge; size()</code>
      */
     public double getY(final int i)

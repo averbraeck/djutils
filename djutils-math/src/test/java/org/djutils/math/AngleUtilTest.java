@@ -216,8 +216,8 @@ public class AngleUtilTest
 
     /**
      * Format an angle.
-     * @param angle double; angle in radians
-     * @return String; fixed width text representation of angle
+     * @param angle angle in radians
+     * @return fixed width text representation of angle
      */
     public static String printAngle(final double angle)
     {

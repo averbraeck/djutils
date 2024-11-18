@@ -17,9 +17,9 @@ public abstract class FixedSizeObjectSerializer<T extends Object> extends Object
 
     /**
      * Construct the FixedSizeSerializer.
-     * @param fieldType byte; the field type (returned by the <code>fieldType</code> method)
-     * @param serializedDataSize int; number of bytes required for serialized T
-     * @param dataClassName String; returned by the dataClassName method
+     * @param fieldType the field type (returned by the <code>fieldType</code> method)
+     * @param serializedDataSize number of bytes required for serialized T
+     * @param dataClassName returned by the dataClassName method
      */
     public FixedSizeObjectSerializer(final byte fieldType, final int serializedDataSize, final String dataClassName)
     {

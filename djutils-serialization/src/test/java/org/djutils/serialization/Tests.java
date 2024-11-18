@@ -457,8 +457,8 @@ public class Tests
 
         /**
          * Construct a new Compound object.
-         * @param intValue int; the value to assign to intValue
-         * @param doubleValue double; the value to assign to doubleValue
+         * @param intValue the value to assign to intValue
+         * @param doubleValue the value to assign to doubleValue
          */
         Compound(final int intValue, final double doubleValue)
         {
@@ -691,8 +691,8 @@ public class Tests
 
     /**
      * Convert an array, or matrix of Byte, Short, Integer, etc. to an array/matrix of byte, short, int, etc.
-     * @param in Object; the array to convert
-     * @return Object; the converted input (if conversion was possible), or the unconverted input.
+     * @param in the array to convert
+     * @return the converted input (if conversion was possible), or the unconverted input.
      */
     static Object makePrimitive(final Object in)
     {
@@ -864,7 +864,7 @@ public class Tests
      * Compare two arrays of any type (stolen from java.util.Arrays).
      * @param e1 Object (should be some kind of array)
      * @param e2 Object (should be some kind of array)
-     * @return boolean; true of the arrays have the same type, size and all elements in the arrays are equal to their
+     * @return true of the arrays have the same type, size and all elements in the arrays are equal to their
      *         counterpart
      */
     static boolean deepEquals0(final Object e1, final Object e2)

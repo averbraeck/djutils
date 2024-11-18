@@ -28,8 +28,8 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
 {
     /**
      * Flatten a Curve3d into a PolyLine3d.
-     * @param curve Curve2d; the curve
-     * @return PolyLine2d; flattened line
+     * @param curve the curve
+     * @return flattened line
      * @throws NullPointerException when <code>curve</code> is <code>null</code>
      */
     PolyLine3d flatten(Curve3d curve);
@@ -70,7 +70,7 @@ public interface Flattener3d extends Flattener<Flattener3d, Curve3d, PolyLine3d,
 
         /**
          * Construct a flattener that approximates the <code>Curve3d</code> with a specified number of segments.
-         * @param numSegments int; number of segments to use in the construction of the PolyLine3d.
+         * @param numSegments number of segments to use in the construction of the PolyLine3d.
          * @throws IllegalArgumentException when <code>numSegments &lt; 1</code>
          */
         public NumSegments(final int numSegments)

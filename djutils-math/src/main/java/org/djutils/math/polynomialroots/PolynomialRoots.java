@@ -25,9 +25,9 @@ public final class PolynomialRoots
 
     /**
      * Emulate the F77 sign function.
-     * @param a double; the value to optionally sign invert
-     * @param b double; the sign of which determines what to do
-     * @return double; if b &gt;= 0 then a; else -a
+     * @param a the value to optionally sign invert
+     * @param b the sign of which determines what to do
+     * @return if b &gt;= 0 then a; else -a
      */
     private static double sign(final double a, final double b)
     {
@@ -40,9 +40,9 @@ public final class PolynomialRoots
      * Calculates the root of the linear polynomial:<br>
      * q1 * x + q0<br>
      * Unlike the quadratic, cubic and quartic code, this is NOT derived from that Fortran90 code; it was added for completenes.
-     * @param q1 double; coefficient of the x term
-     * @param q0 double; independent coefficient
-     * @return Complex[]; the roots of the equation
+     * @param q1 coefficient of the x term
+     * @param q0 independent coefficient
+     * @return the roots of the equation
      */
     public static Complex[] linearRoots(final double q1, final double q0)
     {
@@ -59,8 +59,8 @@ public final class PolynomialRoots
      * Calculates the root of the linear polynomial:<br>
      * x + q0<br>
      * Unlike the quadratic, cubic and quartic code, this is NOT derived from that Fortran90 code; it was added for completenes.
-     * @param q0 double; independent coefficient
-     * @return Complex[]; the roots of the equation
+     * @param q0 independent coefficient
+     * @return the roots of the equation
      */
     public static Complex[] linearRoots(final double q0)
     {
@@ -79,10 +79,10 @@ public final class PolynomialRoots
      * negative last).<br>
      * 2) Since there can be only one complex conjugate pair root, no order is necessary.<br>
      * q1 : coefficient of x term q0 : independent coefficient
-     * @param q2 double; coefficient of the quadratic term
-     * @param q1 double; coefficient of the x term
-     * @param q0 double; independent coefficient
-     * @return Complex[]; the roots of the equation
+     * @param q2 coefficient of the quadratic term
+     * @param q1 coefficient of the x term
+     * @param q0 independent coefficient
+     * @return the roots of the equation
      */
     public static Complex[] quadraticRoots(final double q2, final double q1, final double q0)
     {
@@ -105,9 +105,9 @@ public final class PolynomialRoots
      * negative last).<br>
      * 2) Since there can be only one complex conjugate pair root, no order is necessary.<br>
      * q1 : coefficient of x term q0 : independent coefficient
-     * @param q1 double; coefficient of the x term
-     * @param q0 double; independent coefficient
-     * @return Complex[]; the roots of the equation
+     * @param q1 coefficient of the x term
+     * @param q0 independent coefficient
+     * @return the roots of the equation
      */
     public static Complex[] quadraticRoots(final double q1, final double q0)
     {
@@ -240,11 +240,11 @@ public final class PolynomialRoots
      * rescaling of the cubic polynomial. The order of the roots is as follows: 1) For real roots, the order is according to
      * their algebraic value on the number scale (largest positive first, largest negative last). 2) Since there can be only one
      * complex conjugate pair root, no order is necessary. 3) All real roots precede the complex ones.
-     * @param c3 double; coefficient of the cubic term
-     * @param c2 double; coefficient of the quadratic term
-     * @param c1 double; coefficient of the linear term
-     * @param c0 double; coefficient of the independent term
-     * @return Complex[]; array of Complex with all the roots
+     * @param c3 coefficient of the cubic term
+     * @param c2 coefficient of the quadratic term
+     * @param c1 coefficient of the linear term
+     * @param c0 coefficient of the independent term
+     * @return array of Complex with all the roots
      */
     public static Complex[] cubicRoots(final double c3, final double c2, final double c1, final double c0)
     {
@@ -267,10 +267,10 @@ public final class PolynomialRoots
      * rescaling of the cubic polynomial. The order of the roots is as follows: 1) For real roots, the order is according to
      * their algebraic value on the number scale (largest positive first, largest negative last). 2) Since there can be only one
      * complex conjugate pair root, no order is necessary. 3) All real roots precede the complex ones.
-     * @param c2 double; coefficient of the quadratic term
-     * @param c1 double; coefficient of the linear term
-     * @param c0 double; coefficient of the independent term
-     * @return Complex[]; array of Complex with all the roots
+     * @param c2 coefficient of the quadratic term
+     * @param c1 coefficient of the linear term
+     * @param c0 coefficient of the independent term
+     * @return array of Complex with all the roots
      */
     public static Complex[] cubicRoots(final double c2, final double c1, final double c0)
     {
@@ -290,11 +290,11 @@ public final class PolynomialRoots
      * rescaling of the cubic polynomial. The order of the roots is as follows: 1) For real roots, the order is according to
      * their algebraic value on the number scale (largest positive first, largest negative last). 2) Since there can be only one
      * complex conjugate pair root, no order is necessary. 3) All real roots precede the complex ones.
-     * @param c2 double; coefficient of the quadratic term
-     * @param c1 double; coefficient of the linear term
-     * @param c0 double; coefficient of the independent term
-     * @param verbose boolean; if true; produce debugging output; if false; do not produce debugging output
-     * @return Complex[]; array of Complex with all the roots
+     * @param c2 coefficient of the quadratic term
+     * @param c1 coefficient of the linear term
+     * @param c0 coefficient of the independent term
+     * @param verbose if true; produce debugging output; if false; do not produce debugging output
+     * @return array of Complex with all the roots
      */
     public static Complex[] cubicRoots(final double c2, final double c1, final double c0, final boolean verbose)
     {
@@ -815,12 +815,12 @@ public final class PolynomialRoots
      * first). If the real parts are equal, the order is according to the algebraic value of their imaginary parts (largest
      * first).<br>
      * 3) All real roots precede the complex ones.
-     * @param q4 double; coefficient of the quartic term
-     * @param q3 double; coefficient of the cubic term
-     * @param q2 double; coefficient of the quadratic term
-     * @param q1 double; coefficient of the linear term
-     * @param q0 double; independent coefficient
-     * @return Complex[]; array of Complex with all the roots
+     * @param q4 coefficient of the quartic term
+     * @param q3 coefficient of the cubic term
+     * @param q2 coefficient of the quadratic term
+     * @param q1 coefficient of the linear term
+     * @param q0 independent coefficient
+     * @return array of Complex with all the roots
      */
     public static Complex[] quarticRoots(final double q4, final double q3, final double q2, final double q1, final double q0)
     {
@@ -847,11 +847,11 @@ public final class PolynomialRoots
      * first). If the real parts are equal, the order is according to the algebraic value of their imaginary parts (largest
      * first).<br>
      * 3) All real roots precede the complex ones.
-     * @param q3 double; coefficient of the cubic term
-     * @param q2 double; coefficient of the quadratic term
-     * @param q1 double; coefficient of the linear term
-     * @param q0 double; independent coefficient
-     * @return Complex[]; array of Complex with all the roots
+     * @param q3 coefficient of the cubic term
+     * @param q2 coefficient of the quadratic term
+     * @param q1 coefficient of the linear term
+     * @param q0 independent coefficient
+     * @return array of Complex with all the roots
      */
     public static Complex[] quarticRoots(final double q3, final double q2, final double q1, final double q0)
     {
@@ -876,12 +876,12 @@ public final class PolynomialRoots
      * first). If the real parts are equal, the order is according to the algebraic value of their imaginary parts (largest
      * first).<br>
      * 3) All real roots precede the complex ones.
-     * @param q3 double; coefficient of the cubic term
-     * @param q2 double; coefficient of the quadratic term
-     * @param q1 double; coefficient of the linear term
-     * @param q0 double; independent coefficient
-     * @param verbose boolean; if true; produce debugging output; if false; do not produce debugging output
-     * @return Complex[]; array of Complex with all the roots
+     * @param q3 coefficient of the cubic term
+     * @param q2 coefficient of the quadratic term
+     * @param q1 coefficient of the linear term
+     * @param q0 independent coefficient
+     * @param verbose if true; produce debugging output; if false; do not produce debugging output
+     * @return array of Complex with all the roots
      */
     public static Complex[] quarticRoots(final double q3, final double q2, final double q1, final double q0,
             final boolean verbose)

@@ -135,7 +135,7 @@ public class PolyLine3dTest
 
     /**
      * Test all the constructors of PolyLine3d.
-     * @param points Point3d[]; array of Point3d to test with
+     * @param points array of Point3d to test with
      * @throws RuntimeException should not happen; this test has failed if it does happen
      */
     private void runConstructors(final Point3d[] points) throws RuntimeException
@@ -212,7 +212,7 @@ public class PolyLine3dTest
 
     /**
      * Print a Path2D to the console.
-     * @param path Path2D; the path
+     * @param path the path
      */
     public final void printPath2D(final Path2D path)
     {
@@ -240,8 +240,8 @@ public class PolyLine3dTest
 
     /**
      * Verify that a Line3d contains the same points as an array of Point3d.
-     * @param line Line3d; the OTS line
-     * @param points Point3d[]; the OTSPoint array
+     * @param line the OTS line
+     * @param points the OTSPoint array
      * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
     private void verifyPoints(final PolyLine3d line, final Point3d[] points) throws DrawRuntimeException
@@ -518,11 +518,11 @@ public class PolyLine3dTest
 
     /**
      * Check the location returned by the various location methods.
-     * @param line Line3d; the line
-     * @param fraction double; relative position to check
-     * @param expectedPoint Point3d; expected location of the result
-     * @param expectedDirY double; expected angle of the result from the Z axis
-     * @param expectedDirZ double; expected angle of the result from the X axis
+     * @param line the line
+     * @param fraction relative position to check
+     * @param expectedPoint expected location of the result
+     * @param expectedDirY expected angle of the result from the Z axis
+     * @param expectedDirZ expected angle of the result from the X axis
      * @throws DrawRuntimeException on failure
      */
     private void checkGetLocation(final PolyLine3d line, final double fraction, final Point3d expectedPoint,
@@ -561,10 +561,10 @@ public class PolyLine3dTest
 
     /**
      * Verify the location and direction of a DirectedPoint3d.
-     * @param dp DirectedPoint3d; the DirectedPoint3d that should be verified
-     * @param expectedPoint Point3d; the expected location (or null if location should not be checked)
-     * @param expectedDirY double; the expected angle from the Z axis
-     * @param expectedDirZ double; the expected angle from the X axis
+     * @param dp the DirectedPoint3d that should be verified
+     * @param expectedPoint the expected location (or null if location should not be checked)
+     * @param expectedDirY the expected angle from the Z axis
+     * @param expectedDirZ the expected angle from the X axis
      */
     private void checkDirectedPoint3d(final DirectedPoint3d dp, final Point3d expectedPoint, final double expectedDirY,
             final double expectedDirZ)
@@ -2060,8 +2060,8 @@ public class PolyLine3dTest
 
     /**
      * Draw a X marker.
-     * @param x double; x location
-     * @param y double; y location
+     * @param x x location
+     * @param y y location
      * @return String
      */
     public static String marker(final double x, final double y)

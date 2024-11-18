@@ -1408,8 +1408,8 @@ public final class TypedMessage
 
     /**
      * Encode the object array into a byte[] message. Use UTF8 for the characters and for the String.
-     * @param endianUtil EndianUtil; encoder to use for multi-byte values
-     * @param content Object...; the objects to encode
+     * @param endianUtil encoder to use for multi-byte values
+     * @param content the objects to encode
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
@@ -1420,8 +1420,8 @@ public final class TypedMessage
 
     /**
      * Encode the object array into a byte[] message. Use UTF16 for the characters and for the String.
-     * @param endianUtil EndianUtil; encoder for multi-byte values
-     * @param content Object...; the objects to encode
+     * @param endianUtil encoder for multi-byte values
+     * @param content the objects to encode
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
@@ -1432,10 +1432,10 @@ public final class TypedMessage
 
     /**
      * Find the serializer for one object.
-     * @param utf8 boolean; if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters
+     * @param utf8 if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters
      *            and Strings
-     * @param object Object; the object for which the serializer must be returned
-     * @return Serializer; the serializer needed for <code>object</code>
+     * @param object the object for which the serializer must be returned
+     * @return the serializer needed for <code>object</code>
      * @throws SerializationException when there is no known serializer for <code>object</code>
      */
     static Serializer<?> findEncoder(final boolean utf8, final Object object) throws SerializationException
@@ -1493,10 +1493,10 @@ public final class TypedMessage
 
     /**
      * Build the list of serializers corresponding to the data in an Object array.
-     * @param utf8 boolean; if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters
+     * @param utf8 if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters
      *            and Strings
-     * @param content Object...; the objects for which the serializers must be returned
-     * @return Serializer[]; array filled with the serializers needed for the objects in the Object array
+     * @param content the objects for which the serializers must be returned
+     * @return array filled with the serializers needed for the objects in the Object array
      * @throws SerializationException when an object in <code>content</code> cannot be serialized
      */
     static Serializer<?>[] buildEncoderList(final boolean utf8, final Object... content) throws SerializationException
@@ -1513,9 +1513,9 @@ public final class TypedMessage
 
     /**
      * Encode the object array into a Big Endian message.
-     * @param utf8 boolean; whether to encode String fields and characters in utf8 or not
-     * @param endianUtil EndianUtil; encoder for multi-byte values
-     * @param content Object...; the objects to encode
+     * @param utf8 whether to encode String fields and characters in utf8 or not
+     * @param endianUtil encoder for multi-byte values
+     * @param content the objects to encode
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
@@ -1548,8 +1548,8 @@ public final class TypedMessage
 
     /**
      * Decode the message into an object array, constructing Java Primitive data arrays and matrices where possible.
-     * @param buffer byte[]; the byte array to decode
-     * @param endianUtil EndianUtil; decoder for multi-byte values
+     * @param buffer the byte array to decode
+     * @param endianUtil decoder for multi-byte values
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
@@ -1561,8 +1561,8 @@ public final class TypedMessage
 
     /**
      * Decode the message into an object array, constructing Java Object arrays and matrices where possible.
-     * @param buffer byte[]; the byte array to decode
-     * @param endianUtil EndianUtil; decoder for multi-byte values
+     * @param buffer the byte array to decode
+     * @param endianUtil decoder for multi-byte values
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
@@ -1574,9 +1574,9 @@ public final class TypedMessage
 
     /**
      * Decode the message into an object array.
-     * @param buffer byte[]; the byte array to decode
-     * @param decoderMap Map&lt;Byte, Serializer&lt;?&gt;&gt;; the map with decoders to use
-     * @param endianUtil EndianUtil; decoder for multi-byte values
+     * @param buffer the byte array to decode
+     * @param decoderMap the map with decoders to use
+     * @param endianUtil decoder for multi-byte values
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
@@ -1606,10 +1606,10 @@ public final class TypedMessage
 
     /**
      * Retrieve and decode a DJUNITS unit.
-     * @param buffer byte[]; the encoded data
-     * @param pointer Pointer; position in the encoded data where the unit is to be decoded from
-     * @param endianUtil EndianUtil; decoder for multi-byte values
-     * @return U; decoded Unit
+     * @param buffer the encoded data
+     * @param pointer position in the encoded data where the unit is to be decoded from
+     * @param endianUtil decoder for multi-byte values
+     * @return decoded Unit
      * @param <U> the unit type
      */
     @SuppressWarnings("unchecked")
@@ -1630,7 +1630,7 @@ public final class TypedMessage
 
         /**
          * Construct a new MinimalCompound object.
-         * @param list List&lt;Object&gt;; the object list that is returned by <code>exportAsList</code> method
+         * @param list the object list that is returned by <code>exportAsList</code> method
          */
         MinimalSerializableObject(final List<Object> list)
         {

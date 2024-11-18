@@ -17,7 +17,7 @@ public interface Directed2d<D extends Directed<D>> extends Directed<D>
 {
     /**
      * Retrieve the angle from the positive x-axis. Positive rotates towards the positive y-axis (and beyond).
-     * @return double; dirZ
+     * @return dirZ
      */
     double getDirZ();
 

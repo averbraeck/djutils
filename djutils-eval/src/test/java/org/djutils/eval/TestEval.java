@@ -1317,7 +1317,7 @@ public class TestEval
 
         /**
          * Create a new ValueStore.
-         * @param map Map&lt;String,Object&gt;; map that translates names to value (not deep-copied; therefore, if this map is
+         * @param map map that translates names to value (not deep-copied; therefore, if this map is
          *            changed at a later time that will affect subsequent lookup results).
          */
         ValueStore(final Map<String, Object> map)
@@ -1335,11 +1335,11 @@ public class TestEval
 
     /**
      * Verify the class, value and unit of a DoubleScalar value.
-     * @param description String; description of the test
-     * @param object Object; the DoubleScalar
-     * @param expectedValue double; the expected SI value
-     * @param tolerance double; the maximum error of the SI value
-     * @param expectedQuantity Quantity&lt;?&gt;; the expected quantity
+     * @param description description of the test
+     * @param object the DoubleScalar
+     * @param expectedValue the expected SI value
+     * @param tolerance the maximum error of the SI value
+     * @param expectedQuantity the expected quantity
      */
     private void verifyValueAndUnit(final String description, final Object object, final double expectedValue,
             final double tolerance, final Quantity<?> expectedQuantity)
@@ -1356,9 +1356,9 @@ public class TestEval
 
     /**
      * Verify the class and value of a Boolean value
-     * @param description String; description of the test
-     * @param object Object; the Boolean
-     * @param expectedValue boolean; the expected value
+     * @param description description of the test
+     * @param object the Boolean
+     * @param expectedValue the expected value
      */
     private void verifyBoolean(final String description, final Object object, final boolean expectedValue)
     {

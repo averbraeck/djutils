@@ -24,8 +24,8 @@ public class SerialDataDumper extends Dumper<SerialDataDumper>
 {
     /**
      * Construct a new SerialDataDumper.
-     * @param endianUtil EndianUtil; used to decode multi-byte values
-     * @param addressOffset int; address of the first byte that will be processed
+     * @param endianUtil used to decode multi-byte values
+     * @param addressOffset address of the first byte that will be processed
      */
     public SerialDataDumper(final EndianUtil endianUtil, final int addressOffset)
     {
@@ -40,7 +40,7 @@ public class SerialDataDumper extends Dumper<SerialDataDumper>
 
     /**
      * Construct a new SerialDataDumper.
-     * @param endianUtil EndianUtil; used to decode multi-byte values
+     * @param endianUtil used to decode multi-byte values
      */
     public SerialDataDumper(final EndianUtil endianUtil)
     {
@@ -49,10 +49,10 @@ public class SerialDataDumper extends Dumper<SerialDataDumper>
 
     /**
      * Create a SerialDataDumper object; use it to dump an array of bytes and return the dump as a String.
-     * @param endianUtil EndianUtil; used to decode multi-byte values
-     * @param addressOffset int; address of the first byte
-     * @param bytes byte[]; the bytes to hex-dump
-     * @return String; the hexadecimal and character dump of the <code>bytes</code>
+     * @param endianUtil used to decode multi-byte values
+     * @param addressOffset address of the first byte
+     * @param bytes the bytes to hex-dump
+     * @return the hexadecimal and character dump of the <code>bytes</code>
      */
     public static String serialDataDumper(final EndianUtil endianUtil, final int addressOffset, final byte[] bytes)
     {
@@ -70,9 +70,9 @@ public class SerialDataDumper extends Dumper<SerialDataDumper>
 
     /**
      * Create a SerialDataDumper object with addressOffset 0; use it to dump an array of bytes and return the dump as a String.
-     * @param endianUtil EndianUtil; used to decode multi-byte values
-     * @param bytes byte[]; the bytes to hex-dump
-     * @return String; the hexadecimal and character dump of the <code>bytes</code>
+     * @param endianUtil used to decode multi-byte values
+     * @param bytes the bytes to hex-dump
+     * @return the hexadecimal and character dump of the <code>bytes</code>
      */
     public static String serialDataDumper(final EndianUtil endianUtil, final byte[] bytes)
     {

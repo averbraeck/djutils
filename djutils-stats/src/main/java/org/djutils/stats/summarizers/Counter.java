@@ -32,7 +32,7 @@ public class Counter implements Statistic
 
     /**
      * Constructs a new Counter.
-     * @param description String; the description for this counter
+     * @param description the description for this counter
      */
     public Counter(final String description)
     {
@@ -43,7 +43,7 @@ public class Counter implements Statistic
 
     /**
      * Returns the current counter value.
-     * @return long; the counter value
+     * @return the counter value
      */
     public long getCount()
     {
@@ -58,8 +58,8 @@ public class Counter implements Statistic
 
     /**
      * Process one observed value.
-     * @param value long; the value to process
-     * @return long; the value
+     * @param value the value to process
+     * @return the value
      */
     public long register(final long value)
     {
@@ -92,7 +92,7 @@ public class Counter implements Statistic
 
     /**
      * Return a string representing a header for a textual table with a monospaced font that can contain multiple statistics.
-     * @return String; header for the textual table.
+     * @return header for the textual table.
      */
     public static String reportHeader()
     {
@@ -108,7 +108,7 @@ public class Counter implements Statistic
 
     /**
      * Return a string representing a footer for a textual table with a monospaced font that can contain multiple statistics.
-     * @return String; footer for the textual table
+     * @return footer for the textual table
      */
     public static String reportFooter()
     {

@@ -46,7 +46,7 @@ public class Surface3d implements Drawable3d
 
     /**
      * Construct a new Surface3d.
-     * @param points Point3d[][]; two dimensional array of points. The first index iterates over the individual triangles; the
+     * @param points two dimensional array of points. The first index iterates over the individual triangles; the
      *            second index iterates over the points of a single triangle. The range of the second index must be 3. It is
      *            expected that all points appear multiple times in the points array, but never within the same sub-array.
      * @throws NullPointerException when <code>points</code> is <code>null</code>, or contains a <code>null</code> value

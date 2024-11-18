@@ -59,7 +59,7 @@ public class Tally implements TallyStatistic
 
     /**
      * Convenience constructor that uses a NoStorageAccumulator to estimate quantiles.
-     * @param description String; the description of this tally
+     * @param description the description of this tally
      */
     public Tally(final String description)
     {
@@ -68,8 +68,8 @@ public class Tally implements TallyStatistic
 
     /**
      * Constructs a new Tally.
-     * @param description String; the description of this tally
-     * @param quantileAccumulator QuantileAccumulator; the input series accumulator that can approximate or compute quantiles.
+     * @param description the description of this tally
+     * @param quantileAccumulator the input series accumulator that can approximate or compute quantiles.
      */
     public Tally(final String description, final QuantileAccumulator quantileAccumulator)
     {
@@ -99,7 +99,7 @@ public class Tally implements TallyStatistic
 
     /**
      * Ingest an array of values.
-     * @param values double...; the values to register
+     * @param values the values to register
      */
     public void register(final double... values)
     {
@@ -111,8 +111,8 @@ public class Tally implements TallyStatistic
 
     /**
      * Process one observed value.
-     * @param value double; the value to process
-     * @return double; the value
+     * @param value the value to process
+     * @return the value
      */
     public double register(final double value)
     {
@@ -179,7 +179,7 @@ public class Tally implements TallyStatistic
 
     /**
      * Return the sum of the values of the observations.
-     * @return double; the sum of the values of the observations
+     * @return the sum of the values of the observations
      */
     public double getSum()
     {
@@ -188,7 +188,7 @@ public class Tally implements TallyStatistic
 
     /**
      * Returns the sample mean of all observations since the initialization.
-     * @return double; the sample mean
+     * @return the sample mean
      */
     public double getSampleMean()
     {
@@ -201,7 +201,7 @@ public class Tally implements TallyStatistic
 
     /**
      * Returns the population mean of all observations since the initialization.
-     * @return double; the population mean
+     * @return the population mean
      */
     public double getPopulationMean()
     {
@@ -211,7 +211,7 @@ public class Tally implements TallyStatistic
     /**
      * Returns the current (unbiased) sample standard deviation of all observations since the initialization. The sample
      * standard deviation is defined as the square root of the sample variance.
-     * @return double; the sample standard deviation
+     * @return the sample standard deviation
      */
     public double getSampleStDev()
     {
@@ -228,7 +228,7 @@ public class Tally implements TallyStatistic
     /**
      * Returns the current (biased) population standard deviation of all observations since the initialization. The population
      * standard deviation is defined as the square root of the population variance.
-     * @return double; the population standard deviation
+     * @return the population standard deviation
      */
     public double getPopulationStDev()
     {
@@ -244,7 +244,7 @@ public class Tally implements TallyStatistic
      * &nbsp;&nbsp;<i>S<sup>2</sup> = (1 / (n - 1)) * [ &Sigma;x<sup>2</sup> - (&Sigma;x)<sup>2</sup> / n ] </i><br>
      * which can be calculated on the basis of the calculated population variance <i>&sigma;<sup>2</sup></i> as follows:<br>
      * &nbsp;&nbsp;<i>S<sup>2</sup> = &sigma;<sup>2</sup> * n / (n - 1)</i><br>
-     * @return double; the current sample variance of this tally
+     * @return the current sample variance of this tally
      */
     public double getSampleVariance()
     {
@@ -262,7 +262,7 @@ public class Tally implements TallyStatistic
      * Returns the current (biased) population variance of all observations since the initialization. The population variance is
      * defined as:<br>
      * <i>&sigma;<sup>2</sup> = (1 / n) * [ &Sigma;x<sup>2</sup> - (&Sigma;x)<sup>2</sup> / n ] </i>
-     * @return double; the current population variance of this tally
+     * @return the current population variance of this tally
      */
     public double getPopulationVariance()
     {
@@ -283,7 +283,7 @@ public class Tally implements TallyStatistic
      * whereas SAS, SPSS and Excel calculate it as:<br>
      * &nbsp;&nbsp;<i>Skew<sub>unbiased</sub> = Skew<sub>biased</sub> &radic;[ n ( n - 1)] / (n - 2)</i> <br>
      * Here we follow the last mentioned formula. All formulas converge to the same value with larger n.
-     * @return double; the sample skewness of the registered data
+     * @return the sample skewness of the registered data
      */
     public double getSampleSkewness()
     {
@@ -299,7 +299,7 @@ public class Tally implements TallyStatistic
      * &nbsp;&nbsp;<i>Skew<sub>biased</sub> = [ &Sigma; ( x - &mu; ) <sup>3</sup> ] / [ n . S<sup>3</sup> ]</i><br>
      * where <i>S<sup>2</sup></i> is the <b>sample</b> variance. So the denominator is equal to <i>[ n .
      * sample_var<sup>3/2</sup> ]</i> .
-     * @return double; the skewness of the registered data
+     * @return the skewness of the registered data
      */
     public double getPopulationSkewness()
     {
@@ -316,7 +316,7 @@ public class Tally implements TallyStatistic
      * &nbsp;&nbsp;<i>Kurt<sub>unbiased</sub> = [ &Sigma; ( x - &mu; ) <sup>4</sup> ] / [ ( n - 1 ) . S<sup>4</sup> ]</i><br>
      * where <i>S<sup>2</sup></i> is the <u>sample</u> variance. So the denominator is equal to <i>[ ( n - 1 ) .
      * sample_var<sup>2</sup> ]</i> .
-     * @return double; the sample kurtosis of the registered data
+     * @return the sample kurtosis of the registered data
      */
     public double getSampleKurtosis()
     {
@@ -333,7 +333,7 @@ public class Tally implements TallyStatistic
      * &nbsp;&nbsp;<i>Kurt<sub>biased</sub> = [ &Sigma; ( x - &mu; ) <sup>4</sup> ] / [ n . &sigma;<sup>4</sup> ]</i><br>
      * where <i>&sigma;<sup>2</sup></i> is the <u>population</u> variance. So the denominator is equal to <i>[ n .
      * pop_var<sup>2</sup> ]</i> .
-     * @return double; the population kurtosis of the registered data
+     * @return the population kurtosis of the registered data
      */
     public double getPopulationKurtosis()
     {
@@ -351,7 +351,7 @@ public class Tally implements TallyStatistic
      * &nbsp;&nbsp;<i>ExcessKurt<sub>unbiased</sub> = ( n - 1 ) / [( n - 2 ) * ( n - 3 )] [ ( n + 1 ) *
      * ExcessKurt<sub>biased</sub> + 6]</i> <br>
      * This is the excess kurtosis that is calculated by, for instance, SAS, SPSS and Excel.
-     * @return double; the sample excess kurtosis of the registered data
+     * @return the sample excess kurtosis of the registered data
      */
     public double getSampleExcessKurtosis()
     {
@@ -366,7 +366,7 @@ public class Tally implements TallyStatistic
     /**
      * Return the population excess kurtosis of the registered data. The kurtosis value of the normal distribution is 3. The
      * excess kurtosis is the kurtosis value shifted by -3 to be 0 for the normal distribution.
-     * @return double; the population excess kurtosis of the registered data
+     * @return the population excess kurtosis of the registered data
      */
     public double getPopulationExcessKurtosis()
     {
@@ -380,9 +380,9 @@ public class Tally implements TallyStatistic
 
     /**
      * Compute the quantile for the given probability.
-     * @param probability double; the probability for which the quantile is to be computed. The value should be between 0 and 1,
+     * @param probability the probability for which the quantile is to be computed. The value should be between 0 and 1,
      *            inclusive.
-     * @return double; the quantile for the probability
+     * @return the quantile for the probability
      * @throws IllegalArgumentException when the probability is less than 0 or larger than 1
      */
     public double getQuantile(final double probability)
@@ -392,8 +392,8 @@ public class Tally implements TallyStatistic
 
     /**
      * Get, or estimate fraction of registered values between -infinity up to and including a given quantile.
-     * @param quantile double; the given quantile
-     * @return double; the estimated or observed fraction of registered values between -infinity up to and including the given
+     * @param quantile the given quantile
+     * @return the estimated or observed fraction of registered values between -infinity up to and including the given
      *         quantile. When this TallyInterface has registered zero values; this method shall return NaN.
      * @throws IllegalArgumentException when quantile is NaN
      */
@@ -404,9 +404,9 @@ public class Tally implements TallyStatistic
 
     /**
      * returns the confidence interval on either side of the mean.
-     * @param alpha double; Alpha is the significance level used to compute the confidence level. The confidence level equals
+     * @param alpha Alpha is the significance level used to compute the confidence level. The confidence level equals
      *            100*(1 - alpha)%, or in other words, an alpha of 0.05 indicates a 95 percent confidence level.
-     * @return double[]; the confidence interval of this tally
+     * @return the confidence interval of this tally
      * @throws IllegalArgumentException when alpha is less than 0 or larger than 1
      */
     public double[] getConfidenceInterval(final double alpha)
@@ -416,10 +416,10 @@ public class Tally implements TallyStatistic
 
     /**
      * returns the confidence interval based of the mean.
-     * @param alpha double; Alpha is the significance level used to compute the confidence level. The confidence level equals
+     * @param alpha Alpha is the significance level used to compute the confidence level. The confidence level equals
      *            100*(1 - alpha)%, or in other words, an alpha of 0.05 indicates a 95 percent confidence level.
-     * @param side ConfidenceInterval; the side of the confidence interval with respect to the mean
-     * @return double[]; the confidence interval of this tally
+     * @param side the side of the confidence interval with respect to the mean
+     * @return the confidence interval of this tally
      * @throws IllegalArgumentException when alpha is less than 0 or larger than 1
      * @throws NullPointerException when side is null
      */
@@ -467,7 +467,7 @@ public class Tally implements TallyStatistic
 
     /**
      * Return a string representing a header for a textual table with a monospaced font that can contain multiple statistics.
-     * @return String; header for the textual table.
+     * @return header for the textual table.
      */
     public static String reportHeader()
     {
@@ -485,7 +485,7 @@ public class Tally implements TallyStatistic
 
     /**
      * Return a string representing a footer for a textual table with a monospaced font that can contain multiple statistics.
-     * @return String; footer for the textual table
+     * @return footer for the textual table
      */
     public static String reportFooter()
     {

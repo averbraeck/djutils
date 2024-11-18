@@ -262,11 +262,11 @@ public class SerializationUnits implements Serializable
 
     /**
      * Construct a new UnitType and put it in the maps.
-     * @param code int; the byte code of the unit provided as an int
-     * @param djunitsType Class&lt;U&gt;; the djunits data type
-     * @param name String; the unit name
-     * @param description String; the unit description
-     * @param siUnit String; the SI or default unit in SI-elements
+     * @param code the byte code of the unit provided as an int
+     * @param djunitsType the djunits data type
+     * @param name the unit name
+     * @param description the unit description
+     * @param siUnit the SI or default unit in SI-elements
      * @param <U> the Unit
      */
     public <U extends Unit<U>> SerializationUnits(final int code, final Class<U> djunitsType, final String name,
@@ -284,8 +284,8 @@ public class SerializationUnits implements Serializable
 
     /**
      * Return the unit type belonging to the byte code.
-     * @param code byte; the code to search for.
-     * @return UnitType; the unit type, or null if not found.
+     * @param code the code to search for.
+     * @return the unit type, or null if not found.
      */
     public static SerializationUnits getUnitType(final byte code)
     {
@@ -294,8 +294,8 @@ public class SerializationUnits implements Serializable
 
     /**
      * Return the unit class belonging to the byte code.
-     * @param code byte; the code to search for.
-     * @return Class; the unit class, or null if not found.
+     * @param code the code to search for.
+     * @return the unit class, or null if not found.
      */
     public static Class<? extends Unit<?>> getUnitClass(final byte code)
     {
@@ -305,8 +305,8 @@ public class SerializationUnits implements Serializable
 
     /**
      * Return the unit type belonging to the unit class.
-     * @param unit U; the unit to search for.
-     * @return UnitType; the unit type, or null if not found.
+     * @param unit the unit to search for.
+     * @return the unit type, or null if not found.
      * @param <U> the Unit
      */
     public static <U extends Unit<U>> SerializationUnits getUnitType(final U unit)
@@ -316,8 +316,8 @@ public class SerializationUnits implements Serializable
 
     /**
      * Return the byte code belonging to the unit class.
-     * @param unit U; the unit to search for.
-     * @return byte; the unit type code, or null if not found.
+     * @param unit the unit to search for.
+     * @return the unit type code, or null if not found.
      * @param <U> the Unit
      */
     public static <U extends Unit<U>> byte getUnitCode(final U unit)
@@ -328,7 +328,7 @@ public class SerializationUnits implements Serializable
 
     /**
      * Retrieve the byte code of this UnitType.
-     * @return byte; the byte code of this UnitType
+     * @return the byte code of this UnitType
      */
     public final byte getCode()
     {
@@ -337,7 +337,7 @@ public class SerializationUnits implements Serializable
 
     /**
      * Retrieve the DJUNITS type of this UnitType.
-     * @return Class; the DJUNITS type of this UnitType
+     * @return the DJUNITS type of this UnitType
      */
     public final Class<? extends Unit<?>> getDjunitsType()
     {
@@ -346,7 +346,7 @@ public class SerializationUnits implements Serializable
 
     /**
      * Retrieve the name of the UnitType.
-     * @return String; the name of this UnitType
+     * @return the name of this UnitType
      */
     public final String getName()
     {
@@ -355,7 +355,7 @@ public class SerializationUnits implements Serializable
 
     /**
      * Retrieve the description of this UnitType.
-     * @return String; the description of this UnitType
+     * @return the description of this UnitType
      */
     public final String getDescription()
     {

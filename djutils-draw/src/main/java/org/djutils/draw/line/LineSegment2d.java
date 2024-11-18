@@ -44,10 +44,10 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
 
     /**
      * Construct a new LineSegment2d from four coordinates.
-     * @param startX double; the x-coordinate of the start point
-     * @param startY double; the y-coordinate of the start point
-     * @param endX double; the x-coordinate of the end point
-     * @param endY double; the y-coordinate of the end point
+     * @param startX the x-coordinate of the start point
+     * @param startY the y-coordinate of the start point
+     * @param endX the x-coordinate of the end point
+     * @param endY the y-coordinate of the end point
      * @throws IllegalArgumentException when <code>(startX,startY)</code> is the same as<code>(endX,endY)</code>
      */
     public LineSegment2d(final double startX, final double startY, final double endX, final double endY)
@@ -61,9 +61,9 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
 
     /**
      * Construct a new LineSegment2d from a Point2d and two coordinates.
-     * @param start Point2d; the start point
-     * @param endX double; the x-coordinate of the end point
-     * @param endY double; the y-coordinate of the end point
+     * @param start the start point
+     * @param endX the x-coordinate of the end point
+     * @param endY the y-coordinate of the end point
      * @throws NullPointerException when <code>start</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>start</code> has the exact coordinates <code>(endX,endY)</code>
      */
@@ -74,9 +74,9 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
 
     /**
      * Construct a new LineSegment2d from two coordinates and a Point2d.
-     * @param startX double; the x-coordinate of the start point
-     * @param startY double; the y-coordinate of the start point
-     * @param end Point2d; the end point
+     * @param startX the x-coordinate of the start point
+     * @param startY the y-coordinate of the start point
+     * @param end the end point
      * @throws NullPointerException when <code>end</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>end</code> has the exact coordinates <code>(startX,startY)</code>
      */
@@ -88,8 +88,8 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
 
     /**
      * Construct a new LineSegment2d from two Point2d objects.
-     * @param start Point2d; the start point
-     * @param end Point2d; the end point
+     * @param start the start point
+     * @param end the end point
      * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>start</code> has the same coordinates as <code>end</code>
      */

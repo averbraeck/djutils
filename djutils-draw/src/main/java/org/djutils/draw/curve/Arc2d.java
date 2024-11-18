@@ -37,7 +37,7 @@ public class Arc2d implements Curvature, Curve2d, OffsetCurve2d
 
     /**
      * Define arc by starting point, radius, curve direction, and angle.
-     * @param startPoint DirectedPoint2d; starting point
+     * @param startPoint starting point
      * @param radius radius (must be positive)
      * @param left <code>true</code>for left turning curve; <code>false</code> for for right turning curve
      * @param angle angle of arc (must be positive)
@@ -82,7 +82,7 @@ public class Arc2d implements Curvature, Curve2d, OffsetCurve2d
 
     /**
      * Does this arc bend to the left?
-     * @return boolean; <code>true</code> if this Arc bends to the left; <code>false</code> if this Arc bends to the right
+     * @return <code>true</code> if this Arc bends to the left; <code>false</code> if this Arc bends to the right
      */
     public boolean isLeft()
     {
@@ -91,7 +91,7 @@ public class Arc2d implements Curvature, Curve2d, OffsetCurve2d
 
     /**
      * Retrieve the total change of direction on this Arc.
-     * @return double; the total change of direction on this Arc
+     * @return the total change of direction on this Arc
      */
     public double getAngle()
     {
@@ -100,9 +100,9 @@ public class Arc2d implements Curvature, Curve2d, OffsetCurve2d
 
     /**
      * Compute the point at the provided fraction of this Arc while applying the provided lateral offset.
-     * @param fraction double; the fraction along this Arc
-     * @param offset double; the lateral offset to apply
-     * @return Point2d; the point at the provided fraction of this Arc with the provided lateral offset applied
+     * @param fraction the fraction along this Arc
+     * @param offset the lateral offset to apply
+     * @return the point at the provided fraction of this Arc with the provided lateral offset applied
      */
     private Point2d getPoint(final double fraction, final double offset)
     {

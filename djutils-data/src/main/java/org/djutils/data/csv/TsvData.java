@@ -45,9 +45,9 @@ public final class TsvData
      * The metadata consists of a TSV file with three columns: the id, the description, and the class. The first row after the
      * header contains the id, description, and class of the data table itself. The second and further rows contain information
      * about the columns of the data table.
-     * @param writer Writer; the writer that writes the data, e.g. to a file
-     * @param metaWriter Writer; the writer for the metadata
-     * @param dataTable Table; the data table to write
+     * @param writer the writer that writes the data, e.g. to a file
+     * @param metaWriter the writer for the metadata
+     * @param dataTable the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -59,9 +59,9 @@ public final class TsvData
 
     /**
      * Write the data from the data table in TSV format.
-     * @param filename String; the file name to write the data to
-     * @param metaFilename String; the file name to write the metadata to
-     * @param dataTable Table; the data table to write
+     * @param filename the file name to write the data to
+     * @param metaFilename the file name to write the metadata to
+     * @param dataTable the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -79,10 +79,10 @@ public final class TsvData
      * TSV file with three columns: the id, the description, and the class. The first row after the header contains the id,
      * description, and class of the data table itself. The second and further rows contain information about the columns of the
      * data table.
-     * @param writer Writer; the writer that writes the data, e.g. to a file
-     * @param tsvName String; name of the TSV file within the zip file
-     * @param metaName String; name of the meta data file within the zip file
-     * @param table Table; the data table to write
+     * @param writer the writer that writes the data, e.g. to a file
+     * @param tsvName name of the TSV file within the zip file
+     * @param metaName name of the meta data file within the zip file
+     * @param table the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -94,8 +94,8 @@ public final class TsvData
 
     /**
      * Read the data from the TSV-file into the data table. Use the metadata to reconstruct the data table.
-     * @param reader Reader; the reader that can read the data, e.g. from a file
-     * @param metaReader Reader; the writer for the metadata
+     * @param reader the reader that can read the data, e.g. from a file
+     * @param metaReader the writer for the metadata
      * @return dataTable the data table reconstructed from the meta data and filled with the data
      * @throws IOException on I/O error when reading the data
      * @throws TextSerializationException on unknown data type for serialization
@@ -107,8 +107,8 @@ public final class TsvData
 
     /**
      * Read the data from the TSV-file into the data table. Use the metadata to reconstruct the data table.
-     * @param filename String; the file name to read the data from
-     * @param metaFilename String; the file name to read the metadata from
+     * @param filename the file name to read the data from
+     * @param metaFilename the file name to read the metadata from
      * @return dataTable the data table reconstructed from the meta data and filled with the data
      * @throws IOException on I/O error when reading the data
      * @throws TextSerializationException on unknown data type for serialization
@@ -125,9 +125,9 @@ public final class TsvData
     /**
      * Read the data from a TSV-file inside a zip file. The metadata file should be in the same zipfile. Use the metadata to
      * reconstruct the data table.
-     * @param fileName String; file name of the zip file
-     * @param tsvName String; name of the TSV-file, without path
-     * @param metaName String; name of the metadata file, without path
+     * @param fileName file name of the zip file
+     * @param tsvName name of the TSV-file, without path
+     * @param metaName name of the metadata file, without path
      * @return Table the data table reconstructed from the meta data and filled with the data
      * @throws IOException when the CSV data was not formatted right
      * @throws TextSerializationException on unknown data type for serialization

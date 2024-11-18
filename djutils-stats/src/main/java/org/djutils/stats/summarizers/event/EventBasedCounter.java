@@ -32,7 +32,7 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
 
     /**
      * Construct a new EventBasedCounter.
-     * @param description String; the description for this counter
+     * @param description the description for this counter
      */
     public EventBasedCounter(final String description)
     {
@@ -41,8 +41,8 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
 
     /**
      * Construct a new EventBasedCounter with a specific EventProducer, e.g. a remote one.
-     * @param description String; the description for this counter
-     * @param eventProducer EventProducer; the EventProducer to embed and use in this statistic
+     * @param description the description for this counter
+     * @param eventProducer the EventProducer to embed and use in this statistic
      */
     public EventBasedCounter(final String description, final EventProducer eventProducer)
     {

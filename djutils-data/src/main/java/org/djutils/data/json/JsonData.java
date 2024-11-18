@@ -89,8 +89,8 @@ public final class JsonData
 
     /**
      * Write the data from the data table in JSON format.
-     * @param writer Writer; the writer that writes the data, e.g. to a file
-     * @param dataTable Table; the data table to write
+     * @param writer the writer that writes the data, e.g. to a file
+     * @param dataTable the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -161,8 +161,8 @@ public final class JsonData
 
     /**
      * Write the data from the data table in JSON format.
-     * @param filename String; the file name to write the data to
-     * @param dataTable Table; the data table to write
+     * @param filename the file name to write the data to
+     * @param dataTable the data table to write
      * @throws IOException on I/O error when writing the data
      * @throws TextSerializationException on unknown data type for serialization
      */
@@ -185,7 +185,7 @@ public final class JsonData
 
     /**
      * Read the data from the csv-file into the data table. Use the metadata to reconstruct the data table.
-     * @param reader Reader; the reader that can read the data, e.g. from a file
+     * @param reader the reader that can read the data, e.g. from a file
      * @return dataTable the data table reconstructed from the meta data and filled with the data
      * @throws IOException on I/O error when reading the data
      * @throws TextSerializationException on unknown data type for serialization
@@ -297,8 +297,8 @@ public final class JsonData
 
     /**
      * Read a name - value pair from the JSON file where name has to match the given tag name.
-     * @param jr JsonReader; the JSON stream reader
-     * @param tag String; the tag to retrieve
+     * @param jr the JSON stream reader
+     * @param tag the tag to retrieve
      * @return the value belonging to the tag
      * @throws IllegalFormatException when the next element in the file did not contain the right tag
      * @throws IOException when reading from the stream raises an exception
@@ -316,8 +316,8 @@ public final class JsonData
 
     /**
      * Read a name -from the JSON file where name has to match the given tag name.
-     * @param jr JsonReader; the JSON stream reader
-     * @param tag String; the tag to retrieve
+     * @param jr the JSON stream reader
+     * @param tag the tag to retrieve
      * @throws IllegalFormatException when the next element in the file did not contain the right tag
      * @throws IOException when reading from the stream raises an exception
      */
@@ -328,7 +328,7 @@ public final class JsonData
 
     /**
      * Read the data from the csv-file into the data table. Use the metadata to reconstruct the data table.
-     * @param filename String; the file name to read the data from
+     * @param filename the file name to read the data from
      * @return dataTable the data table reconstructed from the meta data and filled with the data
      * @throws IOException on I/O error when reading the data
      * @throws TextSerializationException on unknown data type for serialization

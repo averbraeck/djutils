@@ -22,10 +22,10 @@ public interface TextSerializer<T>
      * Serialize a value to text in such a way that it can be deserialized with the corresponding deserializer. Note that
      * {@code null} values for value <b>are allowed</b>. A {@code null} values stands for an empty column value in a CVS-file, a
      * missing tag in an XML-file, etc.
-     * @param value T; the value to serialize, may be {@code null}
-     * @param unit String; the unit used to convert the data to and store, so all valus in a column may have the same unit. The
+     * @param value the value to serialize, may be {@code null}
+     * @param unit the unit used to convert the data to and store, so all valus in a column may have the same unit. The
      *            value may be {@code null} or blank
-     * @return String; a string representation of the value that can later be deserialized, or {@code null}to denote a missing
+     * @return a string representation of the value that can later be deserialized, or {@code null}to denote a missing
      *         value
      */
     String serialize(T value, String unit);
@@ -36,17 +36,17 @@ public interface TextSerializer<T>
      * XML-file, etc. In this way, we can explicitly show values that were not specified in the file. Also, the type may be
      * {@code null}; this is, for instance, the case for any {@code TextSerializer} implementing {@code 
      * SpecificTextSerializer}, where no class needs to be provided (although it can).
-     * @param type Class&lt;T&gt;; class of the value type, may be {@code null}
-     * @param text String; the string to deserialize, may be {@code null} or blank
-     * @param unit String; unit with the value, may be {@code null} or blank
-     * @return T; an instance of the object created with the corresponding serializer, may be {@code null} when a value was not
+     * @param type class of the value type, may be {@code null}
+     * @param text the string to deserialize, may be {@code null} or blank
+     * @param unit unit with the value, may be {@code null} or blank
+     * @return an instance of the object created with the corresponding serializer, may be {@code null} when a value was not
      *         specified in the source from which the deserializer was called
      */
     T deserialize(Class<T> type, String text, String unit);
 
     /**
      * Resolve the correct (de)serializer for the given class, and return an instance of the (de)serializer.
-     * @param valueClass Class&lt;?&gt;; the class to resolve the (de)serializer for
+     * @param valueClass the class to resolve the (de)serializer for
      * @return an instance of the correct (de)serializer
      * @throws TextSerializationException when there is no corresponding (de)serializer for the class
      */
@@ -149,11 +149,11 @@ public interface TextSerializer<T>
      * values for value <b>are allowed</b>. A {@code null} values stands for an empty column value in a CVS-file, a missing tag
      * in an XML-file, etc.
      * @param <T> value type
-     * @param serializer TextSerializer&lt;?&gt;; serializer
-     * @param value Object; value, may be {@code null}
-     * @param unit String; the unit used to convert the data to and store, so all valus in a column may have the same unit. The
+     * @param serializer serializer
+     * @param value value, may be {@code null}
+     * @param unit the unit used to convert the data to and store, so all valus in a column may have the same unit. The
      *            value may be {@code null} or blank
-     * @return String; serialized value, or {@code null}to denote a missing value
+     * @return serialized value, or {@code null}to denote a missing value
      */
     @SuppressWarnings("unchecked")
     static <T> String serialize(final TextSerializer<?> serializer, final Object value, final String unit)
@@ -167,10 +167,10 @@ public interface TextSerializer<T>
      * values for text <b>are allowed</b>. A {@code null} values stands for an empty column value in a CVS-file, a missing tag
      * in an XML-file, etc. In this way, we can explicitly show values that were not specified in the file for a certain column.
      * @param <T> value type
-     * @param serializer TextSerializer&lt;?&gt;; serializer
-     * @param text String; value, may be {@code null}
-     * @param column Column&lt;?&gt;; columns
-     * @return T; deserialized value, may be {@code null} when a value was not specified in the source for which the
+     * @param serializer serializer
+     * @param text value, may be {@code null}
+     * @param column columns
+     * @return deserialized value, may be {@code null} when a value was not specified in the source for which the
      *         deserializer was called
      */
     @SuppressWarnings("unchecked")

@@ -302,11 +302,11 @@ public class BezierTest
 
     /**
      * Compare B&eacute;zier curve approximations.
-     * @param description String; description of the test
-     * @param reference PolyLine2d; reference B&eacute;zier curve approximation
-     * @param candidate PolyLine2d; candidate B&eacute;zier curve approximation
-     * @param numberOfPoints int; number of point to compare the curves at, minus one; this method checks at 0% and at 100%
-     * @param epsilon double; upper limit of the distance between the two curves
+     * @param description description of the test
+     * @param reference reference B&eacute;zier curve approximation
+     * @param candidate candidate B&eacute;zier curve approximation
+     * @param numberOfPoints number of point to compare the curves at, minus one; this method checks at 0% and at 100%
+     * @param epsilon upper limit of the distance between the two curves
      * @throws DrawRuntimeException if that happens uncaught; a test has failed
      */
     public void compareBeziers(final String description, final PolyLine2d reference, final PolyLine2d candidate,
@@ -333,11 +333,11 @@ public class BezierTest
 
     /**
      * Compare B&eacute;zier curve approximations.
-     * @param description String; description of the test
-     * @param reference PolyLine3d; reference B&eacute;zier curve approximation
-     * @param candidate PolyLine3d; candidate B&eacute;zier curve approximation
-     * @param numberOfPoints int; number of point to compare the curves at, minus one; this method checks at 0% and at 100%
-     * @param epsilon double; upper limit of the distance between the two curves
+     * @param description description of the test
+     * @param reference reference B&eacute;zier curve approximation
+     * @param candidate candidate B&eacute;zier curve approximation
+     * @param numberOfPoints number of point to compare the curves at, minus one; this method checks at 0% and at 100%
+     * @param epsilon upper limit of the distance between the two curves
      * @throws DrawRuntimeException if that happens uncaught; a test has failed
      */
     public void compareBeziersDeviation(final String description, final PolyLine3d reference, final PolyLine3d candidate,

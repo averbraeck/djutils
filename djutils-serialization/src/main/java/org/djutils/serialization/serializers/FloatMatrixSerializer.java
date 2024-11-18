@@ -109,9 +109,9 @@ public class FloatMatrixSerializer<U extends Unit<U>, S extends FloatScalar<U, S
      * Instantiate the FloatMatrix based on its unit. Loose check for types on the compiler. This allows the unit to be
      * specified as a Unit&lt;?&gt; type.<br>
      * <b>Note</b> that it is possible to make mistakes with anonymous units.
-     * @param data FloatMatrixData; the values
-     * @param unit Unit&lt;?&gt;; the unit in which the value is expressed
-     * @return M; an instantiated FloatMatrix with the provided displayUunit
+     * @param data the values
+     * @param unit the unit in which the value is expressed
+     * @return an instantiated FloatMatrix with the provided displayUunit
      * @param <U> the unit type
      * @param <S> the scalar type
      * @param <V> the vector type

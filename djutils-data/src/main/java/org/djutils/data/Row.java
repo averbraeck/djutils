@@ -23,8 +23,8 @@ public class Row
 
     /**
      * Constructor.
-     * @param table Table; table.
-     * @param values Object[]; values.
+     * @param table table.
+     * @param values values.
      */
     public Row(final Table table, final Object[] values)
     {
@@ -34,9 +34,9 @@ public class Row
 
     /**
      * Returns the column value in this row. For performance, use {@code getValue(int columnNumber)}.
-     * @param column Column&lt;T&gt;; column.
+     * @param column column.
      * @param <T> value type.
-     * @return T; the column value in this row.
+     * @return the column value in this row.
      */
     @SuppressWarnings("unchecked")
     public <T> T getValue(final Column<T> column)
@@ -46,7 +46,7 @@ public class Row
 
     /**
      * Returns the column value in this row. For performance, use {@code getValue(int columnNumber)}.
-     * @param id String; column id.
+     * @param id column id.
      * @return the column value in this row.
      */
     public Object getValue(final String id)
@@ -56,8 +56,8 @@ public class Row
     
     /**
      * Returns the column value in this row.
-     * @param columnNumber int; column number.
-     * @return Object; the column value in this row.
+     * @param columnNumber column number.
+     * @return the column value in this row.
      */
     public Object getValue(final int columnNumber)
     {
@@ -66,7 +66,7 @@ public class Row
     
     /**
      * Returns the column values of this record in the natural order of the columns.
-     * @return Object[]; the column value in this record
+     * @return the column value in this record
      */
     public Object[] getValues()
     {

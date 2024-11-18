@@ -57,11 +57,11 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Construct a new PolyLine3d from an array of double x values, an array of double y values and an array of double z values.
-     * @param copyNeeded boolean; if<code>true</code>; a deep copy of the points array is stored instead of the provided array
+     * @param copyNeeded if<code>true</code>; a deep copy of the points array is stored instead of the provided array
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
-     * @param x double[]; the x-coordinates of the points
-     * @param y double[]; the y-coordinates of the points
-     * @param z double[]; the z-coordinates of the points
+     * @param x the x-coordinates of the points
+     * @param y the y-coordinates of the points
+     * @param z the z-coordinates of the points
      * @throws NullPointerException when <code>iterator</code> is <code>null</code>
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points, or or <code>x</code> and <code>y</code> and <code>z</code> differ in length)
@@ -108,11 +108,11 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Construct a degenerate PolyLine3d (consisting of only one point).
-     * @param x double; the x-coordinate
-     * @param y double; the y-coordinate
-     * @param z double; the z-coordinate
-     * @param dirY double; the angle from the positive Z axis direction in radians
-     * @param dirZ double; the angle from the positive X axis direction in radians.
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @param z the z-coordinate
+     * @param dirY the angle from the positive Z axis direction in radians
+     * @param dirZ the angle from the positive X axis direction in radians.
      * @throws ArithmeticException when <code>x</code>, <code>y</code>, <code>z</code>, or <code>dirY</code>, or
      *             <code>dirZ</code> is <code>NaN</code>
      * @throws IllegalArgumentException when <code>dirY</code>, or <code>dirZ</code> is infinite
@@ -138,9 +138,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Construct a degenerate PolyLine3d (consisting of only one point).
-     * @param p Point3d; the point of the degenerate PolyLine3d
-     * @param dirY double; the angle from the positive Z axis direction in radians
-     * @param dirZ double; the angle from the positive X axis direction in the XY plane in radians.
+     * @param p the point of the degenerate PolyLine3d
+     * @param dirY the angle from the positive Z axis direction in radians
+     * @param dirZ the angle from the positive X axis direction in the XY plane in radians.
      * @throws NullPointerException when <code>p</code> is <code>null</code>
      * @throws ArithmeticException when <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
      * @throws IllegalArgumentException when <code>dirY</code>, or <code>dirZ</code> is infinite
@@ -152,7 +152,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Construct a degenerate PolyLine3d (consisting of only one point).
-     * @param directedPoint3d DirectedPoint3d; point, <code>dirY</code> and <code>dirZ</code> of the degenerate PolyLine3d
+     * @param directedPoint3d point, <code>dirY</code> and <code>dirZ</code> of the degenerate PolyLine3d
      * @throws NullPointerException when <code>p</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>dirY</code> or <code>dirZ</code> is infinite (should not be possible)
      */
@@ -164,9 +164,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Construct a new PolyLine3d from an array of Point2d. This constructor makes a deep copy of the parameters.
-     * @param x double[]; the x-coordinates of the points
-     * @param y double[]; the y-coordinates of the points
-     * @param z double[]; the z-coordinates of the points
+     * @param x the x-coordinates of the points
+     * @param y the y-coordinates of the points
+     * @param z the z-coordinates of the points
      * @throws NullPointerException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>null</code>
      * @throws IllegalArgumentException when the provided coordinate values do not constitute a valid line (too few points or
      *             identical adjacent points, or the arrays are not the same length)
@@ -179,9 +179,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     /**
      * Construct a new PolyLine3d from an array of Point2d. This constructor makes a deep copy of the parameters.
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
-     * @param x double[]; the x-coordinates of the points
-     * @param y double[]; the y-coordinates of the points
-     * @param z double[]; the z-coordinates of the points
+     * @param x the x-coordinates of the points
+     * @param y the y-coordinates of the points
+     * @param z the z-coordinates of the points
      * @throws NullPointerException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>null</code>
      * @throws IllegalArgumentException when the provided coordinate values do not constitute a valid line (too few points or
      *             identical adjacent points, or the arrays are not the same length)
@@ -193,7 +193,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Construct a new PolyLine3d from an array of Point3d.
-     * @param points Point3d[]; the array of points to construct this PolyLine3d from.
+     * @param points the array of points to construct this PolyLine3d from.
      * @throws NullPointerException when the <code>points</code> array is <code>null</code>
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
@@ -206,7 +206,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     /**
      * Construct a new PolyLine3d from an array of Point3d.
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
-     * @param points Point3d[]; the array of points to construct this PolyLine3d from.
+     * @param points the array of points to construct this PolyLine3d from.
      * @throws NullPointerException when the <code>points</code> array is <code>null</code>
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
@@ -219,9 +219,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Make an array of double an fill it with the appropriate coordinate of points.
-     * @param points Point3d[]; array of points
-     * @param getter Function&lt;Point3d, Double&gt;; function that obtains the intended coordinate
-     * @return double[]; array of double values filled with the requested coordinate values
+     * @param points array of points
+     * @param getter function that obtains the intended coordinate
+     * @return array of double values filled with the requested coordinate values
      */
     protected static double[] makeArray(final Point3d[] points, final Function<Point3d, Double> getter)
     {
@@ -235,9 +235,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Construct a new PolyLine3d from two or more Point3d arguments.
-     * @param point1 Point3d; starting point of the PolyLine3d
-     * @param point2 Point3d; second point of the PolyLine3d
-     * @param otherPoints Point3d...; additional points of the PolyLine3d (may be <code>null</code>, or have zero length)
+     * @param point1 starting point of the PolyLine3d
+     * @param point2 second point of the PolyLine3d
+     * @param otherPoints additional points of the PolyLine3d (may be <code>null</code>, or have zero length)
      * @throws NullPointerException when <code>point1</code>, or <code>point2</code> is <code>null</code>, or
      *             <code>otherPoints</code> contains a <code>null</code> value
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
@@ -251,9 +251,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     /**
      * Construct a new PolyLine3d from two or more Point3d arguments.
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
-     * @param point1 Point3d; starting point of the PolyLine3d
-     * @param point2 Point3d; second point of the PolyLine3d
-     * @param otherPoints Point3d...; additional points of the PolyLine3d (may be <code>null</code>, or have zero length)
+     * @param point1 starting point of the PolyLine3d
+     * @param point2 second point of the PolyLine3d
+     * @param otherPoints additional points of the PolyLine3d (may be <code>null</code>, or have zero length)
      * @throws NullPointerException when <code>point1</code>, or <code>point2</code> is <code>null</code>, or
      *             <code>otherPoints</code> contains a <code>null</code> value
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
@@ -266,11 +266,11 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Construct an array of Point3d from two points plus an array of Point3d.
-     * @param point1 Point3d; the first point (ends up at index 0 of the result)
-     * @param point2 Point3d; the second point (ends up at index 1 of the result)
-     * @param otherPoints Point3d...; may be <code>null</code>, may be empty. If non empty, the elements in otherPoints end up
+     * @param point1 the first point (ends up at index 0 of the result)
+     * @param point2 the second point (ends up at index 1 of the result)
+     * @param otherPoints may be <code>null</code>, may be empty. If non empty, the elements in otherPoints end up
      *            at index 2 and up in the result
-     * @return Point2d[]; the combined array
+     * @return the combined array
      * @throws NullPointerException when <code>point1</code> or <code>point2</code> is <code>null</code>
      */
     private static Point3d[] spliceArray(final Point3d point1, final Point3d point2, final Point3d... otherPoints)
@@ -290,7 +290,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Construct a new PolyLine3d from an iterator that yields Point3d objects.
-     * @param iterator Iterator&lt;Point3d&gt;; iterator that will provide all points that constitute the new PolyLine3d
+     * @param iterator iterator that will provide all points that constitute the new PolyLine3d
      * @throws NullPointerException when <code>iterator</code> is <code>null</code>, or yields a <code>null</code> value
      * @throws IllegalArgumentException when the <code>iterator</code> provides too few points, or some adjacent identical
      *             points)
@@ -303,7 +303,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     /**
      * Construct a new PolyLine3d from an iterator that yields Point3d objects.
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
-     * @param iterator Iterator&lt;Point3d&gt;; iterator that will provide all points that constitute the new PolyLine3d
+     * @param iterator iterator that will provide all points that constitute the new PolyLine3d
      * @throws NullPointerException when <code>iterator</code> is <code>null</code>, or yields a <code>null</code> value
      * @throws IllegalArgumentException when the <code>iterator</code> provides too few points, or some adjacent identical
      *             points)
@@ -315,7 +315,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Construct a new PolyLine3d from a List&lt;Point3d&gt;.
-     * @param pointList List&lt;Point3d&gt;; the list of points to construct the new PolyLine3d from.
+     * @param pointList the list of points to construct the new PolyLine3d from.
      * @throws NullPointerException when <code>pointList</code> is <code>null</code>, or contains a <code>null</code> value
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
@@ -328,7 +328,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     /**
      * Construct a new PolyLine3d from a List&lt;Point3d&gt;.
      * @param epsilon minimum distance between points to be considered different (these will <b>not</b> be filtered out)
-     * @param pointList List&lt;Point3d&gt;; the list of points to construct the new PolyLine3d from.
+     * @param pointList the list of points to construct the new PolyLine3d from.
      * @throws NullPointerException when <code>pointList</code> is <code>null</code>, or contains a <code>null</code> value
      * @throws IllegalArgumentException when the provided points do not constitute a valid line (too few points or identical
      *             adjacent points)
@@ -340,7 +340,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Construct a new PolyLine3d from an existing one. This constructor is primarily intended for use in extending classes.
-     * @param polyLine PolyLine3d; the existing PolyLine3d.
+     * @param polyLine the existing PolyLine3d.
      * @throws NullPointerException when <code>polyLine</code> is <code>null</code>
      */
     public PolyLine3d(final PolyLine3d polyLine)
@@ -363,8 +363,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Build a list from the Point3d objects that an iterator provides.
-     * @param iterator Iterator&lt;Point3d&gt;; the iterator that will provide the points
-     * @return List&lt;Point3d&gt;; a list of the points provided by the iterator
+     * @param iterator the iterator that will provide the points
+     * @return a list of the points provided by the iterator
      * @throws NullPointerException when <code>iterator</code> is <code>null</code>
      */
     static List<Point3d> iteratorToList(final Iterator<Point3d> iterator)
@@ -400,8 +400,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Return the z-coordinate of a point of this PolyLine.
-     * @param index int; the index of the requested z-coordinate
-     * @return double; the z-coordinate of the requested point of this PolyLine
+     * @param index the index of the requested z-coordinate
+     * @return the z-coordinate of the requested point of this PolyLine
      * @throws IndexOutOfBoundsException when <code>index &lt; 0</code>, or <code>index &ge; size()</code>
      */
     public final double getZ(final int index)
@@ -504,7 +504,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Concatenate several PolyLine3d instances.
-     * @param lines PolyLine3d...; one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
+     * @param lines one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
      *            the first of the second, etc.
      * @return PolyLine3d
      * @throws NullPointerException when <code>lines</code> is <code>null</code>, or contains a <code>null</code> value
@@ -517,10 +517,10 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Concatenate two PolyLine3d instances. This method is separate for efficiency reasons.
-     * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
-     * @param line1 PolyLine3d; first line
-     * @param line2 PolyLine3d; second line
-     * @return PolyLine3d; the concatenation of the two lines
+     * @param tolerance the tolerance between the end point of a line and the first point of the next line
+     * @param line1 first line
+     * @param line2 second line
+     * @return the concatenation of the two lines
      * @throws NullPointerException when <code>line1</code>, or <code>line2</code> is <code>null</code>
      * @throws IllegalArgumentException when there is a gap between the lines
      */
@@ -547,10 +547,10 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Concatenate several PolyLine3d instances.
-     * @param tolerance double; the tolerance between the end point of a line and the first point of the next line
-     * @param lines PolyLine3d...; one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
+     * @param tolerance the tolerance between the end point of a line and the first point of the next line
+     * @param lines one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
      *            the first of the second within the provided tolerance value, etc.
-     * @return PolyLine3d; the concatenation of the lines
+     * @return the concatenation of the lines
      * @throws NullPointerException when <code>lines</code> is <code>null</code>, or contains a <code>null</code> value
      * @throws IllegalArgumentException if zero lines are given, or when there is a gap larger than tolerance between
      *             consecutive lines
@@ -680,12 +680,12 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Perform the orthogonal projection operation.
-     * @param point Point3d; the point to project
-     * @param limitHandling Boolean; if <code>Null</code>; results outside the interval [0.0, 1.0] are replaced by
+     * @param point the point to project
+     * @param limitHandling if <code>Null</code>; results outside the interval [0.0, 1.0] are replaced by
      *            <code>NaN</code>, if <code>false</code>, results outside that interval are returned as is; if
      *            <code>true</code> results outside the interval are truncated to the interval and therefore not truly
      *            orthogonal
-     * @return double; the fractional position on this <code>PolyLine3d</code> that is closest to point, or <code>NaN</code>
+     * @return the fractional position on this <code>PolyLine3d</code> that is closest to point, or <code>NaN</code>
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
     private double projectOrthogonalFractional(final Point3d point, final Boolean limitHandling)
@@ -767,12 +767,12 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Perform the project orthogonal operation.
-     * @param point Point3d; the point to project
-     * @param limitHandling Boolean; if <code>Null</code>; results outside the interval [0.0, 1.0] are replaced by
+     * @param point the point to project
+     * @param limitHandling if <code>Null</code>; results outside the interval [0.0, 1.0] are replaced by
      *            <code>NaN</code>, if <code>false</code>, results outside that interval are returned as is; if
      *            <code>true</code> results outside the interval are truncated to the interval and therefore not truly
      *            orthogonal
-     * @return double; the fractional position on this <code>PolyLine3d</code> that is closest to point, or <code>NaN</code>
+     * @return the fractional position on this <code>PolyLine3d</code> that is closest to point, or <code>NaN</code>
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
     private Point3d projectOrthogonal(final Point3d point, final Boolean limitHandling)
@@ -910,8 +910,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Approximate the z-values of a PolyLine that was made 2d in order to apply some modification.
-     * @param flat PolyLine2d; the modified 2d PolyLine
-     * @return PolyLine3d; the PolyLine with approximately restored z-values
+     * @param flat the modified 2d PolyLine
+     * @return the PolyLine with approximately restored z-values
      */
     private PolyLine3d restoreElevation(final PolyLine2d flat)
     {

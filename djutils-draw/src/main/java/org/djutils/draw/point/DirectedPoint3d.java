@@ -39,11 +39,11 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
 
     /**
      * Create a new DirectedPoint3d with x, y, and z coordinates and direction dirY,dirZ.
-     * @param x double; the x coordinate
-     * @param y double; the y coordinate
-     * @param z double; the z coordinate
-     * @param dirY double; the complement of the slope
-     * @param dirZ double; the counter-clockwise rotation around the point in radians
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param z the z coordinate
+     * @param dirY the complement of the slope
+     * @param dirZ the counter-clockwise rotation around the point in radians
      * @throws ArithmeticException when <code>x</code>, <code>y</code>, <code>z</code>, <code>dirY</code>, or <code>dirZ</code>
      *             is <code>NaN</code>
      */
@@ -59,10 +59,10 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
     /**
      * Create a new DirectedPoint3d with x, y and z coordinates and direction specified using a double array of two elements
      * (containing dirY,dirZ in that order).
-     * @param x double; the x coordinate
-     * @param y double; the y coordinate
-     * @param z double; the z coordinate
-     * @param directionVector double[]; the two direction angles (dirY and dirZ) in a double array containing dirY and dirZ in
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param z the z coordinate
+     * @param directionVector the two direction angles (dirY and dirZ) in a double array containing dirY and dirZ in
      *            that order. DirY is the rotation from the positive z-axis to the direction. DirZ is the angle from the
      *            positive x-axis to the projection of the direction in the x-y-plane.
      * @throws NullPointerException when <code>directionVector</code> is <code>null</code>
@@ -78,10 +78,10 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
 
     /**
      * Create a new DirectedPoint3d with x, y, and z coordinates and Direction3d.
-     * @param x double; the x coordinate
-     * @param y double; the y coordinate
-     * @param z double; the z coordinate
-     * @param dir Direction3d; the direction
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param z the z coordinate
+     * @param dir the direction
      * @throws NullPointerException when <code>dir></code> is <code>null</code>
      * @throws ArithmeticException when <code>x</code>, <code>y</code>, <code>z</code>, <code>dirY</code>, or <code>dirZ</code>
      *             is <code>NaN</code>
@@ -96,12 +96,12 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
 
     /**
      * Construct a new DirectedPoint3d from three coordinates and the coordinates of a point that the direction goes through.
-     * @param x double; the x coordinate of the new DirectedPoint
-     * @param y double; the y coordinate of the new DirectedPoint
-     * @param z double; the z coordinate of the new DirectedPoint
-     * @param throughX double; the x-coordinate of a point that the direction goes through
-     * @param throughY double; the y-coordinate of a point that the direction goes through
-     * @param throughZ double; the z-coordinate of a point that the direction goes through
+     * @param x the x coordinate of the new DirectedPoint
+     * @param y the y coordinate of the new DirectedPoint
+     * @param z the z coordinate of the new DirectedPoint
+     * @param throughX the x-coordinate of a point that the direction goes through
+     * @param throughY the y-coordinate of a point that the direction goes through
+     * @param throughZ the z-coordinate of a point that the direction goes through
      * @throws ArithmeticException when <code>z</code>, <code>y</code>, <code>z</code>, <code>throughX</code>,
      *             <code>throughY</code>, or <code>throughZ</code> is <code>NaN</code>
      * @throws IllegalArgumentException when <code>throughX</code> == <code>x</code> and <code>throughY</code> == <code>y</code>
@@ -115,10 +115,10 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
 
     /**
      * Construct a new DirectedPoint3d from x, y and z coordinates and a point that the direction goes through.
-     * @param x double; the x coordinate of the new DirectedPoint3d
-     * @param y double; the y coordinate of the new DirectedPoint3d
-     * @param z double; the z coordinate of the new DirectedPoint3d
-     * @param throughPoint Point3d; a point that the direction goes through
+     * @param x the x coordinate of the new DirectedPoint3d
+     * @param y the y coordinate of the new DirectedPoint3d
+     * @param z the z coordinate of the new DirectedPoint3d
+     * @param throughPoint a point that the direction goes through
      * @throws NullPointerException when <code>throughPoint</code> is <code>null</code>
      * @throws ArithmeticException when <code>x</code>, <code>y</code>, or <code>z</code> is <code>NaN</code>
      * @throws IllegalArgumentException when <code>throughPoint</code> is exactly at <code>(x y,z)</code>
@@ -130,9 +130,9 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
 
     /**
      * Create a new DirectedPoint3d with x, y, and z coordinates in a double[] and direction dirY,dirZ.
-     * @param xyz double[]; the x, y and z coordinates
-     * @param dirY double; the complement of the slope
-     * @param dirZ double; the counter-clockwise rotation around the point in radians
+     * @param xyz the x, y and z coordinates
+     * @param dirY the complement of the slope
+     * @param dirZ the counter-clockwise rotation around the point in radians
      * @throws NullPointerException when <code>xyx</code> is <code>null</code>
      * @throws IllegalArgumentException when the length of the <code>xyz</code> array is not 3, or contains a <code>NaN</code>
      *             value, or <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
@@ -149,8 +149,8 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
     /**
      * Create a new OrientedPoint3d from x, y and z coordinates packed in a double array of three elements and a direction
      * specified using a double array of two elements.
-     * @param xyz double[]; the <code>x</code>, <code>y</code> and <code>z</code> coordinates in that order
-     * @param directionVector double[]; the two direction angles <code>dirY</code> and <code>dirZ</code> in that order
+     * @param xyz the <code>x</code>, <code>y</code> and <code>z</code> coordinates in that order
+     * @param directionVector the two direction angles <code>dirY</code> and <code>dirZ</code> in that order
      * @throws NullPointerException when <code>xyz</code>, or <code>directionVector</code> is <code>null</code>
      * @throws ArithmeticException when <code>xyz</code>, or <code>directionVector</code> contains a <code>NaN</code> value
      * @throws IllegalArgumentException when the length of the <code>xyx</code> is not 3 or the length of the
@@ -163,8 +163,8 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
 
     /**
      * Create a new DirectedPoint3d with x, y, and z coordinates in a double[] and a Direction3d.
-     * @param xyz double[]; the x, y and z coordinates
-     * @param dir Direction3d; the direction
+     * @param xyz the x, y and z coordinates
+     * @param dir the direction
      * @throws NullPointerException when <code>xyx</code> is <code>null</code>, or <code>dir</code> is <code>null</code>
      * @throws IllegalArgumentException when the length of the <code>xyz</code> array is not 3, or contains a <code>NaN</code>
      *             value
@@ -179,9 +179,9 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
 
     /**
      * Create a new DirectedPoint3d from another Point3d and and direction dirY,dirZ.
-     * @param point Point3d; the point from which this OrientedPoint3d will be instantiated
-     * @param dirY double; the complement of the slope
-     * @param dirZ double; the counter-clockwise rotation around the point in radians
+     * @param point the point from which this OrientedPoint3d will be instantiated
+     * @param dirY the complement of the slope
+     * @param dirZ the counter-clockwise rotation around the point in radians
      * @throws ArithmeticException when <code>dirY</code>, or <code>dirZ</code> is <code>NaN</code>
      */
     public DirectedPoint3d(final Point3d point, final double dirY, final double dirZ)
@@ -191,8 +191,8 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
 
     /**
      * Create a new DirectedPoint3d from another Point3d and a Direction3d.
-     * @param point Point3d; the point from which this OrientedPoint3d will be instantiated
-     * @param direction Direction3d; the direction
+     * @param point the point from which this OrientedPoint3d will be instantiated
+     * @param direction the direction
      * @throws NullPointerException when <code>point</code>, or <code>direction</code> is <code>null</code>
      */
     public DirectedPoint3d(final Point3d point, final Direction3d direction)
@@ -202,10 +202,10 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
 
     /**
      * Construct a new DirectedPoint3d form a Point3d and the coordinates that the direction goes through.
-     * @param point Point3d; the point
-     * @param throughX double; the x coordinate of a point that the direction goes through
-     * @param throughY double; the y coordinate of a point that the direction goes through
-     * @param throughZ double; the z coordinate of a point that the direction goes through
+     * @param point the point
+     * @param throughX the x coordinate of a point that the direction goes through
+     * @param throughY the y coordinate of a point that the direction goes through
+     * @param throughZ the z coordinate of a point that the direction goes through
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      * @throws ArithmeticException when <code>throughX</code>, or <code>throughY</code>, or <code>throughZ</code> is
      *             <code>NaN</code>
@@ -219,8 +219,8 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
 
     /**
      * Construct a new DirectedPoint3d.
-     * @param point Point3d; the location of the new DirectedPoint3d
-     * @param throughPoint Point3d; another point that the direction goes through
+     * @param point the location of the new DirectedPoint3d
+     * @param throughPoint another point that the direction goes through
      * @throws NullPointerException when <code>point</code> is <code>null</code> or <code>throughPoint</code> is
      *             <code>null</code>
      * @throws IllegalArgumentException when <code>throughPoint</code> is exactly at <code>point</code>
@@ -233,10 +233,10 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
 
     /**
      * Build the direction vector.
-     * @param dX double; x difference
-     * @param dY double; y difference
-     * @param dZ double; z difference
-     * @return double[]; a two-element array containing dirY and dirZ
+     * @param dX x difference
+     * @param dY y difference
+     * @param dZ z difference
+     * @return a two-element array containing dirY and dirZ
      * @throws IllegalArgumentException when <code>dX</code> == <code>0.0</code> and <code>dY</code> == <code>0.0</code> and
      *             <code>dZ</code> == <code>0.0</code>
      */
@@ -248,8 +248,8 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
 
     /**
      * Verify that a double array is not null, has two elements.
-     * @param direction double[]; the array to check
-     * @return double; the first element of the argument
+     * @param direction the array to check
+     * @return the first element of the argument
      * @throws NullPointerException when <code>direction</code> is <code>null</code>
      * @throws IllegalArgumentException when the length of the <code>direction</code> array is not 2
      */
@@ -307,11 +307,11 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * Interpolate towards another DirectedPoint3d with a fraction. It is allowed for fraction to be less than zero or larger
      * than 1. In that case the interpolation turns into an extrapolation. DirY and dirZ are interpolated/extrapolated using the
      * interpolateShortest method.
-     * @param otherPoint DirectedPoint3d; the other point
-     * @param fraction double; the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
+     * @param otherPoint the other point
+     * @param fraction the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
      *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
      *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
-     * @return DirectedPoint3d; a new <code>DirectedPoint3d</code> at the requested <code>fraction</code>
+     * @return a new <code>DirectedPoint3d</code> at the requested <code>fraction</code>
      * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      * @throws ArithmeticException when <code>fraction</code> is <code>NaN</code>
      */
@@ -336,8 +336,8 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
     /**
      * Return a new DirectedPoint3d with an in-place rotation around the z-axis by the provided rotateZ. The resulting rotation
      * will be normalized between -&pi; and &pi;.
-     * @param rotateZ double; the rotation around the z-axis
-     * @return DirectedPoint3d; a new point with the same coordinates, <code>dirY</code> and modified <code>dirZ</code>
+     * @param rotateZ the rotation around the z-axis
+     * @return a new point with the same coordinates, <code>dirY</code> and modified <code>dirZ</code>
      * @throws ArithmeticException when <code>rotateZ</code> is <code>NaN</code>
      */
     public DirectedPoint3d rotate(final double rotateZ)
@@ -349,9 +349,9 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
     /**
      * Return a new DirectedPoint3d point with an in-place rotation by the provided rotateY, and rotateZ. The resulting
      * rotations will be normalized between -&pi; and &pi;.
-     * @param rotateY double; the rotation around the y-axis
-     * @param rotateZ double; the rotation around the z-axis
-     * @return DirectedPoint3d; a new point with the same coordinates and applied rotations
+     * @param rotateY the rotation around the y-axis
+     * @param rotateZ the rotation around the z-axis
+     * @return a new point with the same coordinates and applied rotations
      * @throws ArithmeticException when <code>rotateY</code>, or <code>rotateZ</code> is <code>NaN</code>
      */
     public DirectedPoint3d rotate(final double rotateY, final double rotateZ)

@@ -26,9 +26,9 @@ public final class PolynomialRoots2
 
     /**
      * Emulate the F77 sign function.
-     * @param a double; the value to optionally sign invert
-     * @param b double; the sign of which determines what to do
-     * @return double; if b &gt;= 0 then a; else -a
+     * @param a the value to optionally sign invert
+     * @param b the sign of which determines what to do
+     * @return if b &gt;= 0 then a; else -a
      */
     private static double sign(final double a, final double b)
     {
@@ -40,9 +40,9 @@ public final class PolynomialRoots2
      * <p>
      * Calculates the root of the linear polynomial:<br>
      * q1 * x + q0<br>
-     * @param q1 double; coefficient of the x term
-     * @param q0 double; independent coefficient
-     * @return Complex[]; the roots of the equation
+     * @param q1 coefficient of the x term
+     * @param q0 independent coefficient
+     * @return the roots of the equation
      */
     public static Complex[] linearRoots(final double q1, final double q0)
     {
@@ -58,8 +58,8 @@ public final class PolynomialRoots2
      * <p>
      * Calculates the root of the linear polynomial:<br>
      * x + q0<br>
-     * @param q0 double; independent coefficient
-     * @return Complex[]; the roots of the equation
+     * @param q0 independent coefficient
+     * @return the roots of the equation
      */
     public static Complex[] linearRoots(final double q0)
     {
@@ -78,10 +78,10 @@ public final class PolynomialRoots2
      * negative last).<br>
      * 2) Since there can be only one complex conjugate pair root, no order is necessary.<br>
      * q1 : coefficient of x term q0 : independent coefficient
-     * @param q2 double; coefficient of the quadratic term
-     * @param q1 double; coefficient of the x term
-     * @param q0 double; independent coefficient
-     * @return Complex[]; the roots of the equation
+     * @param q2 coefficient of the quadratic term
+     * @param q1 coefficient of the x term
+     * @param q0 independent coefficient
+     * @return the roots of the equation
      */
     public static Complex[] quadraticRoots(final double q2, final double q1, final double q0)
     {
@@ -104,9 +104,9 @@ public final class PolynomialRoots2
      * negative last).<br>
      * 2) Since there can be only one complex conjugate pair root, no order is necessary.<br>
      * q1 : coefficient of x term q0 : independent coefficient
-     * @param q1 double; coefficient of the x term
-     * @param q0 double; independent coefficient
-     * @return Complex[]; the roots of the equation
+     * @param q1 coefficient of the x term
+     * @param q0 independent coefficient
+     * @return the roots of the equation
      */
     public static Complex[] quadraticRoots(final double q1, final double q0)
     {
@@ -238,11 +238,11 @@ public final class PolynomialRoots2
      * The order of the roots is as follows: 1) For real roots, the order is according to their algebraic value on the number
      * scale (largest positive first, largest negative last). 2) Since there can be only one complex conjugate pair root, no
      * order is necessary. 3) All real roots precede the complex ones.
-     * @param a3 double; coefficient of the cubic term
-     * @param a2 double; coefficient of the quadratic term
-     * @param a1 double; coefficient of the linear term
-     * @param a0 double; coefficient of the independent term
-     * @return Complex[]; array of Complex with all the roots; there can be one, two or three roots.
+     * @param a3 coefficient of the cubic term
+     * @param a2 coefficient of the quadratic term
+     * @param a1 coefficient of the linear term
+     * @param a0 coefficient of the independent term
+     * @return array of Complex with all the roots; there can be one, two or three roots.
      */
     public static Complex[] cubicRootsNewtonFactor(final double a3, final double a2, final double a1, final double a0)
     {
@@ -344,11 +344,11 @@ public final class PolynomialRoots2
      * The order of the roots is as follows: 1) For real roots, the order is according to their algebraic value on the number
      * scale (largest positive first, largest negative last). 2) Since there can be only one complex conjugate pair root, no
      * order is necessary. 3) All real roots precede the complex ones.
-     * @param a double; coefficient of the cubic term
-     * @param b double; coefficient of the quadratic term
-     * @param c double; coefficient of the linear term
-     * @param d double; coefficient of the independent term
-     * @return Complex[]; array of Complex with all the roots; there can be one, two or three roots.
+     * @param a coefficient of the cubic term
+     * @param b coefficient of the quadratic term
+     * @param c coefficient of the linear term
+     * @param d coefficient of the independent term
+     * @return array of Complex with all the roots; there can be one, two or three roots.
      */
     @SuppressWarnings("checkstyle:localvariablename")
     public static Complex[] cubicRootsCardano(final double a, final double b, final double c, final double d)
@@ -407,11 +407,11 @@ public final class PolynomialRoots2
      * Calculates all (real and complex) roots of the cubic polynomial:<br>
      * a3 * x^3 + a2 * x^2 + a1 * x + a0<br>
      * The roots are found using Durand-Kerner's algorithm.
-     * @param a3 double; coefficient of the cubic term
-     * @param a2 double; coefficient of the quadratic term
-     * @param a1 double; coefficient of the linear term
-     * @param a0 double; coefficient of the independent term
-     * @return Complex[]; array of Complex with all the roots; there can be one, two or three roots.
+     * @param a3 coefficient of the cubic term
+     * @param a2 coefficient of the quadratic term
+     * @param a1 coefficient of the linear term
+     * @param a0 coefficient of the independent term
+     * @return array of Complex with all the roots; there can be one, two or three roots.
      */
     public static Complex[] cubicRootsDurandKerner(final double a3, final double a2, final double a1, final double a0)
     {
@@ -431,11 +431,11 @@ public final class PolynomialRoots2
      * Calculates all (real and complex) roots of the cubic polynomial:<br>
      * a3 * x^3 + a2 * x^2 + a1 * x + a0<br>
      * The roots are found using Aberth-Ehrlich's algorithm.
-     * @param a3 double; coefficient of the cubic term
-     * @param a2 double; coefficient of the quadratic term
-     * @param a1 double; coefficient of the linear term
-     * @param a0 double; coefficient of the independent term
-     * @return Complex[]; array of Complex with all the roots; there can be one, two or three roots.
+     * @param a3 coefficient of the cubic term
+     * @param a2 coefficient of the quadratic term
+     * @param a1 coefficient of the linear term
+     * @param a0 coefficient of the independent term
+     * @return array of Complex with all the roots; there can be one, two or three roots.
      */
     public static Complex[] cubicRootsAberthEhrlich(final double a3, final double a2, final double a1, final double a0)
     {
@@ -456,12 +456,12 @@ public final class PolynomialRoots2
      * Calculates all (real and complex) roots of the cubic polynomial:<br>
      * a4 * x^4 + a3 * x^3 + a2 * x^2 + a1 * x + a0<br>
      * The roots are found using Durand-Kerner's algorithm.
-     * @param a4 double; coefficient of the quartic term
-     * @param a3 double; coefficient of the cubic term
-     * @param a2 double; coefficient of the quadratic term
-     * @param a1 double; coefficient of the linear term
-     * @param a0 double; coefficient of the independent term
-     * @return Complex[]; array of Complex with all the roots; always 4 roots are returned; there can be double roots
+     * @param a4 coefficient of the quartic term
+     * @param a3 coefficient of the cubic term
+     * @param a2 coefficient of the quadratic term
+     * @param a1 coefficient of the linear term
+     * @param a0 coefficient of the independent term
+     * @return array of Complex with all the roots; always 4 roots are returned; there can be double roots
      */
     public static Complex[] quarticRootsDurandKerner(final double a4, final double a3, final double a2, final double a1,
             final double a0)
@@ -482,12 +482,12 @@ public final class PolynomialRoots2
      * Calculates all (real and complex) roots of the cubic polynomial:<br>
      * a4 * x^4 + a3 * x^3 + a2 * x^2 + a1 * x + a0<br>
      * The roots are found using Aberth-Ehrlich's algorithm.
-     * @param a4 double; coefficient of the quartic term
-     * @param a3 double; coefficient of the cubic term
-     * @param a2 double; coefficient of the quadratic term
-     * @param a1 double; coefficient of the linear term
-     * @param a0 double; coefficient of the independent term
-     * @return Complex[]; array of Complex with all the roots; always 4 roots are returned; there can be double roots
+     * @param a4 coefficient of the quartic term
+     * @param a3 coefficient of the cubic term
+     * @param a2 coefficient of the quadratic term
+     * @param a1 coefficient of the linear term
+     * @param a0 coefficient of the independent term
+     * @return array of Complex with all the roots; always 4 roots are returned; there can be double roots
      */
     public static Complex[] quarticRootsAberthEhrlich(final double a4, final double a3, final double a2, final double a1,
             final double a0)
@@ -509,7 +509,7 @@ public final class PolynomialRoots2
      * Polynomial root finder using the Durand-Kerner method, with complex coefficients for the polynomial equation. Own
      * implementation. See <a href="https://en.wikipedia.org/wiki/Durand%E2%80%93Kerner_method">
      * https://en.wikipedia.org/wiki/Durand%E2%80%93Kerner_method</a> for brief information.
-     * @param a Complex[]; the complex factors of the polynomial, where the index i indicate the factor for x^i, so the
+     * @param a the complex factors of the polynomial, where the index i indicate the factor for x^i, so the
      *            polynomial is<br>
      *            a[n]x^n + a[n-1]x^(n-1) + ... + a[2]a^2 + a[1]x + a[0]
      * @return Complex[] all roots of the equation, where real roots are coded with Im = 0
@@ -580,7 +580,7 @@ public final class PolynomialRoots2
      * Polynomial root finder using the Aberth-Ehrlich method or Aberth method, with complex coefficients for the polynomial
      * equation. Own implementation. See <a href="https://en.wikipedia.org/wiki/Aberth_method">
      * https://en.wikipedia.org/wiki/Aberth_method</a> for brief information.
-     * @param a Complex[]; the complex factors of the polynomial, where the index i indicate the factor for x^i, so the
+     * @param a the complex factors of the polynomial, where the index i indicate the factor for x^i, so the
      *            polynomial is<br>
      *            a[n]x^n + a[n-1]x^(n-1) + ... + a[2]a^2 + a[1]x + a[0]
      * @return Complex[] all roots of the equation, where real roots are coded with Im = 0
@@ -649,9 +649,9 @@ public final class PolynomialRoots2
      * Polynomial root finder using the Newton-Raphson method. See <a href="https://en.wikipedia.org/wiki/Newton%27s_method">
      * https://en.wikipedia.org/wiki/Newton%27s_method</a> for brief information about the Newton-Raphson or Newton method for
      * root finding.
-     * @param a double[]; the factors of the polynomial, where the index i indicate the factor for x^i, so the polynomial is<br>
+     * @param a the factors of the polynomial, where the index i indicate the factor for x^i, so the polynomial is<br>
      *            a[n]x^n + a[n-1]x^(n-1) + ... + a[2]a^2 + a[1]x + a[0]
-     * @param allowedError double; the allowed absolute error in the result
+     * @param allowedError the allowed absolute error in the result
      * @return double the root of the equation that has been found on the basis of the start value, or NaN if not found within
      *         the allowed error bounds and the allowed number of steps.
      */
@@ -681,11 +681,11 @@ public final class PolynomialRoots2
      * bounds. Implementation based on Numerical Recipes in C, section 9.4, pp 365-366. See
      * <a href="https://en.wikipedia.org/wiki/Newton%27s_method"> https://en.wikipedia.org/wiki/Newton%27s_method</a> for brief
      * information about the Newton-Raphson or Newton method for root finding.
-     * @param a double[]; the factors of the polynomial, where the index i indicate the factor for x^i, so the polynomial is<br>
+     * @param a the factors of the polynomial, where the index i indicate the factor for x^i, so the polynomial is<br>
      *            a[n]x^n + a[n-1]x^(n-1) + ... + a[2]a^2 + a[1]x + a[0]
-     * @param startMin double; the lowest initial search value
-     * @param startMax double; the highest initial search value
-     * @param allowedError double; the allowed absolute error in the result
+     * @param startMin the lowest initial search value
+     * @param startMax the highest initial search value
+     * @param allowedError the allowed absolute error in the result
      * @return double the root of the equation that has been found on the basis of the start values, or NaN if not found within
      *         the allowed error bounds and the allowed number of steps.
      */
@@ -723,7 +723,7 @@ public final class PolynomialRoots2
     /**
      * Return the max of the norm of the complex coefficients in an array.
      * @param array Complex[] the array with complex numbers
-     * @return double; the highest value of the norm of the complex numbers in the array
+     * @return the highest value of the norm of the complex numbers in the array
      */
     private static double maxAbs(final Complex[] array)
     {
@@ -741,7 +741,7 @@ public final class PolynomialRoots2
     /**
      * Return the max of the absolute values of the coefficients in an array.
      * @param values double[] the array with numbers
-     * @return double; the highest absolute value of the norm of the complex numbers in the array
+     * @return the highest absolute value of the norm of the complex numbers in the array
      */
     private static double maxAbs(final double... values)
     {
@@ -759,8 +759,8 @@ public final class PolynomialRoots2
     /**
      * Return the complex value of f(c) where f(x) = a[n]x^n + a[n-1]x^(n-1) + ... + a[2]a^2 + a[1]x + a[0].
      * @param a Complex[] the complex factors of the equation
-     * @param c Complex; the value for which to calculate f(c)
-     * @return Complex; f(c)
+     * @param c the value for which to calculate f(c)
+     * @return f(c)
      */
     private static Complex f(final Complex[] a, final Complex c)
     {
@@ -777,8 +777,8 @@ public final class PolynomialRoots2
     /**
      * Return the real value of f(x) where f(x) = a[n]x^n + a[n-1]x^(n-1) + ... + a[2]a^2 + a[1]x + a[0].
      * @param a double[] the factors of the equation
-     * @param x double; the value for which to calculate f(x)
-     * @return double; f(x)
+     * @param x the value for which to calculate f(x)
+     * @return f(x)
      */
     private static double f(final double[] a, final double x)
     {
@@ -795,8 +795,8 @@ public final class PolynomialRoots2
     /**
      * Return the complex value of f(c) where f(x) = a[n]x^n + a[n-1]x^(n-1) + ... + a[2]a^2 + a[1]x + a[0].
      * @param a double[] the complex factors of the equation
-     * @param c Complex; the value for which to calculate f(c)
-     * @return Complex; f(c)
+     * @param c the value for which to calculate f(c)
+     * @return f(c)
      */
     private static Complex f(final double[] a, final Complex c)
     {
@@ -814,8 +814,8 @@ public final class PolynomialRoots2
      * Return the real value of f'(x) where f(x) = a[n]x^n + a[n-1]x^(n-1) + ... + a[2]a^2 + a[1]x + a[0].<br>
      * The derivative function f'(x) = n.a[n]x^(n-1) + (n-1).a[n-1]x^(n-2) + ... + 2.a[2]x^1 + 1.a[1]
      * @param a double[] the factors of the equation
-     * @param x double; the value for which to calculate f'(x)
-     * @return double; f'(x), the value of the derivative function at point x
+     * @param x the value for which to calculate f'(x)
+     * @return f'(x), the value of the derivative function at point x
      */
     private static double fDerivative(final double[] a, final double x)
     {
@@ -833,8 +833,8 @@ public final class PolynomialRoots2
      * Return the complex value of f'(c) where f(c) = a[n]c^n + a[n-1]c^(n-1) + ... + a[2]a^2 + a[1]c + a[0].<br>
      * The derivative function f'(c) = n.a[n]c^(n-1) + (n-1).a[n-1]c^(n-2) + ... + 2.a[2]c^1 + 1.a[1]
      * @param a double[] the factors of the equation
-     * @param c double; the value for which to calculate f'(c)
-     * @return Complex; f'(c), the value of the derivative function at point c
+     * @param c the value for which to calculate f'(c)
+     * @return f'(c), the value of the derivative function at point c
      */
     private static Complex fDerivative(final Complex[] a, final Complex c)
     {

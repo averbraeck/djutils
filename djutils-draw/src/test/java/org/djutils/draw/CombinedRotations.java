@@ -24,7 +24,7 @@ public final class CombinedRotations
 
     /**
      * Demonstrate all combinations of 90 degree rotations.
-     * @param args String[]; the command line arguments (not used)
+     * @param args the command line arguments (not used)
      */
     public static void main(final String[] args)
     {

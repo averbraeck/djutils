@@ -17,8 +17,8 @@ public abstract class ObjectSerializer<T extends Object> extends BasicSerializer
 {
     /**
      * Construct a new ObjectSerializer.
-     * @param type byte; the field type (returned by the <code>fieldType</code> method)
-     * @param dataClassName String; returned by the dataClassName method
+     * @param type the field type (returned by the <code>fieldType</code> method)
+     * @param dataClassName returned by the dataClassName method
      */
     public ObjectSerializer(final byte type, final String dataClassName)
     {

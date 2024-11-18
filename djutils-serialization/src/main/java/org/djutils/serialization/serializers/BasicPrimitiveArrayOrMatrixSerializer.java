@@ -23,10 +23,10 @@ public abstract class BasicPrimitiveArrayOrMatrixSerializer<T extends Object> ex
 
     /**
      * Construct a new BasicPrimitiveArrayOrMatrixSerializer.
-     * @param type byte; the field type (returned by the <code>fieldType</code> method)
-     * @param elementSize int; the number of bytes needed to encode one additional array element
-     * @param dataClassName String; returned by the dataClassName method
-     * @param numberOfDimensions int; number of dimensions (1 for array, 2 for matrix)
+     * @param type the field type (returned by the <code>fieldType</code> method)
+     * @param elementSize the number of bytes needed to encode one additional array element
+     * @param dataClassName returned by the dataClassName method
+     * @param numberOfDimensions number of dimensions (1 for array, 2 for matrix)
      */
     public BasicPrimitiveArrayOrMatrixSerializer(final byte type, final int elementSize, final String dataClassName,
             final int numberOfDimensions)
@@ -52,7 +52,7 @@ public abstract class BasicPrimitiveArrayOrMatrixSerializer<T extends Object> ex
 
     /**
      * Retrieve the number of bytes needed to encode one additional array element.
-     * @return int; the number of bytes needed to encode one additional array element
+     * @return the number of bytes needed to encode one additional array element
      */
     public final int getElementSize()
     {

@@ -23,20 +23,20 @@ public interface Directed3d<D extends Directed<D>> extends Directed<D>
     /**
      * Retrieve the angle from the positive z axis to the direction. Normally these are values between [0:&pi;]. Angles &le;
      * &pi;/2 indicate above the x-y-plane; positive slope, angles &gt; &pi;/2 indicate angles below this plane; negative slope.
-     * @return double; dirY
+     * @return dirY
      */
     double getDirY();
 
     /**
      * Retrieve the angle from the positive x-axis to the projection of the direction in the x-y-plane. Positive values rotate
      * towards the positive y-axis (and beyond).
-     * @return double; dirZ
+     * @return dirZ
      */
     double getDirZ();
 
     /**
      * Retrieve the Direction3d.
-     * @return Direction3d; the direction
+     * @return the direction
      */
     default Direction3d getDir()
     {
