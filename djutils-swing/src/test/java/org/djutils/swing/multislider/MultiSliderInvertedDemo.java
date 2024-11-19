@@ -27,14 +27,14 @@ import javax.swing.event.ChangeListener;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class MultiSliderReverseDemo extends JFrame
+public class MultiSliderInvertedDemo extends JFrame
 {
     /** */
     private static final long serialVersionUID = 1L;
 
     /** */
     @SuppressWarnings("checkstyle:needbraces")
-    public MultiSliderReverseDemo()
+    public MultiSliderInvertedDemo()
     {
         setPreferredSize(new Dimension(640, 640));
         setTitle("MultiSliderReverseDemo");
@@ -133,7 +133,7 @@ public class MultiSliderReverseDemo extends JFrame
             @Override
             public void run()
             {
-                new MultiSliderReverseDemo();
+                new MultiSliderInvertedDemo();
             }
         });
     }
