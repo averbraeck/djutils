@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test various classed in function package.
+ * Demonstrate various classed in function package.
  * <p>
  * Copyright (c) 2024-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -16,23 +16,31 @@ import org.junit.jupiter.api.Test;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class FunctionTest
+public final class FunctionDemo
 {
     /**
-     * Test the PowerFunction class.
+     * Utility class - do not instantiate.
      */
-    @Test
-    public void testPowerFunction()
+    private FunctionDemo()
+    {
+        // Do not instantiate.
+    }
+    
+    /**
+     * Demonstrate the Function classes.
+     * @param args the command line arguments (not used)
+     */
+    public static void main(final String... args)
     {
         System.out.println("Build a cubic polynomial as a sum of four power functions");
-        Function pf =
+        Function function =
                 new Sum(new PowerFunction(2, 3), new PowerFunction(5, 2), new PowerFunction(8, 1), new PowerFunction(3, 0));
-        Function deriv = pf.getDerivative();
+        Function deriv = function.getDerivative();
         Function deriv2 = deriv.getDerivative();
         Function deriv3 = deriv2.getDerivative();
         Function deriv4 = deriv3.getDerivative();
         Function deriv5 = deriv4.getDerivative();
-        System.out.println("f      " + pf.getDescription());
+        System.out.println("f      " + function.getDescription());
         System.out.println("f'     " + deriv.getDescription());
         System.out.println("f''    " + deriv2.getDescription());
         System.out.println("f'''   " + deriv3.getDescription());
@@ -43,7 +51,7 @@ public class FunctionTest
             double x = 0.5 * step;
             System.out.println(String.format(
                     "x=%5.2f: f(x)=%8.2f; f'(x)=%10.2f; " + "f''(x)=%8.2f; f'''(x)=%8.2f; " + "f''''(x)=%8.2f; f'''''(x)=%8.2f",
-                    x, pf.get(x), deriv.get(x), deriv2.get(x), deriv3.get(x), deriv4.get(x), deriv5.get(x)));
+                    x, function.get(x), deriv.get(x), deriv2.get(x), deriv3.get(x), deriv4.get(x), deriv5.get(x)));
         }
         assertEquals(deriv5, deriv4, "Should be the same");
 
@@ -64,6 +72,6 @@ public class FunctionTest
             double x = 0.02 * step;
             System.out.println(String.format("x=%5.2f: f=%10.2f; f'=%10.2f", x, concatenation.get(x), derivative.get(x)));
         }
-
     }
+    
 }
