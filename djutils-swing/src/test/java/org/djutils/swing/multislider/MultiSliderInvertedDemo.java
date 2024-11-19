@@ -37,7 +37,7 @@ public class MultiSliderInvertedDemo extends JFrame
     public MultiSliderInvertedDemo()
     {
         setPreferredSize(new Dimension(640, 640));
-        setTitle("MultiSliderReverseDemo");
+        setTitle("MultiSliderInvertedDemo");
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
@@ -45,7 +45,7 @@ public class MultiSliderInvertedDemo extends JFrame
         getContentPane().add(panel);
         getContentPane().setBackground(new Color(204, 255, 204));
 
-        var horSlider = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {25, 50, 75});
+        var horSlider = new MultiSlider(SwingConstants.HORIZONTAL, 100, 200, new int[] {125, 150, 175});
         // horSlider.setUI(new BasicSliderUI());
         horSlider.setMajorTickSpacing(25);
         horSlider.setMinorTickSpacing(5);
@@ -54,7 +54,7 @@ public class MultiSliderInvertedDemo extends JFrame
         horSlider.setInverted(true);
         panel.add(horSlider, BorderLayout.NORTH);
 
-        var vertSlider = new MultiSlider(SwingConstants.VERTICAL, 0, 100, new int[] {40, 60});
+        var vertSlider = new MultiSlider(SwingConstants.VERTICAL, 100, 200, new int[] {140, 160});
         // vertSlider.setUI(new MetalSliderUI());
         vertSlider.setMajorTickSpacing(20);
         vertSlider.setMinorTickSpacing(5);
@@ -78,12 +78,12 @@ public class MultiSliderInvertedDemo extends JFrame
             @Override
             public void actionPerformed(final ActionEvent e)
             {
-                horSlider.setValue(0, 25);
-                horSlider.setValue(1, 50);
-                horSlider.setValue(2, 75);
+                horSlider.setValue(0, 125);
+                horSlider.setValue(1, 150);
+                horSlider.setValue(2, 175);
 
-                vertSlider.setValue(0, 40);
-                vertSlider.setValue(1, 60);
+                vertSlider.setValue(0, 140);
+                vertSlider.setValue(1, 160);
             }
         });
 
