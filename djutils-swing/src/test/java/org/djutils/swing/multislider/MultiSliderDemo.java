@@ -76,12 +76,8 @@ public class MultiSliderDemo extends JFrame
             @Override
             public void actionPerformed(final ActionEvent e)
             {
-                horSlider.setValue(0, 25);
-                horSlider.setValue(1, 50);
-                horSlider.setValue(2, 75);
-
-                vertSlider.setValue(0, 40);
-                vertSlider.setValue(1, 60);
+                horSlider.resetToInitialValues();
+                vertSlider.resetToInitialValues();
             }
         });
 
