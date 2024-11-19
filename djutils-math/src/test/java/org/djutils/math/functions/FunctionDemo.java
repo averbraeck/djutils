@@ -1,9 +1,5 @@
 package org.djutils.math.functions;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.jupiter.api.Test;
-
 /**
  * Demonstrate various classed in function package.
  * <p>
@@ -45,7 +41,8 @@ public final class FunctionDemo
         System.out.println("f''    " + deriv2.getDescription());
         System.out.println("f'''   " + deriv3.getDescription());
         System.out.println("f''''  " + deriv4.getDescription());
-        System.out.println("f''''' " + deriv5.getDescription());
+        System.out.println("f''''' " + deriv5.getDescription()); // Is identical to deriv4
+        System.out.println("Check if f'''' is equal to f''''' : " + deriv4.equals(deriv5));
         for (int step = -10; step <= 10; step++)
         {
             double x = 0.5 * step;
@@ -53,7 +50,6 @@ public final class FunctionDemo
                     "x=%5.2f: f(x)=%8.2f; f'(x)=%10.2f; " + "f''(x)=%8.2f; f'''(x)=%8.2f; " + "f''''(x)=%8.2f; f'''''(x)=%8.2f",
                     x, function.get(x), deriv.get(x), deriv2.get(x), deriv3.get(x), deriv4.get(x), deriv5.get(x)));
         }
-        assertEquals(deriv5, deriv4, "Should be the same");
 
         System.out.println("\nBuild a continuous piecewise linear function; each linear piece is a power function");
         Function part1 = new Sum(new PowerFunction(1.0, 0), new PowerFunction(0.5, 1));
