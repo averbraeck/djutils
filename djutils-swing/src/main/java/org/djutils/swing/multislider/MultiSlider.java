@@ -279,6 +279,15 @@ public class MultiSlider extends JComponent implements ChangeListener
         this.drawThumbLabels = b;
     }
     
+    /**
+     * Return whether thumb label display on or off.
+     * @return whether the thumbs are displayed or not
+     */
+    public boolean isDrawThumbLabels()
+    {
+        return this.drawThumbLabels;
+    }
+    
     @Override
     public void stateChanged(final ChangeEvent e)
     {
