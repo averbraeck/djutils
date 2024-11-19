@@ -18,7 +18,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * MultiSliderTest.java.
+ * MultiSliderDemo demonstrates a horizontal slider and a vertical slider, as well as setValue() through a reset button.
  * <p>
  * Copyright (c) 2024-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -37,6 +37,7 @@ public class MultiSliderDemo extends JFrame
     public MultiSliderDemo()
     {
         setPreferredSize(new Dimension(640, 640));
+        setTitle("MultiSliderDemo");
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
