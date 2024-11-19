@@ -2,6 +2,8 @@ package org.djutils.math.functions;
 
 import java.util.Objects;
 
+import org.djutils.exceptions.Throw;
+
 /**
  * Immutable double interval, optionally including none, one, or both boundary values.
  * <p>
@@ -23,6 +25,26 @@ import java.util.Objects;
 record Interval<T>(double low, boolean lowInclusive, double high, boolean highInclusive, T payload)
         implements Comparable<Interval<?>>
 {
+    /**
+     * Construct a new Interval.
+     * @param low low limit of the domain
+     * @param lowInclusive if true; the low limit is included; if false, the low limit is not included
+     * @param high high limit of the domain (inclusive)
+     * @param highInclusive if true; the high limit is included; if false; the high limit is not included
+     * @param payload the payload of this Interval
+     */
+    Interval(final double low, final boolean lowInclusive, final double high, final boolean highInclusive, final T payload)
+    {
+        Throw.when(low > high, IllegalArgumentException.class, "low may not be higher than high");
+        Throw.when(low == high && (!lowInclusive) && (!highInclusive), IllegalArgumentException.class,
+                "zero width interval must include at least one of its boundaries");
+        this.low = low;
+        this.lowInclusive = lowInclusive;
+        this.high = high;
+        this.highInclusive = highInclusive;
+        this.payload = payload;
+    }
+
     /**
      * Check if this Interval completely covers some other Interval.
      * @param other the other Interval (not necessarily carrying a similarly typed pay load)
@@ -97,8 +119,8 @@ record Interval<T>(double low, boolean lowInclusive, double high, boolean highIn
     @Override
     public String toString()
     {
-        return "Interval " + (this.lowInclusive ? "[" : ")") + this.low + ", " + this.high
-                + (this.highInclusive ? "]" : ")" + ", payload=" + this.payload + "]");
+        return "Interval " + (this.lowInclusive ? "[" : "(") + this.low + ", " + this.high
+                + (this.highInclusive ? "]" : ")") + ", payload=" + this.payload + "]";
     }
 
     @Override
