@@ -1,5 +1,6 @@
 package org.djutils.swing.multislider;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -10,10 +11,14 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.beans.BeanProperty;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.swing.BoundedRangeModel;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.OverlayLayout;
 import javax.swing.SwingConstants;
@@ -52,6 +57,21 @@ public class MultiSlider extends JComponent implements ChangeListener
 
     /** whether an operation is busy or not. */
     private transient boolean busy = false;
+
+    /** the 'glass pane' on top of the sliders to dispatch the mouse clicks and drags to the correct slider. */
+    private final DispatcherPane dispatcherPane;
+
+    /** the panel in which the thumb labels can be drawn if this is wanted. */
+    private final JPanel labelPanel;
+
+    /** the initial values of the labels for the reset function. */
+    private final int[] initialValues;
+
+    /** the labels per thumb (per underlying slider). */
+    private final Map<Integer, String> thumbLabels = new HashMap<>();
+
+    /** whether we draw thumb labels or not. */
+    private boolean drawThumbLabels = false;
 
     /**
      * Only one <code>ChangeEvent</code> is needed for the {@code MultiSlider} since the event's only (read-only) state is the
@@ -94,28 +114,42 @@ public class MultiSlider extends JComponent implements ChangeListener
             }
         }
 
+        // store the initial value array in a safe copy
+        this.initialValues = new int[initialValues.length];
+
+        // based on the orientation, add a JPanel with two subpanels: one for the labels, and one for the sliders
+        setLayout(new BorderLayout());
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(
+                new BoxLayout(topPanel, (orientation == SwingConstants.VERTICAL) ? BoxLayout.X_AXIS : BoxLayout.Y_AXIS));
+        topPanel.setOpaque(false);
+        add(topPanel, BorderLayout.CENTER);
+
+        // create the label panel
+        this.labelPanel = new JPanel();
+        this.labelPanel.setOpaque(false);
+        topPanel.add(this.labelPanel);
+
+        // create the slider panel
+        JPanel sliderPanel = new JPanel();
+        sliderPanel.setOpaque(false);
+        topPanel.add(sliderPanel);
+
         // put a glass pane on top that dispatches the mouse event to all panes
-        DispatcherPane dp = new DispatcherPane(this);
-        add(dp);
+        this.dispatcherPane = new DispatcherPane(this);
+        sliderPanel.add(this.dispatcherPane);
 
         // make the sliders and show them. Slider 0 at the bottom. This one will get ticks, etc.
-        setLayout(new OverlayLayout(this));
+        sliderPanel.setLayout(new OverlayLayout(sliderPanel));
         this.sliders = new JSlider[initialValues.length];
         for (int i = initialValues.length - 1; i >= 0; i--)
         {
+            this.initialValues[i] = initialValues[i]; // create copy
             var slider = new JSlider(orientation, min, max, initialValues[i]);
             this.sliders[i] = slider;
             slider.setOpaque(false);
-            if (i == 0)
-            {
-                slider.setPaintTrack(true);
-            }
-            else
-            {
-                slider.setPaintTrack(false);
-            }
-
-            add(slider);
+            slider.setPaintTrack(i == 0);
+            sliderPanel.add(slider);
 
             // add this class as a change listener for all slider events of the individual sliders
             slider.addChangeListener(this);
@@ -124,7 +158,7 @@ public class MultiSlider extends JComponent implements ChangeListener
             slider.setValue(initialValues[i]);
         }
 
-        dp.setPreferredSize(new Dimension(this.sliders[0].getSize()));
+        this.dispatcherPane.setPreferredSize(new Dimension(this.sliders[0].getSize()));
         invalidate();
     }
 
@@ -206,6 +240,45 @@ public class MultiSlider extends JComponent implements ChangeListener
         this.busy = busy;
     }
 
+    /**
+     * Reset the slider values to the initial values.
+     */
+    public void resetToInitialValues()
+    {
+        for (int i = 0; i < this.sliders.length; i++)
+        {
+            this.sliders[i].setValue(this.initialValues[i]);
+        }
+    }
+
+    /**
+     * Return the label panel in which thumb labels can be drawn. The labels move with the thumbs.
+     * @return the label panel in which thumb labels can be drawn
+     */
+    protected JPanel getLabelPanel()
+    {
+        return this.labelPanel;
+    }
+
+    /**
+     * Set the thumb label for thumb i to the given label.
+     * @param i the thumb number
+     * @param label the label to display
+     */
+    public void setThumbLabel(final int i, final String label)
+    {
+        this.thumbLabels.put(i, label);
+    }
+    
+    /**
+     * Turn the thumb label display on or off.
+     * @param b whether the thumbs are displayed or not
+     */
+    public void setDrawThumbLabels(final boolean b)
+    {
+        this.drawThumbLabels = b;
+    }
+    
     @Override
     public void stateChanged(final ChangeEvent e)
     {
@@ -473,6 +546,8 @@ public class MultiSlider extends JComponent implements ChangeListener
         {
             slider.setOrientation(orientation);
         }
+        this.dispatcherPane.setPreferredSize(new Dimension(this.sliders[0].getSize()));
+        invalidate();
     }
 
     @Override
