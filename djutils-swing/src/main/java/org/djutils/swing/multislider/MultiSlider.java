@@ -119,8 +119,8 @@ public class MultiSlider extends JComponent implements ChangeListener
 
             // add this class as a change listener for all slider events of the individual sliders
             slider.addChangeListener(this);
-            
-            // ensure movability of the slider by setting it  again
+
+            // ensure movability of the slider by setting it again
             slider.setValue(initialValues[i]);
         }
 
@@ -767,7 +767,8 @@ public class MultiSlider extends JComponent implements ChangeListener
         /** */
         private static final long serialVersionUID = 1L;
 
-        /** the pointer to the multislider object. */
+        /** the pointer to the multislider object; protected to access it by the mouse handlers. */
+        @SuppressWarnings("checkstyle:visibilitymodifier")
         protected final MultiSlider multiSlider;
 
         /**
@@ -777,7 +778,6 @@ public class MultiSlider extends JComponent implements ChangeListener
          */
         int thumbPosition(final int i)
         {
-            // TODO: check if it works when slider is reversed
             JSlider slider = this.multiSlider.getSlider(i);
             int value = slider.getValue();
             int min = slider.getMinimum();
@@ -786,13 +786,27 @@ public class MultiSlider extends JComponent implements ChangeListener
             {
                 int w = slider.getWidth();
                 // System.out.println("ThumbPosition[w] " + i + " = " + (int) (1.0 * w * value / (max - min)));
-                return (int) (1.0 * w * value / (max - min));
+                if (this.multiSlider.getInverted())
+                {
+                    return (int) (1.0 * w * (max - value) / (max - min));
+                }
+                else
+                {
+                    return (int) (1.0 * w * (value - min) / (max - min));
+                }
             }
             else
             {
                 int h = slider.getHeight();
                 // System.out.println("thumbPosition[h] " + i + " = " + (int) (1.0 * h * value / (max - min)));
-                return (int) (1.0 * h * value / (max - min));
+                if (this.multiSlider.getInverted())
+                {
+                    return (int) (1.0 * h * (max - value) / (max - min));
+                }
+                else
+                {
+                    return (int) (1.0 * h * (value - min) / (max - min));
+                }
             }
         }
 
@@ -808,7 +822,6 @@ public class MultiSlider extends JComponent implements ChangeListener
                 return this.multiSlider.getBusySlider();
             }
 
-            // TODO: check if it works when slider is reversed
             int ret = -1;
             int mindist = Integer.MAX_VALUE;
             if (this.multiSlider.getOrientation() == SwingConstants.HORIZONTAL)
@@ -870,8 +883,9 @@ public class MultiSlider extends JComponent implements ChangeListener
         }
 
         /**
-         * Indicate whether the multislider is busy with handling an action (e.g., drag, mouse down). Note that the busy flag has
-         * to be set BEFORE the mouse event is handled, to allow a listener to the ChangeEvent to only react when an action is completed. 
+         * Indicate whether the multislider is busy with handling an action (e.g., drag, mouse down). Note that the busy flag
+         * has to be set BEFORE the mouse event is handled, to allow a listener to the ChangeEvent to only react when an action
+         * is completed.
          * @param b whether the multislider is busy with handling an action or not
          */
         void setBusy(final boolean b)
