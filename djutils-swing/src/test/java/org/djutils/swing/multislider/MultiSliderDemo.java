@@ -52,6 +52,10 @@ public class MultiSliderDemo extends JFrame
         horSlider.setPaintTicks(true);
         horSlider.setPaintLabels(true);
         panel.add(horSlider, BorderLayout.NORTH);
+        horSlider.setThumbLabel(0, "a");
+        horSlider.setThumbLabel(1, "b");
+        horSlider.setThumbLabel(2, "c");
+        horSlider.setDrawThumbLabels(true);
 
         var vertSlider = new MultiSlider(SwingConstants.VERTICAL, 0, 100, new int[] {40, 60});
         // vertSlider.setUI(new MetalSliderUI());
