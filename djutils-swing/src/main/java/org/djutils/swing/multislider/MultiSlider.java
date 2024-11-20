@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -26,6 +27,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.SliderUI;
+import javax.swing.plaf.basic.BasicSliderUI;
 
 import org.djutils.exceptions.Throw;
 
@@ -62,7 +64,7 @@ public class MultiSlider extends JComponent implements ChangeListener
     private final DispatcherPane dispatcherPane;
 
     /** the panel in which the thumb labels can be drawn if this is wanted. */
-    private final JPanel labelPanel;
+    private final LabelPanel labelPanel;
 
     /** the initial values of the labels for the reset function. */
     private final int[] initialValues;
@@ -126,7 +128,7 @@ public class MultiSlider extends JComponent implements ChangeListener
         add(topPanel, BorderLayout.CENTER);
 
         // create the label panel
-        this.labelPanel = new JPanel();
+        this.labelPanel = new LabelPanel(this);
         this.labelPanel.setOpaque(false);
         topPanel.add(this.labelPanel);
 
@@ -269,7 +271,17 @@ public class MultiSlider extends JComponent implements ChangeListener
     {
         this.thumbLabels.put(i, label);
     }
-    
+
+    /**
+     * Get the thumb label for thumb i.
+     * @param i the thumb number
+     * @return the label to display
+     */
+    public String getThumbLabel(final int i)
+    {
+        return this.thumbLabels.get(i);
+    }
+
     /**
      * Turn the thumb label display on or off.
      * @param b whether the thumbs are displayed or not
@@ -277,8 +289,16 @@ public class MultiSlider extends JComponent implements ChangeListener
     public void setDrawThumbLabels(final boolean b)
     {
         this.drawThumbLabels = b;
+        if (b)
+        {
+            this.labelPanel.setPreferredSize(new Dimension(1000, 20));
+        }
+        else
+        {
+            this.labelPanel.setPreferredSize(new Dimension(1000, 0));
+        }
     }
-    
+
     /**
      * Return whether thumb label display on or off.
      * @return whether the thumbs are displayed or not
@@ -287,7 +307,44 @@ public class MultiSlider extends JComponent implements ChangeListener
     {
         return this.drawThumbLabels;
     }
-    
+
+    /**
+     * Calculate x (horizontal) or y (vertical) of thumb[i].
+     * @param i the slider number
+     * @return the x (horizontal) or y (vertical) of thumb[i]
+     */
+    protected int thumbPosition(final int i)
+    {
+        JSlider slider = getSlider(i);
+        int value = slider.getValue();
+        int min = slider.getMinimum();
+        int max = slider.getMaximum();
+        if (slider.getOrientation() == SwingConstants.HORIZONTAL)
+        {
+            int w = slider.getWidth();
+            if (getInverted())
+            {
+                return (int) (1.0 * w * (max - value) / (max - min));
+            }
+            else
+            {
+                return (int) (1.0 * w * (value - min) / (max - min));
+            }
+        }
+        else
+        {
+            int h = slider.getHeight();
+            if (getInverted())
+            {
+                return (int) (1.0 * h * (max - value) / (max - min));
+            }
+            else
+            {
+                return (int) (1.0 * h * (value - min) / (max - min));
+            }
+        }
+    }
+
     @Override
     public void stateChanged(final ChangeEvent e)
     {
@@ -856,45 +913,6 @@ public class MultiSlider extends JComponent implements ChangeListener
         protected final MultiSlider multiSlider;
 
         /**
-         * Calculate x (horizontal) or y (vertical) of thumb[i].
-         * @param i the slider number
-         * @return the x (horizontal) or y (vertical) of thumb[i]
-         */
-        int thumbPosition(final int i)
-        {
-            JSlider slider = this.multiSlider.getSlider(i);
-            int value = slider.getValue();
-            int min = slider.getMinimum();
-            int max = slider.getMaximum();
-            if (slider.getOrientation() == SwingConstants.HORIZONTAL)
-            {
-                int w = slider.getWidth();
-                // System.out.println("ThumbPosition[w] " + i + " = " + (int) (1.0 * w * value / (max - min)));
-                if (this.multiSlider.getInverted())
-                {
-                    return (int) (1.0 * w * (max - value) / (max - min));
-                }
-                else
-                {
-                    return (int) (1.0 * w * (value - min) / (max - min));
-                }
-            }
-            else
-            {
-                int h = slider.getHeight();
-                // System.out.println("thumbPosition[h] " + i + " = " + (int) (1.0 * h * value / (max - min)));
-                if (this.multiSlider.getInverted())
-                {
-                    return (int) (1.0 * h * (max - value) / (max - min));
-                }
-                else
-                {
-                    return (int) (1.0 * h * (value - min) / (max - min));
-                }
-            }
-        }
-
-        /**
          * Return the closest slider number based on x (horizontal) or y (vertical) of the thumbs.
          * @param p the point (e.g., of a mouse position)
          * @return the index of the closest slider
@@ -912,7 +930,7 @@ public class MultiSlider extends JComponent implements ChangeListener
             {
                 for (int i = 0; i < this.multiSlider.getNumberOfThumbs(); i++)
                 {
-                    int pos = thumbPosition(i);
+                    int pos = this.multiSlider.thumbPosition(i);
                     int dist = Math.abs(pos - p.x);
                     if (dist < mindist)
                     {
@@ -925,7 +943,7 @@ public class MultiSlider extends JComponent implements ChangeListener
             {
                 for (int i = 0; i < this.multiSlider.getNumberOfThumbs(); i++)
                 {
-                    int pos = thumbPosition(i);
+                    int pos = this.multiSlider.thumbPosition(i);
                     int dist = Math.abs(pos - p.y);
                     if (dist < mindist)
                     {
@@ -1044,6 +1062,82 @@ public class MultiSlider extends JComponent implements ChangeListener
                     // and a 'mouse exited' when the mouse exits the slider pane.
                 }
             });
+        }
+    }
+
+    /**
+     * The LabelPanel is draw above a horizontal slider or left of a vertical slider and displays labels for the thumbs of the
+     * slider, so one can see which one is which.
+     */
+    protected static class LabelPanel extends JPanel
+    {
+        /** */
+        private static final long serialVersionUID = 1L;
+
+        /** a pointer to the multislider. */
+        private final MultiSlider multiSlider;
+
+        /** */
+        private int loX;
+
+        /** */
+        private int hiX;
+
+        /**
+         * Default constructor.
+         * @param multiSlider the multislider for which this is the LabelPanel.
+         */
+        public LabelPanel(final MultiSlider multiSlider)
+        {
+            this.multiSlider = multiSlider;
+            this.multiSlider.addChangeListener(new ChangeListener()
+            {
+                @Override
+                public void stateChanged(final ChangeEvent e)
+                {
+                    JSlider js = LabelPanel.this.multiSlider.getSlider(0);
+                    BasicSliderUI ui = (BasicSliderUI) js.getUI();
+                    for (int i = 0; i < js.getWidth(); i++)
+                    {
+                        if (ui.valueForXPosition(i) == js.getMinimum())
+                        {
+                            LabelPanel.this.loX = i;
+                        }
+                    }
+                    for (int i = js.getWidth() - 1; i >= 0; i--)
+                    {
+                        if (ui.valueForXPosition(i) == js.getMaximum())
+                        {
+                            LabelPanel.this.hiX = i;
+                        }
+                    }
+                    System.out.println(LabelPanel.this.loX + " - " + LabelPanel.this.hiX);
+                    repaint();
+                }
+            });
+        }
+
+        @Override
+        public void paintComponent(final Graphics g)
+        {
+            super.paintComponent(g);
+            if (LabelPanel.this.multiSlider.isDrawThumbLabels())
+            {
+                for (int i = 0; i < this.multiSlider.getNumberOfThumbs(); i++)
+                {
+                    int pos = this.multiSlider.thumbPosition(i);
+                    if (this.multiSlider.getOrientation() == SwingConstants.HORIZONTAL)
+                    {
+                        String s = this.multiSlider.getThumbLabel(i);
+                        int sw = g.getFontMetrics().stringWidth(s) / 2;
+                        g.drawString(s, pos - sw, 12);
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
         }
 
     }
