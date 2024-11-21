@@ -55,7 +55,7 @@ public class MultiSliderDemo extends JFrame
         horSlider.setThumbLabel(0, "a");
         horSlider.setThumbLabel(1, "b");
         horSlider.setThumbLabel(2, "c");
-        horSlider.setDrawThumbLabels(true);
+        horSlider.setDrawThumbLabels(true, 20);
 
         var vertSlider = new MultiSlider(SwingConstants.VERTICAL, 0, 100, new int[] {40, 60});
         // vertSlider.setUI(new MetalSliderUI());
@@ -65,6 +65,9 @@ public class MultiSliderDemo extends JFrame
         vertSlider.setPaintLabels(true);
         vertSlider.setPaintTrack(true);
         panel.add(vertSlider, BorderLayout.WEST);
+        vertSlider.setThumbLabel(0, "min");
+        vertSlider.setThumbLabel(1, "max");
+        vertSlider.setDrawThumbLabels(true, 35);
 
         var button = new JButton("RESET");
         button.setPreferredSize(new Dimension(100, 25));
