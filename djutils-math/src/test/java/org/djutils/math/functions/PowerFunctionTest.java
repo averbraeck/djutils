@@ -64,11 +64,11 @@ public class PowerFunctionTest
         pf = new PowerFunction(2, 0);
         assertEquals("2", pf.getDescription(), "constant 2 powerfunction describes itself as 2");
         pf = new PowerFunction(1, 3);
-        assertEquals("x^3", pf.getDescription(), "power function with unit weight leaves of the weight");
+        assertEquals("x\u00b3", pf.getDescription(), "power function with unit weight leaves of the weight");
         pf = new PowerFunction(3, 1);
-        assertEquals("3*x", pf.getDescription(), "exponent 1 is left off");
+        assertEquals("3x", pf.getDescription(), "exponent 1 is left off");
         pf = new PowerFunction(2, 3);
-        assertEquals("2*x^3", pf.getDescription(), "general case");
+        assertEquals("2x\u00b3", pf.getDescription(), "general case");
         
         assertEquals("POW", pf.getId(), "id is POW");
         assertTrue(pf.toString().startsWith("PowerFunction ["), "toString returns something descriptive");
