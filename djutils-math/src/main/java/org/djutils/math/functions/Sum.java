@@ -1,6 +1,9 @@
 package org.djutils.math.functions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 import org.djutils.exceptions.Throw;
 
@@ -19,7 +22,7 @@ import org.djutils.exceptions.Throw;
 public class Sum implements Function
 {
     /** The functions whose values will be summed. */
-    private final Function[] terms;
+    private final List<Function> terms;
 
     /**
      * Construct the sum of one or more functions.
@@ -29,7 +32,18 @@ public class Sum implements Function
      */
     public Sum(final Function... functions)
     {
-        Throw.when(functions.length == 0, IllegalArgumentException.class, "Plus needs at least one object to sum");
+        this(Arrays.asList(functions));
+    }
+
+    /**
+     * Construct the sum of one or more functions.
+     * @param functions the functions that this Sum will add together.
+     * @throws IllegalArgumentException when zero parameters are provided
+     * @throws NullPointerException when a <code>null</code> value is among the arguments
+     */
+    public Sum(final List<Function> functions)
+    {
+        Throw.when(functions.size() == 0, IllegalArgumentException.class, "Sum needs at least one object to sum");
         this.terms = simplify(functions);
     }
 
@@ -38,52 +52,41 @@ public class Sum implements Function
      * @param functions the terms that must be added together
      * @return minimal array with the remaining terms
      */
-    private Function[] simplify(final Function[] functions)
+    private List<Function> simplify(final List<Function> functions)
     {
+        List<Function> result = new ArrayList<>(functions);
+
         // Aggregate all Constant functions together and accumulate their values
-        int termCount = 0;
         double totalConstant = 0.0;
-        for (Function function : functions)
+        for (int index = 0; index < result.size(); index++)
         {
+            Function function = result.get(index);
             if (function instanceof Constant)
             {
+                // Remove this Constant and accumulate its value in our running total
                 totalConstant += function.get(0.0);
+                result.remove(index);
+                index--;
             }
-            else
+            else if (function instanceof Sum)
             {
-                termCount++;
+                // Replace an embedded Sum by all elements of that Sum
+                result.remove(index);
+                index--;
+                result.addAll(((Sum) function).terms);
             }
         }
-        Function constantPart = null;
         if (totalConstant == 1.0)
         {
-            constantPart = Constant.ONE;
+            result.add(Constant.ONE);
         }
-        if (totalConstant != 0.0)
+        else if (totalConstant != 0.0)
         {
-            constantPart = new Constant(totalConstant);
+            result.add(new Constant(totalConstant));
         }
-        else if (termCount == 0)
+        if (result.isEmpty())
         {
-            constantPart = Constant.ZERO;
-        }
-        if (constantPart != null)
-        {
-            termCount++; // reserve a spot for the Constant term in the result
-        }
-        Function[] result = new Function[termCount];
-        // Aggregate all non-Constant functions
-        int index = 0;
-        for (Function function : functions)
-        {
-            if (!(function instanceof Constant))
-            {
-                result[index++] = function;
-            }
-        }
-        if (constantPart != null)
-        {
-            result[index] = constantPart;
+            result.add(Constant.ZERO); // We may not return an empty list
         }
         return result;
     }
@@ -102,10 +105,10 @@ public class Sum implements Function
     @Override
     public Function getDerivative()
     {
-        Function[] derivatives = new Function[this.terms.length];
-        for (int i = 0; i < this.terms.length; i++)
+        List<Function> derivatives = new ArrayList<>();
+        for (Function term : this.terms)
         {
-            derivatives[i] = this.terms[i].getDerivative();
+            derivatives.add(term.getDerivative());
         }
         return new Sum(derivatives).simplify();
     }
@@ -113,12 +116,12 @@ public class Sum implements Function
     @Override
     public Function simplify()
     {
-        Function[] simplifiedTerms = simplify(this.terms);
-        if (simplifiedTerms.length == 1)
+        List<Function> simplifiedTerms = simplify(this.terms);
+        if (simplifiedTerms.size() == 1)
         {
-            return simplifiedTerms[0];
+            return simplifiedTerms.get(0);
         }
-        if (Arrays.equals(simplifiedTerms, this.terms))
+        if (this.terms.equals(simplifiedTerms))
         {
             return this;
         }
@@ -129,14 +132,14 @@ public class Sum implements Function
     public String getDescription()
     {
         StringBuilder result = new StringBuilder();
-        result.append("\u03A3(");
-        for (int i = 0; i < this.terms.length; i++)
+        result.append("\u03A3("); // Capital sigma (Σ)
+        for (int i = 0; i < this.terms.size(); i++)
         {
             if (i > 0)
             {
                 result.append(", ");
             }
-            result.append(this.terms[i].getDescription());
+            result.append(this.terms.get(i).getDescription());
         }
         result.append(")");
         return result.toString();
@@ -151,16 +154,13 @@ public class Sum implements Function
     @Override
     public String toString()
     {
-        return "Sum [terms=" + Arrays.toString(this.terms) + "]";
+        return "Sum [terms=" + this.terms + "]";
     }
 
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + Arrays.hashCode(this.terms);
-        return result;
+        return Objects.hash(this.terms);
     }
 
     @SuppressWarnings("checkstyle:needbraces")
@@ -174,7 +174,7 @@ public class Sum implements Function
         if (getClass() != obj.getClass())
             return false;
         Sum other = (Sum) obj;
-        return Arrays.equals(this.terms, other.terms);
+        return Objects.equals(this.terms, other.terms);
     }
 
 }

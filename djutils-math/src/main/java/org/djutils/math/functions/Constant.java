@@ -46,6 +46,20 @@ public class Constant implements Function
     {
         return ZERO;
     }
+    
+    @Override
+    public Function simplify()
+    {
+        if (this.value == ZERO.value)
+        {
+            return ZERO;
+        }
+        if (this.value == ONE.value)
+        {
+            return ONE;
+        }
+        return this;
+    }
 
     @Override
     public String getDescription()

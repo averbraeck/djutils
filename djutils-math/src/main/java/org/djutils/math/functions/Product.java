@@ -1,6 +1,9 @@
 package org.djutils.math.functions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 import org.djutils.exceptions.Throw;
 
@@ -19,7 +22,7 @@ import org.djutils.exceptions.Throw;
 public class Product implements Function
 {
     /** The functions whose values will be summed. */
-    private final Function[] factors;
+    private final List<Function> factors;
 
     /**
      * Construct the product of one or more functions.
@@ -29,7 +32,18 @@ public class Product implements Function
      */
     public Product(final Function... functions)
     {
-        Throw.when(functions.length == 0, IllegalArgumentException.class, "Plus needs at least one object to sum");
+        this(Arrays.asList(functions));
+    }
+
+    /**
+     * Construct the product of one or more functions.
+     * @param functions the functions that this Product will multiply together.
+     * @throws IllegalArgumentException when zero parameters are provided
+     * @throws NullPointerException when a <code>null</code> value is among the arguments
+     */
+    public Product(final List<Function> functions)
+    {
+        Throw.when(functions.size() == 0, IllegalArgumentException.class, "Product needs at least one object to multiply");
         this.factors = simplify(functions);
     }
 
@@ -38,52 +52,44 @@ public class Product implements Function
      * @param functions the factors that must be multiplied together
      * @return minimal array with the remaining factors
      */
-    private Function[] simplify(final Function[] functions)
+    private List<Function> simplify(final List<Function> functions)
     {
+        List<Function> result = new ArrayList<>(functions);
+
         // Aggregate all Constant functions together and multiply their values
-        int factorCount = 0;
-        double totalConstant = 1.0;
-        for (Function function : functions)
+        double productOfConstants = 1.0;
+        for (int index = 0; index < result.size(); index++)
         {
+            Function function = result.get(index);
             if (function instanceof Constant)
             {
-                totalConstant *= function.get(0.0);
+                double value = function.get(0.0);
+                if (0.0 == value)
+                {
+                    result.clear();
+                    result.add(Constant.ZERO);
+                    return result;
+                }
+                // Remove this Constant and accumulate its value in our running total
+                productOfConstants *= value;
+                result.remove(index);
+                index--;
             }
-            else
+            else if (function instanceof Product)
             {
-                factorCount++;
+                // Replace an embedded Product by all factors of that Product
+                result.remove(index);
+                index--;
+                result.addAll(((Product) function).factors);
             }
         }
-        if (totalConstant == 0.0)
+        if (productOfConstants != 1.0)
         {
-            return new Function[] {Constant.ZERO};
+            result.add(new Constant(productOfConstants));
         }
-        Function constantPart = null;
-        if (factorCount == 0)
+        if (result.size() == 0)
         {
-            constantPart = Constant.ONE;
-        }
-        if (totalConstant != 1.0)
-        {
-            constantPart = new Constant(totalConstant);
-        }
-        if (constantPart != null)
-        {
-            factorCount++;
-        }
-        // Aggregate all non-Constant functions
-        Function[] result = new Function[factorCount];
-        int index = 0;
-        for (Function function : functions)
-        {
-            if (!(function instanceof Constant))
-            {
-                result[index++] = function;
-            }
-        }
-        if (constantPart != null)
-        {
-            result[index] = constantPart;
+            result.add(Constant.ONE);
         }
         return result;
     }
@@ -102,40 +108,35 @@ public class Product implements Function
     @Override
     public Function getDerivative()
     {
-        Function[] terms = new Function[this.factors.length];
-        for (int i = 0; i < this.factors.length; i++)
+        List<Function> result = new ArrayList<>();
+        for (int i = 0; i < this.factors.size(); i++)
         {
-            Function[] termFactors = new Function[this.factors.length];
-            boolean cancel = false;
-            for (int j = 0; j < this.factors.length; j++)
+            List<Function> termFactors = new ArrayList<>(this.factors.size());
+            for (int j = 0; j < this.factors.size(); j++)
             {
                 if (j == i)
                 {
-                    termFactors[j] = this.factors[j].getDerivative();
+                    termFactors.add(this.factors.get(j).getDerivative());
                 }
                 else
                 {
-                    termFactors[j] = this.factors[j];
-                }
-                if (termFactors[j].equals(Constant.ZERO))
-                {
-                    cancel = true;
+                    termFactors.add(this.factors.get(j));
                 }
             }
-            terms[i] = cancel ? Constant.ZERO : new Product(termFactors).simplify();
+            result.add(new Product(termFactors).simplify());
         }
-        return new Sum(terms).simplify();
+        return new Sum(result).simplify();
     }
 
     @Override
     public Function simplify()
     {
-        Function[] simplifiedFactors = simplify(this.factors);
-        if (simplifiedFactors.length == 1)
+        List<Function> simplifiedFactors = simplify(this.factors);
+        if (simplifiedFactors.size() == 1)
         {
-            return simplifiedFactors[0];
+            return simplifiedFactors.get(0);
         }
-        if (Arrays.equals(simplifiedFactors, this.factors))
+        if (this.factors.equals(simplifiedFactors))
         {
             return this;
         }
@@ -147,14 +148,14 @@ public class Product implements Function
     public String getDescription()
     {
         StringBuilder result = new StringBuilder();
-        result.append("\u03A0(");
-        for (int i = 0; i < this.factors.length; i++)
+        result.append("\u03A0("); // Capital pi (Π)
+        for (int i = 0; i < this.factors.size(); i++)
         {
             if (i > 0)
             {
                 result.append(", ");
             }
-            result.append(this.factors[i].getDescription());
+            result.append(this.factors.get(i).getDescription());
         }
         result.append(")");
         return result.toString();
@@ -169,16 +170,13 @@ public class Product implements Function
     @Override
     public String toString()
     {
-        return "Product [factors=" + Arrays.toString(this.factors) + "]";
+        return "Product [factors=" + this.factors + "]";
     }
 
     @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + Arrays.hashCode(this.factors);
-        return result;
+        return Objects.hash(this.factors);
     }
 
     @SuppressWarnings("checkstyle:needbraces")
@@ -192,7 +190,7 @@ public class Product implements Function
         if (getClass() != obj.getClass())
             return false;
         Product other = (Product) obj;
-        return Arrays.equals(this.factors, other.factors);
+        return Objects.equals(this.factors, other.factors);
     }
 
 }

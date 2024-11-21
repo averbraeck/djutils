@@ -97,6 +97,7 @@ public class PowerFunction implements Function
             result.append("x");
             if (this.power > 1 && this.power <= 9 && this.power % 1 == 0)
             {
+                // Print single digit power using unicode superscript symbols
                 int index = ((int) this.power) - 2;
                 result.append("\u00B2\u00B3\u2074\u2075\u2076\u2077\u2078\u2079".substring(index, index + 1));
             }

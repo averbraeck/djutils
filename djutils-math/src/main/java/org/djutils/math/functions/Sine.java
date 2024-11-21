@@ -73,14 +73,17 @@ public class Sine implements Function
             result.append(printValue(this.factor));
         }
         result.append("sin(");
-        if (this.omega != 0.0)
+        if (this.omega != 1.0)
         {
             result.append(printValue(this.omega));
         }
         result.append("x");
         if (this.shift != 0.0)
         {
-            result.append("+");
+            if (this.shift >= 0.0)
+            {
+                result.append("+");
+            }
             result.append(printValue(this.shift));
         }
         result.append(")");

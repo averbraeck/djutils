@@ -1,5 +1,7 @@
 package org.djutils.math.functions;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * Demonstrate various classed in function package.
  * <p>
@@ -106,7 +108,31 @@ public final class FunctionDemo
         System.out.println("f''''':      " + deriv5.getDescription());
         deriv6 = deriv5.getDerivative();
         System.out.println("f'''''':     " + deriv6.getDescription());
+        
+        
+        System.out.println("\nDifferentiate a simpler sine function");
+        f = new Sine(2, 1, 0);
+        System.out.println("f:           " + f.getDescription());
+        deriv = f.getDerivative();
+        System.out.println("f':          " + deriv.getDescription());
+        product.getDerivative();
+        deriv2 = deriv.getDerivative();
+        System.out.println("f'':         " + deriv2.getDescription());
+        deriv3 = deriv2.getDerivative();
+        System.out.println("f''':        " + deriv3.getDescription());
+        deriv4 = deriv3.getDerivative();
+        System.out.println("f'''':       " + deriv4.getDescription());
+        deriv5 = deriv4.getDerivative();
+        System.out.println("f''''':      " + deriv5.getDescription());
+        System.out.println("f and f'''' do test equal (there is no resulting rounding error)");
+        assertEquals(f, deriv4);
 
+        System.out.println("\nIncorporate a factor in a PowerFunction");
+        f = new Product(new Constant(5), new PowerFunction(3, 4));
+        System.out.println(f.getDescription());
+        f.simplify();
+        System.out.println(f.getDescription());
+        
     }
 
 }
