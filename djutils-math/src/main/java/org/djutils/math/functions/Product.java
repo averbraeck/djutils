@@ -85,7 +85,19 @@ public class Product implements Function
         }
         if (productOfConstants != 1.0)
         {
-            result.add(new Constant(productOfConstants));
+            if (result.size() > 0)
+            {
+                List<Function> newList = new ArrayList<>(result.size());
+                for (Function function : result)
+                {
+                    newList.add(function.scaleBy(productOfConstants));
+                }
+                result = newList;
+            }
+            else
+            {
+                result.add(new Constant(productOfConstants));
+            }
         }
         if (result.size() == 0)
         {
@@ -159,6 +171,25 @@ public class Product implements Function
         }
         result.append(")");
         return result.toString();
+    }
+
+    @Override
+    public Function scaleBy(final double scaleFactor)
+    {
+        if (scaleFactor == 0.0)
+        {
+            return Constant.ZERO;
+        }
+        if (scaleFactor == 1.0)
+        {
+            return this;
+        }
+        List<Function> result = new ArrayList<>(this.factors.size());
+        for (Function factor : this.factors)
+        {
+            result.add(factor.scaleBy(scaleFactor));
+        }
+        return new Product(result);
     }
 
     @Override

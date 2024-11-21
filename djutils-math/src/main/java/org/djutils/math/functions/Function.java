@@ -41,6 +41,13 @@ public interface Function extends Describable
     {
         return this;
     }
+    
+    /**
+     * Incorporate a multiplication factor to this Function. 
+     * @param factor the factor to incorporate
+     * @return a new Function that yields the same result as the original function multiplied by the <code>factor</code>
+     */
+    Function scaleBy(double factor);
 
     /**
      * Format a numerical value. If the value is integer, format it without decimal point. If the value is not integer, use a

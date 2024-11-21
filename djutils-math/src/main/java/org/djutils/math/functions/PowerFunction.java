@@ -79,6 +79,20 @@ public class PowerFunction implements Function
         }
         return new PowerFunction(this.weight * this.power, this.power - 1.0);
     }
+    
+    @Override
+    public Function scaleBy(final double factor)
+    {
+        if (factor == 0.0)
+        {
+            return Constant.ZERO;
+        }
+        if (factor == 1.0)
+        {
+            return this;
+        }
+        return new PowerFunction(factor * this.weight, this.power);
+    }
 
     @Override
     public String getDescription()

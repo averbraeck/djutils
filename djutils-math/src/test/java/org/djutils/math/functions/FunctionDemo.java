@@ -108,8 +108,7 @@ public final class FunctionDemo
         System.out.println("f''''':      " + deriv5.getDescription());
         deriv6 = deriv5.getDerivative();
         System.out.println("f'''''':     " + deriv6.getDescription());
-        
-        
+
         System.out.println("\nDifferentiate a simpler sine function");
         f = new Sine(2, 1, 0);
         System.out.println("f:           " + f.getDescription());
@@ -128,11 +127,15 @@ public final class FunctionDemo
         assertEquals(f, deriv4);
 
         System.out.println("\nIncorporate a factor in a PowerFunction");
-        f = new Product(new Constant(5), new PowerFunction(3, 4));
-        System.out.println(f.getDescription());
-        f.simplify();
-        System.out.println(f.getDescription());
-        
+        p1 = new Constant(5);
+        System.out.println("part 1:     " + p1.getDescription());
+        p2 = new PowerFunction(3, 4);
+        System.out.println("part 2:     " + p2.getDescription());
+        f = new Product(p1, p2);
+        System.out.println("combined:   " + f.getDescription());
+        f = f.simplify();
+        System.out.println("simplified: " + f.getDescription());
+
     }
 
 }

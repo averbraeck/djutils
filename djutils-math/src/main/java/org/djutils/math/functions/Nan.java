@@ -36,6 +36,12 @@ public final class Nan implements Function
     {
         return this; // same NaN value, same domain
     }
+    
+    @Override
+    public Function scaleBy(final double factor)
+    {
+        return this;
+    }
 
     @Override
     public String getDescription()

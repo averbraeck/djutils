@@ -104,6 +104,22 @@ public class Concatenation implements Function
     }
 
     @Override
+    public Function scaleBy(final double factor)
+    {
+        if (factor == 1.0)
+        {
+            return this;
+        }
+        SortedSet<Interval<Function>> result = new TreeSet<>();
+        for (Interval<Function> interval : this.functions)
+        {
+            result.add(new Interval<Function>(interval.low(), interval.lowInclusive(), interval.high(),
+                    interval.highInclusive(), interval.payload().scaleBy(factor)));
+        }
+        return new Concatenation(result);
+    }
+
+    @Override
     public String getDescription()
     {
         StringBuilder stringBuilder = new StringBuilder();

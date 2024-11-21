@@ -129,6 +129,25 @@ public class Sum implements Function
     }
 
     @Override
+    public Function scaleBy(final double factor)
+    {
+        if (factor == 0.0)
+        {
+            return Constant.ZERO;
+        }
+        if (factor == 1.0)
+        {
+            return this;
+        }
+        List<Function> result = new ArrayList<>(this.terms.size());
+        for (Function function : this.terms)
+        {
+            result.add(function.scaleBy(factor));
+        }
+        return new Sum(result);
+    }
+    
+    @Override
     public String getDescription()
     {
         StringBuilder result = new StringBuilder();

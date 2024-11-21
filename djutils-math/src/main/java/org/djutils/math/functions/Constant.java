@@ -62,6 +62,21 @@ public class Constant implements Function
     }
 
     @Override
+    public Function scaleBy(final double factor)
+    {
+        double product = factor * this.value;
+        if (product == 0.0)
+        {
+            return Constant.ZERO;
+        }
+        if (product == 1.0)
+        {
+            return Constant.ONE;
+        }
+        return new Constant(product);
+    }
+    
+    @Override
     public String getDescription()
     {
         return printValue(this.value);

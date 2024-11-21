@@ -63,6 +63,20 @@ public class Sine implements Function
         }
         return this;
     }
+    
+    @Override
+    public Function scaleBy(final double scaleFactor)
+    {
+        if (scaleFactor == 0.0)
+        {
+            return Constant.ZERO;
+        }
+        if (scaleFactor == 1.0)
+        {
+            return this;
+        }
+        return new Sine(scaleFactor * this.factor, this.omega, this.shift);
+    }
 
     @Override
     public String getDescription()
