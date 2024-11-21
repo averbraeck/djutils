@@ -53,6 +53,10 @@ public class MultiSliderInvertedDemo extends JFrame
         horSlider.setPaintLabels(true);
         horSlider.setInverted(true);
         panel.add(horSlider, BorderLayout.NORTH);
+        horSlider.setThumbLabel(0, "a");
+        horSlider.setThumbLabel(1, "b");
+        horSlider.setThumbLabel(2, "c");
+        horSlider.setDrawThumbLabels(true, 20);
 
         var vertSlider = new MultiSlider(SwingConstants.VERTICAL, 100, 200, new int[] {140, 160});
         // vertSlider.setUI(new MetalSliderUI());
@@ -63,6 +67,9 @@ public class MultiSliderInvertedDemo extends JFrame
         vertSlider.setPaintTrack(true);
         vertSlider.setInverted(true);
         panel.add(vertSlider, BorderLayout.WEST);
+        vertSlider.setThumbLabel(0, "min");
+        vertSlider.setThumbLabel(1, "max");
+        vertSlider.setDrawThumbLabels(true, 35);
 
         var button = new JButton("RESET");
         button.setPreferredSize(new Dimension(100, 25));
@@ -78,12 +85,8 @@ public class MultiSliderInvertedDemo extends JFrame
             @Override
             public void actionPerformed(final ActionEvent e)
             {
-                horSlider.setValue(0, 125);
-                horSlider.setValue(1, 150);
-                horSlider.setValue(2, 175);
-
-                vertSlider.setValue(0, 140);
-                vertSlider.setValue(1, 160);
+                horSlider.resetToInitialValues();
+                vertSlider.resetToInitialValues();
             }
         });
 
