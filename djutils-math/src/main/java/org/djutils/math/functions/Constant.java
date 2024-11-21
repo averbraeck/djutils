@@ -3,7 +3,8 @@ package org.djutils.math.functions;
 import java.util.Objects;
 
 /**
- * Constant value function. Could be implemented with PowerFunction, but this is much more efficient.
+ * Constant value function; <code>f(x) &rarr; c</code> where <code>c &isin; &#8477</code>. Can also be implemented with
+ * PowerFunction, but this is much more readable and efficient.
  * <p>
  * Copyright (c) 2024-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -26,7 +27,7 @@ public class Constant implements Function
     public static final Constant ONE = new Constant(1.0);
 
     /**
-     * Create a new constant value function.
+     * Create a new constant value function F(x).
      * @param value the value at any <code>x</code>
      */
     public Constant(final double value)

@@ -12,15 +12,15 @@ package org.djutils.math.functions;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public final class NanFunction implements Function
+public final class Nan implements Function
 {
     /** Function that always return NaN (Not A Number). */
-    public static final NanFunction NAN = new NanFunction();
+    public static final Nan NAN = new Nan();
 
     /**
      * Utility class; do not instantiate.
      */
-    private NanFunction()
+    private Nan()
     {
         // Do not instantiate
     }
@@ -40,13 +40,19 @@ public final class NanFunction implements Function
     @Override
     public String getDescription()
     {
-        return "NaN";
+        return "Nan";
     }
 
     @Override
     public String getId()
     {
-        return ("NaN");
+        return ("Nan");
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Nan []";
     }
 
 }

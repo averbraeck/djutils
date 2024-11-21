@@ -35,7 +35,7 @@ public class PowerFunction implements Function
     }
 
     /**
-     * Create a new power function with weight 1.0.
+     * Create a new power function with weight 1.0 and the supplied value as exponent.
      * @param power the power
      */
     public PowerFunction(final double power)
@@ -87,21 +87,26 @@ public class PowerFunction implements Function
         {
             return ("0");
         }
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder result = new StringBuilder();
         if (this.weight != 1.0 || this.power == 0.0)
         {
-            stringBuilder.append(printValue(this.weight));
+            result.append(printValue(this.weight));
         }
         if (this.power != 0.0)
         {
-            stringBuilder.append("*x");
-            if (this.power != 1)
+            result.append("x");
+            if (this.power > 1 && this.power <= 9 && this.power % 1 == 0)
             {
-                stringBuilder.append("^");
-                stringBuilder.append(printValue(this.power));
+                int index = ((int) this.power) - 2;
+                result.append("\u00B2\u00B3\u2074\u2075\u2076\u2077\u2078\u2079".substring(index, index + 1));
+            }
+            else if (this.power != 1)
+            {
+                result.append("^");
+                result.append(printValue(this.power));
             }
         }
-        return stringBuilder.toString();
+        return result.toString();
     }
 
     @Override

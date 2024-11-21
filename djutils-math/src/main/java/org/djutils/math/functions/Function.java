@@ -32,6 +32,15 @@ public interface Function extends Describable
      * @return derivative of this Function
      */
     Function getDerivative();
+    
+    /**
+     * Attempts to find a simplified version of this Function (e.g. replace <code>1 - 5</code> by <code>-4</code>). 
+     * @return <code>this</code>, or a simplified version thereof
+     */
+    default Function simplify()
+    {
+        return this;
+    }
 
     /**
      * Format a numerical value. If the value is integer, format it without decimal point. If the value is not integer, use a
@@ -41,9 +50,9 @@ public interface Function extends Describable
      */
     default String printValue(final double value)
     {
-        if (value == Math.ceil(value))
+        if (value <= Long.MAX_VALUE && value >= Long.MIN_VALUE && value == Math.ceil(value))
         {
-            return String.format("%d", (int) value);
+            return String.format("%d", (long) value);
         }
         return "" + value;
     }

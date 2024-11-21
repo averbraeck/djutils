@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.djutils.exceptions.Throw;
 
 /**
- * Add up one or more FunctionInterface objects.
+ * Multiply functions.
  * <p>
  * Copyright (c) 2024-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -16,63 +16,63 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class Sum implements Function
+public class Product implements Function
 {
     /** The functions whose values will be summed. */
-    private final Function[] terms;
+    private final Function[] factors;
 
     /**
-     * Construct the sum of one or more functions.
-     * @param functions the functions that this Sum will add together.
+     * Construct the product of one or more functions.
+     * @param functions the functions that this Product will multiply together.
      * @throws IllegalArgumentException when zero parameters are provided
      * @throws NullPointerException when a <code>null</code> value is among the arguments
      */
-    public Sum(final Function... functions)
+    public Product(final Function... functions)
     {
         Throw.when(functions.length == 0, IllegalArgumentException.class, "Plus needs at least one object to sum");
-        this.terms = simplify(functions);
+        this.factors = simplify(functions);
     }
 
     /**
-     * Simplify a set of terms that must be added together.
-     * @param functions the terms that must be added together
-     * @return minimal array with the remaining terms
+     * Simplify a set of factors that must be multiplied together.
+     * @param functions the factors that must be multiplied together
+     * @return minimal array with the remaining factors
      */
     private Function[] simplify(final Function[] functions)
     {
-        // Aggregate all Constant functions together and accumulate their values
-        int termCount = 0;
-        double totalConstant = 0.0;
+        // Aggregate all Constant functions together and multiply their values
+        int factorCount = 0;
+        double totalConstant = 1.0;
         for (Function function : functions)
         {
             if (function instanceof Constant)
             {
-                totalConstant += function.get(0.0);
+                totalConstant *= function.get(0.0);
             }
             else
             {
-                termCount++;
+                factorCount++;
             }
         }
+        if (totalConstant == 0.0)
+        {
+            return new Function[] {Constant.ZERO};
+        }
         Function constantPart = null;
-        if (totalConstant == 1.0)
+        if (factorCount == 0)
         {
             constantPart = Constant.ONE;
         }
-        if (totalConstant != 0.0)
+        if (totalConstant != 1.0)
         {
             constantPart = new Constant(totalConstant);
         }
-        else if (termCount == 0)
-        {
-            constantPart = Constant.ZERO;
-        }
         if (constantPart != null)
         {
-            termCount++; // reserve a spot for the Constant term in the result
+            factorCount++;
         }
-        Function[] result = new Function[termCount];
         // Aggregate all non-Constant functions
+        Function[] result = new Function[factorCount];
         int index = 0;
         for (Function function : functions)
         {
@@ -91,10 +91,10 @@ public class Sum implements Function
     @Override
     public double get(final double x)
     {
-        double result = 0.0;
-        for (Function fi : this.terms)
+        double result = 1.0;
+        for (Function fi : this.factors)
         {
-            result += fi.get(x);
+            result *= fi.get(x);
         }
         return result;
     }
@@ -102,41 +102,59 @@ public class Sum implements Function
     @Override
     public Function getDerivative()
     {
-        Function[] derivatives = new Function[this.terms.length];
-        for (int i = 0; i < this.terms.length; i++)
+        Function[] terms = new Function[this.factors.length];
+        for (int i = 0; i < this.factors.length; i++)
         {
-            derivatives[i] = this.terms[i].getDerivative();
+            Function[] termFactors = new Function[this.factors.length];
+            boolean cancel = false;
+            for (int j = 0; j < this.factors.length; j++)
+            {
+                if (j == i)
+                {
+                    termFactors[j] = this.factors[j].getDerivative();
+                }
+                else
+                {
+                    termFactors[j] = this.factors[j];
+                }
+                if (termFactors[j].equals(Constant.ZERO))
+                {
+                    cancel = true;
+                }
+            }
+            terms[i] = cancel ? Constant.ZERO : new Product(termFactors).simplify();
         }
-        return new Sum(derivatives).simplify();
+        return new Sum(terms).simplify();
     }
 
     @Override
     public Function simplify()
     {
-        Function[] simplifiedTerms = simplify(this.terms);
-        if (simplifiedTerms.length == 1)
+        Function[] simplifiedFactors = simplify(this.factors);
+        if (simplifiedFactors.length == 1)
         {
-            return simplifiedTerms[0];
+            return simplifiedFactors[0];
         }
-        if (Arrays.equals(simplifiedTerms, this.terms))
+        if (Arrays.equals(simplifiedFactors, this.factors))
         {
             return this;
         }
-        return new Sum(simplifiedTerms);
+        return new Product(simplifiedFactors);
+
     }
 
     @Override
     public String getDescription()
     {
         StringBuilder result = new StringBuilder();
-        result.append("\u03A3(");
-        for (int i = 0; i < this.terms.length; i++)
+        result.append("\u03A0(");
+        for (int i = 0; i < this.factors.length; i++)
         {
             if (i > 0)
             {
                 result.append(", ");
             }
-            result.append(this.terms[i].getDescription());
+            result.append(this.factors[i].getDescription());
         }
         result.append(")");
         return result.toString();
@@ -151,7 +169,7 @@ public class Sum implements Function
     @Override
     public String toString()
     {
-        return "Sum [terms=" + Arrays.toString(this.terms) + "]";
+        return "Product [factors=" + Arrays.toString(this.factors) + "]";
     }
 
     @Override
@@ -159,7 +177,7 @@ public class Sum implements Function
     {
         final int prime = 31;
         int result = 1;
-        result = prime * result + Arrays.hashCode(this.terms);
+        result = prime * result + Arrays.hashCode(this.factors);
         return result;
     }
 
@@ -173,8 +191,8 @@ public class Sum implements Function
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Sum other = (Sum) obj;
-        return Arrays.equals(this.terms, other.terms);
+        Product other = (Product) obj;
+        return Arrays.equals(this.factors, other.factors);
     }
 
 }

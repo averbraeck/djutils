@@ -21,7 +21,7 @@ public final class FunctionDemo
     {
         // Do not instantiate.
     }
-    
+
     /**
      * Demonstrate the Function classes.
      * @param args the command line arguments (not used)
@@ -68,6 +68,45 @@ public final class FunctionDemo
             double x = 0.02 * step;
             System.out.println(String.format("x=%5.2f: f=%10.2f; f'=%10.2f", x, concatenation.get(x), derivative.get(x)));
         }
+
+        System.out.println("\nBuild the product of two simple polynomials");
+        Function p1 = new Sum(new PowerFunction(3, 2), new PowerFunction(2, 1), new Constant(5)); // 3*x^2+2*x+5
+        System.out.println("polynomial 1: " + p1.getDescription());
+        Function p2 = new Sum(new PowerFunction(2, 2), new PowerFunction(4, 1), new Constant(7)); // 2*x^2+4*x+7
+        System.out.println("polynomial 2: " + p2.getDescription());
+        Function product = new Product(p1, p2);
+        System.out.println("product (f): " + product.getDescription());
+        deriv = product.getDerivative();
+        System.out.println("f':          " + deriv.getDescription());
+        product.getDerivative();
+        deriv2 = deriv.getDerivative();
+        System.out.println("f'':         " + deriv2.getDescription());
+        deriv3 = deriv2.getDerivative();
+        System.out.println("f''':        " + deriv3.getDescription());
+        deriv4 = deriv3.getDerivative();
+        System.out.println("f'''':       " + deriv4.getDescription());
+        deriv5 = deriv4.getDerivative();
+        System.out.println("f''''':      " + deriv5.getDescription());
+        Function deriv6 = deriv5.getDerivative();
+        System.out.println("f'''''':     " + deriv6.getDescription());
+
+        System.out.println("\nDifferentiate a sine function");
+        Function f = new Sine(2, 3, 0);
+        System.out.println("f:           " + f.getDescription());
+        deriv = f.getDerivative();
+        System.out.println("f':          " + deriv.getDescription());
+        product.getDerivative();
+        deriv2 = deriv.getDerivative();
+        System.out.println("f'':         " + deriv2.getDescription());
+        deriv3 = deriv2.getDerivative();
+        System.out.println("f''':        " + deriv3.getDescription());
+        deriv4 = deriv3.getDerivative();
+        System.out.println("f'''':       " + deriv4.getDescription());
+        deriv5 = deriv4.getDerivative();
+        System.out.println("f''''':      " + deriv5.getDescription());
+        deriv6 = deriv5.getDerivative();
+        System.out.println("f'''''':     " + deriv6.getDescription());
+
     }
-    
+
 }

@@ -68,7 +68,7 @@ public class Concatenation implements Function
                 {
                     // There is a gap; fill it with a NaN function
                     set.add(new Interval<Function>(prevInterval.high(), !prevInterval.highInclusive(), thisInterval.low(),
-                            !thisInterval.lowInclusive(), NanFunction.NAN));
+                            !thisInterval.lowInclusive(), Nan.NAN));
                 }
             }
             prevInterval = thisInterval;
