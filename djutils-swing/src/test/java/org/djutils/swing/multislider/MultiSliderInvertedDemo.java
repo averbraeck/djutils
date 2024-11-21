@@ -18,7 +18,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * MultiSliderDemo demonstrates a horizontal slider and a vertical slider, as well as setValue() through a reset button.
+ * MultiSliderReverseDemo shows a number of sliders with a reversed scale.
  * <p>
  * Copyright (c) 2024-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -27,17 +27,17 @@ import javax.swing.event.ChangeListener;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class MultiSliderDemo extends JFrame
+public class MultiSliderInvertedDemo extends JFrame
 {
     /** */
     private static final long serialVersionUID = 1L;
 
     /** */
     @SuppressWarnings("checkstyle:needbraces")
-    public MultiSliderDemo()
+    public MultiSliderInvertedDemo()
     {
         setPreferredSize(new Dimension(640, 640));
-        setTitle("MultiSliderDemo");
+        setTitle("MultiSliderInvertedDemo");
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
@@ -45,25 +45,27 @@ public class MultiSliderDemo extends JFrame
         getContentPane().add(panel);
         getContentPane().setBackground(new Color(204, 255, 204));
 
-        var horSlider = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {25, 50, 75});
+        var horSlider = new MultiSlider(SwingConstants.HORIZONTAL, 100, 200, new int[] {125, 150, 175});
         // horSlider.setUI(new BasicSliderUI());
         horSlider.setMajorTickSpacing(25);
         horSlider.setMinorTickSpacing(5);
         horSlider.setPaintTicks(true);
         horSlider.setPaintLabels(true);
+        horSlider.setInverted(true);
         panel.add(horSlider, BorderLayout.NORTH);
         horSlider.setThumbLabel(0, "a");
         horSlider.setThumbLabel(1, "b");
         horSlider.setThumbLabel(2, "c");
         horSlider.setDrawThumbLabels(true, 20);
 
-        var vertSlider = new MultiSlider(SwingConstants.VERTICAL, 0, 100, new int[] {40, 60});
+        var vertSlider = new MultiSlider(SwingConstants.VERTICAL, 100, 200, new int[] {140, 160});
         // vertSlider.setUI(new MetalSliderUI());
         vertSlider.setMajorTickSpacing(20);
         vertSlider.setMinorTickSpacing(5);
         vertSlider.setPaintTicks(true);
         vertSlider.setPaintLabels(true);
         vertSlider.setPaintTrack(true);
+        vertSlider.setInverted(true);
         panel.add(vertSlider, BorderLayout.WEST);
         vertSlider.setThumbLabel(0, "min");
         vertSlider.setThumbLabel(1, "max");
@@ -134,7 +136,7 @@ public class MultiSliderDemo extends JFrame
             @Override
             public void run()
             {
-                new MultiSliderDemo();
+                new MultiSliderInvertedDemo();
             }
         });
     }
