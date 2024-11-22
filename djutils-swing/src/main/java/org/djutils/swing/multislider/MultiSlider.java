@@ -166,6 +166,9 @@ public class MultiSlider extends JComponent implements ChangeListener
 
             // ensure movability of the slider by setting it again
             slider.setValue(initialValues[i]);
+            
+            // set the initial labels (issue #71)
+            this.thumbLabels.put(i, "");
         }
 
         this.dispatcherPane.setPreferredSize(new Dimension(this.sliders[0].getSize()));
@@ -182,7 +185,7 @@ public class MultiSlider extends JComponent implements ChangeListener
             }
 
         });
-
+        
         invalidate();
     }
 
