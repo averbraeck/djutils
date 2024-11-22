@@ -99,5 +99,41 @@ public class MultiSliderTest
         assertEquals(oldExtent + 2, ms.getExtent());
         ms.setExtent(oldExtent);
         assertEquals(oldExtent, ms.getExtent());
+        
+        assertFalse(ms.getInverted());
+        ms.setInverted(true);
+        assertTrue(ms.getInverted());
+        ms.setInverted(false);
+        assertFalse(ms.getInverted());
+        
+        ms.setMajorTickSpacing(10);
+        assertEquals(10, ms.getMajorTickSpacing());
+        ms.setMajorTickSpacing(20);
+        assertEquals(20, ms.getMajorTickSpacing());
+        ms.setMinorTickSpacing(10);
+        assertEquals(10, ms.getMinorTickSpacing());
+        ms.setMinorTickSpacing(5);
+        assertEquals(5, ms.getMinorTickSpacing());
+
+        ms.setPaintTicks(false);
+        assertFalse(ms.getPaintTicks());
+        ms.setPaintTicks(true);
+        assertTrue(ms.getPaintTicks());
+
+        ms.setPaintTrack(false);
+        assertFalse(ms.getPaintTrack());
+        ms.setPaintTrack(true);
+        assertTrue(ms.getPaintTrack());
+
+        ms.setSnapToTicks(true);
+        assertTrue(ms.getSnapToTicks());
+        ms.setSnapToTicks(false);
+        assertFalse(ms.getSnapToTicks());
+
+        ms.setPaintLabels(true);
+        assertTrue(ms.getPaintLabels());
+        ms.setPaintLabels(false);
+        assertFalse(ms.getPaintLabels());
+
     }
 }
