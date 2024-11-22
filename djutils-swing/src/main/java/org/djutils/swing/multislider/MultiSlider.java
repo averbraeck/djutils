@@ -166,7 +166,7 @@ public class MultiSlider extends JComponent implements ChangeListener
 
             // ensure movability of the slider by setting it again
             slider.setValue(initialValues[i]);
-            
+
             // set the initial labels (issue #71)
             this.thumbLabels.put(i, "");
         }
@@ -185,7 +185,7 @@ public class MultiSlider extends JComponent implements ChangeListener
             }
 
         });
-        
+
         invalidate();
     }
 
@@ -471,8 +471,16 @@ public class MultiSlider extends JComponent implements ChangeListener
     {
         for (var slider : this.sliders)
         {
-            slider.setUI(ui);
+            try
+            {
+                slider.setUI(ui.getClass().getDeclaredConstructor().newInstance());
+            }
+            catch (Exception exception)
+            {
+                // silently fail
+            }
         }
+        invalidate();
     }
 
     /**
@@ -485,6 +493,7 @@ public class MultiSlider extends JComponent implements ChangeListener
         {
             slider.updateUI();
         }
+        invalidate();
     }
 
     /**
@@ -601,6 +610,10 @@ public class MultiSlider extends JComponent implements ChangeListener
     public void setValue(final int i, final int n)
     {
         this.sliders[i].setValue(n);
+        this.sliders[i].invalidate();
+        this.sliders[i].repaint();
+        invalidate();
+        repaint();
     }
 
     /**
