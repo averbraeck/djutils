@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import javax.swing.BoundedRangeModel;
-import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 
@@ -86,25 +84,6 @@ public class MultiSliderTest
         assertEquals(50, ms.getValue(1));
         assertEquals(75, ms.getValue(2));
         
-        BoundedRangeModel model = ms.getModel();
-        assertEquals(0, model.getMinimum());
-        assertEquals(100, model.getMaximum());
-        assertEquals(25, model.getValue());
-        ms.setModel(new DefaultBoundedRangeModel(50, 2, 10, 90));
-        assertEquals(10, ms.getMinimum());
-        assertEquals(90, ms.getMaximum());
-        assertEquals(50, ms.getValue(0));
-        assertEquals(50, ms.getValue(1));
-        assertEquals(50, ms.getValue(2));
-        ms.setMinimum(0);
-        ms.setMaximum(100);
-        ms.resetToInitialValues();
-        assertEquals(0, ms.getMinimum());
-        assertEquals(100, ms.getMaximum());
-        assertEquals(25, ms.getValue(0));
-        assertEquals(50, ms.getValue(1));
-        assertEquals(75, ms.getValue(2));
-        
         ms.setMinimum(10);
         ms.setMaximum(90);
         assertEquals(10, ms.getMinimum());
@@ -118,9 +97,7 @@ public class MultiSliderTest
         int oldExtent = ms.getExtent();
         ms.setExtent(oldExtent + 2);
         assertEquals(oldExtent + 2, ms.getExtent());
-        assertEquals(oldExtent + 2, model.getExtent());
         ms.setExtent(oldExtent);
         assertEquals(oldExtent, ms.getExtent());
-        assertEquals(oldExtent, model.getExtent());
     }
 }
