@@ -50,20 +50,20 @@ public class ConstantAndNanTest
         assertFalse(Constant.ZERO.equals(null), "not equal to null");
         assertFalse(Constant.ZERO.equals("Not a Constant"), "not equal to some other object");
         assertFalse(Constant.ZERO.equals(Constant.ONE), "not equal if value differs");
-        Function otherZero = new Constant(0.0);
+        MathFunction otherZero = new Constant(0.0);
         assertTrue(Constant.ZERO.equals(otherZero), "equal to other constant with same value");
         assertFalse(otherZero == Constant.ZERO, "but it is not the same object");
         otherZero = otherZero.simplify();
         assertTrue(otherZero == Constant.ZERO, "now it IS the same object");
-        Function otherOne = new Constant(1.0);
+        MathFunction otherOne = new Constant(1.0);
         assertTrue(Constant.ONE.equals(otherOne), "equal to other constant with the same value");
         assertFalse(otherOne == Constant.ONE, "but not the same object");
         otherOne = otherOne.simplify();
         assertTrue(otherOne == Constant.ONE, "now it IS the same object");
-        Function constant = new Constant(4);
+        MathFunction constant = new Constant(4);
         constant = constant.scaleBy(2);
         assertEquals(8, constant.get(0), "scaleBy works");
-        Function simplified = constant.simplify();
+        MathFunction simplified = constant.simplify();
         assertTrue(simplified == constant, "simplify could not make it simpler");
         constant = constant.scaleBy(1.0 / 8);
         assertEquals(Constant.ONE, constant, "now it is equal to ONE");
@@ -83,11 +83,11 @@ public class ConstantAndNanTest
         {
             assertTrue(Double.isNaN(Nan.NAN.get(x)), "value is NaN for every x");
         }
-        assertTrue(Nan.NAN.toString().startsWith("Nan ["), "toString returns something descriptive");
-        assertTrue(Nan.NAN.getDescription().equals("Nan"), "description is \"Nan\"");
-        assertTrue(Nan.NAN.getId().equals("Nan"), "id is \"Nan\"");
+        assertTrue(Nan.NAN.toString().startsWith("NaN ["), "toString returns something descriptive");
+        assertTrue(Nan.NAN.getDescription().equals("NaN"), "description is \"NaN\"");
+        assertTrue(Nan.NAN.getId().equals("NaN"), "id is \"NaN\"");
         assertEquals(Nan.NAN, Nan.NAN.getDerivative(), "derivative is itself");
-        Function otherNan = Nan.NAN.scaleBy(10);
+        MathFunction otherNan = Nan.NAN.scaleBy(10);
         assertTrue(otherNan == Nan.NAN, "it is the same object");
     }
 }

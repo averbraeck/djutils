@@ -8,7 +8,7 @@ import java.util.Objects;
 import org.djutils.exceptions.Throw;
 
 /**
- * Add up one or more FunctionInterface objects.
+ * Add up one or more MathFunction objects.
  * <p>
  * Copyright (c) 2024-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -19,10 +19,10 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class Sum implements Function
+public class Sum implements MathFunction
 {
     /** The functions whose values will be summed. */
-    private final List<Function> terms;
+    private final List<MathFunction> terms;
 
     /**
      * Construct the sum of one or more functions.
@@ -30,7 +30,7 @@ public class Sum implements Function
      * @throws IllegalArgumentException when zero parameters are provided
      * @throws NullPointerException when a <code>null</code> value is among the arguments
      */
-    public Sum(final Function... functions)
+    public Sum(final MathFunction... functions)
     {
         this(Arrays.asList(functions));
     }
@@ -41,7 +41,7 @@ public class Sum implements Function
      * @throws IllegalArgumentException when zero parameters are provided
      * @throws NullPointerException when a <code>null</code> value is among the arguments
      */
-    public Sum(final List<Function> functions)
+    public Sum(final List<MathFunction> functions)
     {
         Throw.when(functions.size() == 0, IllegalArgumentException.class, "Sum needs at least one object to sum");
         this.terms = simplify(functions);
@@ -52,15 +52,15 @@ public class Sum implements Function
      * @param functions the terms that must be added together
      * @return minimal array with the remaining terms
      */
-    private List<Function> simplify(final List<Function> functions)
+    private List<MathFunction> simplify(final List<MathFunction> functions)
     {
-        List<Function> result = new ArrayList<>(functions);
+        List<MathFunction> result = new ArrayList<>(functions);
 
         // Aggregate all Constant functions together and accumulate their values
         double totalConstant = 0.0;
         for (int index = 0; index < result.size(); index++)
         {
-            Function function = result.get(index);
+            MathFunction function = result.get(index);
             if (function instanceof Constant)
             {
                 // Remove this Constant and accumulate its value in our running total
@@ -95,7 +95,7 @@ public class Sum implements Function
     public double get(final double x)
     {
         double result = 0.0;
-        for (Function fi : this.terms)
+        for (MathFunction fi : this.terms)
         {
             result += fi.get(x);
         }
@@ -103,10 +103,10 @@ public class Sum implements Function
     }
 
     @Override
-    public Function getDerivative()
+    public MathFunction getDerivative()
     {
-        List<Function> derivatives = new ArrayList<>();
-        for (Function term : this.terms)
+        List<MathFunction> derivatives = new ArrayList<>();
+        for (MathFunction term : this.terms)
         {
             derivatives.add(term.getDerivative());
         }
@@ -114,9 +114,9 @@ public class Sum implements Function
     }
 
     @Override
-    public Function simplify()
+    public MathFunction simplify()
     {
-        List<Function> simplifiedTerms = simplify(this.terms);
+        List<MathFunction> simplifiedTerms = simplify(this.terms);
         if (simplifiedTerms.size() == 1)
         {
             return simplifiedTerms.get(0);
@@ -129,7 +129,7 @@ public class Sum implements Function
     }
 
     @Override
-    public Function scaleBy(final double factor)
+    public MathFunction scaleBy(final double factor)
     {
         if (factor == 0.0)
         {
@@ -139,8 +139,8 @@ public class Sum implements Function
         {
             return this;
         }
-        List<Function> result = new ArrayList<>(this.terms.size());
-        for (Function function : this.terms)
+        List<MathFunction> result = new ArrayList<>(this.terms.size());
+        for (MathFunction function : this.terms)
         {
             result.add(function.scaleBy(factor));
         }

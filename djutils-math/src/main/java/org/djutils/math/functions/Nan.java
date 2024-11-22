@@ -1,7 +1,7 @@
 package org.djutils.math.functions;
 
 /**
- * Nan; FunctionInterface that returns NaN.
+ * Nan; MathFunction that returns NaN.
  * <p>
  * Copyright (c) 2024-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -12,9 +12,9 @@ package org.djutils.math.functions;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public final class Nan implements Function
+public final class Nan implements MathFunction
 {
-    /** Function that always return NaN (Not A Number). */
+    /** MathFunction that always return NaN (Not A Number). */
     public static final Nan NAN = new Nan();
 
     /**
@@ -32,13 +32,13 @@ public final class Nan implements Function
     }
 
     @Override
-    public Function getDerivative()
+    public MathFunction getDerivative()
     {
         return this; // same NaN value, same domain
     }
     
     @Override
-    public Function scaleBy(final double factor)
+    public MathFunction scaleBy(final double factor)
     {
         return this;
     }
@@ -46,19 +46,19 @@ public final class Nan implements Function
     @Override
     public String getDescription()
     {
-        return "Nan";
+        return "NaN";
     }
 
     @Override
     public String getId()
     {
-        return ("Nan");
+        return "NaN";
     }
 
     @Override
     public String toString()
     {
-        return "Nan []";
+        return "NaN []";
     }
 
 }

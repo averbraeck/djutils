@@ -27,7 +27,7 @@ public class PowerFunctionTest
     @Test
     public void testPowerFunction()
     {
-        Function pf = new PowerFunction(12.3);
+        MathFunction pf = new PowerFunction(12.3);
         assertEquals(Math.pow(2, 12.3), pf.get(2), 0.0001, "default weight is 1.0 and broken powers work");
         pf = new PowerFunction(10, 0.5);
         assertEquals(10 * Math.pow(3.3, 0.5), pf.get(3.3), 0.0001, "weight works");
@@ -38,7 +38,7 @@ public class PowerFunctionTest
         pf = new PowerFunction(123.456, 0);
         assertEquals(123.456, pf.get(654.321), 0, "constant non-zero is exact");
         pf = new PowerFunction(0.5).getDerivative(); // Expect 0.5 / sqrt(x)
-        Function pf2 = new PowerFunction(0.5, -0.5);
+        MathFunction pf2 = new PowerFunction(0.5, -0.5);
         for (double x : new double[] {0.1, 3, 999})
         {
             assertEquals(pf.get(x), pf2.get(x), 0.0001, "results are the same");
@@ -46,7 +46,7 @@ public class PowerFunctionTest
         assertTrue(pf.equals(pf2), "these functions test equal");
         pf = new PowerFunction(4, 1); // 4 * x
         pf2 = pf.getDerivative();
-        Function constant4 = new Constant(4);
+        MathFunction constant4 = new Constant(4);
         assertEquals(constant4, pf2, "derivative of 4 * x is constant 4");
         pf = new PowerFunction(6, 0); // result is constant 6; but the object is a PowerFunction
         pf2 = pf.getDerivative();
@@ -71,7 +71,7 @@ public class PowerFunctionTest
         assertEquals("2x\u00b3", pf.getDescription(), "general case");
         pf = pf.scaleBy(4);
         assertEquals("8x\u00b3", pf.getDescription(), "scaleBy works");
-        Function scaledByOne = pf.scaleBy(1);
+        MathFunction scaledByOne = pf.scaleBy(1);
         assertTrue(scaledByOne == pf, "scaling by 1 returns the original object");
         pf = pf.scaleBy(0);
         assertTrue(pf == Constant.ZERO, "scaleBy 0 yields ZERO");

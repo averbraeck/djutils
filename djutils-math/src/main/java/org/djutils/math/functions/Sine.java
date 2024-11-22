@@ -14,7 +14,7 @@ import org.djutils.math.AngleUtil;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class Sine implements Function
+public class Sine implements MathFunction
 {
     /** Size multiplier. */
     private final double factor;
@@ -49,13 +49,13 @@ public class Sine implements Function
     }
 
     @Override
-    public Function getDerivative()
+    public MathFunction getDerivative()
     {
         return new Sine(this.factor * this.omega, this.omega, AngleUtil.normalizeAroundZero(this.shift + Math.PI / 2));
     }
     
     @Override
-    public Function simplify()
+    public MathFunction simplify()
     {
         if (this.factor == 0.0)
         {
@@ -65,7 +65,7 @@ public class Sine implements Function
     }
     
     @Override
-    public Function scaleBy(final double scaleFactor)
+    public MathFunction scaleBy(final double scaleFactor)
     {
         if (scaleFactor == 0.0)
         {

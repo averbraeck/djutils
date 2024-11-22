@@ -1,5 +1,6 @@
 package org.djutils.math.functions;
 
+import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -17,17 +18,17 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class Concatenation implements Function
+public class Concatenation implements MathFunction
 {
     /** The wrapped functions. */
-    private SortedSet<Interval<Function>> functions;
+    private SortedSet<Interval<MathFunction>> functions;
 
     /**
-     * Construct the concatenation of one or more FunctionInterface objects.
+     * Construct the concatenation of one or more MathFunction objects.
      * @param intervals the functions and the domains over which they should be active
      */
     @SafeVarargs
-    public Concatenation(final Interval<Function>... intervals)
+    public Concatenation(final Interval<MathFunction>... intervals)
     {
         this(convertToSortedSet(intervals));
     }
@@ -38,9 +39,9 @@ public class Concatenation implements Function
      * @return sorted set
      */
     @SafeVarargs
-    private static SortedSet<Interval<Function>> convertToSortedSet(final Interval<Function>... intervals)
+    private static SortedSet<Interval<MathFunction>> convertToSortedSet(final Interval<MathFunction>... intervals)
     {
-        SortedSet<Interval<Function>> result = new TreeSet<>();
+        SortedSet<Interval<MathFunction>> result = new TreeSet<>();
         for (var interval : intervals)
         {
             result.add(interval);
@@ -49,16 +50,16 @@ public class Concatenation implements Function
     }
 
     /**
-     * Construct a Concatenation from a sorted set of Interval&lt;FunctionInterface&gt;.
-     * @param set the sorted set of Interval with FunctionInterface payload
+     * Construct a Concatenation from a sorted set of Interval&lt;MathFunction&gt;.
+     * @param set the sorted set of Interval with MathFunction payload
      */
-    public Concatenation(final SortedSet<Interval<Function>> set)
+    public Concatenation(final SortedSet<Interval<MathFunction>> set)
     {
         // Run the ordered list and check for overlaps and add NaN functions where there are gaps
-        Interval<Function> prevInterval = null;
+        Interval<MathFunction> prevInterval = null;
         for (var interval : set)
         {
-            Interval<Function> thisInterval = interval;
+            Interval<MathFunction> thisInterval = interval;
             if (prevInterval != null)
             {
                 Throw.when(!prevInterval.disjunct(thisInterval), IllegalArgumentException.class,
@@ -67,7 +68,7 @@ public class Concatenation implements Function
                         && (!prevInterval.highInclusive()) && (!thisInterval.lowInclusive())))
                 {
                     // There is a gap; fill it with a NaN function
-                    set.add(new Interval<Function>(prevInterval.high(), !prevInterval.highInclusive(), thisInterval.low(),
+                    set.add(new Interval<MathFunction>(prevInterval.high(), !prevInterval.highInclusive(), thisInterval.low(),
                             !thisInterval.lowInclusive(), Nan.NAN));
                 }
             }
@@ -94,26 +95,26 @@ public class Concatenation implements Function
     @Override
     public Concatenation getDerivative()
     {
-        SortedSet<Interval<Function>> set = new TreeSet<>();
+        SortedSet<Interval<MathFunction>> set = new TreeSet<>();
         for (var interval : this.functions)
         {
-            set.add(new Interval<Function>(interval.low(), interval.lowInclusive(), interval.high(), interval.highInclusive(),
+            set.add(new Interval<MathFunction>(interval.low(), interval.lowInclusive(), interval.high(), interval.highInclusive(),
                     interval.payload().getDerivative()));
         }
         return new Concatenation(set);
     }
 
     @Override
-    public Function scaleBy(final double factor)
+    public MathFunction scaleBy(final double factor)
     {
         if (factor == 1.0)
         {
             return this;
         }
-        SortedSet<Interval<Function>> result = new TreeSet<>();
-        for (Interval<Function> interval : this.functions)
+        SortedSet<Interval<MathFunction>> result = new TreeSet<>();
+        for (Interval<MathFunction> interval : this.functions)
         {
-            result.add(new Interval<Function>(interval.low(), interval.lowInclusive(), interval.high(),
+            result.add(new Interval<MathFunction>(interval.low(), interval.lowInclusive(), interval.high(),
                     interval.highInclusive(), interval.payload().scaleBy(factor)));
         }
         return new Concatenation(result);
@@ -148,6 +149,26 @@ public class Concatenation implements Function
     public String getId()
     {
         return "Concatenation";
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(this.functions);
+    }
+
+    @SuppressWarnings("checkstyle:needbraces")
+    @Override
+    public boolean equals(final Object obj)
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Concatenation other = (Concatenation) obj;
+        return Objects.equals(this.functions, other.functions);
     }
 
 }

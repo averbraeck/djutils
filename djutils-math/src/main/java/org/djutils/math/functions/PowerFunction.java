@@ -3,7 +3,7 @@ package org.djutils.math.functions;
 import java.util.Objects;
 
 /**
- * Functions that are a constant times some power of x; generally <code>f(x) &rarr; a * x^<sup>b</sup></code> where a &isin;
+ * MathFunctions that are a constant times some power of x; generally <code>f(x) &rarr; a * x^<sup>b</sup></code> where a &isin;
  * &#8477 and b &isin; &#8477
  * <p>
  * Copyright (c) 2024-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class PowerFunction implements Function
+public class PowerFunction implements MathFunction
 {
     /** The weight (value at x == 0). */
     private final double weight;
@@ -63,7 +63,7 @@ public class PowerFunction implements Function
     }
 
     @Override
-    public Function getDerivative()
+    public MathFunction getDerivative()
     {
         if (this.weight == 0.0 || this.power == 0.0)
         {
@@ -79,9 +79,9 @@ public class PowerFunction implements Function
         }
         return new PowerFunction(this.weight * this.power, this.power - 1.0);
     }
-    
+
     @Override
-    public Function scaleBy(final double factor)
+    public MathFunction scaleBy(final double factor)
     {
         if (factor == 0.0)
         {

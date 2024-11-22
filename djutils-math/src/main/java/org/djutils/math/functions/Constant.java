@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class Constant implements Function
+public class Constant implements MathFunction
 {
     /** The value of this constant function. */
     private final double value;
@@ -48,7 +48,7 @@ public class Constant implements Function
     }
     
     @Override
-    public Function simplify()
+    public MathFunction simplify()
     {
         if (this.value == ZERO.value)
         {
@@ -62,7 +62,7 @@ public class Constant implements Function
     }
 
     @Override
-    public Function scaleBy(final double factor)
+    public MathFunction scaleBy(final double factor)
     {
         double product = factor * this.value;
         if (product == 0.0)

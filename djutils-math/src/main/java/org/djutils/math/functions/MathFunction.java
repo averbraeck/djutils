@@ -3,9 +3,9 @@ package org.djutils.math.functions;
 import org.djutils.base.Describable;
 
 /**
- * Function interface
+ * MathFunction interface.
  * <p>
- * Copyright (c) 2023-2023 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2024-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
@@ -14,7 +14,7 @@ import org.djutils.base.Describable;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public interface Function extends Describable
+public interface MathFunction extends Describable
 {
 
     /**
@@ -29,25 +29,25 @@ public interface Function extends Describable
 
     /**
      * Returns the derivative of the data with respect to fractional length.
-     * @return derivative of this Function
+     * @return derivative of this MathFunction
      */
-    Function getDerivative();
+    MathFunction getDerivative();
     
     /**
-     * Attempts to find a simplified version of this Function (e.g. replace <code>1 - 5</code> by <code>-4</code>). 
+     * Attempts to find a simplified version of this MathFunction (e.g. replace <code>1 - 5</code> by <code>-4</code>). 
      * @return <code>this</code>, or a simplified version thereof
      */
-    default Function simplify()
+    default MathFunction simplify()
     {
         return this;
     }
     
     /**
-     * Incorporate a multiplication factor to this Function. 
+     * Incorporate a multiplication factor to this MathFunction. 
      * @param factor the factor to incorporate
-     * @return a new Function that yields the same result as the original function multiplied by the <code>factor</code>
+     * @return a new MathFunction that yields the same result as the original function multiplied by the <code>factor</code>
      */
-    Function scaleBy(double factor);
+    MathFunction scaleBy(double factor);
 
     /**
      * Format a numerical value. If the value is integer, format it without decimal point. If the value is not integer, use a

@@ -19,10 +19,10 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class Product implements Function
+public class Product implements MathFunction
 {
     /** The functions whose values will be summed. */
-    private final List<Function> factors;
+    private final List<MathFunction> factors;
 
     /**
      * Construct the product of one or more functions.
@@ -30,7 +30,7 @@ public class Product implements Function
      * @throws IllegalArgumentException when zero parameters are provided
      * @throws NullPointerException when a <code>null</code> value is among the arguments
      */
-    public Product(final Function... functions)
+    public Product(final MathFunction... functions)
     {
         this(Arrays.asList(functions));
     }
@@ -41,7 +41,7 @@ public class Product implements Function
      * @throws IllegalArgumentException when zero parameters are provided
      * @throws NullPointerException when a <code>null</code> value is among the arguments
      */
-    public Product(final List<Function> functions)
+    public Product(final List<MathFunction> functions)
     {
         Throw.when(functions.size() == 0, IllegalArgumentException.class, "Product needs at least one object to multiply");
         this.factors = simplify(functions);
@@ -52,15 +52,15 @@ public class Product implements Function
      * @param functions the factors that must be multiplied together
      * @return minimal array with the remaining factors
      */
-    private List<Function> simplify(final List<Function> functions)
+    private List<MathFunction> simplify(final List<MathFunction> functions)
     {
-        List<Function> result = new ArrayList<>(functions);
+        List<MathFunction> result = new ArrayList<>(functions);
 
         // Aggregate all Constant functions together and multiply their values
         double productOfConstants = 1.0;
         for (int index = 0; index < result.size(); index++)
         {
-            Function function = result.get(index);
+            MathFunction function = result.get(index);
             if (function instanceof Constant)
             {
                 double value = function.get(0.0);
@@ -87,10 +87,11 @@ public class Product implements Function
         {
             if (result.size() > 0)
             {
-                List<Function> newList = new ArrayList<>(result.size());
-                for (Function function : result)
+                List<MathFunction> newList = new ArrayList<>(result.size());
+                for (MathFunction function : result)
                 {
                     newList.add(function.scaleBy(productOfConstants));
+                    // WRONG should only scale one!
                 }
                 result = newList;
             }
@@ -110,7 +111,7 @@ public class Product implements Function
     public double get(final double x)
     {
         double result = 1.0;
-        for (Function fi : this.factors)
+        for (MathFunction fi : this.factors)
         {
             result *= fi.get(x);
         }
@@ -118,12 +119,12 @@ public class Product implements Function
     }
 
     @Override
-    public Function getDerivative()
+    public MathFunction getDerivative()
     {
-        List<Function> result = new ArrayList<>();
+        List<MathFunction> result = new ArrayList<>();
         for (int i = 0; i < this.factors.size(); i++)
         {
-            List<Function> termFactors = new ArrayList<>(this.factors.size());
+            List<MathFunction> termFactors = new ArrayList<>(this.factors.size());
             for (int j = 0; j < this.factors.size(); j++)
             {
                 if (j == i)
@@ -141,9 +142,9 @@ public class Product implements Function
     }
 
     @Override
-    public Function simplify()
+    public MathFunction simplify()
     {
-        List<Function> simplifiedFactors = simplify(this.factors);
+        List<MathFunction> simplifiedFactors = simplify(this.factors);
         if (simplifiedFactors.size() == 1)
         {
             return simplifiedFactors.get(0);
@@ -174,7 +175,7 @@ public class Product implements Function
     }
 
     @Override
-    public Function scaleBy(final double scaleFactor)
+    public MathFunction scaleBy(final double scaleFactor)
     {
         if (scaleFactor == 0.0)
         {
@@ -184,8 +185,8 @@ public class Product implements Function
         {
             return this;
         }
-        List<Function> result = new ArrayList<>(this.factors.size());
-        for (Function factor : this.factors)
+        List<MathFunction> result = new ArrayList<>(this.factors.size());
+        for (MathFunction factor : this.factors)
         {
             result.add(factor.scaleBy(scaleFactor));
         }

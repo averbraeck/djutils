@@ -31,13 +31,13 @@ public final class FunctionDemo
     public static void main(final String... args)
     {
         System.out.println("Build a cubic polynomial as a sum of four power functions");
-        Function function =
+        MathFunction function =
                 new Sum(new PowerFunction(2, 3), new PowerFunction(5, 2), new PowerFunction(8, 1), new PowerFunction(3, 0));
-        Function deriv = function.getDerivative();
-        Function deriv2 = deriv.getDerivative();
-        Function deriv3 = deriv2.getDerivative();
-        Function deriv4 = deriv3.getDerivative();
-        Function deriv5 = deriv4.getDerivative();
+        MathFunction deriv = function.getDerivative();
+        MathFunction deriv2 = deriv.getDerivative();
+        MathFunction deriv3 = deriv2.getDerivative();
+        MathFunction deriv4 = deriv3.getDerivative();
+        MathFunction deriv5 = deriv4.getDerivative();
         System.out.println("f      " + function.getDescription());
         System.out.println("f'     " + deriv.getDescription());
         System.out.println("f''    " + deriv2.getDescription());
@@ -52,18 +52,18 @@ public final class FunctionDemo
                     "x=%5.2f: f(x)=%8.2f; f'(x)=%10.2f; " + "f''(x)=%8.2f; f'''(x)=%8.2f; " + "f''''(x)=%8.2f; f'''''(x)=%8.2f",
                     x, function.get(x), deriv.get(x), deriv2.get(x), deriv3.get(x), deriv4.get(x), deriv5.get(x)));
         }
-
+ 
         System.out.println("\nBuild a continuous piecewise linear function; each linear piece is a power function");
-        Function part1 = new Sum(new PowerFunction(1.0, 0), new PowerFunction(0.5, 1));
-        Function part2 = new Sum(new PowerFunction(1.1 - 0.4, 0), new PowerFunction(2.0, 1));
-        Function part3 = new PowerFunction(1.7, 0);
-        Function concatenation = new Concatenation(new Interval<Function>(0.0, true, 0.2, false, part1),
-                new Interval<Function>(0.2, true, 0.5, false, part2), new Interval<Function>(0.5, true, 1.0, true, part3));
+        MathFunction part1 = new Sum(new PowerFunction(1.0, 0), new PowerFunction(0.5, 1));
+        MathFunction part2 = new Sum(new PowerFunction(1.1 - 0.4, 0), new PowerFunction(2.0, 1));
+        MathFunction part3 = new PowerFunction(1.7, 0);
+        MathFunction concatenation = new Concatenation(new Interval<MathFunction>(0.0, true, 0.2, false, part1),
+                new Interval<MathFunction>(0.2, true, 0.5, false, part2), new Interval<MathFunction>(0.75, true, 1.0, true, part3));
         System.out.println("part 1 " + part1.getDescription());
         System.out.println("part 2 " + part2.getDescription());
         System.out.println("part 3 " + part3.getDescription());
         System.out.println("f  " + concatenation.getDescription());
-        Function derivative = concatenation.getDerivative();
+        MathFunction derivative = concatenation.getDerivative();
         System.out.println("f' " + derivative.getDescription());
         for (int step = 0; step <= 50; step++)
         {
@@ -72,11 +72,11 @@ public final class FunctionDemo
         }
 
         System.out.println("\nBuild the product of two simple polynomials");
-        Function p1 = new Sum(new PowerFunction(3, 2), new PowerFunction(2, 1), new Constant(5)); // 3*x^2+2*x+5
+        MathFunction p1 = new Sum(new PowerFunction(3, 2), new PowerFunction(2, 1), new Constant(5)); // 3*x^2+2*x+5
         System.out.println("polynomial 1: " + p1.getDescription());
-        Function p2 = new Sum(new PowerFunction(2, 2), new PowerFunction(4, 1), new Constant(7)); // 2*x^2+4*x+7
+        MathFunction p2 = new Sum(new PowerFunction(2, 2), new PowerFunction(4, 1), new Constant(7)); // 2*x^2+4*x+7
         System.out.println("polynomial 2: " + p2.getDescription());
-        Function product = new Product(p1, p2);
+        MathFunction product = new Product(p1, p2);
         System.out.println("product (f): " + product.getDescription());
         deriv = product.getDerivative();
         System.out.println("f':          " + deriv.getDescription());
@@ -89,11 +89,11 @@ public final class FunctionDemo
         System.out.println("f'''':       " + deriv4.getDescription());
         deriv5 = deriv4.getDerivative();
         System.out.println("f''''':      " + deriv5.getDescription());
-        Function deriv6 = deriv5.getDerivative();
+        MathFunction deriv6 = deriv5.getDerivative();
         System.out.println("f'''''':     " + deriv6.getDescription());
 
         System.out.println("\nDifferentiate a sine function");
-        Function f = new Sine(2, 3, 0);
+        MathFunction f = new Sine(2, 3, 0);
         System.out.println("f:           " + f.getDescription());
         deriv = f.getDerivative();
         System.out.println("f':          " + deriv.getDescription());

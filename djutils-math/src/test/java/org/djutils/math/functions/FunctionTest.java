@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.djutils.math.functions.Function.TupleSt;
+import org.djutils.math.functions.MathFunction.TupleSt;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -43,7 +43,7 @@ public class FunctionTest
             }
         }
         // Nan does not have a simplify method, so we can use it to test the default implementation
-        Function simplifiedNan = Nan.NAN.simplify();
+        MathFunction simplifiedNan = Nan.NAN.simplify();
         assertTrue(simplifiedNan == Nan.NAN, "the're the same object");
     }
     
