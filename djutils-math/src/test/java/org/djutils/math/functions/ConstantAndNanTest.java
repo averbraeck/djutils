@@ -50,8 +50,27 @@ public class ConstantAndNanTest
         assertFalse(Constant.ZERO.equals(null), "not equal to null");
         assertFalse(Constant.ZERO.equals("Not a Constant"), "not equal to some other object");
         assertFalse(Constant.ZERO.equals(Constant.ONE), "not equal if value differs");
-        Constant otherZero = new Constant(0.0);
+        Function otherZero = new Constant(0.0);
         assertTrue(Constant.ZERO.equals(otherZero), "equal to other constant with same value");
+        assertFalse(otherZero == Constant.ZERO, "but it is not the same object");
+        otherZero = otherZero.simplify();
+        assertTrue(otherZero == Constant.ZERO, "now it IS the same object");
+        Function otherOne = new Constant(1.0);
+        assertTrue(Constant.ONE.equals(otherOne), "equal to other constant with the same value");
+        assertFalse(otherOne == Constant.ONE, "but not the same object");
+        otherOne = otherOne.simplify();
+        assertTrue(otherOne == Constant.ONE, "now it IS the same object");
+        Function constant = new Constant(4);
+        constant = constant.scaleBy(2);
+        assertEquals(8, constant.get(0), "scaleBy works");
+        Function simplified = constant.simplify();
+        assertTrue(simplified == constant, "simplify could not make it simpler");
+        constant = constant.scaleBy(1.0 / 8);
+        assertEquals(Constant.ONE, constant, "now it is equal to ONE");
+        assertTrue(constant == Constant.ONE, "in fact, it is the same object");
+        constant = constant.scaleBy(0);
+        assertEquals(Constant.ZERO, constant, "now it is ZERO");
+        assertTrue(Constant.ZERO == constant, "and it is the same object");
     }
 
     /**
@@ -68,5 +87,7 @@ public class ConstantAndNanTest
         assertTrue(Nan.NAN.getDescription().equals("Nan"), "description is \"Nan\"");
         assertTrue(Nan.NAN.getId().equals("Nan"), "id is \"Nan\"");
         assertEquals(Nan.NAN, Nan.NAN.getDerivative(), "derivative is itself");
+        Function otherNan = Nan.NAN.scaleBy(10);
+        assertTrue(otherNan == Nan.NAN, "it is the same object");
     }
 }

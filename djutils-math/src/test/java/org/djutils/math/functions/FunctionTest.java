@@ -42,9 +42,11 @@ public class FunctionTest
                 assertFalse(result.contains("."), "integer (within range) result is printed without a decimal point");
             }
         }
-
+        // Nan does not have a simplify method, so we can use it to test the default implementation
+        Function simplifiedNan = Nan.NAN.simplify();
+        assertTrue(simplifiedNan == Nan.NAN, "the're the same object");
     }
-
+    
     /**
      * Construct a Constant with the specified value and return the result of the printValue method.
      * @param value the value to embed in the Constant

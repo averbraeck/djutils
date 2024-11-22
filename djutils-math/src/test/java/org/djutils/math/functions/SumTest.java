@@ -72,7 +72,6 @@ public class SumTest
         assertTrue(sum.toString().startsWith("Sum ["), "toString method returns something descriptive");
 
         sum = new Sum(new Constant(2), new Constant(3), new Sine(1, 2, 3), new PowerFunction(2, 3));
-        System.out.println(sum.getDescription());
         for (double x : xValues)
         {
             checkOneValue(5 + Math.sin(2 * x + 3) + 2 * x * x * x, x, sum);

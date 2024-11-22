@@ -69,10 +69,20 @@ public class PowerFunctionTest
         assertEquals("3x", pf.getDescription(), "exponent 1 is left off");
         pf = new PowerFunction(2, 3);
         assertEquals("2x\u00b3", pf.getDescription(), "general case");
+        pf = pf.scaleBy(4);
+        assertEquals("8x\u00b3", pf.getDescription(), "scaleBy works");
+        Function scaledByOne = pf.scaleBy(1);
+        assertTrue(scaledByOne == pf, "scaling by 1 returns the original object");
+        pf = pf.scaleBy(0);
+        assertTrue(pf == Constant.ZERO, "scaleBy 0 yields ZERO");
+        pf = new PowerFunction(3, 12);
+        assertEquals("3x^12", pf.getDescription(), "larger exponents use the ^ notation");
+        pf = new PowerFunction(3, 1.2);
+        assertEquals("3x^1.2", pf.getDescription(), "fractional exponents use the ^ notation");
         
+        pf = new PowerFunction(3, 7);
         assertEquals("POW", pf.getId(), "id is POW");
         assertTrue(pf.toString().startsWith("PowerFunction ["), "toString returns something descriptive");
-        pf = new PowerFunction(3, 7);
         assertTrue(pf.equals(pf), "equal to itself");
         assertFalse(pf.equals(null), "not equal to null");
         assertFalse(pf.equals("Not a PowerFunction"), "not equal to some other kind of Object");
