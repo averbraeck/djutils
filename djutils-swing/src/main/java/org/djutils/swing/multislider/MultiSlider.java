@@ -18,9 +18,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-import javax.swing.BoundedRangeModel;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
