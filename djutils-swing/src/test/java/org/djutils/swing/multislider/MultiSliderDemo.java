@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -17,6 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.basic.BasicSliderUI;
 
 /**
  * MultiSliderDemo demonstrates a horizontal slider and a vertical slider, as well as setValue() through a reset button.
@@ -70,6 +70,19 @@ public class MultiSliderDemo extends JFrame
         vertSlider.setThumbLabel(1, "max");
         vertSlider.setDrawThumbLabels(true, 35);
 
+        var horSlider2 = new MultiSlider(SwingConstants.HORIZONTAL, 0, 10, new int[] {2, 5, 7});
+        horSlider2.setMajorTickSpacing(1);
+        horSlider2.setMinorTickSpacing(1);
+        horSlider2.setPaintTicks(true);
+        horSlider2.setPaintLabels(true);
+        panel.add(horSlider2, BorderLayout.SOUTH);
+        horSlider2.setThumbLabel(0, "x");
+        horSlider2.setThumbLabel(1, "y");
+        horSlider2.setThumbLabel(2, "z");
+        horSlider2.setDrawThumbLabels(true, 20);
+        horSlider2.setSnapToTicks(true);
+        horSlider2.setUI(new BasicSliderUI());
+
         var button = new JButton("RESET");
         button.setPreferredSize(new Dimension(100, 25));
         JPanel buttonPanel = new JPanel();
@@ -84,7 +97,7 @@ public class MultiSliderDemo extends JFrame
             @Override
             public void actionPerformed(final ActionEvent e)
             {
-                horSlider.resetToInitialValues();
+                horSlider2.resetToInitialValues();
                 vertSlider.resetToInitialValues();
             }
         });
@@ -95,7 +108,7 @@ public class MultiSliderDemo extends JFrame
         setLocationRelativeTo(null);
         setVisible(true);
 
-        horSlider.addChangeListener(new ChangeListener()
+        horSlider2.addChangeListener(new ChangeListener()
         {
             @Override
             public void stateChanged(final ChangeEvent e)
