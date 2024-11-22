@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -45,7 +46,7 @@ public class MultiSliderDemo extends JFrame
         getContentPane().add(panel);
         getContentPane().setBackground(new Color(204, 255, 204));
 
-        var horSlider = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {25, 50, 75});
+        var horSlider = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {25, 50, 75, 80});
         // horSlider.setUI(new BasicSliderUI());
         horSlider.setMajorTickSpacing(25);
         horSlider.setMinorTickSpacing(5);
