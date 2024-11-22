@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.swing.BoundedRangeModel;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -557,32 +558,6 @@ public class MultiSlider extends JComponent implements ChangeListener
                 }
                 ((ChangeListener) listeners[i + 1]).stateChanged(this.changeEvent);
             }
-        }
-    }
-
-    /**
-     * Returns the {@code BoundedRangeModel} that handles the slider's three fundamental properties: minimum, maximum, value.
-     * @return the data model for this component
-     */
-    public BoundedRangeModel getModel()
-    {
-        return this.sliders[0].getModel();
-    }
-
-    /**
-     * Sets the {@code BoundedRangeModel} for all the underlying sliders. This handles the slider's three fundamental
-     * properties: minimum, maximum, value.
-     * <p>
-     * Attempts to pass a {@code null} model to this method result in undefined behavior, and, most likely, exceptions.
-     * </p>
-     * @param newModel the new, {@code non-null} <code>BoundedRangeModel</code> to use
-     */
-    @BeanProperty(description = "The sliders BoundedRangeModel.")
-    public void setModel(final BoundedRangeModel newModel)
-    {
-        for (var slider : this.sliders)
-        {
-            slider.setModel(newModel);
         }
     }
 
