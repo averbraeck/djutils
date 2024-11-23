@@ -446,6 +446,15 @@ public class MultiSlider extends JComponent implements ChangeListener
         return this.trackSizeLoPx + (int) (1.0 * ts * (value - min) / (max - min));
     }
 
+    /**
+     * Return the glass pane on top of the multislider.
+     * @return the glass pane on top of the multislider
+     */
+    protected DispatcherPane getDispatcherPane()
+    {
+        return this.dispatcherPane;
+    }
+
     @Override
     public void stateChanged(final ChangeEvent e)
     {
