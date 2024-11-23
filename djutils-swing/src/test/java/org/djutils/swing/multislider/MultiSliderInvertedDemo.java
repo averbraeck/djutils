@@ -71,6 +71,18 @@ public class MultiSliderInvertedDemo extends JFrame
         vertSlider.setThumbLabel(1, "max");
         vertSlider.setDrawThumbLabels(true, 35);
 
+        var horSlider2 = new MultiSlider(SwingConstants.HORIZONTAL, 1, 10, new int[] {2, 4});
+        var labtab = horSlider2.createStandardLabels(2, 2);
+        horSlider2.setLabelTable(labtab);
+        horSlider2.setMajorTickSpacing(1);
+        horSlider2.setMinorTickSpacing(1);
+        horSlider2.setPaintTicks(true);
+        horSlider2.setPaintLabels(true);
+        panel.add(horSlider2, BorderLayout.SOUTH);
+        horSlider2.setThumbLabel(0, "s1");
+        horSlider2.setThumbLabel(1, "s2");
+        horSlider2.setDrawThumbLabels(true, 20);
+
         var button = new JButton("RESET");
         button.setPreferredSize(new Dimension(100, 25));
         JPanel buttonPanel = new JPanel();
@@ -87,6 +99,7 @@ public class MultiSliderInvertedDemo extends JFrame
             {
                 horSlider.resetToInitialValues();
                 vertSlider.resetToInitialValues();
+                horSlider2.resetToInitialValues();
             }
         });
 
@@ -120,6 +133,20 @@ public class MultiSliderInvertedDemo extends JFrame
                 {
                     if (!s.isBusy())
                         System.out.println("Vertical Thumb " + i + ": " + s.getValue(i));
+                }
+            }
+        });
+
+        horSlider2.addChangeListener(new ChangeListener()
+        {
+            @Override
+            public void stateChanged(final ChangeEvent e)
+            {
+                MultiSlider s = (MultiSlider) e.getSource();
+                for (int i = 0; i < s.getNumberOfThumbs(); i++)
+                {
+                    if (!s.isBusy())
+                        System.out.println("Horizontal Thumb " + i + ": " + s.getValue(i));
                 }
             }
         });
