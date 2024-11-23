@@ -2,8 +2,16 @@ package org.djutils.swing.multislider;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.awt.AWTException;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 
@@ -32,7 +40,7 @@ public class MultiSliderTest
         testGetSet(SwingConstants.VERTICAL);
         testGetSet(-1);
     }
-    
+
     /**
      * Test get/set of a multislider with an orientation.
      * @param initialOrientation the orientation
@@ -58,12 +66,12 @@ public class MultiSliderTest
         assertEquals(75, ms.getValue(2));
         assertEquals(orientation, ms.getOrientation());
         assertFalse(ms.isBusy());
-        
+
         JSlider js0 = ms.getSlider(0);
         assertEquals(25, js0.getValue());
         JSlider js1 = ms.getSliders()[1];
         assertEquals(50, js1.getValue());
-        
+
         ms.setThumbLabel(0, "min");
         ms.setThumbLabel(2, "max");
         assertEquals("min", ms.getThumbLabel(0));
@@ -73,7 +81,7 @@ public class MultiSliderTest
         assertTrue(ms.isDrawThumbLabels());
         ms.setDrawThumbLabels(false, 0);
         assertFalse(ms.isDrawThumbLabels());
-        
+
         ms.setValue(1, 40);
         assertEquals(40, ms.getValue(1));
         assertEquals(40, js1.getValue());
@@ -83,7 +91,7 @@ public class MultiSliderTest
         assertEquals(25, ms.getValue(0));
         assertEquals(50, ms.getValue(1));
         assertEquals(75, ms.getValue(2));
-        
+
         ms.setMinimum(10);
         ms.setMaximum(90);
         assertEquals(10, ms.getMinimum());
@@ -93,19 +101,19 @@ public class MultiSliderTest
         assertEquals(75, ms.getValue(2));
         ms.setMinimum(0);
         ms.setMaximum(100);
-        
+
         int oldExtent = ms.getExtent();
         ms.setExtent(oldExtent + 2);
         assertEquals(oldExtent + 2, ms.getExtent());
         ms.setExtent(oldExtent);
         assertEquals(oldExtent, ms.getExtent());
-        
+
         assertFalse(ms.getInverted());
         ms.setInverted(true);
         assertTrue(ms.getInverted());
         ms.setInverted(false);
         assertFalse(ms.getInverted());
-        
+
         ms.setMajorTickSpacing(10);
         assertEquals(10, ms.getMajorTickSpacing());
         ms.setMajorTickSpacing(20);
@@ -134,6 +142,58 @@ public class MultiSliderTest
         assertTrue(ms.getPaintLabels());
         ms.setPaintLabels(false);
         assertFalse(ms.getPaintLabels());
+
+        ms.setOrientation(1 - orientation);
+        assertNotEquals(orientation, ms.getOrientation());
+        ms.setOrientation(orientation);
+        assertEquals(orientation, ms.getOrientation());
+    }
+
+    /**
+     * Test get/set of a multislider with an orientation.
+     * @throws AWTException on AWT or Swing error
+     * @throws InterruptedException when sleep is interrupted
+     */
+    @Test
+    public void testMouseClicksHorizontal() throws AWTException, InterruptedException
+    {
+        JFrame frame = new JFrame();
+        frame.setVisible(false);
+        frame.setPreferredSize(new Dimension(400, 400));
+        frame.setSize(new Dimension(400, 400));
+        frame.setLocationRelativeTo(null);
+        frame.setLocation(0, 0);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setPreferredSize(new Dimension(400, 400));
+        MultiSlider ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {25, 50, 75});
+        panel.add(ms, BorderLayout.NORTH);
+        frame.add(panel);
+        frame.validate();
+        frame.pack();
+
+        int x = 10;
+        int y = 10;
+        for (var mml : ms.getDispatcherPane().getMouseMotionListeners())
+        {
+            mml.mouseMoved(new MouseEvent(ms, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, x, y, 0, false));
+        }
+
+        for (var ml : ms.getDispatcherPane().getMouseListeners())
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                ml.mousePressed(new MouseEvent(ms, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, x, y, x, y, 1,
+                        false, MouseEvent.BUTTON1));
+                Thread.sleep(50);
+                ml.mouseReleased(new MouseEvent(ms, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, x, y, x, y, 1,
+                        false, MouseEvent.BUTTON1));
+                Thread.sleep(50);
+            }
+        }
+
+        assertEquals(15, ms.getValue(0));
 
     }
 }
