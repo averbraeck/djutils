@@ -2,6 +2,8 @@ package org.djutils.math.functions;
 
 import java.util.Objects;
 
+import org.djutils.exceptions.Throw;
+
 /**
  * Constant value function; <code>f(x) &rarr; c</code> where <code>c &isin; &#8477</code>. Can also be implemented with
  * PowerFunction, but this is much more readable and efficient.
@@ -46,7 +48,7 @@ public class Constant implements MathFunction
     {
         return ZERO;
     }
-    
+
     @Override
     public MathFunction simplify()
     {
@@ -62,20 +64,52 @@ public class Constant implements MathFunction
     }
 
     @Override
+    public double getScale()
+    {
+        return this.value;
+    }
+
+    @Override
     public MathFunction scaleBy(final double factor)
     {
-        double product = factor * this.value;
-        if (product == 0.0)
-        {
-            return Constant.ZERO;
-        }
-        if (product == 1.0)
-        {
-            return Constant.ONE;
-        }
-        return new Constant(product);
+        return new Constant(factor * this.value).simplify();
     }
-    
+
+    @Override
+    public int sortPriority()
+    {
+        return 2;
+    }
+
+    @Override
+    public int compareWithinSubType(final MathFunction other)
+    {
+        Throw.when(!(other instanceof Constant), IllegalArgumentException.class, "other is of wrong type");
+        return 0;
+    }
+
+    @Override
+    public MathFunction mergeAdd(final MathFunction other)
+    {
+        if (other instanceof Constant)
+        {
+            double total = this.value + ((Constant) other).value;
+            return new Constant(total).simplify();
+        }
+        return null;
+    }
+
+    @Override
+    public MathFunction mergeMultiply(final MathFunction other)
+    {
+        if (other instanceof Constant)
+        {
+            double product = this.value * ((Constant) other).value;
+            return new Constant(product).simplify();
+        }
+        return null;
+    }
+
     @Override
     public String getDescription()
     {

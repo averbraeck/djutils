@@ -2,6 +2,7 @@ package org.djutils.math.functions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -56,46 +57,87 @@ public class Product implements MathFunction
     {
         List<MathFunction> result = new ArrayList<>(functions);
 
-        // Aggregate all Constant functions together and multiply their values
+        // Pull up all Products that are directly embedded in this Product
+        for (int index = 0; index < result.size(); index++)
+        {
+            MathFunction function = result.get(index);
+            if (function instanceof Product)
+            {
+                // Replace any embedded Product by all factors that comprise that Product
+                result.remove(index);
+                index--;
+                result.addAll(((Product) function).factors);
+            }
+        }
+        // Optimize all elements
+        for (int index = 0; index < result.size(); index++)
+        {
+            MathFunction function = result.get(index);
+            MathFunction optimized = function.simplify();
+            if (!function.equals(optimized))
+            {
+                result.remove(index);
+                result.add(index, optimized);
+            }
+        }
+        Collections.sort(result);
+        // Aggregate all Constant functions and scale factors together and multiply their values
+        // Merge all functions that can be merged 
+        for (int index = 0; index < result.size(); index++)
+        {
+            MathFunction function = result.get(index);
+            if (index < result.size() - 1)
+            {
+                MathFunction nextFunction = result.get(index + 1);
+                MathFunction merged = function.mergeMultiply(nextFunction);
+                if (merged != null)
+                {
+                    result.remove(index);
+                    result.remove(index);
+                    result.add(index, merged);
+                    index--; // try to merge it with yet one more MathFunction
+                }
+            }
+        }
         double productOfConstants = 1.0;
         for (int index = 0; index < result.size(); index++)
         {
             MathFunction function = result.get(index);
+            double scale = function.getScale();
             if (function instanceof Constant)
             {
-                double value = function.get(0.0);
-                if (0.0 == value)
+                if (0.0 == scale)
                 {
+                    // This may have to be revised to work in the presence of infinity or NaN values
                     result.clear();
                     result.add(Constant.ZERO);
                     return result;
                 }
                 // Remove this Constant and accumulate its value in our running total
-                productOfConstants *= value;
+                productOfConstants *= scale;
                 result.remove(index);
                 index--;
             }
-            else if (function instanceof Product)
+            else if (scale != 1.0)
             {
-                // Replace an embedded Product by all factors of that Product
+                // Accumulate this scale factor in our running total
+                productOfConstants *= scale;
+                function = function.scaleBy(1.0 / scale); // remove it from the function and replace the function
                 result.remove(index);
-                index--;
-                result.addAll(((Product) function).factors);
+                result.add(index, function);
             }
         }
         if (productOfConstants != 1.0)
         {
             if (result.size() > 0)
             {
-                List<MathFunction> newList = new ArrayList<>(result.size());
-                for (MathFunction function : result)
-                {
-                    newList.add(function.scaleBy(productOfConstants));
-                    // WRONG should only scale one!
-                }
-                result = newList;
+                // Incorporate the scale factor in the first item of the result
+                MathFunction function = result.get(0);
+                result.remove(0);
+                function = function.scaleBy(productOfConstants);
+                result.add(0, function);
             }
-            else
+            else // result list is empty
             {
                 result.add(new Constant(productOfConstants));
             }
@@ -155,6 +197,19 @@ public class Product implements MathFunction
         }
         return new Product(simplifiedFactors);
 
+    }
+
+    @Override
+    public int sortPriority()
+    {
+        return 100;
+    }
+
+    @Override
+    public int compareWithinSubType(final MathFunction other)
+    {
+        Throw.when(!(other instanceof Product), IllegalArgumentException.class, "other is of wrong type");
+        return 0;
     }
 
     @Override

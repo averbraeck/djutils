@@ -2,6 +2,7 @@ package org.djutils.math.functions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -56,37 +57,55 @@ public class Sum implements MathFunction
     {
         List<MathFunction> result = new ArrayList<>(functions);
 
-        // Aggregate all Constant functions together and accumulate their values
-        double totalConstant = 0.0;
+        // Pull up all Sums that are embedded in this Sum
         for (int index = 0; index < result.size(); index++)
         {
             MathFunction function = result.get(index);
-            if (function instanceof Constant)
+            if (function instanceof Sum)
             {
-                // Remove this Constant and accumulate its value in our running total
-                totalConstant += function.get(0.0);
-                result.remove(index);
-                index--;
-            }
-            else if (function instanceof Sum)
-            {
-                // Replace an embedded Sum by all elements of that Sum
+                // Replace any embedded Sum by all terms that comprise that Sum
                 result.remove(index);
                 index--;
                 result.addAll(((Sum) function).terms);
             }
         }
-        if (totalConstant == 1.0)
+        // Optimize all elements
+        for (int index = 0; index < result.size(); index++)
         {
-            result.add(Constant.ONE);
+            MathFunction function = result.get(index);
+            MathFunction optimized = function.simplify();
+            if (!function.equals(optimized))
+            {
+                result.remove(index);
+                result.add(index, optimized);
+            }
         }
-        else if (totalConstant != 0.0)
+        Collections.sort(result);
+        // Merge all functions that can be merged
+        for (int index = 0; index < result.size(); index++)
         {
-            result.add(new Constant(totalConstant));
+            MathFunction function = result.get(index);
+            if (function.equals(Constant.ZERO))
+            {
+                result.remove(index);
+                index--;
+            }
+            else if (index < result.size() - 1)
+            {
+                MathFunction nextFunction = result.get(index + 1);
+                MathFunction merged = function.mergeAdd(nextFunction);
+                if (merged != null)
+                {
+                    result.remove(index);
+                    result.remove(index);
+                    result.add(index, merged);
+                    index--; // try to merge it with yet one more MathFunction
+                }
+            }
         }
-        if (result.isEmpty())
+        if (result.size() == 0)
         {
-            result.add(Constant.ZERO); // We may not return an empty list
+            result.add(Constant.ZERO);
         }
         return result;
     }
@@ -146,7 +165,20 @@ public class Sum implements MathFunction
         }
         return new Sum(result);
     }
-    
+
+    @Override
+    public int sortPriority()
+    {
+        return 101;
+    }
+
+    @Override
+    public int compareWithinSubType(final MathFunction other)
+    {
+        Throw.when(!(other instanceof Sum), IllegalArgumentException.class, "other is of wrong type");
+        return 0;
+    }
+
     @Override
     public String getDescription()
     {

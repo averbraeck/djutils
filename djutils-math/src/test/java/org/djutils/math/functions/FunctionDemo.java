@@ -52,13 +52,14 @@ public final class FunctionDemo
                     "x=%5.2f: f(x)=%8.2f; f'(x)=%10.2f; " + "f''(x)=%8.2f; f'''(x)=%8.2f; " + "f''''(x)=%8.2f; f'''''(x)=%8.2f",
                     x, function.get(x), deriv.get(x), deriv2.get(x), deriv3.get(x), deriv4.get(x), deriv5.get(x)));
         }
- 
+
         System.out.println("\nBuild a continuous piecewise linear function; each linear piece is a power function");
         MathFunction part1 = new Sum(new PowerFunction(1.0, 0), new PowerFunction(0.5, 1));
         MathFunction part2 = new Sum(new PowerFunction(1.1 - 0.4, 0), new PowerFunction(2.0, 1));
         MathFunction part3 = new PowerFunction(1.7, 0);
         MathFunction concatenation = new Concatenation(new Interval<MathFunction>(0.0, true, 0.2, false, part1),
-                new Interval<MathFunction>(0.2, true, 0.5, false, part2), new Interval<MathFunction>(0.75, true, 1.0, true, part3));
+                new Interval<MathFunction>(0.2, true, 0.5, false, part2),
+                new Interval<MathFunction>(0.75, true, 1.0, true, part3));
         System.out.println("part 1 " + part1.getDescription());
         System.out.println("part 2 " + part2.getDescription());
         System.out.println("part 3 " + part3.getDescription());
@@ -136,6 +137,72 @@ public final class FunctionDemo
         f = f.simplify();
         System.out.println("simplified: " + f.getDescription());
 
+        System.out.println("\nadd together two polynomials");
+        p1 = new Sum(new PowerFunction(3, 3), new PowerFunction(2, 2), new PowerFunction(1, 1), new PowerFunction(6, 0));
+        System.out.println(p1.getDescription());
+        p2 = new Sum(new PowerFunction(2, 3), new PowerFunction(1, 2), new PowerFunction(5, 1), new PowerFunction(8, 0));
+        System.out.println(p2.getDescription());
+        f = new Sum(p1, p2);
+        System.out.println(f.getDescription());
+
+        System.out.println("\nmultiply some powers");
+        p1 = new PowerFunction(3, 4);
+        System.out.println(p1.getDescription());
+        p2 = new PowerFunction(2, 3);
+        System.out.println(p2.getDescription());
+        f = new Product(p1, p2);
+        System.out.println(f.getDescription());
+        f = f.simplify();
+        System.out.println("simplified: " + f.getDescription());
+
+        System.out.println("\nadd two sines with the same frequency but different amplitude and 90 degrees different phase");
+        p1 = new Sine(3, 10, 0);
+        System.out.println("sine 1:     " + p1.getDescription());
+        p2 = new Sine(4, 10, Math.PI / 2);
+        System.out.println("sine 2:     " + p2.getDescription());
+        f = new Sum(p1, p2);
+        System.out.println("sum:        " + f.getDescription());
+        f = f.simplify();
+        System.out.println("simplified: " + f.getDescription());
+
+        System.out.println("\nadd two sines with the same frequency but different amplitude and 180 degrees different phase");
+        p1 = new Sine(3, 10, 0);
+        System.out.println("sine 1:     " + p1.getDescription());
+        p2 = new Sine(4, 10, Math.PI);
+        System.out.println("sine 2:     " + p2.getDescription());
+        f = new Sum(p1, p2);
+        System.out.println("sum:        " + f.getDescription());
+        f = f.simplify();
+        System.out.println("simplified: " + f.getDescription());
+
+        System.out.println("\nadd two sines with the same frequency same amplitude and 180 degrees different phase");
+        p1 = new Sine(3, 10, 0);
+        System.out.println("sine 1:     " + p1.getDescription());
+        p2 = new Sine(3, 10, Math.PI);
+        System.out.println("sine 2:     " + p2.getDescription());
+        f = new Sum(p1, p2);
+        System.out.println("sum:        " + f.getDescription());
+        f = f.simplify();
+        System.out.println("simplified: " + f.getDescription());
+        System.out.println("obviously; these don't quite cancel out...");
+
+        System.out.println("\nchain sine as argument of square function");
+        p1 = new Sine(1, 1, 0);
+        System.out.println("sine: " + p1.getDescription());
+        p2 = new PowerFunction(p1, 1, 2);
+        System.out.println("f:    " + p2.getDescription());
+        deriv = p2.getDerivative();
+        System.out.println("f':   " + deriv.getDescription());
+        deriv2 = deriv.getDerivative();
+        System.out.println("f''   " + deriv2.getDescription());
+        deriv3 = deriv2.getDerivative();
+        System.out.println("f'''  " + deriv3.getDescription());
+        for (int step = -10; step <= 10; step++)
+        {
+            double x = 0.2 * step;
+            System.out.println(String.format("x=%5.1f: f(x)=%10.5f; f'(x)=%10.5f; f''(x)=%10.5f; f'''(x)=%10.5f", x, p2.get(x),
+                    deriv.get(x), deriv2.get(x), deriv3.get(x)));
+        }
     }
 
 }

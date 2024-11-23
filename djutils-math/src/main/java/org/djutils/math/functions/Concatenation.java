@@ -121,6 +121,19 @@ public class Concatenation implements MathFunction
     }
 
     @Override
+    public int sortPriority()
+    {
+        return 110;
+    }
+
+    @Override
+    public int compareWithinSubType(final MathFunction other)
+    {
+        Throw.when(!(other instanceof Concatenation), IllegalArgumentException.class, "other is of wrong type");
+        return 0;
+    }
+
+    @Override
     public String getDescription()
     {
         StringBuilder stringBuilder = new StringBuilder();

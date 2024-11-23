@@ -2,6 +2,8 @@ package org.djutils.math.functions;
 
 import java.util.Objects;
 
+import org.djutils.exceptions.Throw;
+
 /**
  * MathFunctions that are a constant times some power of x; generally <code>f(x) &rarr; a * x^<sup>b</sup></code> where a &isin;
  * &#8477 and b &isin; &#8477
@@ -23,6 +25,22 @@ public class PowerFunction implements MathFunction
     /** The power value. */
     private final double power;
 
+    /** The function that yields x (may be null). */
+    private final MathFunction chain;
+
+    /**
+     * Construct a new power function.
+     * @param chain the MathFunction that yields the <code>x</code> for this power function
+     * @param weight the value at <code>x == 1</code>
+     * @param power the power
+     */
+    public PowerFunction(final MathFunction chain, final double weight, final double power)
+    {
+        this.weight = weight;
+        this.power = weight == 0.0 ? 1.0 : power;
+        this.chain = chain;
+    }
+
     /**
      * Construct a new power function.
      * @param weight the value at <code>x == 1</code>
@@ -32,6 +50,17 @@ public class PowerFunction implements MathFunction
     {
         this.weight = weight;
         this.power = weight == 0.0 ? 1.0 : power;
+        this.chain = null;
+    }
+
+    /**
+     * Create a new power function with weight 1.0 and the supplied value as exponent.
+     * @param chain the MathFunction that yields the <code>x</code> for this power function
+     * @param power the power
+     */
+    public PowerFunction(final MathFunction chain, final double power)
+    {
+        this(chain, 1.0, power);
     }
 
     /**
@@ -55,11 +84,12 @@ public class PowerFunction implements MathFunction
         {
             return this.weight;
         }
+        double xValue = this.chain == null ? x : this.chain.get(x);
         if (this.power == 1.0)
         {
-            return this.weight * x;
+            return this.weight * xValue;
         }
-        return this.weight * Math.pow(x, this.power);
+        return this.weight * Math.pow(xValue, this.power);
     }
 
     @Override
@@ -77,7 +107,41 @@ public class PowerFunction implements MathFunction
             }
             return new Constant(this.weight);
         }
-        return new PowerFunction(this.weight * this.power, this.power - 1.0);
+        PowerFunction myDerivative = new PowerFunction(this.chain, this.weight * this.power, this.power - 1.0);
+        if (this.chain == null)
+        {
+            return myDerivative.simplify();
+        }
+        MathFunction myChainDerivative = new PowerFunction(this.chain, myDerivative.weight, myDerivative.power);
+        return new Product(myChainDerivative, this.chain.getDerivative()).simplify();
+    }
+
+    @Override
+    public MathFunction simplify()
+    {
+        if (this.power == 0.0)
+        {
+            if (this.weight == 1.0)
+            {
+                return Constant.ONE;
+            }
+            if (this.weight == 0.0)
+            {
+                return Constant.ZERO;
+            }
+            return new Constant(this.weight);
+        }
+        if (this.power == 1.0 && this.chain != null)
+        {
+            return this.chain.scaleBy(this.weight);
+        }
+        return this;
+    }
+
+    @Override
+    public double getScale()
+    {
+        return this.weight;
     }
 
     @Override
@@ -91,7 +155,63 @@ public class PowerFunction implements MathFunction
         {
             return this;
         }
-        return new PowerFunction(factor * this.weight, this.power);
+        return new PowerFunction(this.chain, factor * this.weight, this.power);
+    }
+
+    @Override
+    public int sortPriority()
+    {
+        return 1;
+    }
+
+    @Override
+    public int compareWithinSubType(final MathFunction other)
+    {
+        Throw.when(!(other instanceof PowerFunction), IllegalArgumentException.class, "other is of wrong type");
+        PowerFunction otherPowerFunction = (PowerFunction) other;
+        if (otherPowerFunction.power < this.power)
+        {
+            return -1;
+        }
+        if (otherPowerFunction.power > this.power)
+        {
+            return 1;
+        }
+        return 0;
+    }
+
+    @Override
+    public MathFunction mergeAdd(final MathFunction other)
+    {
+        if (other instanceof PowerFunction)
+        {
+            PowerFunction otherPowerFunction = (PowerFunction) other;
+            if (this.power == otherPowerFunction.power && this.chain == otherPowerFunction.chain)
+            {
+                return new PowerFunction(this.weight + otherPowerFunction.weight, this.power);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public MathFunction mergeMultiply(final MathFunction other)
+    {
+        if (other instanceof PowerFunction)
+        {
+            PowerFunction otherPowerFunction = (PowerFunction) other;
+            if (this.chain == otherPowerFunction.chain)
+            {
+                return new PowerFunction(this.chain, this.weight * otherPowerFunction.weight,
+                        this.power + otherPowerFunction.power);
+            }
+            else if (this.power == otherPowerFunction.power)
+            {
+                return new PowerFunction(new Product(this.chain, otherPowerFunction.chain),
+                        this.weight * otherPowerFunction.weight, this.power);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -108,7 +228,7 @@ public class PowerFunction implements MathFunction
         }
         if (this.power != 0.0)
         {
-            result.append("x");
+            result.append(this.chain == null ? "x" : ("(" + this.chain.getDescription() + ")"));
             if (this.power > 1 && this.power <= 9 && this.power % 1 == 0)
             {
                 // Print single digit power using unicode superscript symbols
@@ -133,13 +253,14 @@ public class PowerFunction implements MathFunction
     @Override
     public String toString()
     {
-        return "PowerFunction [weight=" + printValue(this.weight) + ", power=" + printValue(this.power) + "]";
+        return "PowerFunction [weight=" + printValue(this.weight) + ", power=" + printValue(this.power) + ", chain="
+                + this.chain + "]";
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(this.power, this.weight);
+        return Objects.hash(this.chain, this.power, this.weight);
     }
 
     @SuppressWarnings("checkstyle:needbraces")
@@ -153,7 +274,8 @@ public class PowerFunction implements MathFunction
         if (getClass() != obj.getClass())
             return false;
         PowerFunction other = (PowerFunction) obj;
-        return Double.doubleToLongBits(this.power) == Double.doubleToLongBits(other.power)
+        return Objects.equals(this.chain, other.chain)
+                && Double.doubleToLongBits(this.power) == Double.doubleToLongBits(other.power)
                 && Double.doubleToLongBits(this.weight) == Double.doubleToLongBits(other.weight);
     }
 

@@ -1,5 +1,7 @@
 package org.djutils.math.functions;
 
+import org.djutils.exceptions.Throw;
+
 /**
  * Nan; MathFunction that returns NaN.
  * <p>
@@ -36,11 +38,24 @@ public final class Nan implements MathFunction
     {
         return this; // same NaN value, same domain
     }
-    
+
     @Override
     public MathFunction scaleBy(final double factor)
     {
         return this;
+    }
+
+    @Override
+    public int sortPriority()
+    {
+        return 3;
+    }
+
+    @Override
+    public int compareWithinSubType(final MathFunction other)
+    {
+        Throw.when(!(other instanceof Nan), IllegalArgumentException.class, "other is of wrong type");
+        return 0;
     }
 
     @Override

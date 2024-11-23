@@ -14,7 +14,7 @@ import org.djutils.base.Describable;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public interface MathFunction extends Describable
+public interface MathFunction extends Describable, Comparable<MathFunction>
 {
 
     /**
@@ -32,18 +32,27 @@ public interface MathFunction extends Describable
      * @return derivative of this MathFunction
      */
     MathFunction getDerivative();
-    
+
     /**
-     * Attempts to find a simplified version of this MathFunction (e.g. replace <code>1 - 5</code> by <code>-4</code>). 
+     * Attempts to find a simplified version of this MathFunction (e.g. replace <code>1 - 5</code> by <code>-4</code>).
      * @return <code>this</code>, or a simplified version thereof
      */
     default MathFunction simplify()
     {
         return this;
     }
-    
+
     /**
-     * Incorporate a multiplication factor to this MathFunction. 
+     * Get the scale factor of this MathFunction.
+     * @return the scale factor of this MathFunction
+     */
+    default double getScale()
+    {
+        return 1.0;
+    }
+
+    /**
+     * Incorporate a multiplication factor to this MathFunction.
      * @param factor the factor to incorporate
      * @return a new MathFunction that yields the same result as the original function multiplied by the <code>factor</code>
      */
@@ -62,6 +71,51 @@ public interface MathFunction extends Describable
             return String.format("%d", (long) value);
         }
         return "" + value;
+    }
+
+    /**
+     * Sorting priority of this type of MathFunction (low values shall sort before higher).
+     * @return sorting priority of this type of MathFunction
+     */
+    int sortPriority();
+
+    /**
+     * Determine sorting order among instances of a particular sub type of MathFunction.
+     * @param other the other MathFunction that must be of the same type
+     * @return int; < 0 when this sorts before other; > 0 when this sorts after other; 0 when this and other are identical
+     *         enough to be potentially merged into one
+     */
+    int compareWithinSubType(MathFunction other);
+    
+    /**
+     * This MathFunction is added to another; try to replace both by a combined MathFunction.
+     * @param other the other MathFunction
+     * @return combined MathFunction, or null when the two could not be combined
+     */
+    default MathFunction mergeAdd(final MathFunction other)
+    {
+        return null;
+    }
+    
+    /**
+     * This MathFunction is multiplied by another; try to replace both by a combined MathFunction.
+     * @param other the other MathFunction
+     * @return combined MathFunction, or null when the two could not be combined
+     */
+    default MathFunction mergeMultiply(final MathFunction other)
+    {
+        return null;
+    }
+
+    @Override
+    default int compareTo(final MathFunction other)
+    {
+        int result = this.sortPriority() - other.sortPriority();
+        if (result == 0)
+        {
+            return compareWithinSubType(other);
+        }
+        return result;
     }
 
     /**

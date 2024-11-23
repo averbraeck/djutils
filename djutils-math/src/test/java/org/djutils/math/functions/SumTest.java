@@ -56,8 +56,7 @@ public class SumTest
             sum2 = new Sum(Constant.ZERO, Constant.ZERO);
             assertEquals(0, sum2.get(x), 0, "zeros work");
             sum2 = new Sum(f, f);
-            assertEquals(f.get(x) + f.get(x), sum2.get(x), Math.abs(x / 1e10), "this one cannot be simplified by Sum");
-            assertEquals(sum2, sum2.simplify());
+            assertEquals(f.get(x) + f.get(x), sum2.get(x), Math.abs(x / 1e10), "this one can now be simplified by Sum");
             MathFunction derivative = sum2.getDerivative();
             checkOneValue(6, x, derivative);
             assertTrue(derivative instanceof Constant);
