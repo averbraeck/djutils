@@ -576,6 +576,8 @@ public class MultiSlider extends JComponent implements ChangeListener
      */
     public void setValue(final int i, final int n)
     {
+        Throw.when(n < getMinimum() || n > getMaximum(), IllegalArgumentException.class, "setValue(%d) not in range [%d, %d]",
+                n, getMinimum(), getMaximum());
         this.sliders[i].setValue(n);
         // drastic way to force thumbs that are on top of each other to be redrawn
         setUI(getUI());
@@ -602,6 +604,8 @@ public class MultiSlider extends JComponent implements ChangeListener
      */
     public void setMinimum(final int minimum)
     {
+        Throw.when(minimum >= getMaximum(), IllegalArgumentException.class, "setMinimum(%d) >= maximum %d", minimum,
+                getMaximum());
         int oldMin = getMinimum();
         for (var slider : this.sliders)
         {
@@ -634,6 +638,8 @@ public class MultiSlider extends JComponent implements ChangeListener
      */
     public void setMaximum(final int maximum)
     {
+        Throw.when(maximum <= getMinimum(), IllegalArgumentException.class, "setMaximum(%d) >= minimum %d", maximum,
+                getMinimum());
         int oldMax = getMaximum();
         for (var slider : this.sliders)
         {
