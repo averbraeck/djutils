@@ -8,12 +8,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.basic.BasicSliderUI;
 
 import org.junit.jupiter.api.Test;
 
@@ -143,19 +149,127 @@ public class MultiSliderTest
         ms.setPaintLabels(false);
         assertFalse(ms.getPaintLabels());
 
+        assertEquals(ms.getOrientation() == SwingConstants.HORIZONTAL, ms.isHorizontal());
+        assertEquals(ms.getOrientation() == SwingConstants.VERTICAL, ms.isVertical());
         ms.setOrientation(1 - orientation);
         assertNotEquals(orientation, ms.getOrientation());
+        assertEquals(ms.getOrientation() == SwingConstants.HORIZONTAL, ms.isHorizontal());
+        assertEquals(ms.getOrientation() == SwingConstants.VERTICAL, ms.isVertical());
         ms.setOrientation(orientation);
         assertEquals(orientation, ms.getOrientation());
+        assertEquals(ms.getOrientation() == SwingConstants.HORIZONTAL, ms.isHorizontal());
+        assertEquals(ms.getOrientation() == SwingConstants.VERTICAL, ms.isVertical());
     }
 
     /**
-     * Test get/set of a multislider with an orientation.
+     * Test mouse clicks for a multislider with a horizontal and vertical orientation and an inverted and non-inverted
+     * direction.
+     * @throws AWTException on AWT or Swing error
+     * @throws InterruptedException when sleep is interrupted
+     * @throws InvocationTargetException on error in invokeAndWait
+     */
+    @Test
+    public void testMouseClicks() throws AWTException, InterruptedException, InvocationTargetException
+    {
+        testMouseClicks(SwingConstants.HORIZONTAL, false);
+        testMouseClicks(SwingConstants.VERTICAL, false);
+        testMouseClicks(SwingConstants.HORIZONTAL, true);
+        testMouseClicks(SwingConstants.VERTICAL, true);
+    }
+
+    /**
+     * Test mouse clicks for a multislider with the given orientation.
+     * @param orientation the orientation
+     * @param inverted whether the scale is inverted or not
+     * @throws AWTException on AWT or Swing error
+     * @throws InterruptedException when sleep is interrupted
+     * @throws InvocationTargetException on error in invokeAndWait
+     */
+    public void testMouseClicks(final int orientation, final boolean inverted)
+            throws AWTException, InterruptedException, InvocationTargetException
+    {
+        JFrame frame = new JFrame();
+        frame.setVisible(false);
+        frame.setPreferredSize(new Dimension(400, 400));
+        frame.setSize(new Dimension(400, 400));
+        frame.setLocationRelativeTo(null);
+        frame.setLocation(0, 0);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setPreferredSize(new Dimension(400, 400));
+        MultiSlider ms = new MultiSlider(orientation, 0, 100, new int[] {25, 50, 75});
+        ms.setInverted(inverted);
+        panel.add(ms, orientation == SwingConstants.VERTICAL ? BorderLayout.WEST : BorderLayout.NORTH);
+        frame.add(panel);
+        frame.validate();
+        frame.pack();
+
+        Thread.sleep(500);
+
+        int x = 10;
+        int y = 10;
+        for (var mml : ms.getDispatcherPane().getMouseMotionListeners())
+        {
+            SwingUtilities.invokeAndWait(() ->
+            { mml.mouseMoved(new MouseEvent(ms, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, x, y, 0, false)); });
+        }
+
+        for (var ml : ms.getDispatcherPane().getMouseListeners())
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                ml.mousePressed(new MouseEvent(ms, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, x, y, x, y, 1,
+                        false, MouseEvent.BUTTON1));
+                Thread.sleep(50);
+                ml.mouseReleased(new MouseEvent(ms, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, x, y, x, y, 1,
+                        false, MouseEvent.BUTTON1));
+                int counter = 0;
+                while (ms.isBusy() && counter++ < 100)
+                {
+                    Thread.sleep(10);
+                }
+                assertTrue(counter < 100);
+                Thread.sleep(50);
+            }
+        }
+
+        Thread.sleep(250);
+
+        String s = "0=" + ms.getValue(0) + ", 1=" + ms.getValue(1) + ", 2=" + ms.getValue(2);
+        if (orientation == SwingConstants.HORIZONTAL)
+        {
+            if (inverted)
+            {
+                assertEquals(85, ms.getValue(2), "Hor, inv - " + s);
+            }
+            else
+            {
+                assertEquals(15, ms.getValue(0), "Hor, not - " + s);
+            }
+        }
+        else
+        {
+            if (inverted)
+            {
+                assertEquals(15, ms.getValue(0), "vert, inv - " + s);
+            }
+            else
+            {
+                assertEquals(85, ms.getValue(2), "vert, not - " + s);
+            }
+        }
+
+        frame.dispose();
+    }
+
+    /**
+     * Test label panel of a multislider with a horizontal orientation.
      * @throws AWTException on AWT or Swing error
      * @throws InterruptedException when sleep is interrupted
      */
     @Test
-    public void testMouseClicksHorizontal() throws AWTException, InterruptedException
+    public void testLabelPanelHorizontal() throws AWTException, InterruptedException
     {
         JFrame frame = new JFrame();
         frame.setVisible(false);
@@ -168,32 +282,65 @@ public class MultiSliderTest
         panel.setLayout(new BorderLayout());
         panel.setPreferredSize(new Dimension(400, 400));
         MultiSlider ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {25, 50, 75});
+        ms.setDrawThumbLabels(false, 0);
         panel.add(ms, BorderLayout.NORTH);
         frame.add(panel);
         frame.validate();
         frame.pack();
+        Thread.sleep(500);
+        int oldHeight = ms.getHeight();
 
-        int x = 10;
-        int y = 10;
-        for (var mml : ms.getDispatcherPane().getMouseMotionListeners())
-        {
-            mml.mouseMoved(new MouseEvent(ms, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, x, y, 0, false));
-        }
+        ms.setThumbLabel(0, "a");
+        ms.setThumbLabel(1, "b");
+        ms.setThumbLabel(2, "c");
+        ms.setDrawThumbLabels(true, 20);
+        frame.revalidate();
+        ms.getLabelPanel().paintComponent(ms.getGraphics());
+        ms.setValue(0, 20);
+        Thread.sleep(500);
+        assertTrue(ms.getHeight() > oldHeight, "ms.GetHeight() = " + ms.getHeight() + "; oldHeight = " + oldHeight);
 
-        for (var ml : ms.getDispatcherPane().getMouseListeners())
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                ml.mousePressed(new MouseEvent(ms, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, x, y, x, y, 1,
-                        false, MouseEvent.BUTTON1));
-                Thread.sleep(50);
-                ml.mouseReleased(new MouseEvent(ms, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, x, y, x, y, 1,
-                        false, MouseEvent.BUTTON1));
-                Thread.sleep(50);
-            }
-        }
+        frame.dispose();
 
-        assertEquals(15, ms.getValue(0));
+    }
 
+    /**
+     * Test font and UI.
+     * @throws InterruptedException when sleep is interrupted
+     * @throws UnsupportedLookAndFeelException when MetalLookAndFeel unavailable
+     * @throws IllegalAccessException when MetalLookAndFeel unavailable
+     * @throws InstantiationException when MetalLookAndFeel unavailable
+     * @throws ClassNotFoundException when MetalLookAndFeel unavailable
+     */
+    @Test
+    public void testUI() throws InterruptedException, ClassNotFoundException, InstantiationException, IllegalAccessException,
+            UnsupportedLookAndFeelException
+    {
+        JFrame frame = new JFrame();
+        frame.setVisible(false);
+        frame.setPreferredSize(new Dimension(400, 400));
+        frame.setSize(new Dimension(400, 400));
+        frame.setLocationRelativeTo(null);
+        frame.setLocation(0, 0);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setPreferredSize(new Dimension(400, 400));
+        MultiSlider ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {25, 50, 75});
+        ms.setDrawThumbLabels(false, 0);
+        panel.add(ms, BorderLayout.NORTH);
+        frame.add(panel);
+        frame.validate();
+        frame.pack();
+        Thread.sleep(500);
+
+        ms.setUI(new BasicSliderUI());
+        assertEquals("BasicSliderUI", ms.getUI().getClass().getSimpleName());
+        assertEquals("SliderUI", ms.getUIClassID());
+        UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+        ms.updateUI();
+        assertEquals("MetalSliderUI", ms.getUI().getClass().getSimpleName());
+
+        ms.setFont(new Font("Dialog", Font.ITALIC, 12));
     }
 }
