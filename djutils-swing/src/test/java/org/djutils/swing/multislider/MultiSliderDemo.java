@@ -97,6 +97,7 @@ public class MultiSliderDemo extends JFrame
             @Override
             public void actionPerformed(final ActionEvent e)
             {
+                horSlider.resetToInitialValues();
                 horSlider2.resetToInitialValues();
                 vertSlider.resetToInitialValues();
             }
