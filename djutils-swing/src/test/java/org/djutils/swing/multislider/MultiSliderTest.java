@@ -13,14 +13,18 @@ import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
 
+import org.djutils.exceptions.Try;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -222,6 +226,8 @@ public class MultiSliderTest
                 ml.mousePressed(new MouseEvent(ms, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, x, y, x, y, 1,
                         false, MouseEvent.BUTTON1));
                 Thread.sleep(50);
+                assertNotEquals(-1, ms.getBusySlider());
+                assertTrue(ms.isBusy());
                 ml.mouseReleased(new MouseEvent(ms, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, x, y, x, y, 1,
                         false, MouseEvent.BUTTON1));
                 int counter = 0;
@@ -229,6 +235,8 @@ public class MultiSliderTest
                 {
                     Thread.sleep(10);
                 }
+                assertEquals(-1, ms.getBusySlider());
+                assertFalse(ms.isBusy());
                 assertTrue(counter < 100);
                 Thread.sleep(50);
             }
@@ -258,6 +266,48 @@ public class MultiSliderTest
             {
                 assertEquals(85, ms.getValue(2), "vert, not - " + s);
             }
+        }
+
+        // move in and out; test 'clicked'
+        for (var ml : ms.getDispatcherPane().getMouseListeners())
+        {
+            ml.mouseEntered(
+                    new MouseEvent(ms, MouseEvent.MOUSE_ENTERED, System.currentTimeMillis(), 0, x, y, x, y, 0, false, 0));
+            assertEquals(-1, ms.getBusySlider());
+            assertFalse(ms.isBusy());
+            Thread.sleep(200);
+
+            ml.mouseExited(new MouseEvent(ms, MouseEvent.MOUSE_EXITED, System.currentTimeMillis(), 0, 100, 100, 100, 100, 0,
+                    false, 0));
+            assertEquals(-1, ms.getBusySlider());
+            assertFalse(ms.isBusy());
+            Thread.sleep(200);
+
+            ml.mouseClicked(new MouseEvent(ms, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, x, y, x, y, 1, false,
+                    MouseEvent.BUTTON1));
+            Thread.sleep(200);
+            assertEquals(-1, ms.getBusySlider());
+            assertFalse(ms.isBusy());
+        }
+
+        // test drag to (10, 10)
+        for (var ml : ms.getDispatcherPane().getMouseListeners())
+        {
+            ml.mousePressed(new MouseEvent(ms, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0, x, y, x, y, 1, false,
+                    MouseEvent.BUTTON1));
+            Thread.sleep(150);
+        }
+        for (var mml : ms.getDispatcherPane().getMouseMotionListeners())
+        {
+            mml.mouseDragged(new MouseEvent(ms, MouseEvent.MOUSE_DRAGGED, System.currentTimeMillis(), 0, x, y, x, y, 1, false,
+                    MouseEvent.BUTTON1));
+            Thread.sleep(50);
+        }
+        for (var ml : ms.getDispatcherPane().getMouseListeners())
+        {
+            ml.mouseReleased(new MouseEvent(ms, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, x, y, x, y, 1, false,
+                    MouseEvent.BUTTON1));
+            Thread.sleep(150);
         }
 
         frame.dispose();
@@ -294,9 +344,15 @@ public class MultiSliderTest
         ms.setThumbLabel(1, "b");
         ms.setThumbLabel(2, "c");
         ms.setDrawThumbLabels(true, 20);
-        frame.revalidate();
+        ms.revalidate();
+        ms.repaint();
+        ms.getLabelPanel().invalidate();
+        ms.getLabelPanel().repaint();
+        ms.setUI(ms.getUI()); // very bold way to force complete redraw...
         ms.getLabelPanel().paintComponent(ms.getGraphics());
         ms.setValue(0, 20);
+        frame.revalidate();
+        frame.pack();
         Thread.sleep(500);
         assertTrue(ms.getHeight() > oldHeight, "ms.GetHeight() = " + ms.getHeight() + "; oldHeight = " + oldHeight);
 
@@ -343,4 +399,184 @@ public class MultiSliderTest
 
         ms.setFont(new Font("Dialog", Font.ITALIC, 12));
     }
+
+    /**
+     * Test errors in creating and using sliders.
+     */
+    @Test
+    public void testErrors()
+    {
+        Try.testFail(new Try.Assignment<MultiSlider>()
+        {
+            @Override
+            public MultiSlider assign() throws Throwable
+            {
+                return new MultiSlider(0, 100, new int[] {});
+            }
+        });
+
+        Try.testFail(new Try.Assignment<MultiSlider>()
+        {
+            @Override
+            public MultiSlider assign() throws Throwable
+            {
+                return new MultiSlider(0, 100, new int[] {-10});
+            }
+        });
+
+        Try.testFail(new Try.Assignment<MultiSlider>()
+        {
+            @Override
+            public MultiSlider assign() throws Throwable
+            {
+                return new MultiSlider(0, 100, new int[] {50, 100, 150});
+            }
+        });
+
+        Try.testFail(new Try.Assignment<MultiSlider>()
+        {
+            @Override
+            public MultiSlider assign() throws Throwable
+            {
+                return new MultiSlider(200, 100, new int[] {150});
+            }
+        });
+
+        final var ms = new MultiSlider(SwingConstants.HORIZONTAL, 1, 10, new int[] {2, 4});
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.setValue(1, 20);
+            }
+        });
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.setValue(1, -20);
+            }
+        });
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.setMaximum(0);
+            }
+        });
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.setMaximum(1);
+            }
+        });
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.setMinimum(20);
+            }
+        });
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.setMinimum(10);
+            }
+        });
+    }
+
+    /**
+     * Test making labels.
+     */
+    @Test
+    public void testLabelTable()
+    {
+        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 1, 10, new int[] {2, 4});
+        var labtab = ms.createStandardLabels(2, 2);
+        assertEquals(5, labtab.size());
+        assertEquals("2", ((JLabel) labtab.get(2)).getText());
+        assertEquals("4", ((JLabel) labtab.get(4)).getText());
+        assertEquals("6", ((JLabel) labtab.get(6)).getText());
+        assertEquals("8", ((JLabel) labtab.get(8)).getText());
+        assertEquals("10", ((JLabel) labtab.get(10)).getText());
+        ms.setLabelTable(labtab);
+
+        labtab = ms.createStandardLabels(2);
+        assertEquals(5, labtab.size());
+        assertEquals("1", ((JLabel) labtab.get(1)).getText());
+        assertEquals("3", ((JLabel) labtab.get(3)).getText());
+        assertEquals("5", ((JLabel) labtab.get(5)).getText());
+        assertEquals("7", ((JLabel) labtab.get(7)).getText());
+        assertEquals("9", ((JLabel) labtab.get(9)).getText());
+        ms.setLabelTable(labtab);
+
+        var lt2 = ms.getLabelTable();
+        assertEquals(5, lt2.size());
+        assertEquals("1", ((JLabel) lt2.get(1)).getText());
+        assertEquals("3", ((JLabel) lt2.get(3)).getText());
+        assertEquals("5", ((JLabel) lt2.get(5)).getText());
+        assertEquals("7", ((JLabel) lt2.get(7)).getText());
+        assertEquals("9", ((JLabel) lt2.get(9)).getText());
+    }
+
+    /** array with values. */
+    private int[] v;
+
+    /**
+     * @return v[0]
+     */
+    private int v0()
+    {
+        return this.v[0];
+    }
+
+    /**
+     * @return v[1]
+     */
+    private int v1()
+    {
+        return this.v[1];
+    }
+
+    /**
+     * Test listeners.
+     */
+    @Test
+    public void testListeners()
+    {
+        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40});
+        this.v = new int[] {20, 40};
+        int nrListeners = ms.getChangeListeners().length;
+        var cl = new ChangeListener()
+        {
+            @Override
+            public void stateChanged(final ChangeEvent e)
+            {
+                assertEquals(v0(), ms.getValue(0));
+                assertEquals(v1(), ms.getValue(1));
+            }
+        };
+        ms.addChangeListener(cl);
+        assertEquals(nrListeners + 1, ms.getChangeListeners().length);
+
+        this.v = new int[] {25, 40};
+        ms.setValue(0, 25);
+        
+        ms.removeChangeListener(cl);
+        assertEquals(nrListeners, ms.getChangeListeners().length);
+    }
+
 }
