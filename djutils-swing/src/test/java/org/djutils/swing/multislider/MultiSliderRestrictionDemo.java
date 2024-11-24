@@ -4,12 +4,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -53,6 +56,8 @@ public class MultiSliderRestrictionDemo extends JFrame
 
         sliderPanel.add(Box.createVerticalGlue());
 
+        sliderPanel.add(new JLabel("No passing"));
+        sliderPanel.add(new JLabel("     "));
         var s1 = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {25, 50, 75, 80});
         s1.setPreferredSize(new Dimension(480, 10));
         s1.setMajorTickSpacing(25);
@@ -68,6 +73,9 @@ public class MultiSliderRestrictionDemo extends JFrame
 
         sliderPanel.add(Box.createVerticalGlue());
 
+        sliderPanel.add(new JLabel("     "));
+        sliderPanel.add(new JLabel("No overlap"));
+        sliderPanel.add(new JLabel("     "));
         var s2 = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {40, 60});
         s2.setPreferredSize(new Dimension(480, 10));
         s2.setMajorTickSpacing(20);
@@ -83,6 +91,9 @@ public class MultiSliderRestrictionDemo extends JFrame
 
         sliderPanel.add(Box.createVerticalGlue());
 
+        sliderPanel.add(new JLabel("     "));
+        sliderPanel.add(new JLabel("No passing and no overlap"));
+        sliderPanel.add(new JLabel("     "));
         var s3 = new MultiSlider(SwingConstants.HORIZONTAL, 0, 10, new int[] {2, 5, 7});
         s3.setPreferredSize(new Dimension(480, 10));
         s3.setMajorTickSpacing(1);
@@ -98,6 +109,29 @@ public class MultiSliderRestrictionDemo extends JFrame
         s3.setUI(new BasicSliderUI());
         s3.setPassing(false);
         s3.setOverlap(false);
+
+        sliderPanel.add(new JLabel("     "));
+        sliderPanel.add(new JLabel("No passing and no overlap"));
+        sliderPanel.add(new JLabel("     "));
+        var s4 = new MultiSlider(SwingConstants.HORIZONTAL, 1, 8, new int[] {1, 3});
+        s4.setPreferredSize(new Dimension(480, 10));
+        var labtab = new Hashtable<Integer, JComponent>();
+        for (int i = 1; i < 9; i++)
+            labtab.put(i, new JLabel(String.valueOf((char) ('A' + i - 1))));
+        s4.setLabelTable(labtab);
+        s4.setMajorTickSpacing(1);
+        s4.setMinorTickSpacing(1);
+        s4.setPaintTicks(true);
+        s4.setPaintLabels(true);
+        sliderPanel.add(s4);
+        s4.setThumbLabel(0, "choice 1");
+        s4.setThumbLabel(1, "choice 2");
+        s4.setThumbLabel(2, "z");
+        s4.setDrawThumbLabels(true, 20);
+        s4.setSnapToTicks(true);
+        s4.setUI(new BasicSliderUI());
+        s4.setPassing(false);
+        s4.setOverlap(false);
 
         sliderPanel.add(Box.createVerticalGlue());
 
@@ -124,6 +158,7 @@ public class MultiSliderRestrictionDemo extends JFrame
                 s1.resetToInitialValues();
                 s2.resetToInitialValues();
                 s3.resetToInitialValues();
+                s4.resetToInitialValues();
             }
         });
 
@@ -133,21 +168,20 @@ public class MultiSliderRestrictionDemo extends JFrame
         setLocationRelativeTo(null);
         setVisible(true);
 
-        s1.addChangeListener(new ChangeListener()
-        {
-            @Override
-            public void stateChanged(final ChangeEvent e)
-            {
-                MultiSlider s = (MultiSlider) e.getSource();
-                for (int i = 0; i < s.getNumberOfThumbs(); i++)
-                {
-                    if (!s.isBusy())
-                        System.out.println("s1 Thumb " + i + ": " + s.getValue(i));
-                }
-            }
-        });
+        acl(s1, "s1");
+        acl(s2, "s2");
+        acl(s3, "s3");
+        acl(s4, "s4");
+    }
 
-        s2.addChangeListener(new ChangeListener()
+    /**
+     * Add change listener.
+     * @param ms the multislider
+     * @param name the string with the variable name
+     */
+    void acl(final MultiSlider ms, final String name)
+    {
+        ms.addChangeListener(new ChangeListener()
         {
             @Override
             public void stateChanged(final ChangeEvent e)
@@ -156,21 +190,9 @@ public class MultiSliderRestrictionDemo extends JFrame
                 for (int i = 0; i < s.getNumberOfThumbs(); i++)
                 {
                     if (!s.isBusy())
-                        System.out.println("s2 Thumb " + i + ": " + s.getValue(i));
-                }
-            }
-        });
-
-        s3.addChangeListener(new ChangeListener()
-        {
-            @Override
-            public void stateChanged(final ChangeEvent e)
-            {
-                MultiSlider s = (MultiSlider) e.getSource();
-                for (int i = 0; i < s.getNumberOfThumbs(); i++)
-                {
-                    if (!s.isBusy())
-                        System.out.println("s3 Thumb " + i + ": " + s.getValue(i));
+                    {
+                        System.out.println(name + " Thumb " + i + ": " + s.getValue(i));
+                    }
                 }
             }
         });
