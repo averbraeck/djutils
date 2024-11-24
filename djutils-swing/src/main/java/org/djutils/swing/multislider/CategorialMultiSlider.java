@@ -46,7 +46,7 @@ public class CategorialMultiSlider<T> extends AbstractMultiSlider<T>
     }
 
     /**
-     * Creates a horizontal slider using the specified min, max and initial values.
+     * Creates a horizontal or vertical slider using the specified min, max and initial values.
      * @param horizontal the orientation of the slider; true for horizontal, false for vertical
      * @param scale the list of categorial values for the scale
      * @param initialValues the initial values of the slider.
