@@ -18,6 +18,7 @@ import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.OverlayLayout;
@@ -101,19 +102,6 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
      * notification is fired.
      */
     private transient ChangeEvent changeEvent = null;
-
-    /**
-     * Creates a horizontal slider using the specified min, max and initial values.
-     * @param minIndex the minimum index value of the slider
-     * @param maxIndex the maximum index value of the slider
-     * @param initialIndexValues the initial index values of the thumbs of the slider
-     * @throws IllegalArgumentException if initial values are outside the min-max range, or if the number of thumbs is 0, or
-     *             when the values are not in increasing order (which is important for restricting passing and overlap)
-     */
-    public AbstractMultiSlider(final int minIndex, final int maxIndex, final int... initialIndexValues)
-    {
-        this(minIndex, maxIndex, true, initialIndexValues);
-    }
 
     /**
      * Creates a slider with the specified orientation and the specified minimum, maximum, and initial values. The orientation
@@ -328,9 +316,11 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
      * Set the thumb label for thumb i to the given label.
      * @param i the thumb number
      * @param label the label to display
+     * @throws IndexOutOfBoundsException when thumb number is out of bounds
      */
     public void setThumbLabel(final int i, final String label)
     {
+        Throw.when(i < 0 || i >= getNumberOfThumbs(), IndexOutOfBoundsException.class, "thumb number %d is out of bounds", i);
         this.thumbLabels.put(i, label);
         invalidate();
     }
@@ -339,9 +329,11 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
      * Get the thumb label for thumb i.
      * @param i the thumb number
      * @return the label to display
+     * @throws IndexOutOfBoundsException when thumb number is out of bounds
      */
     public String getThumbLabel(final int i)
     {
+        Throw.when(i < 0 || i >= getNumberOfThumbs(), IndexOutOfBoundsException.class, "thumb number %d is out of bounds", i);
         return this.thumbLabels.get(i);
     }
 
@@ -900,23 +892,31 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
     }
 
     /**
-     * Creates a {@code Hashtable} of numerical text labels, starting at the starting point specified, and using the increment
-     * specified. For example, if you call <code>createStandardLabels( 10, 2 )</code>, then labels will be created for the
-     * values 2, 12, 22, 32, and so on.
+     * Creates a {@code Hashtable} of text labels, starting at the starting point specified, and using the increment specified.
+     * For example, if you call <code>createStandardLabels( 10, 2 )</code>, then labels will be created for the index values 2,
+     * 12, 22, 32, and so on.
      * <p>
      * For the labels to be drawn on the slider, the returned {@code Hashtable} must be passed into {@code setLabelTable}, and
      * {@code setPaintLabels} must be set to {@code true}.
      * <p>
      * For further details on the makeup of the returned {@code Hashtable}, see the {@code setLabelTable} documentation.
      * @param increment distance between labels in the generated hashtable
-     * @param start value at which the labels will begin
+     * @param startIndex value at which the labels will begin
      * @return a new {@code Hashtable} of labels
      * @exception IllegalArgumentException if {@code start} is out of range, or if {@code increment} is less than or equal to
      *                zero
      */
-    public Hashtable<Integer, JComponent> createStandardLabels(final int increment, final int start)
+    public Hashtable<Integer, JComponent> createStandardLabels(final int increment, final int startIndex)
     {
-        return this.sliders[0].createStandardLabels(increment, start);
+        Throw.when(increment <= 0, IllegalArgumentException.class, "increment should be > 0");
+        Throw.when(startIndex < getIndexMinimum() || startIndex > getIndexMaximum(), IllegalArgumentException.class,
+                "startIndex should be between minimum index and maximum index");
+        Hashtable<Integer, JComponent> labels = new Hashtable<>();
+        for (int i = startIndex; i <= getIndexMaximum(); i += increment)
+        {
+            labels.put(i, new JLabel(mapIndexToValue(i).toString()));
+        }
+        return labels;
     }
 
     /**
