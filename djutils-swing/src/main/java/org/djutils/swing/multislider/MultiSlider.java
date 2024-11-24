@@ -104,7 +104,7 @@ public class MultiSlider extends JComponent implements ChangeListener
      * @throws IllegalArgumentException if initial values are outside the min-max range, or if the number of thumbs is 0, or
      *             when the values are not in increasing order (which is important for restricting passing and overlap)
      */
-    public MultiSlider(final int min, final int max, final int[] initialValues)
+    public MultiSlider(final int min, final int max, final int... initialValues)
     {
         this(SwingConstants.HORIZONTAL, min, max, initialValues);
     }
@@ -120,7 +120,7 @@ public class MultiSlider extends JComponent implements ChangeListener
      *             outside the min-max range, or if the number of thumbs is 0, or when the values are not in increasing order
      *             (which is important for restricting passing and overlap)
      */
-    public MultiSlider(final int orientation, final int min, final int max, final int[] initialValues)
+    public MultiSlider(final int orientation, final int min, final int max, final int... initialValues)
     {
         Throw.when(initialValues.length == 0, IllegalArgumentException.class, "the number of thumbs cannot be zero");
         Throw.when(min >= max, IllegalArgumentException.class, "min should be less than max");
