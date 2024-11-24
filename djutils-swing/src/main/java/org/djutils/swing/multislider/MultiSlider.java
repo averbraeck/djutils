@@ -86,6 +86,9 @@ public class MultiSlider extends JComponent implements ChangeListener
     /** MultiSlider restriction on overlap. */
     private boolean overlap = true;
 
+    /** Flag to indicate that restrictions are being checked -- ensure state changes do not lead to a stack overflow. */
+    private boolean checkRestrictionsBusy = false;
+
     /**
      * Only one <code>ChangeEvent</code> is needed for the {@code MultiSlider} since the event's only (read-only) state is the
      * source property. The source of events generated here is always "this". The event is created the first time that an event
@@ -203,7 +206,10 @@ public class MultiSlider extends JComponent implements ChangeListener
                 @Override
                 public void stateChanged(final ChangeEvent e)
                 {
-                    MultiSlider.this.checkRestrictions(index);
+                    if (!MultiSlider.this.checkRestrictionsBusy)
+                    {
+                        MultiSlider.this.checkRestrictions(index);
+                    }
                     fireStateChanged();
                 }
             });
@@ -667,11 +673,14 @@ public class MultiSlider extends JComponent implements ChangeListener
     {
         Throw.when(maximum <= getMinimum(), IllegalArgumentException.class, "setMaximum(%d) >= minimum %d", maximum,
                 getMinimum());
-        checkRestrictions();
         int oldMax = getMaximum();
         for (var slider : this.sliders)
         {
             slider.setMaximum(maximum);
+        }
+        checkRestrictions();
+        for (var slider : this.sliders)
+        {
             slider.invalidate();
         }
         firePropertyChange("maximum", Integer.valueOf(oldMax), Integer.valueOf(maximum));
@@ -1079,35 +1088,13 @@ public class MultiSlider extends JComponent implements ChangeListener
     }
 
     /**
-     * Check min/max restrictions on all thumb values and correct values where necessary.
-     * @return whether compliance with the restrictions is ok; false means violation
-     */
-    private boolean checkMinMax()
-    {
-        boolean ret = true;
-        for (int i = 0; i < getNumberOfThumbs(); i++)
-        {
-            if (getValue(i) < getMinimum())
-            {
-                getSlider(i).setValue(getMinimum());
-                ret = false;
-            }
-            if (getValue(i) > getMaximum())
-            {
-                getSlider(i).setValue(getMaximum());
-                ret = false;
-            }
-        }
-        return ret;
-    }
-
-    /**
      * Check restrictions on all thumb values and correct values where necessary.
      * @return whether compliance with the restrictions is ok; false means violation
      */
     protected boolean checkRestrictions()
     {
-        boolean ret = checkMinMax();
+        this.checkRestrictionsBusy = true;
+        boolean ret = true;
         if (!getPassing())
         {
             for (int i = 1; i < getNumberOfThumbs(); i++)
@@ -1119,7 +1106,6 @@ public class MultiSlider extends JComponent implements ChangeListener
                     ret = false;
                 }
             }
-            ret &= checkMinMax();
             for (int i = getNumberOfThumbs() - 1; i >= 1; i--)
             {
                 // see if we need to push values 'down'
@@ -1129,7 +1115,6 @@ public class MultiSlider extends JComponent implements ChangeListener
                     ret = false;
                 }
             }
-            ret &= checkMinMax();
         }
         if (!getOverlap())
         {
@@ -1142,7 +1127,6 @@ public class MultiSlider extends JComponent implements ChangeListener
                     ret = false;
                 }
             }
-            ret &= checkMinMax();
             for (int i = getNumberOfThumbs() - 1; i >= 1; i--)
             {
                 // see if we need to push values 'down'
@@ -1152,13 +1136,13 @@ public class MultiSlider extends JComponent implements ChangeListener
                     ret = false;
                 }
             }
-            ret &= checkMinMax();
         }
         if (!ret)
         {
             // hack to force repaint of all the thumbs in the overlapping sliders
             setUI(getUI());
         }
+        this.checkRestrictionsBusy = false;
         return ret;
     }
 
@@ -1169,6 +1153,7 @@ public class MultiSlider extends JComponent implements ChangeListener
      */
     protected boolean checkRestrictions(final int index)
     {
+        this.checkRestrictionsBusy = true;
         boolean ret = true;
         if (!getPassing())
         {
@@ -1201,6 +1186,7 @@ public class MultiSlider extends JComponent implements ChangeListener
             // hack to force repaint of all the thumbs in the overlapping sliders
             setUI(getUI());
         }
+        this.checkRestrictionsBusy = false;
         return ret;
     }
 
