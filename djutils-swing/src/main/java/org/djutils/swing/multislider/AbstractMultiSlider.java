@@ -914,9 +914,20 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
         Hashtable<Integer, JComponent> labels = new Hashtable<>();
         for (int i = startIndex; i <= getIndexMaximum(); i += increment)
         {
-            labels.put(i, new JLabel(mapIndexToValue(i).toString()));
+            labels.put(i, new JLabel(format(mapIndexToValue(i))));
         }
         return labels;
+    }
+
+    /**
+     * Format a value for e.g., the labels of the slider. By default, the formatting is done with {@code toString()}, but this
+     * can be overridden.
+     * @param value the value to format
+     * @return a formatted string representation of the value
+     */
+    protected String format(final T value)
+    {
+        return value.toString();
     }
 
     /**
