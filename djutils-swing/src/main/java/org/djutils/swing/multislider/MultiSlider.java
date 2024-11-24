@@ -204,6 +204,7 @@ public class MultiSlider extends JComponent implements ChangeListener
                 public void stateChanged(final ChangeEvent e)
                 {
                     MultiSlider.this.checkRestrictions(index);
+                    fireStateChanged();
                 }
             });
         }
@@ -1267,7 +1268,7 @@ public class MultiSlider extends JComponent implements ChangeListener
                 {
                     // ignore
                 }
-                this.multiSlider.setBusySlider(index);
+                setBusySlider(index);
                 return index;
             }
             return -1;
