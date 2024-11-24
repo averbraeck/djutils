@@ -66,6 +66,14 @@ public class LinearMultiSliderTest
             super(0.0, 50.0, 101, horizontal, initialValues);
         }
 
+        /**
+         * @param initialValues 1 or more new values
+         */
+        DoubleSlider50(final Double... initialValues)
+        {
+            super(0.0, 50.0, 101, initialValues);
+        }
+
         /** {@inheritDoc} */
         @Override
         protected Double mapIndexToValue(final int index)
@@ -111,7 +119,7 @@ public class LinearMultiSliderTest
         int orientation = initialOrientation;
         if (initialOrientation == -1)
         {
-            ms = new DoubleSlider50(true, 10.0, 25.0, 30.0);
+            ms = new DoubleSlider50(10.0, 25.0, 30.0);
             orientation = SwingConstants.HORIZONTAL;
         }
         else
@@ -121,6 +129,7 @@ public class LinearMultiSliderTest
         assertEquals(0.0, ms.getMinimum(), 1E-6);
         assertEquals(50.0, ms.getMaximum(), 1E-6);
         assertEquals(3, ms.getNumberOfThumbs());
+        assertEquals(101, ms.getUnitTicks());
         assertEquals(10.0, ms.getValue(0), 1E-6);
         assertEquals(25.0, ms.getValue(1), 1E-6);
         assertEquals(30.0, ms.getValue(2), 1E-6);
