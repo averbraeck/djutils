@@ -30,22 +30,23 @@ public abstract class LinearMultiSlider<T extends Number & Comparable<T>> extend
     /** the highest value of the linear scale. */
     private T max;
 
-    /** the number of steps of the linear scale. */
-    private int steps;
+    /** the number of ticks of the linear scale. The number of intervals in {@code unitTicks - 1}. */
+    private int unitTicks;
 
     /**
      * Creates a horizontal slider using the specified interval, number of steps, and initial values.
      * @param min the lowest value of the linear scale
      * @param max the highest value of the linear scale
-     * @param steps the number of steps of the linear scale
+     * @param unitTicks the number of ticks on the linear scale; note that when you need 100 intervals (0-100), ticks should be 101.
+     *            When you need 99 intervals (1-100), ticks should be 100.
      * @param initialValues the initial values of the slider
      * @throws IllegalArgumentException if the initial values are not part of the scale, or if the number of thumbs is 0, or
      *             when the values are not in increasing scale order (which is important for restricting passing and overlap)
      */
     @SafeVarargs
-    public LinearMultiSlider(final T min, final T max, final int steps, final T... initialValues)
+    public LinearMultiSlider(final T min, final T max, final int unitTicks, final T... initialValues)
     {
-        this(min, max, steps, true, initialValues);
+        this(min, max, unitTicks, true, initialValues);
     }
 
     /**
@@ -53,18 +54,19 @@ public abstract class LinearMultiSlider<T extends Number & Comparable<T>> extend
      * @param horizontal the orientation of the slider; true for horizontal, false for vertical
      * @param min the lowest value of the linear scale
      * @param max the highest value of the linear scale
-     * @param steps the number of steps of the linear scale
+     * @param unitTicks the number of ticks on the linear scale; note that when you need 100 intervals (0-100), ticks should be 101.
+     *            When you need 99 intervals (1-100), ticks should be 100.
      * @param initialValues the initial values of the slider.
      * @throws IllegalArgumentException if the initial values are not part of the scale, or if the number of thumbs is 0, or
      *             when the values are not in increasing scale order (which is important for restricting passing and overlap)
      */
     @SafeVarargs
-    public LinearMultiSlider(final T min, final T max, final int steps, final boolean horizontal, final T... initialValues)
+    public LinearMultiSlider(final T min, final T max, final int unitTicks, final boolean horizontal, final T... initialValues)
     {
-        super(0, steps - 1, horizontal, intArray(min, max, steps, initialValues));
+        super(0, unitTicks - 1, horizontal, intArray(min, max, unitTicks, initialValues));
         this.min = min;
         this.max = max;
-        this.steps = steps;
+        this.unitTicks = unitTicks;
         setLabelTable(createStandardLabels(1));
     }
 
@@ -72,14 +74,14 @@ public abstract class LinearMultiSlider<T extends Number & Comparable<T>> extend
      * Make an int array from the initial values given the linear scale.
      * @param min the lowest value of the linear scale
      * @param max the highest value of the linear scale
-     * @param steps the number of steps of the linear scale
+     * @param unitTicks the number of steps of the linear scale
      * @param initialValues the initial values of the slider.
      * @param <T> the type of objects for the categorial scale
      * @return an int array with the index vales of the initial values on the scale
      * @throws IllegalArgumentException if the initial values are not part of the scale, or when the scale has duplicate values
      */
     @SafeVarargs
-    private static <T extends Number & Comparable<T>> int[] intArray(final T min, final T max, final int steps,
+    private static <T extends Number & Comparable<T>> int[] intArray(final T min, final T max, final int unitTicks,
             final T... initialValues)
     {
         int[] ret = new int[initialValues.length];
@@ -96,8 +98,8 @@ public abstract class LinearMultiSlider<T extends Number & Comparable<T>> extend
             double div = iv.doubleValue();
             double dmin = min.doubleValue();
             double dmax = max.doubleValue();
-            double dsteps = Double.valueOf(steps);
-            int index = (int) Math.round(dsteps * (div - dmin) / (dmax - dmin));
+            double dut1 = Double.valueOf(unitTicks - 1);
+            int index = (int) Math.round(dut1 * (div - dmin) / (dmax - dmin));
             ret[i] = index;
         }
         return ret;
@@ -113,9 +115,9 @@ public abstract class LinearMultiSlider<T extends Number & Comparable<T>> extend
         double div = value.doubleValue();
         double dmin = this.min.doubleValue();
         double dmax = this.max.doubleValue();
-        double dsteps = Double.valueOf(this.steps);
-        int index = (int) Math.round(dsteps * (div - dmin) / (dmax - dmin));
+        double dut1 = Double.valueOf(this.unitTicks - 1);
+        int index = (int) Math.round(dut1 * (div - dmin) / (dmax - dmin));
         return index;
     }
-    
+
 }
