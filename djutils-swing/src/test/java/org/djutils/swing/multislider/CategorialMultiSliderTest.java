@@ -436,6 +436,24 @@ public class CategorialMultiSliderTest
                 ms.setMaximum("A");
             }
         });
+        
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.mapIndexToValue(-1);
+            }
+        });
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.mapIndexToValue(100);
+            }
+        });
     }
 
     /**
