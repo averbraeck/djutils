@@ -390,6 +390,15 @@ public class CategorialMultiSliderTest
             }
         });
 
+        Try.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
+        {
+            @Override
+            public CategorialMultiSlider<String> assign() throws Throwable
+            {
+                return new CategorialMultiSlider<String>(List.of("A", "C", "E", "A"), "A", "C");
+            }
+        });
+
         final var ms = new CategorialMultiSlider<String>(CategorialMultiSliderTest.this.listAJ, "C", "E");
         Try.testFail(new Try.Execution()
         {
