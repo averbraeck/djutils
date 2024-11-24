@@ -76,9 +76,9 @@ public class PowerFunctionTest
         pf = pf.scaleBy(0);
         assertTrue(pf == Constant.ZERO, "scaleBy 0 yields ZERO");
         pf = new PowerFunction(3, 12);
-        assertEquals("3x^12", pf.getDescription(), "larger exponents use the ^ notation");
+        assertEquals("3x\u00b9\u00b2", pf.getDescription(), "multi digit superscript exponent");
         pf = new PowerFunction(3, 1.2);
-        assertEquals("3x^1.2", pf.getDescription(), "fractional exponents use the ^ notation");
+        assertEquals("3x\u00b9\u02d9\u00b2", pf.getDescription(), "fractional exponents use the ^ notation");
         
         pf = new PowerFunction(3, 7);
         assertEquals("POW", pf.getId(), "id is POW");

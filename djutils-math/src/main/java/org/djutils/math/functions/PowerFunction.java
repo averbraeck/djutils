@@ -28,6 +28,9 @@ public class PowerFunction implements MathFunction
     /** The function that yields x (may be null). */
     private final MathFunction chain;
 
+    /** SuperScript writer. */
+    private static final SuperScript SUPER_SCRIPT = new SuperScript();
+
     /**
      * Construct a new power function.
      * @param chain the MathFunction that yields the <code>x</code> for this power function
@@ -229,16 +232,9 @@ public class PowerFunction implements MathFunction
         if (this.power != 0.0)
         {
             result.append(this.chain == null ? "x" : ("(" + this.chain.getDescription() + ")"));
-            if (this.power > 1 && this.power <= 9 && this.power % 1 == 0)
+            if (this.power != 1)
             {
-                // Print single digit power using unicode superscript symbols
-                int index = ((int) this.power) - 2;
-                result.append("\u00B2\u00B3\u2074\u2075\u2076\u2077\u2078\u2079".substring(index, index + 1));
-            }
-            else if (this.power != 1)
-            {
-                result.append("^");
-                result.append(printValue(this.power));
+                result.append(SUPER_SCRIPT.translate(printValue(this.power)));
             }
         }
         return result.toString();
