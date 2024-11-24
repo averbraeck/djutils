@@ -80,6 +80,12 @@ public class MultiSlider extends JComponent implements ChangeListener
     /** the track size highest pixel (to calculate width for horizontal slider; height for vertical slider). */
     private int trackSizeHiPx;
 
+    /** MultiSlider restriction on passing. */
+    private boolean passing = false;
+
+    /** MultiSlider restriction on overlap. */
+    private boolean overlap = true;
+
     /**
      * Only one <code>ChangeEvent</code> is needed for the {@code MultiSlider} since the event's only (read-only) state is the
      * source property. The source of events generated here is always "this". The event is created the first time that an event
@@ -92,7 +98,8 @@ public class MultiSlider extends JComponent implements ChangeListener
      * @param min the minimum value of the slider
      * @param max the maximum value of the slider
      * @param initialValues the initial values of the thumbs of the slider
-     * @throws IllegalArgumentException if initial values are outside the min-max range, or if the number of thumbs is 0
+     * @throws IllegalArgumentException if initial values are outside the min-max range, or if the number of thumbs is 0, or
+     *             when the values are not in increasing order (which is important for restricting passing and overlap)
      */
     public MultiSlider(final int min, final int max, final int[] initialValues)
     {
@@ -107,18 +114,19 @@ public class MultiSlider extends JComponent implements ChangeListener
      * @param max the maximum value of the slider
      * @param initialValues the initial values of the thumbs of the slider
      * @throws IllegalArgumentException if orientation is not one of {@code VERTICAL}, {@code HORIZONTAL}, if initial values are
-     *             outside the min-max range, or if the number of thumbs is 0
+     *             outside the min-max range, or if the number of thumbs is 0, or when the values are not in increasing order
+     *             (which is important for restricting passing and overlap)
      */
     public MultiSlider(final int orientation, final int min, final int max, final int[] initialValues)
     {
         Throw.when(initialValues.length == 0, IllegalArgumentException.class, "the number of thumbs cannot be zero");
         Throw.when(min >= max, IllegalArgumentException.class, "min should be less than max");
-        for (int v : initialValues)
+        for (int i = 0; i < initialValues.length; i++)
         {
-            if (v < min || v > max)
-            {
-                throw new IllegalArgumentException("all initial value should be between min and max (inclusive)");
-            }
+            Throw.when(initialValues[i] < min || initialValues[i] > max, IllegalArgumentException.class,
+                    "all initial value should be between min and max (inclusive)");
+            Throw.when(i > 0 && initialValues[i] < initialValues[i - 1], IllegalArgumentException.class,
+                    "all initial value should be in increasing order or overlap");
         }
 
         // store the initial value array in a safe copy
@@ -130,10 +138,12 @@ public class MultiSlider extends JComponent implements ChangeListener
         topPanel.setLayout(
                 new BoxLayout(topPanel, (orientation == SwingConstants.VERTICAL) ? BoxLayout.X_AXIS : BoxLayout.Y_AXIS));
         topPanel.setOpaque(false);
-        add(topPanel, BorderLayout.CENTER);
+        add(topPanel, orientation == SwingConstants.HORIZONTAL ? BorderLayout.NORTH : BorderLayout.WEST);
 
         // create the label panel
         this.labelPanel = new LabelPanel(this);
+        this.labelPanel.setLayout(new BorderLayout());
+        this.labelPanel.setPreferredSize(new Dimension(1000, 0));
         this.labelPanel.setOpaque(false);
         topPanel.add(this.labelPanel);
 
@@ -177,12 +187,26 @@ public class MultiSlider extends JComponent implements ChangeListener
             @Override
             public void componentResized(final ComponentEvent e)
             {
+                super.componentResized(e);
                 calculateTrackSize();
-                MultiSlider.this.labelPanel.repaint();
+                MultiSlider.this.labelPanel.revalidate();
+                MultiSlider.this.dispatcherPane.setPreferredSize(new Dimension(MultiSlider.this.sliders[0].getSize()));
+                revalidate();
             }
-
         });
 
+        for (int i = 0; i < getNumberOfThumbs(); i++)
+        {
+            final int index = i;
+            this.getSlider(i).addChangeListener(new ChangeListener()
+            {
+                @Override
+                public void stateChanged(final ChangeEvent e)
+                {
+                    MultiSlider.this.checkRestrictions(index);
+                }
+            });
+        }
         invalidate();
     }
 
@@ -579,6 +603,7 @@ public class MultiSlider extends JComponent implements ChangeListener
         Throw.when(n < getMinimum() || n > getMaximum(), IllegalArgumentException.class, "setValue(%d) not in range [%d, %d]",
                 n, getMinimum(), getMaximum());
         this.sliders[i].setValue(n);
+        checkRestrictions(i);
         // drastic way to force thumbs that are on top of each other to be redrawn
         setUI(getUI());
     }
@@ -606,6 +631,7 @@ public class MultiSlider extends JComponent implements ChangeListener
     {
         Throw.when(minimum >= getMaximum(), IllegalArgumentException.class, "setMinimum(%d) >= maximum %d", minimum,
                 getMaximum());
+        checkRestrictions();
         int oldMin = getMinimum();
         for (var slider : this.sliders)
         {
@@ -640,6 +666,7 @@ public class MultiSlider extends JComponent implements ChangeListener
     {
         Throw.when(maximum <= getMinimum(), IllegalArgumentException.class, "setMaximum(%d) >= minimum %d", maximum,
                 getMinimum());
+        checkRestrictions();
         int oldMax = getMaximum();
         for (var slider : this.sliders)
         {
@@ -1007,6 +1034,176 @@ public class MultiSlider extends JComponent implements ChangeListener
     }
 
     /**
+     * Set whether passing of the thumbs is allowed, and check whether thumb values are in line with restrictions.
+     * @param b whether passing of the thumbs is allowed or not
+     */
+    public void setPassing(final boolean b)
+    {
+        this.passing = b;
+        if (!this.passing)
+        {
+            checkRestrictions();
+        }
+    }
+
+    /**
+     * Return whether passing of the thumbs is allowed.
+     * @return whether passing of the thumbs is allowed or not
+     */
+    public boolean getPassing()
+    {
+        return this.passing;
+    }
+
+    /**
+     * Set whether overlap of the thumbs is allowed, and check whether thumb values are in line with restrictions.
+     * @param b whether overlap of the thumbs is allowed or not
+     */
+    public void setOverlap(final boolean b)
+    {
+        this.overlap = b;
+        if (!this.overlap)
+        {
+            checkRestrictions();
+        }
+    }
+
+    /**
+     * Return whether overlap of the thumbs is allowed.
+     * @return whether overlap of the thumbs is allowed or not
+     */
+    public boolean getOverlap()
+    {
+        return this.overlap;
+    }
+
+    /**
+     * Check min/max restrictions on all thumb values and correct values where necessary.
+     * @return whether compliance with the restrictions is ok; false means violation
+     */
+    private boolean checkMinMax()
+    {
+        boolean ret = true;
+        for (int i = 0; i < getNumberOfThumbs(); i++)
+        {
+            if (getValue(i) < getMinimum())
+            {
+                getSlider(i).setValue(getMinimum());
+                ret = false;
+            }
+            if (getValue(i) > getMaximum())
+            {
+                getSlider(i).setValue(getMaximum());
+                ret = false;
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * Check restrictions on all thumb values and correct values where necessary.
+     * @return whether compliance with the restrictions is ok; false means violation
+     */
+    protected boolean checkRestrictions()
+    {
+        boolean ret = checkMinMax();
+        if (!getPassing())
+        {
+            for (int i = 1; i < getNumberOfThumbs(); i++)
+            {
+                // see if we need to push values 'up'
+                if (getValue(i) <= getValue(i - 1))
+                {
+                    getSlider(i).setValue(getValue(i - 1));
+                    ret = false;
+                }
+            }
+            ret &= checkMinMax();
+            for (int i = getNumberOfThumbs() - 1; i >= 1; i--)
+            {
+                // see if we need to push values 'down'
+                if (getValue(i) <= getValue(i - 1))
+                {
+                    getSlider(i - 1).setValue(getValue(i));
+                    ret = false;
+                }
+            }
+            ret &= checkMinMax();
+        }
+        if (!getOverlap())
+        {
+            for (int i = 1; i < getNumberOfThumbs(); i++)
+            {
+                // see if we need to push values 'up'
+                if (getValue(i) <= getValue(i - 1))
+                {
+                    getSlider(i).setValue(getValue(i - 1) + 1);
+                    ret = false;
+                }
+            }
+            ret &= checkMinMax();
+            for (int i = getNumberOfThumbs() - 1; i >= 1; i--)
+            {
+                // see if we need to push values 'down'
+                if (getValue(i) <= getValue(i - 1))
+                {
+                    getSlider(i - 1).setValue(getValue(i) - 1);
+                    ret = false;
+                }
+            }
+            ret &= checkMinMax();
+        }
+        if (!ret)
+        {
+            // hack to force repaint of all the thumbs in the overlapping sliders
+            setUI(getUI());
+        }
+        return ret;
+    }
+
+    /**
+     * Check restrictions on the thumb values of thumb 'index' and correct values where necessary.
+     * @param index the slider for which to check (the only one whose value should change)
+     * @return whether compliance with the restrictions is ok; false means violation
+     */
+    protected boolean checkRestrictions(final int index)
+    {
+        boolean ret = true;
+        if (!getPassing())
+        {
+            if (index > 0 && getValue(index) <= getValue(index - 1))
+            {
+                getSlider(index).setValue(getValue(index - 1));
+                ret = false;
+            }
+            if (index < getNumberOfThumbs() - 1 && getValue(index) >= getValue(index + 1))
+            {
+                getSlider(index).setValue(getValue(index + 1));
+                ret = false;
+            }
+        }
+        if (!getOverlap())
+        {
+            if (index > 0 && getValue(index) <= getValue(index - 1))
+            {
+                getSlider(index).setValue(getValue(index - 1) + 1);
+                ret = false;
+            }
+            if (index < getNumberOfThumbs() - 1 && getValue(index) >= getValue(index + 1))
+            {
+                getSlider(index).setValue(getValue(index + 1) - 1);
+                ret = false;
+            }
+        }
+        if (!ret)
+        {
+            // hack to force repaint of all the thumbs in the overlapping sliders
+            setUI(getUI());
+        }
+        return ret;
+    }
+
+    /**
      * The DispatcherPane class, which is a glass pane sitting on top of the sliders to dispatch the mouse event to the correct
      * slider class. Note that the mouse coordinates are relative to the component itself, so a translation might be needed. The
      * <code>SwingUtilities.convertPoint()</code> method can make the conversion.
@@ -1062,7 +1259,14 @@ public class MultiSlider extends JComponent implements ChangeListener
                 int index = closestSliderIndex(pSlider);
                 MouseEvent meSlider = new MouseEvent((Component) e.getSource(), e.getID(), e.getWhen(), e.getModifiersEx(),
                         pSlider.x, pSlider.y, e.getClickCount(), e.isPopupTrigger(), e.getButton());
-                DispatcherPane.this.multiSlider.getSlider(index).dispatchEvent(meSlider);
+                try
+                {
+                    DispatcherPane.this.multiSlider.getSlider(index).dispatchEvent(meSlider);
+                }
+                catch (Exception exception)
+                {
+                    // ignore
+                }
                 this.multiSlider.setBusySlider(index);
                 return index;
             }
@@ -1091,6 +1295,15 @@ public class MultiSlider extends JComponent implements ChangeListener
         }
 
         /**
+         * Check whether minimum, maximum, passing or overlap restrictions were violated, and if so, adjust.
+         * @param index the slider number for which to check
+         */
+        void checkRestrictions(final int index)
+        {
+            this.multiSlider.checkRestrictions(index);
+        }
+
+        /**
          * Create a glass pane on top of the sliders.
          * @param multiSlider the multislider for which this is the glass pane
          */
@@ -1104,9 +1317,12 @@ public class MultiSlider extends JComponent implements ChangeListener
                 @Override
                 public void mouseReleased(final MouseEvent e)
                 {
-                    // Note that a mouse release should ALWAYS be communicated, also when it is outside of the slider
                     setBusy(false);
-                    dispatch(e, true);
+                    int index = dispatch(e, false);
+                    if (index >= 0)
+                    {
+                        checkRestrictions(index);
+                    }
                     setBusySlider(-1);
                 }
 
@@ -1127,7 +1343,11 @@ public class MultiSlider extends JComponent implements ChangeListener
                 {
                     // Note that a mouse exited should ALWAYS be communicated, also when it is outside of the slider
                     setBusy(false);
-                    dispatch(e, true);
+                    int index = dispatch(e, true);
+                    if (index >= 0)
+                    {
+                        checkRestrictions(index);
+                    }
                     setBusySlider(-1);
                 }
 
@@ -1140,9 +1360,7 @@ public class MultiSlider extends JComponent implements ChangeListener
                 @Override
                 public void mouseClicked(final MouseEvent e)
                 {
-                    setBusy(false);
-                    dispatch(e, false);
-                    setBusySlider(-1);
+                    // completely caught by pressed + released (or pressed + dragged + released)
                 }
             });
 
@@ -1157,6 +1375,10 @@ public class MultiSlider extends JComponent implements ChangeListener
                     if (index < 0)
                     {
                         setBusy(false);
+                    }
+                    else
+                    {
+                        checkRestrictions(index);
                     }
                 }
 
