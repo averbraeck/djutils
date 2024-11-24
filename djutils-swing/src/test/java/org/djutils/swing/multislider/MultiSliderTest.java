@@ -66,7 +66,7 @@ public class MultiSliderTest
         }
         else
         {
-            ms = new MultiSlider(orientation, 0, 100, new int[] {25, 50, 75});
+            ms = new MultiSlider(0, 100, orientation == SwingConstants.HORIZONTAL, new int[] {25, 50, 75});
         }
         assertEquals(0, ms.getMinimum());
         assertEquals(100, ms.getMaximum());
@@ -202,7 +202,7 @@ public class MultiSliderTest
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.setPreferredSize(new Dimension(400, 400));
-        MultiSlider ms = new MultiSlider(orientation, 0, 100, new int[] {25, 50, 75});
+        MultiSlider ms = new MultiSlider(0, 100, orientation == SwingConstants.HORIZONTAL, new int[] {25, 50, 75});
         ms.setInverted(inverted);
         panel.add(ms, orientation == SwingConstants.VERTICAL ? BorderLayout.WEST : BorderLayout.NORTH);
         frame.add(panel);
@@ -331,7 +331,7 @@ public class MultiSliderTest
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.setPreferredSize(new Dimension(400, 400));
-        MultiSlider ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {25, 50, 75});
+        MultiSlider ms = new MultiSlider(0, 100, new int[] {25, 50, 75});
         ms.setDrawThumbLabels(false, 0);
         panel.add(ms, BorderLayout.NORTH);
         frame.add(panel);
@@ -382,7 +382,7 @@ public class MultiSliderTest
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.setPreferredSize(new Dimension(400, 400));
-        MultiSlider ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {25, 50, 75});
+        MultiSlider ms = new MultiSlider(0, 100, new int[] {25, 50, 75});
         ms.setDrawThumbLabels(false, 0);
         panel.add(ms, BorderLayout.NORTH);
         frame.add(panel);
@@ -442,7 +442,7 @@ public class MultiSliderTest
             }
         });
 
-        final var ms = new MultiSlider(SwingConstants.HORIZONTAL, 1, 10, new int[] {2, 4});
+        final var ms = new MultiSlider(1, 10, new int[] {2, 4});
         Try.testFail(new Try.Execution()
         {
             @Override
@@ -504,7 +504,7 @@ public class MultiSliderTest
     @Test
     public void testLabelTable()
     {
-        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 1, 10, new int[] {2, 4});
+        var ms = new MultiSlider(1, 10, new int[] {2, 4});
         var labtab = ms.createStandardLabels(2, 2);
         assertEquals(5, labtab.size());
         assertEquals("2", ((JLabel) labtab.get(2)).getText());
@@ -557,7 +557,7 @@ public class MultiSliderTest
     @Test
     public void testListeners()
     {
-        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40});
+        var ms = new MultiSlider(0, 100, new int[] {20, 40});
         this.v = new int[] {20, 40};
         int nrListeners = ms.getChangeListeners().length;
         var cl = new ChangeListener()
@@ -574,7 +574,7 @@ public class MultiSliderTest
 
         this.v = new int[] {25, 40};
         ms.setValue(0, 25);
-        
+
         ms.removeChangeListener(cl);
         assertEquals(nrListeners, ms.getChangeListeners().length);
     }
@@ -585,7 +585,7 @@ public class MultiSliderTest
     @Test
     public void testPassingRestrictions()
     {
-        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+        var ms = new MultiSlider(0, 100, new int[] {20, 40, 60});
         ms.setPassing(true);
         assertTrue(ms.getPassing());
         ms.setPassing(false);
@@ -614,7 +614,7 @@ public class MultiSliderTest
         assertEquals(40, ms.getValue(0));
         assertEquals(40, ms.getValue(1));
         assertEquals(40, ms.getValue(2));
-        
+
         ms.setPassing(true);
         assertTrue(ms.getPassing());
         ms.setValue(0, 45);
@@ -623,7 +623,7 @@ public class MultiSliderTest
         assertEquals(40, ms.getValue(1));
         assertEquals(10, ms.getValue(2));
     }
-    
+
     /**
      * Test overlap restrictions.
      */
@@ -631,7 +631,7 @@ public class MultiSliderTest
     public void testOverlapRestrictions()
     {
         // note that no overlap implies no passing.
-        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+        var ms = new MultiSlider(0, 100, new int[] {20, 40, 60});
         ms.setOverlap(true);
         assertTrue(ms.getOverlap());
         ms.setOverlap(false);
@@ -668,7 +668,7 @@ public class MultiSliderTest
         assertEquals(39, ms.getValue(0));
         assertEquals(40, ms.getValue(1));
         assertEquals(41, ms.getValue(2));
-        
+
         ms.setOverlap(true);
         assertTrue(ms.getOverlap());
         ms.setValue(0, 40);
@@ -684,7 +684,7 @@ public class MultiSliderTest
     @Test
     public void testPassingRestrictionsSlider()
     {
-        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+        var ms = new MultiSlider(0, 100, new int[] {20, 40, 60});
         ms.setPassing(true);
         assertTrue(ms.getPassing());
         ms.setPassing(false);
@@ -713,7 +713,7 @@ public class MultiSliderTest
         assertEquals(40, ms.getValue(0));
         assertEquals(40, ms.getValue(1));
         assertEquals(40, ms.getValue(2));
-        
+
         ms.setPassing(true);
         assertTrue(ms.getPassing());
         ms.getSlider(0).setValue(45);
@@ -722,7 +722,7 @@ public class MultiSliderTest
         assertEquals(40, ms.getValue(1));
         assertEquals(10, ms.getValue(2));
     }
-    
+
     /**
      * Test overlap restrictions.
      */
@@ -730,7 +730,7 @@ public class MultiSliderTest
     public void testOverlapRestrictionsSlider()
     {
         // note that no overlap implies no passing.
-        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+        var ms = new MultiSlider(0, 100, new int[] {20, 40, 60});
         ms.setOverlap(true);
         assertTrue(ms.getOverlap());
         ms.setOverlap(false);
@@ -767,7 +767,7 @@ public class MultiSliderTest
         assertEquals(39, ms.getValue(0));
         assertEquals(40, ms.getValue(1));
         assertEquals(41, ms.getValue(2));
-        
+
         ms.setOverlap(true);
         assertTrue(ms.getOverlap());
         ms.getSlider(0).setValue(40);
@@ -783,15 +783,15 @@ public class MultiSliderTest
     @Test
     public void testPassingRestrictionsMinMax()
     {
-        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+        var ms = new MultiSlider(0, 100, true, 20, 40, 60);
         ms.setPassing(false);
         assertFalse(ms.getPassing());
         ms.setMinimum(50);
         assertEquals(50, ms.getValue(0));
         assertEquals(50, ms.getValue(1));
         assertEquals(60, ms.getValue(2));
-        
-        ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+
+        ms = new MultiSlider(0, 100, false, 20, 40, 60);
         ms.setPassing(false);
         assertFalse(ms.getPassing());
         ms.setMaximum(10);
@@ -799,22 +799,22 @@ public class MultiSliderTest
         assertEquals(10, ms.getValue(1));
         assertEquals(10, ms.getValue(2));
     }
-    
+
     /**
      * Test overlap restrictions, based on changing the min/max values.
      */
     @Test
     public void testOverlapRestrictionsMinMax()
     {
-        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+        var ms = new MultiSlider(0, 100, true, new int[] {20, 40, 60});
         ms.setOverlap(false);
         assertFalse(ms.getOverlap());
         ms.setMinimum(50);
         assertEquals(50, ms.getValue(0));
         assertEquals(51, ms.getValue(1));
         assertEquals(60, ms.getValue(2));
-        
-        ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+
+        ms = new MultiSlider(0, 100, false, new int[] {20, 40, 60});
         ms.setOverlap(false);
         assertFalse(ms.getOverlap());
         ms.setMaximum(10);

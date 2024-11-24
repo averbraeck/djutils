@@ -12,7 +12,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -45,7 +44,7 @@ public class MultiSliderInvertedDemo extends JFrame
         getContentPane().add(panel);
         getContentPane().setBackground(new Color(204, 255, 204));
 
-        var horSlider = new MultiSlider(SwingConstants.HORIZONTAL, 100, 200, new int[] {125, 150, 175});
+        var horSlider = new MultiSlider(100, 200, new int[] {125, 150, 175});
         // horSlider.setUI(new BasicSliderUI());
         horSlider.setMajorTickSpacing(25);
         horSlider.setMinorTickSpacing(5);
@@ -58,7 +57,7 @@ public class MultiSliderInvertedDemo extends JFrame
         horSlider.setThumbLabel(2, "c");
         horSlider.setDrawThumbLabels(true, 20);
 
-        var vertSlider = new MultiSlider(SwingConstants.VERTICAL, 100, 200, new int[] {140, 160});
+        var vertSlider = new MultiSlider(100, 200, false, new int[] {140, 160});
         // vertSlider.setUI(new MetalSliderUI());
         vertSlider.setMajorTickSpacing(20);
         vertSlider.setMinorTickSpacing(5);
@@ -71,7 +70,7 @@ public class MultiSliderInvertedDemo extends JFrame
         vertSlider.setThumbLabel(1, "max");
         vertSlider.setDrawThumbLabels(true, 35);
 
-        var horSlider2 = new MultiSlider(SwingConstants.HORIZONTAL, 1, 10, new int[] {2, 4});
+        var horSlider2 = new MultiSlider(1, 10, new int[] {2, 4});
         var labtab = horSlider2.createStandardLabels(2, 2);
         horSlider2.setLabelTable(labtab);
         horSlider2.setMajorTickSpacing(1);

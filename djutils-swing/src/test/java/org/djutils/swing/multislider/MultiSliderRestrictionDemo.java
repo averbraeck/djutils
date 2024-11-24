@@ -14,7 +14,6 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -58,7 +57,7 @@ public class MultiSliderRestrictionDemo extends JFrame
 
         sliderPanel.add(new JLabel("No passing"));
         sliderPanel.add(new JLabel("     "));
-        var s1 = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {25, 50, 75, 80});
+        var s1 = new MultiSlider(0, 100, new int[] {25, 50, 75, 80});
         s1.setPreferredSize(new Dimension(480, 10));
         s1.setMajorTickSpacing(25);
         s1.setMinorTickSpacing(5);
@@ -76,7 +75,7 @@ public class MultiSliderRestrictionDemo extends JFrame
         sliderPanel.add(new JLabel("     "));
         sliderPanel.add(new JLabel("No overlap"));
         sliderPanel.add(new JLabel("     "));
-        var s2 = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {40, 60});
+        var s2 = new MultiSlider(0, 100, new int[] {40, 60});
         s2.setPreferredSize(new Dimension(480, 10));
         s2.setMajorTickSpacing(20);
         s2.setMinorTickSpacing(5);
@@ -94,7 +93,7 @@ public class MultiSliderRestrictionDemo extends JFrame
         sliderPanel.add(new JLabel("     "));
         sliderPanel.add(new JLabel("No passing and no overlap"));
         sliderPanel.add(new JLabel("     "));
-        var s3 = new MultiSlider(SwingConstants.HORIZONTAL, 0, 10, new int[] {2, 5, 7});
+        var s3 = new MultiSlider(0, 10, new int[] {2, 5, 7});
         s3.setPreferredSize(new Dimension(480, 10));
         s3.setMajorTickSpacing(1);
         s3.setMinorTickSpacing(1);
@@ -113,7 +112,7 @@ public class MultiSliderRestrictionDemo extends JFrame
         sliderPanel.add(new JLabel("     "));
         sliderPanel.add(new JLabel("No passing and no overlap"));
         sliderPanel.add(new JLabel("     "));
-        var s4 = new MultiSlider(SwingConstants.HORIZONTAL, 1, 8, new int[] {1, 3});
+        var s4 = new MultiSlider(1, 8, new int[] {1, 3});
         s4.setPreferredSize(new Dimension(480, 10));
         var labtab = new Hashtable<Integer, JComponent>();
         for (int i = 1; i < 9; i++)
