@@ -777,4 +777,50 @@ public class MultiSliderTest
         assertEquals(40, ms.getValue(2));
     }
 
+    /**
+     * Test passing restrictions, based on changing the min/max values.
+     */
+    @Test
+    public void testPassingRestrictionsMinMax()
+    {
+        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+        ms.setPassing(false);
+        assertFalse(ms.getPassing());
+        ms.setMinimum(50);
+        assertEquals(50, ms.getValue(0));
+        assertEquals(50, ms.getValue(1));
+        assertEquals(60, ms.getValue(2));
+        
+        ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+        ms.setPassing(false);
+        assertFalse(ms.getPassing());
+        ms.setMaximum(10);
+        assertEquals(10, ms.getValue(0));
+        assertEquals(10, ms.getValue(1));
+        assertEquals(10, ms.getValue(2));
+    }
+    
+    /**
+     * Test overlap restrictions, based on changing the min/max values.
+     */
+    @Test
+    public void testOverlapRestrictionsMinMax()
+    {
+        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+        ms.setOverlap(false);
+        assertFalse(ms.getOverlap());
+        ms.setMinimum(50);
+        assertEquals(50, ms.getValue(0));
+        assertEquals(51, ms.getValue(1));
+        assertEquals(60, ms.getValue(2));
+        
+        ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+        ms.setOverlap(false);
+        assertFalse(ms.getOverlap());
+        ms.setMaximum(10);
+        assertEquals(8, ms.getValue(0));
+        assertEquals(9, ms.getValue(1));
+        assertEquals(10, ms.getValue(2));
+    }
+
 }
