@@ -21,6 +21,12 @@
       <artifactId>jakarta.annotation-api</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.djunits</groupId>
+      <artifactId>djunits</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
 </project>

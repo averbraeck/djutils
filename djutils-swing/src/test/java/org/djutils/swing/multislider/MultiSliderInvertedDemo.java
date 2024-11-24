@@ -12,7 +12,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -45,7 +44,7 @@ public class MultiSliderInvertedDemo extends JFrame
         getContentPane().add(panel);
         getContentPane().setBackground(new Color(204, 255, 204));
 
-        var horSlider = new MultiSlider(SwingConstants.HORIZONTAL, 100, 200, new int[] {125, 150, 175});
+        var horSlider = new MultiSlider(100, 200, new int[] {125, 150, 175});
         // horSlider.setUI(new BasicSliderUI());
         horSlider.setMajorTickSpacing(25);
         horSlider.setMinorTickSpacing(5);
@@ -58,7 +57,7 @@ public class MultiSliderInvertedDemo extends JFrame
         horSlider.setThumbLabel(2, "c");
         horSlider.setDrawThumbLabels(true, 20);
 
-        var vertSlider = new MultiSlider(SwingConstants.VERTICAL, 100, 200, new int[] {140, 160});
+        var vertSlider = new MultiSlider(100, 200, false, new int[] {140, 160});
         // vertSlider.setUI(new MetalSliderUI());
         vertSlider.setMajorTickSpacing(20);
         vertSlider.setMinorTickSpacing(5);
@@ -70,6 +69,18 @@ public class MultiSliderInvertedDemo extends JFrame
         vertSlider.setThumbLabel(0, "min");
         vertSlider.setThumbLabel(1, "max");
         vertSlider.setDrawThumbLabels(true, 35);
+
+        var horSlider2 = new MultiSlider(1, 10, new int[] {2, 4});
+        var labtab = horSlider2.createStandardLabels(2, 2);
+        horSlider2.setLabelTable(labtab);
+        horSlider2.setMajorTickSpacing(1);
+        horSlider2.setMinorTickSpacing(1);
+        horSlider2.setPaintTicks(true);
+        horSlider2.setPaintLabels(true);
+        panel.add(horSlider2, BorderLayout.SOUTH);
+        horSlider2.setThumbLabel(0, "s1");
+        horSlider2.setThumbLabel(1, "s2");
+        horSlider2.setDrawThumbLabels(true, 20);
 
         var button = new JButton("RESET");
         button.setPreferredSize(new Dimension(100, 25));
@@ -87,6 +98,7 @@ public class MultiSliderInvertedDemo extends JFrame
             {
                 horSlider.resetToInitialValues();
                 vertSlider.resetToInitialValues();
+                horSlider2.resetToInitialValues();
             }
         });
 
@@ -120,6 +132,20 @@ public class MultiSliderInvertedDemo extends JFrame
                 {
                     if (!s.isBusy())
                         System.out.println("Vertical Thumb " + i + ": " + s.getValue(i));
+                }
+            }
+        });
+
+        horSlider2.addChangeListener(new ChangeListener()
+        {
+            @Override
+            public void stateChanged(final ChangeEvent e)
+            {
+                MultiSlider s = (MultiSlider) e.getSource();
+                for (int i = 0; i < s.getNumberOfThumbs(); i++)
+                {
+                    if (!s.isBusy())
+                        System.out.println("Horizontal Thumb " + i + ": " + s.getValue(i));
                 }
             }
         });
