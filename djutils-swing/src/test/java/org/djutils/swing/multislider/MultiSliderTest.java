@@ -579,4 +579,202 @@ public class MultiSliderTest
         assertEquals(nrListeners, ms.getChangeListeners().length);
     }
 
+    /**
+     * Test passing restrictions.
+     */
+    @Test
+    public void testPassingRestrictions()
+    {
+        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+        ms.setPassing(true);
+        assertTrue(ms.getPassing());
+        ms.setPassing(false);
+        assertFalse(ms.getPassing());
+        ms.setValue(0, 30);
+        assertEquals(30, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(60, ms.getValue(2));
+        ms.setValue(0, 40);
+        assertEquals(40, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(60, ms.getValue(2));
+        ms.setValue(0, 45);
+        assertEquals(40, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(60, ms.getValue(2));
+        ms.setValue(2, 50);
+        assertEquals(40, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(50, ms.getValue(2));
+        ms.setValue(2, 40);
+        assertEquals(40, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(40, ms.getValue(2));
+        ms.setValue(2, 10);
+        assertEquals(40, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(40, ms.getValue(2));
+        
+        ms.setPassing(true);
+        assertTrue(ms.getPassing());
+        ms.setValue(0, 45);
+        ms.setValue(2, 10);
+        assertEquals(45, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(10, ms.getValue(2));
+    }
+    
+    /**
+     * Test overlap restrictions.
+     */
+    @Test
+    public void testOverlapRestrictions()
+    {
+        // note that no overlap implies no passing.
+        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+        ms.setOverlap(true);
+        assertTrue(ms.getOverlap());
+        ms.setOverlap(false);
+        assertFalse(ms.getOverlap());
+        ms.setValue(0, 30);
+        assertEquals(30, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(60, ms.getValue(2));
+        ms.setValue(0, 40);
+        assertEquals(39, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(60, ms.getValue(2));
+        ms.setValue(0, 45);
+        assertEquals(39, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(60, ms.getValue(2));
+        ms.setValue(2, 50);
+        assertEquals(39, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(50, ms.getValue(2));
+        ms.setValue(2, 40);
+        assertEquals(39, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(41, ms.getValue(2));
+        ms.setValue(2, 10);
+        assertEquals(39, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(41, ms.getValue(2));
+        ms.setValue(1, 10);
+        assertEquals(39, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(41, ms.getValue(2));
+        ms.setValue(1, 50);
+        assertEquals(39, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(41, ms.getValue(2));
+        
+        ms.setOverlap(true);
+        assertTrue(ms.getOverlap());
+        ms.setValue(0, 40);
+        ms.setValue(2, 40);
+        assertEquals(40, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(40, ms.getValue(2));
+    }
+
+    /**
+     * Test passing restrictions, based on changing the underlying slider values.
+     */
+    @Test
+    public void testPassingRestrictionsSlider()
+    {
+        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+        ms.setPassing(true);
+        assertTrue(ms.getPassing());
+        ms.setPassing(false);
+        assertFalse(ms.getPassing());
+        ms.getSlider(0).setValue(30);
+        assertEquals(30, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(60, ms.getValue(2));
+        ms.getSlider(0).setValue(40);
+        assertEquals(40, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(60, ms.getValue(2));
+        ms.getSlider(0).setValue(45);
+        assertEquals(40, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(60, ms.getValue(2));
+        ms.getSlider(2).setValue(50);
+        assertEquals(40, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(50, ms.getValue(2));
+        ms.getSlider(2).setValue(40);
+        assertEquals(40, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(40, ms.getValue(2));
+        ms.getSlider(2).setValue(10);
+        assertEquals(40, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(40, ms.getValue(2));
+        
+        ms.setPassing(true);
+        assertTrue(ms.getPassing());
+        ms.getSlider(0).setValue(45);
+        ms.getSlider(2).setValue(10);
+        assertEquals(45, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(10, ms.getValue(2));
+    }
+    
+    /**
+     * Test overlap restrictions.
+     */
+    @Test
+    public void testOverlapRestrictionsSlider()
+    {
+        // note that no overlap implies no passing.
+        var ms = new MultiSlider(SwingConstants.HORIZONTAL, 0, 100, new int[] {20, 40, 60});
+        ms.setOverlap(true);
+        assertTrue(ms.getOverlap());
+        ms.setOverlap(false);
+        assertFalse(ms.getOverlap());
+        ms.getSlider(0).setValue(30);
+        assertEquals(30, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(60, ms.getValue(2));
+        ms.getSlider(0).setValue(40);
+        assertEquals(39, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(60, ms.getValue(2));
+        ms.getSlider(0).setValue(45);
+        assertEquals(39, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(60, ms.getValue(2));
+        ms.getSlider(2).setValue(50);
+        assertEquals(39, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(50, ms.getValue(2));
+        ms.getSlider(2).setValue(40);
+        assertEquals(39, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(41, ms.getValue(2));
+        ms.getSlider(2).setValue(10);
+        assertEquals(39, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(41, ms.getValue(2));
+        ms.getSlider(2).setValue(10);
+        assertEquals(39, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(41, ms.getValue(2));
+        ms.getSlider(1).setValue(50);
+        assertEquals(39, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(41, ms.getValue(2));
+        
+        ms.setOverlap(true);
+        assertTrue(ms.getOverlap());
+        ms.getSlider(0).setValue(40);
+        ms.getSlider(2).setValue(40);
+        assertEquals(40, ms.getValue(0));
+        assertEquals(40, ms.getValue(1));
+        assertEquals(40, ms.getValue(2));
+    }
+
 }
