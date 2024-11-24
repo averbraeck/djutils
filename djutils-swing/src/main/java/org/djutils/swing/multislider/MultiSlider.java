@@ -106,21 +106,20 @@ public class MultiSlider extends JComponent implements ChangeListener
      */
     public MultiSlider(final int min, final int max, final int... initialValues)
     {
-        this(SwingConstants.HORIZONTAL, min, max, initialValues);
+        this(min, max, true, initialValues);
     }
 
     /**
      * Creates a slider with the specified orientation and the specified minimum, maximum, and initial values. The orientation
-     * can be either <code>SwingConstants.VERTICAL</code> or <code>SwingConstants.HORIZONTAL</code>.
-     * @param orientation the orientation of the slider
+     * can be either horizontal or vertical.
      * @param min the minimum value of the slider
      * @param max the maximum value of the slider
+     * @param horizontal the orientation of the slider; true for horizontal, false for vertical
      * @param initialValues the initial values of the thumbs of the slider
-     * @throws IllegalArgumentException if orientation is not one of {@code VERTICAL}, {@code HORIZONTAL}, if initial values are
-     *             outside the min-max range, or if the number of thumbs is 0, or when the values are not in increasing order
-     *             (which is important for restricting passing and overlap)
+     * @throws IllegalArgumentException if initial values are outside the min-max range, or if the number of thumbs is 0, or
+     *             when the values are not in increasing order (which is important for restricting passing and overlap)
      */
-    public MultiSlider(final int orientation, final int min, final int max, final int... initialValues)
+    public MultiSlider(final int min, final int max, final boolean horizontal, final int... initialValues)
     {
         Throw.when(initialValues.length == 0, IllegalArgumentException.class, "the number of thumbs cannot be zero");
         Throw.when(min >= max, IllegalArgumentException.class, "min should be less than max");
@@ -138,10 +137,9 @@ public class MultiSlider extends JComponent implements ChangeListener
         // based on the orientation, add a JPanel with two subpanels: one for the labels, and one for the sliders
         setLayout(new BorderLayout());
         JPanel topPanel = new JPanel();
-        topPanel.setLayout(
-                new BoxLayout(topPanel, (orientation == SwingConstants.VERTICAL) ? BoxLayout.X_AXIS : BoxLayout.Y_AXIS));
+        topPanel.setLayout(new BoxLayout(topPanel, horizontal ? BoxLayout.Y_AXIS : BoxLayout.X_AXIS));
         topPanel.setOpaque(false);
-        add(topPanel, orientation == SwingConstants.HORIZONTAL ? BorderLayout.NORTH : BorderLayout.WEST);
+        add(topPanel, horizontal ? BorderLayout.NORTH : BorderLayout.WEST);
 
         // create the label panel
         this.labelPanel = new LabelPanel(this);
@@ -165,7 +163,8 @@ public class MultiSlider extends JComponent implements ChangeListener
         for (int i = initialValues.length - 1; i >= 0; i--)
         {
             this.initialValues[i] = initialValues[i]; // create copy
-            var slider = new JSlider(orientation, min, max, initialValues[i]);
+            var slider =
+                    new JSlider(horizontal ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL, min, max, initialValues[i]);
             this.sliders[i] = slider;
             slider.setOpaque(false);
             slider.setPaintTrack(i == 0);
