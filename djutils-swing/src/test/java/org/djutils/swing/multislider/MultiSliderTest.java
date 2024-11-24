@@ -228,6 +228,14 @@ public class MultiSliderTest
                 Thread.sleep(50);
                 assertNotEquals(-1, ms.getBusySlider());
                 assertTrue(ms.isBusy());
+                assertTrue(ms.isBusySlider(ms.getBusySlider()));
+                // check there is only one busy slider
+                int count = 0;
+                for (int j = 0; j < ms.getNumberOfThumbs(); j++)
+                {
+                    count += ms.isBusySlider(j) ? 1 : 0;
+                }
+                assertEquals(1, count);
                 ml.mouseReleased(new MouseEvent(ms, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0, x, y, x, y, 1,
                         false, MouseEvent.BUTTON1));
                 int counter = 0;
@@ -355,6 +363,42 @@ public class MultiSliderTest
         frame.pack();
         Thread.sleep(500);
         assertTrue(ms.getHeight() > oldHeight, "ms.GetHeight() = " + ms.getHeight() + "; oldHeight = " + oldHeight);
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.setThumbLabel(-1, "x");
+            }
+        });
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.setThumbLabel(1000, "x");
+            }
+        });
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.getThumbLabel(-1);
+            }
+        });
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.getThumbLabel(1000);
+            }
+        });
 
         frame.dispose();
 
@@ -530,6 +574,42 @@ public class MultiSliderTest
         assertEquals("5", ((JLabel) lt2.get(5)).getText());
         assertEquals("7", ((JLabel) lt2.get(7)).getText());
         assertEquals("9", ((JLabel) lt2.get(9)).getText());
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.createStandardLabels(0);
+            }
+        });
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.createStandardLabels(-1);
+            }
+        });
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.createStandardLabels(1, -1);
+            }
+        });
+
+        Try.testFail(new Try.Execution()
+        {
+            @Override
+            public void execute() throws Throwable
+            {
+                ms.createStandardLabels(1, 1000);
+            }
+        });
     }
 
     /** array with values. */
