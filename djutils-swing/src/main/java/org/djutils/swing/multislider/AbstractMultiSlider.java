@@ -1344,7 +1344,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
                 }
                 catch (Exception exception)
                 {
-                    // ignore
+                    System.out.println("error dispatching mouseEvent " + meSlider);
                 }
                 setBusySlider(index);
                 return index;

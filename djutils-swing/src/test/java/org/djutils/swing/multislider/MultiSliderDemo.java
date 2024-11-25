@@ -56,6 +56,8 @@ public class MultiSliderDemo extends JFrame
         horSlider.setThumbLabel(1, "b");
         horSlider.setThumbLabel(2, "c");
         horSlider.setDrawThumbLabels(true, 20);
+        horSlider.setPassing(true);
+        horSlider.setOverlap(true);
 
         var vertSlider = new MultiSlider(0, 100, false, new int[] {40, 60});
         // vertSlider.setUI(new MetalSliderUI());
@@ -68,6 +70,8 @@ public class MultiSliderDemo extends JFrame
         vertSlider.setThumbLabel(0, "min");
         vertSlider.setThumbLabel(1, "max");
         vertSlider.setDrawThumbLabels(true, 35);
+        vertSlider.setPassing(true);
+        vertSlider.setOverlap(true);
 
         var horSlider2 = new MultiSlider(0, 10, true, new int[] {2, 5, 7});
         horSlider2.setMajorTickSpacing(1);
@@ -81,6 +85,8 @@ public class MultiSliderDemo extends JFrame
         horSlider2.setDrawThumbLabels(true, 20);
         horSlider2.setSnapToTicks(true);
         horSlider2.setUI(new BasicSliderUI());
+        horSlider2.setPassing(true);
+        horSlider2.setOverlap(true);
 
         var button = new JButton("RESET");
         button.setPreferredSize(new Dimension(100, 25));
@@ -108,6 +114,20 @@ public class MultiSliderDemo extends JFrame
         setLocationRelativeTo(null);
         setVisible(true);
 
+        horSlider.addChangeListener(new ChangeListener()
+        {
+            @Override
+            public void stateChanged(final ChangeEvent e)
+            {
+                MultiSlider s = (MultiSlider) e.getSource();
+                for (int i = 0; i < s.getNumberOfThumbs(); i++)
+                {
+                    if (!s.isBusy())
+                        System.out.println("Horizontal 1 Thumb " + i + ": " + s.getValue(i));
+                }
+            }
+        });
+
         horSlider2.addChangeListener(new ChangeListener()
         {
             @Override
@@ -117,7 +137,7 @@ public class MultiSliderDemo extends JFrame
                 for (int i = 0; i < s.getNumberOfThumbs(); i++)
                 {
                     if (!s.isBusy())
-                        System.out.println("Horizontal Thumb " + i + ": " + s.getValue(i));
+                        System.out.println("Horizontal 2 Thumb " + i + ": " + s.getValue(i));
                 }
             }
         });
