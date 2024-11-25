@@ -71,29 +71,17 @@ public class Quotient implements MathFunction
     }
 
     @Override
-    public String getDescription()
+    public String toString()
     {
         StringBuilder result = new StringBuilder();
         result.append("(");
-        result.append(this.numerator.getDescription());
+        result.append(this.numerator.toString());
         result.append(")/(");
-        result.append(this.denominator.getDescription());
+        result.append(this.denominator.toString());
         result.append(")");
         return result.toString();
     }
     
-    @Override
-    public String getId()
-    {
-        return "Quotient";
-    }
-
-    @Override
-    public String toString()
-    {
-        return "Quotient [numerator=" + this.numerator + ", denominator=" + this.denominator + "]";
-    }
-
     @Override
     public int hashCode()
     {

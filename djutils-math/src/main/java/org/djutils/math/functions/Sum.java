@@ -180,7 +180,7 @@ public class Sum implements MathFunction
     }
 
     @Override
-    public String getDescription()
+    public String toString()
     {
         StringBuilder result = new StringBuilder();
         result.append("\u03A3("); // Capital sigma (Σ)
@@ -190,22 +190,10 @@ public class Sum implements MathFunction
             {
                 result.append(", ");
             }
-            result.append(this.terms.get(i).getDescription());
+            result.append(this.terms.get(i).toString());
         }
         result.append(")");
         return result.toString();
-    }
-
-    @Override
-    public String getId()
-    {
-        return "Sum";
-    }
-
-    @Override
-    public String toString()
-    {
-        return "Sum [terms=" + this.terms + "]";
     }
 
     @Override

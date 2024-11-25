@@ -218,7 +218,7 @@ public class PowerFunction implements MathFunction
     }
 
     @Override
-    public String getDescription()
+    public String toString()
     {
         if (this.weight == 0)
         {
@@ -231,26 +231,13 @@ public class PowerFunction implements MathFunction
         }
         if (this.power != 0.0)
         {
-            result.append(this.chain == null ? "x" : ("(" + this.chain.getDescription() + ")"));
+            result.append(this.chain == null ? "x" : ("(" + this.chain.toString() + ")"));
             if (this.power != 1)
             {
                 result.append(SUPER_SCRIPT.translate(printValue(this.power)));
             }
         }
         return result.toString();
-    }
-
-    @Override
-    public String getId()
-    {
-        return ("POW");
-    }
-
-    @Override
-    public String toString()
-    {
-        return "PowerFunction [weight=" + printValue(this.weight) + ", power=" + printValue(this.power) + ", chain="
-                + this.chain + "]";
     }
 
     @Override

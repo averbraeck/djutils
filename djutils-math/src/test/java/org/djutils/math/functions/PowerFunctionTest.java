@@ -60,29 +60,27 @@ public class PowerFunctionTest
         assertEquals(Constant.ZERO, pf2, "derivative is pre-defined constant ZERO");
         // test the description method
         pf = new PowerFunction(0, 123);
-        assertEquals("0", pf.getDescription(), "constant 0 powerfunction describes itself as 0");
+        assertEquals("0", pf.toString(), "constant 0 powerfunction describes itself as 0");
         pf = new PowerFunction(2, 0);
-        assertEquals("2", pf.getDescription(), "constant 2 powerfunction describes itself as 2");
+        assertEquals("2", pf.toString(), "constant 2 powerfunction describes itself as 2");
         pf = new PowerFunction(1, 3);
-        assertEquals("x\u00b3", pf.getDescription(), "power function with unit weight leaves of the weight");
+        assertEquals("x\u00b3", pf.toString(), "power function with unit weight leaves of the weight");
         pf = new PowerFunction(3, 1);
-        assertEquals("3x", pf.getDescription(), "exponent 1 is left off");
+        assertEquals("3x", pf.toString(), "exponent 1 is left off");
         pf = new PowerFunction(2, 3);
-        assertEquals("2x\u00b3", pf.getDescription(), "general case");
+        assertEquals("2x\u00b3", pf.toString(), "general case");
         pf = pf.scaleBy(4);
-        assertEquals("8x\u00b3", pf.getDescription(), "scaleBy works");
+        assertEquals("8x\u00b3", pf.toString(), "scaleBy works");
         MathFunction scaledByOne = pf.scaleBy(1);
         assertTrue(scaledByOne == pf, "scaling by 1 returns the original object");
         pf = pf.scaleBy(0);
         assertTrue(pf == Constant.ZERO, "scaleBy 0 yields ZERO");
         pf = new PowerFunction(3, 12);
-        assertEquals("3x\u00b9\u00b2", pf.getDescription(), "multi digit superscript exponent");
+        assertEquals("3x\u00b9\u00b2", pf.toString(), "multi digit superscript exponent");
         pf = new PowerFunction(3, 1.2);
-        assertEquals("3x\u00b9\u02d9\u00b2", pf.getDescription(), "fractional exponents use the ^ notation");
-        
+        assertEquals("3x\u00b9\u02d9\u00b2", pf.toString(), "fractional exponents use the ^ notation");
+
         pf = new PowerFunction(3, 7);
-        assertEquals("POW", pf.getId(), "id is POW");
-        assertTrue(pf.toString().startsWith("PowerFunction ["), "toString returns something descriptive");
         assertTrue(pf.equals(pf), "equal to itself");
         assertFalse(pf.equals(null), "not equal to null");
         assertFalse(pf.equals("Not a PowerFunction"), "not equal to some other kind of Object");
@@ -95,5 +93,15 @@ public class PowerFunctionTest
         pf2 = new PowerFunction(3, 5);
         assertFalse(pf.equals(pf2), "power is part of the equals test");
         assertNotEquals(pf.hashCode(), pf2.hashCode(), "hashCode takes power into account");
+    }
+
+    /**
+     * Test the remaining bits of the SuperScript class.
+     */
+    @Test
+    public void superScriptTest()
+    {
+        // Should really run some OCR on the result to check that it resembles the original letter...
+        assertEquals(":", new SuperScript().translate(":"), "a character not in the translate table translates into itself");
     }
 }

@@ -195,7 +195,7 @@ public class Sine implements MathFunction
     }
 
     @Override
-    public String getDescription()
+    public String toString()
     {
         StringBuilder result = new StringBuilder();
         if (this.amplitude != 1.0)
@@ -207,7 +207,7 @@ public class Sine implements MathFunction
         {
             result.append(printValue(this.omega));
         }
-        result.append(this.chain == null ? "x" : ("(" + this.chain.getDescription() + ")"));
+        result.append(this.chain == null ? "x" : ("(" + this.chain.toString() + ")"));
         if (this.shift != 0.0)
         {
             if (this.shift >= 0.0)
@@ -218,19 +218,6 @@ public class Sine implements MathFunction
         }
         result.append(")");
         return result.toString();
-    }
-
-    @Override
-    public String getId()
-    {
-        return ("sin");
-    }
-
-    @Override
-    public String toString()
-    {
-        return "Sine [amplitude=" + printValue(this.amplitude) + ", omega=" + printValue(this.omega) + ", shift="
-                + printValue(this.shift) + ", chain=" + this.chain + "]";
     }
 
     @Override

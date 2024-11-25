@@ -1,7 +1,5 @@
 package org.djutils.math.functions;
 
-import org.djutils.base.Describable;
-
 /**
  * MathFunction interface.
  * <p>
@@ -14,7 +12,7 @@ import org.djutils.base.Describable;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public interface MathFunction extends Describable, Comparable<MathFunction>
+public interface MathFunction extends Comparable<MathFunction>
 {
 
     /**

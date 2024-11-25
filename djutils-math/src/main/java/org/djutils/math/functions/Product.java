@@ -213,23 +213,6 @@ public class Product implements MathFunction
     }
 
     @Override
-    public String getDescription()
-    {
-        StringBuilder result = new StringBuilder();
-        result.append("\u03A0("); // Capital pi (Π)
-        for (int i = 0; i < this.factors.size(); i++)
-        {
-            if (i > 0)
-            {
-                result.append(", ");
-            }
-            result.append(this.factors.get(i).getDescription());
-        }
-        result.append(")");
-        return result.toString();
-    }
-
-    @Override
     public MathFunction scaleBy(final double scaleFactor)
     {
         if (scaleFactor == 0.0)
@@ -249,15 +232,20 @@ public class Product implements MathFunction
     }
 
     @Override
-    public String getId()
-    {
-        return "Sum";
-    }
-
-    @Override
     public String toString()
     {
-        return "Product [factors=" + this.factors + "]";
+        StringBuilder result = new StringBuilder();
+        result.append("\u03A0("); // Capital pi (Π)
+        for (int i = 0; i < this.factors.size(); i++)
+        {
+            if (i > 0)
+            {
+                result.append(", ");
+            }
+            result.append(this.factors.get(i).toString());
+        }
+        result.append(")");
+        return result.toString();
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.djutils.math.functions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.djutils.math.functions.MathFunction.TupleSt;
@@ -19,7 +20,7 @@ import org.junit.jupiter.api.Test;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class FunctionTest
+public class MathFunctionTest
 {
     /**
      * Test the printValue method in the Function interface.
@@ -27,8 +28,8 @@ public class FunctionTest
     @Test
     public void printValueTest()
     {
-        for (double v : new double[] {Long.MIN_VALUE - 0.1, Long.MIN_VALUE, -123456.789, -Math.PI, -1e-99, 0, 1.23e-200,
-                Math.E, Long.MAX_VALUE, Long.MAX_VALUE + 0.1, 123e200})
+        for (double v : new double[] {Long.MIN_VALUE - 0.1, Long.MIN_VALUE, -123456.789, -Math.PI, -1e-99, 0, 1.23e-200, Math.E,
+                Long.MAX_VALUE, Long.MAX_VALUE + 0.1, 123e200})
         {
             String result = printValue(v);
             // System.out.println(v + " -> " + result);
@@ -46,7 +47,7 @@ public class FunctionTest
         MathFunction simplifiedNan = Nan.NAN.simplify();
         assertTrue(simplifiedNan == Nan.NAN, "the're the same object");
     }
-    
+
     /**
      * Construct a Constant with the specified value and return the result of the printValue method.
      * @param value the value to embed in the Constant
@@ -57,6 +58,18 @@ public class FunctionTest
         return new Constant(value).printValue(value);
     }
 
+    /**
+     * Test the default methods in MathFunction.
+     */
+    @Test
+    public void testDefaultMethods()
+    {
+        SubClass subClass = new SubClass();
+        assertNull(subClass.mergeAdd(Constant.ONE), "default mergeAdd returns null");
+        assertNull(subClass.mergeMultiply(Constant.ONE), "default mergeMultiply returns null");
+        assertEquals(1.0, subClass.getScale(), "default getScale returns 1");
+    }
+    
     /**
      * Test the TupleSt record in the Function interface.
      */
@@ -72,6 +85,49 @@ public class FunctionTest
                 assertEquals(t, tuple.t(), "t can be retrieved");
             }
         }
+    }
+
+    /**
+     * Sub class to verify the default methods in MathFunction.
+     */
+    class SubClass implements MathFunction
+    {
+
+        /** {@inheritDoc} */
+        @Override
+        public double get(final double fraction)
+        {
+            return 0;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public MathFunction getDerivative()
+        {
+            return null;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public MathFunction scaleBy(final double factor)
+        {
+            return null;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public int sortPriority()
+        {
+            return 0;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public int compareWithinSubType(final MathFunction other)
+        {
+            return 0;
+        }
+
     }
 
 }

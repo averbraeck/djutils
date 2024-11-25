@@ -111,21 +111,9 @@ public class Constant implements MathFunction
     }
 
     @Override
-    public String getDescription()
-    {
-        return printValue(this.value);
-    }
-
-    @Override
-    public String getId()
-    {
-        return "C";
-    }
-
-    @Override
     public String toString()
     {
-        return "Constant [value=" + printValue(this.value) + "]";
+        return printValue(this.value);
     }
 
     @Override

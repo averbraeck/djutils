@@ -67,9 +67,6 @@ public class SumTest
         MathFunction simplified = sum.simplify(); // now it gets short circuited to Constant.ONE
         assertEquals(Constant.ONE, simplified, "should now be short circuited to Constant.ONE");
 
-        assertEquals("Sum", sum.getId(), "id is \"Sum\"");
-        assertTrue(sum.toString().startsWith("Sum ["), "toString method returns something descriptive");
-
         sum = new Sum(new Constant(2), new Constant(3), new Sine(1, 2, 3), new PowerFunction(2, 3));
         for (double x : xValues)
         {

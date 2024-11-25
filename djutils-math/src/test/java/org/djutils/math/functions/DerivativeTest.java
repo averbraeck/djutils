@@ -53,7 +53,7 @@ public class DerivativeTest
             // System.out.println(function.getDescription());
             MathFunction derivative = function.getDerivative();
             // System.out.println(derivative.getDescription());
-            String functionName = function.getDescription();
+            String functionName = function.toString();
             for (int step = 0; step < scenario.steps(); step++)
             {
                 double x = steps == 1 ? scenario.minimum()
@@ -70,7 +70,7 @@ public class DerivativeTest
 
                         if (Math.abs(actualSlope - expectedSlope) >= scenario.epsilon())
                         {
-                            System.out.println(functionName + " (deriv " + derivative.getDescription() + ") f(" + dX + ")=" + fX
+                            System.out.println(functionName + " (deriv " + derivative.toString() + ") f(" + dX + ")=" + fX
                                     + " - f(" + x + ")=" + fX + " = " + (fDX - fX) + "; actual slope=" + actualSlope
                                     + ", expected slope=" + expectedSlope);
                         }

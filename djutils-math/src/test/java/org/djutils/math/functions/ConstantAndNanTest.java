@@ -2,7 +2,9 @@ package org.djutils.math.functions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 
@@ -29,15 +31,13 @@ public class ConstantAndNanTest
         for (double c : new double[] {-9999, -Math.PI, -1, 1, 1, Math.E, 3e200})
         {
             Constant constant = new Constant(c);
-            assertEquals(Double.parseDouble(constant.getDescription()), c, Math.abs(c) / 99999999,
-                    "value is produced as description");
+            assertEquals(Double.parseDouble(constant.toString()), c, Math.abs(c) / 99999999,
+                    "value is produced as toString");
             for (double x : new double[] {-12, 0, Math.PI, 2e12})
             {
                 assertEquals(c, constant.get(x), 0.0, "value of c is returned for any x");
                 assertEquals(Constant.ZERO, constant.getDerivative(), "derivative of constant is ZERO");
             }
-            assertEquals("C", constant.getId(), "Id of constant is C");
-            assertTrue(constant.toString().startsWith("Constant ["), "toString returns something descriptive");
         }
         for (double x : new double[] {-12, 0, 7777, Math.PI, 2e12, 3e100})
         {
@@ -71,6 +71,24 @@ public class ConstantAndNanTest
         constant = constant.scaleBy(0);
         assertEquals(Constant.ZERO, constant, "now it is ZERO");
         assertTrue(Constant.ZERO == constant, "and it is the same object");
+        try
+        {
+            Constant.ZERO.compareWithinSubType(Nan.NAN);
+            fail("compareWithinSubType with wrong type should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+        assertEquals(1.0, Constant.ONE.getScale(), "scale factor of ONE is 1.0");
+        assertEquals(0.0, Constant.ZERO.getScale(), "scale factor of ZERO is 0.0");
+        constant = new Constant(123.456);
+        assertEquals(123.456, constant.getScale(), 0.0, "scale factor is returned");
+        constant = constant.mergeMultiply(new Constant(2.0));
+        assertEquals(2 * 123.456, constant.getScale(), 0.0, "scale factor is updated");
+        constant = constant.mergeAdd(new Constant(987.654));
+        assertEquals(2 * 123.456 + 987.654, constant.getScale(), 0.0, "scale factor is updated");
+        assertNull(constant.mergeMultiply(new PowerFunction(2, 3)), "Constant can not merge with PowerFunction");
     }
 
     /**
@@ -83,11 +101,20 @@ public class ConstantAndNanTest
         {
             assertTrue(Double.isNaN(Nan.NAN.get(x)), "value is NaN for every x");
         }
-        assertTrue(Nan.NAN.toString().startsWith("NaN ["), "toString returns something descriptive");
-        assertTrue(Nan.NAN.getDescription().equals("NaN"), "description is \"NaN\"");
-        assertTrue(Nan.NAN.getId().equals("NaN"), "id is \"NaN\"");
+        assertEquals("NaN", Nan.NAN.toString(), "toString returns something descriptive");
         assertEquals(Nan.NAN, Nan.NAN.getDerivative(), "derivative is itself");
         MathFunction otherNan = Nan.NAN.scaleBy(10);
         assertTrue(otherNan == Nan.NAN, "it is the same object");
+        assertEquals(3, Nan.NAN.sortPriority(), "sort priority is 3");
+        assertEquals(0, Nan.NAN.compareWithinSubType(Nan.NAN), "compare within sub type is always 0");
+        try
+        {
+            Nan.NAN.compareWithinSubType(Constant.ONE);
+            fail("compareWithinSubType should throw an IllegalArgumentException when called with some other type");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
     }
 }

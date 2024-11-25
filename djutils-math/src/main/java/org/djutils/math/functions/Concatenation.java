@@ -134,7 +134,7 @@ public class Concatenation implements MathFunction
     }
 
     @Override
-    public String getDescription()
+    public String toString()
     {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("IntervalSet(");
@@ -151,17 +151,11 @@ public class Concatenation implements MathFunction
             stringBuilder.append(printValue(interval.high()));
             stringBuilder.append(interval.highInclusive() ? "]" : ")");
             stringBuilder.append("\u2192");
-            stringBuilder.append(interval.payload().getDescription());
+            stringBuilder.append(interval.payload().toString());
             first = false;
         }
         stringBuilder.append(")");
         return stringBuilder.toString();
-    }
-
-    @Override
-    public String getId()
-    {
-        return "Concatenation";
     }
 
     @Override

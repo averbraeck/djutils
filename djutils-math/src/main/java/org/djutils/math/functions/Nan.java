@@ -59,21 +59,9 @@ public final class Nan implements MathFunction
     }
 
     @Override
-    public String getDescription()
-    {
-        return "NaN";
-    }
-
-    @Override
-    public String getId()
-    {
-        return "NaN";
-    }
-
-    @Override
     public String toString()
     {
-        return "NaN []";
+        return "NaN";
     }
 
 }
