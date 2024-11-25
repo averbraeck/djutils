@@ -140,11 +140,7 @@ public class Sum implements MathFunction
         {
             return simplifiedTerms.get(0);
         }
-        if (this.terms.equals(simplifiedTerms))
-        {
-            return this;
-        }
-        return new Sum(simplifiedTerms);
+        return this;
     }
 
     @Override

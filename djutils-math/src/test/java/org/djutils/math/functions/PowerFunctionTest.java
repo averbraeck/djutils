@@ -3,6 +3,7 @@ package org.djutils.math.functions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -93,6 +94,51 @@ public class PowerFunctionTest
         pf2 = new PowerFunction(3, 5);
         assertFalse(pf.equals(pf2), "power is part of the equals test");
         assertNotEquals(pf.hashCode(), pf2.hashCode(), "hashCode takes power into account");
+        MathFunction chained = new Sine(1, 1, 0);
+        pf = new PowerFunction(chained, 2);
+        pf2 = new PowerFunction(chained, 1.0, 2);
+        assertEquals(pf, pf2);
+        assertEquals(pf.get(12), pf2.get(12), 0.0, "of course...");
+        MathFunction derivative = pf.getDerivative();
+        MathFunction expectedDerivative = new Product(new Constant(2), new Sine(1, 1, 0), new Sine(1, 1, Math.PI / 2));
+        for (double x : new double[] {-10, -2, 0, 0.1, Math.E, Math.PI})
+        {
+            assertEquals(expectedDerivative.get(x), derivative.get(x), 0.00001, "derivative with chained function");
+        }
+
+        pf = new PowerFunction(3, 0);
+        pf2 = pf.simplify();
+        assertEquals(new Constant(3), pf2, "should simplify to constant 3");
+        pf = new PowerFunction(0, 0);
+        pf2 = pf.simplify();
+        assertEquals(Constant.ZERO, pf2, "should simplify to ZERO");
+        pf = new PowerFunction(5, 0);
+        pf2 = pf.simplify();
+        assertEquals(new Constant(5), pf2, "should simplify to Constant 5");
+        pf = new PowerFunction(1, 0);
+        pf2 = pf.simplify();
+        assertEquals(new Constant(1), pf2, "should simplify to Constant 5");
+        pf = new PowerFunction(-0.0, 0);
+        pf2 = pf.simplify();
+        assertEquals(Constant.ZERO, pf2, "should simplify to Constant 5");
+
+        pf = new PowerFunction(chained, 2, 3);
+        pf2 = new PowerFunction(chained, 3, 3);
+        MathFunction combined = pf.mergeMultiply(pf2);
+        assertEquals(new PowerFunction(chained, 6, 6), combined);
+        pf2 = new PowerFunction(3, 4);
+        assertNull(pf.mergeMultiply(pf2), "cannot merge those");
+        pf2 = new PowerFunction(chained, 3, 3);
+        combined = pf.mergeMultiply(pf2);
+        assertEquals(new PowerFunction(chained, 6, 6), combined);
+        pf2 = new PowerFunction(3, 4);
+        assertNull(pf.mergeMultiply(pf2), "cannot merge those");
+        pf2 = new PowerFunction(new PowerFunction(2, 2), 2, 3);
+        combined = pf.mergeMultiply(pf2);
+        // System.out.println(pf);
+        // System.out.println(pf2);
+        // System.out.println(combined);
+        assertEquals(new PowerFunction(new Product(new PowerFunction(2, 2), new Sine(1, 1, 0)), 4, 3), combined, "nice");
     }
 
     /**

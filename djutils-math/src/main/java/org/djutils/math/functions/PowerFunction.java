@@ -122,15 +122,15 @@ public class PowerFunction implements MathFunction
     @Override
     public MathFunction simplify()
     {
+        if (this.weight == 0.0)
+        {
+            return Constant.ZERO;
+        }
         if (this.power == 0.0)
         {
             if (this.weight == 1.0)
             {
                 return Constant.ONE;
-            }
-            if (this.weight == 0.0)
-            {
-                return Constant.ZERO;
             }
             return new Constant(this.weight);
         }

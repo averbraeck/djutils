@@ -1,6 +1,8 @@
 package org.djutils.math.functions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -72,6 +74,39 @@ public class SumTest
         {
             checkOneValue(5 + Math.sin(2 * x + 3) + 2 * x * x * x, x, sum);
         }
+        sum = new Sum(sum, new Constant(10));
+        for (double x : xValues)
+        {
+            checkOneValue(5 + Math.sin(2 * x + 3) + 2 * x * x * x + 10, x, sum);
+        }
+        assertEquals(sum, sum.scaleBy(1.0), "scale by 1 is the identity operation");
+        assertEquals(Constant.ZERO, sum.scaleBy(0.0), "scale by 0 return ZERO");
+        MathFunction mf = sum.scaleBy(2);
+        for (double x : xValues)
+        {
+            checkOneValue(2 * (5 + Math.sin(2 * x + 3) + 2 * x * x * x + 10), x, mf);
+        }
+        try
+        {
+            sum.compareWithinSubType(Constant.ONE);
+            fail("compareWithinSubType with wrong type should throw an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+        assertEquals(101, sum.sortPriority(), 0, "sorting priority of Sum is 101");
+        assertTrue(sum.equals(sum), "equal to itself");
+        assertFalse(sum.equals(null), "not equal to null");
+        assertFalse(sum.equals(mf), "not equal to another MathFunction");
+        assertFalse(sum.equals("Not a Sum"), "not equal to an unrelated object");
+        sum = new Sum(new Constant(2), new PowerFunction(3, 4));
+        Sum sum2 = new Sum(new Constant(2), new PowerFunction(3, 4));
+        assertTrue(sum.equals(sum2), "equal to another Sum with same terms");
+        assertEquals(0, sum.compareWithinSubType(sum2), "should compare 0 with any other Sum");
+        assertEquals(sum.hashCode(), sum2.hashCode(), "hash code should be same");
+        sum2 = new Sum(new Constant(3), new PowerFunction(3, 4));
+        assertNotEquals(sum.hashCode(), sum2.hashCode(), "hash code takes terms into account");
     }
 
     /**
