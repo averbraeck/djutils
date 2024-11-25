@@ -223,11 +223,10 @@ public class Product implements MathFunction
         {
             return this;
         }
-        List<MathFunction> result = new ArrayList<>(this.factors.size());
-        for (MathFunction factor : this.factors)
-        {
-            result.add(factor.scaleBy(scaleFactor));
-        }
+        List<MathFunction> result = new ArrayList<>(this.factors);
+        MathFunction scaledFactor = result.get(0).scaleBy(scaleFactor);
+        result.remove(0);
+        result.add(0, scaledFactor);
         return new Product(result);
     }
 
