@@ -68,7 +68,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
 
     /**
      * Create a cubic B&eacute;zier curve.
-     * @param points array containing four Point2d objects
+     * @param points array containing four <code>Point2d</code> objects
      * @throws NullPointerException when <code>points</code> is <code>null</code>, or contains a <code>null</code> value
      * @throws IllegalArgumentException when length of <code>points</code> is not equal to <code>4</code>
      */
@@ -91,8 +91,8 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
     }
 
     /**
-     * Construct a BezierCubic2d from start to end with two generated control points at half the distance between start and end.
-     * This constructor creates two control points. The first of these is offset from <code>start</code> in the direction of the
+     * Construct a BezierCubic2d from <code>start</code> to <code>end</code> with two generated control points. This constructor
+     * creates two control points. The first of these is offset from <code>start</code> in the direction of the
      * <code>start</code> and at a distance from <code>start</code> equal to half the distance from <code>start</code> to
      * <code>end</code>. The second is placed in a similar relation to <code>end</code>.
      * @param start the start point and start direction of the B&eacute;zier curve
@@ -106,11 +106,13 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
     }
 
     /**
-     * Construct a BezierCubic2d from start to end with two generated control points at half the distance between start and end.
+     * Construct a BezierCubic2d from <code>start</code> to <code>end</code> with two generated control points. The control
+     * points are in placed along the direction of the <code>start</code>, resp. <code>end</code> points at a distance that
+     * depends on the <code>shape</code> parameter.
      * @param start the start point and start direction of the B&eacute;zier curve
      * @param end the end point and end direction of the B&eacute;zier curve
-     * @param shape 1 = control points at half the distance between start and end, &gt; 1 results in a pointier
-     *            shape, &lt; 1 results in a flatter shape, value should be above 0 and finite
+     * @param shape 1 = control points at half the distance between start and end, &gt; 1 results in a pointier shape, &lt; 1
+     *            results in a flatter shape, value should be above 0 and finite
      * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>start</code> and <code>end</code> are at the same location,
      *             <code>shape &le; 0</code>, <code>shape</code> is <code>NaN</code>, or infinite
@@ -121,12 +123,12 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
     }
 
     /**
-     * Construct a BezierCubic2d from start to end with two generated control points at half the distance between start and end.
+     * Construct a BezierCubic2d from start to end with two generated control points.
      * @param start the start point and start direction of the B&eacute;zier curve
      * @param end the end point and end direction of the B&eacute;zier curve
-     * @param shape the shape; higher values put the generated control points further away from end and result in a
-     *            pointier B&eacute;zier curve
-     * @param weighted whether weights will be applied 
+     * @param shape the shape; higher values put the generated control points further away from end and result in a pointier
+     *            B&eacute;zier curve
+     * @param weighted whether weights will be applied
      * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>start</code> and <code>end</code> are at the same location,
      *             <code>shape &le; 0</code>, <code>shape</code> is <code>NaN</code>, or infinite
@@ -143,9 +145,9 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
      * Create control points for a cubic B&eacute;zier curve defined by two Rays.
      * @param start the start point (and direction)
      * @param end the end point (and direction)
-     * @param shape the shape; higher values put the generated control points further away from end and result in a
-     *            pointier B&eacute;zier curve
-     * @param weighted whether weights will be applied 
+     * @param shape the shape; higher values put the generated control points further away from end and result in a pointier
+     *            B&eacute;zier curve
+     * @param weighted whether weights will be applied
      * @return an array of four Point2d elements: start, the first control point, the second control point, end.
      * @throws NullPointerException when <code>start</code>, or <code>end</code> is <code>null</code>
      * @throws IllegalArgumentException when <code>start</code> and <code>end</code> are at the same location,
@@ -180,7 +182,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
         }
         else
         {
-            // each control point is half the distance between the end-points away from the respective end point
+            // each control point is at shape times half the distance between the end-points away from the respective end point
             double distance = shape * start.distance(end) / 2.0;
             control1 = start.getLocation(distance);
             // new Transform2d().translate(start).rotation(start.phi).scale(distance, distance).transform(UNIT_VECTOR2D);
@@ -215,8 +217,8 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
     }
 
     /**
-     * Start curvature of this Curve2d..
-     * @return start curvature of this Curve2d.
+     * Start curvature of this BezierCubic2d. TODO looks very wrong
+     * @return start curvature of this BezierCubic2d
      */
     @Override
     public double getStartCurvature()
@@ -225,8 +227,8 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
     }
 
     /**
-     * End curvature of this Curve2d..
-     * @return end curvature of this Curve2d
+     * End curvature of this BezierCubic2d. TODO looks very wrong
+     * @return end curvature of this BezierCubic2d
      */
     @Override
     public double getEndCurvature()
@@ -240,31 +242,22 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
      */
     private SortedSet<Double> getRoots()
     {
-        // Uses quadratic B&eacute;zier formulation
-        double ax = 3.0 * (-getX(0) + 3.0 * getX(1) - 3.0 * getX(2) + getX(3));
-        double ay = 3.0 * (-getY(0) + 3.0 * getY(1) - 3.0 * getY(2) + getY(3));
-        double bx = 6.0 * (getX(0) - 2.0 * getX(1) + getX(2));
-        double by = 6.0 * (getY(0) - 2.0 * getY(1) + getY(2));
-        double cx = 3.0 * (getX(1) - getX(0));
-        double cy = 3.0 * (getY(1) - getY(0));
-
-        // ABC formula
         TreeSet<Double> roots = new TreeSet<>();
-        double discriminant = bx * bx - 4.0 * ax * cx;
-        if (discriminant > 0)
+        for (double[] dimension : new double[][] {this.x, this.y})
         {
-            double sqrtDiscriminant = Math.sqrt(discriminant);
-            double ax2 = 2.0 * ax;
-            roots.add((-bx + sqrtDiscriminant) / ax2);
-            roots.add((-bx - sqrtDiscriminant) / ax2);
-        }
-        discriminant = by * by - 4.0 * ay * cy;
-        if (discriminant > 0)
-        {
-            double sqrtDiscriminant = Math.sqrt(discriminant);
-            double ay2 = 2.0 * ay;
-            roots.add((-by + sqrtDiscriminant) / ay2);
-            roots.add((-by - sqrtDiscriminant) / ay2);
+            // Coefficients of the derivative in this dimension (for quadaratic B&eacure;zier)
+            double a = 3.0 * (-dimension[0] + 3.0 * dimension[1] - 3.0 * dimension[2] + dimension[3]);
+            double b = 6.0 * (dimension[0] - 2.0 * dimension[1] + dimension[2]);
+            double c = 3.0 * (dimension[1] - dimension[0]);
+            // ABC formula
+            double discriminant = b * b - 4.0 * a * c;
+            if (discriminant > 0)
+            {
+                double sqrtDiscriminant = Math.sqrt(discriminant);
+                double a2 = 2.0 * a;
+                roots.add((-b + sqrtDiscriminant) / a2);
+                roots.add((-b - sqrtDiscriminant) / a2);
+            }
         }
         // Only roots in range (0.0 ... 1.0) are valid and useful
         return roots.subSet(0.0, false, 1.0, false);
@@ -341,7 +334,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
         }
         return result;
     }
-    
+
     /**
      * Returns the offset t values.
      * @param fractions yields the fractions at which offsets are defined.
@@ -428,11 +421,6 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
         split0(t, all, p1, p2);
         SplitBeziers result = new SplitBeziers(new BezierCubic2d(p1.get(0), p1.get(1), p1.get(2), p1.get(3)),
                 new BezierCubic2d(p2.get(3), p2.get(2), p2.get(1), p2.get(0)));
-        // System.out.println("\t1 " + result.first + "\n\t2 " + result.remainder);
-        // if (Math.abs(AngleUtil.normalizeAroundZero(result.first.endPoint.dirZ - result.remainder.startPoint.dirZ)) > 0.1)
-        // {
-        // System.out.println("DIRECTION MISMATCH");
-        // }
         return result;
     }
 
@@ -470,7 +458,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
         }
     }
 
-    /** The derivative B&eacute;zier used to compute the direction at some t value. */
+    /** The derivative B&eacute;zier used (and cashed) to compute the direction at some t value. */
     private Bezier2d derivative = null;
 
     @Override
@@ -493,7 +481,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
      */
     private NavigableMap<Double, BezierCubic2d> segments;
 
-    /** The offset data for which segments were created. */
+    /** The offset data for which the (current) segments were created. */
     private ContinuousPiecewiseLinearFunction ofForSegments = null;
 
     /**
