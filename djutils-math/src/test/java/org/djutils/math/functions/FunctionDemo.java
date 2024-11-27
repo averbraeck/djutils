@@ -2,6 +2,9 @@ package org.djutils.math.functions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 /**
  * Demonstrate various classed in function package.
  * <p>
@@ -54,8 +57,8 @@ public final class FunctionDemo
         }
 
         System.out.println("\nBuild a continuous piecewise linear function; each linear piece is a power function");
-        MathFunction part1 = new Sum(new PowerFunction(1.0, 0), new PowerFunction(0.5, 1));
-        MathFunction part2 = new Sum(new PowerFunction(1.1 - 0.4, 0), new PowerFunction(2.0, 1));
+        MathFunction part1 = new Sum(new Constant(1.0), new PowerFunction(0.5, 1));
+        MathFunction part2 = new Sum(new Constant(1.1 - 0.4), new PowerFunction(2.0, 1));
         MathFunction part3 = new PowerFunction(1.7, 0);
         MathFunction concatenation = new Concatenation(new Interval<MathFunction>(0.0, true, 0.2, false, part1),
                 new Interval<MathFunction>(0.2, true, 0.5, false, part2),
@@ -71,6 +74,14 @@ public final class FunctionDemo
             double x = 0.02 * step;
             System.out.println(String.format("x=%5.2f: f=%10.2f; f'=%10.2f", x, concatenation.get(x), derivative.get(x)));
         }
+        System.out.println("Build the same concatentation the easy way (without the NaN section)");
+        SortedMap<Double, Double> map = new TreeMap<>();
+        map.put(0.0, 1.0);
+        map.put(0.2, 1.1);
+        map.put(0.5,  1.7);
+        map.put(1.0, 1.7);
+        concatenation = Concatenation.continuousPiecewiseLinear(map);
+        System.out.println(concatenation);
 
         System.out.println("\nBuild the product of two simple polynomials");
         MathFunction p1 = new Sum(new PowerFunction(3, 2), new PowerFunction(2, 1), new Constant(5)); // 3*x^2+2*x+5

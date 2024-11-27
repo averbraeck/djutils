@@ -1,7 +1,10 @@
 package org.djutils.math.functions;
 
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.djutils.exceptions.Throw;
@@ -98,8 +101,8 @@ public class Concatenation implements MathFunction
         SortedSet<Interval<MathFunction>> set = new TreeSet<>();
         for (var interval : this.functions)
         {
-            set.add(new Interval<MathFunction>(interval.low(), interval.lowInclusive(), interval.high(), interval.highInclusive(),
-                    interval.payload().getDerivative()));
+            set.add(new Interval<MathFunction>(interval.low(), interval.lowInclusive(), interval.high(),
+                    interval.highInclusive(), interval.payload().getDerivative()));
         }
         return new Concatenation(set);
     }
@@ -126,6 +129,48 @@ public class Concatenation implements MathFunction
         return 110;
     }
 
+    /**
+     * Construct a concatenation that is piecewise linear through a given set of points.
+     * @param map mapping from domain to value at the inflection points
+     * @return new Concatenation that is piecewise linear and connects the given points
+     */
+    public static Concatenation continuousPiecewiseLinear(final SortedMap<Double, Double> map)
+    {
+        SortedSet<Interval<MathFunction>> intervals = new TreeSet<>();
+        Entry<Double, Double> prevEntry = null;
+        for (Entry<Double, Double> nextEntry : map.entrySet())
+        {
+            if (prevEntry != null)
+            {
+                // create one linear section
+                double slope = (nextEntry.getValue() - prevEntry.getValue()) / (nextEntry.getKey() - prevEntry.getKey());
+                PowerFunction powerFunction = new PowerFunction(slope, 1);
+                double constant = prevEntry.getValue() - powerFunction.get(prevEntry.getKey());
+                MathFunction function = new Sum(new Constant(constant), powerFunction);
+                intervals.add(new Interval<MathFunction>(prevEntry.getKey(), intervals.isEmpty(), nextEntry.getKey(), true,
+                        function));
+            }
+            prevEntry = nextEntry;
+        }
+        return new Concatenation(intervals);
+    }
+
+    /**
+     * Construct a concatenation that is piecewise linear through a given set of input-output pairs.
+     * @param arguments the input-output pairs; these specify the inflection points
+     * @return new Concatenation that is piecewise linear and connects the given points
+     */
+    public static Concatenation continuousPiecewiseLinear(final double... arguments)
+    {
+        Throw.when(arguments.length % 2 != 0, IllegalArgumentException.class, "need an even number of arguments");
+        SortedMap<Double, Double> map = new TreeMap<>();
+        for (int i = 0; i < arguments.length; i += 2)
+        {
+            map.put(arguments[i], arguments[i + 1]);
+        }
+        return continuousPiecewiseLinear(map);
+    }
+
     @Override
     public int compareWithinSubType(final MathFunction other)
     {
@@ -145,13 +190,7 @@ public class Concatenation implements MathFunction
             {
                 stringBuilder.append(", ");
             }
-            stringBuilder.append(interval.lowInclusive() ? "[" : "(");
-            stringBuilder.append(printValue(interval.low()));
-            stringBuilder.append(",");
-            stringBuilder.append(printValue(interval.high()));
-            stringBuilder.append(interval.highInclusive() ? "]" : ")");
-            stringBuilder.append("\u2192");
-            stringBuilder.append(interval.payload().toString());
+            stringBuilder.append(interval.toString());
             first = false;
         }
         stringBuilder.append(")");

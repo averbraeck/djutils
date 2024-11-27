@@ -119,8 +119,8 @@ record Interval<T>(double low, boolean lowInclusive, double high, boolean highIn
     @Override
     public String toString()
     {
-        return "Interval " + (this.lowInclusive ? "[" : "(") + this.low + ", " + this.high
-                + (this.highInclusive ? "]" : ")") + ", payload=" + this.payload + "]";
+        return (this.lowInclusive ? "[" : "(") + this.low + ", " + this.high
+                + (this.highInclusive ? "]" : ")") + "\u2192" + this.payload;
     }
 
     @Override

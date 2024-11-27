@@ -100,11 +100,11 @@ public class IntervalTest
                 }
                 if (i1Right)
                 {
-                    assertTrue(interval1.toString().contains("],"));
+                    assertTrue(interval1.toString().contains("]"));
                 }
                 else
                 {
-                    assertTrue(interval1.toString().contains("),"));
+                    assertTrue(interval1.toString().contains(")"));
                 }
                 for (boolean i2Left : new boolean[] {true, false})
                 {
