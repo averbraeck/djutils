@@ -112,7 +112,6 @@ public class SineTest
                     "simplified sum of two sines, different omega");
         }
         s1 = new Sine(chained, 1, 2, 3);
-        System.out.println(s1);
         s2 = new Sine(1, 2, 3);
         sum = new Sum(s1, s2); // sin(2 * x * x + 3) + sin(2 * x + 3)
         simplified = sum.simplify();

@@ -80,11 +80,11 @@ public interface MathFunction extends Comparable<MathFunction>
     /**
      * Determine sorting order among instances of a particular sub type of MathFunction.
      * @param other the other MathFunction that must be of the same type
-     * @return int; < 0 when this sorts before other; > 0 when this sorts after other; 0 when this and other are identical
+     * @return int; &lt; 0 when this sorts before other; &gt; 0 when this sorts after other; 0 when this and other are identical
      *         enough to be potentially merged into one
      */
     int compareWithinSubType(MathFunction other);
-    
+
     /**
      * This MathFunction is added to another; try to replace both by a combined MathFunction.
      * @param other the other MathFunction
@@ -94,7 +94,7 @@ public interface MathFunction extends Comparable<MathFunction>
     {
         return null;
     }
-    
+
     /**
      * This MathFunction is multiplied by another; try to replace both by a combined MathFunction.
      * @param other the other MathFunction

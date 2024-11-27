@@ -6,7 +6,7 @@ import org.djutils.exceptions.Throw;
 
 /**
  * MathFunctions that are a constant times some power of x; generally <code>f(x) &rarr; a * x^<sup>b</sup></code> where a &isin;
- * &#8477 and b &isin; &#8477
+ * &#8477; and b &isin; &#8477;
  * <p>
  * Copyright (c) 2024-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
