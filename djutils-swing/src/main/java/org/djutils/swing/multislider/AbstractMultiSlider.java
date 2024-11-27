@@ -1296,7 +1296,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
             {
                 int posPx = this.multiSlider.thumbPositionPx(i);
                 int dist = this.multiSlider.isHorizontal() ? posPx - p.x : posPx - (getHeight() - p.y);
-                if (Math.abs(dist) == mindist)
+                if (Math.abs(dist) == Math.abs(mindist))
                 {
                     hii = i;
                 }
