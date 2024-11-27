@@ -93,9 +93,6 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
     /** MultiSlider restriction on overlap. */
     private boolean overlap = true;
 
-    /** Flag to indicate that restrictions are being checked -- ensure state changes do not lead to a stack overflow. */
-    private boolean checkRestrictionsBusy = false;
-
     /**
      * Only one <code>ChangeEvent</code> is needed for the {@code MultiSlider} since the event's only (read-only) state is the
      * source property. The source of events generated here is always "this". The event is created the first time that an event
@@ -193,22 +190,6 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
             }
         });
 
-        for (int i = 0; i < getNumberOfThumbs(); i++)
-        {
-            final int index = i;
-            this.getSlider(i).addChangeListener(new ChangeListener()
-            {
-                @Override
-                public void stateChanged(final ChangeEvent e)
-                {
-                    if (!AbstractMultiSlider.this.checkRestrictionsBusy)
-                    {
-                        AbstractMultiSlider.this.checkRestrictions(index);
-                    }
-                    fireStateChanged();
-                }
-            });
-        }
         invalidate();
     }
 
@@ -1185,7 +1166,6 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
      */
     protected boolean checkRestrictions()
     {
-        this.checkRestrictionsBusy = true;
         boolean ret = true;
         if (!getPassing())
         {
@@ -1234,7 +1214,6 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
             // hack to force repaint of all the thumbs in the overlapping sliders
             setUI(getUI());
         }
-        this.checkRestrictionsBusy = false;
         return ret;
     }
 
@@ -1245,7 +1224,6 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
      */
     protected boolean checkRestrictions(final int index)
     {
-        this.checkRestrictionsBusy = true;
         boolean ret = true;
         if (!getPassing())
         {
@@ -1278,7 +1256,6 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
             // hack to force repaint of all the thumbs in the overlapping sliders
             setUI(getUI());
         }
-        this.checkRestrictionsBusy = false;
         return ret;
     }
 
@@ -1297,9 +1274,11 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
         protected final AbstractMultiSlider<?> multiSlider;
 
         /**
-         * Return the closest slider number based on x (horizontal) or y (vertical) of the thumbs.
+         * Return the closest slider number based on x (horizontal) or y (vertical) locations of the thumbs. When two or more
+         * thumbs are at the exact same distance (e.g., because they overlap), the first slider found that has a movement option
+         * in the direction of the mouse will be returned.
          * @param p the point (e.g., of a mouse position)
-         * @return the index of the closest slider
+         * @return the index(es) of the closest slider(s)
          */
         int closestSliderIndex(final Point p)
         {
@@ -1308,19 +1287,47 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
                 return this.multiSlider.getBusySlider();
             }
 
-            int ret = -1;
-            int mindist = Integer.MAX_VALUE;
+            int mindist = Integer.MAX_VALUE; // non-absolute lowest distance of (mouse) position in pixels
+            int minIndex = -1; // int scale value of thumb at closest position
+            int mini = -1; // thumb index of closest position
+            int loi = Integer.MAX_VALUE; // lowest thumb number on closest position
+            int hii = -1; // highest thumb number on closest position
             for (int i = 0; i < this.multiSlider.getNumberOfThumbs(); i++)
             {
-                int pos = this.multiSlider.thumbPositionPx(i);
-                int dist = this.multiSlider.isHorizontal() ? Math.abs(pos - p.x) : Math.abs(pos - (getHeight() - p.y));
-                if (dist < mindist)
+                int posPx = this.multiSlider.thumbPositionPx(i);
+                int dist = this.multiSlider.isHorizontal() ? posPx - p.x : posPx - (getHeight() - p.y);
+                if (Math.abs(dist) == Math.abs(mindist))
+                {
+                    hii = i;
+                }
+                else if (Math.abs(dist) < Math.abs(mindist))
                 {
                     mindist = dist;
-                    ret = i;
+                    mini = i;
+                    minIndex = this.multiSlider.getIndexValue(i);
+                    loi = i;
+                    hii = i;
                 }
             }
-            return ret;
+
+            // if only one closest slider (loi == hii), or no passing restrictions: move any slider!
+            if (loi == hii || this.multiSlider.getPassing())
+            {
+                return mini;
+            }
+            if (minIndex == this.multiSlider.getIndexMinimum()) // hi movement only
+            {
+                return hii;
+            }
+            if (minIndex == this.multiSlider.getIndexMaximum()) // lo movement only
+            {
+                return loi;
+            }
+            if (mindist > 0) // mouse to the left
+            {
+                return loi;
+            }
+            return hii; // mouse to the right
         }
 
         /**
@@ -1344,6 +1351,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
                 }
                 catch (Exception exception)
                 {
+                    exception.printStackTrace();
                     System.out.println("error dispatching mouseEvent " + meSlider);
                 }
                 setBusySlider(index);
