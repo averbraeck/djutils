@@ -125,7 +125,6 @@ public class MultiSliderRestrictionDemo extends JFrame
         sliderPanel.add(s4);
         s4.setThumbLabel(0, "choice 1");
         s4.setThumbLabel(1, "choice 2");
-        s4.setThumbLabel(2, "z");
         s4.setDrawThumbLabels(true, 20);
         s4.setSnapToTicks(true);
         s4.setUI(new BasicSliderUI());
