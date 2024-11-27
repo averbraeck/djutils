@@ -1,6 +1,7 @@
 package org.djutils.math.functions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -66,5 +67,8 @@ public class ProductTest
         p = new Product(new Constant(2), new Constant(0.5));
         f = p.simplify();
         assertEquals(Constant.ONE, f, "product of constants should simplify to a single constant");
+        p = new Product(new Constant(2));
+        p2 = new Product(new Constant(4));
+        assertNotEquals(p.hashCode(), p2.hashCode(), "hash code takes the factor(s) into account");
     }
 }
