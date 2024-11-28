@@ -632,10 +632,10 @@ public class MultiSliderTest
     }
 
     /**
-     * Test listeners.
+     * Test change listeners.
      */
     @Test
-    public void testListeners()
+    public void testChangeListeners()
     {
         var ms = new MultiSlider(0, 100, new int[] {20, 40});
         this.v = new int[] {20, 40};
@@ -657,6 +657,36 @@ public class MultiSliderTest
 
         ms.removeChangeListener(cl);
         assertEquals(nrListeners, ms.getChangeListeners().length);
+    }
+
+    /**
+     * Test final value change listeners.
+     */
+    @Test
+    public void testFinalValueChangeListeners()
+    {
+        var ms = new MultiSlider(0, 100, new int[] {20, 40});
+        this.v = new int[] {20, 40};
+        int nrListeners = ms.getFinalValueChangeListeners().length;
+        var cl = new MultiSlider.FinalValueChangeListener()
+        {
+            @Override
+            public void stateChanged(final ChangeEvent e)
+            {
+                assertEquals(v0(), ms.getValue(0));
+                assertEquals(v1(), ms.getValue(1));
+            }
+        };
+        ms.addFinalValueChangeListener(cl);
+        assertEquals(nrListeners + 1, ms.getFinalValueChangeListeners().length);
+
+        this.v = new int[] {25, 40};
+        ms.setValue(0, 25);
+        this.v = new int[] {25, 60};
+        ms.setValue(1, 60);
+
+        ms.removeFinalValueChangeListener(cl);
+        assertEquals(nrListeners, ms.getFinalValueChangeListeners().length);
     }
 
     /**
