@@ -52,7 +52,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @param <T> the type of values that the {@code AbstractMultiSlider} stores and returns
  */
-public abstract class AbstractMultiSlider<T> extends JComponent implements ChangeListener
+public abstract class AbstractMultiSlider<T> extends JComponent
 {
     /** */
     private static final long serialVersionUID = 1L;
@@ -75,6 +75,9 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
     /** the initial index values of the labels for the reset function. */
     private final int[] initialIndexValues;
 
+    /** the last known index values of the labels for the state change function. */
+    private final int[] lastIndexValues;
+
     /** the labels per thumb (per underlying slider). */
     private final Map<Integer, String> thumbLabels = new HashMap<>();
 
@@ -92,6 +95,9 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
 
     /** MultiSlider restriction on overlap. */
     private boolean overlap = true;
+
+    /** busy tesingt whether the state change of an underlying slider is okay, to avoid stack overflow. */
+    private boolean testingStateChange = false;
 
     /**
      * Only one <code>ChangeEvent</code> is needed for the {@code MultiSlider} since the event's only (read-only) state is the
@@ -125,6 +131,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
 
         // store the initial value array in a safe copy
         this.initialIndexValues = new int[initialIndexValues.length];
+        this.lastIndexValues = new int[initialIndexValues.length];
 
         // based on the orientation, add a JPanel with two subpanels: one for the labels, and one for the sliders
         setLayout(new BorderLayout());
@@ -155,15 +162,13 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
         for (int i = initialIndexValues.length - 1; i >= 0; i--)
         {
             this.initialIndexValues[i] = initialIndexValues[i]; // create copy
+            this.lastIndexValues[i] = initialIndexValues[i];
             var slider = new JSlider(horizontal ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL, minIndex, maxIndex,
                     initialIndexValues[i]);
             this.sliders[i] = slider;
             slider.setOpaque(false);
             slider.setPaintTrack(i == 0);
             sliderPanel.add(slider);
-
-            // add this class as a change listener for all slider events of the individual sliders
-            slider.addChangeListener(this);
 
             // ensure movability of the slider by setting it again
             slider.setValue(initialIndexValues[i]);
@@ -189,6 +194,26 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
                 revalidate();
             }
         });
+
+        // listen to state changes of underlying sliders and check if restrictions are met
+        for (int i = 0; i < this.sliders.length; i++)
+        {
+            final int index = i;
+            this.sliders[index].addChangeListener(new ChangeListener()
+            {
+                @Override
+                public void stateChanged(final ChangeEvent e)
+                {
+                    if (!AbstractMultiSlider.this.testingStateChange)
+                    {
+                        AbstractMultiSlider.this.testingStateChange = true;
+                        checkRestrictions(index);
+                        AbstractMultiSlider.this.testingStateChange = false;
+                    }
+                    AbstractMultiSlider.this.fireStateChanged();
+                }
+            });
+        }
 
         invalidate();
     }
@@ -279,9 +304,12 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
         for (int i = 0; i < this.sliders.length; i++)
         {
             this.sliders[i].setValue(this.initialIndexValues[i]);
+            this.sliders[i].invalidate();
+            this.sliders[i].repaint();
         }
-        // This is a drastic way to redraw overlapping thumbs... But it does the job.
-        setUI(getUI());
+        fireFinalValueChanged();
+        invalidate();
+        repaint();
     }
 
     /**
@@ -452,12 +480,6 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
         return this.dispatcherPane;
     }
 
-    @Override
-    public void stateChanged(final ChangeEvent e)
-    {
-        fireStateChanged();
-    }
-
     /**
      * Gets the UI object which implements the L&amp;F for this component.
      * @return the SliderUI object that implements the Slider L&amp;F
@@ -550,17 +572,92 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
      */
     protected void fireStateChanged()
     {
+        // Check if the current state is legal (don't send events before checkRestrictions() has been called)
+        if (!legalState())
+        {
+            return;
+        }
+
+        // See if an actual state change has occurred
+        boolean changed = false;
+        for (int i = 0; i < getNumberOfThumbs(); i++)
+        {
+            if (this.lastIndexValues[i] != this.sliders[i].getValue())
+            {
+                changed = true;
+                this.lastIndexValues[i] = this.sliders[i].getValue();
+            }
+        }
+
+        if (changed)
+        {
+            // Note that the listener array has the classes at the even places, and the listeners at the odd places (yuck).
+            Object[] listeners = this.listenerList.getListenerList();
+            for (int i = listeners.length - 2; i >= 0; i -= 2)
+            {
+                if (listeners[i] == ChangeListener.class)
+                {
+                    if (this.changeEvent == null)
+                    {
+                        this.changeEvent = new ChangeEvent(this);
+                    }
+                    ((ChangeListener) listeners[i + 1]).stateChanged(this.changeEvent);
+                }
+            }
+        }
+    }
+
+    /**
+     * Adds a FinalValueChangeListener to the multislider.
+     * @param listener the FinalValueChangeListener to add
+     */
+    public void addFinalValueChangeListener(final FinalValueChangeListener listener)
+    {
+        this.listenerList.add(FinalValueChangeListener.class, listener);
+    }
+
+    /**
+     * Removes a FinalValueChangeListener from the multislider.
+     * @param listener the FinalValueChangeListener to remove
+     */
+    public void removeFinalValueChangeListener(final FinalValueChangeListener listener)
+    {
+        this.listenerList.remove(FinalValueChangeListener.class, listener);
+    }
+
+    /**
+     * Returns an array of all the <code>FinalValueChangeListener</code>s added to this MultiSlider with
+     * addFinalValueChangeListener().
+     * @return all of the <code>FinalValueChangeListener</code>s added or an empty array if no listeners have been added
+     */
+    public FinalValueChangeListener[] getFinalValueChangeListeners()
+    {
+        return this.listenerList.getListeners(FinalValueChangeListener.class);
+    }
+
+    /**
+     * Send a {@code ChangeEvent}, whose source is this {@code MultiSlider}, to all {@code FinalValueChangeListener}s that have
+     * registered interest in {@code ChangeEvent}s. This method is called when a change is final, e.g., after setValue(...),
+     * setInitialValues(), mouse up, and leaving the slider window after a drag event. Note that the {@code ChangeEvent}s are
+     * NOT fired when a value of an underlying slider is changed directly. The regular ChangeListener does fire these changes.
+     * <p>
+     * The event instance is created if necessary, and stored in {@code changeEvent}.
+     * </p>
+     */
+    protected void fireFinalValueChanged()
+    {
+        // Check if the current state is legal (don't send events before checkRestrictions() has been called)
         // Note that the listener array has the classes at the even places, and the listeners at the odd places (yuck).
         Object[] listeners = this.listenerList.getListenerList();
         for (int i = listeners.length - 2; i >= 0; i -= 2)
         {
-            if (listeners[i] == ChangeListener.class)
+            if (listeners[i] == FinalValueChangeListener.class)
             {
                 if (this.changeEvent == null)
                 {
                     this.changeEvent = new ChangeEvent(this);
                 }
-                ((ChangeListener) listeners[i + 1]).stateChanged(this.changeEvent);
+                ((FinalValueChangeListener) listeners[i + 1]).stateChanged(this.changeEvent);
             }
         }
     }
@@ -629,8 +726,9 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
                 "setValue(%d) not in range [%d, %d]", n, getIndexMinimum(), getIndexMaximum());
         this.sliders[i].setValue(n);
         checkRestrictions(i);
-        // drastic way to force thumbs that are on top of each other to be redrawn
-        setUI(getUI());
+        this.sliders[i].invalidate();
+        this.sliders[i].repaint();
+        fireFinalValueChanged();
     }
 
     /**
@@ -656,14 +754,18 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
     {
         Throw.when(minimum >= getIndexMaximum(), IllegalArgumentException.class, "setMinimum(%d) >= maximum %d", minimum,
                 getIndexMaximum());
-        checkRestrictions();
         int oldMin = getIndexMinimum();
         for (var slider : this.sliders)
         {
             slider.setMinimum(minimum);
+        }
+        checkRestrictions();
+        for (var slider : this.sliders)
+        {
             slider.invalidate();
         }
         invalidate();
+        fireFinalValueChanged();
         firePropertyChange("minimum", Integer.valueOf(oldMin), Integer.valueOf(minimum));
         calculateTrackSize();
     }
@@ -719,6 +821,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
         {
             slider.invalidate();
         }
+        fireFinalValueChanged();
         firePropertyChange("maximum", Integer.valueOf(oldMax), Integer.valueOf(maximum));
         invalidate();
         calculateTrackSize();
@@ -1161,6 +1264,33 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
     }
 
     /**
+     * Check whether the current state of the multislider is legal and all restrictions are met.
+     * @return whether the current state of the multislider is legal or not
+     */
+    protected boolean legalState()
+    {
+        if (!this.passing || !this.overlap)
+        {
+            for (int i = 1; i < getNumberOfThumbs(); i++)
+            {
+                if (getIndexValue(i) < getIndexMinimum() || getIndexValue(i) > getIndexMaximum())
+                {
+                    return false;
+                }
+                if (getIndexValue(i) <= getIndexValue(i - 1))
+                {
+                    return false;
+                }
+                if (!this.overlap && getIndexValue(i) == getIndexValue(i - 1))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
      * Check restrictions on all thumb values and correct values where necessary.
      * @return whether compliance with the restrictions is ok; false means violation
      */
@@ -1211,8 +1341,8 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
         }
         if (!ret)
         {
-            // hack to force repaint of all the thumbs in the overlapping sliders
-            setUI(getUI());
+            invalidate();
+            repaint();
         }
         return ret;
     }
@@ -1253,8 +1383,8 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
         }
         if (!ret)
         {
-            // hack to force repaint of all the thumbs in the overlapping sliders
-            setUI(getUI());
+            getSlider(index).invalidate();
+            getSlider(index).repaint();
         }
         return ret;
     }
@@ -1409,6 +1539,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
                     if (index >= 0)
                     {
                         checkRestrictions(index);
+                        DispatcherPane.this.multiSlider.fireFinalValueChanged();
                     }
                     setBusySlider(-1);
                 }
@@ -1428,12 +1559,17 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
                 @Override
                 public void mouseExited(final MouseEvent e)
                 {
-                    // Note that a mouse exited should ALWAYS be communicated, also when it is outside of the slider
                     setBusy(false);
-                    int index = dispatch(e, true);
-                    if (index >= 0)
+                    // emulate a mouse release somewhere on the current slider to force correct update
+                    var ms = DispatcherPane.this.multiSlider;
+                    if (ms.getBusySlider() >= 0)
                     {
-                        checkRestrictions(index);
+                        JSlider js = ms.getSlider(ms.getBusySlider());
+                        checkRestrictions(ms.getBusySlider());
+                        MouseEvent meSlider = new MouseEvent(js, MouseEvent.MOUSE_RELEASED, e.getWhen(), 0, 10, 10, 1, false,
+                                MouseEvent.BUTTON1);
+                        js.dispatchEvent(meSlider);
+                        ms.fireFinalValueChanged();
                     }
                     setBusySlider(-1);
                 }
@@ -1532,6 +1668,14 @@ public abstract class AbstractMultiSlider<T> extends JComponent implements Chang
                 }
             }
         }
+    }
 
+    /**
+     * The FinalValueChangeListener sends a final value to the listeners after mouse-up, leave focus, setValue(...), and
+     * setInitialValues().
+     */
+    public interface FinalValueChangeListener extends ChangeListener
+    {
+        // no extra events
     }
 }
