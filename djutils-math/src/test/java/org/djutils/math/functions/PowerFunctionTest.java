@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 
@@ -135,10 +136,26 @@ public class PowerFunctionTest
         assertNull(pf.mergeMultiply(pf2), "cannot merge those");
         pf2 = new PowerFunction(new PowerFunction(2, 2), 2, 3);
         combined = pf.mergeMultiply(pf2);
-        // System.out.println(pf);
-        // System.out.println(pf2);
-        // System.out.println(combined);
         assertEquals(new PowerFunction(new Product(new PowerFunction(2, 2), new Sine(1, 1, 0)), 4, 3), combined, "nice");
+        
+        pf = new PowerFunction(2, 3);
+        try
+        {
+            pf.compareWithinSubType(Constant.ZERO);
+            fail("compareWithinSubType should throw IllegalArgumentException for incompatible sub type");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+        pf2 = new PowerFunction(3, 2);
+        assertTrue(pf.compareWithinSubType(pf2) < 0, "should sort by power");
+        assertTrue(pf2.compareWithinSubType(pf) > 0, "should sort by power");
+        pf2 = new PowerFunction(3, 3);
+        assertEquals(0, pf.compareWithinSubType(pf2), "same power yields 0");
+        pf2 = new PowerFunction(chained, 2, 3);
+        assertFalse(pf.equals(pf2), "equals takes chained into account");
+        assertTrue(pf2.toString().contains("(" + chained.toString() + ")"), "toString output contains chained");
     }
 
     /**

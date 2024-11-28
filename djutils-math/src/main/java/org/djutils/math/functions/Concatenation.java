@@ -133,6 +133,7 @@ public class Concatenation implements MathFunction
      * Construct a concatenation that is piecewise linear through a given set of points.
      * @param map mapping from domain to value at the inflection points
      * @return new Concatenation that is piecewise linear and connects the given points
+     * @throws IllegalArgumentException when <code>map</code> contains fewer than 2 entries
      */
     public static Concatenation continuousPiecewiseLinear(final SortedMap<Double, Double> map)
     {
@@ -152,6 +153,7 @@ public class Concatenation implements MathFunction
             }
             prevEntry = nextEntry;
         }
+        Throw.when(intervals.isEmpty(), IllegalArgumentException.class, "need at least two points");
         return new Concatenation(intervals);
     }
 
@@ -159,6 +161,8 @@ public class Concatenation implements MathFunction
      * Construct a concatenation that is piecewise linear through a given set of input-output pairs.
      * @param arguments the input-output pairs; these specify the inflection points
      * @return new Concatenation that is piecewise linear and connects the given points
+     * @throws IllegalArgumentException when <code>arguments</code> contains an odd number of entries, or fewer than 2 domain
+     *             values, or duplicate domain values with differing function values
      */
     public static Concatenation continuousPiecewiseLinear(final double... arguments)
     {
@@ -166,6 +170,8 @@ public class Concatenation implements MathFunction
         SortedMap<Double, Double> map = new TreeMap<>();
         for (int i = 0; i < arguments.length; i += 2)
         {
+            Throw.when(map.containsKey(arguments[i]) && arguments[i + 1] != map.get(arguments[i]),
+                    IllegalArgumentException.class, "duplicate domain value with different function value is not permitted");
             map.put(arguments[i], arguments[i + 1]);
         }
         return continuousPiecewiseLinear(map);
