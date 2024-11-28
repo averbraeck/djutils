@@ -217,12 +217,12 @@ public class Sine implements MathFunction
         boolean useCosine = closeTo90 && roundedQuadrant % 2 == 1;
         boolean useSine = closeTo90 && roundedQuadrant % 2 == 0;
         //System.out.println("roundedQuadrant=" + roundedQuadrant);
-        boolean parenthesizeNegative = (useSine || useCosine) && ((roundedQuadrant >= 2) != (this.amplitude < 0));
+        boolean negativeSign = (useSine || useCosine) && ((roundedQuadrant >= 2) != (this.amplitude < 0));
 
         StringBuilder result = new StringBuilder();
-        if (parenthesizeNegative)
+        if (negativeSign)
         {
-            result.append("(-");
+            result.append("-");
         }
         if (this.amplitude != 1.0)
         {
@@ -246,10 +246,6 @@ public class Sine implements MathFunction
             }
         }
         result.append(")");
-        if (parenthesizeNegative)
-        {
-            result.append(")");
-        }
         return result.toString();
     }
 
