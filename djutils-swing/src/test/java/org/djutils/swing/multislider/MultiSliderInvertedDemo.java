@@ -108,48 +108,32 @@ public class MultiSliderInvertedDemo extends JFrame
         setLocationRelativeTo(null);
         setVisible(true);
 
-        horSlider.addChangeListener(new ChangeListener()
+        acl(horSlider, "hor1");
+        acl(vertSlider, "vert");
+        acl(horSlider2, "hor2");
+    }
+
+    /**
+     * Add change listener.
+     * @param ms the multislider
+     * @param name the string with the variable name
+     */
+    void acl(final MultiSlider ms, final String name)
+    {
+        ms.addChangeListener(new ChangeListener()
         {
             @Override
             public void stateChanged(final ChangeEvent e)
             {
                 MultiSlider s = (MultiSlider) e.getSource();
+                System.out.print(name);
                 for (int i = 0; i < s.getNumberOfThumbs(); i++)
                 {
-                    if (!s.isBusy())
-                        System.out.println("Horizontal Thumb " + i + ": " + s.getValue(i));
+                    System.out.print(", Thumb " + i + ": " + s.getValue(i));
                 }
+                System.out.println();
             }
         });
-
-        vertSlider.addChangeListener(new ChangeListener()
-        {
-            @Override
-            public void stateChanged(final ChangeEvent e)
-            {
-                MultiSlider s = (MultiSlider) e.getSource();
-                for (int i = 0; i < s.getNumberOfThumbs(); i++)
-                {
-                    if (!s.isBusy())
-                        System.out.println("Vertical Thumb " + i + ": " + s.getValue(i));
-                }
-            }
-        });
-
-        horSlider2.addChangeListener(new ChangeListener()
-        {
-            @Override
-            public void stateChanged(final ChangeEvent e)
-            {
-                MultiSlider s = (MultiSlider) e.getSource();
-                for (int i = 0; i < s.getNumberOfThumbs(); i++)
-                {
-                    if (!s.isBusy())
-                        System.out.println("Horizontal Thumb " + i + ": " + s.getValue(i));
-                }
-            }
-        });
-
     }
 
     /**

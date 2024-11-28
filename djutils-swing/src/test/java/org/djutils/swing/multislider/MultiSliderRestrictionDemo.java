@@ -185,16 +185,14 @@ public class MultiSliderRestrictionDemo extends JFrame
             public void stateChanged(final ChangeEvent e)
             {
                 MultiSlider s = (MultiSlider) e.getSource();
+                System.out.print(name);
                 for (int i = 0; i < s.getNumberOfThumbs(); i++)
                 {
-                    if (!s.isBusy())
-                    {
-                        System.out.println(name + " Thumb " + i + ": " + s.getValue(i));
-                    }
+                    System.out.print(", Thumb " + i + ": " + s.getValue(i));
                 }
+                System.out.println();
             }
         });
-
     }
 
     /**

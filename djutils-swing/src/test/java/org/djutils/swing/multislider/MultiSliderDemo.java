@@ -14,8 +14,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
+
+import org.djutils.swing.multislider.AbstractMultiSlider.FinalValueChangeListener;
 
 /**
  * MultiSliderDemo demonstrates a horizontal slider and a vertical slider, as well as setValue() through a reset button.
@@ -114,48 +115,32 @@ public class MultiSliderDemo extends JFrame
         setLocationRelativeTo(null);
         setVisible(true);
 
-        horSlider.addChangeListener(new ChangeListener()
+        acl(horSlider, "hor1");
+        acl(vertSlider, "vert");
+        acl(horSlider2, "hor2");
+    }
+
+    /**
+     * Add change listener.
+     * @param ms the multislider
+     * @param name the string with the variable name
+     */
+    void acl(final MultiSlider ms, final String name)
+    {
+        ms.addFinalValueChangeListener(new FinalValueChangeListener()
         {
             @Override
             public void stateChanged(final ChangeEvent e)
             {
                 MultiSlider s = (MultiSlider) e.getSource();
+                System.out.print(name);
                 for (int i = 0; i < s.getNumberOfThumbs(); i++)
                 {
-                    if (!s.isBusy())
-                        System.out.println("Horizontal 1 Thumb " + i + ": " + s.getValue(i));
+                    System.out.print(", Thumb " + i + ": " + s.getValue(i));
                 }
+                System.out.println();
             }
         });
-
-        horSlider2.addChangeListener(new ChangeListener()
-        {
-            @Override
-            public void stateChanged(final ChangeEvent e)
-            {
-                MultiSlider s = (MultiSlider) e.getSource();
-                for (int i = 0; i < s.getNumberOfThumbs(); i++)
-                {
-                    if (!s.isBusy())
-                        System.out.println("Horizontal 2 Thumb " + i + ": " + s.getValue(i));
-                }
-            }
-        });
-
-        vertSlider.addChangeListener(new ChangeListener()
-        {
-            @Override
-            public void stateChanged(final ChangeEvent e)
-            {
-                MultiSlider s = (MultiSlider) e.getSource();
-                for (int i = 0; i < s.getNumberOfThumbs(); i++)
-                {
-                    if (!s.isBusy())
-                        System.out.println("Vertical Thumb " + i + ": " + s.getValue(i));
-                }
-            }
-        });
-
     }
 
     /**
