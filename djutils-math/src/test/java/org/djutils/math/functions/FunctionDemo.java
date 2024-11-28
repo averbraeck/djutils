@@ -78,7 +78,7 @@ public final class FunctionDemo
         SortedMap<Double, Double> map = new TreeMap<>();
         map.put(0.0, 1.0);
         map.put(0.2, 1.1);
-        map.put(0.5,  1.7);
+        map.put(0.5, 1.7);
         map.put(1.0, 1.7);
         concatenation = Concatenation.continuousPiecewiseLinear(map);
         System.out.println(concatenation);
@@ -214,6 +214,68 @@ public final class FunctionDemo
             System.out.println(String.format("x=%5.1f: f(x)=%10.5f; f'(x)=%10.5f; f''(x)=%10.5f; f'''(x)=%10.5f", x, p2.get(x),
                     deriv1.get(x), deriv2.get(x), deriv3.get(x)));
         }
+
+        System.out.println("show that pure cosines get print as cos and sin(x+pi) like (-sin(x))");
+        f = new Sine(1, 2, 0);
+        System.out.println(f);
+        deriv1 = f.getDerivative();
+        System.out.println(deriv1);
+        deriv2 = deriv1.getDerivative();
+        System.out.println(deriv2);
+        deriv3 = deriv2.getDerivative();
+        System.out.println(deriv3);
+        deriv4 = deriv3.getDerivative();
+        System.out.println(deriv4);
+        deriv5 = deriv4.getDerivative();
+        System.out.println(deriv5);
+        deriv6 = deriv5.getDerivative();
+        System.out.println(deriv6);
+        System.out.println();
+        f = new Sine(-1, 2, 0);
+        System.out.println(f);
+        deriv1 = f.getDerivative();
+        System.out.println(deriv1);
+        deriv2 = deriv1.getDerivative();
+        System.out.println(deriv2);
+        deriv3 = deriv2.getDerivative();
+        System.out.println(deriv3);
+        deriv4 = deriv3.getDerivative();
+        System.out.println(deriv4);
+        deriv5 = deriv4.getDerivative();
+        System.out.println(deriv5);
+        deriv6 = deriv5.getDerivative();
+        System.out.println(deriv6);
+
+        System.out.println("\ncreate sin(x + pi)");
+        f = new Sine(1, 1, Math.PI);
+        System.out.println(f);
+        deriv1 = f.getDerivative();
+        System.out.println(deriv1);
+        deriv2 = deriv1.getDerivative();
+        System.out.println(deriv2);
+        deriv3 = deriv2.getDerivative();
+        System.out.println(deriv3);
+        deriv4 = deriv3.getDerivative();
+        System.out.println(deriv4);
+        deriv5 = deriv4.getDerivative();
+        System.out.println(deriv5);
+        deriv6 = deriv5.getDerivative();
+        System.out.println(deriv6);
+        System.out.println("\ncreate cos(x - pi)");
+        f = Sine.cosine(1, 1, -Math.PI);
+        System.out.println(f);
+        deriv1 = f.getDerivative();
+        System.out.println(deriv1);
+        deriv2 = deriv1.getDerivative();
+        System.out.println(deriv2);
+        deriv3 = deriv2.getDerivative();
+        System.out.println(deriv3);
+        deriv4 = deriv3.getDerivative();
+        System.out.println(deriv4);
+        deriv5 = deriv4.getDerivative();
+        System.out.println(deriv5);
+        deriv6 = deriv5.getDerivative();
+        System.out.println(deriv6);
     }
 
 }

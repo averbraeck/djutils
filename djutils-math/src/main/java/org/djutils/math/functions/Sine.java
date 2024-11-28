@@ -58,6 +58,19 @@ public class Sine implements MathFunction
         this.chain = null;
     }
 
+    /**
+     * Construct a cosine function <code>factor * cos(omega * x + shift)</code>. The result is actually a Sine with the
+     * correctly adjusted <code>shift</code>.
+     * @param amplitude multiplication factor for the output
+     * @param omega radial frequency; multiplication factor for the input
+     * @param shift time shift for the input (applied <b>after</b> the <code>omega</code> factor)
+     * @return Sine with the requested <code>amplitude</code>, <code>omega</code> and adjusted <code>shift</code>
+     */
+    public static Sine cosine(final double amplitude, final double omega, final double shift)
+    {
+        return new Sine(amplitude, omega, AngleUtil.normalizeAroundZero(shift + Math.PI / 2));
+    }
+
     @Override
     public double get(final double x)
     {
@@ -197,12 +210,25 @@ public class Sine implements MathFunction
     @Override
     public String toString()
     {
+        double quadrant = AngleUtil.normalizeAroundPi(this.shift) / (Math.PI / 2);
+        int roundedQuadrant = (int) Math.round(quadrant);
+        double deviation = Math.abs(roundedQuadrant - quadrant);
+        boolean closeTo90 = deviation < 10 * Math.ulp(Math.PI);
+        boolean useCosine = closeTo90 && roundedQuadrant % 2 == 1;
+        boolean useSine = closeTo90 && roundedQuadrant % 2 == 0;
+        //System.out.println("roundedQuadrant=" + roundedQuadrant);
+        boolean parenthesizeNegative = (useSine || useCosine) && ((roundedQuadrant >= 2) != (this.amplitude < 0));
+
         StringBuilder result = new StringBuilder();
+        if (parenthesizeNegative)
+        {
+            result.append("(-");
+        }
         if (this.amplitude != 1.0)
         {
-            result.append(printValue(this.amplitude));
+            result.append(printValue(Math.abs(this.amplitude)));
         }
-        result.append("sin(");
+        result.append(useCosine ? "cos(" : "sin(");
         if (this.omega != 1.0)
         {
             result.append(printValue(this.omega));
@@ -210,13 +236,20 @@ public class Sine implements MathFunction
         result.append(this.chain == null ? "x" : ("(" + this.chain.toString() + ")"));
         if (this.shift != 0.0)
         {
-            if (this.shift >= 0.0)
+            if (!closeTo90)
             {
-                result.append("+");
+                if (this.shift >= 0.0)
+                {
+                    result.append("+");
+                }
+                result.append(printValue(this.shift));
             }
-            result.append(printValue(this.shift));
         }
         result.append(")");
+        if (parenthesizeNegative)
+        {
+            result.append(")");
+        }
         return result.toString();
     }
 
