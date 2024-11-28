@@ -646,7 +646,6 @@ public abstract class AbstractMultiSlider<T> extends JComponent
      */
     protected void fireFinalValueChanged()
     {
-        // Check if the current state is legal (don't send events before checkRestrictions() has been called)
         // Note that the listener array has the classes at the even places, and the listeners at the odd places (yuck).
         Object[] listeners = this.listenerList.getListenerList();
         for (int i = listeners.length - 2; i >= 0; i -= 2)
