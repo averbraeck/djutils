@@ -155,5 +155,19 @@ public class SineTest
         assertNotEquals(s1.hashCode(), s2.hashCode(), "hash code checks shift");
         assertFalse(s1.equals(s2), "equals checks shift");
         assertFalse(s1.equals(null), "not equal to null");
+        
+        s1 = Sine.cosine(2, 1, 0);
+        assertTrue(s1.toString().contains("cos("));
+        assertFalse(s1.toString().contains("-"));
+        s1 = Sine.cosine(2,  1, Math.PI);
+        assertTrue(s1.toString().contains("cos("));
+        assertTrue(s1.toString().contains("-"));
+        s1 = new Sine(2, 1, Math.PI);
+        assertTrue(s1.toString().contains("sin("));
+        assertTrue(s1.toString().contains("-"));
+        s1 = new Sine(-2, 1, 0);
+        System.out.println(s1);
+        assertTrue(s1.toString().contains("sin("));
+        assertTrue(s1.toString().contains("-"));
     }
 }
