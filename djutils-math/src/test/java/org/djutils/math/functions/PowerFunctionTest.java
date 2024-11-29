@@ -3,6 +3,7 @@ package org.djutils.math.functions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -137,7 +138,7 @@ public class PowerFunctionTest
         pf2 = new PowerFunction(new PowerFunction(2, 2), 2, 3);
         combined = pf.mergeMultiply(pf2);
         assertEquals(new PowerFunction(new Product(new PowerFunction(2, 2), new Sine(1, 1, 0)), 4, 3), combined, "nice");
-        
+
         pf = new PowerFunction(2, 3);
         try
         {
@@ -156,6 +157,16 @@ public class PowerFunctionTest
         pf2 = new PowerFunction(chained, 2, 3);
         assertFalse(pf.equals(pf2), "equals takes chained into account");
         assertTrue(pf2.toString().contains("(" + chained.toString() + ")"), "toString output contains chained");
+
+        chained = new Sine(1, 2, 3);
+        pf = new PowerFunction(chained, 2, 3);
+        MathFunction chained2 = new Sine(2, 3, 4);
+        pf2 = new PowerFunction(chained2, 2, 3);
+        assertNull(pf.mergeAdd(pf2), "cannot mergeAdd these");
+        pf2 = new PowerFunction(2, 3);
+        assertNull(pf.mergeAdd(pf2), "cannot mergeAdd these");
+        assertNull(pf2.mergeAdd(pf), "cannot mergeAdd these");
+        assertNotNull(pf.mergeAdd(pf), "can mergeAdd these");
     }
 
     /**
