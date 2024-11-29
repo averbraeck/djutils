@@ -1,0 +1,141 @@
+package org.djutils.math.functions;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import org.junit.jupiter.api.Test;
+
+/**
+ * Test the Concatenation class.
+ * <p>
+ * Copyright (c) 2024-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
+ * distributed under a three-clause BSD-style license, which can be found at
+ * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.
+ * </p>
+ * @author <a href="https://github.com/averbraeck">Alexander Verbraeck</a>
+ * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
+ * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
+ */
+public class ConcatenationTest
+{
+    /**
+     * Test the Concatenation class.
+     */
+    @Test
+    public void concatenationTest()
+    {
+        try
+        {
+            Concatenation.continuousPiecewiseLinear(0.0);
+            fail("odd number of points should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+        
+        try
+        {
+            Concatenation.continuousPiecewiseLinear(0.0, 2.2);
+            fail("too few points should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+        
+        try
+        {
+            Concatenation.continuousPiecewiseLinear(0.0, 2.2, 0.0, 3.2);
+            fail("different values for same point should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+        
+        try
+        {
+            Concatenation.continuousPiecewiseLinear(0.0, 2.2, 0.0, 2.2);
+            fail("too few unique points should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+        
+        Concatenation c = Concatenation.continuousPiecewiseLinear(0.0, 2.0, 0.2, 2.1, 0.5, 1.5, 1.0, 5.5);
+        assertEquals(2.0, c.get(0.0), 0.000001, "value at provided domain point");
+        assertEquals(2.1, c.get(0.2), 0.000001, "value at provided domain point");
+        assertEquals(1.5, c.get(0.5), 0.000001, "value at provided domain point");
+        assertEquals(5.5, c.get(1.0), 0.000001, "value at provided domain point");
+        Concatenation derivative = c.getDerivative();
+        assertEquals(0.5, derivative.get(0.1), 0.000001, "slope in segment");
+        assertEquals(-2.0, derivative.get(0.3), 0.000001, "slope in segment");
+        assertEquals(8.0, derivative.get(0.9), 0.000001, "slope in segment");
+        try
+        {
+            c.get(-0.01);
+            fail("get for point outside domain should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+        
+        try
+        {
+            c.get(1.01);
+            fail("get for point outside domain should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+        
+        MathFunction scaled = c.scaleBy(3);
+        assertEquals(2.0 * 3, scaled.get(0.0), 0.000001, "value at provided domain point");
+        assertEquals(2.1 * 3, scaled.get(0.2), 0.000001, "value at provided domain point");
+        assertEquals(1.5 * 3, scaled.get(0.5), 0.000001, "value at provided domain point");
+        assertEquals(5.5 * 3, scaled.get(1.0), 0.000001, "value at provided domain point");
+        MathFunction derivativeScaled = scaled.getDerivative();
+        assertEquals(0.5 * 3, derivativeScaled.get(0.1), 0.000001, "slope in segment");
+        assertEquals(-2.0 * 3, derivativeScaled.get(0.3), 0.000001, "slope in segment");
+        assertEquals(8.0 * 3, derivativeScaled.get(0.9), 0.000001, "slope in segment");
+        
+        assertTrue(c == c.scaleBy(1.0), "scaling by 1.0 return original");
+        assertEquals(110, c.sortPriority(), "sort priority is returned");
+        
+        try
+        {
+            c.compareWithinSubType(Constant.ONE);
+            fail("compareWithinSubType with incompatible type should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+        assertEquals(0, c.compareWithinSubType(c), "compareWithinSubType with itself should return 0");
+        
+        assertTrue(c.toString().startsWith("IntervalSet("), "toString returns something descriptive");
+        
+        Concatenation c2 = Concatenation.continuousPiecewiseLinear(0.0, 2.0, 0.2, 2.1, 0.5, 1.5, 1.0, 5.5);
+        assertEquals(c.hashCode(), c2.hashCode(), "same content should yield same hash code");
+        assertTrue(c.equals(c2), "same content should test as equal");
+        c2 = Concatenation.continuousPiecewiseLinear(0.1, 2.0, 0.2, 2.1, 0.5, 1.5, 1.0, 5.5);
+        assertNotEquals(c.hashCode(), c2.hashCode(), "different start should affect hash code");
+        assertFalse(c.equals(c2), "different start should cause equals test to fail");
+        c2 = Concatenation.continuousPiecewiseLinear(0.0, 3.0, 0.2, 2.1, 0.5, 1.5, 1.0, 5.5);
+        assertNotEquals(c.hashCode(), c2.hashCode(), "different start should affect hash code");
+        System.out.println("the following two should not test equal:");
+        System.out.println(c);
+        System.out.println(c2);
+        assertFalse(c.equals(c2), "different start should cause equals test to fail");
+        assertFalse(c.equals(null), "not equal to null");
+        assertFalse(c.equals("not a Concatenation"), "not equal to some unrelated object");
+    }
+}

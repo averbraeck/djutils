@@ -119,8 +119,8 @@ record Interval<T>(double low, boolean lowInclusive, double high, boolean highIn
     @Override
     public String toString()
     {
-        return (this.lowInclusive ? "[" : "(") + this.low + ", " + this.high
-                + (this.highInclusive ? "]" : ")") + "\u2192" + this.payload;
+        return (this.lowInclusive ? "[" : "(") + this.low + ", " + this.high + (this.highInclusive ? "]" : ")") + "\u2192"
+                + this.payload;
     }
 
     @Override
@@ -140,6 +140,10 @@ record Interval<T>(double low, boolean lowInclusive, double high, boolean highIn
         if (getClass() != obj.getClass())
             return false;
         Interval<?> other = (Interval<?>) obj;
+        if (this.payload != null)
+        {
+            System.out.println("payload equals=" + this.payload.equals(other.payload));
+        }
         return Double.doubleToLongBits(this.high) == Double.doubleToLongBits(other.high)
                 && this.highInclusive == other.highInclusive
                 && Double.doubleToLongBits(this.low) == Double.doubleToLongBits(other.low)
