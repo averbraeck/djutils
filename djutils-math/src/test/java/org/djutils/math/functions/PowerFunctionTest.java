@@ -163,10 +163,22 @@ public class PowerFunctionTest
         MathFunction chained2 = new Sine(2, 3, 4);
         pf2 = new PowerFunction(chained2, 2, 3);
         assertNull(pf.mergeAdd(pf2), "cannot mergeAdd these");
+        assertNotNull(pf.mergeMultiply(pf2), "can mergeMultiply these");
         pf2 = new PowerFunction(2, 3);
         assertNull(pf.mergeAdd(pf2), "cannot mergeAdd these");
+        assertNotNull(pf.mergeMultiply(pf2), "can mergeMultiply these");
+        // System.out.println(pf);
+        // System.out.println(pf2);
+        // System.out.println(pf.mergeMultiply(pf2));
+        assertEquals(pf.get(10) * pf2.get(10), pf.mergeMultiply(pf2).get(10), 0.0001, "check");
         assertNull(pf2.mergeAdd(pf), "cannot mergeAdd these");
+        assertNotNull(pf2.mergeMultiply(pf), "can mergeMultiply these");
+        assertEquals(pf.get(10) * pf2.get(10), pf2.mergeMultiply(pf).get(10), 0.0001, "check");
         assertNotNull(pf.mergeAdd(pf), "can mergeAdd these");
+        assertEquals(pf.get(10) + pf.get(10), pf.mergeAdd(pf).get(10), 0.0001, "check");
+        pf = new PowerFunction(2, 3);
+        assertNotNull(pf.mergeMultiply(pf2), "can mergeMultiply these");
+        assertEquals(pf.get(10) * pf2.get(10), pf.mergeMultiply(pf2).get(10), 0.0001, "check");
     }
 
     /**

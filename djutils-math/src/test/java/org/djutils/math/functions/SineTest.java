@@ -3,6 +3,7 @@ package org.djutils.math.functions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -168,5 +169,17 @@ public class SineTest
         s1 = new Sine(-2, 1, 0);
         assertTrue(s1.toString().contains("sin("));
         assertTrue(s1.toString().contains("-"));
+        
+        s1 = new Sine(chained, 1, 2, 3);
+        s2 = new Sine(chained, 1, 2, 4);
+        assertNotNull(s1.mergeMultiply(s2), "can mergeMultiply these");
+        assertNotNull(s1.mergeAdd(s2), "can mergAdd these");
+        s2 = new Sine(1, 2, 4);
+        assertNull(s1.mergeMultiply(s2), "cannot mergeMultiply these");
+        assertNull(s1.mergeAdd(s2), "cannot mergeAdd these");
+        assertNull(s2.mergeMultiply(s1), "cannot mergeMultiply these");
+        assertNull(s2.mergeAdd(s1), "cannot mergeAdd these");
+        s2 = new Sine(chained, 1, 3, 4);
+        assertNull(s1.mergeAdd(s2), "cannot mergeMultiply these, yet");
     }
 }

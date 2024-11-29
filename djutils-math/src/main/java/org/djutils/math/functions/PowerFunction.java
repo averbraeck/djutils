@@ -35,7 +35,7 @@ public class PowerFunction implements MathFunction
      * Construct a new power function.
      * @param chain the MathFunction that yields the <code>x</code> for this power function
      * @param weight the value at <code>x == 1</code>
-     * @param power the power
+     * @param power the exponent of <code>x</code>
      */
     public PowerFunction(final MathFunction chain, final double weight, final double power)
     {
@@ -47,7 +47,7 @@ public class PowerFunction implements MathFunction
     /**
      * Construct a new power function.
      * @param weight the value at <code>x == 1</code>
-     * @param power the power
+     * @param power the exponent of <code>x</code>
      */
     public PowerFunction(final double weight, final double power)
     {
@@ -59,7 +59,7 @@ public class PowerFunction implements MathFunction
     /**
      * Create a new power function with weight 1.0 and the supplied value as exponent.
      * @param chain the MathFunction that yields the <code>x</code> for this power function
-     * @param power the power
+     * @param power the exponent of <code>chain</code>
      */
     public PowerFunction(final MathFunction chain, final double power)
     {
@@ -68,7 +68,7 @@ public class PowerFunction implements MathFunction
 
     /**
      * Create a new power function with weight 1.0 and the supplied value as exponent.
-     * @param power the power
+     * @param power the exponent of <code>x</code>
      */
     public PowerFunction(final double power)
     {
@@ -212,8 +212,15 @@ public class PowerFunction implements MathFunction
             }
             else if (this.power == otherPowerFunction.power)
             {
-                return new PowerFunction(new Product(this.chain, otherPowerFunction.chain),
-                        this.weight * otherPowerFunction.weight, this.power);
+                double resultWeight = this.weight * otherPowerFunction.weight;
+                if (this.chain != null && otherPowerFunction.chain != null)
+                {
+                    return new PowerFunction(new Product(this.chain, otherPowerFunction.chain), resultWeight, this.power);
+                }
+                // The chain fields cannot both be null; therefore, exactly one is non-null
+                return new PowerFunction(
+                        new Product(new PowerFunction(1, 1), this.chain == null ? otherPowerFunction.chain : this.chain),
+                        resultWeight, this.power);
             }
         }
         return null;
