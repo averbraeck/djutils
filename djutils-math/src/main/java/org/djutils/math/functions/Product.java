@@ -191,12 +191,7 @@ public class Product implements MathFunction
         {
             return simplifiedFactors.get(0);
         }
-        if (this.factors.equals(simplifiedFactors))
-        {
-            return this;
-        }
-        return new Product(simplifiedFactors);
-
+        return this; // Other simplification were already done in the constructor
     }
 
     @Override

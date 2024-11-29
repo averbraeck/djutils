@@ -166,7 +166,6 @@ public class SineTest
         assertTrue(s1.toString().contains("sin("));
         assertTrue(s1.toString().contains("-"));
         s1 = new Sine(-2, 1, 0);
-        System.out.println(s1);
         assertTrue(s1.toString().contains("sin("));
         assertTrue(s1.toString().contains("-"));
     }
