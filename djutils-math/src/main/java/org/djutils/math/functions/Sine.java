@@ -174,7 +174,8 @@ public class Sine implements MathFunction
         if (other instanceof Sine)
         {
             Sine otherSine = (Sine) other;
-            if (this.omega == otherSine.omega && this.chain == otherSine.chain)
+            if (this.omega == otherSine.omega && (this.chain == null && otherSine.chain == null
+                    || (this.chain != null && this.chain.equals(otherSine.chain))))
             {
                 return sumSines(this.chain, this.amplitude, otherSine.amplitude, this.omega, this.shift, otherSine.shift);
             }
@@ -188,7 +189,8 @@ public class Sine implements MathFunction
         if (other instanceof Sine)
         {
             Sine otherSine = (Sine) other;
-            if (this.omega == otherSine.omega && this.chain == otherSine.chain)
+            if (this.omega == otherSine.omega && (this.chain == null && otherSine.chain == null
+                    || (this.chain != null && this.chain.equals(otherSine.chain))))
             {
                 /*-
                  * a * sin(x + theta) * b * sin(x + phi)
@@ -216,7 +218,7 @@ public class Sine implements MathFunction
         boolean closeTo90 = deviation < 10 * Math.ulp(Math.PI);
         boolean useCosine = closeTo90 && roundedQuadrant % 2 == 1;
         boolean useSine = closeTo90 && roundedQuadrant % 2 == 0;
-        //System.out.println("roundedQuadrant=" + roundedQuadrant);
+        // System.out.println("roundedQuadrant=" + roundedQuadrant);
         boolean negativeSign = (useSine || useCosine) && ((roundedQuadrant >= 2) != (this.amplitude < 0));
 
         StringBuilder result = new StringBuilder();

@@ -204,7 +204,8 @@ public class PowerFunction implements MathFunction
         if (other instanceof PowerFunction)
         {
             PowerFunction otherPowerFunction = (PowerFunction) other;
-            if (this.chain == otherPowerFunction.chain)
+            if (this.chain == null && otherPowerFunction.chain == null
+                    || (this.chain != null && this.chain.equals(otherPowerFunction.chain)))
             {
                 return new PowerFunction(this.chain, this.weight * otherPowerFunction.weight,
                         this.power + otherPowerFunction.power);
