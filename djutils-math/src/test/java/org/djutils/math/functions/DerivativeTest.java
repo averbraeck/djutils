@@ -25,7 +25,8 @@ public class DerivativeTest
             new Scenario(new PowerFunction(2, 0.5), 1, 20, 20, 0.0001, 0.0001),
             new Scenario(new PowerFunction(2, -0.5), 1, 20, 20, 0.0001, 0.0001),
             new Scenario(new Sum(new PowerFunction(1, 2), new PowerFunction(5, 1)), -20, 20, 41, 0.0001, 0.001),
-            new Scenario(new Product(new Sine(2, 2, 1), new PowerFunction(1, 2)), -20, 20, 41, 0.0001, 0.2)};
+            new Scenario(new Product(new Sine(2, 2, 1), new PowerFunction(1, 2)), -20, 20, 41, 0.0001, 0.2),
+            new Scenario(new Quotient(new Sine(2, 2, 2), new PowerFunction(2, 3)), -9, 10, 21, 0.0001, 0.2)};
 
     /**
      * Test scenario.
@@ -50,9 +51,8 @@ public class DerivativeTest
         {
             int steps = scenario.steps();
             MathFunction function = scenario.mathFunction();
-            // System.out.println(function.getDescription());
             MathFunction derivative = function.getDerivative();
-            // System.out.println(derivative.getDescription());
+            // System.out.println("f=" + function + ", f'=" + derivative);
             String functionName = function.toString();
             for (int step = 0; step < scenario.steps(); step++)
             {
@@ -63,6 +63,7 @@ public class DerivativeTest
                 {
                     if (side > 0 && step < steps - 1 || side < 0 && step > 0)
                     {
+                        // System.out.println("x=" + x);
                         double dX = x + scenario.delta() * side;
                         double fDX = function.get(dX);
                         double actualSlope = (fDX - fX) / (dX - x);

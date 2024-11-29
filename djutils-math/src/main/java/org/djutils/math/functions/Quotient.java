@@ -27,10 +27,13 @@ public class Quotient implements MathFunction
     /**
      * Construct a new Quotient; division of two <code>MathFunction</code>s, generally <code>numerator / denominator</code>.
      * @param numerator the numerator part of the division (the part above the division line)
-     * @param denominator the denominator of the devision (the part below the division line)
+     * @param denominator the denominator of the division (the part below the division line)
+     * @throws NullPointerException when <code>numerator</code>, or <code>denominator</code> is <code>null</code>
      */
     public Quotient(final MathFunction numerator, final MathFunction denominator)
     {
+        Throw.whenNull(numerator, "numerator");
+        Throw.whenNull(denominator, "denominator");
         this.numerator = numerator;
         this.denominator = denominator;
     }
@@ -44,10 +47,26 @@ public class Quotient implements MathFunction
     @Override
     public MathFunction getDerivative()
     {
-        return new Quotient(
+        Quotient result = new Quotient(
                 new Sum(new Product(this.numerator.getDerivative(), this.denominator),
                         new Product(this.numerator.scaleBy(-1), this.denominator.getDerivative())),
-                new Product(this.denominator, this.denominator)).simplify();
+                new Product(this.denominator, this.denominator));
+        MathFunction simplified = result.simplify();
+        if (simplified != null)
+        {
+            return simplified;
+        }
+        return result;
+    }
+    
+    @Override
+    public MathFunction simplify()
+    {
+        if (this.denominator instanceof Constant)
+        {
+            return this.numerator.scaleBy(1.0 / this.denominator.get(0));
+        }
+        return null;
     }
     
     @Override
@@ -67,7 +86,7 @@ public class Quotient implements MathFunction
     {
         Throw.when(!(other instanceof Quotient), IllegalArgumentException.class, "other is of wrong type");
         Quotient otherQuotient = (Quotient) other;
-        return this.denominator.sortPriority() - otherQuotient.sortPriority();
+        return this.denominator.sortPriority() - otherQuotient.denominator.sortPriority();
     }
 
     @Override
