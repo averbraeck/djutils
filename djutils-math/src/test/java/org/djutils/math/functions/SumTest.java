@@ -107,6 +107,10 @@ public class SumTest
         assertEquals(sum.hashCode(), sum2.hashCode(), "hash code should be same");
         sum2 = new Sum(new Constant(3), new PowerFunction(3, 4));
         assertNotEquals(sum.hashCode(), sum2.hashCode(), "hash code takes terms into account");
+        Product p = new Product(Constant.ONE);
+        sum = new Sum(p);
+        mf = sum.simplify();
+        assertEquals(Constant.ONE, mf, "should be reduced to constant ONE");
     }
 
     /**
