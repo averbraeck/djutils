@@ -180,6 +180,14 @@ public class PowerFunction implements MathFunction
         {
             return 1;
         }
+        if (this.weight < otherPowerFunction.weight)
+        {
+            return 1;
+        }
+        if (this.weight > otherPowerFunction.weight)
+        {
+            return -1;
+        }
         return 0;
     }
 

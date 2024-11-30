@@ -78,16 +78,17 @@ public interface MathFunction extends Comparable<MathFunction>
     int sortPriority();
 
     /**
-     * Determine sorting order among instances of a particular sub type of MathFunction.
-     * @param other the other MathFunction that must be of the same type
+     * Determine sorting order among instances of a particular sub type of <code>MathFunction</code>. The sorting order should
+     * sort <code>MathFunction</code>s that may be combined next to one another. Because <code>MathFunction</code>s are also
+     * used in <code>SortedSet</code>s, this comparator may return 0 <b>if and only if</b> this and other are entirely equal!
+     * @param other the other <code>MathFunction</code> that must be of the same type
      * @return int; &lt; 0 when this sorts before other; &gt; 0 when this sorts after other; 0 when this and other are identical
-     *         enough to be potentially merged into one
      */
     int compareWithinSubType(MathFunction other);
 
     /**
-     * This MathFunction is added to another; try to replace both by a combined MathFunction.
-     * @param other the other MathFunction
+     * This MathFunction is added to another; try to replace both by a combined <code>MathFunction</code>.
+     * @param other the other <code>MathFunction</code>
      * @return combined MathFunction, or null when the two could not be combined
      */
     default MathFunction mergeAdd(final MathFunction other)

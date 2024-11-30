@@ -137,17 +137,17 @@ public class IntervalTest
 
         // Interval should sort by left boundary
         interval1 = new Interval<String>(2, true, 4, false, null);
-        interval2 = new Interval<String>(2, true, 5, false, null);
+        interval2 = new Interval<String>(2, true, 4, false, null);
         assertEquals(0, interval1.compareTo(interval1), "should compare equal");
         assertEquals(0, interval1.compareTo(interval2), "should compare equal");
         assertEquals(0, interval2.compareTo(interval1), "should compare equal");
-        interval2 = new Interval<String>(2, false, 5, false, null);
+        interval2 = new Interval<String>(2, false, 4, false, null);
         assertTrue(interval1.compareTo(interval2) < 0,
                 "interval that starts at same point, but includes boundary should sort first");
         assertTrue(interval2.compareTo(interval1) > 0,
                 "interval that starts at same point, but not includes boundary should sort last");
         interval1 = new Interval<String>(2, false, 4, false, null);
-        interval2 = new Interval<String>(2, false, 5, false, null);
+        interval2 = new Interval<String>(2, false, 4, false, null);
         // Check the covers method that takes a double argument
         interval1 = new Interval<String>(2, false, 4, false, null);
         assertEquals(0, interval1.compareTo(interval1), "should compare equal");

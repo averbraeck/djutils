@@ -136,11 +136,27 @@ public class Sine implements MathFunction
     {
         Throw.when(!(other instanceof Sine), IllegalArgumentException.class, "other is of wrong type");
         Sine otherSine = (Sine) other;
-        if (otherSine.omega > this.omega)
+        if (this.omega < otherSine.omega)
         {
             return -1;
         }
-        if (otherSine.omega < this.omega)
+        if (this.omega > otherSine.omega)
+        {
+            return 1;
+        }
+        if (this.amplitude < otherSine.amplitude)
+        {
+            return -1;
+        }
+        if (this.amplitude > otherSine.amplitude)
+        {
+            return 1;
+        }
+        if (this.shift < otherSine.shift)
+        {
+            return -1;
+        }
+        if (this.shift > otherSine.shift)
         {
             return 1;
         }

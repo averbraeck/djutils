@@ -22,7 +22,7 @@ import org.djutils.exceptions.Throw;
  * @param highInclusive if true; the high limit is included; if false; the high limit is not included
  * @param payload the payload of this Interval
  */
-record Interval<T>(double low, boolean lowInclusive, double high, boolean highInclusive, T payload)
+record Interval<T extends Comparable<T>>(double low, boolean lowInclusive, double high, boolean highInclusive, T payload)
         implements Comparable<Interval<?>>
 {
     /**
@@ -91,9 +91,11 @@ record Interval<T>(double low, boolean lowInclusive, double high, boolean highIn
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public int compareTo(final Interval<?> other)
     {
+        // compare the low boundary
         if (this.low < other.low || this.low == other.low && this.lowInclusive && (!other.lowInclusive))
         {
             return -1;
@@ -101,6 +103,20 @@ record Interval<T>(double low, boolean lowInclusive, double high, boolean highIn
         if (this.low > other.low || this.low == other.low && other.lowInclusive && (!this.lowInclusive))
         {
             return 1;
+        }
+        // low and lowInclusive are the same; compare the high boundary
+        if (this.high < other.high || this.high == other.high && (!this.highInclusive) && other.highInclusive)
+        {
+            return -1;
+        }
+        if (this.high > other.high || this.high == other.high && this.highInclusive && (!other.highInclusive))
+        {
+            return 1;
+        }
+        // boundaries are exactly the same; compare the payload
+        if (this.payload != null)
+        {
+            return this.payload.compareTo((T) other.payload);
         }
         return 0;
     }

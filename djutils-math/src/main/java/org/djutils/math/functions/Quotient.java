@@ -86,7 +86,12 @@ public class Quotient implements MathFunction
     {
         Throw.when(!(other instanceof Quotient), IllegalArgumentException.class, "other is of wrong type");
         Quotient otherQuotient = (Quotient) other;
-        return this.denominator.sortPriority() - otherQuotient.denominator.sortPriority();
+        int result = this.denominator.compareTo(otherQuotient.denominator);
+        if (result != 0)
+        {
+            return result;
+        }
+        return this.numerator.compareTo(otherQuotient.numerator);
     }
 
     @Override

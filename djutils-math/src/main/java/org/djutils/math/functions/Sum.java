@@ -172,6 +172,23 @@ public class Sum implements MathFunction
     public int compareWithinSubType(final MathFunction other)
     {
         Throw.when(!(other instanceof Sum), IllegalArgumentException.class, "other is of wrong type");
+        Sum otherSum = (Sum) other;
+        for (int index = 0; index < this.terms.size(); index++)
+        {
+            if (index >= otherSum.terms.size())
+            {
+                return 1;
+            }
+            int result = this.terms.get(index).compareTo(otherSum.terms.get(index));
+            if (result != 0)
+            {
+                return result;
+            }
+        }
+        if (otherSum.terms.size() > this.terms.size())
+        {
+            return -1;
+        }
         return 0;
     }
 

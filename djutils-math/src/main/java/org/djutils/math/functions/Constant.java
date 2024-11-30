@@ -85,6 +85,15 @@ public class Constant implements MathFunction
     public int compareWithinSubType(final MathFunction other)
     {
         Throw.when(!(other instanceof Constant), IllegalArgumentException.class, "other is of wrong type");
+        Constant otherConstant = (Constant) other;
+        if (this.value < otherConstant.value)
+        {
+            return -1;
+        }
+        if (this.value > otherConstant.value)
+        {
+            return 1;
+        }
         return 0;
     }
 

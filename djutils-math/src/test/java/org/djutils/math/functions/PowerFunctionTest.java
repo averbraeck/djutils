@@ -153,7 +153,7 @@ public class PowerFunctionTest
         assertTrue(pf.compareWithinSubType(pf2) < 0, "should sort by power");
         assertTrue(pf2.compareWithinSubType(pf) > 0, "should sort by power");
         pf2 = new PowerFunction(3, 3);
-        assertEquals(0, pf.compareWithinSubType(pf2), "same power yields 0");
+        assertTrue(pf.compareWithinSubType(pf2) > 0, "same power yields 0");
         pf2 = new PowerFunction(chained, 2, 3);
         assertFalse(pf.equals(pf2), "equals takes chained into account");
         assertTrue(pf2.toString().contains("(" + chained.toString() + ")"), "toString output contains chained");

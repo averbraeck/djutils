@@ -131,9 +131,6 @@ public class ConcatenationTest
         assertFalse(c.equals(c2), "different start should cause equals test to fail");
         c2 = Concatenation.continuousPiecewiseLinear(0.0, 3.0, 0.2, 2.1, 0.5, 1.5, 1.0, 5.5);
         assertNotEquals(c.hashCode(), c2.hashCode(), "different start should affect hash code");
-        System.out.println("the following two should not test equal:");
-        System.out.println(c);
-        System.out.println(c2);
         assertFalse(c.equals(c2), "different start should cause equals test to fail");
         assertFalse(c.equals(null), "not equal to null");
         assertFalse(c.equals("not a Concatenation"), "not equal to some unrelated object");

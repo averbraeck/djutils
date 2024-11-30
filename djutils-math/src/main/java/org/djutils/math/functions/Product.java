@@ -204,6 +204,23 @@ public class Product implements MathFunction
     public int compareWithinSubType(final MathFunction other)
     {
         Throw.when(!(other instanceof Product), IllegalArgumentException.class, "other is of wrong type");
+        Product otherProduct = (Product) other;
+        for (int index = 0; index < this.factors.size(); index++)
+        {
+            if (index >= otherProduct.factors.size())
+            {
+                return 1;
+            }
+            int result = this.factors.get(index).compareTo(otherProduct.factors.get(index));
+            if (result != 0)
+            {
+                return result;
+            }
+        }
+        if (otherProduct.factors.size() > this.factors.size())
+        {
+            return -1;
+        }
         return 0;
     }
 
