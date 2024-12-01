@@ -66,7 +66,7 @@ public class Quotient implements MathFunction
         {
             return this.numerator.scaleBy(1.0 / this.denominator.get(0));
         }
-        return null;
+        return this.numerator.mergeDivide(this.denominator);
     }
     
     @Override

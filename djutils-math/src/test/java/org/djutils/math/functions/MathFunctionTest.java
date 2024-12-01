@@ -67,6 +67,7 @@ public class MathFunctionTest
         SubClass subClass = new SubClass();
         assertNull(subClass.mergeAdd(Constant.ONE), "default mergeAdd returns null");
         assertNull(subClass.mergeMultiply(Constant.ONE), "default mergeMultiply returns null");
+        assertNull(subClass.mergeDivide(Constant.ONE), "default mergeDivide returns null");
         assertEquals(1.0, subClass.getScale(), "default getScale returns 1");
     }
     

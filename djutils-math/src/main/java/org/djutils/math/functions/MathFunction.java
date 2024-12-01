@@ -105,6 +105,16 @@ public interface MathFunction extends Comparable<MathFunction>
     {
         return null;
     }
+    
+    /**
+     * This MathFunction is divided by another; try to replace both by a combined MathFunction.
+     * @param other the other MathFunction
+     * @return combined MathFunction, or null when the two could not be combined
+     */
+    default MathFunction mergeDivide(final MathFunction other)
+    {
+        return null;
+    }
 
     @Override
     default int compareTo(final MathFunction other)

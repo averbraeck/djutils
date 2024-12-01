@@ -180,6 +180,35 @@ public class PowerFunctionTest
         pf = new PowerFunction(2, 3);
         assertNotNull(pf.mergeMultiply(pf2), "can mergeMultiply these");
         assertEquals(pf.get(10) * pf2.get(10), pf.mergeMultiply(pf2).get(10), 0.0001, "check");
+
+        pf = new PowerFunction(2, 3);
+        pf2 = new PowerFunction(3, 2);
+        // System.out.println(pf);
+        // System.out.println(pf2);
+        MathFunction quotient = new Quotient(pf, pf2);
+        // System.out.println(quotient);
+        quotient = quotient.simplify();
+        // System.out.println(quotient);
+        assertEquals(new PowerFunction(2.0 / 3.0, 1), quotient, "should simplify to linear power function");
+        quotient = new Quotient(pf2, pf);
+        // System.out.println(quotient);
+        quotient = quotient.simplify();
+        // System.out.println(quotient);
+        assertEquals(new PowerFunction(1.5, -1), quotient, "should simplify to this");
+        quotient = new Quotient(pf, new Sine(1, 2, 3));
+        assertNull(quotient.simplify(), "cannot simplify this");
+        pf2 = new PowerFunction(chained, 3, 2);
+        quotient = new Quotient(pf, pf2);
+        assertNull(quotient.simplify(), "cannot simplify this, yet");
+        quotient = new Quotient(pf2, pf);
+        assertNull(quotient.simplify(), "cannot simplify this, yet");
+        pf = new PowerFunction(chained, 2, 3);
+        quotient = new Quotient(pf, pf2);
+        // System.out.println(quotient);
+        quotient = quotient.simplify();
+        // System.out.println(quotient);
+        assertEquals(new PowerFunction(chained, 2.0 / 3.0, 1), quotient, "should simplify to this");
+
     }
 
     /**
