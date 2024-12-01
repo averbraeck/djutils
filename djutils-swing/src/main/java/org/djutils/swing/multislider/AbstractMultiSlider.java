@@ -96,7 +96,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent
     /** MultiSlider restriction on overlap. */
     private boolean overlap = true;
 
-    /** busy tesingt whether the state change of an underlying slider is okay, to avoid stack overflow. */
+    /** busy testing whether the state change of an underlying slider is okay, to avoid stack overflow. */
     private boolean testingStateChange = false;
 
     /**
@@ -179,7 +179,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent
 
         this.dispatcherPane.setPreferredSize(new Dimension(this.sliders[0].getSize()));
         calculateTrackSize();
-        
+
         // listen to resize events to (re)set the track width or height
         addComponentListener(new ComponentAdapter()
         {
@@ -572,12 +572,6 @@ public abstract class AbstractMultiSlider<T> extends JComponent
      */
     protected void fireStateChanged()
     {
-        // Check if the current state is legal (don't send events before checkRestrictions() has been called)
-        if (!legalState())
-        {
-            return;
-        }
-
         // See if an actual state change has occurred
         boolean changed = false;
         for (int i = 0; i < getNumberOfThumbs(); i++)
@@ -1260,33 +1254,6 @@ public abstract class AbstractMultiSlider<T> extends JComponent
     public boolean getOverlap()
     {
         return this.overlap;
-    }
-
-    /**
-     * Check whether the current state of the multislider is legal and all restrictions are met.
-     * @return whether the current state of the multislider is legal or not
-     */
-    protected boolean legalState()
-    {
-        if (!this.passing || !this.overlap)
-        {
-            for (int i = 1; i < getNumberOfThumbs(); i++)
-            {
-                if (getIndexValue(i) < getIndexMinimum() || getIndexValue(i) > getIndexMaximum())
-                {
-                    return false;
-                }
-                if (getIndexValue(i) <= getIndexValue(i - 1))
-                {
-                    return false;
-                }
-                if (!this.overlap && getIndexValue(i) == getIndexValue(i - 1))
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     /**
