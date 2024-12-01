@@ -69,6 +69,7 @@ public class IntervalTest
         interval1 = new Interval<String>(1, true, 2, true, null);
         interval2 = new Interval<String>(2, true, 2, true, null);
         assertTrue(interval1.covers(interval2), "interval2 is completely inside interval1");
+        assertFalse(interval2.covers(interval1), "interval2 is completely inside interval1");
         interval2 = new Interval<String>(3, true, 5, true, null);
         assertTrue(interval1.disjunct(interval2), "totally disjunct");
         assertTrue(interval2.disjunct(interval1), "totally disjunct");
@@ -76,14 +77,24 @@ public class IntervalTest
         assertFalse(interval2.covers(interval1), "totally disjunct");
 
         assertTrue(interval1.equals(interval1), "equal to itself");
+        assertTrue(interval1.compareTo(interval1) == 0);
         assertFalse(interval1.equals(null), "not equal to null");
         assertFalse(interval1.equals("not an Interval"), "not equal to unrelated object");
         interval2 = new Interval<String>(0, true, 2, true, null);
         assertFalse(interval1.equals(interval2), "left boundary differs");
+        assertTrue(interval1.compareTo(interval2) > 0);
+        assertTrue(interval2.compareTo(interval1) < 0);
         interval2 = new Interval<String>(1, true, 3, true, null);
         assertFalse(interval1.equals(interval2), "right boundary differs");
+        assertTrue(interval1.compareTo(interval2) < 0);
+        assertTrue(interval2.compareTo(interval1) > 0);
         interval2 = new Interval<String>(1, true, 2, true, "Hello");
         assertFalse(interval1.equals(interval2), "payload differs");
+        assertTrue(interval1.compareTo(interval2) > 0);
+        assertTrue(interval2.compareTo(interval1) < 0);
+        interval1 = new Interval<String>(1, true, 2, true, "XYZ");
+        assertTrue(interval1.compareTo(interval2) > 0);
+        assertTrue(interval2.compareTo(interval1) < 0);
 
         for (boolean i1Left : new boolean[] {true, false})
         {
@@ -112,6 +123,7 @@ public class IntervalTest
                     {
                         interval2 = new Interval<String>(1, i2Left, 2, i2Right, null);
                         boolean covers = (i1Left || (!i2Left)) && (i1Right || (!i2Right));
+                        boolean equals = i1Left == i2Left && i1Right == i2Right;
                         // System.out.println("interval1 " + interval1 + ", interval2 " + interval2 + ", covers " + covers);
                         if (covers)
                         {
@@ -121,14 +133,19 @@ public class IntervalTest
                         {
                             assertFalse(interval1.covers(interval2));
                         }
-                        boolean equals = i1Left == i2Left && i1Right == i2Right;
                         if (equals)
                         {
                             assertEquals(interval1, interval2);
+                            assertEquals(0, interval1.compareTo(interval2));
                         }
                         else
                         {
                             assertNotEquals(interval1, interval2);
+                            if (i1Left && (!i2Left) || i1Left == i2Left && (!i1Right) && i2Right)
+                            {
+                                assertTrue(interval1.compareTo(interval2) < 0);
+                                assertTrue(interval2.compareTo(interval1) > 0); 
+                            }
                         }
                     }
                 }

@@ -116,7 +116,15 @@ record Interval<T extends Comparable<T>>(double low, boolean lowInclusive, doubl
         // boundaries are exactly the same; compare the payload
         if (this.payload != null)
         {
+            if (other.payload == null)
+            {
+                return -1;
+            }
             return this.payload.compareTo((T) other.payload);
+        }
+        if (other.payload != null)
+        {
+            return 1;
         }
         return 0;
     }
@@ -156,10 +164,6 @@ record Interval<T extends Comparable<T>>(double low, boolean lowInclusive, doubl
         if (getClass() != obj.getClass())
             return false;
         Interval<?> other = (Interval<?>) obj;
-        if (this.payload != null)
-        {
-            System.out.println("payload equals=" + this.payload.equals(other.payload));
-        }
         return Double.doubleToLongBits(this.high) == Double.doubleToLongBits(other.high)
                 && this.highInclusive == other.highInclusive
                 && Double.doubleToLongBits(this.low) == Double.doubleToLongBits(other.low)

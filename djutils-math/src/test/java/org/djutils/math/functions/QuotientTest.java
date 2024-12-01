@@ -87,10 +87,13 @@ public class QuotientTest
         q2 = new Quotient(numerator, Constant.ONE);
         assertFalse(q.equals(q2), "should test not equal");
         assertNotEquals(q.hashCode(), q2.hashCode(), "should be different");
+        assertTrue(q.compareTo(q2) < 0, "should sort before");
+        assertTrue(q2.compareTo(q) > 0, "should sort before");
         assertFalse(q.equals(null));
         assertFalse(q.equals("Not a Quotient"));
         assertTrue(q.toString().contains(numerator.toString()), "numerator is in toString");
         assertTrue(q.toString().contains(denominator.toString()), "denominator is in toString");
         assertTrue(q.toString().contains("/"), "there is a forward slash in toString");
+        
     }
 }

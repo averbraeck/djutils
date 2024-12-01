@@ -103,6 +103,9 @@ public class SineTest
             assertEquals(Math.sin(2 * x + 3) + Math.sin(2 * x), simplified.get(x), 0.0001,
                     "simplified sum of two sines, same omega");
         }
+        s2 = new Sine(2, 2, 3);
+        assertTrue(s1.compareTo(s2) < 0, "sort by amplitude");
+        assertTrue(s2.compareTo(s1) > 0, "sort by amplitude");
         s2 = new Sine(1, 3, 0); // sin(3 * x)
         sum = new Sum(s1, s2); // sin(2 * x + 3) + sin(3 * x)
         simplified = sum.simplify();

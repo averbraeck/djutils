@@ -111,6 +111,10 @@ public class SumTest
         sum = new Sum(p);
         mf = sum.simplify();
         assertEquals(Constant.ONE, mf, "should be reduced to constant ONE");
+        sum = new Sum(new Constant(2), new PowerFunction(2, 3), new Sine(1, 2, 3));
+        sum2 = new Sum(new Constant(2), new PowerFunction(2, 3));
+        assertTrue(sum.compareTo(sum2) > 0, "shortest goes first");
+        assertTrue(sum2.compareTo(sum) < 0, "shortest goes first");
     }
 
     /**

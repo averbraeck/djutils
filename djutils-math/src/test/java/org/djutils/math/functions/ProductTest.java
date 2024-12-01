@@ -72,5 +72,15 @@ public class ProductTest
         p2 = new Product(new Constant(4));
         assertNotEquals(p.hashCode(), p2.hashCode(), "hash code takes the factor(s) into account");
         assertFalse(p.equals(null), "not equal to null");
+        
+        p = new Product(new Sine(1, 2, 3), new Sine(1, 3, 1));
+        p2 = new Product(new Sine(1, 2, 3));
+        assertTrue(p.compareTo(p2) > 0);
+        assertTrue(p2.compareTo(p) < 0);
+        p2 = new Product(new Sine(1, 2, 3), new PowerFunction(2, 2));
+        assertTrue(p.compareTo(p2) > 0);
+        assertTrue(p2.compareTo(p) < 0);
+        p2 = new Product(new Sine(1, 2, 3), new Sine(1, 3, 1));
+        assertEquals(0, p.compareTo(p2));
     }
 }
