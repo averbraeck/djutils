@@ -178,20 +178,20 @@ public abstract class AbstractMultiSlider<T> extends JComponent
         }
 
         this.dispatcherPane.setPreferredSize(new Dimension(this.sliders[0].getSize()));
-
-        // listen to resize events to (re)set the track width or height
         calculateTrackSize();
+        
+        // listen to resize events to (re)set the track width or height
         addComponentListener(new ComponentAdapter()
         {
             @Override
             public void componentResized(final ComponentEvent e)
             {
                 super.componentResized(e);
+                AbstractMultiSlider.this.setUI(getUI());
                 calculateTrackSize();
+                AbstractMultiSlider.this.dispatcherPane.revalidate();
                 AbstractMultiSlider.this.labelPanel.revalidate();
-                AbstractMultiSlider.this.dispatcherPane
-                        .setPreferredSize(new Dimension(AbstractMultiSlider.this.sliders[0].getSize()));
-                revalidate();
+                AbstractMultiSlider.this.labelPanel.repaint();
             }
         });
 
