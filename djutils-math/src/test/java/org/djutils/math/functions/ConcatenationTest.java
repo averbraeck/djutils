@@ -37,7 +37,7 @@ public class ConcatenationTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             Concatenation.continuousPiecewiseLinear(0.0, 2.2);
@@ -47,7 +47,7 @@ public class ConcatenationTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             Concatenation.continuousPiecewiseLinear(0.0, 2.2, 0.0, 3.2);
@@ -57,7 +57,7 @@ public class ConcatenationTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             Concatenation.continuousPiecewiseLinear(0.0, 2.2, 0.0, 2.2);
@@ -67,7 +67,7 @@ public class ConcatenationTest
         {
             // Ignore expected exception
         }
-        
+
         Concatenation c = Concatenation.continuousPiecewiseLinear(0.0, 2.0, 0.2, 2.1, 0.5, 1.5, 1.0, 5.5);
         assertEquals(2.0, c.get(0.0), 0.000001, "value at provided domain point");
         assertEquals(2.1, c.get(0.2), 0.000001, "value at provided domain point");
@@ -86,7 +86,7 @@ public class ConcatenationTest
         {
             // Ignore expected exception
         }
-        
+
         try
         {
             c.get(1.01);
@@ -96,7 +96,7 @@ public class ConcatenationTest
         {
             // Ignore expected exception
         }
-        
+
         MathFunction scaled = c.scaleBy(3);
         assertEquals(2.0 * 3, scaled.get(0.0), 0.000001, "value at provided domain point");
         assertEquals(2.1 * 3, scaled.get(0.2), 0.000001, "value at provided domain point");
@@ -106,10 +106,10 @@ public class ConcatenationTest
         assertEquals(0.5 * 3, derivativeScaled.get(0.1), 0.000001, "slope in segment");
         assertEquals(-2.0 * 3, derivativeScaled.get(0.3), 0.000001, "slope in segment");
         assertEquals(8.0 * 3, derivativeScaled.get(0.9), 0.000001, "slope in segment");
-        
+
         assertTrue(c == c.scaleBy(1.0), "scaling by 1.0 return original");
         assertEquals(110, c.sortPriority(), "sort priority is returned");
-        
+
         try
         {
             c.compareWithinSubType(Constant.ONE);
@@ -120,9 +120,9 @@ public class ConcatenationTest
             // Ignore expected exception
         }
         assertEquals(0, c.compareWithinSubType(c), "compareWithinSubType with itself should return 0");
-        
+
         assertTrue(c.toString().startsWith("IntervalSet("), "toString returns something descriptive");
-        
+
         Concatenation c2 = Concatenation.continuousPiecewiseLinear(0.0, 2.0, 0.2, 2.1, 0.5, 1.5, 1.0, 5.5);
         assertEquals(c.hashCode(), c2.hashCode(), "same content should yield same hash code");
         assertTrue(c.equals(c2), "same content should test as equal");
@@ -134,5 +134,104 @@ public class ConcatenationTest
         assertFalse(c.equals(c2), "different start should cause equals test to fail");
         assertFalse(c.equals(null), "not equal to null");
         assertFalse(c.equals("not a Concatenation"), "not equal to some unrelated object");
+
+        MathFunction mf1 = new PowerFunction(1, 2);
+        MathFunction mf2 = new PowerFunction(2, 3);
+        c = new Concatenation(new Interval<MathFunction>(1, true, 2, true, mf1),
+                new Interval<MathFunction>(3, true, 5, true, mf2));
+        assertEquals(mf1.get(1.0), c.get(1.0), 0.0, "mf1");
+        assertEquals(mf1.get(1.5), c.get(1.5), 0.0, "mf1");
+        assertEquals(mf1.get(2.0), c.get(2.0), 0.0, "mf1");
+        assertEquals(mf2.get(3.0), c.get(3.0), 0.0, "mf3");
+        assertEquals(mf2.get(3.5), c.get(3.5), 0.0, "mf3");
+        assertEquals(mf2.get(5.0), c.get(5.0), 0.0, "mf3");
+        assertTrue(Double.isNaN(c.get(2.5)), "NaN between the two sections");
+        c = new Concatenation(new Interval<MathFunction>(1, true, 2, false, mf1),
+                new Interval<MathFunction>(3, false, 5, true, mf2));
+        assertEquals(mf1.get(1.0), c.get(1.0), 0.0, "mf1");
+        assertEquals(mf1.get(1.5), c.get(1.5), 0.0, "mf1");
+        assertTrue(Double.isNaN(c.get(2.0)), "NaN between the two sections");
+        assertTrue(Double.isNaN(c.get(3.0)), "NaN between the two sections");
+        assertEquals(mf2.get(3.5), c.get(3.5), 0.0, "mf3");
+        assertEquals(mf2.get(5.0), c.get(5.0), 0.0, "mf3");
+        assertTrue(Double.isNaN(c.get(2.5)), "NaN between the two sections");
+        c = new Concatenation(new Interval<MathFunction>(1, true, 2, true, mf1),
+                new Interval<MathFunction>(2, false, 5, true, mf2));
+        assertEquals(mf1.get(1.0), c.get(1.0), 0.0, "mf1");
+        assertEquals(mf1.get(1.5), c.get(1.5), 0.0, "mf1");
+        assertEquals(mf1.get(2.0), c.get(2.0), 0.0, "mf1");
+        assertEquals(mf2.get(2.1), c.get(2.1), 0.0, "mf3");
+        assertEquals(mf2.get(3.5), c.get(3.5), 0.0, "mf3");
+        assertEquals(mf2.get(5.0), c.get(5.0), 0.0, "mf3");
+        c = new Concatenation(new Interval<MathFunction>(1, true, 2, false, mf1),
+                new Interval<MathFunction>(2, true, 5, true, mf2));
+        assertEquals(mf1.get(1.0), c.get(1.0), 0.0, "mf1");
+        assertEquals(mf1.get(1.5), c.get(1.5), 0.0, "mf1");
+        assertEquals(mf1.get(1.9), c.get(1.9), 0.0, "mf1");
+        assertEquals(mf2.get(2.0), c.get(2.0), 0.0, "mf3");
+        assertEquals(mf2.get(3.5), c.get(3.5), 0.0, "mf3");
+        assertEquals(mf2.get(5.0), c.get(5.0), 0.0, "mf3");
+        c = new Concatenation(new Interval<MathFunction>(1, true, 2, false, mf1),
+                new Interval<MathFunction>(2, false, 5, true, mf2));
+        assertEquals(mf1.get(1.0), c.get(1.0), 0.0, "mf1");
+        assertEquals(mf1.get(1.5), c.get(1.5), 0.0, "mf1");
+        assertEquals(mf1.get(1.9), c.get(1.9), 0.0, "mf1");
+        assertEquals(mf2.get(2.1), c.get(2.1), 0.0, "mf3");
+        assertEquals(mf2.get(3.5), c.get(3.5), 0.0, "mf3");
+        assertEquals(mf2.get(5.0), c.get(5.0), 0.0, "mf3");
+        assertTrue(Double.isNaN(c.get(2.0)), "NaN between the two sections");
+        try
+        {
+            new Concatenation(new Interval<MathFunction>(1, true, 2, true, mf1),
+                    new Interval<MathFunction>(2, true, 5, true, mf2));
+            fail("overlap at 2 should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            c.get(0.5);
+            fail("outside domain should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            c.get(5.5);
+            fail("outside domain should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new Concatenation(new Interval<MathFunction>(1, true, 2, true, mf1),
+                    new Interval<MathFunction>(2, true, 5, true, mf2));
+            fail("domain value 2.0 falls in two intervals; should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+
+        try
+        {
+            new Concatenation();
+            fail("no arguments should have thrown an IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Ignore expected exception
+        }
+        
+        assertTrue(c.equals(c), "equal to itself");
     }
 }
