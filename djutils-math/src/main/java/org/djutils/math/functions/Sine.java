@@ -160,7 +160,7 @@ public class Sine implements MathFunction
         {
             return 1;
         }
-        return 0;
+        return compareChains(this.chain, otherSine.chain);
     }
 
     /**

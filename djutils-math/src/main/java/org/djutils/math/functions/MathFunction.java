@@ -72,6 +72,31 @@ public interface MathFunction extends Comparable<MathFunction>
     }
 
     /**
+     * Compare chains for sorting.
+     * @param chain1 chain <code>MathFunction</code> of first <code>MathFunction</code> (may be <code>null</code>)
+     * @param chain2 chain <code>MathFunction</code> of second <code>MathFunction</code> (may be <code>null</code>)
+     * @return int <code>&lt; 0</code> when <code>chain1</code> sorts before <code>chain2</code>; <code>&gt; 0</code> when
+     *         <code>chain1</code> sorts after <code>chain2</code>; <code>0</code> when <code>chain1</code> is equal to
+     *         <code>chain2</code>
+     */
+    default int compareChains(final MathFunction chain1, final MathFunction chain2)
+    {
+        if (chain1 == null && chain2 != null)
+        {
+            return 1;
+        }
+        if (chain1 != null && chain2 == null)
+        {
+            return -1;
+        }
+        if (chain1 != null)
+        {
+            return chain1.compareTo(chain2);
+        }
+        return 0;
+    }
+
+    /**
      * Sorting priority of this type of MathFunction (low values shall sort before higher).
      * @return sorting priority of this type of MathFunction
      */
@@ -105,7 +130,7 @@ public interface MathFunction extends Comparable<MathFunction>
     {
         return null;
     }
-    
+
     /**
      * This MathFunction is divided by another; try to replace both by a combined MathFunction.
      * @param other the other MathFunction
