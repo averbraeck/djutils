@@ -93,5 +93,8 @@ public class LogarithmTest
         assertFalse(new Logarithm(new Sine(1, 2, 3)).equals(l), "checks chained");
         assertFalse(l.equals(log10), "checks factor");
         assertTrue(logChained.toString().contains(chained.toString()), "toString includes chain");
+
+        Logarithm inf = new Logarithm(Double.POSITIVE_INFINITY);
+        assertEquals(Constant.ZERO, inf.simplify(), "should simplify to ZERO");
     }
 }

@@ -96,6 +96,16 @@ public class Logarithm implements MathFunction
     }
 
     @Override
+    public MathFunction simplify()
+    {
+        if (this.logBaseRecip == 0.0)
+        {
+            return Constant.ZERO;
+        }
+        return this;
+    }
+
+    @Override
     public MathFunction scaleBy(final double scaleFactor)
     {
         if (scaleFactor == 0.0)
