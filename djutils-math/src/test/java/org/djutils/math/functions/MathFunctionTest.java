@@ -69,8 +69,14 @@ public class MathFunctionTest
         assertNull(subClass.mergeMultiply(Constant.ONE), "default mergeMultiply returns null");
         assertNull(subClass.mergeDivide(Constant.ONE), "default mergeDivide returns null");
         assertEquals(1.0, subClass.getScale(), "default getScale returns 1");
+
+        assertTrue(subClass.compareChains(null, Constant.ONE) > 0);
+        assertTrue(subClass.compareChains(Constant.ONE, null) < 0);
+        assertEquals(0, subClass.compareChains(null, null));
+        assertEquals(0, subClass.compareChains(Constant.ONE, Constant.ONE));
+        assertTrue(subClass.compareChains(Constant.ONE, Constant.ZERO) > 0);
     }
-    
+
     /**
      * Test the TupleSt record in the Function interface.
      */
