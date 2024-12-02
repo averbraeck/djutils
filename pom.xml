@@ -14,7 +14,7 @@
     <url>https://www.tudelft.nl</url>
   </organization>
 
-  <inceptionYear>2018-2024</inceptionYear>
+  <inceptionYear>2018</inceptionYear>
 
   <modules>
     <module>djutils-cli</module>
