@@ -14,7 +14,7 @@
     <url>https://www.tudelft.nl</url>
   </organization>
 
-  <inceptionYear>2018</inceptionYear>
+  <inceptionYear>2018-2024</inceptionYear>
 
   <modules>
     <module>djutils-cli</module>
@@ -798,7 +798,7 @@
 
   <licenses>
     <license>
-      <name>BSD 3-Clause license</name>
+      <name>BSD 3-Clause</name>
       <url>https://opensource.org/licenses/BSD-3-Clause</url>
       <distribution>repo</distribution>
     </license>
