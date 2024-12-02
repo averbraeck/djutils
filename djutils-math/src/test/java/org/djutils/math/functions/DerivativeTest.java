@@ -26,7 +26,9 @@ public class DerivativeTest
             new Scenario(new PowerFunction(2, -0.5), 1, 20, 20, 0.0001, 0.0001),
             new Scenario(new Sum(new PowerFunction(1, 2), new PowerFunction(5, 1)), -20, 20, 41, 0.0001, 0.001),
             new Scenario(new Product(new Sine(2, 2, 1), new PowerFunction(1, 2)), -20, 20, 41, 0.0001, 0.2),
-            new Scenario(new Quotient(new Sine(2, 2, 2), new PowerFunction(2, 3)), -9, 10, 21, 0.0001, 0.2)};
+            new Scenario(new Quotient(new Sine(2, 2, 2), new PowerFunction(2, 3)), -9, 10, 21, 0.0001, 0.2),
+            new Scenario(new Logarithm(new Sum(new Constant(2.5), new Sine(new Sine(3, 2, 1), 2, 2, 1))), -20, 20, 41, 0.001,
+                    0.3)};
 
     /**
      * Test scenario.
@@ -69,7 +71,7 @@ public class DerivativeTest
                         double actualSlope = (fDX - fX) / (dX - x);
                         double expectedSlope = derivative.get(x);
 
-                        if (Math.abs(actualSlope - expectedSlope) >= scenario.epsilon())
+                        if (Math.abs(actualSlope - expectedSlope) >= scenario.epsilon() || Double.isNaN(actualSlope))
                         {
                             System.out.println(functionName + " (deriv " + derivative.toString() + ") f(" + dX + ")=" + fX
                                     + " - f(" + x + ")=" + fX + " = " + (fDX - fX) + "; actual slope=" + actualSlope

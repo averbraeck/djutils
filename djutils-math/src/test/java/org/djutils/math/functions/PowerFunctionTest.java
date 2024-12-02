@@ -196,12 +196,12 @@ public class PowerFunctionTest
         // System.out.println(quotient);
         assertEquals(new PowerFunction(1.5, -1), quotient, "should simplify to this");
         quotient = new Quotient(pf, new Sine(1, 2, 3));
-        assertNull(quotient.simplify(), "cannot simplify this");
+        assertTrue(quotient == quotient.simplify(), "cannot simplify this");
         pf2 = new PowerFunction(chained, 3, 2);
         quotient = new Quotient(pf, pf2);
-        assertNull(quotient.simplify(), "cannot simplify this, yet");
+        assertTrue(quotient == quotient.simplify(), "cannot simplify this, yet");
         quotient = new Quotient(pf2, pf);
-        assertNull(quotient.simplify(), "cannot simplify this, yet");
+        assertTrue(quotient == quotient.simplify(), "cannot simplify this, yet");
         pf = new PowerFunction(chained, 2, 3);
         quotient = new Quotient(pf, pf2);
         // System.out.println(quotient);

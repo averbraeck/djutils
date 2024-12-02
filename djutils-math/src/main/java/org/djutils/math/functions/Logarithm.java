@@ -92,7 +92,8 @@ public class Logarithm implements MathFunction
             return new PowerFunction(this.logBaseRecip, -1); // d/dx c * ln(x) === c / x
         }
         // d/dx c * ln(f(x)) === c * f'(x) / f(x)
-        return new Quotient(this.chain.getDerivative().scaleBy(this.logBaseRecip), this.chain).simplify();
+        MathFunction result = new Quotient(this.chain.getDerivative().scaleBy(this.logBaseRecip), this.chain);
+        return result.simplify();
     }
 
     @Override

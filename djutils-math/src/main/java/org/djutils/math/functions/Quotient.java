@@ -51,12 +51,7 @@ public class Quotient implements MathFunction
                 new Sum(new Product(this.numerator.getDerivative(), this.denominator),
                         new Product(this.numerator.scaleBy(-1), this.denominator.getDerivative())),
                 new Product(this.denominator, this.denominator));
-        MathFunction simplified = result.simplify();
-        if (simplified != null)
-        {
-            return simplified;
-        }
-        return result;
+        return result.simplify();
     }
     
     @Override
@@ -66,7 +61,8 @@ public class Quotient implements MathFunction
         {
             return this.numerator.scaleBy(1.0 / this.denominator.get(0));
         }
-        return this.numerator.mergeDivide(this.denominator);
+        MathFunction divideResult = this.numerator.mergeDivide(this.denominator);
+        return divideResult != null ? divideResult : this;
     }
     
     @Override
