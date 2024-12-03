@@ -12,8 +12,8 @@ DJUTILS is a highly diverse software collection. All of this software has in com
 * [djutils-math](https://djutils.org/manual/djutils-math): utilities that calculate means, manipulate functions, and provide classes for complex numbers and the calculation of roots of polynomial functions.
 * [djutils-serialization](https://djutils.org/manual/djutils-serialization): utilities to serialize and deserialize data.
 * [djutils-stats](https://djutils.org/manual/djutils-stats): utilities that ingest a series of values, e.g., measurements from a sensor, or results from a simulation, and compute statistical properties (mean, standard deviation, skewness, kurtosis, estimated cumulative probabilities).
-* The djutils-parent project contains the master pom file for the DJUTILS project and the documentation and general settings.
 * [djutils-swing](https://djutils.org/manual/djutils-swing): utilities that provide Swing components such as a slider with multiple knobs.
+* The djutils-parent project contains the master pom file for the DJUTILS project and the documentation and general settings.
 
 
 ## Origin
