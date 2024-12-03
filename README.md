@@ -6,11 +6,14 @@ DJUTILS is a highly diverse software collection. All of this software has in com
 
 * [djutils-base](https://djutils.org/manual/djutils): several small projects that require few or no external packages.
 * [djutils-cli](https://djutils.org/manual/djutils-cli): command line arguments processing with defaults taken from environment variables and other sources, usage summary, etc.
-* [djutils-serialization](https://djutils.org/manual/djutils-serialization): utilities to serialize and deserialize data.
 * [djutils-data](https://djutils.org/manual/djutils-data): utilities to collect, store, write and read structured data, e.g., measurements from sensors, or results from a simulation.
 * [djutils-draw](https://djutils.org/manual/djutils-draw): utilities that manipulate points, poly-lines, line-segments, rays, in 2D and 3D.
+* [djutils-eval](https://djutils.org/manual/djutils-eval): utilities that can evaluate mathematical expressions stored as a String.
+* [djutils-math](https://djutils.org/manual/djutils-math): utilities that calculate means, manipulate functions, and provide classes for complex numbers and the calculation of roots of polynomial functions.
+* [djutils-serialization](https://djutils.org/manual/djutils-serialization): utilities to serialize and deserialize data.
 * [djutils-stats](https://djutils.org/manual/djutils-stats): utilities that ingest a series of values, e.g., measurements from a sensor, or results from a simulation, and compute statistical properties (mean, standard deviation, skewness, kurtosis, estimated cumulative probabilities).
 * The djutils-parent project contains the master pom file for the DJUTILS project and the documentation and general settings.
+* [djutils-swing](https://djutils.org/manual/djutils-swing): utilities that provide Swing components such as a slider with multiple knobs.
 
 
 ## Origin
