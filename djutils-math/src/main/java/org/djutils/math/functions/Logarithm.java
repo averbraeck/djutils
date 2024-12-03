@@ -105,7 +105,7 @@ public class Logarithm implements MathFunction
         }
         if (this.chain != null && this.chain instanceof Constant)
         {
-            return new Constant(this.logBaseRecip * Math.log(this.chain.get(0)));
+            return new Constant(get(0)).simplify();
         }
         return this;
     }

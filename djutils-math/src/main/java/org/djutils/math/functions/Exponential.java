@@ -89,7 +89,7 @@ public class Exponential implements MathFunction
         }
         if (this.chain != null && this.chain instanceof Constant)
         {
-            return new Constant(this.factor * Math.exp(this.chain.get(0)));
+            return new Constant(get(0)).simplify();
         }
         return this;
     }

@@ -184,5 +184,9 @@ public class SineTest
         assertNull(s2.mergeAdd(s1), "cannot mergeAdd these");
         s2 = new Sine(chained, 1, 3, 4);
         assertNull(s1.mergeAdd(s2), "cannot mergeMultiply these, yet");
+        
+        s1 = new Sine(new Constant(3), 3, 2, 1);
+        simplified = s1.simplify();
+        assertEquals(new Constant(3 * Math.sin(2 * 3 + 1)), simplified, "should simplify to constant");
     }
 }

@@ -208,7 +208,9 @@ public class PowerFunctionTest
         quotient = quotient.simplify();
         // System.out.println(quotient);
         assertEquals(new PowerFunction(chained, 2.0 / 3.0, 1), quotient, "should simplify to this");
-
+        pf = new PowerFunction(new Constant(3), 5, 2);
+        MathFunction simplified = pf.simplify();
+        assertEquals(new Constant(5 * 3 * 3), simplified, "should simplify to constant");
     }
 
     /**

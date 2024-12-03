@@ -134,6 +134,10 @@ public class PowerFunction implements MathFunction
             }
             return new Constant(this.weight);
         }
+        if (this.chain != null && this.chain instanceof Constant)
+        {
+            return new Constant(get(0)).simplify();
+        }
         if (this.power == 1.0 && this.chain != null)
         {
             return this.chain.scaleBy(this.weight);

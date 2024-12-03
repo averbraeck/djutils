@@ -102,6 +102,10 @@ public class Sine implements MathFunction
         {
             return Constant.ZERO;
         }
+        if (this.chain != null && this.chain instanceof Constant)
+        {
+            return new Constant(get(0)).simplify();
+        }
         return this;
     }
 
