@@ -61,6 +61,7 @@ public class Product implements MathFunction
         for (int index = 0; index < result.size(); index++)
         {
             MathFunction function = result.get(index);
+            Throw.whenNull(function, "function");
             if (function instanceof Product)
             {
                 // Replace any embedded Product by all factors that comprise that Product

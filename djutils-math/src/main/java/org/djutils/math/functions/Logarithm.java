@@ -103,6 +103,10 @@ public class Logarithm implements MathFunction
         {
             return Constant.ZERO;
         }
+        if (this.chain != null && this.chain instanceof Constant)
+        {
+            return new Constant(this.logBaseRecip * Math.log(this.chain.get(0)));
+        }
         return this;
     }
 

@@ -61,6 +61,7 @@ public class Sum implements MathFunction
         for (int index = 0; index < result.size(); index++)
         {
             MathFunction function = result.get(index);
+            Throw.whenNull(function, "function");
             if (function instanceof Sum)
             {
                 // Replace any embedded Sum by all terms that comprise that Sum

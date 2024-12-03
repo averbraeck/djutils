@@ -96,5 +96,11 @@ public class LogarithmTest
 
         Logarithm inf = new Logarithm(Double.POSITIVE_INFINITY);
         assertEquals(Constant.ZERO, inf.simplify(), "should simplify to ZERO");
+        
+        l = new Logarithm(new Constant(2));
+        MathFunction simplified = l.simplify();
+        assertEquals(new Constant(Math.log(2)), simplified, "should simplify to a constant");
+        
+        
     }
 }
