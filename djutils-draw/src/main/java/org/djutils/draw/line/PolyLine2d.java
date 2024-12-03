@@ -246,8 +246,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * Construct an array of Point2d from two points plus an array of Point2d.
      * @param point1 the first point (ends up at index 0 of the result)
      * @param point2 the second point (ends up at index 1 of the result)
-     * @param otherPoints may be <code>null</code>, may be empty. If non empty, the elements in
-     *            <code>otherPoints</code> end up at index 2 and up in the result
+     * @param otherPoints may be <code>null</code>, may be empty. If non empty, the elements in <code>otherPoints</code> end up
+     *            at index 2 and up in the result
      * @return the combined array
      */
     private static Point2d[] spliceArray(final Point2d point1, final Point2d point2, final Point2d... otherPoints)
@@ -523,8 +523,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
 
     /**
      * Concatenate several PolyLine2d instances.
-     * @param lines One or more PolyLine2d objects. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
-     *            match the first of the second, etc.
+     * @param lines One or more PolyLine2d objects. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match the
+     *            first of the second, etc.
      * @return PolyLine2d
      * @throws NullPointerException when <code>lines</code> is <code>null</code>
      * @throws IllegalArgumentException if zero lines are given, or when there is a gap between consecutive lines
@@ -567,8 +567,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Concatenate several PolyLine2d instances.
      * @param tolerance the tolerance between the end point of a line and the first point of the next line
-     * @param lines one or more PolyLine2d objects. The last point of the first &lt;strong&gt;must&lt;/strong&gt;
-     *            match the first of the second within the provided tolerance value, etc.
+     * @param lines one or more PolyLine2d objects. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match the
+     *            first of the second within the provided tolerance value, etc.
      * @return the concatenation of the lines
      * @throws NullPointerException when <code>lines</code> is <code>null</code>, or contains a <code>null</code> value
      * @throws IllegalArgumentException if zero lines are given, or when there is a gap larger than <code>tolerance</code>
@@ -669,14 +669,26 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         // find the index of the line segment, use binary search
         int index = find(position);
         double remainder = position - this.lengthIndexedLine[index];
+        while ((this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]) == 0) // Issue 82
+        {
+            int fromIndex = index;
+            while (index < this.size() - 1 && (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[fromIndex]) == 0)
+            {
+                index++;
+            }
+            if ((this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[fromIndex]) != 0)
+            {
+                return new DirectedPoint2d(this.x[fromIndex], this.y[fromIndex], 2 * this.x[index + 1] - this.x[fromIndex],
+                        2 * this.y[index + 1] - this.y[fromIndex]);
+            }
+            while (fromIndex > 0 && (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[fromIndex]) == 0)
+            {
+                fromIndex--;
+            }
+            return new DirectedPoint2d(this.x[index], this.y[index], 2 * this.x[index] - this.x[fromIndex],
+                    2 * this.y[index] - this.y[fromIndex]);
+        }
         double fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
-        // if (fraction >= 1.0 && index < this.x.length - 1)
-        // {
-        // // Rounding problem; move to the next segment.
-        // index++;
-        // remainder = position - this.lengthIndexedLine[index];
-        // fraction = remainder / (this.lengthIndexedLine[index + 1] - this.lengthIndexedLine[index]);
-        // }
         return new DirectedPoint2d(this.x[index] + fraction * (this.x[index + 1] - this.x[index]),
                 this.y[index] + fraction * (this.y[index + 1] - this.y[index]), 2 * this.x[index + 1] - this.x[index],
                 2 * this.y[index + 1] - this.y[index]);
@@ -685,10 +697,9 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Perform the orthogonal projection operation.
      * @param point the point to project
-     * @param limitHandling if <code>Null</code>; results outside the interval 0.0 .. 1.0 are replaced by
-     *            <code>NaN</code>, if <code>false</code>, results outside that interval are returned as is; if
-     *            <code>true</code> results outside the interval are truncated to the interval and therefore not truly
-     *            orthogonal
+     * @param limitHandling if <code>Null</code>; results outside the interval 0.0 .. 1.0 are replaced by <code>NaN</code>, if
+     *            <code>false</code>, results outside that interval are returned as is; if <code>true</code> results outside the
+     *            interval are truncated to the interval and therefore not truly orthogonal
      * @return the fractional position on this <code>PolyLine2d</code> that is closest to point, or <code>NaN</code>
      */
     private double projectOrthogonalFractional(final Point2d point, final Boolean limitHandling)
@@ -768,8 +779,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     /**
      * Perform the project orthogonal operation.
      * @param point the point to project
-     * @param limitHandling if Null; results outside this <code>PolyLine2d</code> are replaced by Null, if
-     *            <code>false</code>, results outside that interval are returned as is; if<code>true</code> results outside this
+     * @param limitHandling if Null; results outside this <code>PolyLine2d</code> are replaced by Null, if <code>false</code>,
+     *            results outside that interval are returned as is; if<code>true</code> results outside this
      *            <code>PolyLine2d</code> are truncated to the first or last point of this <code>PolyLine2d</code> and therefore
      *            not truly orthogonal
      * @return the orthogonal projection of point on this <code>PolyLine2d</code>
@@ -1265,8 +1276,8 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
      * that must be projected. There are cases where this is simply impossible, or the optimal result is ambiguous. In these
      * cases this method will return something that is hopefully good enough.
      * @param ray the Ray
-     * @return length along this <code>PolyLine</code> (some value between 0 and the length of this
-     *         <code>PolyLine</code>) where <code>ray</code> projects, or <code>NaN</code> if there is no solution
+     * @return length along this <code>PolyLine</code> (some value between 0 and the length of this <code>PolyLine</code>) where
+     *         <code>ray</code> projects, or <code>NaN</code> if there is no solution
      * @throws NullPointerException when <code>ray</code> is <code>null</code>
      */
     public double projectRay(final Ray2d ray)
