@@ -7,12 +7,10 @@ These are light-weight projects that do not depend on huge external libraries an
 *  DJUTILS provides a framework for [decoding and dumping data](decoder-dumper) with decoders for hexadecimal and base64 data.
 *  DJUTILS contains [immutable collections](immutable-collections), such as the ImmutableList, ImmutableSet and ImmutableMap.
 *  DJUTILS [events](event) is a framework for publish and subscribe communication, including remote event handling.
-*  DJUTILS offers an implementation of [complex numbers](complex-numbers) and [complex math](complex-math).
 *  DJUTILS offers several helper classes for [logging](logging) using the tinylog package.
 *  DJUTILS provides several classes for handling [exceptions](exceptions) in an easy way, such as Throw and Try.
 *  DJUTILS has a class to easily [resolve URLs](urlresource) from a resource location, also when the resource is in a JAR file.
 *  DJUTILS extends the [reflection classes](reflection) of Java with several new classes to easily work with Method, Field, and Class signatures.
-*  DJUTILS has a package that implements computation of [three kinds of mean value](means).
 
 
 ## Maven use
