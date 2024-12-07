@@ -1,6 +1,7 @@
 # Lines
 
 The DJUTILS-DRAW line package defines several line-like objects:
+
 * PolyLine: lines with two end points and zero or more intermediate points.
 * Polygon: closed PolyLine with at least two points.
 * LineSegment: line segment defined by two points. This much like a PolyLine with no intermediate points.
