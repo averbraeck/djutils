@@ -3,7 +3,7 @@
 The MATH project contains classes for math calculations and functions. The project consists of several packages.
 
 *  DJUTILS-MATH offers an implementation of [complex numbers](complex-numbers) and [complex math](complex-math).
-*  DJUTILS-MATH has a package that implements computation of [three kinds of mean value](means).
+*  DJUTILS-MATH has a package that implements computation of [three kinds of mean values](means).
 *  DJUTILS-MATH can estimate the roots of polynomial functions.
 *  DJUTILS-MATH can store and manipulate mathematical functions. 
 
