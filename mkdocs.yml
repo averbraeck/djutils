@@ -62,6 +62,7 @@ nav:
     - DJUTILS-DRAW API: https://djutils.org/docs/latest/djutils-draw/apidocs/index.html
   - DJUTILS-EVAL project:
     - Introduction: djutils-eval/index.md
+    - Usage: djutils-eval/eval.md
     - DJUTILS-EVAL documentation: https://djutils.org/docs/latest/djutils-eval/index.html
     - DJUTILS-EVAL API: https://djutils.org/docs/latest/djutils-eval/apidocs/index.html
   - DJUTILS-MATH project:
