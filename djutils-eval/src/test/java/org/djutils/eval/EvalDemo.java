@@ -36,6 +36,8 @@ public class EvalDemo
         run("myVariable+20", values);
         run("2 * PI()");
         run("sin(1)");
+        run("CURRENTTIME()+5");
+        run("CURRENTTIME()/86400[s]"); // Does not work; cannot divide absolute values by anything
     }
 
     /**
