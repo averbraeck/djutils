@@ -69,7 +69,9 @@ The 2-parameter atan2 function is also available.
 
 The complete list of one- and two-argument functions can be found in _Eval.java_. Look for the _F1_ and _F2_ entries in _builtinFunctions_.
 
-One very special built-in function is <pre>CURRENTTIME()</pre>. This returns the number of seconds and milliseconds since January 1st, 1970, 00:00:00 UTC. The result is a double value in seconds with a granularity of 1 ms. It is, of course, strongly typed so you cannot just add some value to it unless that value is a duration.
+One very special built-in function is
+<pre>CURRENTTIME()</pre>
+This returns the number of seconds and milliseconds since January 1st, 1970, 00:00:00 UTC. The result is a double value in seconds with a granularity of 1 ms. It is, of course, strongly typed so you cannot just add some value to it unless that value is a duration.
 ```java
 System.out.println(new Eval().evaluate("CURRENTTIME()+5"));
 ```
