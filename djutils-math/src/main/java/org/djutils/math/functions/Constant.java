@@ -1,5 +1,6 @@
 package org.djutils.math.functions;
 
+import java.util.Iterator;
 import java.util.Objects;
 
 import org.djutils.exceptions.Throw;
@@ -118,7 +119,7 @@ public class Constant implements MathFunction
         }
         return null;
     }
-
+    
     @Override
     public String toString()
     {

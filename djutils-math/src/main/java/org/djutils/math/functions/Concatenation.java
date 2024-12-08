@@ -1,6 +1,8 @@
 package org.djutils.math.functions;
 
+import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -184,6 +186,56 @@ public class Concatenation implements MathFunction
         return 0;
     }
 
+    /**
+     * Report all non-continuities and all points where <code>this</code> function is non differentiable, or non-evaluable. If
+     * another <code>MathFunction</code> is chained, the transformation of that function, nor any discontinuities of that
+     * <code>MathFunction</code> are taken into account as there is (currently) no way to figure out what values of the domain
+     * of the chained function result in values that correspond to the discontinuities of <code>this</code> function.
+     * @param interval the interval on which to report the discontinuities
+     * @return iterator that will generate all discontinuities in the interval
+     */
+    public Iterator<Interval<Discontinuity>> discontinuities(final Interval<?> interval)
+    {
+        return new Iterator<Interval<Discontinuity>>()
+        {
+            /** The interval over which the discontinuities were requested. */
+            private Interval<?> requestedInterval = interval;
+
+            /** Iterator that visits all the internal intervals/functions of the Concatenation in sequence. */
+            private Iterator<Interval<MathFunction>> internalIterator = Concatenation.this.functions.iterator();
+
+            /** The current interval (made available by the hasNext method and cleared by the next method). */
+            private Interval<MathFunction> currentInterval = null;
+
+            @Override
+            public boolean hasNext()
+            {
+                if (this.currentInterval == null && (!this.internalIterator.hasNext()))
+                {
+                    return false; // out of data
+                }
+                while (this.currentInterval == null && this.internalIterator.hasNext())
+                {
+                    this.currentInterval = this.internalIterator.next().intersection(this.requestedInterval);
+                }
+                return this.currentInterval != null;
+            }
+
+            @Override
+            public Interval<Discontinuity> next()
+            {
+                Throw.when(this.currentInterval == null, NoSuchElementException.class, "Out of data");
+                Interval<Discontinuity> result = this.currentInterval.payload() instanceof Nan
+                        ? new Interval<>(this.currentInterval.low(), true, this.currentInterval.high(),
+                                this.currentInterval.highInclusive(), Discontinuity.GAP)
+                        : new Interval<>(this.currentInterval.low(), true, this.currentInterval.low(), true,
+                                Discontinuity.KNOT);
+                this.currentInterval = null;
+                return result;
+            }
+        };
+    }
+
     @Override
     public String toString()
     {
@@ -221,6 +273,19 @@ public class Concatenation implements MathFunction
             return false;
         Concatenation other = (Concatenation) obj;
         return Objects.equals(this.functions, other.functions);
+    }
+
+    /** The various discontinuities reported by the <code>discontinuities</code> method. */
+    enum Discontinuity
+    {
+        /** Continuous, but not differentiable. */
+        KNOT,
+
+        /** Not continuous (and, therefore, not differentiable). */
+        DISCONTIUOUS,
+
+        /** Function undefined in this interval; the <code>MathFunction</code> will yield <code>NaN</code> in this interval. */
+        GAP;
     }
 
 }

@@ -51,9 +51,7 @@ public class PowerFunction implements MathFunction
      */
     public PowerFunction(final double weight, final double power)
     {
-        this.weight = weight;
-        this.power = weight == 0.0 ? 1.0 : power;
-        this.chain = null;
+        this(null, weight, power);
     }
 
     /**
@@ -237,7 +235,7 @@ public class PowerFunction implements MathFunction
         }
         return null;
     }
-    
+
     @Override
     public MathFunction mergeDivide(final MathFunction other)
     {

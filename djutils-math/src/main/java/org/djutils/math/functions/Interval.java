@@ -140,6 +140,35 @@ record Interval<T extends Comparable<T>>(double low, boolean lowInclusive, doubl
                 && (this.high > x || (this.high == x && this.highInclusive)));
     }
 
+    /**
+     * Compute the intersection of this <code>Interval</code> and some other <code>Interval</code>. The other Interval need not
+     * have the same type of payload.
+     * @param other the other <code>Interval</code>
+     * @return the intersection of the intervals (can be <code>null</code>). If not null, the payload is the payload of
+     *         <code>this</code> interval
+     */
+    public Interval<T> intersection(final Interval<?> other)
+    {
+        if (this.disjunct(other))
+        {
+            return null;
+        }
+        if (other.covers(this))
+        {
+            return this;
+        }
+        if (this.covers(other))
+        {
+            return new Interval<T>(other.low, other.lowInclusive, other.high, other.highInclusive, this.payload);
+        }
+        boolean includeLow = this.low > other.low && this.lowInclusive || this.low < other.low && other.lowInclusive
+                || this.low == other.low && this.lowInclusive && other.lowInclusive;
+        boolean includeHigh = this.high < other.high && this.highInclusive || this.high > other.high && other.highInclusive
+                || this.high == other.high && this.highInclusive && other.highInclusive;
+        return new Interval<T>(Math.max(this.low, other.low), includeLow, Math.min(this.high, other.high), includeHigh,
+                this.payload);
+    }
+
     @Override
     public String toString()
     {
