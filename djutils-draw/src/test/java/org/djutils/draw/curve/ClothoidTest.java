@@ -274,7 +274,8 @@ public class ClothoidTest
                 // offset -2.0 or 2.0
                 for (double offset = -2.0; offset < 3.0; offset += 4.0)
                 {
-                    flattened = clothoid.toPolyLine(offsetFlattener, new ContinuousPiecewiseLinearFunction(0.0, offset, 1.0, offset));
+                    flattened = clothoid.toPolyLine(offsetFlattener,
+                            new ContinuousPiecewiseLinearFunction(0.0, offset, 1.0, offset));
                     Point2d start = flattened.get(0);
                     Point2d end = flattened.get(flattened.size() - 1);
                     assertEquals(0.0, start.x, 0.00001); // offset on y-axis
