@@ -48,8 +48,11 @@ That last one is used in conditional expressions (see end of the preceding secti
 Expressions with multiple binary or ternary operators are evaluated by binding strength (highest first).
 
 In addition to this, there are two unary operators:
+
 _-_: the unary minus operator
+
 _!_: the unary boolean not operator
+
 These have a higher binding strength than any binary or ternary operator.
 
 ## Using pre-defined constants
