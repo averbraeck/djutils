@@ -32,7 +32,9 @@ The evaluator can deal with boolean values. These can be created with the _TRUE(
 
 ## Operators
 The following binary and ternary operators are available in Eval.
+
 | operators | binding strength |
+| --------- | ---------------- |
 | ^         | 8 right to left  |
 | *, /      | 7 left to right  |
 | *, -      | 6 left to right  |
