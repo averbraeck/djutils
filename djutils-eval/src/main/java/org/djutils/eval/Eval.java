@@ -219,8 +219,6 @@ public class Eval
         return this;
     }
 
-    // TODO create a mechanism that allows parsing of user-defined units (e.g., [km/h])
-
     /**
      * Evaluate a mathematical expression
      * @param expression the expression
@@ -253,7 +251,7 @@ public class Eval
      * the result is strongly typed (some DJUNITS quantity), the SI value is returned.
      * @param expression the expression
      * @return the result of the expression
-     * @throws RuntimeException when the expression could not be evaluated, or the result is not a logical value
+     * @throws RuntimeException when the expression could not be evaluated, or the result is not a double value
      */
     public double evaluateAsDouble(final String expression) throws RuntimeException
     {
