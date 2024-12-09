@@ -28,7 +28,27 @@ yields the value _NaN_ without throwing an exception.
 
 Other cases, like division by zero _do_ throw an exception.
 
-The evaluator can deal with boolean values. These can be created with the _TRUE()_ and _FALSE()_ functions, but also with the binary comparison operators like _<_, _<=_, _>_, _>=_, _==_, _!=_ and combined with boolean binary operators like _&&_ and _||_ . You can even write conditional expressions using the _?_ and _:_ notation of java, C, and many other programming languages.
+The evaluator can deal with boolean values. These can be created with the _TRUE()_ and _FALSE()_ functions, but also with the binary comparison operators like _<_, _<=_, _>_, _>=_, _==_, _!=_ and combined with boolean binary operators like _&&_ and _||_ . You can even write conditional expressions using the _? :_ notation of java, C, and many other programming languages.
+
+## Operators
+The following binary and ternary operators are available in Eval.
+| operators | binding strength |
+| ^         | 8 right to left  |
+| *, /      | 7 left to right  |
+| *, -      | 6 left to right  |
+| &lt; &lt;=, &gt; &gt;= | 5 left to right  |
+| != ==     | 4 left to right  |
+| &&        | 3 left to right  |
+| &#124;&#124; | 2 left to right  |
+| ? :       | 1 left to right  |
+
+That last one is used in conditional expressions (see end of the preceding section).
+Expressions with multiple binary or ternary operators are evaluated by binding strength (highest first).
+
+In addition to this, there are two unary operators:
+_-_: the unary minus operator
+_!_: the unary boolean not operator
+These have a higher binding strength than any binary or ternary operator.
 
 ## Using pre-defined constants
 A long list of physical and mathematical constants are pre-defined in Eval. Using these looks like calling a zero-argument function like:
@@ -39,7 +59,7 @@ Currently, all pre-defined constants have names that are entirely upper-case.
 
 The complete list of pre-defined constants can be found in _Eval.java_, search for the _F0_ entries in _builtinFunctions_.
 
-## Using variables
+## Using variables (user-defined constants)
 Every decent desk calculator has a way to store and retrieve values. The retrieve operation of such a mechanism is embedded in Eval. The store operation is not. To allow Eval to find the value of a named variable, it has to be taught were to find them. This is done by providing a _RetrieveValue_ object. _RetrieveValue_ is an object that implements a _lookup_ method that takes a _String_ argument and returns an _Object_. The _Object_ can be a strongly typed djunits value, or a _Double_, a _Boolean_, an _Integer_, etc.
 ```java
         RetrieveValue values = new RetrieveValue() {
@@ -56,14 +76,14 @@ Every decent desk calculator has a way to store and retrieve values. The retriev
 ```
 This trivial example creates a _RetrieveValue_ object that knows only one variable (_myVariable_). The _lookup_ method should return _null_ if the value is not known (which will result in a RuntimeException). The _setRetrieveValue_ method returns the Eval object which is useful for method chaining.
 
-Actual implementations of _RetrieveValue_ should probably use a _HashMap&lt;String, Object&gt;_.
+Actual implementations of _RetrieveValue_ should probably use a _HashMap&lt;String, Object&gt;_. Variables (and function names) start with a letter, hash (_#_), at sign (_@_), or underscore character (<i>_</i>), followed by zero or more letters, digits, hashes, at signs and underscores.
 
 ## Using built-in functions
 The built-in functions have case-sensitive names. The usual trigonometric functions are implemented. E.g.
 ```java
 new Eval().evaluate("sin(1)");
 ```
-will yield a double value of approximately 0.84147098 (angles are in Radians).
+will yield a double value of approximately 0.84147098 (angles are in Radians). A zero-argument function is followed by an empty pair of parentheses, unlike a variable which is not followed by an opening parenthesis.
 
 The 2-parameter atan2 function is also available.
 
@@ -81,3 +101,5 @@ System.out.println(new Eval().evaluate("CURRENTTIME()+5[s]"));
 ```
 prints a (rather large) number.
 
+## Adding your own functions
+The method _setUserDefinedFunctions_ can be used to expand the available set of functions.
