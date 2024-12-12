@@ -41,12 +41,7 @@ public final class FunctionDemo
         MathFunction deriv3 = deriv2.getDerivative();
         MathFunction deriv4 = deriv3.getDerivative();
         MathFunction deriv5 = deriv4.getDerivative();
-        System.out.println("f      " + function);
-        System.out.println("f'     " + deriv1);
-        System.out.println("f''    " + deriv2);
-        System.out.println("f'''   " + deriv3);
-        System.out.println("f''''  " + deriv4);
-        System.out.println("f''''' " + deriv5); // Is identical to deriv4
+        printWithSomeDerivatives(function, 6);
         System.out.println("Check if f'''' is equal to f''''' : " + deriv4.equals(deriv5));
         for (int step = -10; step <= 10; step++)
         {
@@ -89,52 +84,21 @@ public final class FunctionDemo
         MathFunction p2 = new Sum(new Power(2, 2), new Power(4, 1), new Constant(7)); // 2*x^2+4*x+7
         System.out.println("polynomial 2: " + p2);
         MathFunction product = new Product(p1, p2);
-        System.out.println("product (f): " + product);
-        deriv1 = product.getDerivative();
-        System.out.println("f':          " + deriv1);
-        product.getDerivative();
-        deriv2 = deriv1.getDerivative();
-        System.out.println("f'':         " + deriv2);
-        deriv3 = deriv2.getDerivative();
-        System.out.println("f''':        " + deriv3);
-        deriv4 = deriv3.getDerivative();
-        System.out.println("f'''':       " + deriv4);
-        deriv5 = deriv4.getDerivative();
-        System.out.println("f''''':      " + deriv5);
-        MathFunction deriv6 = deriv5.getDerivative();
-        System.out.println("f'''''':     " + deriv6);
+        printWithSomeDerivatives(product, 6);
 
         System.out.println("\nDifferentiate a sine function");
         MathFunction f = new Sine(2, 3, 0);
-        System.out.println("f:           " + f);
-        deriv1 = f.getDerivative();
-        System.out.println("f':          " + deriv1);
-        product.getDerivative();
-        deriv2 = deriv1.getDerivative();
-        System.out.println("f'':         " + deriv2);
-        deriv3 = deriv2.getDerivative();
-        System.out.println("f''':        " + deriv3);
-        deriv4 = deriv3.getDerivative();
-        System.out.println("f'''':       " + deriv4);
-        deriv5 = deriv4.getDerivative();
-        System.out.println("f''''':      " + deriv5);
-        deriv6 = deriv5.getDerivative();
-        System.out.println("f'''''':     " + deriv6);
+        printWithSomeDerivatives(f, 5);
 
         System.out.println("\nDifferentiate a simpler sine function");
         f = new Sine(2, 1, 0);
-        System.out.println("f:           " + f);
+        printWithSomeDerivatives(f, 5);
         deriv1 = f.getDerivative();
-        System.out.println("f':          " + deriv1);
         product.getDerivative();
         deriv2 = deriv1.getDerivative();
-        System.out.println("f'':         " + deriv2);
         deriv3 = deriv2.getDerivative();
-        System.out.println("f''':        " + deriv3);
         deriv4 = deriv3.getDerivative();
-        System.out.println("f'''':       " + deriv4);
         deriv5 = deriv4.getDerivative();
-        System.out.println("f''''':      " + deriv5);
         System.out.println("f and f'''' do test equal (there is no resulting rounding error)");
         assertEquals(f, deriv4);
 
@@ -217,77 +181,48 @@ public final class FunctionDemo
 
         System.out.println("show that pure cosines get print as cos and sin(x+pi) like (-sin(x))");
         f = new Sine(1, 2, 0);
-        System.out.println(f);
-        deriv1 = f.getDerivative();
-        System.out.println(deriv1);
-        deriv2 = deriv1.getDerivative();
-        System.out.println(deriv2);
-        deriv3 = deriv2.getDerivative();
-        System.out.println(deriv3);
-        deriv4 = deriv3.getDerivative();
-        System.out.println(deriv4);
-        deriv5 = deriv4.getDerivative();
-        System.out.println(deriv5);
-        deriv6 = deriv5.getDerivative();
-        System.out.println(deriv6);
+        printWithSomeDerivatives(f, 6);
         System.out.println();
         f = new Sine(-1, 2, 0);
-        System.out.println(f);
-        deriv1 = f.getDerivative();
-        System.out.println(deriv1);
-        deriv2 = deriv1.getDerivative();
-        System.out.println(deriv2);
-        deriv3 = deriv2.getDerivative();
-        System.out.println(deriv3);
-        deriv4 = deriv3.getDerivative();
-        System.out.println(deriv4);
-        deriv5 = deriv4.getDerivative();
-        System.out.println(deriv5);
-        deriv6 = deriv5.getDerivative();
-        System.out.println(deriv6);
+        printWithSomeDerivatives(f, 6);
 
         System.out.println("\ncreate sin(x + pi)");
         f = new Sine(1, 1, Math.PI);
-        System.out.println(f);
-        deriv1 = f.getDerivative();
-        System.out.println(deriv1);
-        deriv2 = deriv1.getDerivative();
-        System.out.println(deriv2);
-        deriv3 = deriv2.getDerivative();
-        System.out.println(deriv3);
-        deriv4 = deriv3.getDerivative();
-        System.out.println(deriv4);
-        deriv5 = deriv4.getDerivative();
-        System.out.println(deriv5);
-        deriv6 = deriv5.getDerivative();
-        System.out.println(deriv6);
+        printWithSomeDerivatives(f, 6);
         System.out.println("\ncreate cos(x - pi)");
         f = Sine.cosine(1, 1, -Math.PI);
-        System.out.println(f);
-        deriv1 = f.getDerivative();
-        System.out.println(deriv1);
-        deriv2 = deriv1.getDerivative();
-        System.out.println(deriv2);
-        deriv3 = deriv2.getDerivative();
-        System.out.println(deriv3);
-        deriv4 = deriv3.getDerivative();
-        System.out.println(deriv4);
-        deriv5 = deriv4.getDerivative();
-        System.out.println(deriv5);
-        deriv6 = deriv5.getDerivative();
-        System.out.println(deriv6);
+        printWithSomeDerivatives(f, 6);
         
         System.out.println("\narc sine");
         MathFunction a = new ArcSine(1, 3);
-        System.out.println(a);
-        deriv1 = a.getDerivative();
-        System.out.println("f' " + deriv1);
+        printWithSomeDerivatives(a, 2);
         
         a = new ArcSine(new Power(2, 1), 1, 0).scaleBy(7);
-        System.out.println(a);
-        deriv1 = a.getDerivative();
-        System.out.println("f' " + deriv1);
+        printWithSomeDerivatives(a, 2);
         
     }
 
+    /**
+     * Print a MathFunction and a couple of its derivatives.
+     * @param f the MathFunction
+     * @param derivatives number of derivatives to determine and print
+     */
+    public static void printWithSomeDerivatives(final MathFunction f, final int derivatives)
+    {
+        MathFunction work = f;
+        for (int i = 0; i < derivatives; i++)
+        {
+            System.out.print("f");
+            for (int j = 0; j < i; j++)
+            {
+                System.out.print("'");
+            }
+            for (int j = i; j < derivatives; j++)
+            {
+                System.out.print(" ");
+            }
+            System.out.println(work);
+            work = work.getDerivative();
+        }
+    }
 }

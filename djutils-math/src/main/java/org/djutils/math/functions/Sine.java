@@ -246,7 +246,7 @@ public class Sine implements MathFunction
         {
             result.append("-");
         }
-        if (this.amplitude != 1.0)
+        if (this.amplitude != 1.0 && this.amplitude != -1.0)
         {
             result.append(printValue(Math.abs(this.amplitude)));
         }

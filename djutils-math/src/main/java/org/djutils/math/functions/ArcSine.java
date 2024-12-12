@@ -95,7 +95,7 @@ public class ArcSine implements MathFunction
      */
     public static ArcSine arcCosine(final MathFunction chain, final double omega)
     {
-        return new ArcSine(chain, -omega, Math.PI / 2);
+        return new ArcSine(chain, -omega, -Math.PI / 2);
     }
 
     @Override
@@ -113,9 +113,9 @@ public class ArcSine implements MathFunction
     public MathFunction getDerivative()
     {
         // d/dx(omega * asin(x + shift)) === omega * (-x^2 - 2 * shift * x + 1 - shift^2)^-0.5
-        MathFunction myDerivative =
-                new Power(new Sum(new Power(this.chain, -1, 2), new Power(-2 * this.shift, 1),
-                        new Constant(1 - this.shift * this.shift)), 1, -0.5).scaleBy(this.omega);
+        MathFunction myDerivative = new Power(
+                new Sum(new Power(this.chain, -1, 2), new Power(-2 * this.shift, 1), new Constant(1 - this.shift * this.shift)),
+                1, -0.5).scaleBy(this.omega);
         if (this.chain == null)
         {
             return myDerivative.simplify();
