@@ -88,7 +88,7 @@ public class ConstantAndNanTest
         assertEquals(2 * 123.456, constant.getScale(), 0.0, "scale factor is updated");
         constant = constant.mergeAdd(new Constant(987.654));
         assertEquals(2 * 123.456 + 987.654, constant.getScale(), 0.0, "scale factor is updated");
-        assertNull(constant.mergeMultiply(new PowerFunction(2, 3)), "Constant can not merge with PowerFunction");
+        assertNull(constant.mergeMultiply(new Power(2, 3)), "Constant can not merge with PowerFunction");
     }
 
     /**

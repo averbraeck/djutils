@@ -147,7 +147,7 @@ public class Concatenation implements MathFunction
             {
                 // create one linear section
                 double slope = (nextEntry.getValue() - prevEntry.getValue()) / (nextEntry.getKey() - prevEntry.getKey());
-                PowerFunction powerFunction = new PowerFunction(slope, 1);
+                Power powerFunction = new Power(slope, 1);
                 double constant = prevEntry.getValue() - powerFunction.get(prevEntry.getKey());
                 MathFunction function = new Sum(new Constant(constant), powerFunction);
                 intervals.add(new Interval<MathFunction>(prevEntry.getKey(), intervals.isEmpty(), nextEntry.getKey(), true,

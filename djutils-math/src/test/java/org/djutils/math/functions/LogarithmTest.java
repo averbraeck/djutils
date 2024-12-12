@@ -34,7 +34,7 @@ public class LogarithmTest
         MathFunction derivative = l.getDerivative();
         Logarithm log10 = new Logarithm(10);
         MathFunction derivative10 = log10.getDerivative();
-        MathFunction chained = new PowerFunction(2, 2);
+        MathFunction chained = new Power(2, 2);
         MathFunction logChained = new Logarithm(chained, 10);
         MathFunction derivativeChained = logChained.getDerivative();
         MathFunction lnChained = new Logarithm(chained);

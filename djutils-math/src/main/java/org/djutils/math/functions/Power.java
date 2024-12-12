@@ -17,7 +17,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class PowerFunction implements MathFunction
+public class Power implements MathFunction
 {
     /** The weight (value at x == 0). */
     private final double weight;
@@ -37,7 +37,7 @@ public class PowerFunction implements MathFunction
      * @param weight the value at <code>x == 1</code>
      * @param power the exponent of <code>x</code>
      */
-    public PowerFunction(final MathFunction chain, final double weight, final double power)
+    public Power(final MathFunction chain, final double weight, final double power)
     {
         this.weight = weight;
         this.power = weight == 0.0 ? 1.0 : power;
@@ -49,7 +49,7 @@ public class PowerFunction implements MathFunction
      * @param weight the value at <code>x == 1</code>
      * @param power the exponent of <code>x</code>
      */
-    public PowerFunction(final double weight, final double power)
+    public Power(final double weight, final double power)
     {
         this(null, weight, power);
     }
@@ -59,7 +59,7 @@ public class PowerFunction implements MathFunction
      * @param chain the MathFunction that yields the <code>x</code> for this power function
      * @param power the exponent of <code>chain</code>
      */
-    public PowerFunction(final MathFunction chain, final double power)
+    public Power(final MathFunction chain, final double power)
     {
         this(chain, 1.0, power);
     }
@@ -68,7 +68,7 @@ public class PowerFunction implements MathFunction
      * Create a new power function with weight 1.0 and the supplied value as exponent.
      * @param power the exponent of <code>x</code>
      */
-    public PowerFunction(final double power)
+    public Power(final double power)
     {
         this(1.0, power);
     }
@@ -108,12 +108,12 @@ public class PowerFunction implements MathFunction
             }
             return new Constant(this.weight);
         }
-        PowerFunction myDerivative = new PowerFunction(this.chain, this.weight * this.power, this.power - 1.0);
+        Power myDerivative = new Power(this.chain, this.weight * this.power, this.power - 1.0);
         if (this.chain == null)
         {
             return myDerivative.simplify();
         }
-        MathFunction myChainDerivative = new PowerFunction(this.chain, myDerivative.weight, myDerivative.power);
+        MathFunction myChainDerivative = new Power(this.chain, myDerivative.weight, myDerivative.power);
         return new Product(myChainDerivative, this.chain.getDerivative()).simplify();
     }
 
@@ -160,7 +160,7 @@ public class PowerFunction implements MathFunction
         {
             return this;
         }
-        return new PowerFunction(this.chain, factor * this.weight, this.power);
+        return new Power(this.chain, factor * this.weight, this.power);
     }
 
     @Override
@@ -172,8 +172,8 @@ public class PowerFunction implements MathFunction
     @Override
     public int compareWithinSubType(final MathFunction other)
     {
-        Throw.when(!(other instanceof PowerFunction), IllegalArgumentException.class, "other is of wrong type");
-        PowerFunction otherPowerFunction = (PowerFunction) other;
+        Throw.when(!(other instanceof Power), IllegalArgumentException.class, "other is of wrong type");
+        Power otherPowerFunction = (Power) other;
         if (otherPowerFunction.power < this.power)
         {
             return -1;
@@ -196,13 +196,13 @@ public class PowerFunction implements MathFunction
     @Override
     public MathFunction mergeAdd(final MathFunction other)
     {
-        if (other instanceof PowerFunction)
+        if (other instanceof Power)
         {
-            PowerFunction otherPowerFunction = (PowerFunction) other;
+            Power otherPowerFunction = (Power) other;
             if (this.power == otherPowerFunction.power && (this.chain == null && otherPowerFunction.chain == null
                     || (this.chain != null && this.chain.equals(otherPowerFunction.chain))))
             {
-                return new PowerFunction(this.chain, this.weight + otherPowerFunction.weight, this.power);
+                return new Power(this.chain, this.weight + otherPowerFunction.weight, this.power);
             }
         }
         return null;
@@ -211,13 +211,13 @@ public class PowerFunction implements MathFunction
     @Override
     public MathFunction mergeMultiply(final MathFunction other)
     {
-        if (other instanceof PowerFunction)
+        if (other instanceof Power)
         {
-            PowerFunction otherPowerFunction = (PowerFunction) other;
+            Power otherPowerFunction = (Power) other;
             if (this.chain == null && otherPowerFunction.chain == null
                     || (this.chain != null && this.chain.equals(otherPowerFunction.chain)))
             {
-                return new PowerFunction(this.chain, this.weight * otherPowerFunction.weight,
+                return new Power(this.chain, this.weight * otherPowerFunction.weight,
                         this.power + otherPowerFunction.power);
             }
             else if (this.power == otherPowerFunction.power)
@@ -225,11 +225,11 @@ public class PowerFunction implements MathFunction
                 double resultWeight = this.weight * otherPowerFunction.weight;
                 if (this.chain != null && otherPowerFunction.chain != null)
                 {
-                    return new PowerFunction(new Product(this.chain, otherPowerFunction.chain), resultWeight, this.power);
+                    return new Power(new Product(this.chain, otherPowerFunction.chain), resultWeight, this.power);
                 }
                 // The chain fields cannot both be null; therefore, exactly one is non-null
-                return new PowerFunction(
-                        new Product(new PowerFunction(1, 1), this.chain == null ? otherPowerFunction.chain : this.chain),
+                return new Power(
+                        new Product(new Power(1, 1), this.chain == null ? otherPowerFunction.chain : this.chain),
                         resultWeight, this.power);
             }
         }
@@ -239,13 +239,13 @@ public class PowerFunction implements MathFunction
     @Override
     public MathFunction mergeDivide(final MathFunction other)
     {
-        if (other instanceof PowerFunction)
+        if (other instanceof Power)
         {
-            PowerFunction otherPowerFunction = (PowerFunction) other;
+            Power otherPowerFunction = (Power) other;
             if (this.chain == null && otherPowerFunction.chain == null
                     || (this.chain != null && this.chain.equals(otherPowerFunction.chain)))
             {
-                return new PowerFunction(this.chain, this.weight / otherPowerFunction.weight,
+                return new Power(this.chain, this.weight / otherPowerFunction.weight,
                         this.power - otherPowerFunction.power);
             }
         }
@@ -295,7 +295,7 @@ public class PowerFunction implements MathFunction
             return false;
         if (getClass() != obj.getClass())
             return false;
-        PowerFunction other = (PowerFunction) obj;
+        Power other = (Power) obj;
         return Objects.equals(this.chain, other.chain)
                 && Double.doubleToLongBits(this.power) == Double.doubleToLongBits(other.power)
                 && Double.doubleToLongBits(this.weight) == Double.doubleToLongBits(other.weight);

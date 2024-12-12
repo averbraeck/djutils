@@ -38,7 +38,7 @@ public class ProductTest
             // Ignore expected exception
         }
 
-        Product p = new Product(new Sine(1, 2, 3), new PowerFunction(2, 3));
+        Product p = new Product(new Sine(1, 2, 3), new Power(2, 3));
         try
         {
             p.compareWithinSubType(Constant.ONE);
@@ -77,7 +77,7 @@ public class ProductTest
         p2 = new Product(new Sine(1, 2, 3));
         assertTrue(p.compareTo(p2) > 0);
         assertTrue(p2.compareTo(p) < 0);
-        p2 = new Product(new Sine(1, 2, 3), new PowerFunction(2, 2));
+        p2 = new Product(new Sine(1, 2, 3), new Power(2, 2));
         assertTrue(p.compareTo(p2) > 0);
         assertTrue(p2.compareTo(p) < 0);
         p2 = new Product(new Sine(1, 2, 3), new Sine(1, 3, 1));

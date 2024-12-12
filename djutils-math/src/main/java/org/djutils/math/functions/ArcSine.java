@@ -114,7 +114,7 @@ public class ArcSine implements MathFunction
     {
         // d/dx(omega * asin(x + shift)) === omega * (-x^2 - 2 * shift * x + 1 - shift^2)^-0.5
         MathFunction myDerivative =
-                new PowerFunction(new Sum(new PowerFunction(this.chain, -1, 2), new PowerFunction(-2 * this.shift, 1),
+                new Power(new Sum(new Power(this.chain, -1, 2), new Power(-2 * this.shift, 1),
                         new Constant(1 - this.shift * this.shift)), 1, -0.5).scaleBy(this.omega);
         if (this.chain == null)
         {

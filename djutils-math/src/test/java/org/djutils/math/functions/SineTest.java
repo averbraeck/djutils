@@ -65,7 +65,7 @@ public class SineTest
         MathFunction f = s1.simplify();
         assertEquals(Constant.ZERO, f, "should be simplified to ZERO");
 
-        MathFunction chained = new PowerFunction(1, 2); // x^2
+        MathFunction chained = new Power(1, 2); // x^2
         s1 = new Sine(chained, 2, 3, 4); // 2 * sin(3 * x ^ 2 + 4)
         for (double x : xValues)
         {

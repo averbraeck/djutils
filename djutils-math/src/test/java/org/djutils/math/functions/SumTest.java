@@ -48,7 +48,7 @@ public class SumTest
             Sum sum2 = new Sum(c1, c2);
             checkOneValue(12.34 - 23.56, x, sum2);
             assertEquals(Constant.ZERO, sum2.getDerivative(), "derivative of constant is ZERO");
-            MathFunction f = new PowerFunction(3, 1);
+            MathFunction f = new Power(3, 1);
             sum2 = new Sum(c1, c2, f);
             checkOneValue(12.34 - 23.56 + 3 * x, x, sum2);
             assertEquals(3, sum2.getDerivative().get(x), 0, "derivative of slope 3 is 3");
@@ -69,7 +69,7 @@ public class SumTest
         MathFunction simplified = sum.simplify(); // now it gets short circuited to Constant.ONE
         assertEquals(Constant.ONE, simplified, "should now be short circuited to Constant.ONE");
 
-        sum = new Sum(new Constant(2), new Constant(3), new Sine(1, 2, 3), new PowerFunction(2, 3));
+        sum = new Sum(new Constant(2), new Constant(3), new Sine(1, 2, 3), new Power(2, 3));
         for (double x : xValues)
         {
             checkOneValue(5 + Math.sin(2 * x + 3) + 2 * x * x * x, x, sum);
@@ -100,19 +100,19 @@ public class SumTest
         assertFalse(sum.equals(null), "not equal to null");
         assertFalse(sum.equals(mf), "not equal to another MathFunction");
         assertFalse(sum.equals("Not a Sum"), "not equal to an unrelated object");
-        sum = new Sum(new Constant(2), new PowerFunction(3, 4));
-        Sum sum2 = new Sum(new Constant(2), new PowerFunction(3, 4));
+        sum = new Sum(new Constant(2), new Power(3, 4));
+        Sum sum2 = new Sum(new Constant(2), new Power(3, 4));
         assertTrue(sum.equals(sum2), "equal to another Sum with same terms");
         assertEquals(0, sum.compareWithinSubType(sum2), "should compare 0 with any other Sum");
         assertEquals(sum.hashCode(), sum2.hashCode(), "hash code should be same");
-        sum2 = new Sum(new Constant(3), new PowerFunction(3, 4));
+        sum2 = new Sum(new Constant(3), new Power(3, 4));
         assertNotEquals(sum.hashCode(), sum2.hashCode(), "hash code takes terms into account");
         Product p = new Product(Constant.ONE);
         sum = new Sum(p);
         mf = sum.simplify();
         assertEquals(Constant.ONE, mf, "should be reduced to constant ONE");
-        sum = new Sum(new Constant(2), new PowerFunction(2, 3), new Sine(1, 2, 3));
-        sum2 = new Sum(new Constant(2), new PowerFunction(2, 3));
+        sum = new Sum(new Constant(2), new Power(2, 3), new Sine(1, 2, 3));
+        sum2 = new Sum(new Constant(2), new Power(2, 3));
         assertTrue(sum.compareTo(sum2) > 0, "shortest goes first");
         assertTrue(sum2.compareTo(sum) < 0, "shortest goes first");
     }

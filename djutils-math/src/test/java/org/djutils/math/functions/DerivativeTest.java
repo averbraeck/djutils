@@ -21,12 +21,12 @@ public class DerivativeTest
     /** The tests. */
     private static Scenario[] tests = new Scenario[] {new Scenario(new Sine(1, 1, 0), -30, +30, 61, 0.0001, 0.0001),
             new Scenario(new Sine(2, 3, 4), -10, 10, 61, 0.0001, 0.001),
-            new Scenario(new PowerFunction(3, 5), -10, 10, 61, 0.0001, 5),
-            new Scenario(new PowerFunction(2, 0.5), 1, 20, 20, 0.0001, 0.0001),
-            new Scenario(new PowerFunction(2, -0.5), 1, 20, 20, 0.0001, 0.0001),
-            new Scenario(new Sum(new PowerFunction(1, 2), new PowerFunction(5, 1)), -20, 20, 41, 0.0001, 0.001),
-            new Scenario(new Product(new Sine(2, 2, 1), new PowerFunction(1, 2)), -20, 20, 41, 0.0001, 0.2),
-            new Scenario(new Quotient(new Sine(2, 2, 2), new PowerFunction(2, 3)), -9, 10, 21, 0.0001, 0.2),
+            new Scenario(new Power(3, 5), -10, 10, 61, 0.0001, 5),
+            new Scenario(new Power(2, 0.5), 1, 20, 20, 0.0001, 0.0001),
+            new Scenario(new Power(2, -0.5), 1, 20, 20, 0.0001, 0.0001),
+            new Scenario(new Sum(new Power(1, 2), new Power(5, 1)), -20, 20, 41, 0.0001, 0.001),
+            new Scenario(new Product(new Sine(2, 2, 1), new Power(1, 2)), -20, 20, 41, 0.0001, 0.2),
+            new Scenario(new Quotient(new Sine(2, 2, 2), new Power(2, 3)), -9, 10, 21, 0.0001, 0.2),
             new Scenario(new Logarithm(new Sum(new Constant(2.5), new Sine(new Sine(3, 2, 1), 2, 2, 1))), -20, 20, 41, 0.001,
                     0.3)};
 

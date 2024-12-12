@@ -59,7 +59,7 @@ public class QuotientTest
         MathFunction simplified = q.simplify();
         assertTrue(simplified instanceof Constant, "Should simplify to a constant");
         numerator = new Sine(1, 2, 3);
-        denominator = new PowerFunction(2, 3);
+        denominator = new Power(2, 3);
         q = new Quotient(numerator, denominator);
         MathFunction scaled = q.scaleBy(123);
         for (double x : testValues)

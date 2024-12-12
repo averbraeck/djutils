@@ -135,8 +135,8 @@ public class ConcatenationTest
         assertFalse(c.equals(null), "not equal to null");
         assertFalse(c.equals("not a Concatenation"), "not equal to some unrelated object");
 
-        MathFunction mf1 = new PowerFunction(1, 2);
-        MathFunction mf2 = new PowerFunction(2, 3);
+        MathFunction mf1 = new Power(1, 2);
+        MathFunction mf2 = new Power(2, 3);
         c = new Concatenation(new Interval<MathFunction>(1, true, 2, true, mf1),
                 new Interval<MathFunction>(3, true, 5, true, mf2));
         assertEquals(mf1.get(1.0), c.get(1.0), 0.0, "mf1");
