@@ -260,7 +260,11 @@ public class PowerFunction implements MathFunction
             return ("0");
         }
         StringBuilder result = new StringBuilder();
-        if (this.weight != 1.0 || this.power == 0.0)
+        if (this.weight == -1.0)
+        {
+            result.append("-");
+        }
+        else if (this.weight != 1.0 || this.power == 0.0)
         {
             result.append(printValue(this.weight));
         }
