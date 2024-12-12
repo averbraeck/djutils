@@ -276,6 +276,18 @@ public final class FunctionDemo
         System.out.println(deriv5);
         deriv6 = deriv5.getDerivative();
         System.out.println(deriv6);
+        
+        System.out.println("\narc sine");
+        MathFunction a = new ArcSine(1, 3);
+        System.out.println(a);
+        deriv1 = a.getDerivative();
+        System.out.println("f' " + deriv1);
+        
+        a = new ArcSine(new PowerFunction(2, 1), 1, 0).scaleBy(7);
+        System.out.println(a);
+        deriv1 = a.getDerivative();
+        System.out.println("f' " + deriv1);
+        
     }
 
 }
