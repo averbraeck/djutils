@@ -93,7 +93,7 @@ public final class SuperScript
             {'9', '\u2079'},
             {'+', '\u207a'},
             {'-', '\u207b'},
-            {'.', '\u02d9'},
+            {'.', '\u00b7'}, // https://www.compart.com/en/unicode/U+00B7 middle dot character
             {',', '\u02be'}, // https://stackoverflow.com/questions/34350441/is-there-an-unicode-symbol-for-superscript-comma
             {'(', '\u207d'},
             {')', '\u207e'}
