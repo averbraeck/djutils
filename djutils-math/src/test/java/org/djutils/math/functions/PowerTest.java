@@ -211,6 +211,8 @@ public class PowerTest
         pf = new Power(new Constant(3), 5, 2);
         MathFunction simplified = pf.simplify();
         assertEquals(new Constant(5 * 3 * 3), simplified, "should simplify to constant");
+        
+        assertTrue(new Power(-1, 2).toString().startsWith("-x"), "should print without the 1 ");
     }
 
     /**
