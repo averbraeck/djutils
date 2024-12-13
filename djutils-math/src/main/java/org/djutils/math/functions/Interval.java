@@ -80,11 +80,11 @@ record Interval<T extends Comparable<T>>(double low, boolean lowInclusive, doubl
         {
             return true;
         }
-        if (this.high == other.low && (!this.highInclusive) || (!other.lowInclusive))
+        if (this.high == other.low && ((!this.highInclusive) || (!other.lowInclusive)))
         {
             return true;
         }
-        if (this.low == other.high && !(this.lowInclusive) || (!other.highInclusive))
+        if (this.low == other.high && ((!this.lowInclusive) || (!other.highInclusive)))
         {
             return true;
         }

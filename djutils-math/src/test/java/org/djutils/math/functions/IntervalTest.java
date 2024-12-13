@@ -3,6 +3,7 @@ package org.djutils.math.functions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -144,7 +145,7 @@ public class IntervalTest
                             if (i1Left && (!i2Left) || i1Left == i2Left && (!i1Right) && i2Right)
                             {
                                 assertTrue(interval1.compareTo(interval2) < 0);
-                                assertTrue(interval2.compareTo(interval1) > 0); 
+                                assertTrue(interval2.compareTo(interval1) > 0);
                             }
                         }
                     }
@@ -199,4 +200,71 @@ public class IntervalTest
         assertNotEquals(interval1.hashCode(), interval2.hashCode(), "different content, different hash code");
     }
 
+    /**
+     * Test the intersection method.
+     */
+    @Test
+    public void intersectionTest()
+    {
+        Interval<String> a = new Interval<>(10, true, 20, true, "String");
+        Interval<Double> b = new Interval<>(12, true, 18, true, 123.456);
+        verifyIntersection(a.intersection(b), 12, true, 18, true, "String");
+        verifyIntersection(b.intersection(a), 12, true, 18, true, 123.456);
+        b = new Interval<>(8, false, 12, false, 234.56);
+        verifyIntersection(a.intersection(b), 10, true, 12, false, "String");
+        verifyIntersection(b.intersection(a), 10, true, 12, false, 234.56);
+        b = new Interval<>(2, true, 8, false, 12.34);
+        assertNull(a.intersection(b));
+        assertNull(b.intersection(a));
+        b = new Interval<>(10, true, 15, false, 1.2);
+        verifyIntersection(a.intersection(b), 10, true, 15, false, "String");
+        verifyIntersection(b.intersection(a), 10, true, 15, false, 1.2);
+        b = new Interval<>(10, false, 15, false, 1.2);
+        verifyIntersection(a.intersection(b), 10, false, 15, false, "String");
+        verifyIntersection(b.intersection(a), 10, false, 15, false, 1.2);
+        b = new Interval<>(12, false, 20, false, 1.2);
+        verifyIntersection(a.intersection(b), 12, false, 20, false, "String");
+        verifyIntersection(b.intersection(a), 12, false, 20, false, 1.2);
+        b = new Interval<>(12, false, 20, true, 1.25);
+        verifyIntersection(a.intersection(b), 12, false, 20, true, "String");
+        verifyIntersection(b.intersection(a), 12, false, 20, true, 1.25);
+        b = new Interval<>(12, true, 20, true, 1.25);
+        verifyIntersection(a.intersection(b), 12, true, 20, true, "String");
+        verifyIntersection(b.intersection(a), 12, true, 20, true, 1.25);
+        a = new Interval<>(10, false, 20, false, "String");
+        b = new Interval<>(10, true, 15, false, 1.2);
+        verifyIntersection(a.intersection(b), 10, false, 15, false, "String");
+        verifyIntersection(b.intersection(a), 10, false, 15, false, 1.2);
+        b = new Interval<>(10, false, 15, false, 1.2);
+        verifyIntersection(a.intersection(b), 10, false, 15, false, "String");
+        verifyIntersection(b.intersection(a), 10, false, 15, false, 1.2);
+        b = new Interval<>(12, false, 20, false, 1.2);
+        verifyIntersection(a.intersection(b), 12, false, 20, false, "String");
+        verifyIntersection(b.intersection(a), 12, false, 20, false, 1.2);
+        b = new Interval<>(12, false, 20, true, 1.25);
+        verifyIntersection(a.intersection(b), 12, false, 20, false, "String");
+        verifyIntersection(b.intersection(a), 12, false, 20, false, 1.25);
+        b = new Interval<>(12, true, 20, true, 1.25);
+        verifyIntersection(a.intersection(b), 12, true, 20, false, "String");
+        verifyIntersection(b.intersection(a), 12, true, 20, false, 1.25);
+    }
+
+    /**
+     * Verify all aspects of an Interval.
+     * @param intersection the Interval to verify
+     * @param low expected low boundary
+     * @param includesLow is low boundary included
+     * @param high expected high boundary
+     * @param includesHigh is high boundary included
+     * @param payload the expected paylowd
+     */
+    public void verifyIntersection(final Interval<?> intersection, final double low, final boolean includesLow,
+            final double high, final boolean includesHigh, final Object payload)
+    {
+        assertEquals(low, intersection.low(), 0.0, "intersection start");
+        assertEquals(high, intersection.high(), 0.0, "intersection end");
+        assertTrue(includesLow == intersection.lowInclusive(), "low inclusive");
+        assertTrue(includesHigh == intersection.highInclusive(), "high includes");
+        assertEquals(payload, intersection.payload());
+    }
 }
