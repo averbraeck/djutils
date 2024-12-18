@@ -94,6 +94,17 @@ public class QuotientTest
         assertTrue(q.toString().contains(numerator.toString()), "numerator is in toString");
         assertTrue(q.toString().contains(denominator.toString()), "denominator is in toString");
         assertTrue(q.toString().contains("/"), "there is a forward slash in toString");
-        
+
+        assertEquals(KnotReport.UNKNOWN, q.getKnotReport(new Interval<String>(10, true, 20, false, "string")),
+                "quotient cannot report knots");
+        try
+        {
+            q.getKnots(new Interval<String>(10, true, 20, false, "string"));
+            fail("getKnots should have thrown an UnsupportedOperationException");
+        }
+        catch (UnsupportedOperationException e)
+        {
+            // Ignore expected exception
+        }
     }
 }

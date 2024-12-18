@@ -100,5 +100,40 @@ public class LogarithmTest
         l = new Logarithm(new Constant(2));
         MathFunction simplified = l.simplify();
         assertEquals(new Constant(Math.log(2)), simplified, "should simplify to a constant");
+
+        l = new Logarithm();
+        assertEquals(KnotReport.NONE, l.getKnotReport(new Interval<String>(10, true, 20, true, "string")), "has no knots");
+        assertEquals(0, l.getKnots(new Interval<String>(10, true, 20, true, "string")).size(), "zero knots");
+
+        assertEquals(KnotReport.KNOWN_FINITE, l.getKnotReport(new Interval<String>(0, true, 20, true, "string")), "knot at 0");
+        assertEquals(1, l.getKnots(new Interval<String>(0, true, 20, true, "string")).size(), "one knot");
+        assertEquals(0.0, l.getKnots(new Interval<String>(0, true, 20, true, "string")).first(), "one knot at 0.0");
+
+        assertEquals(KnotReport.KNOWN_INFINITE, l.getKnotReport(new Interval<String>(-1, true, 20, true, "string")),
+                "infinite");
+        try
+        {
+            l.getKnots(new Interval<String>(-1, true, 20, true, "string"));
+            fail("attempt to collect infinitely many knots should fail with an UnsupportedOperationException");
+        }
+        catch (UnsupportedOperationException e)
+        {
+            // Ignore expected exception
+        }
+
+        l = new Logarithm(new Sine(1, 2, 3));
+        assertEquals(KnotReport.UNKNOWN, l.getKnotReport(new Interval<String>(10, true, 20, true, "string")),
+                "can't determine that");
+        try
+        {
+            l.getKnots(new Interval<String>(10, true, 20, true, "string"));
+            fail("attempt to collect uncollectable knots should throw an UnsupportedOperationException");
+        }
+        catch (UnsupportedOperationException e)
+        {
+            // Ignore expected exception
+        }
+
+        
     }
 }

@@ -1,7 +1,8 @@
 package org.djutils.math.functions;
 
-import java.util.Iterator;
 import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.djutils.exceptions.Throw;
 
@@ -119,7 +120,19 @@ public class Constant implements MathFunction
         }
         return null;
     }
-    
+
+    @Override
+    public KnotReport getKnotReport(final Interval<?> interval)
+    {
+        return KnotReport.NONE;
+    }
+
+    @Override
+    public SortedSet<Double> getKnots(final Interval<?> interval)
+    {
+        return new TreeSet<Double>();
+    }
+
     @Override
     public String toString()
     {

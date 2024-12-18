@@ -1,6 +1,8 @@
 package org.djutils.math.functions;
 
 import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.djutils.exceptions.Throw;
 
@@ -217,8 +219,7 @@ public class Power implements MathFunction
             if (this.chain == null && otherPowerFunction.chain == null
                     || (this.chain != null && this.chain.equals(otherPowerFunction.chain)))
             {
-                return new Power(this.chain, this.weight * otherPowerFunction.weight,
-                        this.power + otherPowerFunction.power);
+                return new Power(this.chain, this.weight * otherPowerFunction.weight, this.power + otherPowerFunction.power);
             }
             else if (this.power == otherPowerFunction.power)
             {
@@ -228,8 +229,7 @@ public class Power implements MathFunction
                     return new Power(new Product(this.chain, otherPowerFunction.chain), resultWeight, this.power);
                 }
                 // The chain fields cannot both be null; therefore, exactly one is non-null
-                return new Power(
-                        new Product(new Power(1, 1), this.chain == null ? otherPowerFunction.chain : this.chain),
+                return new Power(new Product(new Power(1, 1), this.chain == null ? otherPowerFunction.chain : this.chain),
                         resultWeight, this.power);
             }
         }
@@ -245,11 +245,42 @@ public class Power implements MathFunction
             if (this.chain == null && otherPowerFunction.chain == null
                     || (this.chain != null && this.chain.equals(otherPowerFunction.chain)))
             {
-                return new Power(this.chain, this.weight / otherPowerFunction.weight,
-                        this.power - otherPowerFunction.power);
+                return new Power(this.chain, this.weight / otherPowerFunction.weight, this.power - otherPowerFunction.power);
             }
         }
         return null;
+    }
+
+    @Override
+    public KnotReport getKnotReport(final Interval<?> interval)
+    {
+        boolean integerPower = this.power == Math.ceil(this.power);
+        if (this.chain == null && (!integerPower) && interval.low() < 0.0)
+        {
+            return KnotReport.KNOWN_INFINITE; // cannot raise negative to non-integer power
+        }
+        if (this.chain != null && (!integerPower))
+        {
+            return KnotReport.UNKNOWN; // we cannot tell if this might raise negative to non-integer power
+        }
+        // Our domain is [-inf, +inf]
+        return this.chain == null ? KnotReport.NONE : this.chain.getKnotReport(interval);
+    }
+
+    @Override
+    public SortedSet<Double> getKnots(final Interval<?> interval)
+    {
+        boolean integerPower = this.power == Math.ceil(this.power);
+        if (this.chain == null && (!integerPower) && interval.low() < 0.0)
+        {
+            throw new UnsupportedOperationException("There are infinitely many knots in " + interval);
+        }
+        if (this.chain != null && (!integerPower))
+        {
+            throw new UnsupportedOperationException("Cannot report knots in " + interval
+                    + " because I do not know where the chained function is negative or zero");
+        }
+        return this.chain == null ? new TreeSet<Double>() : this.chain.getKnots(interval);
     }
 
     @Override

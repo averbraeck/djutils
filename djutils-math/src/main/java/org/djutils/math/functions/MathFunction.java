@@ -1,5 +1,7 @@
 package org.djutils.math.functions;
 
+import java.util.SortedSet;
+
 /**
  * MathFunction interface.
  * <p>
@@ -151,6 +153,24 @@ public interface MathFunction extends Comparable<MathFunction>
         }
         return result;
     }
+
+    /**
+     * Report what is known about knots of this <code>MathFunction</code> in some <code>Interval</code>. The report does
+     * <b>not</b> take chained functions into account.
+     * @param interval the <code>Interval</code> on which knowledge of knots is requested
+     * @return summary of what is known about knots in the Interval
+     */
+    KnotReport getKnotReport(Interval<?> interval);
+
+    /**
+     * Report all knots of this <code>MathFunction</code> in some <code>Interval</code>. Throws
+     * <code>IllegalStateException</code> when the number of knots in the <code>Interval</code> is not known, or infinite.
+     * @param interval the <code>Interval</code> over which the knots must be reported
+     * @return all the knots of this <code>MathFunction</code> in the requested <code>Interval</code>
+     * @throws UnsupportedOperationException when the number of knots cannot be returned in a set because it is not known, or
+     *             infinite
+     */
+    SortedSet<Double> getKnots(Interval<?> interval);
 
     /**
      * Wrapper for one domain and function value pair.

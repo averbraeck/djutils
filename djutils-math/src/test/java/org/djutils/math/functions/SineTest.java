@@ -159,11 +159,11 @@ public class SineTest
         assertNotEquals(s1.hashCode(), s2.hashCode(), "hash code checks shift");
         assertFalse(s1.equals(s2), "equals checks shift");
         assertFalse(s1.equals(null), "not equal to null");
-        
+
         s1 = Sine.cosine(2, 1, 0);
         assertTrue(s1.toString().contains("cos("));
         assertFalse(s1.toString().contains("-"));
-        s1 = Sine.cosine(2,  1, Math.PI);
+        s1 = Sine.cosine(2, 1, Math.PI);
         assertTrue(s1.toString().contains("cos("));
         assertTrue(s1.toString().contains("-"));
         s1 = new Sine(2, 1, Math.PI);
@@ -172,7 +172,7 @@ public class SineTest
         s1 = new Sine(-2, 1, 0);
         assertTrue(s1.toString().contains("sin("));
         assertTrue(s1.toString().contains("-"));
-        
+
         s1 = new Sine(chained, 1, 2, 3);
         s2 = new Sine(chained, 1, 2, 4);
         assertNotNull(s1.mergeMultiply(s2), "can mergeMultiply these");
@@ -184,9 +184,32 @@ public class SineTest
         assertNull(s2.mergeAdd(s1), "cannot mergeAdd these");
         s2 = new Sine(chained, 1, 3, 4);
         assertNull(s1.mergeAdd(s2), "cannot mergeMultiply these, yet");
-        
+
         s1 = new Sine(new Constant(3), 3, 2, 1);
         simplified = s1.simplify();
         assertEquals(new Constant(3 * Math.sin(2 * 3 + 1)), simplified, "should simplify to constant");
+
+        s1 = Sine.cosine(2, 1, 0);
+        assertEquals(KnotReport.NONE, s1.getKnotReport(new Interval<String>(10, true, 20, false, "string")),
+                "sine has no knots");
+        assertEquals(0, s1.getKnots(new Interval<String>(10, true, 20, false, "string")).size(), "zero knots");
+        assertEquals(KnotReport.KNOWN_INFINITE,
+                new Sine(new Logarithm(), 2, 3, 4).getKnotReport(new Interval<String>(-1, true, 1, true, "string")),
+                "should be infinite");
+        try
+        {
+            new Sine(new Logarithm(), 2, 3, 4).getKnots(new Interval<String>(-1, true, 1, true, "string"));
+            fail("attempt to return infinitely many knots should have thrown an UnsupportedOperationException");
+        }
+        catch (UnsupportedOperationException e)
+        {
+            // Ignore expected exception
+        }
+        assertEquals(KnotReport.NONE,
+                new Sine(new Logarithm(), 2, 3, 4).getKnotReport(new Interval<String>(10, true, 20, true, "string")),
+                "should be zero");
+        assertEquals(0, new Sine(new Logarithm(), 2, 3, 4).getKnots(new Interval<String>(10, true, 20, true, "string")).size(),
+                "zero knots");
+
     }
 }

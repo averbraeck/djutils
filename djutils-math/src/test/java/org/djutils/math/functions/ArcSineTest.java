@@ -88,7 +88,7 @@ public class ArcSineTest
         assertNotEquals(asin.hashCode(), asin2.hashCode(), "hashCode takes omega into account");
         assertNotEquals(asin3.hashCode(), new ArcSine(2, 1).hashCode(), "hashCode takes shift into account");
         assertNotEquals(asin.hashCode(), asin4.hashCode(), "hashCode takes chain into account");
-        
+
         assertFalse(asin.equals(null), "not equal to null");
         assertTrue(asin.equals(asin), "equal to itself");
         assertTrue(asin.equals(new ArcSine()), "equal to identical ArcSine");
@@ -97,6 +97,35 @@ public class ArcSineTest
         assertFalse(asin.equals(new ArcSine(1, 2)), "not equal to ArcSine with different shift");
         assertFalse(asin.equals(asin4), "not equal to one with chained function");
         assertFalse(asin4.equals(asin), "not equal to one with chained function");
-        
+
+        assertEquals(KnotReport.NONE, asin.getKnotReport(new Interval<String>(-1, true, 1, true, "string")), "no knots");
+        assertEquals(0, asin.getKnots(new Interval<String>(-1, true, 1, true, "string")).size(), "no knots");
+
+        assertEquals(KnotReport.KNOWN_INFINITE, asin.getKnotReport(new Interval<String>(-1.5, true, 1, true, "string")),
+                "infinite");
+        assertEquals(KnotReport.KNOWN_INFINITE, asin.getKnotReport(new Interval<String>(-1, true, 1.5, true, "string")),
+                "infinite");
+        try
+        {
+            asin.getKnots(new Interval<String>(-1.5, true, 1, true, "string"));
+            fail("infinite set should throw an UnsupportedOperationException");
+        }
+        catch (UnsupportedOperationException e)
+        {
+            // Ignore expected exception
+        }
+
+        assertEquals(KnotReport.UNKNOWN,
+                new ArcSine(new Power(1, 2), 1, 1).getKnotReport(new Interval<String>(0, true, 1, true, "string")),
+                "not possible");
+        try
+        {
+            new ArcSine(new Power(1, 2), 1, 1).getKnots(new Interval<String>(0, true, 1, true, "string"));
+            fail("infinite set should throw an UnsupportedOperationException");
+        }
+        catch (UnsupportedOperationException e)
+        {
+            // Ignore expected exception
+        }
     }
 }

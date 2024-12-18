@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.djutils.exceptions.Throw;
 
@@ -191,6 +193,28 @@ public class Sum implements MathFunction
             return -1;
         }
         return 0;
+    }
+
+    @Override
+    public KnotReport getKnotReport(final Interval<?> interval)
+    {
+        KnotReport result = KnotReport.NONE;
+        for (MathFunction term : this.terms)
+        {
+            result = result.combineWith(term.getKnotReport(interval));
+        }
+        return result;
+    }
+
+    @Override
+    public SortedSet<Double> getKnots(final Interval<?> interval)
+    {
+        SortedSet<Double> result = new TreeSet<>(); 
+        for (MathFunction term : this.terms)
+        {
+            result.addAll(term.getKnots(interval));
+        }
+        return result;
     }
 
     @Override

@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.SortedSet;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -211,8 +213,53 @@ public class PowerTest
         pf = new Power(new Constant(3), 5, 2);
         MathFunction simplified = pf.simplify();
         assertEquals(new Constant(5 * 3 * 3), simplified, "should simplify to constant");
-        
+
         assertTrue(new Power(-1, 2).toString().startsWith("-x"), "should print without the 1 ");
+
+        pf = new Power(2, 3);
+        assertEquals(KnotReport.NONE, pf.getKnotReport(new Interval<String>(-10, true, 10, true, "string")), "no knots");
+        assertEquals(0, pf.getKnots(new Interval<String>(-10, true, 10, true, "string")).size(), "no knots");
+
+        pf = new Power(2, 0.5);
+        assertEquals(KnotReport.NONE, pf.getKnotReport(new Interval<String>(0, true, 10, true, "string")), "no knots");
+        assertEquals(0, pf.getKnots(new Interval<String>(0, true, 10, true, "string")).size(), "no knots");
+        assertEquals(KnotReport.KNOWN_INFINITE, pf.getKnotReport(new Interval<String>(-10, true, 10, true, "string")),
+                "infinite");
+        try
+        {
+            pf.getKnots(new Interval<String>(-10, true, 10, true, "string"));
+            fail("Infinite set should throw an UnsupportedOperationException");
+        }
+        catch (UnsupportedOperationException e)
+        {
+            // Ignore expected exception
+        }
+        pf = new Power(new Sine(1, 1, 1), 2, 1.5);
+        assertEquals(KnotReport.UNKNOWN, pf.getKnotReport(new Interval<String>(-10, true, 10, true, "string")), "can't tell");
+        try
+        {
+            pf.getKnots(new Interval<String>(-10, true, 10, true, "string"));
+            fail("can't tell set should throw an UnsupportedOperationException");
+        }
+        catch (UnsupportedOperationException e)
+        {
+            // Ignore expected exception
+        }
+
+        pf = new Power(new Concatenation(new Interval<MathFunction>(0, true, 0.5, true, new Constant(1)),
+                new Interval<MathFunction>(0.5, false, 1.0, true, new Constant(1)),
+                new Interval<MathFunction>(1.0, false, 2.0, true, new Constant(2))), 2, 3);
+        assertEquals(KnotReport.KNOWN_FINITE, pf.getKnotReport(new Interval<String>(0.25, true, 0.75, true, "string")),
+                "one knot");
+        assertEquals(1, pf.getKnots(new Interval<String>(0.25, true, 0.75, true, "string")).size(), "one knot");
+        assertEquals(0.5, pf.getKnots(new Interval<String>(0.25, true, 0.75, true, "string")).first(), "one knot at 0.5");
+        assertEquals(KnotReport.NONE, pf.getKnotReport(new Interval<String>(0.1, true, 0.4, true, "string")), "no knots");
+        assertEquals(0, pf.getKnots(new Interval<String>(0.1, true, 0.4, true, "string")).size(), "no knots");
+        SortedSet<Double> knots = pf.getKnots(new Interval<String>(0.25, true, 1.75, true, "string"));
+        assertEquals(2, knots.size(), "two knots");
+        assertEquals(0.5, knots.first(), "first knot at 0.5");
+        assertEquals(1.0, knots.last(), "last knot at 1.0");
+        
     }
 
     /**

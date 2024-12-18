@@ -1,5 +1,8 @@
 package org.djutils.math.functions;
 
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import org.djutils.exceptions.Throw;
 
 /**
@@ -56,6 +59,24 @@ public final class Nan implements MathFunction
     {
         Throw.when(!(other instanceof Nan), IllegalArgumentException.class, "other is of wrong type");
         return 0;
+    }
+
+    @Override
+    public KnotReport getKnotReport(final Interval<?> interval)
+    {
+        return interval.low() < interval.high() ? KnotReport.KNOWN_INFINITE : KnotReport.KNOWN_FINITE;
+    }
+
+    @Override
+    public SortedSet<Double> getKnots(final Interval<?> interval)
+    {
+        if (interval.low() == interval.high())
+        {
+            SortedSet<Double> result =  new TreeSet<Double>();
+            result.add(interval.low());
+            return result;
+        }
+        throw new UnsupportedOperationException("there are Infinitely many knots in " + interval);
     }
 
     @Override

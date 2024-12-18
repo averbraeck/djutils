@@ -47,7 +47,7 @@ public class ExponentTest
                     "derivative of chained works");
             assertEquals(Math.exp(2 * Math.sin(x)), eChain.get(x), 0.0001, "default factor works with chaining");
         }
-        
+
         assertEquals(Constant.ZERO, new Exponential(0).simplify(), "simplifies to ZERO");
         assertEquals(e, e.scaleBy(1.0), "scale by 1.0 returns e");
         assertEquals(Constant.ZERO, e.scaleBy(0.0), "simplifies to ZERO");
@@ -66,7 +66,7 @@ public class ExponentTest
         {
             // Ignore expected exception
         }
-        
+
         MathFunction sum = new Sum(e, e3);
         MathFunction simplified = sum.simplify();
         assertEquals(new Exponential(4), simplified, "should simplify to 4 * exp(x)");
@@ -79,7 +79,7 @@ public class ExponentTest
         assertTrue(eOfSine.toString().startsWith("2exp("), "uses exp notation");
         assertTrue(eOfSine.toString().contains(chain.toString()), "contains toString of chained function");
         assertEquals("0", new Exponential(0.0).toString(), "effectively ZERO exponential prints like 0");
-        
+
         assertEquals(new Constant(Math.exp(2)), new Exponential(new Constant(2)).simplify(), "simplifies to Constant");
         assertNotEquals(e.hashCode(), new Exponential(2).hashCode(), "hash code takes factor into account");
         assertFalse(e.equals(new Exponential(2)), "not equal");
@@ -88,5 +88,24 @@ public class ExponentTest
         assertFalse(eChain.equals(e), "checks chain");
         assertFalse(e.equals(eChain), "checks chain");
         assertTrue(eChain.equals(new Exponential(chain)), "should test equal");
+
+        e = new Exponential(2);
+        assertEquals(KnotReport.NONE, e.getKnotReport(new Interval<String>(-10, true, 20, true, "string")), "no knots");
+        assertEquals(0, e.getKnots(new Interval<String>(-10, true, 20, true, "string")).size(), "zero knots");
+        e = new Exponential(new Logarithm());
+        assertEquals(KnotReport.KNOWN_FINITE, e.getKnotReport(new Interval<String>(0, true, 20, true, "string")), "one knot");
+        assertEquals(1, e.getKnots(new Interval<String>(0, true, 20, true, "string")).size(), "one knot");
+        assertEquals(0.0, e.getKnots(new Interval<String>(0, true, 20, true, "string")).first(), "one knot at 0.0");
+        assertEquals(KnotReport.KNOWN_INFINITE, e.getKnotReport(new Interval<String>(-1, true, 20, true, "string")),
+                "infinitely many");
+        try
+        {
+            e.getKnots(new Interval<String>(-1, true, 20, true, "string"));
+            fail("attempt to collect infinitely many knots should throw an UnsupportedOperationException");
+        }
+        catch (UnsupportedOperationException exeption)
+        {
+            // Ignore expected exception
+        }
     }
 }

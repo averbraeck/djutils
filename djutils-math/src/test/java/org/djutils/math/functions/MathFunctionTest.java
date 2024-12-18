@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import org.djutils.math.functions.MathFunction.TupleSt;
 import org.junit.jupiter.api.Test;
 
@@ -133,6 +136,19 @@ public class MathFunctionTest
         public int compareWithinSubType(final MathFunction other)
         {
             return 0;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public KnotReport getKnotReport(final Interval<?> interval)
+        {
+            return KnotReport.NONE;
+        }
+
+        @Override
+        public SortedSet<Double> getKnots(final Interval<?> interval)
+        {
+            return new TreeSet<Double>();
         }
 
     }

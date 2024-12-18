@@ -31,8 +31,7 @@ public class ConstantAndNanTest
         for (double c : new double[] {-9999, -Math.PI, -1, 1, 1, Math.E, 3e200})
         {
             Constant constant = new Constant(c);
-            assertEquals(Double.parseDouble(constant.toString()), c, Math.abs(c) / 99999999,
-                    "value is produced as toString");
+            assertEquals(Double.parseDouble(constant.toString()), c, Math.abs(c) / 99999999, "value is produced as toString");
             for (double x : new double[] {-12, 0, Math.PI, 2e12})
             {
                 assertEquals(c, constant.get(x), 0.0, "value of c is returned for any x");
@@ -89,6 +88,10 @@ public class ConstantAndNanTest
         constant = constant.mergeAdd(new Constant(987.654));
         assertEquals(2 * 123.456 + 987.654, constant.getScale(), 0.0, "scale factor is updated");
         assertNull(constant.mergeMultiply(new Power(2, 3)), "Constant can not merge with PowerFunction");
+
+        assertEquals(KnotReport.NONE, constant.getKnotReport(new Interval<String>(10, true, 20, false, "string")),
+                "constant has no knots");
+        assertEquals(0, constant.getKnots(new Interval<String>(10, true, 20, false, "string")).size(), "zero knots");
     }
 
     /**
@@ -116,5 +119,22 @@ public class ConstantAndNanTest
         {
             // Ignore expected exception
         }
+
+        assertEquals(KnotReport.KNOWN_INFINITE, Nan.NAN.getKnotReport(new Interval<String>(10, true, 20, true, "string")),
+                "infinitely many knots on any interval");
+        try
+        {
+            Nan.NAN.getKnots(new Interval<String>(10, true, 20, true, "string"));
+            fail("attempt to collect infinitely many knots should have thrown an UnsupportedOperationException");
+        }
+        catch (UnsupportedOperationException e)
+        {
+            // Ignore expected exception
+        }
+        
+        assertEquals(KnotReport.KNOWN_FINITE, Nan.NAN.getKnotReport(new Interval<String>(10, true, 10, true, "string")),
+                "one knots on zero width interval");
+        assertEquals(1, Nan.NAN.getKnots(new Interval<String>(10, true, 10, true, "string")).size(), "one knot");
+        assertEquals(10.0, Nan.NAN.getKnots(new Interval<String>(10, true, 10, true, "string")).first(), "knot is at the 10.0");
     }
 }

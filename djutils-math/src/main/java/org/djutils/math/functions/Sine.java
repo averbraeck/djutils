@@ -1,6 +1,8 @@
 package org.djutils.math.functions;
 
 import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.djutils.exceptions.Throw;
 import org.djutils.math.AngleUtil;
@@ -227,6 +229,18 @@ public class Sine implements MathFunction
             }
         }
         return null;
+    }
+
+    @Override
+    public KnotReport getKnotReport(final Interval<?> interval)
+    {
+        return this.chain == null ? KnotReport.NONE : this.chain.getKnotReport(interval);
+    }
+
+    @Override
+    public SortedSet<Double> getKnots(final Interval<?> interval)
+    {
+        return this.chain == null ? new TreeSet<Double>() : this.chain.getKnots(interval);
     }
 
     @Override

@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.SortedSet;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -115,6 +117,56 @@ public class SumTest
         sum2 = new Sum(new Constant(2), new Power(2, 3));
         assertTrue(sum.compareTo(sum2) > 0, "shortest goes first");
         assertTrue(sum2.compareTo(sum) < 0, "shortest goes first");
+
+        sum = new Sum(new Logarithm(), new Power(1, 2));
+        assertEquals(KnotReport.NONE, sum.getKnotReport(new Interval<String>(0.5, true, 10, true, "string")), "zero knots");
+        assertEquals(KnotReport.KNOWN_FINITE, sum.getKnotReport(new Interval<String>(0.0, true, 10, true, "string")),
+                "one knot");
+        assertEquals(1, sum.getKnots(new Interval<String>(0.0, true, 10, true, "string")).size(), "one knot");
+        assertEquals(0.0, sum.getKnots(new Interval<String>(0.0, true, 10, true, "string")).first(), "one knot at 0.0");
+        assertEquals(KnotReport.KNOWN_INFINITE, sum.getKnotReport(new Interval<String>(-0.5, true, 10, true, "string")),
+                "infinite");
+        try
+        {
+            sum.getKnots(new Interval<String>(-0.5, true, 10, true, "string"));
+            fail("infinite set should throw an UnsupportedOperationException");
+        }
+        catch (UnsupportedOperationException e)
+        {
+            // Ignore expected exception
+        }
+        sum = new Sum(new Logarithm(), new Concatenation(new Interval<MathFunction>(-1.0, true, 0.5, false, new Constant(1))));
+        // System.out.println(sum); // Can't simplify this one
+        assertEquals(KnotReport.KNOWN_FINITE, sum.getKnotReport(new Interval<String>(0.0, true, 0.5, true, "string")),
+                "two knots");
+        SortedSet<Double> knots = sum.getKnots(new Interval<String>(0.0, true, 0.5, true, "string"));
+        // System.out.println(knots);
+        assertEquals(2, knots.size(), "two knots");
+        assertEquals(0.0, knots.first(), "first is at 0.0");
+        assertEquals(0.5, knots.last(), "last is at 0.5");
+        sum.getKnotReport(new Interval<String>(-0.5, true, 0.5, true, "string"));
+        assertEquals(KnotReport.KNOWN_INFINITE, sum.getKnotReport(new Interval<String>(-0.5, true, 0.5, true, "string")),
+                "infinite knots");
+        try
+        {
+            sum.getKnots(new Interval<String>(0.0, true, 1.0, true, "string"));
+            fail("Infinitely many knots should have thrown an UnsupportedOperationException");
+        }
+        catch (UnsupportedOperationException e)
+        {
+            // Ignore expected exception
+        }
+        assertEquals(KnotReport.KNOWN_INFINITE, sum.getKnotReport(new Interval<String>(-1.0, true, 1.0, true, "string")),
+                "infinite knots");
+        try
+        {
+            sum.getKnots(new Interval<String>(0.0, true, 1.0, true, "string"));
+            fail("Infinitely many knots should have thrown an UnsupportedOperationException");
+        }
+        catch (UnsupportedOperationException e)
+        {
+            // Ignore expected exception
+        }
     }
 
     /**

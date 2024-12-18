@@ -237,6 +237,58 @@ public class Concatenation implements MathFunction
     }
 
     @Override
+    public KnotReport getKnotReport(final Interval<?> interval)
+    {
+        KnotReport result = KnotReport.NONE;
+        if (this.functions.first().low() > interval.low() || (this.functions.last().high() < interval.high()))
+        {
+            result = KnotReport.KNOWN_INFINITE;
+        }
+        for (Interval<MathFunction> i : this.functions)
+        {
+            Interval<MathFunction> intersection = i.intersection(interval);
+            if (intersection != null)
+            {
+                if (interval.covers(i.low()))
+                {
+                    result = result.combineWith(KnotReport.KNOWN_FINITE);
+                }
+                if (interval.covers(i.high()))
+                {
+                    result = result.combineWith(KnotReport.KNOWN_FINITE);
+                }
+                result = result.combineWith(i.payload().getKnotReport(interval));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public SortedSet<Double> getKnots(final Interval<?> interval)
+    {
+        Throw.when(this.functions.first().low() > interval.low() || (this.functions.last().high() < interval.high()),
+                UnsupportedOperationException.class, "Concatentation is undefined over (part of) " + interval);
+        SortedSet<Double> result = new TreeSet<Double>();
+        for (Interval<MathFunction> i : this.functions)
+        {
+            Interval<MathFunction> intersection = i.intersection(interval);
+            if (intersection != null)
+            {
+                result.addAll(i.payload().getKnots(interval));
+            }
+            if (interval.covers(i.low()))
+            {
+                result.add(i.low());
+            }
+            if (interval.covers(i.high()))
+            {
+                result.add(i.high());
+            }
+        }
+        return result;
+    }
+
+    @Override
     public String toString()
     {
         StringBuilder stringBuilder = new StringBuilder();

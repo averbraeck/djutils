@@ -1,6 +1,8 @@
 package org.djutils.math.functions;
 
 import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.djutils.exceptions.Throw;
 
@@ -185,6 +187,26 @@ public class ArcSine implements MathFunction
             return 1;
         }
         return compareChains(this.chain, otherArcSine.chain);
+    }
+
+    @Override
+    public KnotReport getKnotReport(final Interval<?> interval)
+    {
+        if (this.chain != null)
+        {
+            return KnotReport.UNKNOWN;
+        }
+        return interval.low() >= -1.0 && interval.high() <= 1.0 ? KnotReport.NONE : KnotReport.KNOWN_INFINITE;
+    }
+
+    @Override
+    public SortedSet<Double> getKnots(final Interval<?> interval)
+    {
+        if (this.chain == null && interval.low() >= -1.0 && interval.high() <= 1.0)
+        {
+            return new TreeSet<Double>();
+        }
+        throw new UnsupportedOperationException("Cannot report knots in " + interval);
     }
 
     @Override

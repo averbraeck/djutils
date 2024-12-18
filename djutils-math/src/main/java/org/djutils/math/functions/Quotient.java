@@ -1,6 +1,7 @@
 package org.djutils.math.functions;
 
 import java.util.Objects;
+import java.util.SortedSet;
 
 import org.djutils.exceptions.Throw;
 
@@ -53,7 +54,7 @@ public class Quotient implements MathFunction
                 new Product(this.denominator, this.denominator));
         return result.simplify();
     }
-    
+
     @Override
     public MathFunction simplify()
     {
@@ -64,7 +65,7 @@ public class Quotient implements MathFunction
         MathFunction divideResult = this.numerator.mergeDivide(this.denominator);
         return divideResult != null ? divideResult : this;
     }
-    
+
     @Override
     public MathFunction scaleBy(final double factor)
     {
@@ -91,6 +92,19 @@ public class Quotient implements MathFunction
     }
 
     @Override
+    public KnotReport getKnotReport(final Interval<?> interval)
+    {
+        return KnotReport.UNKNOWN;
+    }
+
+    @Override
+    public SortedSet<Double> getKnots(final Interval<?> interval)
+    {
+        throw new UnsupportedOperationException(
+                "Cannot report knots in because I do not know where the numerator function is negative or zero");
+    }
+
+    @Override
     public String toString()
     {
         StringBuilder result = new StringBuilder();
@@ -101,7 +115,7 @@ public class Quotient implements MathFunction
         result.append(")");
         return result.toString();
     }
-    
+
     @Override
     public int hashCode()
     {
@@ -121,5 +135,5 @@ public class Quotient implements MathFunction
         Quotient other = (Quotient) obj;
         return Objects.equals(this.denominator, other.denominator) && Objects.equals(this.numerator, other.numerator);
     }
-    
+
 }

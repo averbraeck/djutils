@@ -1,6 +1,8 @@
 package org.djutils.math.functions;
 
 import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.djutils.exceptions.Throw;
 
@@ -158,6 +160,38 @@ public class Logarithm implements MathFunction
             }
         }
         return null;
+    }
+
+    @Override
+    public KnotReport getKnotReport(final Interval<?> interval)
+    {
+        if (this.chain != null)
+        {
+            return KnotReport.UNKNOWN;
+        }
+        return interval.low() > 0.0 ? KnotReport.NONE
+                : interval.low() == 0.0 ? KnotReport.KNOWN_FINITE : KnotReport.KNOWN_INFINITE;
+    }
+
+    @Override
+    public SortedSet<Double> getKnots(final Interval<?> interval)
+    {
+        if (this.chain != null)
+        {
+            throw new UnsupportedOperationException("Cannot report knots in " + interval
+                    + " because I do not know where the chained function is negative or zero");
+        }
+        if (interval.low() > 0.0)
+        {
+            return new TreeSet<Double>();
+        }
+        if (interval.low() == 0.0)
+        {
+            SortedSet<Double> result = new TreeSet<>();
+            result.add(0.0);
+            return result;
+        }
+        throw new UnsupportedOperationException("There are infinitely many knots in " + interval);
     }
 
     @Override

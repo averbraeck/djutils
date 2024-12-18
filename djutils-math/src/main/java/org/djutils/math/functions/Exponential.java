@@ -1,6 +1,8 @@
 package org.djutils.math.functions;
 
 import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.djutils.exceptions.Throw;
 
@@ -145,6 +147,18 @@ public class Exponential implements MathFunction
     }
 
     @Override
+    public KnotReport getKnotReport(final Interval<?> interval)
+    {
+        return this.chain == null ? KnotReport.NONE : this.chain.getKnotReport(interval);
+    }
+
+    @Override
+    public SortedSet<Double> getKnots(final Interval<?> interval)
+    {
+        return this.chain == null ? new TreeSet<Double>() : this.chain.getKnots(interval);
+    }
+
+    @Override
     public String toString()
     {
         StringBuilder result = new StringBuilder();
@@ -189,5 +203,5 @@ public class Exponential implements MathFunction
         return Objects.equals(this.chain, other.chain)
                 && Double.doubleToLongBits(this.factor) == Double.doubleToLongBits(other.factor);
     }
-    
+
 }

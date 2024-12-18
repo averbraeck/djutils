@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.djutils.exceptions.Throw;
 
@@ -241,6 +243,28 @@ public class Product implements MathFunction
         result.remove(0);
         result.add(0, scaledFactor);
         return new Product(result);
+    }
+
+    @Override
+    public KnotReport getKnotReport(final Interval<?> interval)
+    {
+        KnotReport result = KnotReport.NONE;
+        for (MathFunction factor : this.factors)
+        {
+            result = result.combineWith(factor.getKnotReport(interval));
+        }
+        return result;
+    }
+    
+    @Override
+    public SortedSet<Double> getKnots(final Interval<?> interval)
+    {
+        SortedSet<Double> result = new TreeSet<>(); 
+        for (MathFunction factor : this.factors)
+        {
+            result.addAll(factor.getKnots(interval));
+        }
+        return result;
     }
 
     @Override
