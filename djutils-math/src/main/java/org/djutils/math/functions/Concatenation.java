@@ -334,7 +334,7 @@ public class Concatenation implements MathFunction
         KNOT,
 
         /** Not continuous (and, therefore, not differentiable). */
-        DISCONTIUOUS,
+        DISCONTINUOUS,
 
         /** Function undefined in this interval; the <code>MathFunction</code> will yield <code>NaN</code> in this interval. */
         GAP;
