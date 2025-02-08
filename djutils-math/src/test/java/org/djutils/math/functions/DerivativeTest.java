@@ -28,7 +28,8 @@ public class DerivativeTest
             new Scenario(new Quotient(new Sine(2, 2, 2), new Power(2, 3)), -9, 10, 21, 0.0001, 0.2),
             new Scenario(new Logarithm(new Sum(new Constant(2.5), new Sine(new Sine(3, 2, 1), 2, 2, 1))), -20, 20, 41, 0.001,
                     0.3),
-            new Scenario(new ArcSine(new Power(1, 2)), -0.9, 0.9, 19, 0.0001, 0.001)};
+            new Scenario(new ArcSine(new Power(1, 2)), -0.9, 0.9, 19, 0.0001, 0.001),
+            new Scenario(new ArcTangent(new Quotient(new Sine(1, 1, 0), Sine.cosine(1, 1, 0))), -1, 1, 21, 0.001, 0.3)};
 
     /**
      * Test scenario.

@@ -7,7 +7,7 @@ import java.util.TreeSet;
 import org.djutils.exceptions.Throw;
 
 /**
- * ArcSine function.
+ * ArcTangent.java.
  * <p>
  * Copyright (c) 2024-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
@@ -18,7 +18,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class ArcSine implements MathFunction
+public class ArcTangent implements MathFunction
 {
     /** Omega (scales the result). */
     private final double omega;
@@ -30,12 +30,12 @@ public class ArcSine implements MathFunction
     private MathFunction chain;
 
     /**
-     * Construct a new ArcSine function.
+     * Construct a new ArcTangent function.
      * @param chain the MathFunction that yields x (may be null)
      * @param omega factor for the result
      * @param shift added to the arc sine <b>before</b> scaling by <code>omega</code>
      */
-    public ArcSine(final MathFunction chain, final double omega, final double shift)
+    public ArcTangent(final MathFunction chain, final double omega, final double shift)
     {
         this.omega = omega;
         this.shift = shift;
@@ -43,61 +43,50 @@ public class ArcSine implements MathFunction
     }
 
     /**
-     * Construct a new ArcSine function with <code>shift</code> equal to <code>0.0</code>.
+     * Construct a new ArcTangent function with <code>shift</code> equal to <code>0.0</code>.
      * @param chain the MathFunction that yields x (may be null)
      * @param omega factor for the result
      */
-    public ArcSine(final MathFunction chain, final double omega)
+    public ArcTangent(final MathFunction chain, final double omega)
     {
         this(chain, omega, 0.0);
     }
 
     /**
-     * Construct a new ArcSine function with <code>omega</code> equal to <code>1.0</code> and no <code>shift</code>.
+     * Construct a new ArcTangent function with <code>omega</code> equal to <code>1.0</code> and no <code>shift</code>.
      * @param chain the MathFunction that yields x (may be null)
      */
-    public ArcSine(final MathFunction chain)
+    public ArcTangent(final MathFunction chain)
     {
         this(chain, 1.0);
     }
 
     /**
-     * Construct a new ArcSine function with <code>omega</code> equal to <code>1.0</code>, no <code>shift</code> and no chained
-     * <code>MathFunction</code>.
+     * Construct a new ArcTangent function with <code>omega</code> equal to <code>1.0</code>, no <code>shift</code> and no
+     * chained <code>MathFunction</code>.
      */
-    public ArcSine()
+    public ArcTangent()
     {
         this(null);
     }
 
     /**
-     * Construct a new ArcSine function with no <code>shift</code> and no chained <code>MathFunction</code>.
+     * Construct a new ArcTangent function with no <code>shift</code> and no chained <code>MathFunction</code>.
      * @param omega factor for the result
      */
-    public ArcSine(final double omega)
+    public ArcTangent(final double omega)
     {
         this(null, omega);
     }
 
     /**
-     * Construct a new ArcSine function with <code>shift</code> and no chained <code>MathFunction</code>.
+     * Construct a new ArcTangent function with <code>shift</code> and no chained <code>MathFunction</code>.
      * @param omega factor for the result
      * @param shift added to the arc sine <b>before</b> scaling by <code>omega</code>
      */
-    public ArcSine(final double omega, final double shift)
+    public ArcTangent(final double omega, final double shift)
     {
         this(null, omega, shift);
-    }
-
-    /**
-     * Construct an arc cosine function using the equation <code>acos(x) === &pi;/2-asin(x)</code>.
-     * @param chain the MathFunction that yields x (may be null)
-     * @param omega factor for the result
-     * @return a ArcSine object that is set up to actually yield the arc cosine function
-     */
-    public static ArcSine arcCosine(final MathFunction chain, final double omega)
-    {
-        return new ArcSine(chain, -omega, -Math.PI / 2);
     }
 
     @Override
@@ -108,16 +97,14 @@ public class ArcSine implements MathFunction
             return 0.0;
         }
         double xValue = this.chain == null ? x : this.chain.get(x);
-        return this.omega * (this.shift + Math.asin(xValue));
+        return this.omega * (this.shift + Math.atan(xValue));
     }
 
     @Override
     public MathFunction getDerivative()
     {
-        // d/dx(omega * asin(x + shift)) === omega * (-x^2 - 2 * shift * x + 1 - shift^2)^-0.5
-        MathFunction myDerivative = new Power(
-                new Sum(new Power(this.chain, -1, 2), new Power(-2 * this.shift, 1), new Constant(1 - this.shift * this.shift)),
-                1, -0.5).scaleBy(this.omega);
+        // d/dx(omega * (shift + atan(x)) === omega / (x^2 + 1)
+        MathFunction myDerivative = new Quotient(new Constant(this.omega), new Sum(new Power(this.chain, 2), Constant.ONE));
         if (this.chain == null)
         {
             return myDerivative.simplify();
@@ -162,31 +149,31 @@ public class ArcSine implements MathFunction
     @Override
     public int sortPriority()
     {
-        return 5;
+        return 7;
     }
 
     @Override
     public int compareWithinSubType(final MathFunction other)
     {
-        Throw.when(!(other instanceof ArcSine), IllegalArgumentException.class, "other is of wrong type");
-        ArcSine otherArcSine = (ArcSine) other;
-        if (this.omega < otherArcSine.omega)
+        Throw.when(!(other instanceof ArcTangent), IllegalArgumentException.class, "other is of wrong type");
+        ArcTangent otherArcTangent = (ArcTangent) other;
+        if (this.omega < otherArcTangent.omega)
         {
             return -1;
         }
-        if (this.omega > otherArcSine.omega)
+        if (this.omega > otherArcTangent.omega)
         {
             return 1;
         }
-        if (this.shift < otherArcSine.shift)
+        if (this.shift < otherArcTangent.shift)
         {
             return -1;
         }
-        if (this.shift > otherArcSine.shift)
+        if (this.shift > otherArcTangent.shift)
         {
             return 1;
         }
-        return compareChains(this.chain, otherArcSine.chain);
+        return compareChains(this.chain, otherArcTangent.chain);
     }
 
     @Override
@@ -196,13 +183,13 @@ public class ArcSine implements MathFunction
         {
             return KnotReport.UNKNOWN;
         }
-        return interval.low() >= -1.0 && interval.high() <= 1.0 ? KnotReport.NONE : KnotReport.KNOWN_INFINITE;
+        return KnotReport.NONE;
     }
 
     @Override
     public SortedSet<Double> getKnots(final Interval<?> interval)
     {
-        if (this.chain == null && interval.low() >= -1.0 && interval.high() <= 1.0)
+        if (this.chain == null)
         {
             return new TreeSet<Double>();
         }
@@ -221,7 +208,7 @@ public class ArcSine implements MathFunction
         {
             result.append(printValue(this.omega));
         }
-        result.append("asin(");
+        result.append("atan(");
         result.append(this.chain == null ? "x" : this.chain.toString());
         if (this.shift != 0.0)
         {
@@ -251,7 +238,7 @@ public class ArcSine implements MathFunction
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ArcSine other = (ArcSine) obj;
+        ArcTangent other = (ArcTangent) obj;
         return Objects.equals(this.chain, other.chain)
                 && Double.doubleToLongBits(this.omega) == Double.doubleToLongBits(other.omega)
                 && Double.doubleToLongBits(this.shift) == Double.doubleToLongBits(other.shift);
