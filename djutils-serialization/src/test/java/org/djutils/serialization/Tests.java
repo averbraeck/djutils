@@ -185,20 +185,24 @@ public class Tests
         assertEquals(expected16, s.getBytes("UTF-16BE").length);
         assertEquals(expected16, s.getBytes("UTF-16LE").length);
 
-        byte[] b8 = TypedMessage.encodeUTF8(EndianUtil.BIG_ENDIAN, s);
+        byte[] b8BE = TypedMessage.encodeUTF8(EndianUtil.BIG_ENDIAN, s);
+        byte[] b8LE = TypedMessage.encodeUTF8(EndianUtil.LITTLE_ENDIAN, s);
         byte[] b16BE = TypedMessage.encodeUTF16(EndianUtil.BIG_ENDIAN, s);
         byte[] b16LE = TypedMessage.encodeUTF16(EndianUtil.LITTLE_ENDIAN, s);
 
-        assertEquals(expected8, b8.length - 5);
+        assertEquals(expected8, b8BE.length - 5);
+        assertEquals(expected8, b8LE.length - 5);
         assertEquals(expected16, b16BE.length - 5);
         assertEquals(expected16, b16LE.length - 5);
 
         // get the number from the byte arrays
-        assertEquals(9, b8[0]);
-        assertEquals(expected8, EndianUtil.BIG_ENDIAN.decodeInt(b8, 1));
+        assertEquals(9, b8BE[0]);
+        assertEquals(expected8, EndianUtil.BIG_ENDIAN.decodeInt(b8BE, 1));
+        assertEquals(-119, b8LE[0]);
+        assertEquals(expected8, EndianUtil.LITTLE_ENDIAN.decodeInt(b8LE, 1));
         assertEquals(10, b16BE[0]);
         assertEquals(expected16 / 2, EndianUtil.BIG_ENDIAN.decodeInt(b16BE, 1));
-        assertEquals(10, b16LE[0]); // TODO: the code for UTF-16LE will be different from 10 in a next version of djutils
+        assertEquals(-118, b16LE[0]);
         assertEquals(expected16 / 2, EndianUtil.LITTLE_ENDIAN.decodeInt(b16LE, 1));
     }
 
