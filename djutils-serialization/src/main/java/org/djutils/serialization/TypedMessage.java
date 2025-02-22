@@ -216,40 +216,42 @@ public final class TypedMessage
             };
 
     /** Converter for String. */
-    private static final Serializer<String> CONVERT_STRING16 = new ObjectSerializer<String>(FieldTypes.STRING_UTF16, "String_16")
-    {
-        @Override
-        public int size(final String object)
-        {
-            return 4 + object.getBytes(UTF16).length;
-        }
-
-        @Override
-        public void serialize(final String string, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
-        {
-            // System.out.println("Encoding string \"" + string + "\"");
-            char[] chars = new char[string.length()];
-            string.getChars(0, chars.length, chars, 0);
-            endianUtil.encodeInt(chars.length, buffer, pointer.getAndIncrement(4));
-            // int originalPos = pointer.get();
-            for (char c : chars)
+    private static final Serializer<String> CONVERT_STRING16 =
+            new ObjectSerializer<String>(FieldTypes.STRING_UTF16, "String_16")
             {
-                endianUtil.encodeChar(c, buffer, pointer.getAndIncrement(2));
-            }
-            // System.out.println("encoded string starts at " + originalPos);
-            // System.out.print(HexDumper.hexDumper(buffer));
-        }
+                @Override
+                public int size(final String object)
+                {
+                    return 4 + object.getBytes(UTF16).length;
+                }
 
-        @Override
-        public String deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
-        {
-            // System.out.println("Input bytes");
-            // System.out.print(HexDumper.hexDumper(buffer));
-            String s = endianUtil.decodeUTF16String(buffer, pointer.get());
-            pointer.getAndIncrement(4 + s.length() * 2);
-            return s;
-        }
-    };
+                @Override
+                public void serialize(final String string, final byte[] buffer, final Pointer pointer,
+                        final EndianUtil endianUtil)
+                {
+                    // System.out.println("Encoding string \"" + string + "\"");
+                    char[] chars = new char[string.length()];
+                    string.getChars(0, chars.length, chars, 0);
+                    endianUtil.encodeInt(chars.length, buffer, pointer.getAndIncrement(4));
+                    // int originalPos = pointer.get();
+                    for (char c : chars)
+                    {
+                        endianUtil.encodeChar(c, buffer, pointer.getAndIncrement(2));
+                    }
+                    // System.out.println("encoded string starts at " + originalPos);
+                    // System.out.print(HexDumper.hexDumper(buffer));
+                }
+
+                @Override
+                public String deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+                {
+                    // System.out.println("Input bytes");
+                    // System.out.print(HexDumper.hexDumper(buffer));
+                    String s = endianUtil.decodeUTF16String(buffer, pointer.get());
+                    pointer.getAndIncrement(4 + s.length() * 2);
+                    return s;
+                }
+            };
 
     /** Converter for String. */
     private static final Serializer<String> CONVERT_STRING8 = new ObjectSerializer<String>(FieldTypes.STRING_UTF8, "String_8")
@@ -1127,8 +1129,7 @@ public final class TypedMessage
 
     /** Serializer for array of DoubleVector. Each DoubleVector must have same size. */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static final Serializer<DoubleVector[]> CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY =
-            new DoubleVectorArraySerializer();
+    private static final Serializer<DoubleVector[]> CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY = new DoubleVectorArraySerializer();
 
     /** Converter for array of SerializebleObject using UTF16 for strings and characters. */
     private static final Serializer<SerializableObject<?>[]> COMPOUND_ARRAY_SERIALIZER_UTF16 =
@@ -1432,8 +1433,8 @@ public final class TypedMessage
 
     /**
      * Find the serializer for one object.
-     * @param utf8 if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters
-     *            and Strings
+     * @param utf8 if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters and
+     *            Strings
      * @param object the object for which the serializer must be returned
      * @return the serializer needed for <code>object</code>
      * @throws SerializationException when there is no known serializer for <code>object</code>
@@ -1493,8 +1494,8 @@ public final class TypedMessage
 
     /**
      * Build the list of serializers corresponding to the data in an Object array.
-     * @param utf8 if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters
-     *            and Strings
+     * @param utf8 if true; use UTF8 encoding for characters and Strings; if false; use UTF16 encoding for characters and
+     *            Strings
      * @param content the objects for which the serializers must be returned
      * @return array filled with the serializers needed for the objects in the Object array
      * @throws SerializationException when an object in <code>content</code> cannot be serialized
@@ -1580,7 +1581,6 @@ public final class TypedMessage
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    @SuppressWarnings({"checkstyle:methodlength", "checkstyle:needbraces"})
     public static Object[] decode(final byte[] buffer, final Map<Byte, Serializer<?>> decoderMap, final EndianUtil endianUtil)
             throws SerializationException
     {
@@ -1602,6 +1602,26 @@ public final class TypedMessage
             }
         }
         return list.toArray();
+    }
+
+    /**
+     * Decode an integer value from the buffer.
+     * @param buffer the buffer with the byte-encoded int
+     * @return the integer value belonging to the byte buffer content
+     * @throws SerializationException when decoding fails
+     */
+    public static int decodeInt(final byte[] buffer) throws SerializationException
+    {
+        Throw.when(buffer.length < 5, SerializationException.class, "decodeInt expects a buffer of at least 5 bytes");
+        if (buffer[0] == FieldTypes.INT_32)
+        {
+            return (int) decodeToPrimitiveDataTypes(buffer, EndianUtil.BIG_ENDIAN)[0];
+        }
+        if (buffer[0] == FieldTypes.INT_32_LE)
+        {
+            return (int) decodeToPrimitiveDataTypes(buffer, EndianUtil.LITTLE_ENDIAN)[0];
+        }
+        throw new SerializationException("decodeInt did not detect integer in first byte");
     }
 
     /**
