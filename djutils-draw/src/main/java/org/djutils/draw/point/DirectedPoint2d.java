@@ -14,7 +14,7 @@ import org.djutils.math.AngleUtil;
  * A DirectedPoint2d is a Point2d that additionally carries a direction in 2d-space (dirZ). This is <b>not</b> the direction
  * that the point is when viewed from the origin (0,0).
  * <p>
- * Copyright (c) 2023-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2023-2025 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.

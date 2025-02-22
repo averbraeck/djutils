@@ -7,7 +7,7 @@ import java.util.Map;
  * Draw text in unicode superscript glyphs. Much of this is based on
  * <a href="https://rupertshepherd.info/resource_pages/superscript-letters-in-unicode">Superscript letters in unicode</a>
  * <p>
- * Copyright (c) 2024-2024 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
+ * Copyright (c) 2024-2025 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
  * distributed under a three-clause BSD-style license, which can be found at
  * <a href="https://djutils.org/docs/license.html" target="_blank"> https://djutils.org/docs/license.html</a>.

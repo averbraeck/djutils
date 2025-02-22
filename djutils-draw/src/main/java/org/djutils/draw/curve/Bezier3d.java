@@ -10,7 +10,7 @@ import org.djutils.exceptions.Throw;
  * Continuous definition of a B&eacute;zier curve in 3d. This class is simply a helper class for (and a super of)
  * {@code BezierCubic3d}, which uses this class to determine curvature, offset lines, etc.
  * <p>
- * Copyright (c) 2023-2024 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2023-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://opentrafficsim.org/docs/license.html">OpenTrafficSim License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>

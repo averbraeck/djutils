@@ -13,7 +13,7 @@ import org.djutils.serialization.SerialDataDecoder;
 /**
  * Dumper for serialized data.
  * <p>
- * Copyright (c) 2019-2024 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2019-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * <p>
  * version Jun 27, 2019 <br>

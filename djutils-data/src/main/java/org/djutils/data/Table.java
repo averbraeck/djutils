@@ -13,7 +13,7 @@ import org.djutils.immutablecollections.ImmutableList;
  * Abstract table implementation taking care of the columns. Sub classes must provide an {@code Iterator} over {@code Record}s
  * and may have methods to add data.
  * <p>
- * Copyright (c) 2020-2024 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2020-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
  * </p>
  * @author <a href="https://github.com/averbraeck">Alexander Verbraeck</a>
