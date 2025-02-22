@@ -91,7 +91,7 @@ public class SerialDataDecoder implements Decoder
         if (null == this.currentSerializer)
         {
             // We are expecting a field type byte
-            this.currentFieldType = theByte;
+            this.currentFieldType = (byte) (theByte & 0x7F);
             this.currentSerializer = TypedMessage.PRIMITIVE_DATA_DECODERS.get(this.currentFieldType);
             if (null == this.currentSerializer)
             {
