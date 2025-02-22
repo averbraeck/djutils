@@ -293,7 +293,7 @@ public final class FieldTypes
      * |0x40|0x80|0x00|0x00|  |0x42|0x70|0x00|0x00|
      * </pre>
      */
-    public static final byte FLOAT_32_UNIT_COLUMN_ARRAY = 31;
+    public static final byte FLOAT_32_UNIT_COLUMN_MATRIX = 31;
 
     /**
      * Number-preceded dense double array, stored internally in the SI unit, with a unique unit type and display type per row.
@@ -331,19 +331,7 @@ public final class FieldTypes
      * |0x40|0x7A|0x91|0x99|0x99|0x99|0x99|0x9A|
      * </pre>
      */
-    public static final byte DOUBLE_64_UNIT_COLUMN_ARRAY = 32;
-
-    /**
-     * Dense BIG-endian float matrix, preceded by a 32-bit BIG-endian row count int and a 32-bit big-endian column count int,
-     * with a unique unit type and display unit per column of the float matrix.
-     */
-    public static final byte FLOAT_32_UNIT2_MATRIX = 33;
-
-    /**
-     * Dense big-endian double matrix, preceded by a 32-bit big-endian row count int and a 32-bit big-endian column count int,
-     * with a unique unit type and display unit per column of the double matrix.
-     */
-    public static final byte DOUBLE_64_UNIT2_MATRIX = 34;
+    public static final byte DOUBLE_64_UNIT_COLUMN_MATRIX = 32;
 
     /** ******************************************************************************************************* */
     /** ******************************************************************************************************* */
@@ -530,13 +518,13 @@ public final class FieldTypes
      * 159 (-97) Dense little-endian float matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian
      * column count int, with a unique unit type and display unit per column of the float matrix.
      */
-    public static final byte FLOAT_32_UNIT2_MATRIX_LE = -97;
+    public static final byte FLOAT_32_UNIT_COLUMN_MATRIX_LE = -97;
 
     /**
      * 160 (-96) Dense little-endian double matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian
      * column count int, with a unique unit type and display unit per column of the double matrix.
      */
-    public static final byte DOUBLE_64_UNIT2_MATRIX_LE = -96;
+    public static final byte DOUBLE_64_UNIT_COLUMN_MATRIX_LE = -96;
 
     /**
      * Utility class, cannot be instantiated.

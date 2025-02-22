@@ -52,8 +52,8 @@ The following types have been implemented in the v1-version of the standard:
 | 28 | DOUBLE_64_UNIT_ARRAY | Dense double array, preceded by a 32-bit number indicating the number of doubles, order, with unit type and display unit attached to the entire double array |
 | 29 | FLOAT_32_UNIT_MATRIX | Dense float matrix, preceded by a 32-bit row count int and a 32-bit column count int, with unit type and display unit attached to the entire float matrix |
 | 30 | DOUBLE_64_UNIT_MATRIX | Dense double matrix, preceded by a 32-bit row count int and a 32-bit column count int, with unit type and display unit attached to the entire double matrix |
-| 31 | FLOAT_32_UNIT2_MATRIX | Dense float matrix, preceded by a 32-bit row count int and a 32-bit column count int, with a unique unit type and display unit per column of the float matrix. |
-| 32 | DOUBLE_64_UNIT2_MATRIX | Dense double matrix, preceded by a 32-bit row count int and a 32-bit column count int, with a unique unit type and display unit per column of the double matrix. |
+| 31 | FLOAT_32_UNIT_COLUMN_MATRIX | Dense float matrix, preceded by a 32-bit row count int and a 32-bit column count int, with a unique unit type and display unit per column of the float matrix. |
+| 32 | DOUBLE_64_UNIT_COLUMN_MATRIX | Dense double matrix, preceded by a 32-bit row count int and a 32-bit column count int, with a unique unit type and display unit per column of the double matrix. |
 
 <br>
 
