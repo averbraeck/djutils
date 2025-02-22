@@ -32,23 +32,29 @@ public final class FieldTypes
     /** boolean, sent / received as a byte; 0 = false, 1 = true. */
     public static final byte BOOLEAN_8 = 6;
 
-    /** char, 8-bit ASCII character. */
+    /** char, 8-bit ASCII character. Note that not all characters can be represented in 8 bits. */
     public static final byte CHAR_8 = 7;
 
-    /** char, 16-bit Unicode character, big endian order. */
+    /**
+     * char, 16-bit Unicode character, big endian order. Note that not all characters can be represented in two bytes using
+     * UTF-16.
+     */
     public static final byte CHAR_16 = 8;
 
     /**
      * String, number-preceded byte array of 8-bits characters. The string types are preceded by a 32-bit int indicating the
-     * number of characters in the array that follows. This int is itself not preceded by a byte indicating it is an int. An
-     * ASCII string "Hello" is therefore coded as follows: |9|0|0|0|5|H|e|l|l|o|
+     * number of bytes in the array that follows. This int is itself not preceded by a byte indicating it is an int. An ASCII
+     * string "Hello" is therefore coded as follows: |9|0|0|0|5|H|e|l|l|o|. Note that the int indicates the number of bytes, not
+     * the number of characters. The string itself is coded with the first character at the start of the array and the last
+     * character at the end.
      */
     public static final byte STRING_8 = 9;
 
     /**
      * String, number-preceded char array of 16-bits characters, big-endian order. The string types are preceded by a 32-bit int
-     * indicating the number of characters in the array that follows. This int is itself not preceded by a byte indicating it is
-     * an int.
+     * indicating the number of bytes in the array that follows. This int is itself not preceded by a byte indicating it is an
+     * int. Note that the int indicates the number of bytes, not the number of characters. The string itself is coded with the
+     * first character at the start of the array and the last character at the end.
      */
     public static final byte STRING_16 = 10;
 
@@ -327,6 +333,24 @@ public final class FieldTypes
      */
     public static final byte DOUBLE_64_UNIT_COLUMN_ARRAY = 32;
 
+    /**
+     * Dense BIG-endian float matrix, preceded by a 32-bit BIG-endian row count int and a 32-bit big-endian column count int,
+     * with a unique unit type and display unit per column of the float matrix.
+     */
+    public static final byte FLOAT_32_UNIT2_MATRIX = 33;
+
+    /**
+     * Dense big-endian double matrix, preceded by a 32-bit big-endian row count int and a 32-bit big-endian column count int,
+     * with a unique unit type and display unit per column of the double matrix.
+     */
+    public static final byte DOUBLE_64_UNIT2_MATRIX = 34;
+
+    /** ******************************************************************************************************* */
+    /** ******************************************************************************************************* */
+    /** *************************************** LITTLE ENDIAN ************************************************* */
+    /** ******************************************************************************************************* */
+    /** ******************************************************************************************************* */
+
     /** 128 (-128) Byte, 8 bit signed two's complement integer; equal to code 0. */
     public static final byte BYTE_8_LE = -128;
 
@@ -366,18 +390,21 @@ public final class FieldTypes
     public static final byte CHAR_8_LE = -121;
 
     /**
-     * 136 (-120) Char, 16-bit Unicode character, little-endian order for the 2 part.
+     * 136 (-120) Char, 16-bit Unicode character, little-endian order for the 2 bytes.
      */
     public static final byte CHAR_16_LE = -120;
 
     /**
-     * s 137 (-119) String, 32-bit little-endian number-preceded byte array of 8-bits characters.
+     * 137 (-119) String, 32-bit little-endian number indicating the number of bytes, followed by a byte array of UTF-8 encoded
+     * characters. The string itself is coded with the first character at the start of the array and the last character at the
+     * end.
      */
     public static final byte STRING_8_LE = -119;
 
     /**
-     * 138 (-118) String, 32-bit little-endian number-preceded char array of 16-bits characters, each 2-byte character in
-     * little-endian order.
+     * 138 (-118) String, 32-bit little-endian number indicating the number of bytes, followed by a byte array of UTF-16 encoded
+     * characters. Each 2-byte character is represented in little-endian order, whereas the string itself is coded with the
+     * first character at the start of the array and the last character at the end.
      */
     public static final byte STRING_16_LE = -118;
 
@@ -501,13 +528,13 @@ public final class FieldTypes
 
     /**
      * 159 (-97) Dense little-endian float matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian
-     * column count int, with a unique unit type and display unit per row of the float matrix.
+     * column count int, with a unique unit type and display unit per column of the float matrix.
      */
     public static final byte FLOAT_32_UNIT2_MATRIX_LE = -97;
 
     /**
      * 160 (-96) Dense little-endian double matrix, preceded by a 32-bit little-endian row count int and a 32-bit little-endian
-     * column count int, with a unique unit type and display unit per row of the double matrix.
+     * column count int, with a unique unit type and display unit per column of the double matrix.
      */
     public static final byte DOUBLE_64_UNIT2_MATRIX_LE = -96;
 
