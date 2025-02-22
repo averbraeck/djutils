@@ -7,7 +7,7 @@ import java.nio.ByteOrder;
  * Method to help with Little Endian / Big Endian conversions for the Sim0MQ messages. All Sim0MQ messages are encoded Big
  * Endian over the wire.
  * <p>
- * Copyright (c) 2016-2017 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
+ * Copyright (c) 2016-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://sim0mq.org/docs/current/license.html">Sim0MQ License</a>.
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
