@@ -1608,7 +1608,39 @@ public final class TypedMessage
     }
 
     /**
-     * Decode an integer value from the buffer.
+     * Decode a byte value from the buffer, including the prefix.
+     * @param buffer the buffer with the byte-encoded byte
+     * @return the byte value belonging to the byte buffer content
+     * @throws SerializationException when decoding fails
+     */
+    public static byte decodeByte(final byte[] buffer) throws SerializationException
+    {
+        Throw.when(buffer.length < 2, SerializationException.class, "decodeByte expects a buffer of at least 2 bytes");
+        if (buffer[0] == FieldTypes.BYTE_8 || buffer[0] == FieldTypes.BYTE_8_LE)
+        {
+            return (byte) decodeToPrimitiveDataTypes(buffer)[0];
+        }
+        throw new SerializationException("decodeByte did not detect byte in first byte");
+    }
+
+    /**
+     * Decode a short value from the buffer, including the prefix.
+     * @param buffer the buffer with the byte-encoded short
+     * @return the short value belonging to the byte buffer content
+     * @throws SerializationException when decoding fails
+     */
+    public static short decodeShort(final byte[] buffer) throws SerializationException
+    {
+        Throw.when(buffer.length < 3, SerializationException.class, "decodeShort expects a buffer of at least 3 bytes");
+        if (buffer[0] == FieldTypes.SHORT_16 || buffer[0] == FieldTypes.SHORT_16_LE)
+        {
+            return (short) decodeToPrimitiveDataTypes(buffer)[0];
+        }
+        throw new SerializationException("decodeShort did not detect short in first byte");
+    }
+
+    /**
+     * Decode an integer value from the buffer, including the prefix.
      * @param buffer the buffer with the byte-encoded int
      * @return the integer value belonging to the byte buffer content
      * @throws SerializationException when decoding fails
@@ -1621,6 +1653,102 @@ public final class TypedMessage
             return (int) decodeToPrimitiveDataTypes(buffer)[0];
         }
         throw new SerializationException("decodeInt did not detect integer in first byte");
+    }
+
+    /**
+     * Decode a long value from the buffer, including the prefix.
+     * @param buffer the buffer with the byte-encoded long
+     * @return the long value belonging to the byte buffer content
+     * @throws SerializationException when decoding fails
+     */
+    public static long decodeLong(final byte[] buffer) throws SerializationException
+    {
+        Throw.when(buffer.length < 9, SerializationException.class, "decodeLong expects a buffer of at least 9 bytes");
+        if (buffer[0] == FieldTypes.LONG_64 || buffer[0] == FieldTypes.LONG_64_LE)
+        {
+            return (long) decodeToPrimitiveDataTypes(buffer)[0];
+        }
+        throw new SerializationException("decodeLong did not detect long in first byte");
+    }
+
+    /**
+     * Decode a float value from the buffer, including the prefix.
+     * @param buffer the buffer with the byte-encoded float
+     * @return the float value belonging to the byte buffer content
+     * @throws SerializationException when decoding fails
+     */
+    public static float decodeFloat(final byte[] buffer) throws SerializationException
+    {
+        Throw.when(buffer.length < 5, SerializationException.class, "decodeFloat expects a buffer of at least 5 bytes");
+        if (buffer[0] == FieldTypes.FLOAT_32 || buffer[0] == FieldTypes.FLOAT_32_LE)
+        {
+            return (float) decodeToPrimitiveDataTypes(buffer)[0];
+        }
+        throw new SerializationException("decodeFloat did not detect float in first byte");
+    }
+
+    /**
+     * Decode a double value from the buffer, including the prefix.
+     * @param buffer the buffer with the byte-encoded double
+     * @return the double value belonging to the byte buffer content
+     * @throws SerializationException when decoding fails
+     */
+    public static double decodeDouble(final byte[] buffer) throws SerializationException
+    {
+        Throw.when(buffer.length < 9, SerializationException.class, "decodeDouble expects a buffer of at least 9 bytes");
+        if (buffer[0] == FieldTypes.DOUBLE_64 || buffer[0] == FieldTypes.DOUBLE_64_LE)
+        {
+            return (double) decodeToPrimitiveDataTypes(buffer)[0];
+        }
+        throw new SerializationException("decodeDouble did not detect double in first byte");
+    }
+
+    /**
+     * Decode a boolean value from the buffer, including the prefix.
+     * @param buffer the buffer with the byte-encoded boolean
+     * @return the boolean value belonging to the byte buffer content
+     * @throws SerializationException when decoding fails
+     */
+    public static boolean decodeBoolean(final byte[] buffer) throws SerializationException
+    {
+        Throw.when(buffer.length < 2, SerializationException.class, "decodeBoolean expects a buffer of at least 2 bytes");
+        if (buffer[0] == FieldTypes.SHORT_16 || buffer[0] == FieldTypes.SHORT_16_LE)
+        {
+            return (boolean) decodeToPrimitiveDataTypes(buffer)[0];
+        }
+        throw new SerializationException("decodeBoolean did not detect boolean in first byte");
+    }
+
+    /**
+     * Decode a char value from the buffer, including the prefix, based on a one-byte UTF-8 value.
+     * @param buffer the buffer with the byte-encoded char
+     * @return the char value belonging to the byte buffer content
+     * @throws SerializationException when decoding fails
+     */
+    public static char decodeCharUtf8(final byte[] buffer) throws SerializationException
+    {
+        Throw.when(buffer.length < 2, SerializationException.class, "decodeShort expects a buffer of at least 2 bytes");
+        if (buffer[0] == FieldTypes.CHAR_8 || buffer[0] == FieldTypes.CHAR_8_LE)
+        {
+            return (char) decodeToPrimitiveDataTypes(buffer)[0];
+        }
+        throw new SerializationException("decodeCharUtf8 did not detect char in first byte");
+    }
+
+    /**
+     * Decode a char value from the buffer, including the prefix, based on a one-byte UTF-16 value.
+     * @param buffer the buffer with the byte-encoded char
+     * @return the char value belonging to the byte buffer content
+     * @throws SerializationException when decoding fails
+     */
+    public static char decodeCharUtf16(final byte[] buffer) throws SerializationException
+    {
+        Throw.when(buffer.length < 3, SerializationException.class, "decodeShort expects a buffer of at least 3 bytes");
+        if (buffer[0] == FieldTypes.CHAR_16 || buffer[0] == FieldTypes.CHAR_16_LE)
+        {
+            return (char) decodeToPrimitiveDataTypes(buffer)[0];
+        }
+        throw new SerializationException("decodeCharUtf8 did not detect char in first byte");
     }
 
     /**
