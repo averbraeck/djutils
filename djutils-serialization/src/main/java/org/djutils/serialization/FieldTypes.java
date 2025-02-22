@@ -48,7 +48,7 @@ public final class FieldTypes
      * the number of characters. The string itself is coded with the first character at the start of the array and the last
      * character at the end.
      */
-    public static final byte STRING_8 = 9;
+    public static final byte STRING_UTF8 = 9;
 
     /**
      * String, number-preceded char array of 16-bits characters, big-endian order. The string types are preceded by a 32-bit int
@@ -56,7 +56,7 @@ public final class FieldTypes
      * int. Note that the int indicates the number of bytes, not the number of characters. The string itself is coded with the
      * first character at the start of the array and the last character at the end.
      */
-    public static final byte STRING_16 = 10;
+    public static final byte STRING_UTF16 = 10;
 
     /**
      * Number-preceded byte array. The array types are preceded by a 32-bit int indicating the number of values in the array
@@ -399,14 +399,14 @@ public final class FieldTypes
      * characters. The string itself is coded with the first character at the start of the array and the last character at the
      * end.
      */
-    public static final byte STRING_8_LE = -119;
+    public static final byte STRING_UTF8_LE = -119;
 
     /**
      * 138 (-118) String, 32-bit little-endian number indicating the number of bytes, followed by a byte array of UTF-16 encoded
      * characters. Each 2-byte character is represented in little-endian order, whereas the string itself is coded with the
      * first character at the start of the array and the last character at the end.
      */
-    public static final byte STRING_16_LE = -118;
+    public static final byte STRING_UTF16_LE = -118;
 
     /**
      * 139 (-117) Byte array, preceded by a 32-bit little-endian number indicating the number of bytes.

@@ -216,7 +216,7 @@ public final class TypedMessage
             };
 
     /** Converter for String. */
-    private static final Serializer<String> CONVERT_STRING16 = new ObjectSerializer<String>(FieldTypes.STRING_16, "String_16")
+    private static final Serializer<String> CONVERT_STRING16 = new ObjectSerializer<String>(FieldTypes.STRING_UTF16, "String_16")
     {
         @Override
         public int size(final String object)
@@ -252,7 +252,7 @@ public final class TypedMessage
     };
 
     /** Converter for String. */
-    private static final Serializer<String> CONVERT_STRING8 = new ObjectSerializer<String>(FieldTypes.STRING_8, "String_8")
+    private static final Serializer<String> CONVERT_STRING8 = new ObjectSerializer<String>(FieldTypes.STRING_UTF8, "String_8")
     {
         @Override
         public int size(final String string)
