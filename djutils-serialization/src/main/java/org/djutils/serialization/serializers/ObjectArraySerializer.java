@@ -49,7 +49,7 @@ public abstract class ObjectArraySerializer<E extends Object> extends ArrayOrMat
     public final void serializeWithPrefix(final E[] array, final byte[] buffer, final Pointer pointer,
             final EndianUtil endianUtil) throws SerializationException
     {
-        buffer[pointer.getAndIncrement(1)] = fieldType();
+        buffer[pointer.getAndIncrement(1)] = endianUtil.isBigEndian() ? fieldType() : (byte) (fieldType() + 128);
         serialize(array, buffer, pointer, endianUtil);
     }
 

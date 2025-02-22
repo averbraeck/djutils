@@ -44,7 +44,7 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
     public final void serializeWithPrefix(final T object, final byte[] buffer, final Pointer pointer,
             final EndianUtil endianUtil) throws SerializationException
     {
-        buffer[pointer.getAndIncrement(1)] = fieldType();
+        buffer[pointer.getAndIncrement(1)] = endianUtil.isBigEndian() ? fieldType() : (byte) (fieldType() + 128);
         serialize(object, buffer, pointer, endianUtil);
     }
 

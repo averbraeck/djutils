@@ -1550,45 +1550,48 @@ public final class TypedMessage
     /**
      * Decode the message into an object array, constructing Java Primitive data arrays and matrices where possible.
      * @param buffer the byte array to decode
-     * @param endianUtil decoder for multi-byte values
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    public static Object[] decodeToPrimitiveDataTypes(final byte[] buffer, final EndianUtil endianUtil)
+    public static Object[] decodeToPrimitiveDataTypes(final byte[] buffer)
             throws SerializationException
     {
-        return decode(buffer, PRIMITIVE_DATA_DECODERS, endianUtil);
+        return decode(buffer, PRIMITIVE_DATA_DECODERS);
     }
 
     /**
      * Decode the message into an object array, constructing Java Object arrays and matrices where possible.
      * @param buffer the byte array to decode
-     * @param endianUtil decoder for multi-byte values
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    public static Object[] decodeToObjectDataTypes(final byte[] buffer, final EndianUtil endianUtil)
+    public static Object[] decodeToObjectDataTypes(final byte[] buffer)
             throws SerializationException
     {
-        return decode(buffer, OBJECT_DECODERS, endianUtil);
+        return decode(buffer, OBJECT_DECODERS);
     }
 
     /**
      * Decode the message into an object array.
      * @param buffer the byte array to decode
      * @param decoderMap the map with decoders to use
-     * @param endianUtil decoder for multi-byte values
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    public static Object[] decode(final byte[] buffer, final Map<Byte, Serializer<?>> decoderMap, final EndianUtil endianUtil)
+    public static Object[] decode(final byte[] buffer, final Map<Byte, Serializer<?>> decoderMap)
             throws SerializationException
     {
         List<Object> list = new ArrayList<>();
         Pointer pointer = new Pointer();
         while (pointer.get() < buffer.length)
         {
+            EndianUtil endianUtil = EndianUtil.BIG_ENDIAN;
             Byte fieldType = buffer[pointer.getAndIncrement(1)];
+            if (fieldType < 0)
+            {
+                fieldType = (byte) (fieldType & 0x7F);
+                endianUtil = EndianUtil.LITTLE_ENDIAN;
+            }
             Serializer<?> serializer = decoderMap.get(fieldType);
             if (null == serializer)
             {
@@ -1613,13 +1616,9 @@ public final class TypedMessage
     public static int decodeInt(final byte[] buffer) throws SerializationException
     {
         Throw.when(buffer.length < 5, SerializationException.class, "decodeInt expects a buffer of at least 5 bytes");
-        if (buffer[0] == FieldTypes.INT_32)
+        if (buffer[0] == FieldTypes.INT_32 || buffer[0] == FieldTypes.INT_32_LE)
         {
-            return (int) decodeToPrimitiveDataTypes(buffer, EndianUtil.BIG_ENDIAN)[0];
-        }
-        if (buffer[0] == FieldTypes.INT_32_LE)
-        {
-            return (int) decodeToPrimitiveDataTypes(buffer, EndianUtil.LITTLE_ENDIAN)[0];
+            return (int) decodeToPrimitiveDataTypes(buffer)[0];
         }
         throw new SerializationException("decodeInt did not detect integer in first byte");
     }

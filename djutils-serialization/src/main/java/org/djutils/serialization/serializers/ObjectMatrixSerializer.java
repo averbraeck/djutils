@@ -51,7 +51,7 @@ public abstract class ObjectMatrixSerializer<E extends Object> extends ArrayOrMa
     public final void serializeWithPrefix(final E[][] matrix, final byte[] buffer, final Pointer pointer,
             final EndianUtil endianUtil) throws SerializationException
     {
-        buffer[pointer.getAndIncrement(1)] = fieldType();
+        buffer[pointer.getAndIncrement(1)] = endianUtil.isBigEndian() ? fieldType() : (byte) (fieldType() + 128);
         serialize(matrix, buffer, pointer, endianUtil);
     }
 
