@@ -45,38 +45,24 @@ public class DoubleMatrixSerializer<U extends Unit<U>, S extends DoubleScalar<U,
     }
 
     @Override
-    public int size(final M adm) throws SerializationException
+    public int size(final M adm)
     {
-        try
-        {
-            return 4 + 4 + 2 + 8 * adm.rows() * adm.cols();
-        }
-        catch (ValueRuntimeException e)
-        {
-            throw new SerializationException(e);
-        }
+        return 4 + 4 + 2 + 8 * adm.rows() * adm.cols();
     }
 
     @Override
     public void serialize(final M adm, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
             throws SerializationException
     {
-        try
+        endianUtil.encodeInt(adm.rows(), buffer, pointer.getAndIncrement(4));
+        endianUtil.encodeInt(adm.cols(), buffer, pointer.getAndIncrement(4));
+        encodeUnit(adm.getDisplayUnit(), buffer, pointer, endianUtil);
+        for (int i = 0; i < adm.rows(); i++)
         {
-            endianUtil.encodeInt(adm.rows(), buffer, pointer.getAndIncrement(4));
-            endianUtil.encodeInt(adm.cols(), buffer, pointer.getAndIncrement(4));
-            encodeUnit(adm.getDisplayUnit(), buffer, pointer, endianUtil);
-            for (int i = 0; i < adm.rows(); i++)
+            for (int j = 0; j < adm.cols(); j++)
             {
-                for (int j = 0; j < adm.cols(); j++)
-                {
-                    endianUtil.encodeDouble(adm.get(i, j).getSI(), buffer, pointer.getAndIncrement(8));
-                }
+                endianUtil.encodeDouble(adm.get(i, j).getSI(), buffer, pointer.getAndIncrement(8));
             }
-        }
-        catch (ValueRuntimeException e)
-        {
-            throw new SerializationException(e);
         }
     }
 

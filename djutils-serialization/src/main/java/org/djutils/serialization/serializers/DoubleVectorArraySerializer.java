@@ -72,7 +72,7 @@ public class DoubleVectorArraySerializer<U extends Unit<U>, S extends DoubleScal
                 {
                     endianUtil.encodeDouble(adva[col].getSI(row), buffer, pointer.getAndIncrement(8));
                 }
-                catch (ValueRuntimeException e)
+                catch (IndexOutOfBoundsException e)
                 {
                     throw new SerializationException(e);
                 }

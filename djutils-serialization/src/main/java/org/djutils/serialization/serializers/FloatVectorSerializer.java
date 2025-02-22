@@ -9,7 +9,6 @@ import org.djunits.unit.SIUnit;
 import org.djunits.unit.Unit;
 import org.djunits.unit.scale.IdentityScale;
 import org.djunits.unit.util.UnitRuntimeException;
-import org.djunits.value.ValueRuntimeException;
 import org.djunits.value.storage.StorageType;
 import org.djunits.value.vfloat.scalar.base.FloatScalar;
 import org.djunits.value.vfloat.vector.FloatSIVector;
@@ -43,34 +42,19 @@ public class FloatVectorSerializer<U extends Unit<U>, S extends FloatScalar<U, S
     }
 
     @Override
-    public int size(final V afv) throws SerializationException
+    public int size(final V afv)
     {
-        try
-        {
-            return 4 + 2 + 4 * afv.size();
-        }
-        catch (ValueRuntimeException e)
-        {
-            throw new SerializationException(e);
-        }
+        return 4 + 2 + 4 * afv.size();
     }
 
     @Override
     public void serialize(final V afv, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
-            throws SerializationException
     {
-        try
+        endianUtil.encodeInt(afv.size(), buffer, pointer.getAndIncrement(4));
+        encodeUnit(afv.getDisplayUnit(), buffer, pointer, endianUtil);
+        for (int i = 0; i < afv.size(); i++)
         {
-            endianUtil.encodeInt(afv.size(), buffer, pointer.getAndIncrement(4));
-            encodeUnit(afv.getDisplayUnit(), buffer, pointer, endianUtil);
-            for (int i = 0; i < afv.size(); i++)
-            {
-                endianUtil.encodeFloat(afv.get(i).getSI(), buffer, pointer.getAndIncrement(4));
-            }
-        }
-        catch (ValueRuntimeException e)
-        {
-            throw new SerializationException(e);
+            endianUtil.encodeFloat(afv.get(i).getSI(), buffer, pointer.getAndIncrement(4));
         }
     }
 
@@ -89,7 +73,7 @@ public class FloatVectorSerializer<U extends Unit<U>, S extends FloatScalar<U, S
             FloatVectorData fvd = FloatVectorData.instantiate(array, IdentityScale.SCALE, StorageType.DENSE);
             return instantiateAnonymous(fvd, unit);
         }
-        catch (ValueRuntimeException exception)
+        catch (UnitRuntimeException exception)
         {
             throw new SerializationException(exception);
         }

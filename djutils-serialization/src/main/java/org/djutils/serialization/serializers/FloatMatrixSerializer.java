@@ -45,38 +45,24 @@ public class FloatMatrixSerializer<U extends Unit<U>, S extends FloatScalar<U, S
     }
 
     @Override
-    public int size(final M afm) throws SerializationException
+    public int size(final M afm)
     {
-        try
-        {
-            return 4 + 4 + 2 + 4 * afm.rows() * afm.cols();
-        }
-        catch (ValueRuntimeException e)
-        {
-            throw new SerializationException(e);
-        }
+        return 4 + 4 + 2 + 4 * afm.rows() * afm.cols();
     }
 
     @Override
     public void serialize(final M afm, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
             throws SerializationException
     {
-        try
+        endianUtil.encodeInt(afm.rows(), buffer, pointer.getAndIncrement(4));
+        endianUtil.encodeInt(afm.cols(), buffer, pointer.getAndIncrement(4));
+        encodeUnit(afm.getDisplayUnit(), buffer, pointer, endianUtil);
+        for (int i = 0; i < afm.rows(); i++)
         {
-            endianUtil.encodeInt(afm.rows(), buffer, pointer.getAndIncrement(4));
-            endianUtil.encodeInt(afm.cols(), buffer, pointer.getAndIncrement(4));
-            encodeUnit(afm.getDisplayUnit(), buffer, pointer, endianUtil);
-            for (int i = 0; i < afm.rows(); i++)
+            for (int j = 0; j < afm.cols(); j++)
             {
-                for (int j = 0; j < afm.cols(); j++)
-                {
-                    endianUtil.encodeFloat(afm.get(i, j).getSI(), buffer, pointer.getAndIncrement(4));
-                }
+                endianUtil.encodeFloat(afm.get(i, j).getSI(), buffer, pointer.getAndIncrement(4));
             }
-        }
-        catch (ValueRuntimeException e)
-        {
-            throw new SerializationException(e);
         }
     }
 

@@ -3,6 +3,7 @@ package org.djutils.serialization;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.djunits.unit.AbsoluteTemperatureUnit;
 import org.djunits.unit.AbsorbedDoseUnit;
@@ -371,22 +372,15 @@ public class SerializationUnits implements Serializable
         return this.siUnit;
     }
 
-    @Override
     @SuppressWarnings("checkstyle:designforextension")
+    @Override
     public int hashCode()
     {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + this.code;
-        result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
-        result = prime * result + ((this.djunitsType == null) ? 0 : this.djunitsType.hashCode());
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        result = prime * result + ((this.siUnit == null) ? 0 : this.siUnit.hashCode());
-        return result;
+        return Objects.hash(this.code, this.description, this.djunitsType, this.name, this.siUnit);
     }
 
-    @Override
     @SuppressWarnings({"checkstyle:designforextension", "needbraces"})
+    @Override
     public boolean equals(final Object obj)
     {
         if (this == obj)
@@ -396,37 +390,9 @@ public class SerializationUnits implements Serializable
         if (getClass() != obj.getClass())
             return false;
         SerializationUnits other = (SerializationUnits) obj;
-        if (this.code != other.code)
-            return false;
-        if (this.description == null)
-        {
-            if (other.description != null)
-                return false;
-        }
-        else if (!this.description.equals(other.description))
-            return false;
-        if (this.djunitsType == null)
-        {
-            if (other.djunitsType != null)
-                return false;
-        }
-        else if (!this.djunitsType.equals(other.djunitsType))
-            return false;
-        if (this.name == null)
-        {
-            if (other.name != null)
-                return false;
-        }
-        else if (!this.name.equals(other.name))
-            return false;
-        if (this.siUnit == null)
-        {
-            if (other.siUnit != null)
-                return false;
-        }
-        else if (!this.siUnit.equals(other.siUnit))
-            return false;
-        return true;
+        return this.code == other.code && Objects.equals(this.description, other.description)
+                && Objects.equals(this.djunitsType, other.djunitsType) && Objects.equals(this.name, other.name)
+                && Objects.equals(this.siUnit, other.siUnit);
     }
 
     @Override
