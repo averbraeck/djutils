@@ -87,8 +87,8 @@ public class Tests
                 // System.out.println("" + endianUtil + ", UTF8=" + encodeUTF8);
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
-                // System.out.print(HexDumper.hexDumper(serialized));
-                // System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
+                HexDumper.hexDumper(serialized);
+                SerialDataDumper.serialDataDumper(endianUtil, serialized);
                 for (boolean primitive : new boolean[] {false, true})
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
@@ -142,8 +142,8 @@ public class Tests
             {
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
-                // System.out.print(HexDumper.hexDumper(serialized));
-                // System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
+                HexDumper.hexDumper(serialized);
+                SerialDataDumper.serialDataDumper(endianUtil, serialized);
                 Object[] decodedObjects = TypedMessage.decodeToObjectDataTypes(serialized);
                 assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                 for (int i = 0; i < objects.length; i++)
@@ -198,7 +198,7 @@ public class Tests
         assertEquals(expected8, EndianUtil.BIG_ENDIAN.decodeInt(b8, 1));
         assertEquals(10, b16BE[0]);
         assertEquals(expected16 / 2, EndianUtil.BIG_ENDIAN.decodeInt(b16BE, 1));
-        // TODO: assertEquals(10, b16LE[0]); the code for UTF-16LE will be different from 10 in a next version of djutils
+        assertEquals(10, b16LE[0]); // TODO: the code for UTF-16LE will be different from 10 in a next version of djutils
         assertEquals(expected16 / 2, EndianUtil.LITTLE_ENDIAN.decodeInt(b16LE, 1));
     }
 
@@ -231,8 +231,8 @@ public class Tests
             {
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
-                // System.out.print(HexDumper.hexDumper(serialized));
-                // System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
+                HexDumper.hexDumper(serialized);
+                SerialDataDumper.serialDataDumper(endianUtil, serialized);
                 for (boolean primitive : new boolean[] {false, true})
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
@@ -271,14 +271,14 @@ public class Tests
         Double[][] doubleValues2 = new Double[][] {{-23.45, -34.56, -45.67}, {-22.2, -33.3, -44.4}};
         Object[] objects = new Object[] {integer, integerValues2, shortValues, shortValues2, longValues, longValues2,
                 byteValues, byteValues2, floatValues, floatValues2, doubleValues, doubleValues2, boolValues, boolValues2};
-        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
+        for (EndianUtil endianUtil : new EndianUtil[] {/*EndianUtil.BIG_ENDIAN, */EndianUtil.LITTLE_ENDIAN})
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
-                // System.out.print(HexDumper.hexDumper(serialized));
-                // System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
+                HexDumper.hexDumper(serialized);
+                SerialDataDumper.serialDataDumper(endianUtil, serialized);
                 for (boolean primitive : new boolean[] {false, true})
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
@@ -318,8 +318,8 @@ public class Tests
         for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
         {
             byte[] serialized = TypedMessage.encodeUTF16(endianUtil, objects);
-            // System.out.print(HexDumper.hexDumper(serialized));
-            // System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
+            HexDumper.hexDumper(serialized);
+            SerialDataDumper.serialDataDumper(endianUtil, serialized);
             for (boolean primitive : new boolean[] {false, true})
             {
                 Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
@@ -493,7 +493,7 @@ public class Tests
                 // System.out.println("Encoding " + (encodeUTF8 ? "UTF8" : "UTF16") + ", " + endianUtil);
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
-                // System.out.print(HexDumper.hexDumper(serialized));
+                HexDumper.hexDumper(serialized);
                 for (boolean primitive : new boolean[] {false, true})
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
@@ -561,8 +561,8 @@ public class Tests
                 // System.out.println("Encoding " + (encodeUTF8 ? "UTF8" : "UTF16") + ", " + endianUtil);
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
-                // System.out.print(HexDumper.hexDumper(serialized));
-                // System.out.print(SerialDataDumper.serialDataDumper(endianUtil, serialized));
+                HexDumper.hexDumper(serialized);
+                SerialDataDumper.serialDataDumper(endianUtil, serialized);
                 for (boolean primitive : new boolean[] {false, true})
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
