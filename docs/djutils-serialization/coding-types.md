@@ -30,8 +30,8 @@ The following types have been implemented in the v1-version of the standard:
 | 6 | BOOLEAN_8 | Boolean, sent / received as a byte; 0 = false, 1 = true |
 | 7 | CHAR_8 | Char, 8-bit ASCII character |
 | 8 | CHAR_16 | Char, 16-bit Unicode character, the 2 bytes in the order of endianness |
-| 9 | STRING_8 | String, 32-bit number-preceded byte array of 8-bits characters |
-| 10 | STRING_16 | String, 32-bit number-preceded char array of 16-bits characters, the 2 bytes of each character in the order of the endianness |
+| 9 | STRING_UTF8 | String, 32-bit number-preceded byte array of 8-bits characters |
+| 10 | STRING_UTF16 | String, 32-bit number-preceded char array of 16-bits characters, the 2 bytes of each character in the order of the endianness |
 | 11 | BYTE_8_ARRAY | Byte array, preceded by a 32-bit number indicating the number of bytes |
 | 12 | SHORT_16_ARRAY | Short array, preceded by a 32-bit number indicating the number of shorts |
 | 13 | INT_32_ARRAY | Integer array, preceded by a 32-bit number indicating the number of integers |
