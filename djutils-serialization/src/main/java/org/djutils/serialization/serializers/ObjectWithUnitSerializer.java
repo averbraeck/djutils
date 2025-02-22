@@ -28,7 +28,7 @@ public abstract class ObjectWithUnitSerializer<U extends Unit<U>, T> extends Obj
     }
 
     /**
-     * Code a unit, including MoneyUnits.
+     * Code a unit.
      * @param unit the unit to code in the byte array
      * @param message the byte array
      * @param pointer the start pointer in the byte array

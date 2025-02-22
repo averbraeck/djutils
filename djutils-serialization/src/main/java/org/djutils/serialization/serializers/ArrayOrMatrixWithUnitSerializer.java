@@ -55,7 +55,7 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
     }
 
     /**
-     * Code a unit, including MoneyUnits.
+     * Code a unit.
      * @param unit the unit to code in the byte array
      * @param message the byte array
      * @param pointer the start pointer in the byte array

@@ -181,29 +181,28 @@ public final class FieldTypes
 
     /**
      * Float, stored internally in the SI unit, with a unit type and display type attached. The internal storage of the value
-     * that is transmitted is always in the SI (or standard) unit, except for money where the display unit is used. The value is
-     * preceded by a one-byte unit type, and a one-byte display type (or two-byte in case of the MoneyPerUnit). As an example:
-     * suppose the unit indicates that the type is a length, whereas the display type indicates that the internally stored value
-     * 60000.0 should be displayed as 60.0 km, this is coded as follows: |25|16|11|0x47|0x6A|0x60|0x00|
+     * that is transmitted is always in the SI (or standard) unit. The value is preceded by a one-byte unit type, and a one-byte
+     * display type. As an example: suppose the unit indicates that the type is a length, whereas the display type indicates
+     * that the internally stored value 60000.0 should be displayed as 60.0 km, this is coded as follows:
+     * |25|16|11|0x47|0x6A|0x60|0x00|
      */
     public static final byte FLOAT_32_UNIT = 25;
 
     /**
      * Double, stored internally in the SI unit, with a unit type and display type attached. The internal storage of the value
-     * that is transmitted is always in the SI (or standard) unit, except for money where the display unit is used. The value is
-     * preceded by a one-byte unit type and a one-byte display type (or two-byte in case of the MoneyPerUnit). As an example:
-     * suppose the unit indicates that the type is a length, whereas the display type indicates that the internally stored value
-     * 60000.0 should be displayed as 60.0 km, this is coded as follows: |26|16|11|0x47|0x6A|0x60|0x00|0x00|0x00|0x00|0x00|
+     * that is transmitted is always in the SI (or standard) unit. The value is preceded by a one-byte unit type and a one-byte
+     * display type. As an example: suppose the unit indicates that the type is a length, whereas the display type indicates
+     * that the internally stored value 60000.0 should be displayed as 60.0 km, this is coded as follows:
+     * |26|16|11|0x47|0x6A|0x60|0x00|0x00|0x00|0x00|0x00|
      */
     public static final byte DOUBLE_64_UNIT = 26;
 
     /**
      * Number-preceded dense float array, stored internally in the SI unit, with a unit type and display type. After the byte
      * with value 27, the array types have a 32-bit int indicating the number of values in the array that follows. This int is
-     * itself not preceded by a byte indicating it is an int. Then a one-byte unit type follows and a one-byte display type (or
-     * two-byte in case of the MoneyPerUnit). The internal storage of the values that are transmitted after that always use the
-     * SI (or standard) unit, except for money where the display unit is used. As an example: when we send an array of two
-     * durations, 2.0 minutes and 2.5 minutes, this is coded as follows:
+     * itself not preceded by a byte indicating it is an int. Then a one-byte unit type follows and a one-byte display type .
+     * The internal storage of the values that are transmitted after that always use the SI (or standard) unit. As an example:
+     * when we send an array of two durations, 2.0 minutes and 2.5 minutes, this is coded as follows:
      * |27|0|0|0|2|25|7|0x40|0x00|0x00|0x00|0x40|0x20|0x00|0x00|
      */
     public static final byte FLOAT_32_UNIT_ARRAY = 27;
@@ -211,10 +210,9 @@ public final class FieldTypes
     /**
      * Number-preceded dense double array, stored internally in the SI unit, with a unit type and display type. After the byte
      * with value 28, the array types have a 32-bit int indicating the number of values in the array that follows. This int is
-     * itself not preceded by a byte indicating it is an int. Then a one-byte unit type follows and a one-byte display type (or
-     * two-byte in case of the MoneyPerUnit). The internal storage of the values that are transmitted after that always use the
-     * SI (or standard) unit, except for money where the display unit is used. As an example: when we send an array of two
-     * durations, 21.2 minutes and 21.5 minutes, this is coded as follows:
+     * itself not preceded by a byte indicating it is an int. Then a one-byte unit type follows and a one-byte display type. The
+     * internal storage of the values that are transmitted after that always use the SI (or standard) unit. As an example: when
+     * we send an array of two durations, 21.2 minutes and 21.5 minutes, this is coded as follows:
      * |28|0|0|0|2|25|7|0x40|0x35|0x33|0x33|0x3|0x33|0x33|0x33|0x40|0x35|0x80|0x00|0x00|0x00|0x00|0x00|
      */
     public static final byte DOUBLE_64_UNIT_ARRAY = 28;
@@ -223,9 +221,8 @@ public final class FieldTypes
      * Rows/Cols-preceded dense float array, stored internally in the SI unit, with a unit type and display type. After the byte
      * with value 29, the matrix types have a 32-bit int indicating the number of rows in the array that follows, followed by a
      * 32-bit int indicating the number of columns. These integers are not preceded by a byte indicating it is an int. Then a
-     * one-byte unit type follows and a one-byte (or two-byte in case of the MoneyPerUnit) display type The internal storage of
-     * the values that are transmitted after that always use the SI (or standard) unit, except for money where the display unit
-     * is used. Summarized, the coding is as follows:
+     * one-byte unit type follows and a one-byte display type The internal storage of the values that are transmitted after that
+     * always use the SI (or standard) unit. Summarized, the coding is as follows:
      * 
      * <pre>
      * |29|  |R|O|W|S|  |C|O|L|S|  |UT|  |DT|
@@ -244,9 +241,8 @@ public final class FieldTypes
      * Rows/Cols-preceded dense double array, stored internally in the SI unit, with a unit type and display type. After the
      * byte with value 30, the matrix types have a 32-bit int indicating the number of rows in the array that follows, followed
      * by a 32-bit int indicating the number of columns. These integers are not preceded by a byte indicating it is an int. Then
-     * a one-byte unit type follows and a one-byte (or two-byte in case of the MoneyPerUnit) display type The internal storage
-     * of the values that are transmitted after that always use the SI (or standard) unit, except for money where the display
-     * unit is used. Summarized, the coding is as follows:
+     * a one-byte unit type follows and a one-byte display type The internal storage of the values that are transmitted after
+     * that always use the SI (or standard) unit. Summarized, the coding is as follows:
      * 
      * <pre>
      * |30|  |R|O|W|S|  |C|O|L|S|  |UT|  |DT|
@@ -265,10 +261,9 @@ public final class FieldTypes
      * Number-preceded dense float array, stored internally in the SI unit, with a unique unit type and display type per row.
      * After the byte with value 31, the matrix types have a 32-bit int indicating the number of rows in the array that follows,
      * followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte indicating it is an
-     * int. Then a one-byte unit type for column 1 follows and a one-byte (or two-byte in case of the MoneyPerUnit) display type
-     * for column 1. Then the unit type and display type for column 2, etc. The internal storage of the values that are
-     * transmitted after that always use the SI (or standard) unit, except for money where the display unit is used. Summarized,
-     * the coding is as follows:
+     * int. Then a one-byte unit type for column 1 follows and a one-byte display type for column 1. Then the unit type and
+     * display type for column 2, etc. The internal storage of the values that are transmitted after that always use the SI (or
+     * standard) unit. Summarized, the coding is as follows:
      * 
      * <pre>
      * |31|  |R|O|W|S|  |C|O|L|S|
@@ -299,10 +294,9 @@ public final class FieldTypes
      * Number-preceded dense double array, stored internally in the SI unit, with a unique unit type and display type per row.
      * After the byte with value 32, the matrix types have a 32-bit int indicating the number of rows in the array that follows,
      * followed by a 32-bit int indicating the number of columns. These integers are not preceded by a byte indicating it is an
-     * int. Then a one-byte unit type for column 1 follows (see the table above) and a one-byte (or two-byte in case of the
-     * MoneyPerUnit) display type for column 1 (see Appendix A). Then the unit type and display type for column 2, etc. The
-     * internal storage of the values that are transmitted after that always use the SI (or standard) unit, except for money
-     * where the display unit is used. Summarized, the coding is as follows:
+     * int. Then a one-byte unit type for column 1 follows (see the table above) and a one-byte display type for column 1 (see
+     * Appendix A). Then the unit type and display type for column 2, etc. The internal storage of the values that are
+     * transmitted after that always use the SI (or standard) unit. Summarized, the coding is as follows:
      * 
      * <pre>
      * |32|  |R|O|W|S|  |C|O|L|S|
@@ -480,13 +474,13 @@ public final class FieldTypes
 
     /**
      * 153 (-103) Float stored internally as a little-endian float in the corresponding SI unit, with unit type and display unit
-     * attached. The total size of the object is 7 bytes plus 1 or 2 extra bytes when a money unit is involved.
+     * attached. The total size of the object is 7 bytes.
      */
     public static final byte FLOAT_32_UNIT_LE = -103;
 
     /**
      * 154 (-102) Double stored internally as a little-endian double in the corresponding SI unit, with unit type and display
-     * unit attached. The total size of the object is 11 bytes plus 1 or 2 extra bytes when a money unit is involved.
+     * unit attached. The total size of the object is 11 bytes.
      */
     public static final byte DOUBLE_64_UNIT_LE = -102;
 
