@@ -52,9 +52,10 @@ public final class FieldTypes
 
     /**
      * String, number-preceded char array of 16-bits characters, big-endian order. The string types are preceded by a 32-bit int
-     * indicating the number of bytes in the array that follows. This int is itself not preceded by a byte indicating it is an
-     * int. Note that the int indicates the number of bytes, not the number of characters. The string itself is coded with the
-     * first character at the start of the array and the last character at the end.
+     * indicating the number of shorts in the array that follows. This int is itself not preceded by a byte indicating it is an
+     * int. Note that the int indicates the number of shorts, not the number of characters; the number of bytes is therefore
+     * equal to 2 * length. The string itself is coded with the first character at the start of the array and the last character
+     * at the end.
      */
     public static final byte STRING_UTF16 = 10;
 
@@ -378,15 +379,17 @@ public final class FieldTypes
 
     /**
      * 137 (-119) String, 32-bit little-endian number indicating the number of bytes, followed by a byte array of UTF-8 encoded
-     * characters. The string itself is coded with the first character at the start of the array and the last character at the
-     * end.
+     * characters. Note that the length indicates the number of bytes in the encoding, not the number of characters in the
+     * string. The string itself is coded with the first character at the start of the array and the last character at the end.
      */
     public static final byte STRING_UTF8_LE = -119;
 
     /**
-     * 138 (-118) String, 32-bit little-endian number indicating the number of bytes, followed by a byte array of UTF-16 encoded
-     * characters. Each 2-byte character is represented in little-endian order, whereas the string itself is coded with the
-     * first character at the start of the array and the last character at the end.
+     * 138 (-118) String, 32-bit little-endian number indicating the number of shorts in the encoding, followed by a byte array
+     * of UTF-16 encoded characters. Each 2-byte character is represented in little-endian order. Note that the length indicates
+     * the number of shorts (2 bytes) in the encoding, not the number of characters in the string. The number of bytes to
+     * represent the string in the encoding is therefore equal to 2 * length. The string itself is coded with the first
+     * character at the start of the array and the last character at the end.
      */
     public static final byte STRING_UTF16_LE = -118;
 

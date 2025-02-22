@@ -229,24 +229,21 @@ public final class TypedMessage
                 public void serialize(final String string, final byte[] buffer, final Pointer pointer,
                         final EndianUtil endianUtil)
                 {
-                    // System.out.println("Encoding string \"" + string + "\"");
+                    // Note that according to https://stackoverflow.com/questions/74887443, String.length returns the number of
+                    // code units (i.e. the number of 16-bit char values) needed to make up the String and not the number of
+                    // Unicode codepoints.
                     char[] chars = new char[string.length()];
                     string.getChars(0, chars.length, chars, 0);
                     endianUtil.encodeInt(chars.length, buffer, pointer.getAndIncrement(4));
-                    // int originalPos = pointer.get();
                     for (char c : chars)
                     {
                         endianUtil.encodeChar(c, buffer, pointer.getAndIncrement(2));
                     }
-                    // System.out.println("encoded string starts at " + originalPos);
-                    // System.out.print(HexDumper.hexDumper(buffer));
                 }
 
                 @Override
                 public String deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
                 {
-                    // System.out.println("Input bytes");
-                    // System.out.print(HexDumper.hexDumper(buffer));
                     String s = endianUtil.decodeUTF16String(buffer, pointer.get());
                     pointer.getAndIncrement(4 + s.length() * 2);
                     return s;
