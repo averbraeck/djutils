@@ -1553,8 +1553,7 @@ public final class TypedMessage
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    public static Object[] decodeToPrimitiveDataTypes(final byte[] buffer)
-            throws SerializationException
+    public static Object[] decodeToPrimitiveDataTypes(final byte[] buffer) throws SerializationException
     {
         return decode(buffer, PRIMITIVE_DATA_DECODERS);
     }
@@ -1565,8 +1564,7 @@ public final class TypedMessage
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    public static Object[] decodeToObjectDataTypes(final byte[] buffer)
-            throws SerializationException
+    public static Object[] decodeToObjectDataTypes(final byte[] buffer) throws SerializationException
     {
         return decode(buffer, OBJECT_DECODERS);
     }
@@ -1578,8 +1576,7 @@ public final class TypedMessage
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    public static Object[] decode(final byte[] buffer, final Map<Byte, Serializer<?>> decoderMap)
-            throws SerializationException
+    public static Object[] decode(final byte[] buffer, final Map<Byte, Serializer<?>> decoderMap) throws SerializationException
     {
         List<Object> list = new ArrayList<>();
         Pointer pointer = new Pointer();
@@ -1712,7 +1709,7 @@ public final class TypedMessage
     public static boolean decodeBoolean(final byte[] buffer) throws SerializationException
     {
         Throw.when(buffer.length < 2, SerializationException.class, "decodeBoolean expects a buffer of at least 2 bytes");
-        if (buffer[0] == FieldTypes.SHORT_16 || buffer[0] == FieldTypes.SHORT_16_LE)
+        if (buffer[0] == FieldTypes.BOOLEAN_8 || buffer[0] == FieldTypes.BOOLEAN_8_LE)
         {
             return (boolean) decodeToPrimitiveDataTypes(buffer)[0];
         }
