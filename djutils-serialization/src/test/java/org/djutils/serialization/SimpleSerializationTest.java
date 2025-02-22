@@ -7,7 +7,7 @@ import org.djutils.exceptions.Try;
 import org.junit.jupiter.api.Test;
 
 /**
- * SerializationDemo.java.
+ * SimpleSerializationTest tests the decode methods for primitives, and compares the big-endian and little-endian results.
  * <p>
  * Copyright (c) 2025-2025 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://djutils.org" target="_blank"> https://djutils.org</a>. The DJUTILS project is
