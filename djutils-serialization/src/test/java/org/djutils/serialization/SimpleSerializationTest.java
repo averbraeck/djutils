@@ -3,7 +3,9 @@ package org.djutils.serialization;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import org.djutils.decoderdumper.HexDumper;
 import org.djutils.exceptions.Try;
+import org.djutils.serialization.util.SerialDataDumper;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -18,6 +20,56 @@ import org.junit.jupiter.api.Test;
  */
 public class SimpleSerializationTest
 {
+    /**
+     * Basic test encoding and decoding of the basic types.
+     * @throws SerializationException when that happens uncaught this test has failed
+     */
+    @Test
+    public void simpleTests() throws SerializationException
+    {
+        int intValue = 123;
+        Integer integerValue = -456;
+        short shortValue = 234;
+        Short shortValue2 = -345;
+        long longValue = 98765L;
+        Long longValue2 = -98765L;
+        Byte byteValue = 12;
+        byte byteValue2 = -23;
+        float floatValue = 1.234f;
+        Float floatValue2 = -3.456f;
+        double doubleValue = 4.56789;
+        Double doubleValue2 = -4.56789;
+        boolean boolValue = true;
+        Boolean boolValue2 = false;
+        Character charValue = 'a';
+        char charValue2 = 'b';
+        String stringValue = "abcDEF123!@#ȦȧȨ\u0776\u0806\u080e";
+        Object[] objects = new Object[] {intValue, integerValue, shortValue, shortValue2, longValue, longValue2, byteValue,
+                byteValue2, floatValue, floatValue2, doubleValue, doubleValue2, boolValue, boolValue2, charValue, charValue2,
+                stringValue};
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
+        {
+            for (boolean encodeUTF8 : new boolean[] {false, true})
+            {
+                // System.out.println("" + endianUtil + ", UTF8=" + encodeUTF8);
+                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
+                        : TypedMessage.encodeUTF16(endianUtil, objects);
+                HexDumper.hexDumper(serialized);
+                SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                for (boolean primitive : new boolean[] {false, true})
+                {
+                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
+                            : TypedMessage.decodeToObjectDataTypes(serialized);
+                    assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
+                    for (int i = 0; i < objects.length; i++)
+                    {
+                        assertEquals(objects[i], decodedObjects[i],
+                                "decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input");
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Test decodeInt method.
