@@ -52,6 +52,16 @@ public class StringSerializationTest extends AbstractSerializationTest
         compare(TypedMessage.encodeUTF16(EndianUtil.BIG_ENDIAN, smiley),
                 new byte[] {10, 0, 0, 0, 2, (byte) 0xD8, (byte) 0x3D, (byte) 0xDE, (byte) 0x00});
 
+        compare(TypedMessage.encodeUTF8(EndianUtil.LITTLE_ENDIAN, permille),
+                new byte[] {-119, 3, 0, 0, 0, (byte) 0xE2, (byte) 0x80, (byte) 0xB0});
+        compare(TypedMessage.encodeUTF16(EndianUtil.LITTLE_ENDIAN, permille),
+                new byte[] {-118, 1, 0, 0, 0, (byte) 0x30, (byte) 0x20});
+
+        compare(TypedMessage.encodeUTF8(EndianUtil.LITTLE_ENDIAN, smiley),
+                new byte[] {-119, 4, 0, 0, 0, (byte) 0xF0, (byte) 0x9F, (byte) 0x98, (byte) 0x80});
+        compare(TypedMessage.encodeUTF16(EndianUtil.LITTLE_ENDIAN, smiley),
+                new byte[] {-118, 2, 0, 0, 0, (byte) 0x3D, (byte) 0xD8, (byte) 0x00, (byte) 0xDE});
+
         Object[] objects = new Object[] {copyright, xi, permille, smiley, abc, complex};
         for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
         {
