@@ -42,7 +42,7 @@ public class FloatVectorArraySerializer<U extends Unit<U>, S extends FloatScalar
         {
             V adv = adva[i];
             Throw.when(adv.size() != height, SerializationException.class,
-                    "All AbstractDoubleVectors in array must have same size");
+                    "All AbstractFloatVectors in array must have same size");
             result += 2; // quantity and display unit
         }
         result += height * width * 4;
@@ -61,7 +61,7 @@ public class FloatVectorArraySerializer<U extends Unit<U>, S extends FloatScalar
         {
             V adv = adva[i];
             Throw.when(adv.size() != height, SerializationException.class,
-                    "All AbstractDoubleVectors in array must have same size");
+                    "All AbstractFloatVectors in array must have same size");
             encodeUnit(adv.getDisplayUnit(), buffer, pointer, endianUtil);
         }
         for (int row = 0; row < height; row++)
