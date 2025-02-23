@@ -116,4 +116,16 @@ public class MatrixSerializationTest extends AbstractSerializationTest
         }
     }
 
+    /**
+     * Test dimensions for matrix serializers.
+     */
+    @Test
+    public void testMatrixSerializerDimensions()
+    {
+        assertEquals(2, TypedObject.CONVERT_BOOL_MATRIX.getNumberOfDimensions());
+        assertEquals(2, TypedObject.CONVERT_BOOLEAN_MATRIX.getNumberOfDimensions());
+        assertEquals(2, TypedObject.CONVERT_LNG_MATRIX.getNumberOfDimensions());
+        assertEquals(2, TypedObject.CONVERT_LONG_MATRIX.getNumberOfDimensions());
+    }
+
 }

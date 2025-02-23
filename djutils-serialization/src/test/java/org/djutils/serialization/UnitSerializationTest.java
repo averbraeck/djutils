@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.djunits.quantity.Quantity;
 import org.djunits.unit.AccelerationUnit;
 import org.djunits.unit.AreaUnit;
 import org.djunits.unit.DimensionlessUnit;
@@ -12,13 +13,19 @@ import org.djunits.unit.ElectricalCurrentUnit;
 import org.djunits.unit.ElectricalResistanceUnit;
 import org.djunits.unit.EnergyUnit;
 import org.djunits.unit.LengthUnit;
+import org.djunits.unit.SIUnit;
 import org.djunits.unit.SpeedUnit;
 import org.djunits.unit.TimeUnit;
+import org.djunits.unit.Unit;
+import org.djunits.unit.scale.IdentityScale;
+import org.djunits.unit.si.SIPrefixes;
+import org.djunits.unit.unitsystem.UnitSystem;
 import org.djunits.value.ValueRuntimeException;
 import org.djunits.value.storage.StorageType;
 import org.djunits.value.vdouble.matrix.ElectricalCurrentMatrix;
 import org.djunits.value.vdouble.scalar.Dimensionless;
 import org.djunits.value.vdouble.scalar.Length;
+import org.djunits.value.vdouble.scalar.base.DoubleScalarRel;
 import org.djunits.value.vdouble.vector.ElectricalCurrentVector;
 import org.djunits.value.vdouble.vector.LengthVector;
 import org.djunits.value.vdouble.vector.TimeVector;
@@ -78,6 +85,25 @@ public class UnitSerializationTest extends AbstractSerializationTest
         assertEquals(SerializationUnits.SPEED, SerializationUnits.getUnitType(SpeedUnit.FOOT_PER_SECOND),
                 "speed type can be found by non SI unit type");
         assertEquals(22, SerializationUnits.getUnitCode(SpeedUnit.SI), "speed unit code can be found by unit type");
+
+        assertEquals(testAccelerationUnitType, new SerializationUnits(code, unitClass, name, description, siUnit));
+        assertNotEquals(testAccelerationUnitType, SerializationUnits.ACCELERATION);
+        assertNotEquals(SerializationUnits.ACCELERATION, null);
+        assertNotEquals(testAccelerationUnitType, new Object());
+        assertNotEquals(testAccelerationUnitType, new SerializationUnits(125, unitClass, name, description, siUnit));
+        assertNotEquals(testAccelerationUnitType, new SerializationUnits(code, LengthUnit.class, name, description, siUnit));
+        assertNotEquals(testAccelerationUnitType, new SerializationUnits(code, unitClass, "x", description, siUnit));
+        assertNotEquals(testAccelerationUnitType, new SerializationUnits(code, unitClass, name, "x", siUnit));
+        assertNotEquals(testAccelerationUnitType, new SerializationUnits(code, unitClass, name, description, "N/K"));
+
+        Try.testFail(() -> SerializationUnits.getUnitCode(SIUnit.of("K/mol")));
+
+        // restore the cache
+        new SerializationUnits(SerializationUnits.ACCELERATION.getCode(), AccelerationUnit.class,
+                SerializationUnits.ACCELERATION.getName(), SerializationUnits.ACCELERATION.getDescription(),
+                SerializationUnits.ACCELERATION.getSiUnit());
+        new SerializationUnits(SerializationUnits.LENGTH.getCode(), LengthUnit.class, SerializationUnits.LENGTH.getName(),
+                SerializationUnits.LENGTH.getDescription(), SerializationUnits.LENGTH.getSiUnit());
     }
 
     /**
@@ -118,6 +144,68 @@ public class UnitSerializationTest extends AbstractSerializationTest
                 }
             }
         }
+    }
+
+    /** Non existing unit. */
+    private static final class NonsenseUnit2 extends Unit<NonsenseUnit2>
+    {
+        /** */
+        private static final long serialVersionUID = 1L;
+
+        /** one instance of the unit. */
+        public static final Quantity<NonsenseUnit2> BASE = new Quantity<>("Nonsense", "kg.K/mol.s");
+
+        /** The SI unit for acceleration is kg.K/mol.s. */
+        public static final NonsenseUnit2 SI = new NonsenseUnit2().build(new Unit.Builder<NonsenseUnit2>().setQuantity(BASE)
+                .setId("kg.K/mol.s").setName("x").setUnitSystem(UnitSystem.SI_DERIVED).setSiPrefixes(SIPrefixes.NONE, 1.0)
+                .setScale(IdentityScale.SCALE));
+    }
+
+    /** Non-existing scalar. */
+    private static final class NonsenseScalar extends DoubleScalarRel<NonsenseUnit2, NonsenseScalar>
+    {
+        /** */
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * @param value v
+         * @param unit u
+         */
+        NonsenseScalar(final double value, final NonsenseUnit2 unit)
+        {
+            super(value, unit);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public NonsenseScalar instantiateRel(final double value, final NonsenseUnit2 unit)
+        {
+            return null;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public DoubleScalarRel<?, ?> reciprocal()
+        {
+            return null;
+        }
+    }
+
+    /**
+     * Test encoding and decoding of strongly typed quantities (DJUNITS).
+     * @throws SerializationException when that happens uncaught, this test has failed
+     * @throws ValueRuntimeException when that happens uncaught, this test has failed
+     */
+    @Test
+    public void testDJunitsErrors() throws SerializationException, ValueRuntimeException
+    {
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
+        {
+            Try.testFail(() -> TypedObject.encode(endianUtil, NonsenseUnit2.SI));
+            NonsenseScalar ns = new NonsenseScalar(1.0, NonsenseUnit2.SI);
+            Try.testFail(() -> TypedObject.encode(endianUtil, ns));
+        }
+
     }
 
     /**
@@ -236,7 +324,6 @@ public class UnitSerializationTest extends AbstractSerializationTest
         }
     }
 
-
     /**
      * Test a float column matrix, where each column can contain a different quantity and/or display unit.
      * @throws ValueRuntimeException if that happens uncaught; this test has failed
@@ -286,9 +373,10 @@ public class UnitSerializationTest extends AbstractSerializationTest
             }
         }
     }
-/** 
- * Test exceptions with instantiation of unit column matrices. 
- */
+
+    /**
+     * Test exceptions with instantiation of unit column matrices.
+     */
     @Test
     public void testUnitColumnMatrixExceptions()
     {
@@ -301,5 +389,5 @@ public class UnitSerializationTest extends AbstractSerializationTest
         Try.testFail(() -> TypedObject.encodeUTF8(EndianUtil.BIG_ENDIAN, dRagged));
         Try.testFail(() -> TypedObject.encodeUTF8(EndianUtil.BIG_ENDIAN, fRagged));
     }
-    
+
 }

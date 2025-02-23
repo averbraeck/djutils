@@ -53,7 +53,7 @@ import org.djunits.unit.Unit;
 import org.djunits.unit.VolumeUnit;
 
 /**
- * The Sim0MQ unit types with their code, including static methods to quickly find a unit type.
+ * The unit types with their code, including static methods to quickly find a unit type.
  * <p>
  * Copyright (c) 2016-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://sim0mq.org/docs/current/license.html">Sim0MQ License</a>.
@@ -320,11 +320,16 @@ public class SerializationUnits implements Serializable
      * @param unit the unit to search for.
      * @return the unit type code, or null if not found.
      * @param <U> the Unit
+     * @throws IllegalArgumentException when unit type could not be found
      */
     public static <U extends Unit<U>> byte getUnitCode(final U unit)
     {
         SerializationUnits type = unitTypeMap.get(unit.getClass());
-        return type == null ? null : type.getCode();
+        if (type == null)
+        {
+            throw new IllegalArgumentException("Could not find unit type for unit " + unit + " in unitTypeMap");
+        }
+        return type.getCode();
     }
 
     /**

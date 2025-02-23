@@ -66,5 +66,16 @@ public class ArraySerializationTest extends AbstractSerializationTest
         }
     }
 
+    /**
+     * Test dimensions for array serializers.
+     */
+    @Test
+    public void testArraySerializerDimensions()
+    {
+        assertEquals(1, TypedObject.CONVERT_BOOL_ARRAY.getNumberOfDimensions());
+        assertEquals(1, TypedObject.CONVERT_BOOLEAN_ARRAY.getNumberOfDimensions());
+        assertEquals(1, TypedObject.CONVERT_LNG_ARRAY.getNumberOfDimensions());
+        assertEquals(1, TypedObject.CONVERT_LONG_ARRAY.getNumberOfDimensions());
+    }
 
 }

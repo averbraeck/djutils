@@ -1,5 +1,6 @@
 package org.djutils.serialization;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -79,13 +80,13 @@ public class SimpleSerializationTest
     public void testDecodeInt() throws SerializationException
     {
         int value = 1024;
-        byte[] intSerBE = TypedObject.encodeUTF8(EndianUtil.BIG_ENDIAN, value);
+        byte[] intSerBE = TypedObject.encode(EndianUtil.BIG_ENDIAN, value);
         // System.out.println(IntStream.range(0, intSerBE.length).map(i -> intSerBE[i] >= 0 ? intSerBE[i] : intSerBE[i] + 256)
         // .boxed().collect(Collectors.toList()));
         int intBE = TypedObject.decodeInt(intSerBE);
         assertEquals(value, intBE);
 
-        byte[] intSerLE = TypedObject.encodeUTF8(EndianUtil.LITTLE_ENDIAN, value);
+        byte[] intSerLE = TypedObject.encode(EndianUtil.LITTLE_ENDIAN, value);
         // System.out.println(IntStream.range(0, intSerLE.length).map(i -> intSerLE[i] >= 0 ? intSerLE[i] : intSerLE[i] + 256)
         // .boxed().collect(Collectors.toList()));
         int intLE = TypedObject.decodeInt(intSerLE);
@@ -93,6 +94,16 @@ public class SimpleSerializationTest
 
         assertNotEquals(intSerBE, intSerLE);
         assertEquals(intBE, intLE);
+
+        assertEquals(Integer.valueOf(value), TypedObject.decodeToObjectDataTypes(intSerBE));
+        assertArrayEquals(new Object[] {Integer.valueOf(value)}, TypedMessage.decodeToObjectDataTypes(intSerBE));
+        assertEquals(value, TypedObject.decodeToPrimitiveDataTypes(intSerBE));
+        assertArrayEquals(new Object[] {value}, TypedMessage.decodeToPrimitiveDataTypes(intSerBE));
+
+        assertEquals(Integer.valueOf(value), TypedObject.decodeToObjectDataTypes(intSerLE));
+        assertArrayEquals(new Object[] {Integer.valueOf(value)}, TypedMessage.decodeToObjectDataTypes(intSerLE));
+        assertEquals(value, TypedObject.decodeToPrimitiveDataTypes(intSerLE));
+        assertArrayEquals(new Object[] {value}, TypedMessage.decodeToPrimitiveDataTypes(intSerLE));
     }
 
     /**
@@ -103,11 +114,11 @@ public class SimpleSerializationTest
     public void testDecodeByte() throws SerializationException
     {
         byte value = 55;
-        byte[] valueSerBE = TypedObject.encodeUTF8(EndianUtil.BIG_ENDIAN, value);
+        byte[] valueSerBE = TypedMessage.encode(EndianUtil.BIG_ENDIAN, value);
         byte valueBE = TypedObject.decodeByte(valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF8(EndianUtil.LITTLE_ENDIAN, value);
+        byte[] valueSerLE = TypedMessage.encode(EndianUtil.LITTLE_ENDIAN, value);
         byte valueLE = TypedObject.decodeByte(valueSerLE);
         assertEquals(value, valueLE);
 
@@ -284,5 +295,10 @@ public class SimpleSerializationTest
         Try.testFail(() -> TypedObject.decodeBoolean(buffer2), SerializationException.class);
         Try.testFail(() -> TypedObject.decodeCharUtf8(buffer2), SerializationException.class);
         Try.testFail(() -> TypedObject.decodeCharUtf16(buffer2), SerializationException.class);
+
+        Try.testFail(() -> TypedObject.decodeToObjectDataTypes(buffer), SerializationException.class);
+        Try.testFail(() -> TypedObject.decodeToPrimitiveDataTypes(buffer), SerializationException.class);
+        Try.testFail(() -> TypedMessage.decodeToObjectDataTypes(buffer), SerializationException.class);
+        Try.testFail(() -> TypedMessage.decodeToPrimitiveDataTypes(buffer), SerializationException.class);
     }
 }
