@@ -23,8 +23,8 @@ import org.djutils.serialization.SerializationException;
  * @param <S> the scalar type
  * @param <V> the vector type
  */
-public class DoubleVectorArraySerializer<U extends Unit<U>, S extends DoubleScalar<U, S>,
-        V extends DoubleVector<U, S, V>> extends ObjectWithUnitSerializer<U, V[]>
+public class DoubleVectorArraySerializer<U extends Unit<U>, S extends DoubleScalar<U, S>, V extends DoubleVector<U, S, V>>
+        extends ObjectWithUnitSerializer<U, V[]>
 {
     /** */
     public DoubleVectorArraySerializer()
@@ -43,7 +43,7 @@ public class DoubleVectorArraySerializer<U extends Unit<U>, S extends DoubleScal
             V adv = adva[i];
             Throw.when(adv.size() != height, SerializationException.class,
                     "All AbstractDoubleVectors in array must have same size");
-            result += 2;
+            result += 2; // quantity and display unit
         }
         result += height * width * 8;
         return result;
@@ -68,14 +68,7 @@ public class DoubleVectorArraySerializer<U extends Unit<U>, S extends DoubleScal
         {
             for (int col = 0; col < width; col++)
             {
-                try
-                {
-                    endianUtil.encodeDouble(adva[col].getSI(row), buffer, pointer.getAndIncrement(8));
-                }
-                catch (IndexOutOfBoundsException e)
-                {
-                    throw new SerializationException(e);
-                }
+                endianUtil.encodeDouble(adva[col].getSI(row), buffer, pointer.getAndIncrement(8));
             }
         }
 
