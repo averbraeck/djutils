@@ -328,6 +328,77 @@ public final class FieldTypes
      */
     public static final byte DOUBLE_64_UNIT_COLUMN_MATRIX = 32;
 
+    /**
+     * Array of UTF-8 Strings. The number of strings is provided in a 32-bit big-endian integer. Each string is preceded by a
+     * 32-bit int indicating the number of bytes in the array that follows. This int is itself not preceded by a byte indicating
+     * it is an int. Note that the int to code the length for each string indicates the number of bytes, not the number of
+     * characters. As an example, coding two series for a graph is done as follows:
+     * 
+     * <pre>
+     * | 33 | 0 | 0 | 0 | 2 | 
+     * | 0 | 0 | 0 | 7 | S | e | r | i | e | s | 1 | 
+     * | 0 | 0 | 0 | 7 | S | e | r | i | e | s | 2 |
+     * </pre>
+     */
+    public static final byte STRING_UTF8_ARRAY = 33;
+
+    /**
+     * Array of UTF-16 Strings. The number of strings is provided in a 32-bit big-endian integer. Each string is preceded by a
+     * 32-bit int indicating the number of shorts (2-byte UTF-16 encoding) in the array that follows. This int is itself not
+     * preceded by a byte indicating it is an int. Note that the int to code the length for each string indicates the number of
+     * shorts, not the number of characters in the original string, nor the number of bytes. As an example, coding two series
+     * for a graph is done as follows:
+     * 
+     * <pre>
+     * |0x22|0x00|0x00|0x00|0x02|
+     * |0x00|0x00|0x00|0x07|0x00|0x53|0x00|0x65|0x00|0x72|0x00|0x69|0x00|0x65|0x00|0x73|0x00|0x31|
+     * |0x00|0x00|0x00|0x07|0x00|0x53|0x00|0x65|0x00|0x72|0x00|0x69|0x00|0x65|0x00|0x73|0x00|0x32|
+     * </pre>
+     */
+    public static final byte STRING_UTF16_ARRAY = 34;
+
+    /**
+     * Matrix of UTF-8 Strings. First, the number of rows is provided in a 32-bit big-endian integer, followed by the number of
+     * columns encoded in a 32-bit big-endian integer. Each string is preceded by a 32-bit int indicating the number of bytes in
+     * the array that follows. This int is itself not preceded by a byte indicating it is an int. The strings are provided
+     * row-by-row. Note that the int to code the length for each string indicates the number of bytes, not the number of
+     * characters. In general, the coding is as follows:
+     * 
+     * <pre>
+     * | 35 | R | O | W | S | C | O | L | S | 
+     * |  0 | 0 | 0 | 4 | R | 1 | C | 1 | 
+     * |  0 | 0 | 0 | 4 | R | 1 | C | 2 |
+     * ...
+     * |  0 | 0 | 0 | 4 | R | 1 | C | n | 
+     * |  0 | 0 | 0 | 4 | R | 2 | C | 1 |
+     * |  0 | 0 | 0 | 4 | R | 2 | C | 2 |
+     * ...
+     * |  0 | 0 | 0 | 4 | R | m | C | n |
+     * </pre>
+     */
+    public static final byte STRING_UTF8_MATRIX = 35;
+
+    /**
+     * Matrix of UTF-16 Strings. First, the number of rows is provided in a 32-bit big-endian integer, followed by the number of
+     * columns encoded in a 32-bit big-endian integer. Each string is preceded by a 32-bit int indicating the number of bytes in
+     * the array that follows. This int is itself not preceded by a byte indicating it is an int. The strings are provided
+     * row-by-row. Note that the int to code the length for each string indicates the number of shorts (2-bytes), not the number
+     * of characters in the original string, nor the number of bytes in the encoding. In general, the coding is as follows:
+     * 
+     * <pre>
+     * | 36 | R | O | W | S | C | O | L | S | 
+     * |  0 | 0 | 0 | 4 | . | R | . | 1 | . | C | . | 1 | 
+     * |  0 | 0 | 0 | 4 | . | R | . | 1 | . | C | . | 2 |
+     * ...
+     * |  0 | 0 | 0 | 4 | . | R | . | 1 | . | C | . | n | 
+     * |  0 | 0 | 0 | 4 | . | R | . | 2 | . | C | . | 1 | 
+     * |  0 | 0 | 0 | 4 | . | R | . | 2 | . | C | . | 2 | 
+     * ...
+     * |  0 | 0 | 0 | 4 | . | R | . | m | . | C | . | n |
+     * </pre>
+     */
+    public static final byte STRING_UTF16_MATRIX = 36;
+
     /** ******************************************************************************************************* */
     /** ******************************************************************************************************* */
     /** *************************************** LITTLE ENDIAN ************************************************* */
@@ -522,6 +593,78 @@ public final class FieldTypes
      * column count int, with a unique unit type and display unit per column of the double matrix.
      */
     public static final byte DOUBLE_64_UNIT_COLUMN_MATRIX_LE = -96;
+
+    /**
+     * 161 (-95) Little-endian array of UTF-8 Strings. The number of strings is provided in a 32-bit little-endian integer. Each
+     * string is preceded by a 32-bit int indicating the number of bytes in the array that follows. This int is itself not
+     * preceded by a byte indicating it is an int. Note that the int to code the length for each string indicates the number of
+     * bytes, not the number of characters. As an example, coding two series for a graph is done as follows:
+     * 
+     * <pre>
+     * | 33 | 2 | 0 | 0 | 0 | 
+     * | 7 | 0 | 0 | 0 | S | e | r | i | e | s | 1 | 
+     * | 7 | 0 | 0 | 0 | S | e | r | i | e | s | 2 |
+     * </pre>
+     */
+    public static final byte STRING_UTF8_ARRAY_LE = -95;
+
+    /**
+     * 162 (-94) Little-endian array of UTF-16 Strings. The number of strings is provided in a 32-bit little-endian integer.
+     * Each string is preceded by a 32-bit int indicating the number of shorts (2-byte UTF-16 encoding) in the array that
+     * follows. This int is itself not preceded by a byte indicating it is an int. Note that the int to code the length for each
+     * string indicates the number of shorts, not the number of characters in the original string, nor the number of bytes. As
+     * an example, coding two series for a graph is done as follows:
+     * 
+     * <pre>
+     * |0x22|0x02|0x00|0x00|0x00|
+     * |0x07|0x00|0x00|0x00|0x53|0x00|0x65|0x00|0x72|0x00|0x69|0x00|0x65|0x00|0x73|0x00|0x31|0x00|
+     * |0x07|0x00|0x00|0x00|0x53|0x00|0x65|0x00|0x72|0x00|0x69|0x00|0x65|0x00|0x73|0x00|0x32|0x00|
+     * </pre>
+     */
+    public static final byte STRING_UTF16_ARRAY_LE = -94;
+
+    /**
+     * 163 (-93) Little-endian matrix of UTF-8 Strings. First, the number of rows is provided in a 32-bit little-endian integer,
+     * followed by the number of columns encoded in a 32-bit little-endian integer. Each string is preceded by a 32-bit int
+     * indicating the number of bytes in the array that follows. This int is itself not preceded by a byte indicating it is an
+     * int. The strings are provided row-by-row. Note that the int to code the length for each string indicates the number of
+     * bytes, not the number of characters. In general, the coding is as follows:
+     * 
+     * <pre>
+     * | 35 | R | O | W | S | C | O | L | S |
+     * |  4 | 0 | 0 | 0 | R | 1 | C | 1 | 
+     * |  4 | 0 | 0 | 0 | R | 1 | C | 2 |
+     * ...
+     * |  4 | 0 | 0 | 0 | R | 1 | C | n | 
+     * |  4 | 0 | 0 | 0 | R | 2 | C | 1 |
+     * |  4 | 0 | 0 | 0 | R | 2 | C | 2 |
+     * ...
+     * |  4 | 0 | 0 | 0 | R | m | C | n |
+     * </pre>
+     */
+    public static final byte STRING_UTF8_MATRIX_LE = -93;
+
+    /**
+     * 164 (-92) Little-endian matrix of UTF-16 Strings. First, the number of rows is provided in a 32-bit little-endian
+     * integer, followed by the number of columns encoded in a 32-bit little-endian integer. Each string is preceded by a 32-bit
+     * int indicating the number of bytes in the array that follows. This int is itself not preceded by a byte indicating it is
+     * an int. The strings are provided row-by-row. Note that the int to code the length for each string indicates the number of
+     * shorts (2-bytes), not the number of characters in the original string, nor the number of bytes in the encoding. In
+     * general, the coding is as follows:
+     * 
+     * <pre>
+     * | 36 | R | O | W | S | C | O | L | S | 
+     * |  4 | 0 | 0 | 0 | R | . | 1 | . | C | . | 1 | . | 
+     * |  4 | 0 | 0 | 0 | R | . | 1 | . | C | . | 2 | . |
+     * ...
+     * |  4 | 0 | 0 | 0 | R | . | 1 | . | C | . | n | . |
+     * |  4 | 0 | 0 | 0 | R | . | 2 | . | C | . | 1 | . |
+     * |  4 | 0 | 0 | 0 | R | . | 2 | . | C | . | 2 | . |
+     * ...
+     * |  4 | 0 | 0 | 0 | R | . | m | . | C | . | n | . |
+     * </pre>
+     */
+    public static final byte STRING_UTF16_MATRIX_LE = -92;
 
     /**
      * Utility class, cannot be instantiated.
