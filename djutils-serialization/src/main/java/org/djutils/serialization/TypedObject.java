@@ -29,6 +29,8 @@ import org.djutils.serialization.serializers.ObjectMatrixSerializer;
 import org.djutils.serialization.serializers.ObjectSerializer;
 import org.djutils.serialization.serializers.Pointer;
 import org.djutils.serialization.serializers.Serializer;
+import org.djutils.serialization.serializers.StringArraySerializer;
+import org.djutils.serialization.serializers.StringMatrixSerializer;
 
 /**
  * Serialization and deserialization of a single object. These take into account the endianness for coding the different values.
@@ -1289,7 +1291,7 @@ public final class TypedObject
 
     /** Converter for String UTF-8 array. */
     protected static final Serializer<String[]> CONVERT_STRING8_ARRAY =
-            new ObjectSerializer<String[]>(FieldTypes.STRING_UTF8_ARRAY, "String_8_array")
+            new StringArraySerializer(FieldTypes.STRING_UTF8_ARRAY, "String_8_array")
             {
                 @Override
                 public int size(final String[] stringArray)
@@ -1332,11 +1334,12 @@ public final class TypedObject
                     }
                     return result;
                 }
+
             };
 
     /** Converter for String UTF-16 array. */
     protected static final Serializer<String[]> CONVERT_STRING16_ARRAY =
-            new ObjectSerializer<String[]>(FieldTypes.STRING_UTF16_ARRAY, "String_16_array")
+            new StringArraySerializer(FieldTypes.STRING_UTF16_ARRAY, "String_16_array")
             {
                 @Override
                 public int size(final String[] stringArray)
@@ -1385,7 +1388,7 @@ public final class TypedObject
 
     /** Converter for String UTF-8 matrix. */
     protected static final Serializer<String[][]> CONVERT_STRING8_MATRIX =
-            new ObjectSerializer<String[][]>(FieldTypes.STRING_UTF8_MATRIX, "String_8_matrix")
+            new StringMatrixSerializer(FieldTypes.STRING_UTF8_MATRIX, "String_8_matrix")
             {
                 @Override
                 public int size(final String[][] stringMatrix)
@@ -1447,7 +1450,7 @@ public final class TypedObject
 
     /** Converter for String UTF-16 matrix. */
     protected static final Serializer<String[][]> CONVERT_STRING16_MATRIX =
-            new ObjectSerializer<String[][]>(FieldTypes.STRING_UTF16_MATRIX, "String_16_matrix")
+            new StringMatrixSerializer(FieldTypes.STRING_UTF16_MATRIX, "String_16_matrix")
             {
                 @Override
                 public int size(final String[][] stringMatrix)
@@ -1591,10 +1594,10 @@ public final class TypedObject
         PRIMITIVE_DATA_DECODERS.put(CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY.fieldType(),
                 CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY);
         PRIMITIVE_DATA_DECODERS.put(CONVERT_FLOAT_UNIT_COLUMN_VECTOR_ARRAY.fieldType(), CONVERT_FLOAT_UNIT_COLUMN_VECTOR_ARRAY);
-        PRIMITIVE_DATA_DECODERS.put(CONVERT_STRING8_ARRAY.fieldType(), CONVERT_STRING8);
-        PRIMITIVE_DATA_DECODERS.put(CONVERT_STRING16_ARRAY.fieldType(), CONVERT_STRING16);
-        PRIMITIVE_DATA_DECODERS.put(CONVERT_STRING8_MATRIX.fieldType(), CONVERT_STRING8);
-        PRIMITIVE_DATA_DECODERS.put(CONVERT_STRING16_MATRIX.fieldType(), CONVERT_STRING16);
+        PRIMITIVE_DATA_DECODERS.put(CONVERT_STRING8_ARRAY.fieldType(), CONVERT_STRING8_ARRAY);
+        PRIMITIVE_DATA_DECODERS.put(CONVERT_STRING16_ARRAY.fieldType(), CONVERT_STRING16_ARRAY);
+        PRIMITIVE_DATA_DECODERS.put(CONVERT_STRING8_MATRIX.fieldType(), CONVERT_STRING8_MATRIX);
+        PRIMITIVE_DATA_DECODERS.put(CONVERT_STRING16_MATRIX.fieldType(), CONVERT_STRING16_MATRIX);
 
         OBJECT_DECODERS.put(CONVERT_BYTE.fieldType(), CONVERT_BYTE);
         OBJECT_DECODERS.put(CONVERT_CHARACTER8.fieldType(), CONVERT_CHARACTER8);
