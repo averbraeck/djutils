@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.UnsupportedEncodingException;
 
 import org.djutils.decoderdumper.HexDumper;
+import org.djutils.exceptions.Try;
 import org.djutils.serialization.util.SerialDataDumper;
 import org.junit.jupiter.api.Test;
 
@@ -116,6 +117,89 @@ public class StringSerializationTest extends AbstractSerializationTest
         assertEquals(expected16 / 2, EndianUtil.BIG_ENDIAN.decodeInt(b16BE, 1));
         assertEquals(-118, b16LE[0]);
         assertEquals(expected16 / 2, EndianUtil.LITTLE_ENDIAN.decodeInt(b16LE, 1));
+    }
+
+    /**
+     * Test String array en/decoding.
+     * @throws SerializationException on error
+     */
+    @Test
+    public void testStringArray() throws SerializationException
+    {
+        String abc = "abc123/?";
+        String copyright = "" + '\u00A9';
+        String xi = "" + '\u03BE';
+        String permille = "" + '\u2030';
+        String smiley = "\uD83D\uDE00";
+        String complex = "12%c" + smiley + copyright + xi + permille + "[]@";
+
+        String[] sa = new String[] {abc, smiley, complex};
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
+        {
+            for (boolean encodeUTF8 : new boolean[] {false, true})
+            {
+                byte[] serialized =
+                        encodeUTF8 ? TypedObject.encodeUTF8(endianUtil, sa) : TypedObject.encodeUTF16(endianUtil, sa);
+                HexDumper.hexDumper(serialized);
+                // SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String[] decodedObjects = (String[]) TypedObject.decodeToObjectDataTypes(serialized);
+                assertEquals(sa.length, decodedObjects.length, "Size of decoded matches");
+                for (int i = 0; i < sa.length; i++)
+                {
+                    assertEquals(sa[i], decodedObjects[i], "decoded object at index " + i + "(" + decodedObjects[i]
+                            + ") equals corresponding object in input");
+                }
+            }
+        }
+    }
+
+    /**
+     * Test String matrix en/decoding.
+     * @throws SerializationException on error
+     */
+    @Test
+    public void testStringMatrix() throws SerializationException
+    {
+        String abc = "abc123/?";
+        String copyright = "" + '\u00A9';
+        String xi = "" + '\u03BE';
+        String permille = "" + '\u2030';
+        String smiley = "\uD83D\uDE00";
+        String complex = "12%c" + smiley + copyright + xi + permille + "[]@";
+
+        String[][] sm = new String[][] {{abc, smiley, complex}, {xi, permille, smiley}};
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
+        {
+            for (boolean encodeUTF8 : new boolean[] {false, true})
+            {
+                byte[] serialized =
+                        encodeUTF8 ? TypedObject.encodeUTF8(endianUtil, sm) : TypedObject.encodeUTF16(endianUtil, sm);
+                HexDumper.hexDumper(serialized);
+                // SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String[][] decodedObjects = (String[][]) TypedObject.decodeToObjectDataTypes(serialized);
+                assertEquals(sm.length, decodedObjects.length, "Row size of decoded matches");
+                for (int i = 0; i < sm.length; i++)
+                {
+                    assertEquals(sm[i].length, decodedObjects[i].length, "Column size of decoded matches");
+                    for (int j = 0; j < sm[i].length; j++)
+                    {
+                        assertEquals(sm[i][j], decodedObjects[i][j], "decoded object at index (" + i + "," + j + ") (value "
+                                + decodedObjects[i][j] + ") equals corresponding object in input");
+                    }
+                }
+            }
+        }
+
+        // test jagged matrix
+        final String[][] smRagged = new String[][] {{abc, smiley, complex}, {xi, smiley}};
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
+        {
+            for (boolean encodeUTF8 : new boolean[] {false, true})
+            {
+                Try.testFail(() -> encodeUTF8 ? TypedObject.encodeUTF8(endianUtil, smRagged)
+                        : TypedObject.encodeUTF16(endianUtil, smRagged));
+            }
+        }
     }
 
 }

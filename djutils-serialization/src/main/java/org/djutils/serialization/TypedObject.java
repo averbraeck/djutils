@@ -1287,6 +1287,229 @@ public final class TypedObject
                 }
             };
 
+    /** Converter for String UTF-8 array. */
+    protected static final Serializer<String[]> CONVERT_STRING8_ARRAY =
+            new ObjectSerializer<String[]>(FieldTypes.STRING_UTF8_ARRAY, "String_8_array")
+            {
+                @Override
+                public int size(final String[] stringArray)
+                {
+                    int size = 4;
+                    for (String string : stringArray)
+                    {
+                        size += 4 + string.getBytes(UTF8).length;
+                    }
+                    return size;
+                }
+
+                @Override
+                public void serialize(final String[] stringArray, final byte[] buffer, final Pointer pointer,
+                        final EndianUtil endianUtil)
+                {
+                    endianUtil.encodeInt(stringArray.length, buffer, pointer.getAndIncrement(4));
+                    for (String string : stringArray)
+                    {
+                        byte[] s = string.getBytes(UTF8);
+                        endianUtil.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
+                        for (byte b : s)
+                        {
+                            buffer[pointer.getAndIncrement(1)] = b;
+                        }
+                    }
+                }
+
+                @Override
+                public String[] deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
+                {
+                    int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    String[] result = new String[size];
+                    for (int i = 0; i < size; i++)
+                    {
+                        int bytesUsed = endianUtil.decodeInt(buffer, pointer.get());
+                        result[i] = endianUtil.decodeUTF8String(buffer, pointer.get());
+                        pointer.getAndIncrement(4 + bytesUsed);
+                    }
+                    return result;
+                }
+            };
+
+    /** Converter for String UTF-16 array. */
+    protected static final Serializer<String[]> CONVERT_STRING16_ARRAY =
+            new ObjectSerializer<String[]>(FieldTypes.STRING_UTF16_ARRAY, "String_16_array")
+            {
+                @Override
+                public int size(final String[] stringArray)
+                {
+                    int size = 4;
+                    for (String string : stringArray)
+                    {
+                        size += 4 + string.getBytes(UTF16).length;
+                    }
+                    return size;
+                }
+
+                @Override
+                public void serialize(final String[] stringArray, final byte[] buffer, final Pointer pointer,
+                        final EndianUtil endianUtil)
+                {
+                    endianUtil.encodeInt(stringArray.length, buffer, pointer.getAndIncrement(4));
+                    for (String string : stringArray)
+                    {
+                        // Note that according to https://stackoverflow.com/questions/74887443, String.length returns
+                        // the number of code units (i.e. the number of 16-bit char values) needed to make up the String
+                        // and not the number of Unicode codepoints.
+                        char[] chars = new char[string.length()];
+                        string.getChars(0, chars.length, chars, 0);
+                        endianUtil.encodeInt(chars.length, buffer, pointer.getAndIncrement(4));
+                        for (char c : chars)
+                        {
+                            endianUtil.encodeChar(c, buffer, pointer.getAndIncrement(2));
+                        }
+                    }
+                }
+
+                @Override
+                public String[] deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+                {
+                    int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    String[] result = new String[size];
+                    for (int i = 0; i < size; i++)
+                    {
+                        result[i] = endianUtil.decodeUTF16String(buffer, pointer.get());
+                        pointer.getAndIncrement(4 + result[i].length() * 2);
+                    }
+                    return result;
+                }
+            };
+
+    /** Converter for String UTF-8 matrix. */
+    protected static final Serializer<String[][]> CONVERT_STRING8_MATRIX =
+            new ObjectSerializer<String[][]>(FieldTypes.STRING_UTF8_MATRIX, "String_8_matrix")
+            {
+                @Override
+                public int size(final String[][] stringMatrix)
+                {
+                    int size = 8;
+                    for (String[] stringArray : stringMatrix)
+                    {
+                        for (String string : stringArray)
+                        {
+                            size += 4 + string.getBytes(UTF8).length;
+                        }
+                    }
+                    return size;
+                }
+
+                @Override
+                public void serialize(final String[][] stringMatrix, final byte[] buffer, final Pointer pointer,
+                        final EndianUtil endianUtil) throws SerializationException
+                {
+                    int height = stringMatrix.length;
+                    int width = stringMatrix[0].length;
+                    endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+                    for (int i = 0; i < height; i++)
+                    {
+                        Throw.when(stringMatrix[i].length != width, SerializationException.class,
+                                "Jagged matrix is not allowed");
+                        for (int j = 0; j < width; j++)
+                        {
+                            byte[] s = stringMatrix[i][j].getBytes(UTF8);
+                            endianUtil.encodeInt(s.length, buffer, pointer.getAndIncrement(4));
+                            for (byte b : s)
+                            {
+                                buffer[pointer.getAndIncrement(1)] = b;
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public String[][] deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+                        throws SerializationException
+                {
+                    int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    String[][] result = new String[height][width];
+                    for (int i = 0; i < height; i++)
+                    {
+                        for (int j = 0; j < width; j++)
+                        {
+                            int bytesUsed = endianUtil.decodeInt(buffer, pointer.get());
+                            result[i][j] = endianUtil.decodeUTF8String(buffer, pointer.get());
+                            pointer.getAndIncrement(4 + bytesUsed);
+                        }
+                    }
+                    return result;
+                }
+            };
+
+    /** Converter for String UTF-16 matrix. */
+    protected static final Serializer<String[][]> CONVERT_STRING16_MATRIX =
+            new ObjectSerializer<String[][]>(FieldTypes.STRING_UTF16_MATRIX, "String_16_matrix")
+            {
+                @Override
+                public int size(final String[][] stringMatrix)
+                {
+                    int size = 8;
+                    for (String[] stringArray : stringMatrix)
+                    {
+                        for (String string : stringArray)
+                        {
+                            size += 4 + string.getBytes(UTF16).length;
+                        }
+                    }
+                    return size;
+                }
+
+                @Override
+                public void serialize(final String[][] stringMatrix, final byte[] buffer, final Pointer pointer,
+                        final EndianUtil endianUtil) throws SerializationException
+                {
+                    int height = stringMatrix.length;
+                    int width = stringMatrix[0].length;
+                    endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
+                    endianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+                    for (int i = 0; i < height; i++)
+                    {
+                        Throw.when(stringMatrix[i].length != width, SerializationException.class,
+                                "Jagged matrix is not allowed");
+                        for (int j = 0; j < width; j++)
+                        {
+                            // Note that according to https://stackoverflow.com/questions/74887443, String.length returns
+                            // the number of code units (i.e. the number of 16-bit char values) needed to make up the String
+                            // and not the number of Unicode codepoints.
+                            char[] chars = new char[stringMatrix[i][j].length()];
+                            stringMatrix[i][j].getChars(0, chars.length, chars, 0);
+                            endianUtil.encodeInt(chars.length, buffer, pointer.getAndIncrement(4));
+                            for (char c : chars)
+                            {
+                                endianUtil.encodeChar(c, buffer, pointer.getAndIncrement(2));
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public String[][] deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+                {
+                    int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+                    String[][] result = new String[height][width];
+                    for (int i = 0; i < height; i++)
+                    {
+                        for (int j = 0; j < width; j++)
+                        {
+                            result[i][j] = endianUtil.decodeUTF16String(buffer, pointer.get());
+                            pointer.getAndIncrement(4 + result[i][j].length() * 2);
+                        }
+                    }
+                    return result;
+
+                }
+            };
+
     static
     {
         ENCODERS.put(Byte.class, CONVERT_BYTE);
@@ -1368,6 +1591,10 @@ public final class TypedObject
         PRIMITIVE_DATA_DECODERS.put(CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY.fieldType(),
                 CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY);
         PRIMITIVE_DATA_DECODERS.put(CONVERT_FLOAT_UNIT_COLUMN_VECTOR_ARRAY.fieldType(), CONVERT_FLOAT_UNIT_COLUMN_VECTOR_ARRAY);
+        PRIMITIVE_DATA_DECODERS.put(CONVERT_STRING8_ARRAY.fieldType(), CONVERT_STRING8);
+        PRIMITIVE_DATA_DECODERS.put(CONVERT_STRING16_ARRAY.fieldType(), CONVERT_STRING16);
+        PRIMITIVE_DATA_DECODERS.put(CONVERT_STRING8_MATRIX.fieldType(), CONVERT_STRING8);
+        PRIMITIVE_DATA_DECODERS.put(CONVERT_STRING16_MATRIX.fieldType(), CONVERT_STRING16);
 
         OBJECT_DECODERS.put(CONVERT_BYTE.fieldType(), CONVERT_BYTE);
         OBJECT_DECODERS.put(CONVERT_CHARACTER8.fieldType(), CONVERT_CHARACTER8);
@@ -1404,6 +1631,10 @@ public final class TypedObject
         OBJECT_DECODERS.put(COMPOUND_ARRAY_SERIALIZER_UTF8.fieldType(), COMPOUND_ARRAY_SERIALIZER_UTF8);
         OBJECT_DECODERS.put(CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY.fieldType(), CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY);
         OBJECT_DECODERS.put(CONVERT_FLOAT_UNIT_COLUMN_VECTOR_ARRAY.fieldType(), CONVERT_FLOAT_UNIT_COLUMN_VECTOR_ARRAY);
+        OBJECT_DECODERS.put(CONVERT_STRING8_ARRAY.fieldType(), CONVERT_STRING8_ARRAY);
+        OBJECT_DECODERS.put(CONVERT_STRING16_ARRAY.fieldType(), CONVERT_STRING16_ARRAY);
+        OBJECT_DECODERS.put(CONVERT_STRING8_MATRIX.fieldType(), CONVERT_STRING8_MATRIX);
+        OBJECT_DECODERS.put(CONVERT_STRING16_MATRIX.fieldType(), CONVERT_STRING16_MATRIX);
     }
 
     /** the UTF-8 charset. */
@@ -1456,61 +1687,40 @@ public final class TypedObject
      * @return the serializer needed for <code>object</code>
      * @throws SerializationException when there is no known serializer for <code>object</code>
      */
+    @SuppressWarnings("checkstyle:needbraces")
     protected static Serializer<?> findEncoder(final boolean utf8, final Object object) throws SerializationException
     {
         Serializer<?> serializer = ENCODERS.get(object.getClass());
         if (serializer != null)
-        {
             return serializer;
-        }
-        else if (object instanceof Character)
-        {
+        if (object instanceof Character)
             return utf8 ? CONVERT_CHARACTER8 : CONVERT_CHARACTER16;
-        }
-        else if (object instanceof String)
-        {
+        if (object instanceof String)
             return utf8 ? CONVERT_STRING8 : CONVERT_STRING16;
-        }
-        else if (object instanceof FloatScalar)
-        {
+        if (object instanceof String[])
+            return utf8 ? CONVERT_STRING8_ARRAY : CONVERT_STRING16_ARRAY;
+        if (object instanceof String[][])
+            return utf8 ? CONVERT_STRING8_MATRIX : CONVERT_STRING16_MATRIX;
+        if (object instanceof FloatScalar)
             return CONVERT_DJUNITS_FLOAT_SCALAR;
-        }
-        else if (object instanceof DoubleScalar)
-        {
+        if (object instanceof DoubleScalar)
             return CONVERT_DJUNITS_DOUBLE_SCALAR;
-        }
-        else if (object instanceof FloatVector)
-        {
+        if (object instanceof FloatVector)
             return CONVERT_DJUNITS_FLOAT_VECTOR;
-        }
-        else if (object instanceof DoubleVector)
-        {
+        if (object instanceof DoubleVector)
             return CONVERT_DJUNITS_DOUBLE_VECTOR;
-        }
-        else if (object instanceof FloatMatrix)
-        {
+        if (object instanceof FloatMatrix)
             return CONVERT_DJUNITS_FLOAT_MATRIX;
-        }
-        else if (object instanceof DoubleMatrix)
-        {
+        if (object instanceof DoubleMatrix)
             return CONVERT_DJUNITS_DOUBLE_MATRIX;
-        }
-        else if (object instanceof SerializableObject[])
-        {
+        if (object instanceof SerializableObject[])
             return utf8 ? COMPOUND_ARRAY_SERIALIZER_UTF8 : COMPOUND_ARRAY_SERIALIZER_UTF16;
-        }
-        else if (object instanceof DoubleVector[])
-        {
+        if (object instanceof DoubleVector[])
             return CONVERT_DOUBLE_UNIT_COLUMN_VECTOR_ARRAY;
-        }
-        else if (object instanceof FloatVector[])
-        {
+        if (object instanceof FloatVector[])
             return CONVERT_FLOAT_UNIT_COLUMN_VECTOR_ARRAY;
-        }
         else
-        {
             throw new SerializationException("Unhandled data type " + object.getClass());
-        }
     }
 
     /**
