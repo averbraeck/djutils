@@ -66,7 +66,8 @@ it is an int. As an example, coding two series for a graph is done as follows:
 | 0 | 0 | 0 | 7 | S | e | r | i | e | s | 2 |
 </pre>
 
-!!! Note that the int to code the length for each string indicates the number of bytes, not the number of characters.
+!!! Note
+    Note that the int to code the length for each string indicates the number of bytes, not the number of characters.
 
 
 ## 34. UTF-16 Big-endian string array
@@ -82,7 +83,8 @@ for a graph is done as follows:
 |0x00|0x00|0x00|0x07|0x00|0x53|0x00|0x65|0x00|0x72|0x00|0x69|0x00|0x65|0x00|0x73|0x00|0x32|
 </pre>
 
-!!! Note that the int to code the length for each string indicates the number of shorts, not the number of characters in the original string, nor the number of bytes.
+!!! Note
+    Note that the int to code the length for each string indicates the number of shorts, not the number of characters in the original string, nor the number of bytes.
 
 
 ## 35. UTF-8 Big-endian string matrix
@@ -104,7 +106,8 @@ row-by-row. In general, the coding is as follows:
 |  0 | 0 | 0 | 4 | R | m | C | n |
 </pre>
 
-!!! Note that the int to code the length for each string indicates the number of bytes, not the number of characters. 
+!!! Note
+    Note that the int to code the length for each string indicates the number of bytes, not the number of characters. 
 
 
 ## 36. UTF-16 Big-endian string matrix
@@ -126,7 +129,8 @@ row-by-row. In general, the coding is as follows:
 |  0 | 0 | 0 | 4 | . | R | . | m | . | C | . | n |
 </pre>
 
-!!! Note that the int to code the length for each string indicates the number of shorts (2-bytes), not the number of characters in the original string, nor the number of bytes in the encoding.
+!!! Note
+    Note that the int to code the length for each string indicates the number of shorts (2-bytes), not the number of characters in the original string, nor the number of bytes in the encoding.
 
 
 ## 137. UTF-8 Little-endian String
@@ -191,7 +195,8 @@ preceded by a byte indicating it is an int. As an example, coding two series for
 | 7 | 0 | 0 | 0 | S | e | r | i | e | s | 2 |
 </pre>
 
-!!! Note that the int to code the length for each string indicates the number of bytes, not the number of characters. 
+!!! Note
+    Note that the int to code the length for each string indicates the number of bytes, not the number of characters. 
 
 
 ## 162. UTF-16 Little-endian String array
@@ -206,7 +211,8 @@ follows. This int is itself not preceded by a byte indicating it is an int. As a
 |0x07|0x00|0x00|0x00|0x53|0x00|0x65|0x00|0x72|0x00|0x69|0x00|0x65|0x00|0x73|0x00|0x32|0x00|
 </pre>
 
-!!! Note that the int to code the length for each string indicates the number of shorts, not the number of characters in the original string, nor the number of bytes. 
+!!! Note
+    Note that the int to code the length for each string indicates the number of shorts, not the number of characters in the original string, nor the number of bytes. 
 
 
 ## 163. UTF-8 Little-endian String matrix
@@ -228,7 +234,8 @@ int. The strings are provided row-by-row. In general, the coding is as follows:
 |  4 | 0 | 0 | 0 | R | m | C | n |
 </pre>
 
-!!! Note that the int to code the length for each string indicates the number of bytes, not the number of characters. 
+!!! Note
+    Note that the int to code the length for each string indicates the number of bytes, not the number of characters. 
 
 
 ## 164. UTF-16 Little-endian String matrix
@@ -250,4 +257,5 @@ an int. The strings are provided row-by-row. In general, the coding is as follow
 |  4 | 0 | 0 | 0 | R | . | m | . | C | . | n | . |
 </pre>
 
-!!! Note that the int to code the length for each string indicates the number of shorts (2-bytes), not the number of characters in the original string, nor the number of bytes in the encoding. 
+!!! Note
+    Note that the int to code the length for each string indicates the number of shorts (2-bytes), not the number of characters in the original string, nor the number of bytes in the encoding. 
