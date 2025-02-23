@@ -76,15 +76,15 @@ nav:
     - Introduction: djutils-serialization/index.md
     - Coding types: djutils-serialization/coding-types.md
     - 'Primitive types (#0 - #8)': djutils-serialization/primitive-types.md
-    - 'String types (#9 - #10)': djutils-serialization/string-types.md
+    - 'String types (#9-#10, #33-#36)': djutils-serialization/string-types.md
     - 'Array types (#11 - #17)': djutils-serialization/array-types.md
     - 'Matrix types (#18 - #24)': djutils-serialization/matrix-types.md
     - Coding of units: djutils-serialization/coding-units.md
     - Display types for units: djutils-serialization/display-types.md
-    - 'Scalar types with unit (#25 - #26)': djutils-serialization/scalar-units.md 
-    - 'Vector types with unit (#27 - #28)': djutils-serialization/vector-units.md 
-    - 'Matrix types with unit (#29 - #32)': djutils-serialization/matrix-units.md 
-    - SERIALIZATION documentation: https://djutils.org/docs/latest/djutils-serialization/index.html
+    - 'Scalar unit types(#25 - #26)': djutils-serialization/scalar-units.md 
+    - 'Vector unit types(#27 - #28)': djutils-serialization/vector-units.md 
+    - 'Matrix unit types(#29 - #32)': djutils-serialization/matrix-units.md 
+    - SERIALIZATION doc: https://djutils.org/docs/latest/djutils-serialization/index.html
     - SERIALIZATION API: https://djutils.org/docs/latest/djutils-serialization/apidocs/index.html
   - DJUTILS-STATS project:
     - Introduction: djutils-stats/index.md
