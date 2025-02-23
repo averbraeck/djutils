@@ -30,8 +30,8 @@ The following types have been implemented in the v1-version of the standard:
 | 6 | BOOLEAN_8 | Boolean, sent / received as a byte; 0 = false, 1 = true |
 | 7 | CHAR_8 | Char, 8-bit ASCII character |
 | 8 | CHAR_16 | Char, 16-bit Unicode character, the 2 bytes in the order of endianness |
-| 9 | STRING_UTF8 | String, 32-bit number-preceded byte array of 8-bits characters |
-| 10 | STRING_UTF16 | String, 32-bit number-preceded char array of 16-bits characters, the 2 bytes of each character in the order of the endianness |
+| 9 | STRING_UTF8 | String, represented as a UTF-8 byte array, preceded by a 32-bit number indicating the number of bytes (NOT the number of characters) |
+| 10 | STRING_UTF16 | String, represented as a UTF-16 short array, preceded by a 32-bit number indicating the number of shorts / chars (NOT the number of characters in the string, nor the number of bytes in the encoding); the 2 bytes of each character are coded using endianness |
 | 11 | BYTE_8_ARRAY | Byte array, preceded by a 32-bit number indicating the number of bytes |
 | 12 | SHORT_16_ARRAY | Short array, preceded by a 32-bit number indicating the number of shorts |
 | 13 | INT_32_ARRAY | Integer array, preceded by a 32-bit number indicating the number of integers |
@@ -64,4 +64,4 @@ Unicode characters can be of different formats: UTF-8, UTF-16 with a byte-order 
 For a discussion on little and big endianness for UTF-8 and UTF-16 strings, see the following discussion at StackExchange: [https://stackoverflow.com/questions/3833693/isn-t-on-big-endian-machines-utf-8s-byte-order-different-than-on-little-endian](https://stackoverflow.com/questions/3833693/isn-t-on-big-endian-machines-utf-8s-byte-order-different-than-on-little-endian), as well as [https://unicode.org/faq/utf_bom.html#utf8-2](https://unicode.org/faq/utf_bom.html#utf8-2).
 
 !!! Note 
-    Note that because of escape characters (or surrogates), the String length is not equal to the number of characters in UTF-8, nor to the number of characters times two in UTF-16. The numbers in STRING_UTF8, STRING_UTF16, STRING_UTF8_LE and STRING_UTF16_LE are related to the number of bytes / shorts in the representation, and **not** to the number of characters in the resulting String.
+    Note that because of escape characters (or surrogates), the String length is not equal to the number of characters in UTF-8, nor to the number of characters/shorts times two in UTF-16. The numbers in STRING_UTF8, STRING_UTF16, STRING_UTF8_LE and STRING_UTF16_LE represent the number of bytes / shorts in the representation, and **not** to the number of characters in the resulting String.
