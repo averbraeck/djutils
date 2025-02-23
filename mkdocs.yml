@@ -76,7 +76,7 @@ nav:
     - Introduction: djutils-serialization/index.md
     - Coding types: djutils-serialization/coding-types.md
     - 'Primitive types (#0 - #8)': djutils-serialization/primitive-types.md
-    - 'String types (#9-#10, #33-#36)': djutils-serialization/string-types.md
+    - 'String types (#9-10, #33-36)': djutils-serialization/string-types.md
     - 'Array types (#11 - #17)': djutils-serialization/array-types.md
     - 'Matrix types (#18 - #24)': djutils-serialization/matrix-types.md
     - Coding of units: djutils-serialization/coding-units.md
