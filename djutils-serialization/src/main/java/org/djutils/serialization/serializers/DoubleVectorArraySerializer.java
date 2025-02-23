@@ -2,7 +2,7 @@ package org.djutils.serialization.serializers;
 
 import org.djunits.unit.Unit;
 import org.djunits.unit.scale.IdentityScale;
-import org.djunits.value.ValueRuntimeException;
+import org.djunits.unit.util.UnitRuntimeException;
 import org.djunits.value.storage.StorageType;
 import org.djunits.value.vdouble.scalar.base.DoubleScalar;
 import org.djunits.value.vdouble.vector.base.DoubleVector;
@@ -102,7 +102,7 @@ public class DoubleVectorArraySerializer<U extends Unit<U>, S extends DoubleScal
                 DoubleVectorData fvd = DoubleVectorData.instantiate(values[col], IdentityScale.SCALE, StorageType.DENSE);
                 result[col] = DoubleVectorSerializer.instantiateAnonymous(fvd, units[col]);
             }
-            catch (ValueRuntimeException e)
+            catch (UnitRuntimeException e)
             {
                 throw new SerializationException(e);
             }
