@@ -54,6 +54,10 @@ The following types have been implemented in the v1-version of the standard:
 | 30 | DOUBLE_64_UNIT_MATRIX | Dense double matrix, preceded by a 32-bit row count int and a 32-bit column count int, with unit type and display unit attached to the entire double matrix |
 | 31 | FLOAT_32_UNIT_COLUMN_MATRIX | Dense float matrix, preceded by a 32-bit row count int and a 32-bit column count int, with a unique unit type and display unit per column of the float matrix. |
 | 32 | DOUBLE_64_UNIT_COLUMN_MATRIX | Dense double matrix, preceded by a 32-bit row count int and a 32-bit column count int, with a unique unit type and display unit per column of the double matrix. |
+| 33 | STRING_UTF8_ARRAY | String array where each string is encoded as a UTF-8 byte array. |
+| 34 | STRING_UTF16_ARRAY | String array where each string is encoded as a UTF-16 byte array. |
+| 35 | STRING_UTF8_MATRIX | String matrix where each string is encoded as a UTF-8 byte array. |
+| 36 | STRING_UTF16_MATRIX | String matrix where each string is encoded as a UTF-16 byte array. |
 
 <br>
 
