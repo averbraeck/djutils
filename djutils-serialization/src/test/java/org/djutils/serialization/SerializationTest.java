@@ -129,9 +129,9 @@ public class SerializationTest extends AbstractSerializationTest
                     for (int i = 0; i < objects.length; i++)
                     {
                         Object o = decodedObjects[i];
-                        if (o instanceof TypedMessage.MinimalSerializableObject[])
+                        if (o instanceof TypedObject.MinimalSerializableObject[])
                         {
-                            TypedMessage.MinimalSerializableObject[] in = ((TypedMessage.MinimalSerializableObject[]) o);
+                            TypedObject.MinimalSerializableObject[] in = ((TypedObject.MinimalSerializableObject[]) o);
                             Compound[] out = new Compound[in.length];
                             for (int j = 0; j < in.length; j++)
                             {

@@ -26,7 +26,11 @@ import org.djunits.value.vdouble.vector.base.DoubleVector;
 import org.djunits.value.vfloat.matrix.FloatElectricalResistanceMatrix;
 import org.djunits.value.vfloat.scalar.FloatArea;
 import org.djunits.value.vfloat.vector.FloatElectricalResistanceVector;
+import org.djunits.value.vfloat.vector.FloatLengthVector;
+import org.djunits.value.vfloat.vector.FloatTimeVector;
+import org.djunits.value.vfloat.vector.base.FloatVector;
 import org.djutils.decoderdumper.HexDumper;
+import org.djutils.exceptions.Try;
 import org.djutils.serialization.util.SerialDataDumper;
 import org.junit.jupiter.api.Test;
 
@@ -232,4 +236,70 @@ public class UnitSerializationTest extends AbstractSerializationTest
         }
     }
 
+
+    /**
+     * Test a float column matrix, where each column can contain a different quantity and/or display unit.
+     * @throws ValueRuntimeException if that happens uncaught; this test has failed
+     * @throws SerializationException if that happens uncaught; this test has failed
+     */
+    @Test
+    public void testFloatUnitColumnMatrix() throws ValueRuntimeException, SerializationException
+    {
+        FloatVector<?, ?, ?>[] array =
+                new FloatVector[] {new FloatLengthVector(new float[] {0.1f, 0.2f, 0.3f}, LengthUnit.INCH, StorageType.DENSE),
+                        new FloatTimeVector(new float[] {10.1f, 20.2f, 30.3f}, TimeUnit.BASE_MINUTE, StorageType.DENSE)};
+        Object[] objects = new Object[] {array};
+        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
+        {
+            for (boolean encodeUTF8 : new boolean[] {false, true})
+            {
+                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
+                        : TypedMessage.encodeUTF16(endianUtil, objects);
+                assertEquals(endianUtil.isBigEndian() ? FieldTypes.FLOAT_32_UNIT_COLUMN_MATRIX
+                        : FieldTypes.FLOAT_32_UNIT_COLUMN_MATRIX_LE, serialized[0]);
+                HexDumper.hexDumper(serialized);
+                SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                for (boolean primitive : new boolean[] {false, true})
+                {
+                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
+                            : TypedMessage.decodeToObjectDataTypes(serialized);
+                    assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
+                    for (int i = 0; i < objects.length; i++)
+                    {
+                        if (objects[i] instanceof FloatVector<?, ?, ?>[])
+                        {
+                            FloatVector<?, ?, ?>[] arrayIn = (FloatVector<?, ?, ?>[]) objects[i];
+                            FloatVector<?, ?, ?>[] arrayOut = (FloatVector<?, ?, ?>[]) decodedObjects[i];
+                            for (int j = 0; j < arrayOut.length; j++)
+                            {
+                                assertEquals(arrayIn[j], arrayOut[j], "Decoded Djutils array vector element matches");
+                            }
+                        }
+                        else
+                        {
+                            assertTrue(deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])),
+                                    "decoded object at index " + i + "(" + objects[i]
+                                            + ") equals corresponding object in input");
+                        }
+                    }
+                }
+            }
+        }
+    }
+/** 
+ * Test exceptions with instantiation of unit column matrices. 
+ */
+    @Test
+    public void testUnitColumnMatrixExceptions()
+    {
+        DoubleVector<?, ?, ?>[] dRagged =
+                new DoubleVector[] {new LengthVector(new double[] {0.1, 0.2, 0.3}, LengthUnit.INCH, StorageType.DENSE),
+                        new TimeVector(new double[] {10.1, 20.2}, TimeUnit.BASE_MINUTE, StorageType.DENSE)};
+        FloatVector<?, ?, ?>[] fRagged =
+                new FloatVector[] {new FloatLengthVector(new float[] {0.1f, 0.2f, 0.3f}, LengthUnit.INCH, StorageType.DENSE),
+                        new FloatTimeVector(new float[] {10.1f, 20.2f}, TimeUnit.BASE_MINUTE, StorageType.DENSE)};
+        Try.testFail(() -> TypedObject.encodeUTF8(EndianUtil.BIG_ENDIAN, dRagged));
+        Try.testFail(() -> TypedObject.encodeUTF8(EndianUtil.BIG_ENDIAN, fRagged));
+    }
+    
 }

@@ -92,7 +92,7 @@ public class SerialDataDecoder implements Decoder
         {
             // We are expecting a field type byte
             this.currentFieldType = (byte) (theByte & 0x7F);
-            this.currentSerializer = TypedMessage.PRIMITIVE_DATA_DECODERS.get(this.currentFieldType);
+            this.currentSerializer = TypedObject.PRIMITIVE_DATA_DECODERS.get(this.currentFieldType);
             if (null == this.currentSerializer)
             {
                 this.buffer.append(String.format("Bad field type %02x - resynchronizing", this.currentFieldType));
@@ -224,8 +224,8 @@ public class SerialDataDecoder implements Decoder
                 else if (this.currentRow < 0)
                 {
                     // parse one unit
-                    TypedMessage.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
-                    this.displayUnit = TypedMessage.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
+                    TypedObject.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
+                    this.displayUnit = TypedObject.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
                     this.buffer.append("unit for column " + this.currentColumn + ": ");
                     this.buffer.append(this.displayUnit);
                     this.currentColumn++;
@@ -286,7 +286,7 @@ public class SerialDataDecoder implements Decoder
                 }
                 else if (null == this.displayUnit)
                 {
-                    this.displayUnit = TypedMessage.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
+                    this.displayUnit = TypedObject.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
                     this.buffer.append("unit " + this.displayUnit);
                     int numberOfDimensions = this.currentSerializer.getNumberOfDimensions();
                     int elementSize = this.currentSerializer.dataClassName().contains("Float") ? 4 : 8;
