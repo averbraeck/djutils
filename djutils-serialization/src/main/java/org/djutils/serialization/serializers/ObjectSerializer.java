@@ -40,7 +40,7 @@ public abstract class ObjectSerializer<T extends Object> extends BasicSerializer
     }
 
     @Override
-    public final int getNumberOfDimensions()
+    public int getNumberOfDimensions()
     {
         return 0;
     }

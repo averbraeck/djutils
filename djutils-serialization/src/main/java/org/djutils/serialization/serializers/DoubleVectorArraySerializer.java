@@ -110,4 +110,10 @@ public class DoubleVectorArraySerializer<U extends Unit<U>, S extends DoubleScal
         return result;
     }
 
+    @Override
+    public int getNumberOfDimensions()
+    {
+        return 2;
+    }
+
 }

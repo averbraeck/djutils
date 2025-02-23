@@ -110,4 +110,9 @@ public class FloatVectorArraySerializer<U extends Unit<U>, S extends FloatScalar
         return result;
     }
 
+    @Override
+    public int getNumberOfDimensions()
+    {
+        return 2;
+    }
 }
