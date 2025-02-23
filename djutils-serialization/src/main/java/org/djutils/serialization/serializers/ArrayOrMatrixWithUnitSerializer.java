@@ -54,6 +54,12 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
         return this.numberOfDimensions;
     }
 
+    @Override
+    public boolean hasUnit()
+    {
+        return true;
+    }
+
     /**
      * Code a unit.
      * @param unit the unit to code in the byte array

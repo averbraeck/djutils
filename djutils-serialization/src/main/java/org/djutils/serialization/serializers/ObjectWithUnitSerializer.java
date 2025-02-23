@@ -57,4 +57,10 @@ public abstract class ObjectWithUnitSerializer<U extends Unit<U>, T> extends Obj
         return (U) displayType.getDjunitsType();
     }
 
+    @Override
+    public boolean hasUnit()
+    {
+        return true;
+    }
+
 }

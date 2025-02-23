@@ -84,4 +84,12 @@ public interface Serializer<T extends Object>
      */
     int getNumberOfDimensions();
 
+    /**
+     * Return whether the serializer uses a single unit type or not.
+     * @return whether the serializer uses a single unit type or not
+     */
+    default boolean hasUnit()
+    {
+        return false;
+    }
 }
