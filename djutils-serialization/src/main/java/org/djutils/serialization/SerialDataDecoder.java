@@ -3,16 +3,19 @@ package org.djutils.serialization;
 import java.io.IOException;
 
 import org.djunits.unit.Unit;
+import org.djunits.value.vdouble.scalar.base.DoubleScalar;
+import org.djunits.value.vfloat.scalar.base.FloatScalar;
 import org.djutils.decoderdumper.Decoder;
-import org.djutils.serialization.serializers.ArrayOrMatrixSerializer;
 import org.djutils.serialization.serializers.BasicPrimitiveArrayOrMatrixSerializer;
 import org.djutils.serialization.serializers.FixedSizeObjectSerializer;
-import org.djutils.serialization.serializers.ObjectSerializer;
 import org.djutils.serialization.serializers.Pointer;
 import org.djutils.serialization.serializers.Serializer;
+import org.djutils.serialization.serializers.StringArraySerializer;
+import org.djutils.serialization.serializers.StringMatrixSerializer;
 
 /**
- * Decoder for inspection of serialized data.
+ * Decoder for inspection of serialized data. The SerialDataDecoder implements a state machine that processes one byte at a
+ * time. Output is sent to the buffer (a StringBuilder).
  * <p>
  * Copyright (c) 2013-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://djutils.org/docs/current/djutils/licenses.html">DJUTILS License</a>.
@@ -31,17 +34,11 @@ public class SerialDataDecoder implements Decoder
     /** The serializer for the <code>currentFieldType</code>. */
     private Serializer<?> currentSerializer = null;
 
-    /** Position in the data of the <code>dataElementBytes</code>. */
-    private int positionInData = -1;
-
     /** Position in the dataElementBytes where the next input byte shall be store. */
     private int nextDataElementByte = -1;
 
     /** Collects the bytes that constitute the current data element. */
     private byte[] dataElementBytes = new byte[0];
-
-    /** Size of the data that is currently being decode. */
-    private int totalDataSize = -1;
 
     /** Number of rows in an array or matrix. */
     private int rowCount;
@@ -49,14 +46,23 @@ public class SerialDataDecoder implements Decoder
     /** Number of columns in a matrix. */
     private int columnCount;
 
+    /** Number of characters in a string. */
+    private int charCount;
+
     /** Row of matrix or array that we are now reading. */
     private int currentRow;
 
     /** Column of matrix that we are now reading. */
     private int currentColumn;
 
+    /** Character in the string that we are currently reading (either 8 or 16 bits). */
+    private int currentChar;
+
     /** Djunits display unit. */
     private Unit<?> displayUnit;
+
+    /** Array of units for array of column vectors. */
+    private Unit<?>[] columnUnits = null;
 
     /** String builder for current output line. */
     private StringBuilder buffer = new StringBuilder();
@@ -84,388 +90,481 @@ public class SerialDataDecoder implements Decoder
         return 80;
     }
 
+    /**
+     * Decode one (more) byte. This method must return true when a line becomes full due to this call, otherwise this method
+     * must return false.
+     * @param address the address that corresponds with the byte, for printing purposes.
+     * @param theByte the byte to process
+     * @return true if an output line has been completed by this call; false if at least one more byte can be appended to the
+     *         local accumulator before the current output line is full
+     * @throws IOException when the output device throws this exception
+     */
     @Override
     public final boolean append(final int address, final byte theByte) throws IOException
     {
         boolean result = false;
-        if (null == this.currentSerializer)
+
+        // check if first byte to indicate the field type
+        if (this.currentSerializer == null)
         {
-            // We are expecting a field type byte
-            this.currentFieldType = (byte) (theByte & 0x7F);
-            this.currentSerializer = TypedObject.PRIMITIVE_DATA_DECODERS.get(this.currentFieldType);
-            if (null == this.currentSerializer)
-            {
-                this.buffer.append(String.format("Bad field type %02x - resynchronizing", this.currentFieldType));
-                result = true;
-                // May eventually re-synchronize, but that could take a lot of data.
-            }
-            else
-            {
-                this.buffer.append(this.currentSerializer.dataClassName() + (this.currentSerializer.getNumberOfDimensions() > 0
-                        || this.currentSerializer.dataClassName().startsWith("Djunits") ? " " : ": "));
-                this.positionInData = 1;
-                this.totalDataSize = 1; // to be adjusted
-                this.columnCount = 0;
-                this.rowCount = 0;
-                this.displayUnit = null;
-                if (this.currentSerializer.dataClassName().startsWith("String_"))
-                {
-                    prepareForDataElement(4);
-                    this.totalDataSize += 4;
-                }
-                else if (this.currentSerializer.dataClassName().contentEquals("Djunits_vector_array"))
-                {
-                    prepareForDataElement(8);
-                    this.totalDataSize += 8;
-                }
-                else if (this.currentSerializer.getNumberOfDimensions() > 0)
-                {
-                    int size = this.currentSerializer.getNumberOfDimensions() * 4;
-                    prepareForDataElement(size);
-                    this.totalDataSize += size;
-                }
-                else if (this.currentSerializer instanceof ObjectSerializer)
-                {
-                    try
-                    {
-                        int size;
-                        if (this.currentSerializer.dataClassName().startsWith("Djunits"))
-                        {
-                            // We won't get away calling the size method with null here
-                            // Prepare to get the display unit; requires at least two more bytes
-                            size = 2;
-                            this.displayUnit = null;
-                        }
-                        else
-                        {
-                            size = this.currentSerializer.size(null);
-                        }
-                        prepareForDataElement(size);
-                        this.totalDataSize += size;
-                    }
-                    catch (SerializationException e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        int size = this.currentSerializer.size(null);
-                        this.totalDataSize += size;
-                        prepareForDataElement(size);
-                    }
-                    catch (SerializationException e)
-                    {
-                        e.printStackTrace(); // Cannot happen
-                    }
-                }
-            }
+            result = processFieldTypeByte(theByte);
             return result;
         }
+
+        // add byte to data element
         if (this.nextDataElementByte < this.dataElementBytes.length)
         {
             this.dataElementBytes[this.nextDataElementByte] = theByte;
         }
         this.nextDataElementByte++;
-        this.positionInData++;
+        // if data element complete, process it, and prepare for next data element (if any in current field type)
         if (this.nextDataElementByte == this.dataElementBytes.length)
         {
-            if (this.currentSerializer.dataClassName().startsWith("String_"))
-            {
-                int elementSize = this.currentSerializer.dataClassName().endsWith("8") ? 1 : 2;
-                if (this.columnCount == 0) // re-using columnCount to store number of characters
-                {
-                    this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
-                    prepareForDataElement(elementSize);
-                    this.totalDataSize += this.columnCount * elementSize;
-                }
-                else
-                {
-                    if (1 == elementSize)
-                    {
-                        if (this.dataElementBytes[0] > 32 && this.dataElementBytes[0] < 127)
-                        {
-                            this.buffer.append((char) this.dataElementBytes[0]); // safe to print
-                        }
-                        else
-                        {
-                            this.buffer.append("."); // not safe to print
-                        }
-                    }
-                    else
-                    {
-                        char character = this.endianUtil.decodeChar(this.dataElementBytes, 0);
-                        if (Character.isAlphabetic(character))
-                        {
-                            this.buffer.append(character); // safe to print
-                        }
-                        else
-                        {
-                            this.buffer.append("."); // not safe to print
-                        }
-                    }
-                }
-                this.currentColumn = 0;
-                this.nextDataElementByte = 0;
-            }
-            else if (this.currentSerializer.dataClassName().contentEquals("Djunits_vector_array"))
-            {
-                if (this.rowCount == 0)
-                {
-                    this.rowCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
-                    this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 4);
-                    this.currentRow = -1; // indicates we are parsing the units
-                    this.currentColumn = 0;
-                    prepareForDataElement(2);
-                    this.totalDataSize += 2;
-                }
-                else if (this.currentRow < 0)
-                {
-                    // parse one unit
-                    TypedObject.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
-                    this.displayUnit = TypedObject.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
-                    this.buffer.append("unit for column " + this.currentColumn + ": ");
-                    this.buffer.append(this.displayUnit);
-                    this.currentColumn++;
-                    if (this.currentColumn < this.columnCount)
-                    {
-                        prepareForDataElement(2);
-                        this.totalDataSize += 2;
-                        this.buffer.append(", ");
-                    }
-                    else
-                    {
-                        // Done with the units; prepare to parse the values
-                        this.currentRow = 0;
-                        this.currentColumn = 0;
-                        prepareForDataElement(8);
-                        this.totalDataSize += 8 * this.columnCount * this.rowCount;
-                    }
-                }
-                else
-                {
-                    // process one double value
-                    this.buffer.append(String.format("value at row %d column %d: ", this.currentRow, this.currentColumn));
-                    this.buffer.append(this.endianUtil.decodeDouble(this.dataElementBytes, 0));
-                    this.positionInData = 0;
-                    this.currentColumn++;
-                    if (this.currentColumn >= this.columnCount)
-                    {
-                        this.currentColumn = 0;
-                        this.currentRow++;
-                    }
-                    this.buffer.append(" ");
-                    this.nextDataElementByte = 0;
-                }
-            }
-            else if (this.currentSerializer.dataClassName().startsWith("Djunits"))
-            {
-                if (this.currentSerializer.getNumberOfDimensions() > 0 && 0 == this.rowCount)
-                {
-                    this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
-                    this.currentRow = 0;
-                    this.currentColumn = 0;
-                    if (this.dataElementBytes.length == 8)
-                    {
-                        this.rowCount = this.columnCount;
-                        this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 4);
-                        this.buffer.append(String.format("height %d, width %d", this.rowCount, this.columnCount));
-                    }
-                    else
-                    {
-                        this.rowCount = 1;
-                        this.buffer.append(String.format("length %d", this.columnCount));
-                    }
-                    // Prepare for the unit.
-                    prepareForDataElement(2);
-                    this.totalDataSize += 2;
-                    this.buffer.append(", ");
-                    return false;
-                }
-                else if (null == this.displayUnit)
-                {
-                    this.displayUnit = TypedObject.getUnit(this.dataElementBytes, new Pointer(), this.endianUtil);
-                    this.buffer.append("unit " + this.displayUnit);
-                    int numberOfDimensions = this.currentSerializer.getNumberOfDimensions();
-                    int elementSize = this.currentSerializer.dataClassName().contains("Float") ? 4 : 8;
-                    this.totalDataSize += elementSize * (0 == numberOfDimensions ? 1 : this.rowCount * this.columnCount);
-                    prepareForDataElement(elementSize);
-                    if (0 == numberOfDimensions)
-                    {
-                        this.buffer.append(": ");
-                    }
-                    else
-                    {
-                        result = true;
-                    }
-                }
-                else
-                {
-                    // get one value
-                    int dimensions = this.currentSerializer.getNumberOfDimensions();
-                    if (dimensions == 1)
-                    {
-                        this.buffer.append(String.format("value at index %d: ", this.currentColumn));
-                    }
-                    else if (dimensions == 2)
-                    {
-                        this.buffer.append(String.format("value at row %d column %d: ", this.currentRow, this.currentColumn));
-                    }
-                    // else dimension == 0
-                    if (dimensions > 0)
-                    {
-                        this.currentColumn++;
-                        if (this.currentColumn >= this.columnCount)
-                        {
-                            this.currentColumn = 0;
-                            this.currentRow++;
-                        }
-                    }
-                    this.buffer.append(this.dataElementBytes.length == 4 ? this.endianUtil.decodeFloat(this.dataElementBytes, 0)
-                            : this.endianUtil.decodeDouble(this.dataElementBytes, 0));
-                    this.nextDataElementByte = 0;
-                    result = true;
-                }
-            }
-            else if (this.currentSerializer instanceof FixedSizeObjectSerializer)
-            {
-                try
-                {
-                    Object value = this.currentSerializer.deSerialize(this.dataElementBytes, new Pointer(), this.endianUtil);
-                    this.buffer.append(value.toString());
-                }
-                catch (SerializationException e)
-                {
-                    this.buffer.append("Error deserializing data");
-                }
-            }
-            else if (this.currentSerializer.getNumberOfDimensions() > 0)
-            {
-                if (this.rowCount == 0)
-                {
-                    // Got the height and width of a matrix, or length of an array
-                    this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
-                    this.currentRow = 0;
-                    this.currentColumn = 0;
-                    if (this.dataElementBytes.length == 8)
-                    {
-                        this.rowCount = this.columnCount;
-                        this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 4);
-                        this.buffer.append(String.format("height %d, width %d", this.rowCount, this.columnCount));
-                    }
-                    else
-                    {
-                        this.rowCount = 1;
-                        this.buffer.append(String.format("length %d", this.columnCount));
-                    }
-                    int elementSize = -1;
-                    if (this.currentSerializer instanceof ArrayOrMatrixSerializer<?, ?>)
-                    {
-                        elementSize = ((ArrayOrMatrixSerializer<?, ?>) this.currentSerializer).getElementSize();
-                    }
-                    else if (this.currentSerializer instanceof BasicPrimitiveArrayOrMatrixSerializer)
-                    {
-                        elementSize = ((BasicPrimitiveArrayOrMatrixSerializer<?>) this.currentSerializer).getElementSize();
-                    }
-                    else
-                    {
-                        throw new RuntimeException("Unhandled type of array or matrix serializer");
-                    }
-                    this.totalDataSize += elementSize * this.rowCount * this.columnCount;
-                    prepareForDataElement(elementSize);
-                    // System.out.println("Selecting element size " + elementSize + " for serializer "
-                    // + this.currentSerializer.dataClassName());
-                }
-                else
-                {
-                    // Got one data element
-                    if (this.currentSerializer.getNumberOfDimensions() == 1)
-                    {
-                        this.buffer.append(String.format("value at index %d: ", this.currentColumn));
-                    }
-                    else // 2 dimensions
-                    {
-                        this.buffer.append(String.format("value at row %d column %d: ", this.currentRow, this.currentColumn));
-                    }
-                    if (this.currentSerializer instanceof ArrayOrMatrixSerializer<?, ?>)
-                    {
-                        Object value = ((ArrayOrMatrixSerializer<?, ?>) this.currentSerializer)
-                                .deSerializeElement(this.dataElementBytes, 0, this.endianUtil);
-                        this.buffer.append(value.toString());
-                    }
-                    else if (this.currentSerializer instanceof BasicPrimitiveArrayOrMatrixSerializer)
-                    {
-                        // It looks like we'll have to do this ourselves.
-                        BasicPrimitiveArrayOrMatrixSerializer<?> basicPrimitiveArraySerializer =
-                                (BasicPrimitiveArrayOrMatrixSerializer<?>) this.currentSerializer;
-                        switch (basicPrimitiveArraySerializer.fieldType())
-                        {
-                            case FieldTypes.BYTE_8_ARRAY:
-                            case FieldTypes.BYTE_8_MATRIX:
-                                this.buffer.append(String.format("%02x", this.dataElementBytes[0]));
-                                break;
-
-                            case FieldTypes.SHORT_16_ARRAY:
-                            case FieldTypes.SHORT_16_MATRIX:
-                                this.buffer.append(String.format("%d", this.endianUtil.decodeShort(this.dataElementBytes, 0)));
-                                break;
-
-                            case FieldTypes.INT_32_ARRAY:
-                            case FieldTypes.INT_32_MATRIX:
-                                this.buffer.append(String.format("%d", this.endianUtil.decodeInt(this.dataElementBytes, 0)));
-                                break;
-
-                            case FieldTypes.LONG_64_ARRAY:
-                            case FieldTypes.LONG_64_MATRIX:
-                                this.buffer.append(String.format("%d", this.endianUtil.decodeLong(this.dataElementBytes, 0)));
-                                break;
-
-                            case FieldTypes.FLOAT_32_ARRAY:
-                            case FieldTypes.FLOAT_32_MATRIX:
-                                this.buffer.append(String.format("%f", this.endianUtil.decodeFloat(this.dataElementBytes, 0)));
-                                break;
-
-                            case FieldTypes.DOUBLE_64_ARRAY:
-                            case FieldTypes.DOUBLE_64_MATRIX:
-                                this.buffer.append(String.format("%f", this.endianUtil.decodeDouble(this.dataElementBytes, 0)));
-                                break;
-
-                            case FieldTypes.BOOLEAN_8_ARRAY:
-                            case FieldTypes.BOOLEAN_8_MATRIX:
-                                this.buffer.append(0 == this.dataElementBytes[0] ? "false" : "true");
-                                break;
-
-                            default:
-                                throw new RuntimeException(
-                                        "Unhandled type of basicPrimitiveArraySerializer: " + basicPrimitiveArraySerializer);
-                        }
-                    }
-                    this.nextDataElementByte = 0;
-                    this.currentColumn++;
-                    if (this.currentColumn == this.columnCount)
-                    {
-                        this.currentColumn = 0;
-                        this.currentRow++;
-                    }
-                }
-                // System.out.println(
-                // "Parsed 1 element; next element is for column " + this.currentColumn + ", row " + this.currentRow);
-                result = true;
-            }
+            result = processDataElement();
         }
-        if (this.positionInData == this.totalDataSize)
 
+        // are we done?
+        if (this.currentSerializer == null)
         {
-            this.currentSerializer = null;
-            this.positionInData = -1;
-            this.totalDataSize = -1;
-            this.rowCount = 0;
-            this.columnCount = 0;
             return true;
         }
         return result;
+    }
+
+    /**
+     * Process one byte that indicates the field type.
+     * @param theByte the byte to process
+     * @return whether line is full
+     */
+    private boolean processFieldTypeByte(final byte theByte)
+    {
+        this.currentFieldType = (byte) (theByte & 0x7F);
+        this.currentSerializer = TypedObject.PRIMITIVE_DATA_DECODERS.get(this.currentFieldType);
+        if (this.currentSerializer == null)
+        {
+            this.buffer.append(String.format("Error: Bad field type %02x - resynchronizing", this.currentFieldType));
+            return true;
+        }
+        this.buffer.append(this.currentSerializer.dataClassName() + (this.currentSerializer.getNumberOfDimensions() > 0
+                || this.currentSerializer.dataClassName().startsWith("Djunits") ? " " : ": "));
+
+        this.columnCount = 0;
+        this.rowCount = 0;
+        this.displayUnit = null;
+        this.columnUnits = null;
+
+        // check the type and prepare for what is expected; primitive types
+        if (this.currentSerializer instanceof FixedSizeObjectSerializer<?>)
+        {
+            var fsoe = (FixedSizeObjectSerializer<?>) this.currentSerializer;
+            int size = fsoe.size(null);
+            prepareForDataElement(size);
+            return false;
+        }
+
+        // array or matrix type: next variable to expect is one or more ints (rows/cols)
+        if (this.currentSerializer.getNumberOfDimensions() > 0)
+        {
+            int size = this.currentSerializer.getNumberOfDimensions() * 4;
+            prepareForDataElement(size);
+            return false;
+        }
+
+        // regular string type, next is an int for length
+        if (this.currentFieldType == 9 || this.currentFieldType == 10)
+        {
+            prepareForDataElement(4);
+            return false;
+        }
+
+        // djunits scalar type, next is quantity type and unit
+        if (this.currentFieldType == 25 || this.currentFieldType == 26)
+        {
+            prepareForDataElement(2);
+            return false;
+        }
+
+        this.buffer
+                .append(String.format("Error: No field type handler for type %02x - resynchronizing", this.currentFieldType));
+        return true;
+    }
+
+    /**
+     * Process a completed data element. If the current data type has more elements, prepare for the next data element.
+     * @return whether the line is full or not
+     */
+    private boolean processDataElement()
+    {
+        boolean result = false;
+
+        // primitive types
+        if (this.currentSerializer instanceof FixedSizeObjectSerializer<?>)
+        {
+            result = appendFixedSizeObject();
+            done();
+            return result;
+        }
+
+        // regular string type
+        if (this.currentFieldType == 9 || this.currentFieldType == 10)
+        {
+            appendString();
+            if (this.currentChar >= this.charCount)
+            {
+                done();
+            }
+            return false;
+        }
+
+        // processing of vector array type before array or matrix type
+        if (this.currentFieldType == 31 || this.currentFieldType == 32)
+        {
+            if (this.rowCount == 0)
+            {
+                processRowsCols();
+                prepareForDataElement(2 * this.columnCount); // unit type and display type for every column
+                return false;
+            }
+            if (this.columnUnits == null)
+            {
+                return fillVectorArrayColumnUnits();
+            }
+            return appendVectorArrayElement();
+        }
+
+        // array or matrix type
+        if (this.currentSerializer.getNumberOfDimensions() > 0)
+        {
+            if (this.rowCount == 0)
+            {
+                processRowsCols();
+                if (this.currentSerializer.hasUnit())
+                {
+                    prepareForDataElement(2); // unit type and display type
+                }
+                else if (this.currentSerializer instanceof BasicPrimitiveArrayOrMatrixSerializer<?>)
+                {
+                    var bpams = (BasicPrimitiveArrayOrMatrixSerializer<?>) this.currentSerializer;
+                    prepareForDataElement(bpams.getElementSize());
+                }
+                return false;
+            }
+            if (this.currentSerializer.hasUnit())
+            {
+                if (this.displayUnit == null)
+                {
+                    result = processUnit();
+                    prepareForDataElement(getSize());
+                    return result;
+                }
+                return appendDjunitsElement();
+            }
+            if (this.currentSerializer instanceof StringArraySerializer
+                    || this.currentSerializer instanceof StringMatrixSerializer)
+            {
+                processStringElement();
+                return false;
+            }
+            result = appendPrimitiveElement();
+            prepareForDataElement(this.dataElementBytes.length);
+            incColumnCount();
+            return result;
+        }
+
+        // djunits scalar type
+        if (this.currentFieldType == 25 || this.currentFieldType == 26)
+        {
+            if (this.displayUnit == null)
+            {
+                result = processUnit();
+                prepareForDataElement(getSize());
+                return result;
+            }
+            return appendDjunitsElement();
+        }
+
+        // any leftovers?
+        System.err.println("Did not process type " + this.currentFieldType);
+        return true;
+    }
+
+    /**
+     * Return the size of the encoding for a fixed size data element.
+     * @return the encoding size of an element
+     */
+    private int getSize()
+    {
+        try
+        {
+            return this.currentSerializer.size(null);
+        }
+        catch (SerializationException e)
+        {
+            System.err.println("Could not determine size of element for field type " + this.currentFieldType);
+            return 1;
+        }
+    }
+
+    /**
+     * Append a fixed size object (i.e., primitive type) to the buffer.
+     * @return whether the line is full or not
+     */
+    private boolean appendFixedSizeObject()
+    {
+        try
+        {
+            Object value = this.currentSerializer.deSerialize(this.dataElementBytes, new Pointer(), this.endianUtil);
+            this.buffer.append(value.toString());
+        }
+        catch (SerializationException e)
+        {
+            this.buffer.append("Error deserializing data");
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Append a character of a string to the buffer.
+     */
+    private void appendString()
+    {
+        int elementSize = this.currentSerializer.dataClassName().contains("8") ? 1 : 2;
+        if (this.charCount == 0)
+        {
+            this.charCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
+            this.currentChar = 0;
+            prepareForDataElement(elementSize);
+        }
+        else
+        {
+            if (elementSize == 1)
+            {
+                if (this.dataElementBytes[0] > 32 && this.dataElementBytes[0] < 127)
+                {
+                    this.buffer.append((char) this.dataElementBytes[0]); // safe to print
+                }
+                else
+                {
+                    this.buffer.append("."); // not safe to print
+                }
+            }
+            else
+            {
+                char character = this.endianUtil.decodeChar(this.dataElementBytes, 0);
+                if (Character.isAlphabetic(character))
+                {
+                    this.buffer.append(character); // safe to print
+                }
+                else
+                {
+                    this.buffer.append("."); // not safe to print
+                }
+            }
+            this.currentChar++;
+        }
+        this.nextDataElementByte = 0;
+    }
+
+    /**
+     * Process a string element in a string array or string matrix.
+     */
+    private void processStringElement()
+    {
+        appendString();
+        if (this.currentChar >= this.charCount)
+        {
+            incColumnCount();
+        }
+    }
+
+    /**
+     * Process the height and width of a matrix, or length of an array.
+     */
+    private void processRowsCols()
+    {
+        this.currentRow = 0;
+        this.currentColumn = 0;
+        if (this.dataElementBytes.length == 8)
+        {
+            this.rowCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
+            this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 4);
+            this.buffer.append(String.format("height %d, width %d: ", this.rowCount, this.columnCount));
+        }
+        else
+        {
+            this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
+            this.rowCount = 1;
+            this.buffer.append(String.format("length %d: ", this.columnCount));
+        }
+    }
+
+    /**
+     * Fill the unit type for the columns of this special type.
+     * @return whether line is full or not.
+     */
+    private boolean fillVectorArrayColumnUnits()
+    {
+        boolean result = false;
+        this.columnUnits = new Unit<?>[this.columnCount];
+        for (int i = 0; i < this.columnCount; i += 2)
+        {
+            byte unitTypeCode = this.dataElementBytes[i];
+            byte displayUnitCode = this.dataElementBytes[i + 1];
+            this.columnUnits[i] = DisplayType.getUnit(unitTypeCode, displayUnitCode);
+            if (this.columnUnits[i] == null && !result)
+            {
+                this.buffer.append(
+                        String.format("Error: Could not find unit type %d, display unit %d", unitTypeCode, displayUnitCode));
+                result = true;
+            }
+        }
+        prepareForDataElement(this.currentFieldType == 31 ? 4 : 8);
+        return result;
+    }
+
+    /**
+     * Append one (row) element in an array of (column) vectors.
+     * @return whether the line is full or not
+     */
+    private boolean appendVectorArrayElement()
+    {
+        boolean result = false;
+        try
+        {
+            if (this.currentFieldType == 31)
+            {
+                float f = this.endianUtil.decodeFloat(this.dataElementBytes, 0);
+                this.buffer.append(String.valueOf(f));
+            }
+            else
+            {
+                double d = this.endianUtil.decodeDouble(this.dataElementBytes, 0);
+                this.buffer.append(String.valueOf(d));
+            }
+        }
+        catch (Exception e)
+        {
+            this.buffer.append("Error: Illegal element in vector array -- could not parse");
+            result = true;
+        }
+        prepareForDataElement(this.dataElementBytes.length);
+        incColumnCount();
+        return result;
+    }
+
+    /**
+     * Process a unit (2 bytes).
+     * @return whether the line is full or not
+     */
+    private boolean processUnit()
+    {
+        byte unitTypeCode = this.dataElementBytes[0];
+        byte displayUnitCode = this.dataElementBytes[1];
+        this.displayUnit = DisplayType.getUnit(unitTypeCode, displayUnitCode);
+        if (this.displayUnit == null)
+        {
+            this.buffer
+                    .append(String.format("Error: Could not find unit ype %d, display unit %d", unitTypeCode, displayUnitCode));
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Process one element of a djunits vector or array.
+     * @return whether the line is full or not
+     * @param <U> the unit type
+     * @param <FS> the float scalar type
+     * @param <DS> the double scalar type
+     */
+    @SuppressWarnings("unchecked")
+    private <U extends Unit<U>, FS extends FloatScalar<U, FS>, DS extends DoubleScalar<U, DS>> boolean appendDjunitsElement()
+    {
+        boolean result = false;
+        try
+        {
+            if (this.dataElementBytes.length == 4)
+            {
+                float f = this.endianUtil.decodeFloat(this.dataElementBytes, 0);
+                FloatScalar<U, FS> afs = FloatScalar.instantiateAnonymous(f, this.displayUnit.getStandardUnit());
+                afs.setDisplayUnit((U) this.displayUnit);
+                this.buffer.append(String.valueOf(f));
+            }
+            else
+            {
+                double d = this.endianUtil.decodeDouble(this.dataElementBytes, 0);
+                DoubleScalar<U, DS> ads = DoubleScalar.instantiateAnonymous(d, this.displayUnit.getStandardUnit());
+                ads.setDisplayUnit((U) this.displayUnit);
+                this.buffer.append(String.valueOf(d));
+            }
+        }
+        catch (Exception e)
+        {
+            this.buffer.append("Error: Could not instantiate djunits element");
+            result = true;
+        }
+        prepareForDataElement(this.dataElementBytes.length);
+        incColumnCount();
+        return result;
+    }
+
+    /**
+     * Append a primitive element to the buffer.
+     * @return whether the line is full or not.
+     */
+    private boolean appendPrimitiveElement()
+    {
+        boolean result = false;
+        this.buffer.append(switch (this.currentSerializer.fieldType())
+        {
+            // @formatter:off
+            case FieldTypes.BYTE_8_ARRAY, FieldTypes.BYTE_8_MATRIX -> 
+                String.format("%02x ", this.dataElementBytes[0]);
+            case FieldTypes.SHORT_16_ARRAY, FieldTypes.SHORT_16_MATRIX -> 
+                String.format("%d ", this.endianUtil.decodeShort(this.dataElementBytes, 0));
+            case FieldTypes.INT_32_ARRAY, FieldTypes.INT_32_MATRIX -> 
+                String.format("%d ", this.endianUtil.decodeInt(this.dataElementBytes, 0));
+            case FieldTypes.LONG_64_ARRAY, FieldTypes.LONG_64_MATRIX -> 
+                String.format("%d ", this.endianUtil.decodeLong(this.dataElementBytes, 0));
+            case FieldTypes.FLOAT_32_ARRAY, FieldTypes.FLOAT_32_MATRIX -> 
+                String.format("%f ", this.endianUtil.decodeFloat(this.dataElementBytes, 0));
+            case FieldTypes.DOUBLE_64_ARRAY, FieldTypes.DOUBLE_64_MATRIX -> 
+                String.format("%f ", this.endianUtil.decodeDouble(this.dataElementBytes, 0));
+            case FieldTypes.BOOLEAN_8_ARRAY, FieldTypes.BOOLEAN_8_MATRIX -> 
+                this.dataElementBytes[0] == 0 ? "false " : "true ";
+            // @formatter:on
+            default -> "Error: Unhandled type of basicPrimitiveArraySerializer: " + this.currentSerializer.fieldType();
+        });
+        return result;
+    }
+
+    /**
+     * Increase the column count and possibly row count. Reset when complete.
+     */
+    private void incColumnCount()
+    {
+        this.currentColumn++;
+        if (this.currentColumn >= this.columnCount)
+        {
+            this.currentColumn = 0;
+            this.currentRow++;
+            if (this.currentRow >= this.rowCount)
+            {
+                done();
+            }
+        }
+    }
+
+    /**
+     * Reset the state when done with the current variable.
+     */
+    private void done()
+    {
+        this.currentSerializer = null;
+        this.rowCount = 0;
+        this.columnCount = 0;
+        this.charCount = 0;
     }
 
     /**
