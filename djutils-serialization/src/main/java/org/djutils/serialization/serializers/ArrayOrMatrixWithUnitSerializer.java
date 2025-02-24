@@ -54,6 +54,12 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
         return this.numberOfDimensions;
     }
 
+    /**
+     * Return the size of an element in the djunits vector or array.
+     * @return the size of one element in number of bytes
+     */
+    public abstract int getElementSize();
+    
     @Override
     public boolean hasUnit()
     {

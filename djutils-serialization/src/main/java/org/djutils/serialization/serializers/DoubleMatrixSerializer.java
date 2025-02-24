@@ -51,6 +51,12 @@ public class DoubleMatrixSerializer<U extends Unit<U>, S extends DoubleScalar<U,
     }
 
     @Override
+    public int getElementSize()
+    {
+        return 8;
+    }
+
+    @Override
     public void serialize(final M adm, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
             throws SerializationException
     {

@@ -51,6 +51,12 @@ public class FloatMatrixSerializer<U extends Unit<U>, S extends FloatScalar<U, S
     }
 
     @Override
+    public int getElementSize()
+    {
+        return 4;
+    }
+
+    @Override
     public void serialize(final M afm, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
             throws SerializationException
     {

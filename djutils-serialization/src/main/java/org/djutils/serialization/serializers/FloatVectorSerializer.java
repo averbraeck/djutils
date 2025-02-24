@@ -48,6 +48,12 @@ public class FloatVectorSerializer<U extends Unit<U>, S extends FloatScalar<U, S
     }
 
     @Override
+    public int getElementSize()
+    {
+        return 4;
+    }
+
+    @Override
     public void serialize(final V afv, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
     {
         endianUtil.encodeInt(afv.size(), buffer, pointer.getAndIncrement(4));
