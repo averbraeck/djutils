@@ -1,6 +1,7 @@
 package org.djutils.serialization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -131,7 +132,14 @@ public class UnitSerializationTest extends AbstractSerializationTest
         {
             byte[] serialized = TypedMessage.encodeUTF16(endianUtil, objects);
             HexDumper.hexDumper(serialized);
-            SerialDataDumper.serialDataDumper(endianUtil, serialized);
+            String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+            assertFalse(sdd.contains("Error"));
+            assertTrue(sdd.contains("Djunits_DoubleScalar"));
+            assertTrue(sdd.contains("Djunits_FloatScalar"));
+            assertTrue(sdd.contains("Djunits_DoubleVector"));
+            assertTrue(sdd.contains("Djunits_FloatVector"));
+            assertTrue(sdd.contains("Djunits_DoubleMatrix"));
+            assertTrue(sdd.contains("Djunits_FloatMatrix"));
             for (boolean primitive : new boolean[] {false, true})
             {
                 Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
