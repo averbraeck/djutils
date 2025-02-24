@@ -1,6 +1,8 @@
 package org.djutils.serialization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.UnsupportedEncodingException;
 
@@ -71,7 +73,9 @@ public class StringSerializationTest extends AbstractSerializationTest
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
                 HexDumper.hexDumper(serialized);
-                SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                assertFalse(sdd.contains("Error"));
+                assertTrue(sdd.contains(encodeUTF8 ? "String_8" : "String_16"));
                 Object[] decodedObjects = TypedMessage.decodeToObjectDataTypes(serialized);
                 assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                 for (int i = 0; i < objects.length; i++)
@@ -141,7 +145,9 @@ public class StringSerializationTest extends AbstractSerializationTest
                 byte[] serialized =
                         encodeUTF8 ? TypedObject.encodeUTF8(endianUtil, sa) : TypedObject.encodeUTF16(endianUtil, sa);
                 HexDumper.hexDumper(serialized);
-                // SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                assertFalse(sdd.contains("Error"));
+                assertTrue(sdd.contains(encodeUTF8 ? "String_8_array" : "String_16_array"));
                 String[] decodedObjects = (String[]) TypedObject.decodeToObjectDataTypes(serialized);
                 assertEquals(sa.length, decodedObjects.length, "Size of decoded matches");
                 for (int i = 0; i < sa.length; i++)
@@ -175,7 +181,9 @@ public class StringSerializationTest extends AbstractSerializationTest
                 byte[] serialized =
                         encodeUTF8 ? TypedObject.encodeUTF8(endianUtil, sm) : TypedObject.encodeUTF16(endianUtil, sm);
                 HexDumper.hexDumper(serialized);
-                // SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                assertFalse(sdd.contains("Error"));
+                assertTrue(sdd.contains(encodeUTF8 ? "String_8_matrix" : "String_16_matrix"));
                 String[][] decodedObjects = (String[][]) TypedObject.decodeToObjectDataTypes(serialized);
                 assertEquals(sm.length, decodedObjects.length, "Row size of decoded matches");
                 for (int i = 0; i < sm.length; i++)
