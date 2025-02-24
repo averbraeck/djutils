@@ -6,6 +6,7 @@ import org.djunits.unit.Unit;
 import org.djunits.value.vdouble.scalar.base.DoubleScalar;
 import org.djunits.value.vfloat.scalar.base.FloatScalar;
 import org.djutils.decoderdumper.Decoder;
+import org.djutils.serialization.serializers.ArrayOrMatrixWithUnitSerializer;
 import org.djutils.serialization.serializers.BasicPrimitiveArrayOrMatrixSerializer;
 import org.djutils.serialization.serializers.FixedSizeObjectSerializer;
 import org.djutils.serialization.serializers.Pointer;
@@ -254,10 +255,13 @@ public class SerialDataDecoder implements Decoder
                 if (this.displayUnit == null)
                 {
                     result = processUnit();
-                    prepareForDataElement(getSize());
+                    prepareForDataElement(((ArrayOrMatrixWithUnitSerializer<?, ?>) this.currentSerializer).getElementSize());
                     return result;
                 }
-                return appendDjunitsElement();
+                result = appendDjunitsElement();
+                prepareForDataElement(this.dataElementBytes.length);
+                incColumnCount();
+                return result;
             }
             if (this.currentSerializer instanceof StringArraySerializer
                     || this.currentSerializer instanceof StringMatrixSerializer)
@@ -277,10 +281,12 @@ public class SerialDataDecoder implements Decoder
             if (this.displayUnit == null)
             {
                 result = processUnit();
-                prepareForDataElement(getSize());
+                prepareForDataElement(getSize() - 2); // subtract unit bytes
                 return result;
             }
-            return appendDjunitsElement();
+            result = appendDjunitsElement();
+            done();
+            return result;
         }
 
         // any leftovers?
@@ -489,14 +495,14 @@ public class SerialDataDecoder implements Decoder
                 float f = this.endianUtil.decodeFloat(this.dataElementBytes, 0);
                 FloatScalar<U, FS> afs = FloatScalar.instantiateAnonymous(f, this.displayUnit.getStandardUnit());
                 afs.setDisplayUnit((U) this.displayUnit);
-                this.buffer.append(String.valueOf(f));
+                this.buffer.append(afs.toDisplayString().replace(" ", "") + " ");
             }
             else
             {
                 double d = this.endianUtil.decodeDouble(this.dataElementBytes, 0);
                 DoubleScalar<U, DS> ads = DoubleScalar.instantiateAnonymous(d, this.displayUnit.getStandardUnit());
                 ads.setDisplayUnit((U) this.displayUnit);
-                this.buffer.append(String.valueOf(d));
+                this.buffer.append(ads.toDisplayString().replace(" ", "") + " ");
             }
         }
         catch (Exception e)
@@ -504,8 +510,6 @@ public class SerialDataDecoder implements Decoder
             this.buffer.append("Error: Could not instantiate djunits element");
             result = true;
         }
-        prepareForDataElement(this.dataElementBytes.length);
-        incColumnCount();
         return result;
     }
 
