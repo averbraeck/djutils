@@ -228,9 +228,9 @@ public class SerialDataDecoder implements Decoder
             }
             if (this.columnUnits == null)
             {
-                return fillVectorArrayColumnUnits();
+                return fillDjunitsVectorArrayColumnUnits();
             }
-            return appendVectorArrayElement();
+            return appendDjunitsVectorArrayElement();
         }
 
         // array or matrix type
@@ -409,14 +409,14 @@ public class SerialDataDecoder implements Decoder
      * Fill the unit type for the columns of this special type.
      * @return whether line is full or not.
      */
-    private boolean fillVectorArrayColumnUnits()
+    private boolean fillDjunitsVectorArrayColumnUnits()
     {
         boolean result = false;
         this.columnUnits = new Unit<?>[this.columnCount];
-        for (int i = 0; i < this.columnCount; i += 2)
+        for (int i = 0; i < this.columnCount; i++)
         {
-            byte unitTypeCode = this.dataElementBytes[i];
-            byte displayUnitCode = this.dataElementBytes[i + 1];
+            byte unitTypeCode = this.dataElementBytes[2 * i];
+            byte displayUnitCode = this.dataElementBytes[2 * i + 1];
             this.columnUnits[i] = DisplayType.getUnit(unitTypeCode, displayUnitCode);
             if (this.columnUnits[i] == null && !result)
             {
@@ -432,21 +432,31 @@ public class SerialDataDecoder implements Decoder
     /**
      * Append one (row) element in an array of (column) vectors.
      * @return whether the line is full or not
+     * @param <U> the unit type
+     * @param <FS> the float scalar type
+     * @param <DS> the double scalar type
      */
-    private boolean appendVectorArrayElement()
+    @SuppressWarnings("unchecked")
+    private <U extends Unit<U>, FS extends FloatScalar<U, FS>,
+            DS extends DoubleScalar<U, DS>> boolean appendDjunitsVectorArrayElement()
     {
         boolean result = false;
         try
         {
+            U unit = (U) this.columnUnits[this.currentColumn];
             if (this.currentFieldType == 31)
             {
                 float f = this.endianUtil.decodeFloat(this.dataElementBytes, 0);
-                this.buffer.append(String.valueOf(f));
+                FloatScalar<U, FS> afs = FloatScalar.instantiateAnonymous(f, unit.getStandardUnit());
+                afs.setDisplayUnit(unit);
+                this.buffer.append(afs.toDisplayString().replace(" ", "") + " ");
             }
             else
             {
                 double d = this.endianUtil.decodeDouble(this.dataElementBytes, 0);
-                this.buffer.append(String.valueOf(d));
+                DoubleScalar<U, DS> ads = DoubleScalar.instantiateAnonymous(d, unit.getStandardUnit());
+                ads.setDisplayUnit(unit);
+                this.buffer.append(ads.toDisplayString().replace(" ", "") + " ");
             }
         }
         catch (Exception e)
