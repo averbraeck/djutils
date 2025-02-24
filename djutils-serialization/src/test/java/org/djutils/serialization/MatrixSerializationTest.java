@@ -1,6 +1,7 @@
 package org.djutils.serialization;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -51,7 +52,17 @@ public class MatrixSerializationTest extends AbstractSerializationTest
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
                 HexDumper.hexDumper(serialized);
-                SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                assertFalse(sdd.contains("Error"));
+                assertTrue(sdd.contains("int_32_matrix"));
+                assertTrue(sdd.contains("short_16_matrix"));
+                assertTrue(sdd.contains("long_64_matrix"));
+                assertTrue(sdd.contains("byte_8_matrix"));
+                assertTrue(sdd.contains("float_32_matrix"));
+                assertTrue(sdd.contains("double_64_matrix"));
+                assertTrue(sdd.contains("boolean_8_matrix"));
+                assertTrue(sdd.contains("width"));
+                assertTrue(sdd.contains("height"));
                 for (boolean primitive : new boolean[] {false, true})
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
