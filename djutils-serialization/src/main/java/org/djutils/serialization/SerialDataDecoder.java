@@ -248,6 +248,11 @@ public class SerialDataDecoder implements Decoder
                     var bpams = (BasicPrimitiveArrayOrMatrixSerializer<?>) this.currentSerializer;
                     prepareForDataElement(bpams.getElementSize());
                 }
+                else if (this.currentSerializer instanceof StringArraySerializer
+                        || this.currentSerializer instanceof StringMatrixSerializer)
+                {
+                    prepareForDataElement(4);
+                }
                 return false;
             }
             if (this.currentSerializer.hasUnit())
@@ -381,6 +386,8 @@ public class SerialDataDecoder implements Decoder
         if (this.currentChar >= this.charCount)
         {
             incColumnCount();
+            this.charCount = 0;
+            prepareForDataElement(4);
         }
     }
 
