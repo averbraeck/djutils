@@ -29,7 +29,7 @@ public class FloatVectorArraySerializer<U extends Unit<U>, S extends FloatScalar
     /** */
     public FloatVectorArraySerializer()
     {
-        super(FieldTypes.FLOAT_32_UNIT_COLUMN_MATRIX, "Djunits_vector_array");
+        super(FieldTypes.FLOAT_32_UNIT_COLUMN_MATRIX, "Djunits_float_vector_array");
     }
 
     @Override

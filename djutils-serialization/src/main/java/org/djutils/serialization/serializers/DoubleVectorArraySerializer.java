@@ -29,7 +29,7 @@ public class DoubleVectorArraySerializer<U extends Unit<U>, S extends DoubleScal
     /** */
     public DoubleVectorArraySerializer()
     {
-        super(FieldTypes.DOUBLE_64_UNIT_COLUMN_MATRIX, "Djunits_vector_array");
+        super(FieldTypes.DOUBLE_64_UNIT_COLUMN_MATRIX, "Djunits_double_vector_array");
     }
 
     @Override
