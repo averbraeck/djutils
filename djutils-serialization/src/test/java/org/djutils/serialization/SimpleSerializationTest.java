@@ -2,7 +2,9 @@ package org.djutils.serialization;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.djutils.decoderdumper.HexDumper;
 import org.djutils.exceptions.Try;
@@ -56,7 +58,17 @@ public class SimpleSerializationTest
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
                 HexDumper.hexDumper(serialized);
-                SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                assertFalse(sdd.contains("Error"));
+                assertTrue(sdd.contains("Integer_32"));
+                assertTrue(sdd.contains("Short_16"));
+                assertTrue(sdd.contains("Long_64"));
+                assertTrue(sdd.contains("Byte_8"));
+                assertTrue(sdd.contains("Float_32"));
+                assertTrue(sdd.contains("Double_64"));
+                assertTrue(sdd.contains("Boolean_8"));
+                assertTrue(sdd.contains(encodeUTF8 ? "Char_8" : "Char_16"));
+                assertTrue(sdd.contains(encodeUTF8 ? "String_8" : "String_16"));
                 for (boolean primitive : new boolean[] {false, true})
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
