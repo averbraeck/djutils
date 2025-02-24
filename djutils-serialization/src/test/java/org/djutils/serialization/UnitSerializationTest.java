@@ -303,7 +303,17 @@ public class UnitSerializationTest extends AbstractSerializationTest
                 assertEquals(endianUtil.isBigEndian() ? FieldTypes.DOUBLE_64_UNIT_COLUMN_MATRIX
                         : FieldTypes.DOUBLE_64_UNIT_COLUMN_MATRIX_LE, serialized[0]);
                 HexDumper.hexDumper(serialized);
-                SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                assertFalse(sdd.contains("Error"));
+                assertTrue(sdd.contains("Djunits_double_vector_array"));
+                assertTrue(sdd.contains("height"));
+                assertTrue(sdd.contains("width"));
+                assertTrue(sdd.contains("0.1in"));
+                assertTrue(sdd.contains("10.1min"));
+                assertTrue(sdd.contains("0.2in"));
+                assertTrue(sdd.contains("20.2min"));
+                assertTrue(sdd.contains("0.3in"));
+                assertTrue(sdd.contains("30.3min"));
                 for (boolean primitive : new boolean[] {false, true})
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
@@ -353,7 +363,16 @@ public class UnitSerializationTest extends AbstractSerializationTest
                 assertEquals(endianUtil.isBigEndian() ? FieldTypes.FLOAT_32_UNIT_COLUMN_MATRIX
                         : FieldTypes.FLOAT_32_UNIT_COLUMN_MATRIX_LE, serialized[0]);
                 HexDumper.hexDumper(serialized);
-                SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                assertFalse(sdd.contains("Error"));
+                assertTrue(sdd.contains("Djunits_float_vector_array"));
+                assertTrue(sdd.contains("height"));
+                assertTrue(sdd.contains("width"));
+                assertTrue(sdd.contains("0.1in"));
+                assertTrue(sdd.contains("10."));
+                assertTrue(sdd.contains("min"));
+                assertTrue(sdd.contains("0.2in"));
+                assertTrue(sdd.contains("0.3in"));
                 for (boolean primitive : new boolean[] {false, true})
                 {
                     Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
