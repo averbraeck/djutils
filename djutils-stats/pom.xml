@@ -23,6 +23,13 @@
       <groupId>com.tdunning</groupId>
       <artifactId>t-digest</artifactId>
     </dependency>
+    
+    <!-- temporary fix for CVE's in dependent library of t-digest -->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+
   </dependencies>
  
 </project>
