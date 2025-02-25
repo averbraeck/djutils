@@ -146,6 +146,7 @@ public class CategorialMultiSliderTest
         panel.setPreferredSize(new Dimension(400, 400));
         CategorialMultiSlider<String> ms =
                 new CategorialMultiSlider<>(orientation == SwingConstants.HORIZONTAL, this.listAJ, "C", "E", "I");
+        setLookAndFeel(ms);
         ms.setInverted(inverted);
         panel.add(ms, orientation == SwingConstants.VERTICAL ? BorderLayout.WEST : BorderLayout.NORTH);
         frame.add(panel);
@@ -272,6 +273,7 @@ public class CategorialMultiSliderTest
         panel.setLayout(new BorderLayout());
         panel.setPreferredSize(new Dimension(400, 400));
         CategorialMultiSlider<String> ms = new CategorialMultiSlider<>(this.listAJ, "C", "E", "I");
+        setLookAndFeel(ms);
         ms.setDrawThumbLabels(false, 0);
         panel.add(ms, BorderLayout.NORTH);
         frame.add(panel);
@@ -322,6 +324,7 @@ public class CategorialMultiSliderTest
         panel.setLayout(new BorderLayout());
         panel.setPreferredSize(new Dimension(400, 400));
         CategorialMultiSlider<String> ms = new CategorialMultiSlider<>(this.listAJ, "C", "E", "I");
+        setLookAndFeel(ms);
         ms.setDrawThumbLabels(false, 0);
         panel.add(ms, BorderLayout.NORTH);
         frame.add(panel);
@@ -517,6 +520,7 @@ public class CategorialMultiSliderTest
     public void testListeners()
     {
         var ms = new CategorialMultiSlider<String>(CategorialMultiSliderTest.this.listAJ, "C", "E");
+        setLookAndFeel(ms);
         this.v = new String[] {"C", "E"};
         int nrListeners = ms.getChangeListeners().length;
         var cl = new ChangeListener()
@@ -537,5 +541,20 @@ public class CategorialMultiSliderTest
         ms.removeChangeListener(cl);
         assertEquals(nrListeners, ms.getChangeListeners().length);
     }
-
+    
+    /**
+     * Ensure Look and Feel exists in the headless case for the unit tests.
+     * @param ms the multislider
+     */
+    private void setLookAndFeel(final CategorialMultiSlider<?> ms)
+    {
+        try
+        {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        }
+        catch (Exception e)
+        {
+            System.err.println(e.getMessage());
+        }
+    }
 }

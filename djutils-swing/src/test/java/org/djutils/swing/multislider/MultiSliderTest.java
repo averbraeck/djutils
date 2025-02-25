@@ -203,6 +203,7 @@ public class MultiSliderTest
         panel.setLayout(new BorderLayout());
         panel.setPreferredSize(new Dimension(400, 400));
         MultiSlider ms = new MultiSlider(0, 100, orientation == SwingConstants.HORIZONTAL, new int[] {25, 50, 75});
+        setLookAndFeel(ms);
         ms.setInverted(inverted);
         panel.add(ms, orientation == SwingConstants.VERTICAL ? BorderLayout.WEST : BorderLayout.NORTH);
         frame.add(panel);
@@ -340,6 +341,7 @@ public class MultiSliderTest
         panel.setLayout(new BorderLayout());
         panel.setPreferredSize(new Dimension(400, 400));
         MultiSlider ms = new MultiSlider(0, 100, new int[] {25, 50, 75});
+        setLookAndFeel(ms);
         ms.setDrawThumbLabels(false, 0);
         panel.add(ms, BorderLayout.NORTH);
         frame.add(panel);
@@ -427,6 +429,7 @@ public class MultiSliderTest
         panel.setLayout(new BorderLayout());
         panel.setPreferredSize(new Dimension(400, 400));
         MultiSlider ms = new MultiSlider(0, 100, new int[] {25, 50, 75});
+        setLookAndFeel(ms);
         ms.setDrawThumbLabels(false, 0);
         panel.add(ms, BorderLayout.NORTH);
         frame.add(panel);
@@ -933,4 +936,19 @@ public class MultiSliderTest
         assertEquals(10, ms.getValue(2));
     }
 
+    /**
+     * Ensure Look and Feel exists in the headless case for the unit tests.
+     * @param ms the multislider
+     */
+    private void setLookAndFeel(final MultiSlider ms)
+    {
+        try
+        {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        }
+        catch (Exception e)
+        {
+            System.err.println(e.getMessage());
+        }
+    }
 }

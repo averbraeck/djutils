@@ -202,6 +202,7 @@ public class LinearMultiSliderTest
         panel.setLayout(new BorderLayout());
         panel.setPreferredSize(new Dimension(400, 400));
         LinearMultiSlider<Double> ms = new DoubleSlider50(orientation == SwingConstants.HORIZONTAL, 10.0, 25.0, 30.0);
+        setLookAndFeel(ms);
         ms.setInverted(inverted);
         panel.add(ms, orientation == SwingConstants.VERTICAL ? BorderLayout.WEST : BorderLayout.NORTH);
         frame.add(panel);
@@ -328,6 +329,7 @@ public class LinearMultiSliderTest
         panel.setLayout(new BorderLayout());
         panel.setPreferredSize(new Dimension(400, 400));
         LinearMultiSlider<Double> ms = new DoubleSlider50(true, 10.0, 25.0, 30.0);
+        setLookAndFeel(ms);
         ms.setDrawThumbLabels(false, 0);
         panel.add(ms, BorderLayout.NORTH);
         frame.add(panel);
@@ -378,6 +380,7 @@ public class LinearMultiSliderTest
         panel.setLayout(new BorderLayout());
         panel.setPreferredSize(new Dimension(400, 400));
         LinearMultiSlider<Double> ms = new DoubleSlider50(true, 10.0, 25.0, 30.0);
+        setLookAndFeel(ms);
         ms.setDrawThumbLabels(false, 0);
         panel.add(ms, BorderLayout.NORTH);
         frame.add(panel);
@@ -586,4 +589,19 @@ public class LinearMultiSliderTest
         assertEquals(nrListeners, ms.getChangeListeners().length);
     }
 
+    /**
+     * Ensure Look and Feel exists in the headless case for the unit tests.
+     * @param ms the multislider
+     */
+    private void setLookAndFeel(final LinearMultiSlider<?> ms)
+    {
+        try
+        {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        }
+        catch (Exception e)
+        {
+            System.err.println(e.getMessage());
+        }
+    }
 }
