@@ -28,6 +28,9 @@ import javax.swing.plaf.basic.BasicSliderUI;
 
 import org.djutils.exceptions.Try;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.github.caciocavallosilano.cacio.ctc.junit.CacioExtension;
 
 /**
  * CategorialMultiSliderTest tests the functions of the CategorialMultiSlider.
@@ -39,6 +42,7 @@ import org.junit.jupiter.api.Test;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
+@ExtendWith(CacioExtension.class)
 public class CategorialMultiSliderTest
 {
     /** categorial list. */
@@ -439,7 +443,7 @@ public class CategorialMultiSliderTest
                 ms.setMaximum("A");
             }
         });
-        
+
         Try.testFail(new Try.Execution()
         {
             @Override
@@ -541,7 +545,7 @@ public class CategorialMultiSliderTest
         ms.removeChangeListener(cl);
         assertEquals(nrListeners, ms.getChangeListeners().length);
     }
-    
+
     /**
      * Ensure Look and Feel exists in the headless case for the unit tests.
      * @param ms the multislider

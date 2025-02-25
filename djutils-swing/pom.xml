@@ -27,6 +27,62 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.github.caciocavallosilano</groupId>
+      <artifactId>cacio-tta</artifactId>
+      <version>1.18</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven.surefire.version}</version>
+        <configuration>
+          <systemPropertyVariables>
+            <java.awt.headless>false</java.awt.headless>
+            <awt.toolkit>com.github.caciocavallosilano.cacio.ctc.CTCToolkit</awt.toolkit>
+            <java.awt.graphicsenv>com.github.caciocavallosilano.cacio.ctc.CTCGraphicsEnvironment</java.awt.graphicsenv>
+          </systemPropertyVariables>
+          <!-- Sets the VM argument line used when unit tests are run. -->
+          <argLine>
+            ${surefireArgLine}
+             --add-exports=java.desktop/java.awt=ALL-UNNAMED
+             --add-exports=java.desktop/java.awt.peer=ALL-UNNAMED
+             --add-exports=java.desktop/sun.awt.image=ALL-UNNAMED
+             --add-exports=java.desktop/sun.java2d=ALL-UNNAMED
+             --add-exports=java.desktop/java.awt.dnd.peer=ALL-UNNAMED
+             --add-exports=java.desktop/sun.awt=ALL-UNNAMED
+             --add-exports=java.desktop/sun.awt.event=ALL-UNNAMED
+             --add-exports=java.desktop/sun.awt.datatransfer=ALL-UNNAMED
+             --add-exports=java.base/sun.security.action=ALL-UNNAMED
+             --add-opens=java.base/java.util=ALL-UNNAMED
+             --add-opens=java.desktop/java.awt=ALL-UNNAMED
+             --add-opens=java.desktop/sun.java2d=ALL-UNNAMED
+             --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+          </argLine>
+          <!-- Skips unit tests if the value of skip.unit.tests property is true -->
+          <skipTests>${skip.unit.tests}</skipTests>
+          <!-- Excludes integration tests when unit tests are run. -->
+          <excludes>
+            <exclude>**/IT*.java</exclude>
+          </excludes>
+          <!-- Make sure every unit test is run as a separate process to avoid static leaks between tests -->
+          <forkCount>1</forkCount>
+          <reuseForks>false</reuseForks>
+          <!-- Excludes integration tests when unit tests are run. -->
+          <excludes>
+            <exclude>**/IT*.java</exclude>
+            <exclude>/org/djutils-test-resources/test/Test.class</exclude>
+            <exclude>/org/djutils-test-resources/test folder/Test.class</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

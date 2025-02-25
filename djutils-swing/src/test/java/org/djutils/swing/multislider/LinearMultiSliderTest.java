@@ -26,6 +26,9 @@ import javax.swing.plaf.basic.BasicSliderUI;
 
 import org.djutils.exceptions.Try;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.github.caciocavallosilano.cacio.ctc.junit.CacioExtension;
 
 /**
  * LinearMultiSliderTest tests the functions of the LinearMultiSlider.
@@ -37,6 +40,7 @@ import org.junit.jupiter.api.Test;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
+@ExtendWith(CacioExtension.class)
 public class LinearMultiSliderTest
 {
 
