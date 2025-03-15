@@ -17,19 +17,13 @@ import org.djutils.exceptions.Throw;
  * @param <D> The Directed type (2d or 3d)
  * @param <P> The Point type (2d or 3d)
  */
-public interface Ray<R extends Ray<R, D, P>, D extends Directed<D>, P extends Point<P>> extends Project<P>
+public interface Ray<R extends Ray<R, D, P>, D extends Directed, P extends Point<P>> extends Directed, Project<P>
 {
     /**
      * Get the finite end point of this Ray.
      * @return the finite end point of this Ray
      */
     D getEndPoint();
-
-    /**
-     * Retrieve the angle from the positive X axis direction in radians.
-     * @return the angle from the positive X axis direction in radians
-     */
-    double getDirZ();
 
     /**
      * Flip the direction of the Ray (creates and returns a new Ray instance).

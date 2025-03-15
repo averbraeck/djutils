@@ -24,7 +24,7 @@ import org.djutils.exceptions.Throw;
  * @param <R> The matching Ray type (2d or 3d)
  * @param <LS> The matching LineSegment type (2d or 3d)
  */
-public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>, R extends Ray<R, D, P>, D extends Directed<D>,
+public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>, R extends Ray<R, D, P>, D extends Directed,
         LS extends LineSegment<P, D>> extends Drawable<P>, Project<P>
 {
     /** Use this value for <code>epsilon</code> to disable all filtering. */

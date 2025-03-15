@@ -16,9 +16,8 @@ package org.djutils.draw;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
- * @param <D> the Directed type
  */
-public interface Directed3d<D extends Directed<D>> extends Directed<D>
+public interface Directed3d extends Directed
 {
     /**
      * Retrieve the angle from the positive z axis to the direction. Normally these are values between [0:&pi;]. Angles &le;
@@ -26,13 +25,6 @@ public interface Directed3d<D extends Directed<D>> extends Directed<D>
      * @return dirY
      */
     double getDirY();
-
-    /**
-     * Retrieve the angle from the positive x-axis to the projection of the direction in the x-y-plane. Positive values rotate
-     * towards the positive y-axis (and beyond).
-     * @return dirZ
-     */
-    double getDirZ();
 
     /**
      * Retrieve the Direction3d.

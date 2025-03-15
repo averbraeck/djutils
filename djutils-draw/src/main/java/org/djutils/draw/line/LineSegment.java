@@ -20,7 +20,7 @@ import org.djutils.exceptions.Throw;
  * @param <P> The point type (2d or 3d)
  * @param <D> The directed type (2d or 3d)
  */
-public interface LineSegment<P extends Point<P>, D extends Directed<D>> extends Drawable<P>, Serializable, Project<P>
+public interface LineSegment<P extends Point<P>, D extends Directed> extends Drawable<P>, Serializable, Project<P>
 {
     /**
      * Get the start point of this LineSegment.

@@ -23,7 +23,7 @@ import org.djutils.math.AngleUtil;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<OrientedPoint3d>
+public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
 {
     /** */
     private static final long serialVersionUID = 20200828L;
@@ -202,9 +202,9 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
      * than 1. In that case the interpolation turns into an extrapolation. DirX, dirY and dirZ are interpolated/extrapolated
      * using the interpolateShortest method.
      * @param otherPoint the other point
-     * @param fraction the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
-     *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
-     *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
+     * @param fraction the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is between 0
+     *            and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code>
+     *            Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
      * @return a new <code>OrientedPoint3d</code> at the requested <code>fraction</code>
      * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      * @throws ArithmeticException when <code>fraction</code> is <code>NaN</code>
@@ -232,8 +232,7 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
      * Return a new OrientedPoint3d with an in-place rotation around the z-axis by the provided rotateZ. The resulting rotation
      * will be normalized between -&pi; and &pi;.
      * @param rotateZ the rotation around the z-axis
-     * @return a new point with the same coordinates, <code>dirX</code> and <code>dirY</code> and modified
-     *         <code>dirZ</code>
+     * @return a new point with the same coordinates, <code>dirX</code> and <code>dirY</code> and modified <code>dirZ</code>
      * @throws ArithmeticException when <code>rotateZ</code> is <code>NaN</code>
      */
     @Override
@@ -300,7 +299,20 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d<Orien
         return String.format(Locale.US, format, this.x, this.y, this.z, this.dirX, this.dirY, this.dirZ);
     }
 
-    @Override
+    /**
+     * Compare this Directed with another Directed with specified tolerances in the coordinates and the angles.
+     * @param other the Directed to compare to
+     * @param epsilonCoordinate the upper bound of difference for one of the coordinates; use Double.POSITIVE_INFINITY if you do
+     *            not want to check the coordinates
+     * @param epsilonRotation the upper bound of difference for the rotation(s); use Double.POSITIVE_INFINITY if you do not want
+     *            to check the angles
+     * @return boolean;<code>true</code> if <code>x</code>, <code>y</code>, and possibly <code>z</code> are less than
+     *         <code>epsilonCoordinate</code> apart, and <code>rotZ</code> and possibly <code>rotX</code>, and possibly
+     *         <code>rotY</code>are less than <code>epsilonDirection</code> apart, otherwise <code>false</code>
+     * @throws NullPointerException when <code>other</code> is <code>null</code>
+     * @throws ArithmeticException when <code>epsilonCoordinate</code> or <code>epsilonDirection</code> is <code>NaN</code>
+     * @throws IllegalArgumentException <code>epsilonCoordinate</code> or <code>epsilonDirection</code> is <code>negative</code>
+     */
     public boolean epsilonEquals(final OrientedPoint3d other, final double epsilonCoordinate, final double epsilonRotation)
             throws NullPointerException, IllegalArgumentException
     {

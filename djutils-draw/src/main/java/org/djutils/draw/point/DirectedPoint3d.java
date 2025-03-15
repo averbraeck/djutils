@@ -24,7 +24,7 @@ import org.djutils.math.AngleUtil;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint3d>
+public class DirectedPoint3d extends Point3d implements Directed3d
 {
     /** */
     private static final long serialVersionUID = 20200828L;
@@ -62,9 +62,9 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * @param x the x coordinate
      * @param y the y coordinate
      * @param z the z coordinate
-     * @param directionVector the two direction angles (dirY and dirZ) in a double array containing dirY and dirZ in
-     *            that order. DirY is the rotation from the positive z-axis to the direction. DirZ is the angle from the
-     *            positive x-axis to the projection of the direction in the x-y-plane.
+     * @param directionVector the two direction angles (dirY and dirZ) in a double array containing dirY and dirZ in that order.
+     *            DirY is the rotation from the positive z-axis to the direction. DirZ is the angle from the positive x-axis to
+     *            the projection of the direction in the x-y-plane.
      * @throws NullPointerException when <code>directionVector</code> is <code>null</code>
      * @throws ArithmeticException when <code>x</code>, <code>y</code>, <code>z</code> is <code>NaN</code>, or
      *             <code>directionVector</code> contains a <code>NaN</code> value
@@ -308,9 +308,9 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
      * than 1. In that case the interpolation turns into an extrapolation. DirY and dirZ are interpolated/extrapolated using the
      * interpolateShortest method.
      * @param otherPoint the other point
-     * @param fraction the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
-     *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
-     *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
+     * @param fraction the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is between 0
+     *            and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code>
+     *            Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
      * @return a new <code>DirectedPoint3d</code> at the requested <code>fraction</code>
      * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      * @throws ArithmeticException when <code>fraction</code> is <code>NaN</code>
@@ -394,15 +394,28 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
         return String.format(Locale.US, format, this.x, this.y, this.z, this.dirY, this.dirZ);
     }
 
-    @Override
-    public boolean epsilonEquals(final DirectedPoint3d other, final double epsilonCoordinate, final double epsilonRotation)
+    /**
+     * Compare this Directed with another Directed with specified tolerances in the coordinates and the angles.
+     * @param other the Directed to compare to
+     * @param epsilonCoordinate the upper bound of difference for one of the coordinates; use Double.POSITIVE_INFINITY if you do
+     *            not want to check the coordinates
+     * @param epsilonDirection the upper bound of difference for the direction(s); use Double.POSITIVE_INFINITY if you do not
+     *            want to check the angles
+     * @return boolean;<code>true</code> if <code>x</code>, <code>y</code>, and possibly <code>z</code> are less than
+     *         <code>epsilonCoordinate</code> apart, and <code>rotZ</code> and possibly <code>rotX</code>, and possibly
+     *         <code>rotY</code>are less than <code>epsilonDirection</code> apart, otherwise <code>false</code>
+     * @throws NullPointerException when <code>other</code> is <code>null</code>
+     * @throws ArithmeticException when <code>epsilonCoordinate</code> or <code>epsilonDirection</code> is <code>NaN</code>
+     * @throws IllegalArgumentException <code>epsilonCoordinate</code> or <code>epsilonDirection</code> is <code>negative</code>
+     */
+    public boolean epsilonEquals(final DirectedPoint3d other, final double epsilonCoordinate, final double epsilonDirection)
             throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(other, "other");
-        Throw.when(epsilonCoordinate < 0 || epsilonRotation < 0, IllegalArgumentException.class,
-                "epsilonCoordinate and epsilonRotation may not be negative");
+        Throw.when(epsilonCoordinate < 0 || epsilonDirection < 0, IllegalArgumentException.class,
+                "epsilonCoordinate and epsilonDirection may not be negative");
         Throw.whenNaN(epsilonCoordinate, "epsilonCoordinate");
-        Throw.whenNaN(epsilonRotation, "epsilonRotation");
+        Throw.whenNaN(epsilonDirection, "epsilonDirection");
         if (Math.abs(this.x - other.x) > epsilonCoordinate)
         {
             return false;
@@ -415,11 +428,11 @@ public class DirectedPoint3d extends Point3d implements Directed3d<DirectedPoint
         {
             return false;
         }
-        if (Math.abs(AngleUtil.normalizeAroundZero(this.dirZ - other.dirZ)) > epsilonRotation)
+        if (Math.abs(AngleUtil.normalizeAroundZero(this.dirZ - other.dirZ)) > epsilonDirection)
         {
             return false;
         }
-        if (Math.abs(AngleUtil.normalizeAroundZero(this.dirY - other.dirY)) > epsilonRotation)
+        if (Math.abs(AngleUtil.normalizeAroundZero(this.dirY - other.dirY)) > epsilonDirection)
         {
             return false;
         }

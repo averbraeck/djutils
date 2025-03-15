@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Objects;
 
-import org.djutils.draw.Directed2d;
+import org.djutils.draw.Directed;
 import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Throw;
 import org.djutils.math.AngleUtil;
@@ -23,7 +23,7 @@ import org.djutils.math.AngleUtil;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint2d>
+public class DirectedPoint2d extends Point2d implements Directed
 {
     /** */
     private static final long serialVersionUID = 20200828L;
@@ -189,9 +189,9 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
      * than 1. In that case the interpolation turns into an extrapolation. DirZ is interpolated using the
      * AngleUtil.interpolateShortest method.
      * @param otherPoint the other point
-     * @param fraction the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
-     *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
-     *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
+     * @param fraction the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is between 0
+     *            and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code>
+     *            Point is returned; if <code>fraction</code> is 1, the <code>otherPoint</code> is returned
      * @return a new OrientedPoint2d at the requested fraction
      * @throws NullPointerException when <code>otherPoint</code> is <code>null</code>
      * @throws ArithmeticException when <code>fraction</code> is <code>NaN</code>
@@ -252,14 +252,26 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
         return String.format(Locale.US, format, this.x, this.y, this.dirZ);
     }
 
-    @Override
-    public boolean epsilonEquals(final DirectedPoint2d other, final double epsilonCoordinate, final double epsilonRotation)
+    /**
+     * Compare this Directed with another Directed with specified tolerances in the coordinates and the angles.
+     * @param other the Directed to compare to
+     * @param epsilonCoordinate the upper bound of difference for one of the coordinates; use Double.POSITIVE_INFINITY if you do
+     *            not want to check the coordinates
+     * @param epsilonDirection the upper bound of difference for the direction(s); use Double.POSITIVE_INFINITY if you do not
+     *            want to check the angles
+     * @return boolean;<code>true</code> if <code>x</code> and <code>y</code> are less than <code>epsilonCoordinate</code>
+     *         apart, and <code>rotZ</code> is less than <code>epsilonDirection</code> apart, otherwise <code>false</code>
+     * @throws NullPointerException when <code>other</code> is <code>null</code>
+     * @throws ArithmeticException when <code>epsilonCoordinate</code> or <code>epsilonDirection</code> is <code>NaN</code>
+     * @throws IllegalArgumentException <code>epsilonCoordinate</code> or <code>epsilonDirection</code> is <code>negative</code>
+     */
+    public boolean epsilonEquals(final DirectedPoint2d other, final double epsilonCoordinate, final double epsilonDirection)
             throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(other, "other");
         Throw.whenNaN(epsilonCoordinate, "epsilonCoordinate");
-        Throw.whenNaN(epsilonRotation, "epsilonRotation");
-        Throw.when(epsilonCoordinate < 0 || epsilonRotation < 0, IllegalArgumentException.class,
+        Throw.whenNaN(epsilonDirection, "epsilonDirection");
+        Throw.when(epsilonCoordinate < 0 || epsilonDirection < 0, IllegalArgumentException.class,
                 "epsilonCoordinate and epsilonRotation may not be negative");
         if (Math.abs(this.x - other.x) > epsilonCoordinate)
         {
@@ -269,7 +281,7 @@ public class DirectedPoint2d extends Point2d implements Directed2d<DirectedPoint
         {
             return false;
         }
-        if (Math.abs(AngleUtil.normalizeAroundZero(this.dirZ - other.dirZ)) > epsilonRotation)
+        if (Math.abs(AngleUtil.normalizeAroundZero(this.dirZ - other.dirZ)) > epsilonDirection)
         {
             return false;
         }
