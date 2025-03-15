@@ -6,7 +6,7 @@ DJUTILS-DRAW consists of a number of packages:
 
 * / (top level): The `DrawRuntimeException` class and:
     * [Drawable](drawable.md): the interface that all `Drawable` objects must implement.
-    * Directed and Oriented: `Directed` is the interface that all `Ray` objects implement; the `Oriented` is the interface that all `OrientedPoint` objects implement.
+    * Directed and Oriented: `Directed` is the interface that all `Ray` and `DirectedPoint` objects implement; the `Oriented` is the interface that all `OrientedPoint3d` object implement. See table below.
     * [Affine transformations](affine.md): the `Transform2d` and `Transform3d` classes that implement transformations using affine matrices.
 * [bounds package](bounds.md): The classes that can hold the minimum and maximum of the coordinates of a `Drawable` object.
 * [point package](points.md): The classes for points and oriented points (2D and 3D).
@@ -15,6 +15,14 @@ DJUTILS-DRAW consists of a number of packages:
 * volume package: Intended for 3D objects and generators of those (very rudimentary at this time).
 
 All `Drawable` 3D objects implement a `project()` method that constructs a corresponding 2D object (where this might fail, the `project()` method may throw a `DrawRuntimeException`).
+
+A direction in 2d is implemented as a rotation around the z-axis. A direction in 3d is implemented as a rotation around the z-axis and the y-axis. The rotation around the z-axis typically ranges from 0 to 2 &pi; whereas the rotation around the y-axis is limited to range from 0 to &pi; to reach all directions in 3d. An orientation in 3d means that the object is directed, but can also 'roll' along its x-axis (think about a airplane) and therefore implements a rotation around the x-axis as well (ranging from 0 to 2 &pi;). See the table below.
+
+|class|dirX|dirY|dirZ|
+|---|---|---|---|
+|`Directed`|no|no|yes|
+|`Directed3d`|no|yes|yes|
+|`Oriented3d`|yes|yes|yes|
 
 
 ## Maven use
