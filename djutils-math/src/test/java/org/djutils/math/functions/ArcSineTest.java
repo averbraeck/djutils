@@ -46,7 +46,8 @@ public class ArcSineTest
             assertEquals(3 * (Math.asin(x) + 2), asin3.apply(x), 0.00001, "asin with two double parameters");
             assertEquals(Math.asin(0.9 * x * x), asin4.apply(x), 0.00001, "asin with chain and no double parameters");
             assertEquals(2 * Math.asin(0.9 * x * x), asin5.apply(x), 0.00001, "asin with chain and one double parameters");
-            assertEquals(3 * (Math.asin(0.9 * x * x) + 2), asin6.apply(x), 0.00001, "asin with chain and two double parameters");
+            assertEquals(3 * (Math.asin(0.9 * x * x) + 2), asin6.apply(x), 0.00001,
+                    "asin with chain and two double parameters");
             assertEquals(1.5 * 3 * (Math.asin(0.9 * x * x) + 2), asin7.apply(x), 0.00001,
                     "asin with chain and two double parameters scaled");
             assertEquals(1.0 / Math.sqrt(1 - x * x), derivative.apply(x), 0.00001, "derivative of simplest case works");

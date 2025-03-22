@@ -120,7 +120,8 @@ public class Polygon3d extends PolyLine3d
      */
     public Polygon3d(final double epsilon, final Point3d point1, final Point3d point2, final Point3d... otherPoints)
     {
-        super(epsilon, Throw.whenNull(point1, "point1"), Throw.whenNull(point2, "point2"), fixClosingPoint(point1, otherPoints));
+        super(epsilon, Throw.whenNull(point1, "point1"), Throw.whenNull(point2, "point2"),
+                fixClosingPoint(point1, otherPoints));
     }
 
     /**
