@@ -53,12 +53,12 @@ public class ProductTest
 
         assertEquals(100, p.sortPriority(), "sorting priority of Product is 100");
         MathFunction f = p.scaleBy(123);
-        assertEquals(123, f.apply(10) / p.apply(10), 0.0001, "scaleBy works");
+        assertEquals(123, f.apply(10d) / p.apply(10d), 0.0001, "scaleBy works");
         assertTrue(p == p.scaleBy(1.0), "scaleBy 1.0 return original");
         assertEquals(Constant.ZERO, p.scaleBy(0.0), "scaleBy 0.0 return ZERO");
 
         Product p2 = new Product(new Constant(5), p);
-        assertEquals(5, p2.apply(10) / p.apply(10), 0.0001, "embedded product");
+        assertEquals(5, p2.apply(10d) / p.apply(10d), 0.0001, "embedded product");
 
         p2 = new Product(Constant.ZERO, p);
         f = p2.simplify();

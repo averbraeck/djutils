@@ -101,7 +101,7 @@ public class ArcSine implements MathFunction
     }
 
     @Override
-    public double apply(final double x)
+    public Double apply(final Double x)
     {
         if (this.omega == 0.0)
         {
@@ -134,7 +134,7 @@ public class ArcSine implements MathFunction
         }
         if (this.chain != null && this.chain instanceof Constant)
         {
-            return new Constant(apply(0)).simplify();
+            return new Constant(apply(0d)).simplify();
         }
         return this;
     }

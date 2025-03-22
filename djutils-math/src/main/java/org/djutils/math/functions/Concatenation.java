@@ -84,7 +84,7 @@ public class Concatenation implements MathFunction
     }
 
     @Override
-    public double apply(final double x)
+    public Double apply(final Double x)
     {
         // TODO Use bisection to home in on the interval that covers x; for now use linear search
         for (var interval : this.functions)

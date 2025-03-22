@@ -1,6 +1,7 @@
 package org.djutils.math.functions;
 
 import java.util.SortedSet;
+import java.util.function.Function;
 
 /**
  * MathFunction interface.
@@ -14,15 +15,8 @@ import java.util.SortedSet;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public interface MathFunction extends Comparable<MathFunction>
+public interface MathFunction extends Comparable<MathFunction>, Function<Double, Double>
 {
-
-    /**
-     * Applies this MathFunction on the provided argument.
-     * @param x argument on which this MathFunction is applied
-     * @return interpolated or extended value, at knots, or discontinuities, the result will be <code>NaN</code>
-     */
-    double apply(double x);
 
     /**
      * Returns the derivative of the data with respect to fractional length.

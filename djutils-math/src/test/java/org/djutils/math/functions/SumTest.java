@@ -67,7 +67,7 @@ public class SumTest
             checkOneValue(3 * x, x, f);
         }
         sum = new Sum(new Constant(-1), new Constant(2));
-        assertEquals(1, sum.apply(123), 0, "short circuited to Constant.ONE (but we can't really check that");
+        assertEquals(1, sum.apply(123d), 0, "short circuited to Constant.ONE (but we can't really check that");
         MathFunction simplified = sum.simplify(); // now it gets short circuited to Constant.ONE
         assertEquals(Constant.ONE, simplified, "should now be short circuited to Constant.ONE");
 

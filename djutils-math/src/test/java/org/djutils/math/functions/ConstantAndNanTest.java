@@ -61,7 +61,7 @@ public class ConstantAndNanTest
         assertTrue(otherOne == Constant.ONE, "now it IS the same object");
         MathFunction constant = new Constant(4);
         constant = constant.scaleBy(2);
-        assertEquals(8, constant.apply(0), "scaleBy works");
+        assertEquals(8, constant.apply(0d), "scaleBy works");
         MathFunction simplified = constant.simplify();
         assertTrue(simplified == constant, "simplify could not make it simpler");
         constant = constant.scaleBy(1.0 / 8);

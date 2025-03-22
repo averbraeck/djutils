@@ -76,7 +76,7 @@ public class Power implements MathFunction
     }
 
     @Override
-    public double apply(final double x)
+    public Double apply(final Double x)
     {
         if (this.weight == 0.0)
         {
@@ -136,7 +136,7 @@ public class Power implements MathFunction
         }
         if (this.chain != null && this.chain instanceof Constant)
         {
-            return new Constant(apply(0)).simplify();
+            return new Constant(apply(0d)).simplify();
         }
         if (this.power == 1.0 && this.chain != null)
         {

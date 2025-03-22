@@ -81,7 +81,7 @@ public class ArcTangentTest
             // Ignore expected exception
         }
         assertEquals("0", new ArcSine(0.0).toString(), "non-simplified zero arc sine does print as 0");
-        assertEquals(0.0, new ArcSine(0.0).apply(123), "non-simplified zero evalueates to 0");
+        assertEquals(0.0, new ArcSine(0.0).apply(123d), "non-simplified zero evalueates to 0");
         assertTrue(at1.toString().startsWith("atan"), "multiplier 1.0 is not printed");
         assertTrue(at2.toString().startsWith("3atan"), "non unit multiplier IS printed");
         assertTrue(new ArcTangent(1, -2).toString().contains("x-2"), "negative shift is printed");

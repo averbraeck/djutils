@@ -114,7 +114,7 @@ public class Sum implements MathFunction
     }
 
     @Override
-    public double apply(final double x)
+    public Double apply(final Double x)
     {
         double result = 0.0;
         for (MathFunction fi : this.terms)
