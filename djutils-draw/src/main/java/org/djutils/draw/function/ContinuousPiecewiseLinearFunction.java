@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
+import org.djutils.math.functions.MathFunction.TupleSt;
 
 import org.djutils.exceptions.Throw;
 
@@ -19,8 +20,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class ContinuousPiecewiseLinearFunction
-        implements Iterable<org.djutils.draw.function.ContinuousPiecewiseLinearFunction.TupleSt>
+public class ContinuousPiecewiseLinearFunction implements Iterable<TupleSt>
 {
 
     /** The underlying data. */
@@ -165,18 +165,10 @@ public class ContinuousPiecewiseLinearFunction
             {
                 Throw.when(null == this.nextEntry, NoSuchElementException.class, "Iterator is exhausted");
                 TupleSt result = new TupleSt(this.nextEntry.getKey(), this.nextEntry.getValue());
-                this.nextEntry = ContinuousPiecewiseLinearFunction.this.data.higherEntry(result.s);
+                this.nextEntry = ContinuousPiecewiseLinearFunction.this.data.higherEntry(result.s());
                 return result;
             }
         };
     }
 
-    /**
-     * Wrapper for domain and function value pair.
-     * @param s value in range [0.0, 1.0]
-     * @param t value of the function for <code>s</code>
-     */
-    public record TupleSt(double s, double t)
-    {
-    }
 }

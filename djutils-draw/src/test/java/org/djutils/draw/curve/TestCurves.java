@@ -23,6 +23,7 @@ import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.math.AngleUtil;
+import org.djutils.math.functions.MathFunction.TupleSt;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -509,7 +510,7 @@ public class TestCurves
         {
             System.out.print("# Knots in ofl2d domain:");
             OffsetCurve2d ofl2d = (OffsetCurve2d) curve;
-            for (Iterator<ContinuousPiecewiseLinearFunction.TupleSt> iterator = of.iterator(); iterator.hasNext();)
+            for (Iterator<TupleSt> iterator = of.iterator(); iterator.hasNext();)
             {
                 double knot = iterator.next().s();
                 if (knot != 0.0 && knot != 1.0)
@@ -686,7 +687,7 @@ public class TestCurves
                 }
                 // Check if there is a knot very close to fraction
                 Double knot = null;
-                for (Iterator<ContinuousPiecewiseLinearFunction.TupleSt> iterator = of.iterator(); iterator.hasNext();)
+                for (Iterator<TupleSt> iterator = of.iterator(); iterator.hasNext();)
                 {
                     knot = iterator.next().s();
                     if (knot != 0.0 && knot != 1.0 && Math.abs(curve.getT(knot * curve.getLength()) - fraction) <= veryClose)

@@ -18,6 +18,7 @@ import org.djutils.draw.line.Ray2d;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
+import org.djutils.math.functions.MathFunction.TupleSt;
 
 /**
  * Continuous definition of a cubic B&eacute;zier curves in 2d. This extends from the more general {@code Bezier} as certain
@@ -340,10 +341,10 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
      * @param fractions yields the fractions at which offsets are defined.
      * @return set of offset t values, sorted and only those in the range <code>(0, 1)</code>
      */
-    private SortedSet<Double> getOffsetT(final Iterable<ContinuousPiecewiseLinearFunction.TupleSt> fractions)
+    private SortedSet<Double> getOffsetT(final Iterable<TupleSt> fractions)
     {
         TreeSet<Double> result = new TreeSet<>();
-        for (ContinuousPiecewiseLinearFunction.TupleSt tuple : fractions)
+        for (TupleSt tuple : fractions)
         {
             double f = tuple.s();
             if (f > 0.0 && f < 1.0)
@@ -518,7 +519,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
         // Work on a copy of the offset fractions, so we can remove each we use.
         // Skip t == 0.0 while collecting the split points -on- this B&eacute;zier
         NavigableSet<Double> fCrossSectionRemain = new TreeSet<>();
-        for (ContinuousPiecewiseLinearFunction.TupleSt tuple : of)
+        for (TupleSt tuple : of)
         {
             if (tuple.s() > 0.0)
             {

@@ -6,6 +6,7 @@ import org.djutils.draw.line.Ray2d;
 import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
+import org.djutils.math.functions.MathFunction.TupleSt;
 
 /**
  * Continuous curve implementation of a straight in 2d.
@@ -113,7 +114,7 @@ public class Straight2d implements Curve2d, OffsetCurve2d
         double[] lengths = new double[offsets.size()];
         double[] values = new double[offsets.size()];
         int index = 0;
-        for (ContinuousPiecewiseLinearFunction.TupleSt tuple : offsets)
+        for (TupleSt tuple : offsets)
         {
             lengths[index] = tuple.s();
             values[index] = tuple.t();

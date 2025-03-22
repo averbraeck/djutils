@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import org.djutils.math.functions.MathFunction.TupleSt;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -85,16 +86,16 @@ public class ContinuousPiecewiseLinearTest
 
         of = new ContinuousPiecewiseLinearFunction(0.0, 0.0, 0.2, 1.0, 1.0, 2.0);
         int index = 0;
-        for (ContinuousPiecewiseLinearFunction.TupleSt tuple : of)
+        for (TupleSt tuple : of)
         {
             assertEquals(index == 0 ? 0.0 : index == 1 ? 0.2 : 1.0, tuple.s(), 0.0, "domain point is returned");
             assertEquals(index == 0 ? 0.0 : index == 1 ? 1.0 : 1.0, tuple.t(), 2.0, "offset is returned");
             index++;
         }
 
-        Iterator<ContinuousPiecewiseLinearFunction.TupleSt> iterator = of.iterator();
+        Iterator<TupleSt> iterator = of.iterator();
         assertTrue(iterator.hasNext(), "first offset is available");
-        ContinuousPiecewiseLinearFunction.TupleSt tuple = iterator.next();
+        TupleSt tuple = iterator.next();
         assertEquals(0.0, tuple.s(), "first domain point is returned");
         assertEquals(0.0, tuple.t(), "first offset is returned");
         assertTrue(iterator.hasNext(), "second offset is available");

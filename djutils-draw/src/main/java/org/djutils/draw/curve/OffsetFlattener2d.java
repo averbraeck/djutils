@@ -14,6 +14,7 @@ import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
 import org.djutils.math.AngleUtil;
+import org.djutils.math.functions.MathFunction.TupleSt;
 
 /**
  * Flattens a Curve2d with piece-wise linear offset in to a PolyLine2d.
@@ -76,7 +77,7 @@ public interface OffsetFlattener2d extends Flattener<Flattener2d, Curve2d, PolyL
                 loadKnot(map, knot, curve, of);
             }
         }
-        for (ContinuousPiecewiseLinearFunction.TupleSt knot : of)
+        for (TupleSt knot : of)
         {
             loadKnot(map, knot.s(), curve, of);
         }
