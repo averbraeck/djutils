@@ -16,7 +16,7 @@ import org.djutils.draw.point.Point3d;
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-interface Curve3d
+public interface Curve3d
         extends Curve<DirectedPoint3d, Direction3d, Point3d, Flattener3d, PolyLine3d>, FlattableCurve<Point3d, Direction3d>
 {
 
