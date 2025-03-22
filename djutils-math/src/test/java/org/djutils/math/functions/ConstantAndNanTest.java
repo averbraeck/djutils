@@ -34,13 +34,13 @@ public class ConstantAndNanTest
             assertEquals(Double.parseDouble(constant.toString()), c, Math.abs(c) / 99999999, "value is produced as toString");
             for (double x : new double[] {-12, 0, Math.PI, 2e12})
             {
-                assertEquals(c, constant.get(x), 0.0, "value of c is returned for any x");
+                assertEquals(c, constant.apply(x), 0.0, "value of c is returned for any x");
                 assertEquals(Constant.ZERO, constant.getDerivative(), "derivative of constant is ZERO");
             }
         }
         for (double x : new double[] {-12, 0, 7777, Math.PI, 2e12, 3e100})
         {
-            assertEquals(1.0, Constant.ONE.get(x), 0, "value of ONE is 1.0");
+            assertEquals(1.0, Constant.ONE.apply(x), 0, "value of ONE is 1.0");
             assertEquals(Constant.ZERO, Constant.ONE.getDerivative(), "derivative of ONE is ZERO");
         }
         assertEquals(Constant.ZERO, Constant.ONE.getDerivative(), "derivative of ONE is ZERO");
@@ -61,7 +61,7 @@ public class ConstantAndNanTest
         assertTrue(otherOne == Constant.ONE, "now it IS the same object");
         MathFunction constant = new Constant(4);
         constant = constant.scaleBy(2);
-        assertEquals(8, constant.get(0), "scaleBy works");
+        assertEquals(8, constant.apply(0), "scaleBy works");
         MathFunction simplified = constant.simplify();
         assertTrue(simplified == constant, "simplify could not make it simpler");
         constant = constant.scaleBy(1.0 / 8);
@@ -102,7 +102,7 @@ public class ConstantAndNanTest
     {
         for (double x : new double[] {-1e20, -5.555, 0, Math.E, 23.45e200})
         {
-            assertTrue(Double.isNaN(Nan.NAN.get(x)), "value is NaN for every x");
+            assertTrue(Double.isNaN(Nan.NAN.apply(x)), "value is NaN for every x");
         }
         assertEquals("NaN", Nan.NAN.toString(), "toString returns something descriptive");
         assertEquals(Nan.NAN, Nan.NAN.getDerivative(), "derivative is itself");

@@ -39,13 +39,13 @@ public class ExponentTest
         Exponential eChain = new Exponential(chain);
         for (double x : xValues)
         {
-            assertEquals(Math.exp(x), e.get(x), 0.001, "Computes the exponent of x");
-            assertEquals(3 * Math.exp(x), e3.get(x), 0.01, "scaleBy works");
-            assertEquals(3 * Math.exp(x), derivative.get(x), 0.01, "derivative works");
-            assertEquals(2 * Math.exp(2 * Math.sin(x)), eOfSine.get(x), "chaining works");
-            assertEquals(4 * Math.cos(x) * Math.exp(2 * Math.sin(x)), derivativeChained.get(x), 0.0001,
+            assertEquals(Math.exp(x), e.apply(x), 0.001, "Computes the exponent of x");
+            assertEquals(3 * Math.exp(x), e3.apply(x), 0.01, "scaleBy works");
+            assertEquals(3 * Math.exp(x), derivative.apply(x), 0.01, "derivative works");
+            assertEquals(2 * Math.exp(2 * Math.sin(x)), eOfSine.apply(x), "chaining works");
+            assertEquals(4 * Math.cos(x) * Math.exp(2 * Math.sin(x)), derivativeChained.apply(x), 0.0001,
                     "derivative of chained works");
-            assertEquals(Math.exp(2 * Math.sin(x)), eChain.get(x), 0.0001, "default factor works with chaining");
+            assertEquals(Math.exp(2 * Math.sin(x)), eChain.apply(x), 0.0001, "default factor works with chaining");
         }
 
         assertEquals(Constant.ZERO, new Exponential(0).simplify(), "simplifies to ZERO");

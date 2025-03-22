@@ -61,16 +61,16 @@ public class DerivativeTest
             {
                 double x = steps == 1 ? scenario.minimum()
                         : (scenario.minimum() + (scenario.maximum() - scenario.minimum()) * 1.0 * step / (steps - 1));
-                double fX = function.get(x);
+                double fX = function.apply(x);
                 for (int side : new int[] {1, -1})
                 {
                     if (side > 0 && step < steps - 1 || side < 0 && step > 0)
                     {
                         // System.out.println("x=" + x);
                         double dX = x + scenario.delta() * side;
-                        double fDX = function.get(dX);
+                        double fDX = function.apply(dX);
                         double actualSlope = (fDX - fX) / (dX - x);
-                        double expectedSlope = derivative.get(x);
+                        double expectedSlope = derivative.apply(x);
 
                         if (Math.abs(actualSlope - expectedSlope) >= scenario.epsilon() || Double.isNaN(actualSlope))
                         {

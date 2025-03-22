@@ -41,16 +41,16 @@ public class ArcSineTest
         MathFunction acos = ArcSine.arcCosine(null, 2);
         for (double x : xValues)
         {
-            assertEquals(Math.asin(x), asin.get(x), 0.00001, "asin with no parameters");
-            assertEquals(2 * Math.asin(x), asin2.get(x), 0.00001, "asin with one double paramater");
-            assertEquals(3 * (Math.asin(x) + 2), asin3.get(x), 0.00001, "asin with two double parameters");
-            assertEquals(Math.asin(0.9 * x * x), asin4.get(x), 0.00001, "asin with chain and no double parameters");
-            assertEquals(2 * Math.asin(0.9 * x * x), asin5.get(x), 0.00001, "asin with chain and one double parameters");
-            assertEquals(3 * (Math.asin(0.9 * x * x) + 2), asin6.get(x), 0.00001, "asin with chain and two double parameters");
-            assertEquals(1.5 * 3 * (Math.asin(0.9 * x * x) + 2), asin7.get(x), 0.00001,
+            assertEquals(Math.asin(x), asin.apply(x), 0.00001, "asin with no parameters");
+            assertEquals(2 * Math.asin(x), asin2.apply(x), 0.00001, "asin with one double paramater");
+            assertEquals(3 * (Math.asin(x) + 2), asin3.apply(x), 0.00001, "asin with two double parameters");
+            assertEquals(Math.asin(0.9 * x * x), asin4.apply(x), 0.00001, "asin with chain and no double parameters");
+            assertEquals(2 * Math.asin(0.9 * x * x), asin5.apply(x), 0.00001, "asin with chain and one double parameters");
+            assertEquals(3 * (Math.asin(0.9 * x * x) + 2), asin6.apply(x), 0.00001, "asin with chain and two double parameters");
+            assertEquals(1.5 * 3 * (Math.asin(0.9 * x * x) + 2), asin7.apply(x), 0.00001,
                     "asin with chain and two double parameters scaled");
-            assertEquals(1.0 / Math.sqrt(1 - x * x), derivative.get(x), 0.00001, "derivative of simplest case works");
-            assertEquals(2 * Math.acos(x), acos.get(x), 0.00001, "acos works");
+            assertEquals(1.0 / Math.sqrt(1 - x * x), derivative.apply(x), 0.00001, "derivative of simplest case works");
+            assertEquals(2 * Math.acos(x), acos.apply(x), 0.00001, "acos works");
         }
         assertEquals(3, asin3.getScale(), "omega is scale");
         assertEquals(Constant.ZERO, new ArcSine(0).simplify(), "should simplify to ZERO");
@@ -78,7 +78,7 @@ public class ArcSineTest
             // Ignore expected exception
         }
         assertEquals("0", new ArcSine(0.0).toString(), "non-simplified zero arc sine does print as 0");
-        assertEquals(0.0, new ArcSine(0.0).get(123), "non-simplified zero evalueates to 0");
+        assertEquals(0.0, new ArcSine(0.0).apply(123), "non-simplified zero evalueates to 0");
         assertTrue(asin.toString().startsWith("asin"), "multiplier 1.0 is not printed");
         assertTrue(asin2.toString().startsWith("2asin"), "non unit multiplier IS printed");
         assertTrue(new ArcSine(1, -2).toString().contains("x-2"), "negative shift is printed");

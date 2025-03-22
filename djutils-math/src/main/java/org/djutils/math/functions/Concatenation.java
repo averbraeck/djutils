@@ -84,14 +84,14 @@ public class Concatenation implements MathFunction
     }
 
     @Override
-    public double get(final double x)
+    public double apply(final double x)
     {
         // TODO Use bisection to home in on the interval that covers x; for now use linear search
         for (var interval : this.functions)
         {
             if (interval.covers(x))
             {
-                return interval.payload().get(x);
+                return interval.payload().apply(x);
             }
         }
         throw new IllegalArgumentException(String.format("x is outside the combined domain of this Concatenation", x));
@@ -148,7 +148,7 @@ public class Concatenation implements MathFunction
                 // create one linear section
                 double slope = (nextEntry.getValue() - prevEntry.getValue()) / (nextEntry.getKey() - prevEntry.getKey());
                 Power powerFunction = new Power(slope, 1);
-                double constant = prevEntry.getValue() - powerFunction.get(prevEntry.getKey());
+                double constant = prevEntry.getValue() - powerFunction.apply(prevEntry.getKey());
                 MathFunction function = new Sum(new Constant(constant), powerFunction);
                 intervals.add(new Interval<MathFunction>(prevEntry.getKey(), intervals.isEmpty(), nextEntry.getKey(), true,
                         function));

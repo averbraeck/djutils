@@ -49,19 +49,19 @@ public class LogarithmTest
         double[] xValues = new double[] {0.01, 0.1, 0.5, 1, Math.E, Math.PI, 10, 100, 1000, 10000};
         for (double x : xValues)
         {
-            assertEquals(Math.log(x), l.get(x), 0.000001, "natural log is returned");
-            assertEquals(Math.log10(x), log10.get(x), 0.000001, "log10 is returned");
-            assertEquals(1.0 / x, derivative.get(x), 0.000001, "derivative of natural log is 1/x");
-            assertEquals(1.0 / Math.log(10) / x, derivative10.get(x), 0.000001, "derivative of log10 is 1/ln(10)/x");
-            assertEquals(Math.log10(2 * x * x), logChained.get(x), 0.00001, "chained works");
-            assertEquals(2 / Math.log(10) / x, derivativeChained.get(x), 0.00001, "chained derivative works");
-            assertEquals(Math.log(2 * x * x), lnChained.get(x), 0.000001, "chained natural logarithm");
-            assertEquals(5 * Math.log(2 * x * x), scaledLnChained.get(x), 0.000001, "scaled chained natural logarithm");
-            assertEquals(Math.log(x) + Math.log10(x), merged.get(x), 0.000001, "mergeAdd works");
-            assertEquals(Math.log(2 * x * x) + Math.log10(2 * x * x), mergedChained.get(x), 0.000001,
+            assertEquals(Math.log(x), l.apply(x), 0.000001, "natural log is returned");
+            assertEquals(Math.log10(x), log10.apply(x), 0.000001, "log10 is returned");
+            assertEquals(1.0 / x, derivative.apply(x), 0.000001, "derivative of natural log is 1/x");
+            assertEquals(1.0 / Math.log(10) / x, derivative10.apply(x), 0.000001, "derivative of log10 is 1/ln(10)/x");
+            assertEquals(Math.log10(2 * x * x), logChained.apply(x), 0.00001, "chained works");
+            assertEquals(2 / Math.log(10) / x, derivativeChained.apply(x), 0.00001, "chained derivative works");
+            assertEquals(Math.log(2 * x * x), lnChained.apply(x), 0.000001, "chained natural logarithm");
+            assertEquals(5 * Math.log(2 * x * x), scaledLnChained.apply(x), 0.000001, "scaled chained natural logarithm");
+            assertEquals(Math.log(x) + Math.log10(x), merged.apply(x), 0.000001, "mergeAdd works");
+            assertEquals(Math.log(2 * x * x) + Math.log10(2 * x * x), mergedChained.apply(x), 0.000001,
                     "mergeAdd works if chained is the same");
-            assertEquals(Math.log10(2 * x * x) + Math.log(x), sum.get(x), 0.00001, "sum is correct");
-            assertEquals(Math.log(x) + Math.sin(2 * x + 3), sum2.get(x), 0.00001, "sum is correct");
+            assertEquals(Math.log10(2 * x * x) + Math.log(x), sum.apply(x), 0.00001, "sum is correct");
+            assertEquals(Math.log(x) + Math.sin(2 * x + 3), sum2.apply(x), 0.00001, "sum is correct");
         }
         assertEquals(6, l.sortPriority(), "sort priority is 6");
         assertEquals(lnChained, lnChained.scaleBy(1.0), "scaling by 1.0 returns original");

@@ -18,14 +18,11 @@ public interface MathFunction extends Comparable<MathFunction>
 {
 
     /**
-     * Returns the data at given fractional length. If only data beyond the fractional length is available, the first available
-     * value is returned. If only data before the fractional length is available, the last available value is returned.
-     * Otherwise data is linearly interpolated.
-     * @param fraction fractional length, may be outside range <code>[0.0, 1.0]</code>, but below 0.0 and above 1.1 the result
-     *            will be constant
+     * Applies this MathFunction on the provided argument.
+     * @param x argument on which this MathFunction is applied
      * @return interpolated or extended value, at knots, or discontinuities, the result will be <code>NaN</code>
      */
-    double get(double fraction);
+    double apply(double x);
 
     /**
      * Returns the derivative of the data with respect to fractional length.

@@ -40,9 +40,9 @@ public class Quotient implements MathFunction
     }
 
     @Override
-    public double get(final double x)
+    public double apply(final double x)
     {
-        return this.numerator.get(x) / this.denominator.get(x);
+        return this.numerator.apply(x) / this.denominator.apply(x);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class Quotient implements MathFunction
     {
         if (this.denominator instanceof Constant)
         {
-            return this.numerator.scaleBy(1.0 / this.denominator.get(0));
+            return this.numerator.scaleBy(1.0 / this.denominator.apply(0));
         }
         MathFunction divideResult = this.numerator.mergeDivide(this.denominator);
         return divideResult != null ? divideResult : this;

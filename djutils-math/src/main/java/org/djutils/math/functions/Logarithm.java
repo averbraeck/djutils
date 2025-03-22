@@ -80,9 +80,9 @@ public class Logarithm implements MathFunction
     }
 
     @Override
-    public double get(final double x)
+    public double apply(final double x)
     {
-        double xValue = this.chain == null ? x : this.chain.get(x);
+        double xValue = this.chain == null ? x : this.chain.apply(x);
         return Math.log(xValue) * this.logBaseRecip;
     }
 
@@ -107,7 +107,7 @@ public class Logarithm implements MathFunction
         }
         if (this.chain != null && this.chain instanceof Constant)
         {
-            return new Constant(get(0)).simplify();
+            return new Constant(apply(0)).simplify();
         }
         return this;
     }

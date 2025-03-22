@@ -40,7 +40,7 @@ public class Constant implements MathFunction
     }
 
     @Override
-    public double get(final double x)
+    public double apply(final double x)
     {
         return this.value;
     }

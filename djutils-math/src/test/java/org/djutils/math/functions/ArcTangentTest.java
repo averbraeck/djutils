@@ -43,17 +43,17 @@ public class ArcTangentTest
         MathFunction derivAt5 = at5.getDerivative();
         for (double x : xValues)
         {
-            assertEquals(Math.atan(x), at1.get(x), 0.0001, "plain atan(x)");
-            assertEquals(3 * Math.atan(x), at2.get(x), 0.0001, "3 * atan(x)");
-            assertEquals(3 * (Math.atan(x) + 4), at3.get(x), 0.0001, "3 * (atan(x) + 4)");
-            assertEquals(3 * (Math.atan(0.01 * x * x * x) + 4), at4.get(x), 0.0001, "3 * (atan(x^3*0.001) + 4)");
-            assertEquals(0, at5.get(x), "short circuits to 0");
-            assertEquals(1.0 / (x * x + 1), derivAt1.get(x), 0.0001, "derivative of atan(x)");
-            assertEquals(3.0 / (x * x + 1), derivAt2.get(x), 0.0001, "derivative of 3 * atan(x)");
-            assertEquals(3.0 / (x * x + 1), derivAt3.get(x), 0.0001, "derivative of 3 * (atan(x) + 4)");
-            assertEquals(0.01 * 9 * x * x / (0.0001 * Math.pow(x, 6) + 1), derivAt4.get(x), 0.0001,
+            assertEquals(Math.atan(x), at1.apply(x), 0.0001, "plain atan(x)");
+            assertEquals(3 * Math.atan(x), at2.apply(x), 0.0001, "3 * atan(x)");
+            assertEquals(3 * (Math.atan(x) + 4), at3.apply(x), 0.0001, "3 * (atan(x) + 4)");
+            assertEquals(3 * (Math.atan(0.01 * x * x * x) + 4), at4.apply(x), 0.0001, "3 * (atan(x^3*0.001) + 4)");
+            assertEquals(0, at5.apply(x), "short circuits to 0");
+            assertEquals(1.0 / (x * x + 1), derivAt1.apply(x), 0.0001, "derivative of atan(x)");
+            assertEquals(3.0 / (x * x + 1), derivAt2.apply(x), 0.0001, "derivative of 3 * atan(x)");
+            assertEquals(3.0 / (x * x + 1), derivAt3.apply(x), 0.0001, "derivative of 3 * (atan(x) + 4)");
+            assertEquals(0.01 * 9 * x * x / (0.0001 * Math.pow(x, 6) + 1), derivAt4.apply(x), 0.0001,
                     "derivative of 3 * (atan(x^3*0.001) + 4)");
-            assertEquals(0, derivAt5.get(x), 0.0001, "derivative of constant zero is 0");
+            assertEquals(0, derivAt5.apply(x), 0.0001, "derivative of constant zero is 0");
         }
         assertEquals(Constant.ZERO, at5.simplify(), "should simplify to constant ZERO");
         assertEquals(new Constant(2 * (Math.atan(33) + 3)), new ArcTangent(new Constant(33), 2, 3).simplify(),
@@ -81,7 +81,7 @@ public class ArcTangentTest
             // Ignore expected exception
         }
         assertEquals("0", new ArcSine(0.0).toString(), "non-simplified zero arc sine does print as 0");
-        assertEquals(0.0, new ArcSine(0.0).get(123), "non-simplified zero evalueates to 0");
+        assertEquals(0.0, new ArcSine(0.0).apply(123), "non-simplified zero evalueates to 0");
         assertTrue(at1.toString().startsWith("atan"), "multiplier 1.0 is not printed");
         assertTrue(at2.toString().startsWith("3atan"), "non unit multiplier IS printed");
         assertTrue(new ArcTangent(1, -2).toString().contains("x-2"), "negative shift is printed");

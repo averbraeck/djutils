@@ -48,7 +48,7 @@ public final class FunctionDemo
             double x = 0.5 * step;
             System.out.println(String.format(
                     "x=%5.2f: f(x)=%8.2f; f'(x)=%10.2f; " + "f''(x)=%8.2f; f'''(x)=%8.2f; " + "f''''(x)=%8.2f; f'''''(x)=%8.2f",
-                    x, function.get(x), deriv1.get(x), deriv2.get(x), deriv3.get(x), deriv4.get(x), deriv5.get(x)));
+                    x, function.apply(x), deriv1.apply(x), deriv2.apply(x), deriv3.apply(x), deriv4.apply(x), deriv5.apply(x)));
         }
 
         System.out.println("\nBuild a continuous piecewise linear function; each linear piece is a power function");
@@ -67,7 +67,7 @@ public final class FunctionDemo
         for (int step = 0; step <= 50; step++)
         {
             double x = 0.02 * step;
-            System.out.println(String.format("x=%5.2f: f=%10.2f; f'=%10.2f", x, concatenation.get(x), derivative.get(x)));
+            System.out.println(String.format("x=%5.2f: f=%10.2f; f'=%10.2f", x, concatenation.apply(x), derivative.apply(x)));
         }
         System.out.println("Build the same concatentation the easy way (without the NaN section)");
         SortedMap<Double, Double> map = new TreeMap<>();
@@ -175,8 +175,8 @@ public final class FunctionDemo
         for (int step = -10; step <= 10; step++)
         {
             double x = 0.2 * step;
-            System.out.println(String.format("x=%5.1f: f(x)=%10.5f; f'(x)=%10.5f; f''(x)=%10.5f; f'''(x)=%10.5f", x, p2.get(x),
-                    deriv1.get(x), deriv2.get(x), deriv3.get(x)));
+            System.out.println(String.format("x=%5.1f: f(x)=%10.5f; f'(x)=%10.5f; f''(x)=%10.5f; f'''(x)=%10.5f", x, p2.apply(x),
+                    deriv1.apply(x), deriv2.apply(x), deriv3.apply(x)));
         }
 
         System.out.println("show that pure cosines get print as cos and sin(x+pi) like (-sin(x))");

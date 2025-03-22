@@ -33,20 +33,20 @@ public class PowerTest
     public void testPowerFunction()
     {
         MathFunction pf = new Power(12.3);
-        assertEquals(Math.pow(2, 12.3), pf.get(2), 0.0001, "default weight is 1.0 and broken powers work");
+        assertEquals(Math.pow(2, 12.3), pf.apply(2), 0.0001, "default weight is 1.0 and broken powers work");
         pf = new Power(10, 0.5);
-        assertEquals(10 * Math.pow(3.3, 0.5), pf.get(3.3), 0.0001, "weight works");
+        assertEquals(10 * Math.pow(3.3, 0.5), pf.apply(3.3), 0.0001, "weight works");
         pf = new Power(-0.5);
-        assertEquals(1 / Math.sqrt(5), pf.get(5), 0.0001, "negative exponent works");
+        assertEquals(1 / Math.sqrt(5), pf.apply(5), 0.0001, "negative exponent works");
         pf = new Power(0, 0);
-        assertEquals(0, pf.get(123), 0, "constant 0 is really 0");
+        assertEquals(0, pf.apply(123), 0, "constant 0 is really 0");
         pf = new Power(123.456, 0);
-        assertEquals(123.456, pf.get(654.321), 0, "constant non-zero is exact");
+        assertEquals(123.456, pf.apply(654.321), 0, "constant non-zero is exact");
         pf = new Power(0.5).getDerivative(); // Expect 0.5 / sqrt(x)
         MathFunction pf2 = new Power(0.5, -0.5);
         for (double x : new double[] {0.1, 3, 999})
         {
-            assertEquals(pf.get(x), pf2.get(x), 0.0001, "results are the same");
+            assertEquals(pf.apply(x), pf2.apply(x), 0.0001, "results are the same");
         }
         assertTrue(pf.equals(pf2), "these functions test equal");
         pf = new Power(4, 1); // 4 * x
@@ -57,7 +57,7 @@ public class PowerTest
         pf2 = pf.getDerivative();
         assertEquals(Constant.ZERO, pf2, "derivative is pre-defined constant ZERO");
         pf = new Power(1, 1); // x
-        assertEquals(123.456, pf.get(123.456), 0, "result of this simple one is exact");
+        assertEquals(123.456, pf.apply(123.456), 0, "result of this simple one is exact");
         pf2 = pf.getDerivative();
         assertEquals(Constant.ONE, pf2, "derivative is pre-defined constant ONE");
         pf = new Power(0, 8); // 0 * x^8
@@ -102,12 +102,12 @@ public class PowerTest
         pf = new Power(chained, 2);
         pf2 = new Power(chained, 1.0, 2);
         assertEquals(pf, pf2);
-        assertEquals(pf.get(12), pf2.get(12), 0.0, "of course...");
+        assertEquals(pf.apply(12), pf2.apply(12), 0.0, "of course...");
         MathFunction derivative = pf.getDerivative();
         MathFunction expectedDerivative = new Product(new Constant(2), new Sine(1, 1, 0), new Sine(1, 1, Math.PI / 2));
         for (double x : new double[] {-10, -2, 0, 0.1, Math.E, Math.PI})
         {
-            assertEquals(expectedDerivative.get(x), derivative.get(x), 0.00001, "derivative with chained function");
+            assertEquals(expectedDerivative.apply(x), derivative.apply(x), 0.00001, "derivative with chained function");
         }
 
         pf = new Power(3, 0);
@@ -173,15 +173,15 @@ public class PowerTest
         // System.out.println(pf);
         // System.out.println(pf2);
         // System.out.println(pf.mergeMultiply(pf2));
-        assertEquals(pf.get(10) * pf2.get(10), pf.mergeMultiply(pf2).get(10), 0.0001, "check");
+        assertEquals(pf.apply(10) * pf2.apply(10), pf.mergeMultiply(pf2).apply(10), 0.0001, "check");
         assertNull(pf2.mergeAdd(pf), "cannot mergeAdd these");
         assertNotNull(pf2.mergeMultiply(pf), "can mergeMultiply these");
-        assertEquals(pf.get(10) * pf2.get(10), pf2.mergeMultiply(pf).get(10), 0.0001, "check");
+        assertEquals(pf.apply(10) * pf2.apply(10), pf2.mergeMultiply(pf).apply(10), 0.0001, "check");
         assertNotNull(pf.mergeAdd(pf), "can mergeAdd these");
-        assertEquals(pf.get(10) + pf.get(10), pf.mergeAdd(pf).get(10), 0.0001, "check");
+        assertEquals(pf.apply(10) + pf.apply(10), pf.mergeAdd(pf).apply(10), 0.0001, "check");
         pf = new Power(2, 3);
         assertNotNull(pf.mergeMultiply(pf2), "can mergeMultiply these");
-        assertEquals(pf.get(10) * pf2.get(10), pf.mergeMultiply(pf2).get(10), 0.0001, "check");
+        assertEquals(pf.apply(10) * pf2.apply(10), pf.mergeMultiply(pf2).apply(10), 0.0001, "check");
 
         pf = new Power(2, 3);
         pf2 = new Power(3, 2);

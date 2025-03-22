@@ -53,21 +53,21 @@ public class SumTest
             MathFunction f = new Power(3, 1);
             sum2 = new Sum(c1, c2, f);
             checkOneValue(12.34 - 23.56 + 3 * x, x, sum2);
-            assertEquals(3, sum2.getDerivative().get(x), 0, "derivative of slope 3 is 3");
+            assertEquals(3, sum2.getDerivative().apply(x), 0, "derivative of slope 3 is 3");
             assertEquals(new Constant(3), sum2.getDerivative(), "derivative Sum is simplified to Constant");
             sum2 = new Sum(Constant.ZERO, c1, Constant.ZERO, c2, f, Constant.ZERO);
-            assertEquals(12.34 - 23.56 + 3 * x, sum2.get(x), Math.abs(x / 1e10), "we can add constants and varying values");
+            assertEquals(12.34 - 23.56 + 3 * x, sum2.apply(x), Math.abs(x / 1e10), "we can add constants and varying values");
             sum2 = new Sum(Constant.ZERO, Constant.ZERO);
-            assertEquals(0, sum2.get(x), 0, "zeros work");
+            assertEquals(0, sum2.apply(x), 0, "zeros work");
             sum2 = new Sum(f, f);
-            assertEquals(f.get(x) + f.get(x), sum2.get(x), Math.abs(x / 1e10), "this one can now be simplified by Sum");
+            assertEquals(f.apply(x) + f.apply(x), sum2.apply(x), Math.abs(x / 1e10), "this one can now be simplified by Sum");
             MathFunction derivative = sum2.getDerivative();
             checkOneValue(6, x, derivative);
             assertTrue(derivative instanceof Constant);
             checkOneValue(3 * x, x, f);
         }
         sum = new Sum(new Constant(-1), new Constant(2));
-        assertEquals(1, sum.get(123), 0, "short circuited to Constant.ONE (but we can't really check that");
+        assertEquals(1, sum.apply(123), 0, "short circuited to Constant.ONE (but we can't really check that");
         MathFunction simplified = sum.simplify(); // now it gets short circuited to Constant.ONE
         assertEquals(Constant.ONE, simplified, "should now be short circuited to Constant.ONE");
 
@@ -177,7 +177,7 @@ public class SumTest
      */
     public void checkOneValue(final double expectedResult, final double x, final MathFunction f)
     {
-        double actualResult = f.get(x);
+        double actualResult = f.apply(x);
         assertEquals(expectedResult, actualResult, Math.abs(expectedResult) / 1e10, "verifying f(x)");
     }
 

@@ -31,7 +31,7 @@ public final class Nan implements MathFunction
     }
 
     @Override
-    public double get(final double x)
+    public double apply(final double x)
     {
         return Double.NaN;
     }

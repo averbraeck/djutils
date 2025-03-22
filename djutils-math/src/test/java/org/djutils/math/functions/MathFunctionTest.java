@@ -105,7 +105,7 @@ public class MathFunctionTest
 
         /** {@inheritDoc} */
         @Override
-        public double get(final double fraction)
+        public double apply(final double fraction)
         {
             return 0;
         }

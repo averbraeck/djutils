@@ -67,9 +67,9 @@ public class Exponential implements MathFunction
     }
 
     @Override
-    public double get(final double x)
+    public double apply(final double x)
     {
-        return this.factor * Math.exp(this.chain == null ? x : this.chain.get(x));
+        return this.factor * Math.exp(this.chain == null ? x : this.chain.apply(x));
     }
 
     @Override
@@ -91,7 +91,7 @@ public class Exponential implements MathFunction
         }
         if (this.chain != null && this.chain instanceof Constant)
         {
-            return new Constant(get(0)).simplify();
+            return new Constant(apply(0)).simplify();
         }
         return this;
     }

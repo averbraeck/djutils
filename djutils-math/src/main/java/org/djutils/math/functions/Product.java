@@ -153,12 +153,12 @@ public class Product implements MathFunction
     }
 
     @Override
-    public double get(final double x)
+    public double apply(final double x)
     {
         double result = 1.0;
         for (MathFunction fi : this.factors)
         {
-            result *= fi.get(x);
+            result *= fi.apply(x);
         }
         return result;
     }

@@ -54,7 +54,7 @@ public class QuotientTest
         Quotient q = new Quotient(numerator, denominator);
         for (double x : testValues)
         {
-            assertEquals(12.0 / 34, q.get(x), 0.00001, "quotient is computed");
+            assertEquals(12.0 / 34, q.apply(x), 0.00001, "quotient is computed");
         }
         MathFunction simplified = q.simplify();
         assertTrue(simplified instanceof Constant, "Should simplify to a constant");
@@ -64,8 +64,8 @@ public class QuotientTest
         MathFunction scaled = q.scaleBy(123);
         for (double x : testValues)
         {
-            assertEquals(numerator.get(x) / denominator.get(x), q.get(x), 0.0001, "get returns quotient");
-            assertEquals(123 * numerator.get(x) / denominator.get(x), scaled.get(x), 0.0001, "get returns quotient");
+            assertEquals(numerator.apply(x) / denominator.apply(x), q.apply(x), 0.0001, "get returns quotient");
+            assertEquals(123 * numerator.apply(x) / denominator.apply(x), scaled.apply(x), 0.0001, "get returns quotient");
         }
         assertEquals(102, q.sortPriority(), "sort priority is 102");
         try

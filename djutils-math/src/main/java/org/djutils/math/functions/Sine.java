@@ -74,13 +74,13 @@ public class Sine implements MathFunction
     }
 
     @Override
-    public double get(final double x)
+    public double apply(final double x)
     {
         if (this.amplitude == 0.0)
         {
             return 0.0;
         }
-        double xValue = this.chain == null ? x : this.chain.get(x);
+        double xValue = this.chain == null ? x : this.chain.apply(x);
         return this.amplitude * Math.sin(this.omega * xValue + this.shift);
     }
 
@@ -106,7 +106,7 @@ public class Sine implements MathFunction
         }
         if (this.chain != null && this.chain instanceof Constant)
         {
-            return new Constant(get(0)).simplify();
+            return new Constant(apply(0)).simplify();
         }
         return this;
     }
