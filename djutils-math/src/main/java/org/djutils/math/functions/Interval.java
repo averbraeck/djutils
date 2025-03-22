@@ -20,10 +20,12 @@ import org.djutils.exceptions.Throw;
  * @param lowInclusive if true; the low limit is included; if false, the low limit is not included
  * @param high high limit of the domain (inclusive)
  * @param highInclusive if true; the high limit is included; if false; the high limit is not included
- * @param payload the payload of this Interval
+ * @param payload the payload of this Interval. This is can be anything, but it is usually the MathFunction that is active in
+ *            this Interval. When the Interval field is not used, supply any comparable class (e.g. String) and provide a null
+ *            value to the constructor of Interval
  */
 record Interval<T extends Comparable<T>>(double low, boolean lowInclusive, double high, boolean highInclusive, T payload)
-        implements Comparable<Interval<?>>
+        implements Comparable<Interval<T>>
 {
     /**
      * Construct a new Interval.
@@ -91,9 +93,8 @@ record Interval<T extends Comparable<T>>(double low, boolean lowInclusive, doubl
         return false;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public int compareTo(final Interval<?> other)
+    public int compareTo(final Interval<T> other)
     {
         // compare the low boundary
         if (this.low < other.low || this.low == other.low && this.lowInclusive && (!other.lowInclusive))
@@ -120,7 +121,7 @@ record Interval<T extends Comparable<T>>(double low, boolean lowInclusive, doubl
             {
                 return -1;
             }
-            return this.payload.compareTo((T) other.payload);
+            return this.payload.compareTo(other.payload);
         }
         if (other.payload != null)
         {
