@@ -980,7 +980,6 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             double angle = Math.atan2(nextPoint.y - prevPoint.y, nextPoint.x - prevPoint.x);
             Point2d segmentFrom = new Point2d(prevPoint.x - Math.sin(angle) * offset, prevPoint.y + Math.cos(angle) * offset);
             Point2d segmentTo = new Point2d(nextPoint.x - Math.sin(angle) * offset, nextPoint.y + Math.cos(angle) * offset);
-            boolean addSegment = true;
             if (index > 0)
             {
                 double deltaAngle = AngleUtil.normalizeAroundZero(angle - prevAngle);
@@ -1088,13 +1087,10 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
                     pPoint = p;
                 }
             }
-            if (addSegment)
-            {
-                tempPoints.add(segmentFrom);
-                tempPoints.add(segmentTo);
-                prevPoint = nextPoint;
-                prevAngle = angle;
-            }
+            tempPoints.add(segmentFrom);
+            tempPoints.add(segmentTo);
+            prevPoint = nextPoint;
+            prevAngle = angle;
         }
         // Remove points that are closer than the specified offset
         for (int index = 1; index < tempPoints.size() - 1; index++)
