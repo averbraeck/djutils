@@ -1004,7 +1004,7 @@ public class PolyLine2dTest
                     // Verify that negative offset works in the direction opposite to positive
                     assertEquals(Math.abs(2 * offset), offsetLine.getFirst().distance(line.offsetLine(-offset).getFirst()),
                             0.001, "offset to the left vs to the right differs by twice the offset");
-                    // The following four may be false if the offset is not small comparable to the lenght of the first or last
+                    // The following four may be false if the offset is not small comparable to the length of the first or last
                     // segment of the line
                     assertEquals(0,
                             offsetLine.getLocationExtended(
@@ -1909,6 +1909,18 @@ public class PolyLine2dTest
                 41.77018013985091, 41.8};
         PolyLine2d line = new Polygon2d(x, y);
         line.getLocation(32.74456911070153);
+    }
+
+    /**
+     * Issue #106.
+     */
+    @Test
+    public void offsetLineProble()
+    {
+        double[] x = new double[] {1614.432497574395, 1615.432497574395, 1629.5836510767303, 1632.5836510767303};
+        double[] y = new double[] {1.7999999999999998, 1.7999999999999998, 1.8, 1.8};
+        PolyLine2d line = new PolyLine2d(x, y);
+        line.offsetLine(1.0);
     }
 
 }

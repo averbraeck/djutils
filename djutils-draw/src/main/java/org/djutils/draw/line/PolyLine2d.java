@@ -18,6 +18,7 @@ import org.djutils.draw.point.DirectedPoint2d;
 import org.djutils.draw.point.Point2d;
 import org.djutils.exceptions.Throw;
 import org.djutils.logger.CategoryLogger;
+import org.djutils.math.AngleUtil;
 
 /**
  * Implementation of PolyLine for 2D space.
@@ -84,7 +85,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             if (this.x[i - 1] == this.x[i] && this.y[i - 1] == this.y[i])
             {
                 throw new IllegalArgumentException(
-                        "Degenerate PolyLine2d; point " + (i - 1) + " has the same x, y and z as point " + i);
+                        "Degenerate PolyLine2d; point " + (i - 1) + " has the same x and y as point " + i);
             }
             this.lengthIndexedLine[i] =
                     this.lengthIndexedLine[i - 1] + Math.hypot(this.x[i] - this.x[i - 1], this.y[i] - this.y[i - 1]);
@@ -982,11 +983,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
             boolean addSegment = true;
             if (index > 0)
             {
-                double deltaAngle = angle - prevAngle;
-                if (Math.abs(deltaAngle) > Math.PI)
-                {
-                    deltaAngle -= Math.signum(deltaAngle) * 2 * Math.PI;
-                }
+                double deltaAngle = AngleUtil.normalizeAroundZero(angle - prevAngle);
                 if (deltaAngle * offset <= 0)
                 {
                     // Outside of curve of reference line
@@ -1060,11 +1057,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
                     if (null != pPoint)
                     {
                         double pAngle = Math.atan2(p.y - pPoint.y, p.x - pPoint.x);
-                        double angleDifference = angle - pAngle;
-                        if (Math.abs(angleDifference) > Math.PI)
-                        {
-                            angleDifference -= Math.signum(angleDifference) * 2 * Math.PI;
-                        }
+                        double angleDifference = AngleUtil.normalizeAroundZero(angle - pAngle);
                         if (Math.abs(angleDifference) > 0)// 0.01)
                         {
                             Point2d intersection = Point2d.intersectionOfLineSegments(pPoint, p, segmentFrom, segmentTo);
@@ -1084,7 +1077,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
                         else
                         {
                             // This is where things went very wrong in the TestGeometry demo.
-                            if (i == tempPoints.size() - 1)
+                            if (tempPoints.size() - 1 == i)
                             {
                                 tempPoints.remove(tempPoints.size() - 1);
                                 segmentFrom = tempPoints.get(tempPoints.size() - 1);
@@ -1135,7 +1128,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
                 index--;
             }
         }
-        return new PolyLine2d(NO_FILTER, tempPoints);
+        return new PolyLine2d(0.0, tempPoints);
     }
 
     @Override
