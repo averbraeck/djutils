@@ -27,10 +27,14 @@ public class WeightedTallyTest
         String description = "THIS WEIGHTED TALLY IS TESTED";
         WeightedTally wt = new WeightedTally(description);
         assertEquals(description, wt.getDescription());
-
         assertTrue(wt.toString().startsWith("WeightedTally"));
-        // check the description
         assertTrue(wt.toString().contains(description));
+
+        // change the description
+        wt.setDescription("new description");
+        assertEquals("new description", wt.getDescription());
+        wt.setDescription(description);
+        assertEquals(description, wt.getDescription());
 
         // now we check the initial values
         assertTrue(Double.isNaN(wt.getMin()));

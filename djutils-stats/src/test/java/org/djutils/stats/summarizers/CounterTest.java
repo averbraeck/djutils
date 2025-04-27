@@ -58,6 +58,9 @@ public class CounterTest
         assertEquals(len, counter.reportLine().length());
         Counter counterEmpty = new Counter("Long description ".repeat(100));
         assertEquals(len, counterEmpty.reportLine().length());
-
+        
+        // change the description
+        counter.setDescription("new description");
+        assertEquals("new description", counter.getDescription());
     }
 }
