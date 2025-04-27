@@ -42,7 +42,7 @@ public class WeightedTally implements TallyStatistic
     private long n;
 
     /** The description of this WeightedTally. */
-    private final String description;
+    private String description;
 
     /** The synchronization lock. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
@@ -72,6 +72,12 @@ public class WeightedTally implements TallyStatistic
             this.weightTimesVariance = 0.0;
             this.weightedSum = 0.0;
         }
+    }
+
+    @Override
+    public void setDescription(final String description)
+    {
+        this.description = description;
     }
 
     /**

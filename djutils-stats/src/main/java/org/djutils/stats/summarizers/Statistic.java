@@ -26,6 +26,12 @@ public interface Statistic extends Serializable
     String getDescription();
 
     /**
+     * Set a new description of the statistic.
+     * @param description the new description of the statistic
+     */
+    void setDescription(String description);
+
+    /**
      * Return the current number of observations.
      * @return the number of observations
      */

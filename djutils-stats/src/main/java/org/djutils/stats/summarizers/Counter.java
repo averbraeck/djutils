@@ -56,6 +56,12 @@ public class Counter implements Statistic
         return this.n;
     }
 
+    @Override
+    public void setDescription(final String description)
+    {
+        this.description = description;
+    }
+
     /**
      * Process one observed value.
      * @param value the value to process

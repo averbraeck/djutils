@@ -48,7 +48,7 @@ public class Tally implements TallyStatistic
     private long n;
 
     /** The description of this tally. */
-    private final String description;
+    private String description;
 
     /** The quantile accumulator. */
     private final QuantileAccumulator quantileAccumulator;
@@ -95,6 +95,12 @@ public class Tally implements TallyStatistic
             this.m4 = 0;
             this.quantileAccumulator.initialize();
         }
+    }
+
+    @Override
+    public void setDescription(final String description)
+    {
+        this.description = description;
     }
 
     /**
