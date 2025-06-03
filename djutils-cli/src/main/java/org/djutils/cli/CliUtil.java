@@ -83,7 +83,7 @@ import picocli.CommandLine.Unmatched;
 public final class CliUtil
 {
     /** Mixin class to provide a --locale option, and a default locale. */
-    static class InitLocale
+    public static class InitLocale
     {
         /** the locale. */
         @Option(names = {"--locale"}, defaultValue = "en-US", description = "locale for variables with units.")
@@ -91,7 +91,7 @@ public final class CliUtil
     }
 
     /** Retrieval class to provide a --locale option, and a default locale. */
-    static class RetrieveLocale
+    public static class RetrieveLocale
     {
         /** the locale. */
         @Option(names = {"--locale"}, defaultValue = "en-US", description = "locale for variables with units.")
@@ -129,6 +129,13 @@ public final class CliUtil
     static Map<String, Object> overrideMap = new LinkedHashMap<>();
 
     /**
+     * A flag to indicate that the next argument to be parsed has a Locale attached to it. The code has to ensure that only
+     * arguments that have a parser that is able to handle and RESET the flag after use, set this value.
+     */
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    static String defaultValueLocale = "en_US";
+
+    /**
      * Parse the command line for the program. Register Unit converters, parse the command line, catch --help, --version and
      * errors. If the program implements the Checkable interface, it calls the "check" method of the class that can take care of
      * further checks of the CLI arguments. Potentially, check() can also provide other initialization of the program to be
@@ -154,6 +161,7 @@ public final class CliUtil
     @SuppressWarnings("checkstyle:methodlength")
     public static void execute(final CommandLine commandLine, final String[] args)
     {
+        System.out.println("\nCOMMANDLINE ARGS: " + List.of(args));
         // Issue #13. add the --locale option
         var initLocale = new InitLocale();
         commandLine.addMixin("locale", initLocale);
@@ -165,11 +173,18 @@ public final class CliUtil
             public String defaultValue(final ArgSpec argSpec) throws Exception
             {
                 String fieldName = ((Field) argSpec.userObject()).getName();
+                System.out.println("defaultValue for " + fieldName);
                 Class<?> fieldClass = null;
                 try
                 {
                     Field field = ClassUtil.resolveField(commandLine.getCommand().getClass(), fieldName);
                     fieldClass = field.getDeclaringClass();
+                    if (field.isAnnotationPresent(DefaultValueLocale.class))
+                    {
+                        // TODO: check that the parser for the argument can handle a default value locale (!)
+                        defaultValueLocale = field.getAnnotation(DefaultValueLocale.class).value();
+                        System.out.println("The defaultValueLocale is: " + defaultValueLocale);
+                    }
                 }
                 catch (NoSuchFieldException nsfe)
                 {
@@ -266,7 +281,9 @@ public final class CliUtil
 
         // parse the command line arguments and handle errors, now based on the set locale
         commandLine.getCommandSpec().parser().collectErrors(true);
+        System.out.println("BEFORE PARSEARGS RESULT");
         ParseResult parseResult = commandLine.parseArgs(args);
+        System.out.println("AFTER PARSEARGS RESULT");
         List<Exception> parseErrors = parseResult.errors();
         if (parseErrors.size() > 0)
         {
@@ -510,8 +527,7 @@ public final class CliUtil
     }
 
     /**
-     * @param programClass the class for which to retrieve the version. The class should be annotated with
-     *            &#64;Command
+     * @param programClass the class for which to retrieve the version. The class should be annotated with &#64;Command
      * @return String[] the version string
      * @throws CliException when the class is not annotated with &#64;Command
      */
@@ -531,8 +547,7 @@ public final class CliUtil
     }
 
     /**
-     * @param program the program for which to retrieve the version. The program's class should be annotated with
-     *            &#64;Command
+     * @param program the program for which to retrieve the version. The program's class should be annotated with &#64;Command
      * @return String[] the version string
      * @throws CliException when the class is not annotated with &#64;Command
      */
@@ -542,8 +557,7 @@ public final class CliUtil
     }
 
     /**
-     * @param programClass the class for which to retrieve the program name. The class should be annotated with
-     *            &#64;Command
+     * @param programClass the class for which to retrieve the program name. The class should be annotated with &#64;Command
      * @return String the name string
      * @throws CliException when the class is not annotated with &#64;Command
      */
@@ -569,8 +583,7 @@ public final class CliUtil
     }
 
     /**
-     * @param programClass the class for which to retrieve the description. The class should be annotated with
-     *            &#64;Command
+     * @param programClass the class for which to retrieve the description. The class should be annotated with &#64;Command
      * @return String[] the description string
      * @throws CliException when the class is not annotated with &#64;Command
      */

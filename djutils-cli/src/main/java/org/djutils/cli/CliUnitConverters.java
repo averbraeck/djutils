@@ -1,5 +1,7 @@
 package org.djutils.cli;
 
+import java.util.Locale;
+
 import org.djunits.value.vdouble.scalar.AbsoluteTemperature;
 import org.djunits.value.vdouble.scalar.AbsorbedDose;
 import org.djunits.value.vdouble.scalar.Acceleration;
@@ -290,7 +292,13 @@ public final class CliUnitConverters
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Duration convert(final String value) throws Exception
         {
-            return Duration.valueOf(value);
+            Locale saveLocale = Locale.getDefault();
+            Locale.setDefault(new Locale(CliUtil.defaultValueLocale));
+            System.out.println("In parser for Djunits. The locale is: " + Locale.getDefault());
+            var ret = Duration.valueOf(value);
+            Locale.setDefault(saveLocale);
+            CliUtil.defaultValueLocale = "en";
+            return ret;
         }
     }
 
@@ -485,7 +493,13 @@ public final class CliUnitConverters
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Length convert(final String value) throws Exception
         {
-            return Length.valueOf(value);
+            Locale saveLocale = Locale.getDefault();
+            Locale.setDefault(new Locale(CliUtil.defaultValueLocale));
+            System.out.println("In parser for Djunits. The locale is: " + Locale.getDefault());
+            var ret = Length.valueOf(value);
+            Locale.setDefault(saveLocale);
+            CliUtil.defaultValueLocale = "en";
+            return ret;
         }
     }
 
