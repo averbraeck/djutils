@@ -1812,7 +1812,7 @@ public final class TypedObject
     public static byte decodeByte(final byte[] buffer) throws SerializationException
     {
         Throw.when(buffer.length < 2, SerializationException.class, "decodeByte expects a buffer of at least 2 bytes");
-        if (buffer[0] == FieldTypes.BYTE_8 || buffer[0] == FieldTypes.BYTE_8_LE)
+        if (buffer[0] == FieldTypes.BYTE_8)
         {
             return (byte) decodeToPrimitiveDataTypes(buffer);
         }
@@ -1828,7 +1828,7 @@ public final class TypedObject
     public static short decodeShort(final byte[] buffer) throws SerializationException
     {
         Throw.when(buffer.length < 3, SerializationException.class, "decodeShort expects a buffer of at least 3 bytes");
-        if (buffer[0] == FieldTypes.SHORT_16 || buffer[0] == FieldTypes.SHORT_16_LE)
+        if (buffer[0] == FieldTypes.SHORT_16)
         {
             return (short) decodeToPrimitiveDataTypes(buffer);
         }
@@ -1844,7 +1844,7 @@ public final class TypedObject
     public static int decodeInt(final byte[] buffer) throws SerializationException
     {
         Throw.when(buffer.length < 5, SerializationException.class, "decodeInt expects a buffer of at least 5 bytes");
-        if (buffer[0] == FieldTypes.INT_32 || buffer[0] == FieldTypes.INT_32_LE)
+        if (buffer[0] == FieldTypes.INT_32)
         {
             return (int) decodeToPrimitiveDataTypes(buffer);
         }
@@ -1860,7 +1860,7 @@ public final class TypedObject
     public static long decodeLong(final byte[] buffer) throws SerializationException
     {
         Throw.when(buffer.length < 9, SerializationException.class, "decodeLong expects a buffer of at least 9 bytes");
-        if (buffer[0] == FieldTypes.LONG_64 || buffer[0] == FieldTypes.LONG_64_LE)
+        if (buffer[0] == FieldTypes.LONG_64)
         {
             return (long) decodeToPrimitiveDataTypes(buffer);
         }
@@ -1876,7 +1876,7 @@ public final class TypedObject
     public static float decodeFloat(final byte[] buffer) throws SerializationException
     {
         Throw.when(buffer.length < 5, SerializationException.class, "decodeFloat expects a buffer of at least 5 bytes");
-        if (buffer[0] == FieldTypes.FLOAT_32 || buffer[0] == FieldTypes.FLOAT_32_LE)
+        if (buffer[0] == FieldTypes.FLOAT_32)
         {
             return (float) decodeToPrimitiveDataTypes(buffer);
         }
@@ -1892,7 +1892,7 @@ public final class TypedObject
     public static double decodeDouble(final byte[] buffer) throws SerializationException
     {
         Throw.when(buffer.length < 9, SerializationException.class, "decodeDouble expects a buffer of at least 9 bytes");
-        if (buffer[0] == FieldTypes.DOUBLE_64 || buffer[0] == FieldTypes.DOUBLE_64_LE)
+        if (buffer[0] == FieldTypes.DOUBLE_64)
         {
             return (double) decodeToPrimitiveDataTypes(buffer);
         }
@@ -1908,7 +1908,7 @@ public final class TypedObject
     public static boolean decodeBoolean(final byte[] buffer) throws SerializationException
     {
         Throw.when(buffer.length < 2, SerializationException.class, "decodeBoolean expects a buffer of at least 2 bytes");
-        if (buffer[0] == FieldTypes.BOOLEAN_8 || buffer[0] == FieldTypes.BOOLEAN_8_LE)
+        if (buffer[0] == FieldTypes.BOOLEAN_8)
         {
             return (boolean) decodeToPrimitiveDataTypes(buffer);
         }
@@ -1924,7 +1924,7 @@ public final class TypedObject
     public static char decodeCharUtf8(final byte[] buffer) throws SerializationException
     {
         Throw.when(buffer.length < 2, SerializationException.class, "decodeShort expects a buffer of at least 2 bytes");
-        if (buffer[0] == FieldTypes.CHAR_8 || buffer[0] == FieldTypes.CHAR_8_LE)
+        if (buffer[0] == FieldTypes.CHAR_8)
         {
             return (char) decodeToPrimitiveDataTypes(buffer);
         }
@@ -1940,7 +1940,7 @@ public final class TypedObject
     public static char decodeCharUtf16(final byte[] buffer) throws SerializationException
     {
         Throw.when(buffer.length < 3, SerializationException.class, "decodeShort expects a buffer of at least 3 bytes");
-        if (buffer[0] == FieldTypes.CHAR_16 || buffer[0] == FieldTypes.CHAR_16_LE)
+        if (buffer[0] == FieldTypes.CHAR_16)
         {
             return (char) decodeToPrimitiveDataTypes(buffer);
         }
