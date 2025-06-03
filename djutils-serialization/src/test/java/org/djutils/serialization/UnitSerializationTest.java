@@ -300,8 +300,7 @@ public class UnitSerializationTest extends AbstractSerializationTest
             {
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
-                assertEquals(endianUtil.isBigEndian() ? FieldTypes.DOUBLE_64_UNIT_COLUMN_MATRIX
-                        : FieldTypes.DOUBLE_64_UNIT_COLUMN_MATRIX_LE, serialized[0]);
+                assertEquals(FieldTypes.DOUBLE_64_UNIT_COLUMN_MATRIX, serialized[0]);
                 HexDumper.hexDumper(serialized);
                 String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
                 assertFalse(sdd.contains("Error"));
@@ -360,8 +359,7 @@ public class UnitSerializationTest extends AbstractSerializationTest
             {
                 byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
                         : TypedMessage.encodeUTF16(endianUtil, objects);
-                assertEquals(endianUtil.isBigEndian() ? FieldTypes.FLOAT_32_UNIT_COLUMN_MATRIX
-                        : FieldTypes.FLOAT_32_UNIT_COLUMN_MATRIX_LE, serialized[0]);
+                assertEquals(FieldTypes.FLOAT_32_UNIT_COLUMN_MATRIX, serialized[0]);
                 HexDumper.hexDumper(serialized);
                 String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
                 assertFalse(sdd.contains("Error"));
