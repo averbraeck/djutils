@@ -7,7 +7,7 @@ import org.djutils.decoderdumper.Dumper;
 import org.djutils.decoderdumper.FixedString;
 import org.djutils.decoderdumper.HexAddressDecoder;
 import org.djutils.decoderdumper.HexDecoder;
-import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.Endianness;
 import org.djutils.serialization.SerialDataDecoder;
 
 /**
@@ -27,7 +27,7 @@ public class SerialDataDumper extends Dumper<SerialDataDumper>
      * @param endianUtil used to decode multi-byte values
      * @param addressOffset address of the first byte that will be processed
      */
-    public SerialDataDumper(final EndianUtil endianUtil, final int addressOffset)
+    public SerialDataDumper(final Endianness endianUtil, final int addressOffset)
     {
         super(addressOffset);
         addDecoder(new HexAddressDecoder(16));
@@ -42,7 +42,7 @@ public class SerialDataDumper extends Dumper<SerialDataDumper>
      * Construct a new SerialDataDumper.
      * @param endianUtil used to decode multi-byte values
      */
-    public SerialDataDumper(final EndianUtil endianUtil)
+    public SerialDataDumper(final Endianness endianUtil)
     {
         this(endianUtil, 0);
     }
@@ -54,7 +54,7 @@ public class SerialDataDumper extends Dumper<SerialDataDumper>
      * @param bytes the bytes to hex-dump
      * @return the hexadecimal and character dump of the <code>bytes</code>
      */
-    public static String serialDataDumper(final EndianUtil endianUtil, final int addressOffset, final byte[] bytes)
+    public static String serialDataDumper(final Endianness endianUtil, final int addressOffset, final byte[] bytes)
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try
@@ -74,7 +74,7 @@ public class SerialDataDumper extends Dumper<SerialDataDumper>
      * @param bytes the bytes to hex-dump
      * @return the hexadecimal and character dump of the <code>bytes</code>
      */
-    public static String serialDataDumper(final EndianUtil endianUtil, final byte[] bytes)
+    public static String serialDataDumper(final Endianness endianUtil, final byte[] bytes)
     {
         return serialDataDumper(endianUtil, 0, bytes);
     }

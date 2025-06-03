@@ -2,7 +2,7 @@ package org.djutils.serialization.serializers;
 
 import org.djunits.unit.Unit;
 import org.djunits.value.vdouble.scalar.base.DoubleScalar;
-import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
 
@@ -32,7 +32,7 @@ public class DoubleScalarSerializer<U extends Unit<U>, S extends DoubleScalar<U,
     }
 
     @Override
-    public void serialize(final S ads, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public void serialize(final S ads, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
             throws SerializationException
     {
         encodeUnit(ads.getDisplayUnit(), buffer, pointer, endianUtil);
@@ -41,7 +41,7 @@ public class DoubleScalarSerializer<U extends Unit<U>, S extends DoubleScalar<U,
     }
 
     @Override
-    public S deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil) throws SerializationException
+    public S deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil) throws SerializationException
     {
         U unit = getUnit(buffer, pointer, endianUtil);
         S afd = DoubleScalar.instantiateAnonymous(endianUtil.decodeDouble(buffer, pointer.getAndIncrement(8)),

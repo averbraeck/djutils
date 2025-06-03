@@ -16,7 +16,7 @@ import org.djunits.value.vdouble.matrix.base.DoubleMatrix;
 import org.djunits.value.vdouble.matrix.data.DoubleMatrixData;
 import org.djunits.value.vdouble.scalar.base.DoubleScalar;
 import org.djunits.value.vdouble.vector.base.DoubleVector;
-import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
 
@@ -57,7 +57,7 @@ public class DoubleMatrixSerializer<U extends Unit<U>, S extends DoubleScalar<U,
     }
 
     @Override
-    public void serialize(final M adm, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public void serialize(final M adm, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
             throws SerializationException
     {
         endianUtil.encodeInt(adm.rows(), buffer, pointer.getAndIncrement(4));
@@ -73,7 +73,7 @@ public class DoubleMatrixSerializer<U extends Unit<U>, S extends DoubleScalar<U,
     }
 
     @Override
-    public M deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil) throws SerializationException
+    public M deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil) throws SerializationException
     {
         try
         {

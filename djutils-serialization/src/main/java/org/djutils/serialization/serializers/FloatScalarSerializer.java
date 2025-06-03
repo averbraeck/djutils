@@ -2,7 +2,7 @@ package org.djutils.serialization.serializers;
 
 import org.djunits.unit.Unit;
 import org.djunits.value.vfloat.scalar.base.FloatScalar;
-import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
 
@@ -32,7 +32,7 @@ public class FloatScalarSerializer<U extends Unit<U>, S extends FloatScalar<U, S
     }
 
     @Override
-    public void serialize(final S afs, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public void serialize(final S afs, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
             throws SerializationException
     {
         encodeUnit(afs.getDisplayUnit(), buffer, pointer, endianUtil);
@@ -41,7 +41,7 @@ public class FloatScalarSerializer<U extends Unit<U>, S extends FloatScalar<U, S
     }
 
     @Override
-    public S deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil) throws SerializationException
+    public S deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil) throws SerializationException
     {
         U unit = getUnit(buffer, pointer, endianUtil);
         S afs = FloatScalar.instantiateAnonymous(endianUtil.decodeFloat(buffer, pointer.getAndIncrement(4)),

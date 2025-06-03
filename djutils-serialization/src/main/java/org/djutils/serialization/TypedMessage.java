@@ -34,7 +34,7 @@ public final class TypedMessage
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
-    public static byte[] encode(final EndianUtil endianUtil, final Object... content) throws SerializationException
+    public static byte[] encode(final Endianness endianUtil, final Object... content) throws SerializationException
     {
         return encode(true, endianUtil, content);
     }
@@ -46,7 +46,7 @@ public final class TypedMessage
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
-    public static byte[] encodeUTF8(final EndianUtil endianUtil, final Object... content) throws SerializationException
+    public static byte[] encodeUTF8(final Endianness endianUtil, final Object... content) throws SerializationException
     {
         return encode(true, endianUtil, content);
     }
@@ -58,7 +58,7 @@ public final class TypedMessage
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
-    public static byte[] encodeUTF16(final EndianUtil endianUtil, final Object... content) throws SerializationException
+    public static byte[] encodeUTF16(final Endianness endianUtil, final Object... content) throws SerializationException
     {
         return encode(false, endianUtil, content);
     }
@@ -92,7 +92,7 @@ public final class TypedMessage
      * @throws SerializationException on unknown data type
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static byte[] encode(final boolean utf8, final EndianUtil endianUtil, final Object... content)
+    private static byte[] encode(final boolean utf8, final Endianness endianUtil, final Object... content)
             throws SerializationException
     {
         Serializer[] serializers = buildEncoderList(utf8, content);
@@ -153,12 +153,12 @@ public final class TypedMessage
         Pointer pointer = new Pointer();
         while (pointer.get() < buffer.length)
         {
-            EndianUtil endianUtil = EndianUtil.BIG_ENDIAN;
+            Endianness endianUtil = Endianness.BIG_ENDIAN;
             Byte fieldType = buffer[pointer.getAndIncrement(1)];
             if (fieldType < 0)
             {
                 fieldType = (byte) (fieldType & 0x7F);
-                endianUtil = EndianUtil.LITTLE_ENDIAN;
+                endianUtil = Endianness.LITTLE_ENDIAN;
             }
             Serializer<?> serializer = decoderMap.get(fieldType);
             if (null == serializer)

@@ -12,7 +12,7 @@ import java.nio.ByteOrder;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public final class EndianUtil
+public final class Endianness
 {
     /** Does this EndianUtil encode and decode messages in bigEndian? */
     private final boolean bigEndian;
@@ -30,17 +30,17 @@ public final class EndianUtil
     }
 
     /** Directly usable bigEndian EndianUtil. */
-    public static final EndianUtil BIG_ENDIAN = new EndianUtil(true);
+    public static final Endianness BIG_ENDIAN = new Endianness(true);
 
     /** Directly usable littleEndian EndianUtil. */
-    public static final EndianUtil LITTLE_ENDIAN = new EndianUtil(false);
+    public static final Endianness LITTLE_ENDIAN = new Endianness(false);
 
     /**
      * Construct an EndianUtil object with user specified endianness.
      * @param bigEndian if true encoding and decoding use big endian style; if false; encoding and decoding use little
      *            endian style
      */
-    private EndianUtil(final boolean bigEndian)
+    private Endianness(final boolean bigEndian)
     {
         this.bigEndian = bigEndian;
     }
@@ -49,7 +49,7 @@ public final class EndianUtil
      * Construct an EndianUtil object that uses bigEndian encoding.
      * @return EndianUtil that uses bigEndian encoding
      */
-    public static EndianUtil bigEndian()
+    public static Endianness bigEndian()
     {
         return BIG_ENDIAN;
     }
@@ -58,7 +58,7 @@ public final class EndianUtil
      * Construct an EndianUtil object that uses littleEndian encoding.
      * @return EndianUtil that uses littleEndian encoding
      */
-    public static EndianUtil littleEndian()
+    public static Endianness littleEndian()
     {
         return LITTLE_ENDIAN;
     }

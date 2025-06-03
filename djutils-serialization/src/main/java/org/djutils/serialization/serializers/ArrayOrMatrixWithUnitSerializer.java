@@ -2,7 +2,7 @@ package org.djutils.serialization.serializers;
 
 import org.djunits.unit.Unit;
 import org.djutils.serialization.DisplayType;
-import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.Endianness;
 import org.djutils.serialization.SerializationException;
 import org.djutils.serialization.SerializationUnits;
 
@@ -42,7 +42,7 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
 
     @Override
     public final void serializeWithPrefix(final T object, final byte[] buffer, final Pointer pointer,
-            final EndianUtil endianUtil) throws SerializationException
+            final Endianness endianUtil) throws SerializationException
     {
         buffer[pointer.getAndIncrement(1)] = endianUtil.isBigEndian() ? fieldType() : (byte) (fieldType() + 128);
         serialize(object, buffer, pointer, endianUtil);
@@ -73,7 +73,7 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
      * @param pointer the start pointer in the byte array
      * @param endianUtil encoder to use for multi-byte values
      */
-    protected void encodeUnit(final U unit, final byte[] message, final Pointer pointer, final EndianUtil endianUtil)
+    protected void encodeUnit(final U unit, final byte[] message, final Pointer pointer, final Endianness endianUtil)
     {
         SerializationUnits unitType = SerializationUnits.getUnitType(unit);
         message[pointer.getAndIncrement(1)] = unitType.getCode();
@@ -89,7 +89,7 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
      * @return Unit
      */
     @SuppressWarnings("unchecked")
-    protected U getUnit(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    protected U getUnit(final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
     {
         SerializationUnits unitType = SerializationUnits.getUnitType(buffer[pointer.getAndIncrement(1)]);
         DisplayType displayType = DisplayType.getDisplayType(unitType, 0 + buffer[pointer.getAndIncrement(1)]);

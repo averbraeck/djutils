@@ -14,7 +14,7 @@ import org.djunits.value.vdouble.scalar.base.DoubleScalar;
 import org.djunits.value.vdouble.vector.SIVector;
 import org.djunits.value.vdouble.vector.base.DoubleVector;
 import org.djunits.value.vdouble.vector.data.DoubleVectorData;
-import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
 
@@ -54,7 +54,7 @@ public class DoubleVectorSerializer<U extends Unit<U>, S extends DoubleScalar<U,
     }
 
     @Override
-    public void serialize(final V adv, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public void serialize(final V adv, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
             throws SerializationException
     {
         endianUtil.encodeInt(adv.size(), buffer, pointer.getAndIncrement(4));
@@ -66,7 +66,7 @@ public class DoubleVectorSerializer<U extends Unit<U>, S extends DoubleScalar<U,
     }
 
     @Override
-    public V deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil) throws SerializationException
+    public V deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil) throws SerializationException
     {
         int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianUtil);

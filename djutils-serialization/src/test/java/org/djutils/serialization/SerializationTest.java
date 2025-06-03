@@ -112,7 +112,7 @@ public class SerializationTest extends AbstractSerializationTest
     {
         Compound[] testArray = new Compound[] {new Compound(1, 0.1), new Compound(2, 0.2), new Compound(3, 0.3)};
         Object[] objects = new Object[] {testArray};
-        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
+        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
@@ -176,7 +176,7 @@ public class SerializationTest extends AbstractSerializationTest
     {
         File file = new File("whatever");
         Object[] objects = new Object[] {file};
-        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
+        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
             try
             {
@@ -327,13 +327,13 @@ public class SerializationTest extends AbstractSerializationTest
     @Test
     public void testEndianUtil()
     {
-        assertTrue(EndianUtil.BIG_ENDIAN.isBigEndian(), "EndianUtil.BIG_ENDIAN is big endian");
-        assertFalse(EndianUtil.LITTLE_ENDIAN.isBigEndian(), "EndianUtil.LITTLE_ENDIAN is not big endian");
-        assertEquals(ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN), EndianUtil.isPlatformBigEndian(),
+        assertTrue(Endianness.BIG_ENDIAN.isBigEndian(), "EndianUtil.BIG_ENDIAN is big endian");
+        assertFalse(Endianness.LITTLE_ENDIAN.isBigEndian(), "EndianUtil.LITTLE_ENDIAN is not big endian");
+        assertEquals(ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN), Endianness.isPlatformBigEndian(),
                 "Platform endianness matches what EndianUtil says");
-        assertTrue(EndianUtil.bigEndian().isBigEndian(), "EndianUtil.BIG_ENDIAN is big endian");
-        assertFalse(EndianUtil.littleEndian().isBigEndian(), "EndianUtil.LITTLE_ENDIAN is not big endian");
-        assertTrue(EndianUtil.BIG_ENDIAN.toString().startsWith("EndianUtil"), "EndianUtil has descriptive toString method");
+        assertTrue(Endianness.bigEndian().isBigEndian(), "EndianUtil.BIG_ENDIAN is big endian");
+        assertFalse(Endianness.littleEndian().isBigEndian(), "EndianUtil.LITTLE_ENDIAN is not big endian");
+        assertTrue(Endianness.BIG_ENDIAN.toString().startsWith("EndianUtil"), "EndianUtil has descriptive toString method");
     }
 
     /**
@@ -362,7 +362,7 @@ public class SerializationTest extends AbstractSerializationTest
             }
 
             @Override
-            public void serialize(final Byte object, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+            public void serialize(final Byte object, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
                     throws SerializationException
             {
                 // Auto-generated method stub; never called
@@ -370,13 +370,13 @@ public class SerializationTest extends AbstractSerializationTest
 
             @Override
             public void serializeWithPrefix(final Byte object, final byte[] buffer, final Pointer pointer,
-                    final EndianUtil endianUtil) throws SerializationException
+                    final Endianness endianUtil) throws SerializationException
             {
                 // Auto-generated method stub; never called
             }
 
             @Override
-            public Byte deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+            public Byte deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
                     throws SerializationException
             {
                 // Auto-generated method stub; never called

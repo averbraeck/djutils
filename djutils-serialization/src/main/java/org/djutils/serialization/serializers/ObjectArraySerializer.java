@@ -2,7 +2,7 @@ package org.djutils.serialization.serializers;
 
 import java.lang.reflect.Array;
 
-import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.Endianness;
 import org.djutils.serialization.SerializationException;
 
 /**
@@ -47,14 +47,14 @@ public abstract class ObjectArraySerializer<E extends Object> extends ArrayOrMat
 
     @Override
     public final void serializeWithPrefix(final E[] array, final byte[] buffer, final Pointer pointer,
-            final EndianUtil endianUtil) throws SerializationException
+            final Endianness endianUtil) throws SerializationException
     {
         buffer[pointer.getAndIncrement(1)] = endianUtil.isBigEndian() ? fieldType() : (byte) (fieldType() + 128);
         serialize(array, buffer, pointer, endianUtil);
     }
 
     @Override
-    public final void serialize(final E[] array, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public final void serialize(final E[] array, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
     {
         endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
         for (int i = 0; i < array.length; i++)
@@ -64,7 +64,7 @@ public abstract class ObjectArraySerializer<E extends Object> extends ArrayOrMat
     }
 
     @Override
-    public final E[] deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public final E[] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
     {
         int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         @SuppressWarnings("unchecked")

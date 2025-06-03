@@ -50,7 +50,7 @@ public class SimpleSerializationTest
         Object[] objects = new Object[] {intValue, integerValue, shortValue, shortValue2, longValue, longValue2, byteValue,
                 byteValue2, floatValue, floatValue2, doubleValue, doubleValue2, boolValue, boolValue2, charValue, charValue2,
                 stringValue};
-        for (EndianUtil endianUtil : new EndianUtil[] {EndianUtil.BIG_ENDIAN, EndianUtil.LITTLE_ENDIAN})
+        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
@@ -92,13 +92,13 @@ public class SimpleSerializationTest
     public void testDecodeInt() throws SerializationException
     {
         int value = 1024;
-        byte[] intSerBE = TypedObject.encode(EndianUtil.BIG_ENDIAN, value);
+        byte[] intSerBE = TypedObject.encode(Endianness.BIG_ENDIAN, value);
         // System.out.println(IntStream.range(0, intSerBE.length).map(i -> intSerBE[i] >= 0 ? intSerBE[i] : intSerBE[i] + 256)
         // .boxed().collect(Collectors.toList()));
         int intBE = TypedObject.decodeInt(intSerBE);
         assertEquals(value, intBE);
 
-        byte[] intSerLE = TypedObject.encode(EndianUtil.LITTLE_ENDIAN, value);
+        byte[] intSerLE = TypedObject.encode(Endianness.LITTLE_ENDIAN, value);
         // System.out.println(IntStream.range(0, intSerLE.length).map(i -> intSerLE[i] >= 0 ? intSerLE[i] : intSerLE[i] + 256)
         // .boxed().collect(Collectors.toList()));
         int intLE = TypedObject.decodeInt(intSerLE);
@@ -126,11 +126,11 @@ public class SimpleSerializationTest
     public void testDecodeByte() throws SerializationException
     {
         byte value = 55;
-        byte[] valueSerBE = TypedMessage.encode(EndianUtil.BIG_ENDIAN, value);
+        byte[] valueSerBE = TypedMessage.encode(Endianness.BIG_ENDIAN, value);
         byte valueBE = TypedObject.decodeByte(valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedMessage.encode(EndianUtil.LITTLE_ENDIAN, value);
+        byte[] valueSerLE = TypedMessage.encode(Endianness.LITTLE_ENDIAN, value);
         byte valueLE = TypedObject.decodeByte(valueSerLE);
         assertEquals(value, valueLE);
 
@@ -146,11 +146,11 @@ public class SimpleSerializationTest
     public void testDecodeShort() throws SerializationException
     {
         short value = 5534;
-        byte[] valueSerBE = TypedObject.encodeUTF8(EndianUtil.BIG_ENDIAN, value);
+        byte[] valueSerBE = TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, value);
         short valueBE = TypedObject.decodeShort(valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF8(EndianUtil.LITTLE_ENDIAN, value);
+        byte[] valueSerLE = TypedObject.encodeUTF8(Endianness.LITTLE_ENDIAN, value);
         short valueLE = TypedObject.decodeShort(valueSerLE);
         assertEquals(value, valueLE);
 
@@ -166,11 +166,11 @@ public class SimpleSerializationTest
     public void testDecodeLong() throws SerializationException
     {
         long value = 5534766567L;
-        byte[] valueSerBE = TypedObject.encodeUTF8(EndianUtil.BIG_ENDIAN, value);
+        byte[] valueSerBE = TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, value);
         long valueBE = TypedObject.decodeLong(valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF8(EndianUtil.LITTLE_ENDIAN, value);
+        byte[] valueSerLE = TypedObject.encodeUTF8(Endianness.LITTLE_ENDIAN, value);
         long valueLE = TypedObject.decodeLong(valueSerLE);
         assertEquals(value, valueLE);
 
@@ -186,11 +186,11 @@ public class SimpleSerializationTest
     public void testDecodeFloat() throws SerializationException
     {
         float value = 5534.123f;
-        byte[] valueSerBE = TypedObject.encodeUTF8(EndianUtil.BIG_ENDIAN, value);
+        byte[] valueSerBE = TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, value);
         float valueBE = TypedObject.decodeFloat(valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF8(EndianUtil.LITTLE_ENDIAN, value);
+        byte[] valueSerLE = TypedObject.encodeUTF8(Endianness.LITTLE_ENDIAN, value);
         float valueLE = TypedObject.decodeFloat(valueSerLE);
         assertEquals(value, valueLE);
 
@@ -206,11 +206,11 @@ public class SimpleSerializationTest
     public void testDecodeDouble() throws SerializationException
     {
         double value = 55346533.77d;
-        byte[] valueSerBE = TypedObject.encodeUTF8(EndianUtil.BIG_ENDIAN, value);
+        byte[] valueSerBE = TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, value);
         double valueBE = TypedObject.decodeDouble(valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF8(EndianUtil.LITTLE_ENDIAN, value);
+        byte[] valueSerLE = TypedObject.encodeUTF8(Endianness.LITTLE_ENDIAN, value);
         double valueLE = TypedObject.decodeDouble(valueSerLE);
         assertEquals(value, valueLE);
 
@@ -226,11 +226,11 @@ public class SimpleSerializationTest
     public void testDecodeBoolean() throws SerializationException
     {
         boolean value = true;
-        byte[] valueSerBE = TypedObject.encodeUTF8(EndianUtil.BIG_ENDIAN, value);
+        byte[] valueSerBE = TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, value);
         boolean valueBE = TypedObject.decodeBoolean(valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF8(EndianUtil.LITTLE_ENDIAN, value);
+        byte[] valueSerLE = TypedObject.encodeUTF8(Endianness.LITTLE_ENDIAN, value);
         boolean valueLE = TypedObject.decodeBoolean(valueSerLE);
         assertEquals(value, valueLE);
 
@@ -246,11 +246,11 @@ public class SimpleSerializationTest
     public void testDecodeCharUtf8() throws SerializationException
     {
         char value = '}';
-        byte[] valueSerBE = TypedObject.encodeUTF8(EndianUtil.BIG_ENDIAN, value);
+        byte[] valueSerBE = TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, value);
         char valueBE = TypedObject.decodeCharUtf8(valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF8(EndianUtil.LITTLE_ENDIAN, value);
+        byte[] valueSerLE = TypedObject.encodeUTF8(Endianness.LITTLE_ENDIAN, value);
         char valueLE = TypedObject.decodeCharUtf8(valueSerLE);
         assertEquals(value, valueLE);
 
@@ -266,11 +266,11 @@ public class SimpleSerializationTest
     public void testDecodeCharUtf16() throws SerializationException
     {
         char value = '\u00A2'; // cent sign
-        byte[] valueSerBE = TypedObject.encodeUTF16(EndianUtil.BIG_ENDIAN, value);
+        byte[] valueSerBE = TypedObject.encodeUTF16(Endianness.BIG_ENDIAN, value);
         char valueBE = TypedObject.decodeCharUtf16(valueSerBE);
         assertEquals(value, valueBE);
 
-        byte[] valueSerLE = TypedObject.encodeUTF16(EndianUtil.LITTLE_ENDIAN, value);
+        byte[] valueSerLE = TypedObject.encodeUTF16(Endianness.LITTLE_ENDIAN, value);
         char valueLE = TypedObject.decodeCharUtf16(valueSerLE);
         assertEquals(value, valueLE);
 

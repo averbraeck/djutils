@@ -1,6 +1,6 @@
 package org.djutils.serialization.serializers;
 
-import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.Endianness;
 import org.djutils.serialization.SerializationException;
 
 /**
@@ -48,7 +48,7 @@ public interface Serializer<T extends Object>
      * @param endianUtil selects bigEndian or littleEndian encoding
      * @throws SerializationException when a matrix has size zero or is jagged
      */
-    void serialize(T object, byte[] buffer, Pointer pointer, EndianUtil endianUtil) throws SerializationException;
+    void serialize(T object, byte[] buffer, Pointer pointer, Endianness endianUtil) throws SerializationException;
 
     /**
      * Serialize an object of type T including the prefix byte(s).
@@ -58,7 +58,7 @@ public interface Serializer<T extends Object>
      * @param endianUtil selects bigEndian or littleEndian encoding
      * @throws SerializationException when a matrix has size zero or is jagged
      */
-    void serializeWithPrefix(T object, byte[] buffer, Pointer pointer, EndianUtil endianUtil) throws SerializationException;
+    void serializeWithPrefix(T object, byte[] buffer, Pointer pointer, Endianness endianUtil) throws SerializationException;
 
     /**
      * Deserialize an object of type T. The <code>pointer</code> should be on the first byte of the object; i.e. just after the
@@ -69,7 +69,7 @@ public interface Serializer<T extends Object>
      * @param endianUtil selects bigEndian or littleEndian encoding
      * @throws SerializationException when the input data cannot be deserialized
      */
-    T deSerialize(byte[] buffer, Pointer pointer, EndianUtil endianUtil) throws SerializationException;
+    T deSerialize(byte[] buffer, Pointer pointer, Endianness endianUtil) throws SerializationException;
 
     /**
      * Return a description of the type of data that this serializer handles. The result of this method should <b>not</b> be

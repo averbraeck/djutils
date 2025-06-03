@@ -14,7 +14,7 @@ import org.djunits.value.vfloat.scalar.base.FloatScalar;
 import org.djunits.value.vfloat.vector.FloatSIVector;
 import org.djunits.value.vfloat.vector.base.FloatVector;
 import org.djunits.value.vfloat.vector.data.FloatVectorData;
-import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
 
@@ -54,7 +54,7 @@ public class FloatVectorSerializer<U extends Unit<U>, S extends FloatScalar<U, S
     }
 
     @Override
-    public void serialize(final V afv, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public void serialize(final V afv, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
     {
         endianUtil.encodeInt(afv.size(), buffer, pointer.getAndIncrement(4));
         encodeUnit(afv.getDisplayUnit(), buffer, pointer, endianUtil);
@@ -65,7 +65,7 @@ public class FloatVectorSerializer<U extends Unit<U>, S extends FloatScalar<U, S
     }
 
     @Override
-    public V deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil) throws SerializationException
+    public V deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil) throws SerializationException
     {
         int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         Unit<?> unit = getUnit(buffer, pointer, endianUtil);

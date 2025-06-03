@@ -8,7 +8,7 @@ import org.djunits.value.vfloat.scalar.base.FloatScalar;
 import org.djunits.value.vfloat.vector.base.FloatVector;
 import org.djunits.value.vfloat.vector.data.FloatVectorData;
 import org.djutils.exceptions.Throw;
-import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
 
@@ -50,7 +50,7 @@ public class FloatVectorArraySerializer<U extends Unit<U>, S extends FloatScalar
     }
 
     @Override
-    public void serialize(final V[] adva, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public void serialize(final V[] adva, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
             throws SerializationException
     {
         int width = adva.length;
@@ -75,7 +75,7 @@ public class FloatVectorArraySerializer<U extends Unit<U>, S extends FloatScalar
     }
 
     @Override
-    public V[] deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public V[] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
             throws SerializationException
     {
         int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));

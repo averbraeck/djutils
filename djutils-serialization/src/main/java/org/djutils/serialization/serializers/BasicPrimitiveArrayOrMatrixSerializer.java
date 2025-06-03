@@ -1,6 +1,6 @@
 package org.djutils.serialization.serializers;
 
-import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.Endianness;
 import org.djutils.serialization.SerializationException;
 
 /**
@@ -44,7 +44,7 @@ public abstract class BasicPrimitiveArrayOrMatrixSerializer<T extends Object> ex
 
     @Override
     public final void serializeWithPrefix(final T object, final byte[] buffer, final Pointer pointer,
-            final EndianUtil endianUtil) throws SerializationException
+            final Endianness endianUtil) throws SerializationException
     {
         buffer[pointer.getAndIncrement(1)] = endianUtil.isBigEndian() ? fieldType() : (byte) (fieldType() + 128);
         serialize(object, buffer, pointer, endianUtil);

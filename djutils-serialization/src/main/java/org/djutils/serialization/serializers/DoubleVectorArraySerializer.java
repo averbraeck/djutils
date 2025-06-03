@@ -8,7 +8,7 @@ import org.djunits.value.vdouble.scalar.base.DoubleScalar;
 import org.djunits.value.vdouble.vector.base.DoubleVector;
 import org.djunits.value.vdouble.vector.data.DoubleVectorData;
 import org.djutils.exceptions.Throw;
-import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
 import org.djutils.serialization.SerializationException;
 
@@ -50,7 +50,7 @@ public class DoubleVectorArraySerializer<U extends Unit<U>, S extends DoubleScal
     }
 
     @Override
-    public void serialize(final V[] adva, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public void serialize(final V[] adva, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
             throws SerializationException
     {
         int width = adva.length;
@@ -75,7 +75,7 @@ public class DoubleVectorArraySerializer<U extends Unit<U>, S extends DoubleScal
     }
 
     @Override
-    public V[] deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public V[] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
             throws SerializationException
     {
         int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));

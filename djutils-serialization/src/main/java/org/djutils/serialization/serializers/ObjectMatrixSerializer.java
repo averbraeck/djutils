@@ -3,7 +3,7 @@ package org.djutils.serialization.serializers;
 import java.lang.reflect.Array;
 
 import org.djutils.exceptions.Throw;
-import org.djutils.serialization.EndianUtil;
+import org.djutils.serialization.Endianness;
 import org.djutils.serialization.SerializationException;
 
 /**
@@ -49,14 +49,14 @@ public abstract class ObjectMatrixSerializer<E extends Object> extends ArrayOrMa
 
     @Override
     public final void serializeWithPrefix(final E[][] matrix, final byte[] buffer, final Pointer pointer,
-            final EndianUtil endianUtil) throws SerializationException
+            final Endianness endianUtil) throws SerializationException
     {
         buffer[pointer.getAndIncrement(1)] = endianUtil.isBigEndian() ? fieldType() : (byte) (fieldType() + 128);
         serialize(matrix, buffer, pointer, endianUtil);
     }
 
     @Override
-    public final void serialize(final E[][] matrix, final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public final void serialize(final E[][] matrix, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
             throws SerializationException
     {
         int height = matrix.length;
@@ -76,7 +76,7 @@ public abstract class ObjectMatrixSerializer<E extends Object> extends ArrayOrMa
     }
 
     @Override
-    public final E[][] deSerialize(final byte[] buffer, final Pointer pointer, final EndianUtil endianUtil)
+    public final E[][] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
     {
         int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
         int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));

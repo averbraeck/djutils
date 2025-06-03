@@ -27,7 +27,7 @@ import org.djutils.serialization.serializers.StringMatrixSerializer;
 public class SerialDataDecoder implements Decoder
 {
     /** The endian util to use to decode multi-byte values. */
-    private final EndianUtil endianUtil;
+    private final Endianness endianUtil;
 
     /** Type of the data that is currently being decoded. */
     private byte currentFieldType;
@@ -72,7 +72,7 @@ public class SerialDataDecoder implements Decoder
      * Construct a new SerialDataDecoder.
      * @param endianUtil the endian util to use to decode multi-byte values
      */
-    public SerialDataDecoder(final EndianUtil endianUtil)
+    public SerialDataDecoder(final Endianness endianUtil)
     {
         this.endianUtil = endianUtil;
     }
