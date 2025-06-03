@@ -21,7 +21,7 @@ Some properties:
 
 ## Origin
 
-DJUTILS-SERIALIZATION was developed at the Delft University of Technology as part of the SIM0MQ project and further refined within the [Open Traffic Simulator](https://opentrafficsim.org/docs/latest/) project. The main authors/contributors of the DJUTILS project are Alexander Verbraeck and Peter Knoppers for the Java implementation, and Sibel Eker and Jan Kwakkel for the Python implementation.
+DJUTILS-SERIALIZATION was developed at the Delft University of Technology as part of the SIM0MQ project and further refined within the [Open Traffic Simulator](https://opentrafficsim.org/docs/latest/) project. The main authors/contributors of the DJUTILS project are Alexander Verbraeck, Wouter Schakel and Peter Knoppers for the Java implementation, and Alexander Verbraeck, Wouter Schakel, Sibel Eker and Jan Kwakkel for the Python implementation. There is also a partial C++ implementation.
 
 
 ## Maven use
@@ -50,7 +50,7 @@ DJUTILS-SERIALIZATION is directly dependent on two packages (djutils and djunits
 * [djutils](https://djutils.org/manual/djutils) for the base helper classes
 * [djunits](https://djunits.org/manual/) for the scalar, vector and matrix fields
 * [tinylog](https://tinylog.org/v1/) for providing an easy-to-use and fast logger (via djutils)
-* [ojalgo](https://www.ojalgo.org/) for matrix and vector calculations (via djunits)
+* [jakarta.annotation-api ](https://github.com/jakartaee/common-annotations-api) for annotation code after Java-8 (via djunits)
 
 If the DJUTILS-SERIALIZATION library is used as a part of a Maven project, all dependencies will be automatically resolved, and the programmer / user does not have to worry about finding the libraries.
 
