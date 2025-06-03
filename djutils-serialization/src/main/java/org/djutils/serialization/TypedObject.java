@@ -1959,7 +1959,7 @@ public final class TypedObject
     public static <U extends Unit<U>> U getUnit(final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
     {
         QuantityType unitType = QuantityType.getUnitType(buffer[pointer.getAndIncrement(1)]);
-        DisplayType displayType = DisplayType.getDisplayType(unitType, 0 + buffer[pointer.getAndIncrement(1)]);
+        UnitType displayType = UnitType.getDisplayType(unitType, 0 + buffer[pointer.getAndIncrement(1)]);
         return (U) displayType.getDjunitsType();
     }
 

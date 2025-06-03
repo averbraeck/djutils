@@ -1,7 +1,7 @@
 package org.djutils.serialization.serializers;
 
 import org.djunits.unit.Unit;
-import org.djutils.serialization.DisplayType;
+import org.djutils.serialization.UnitType;
 import org.djutils.serialization.Endianness;
 import org.djutils.serialization.SerializationException;
 import org.djutils.serialization.QuantityType;
@@ -77,7 +77,7 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
     {
         QuantityType unitType = QuantityType.getUnitType(unit);
         message[pointer.getAndIncrement(1)] = unitType.getCode();
-        DisplayType displayType = DisplayType.getDisplayType(unit);
+        UnitType displayType = UnitType.getDisplayType(unit);
         message[pointer.getAndIncrement(1)] = displayType.getByteCode();
     }
 
@@ -92,7 +92,7 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
     protected U getUnit(final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
     {
         QuantityType unitType = QuantityType.getUnitType(buffer[pointer.getAndIncrement(1)]);
-        DisplayType displayType = DisplayType.getDisplayType(unitType, 0 + buffer[pointer.getAndIncrement(1)]);
+        UnitType displayType = UnitType.getDisplayType(unitType, 0 + buffer[pointer.getAndIncrement(1)]);
         return (U) displayType.getDjunitsType();
     }
 

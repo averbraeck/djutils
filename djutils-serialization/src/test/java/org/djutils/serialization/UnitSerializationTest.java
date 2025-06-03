@@ -251,9 +251,9 @@ public class UnitSerializationTest extends AbstractSerializationTest
     public void testDJunitDisplayTypes() throws SerializationException, ValueRuntimeException
     {
         QuantityType areaSerUnit = QuantityType.AREA;
-        DisplayType aream2 = DisplayType.AREA_SQUARE_METER;
-        DisplayType areaacre = DisplayType.AREA_ACRE;
-        DisplayType masskg = DisplayType.MASS_KILOGRAM;
+        UnitType aream2 = UnitType.AREA_SQUARE_METER;
+        UnitType areaacre = UnitType.AREA_ACRE;
+        UnitType masskg = UnitType.MASS_KILOGRAM;
         assertEquals("m2", aream2.getAbbreviation());
         assertEquals(0, aream2.getByteCode());
         assertEquals(18, areaacre.getByteCode());
@@ -266,13 +266,13 @@ public class UnitSerializationTest extends AbstractSerializationTest
         assertEquals(areaSerUnit, aream2.getUnitType());
         assertEquals(areaacre.getUnitType(), aream2.getUnitType());
 
-        assertEquals(8, DisplayType.getByteCode(ElectricalResistanceUnit.STATOHM));
-        assertEquals(areaacre, DisplayType.getDisplayType(AreaUnit.ACRE));
-        assertEquals(DisplayType.ENERGY_CALORIE, DisplayType.getDisplayType((byte) 11, 30));
-        assertEquals(areaacre, DisplayType.getDisplayType(areaSerUnit, 18));
-        assertEquals(30, DisplayType.getIntCode(EnergyUnit.CALORIE));
-        assertEquals(EnergyUnit.CALORIE, DisplayType.getUnit((byte) 11, 30));
-        assertEquals(AreaUnit.ACRE, DisplayType.getUnit(areaSerUnit, 18));
+        assertEquals(8, UnitType.getByteCode(ElectricalResistanceUnit.STATOHM));
+        assertEquals(areaacre, UnitType.getDisplayType(AreaUnit.ACRE));
+        assertEquals(UnitType.ENERGY_CALORIE, UnitType.getDisplayType((byte) 11, 30));
+        assertEquals(areaacre, UnitType.getDisplayType(areaSerUnit, 18));
+        assertEquals(30, UnitType.getIntCode(EnergyUnit.CALORIE));
+        assertEquals(EnergyUnit.CALORIE, UnitType.getUnit((byte) 11, 30));
+        assertEquals(AreaUnit.ACRE, UnitType.getUnit(areaSerUnit, 18));
 
         assertNotEquals(aream2, areaacre);
         assertNotEquals(masskg, areaacre);

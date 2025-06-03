@@ -424,7 +424,7 @@ public class SerialDataDecoder implements Decoder
         {
             byte unitTypeCode = this.dataElementBytes[2 * i];
             byte displayUnitCode = this.dataElementBytes[2 * i + 1];
-            this.columnUnits[i] = DisplayType.getUnit(unitTypeCode, displayUnitCode);
+            this.columnUnits[i] = UnitType.getUnit(unitTypeCode, displayUnitCode);
             if (this.columnUnits[i] == null && !result)
             {
                 this.buffer.append(
@@ -484,7 +484,7 @@ public class SerialDataDecoder implements Decoder
     {
         byte unitTypeCode = this.dataElementBytes[0];
         byte displayUnitCode = this.dataElementBytes[1];
-        this.displayUnit = DisplayType.getUnit(unitTypeCode, displayUnitCode);
+        this.displayUnit = UnitType.getUnit(unitTypeCode, displayUnitCode);
         if (this.displayUnit == null)
         {
             this.buffer
