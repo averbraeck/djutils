@@ -49,44 +49,44 @@ public abstract class ObjectMatrixSerializer<E extends Object> extends ArrayOrMa
 
     @Override
     public final void serializeWithPrefix(final E[][] matrix, final byte[] buffer, final Pointer pointer,
-            final Endianness endianUtil) throws SerializationException
+            final Endianness endianness) throws SerializationException
     {
-        buffer[pointer.getAndIncrement(1)] = endianUtil.isBigEndian() ? fieldType() : (byte) (fieldType() + 128);
-        serialize(matrix, buffer, pointer, endianUtil);
+        buffer[pointer.getAndIncrement(1)] = endianness.isBigEndian() ? fieldType() : (byte) (fieldType() + 128);
+        serialize(matrix, buffer, pointer, endianness);
     }
 
     @Override
-    public final void serialize(final E[][] matrix, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+    public final void serialize(final E[][] matrix, final byte[] buffer, final Pointer pointer, final Endianness endianness)
             throws SerializationException
     {
         int height = matrix.length;
         Throw.when(0 == height, SerializationException.class, "Zero height matrix is not allowed");
         int width = matrix[0].length;
         Throw.when(0 == width, SerializationException.class, "Zero width matrix is not allowed");
-        endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
-        endianUtil.encodeInt(width, buffer, pointer.getAndIncrement(4));
+        endianness.encodeInt(height, buffer, pointer.getAndIncrement(4));
+        endianness.encodeInt(width, buffer, pointer.getAndIncrement(4));
         for (int i = 0; i < height; i++)
         {
             Throw.when(matrix[i].length != width, SerializationException.class, "Jagged matrix is not allowed");
             for (int j = 0; j < width; j++)
             {
-                serializeElement(matrix[i][j], buffer, pointer.getAndIncrement(getElementSize()), endianUtil);
+                serializeElement(matrix[i][j], buffer, pointer.getAndIncrement(getElementSize()), endianness);
             }
         }
     }
 
     @Override
-    public final E[][] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+    public final E[][] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
     {
-        int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-        int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+        int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+        int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
         @SuppressWarnings("unchecked")
         E[][] result = (E[][]) Array.newInstance(this.dataClass, height, width);
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)
             {
-                result[i][j] = deSerializeElement(buffer, pointer.getAndIncrement(getElementSize()), endianUtil);
+                result[i][j] = deSerializeElement(buffer, pointer.getAndIncrement(getElementSize()), endianness);
             }
         }
         return result;

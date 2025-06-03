@@ -128,11 +128,11 @@ public class UnitSerializationTest extends AbstractSerializationTest
                 new float[][] {{1.2f, 4.7f, 6.8f}, {2.2f, 3.3f, 4.4f}}, ElectricalResistanceUnit.KILOOHM, StorageType.DENSE);
 
         Object[] objects = new Object[] {length, value, area, currents, resistors, currentMatrix, resistorMatrix};
-        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
-            byte[] serialized = TypedMessage.encodeUTF16(endianUtil, objects);
+            byte[] serialized = TypedMessage.encodeUTF16(endianness, objects);
             HexDumper.hexDumper(serialized);
-            String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+            String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
             assertFalse(sdd.contains("Error"));
             assertTrue(sdd.contains("Djunits_DoubleScalar"));
             assertTrue(sdd.contains("Djunits_FloatScalar"));
@@ -207,11 +207,11 @@ public class UnitSerializationTest extends AbstractSerializationTest
     @Test
     public void testDJunitsErrors() throws SerializationException, ValueRuntimeException
     {
-        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
-            Try.testFail(() -> TypedObject.encode(endianUtil, NonsenseUnit2.SI));
+            Try.testFail(() -> TypedObject.encode(endianness, NonsenseUnit2.SI));
             NonsenseScalar ns = new NonsenseScalar(1.0, NonsenseUnit2.SI);
-            Try.testFail(() -> TypedObject.encode(endianUtil, ns));
+            Try.testFail(() -> TypedObject.encode(endianness, ns));
         }
 
     }
@@ -294,15 +294,15 @@ public class UnitSerializationTest extends AbstractSerializationTest
                 new DoubleVector[] {new LengthVector(new double[] {0.1, 0.2, 0.3}, LengthUnit.INCH, StorageType.DENSE),
                         new TimeVector(new double[] {10.1, 20.2, 30.3}, TimeUnit.BASE_MINUTE, StorageType.DENSE)};
         Object[] objects = new Object[] {array};
-        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
-                        : TypedMessage.encodeUTF16(endianUtil, objects);
+                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianness, objects)
+                        : TypedMessage.encodeUTF16(endianness, objects);
                 assertEquals(FieldTypes.DOUBLE_64_UNIT_COLUMN_MATRIX, serialized[0]);
                 HexDumper.hexDumper(serialized);
-                String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains("Djunits_double_vector_array"));
                 assertTrue(sdd.contains("height"));
@@ -353,15 +353,15 @@ public class UnitSerializationTest extends AbstractSerializationTest
                 new FloatVector[] {new FloatLengthVector(new float[] {0.1f, 0.2f, 0.3f}, LengthUnit.INCH, StorageType.DENSE),
                         new FloatTimeVector(new float[] {10.1f, 20.2f, 30.3f}, TimeUnit.BASE_MINUTE, StorageType.DENSE)};
         Object[] objects = new Object[] {array};
-        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
-                        : TypedMessage.encodeUTF16(endianUtil, objects);
+                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianness, objects)
+                        : TypedMessage.encodeUTF16(endianness, objects);
                 assertEquals(FieldTypes.FLOAT_32_UNIT_COLUMN_MATRIX, serialized[0]);
                 HexDumper.hexDumper(serialized);
-                String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains("Djunits_float_vector_array"));
                 assertTrue(sdd.contains("height"));

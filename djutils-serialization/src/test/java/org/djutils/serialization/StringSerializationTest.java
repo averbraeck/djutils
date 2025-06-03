@@ -66,14 +66,14 @@ public class StringSerializationTest extends AbstractSerializationTest
                 new byte[] {-118, 2, 0, 0, 0, (byte) 0x3D, (byte) 0xD8, (byte) 0x00, (byte) 0xDE});
 
         Object[] objects = new Object[] {copyright, xi, permille, smiley, abc, complex};
-        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
-                        : TypedMessage.encodeUTF16(endianUtil, objects);
+                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianness, objects)
+                        : TypedMessage.encodeUTF16(endianness, objects);
                 HexDumper.hexDumper(serialized);
-                String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains(encodeUTF8 ? "String_8" : "String_16"));
                 Object[] decodedObjects = TypedMessage.decodeToObjectDataTypes(serialized);
@@ -138,14 +138,14 @@ public class StringSerializationTest extends AbstractSerializationTest
         String complex = "12%c" + smiley + copyright + xi + permille + "[]@";
 
         String[] sa = new String[] {abc, smiley, complex};
-        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
                 byte[] serialized =
-                        encodeUTF8 ? TypedObject.encodeUTF8(endianUtil, sa) : TypedObject.encodeUTF16(endianUtil, sa);
+                        encodeUTF8 ? TypedObject.encodeUTF8(endianness, sa) : TypedObject.encodeUTF16(endianness, sa);
                 HexDumper.hexDumper(serialized);
-                String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains(encodeUTF8 ? "String_8_array" : "String_16_array"));
                 String[] decodedObjects = (String[]) TypedObject.decodeToObjectDataTypes(serialized);
@@ -174,14 +174,14 @@ public class StringSerializationTest extends AbstractSerializationTest
         String complex = "12%c" + smiley + copyright + xi + permille + "[]@";
 
         String[][] sm = new String[][] {{abc, smiley, complex}, {xi, permille, smiley}};
-        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
                 byte[] serialized =
-                        encodeUTF8 ? TypedObject.encodeUTF8(endianUtil, sm) : TypedObject.encodeUTF16(endianUtil, sm);
+                        encodeUTF8 ? TypedObject.encodeUTF8(endianness, sm) : TypedObject.encodeUTF16(endianness, sm);
                 HexDumper.hexDumper(serialized);
-                String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains(encodeUTF8 ? "String_8_matrix" : "String_16_matrix"));
                 String[][] decodedObjects = (String[][]) TypedObject.decodeToObjectDataTypes(serialized);
@@ -200,12 +200,12 @@ public class StringSerializationTest extends AbstractSerializationTest
 
         // test jagged matrix
         final String[][] smRagged = new String[][] {{abc, smiley, complex}, {xi, smiley}};
-        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                Try.testFail(() -> encodeUTF8 ? TypedObject.encodeUTF8(endianUtil, smRagged)
-                        : TypedObject.encodeUTF16(endianUtil, smRagged));
+                Try.testFail(() -> encodeUTF8 ? TypedObject.encodeUTF8(endianness, smRagged)
+                        : TypedObject.encodeUTF16(endianness, smRagged));
             }
         }
     }

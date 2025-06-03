@@ -53,17 +53,17 @@ public abstract class ArrayOrMatrixSerializer<T extends Object, E extends Object
      * @param object the object to serialize
      * @param buffer the byte buffer for the serialized object
      * @param offset index in byte buffer where first serialized byte must be stored
-     * @param endianUtil selects bigEndian or littleEndian encoding
+     * @param endianness selects bigEndian or littleEndian encoding
      */
-    public abstract void serializeElement(E object, byte[] buffer, int offset, Endianness endianUtil);
+    public abstract void serializeElement(E object, byte[] buffer, int offset, Endianness endianness);
 
     /**
      * Deserializer for one array or matrix element (without type prefix) must be implemented in implementing sub classes.
      * @param buffer the byte buffer from which the object is to be deserialized
      * @param offset index in byte buffer where first byte of the object is stored
-     * @param endianUtil selects bigEndian or littleEndian encoding
+     * @param endianness selects bigEndian or littleEndian encoding
      * @return the deserialized object
      */
-    public abstract E deSerializeElement(byte[] buffer, int offset, Endianness endianUtil);
+    public abstract E deSerializeElement(byte[] buffer, int offset, Endianness endianness);
 
 }

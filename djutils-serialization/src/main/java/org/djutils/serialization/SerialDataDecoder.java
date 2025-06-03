@@ -27,7 +27,7 @@ import org.djutils.serialization.serializers.StringMatrixSerializer;
 public class SerialDataDecoder implements Decoder
 {
     /** The endian util to use to decode multi-byte values. */
-    private final Endianness endianUtil;
+    private final Endianness endianness;
 
     /** Type of the data that is currently being decoded. */
     private byte currentFieldType;
@@ -70,11 +70,11 @@ public class SerialDataDecoder implements Decoder
 
     /**
      * Construct a new SerialDataDecoder.
-     * @param endianUtil the endian util to use to decode multi-byte values
+     * @param endianness the endian util to use to decode multi-byte values
      */
-    public SerialDataDecoder(final Endianness endianUtil)
+    public SerialDataDecoder(final Endianness endianness)
     {
-        this.endianUtil = endianUtil;
+        this.endianness = endianness;
     }
 
     @Override
@@ -324,7 +324,7 @@ public class SerialDataDecoder implements Decoder
     {
         try
         {
-            Object value = this.currentSerializer.deSerialize(this.dataElementBytes, new Pointer(), this.endianUtil);
+            Object value = this.currentSerializer.deSerialize(this.dataElementBytes, new Pointer(), this.endianness);
             this.buffer.append(value.toString());
         }
         catch (SerializationException e)
@@ -343,7 +343,7 @@ public class SerialDataDecoder implements Decoder
         int elementSize = this.currentSerializer.dataClassName().contains("8") ? 1 : 2;
         if (this.charCount == 0)
         {
-            this.charCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
+            this.charCount = this.endianness.decodeInt(this.dataElementBytes, 0);
             this.currentChar = 0;
             prepareForDataElement(elementSize);
         }
@@ -362,7 +362,7 @@ public class SerialDataDecoder implements Decoder
             }
             else
             {
-                char character = this.endianUtil.decodeChar(this.dataElementBytes, 0);
+                char character = this.endianness.decodeChar(this.dataElementBytes, 0);
                 if (Character.isAlphabetic(character))
                 {
                     this.buffer.append(character); // safe to print
@@ -400,13 +400,13 @@ public class SerialDataDecoder implements Decoder
         this.currentColumn = 0;
         if (this.dataElementBytes.length == 8)
         {
-            this.rowCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
-            this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 4);
+            this.rowCount = this.endianness.decodeInt(this.dataElementBytes, 0);
+            this.columnCount = this.endianness.decodeInt(this.dataElementBytes, 4);
             this.buffer.append(String.format("height %d, width %d: ", this.rowCount, this.columnCount));
         }
         else
         {
-            this.columnCount = this.endianUtil.decodeInt(this.dataElementBytes, 0);
+            this.columnCount = this.endianness.decodeInt(this.dataElementBytes, 0);
             this.rowCount = 1;
             this.buffer.append(String.format("length %d: ", this.columnCount));
         }
@@ -453,14 +453,14 @@ public class SerialDataDecoder implements Decoder
             U unit = (U) this.columnUnits[this.currentColumn];
             if (this.currentFieldType == 31)
             {
-                float f = this.endianUtil.decodeFloat(this.dataElementBytes, 0);
+                float f = this.endianness.decodeFloat(this.dataElementBytes, 0);
                 FloatScalar<U, FS> afs = FloatScalar.instantiateAnonymous(f, unit.getStandardUnit());
                 afs.setDisplayUnit(unit);
                 this.buffer.append(afs.toDisplayString().replace(" ", "") + " ");
             }
             else
             {
-                double d = this.endianUtil.decodeDouble(this.dataElementBytes, 0);
+                double d = this.endianness.decodeDouble(this.dataElementBytes, 0);
                 DoubleScalar<U, DS> ads = DoubleScalar.instantiateAnonymous(d, unit.getStandardUnit());
                 ads.setDisplayUnit(unit);
                 this.buffer.append(ads.toDisplayString().replace(" ", "") + " ");
@@ -509,14 +509,14 @@ public class SerialDataDecoder implements Decoder
         {
             if (this.dataElementBytes.length == 4)
             {
-                float f = this.endianUtil.decodeFloat(this.dataElementBytes, 0);
+                float f = this.endianness.decodeFloat(this.dataElementBytes, 0);
                 FloatScalar<U, FS> afs = FloatScalar.instantiateAnonymous(f, this.displayUnit.getStandardUnit());
                 afs.setDisplayUnit((U) this.displayUnit);
                 this.buffer.append(afs.toDisplayString().replace(" ", "") + " ");
             }
             else
             {
-                double d = this.endianUtil.decodeDouble(this.dataElementBytes, 0);
+                double d = this.endianness.decodeDouble(this.dataElementBytes, 0);
                 DoubleScalar<U, DS> ads = DoubleScalar.instantiateAnonymous(d, this.displayUnit.getStandardUnit());
                 ads.setDisplayUnit((U) this.displayUnit);
                 this.buffer.append(ads.toDisplayString().replace(" ", "") + " ");
@@ -543,15 +543,15 @@ public class SerialDataDecoder implements Decoder
             case FieldTypes.BYTE_8_ARRAY, FieldTypes.BYTE_8_MATRIX -> 
                 String.format("%02x ", this.dataElementBytes[0]);
             case FieldTypes.SHORT_16_ARRAY, FieldTypes.SHORT_16_MATRIX -> 
-                String.format("%d ", this.endianUtil.decodeShort(this.dataElementBytes, 0));
+                String.format("%d ", this.endianness.decodeShort(this.dataElementBytes, 0));
             case FieldTypes.INT_32_ARRAY, FieldTypes.INT_32_MATRIX -> 
-                String.format("%d ", this.endianUtil.decodeInt(this.dataElementBytes, 0));
+                String.format("%d ", this.endianness.decodeInt(this.dataElementBytes, 0));
             case FieldTypes.LONG_64_ARRAY, FieldTypes.LONG_64_MATRIX -> 
-                String.format("%d ", this.endianUtil.decodeLong(this.dataElementBytes, 0));
+                String.format("%d ", this.endianness.decodeLong(this.dataElementBytes, 0));
             case FieldTypes.FLOAT_32_ARRAY, FieldTypes.FLOAT_32_MATRIX -> 
-                String.format("%f ", this.endianUtil.decodeFloat(this.dataElementBytes, 0));
+                String.format("%f ", this.endianness.decodeFloat(this.dataElementBytes, 0));
             case FieldTypes.DOUBLE_64_ARRAY, FieldTypes.DOUBLE_64_MATRIX -> 
-                String.format("%f ", this.endianUtil.decodeDouble(this.dataElementBytes, 0));
+                String.format("%f ", this.endianness.decodeDouble(this.dataElementBytes, 0));
             case FieldTypes.BOOLEAN_8_ARRAY, FieldTypes.BOOLEAN_8_MATRIX -> 
                 this.dataElementBytes[0] == 0 ? "false " : "true ";
             // @formatter:on

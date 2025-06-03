@@ -29,38 +29,38 @@ public final class TypedMessage
     
     /**
      * Encode the object array into a byte[] message. Use UTF8 for the characters and for the String.
-     * @param endianUtil encoder to use for multi-byte values
+     * @param endianness encoder to use for multi-byte values
      * @param content the objects to encode
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
-    public static byte[] encode(final Endianness endianUtil, final Object... content) throws SerializationException
+    public static byte[] encode(final Endianness endianness, final Object... content) throws SerializationException
     {
-        return encode(true, endianUtil, content);
+        return encode(true, endianness, content);
     }
 
     /**
      * Encode the object array into a byte[] message. Use UTF8 for the characters and for the String.
-     * @param endianUtil encoder to use for multi-byte values
+     * @param endianness encoder to use for multi-byte values
      * @param content the objects to encode
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
-    public static byte[] encodeUTF8(final Endianness endianUtil, final Object... content) throws SerializationException
+    public static byte[] encodeUTF8(final Endianness endianness, final Object... content) throws SerializationException
     {
-        return encode(true, endianUtil, content);
+        return encode(true, endianness, content);
     }
 
     /**
      * Encode the object array into a byte[] message. Use UTF16 for the characters and for the String.
-     * @param endianUtil encoder for multi-byte values
+     * @param endianness encoder for multi-byte values
      * @param content the objects to encode
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
-    public static byte[] encodeUTF16(final Endianness endianUtil, final Object... content) throws SerializationException
+    public static byte[] encodeUTF16(final Endianness endianness, final Object... content) throws SerializationException
     {
-        return encode(false, endianUtil, content);
+        return encode(false, endianness, content);
     }
 
     /**
@@ -86,13 +86,13 @@ public final class TypedMessage
     /**
      * Encode the object array into a Big Endian message.
      * @param utf8 whether to encode String fields and characters in utf8 or not
-     * @param endianUtil encoder for multi-byte values
+     * @param endianness encoder for multi-byte values
      * @param content the objects to encode
      * @return the zeroMQ message to send as a byte array
      * @throws SerializationException on unknown data type
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static byte[] encode(final boolean utf8, final Endianness endianUtil, final Object... content)
+    private static byte[] encode(final boolean utf8, final Endianness endianness, final Object... content)
             throws SerializationException
     {
         Serializer[] serializers = buildEncoderList(utf8, content);
@@ -109,7 +109,7 @@ public final class TypedMessage
 
         for (int i = 0; i < serializers.length; i++)
         {
-            serializers[i].serializeWithPrefix(content[i], message, pointer, endianUtil);
+            serializers[i].serializeWithPrefix(content[i], message, pointer, endianness);
             // System.out.println("Expected increment: " + serializers[i].size(content[i]));
             // System.out.println(pointer);
         }
@@ -153,12 +153,12 @@ public final class TypedMessage
         Pointer pointer = new Pointer();
         while (pointer.get() < buffer.length)
         {
-            Endianness endianUtil = Endianness.BIG_ENDIAN;
+            Endianness endianness = Endianness.BIG_ENDIAN;
             Byte fieldType = buffer[pointer.getAndIncrement(1)];
             if (fieldType < 0)
             {
                 fieldType = (byte) (fieldType & 0x7F);
-                endianUtil = Endianness.LITTLE_ENDIAN;
+                endianness = Endianness.LITTLE_ENDIAN;
             }
             Serializer<?> serializer = decoderMap.get(fieldType);
             if (null == serializer)
@@ -168,7 +168,7 @@ public final class TypedMessage
             }
             else
             {
-                list.add(serializer.deSerialize(buffer, pointer, endianUtil));
+                list.add(serializer.deSerialize(buffer, pointer, endianness));
             }
         }
         return list.toArray();

@@ -33,10 +33,10 @@ public abstract class StringArraySerializer extends BasicSerializer<String[]>
 
     @Override
     public final void serializeWithPrefix(final String[] object, final byte[] buffer, final Pointer pointer,
-            final Endianness endianUtil) throws SerializationException
+            final Endianness endianness) throws SerializationException
     {
-        buffer[pointer.getAndIncrement(1)] = endianUtil.isBigEndian() ? fieldType() : (byte) (fieldType() + 128);
-        serialize(object, buffer, pointer, endianUtil);
+        buffer[pointer.getAndIncrement(1)] = endianness.isBigEndian() ? fieldType() : (byte) (fieldType() + 128);
+        serialize(object, buffer, pointer, endianness);
     }
 
     @Override

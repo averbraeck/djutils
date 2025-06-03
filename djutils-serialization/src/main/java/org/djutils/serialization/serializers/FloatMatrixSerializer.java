@@ -57,33 +57,33 @@ public class FloatMatrixSerializer<U extends Unit<U>, S extends FloatScalar<U, S
     }
 
     @Override
-    public void serialize(final M afm, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+    public void serialize(final M afm, final byte[] buffer, final Pointer pointer, final Endianness endianness)
             throws SerializationException
     {
-        endianUtil.encodeInt(afm.rows(), buffer, pointer.getAndIncrement(4));
-        endianUtil.encodeInt(afm.cols(), buffer, pointer.getAndIncrement(4));
-        encodeUnit(afm.getDisplayUnit(), buffer, pointer, endianUtil);
+        endianness.encodeInt(afm.rows(), buffer, pointer.getAndIncrement(4));
+        endianness.encodeInt(afm.cols(), buffer, pointer.getAndIncrement(4));
+        encodeUnit(afm.getDisplayUnit(), buffer, pointer, endianness);
         for (int i = 0; i < afm.rows(); i++)
         {
             for (int j = 0; j < afm.cols(); j++)
             {
-                endianUtil.encodeFloat(afm.get(i, j).getSI(), buffer, pointer.getAndIncrement(4));
+                endianness.encodeFloat(afm.get(i, j).getSI(), buffer, pointer.getAndIncrement(4));
             }
         }
     }
 
     @Override
-    public M deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil) throws SerializationException
+    public M deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness) throws SerializationException
     {
-        int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-        int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianUtil);
+        int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+        int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianness);
         float[][] array = new float[height][width];
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)
             {
-                array[i][j] = endianUtil.decodeFloat(buffer, pointer.getAndIncrement(4));
+                array[i][j] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
             }
         }
         try

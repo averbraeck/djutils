@@ -50,15 +50,15 @@ public class SimpleSerializationTest
         Object[] objects = new Object[] {intValue, integerValue, shortValue, shortValue2, longValue, longValue2, byteValue,
                 byteValue2, floatValue, floatValue2, doubleValue, doubleValue2, boolValue, boolValue2, charValue, charValue2,
                 stringValue};
-        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                // System.out.println("" + endianUtil + ", UTF8=" + encodeUTF8);
-                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
-                        : TypedMessage.encodeUTF16(endianUtil, objects);
+                // System.out.println("" + endianness + ", UTF8=" + encodeUTF8);
+                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianness, objects)
+                        : TypedMessage.encodeUTF16(endianness, objects);
                 HexDumper.hexDumper(serialized);
-                String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains("Integer_32"));
                 assertTrue(sdd.contains("Short_16"));

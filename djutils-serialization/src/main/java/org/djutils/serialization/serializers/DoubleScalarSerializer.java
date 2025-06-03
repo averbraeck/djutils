@@ -32,19 +32,19 @@ public class DoubleScalarSerializer<U extends Unit<U>, S extends DoubleScalar<U,
     }
 
     @Override
-    public void serialize(final S ads, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+    public void serialize(final S ads, final byte[] buffer, final Pointer pointer, final Endianness endianness)
             throws SerializationException
     {
-        encodeUnit(ads.getDisplayUnit(), buffer, pointer, endianUtil);
+        encodeUnit(ads.getDisplayUnit(), buffer, pointer, endianness);
         double v = ads.getSI();
-        endianUtil.encodeDouble(v, buffer, pointer.getAndIncrement(8));
+        endianness.encodeDouble(v, buffer, pointer.getAndIncrement(8));
     }
 
     @Override
-    public S deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil) throws SerializationException
+    public S deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness) throws SerializationException
     {
-        U unit = getUnit(buffer, pointer, endianUtil);
-        S afd = DoubleScalar.instantiateAnonymous(endianUtil.decodeDouble(buffer, pointer.getAndIncrement(8)),
+        U unit = getUnit(buffer, pointer, endianness);
+        S afd = DoubleScalar.instantiateAnonymous(endianness.decodeDouble(buffer, pointer.getAndIncrement(8)),
                 unit.getStandardUnit());
         afd.setDisplayUnit(unit);
         return afd;

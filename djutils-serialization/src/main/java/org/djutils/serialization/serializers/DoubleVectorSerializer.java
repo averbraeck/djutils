@@ -54,26 +54,26 @@ public class DoubleVectorSerializer<U extends Unit<U>, S extends DoubleScalar<U,
     }
 
     @Override
-    public void serialize(final V adv, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+    public void serialize(final V adv, final byte[] buffer, final Pointer pointer, final Endianness endianness)
             throws SerializationException
     {
-        endianUtil.encodeInt(adv.size(), buffer, pointer.getAndIncrement(4));
-        encodeUnit(adv.getDisplayUnit(), buffer, pointer, endianUtil);
+        endianness.encodeInt(adv.size(), buffer, pointer.getAndIncrement(4));
+        encodeUnit(adv.getDisplayUnit(), buffer, pointer, endianness);
         for (int i = 0; i < adv.size(); i++)
         {
-            endianUtil.encodeDouble(adv.get(i).getSI(), buffer, pointer.getAndIncrement(8));
+            endianness.encodeDouble(adv.get(i).getSI(), buffer, pointer.getAndIncrement(8));
         }
     }
 
     @Override
-    public V deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil) throws SerializationException
+    public V deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness) throws SerializationException
     {
-        int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianUtil);
+        int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianness);
         double[] array = new double[size];
         for (int i = 0; i < size; i++)
         {
-            array[i] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
+            array[i] = endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
         }
         try
         {

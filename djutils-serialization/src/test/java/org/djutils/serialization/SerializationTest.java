@@ -112,13 +112,13 @@ public class SerializationTest extends AbstractSerializationTest
     {
         Compound[] testArray = new Compound[] {new Compound(1, 0.1), new Compound(2, 0.2), new Compound(3, 0.3)};
         Object[] objects = new Object[] {testArray};
-        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                // System.out.println("Encoding " + (encodeUTF8 ? "UTF8" : "UTF16") + ", " + endianUtil);
-                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
-                        : TypedMessage.encodeUTF16(endianUtil, objects);
+                // System.out.println("Encoding " + (encodeUTF8 ? "UTF8" : "UTF16") + ", " + endianness);
+                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianness, objects)
+                        : TypedMessage.encodeUTF16(endianness, objects);
                 HexDumper.hexDumper(serialized);
                 for (boolean primitive : new boolean[] {false, true})
                 {
@@ -176,11 +176,11 @@ public class SerializationTest extends AbstractSerializationTest
     {
         File file = new File("whatever");
         Object[] objects = new Object[] {file};
-        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
             try
             {
-                TypedMessage.encodeUTF16(endianUtil, objects);
+                TypedMessage.encodeUTF16(endianness, objects);
                 fail("Non serializable object should have thrown a SerializationException");
             }
             catch (SerializationException se)
@@ -192,7 +192,7 @@ public class SerializationTest extends AbstractSerializationTest
             objects = new Object[] {badMatrix};
             try
             {
-                TypedMessage.encodeUTF16(endianUtil, objects);
+                TypedMessage.encodeUTF16(endianness, objects);
                 fail("Zero sized matrix should have thrown a SerializationException");
             }
             catch (SerializationException se)
@@ -362,7 +362,7 @@ public class SerializationTest extends AbstractSerializationTest
             }
 
             @Override
-            public void serialize(final Byte object, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+            public void serialize(final Byte object, final byte[] buffer, final Pointer pointer, final Endianness endianness)
                     throws SerializationException
             {
                 // Auto-generated method stub; never called
@@ -370,13 +370,13 @@ public class SerializationTest extends AbstractSerializationTest
 
             @Override
             public void serializeWithPrefix(final Byte object, final byte[] buffer, final Pointer pointer,
-                    final Endianness endianUtil) throws SerializationException
+                    final Endianness endianness) throws SerializationException
             {
                 // Auto-generated method stub; never called
             }
 
             @Override
-            public Byte deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+            public Byte deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
                     throws SerializationException
             {
                 // Auto-generated method stub; never called

@@ -32,19 +32,19 @@ public class FloatScalarSerializer<U extends Unit<U>, S extends FloatScalar<U, S
     }
 
     @Override
-    public void serialize(final S afs, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+    public void serialize(final S afs, final byte[] buffer, final Pointer pointer, final Endianness endianness)
             throws SerializationException
     {
-        encodeUnit(afs.getDisplayUnit(), buffer, pointer, endianUtil);
+        encodeUnit(afs.getDisplayUnit(), buffer, pointer, endianness);
         float v = afs.getSI();
-        endianUtil.encodeFloat(v, buffer, pointer.getAndIncrement(4));
+        endianness.encodeFloat(v, buffer, pointer.getAndIncrement(4));
     }
 
     @Override
-    public S deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil) throws SerializationException
+    public S deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness) throws SerializationException
     {
-        U unit = getUnit(buffer, pointer, endianUtil);
-        S afs = FloatScalar.instantiateAnonymous(endianUtil.decodeFloat(buffer, pointer.getAndIncrement(4)),
+        U unit = getUnit(buffer, pointer, endianness);
+        S afs = FloatScalar.instantiateAnonymous(endianness.decodeFloat(buffer, pointer.getAndIncrement(4)),
                 unit.getStandardUnit());
         afs.setDisplayUnit(unit);
         return afs;

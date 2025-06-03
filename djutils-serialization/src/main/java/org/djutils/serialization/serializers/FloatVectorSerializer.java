@@ -54,25 +54,25 @@ public class FloatVectorSerializer<U extends Unit<U>, S extends FloatScalar<U, S
     }
 
     @Override
-    public void serialize(final V afv, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+    public void serialize(final V afv, final byte[] buffer, final Pointer pointer, final Endianness endianness)
     {
-        endianUtil.encodeInt(afv.size(), buffer, pointer.getAndIncrement(4));
-        encodeUnit(afv.getDisplayUnit(), buffer, pointer, endianUtil);
+        endianness.encodeInt(afv.size(), buffer, pointer.getAndIncrement(4));
+        encodeUnit(afv.getDisplayUnit(), buffer, pointer, endianness);
         for (int i = 0; i < afv.size(); i++)
         {
-            endianUtil.encodeFloat(afv.get(i).getSI(), buffer, pointer.getAndIncrement(4));
+            endianness.encodeFloat(afv.get(i).getSI(), buffer, pointer.getAndIncrement(4));
         }
     }
 
     @Override
-    public V deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil) throws SerializationException
+    public V deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness) throws SerializationException
     {
-        int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-        Unit<?> unit = getUnit(buffer, pointer, endianUtil);
+        int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+        Unit<?> unit = getUnit(buffer, pointer, endianness);
         float[] array = new float[size];
         for (int i = 0; i < size; i++)
         {
-            array[i] = endianUtil.decodeFloat(buffer, pointer.getAndIncrement(4));
+            array[i] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
         }
         try
         {

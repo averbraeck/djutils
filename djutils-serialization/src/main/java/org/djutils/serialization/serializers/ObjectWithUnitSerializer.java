@@ -32,9 +32,9 @@ public abstract class ObjectWithUnitSerializer<U extends Unit<U>, T> extends Obj
      * @param unit the unit to code in the byte array
      * @param message the byte array
      * @param pointer the start pointer in the byte array
-     * @param endianUtil encoder to use for multi-byte values
+     * @param endianness encoder to use for multi-byte values
      */
-    protected void encodeUnit(final U unit, final byte[] message, final Pointer pointer, final Endianness endianUtil)
+    protected void encodeUnit(final U unit, final byte[] message, final Pointer pointer, final Endianness endianness)
     {
         QuantityType unitType = QuantityType.getUnitType(unit);
         message[pointer.getAndIncrement(1)] = unitType.getCode();
@@ -46,11 +46,11 @@ public abstract class ObjectWithUnitSerializer<U extends Unit<U>, T> extends Obj
      * Retrieve and decode a DJUNITS unit.
      * @param buffer the encoded data
      * @param pointer position in the encoded data where the unit is to be decoded from
-     * @param endianUtil decoder for multi-byte values
+     * @param endianness decoder for multi-byte values
      * @return Unit
      */
     @SuppressWarnings("unchecked")
-    protected U getUnit(final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+    protected U getUnit(final byte[] buffer, final Pointer pointer, final Endianness endianness)
     {
         QuantityType unitType = QuantityType.getUnitType(buffer[pointer.getAndIncrement(1)]);
         UnitType displayType = UnitType.getDisplayType(unitType, 0 + buffer[pointer.getAndIncrement(1)]);

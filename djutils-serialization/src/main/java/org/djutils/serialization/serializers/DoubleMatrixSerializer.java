@@ -57,35 +57,35 @@ public class DoubleMatrixSerializer<U extends Unit<U>, S extends DoubleScalar<U,
     }
 
     @Override
-    public void serialize(final M adm, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+    public void serialize(final M adm, final byte[] buffer, final Pointer pointer, final Endianness endianness)
             throws SerializationException
     {
-        endianUtil.encodeInt(adm.rows(), buffer, pointer.getAndIncrement(4));
-        endianUtil.encodeInt(adm.cols(), buffer, pointer.getAndIncrement(4));
-        encodeUnit(adm.getDisplayUnit(), buffer, pointer, endianUtil);
+        endianness.encodeInt(adm.rows(), buffer, pointer.getAndIncrement(4));
+        endianness.encodeInt(adm.cols(), buffer, pointer.getAndIncrement(4));
+        encodeUnit(adm.getDisplayUnit(), buffer, pointer, endianness);
         for (int i = 0; i < adm.rows(); i++)
         {
             for (int j = 0; j < adm.cols(); j++)
             {
-                endianUtil.encodeDouble(adm.get(i, j).getSI(), buffer, pointer.getAndIncrement(8));
+                endianness.encodeDouble(adm.get(i, j).getSI(), buffer, pointer.getAndIncrement(8));
             }
         }
     }
 
     @Override
-    public M deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil) throws SerializationException
+    public M deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness) throws SerializationException
     {
         try
         {
-            int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-            int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-            Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianUtil);
+            int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+            Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianness);
             double[][] array = new double[height][width];
             for (int i = 0; i < height; i++)
             {
                 for (int j = 0; j < width; j++)
                 {
-                    array[i][j] = endianUtil.decodeDouble(buffer, pointer.getAndIncrement(8));
+                    array[i][j] = endianness.decodeDouble(buffer, pointer.getAndIncrement(8));
                 }
             }
             DoubleMatrixData fvd = DoubleMatrixData.instantiate(array, IdentityScale.SCALE, StorageType.DENSE);

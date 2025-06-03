@@ -24,42 +24,42 @@ public class SerialDataDumper extends Dumper<SerialDataDumper>
 {
     /**
      * Construct a new SerialDataDumper.
-     * @param endianUtil used to decode multi-byte values
+     * @param endianness used to decode multi-byte values
      * @param addressOffset address of the first byte that will be processed
      */
-    public SerialDataDumper(final Endianness endianUtil, final int addressOffset)
+    public SerialDataDumper(final Endianness endianness, final int addressOffset)
     {
         super(addressOffset);
         addDecoder(new HexAddressDecoder(16));
         addDecoder(new FixedString(": "));
         addDecoder(new HexDecoder(16, 8));
         addDecoder(new FixedString("  "));
-        addDecoder(new SerialDataDecoder(endianUtil));
+        addDecoder(new SerialDataDecoder(endianness));
         addDecoder(new FixedString("\n"));
     }
 
     /**
      * Construct a new SerialDataDumper.
-     * @param endianUtil used to decode multi-byte values
+     * @param endianness used to decode multi-byte values
      */
-    public SerialDataDumper(final Endianness endianUtil)
+    public SerialDataDumper(final Endianness endianness)
     {
-        this(endianUtil, 0);
+        this(endianness, 0);
     }
 
     /**
      * Create a SerialDataDumper object; use it to dump an array of bytes and return the dump as a String.
-     * @param endianUtil used to decode multi-byte values
+     * @param endianness used to decode multi-byte values
      * @param addressOffset address of the first byte
      * @param bytes the bytes to hex-dump
      * @return the hexadecimal and character dump of the <code>bytes</code>
      */
-    public static String serialDataDumper(final Endianness endianUtil, final int addressOffset, final byte[] bytes)
+    public static String serialDataDumper(final Endianness endianness, final int addressOffset, final byte[] bytes)
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try
         {
-            new SerialDataDumper(endianUtil, addressOffset).setOutputStream(baos).append(bytes).flush();
+            new SerialDataDumper(endianness, addressOffset).setOutputStream(baos).append(bytes).flush();
         }
         catch (IOException exception)
         {
@@ -70,13 +70,13 @@ public class SerialDataDumper extends Dumper<SerialDataDumper>
 
     /**
      * Create a SerialDataDumper object with addressOffset 0; use it to dump an array of bytes and return the dump as a String.
-     * @param endianUtil used to decode multi-byte values
+     * @param endianness used to decode multi-byte values
      * @param bytes the bytes to hex-dump
      * @return the hexadecimal and character dump of the <code>bytes</code>
      */
-    public static String serialDataDumper(final Endianness endianUtil, final byte[] bytes)
+    public static String serialDataDumper(final Endianness endianness, final byte[] bytes)
     {
-        return serialDataDumper(endianUtil, 0, bytes);
+        return serialDataDumper(endianness, 0, bytes);
     }
 
     @Override

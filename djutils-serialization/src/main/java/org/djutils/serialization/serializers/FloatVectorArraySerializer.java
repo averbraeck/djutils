@@ -50,49 +50,49 @@ public class FloatVectorArraySerializer<U extends Unit<U>, S extends FloatScalar
     }
 
     @Override
-    public void serialize(final V[] adva, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+    public void serialize(final V[] adva, final byte[] buffer, final Pointer pointer, final Endianness endianness)
             throws SerializationException
     {
         int width = adva.length;
         int height = adva[0].size();
-        endianUtil.encodeInt(height, buffer, pointer.getAndIncrement(4));
-        endianUtil.encodeInt(adva.length, buffer, pointer.getAndIncrement(4));
+        endianness.encodeInt(height, buffer, pointer.getAndIncrement(4));
+        endianness.encodeInt(adva.length, buffer, pointer.getAndIncrement(4));
         for (int i = 0; i < width; i++)
         {
             V adv = adva[i];
             Throw.when(adv.size() != height, SerializationException.class,
                     "All AbstractFloatVectors in array must have same size");
-            encodeUnit(adv.getDisplayUnit(), buffer, pointer, endianUtil);
+            encodeUnit(adv.getDisplayUnit(), buffer, pointer, endianness);
         }
         for (int row = 0; row < height; row++)
         {
             for (int col = 0; col < width; col++)
             {
-                endianUtil.encodeFloat(adva[col].getSI(row), buffer, pointer.getAndIncrement(4));
+                endianness.encodeFloat(adva[col].getSI(row), buffer, pointer.getAndIncrement(4));
             }
         }
 
     }
 
     @Override
-    public V[] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+    public V[] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
             throws SerializationException
     {
-        int height = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
-        int width = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+        int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
+        int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
         @SuppressWarnings("unchecked")
         V[] result = (V[]) new FloatVector[width];
         Unit<? extends Unit<?>>[] units = new Unit<?>[width];
         for (int col = 0; col < width; col++)
         {
-            units[col] = getUnit(buffer, pointer, endianUtil);
+            units[col] = getUnit(buffer, pointer, endianness);
         }
         float[][] values = new float[width][height];
         for (int row = 0; row < height; row++)
         {
             for (int col = 0; col < width; col++)
             {
-                values[col][row] = endianUtil.decodeFloat(buffer, pointer.getAndIncrement(4));
+                values[col][row] = endianness.decodeFloat(buffer, pointer.getAndIncrement(4));
             }
         }
         for (int col = 0; col < width; col++)

@@ -47,31 +47,31 @@ public abstract class ObjectArraySerializer<E extends Object> extends ArrayOrMat
 
     @Override
     public final void serializeWithPrefix(final E[] array, final byte[] buffer, final Pointer pointer,
-            final Endianness endianUtil) throws SerializationException
+            final Endianness endianness) throws SerializationException
     {
-        buffer[pointer.getAndIncrement(1)] = endianUtil.isBigEndian() ? fieldType() : (byte) (fieldType() + 128);
-        serialize(array, buffer, pointer, endianUtil);
+        buffer[pointer.getAndIncrement(1)] = endianness.isBigEndian() ? fieldType() : (byte) (fieldType() + 128);
+        serialize(array, buffer, pointer, endianness);
     }
 
     @Override
-    public final void serialize(final E[] array, final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+    public final void serialize(final E[] array, final byte[] buffer, final Pointer pointer, final Endianness endianness)
     {
-        endianUtil.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
+        endianness.encodeInt(array.length, buffer, pointer.getAndIncrement(4));
         for (int i = 0; i < array.length; i++)
         {
-            serializeElement(array[i], buffer, pointer.getAndIncrement(getElementSize()), endianUtil);
+            serializeElement(array[i], buffer, pointer.getAndIncrement(getElementSize()), endianness);
         }
     }
 
     @Override
-    public final E[] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianUtil)
+    public final E[] deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness)
     {
-        int size = endianUtil.decodeInt(buffer, pointer.getAndIncrement(4));
+        int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
         @SuppressWarnings("unchecked")
         E[] result = (E[]) Array.newInstance(this.sample.getClass(), size);
         for (int i = 0; i < size; i++)
         {
-            result[i] = deSerializeElement(buffer, pointer.getAndIncrement(getElementSize()), endianUtil);
+            result[i] = deSerializeElement(buffer, pointer.getAndIncrement(getElementSize()), endianness);
         }
         return result;
     }

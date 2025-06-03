@@ -45,20 +45,20 @@ public interface Serializer<T extends Object>
      * @param object the object to serialize
      * @param buffer buffer for the serialized T
      * @param pointer position in buffer where the first byte of the serialized T will be stored
-     * @param endianUtil selects bigEndian or littleEndian encoding
+     * @param endianness selects bigEndian or littleEndian encoding
      * @throws SerializationException when a matrix has size zero or is jagged
      */
-    void serialize(T object, byte[] buffer, Pointer pointer, Endianness endianUtil) throws SerializationException;
+    void serialize(T object, byte[] buffer, Pointer pointer, Endianness endianness) throws SerializationException;
 
     /**
      * Serialize an object of type T including the prefix byte(s).
      * @param object the object to serialize
      * @param buffer buffer for the serialized T
      * @param pointer position in buffer where the first byte of the serialized T will be stored
-     * @param endianUtil selects bigEndian or littleEndian encoding
+     * @param endianness selects bigEndian or littleEndian encoding
      * @throws SerializationException when a matrix has size zero or is jagged
      */
-    void serializeWithPrefix(T object, byte[] buffer, Pointer pointer, Endianness endianUtil) throws SerializationException;
+    void serializeWithPrefix(T object, byte[] buffer, Pointer pointer, Endianness endianness) throws SerializationException;
 
     /**
      * Deserialize an object of type T. The <code>pointer</code> should be on the first byte of the object; i.e. just after the
@@ -66,10 +66,10 @@ public interface Serializer<T extends Object>
      * @param buffer the bytes with serialized data that must be reconstructed into a T
      * @param pointer position in the buffer where the first byte of the serialized T is located
      * @return a T object constructed from the data in the buffer
-     * @param endianUtil selects bigEndian or littleEndian encoding
+     * @param endianness selects bigEndian or littleEndian encoding
      * @throws SerializationException when the input data cannot be deserialized
      */
-    T deSerialize(byte[] buffer, Pointer pointer, Endianness endianUtil) throws SerializationException;
+    T deSerialize(byte[] buffer, Pointer pointer, Endianness endianness) throws SerializationException;
 
     /**
      * Return a description of the type of data that this serializer handles. The result of this method should <b>not</b> be

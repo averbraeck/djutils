@@ -44,14 +44,14 @@ public class ArraySerializationTest extends AbstractSerializationTest
         Double[] doubleValues2 = new Double[] {-23.45, -34.56, -45.67};
         Object[] objects = new Object[] {integer, integerValues2, shortValues, shortValues2, longValues, longValues2,
                 byteValues, byteValues2, floatValues, floatValues2, doubleValues, doubleValues2, boolValues, boolValues2};
-        for (Endianness endianUtil : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
+        for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianUtil, objects)
-                        : TypedMessage.encodeUTF16(endianUtil, objects);
+                byte[] serialized = encodeUTF8 ? TypedMessage.encodeUTF8(endianness, objects)
+                        : TypedMessage.encodeUTF16(endianness, objects);
                 HexDumper.hexDumper(serialized);
-                String sdd = SerialDataDumper.serialDataDumper(endianUtil, serialized);
+                String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains("int_32_array"));
                 assertTrue(sdd.contains("short_16_array"));
