@@ -1,6 +1,10 @@
 package org.djutils.draw.bounds;
 
+import java.util.Iterator;
+
+import org.djutils.draw.Drawable;
 import org.djutils.draw.point.Point;
+import org.djutils.draw.point.Point2d;
 
 /**
  * Bounds is the generic tagging interface that indicates the bounds for an object, where the simplest implementation is minX,
@@ -16,7 +20,7 @@ import org.djutils.draw.point.Point;
  * @param <B> The bounds type (2d or 3d)
  * @param <P> The point type (2d or 3d)
  */
-public interface Bounds<B extends Bounds<B, P>, P extends Point<P>>
+public interface Bounds<B extends Bounds<B, P>, P extends Point<P>> extends Drawable<P>
 {
     /**
      * Return the absolute lower bound for x.
@@ -69,8 +73,8 @@ public interface Bounds<B extends Bounds<B, P>, P extends Point<P>>
     /**
      * Check if a point is contained in this Bounds.
      * @param point the point
-     * @return <code>true</code> if the point is within this Bounds; <code>false</code> if the point is not within this
-     *         Bounds, or on an edge of this Bounds
+     * @return <code>true</code> if the point is within this Bounds; <code>false</code> if the point is not within this Bounds,
+     *         or on an edge of this Bounds
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
     boolean contains(P point);
@@ -79,8 +83,8 @@ public interface Bounds<B extends Bounds<B, P>, P extends Point<P>>
      * Check if this Bounds completely contains another Bounds. If any point of the other Bounds lies on an edge (2d) or surface
      * (3d) of this Bounds, this method returns <code>false</code>.
      * @param otherBounds the Bounds to check for complete containment within this Bounds.
-     * @return <code>false</code> if any point of D is on or outside one of the borders of this Bounds;
-     *         <code>true</code> when all points of D are contained within this Bounds.
+     * @return <code>false</code> if any point of D is on or outside one of the borders of this Bounds; <code>true</code> when
+     *         all points of D are contained within this Bounds.
      * @throws NullPointerException when <code>otherBounds</code> is <code>null</code>
      */
     boolean contains(B otherBounds);
@@ -105,9 +109,8 @@ public interface Bounds<B extends Bounds<B, P>, P extends Point<P>>
      * Return whether a Bounds is disjoint from this Bounds. Touching at an edge is <b>not</b> considered disjoint. A Bounds
      * that completely surrounds this Bounds is <b>not</b> disjoint.
      * @param otherBounds the other Bounds
-     * @return <code>true</code> if the drawable is disjoint from this Bounds, or only touches an edge;
-     *         <code>false</code> if any point of the other Bounds is inside this Bounds, or the other Bounds surrounds this
-     *         Bounds
+     * @return <code>true</code> if the drawable is disjoint from this Bounds, or only touches an edge; <code>false</code> if
+     *         any point of the other Bounds is inside this Bounds, or the other Bounds surrounds this Bounds
      * @throws NullPointerException when <code>otherBounds</code> is <code>null</code>
      */
     boolean disjoint(B otherBounds);
@@ -124,10 +127,18 @@ public interface Bounds<B extends Bounds<B, P>, P extends Point<P>>
      * Return the intersecting Bounds of this Bounds and another Bounds. Touching at an edge is considered intersecting. In case
      * there is no intersection, null is returned.
      * @param otherBounds the other Bounds
-     * @return the intersecting Bounds of this Bounds and another Bounds. Touching at the edge is not seen as
-     *         intersecting. If not intersecting; <code>null</code> is returned
+     * @return the intersecting Bounds of this Bounds and another Bounds. Touching at the edge is not seen as intersecting. If
+     *         not intersecting; <code>null</code> is returned
      * @throws NullPointerException when <code>otherBounds</code> is <code>null</code>
      */
     B intersection(B otherBounds);
+
+    /**
+     * After version 2.3.1, the order of the points returned by the iterator of a Bounds object is documented (and changed
+     * compared with earlier versions). The returned points now form a Hamiltonian circuit through all the vertices of the
+     * bounding box, all steps follow an edge (in the 3D case, not all edges are visited).
+     */
+    @Override
+    Iterator<P> iterator();
 
 }

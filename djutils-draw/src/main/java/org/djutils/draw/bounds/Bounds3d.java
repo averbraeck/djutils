@@ -287,10 +287,10 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     public Iterator<Point3d> iterator()
     {
         Point3d[] array =
-                new Point3d[] {new Point3d(this.minX, this.minY, this.minZ), new Point3d(this.minX, this.minY, this.maxZ),
-                        new Point3d(this.minX, this.maxY, this.minZ), new Point3d(this.minX, this.maxY, this.maxZ),
-                        new Point3d(this.maxX, this.minY, this.minZ), new Point3d(this.maxX, this.minY, this.maxZ),
-                        new Point3d(this.maxX, this.maxY, this.minZ), new Point3d(this.maxX, this.maxY, this.maxZ)};
+                new Point3d[] {new Point3d(this.minX, this.minY, this.minZ), new Point3d(this.maxX, this.minY, this.minZ),
+                        new Point3d(this.maxX, this.maxY, this.minZ), new Point3d(this.minX, this.maxY, this.minZ),
+                        new Point3d(this.minX, this.maxY, this.maxZ), new Point3d(this.maxX, this.maxY, this.maxZ),
+                        new Point3d(this.maxX, this.minY, this.maxZ), new Point3d(this.minX, this.minY, this.maxZ)};
         return Arrays.stream(array).iterator();
     }
 

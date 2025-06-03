@@ -77,8 +77,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 
     /**
      * Construct a Bounds2d from some collection of points, finding the lowest and highest x and y coordinates.
-     * @param points Iterator that will generate all the points for which to construct a
-     *            Bounds2d
+     * @param points Iterator that will generate all the points for which to construct a Bounds2d
      * @throws NullPointerException when <code>points</code> is <code>null</code>
      * @throws IllegalArgumentException when the <code>points</code> iterator provides zero points
      */
@@ -268,8 +267,8 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     @Override
     public Iterator<Point2d> iterator()
     {
-        Point2d[] array = new Point2d[] {new Point2d(this.minX, this.minY), new Point2d(this.minX, this.maxY),
-                new Point2d(this.maxX, this.minY), new Point2d(this.maxX, this.maxY)};
+        Point2d[] array = new Point2d[] {new Point2d(this.minX, this.minY), new Point2d(this.maxX, this.minY),
+                new Point2d(this.maxX, this.maxY), new Point2d(this.minX, this.maxY)};
         return Arrays.stream(array).iterator();
     }
 
