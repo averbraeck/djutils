@@ -142,8 +142,8 @@ public class UnitSerializationTest extends AbstractSerializationTest
             assertTrue(sdd.contains("Djunits_FloatMatrix"));
             for (boolean primitive : new boolean[] {false, true})
             {
-                Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
-                        : TypedMessage.decodeToObjectDataTypes(serialized);
+                Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(endianness, serialized)
+                        : TypedMessage.decodeToObjectDataTypes(endianness, serialized);
                 assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                 for (int i = 0; i < objects.length; i++)
                 {
@@ -315,8 +315,8 @@ public class UnitSerializationTest extends AbstractSerializationTest
                 assertTrue(sdd.contains("30.3min"));
                 for (boolean primitive : new boolean[] {false, true})
                 {
-                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
-                            : TypedMessage.decodeToObjectDataTypes(serialized);
+                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(endianness, serialized)
+                            : TypedMessage.decodeToObjectDataTypes(endianness, serialized);
                     assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                     for (int i = 0; i < objects.length; i++)
                     {
@@ -373,8 +373,8 @@ public class UnitSerializationTest extends AbstractSerializationTest
                 assertTrue(sdd.contains("0.3in"));
                 for (boolean primitive : new boolean[] {false, true})
                 {
-                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
-                            : TypedMessage.decodeToObjectDataTypes(serialized);
+                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(endianness, serialized)
+                            : TypedMessage.decodeToObjectDataTypes(endianness, serialized);
                     assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                     for (int i = 0; i < objects.length; i++)
                     {

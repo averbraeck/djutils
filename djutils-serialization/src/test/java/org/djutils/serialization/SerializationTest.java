@@ -122,8 +122,8 @@ public class SerializationTest extends AbstractSerializationTest
                 HexDumper.hexDumper(serialized);
                 for (boolean primitive : new boolean[] {false, true})
                 {
-                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
-                            : TypedMessage.decodeToObjectDataTypes(serialized);
+                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(endianness, serialized)
+                            : TypedMessage.decodeToObjectDataTypes(endianness, serialized);
                     assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                     // Replace all List objects in the result by corresponding new Compound objects
                     for (int i = 0; i < objects.length; i++)

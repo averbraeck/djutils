@@ -1,10 +1,10 @@
 package org.djutils.serialization.serializers;
 
 import org.djunits.unit.Unit;
-import org.djutils.serialization.UnitType;
 import org.djutils.serialization.Endianness;
-import org.djutils.serialization.SerializationException;
 import org.djutils.serialization.QuantityType;
+import org.djutils.serialization.SerializationException;
+import org.djutils.serialization.UnitType;
 
 /**
  * Serializer for Djunits arrays and matrices.
@@ -44,7 +44,7 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
     public final void serializeWithPrefix(final T object, final byte[] buffer, final Pointer pointer,
             final Endianness endianness) throws SerializationException
     {
-        buffer[pointer.getAndIncrement(1)] = endianness.isBigEndian() ? fieldType() : (byte) (fieldType() + 128);
+        buffer[pointer.getAndIncrement(1)] = fieldType();
         serialize(object, buffer, pointer, endianness);
     }
 
@@ -59,7 +59,7 @@ public abstract class ArrayOrMatrixWithUnitSerializer<U extends Unit<U>, T> exte
      * @return the size of one element in number of bytes
      */
     public abstract int getElementSize();
-    
+
     @Override
     public boolean hasUnit()
     {

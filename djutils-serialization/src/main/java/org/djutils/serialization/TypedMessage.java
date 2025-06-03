@@ -26,7 +26,7 @@ public final class TypedMessage
     {
         // Utility class; do not instantiate.
     }
-    
+
     /**
      * Encode the object array into a byte[] message. Use UTF8 for the characters and for the String.
      * @param endianness encoder to use for multi-byte values
@@ -120,46 +120,46 @@ public final class TypedMessage
 
     /**
      * Decode the message into an object array, constructing Java Primitive data arrays and matrices where possible.
+     * @param endianness use big-endian or little-endian encoding
      * @param buffer the byte array to decode
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    public static Object[] decodeToPrimitiveDataTypes(final byte[] buffer) throws SerializationException
+    public static Object[] decodeToPrimitiveDataTypes(final Endianness endianness, final byte[] buffer)
+            throws SerializationException
     {
-        return decode(buffer, TypedObject.PRIMITIVE_DATA_DECODERS);
+        return decode(endianness, buffer, TypedObject.PRIMITIVE_DATA_DECODERS);
     }
 
     /**
      * Decode the message into an object array, constructing Java Object arrays and matrices where possible.
+     * @param endianness use big-endian or little-endian encoding
      * @param buffer the byte array to decode
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    public static Object[] decodeToObjectDataTypes(final byte[] buffer) throws SerializationException
+    public static Object[] decodeToObjectDataTypes(final Endianness endianness, final byte[] buffer)
+            throws SerializationException
     {
-        return decode(buffer, TypedObject.OBJECT_DECODERS);
+        return decode(endianness, buffer, TypedObject.OBJECT_DECODERS);
     }
 
     /**
      * Decode the message into an object array.
+     * @param endianness use big-endian or little-endian encoding
      * @param buffer the byte array to decode
      * @param decoderMap the map with decoders to use
      * @return an array of objects of the right type
      * @throws SerializationException on unknown data type
      */
-    public static Object[] decode(final byte[] buffer, final Map<Byte, Serializer<?>> decoderMap) throws SerializationException
+    public static Object[] decode(final Endianness endianness, final byte[] buffer, final Map<Byte, Serializer<?>> decoderMap)
+            throws SerializationException
     {
         List<Object> list = new ArrayList<>();
         Pointer pointer = new Pointer();
         while (pointer.get() < buffer.length)
         {
-            Endianness endianness = Endianness.BIG_ENDIAN;
             Byte fieldType = buffer[pointer.getAndIncrement(1)];
-            if (fieldType < 0)
-            {
-                fieldType = (byte) (fieldType & 0x7F);
-                endianness = Endianness.LITTLE_ENDIAN;
-            }
             Serializer<?> serializer = decoderMap.get(fieldType);
             if (null == serializer)
             {

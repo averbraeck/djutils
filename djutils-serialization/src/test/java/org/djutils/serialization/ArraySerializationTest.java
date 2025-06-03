@@ -63,8 +63,8 @@ public class ArraySerializationTest extends AbstractSerializationTest
                 assertTrue(sdd.contains("length"));
                 for (boolean primitive : new boolean[] {false, true})
                 {
-                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(serialized)
-                            : TypedMessage.decodeToObjectDataTypes(serialized);
+                    Object[] decodedObjects = primitive ? TypedMessage.decodeToPrimitiveDataTypes(endianness, serialized)
+                            : TypedMessage.decodeToObjectDataTypes(endianness, serialized);
                     assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                     for (int i = 0; i < objects.length; i++)
                     {

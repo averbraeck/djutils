@@ -56,14 +56,14 @@ public class StringSerializationTest extends AbstractSerializationTest
                 new byte[] {10, 0, 0, 0, 2, (byte) 0xD8, (byte) 0x3D, (byte) 0xDE, (byte) 0x00});
 
         compare(TypedMessage.encodeUTF8(Endianness.LITTLE_ENDIAN, permille),
-                new byte[] {-119, 3, 0, 0, 0, (byte) 0xE2, (byte) 0x80, (byte) 0xB0});
+                new byte[] {9, 3, 0, 0, 0, (byte) 0xE2, (byte) 0x80, (byte) 0xB0});
         compare(TypedMessage.encodeUTF16(Endianness.LITTLE_ENDIAN, permille),
-                new byte[] {-118, 1, 0, 0, 0, (byte) 0x30, (byte) 0x20});
+                new byte[] {10, 1, 0, 0, 0, (byte) 0x30, (byte) 0x20});
 
         compare(TypedMessage.encodeUTF8(Endianness.LITTLE_ENDIAN, smiley),
-                new byte[] {-119, 4, 0, 0, 0, (byte) 0xF0, (byte) 0x9F, (byte) 0x98, (byte) 0x80});
+                new byte[] {9, 4, 0, 0, 0, (byte) 0xF0, (byte) 0x9F, (byte) 0x98, (byte) 0x80});
         compare(TypedMessage.encodeUTF16(Endianness.LITTLE_ENDIAN, smiley),
-                new byte[] {-118, 2, 0, 0, 0, (byte) 0x3D, (byte) 0xD8, (byte) 0x00, (byte) 0xDE});
+                new byte[] {10, 2, 0, 0, 0, (byte) 0x3D, (byte) 0xD8, (byte) 0x00, (byte) 0xDE});
 
         Object[] objects = new Object[] {copyright, xi, permille, smiley, abc, complex};
         for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
@@ -76,7 +76,7 @@ public class StringSerializationTest extends AbstractSerializationTest
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains(encodeUTF8 ? "String_8" : "String_16"));
-                Object[] decodedObjects = TypedMessage.decodeToObjectDataTypes(serialized);
+                Object[] decodedObjects = TypedMessage.decodeToObjectDataTypes(endianness, serialized);
                 assertEquals(objects.length, decodedObjects.length, "Size of decoded matches");
                 for (int i = 0; i < objects.length; i++)
                 {
@@ -115,11 +115,11 @@ public class StringSerializationTest extends AbstractSerializationTest
         // get the number from the byte arrays
         assertEquals(9, b8BE[0]);
         assertEquals(expected8, Endianness.BIG_ENDIAN.decodeInt(b8BE, 1));
-        assertEquals(-119, b8LE[0]);
+        assertEquals(9, b8LE[0]);
         assertEquals(expected8, Endianness.LITTLE_ENDIAN.decodeInt(b8LE, 1));
         assertEquals(10, b16BE[0]);
         assertEquals(expected16 / 2, Endianness.BIG_ENDIAN.decodeInt(b16BE, 1));
-        assertEquals(-118, b16LE[0]);
+        assertEquals(10, b16LE[0]);
         assertEquals(expected16 / 2, Endianness.LITTLE_ENDIAN.decodeInt(b16LE, 1));
     }
 
@@ -148,7 +148,7 @@ public class StringSerializationTest extends AbstractSerializationTest
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains(encodeUTF8 ? "String_8_array" : "String_16_array"));
-                String[] decodedObjects = (String[]) TypedObject.decodeToObjectDataTypes(serialized);
+                String[] decodedObjects = (String[]) TypedObject.decodeToObjectDataTypes(endianness, serialized);
                 assertEquals(sa.length, decodedObjects.length, "Size of decoded matches");
                 for (int i = 0; i < sa.length; i++)
                 {
@@ -184,7 +184,7 @@ public class StringSerializationTest extends AbstractSerializationTest
                 String sdd = SerialDataDumper.serialDataDumper(endianness, serialized);
                 assertFalse(sdd.contains("Error"));
                 assertTrue(sdd.contains(encodeUTF8 ? "String_8_matrix" : "String_16_matrix"));
-                String[][] decodedObjects = (String[][]) TypedObject.decodeToObjectDataTypes(serialized);
+                String[][] decodedObjects = (String[][]) TypedObject.decodeToObjectDataTypes(endianness, serialized);
                 assertEquals(sm.length, decodedObjects.length, "Row size of decoded matches");
                 for (int i = 0; i < sm.length; i++)
                 {
