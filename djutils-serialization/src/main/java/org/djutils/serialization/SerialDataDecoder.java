@@ -134,12 +134,12 @@ public class SerialDataDecoder implements Decoder
 
     /**
      * Process one byte that indicates the field type.
-     * @param theByte the byte to process
+     * @param fieldType the byte for the field type to process
      * @return whether line is full
      */
-    private boolean processFieldTypeByte(final byte theByte)
+    private boolean processFieldTypeByte(final byte fieldType)
     {
-        this.currentFieldType = (byte) (theByte & 0x7F);
+        this.currentFieldType = fieldType;
         this.currentSerializer = TypedObject.PRIMITIVE_DATA_DECODERS.get(this.currentFieldType);
         if (this.currentSerializer == null)
         {
