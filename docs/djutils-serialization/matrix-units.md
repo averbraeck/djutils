@@ -162,8 +162,8 @@ the time, and column 2 the value. Suppose that we have a time series of 4 values
 
 ## 32a. Double matrix with unique units per column (big endian)
 
-After the byte with value 32, the matrix types have a 32-bit int indicating the number of rows in 
-the array that follows, followed by a 32-bit int indicating the number of columns. These integers 
+After the byte with value 32, the matrix types have a 32-bit big endian int indicating the number of rows in 
+the array that follows, followed by a 32-bit big endian int indicating the number of columns. These integers 
 are not preceded by a byte indicating it is an int. Then a one-byte unit type for column 1 follows 
 (see the table in [Coding of units](../coding-units) ) and a one-byte display type for column 1 
 (see [Display types for units](../display-types)). Then the unit type and display type for 
@@ -203,8 +203,8 @@ then the coding is as follows (assuming *big-endian* encoding):
 
 ## 32b. Double matrix with unique units per column (little endian)
 
-After the byte with value 32, the matrix types have a 32-bit int indicating the number of rows in 
-the array that follows, followed by a 32-bit int indicating the number of columns. These integers 
+After the byte with value 32, the matrix types have a 32-bit little endian int indicating the number of rows in 
+the array that follows, followed by a 32-bit little endian int indicating the number of columns. These integers 
 are not preceded by a byte indicating it is an int. Then a one-byte unit type for column 1 follows 
 (see the table in [Coding of units](../coding-units) ) and a one-byte display type for column 1 
 (see [Display types for units](../display-types)). Then the unit type and display type for 
