@@ -66,7 +66,7 @@ public class UnitSerializationTest extends AbstractSerializationTest
         String name = "AccelerationName";
         String description = "AccelerationDescription";
         String siUnit = "[m/s^2]";
-        SerializationUnits testAccelerationUnitType = new SerializationUnits(code, unitClass, name, description, siUnit);
+        QuantityType testAccelerationUnitType = new QuantityType(code, unitClass, name, description, siUnit);
         assertEquals(code, testAccelerationUnitType.getCode(), "code is returned");
         assertEquals(unitClass, testAccelerationUnitType.getDjunitsType(), "unit class is returned");
         assertEquals(name, testAccelerationUnitType.getName(), "name is returned");
@@ -75,36 +75,36 @@ public class UnitSerializationTest extends AbstractSerializationTest
         assertTrue(testAccelerationUnitType.toString().startsWith("UnitType"), "toString returns something descriptive");
 
         byte undefined = 126;
-        assertEquals(testAccelerationUnitType, SerializationUnits.getUnitType(code), "new unit is in the byte type map");
-        assertNull(SerializationUnits.getUnitType(undefined), "undefined byte returns null");
-        assertEquals(unitClass, SerializationUnits.getUnitClass(code), "djunits type is returned");
-        assertNull(SerializationUnits.getUnitClass(undefined), "undefined byte returns null");
-        assertEquals(SerializationUnits.SPEED, SerializationUnits.getUnitType((byte) 22),
+        assertEquals(testAccelerationUnitType, QuantityType.getUnitType(code), "new unit is in the byte type map");
+        assertNull(QuantityType.getUnitType(undefined), "undefined byte returns null");
+        assertEquals(unitClass, QuantityType.getUnitClass(code), "djunits type is returned");
+        assertNull(QuantityType.getUnitClass(undefined), "undefined byte returns null");
+        assertEquals(QuantityType.SPEED, QuantityType.getUnitType((byte) 22),
                 "speed type can be found by byte code");
-        assertEquals(SerializationUnits.SPEED, SerializationUnits.getUnitType(SpeedUnit.SI),
+        assertEquals(QuantityType.SPEED, QuantityType.getUnitType(SpeedUnit.SI),
                 "speed type can be found by unit type");
-        assertEquals(SerializationUnits.SPEED, SerializationUnits.getUnitType(SpeedUnit.FOOT_PER_SECOND),
+        assertEquals(QuantityType.SPEED, QuantityType.getUnitType(SpeedUnit.FOOT_PER_SECOND),
                 "speed type can be found by non SI unit type");
-        assertEquals(22, SerializationUnits.getUnitCode(SpeedUnit.SI), "speed unit code can be found by unit type");
+        assertEquals(22, QuantityType.getUnitCode(SpeedUnit.SI), "speed unit code can be found by unit type");
 
-        assertEquals(testAccelerationUnitType, new SerializationUnits(code, unitClass, name, description, siUnit));
-        assertNotEquals(testAccelerationUnitType, SerializationUnits.ACCELERATION);
-        assertNotEquals(SerializationUnits.ACCELERATION, null);
+        assertEquals(testAccelerationUnitType, new QuantityType(code, unitClass, name, description, siUnit));
+        assertNotEquals(testAccelerationUnitType, QuantityType.ACCELERATION);
+        assertNotEquals(QuantityType.ACCELERATION, null);
         assertNotEquals(testAccelerationUnitType, new Object());
-        assertNotEquals(testAccelerationUnitType, new SerializationUnits(125, unitClass, name, description, siUnit));
-        assertNotEquals(testAccelerationUnitType, new SerializationUnits(code, LengthUnit.class, name, description, siUnit));
-        assertNotEquals(testAccelerationUnitType, new SerializationUnits(code, unitClass, "x", description, siUnit));
-        assertNotEquals(testAccelerationUnitType, new SerializationUnits(code, unitClass, name, "x", siUnit));
-        assertNotEquals(testAccelerationUnitType, new SerializationUnits(code, unitClass, name, description, "N/K"));
+        assertNotEquals(testAccelerationUnitType, new QuantityType(125, unitClass, name, description, siUnit));
+        assertNotEquals(testAccelerationUnitType, new QuantityType(code, LengthUnit.class, name, description, siUnit));
+        assertNotEquals(testAccelerationUnitType, new QuantityType(code, unitClass, "x", description, siUnit));
+        assertNotEquals(testAccelerationUnitType, new QuantityType(code, unitClass, name, "x", siUnit));
+        assertNotEquals(testAccelerationUnitType, new QuantityType(code, unitClass, name, description, "N/K"));
 
-        Try.testFail(() -> SerializationUnits.getUnitCode(SIUnit.of("K/mol")));
+        Try.testFail(() -> QuantityType.getUnitCode(SIUnit.of("K/mol")));
 
         // restore the cache
-        new SerializationUnits(SerializationUnits.ACCELERATION.getCode(), AccelerationUnit.class,
-                SerializationUnits.ACCELERATION.getName(), SerializationUnits.ACCELERATION.getDescription(),
-                SerializationUnits.ACCELERATION.getSiUnit());
-        new SerializationUnits(SerializationUnits.LENGTH.getCode(), LengthUnit.class, SerializationUnits.LENGTH.getName(),
-                SerializationUnits.LENGTH.getDescription(), SerializationUnits.LENGTH.getSiUnit());
+        new QuantityType(QuantityType.ACCELERATION.getCode(), AccelerationUnit.class,
+                QuantityType.ACCELERATION.getName(), QuantityType.ACCELERATION.getDescription(),
+                QuantityType.ACCELERATION.getSiUnit());
+        new QuantityType(QuantityType.LENGTH.getCode(), LengthUnit.class, QuantityType.LENGTH.getName(),
+                QuantityType.LENGTH.getDescription(), QuantityType.LENGTH.getSiUnit());
     }
 
     /**
@@ -224,21 +224,21 @@ public class UnitSerializationTest extends AbstractSerializationTest
     @Test
     public void testSerializationUnits() throws SerializationException, ValueRuntimeException
     {
-        SerializationUnits areaSerUnit = SerializationUnits.AREA;
+        QuantityType areaSerUnit = QuantityType.AREA;
         assertEquals("Area", areaSerUnit.getName());
         assertEquals("Area (m2)", areaSerUnit.getDescription());
         assertEquals(5, areaSerUnit.getCode());
         assertEquals(AreaUnit.class, areaSerUnit.getDjunitsType());
         assertEquals("[m^2]", areaSerUnit.getSiUnit());
 
-        assertEquals(LengthUnit.class, SerializationUnits.getUnitClass((byte) 16));
-        assertEquals(16, SerializationUnits.getUnitCode(LengthUnit.INCH));
-        assertEquals(areaSerUnit, SerializationUnits.getUnitType((byte) 5));
-        assertEquals(areaSerUnit, SerializationUnits.getUnitType(AreaUnit.ARE));
+        assertEquals(LengthUnit.class, QuantityType.getUnitClass((byte) 16));
+        assertEquals(16, QuantityType.getUnitCode(LengthUnit.INCH));
+        assertEquals(areaSerUnit, QuantityType.getUnitType((byte) 5));
+        assertEquals(areaSerUnit, QuantityType.getUnitType(AreaUnit.ARE));
 
-        assertNotEquals(SerializationUnits.RADIOACTIVITY, areaSerUnit);
+        assertNotEquals(QuantityType.RADIOACTIVITY, areaSerUnit);
         assertNotEquals(new Object(), areaSerUnit);
-        assertNotEquals(SerializationUnits.RADIOACTIVITY.hashCode(), areaSerUnit.hashCode());
+        assertNotEquals(QuantityType.RADIOACTIVITY.hashCode(), areaSerUnit.hashCode());
         assertNotEquals(new Object().hashCode(), areaSerUnit.hashCode());
     }
 
@@ -250,7 +250,7 @@ public class UnitSerializationTest extends AbstractSerializationTest
     @Test
     public void testDJunitDisplayTypes() throws SerializationException, ValueRuntimeException
     {
-        SerializationUnits areaSerUnit = SerializationUnits.AREA;
+        QuantityType areaSerUnit = QuantityType.AREA;
         DisplayType aream2 = DisplayType.AREA_SQUARE_METER;
         DisplayType areaacre = DisplayType.AREA_ACRE;
         DisplayType masskg = DisplayType.MASS_KILOGRAM;
