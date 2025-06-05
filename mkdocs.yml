@@ -44,6 +44,7 @@ nav:
   - DJUTILS-CLI project:
     - Introduction: djutils-cli/index.md
     - DJUTILS-CLI usage: djutils-cli/usage.md
+    - Use of locale: djutils-cli/locale.md
     - DJUTILS-CLI documentation: https://djutils.org/docs/latest/djutils-cli/index.html
     - DJUTILS-CLI API: https://djutils.org/docs/latest/djutils-cli/apidocs/index.html
   - DJUTILS-DATA project:
