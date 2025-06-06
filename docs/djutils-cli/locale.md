@@ -66,6 +66,24 @@ java -jar Program.jar --duration=1,25uur --length=200,67m --fraction=0,5
 ```
 
 
+## Rules for applying the locale
+
+The priorities for the locale of a **value** in the command line are:
+
+1. The `--locale=xx` option. This has the highest priority, and overrides any other Locale.
+2. The `@DefaultValueLocale` for the value. If the default value already has a locale, this locale is also used as a starting point for the value itself. (absent a `--locale` option).
+3. US English.
+
+We did **not** choose to use Java's default locale for option 3 above, since if it is not set, it is highly dependent on the locale of the operating system of the computer. This can lead to results that differ per computer. If another Locale than US English is to be used for fields where it matters (fields with a unit, float, double), specify it explicitly with a `@DefaultValueLocale`.  
+
+The priorities for the locale of a **default value** in the specification for the command line are:
+
+1. The `@DefaultValueLocale` for the value. If the default value already has a locale, this locale is also used as a starting point for the value itself. (absent a `--locale` option).
+2. US English.
+
+The choice for US English for option 1 is again to not leave it open for circumstances that can differ per computer. The above priorities guarantee reproducibility across all computers, independent of settings of the locality in a program.
+
+
 ## Expected behavior
 
 The following table shows the expected behavior of the interplay between different settings for the locales:
@@ -75,13 +93,9 @@ The following table shows the expected behavior of the interplay between differe
 | Java     | @Default    | --locale | default | actual | outcome |
 | Locale   | ValueLocale | setting  | value   | value  | (en-US) |
 ==================================================================
-| en-US    | -           | -        | -       | 0.5h   | 0.5h    |
+| any      | -           | -        | -       | 0.5h   | 0.5h    |
 ------------------------------------------------------------------
-| en-US    | -           | -        | -       | 0,5u   | VVVV    |
-------------------------------------------------------------------
-| nl_NL    | -           | -        | -       | 0.5h   | VVVV    |
-------------------------------------------------------------------
-| nl_NL    | -           | -        | -       | 0,5u   | 0.5h    |
+| any      | -           | -        | -       | 0,5u   | VVVV    |
 ==================================================================
 | any      | nl_NL       | -        | -       | 0.5h   | VVVV    |
 ------------------------------------------------------------------
@@ -91,21 +105,17 @@ The following table shows the expected behavior of the interplay between differe
 ------------------------------------------------------------------
 | any      | en_US       | -        | -       | 0,5u   | VVVV    |
 ==================================================================
-| en-US    | -           | nl_NL    | -       | 0.5h   | VVVV    |
+| any      | -           | nl_NL    | -       | 0.5h   | VVVV    |
 ------------------------------------------------------------------
-| en-US    | -           | nl_NL    | -       | 0,5u   | 0.5h    |
+| any      | -           | nl_NL    | -       | 0,5u   | 0.5h    |
 ------------------------------------------------------------------
-| nl_NL    | -           | en-US    | -       | 0.5h   | 0.5h    |
+| any      | -           | en-US    | -       | 0.5h   | 0.5h    |
 ------------------------------------------------------------------
-| nl_NL    | -           | en-US    | -       | 0,5u   | VVVV    |
+| any      | -           | en-US    | -       | 0,5u   | VVVV    |
 ==================================================================
-| en-US    | -           | nl_NL    | 0.2h    | -      | DDDD    |
+| any      | -           | any      | 0.2h    | -      | 0.2h    |
 ------------------------------------------------------------------
-| en-US    | -           | nl_NL    | 0,2u    | -      | 0.2h    |
-------------------------------------------------------------------
-| nl_NL    | -           | en-US    | 0.2h    | -      | 0.2h    |
-------------------------------------------------------------------
-| nl_NL    | -           | en-US    | 0,2u    | -      | DDDD    |
+| any      | -           | any      | 0,2u    | -      | DDDD    |
 ==================================================================
 | any      | en-US       | en-US    | 0.2h    | 0.5h   | 0.5h    |
 ------------------------------------------------------------------
