@@ -32,10 +32,10 @@ public static class Options
 
 ```text
 java -jar Program.jar --duration=1.25s
-java -jar Program.jar --duration=1.25s --locale=en-US
-java -jar Program.jar --duration=1.25s --locale=en
-java -jar Program.jar --duration=1,25s --locale=nl_NL
-java -jar Program.jar --duration=1,25s --locale=nl
+java -jar Program.jar --duration=1.25hour --locale=en-US
+java -jar Program.jar --duration=1.25hour --locale=en
+java -jar Program.jar --duration=1,25uur --locale=nl_NL
+java -jar Program.jar --duration=1,25uur --locale=nl
 ```
 
 ## Specifying a locale for the defaults
