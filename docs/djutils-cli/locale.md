@@ -78,10 +78,10 @@ We did **not** choose to use Java's default locale for option 3 above, since if 
 
 The priorities for the locale of a **default value** in the specification for the command line are:
 
-1. The `@DefaultValueLocale` for the value. If the default value already has a locale, this locale is also used as a starting point for the value itself. (absent a `--locale` option).
-2. US English.
+1. The `@DefaultValueLocale` is applied for the default value.
+2. US English, absent a `@DefaultValueLocale` specification.
 
-The choice for US English for option 1 is again to not leave it open for circumstances that can differ per computer. The above priorities guarantee reproducibility across all computers, independent of settings of the locality in a program.
+The choice for US English for option 2 is again to not leave it open for circumstances that can differ per computer. The above priorities guarantee reproducibility across all computers, independent of settings of the locale in a program.
 
 
 ## Expected behavior
