@@ -201,28 +201,28 @@ public class Ray2dTest
     {
         // X direction
         // Angle of 0 is exact; bounds should be infinite in only the positive X direction
-        verifyBounds(new Ray2d(1, 2, 0).getBounds(), 1, 2, Double.POSITIVE_INFINITY, 2);
+        verifyBounds(new Ray2d(1, 2, 0).getAbsoluteBounds(), 1, 2, Double.POSITIVE_INFINITY, 2);
 
         // first quadrant
-        verifyBounds(new Ray2d(1, 2, 0.2).getBounds(), 1, 2, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray2d(1, 2, 0.2).getAbsoluteBounds(), 1, 2, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 
         // Math.PI / 2 is in first quadrant due to finite precision of a double
-        verifyBounds(new Ray2d(1, 2, Math.PI / 2).getBounds(), 1, 2, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray2d(1, 2, Math.PI / 2).getAbsoluteBounds(), 1, 2, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 
         // second quadrant
-        verifyBounds(new Ray2d(1, 2, 2).getBounds(), Double.NEGATIVE_INFINITY, 2, 1, Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray2d(1, 2, 2).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, 2, 1, Double.POSITIVE_INFINITY);
 
         // Math.PI is in second quadrant due to finite precision of a double
-        verifyBounds(new Ray2d(1, 2, Math.PI).getBounds(), Double.NEGATIVE_INFINITY, 2, 1, Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray2d(1, 2, Math.PI).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, 2, 1, Double.POSITIVE_INFINITY);
 
         // third quadrant
-        verifyBounds(new Ray2d(1, 2, 4).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 1, 2);
+        verifyBounds(new Ray2d(1, 2, 4).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 1, 2);
 
         // fourth quadrant
-        verifyBounds(new Ray2d(1, 2, -1).getBounds(), 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 2);
+        verifyBounds(new Ray2d(1, 2, -1).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 2);
 
         // -Math.PI / 2 is in fourth quadrant due to finite precision of a double
-        verifyBounds(new Ray2d(1, 2, -Math.PI / 2).getBounds(), 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 2);
+        verifyBounds(new Ray2d(1, 2, -Math.PI / 2).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 2);
 
     }
 

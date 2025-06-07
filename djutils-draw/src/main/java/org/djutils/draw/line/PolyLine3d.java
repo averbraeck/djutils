@@ -452,7 +452,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     }
 
     @Override
-    public Bounds3d getBounds()
+    public Bounds3d getAbsoluteBounds()
     {
         return this.bounds;
     }

@@ -566,7 +566,7 @@ public class Bounds3dTest
                 }
             }
         }
-        assertEquals(bb, bb.getBounds(), "getBounds returns this");
+        assertEquals(bb, bb.getAbsoluteBounds(), "getBounds returns this");
         assertNotEquals(bb.hashCode(),
                 new Bounds3d(bb.getMinX() + 1, bb.getMaxX(), bb.getMinY(), bb.getMaxY(), bb.getMinZ(), bb.getMaxZ()),
                 "HashCode uses minX");

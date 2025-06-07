@@ -85,7 +85,7 @@ public class LineSegment2dTest
         assertEquals(expectedEndX, point.x, 0.0001, description + " iterator second point x");
         assertEquals(expectedEndY, point.y, 0.0001, description + " iterator second point y");
         assertFalse(iterator.hasNext(), description + " iterator has no more data");
-        Bounds2d bounds = segment.getBounds();
+        Bounds2d bounds = segment.getAbsoluteBounds();
         assertEquals(Math.min(expectedStartX, expectedEndX), bounds.getMinX(), 0.0001, description + " bounds minX");
         assertEquals(Math.max(expectedStartX, expectedEndX), bounds.getMaxX(), 0.0001, description + " bounds maxX");
         assertEquals(Math.min(expectedStartY, expectedEndY), bounds.getMinY(), 0.0001, description + " bounds minY");

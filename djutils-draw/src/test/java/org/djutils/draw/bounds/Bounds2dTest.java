@@ -462,7 +462,7 @@ public class Bounds2dTest
         assertEquals(r2D.getY(), br.getMinY(), 0, "y");
         assertEquals(r2D.getWidth(), br.getDeltaX(), 0.000001, "w");
         assertEquals(r2D.getHeight(), br.getDeltaY(), 0.000001, "h");
-        assertEquals(br, br.getBounds(), "getBounds returns this");
+        assertEquals(br, br.getAbsoluteBounds(), "getBounds returns this");
         assertNotEquals(br.hashCode(), new Bounds2d(br.getMinX() + 1, br.getMaxX(), br.getMinY(), br.getMaxY()),
                 "HashCode uses minX");
         assertNotEquals(br.hashCode(), new Bounds2d(br.getMinX(), br.getMaxX() + 1, br.getMinY(), br.getMaxY()),

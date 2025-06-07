@@ -150,7 +150,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
     }
 
     @Override
-    public Bounds3d getBounds()
+    public Bounds3d getAbsoluteBounds()
     {
         return new Bounds3d(Math.min(this.startX, this.endX), Math.max(this.startX, this.endX),
                 Math.min(this.startY, this.endY), Math.max(this.startY, this.endY), Math.min(this.startZ, this.endZ),

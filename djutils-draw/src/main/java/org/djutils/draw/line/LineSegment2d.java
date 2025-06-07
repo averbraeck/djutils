@@ -129,7 +129,7 @@ public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedP
     }
 
     @Override
-    public Bounds2d getBounds()
+    public Bounds2d getAbsoluteBounds()
     {
         return new Bounds2d(Math.min(this.startX, this.endX), Math.max(this.startX, this.endX),
                 Math.min(this.startY, this.endY), Math.max(this.startY, this.endY));

@@ -170,7 +170,7 @@ public class Surface3dTest
             }
         };
         Bounds3d bounds = new Bounds3d(iterator);
-        assertEquals(bounds, surface3d.getBounds(), "Bounds match");
+        assertEquals(bounds, surface3d.getAbsoluteBounds(), "Bounds match");
 
         // Triangulate a cube
         Point3d[][] cubePoints = new Point3d[12][];
@@ -194,7 +194,7 @@ public class Surface3dTest
         cubePoints[11] = new Point3d[] {new Point3d(1, 1, 1), new Point3d(-1, 1, 1), new Point3d(-1, 1, -1)};
         surface3d = new Surface3d(cubePoints);
         assertEquals(36, surface3d.size(), "size (number of points in 12 triangles) is 36");
-        assertEquals(new Bounds3d(-1, 1, -1, 1, -1, 1), surface3d.getBounds(), "bounds");
+        assertEquals(new Bounds3d(-1, 1, -1, 1, -1, 1), surface3d.getAbsoluteBounds(), "bounds");
 
         try
         {

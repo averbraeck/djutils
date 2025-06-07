@@ -131,7 +131,7 @@ public class Surface3d implements Drawable3d
     }
 
     @Override
-    public Bounds3d getBounds()
+    public Bounds3d getAbsoluteBounds()
     {
         return this.bounds;
     }

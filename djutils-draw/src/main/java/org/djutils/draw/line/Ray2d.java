@@ -170,7 +170,7 @@ public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, Dir
     }
 
     @Override
-    public Bounds2d getBounds()
+    public Bounds2d getAbsoluteBounds()
     {
         double cosDirZ = Math.cos(this.dirZ);
         double sinDirZ = Math.sin(this.dirZ);

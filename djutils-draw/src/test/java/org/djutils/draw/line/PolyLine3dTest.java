@@ -162,7 +162,7 @@ public class PolyLine3dTest
 
         assertEquals(points.length, line.size(), "size");
 
-        Bounds3d b3d = line.getBounds();
+        Bounds3d b3d = line.getAbsoluteBounds();
         Bounds3d ref = new Bounds3d(points);
         assertEquals(ref, b3d, "bounds is correct");
 
@@ -1907,7 +1907,7 @@ public class PolyLine3dTest
         assertEquals(3, dp.getDirZ(), 0, "heading at 0");
         assertEquals(1, dp.getX(), 0, "x at 0 is 1");
         assertEquals(2, dp.getY(), 0, "y at 0 is 2");
-        assertEquals(new Bounds3d(l.get(0)), l.getBounds(), "bounds");
+        assertEquals(new Bounds3d(l.get(0)), l.getAbsoluteBounds(), "bounds");
         try
         {
             l.getLocation(0.1);

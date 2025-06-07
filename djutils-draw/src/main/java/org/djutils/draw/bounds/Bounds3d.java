@@ -462,7 +462,7 @@ public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Poin
     }
 
     @Override
-    public Bounds3d getBounds()
+    public Bounds3d getAbsoluteBounds()
     {
         return this;
     }

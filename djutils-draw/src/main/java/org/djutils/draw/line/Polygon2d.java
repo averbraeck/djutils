@@ -298,7 +298,7 @@ public class Polygon2d extends PolyLine2d
      */
     public boolean contains(final double x, final double y)
     {
-        if (!getBounds().contains(x, y))
+        if (!getAbsoluteBounds().contains(x, y))
         {
             return false;
         }
@@ -336,7 +336,7 @@ public class Polygon2d extends PolyLine2d
     public boolean contains(final Bounds2d bounds)
     {
         // Step 1: quick check to see if the bounds intersect
-        if (getBounds().disjoint(bounds))
+        if (getAbsoluteBounds().disjoint(bounds))
         {
             return false;
         }
@@ -353,7 +353,7 @@ public class Polygon2d extends PolyLine2d
     public boolean intersects(final Polygon2d other)
     {
         // step 1: quick check to see if the bounds intersect
-        if (!getBounds().intersects(other.getBounds()))
+        if (!getAbsoluteBounds().intersects(other.getAbsoluteBounds()))
         {
             return false;
         }
@@ -414,7 +414,7 @@ public class Polygon2d extends PolyLine2d
     public double surface()
     {
         // Translate all coordinates to the median of the bounding box to minimize rounding errors
-        Point2d midPoint = getBounds().midPoint();
+        Point2d midPoint = getAbsoluteBounds().midPoint();
         double result = 0;
         // We initialize previous point to the last point of this Polygon2d to avoid wrapping problems
         double prevX = getX(size() - 1) - midPoint.x;

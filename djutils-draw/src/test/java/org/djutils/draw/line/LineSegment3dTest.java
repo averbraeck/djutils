@@ -98,7 +98,7 @@ public class LineSegment3dTest
         assertEquals(expectedEndY, point.y, 0.0001, description + " iterator second point y");
         assertEquals(expectedEndZ, point.z, 0.0001, description + " iterator second point z");
         assertFalse(iterator.hasNext(), description + " iterator has no more data");
-        Bounds3d bounds = segment.getBounds();
+        Bounds3d bounds = segment.getAbsoluteBounds();
         assertEquals(Math.min(expectedStartX, expectedEndX), bounds.getMinX(), 0.0001, description + " bounds minX");
         assertEquals(Math.max(expectedStartX, expectedEndX), bounds.getMaxX(), 0.0001, description + " bounds maxX");
         assertEquals(Math.min(expectedStartY, expectedEndY), bounds.getMinY(), 0.0001, description + " bounds minY");

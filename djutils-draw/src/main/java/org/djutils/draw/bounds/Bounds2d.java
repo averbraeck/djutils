@@ -409,7 +409,7 @@ public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
     }
 
     @Override
-    public Bounds2d getBounds()
+    public Bounds2d getAbsoluteBounds()
     {
         return this;
     }

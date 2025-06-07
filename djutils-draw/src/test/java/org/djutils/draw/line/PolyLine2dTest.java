@@ -156,7 +156,7 @@ public class PolyLine2dTest
 
         assertEquals(points.length, line.size(), "size");
 
-        Bounds2d b2d = line.getBounds();
+        Bounds2d b2d = line.getAbsoluteBounds();
         Bounds2d ref = new Bounds2d(points);
         assertEquals(ref, b2d, "bounds is correct");
 
@@ -1714,7 +1714,7 @@ public class PolyLine2dTest
         assertEquals(3, dp.getDirZ(), 0, "heading at 0");
         assertEquals(1, dp.getX(), 0, "x at 0 is 1");
         assertEquals(2, dp.getY(), 0, "y at 0 is 2");
-        assertEquals(new Bounds2d(l.get(0)), l.getBounds(), "bounds");
+        assertEquals(new Bounds2d(l.get(0)), l.getAbsoluteBounds(), "bounds");
         try
         {
             l.getLocation(0.1);

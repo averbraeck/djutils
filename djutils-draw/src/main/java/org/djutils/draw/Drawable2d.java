@@ -16,10 +16,10 @@ import org.djutils.draw.point.Point2d;
 public interface Drawable2d extends Drawable<Point2d>
 {
     /**
-     * Retrieve the bounding rectangle of the object.
-     * @return the bounding box of the object
+     * Retrieve the bounding rectangle of the object in absolute coordinates.
+     * @return the bounding box of the object in absolute coordinates
      */
-    Bounds2d getBounds();
+    Bounds2d getAbsoluteBounds();
 
     @Override
     default int getDimensions()

@@ -258,7 +258,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
     }
 
     @Override
-    public Bounds3d getBounds()
+    public Bounds3d getAbsoluteBounds()
     {
         return new Bounds3d(this);
     }

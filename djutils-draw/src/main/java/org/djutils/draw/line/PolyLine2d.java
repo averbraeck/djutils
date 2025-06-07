@@ -472,7 +472,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     @Override
-    public Bounds2d getBounds()
+    public Bounds2d getAbsoluteBounds()
     {
         return this.bounds;
     }

@@ -251,7 +251,7 @@ public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, Dir
     }
 
     @Override
-    public Bounds3d getBounds()
+    public Bounds3d getAbsoluteBounds()
     {
         double sinDirZ = Math.sin(this.dirZ);
         double cosDirZ = Math.cos(this.dirZ);

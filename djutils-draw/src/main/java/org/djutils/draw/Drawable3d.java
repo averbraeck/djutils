@@ -16,10 +16,10 @@ import org.djutils.draw.point.Point3d;
 public interface Drawable3d extends Drawable<Point3d>
 {
     /**
-     * Retrieve the bounding box of the object.
-     * @return the bounding box of the object
+     * Retrieve the bounding box of the object in absolute coordinates.
+     * @return the bounding box of the object in absolute coordinates
      */
-    Bounds3d getBounds();
+    Bounds3d getAbsoluteBounds();
 
     @Override
     default int getDimensions()

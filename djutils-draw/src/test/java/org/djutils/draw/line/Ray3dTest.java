@@ -263,86 +263,86 @@ public class Ray3dTest
     {
         // X direction
         // Angle of 0 is exact; bounds should be infinite in only the positive X and Z directions
-        verifyBounds(new Ray3d(1, 2, 3, 0, 1).getBounds(), 1, 2, 3, 1, 2, Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray3d(1, 2, 3, 0, 1).getAbsoluteBounds(), 1, 2, 3, 1, 2, Double.POSITIVE_INFINITY);
 
         // Z direction
         // Angle of 0 is exact; bounds should be infinite in only the positive X direction
-        verifyBounds(new Ray3d(1, 2, 3, 0, 0).getBounds(), 1, 2, 3, 1, 2, Double.POSITIVE_INFINITY);
+        verifyBounds(new Ray3d(1, 2, 3, 0, 0).getAbsoluteBounds(), 1, 2, 3, 1, 2, Double.POSITIVE_INFINITY);
 
         // first quadrant in XY, pointing up (positive Z)
-        verifyBounds(new Ray3d(1, 2, 3, 1.1, 0.2).getBounds(), 1, 2, 3, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 1.1, 0.2).getAbsoluteBounds(), 1, 2, 3, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
 
         // Math.PI / 2 is in first quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, 1, Math.PI / 2).getBounds(), 1, 2, 3, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 1, Math.PI / 2).getAbsoluteBounds(), 1, 2, 3, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 
         // second quadrant in XY, pointing up
-        verifyBounds(new Ray3d(1, 2, 3, 1, 2).getBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 1, 2).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
 
         // Math.PI is in second quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, 1, Math.PI).getBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 1, Math.PI).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
 
         // third quadrant
-        verifyBounds(new Ray3d(1, 2, 3, 1, 4).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1, 2,
+        verifyBounds(new Ray3d(1, 2, 3, 1, 4).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1, 2,
                 Double.POSITIVE_INFINITY);
 
         // fourth quadrant
-        verifyBounds(new Ray3d(1, 2, 3, 1, -1).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
+        verifyBounds(new Ray3d(1, 2, 3, 1, -1).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
                 Double.POSITIVE_INFINITY);
 
         // -Math.PI / 2 is in fourth quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, 1, -Math.PI / 2).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 1, -Math.PI / 2).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY,
                 2, Double.POSITIVE_INFINITY);
 
         // first quadrant in XY, pointing down (negative Z)
-        verifyBounds(new Ray3d(1, 2, 3, 3, 0.2).getBounds(), 1, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 3, 0.2).getAbsoluteBounds(), 1, 2, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY, 3);
 
         // second quadrant in XY, pointing down
-        verifyBounds(new Ray3d(1, 2, 3, 3, 2).getBounds(), Double.NEGATIVE_INFINITY, 2, Double.NEGATIVE_INFINITY, 1,
+        verifyBounds(new Ray3d(1, 2, 3, 3, 2).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, 2, Double.NEGATIVE_INFINITY, 1,
                 Double.POSITIVE_INFINITY, 3);
 
         // Math.PI is in second quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, 3, Math.PI).getBounds(), Double.NEGATIVE_INFINITY, 2, Double.NEGATIVE_INFINITY, 1,
+        verifyBounds(new Ray3d(1, 2, 3, 3, Math.PI).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, 2, Double.NEGATIVE_INFINITY, 1,
                 Double.POSITIVE_INFINITY, 3);
 
         // third quadrant
-        verifyBounds(new Ray3d(1, 2, 3, 3, 4).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 3, 4).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
                 Double.NEGATIVE_INFINITY, 1, 2, 3);
 
         // fourth quadrant
-        verifyBounds(new Ray3d(1, 2, 3, 3, -1).getBounds(), 1, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 3, -1).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
                 Double.POSITIVE_INFINITY, 2, 3);
 
         // -Math.PI / 2 is in fourth quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, 3, -Math.PI / 2).getBounds(), 1, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, 3, -Math.PI / 2).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY,
                 Double.POSITIVE_INFINITY, 2, 3);
 
         // first quadrant in XY, pointing up (positive Z)
-        verifyBounds(new Ray3d(1, 2, 3, -1.1, 0.2).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1, 2,
+        verifyBounds(new Ray3d(1, 2, 3, -1.1, 0.2).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1, 2,
                 Double.POSITIVE_INFINITY);
 
         // Math.PI / 2 is in first quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, -1, Math.PI / 2).getBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1,
+        verifyBounds(new Ray3d(1, 2, 3, -1, Math.PI / 2).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, 3, 1,
                 2, Double.POSITIVE_INFINITY);
 
         // second quadrant in XY, pointing up
-        verifyBounds(new Ray3d(1, 2, 3, -1, 2).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
+        verifyBounds(new Ray3d(1, 2, 3, -1, 2).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
                 Double.POSITIVE_INFINITY);
 
         // Math.PI is in second quadrant due to finite precision of a double
-        verifyBounds(new Ray3d(1, 2, 3, -1, Math.PI).getBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
+        verifyBounds(new Ray3d(1, 2, 3, -1, Math.PI).getAbsoluteBounds(), 1, Double.NEGATIVE_INFINITY, 3, Double.POSITIVE_INFINITY, 2,
                 Double.POSITIVE_INFINITY);
 
         // third quadrant
-        verifyBounds(new Ray3d(1, 2, 3, -1, 4).getBounds(), 1, 2, 3, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, -1, 4).getAbsoluteBounds(), 1, 2, 3, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
 
         // fourth quadrant
-        verifyBounds(new Ray3d(1, 2, 3, -1, -1).getBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
+        verifyBounds(new Ray3d(1, 2, 3, -1, -1).getAbsoluteBounds(), Double.NEGATIVE_INFINITY, 2, 3, 1, Double.POSITIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
 
         // TODO dirY values at boundaries and outside of [0..PI/2]
