@@ -1,7 +1,5 @@
 package org.djutils.cli;
 
-import java.util.Locale;
-
 import org.djunits.value.vdouble.scalar.AbsoluteTemperature;
 import org.djunits.value.vdouble.scalar.AbsorbedDose;
 import org.djunits.value.vdouble.scalar.Acceleration;
@@ -77,7 +75,7 @@ public final class CliUnitConverters
      * Register all DJUNITS converters for a CommandLine.
      * @param cmd the CommandLine for which the DJUNITS converters should be registered
      */
-    @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+    @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
     public static void registerAll(final CommandLine cmd)
     {
         cmd.registerConverter(AbsoluteTemperature.class, new ABSOLUTETEMPERATURE());
@@ -133,10 +131,13 @@ public final class CliUnitConverters
     public static class ABSOLUTETEMPERATURE implements ITypeConverter<AbsoluteTemperature>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public AbsoluteTemperature convert(final String value) throws Exception
         {
-            return AbsoluteTemperature.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = AbsoluteTemperature.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -146,10 +147,13 @@ public final class CliUnitConverters
     public static class ABSORBEDDOSE implements ITypeConverter<AbsorbedDose>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public AbsorbedDose convert(final String value) throws Exception
         {
-            return AbsorbedDose.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = AbsorbedDose.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -159,10 +163,13 @@ public final class CliUnitConverters
     public static class ACCELERATION implements ITypeConverter<Acceleration>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Acceleration convert(final String value) throws Exception
         {
-            return Acceleration.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Acceleration.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -172,10 +179,13 @@ public final class CliUnitConverters
     public static class AMOUNTOFSUBSTANCE implements ITypeConverter<AmountOfSubstance>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public AmountOfSubstance convert(final String value) throws Exception
         {
-            return AmountOfSubstance.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = AmountOfSubstance.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -185,10 +195,13 @@ public final class CliUnitConverters
     public static class ANGLE implements ITypeConverter<Angle>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Angle convert(final String value) throws Exception
         {
-            return Angle.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Angle.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -198,10 +211,13 @@ public final class CliUnitConverters
     public static class ANGULARACCELERATION implements ITypeConverter<AngularAcceleration>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public AngularAcceleration convert(final String value) throws Exception
         {
-            return AngularAcceleration.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = AngularAcceleration.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -211,10 +227,13 @@ public final class CliUnitConverters
     public static class ANGULARVELOCITY implements ITypeConverter<AngularVelocity>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public AngularVelocity convert(final String value) throws Exception
         {
-            return AngularVelocity.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = AngularVelocity.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -224,10 +243,13 @@ public final class CliUnitConverters
     public static class AREA implements ITypeConverter<Area>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Area convert(final String value) throws Exception
         {
-            return Area.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Area.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -237,10 +259,13 @@ public final class CliUnitConverters
     public static class CATALYTICACTIVITY implements ITypeConverter<CatalyticActivity>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public CatalyticActivity convert(final String value) throws Exception
         {
-            return CatalyticActivity.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = CatalyticActivity.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -250,10 +275,13 @@ public final class CliUnitConverters
     public static class DENSITY implements ITypeConverter<Density>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Density convert(final String value) throws Exception
         {
-            return Density.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Density.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -263,10 +291,13 @@ public final class CliUnitConverters
     public static class DIMENSIONLESS implements ITypeConverter<Dimensionless>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Dimensionless convert(final String value) throws Exception
         {
-            return Dimensionless.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Dimensionless.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -276,10 +307,13 @@ public final class CliUnitConverters
     public static class DIRECTION implements ITypeConverter<Direction>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Direction convert(final String value) throws Exception
         {
-            return Direction.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Direction.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -289,7 +323,7 @@ public final class CliUnitConverters
     public static class DURATION implements ITypeConverter<Duration>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Duration convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
@@ -305,10 +339,13 @@ public final class CliUnitConverters
     public static class ELECTRICALCAPACITANCE implements ITypeConverter<ElectricalCapacitance>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public ElectricalCapacitance convert(final String value) throws Exception
         {
-            return ElectricalCapacitance.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = ElectricalCapacitance.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -318,10 +355,13 @@ public final class CliUnitConverters
     public static class ELECTRICALCHARGE implements ITypeConverter<ElectricalCharge>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public ElectricalCharge convert(final String value) throws Exception
         {
-            return ElectricalCharge.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = ElectricalCharge.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -331,10 +371,13 @@ public final class CliUnitConverters
     public static class ELECTRICALCONDUCTANCE implements ITypeConverter<ElectricalConductance>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public ElectricalConductance convert(final String value) throws Exception
         {
-            return ElectricalConductance.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = ElectricalConductance.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -344,10 +387,13 @@ public final class CliUnitConverters
     public static class ELECTRICALCURRENT implements ITypeConverter<ElectricalCurrent>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public ElectricalCurrent convert(final String value) throws Exception
         {
-            return ElectricalCurrent.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = ElectricalCurrent.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -357,10 +403,13 @@ public final class CliUnitConverters
     public static class ELECTRICALINDUCTANCE implements ITypeConverter<ElectricalInductance>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public ElectricalInductance convert(final String value) throws Exception
         {
-            return ElectricalInductance.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = ElectricalInductance.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -370,10 +419,13 @@ public final class CliUnitConverters
     public static class ELECTRICALPOTENTIAL implements ITypeConverter<ElectricalPotential>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public ElectricalPotential convert(final String value) throws Exception
         {
-            return ElectricalPotential.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = ElectricalPotential.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -383,10 +435,13 @@ public final class CliUnitConverters
     public static class ELECTRICALRESISTANCE implements ITypeConverter<ElectricalResistance>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public ElectricalResistance convert(final String value) throws Exception
         {
-            return ElectricalResistance.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = ElectricalResistance.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -396,10 +451,13 @@ public final class CliUnitConverters
     public static class ENERGY implements ITypeConverter<Energy>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Energy convert(final String value) throws Exception
         {
-            return Energy.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Energy.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -409,10 +467,13 @@ public final class CliUnitConverters
     public static class EQUIVALENTDOSE implements ITypeConverter<EquivalentDose>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public EquivalentDose convert(final String value) throws Exception
         {
-            return EquivalentDose.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = EquivalentDose.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -422,10 +483,13 @@ public final class CliUnitConverters
     public static class FLOWMASS implements ITypeConverter<FlowMass>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public FlowMass convert(final String value) throws Exception
         {
-            return FlowMass.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = FlowMass.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -435,10 +499,13 @@ public final class CliUnitConverters
     public static class FLOWVOLUME implements ITypeConverter<FlowVolume>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public FlowVolume convert(final String value) throws Exception
         {
-            return FlowVolume.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = FlowVolume.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -448,10 +515,13 @@ public final class CliUnitConverters
     public static class FORCE implements ITypeConverter<Force>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Force convert(final String value) throws Exception
         {
-            return Force.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Force.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -461,10 +531,13 @@ public final class CliUnitConverters
     public static class FREQUENCY implements ITypeConverter<Frequency>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Frequency convert(final String value) throws Exception
         {
-            return Frequency.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Frequency.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -474,10 +547,13 @@ public final class CliUnitConverters
     public static class ILLUMINANCE implements ITypeConverter<Illuminance>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Illuminance convert(final String value) throws Exception
         {
-            return Illuminance.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Illuminance.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -487,7 +563,7 @@ public final class CliUnitConverters
     public static class LENGTH implements ITypeConverter<Length>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Length convert(final String value) throws Exception
         {
             CliUtil.prepareLocale();
@@ -503,10 +579,13 @@ public final class CliUnitConverters
     public static class LINEARDENSITY implements ITypeConverter<LinearDensity>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public LinearDensity convert(final String value) throws Exception
         {
-            return LinearDensity.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = LinearDensity.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -516,10 +595,13 @@ public final class CliUnitConverters
     public static class LUMINOUSFLUX implements ITypeConverter<LuminousFlux>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public LuminousFlux convert(final String value) throws Exception
         {
-            return LuminousFlux.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = LuminousFlux.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -529,10 +611,13 @@ public final class CliUnitConverters
     public static class LUMINOUSINTENSITY implements ITypeConverter<LuminousIntensity>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public LuminousIntensity convert(final String value) throws Exception
         {
-            return LuminousIntensity.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = LuminousIntensity.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -542,10 +627,13 @@ public final class CliUnitConverters
     public static class MAGNETICFLUX implements ITypeConverter<MagneticFlux>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public MagneticFlux convert(final String value) throws Exception
         {
-            return MagneticFlux.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = MagneticFlux.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -555,10 +643,13 @@ public final class CliUnitConverters
     public static class MAGNETICFLUXDENSITY implements ITypeConverter<MagneticFluxDensity>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public MagneticFluxDensity convert(final String value) throws Exception
         {
-            return MagneticFluxDensity.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = MagneticFluxDensity.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -568,10 +659,13 @@ public final class CliUnitConverters
     public static class MASS implements ITypeConverter<Mass>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Mass convert(final String value) throws Exception
         {
-            return Mass.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Mass.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -581,10 +675,13 @@ public final class CliUnitConverters
     public static class MOMENTUM implements ITypeConverter<Momentum>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Momentum convert(final String value) throws Exception
         {
-            return Momentum.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Momentum.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -594,10 +691,13 @@ public final class CliUnitConverters
     public static class POSITION implements ITypeConverter<Position>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Position convert(final String value) throws Exception
         {
-            return Position.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Position.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -607,10 +707,13 @@ public final class CliUnitConverters
     public static class POWER implements ITypeConverter<Power>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Power convert(final String value) throws Exception
         {
-            return Power.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Power.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -620,10 +723,13 @@ public final class CliUnitConverters
     public static class PRESSURE implements ITypeConverter<Pressure>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Pressure convert(final String value) throws Exception
         {
-            return Pressure.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Pressure.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -633,10 +739,13 @@ public final class CliUnitConverters
     public static class RADIOACTIVITY implements ITypeConverter<RadioActivity>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public RadioActivity convert(final String value) throws Exception
         {
-            return RadioActivity.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = RadioActivity.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -646,10 +755,13 @@ public final class CliUnitConverters
     public static class SOLIDANGLE implements ITypeConverter<SolidAngle>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public SolidAngle convert(final String value) throws Exception
         {
-            return SolidAngle.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = SolidAngle.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -659,10 +771,13 @@ public final class CliUnitConverters
     public static class SPEED implements ITypeConverter<Speed>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Speed convert(final String value) throws Exception
         {
-            return Speed.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Speed.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -672,10 +787,13 @@ public final class CliUnitConverters
     public static class TEMPERATURE implements ITypeConverter<Temperature>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Temperature convert(final String value) throws Exception
         {
-            return Temperature.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Temperature.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -685,10 +803,13 @@ public final class CliUnitConverters
     public static class TIME implements ITypeConverter<Time>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Time convert(final String value) throws Exception
         {
-            return Time.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Time.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -698,10 +819,13 @@ public final class CliUnitConverters
     public static class TORQUE implements ITypeConverter<Torque>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Torque convert(final String value) throws Exception
         {
-            return Torque.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Torque.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
@@ -711,10 +835,13 @@ public final class CliUnitConverters
     public static class VOLUME implements ITypeConverter<Volume>
     {
         @Override
-        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
+        @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2025-06-07T10:15:31.719700800Z")
         public Volume convert(final String value) throws Exception
         {
-            return Volume.valueOf(value);
+            CliUtil.prepareLocale();
+            var ret = Volume.valueOf(value);
+            CliUtil.restoreLocale();
+            return ret;
         }
     }
 
