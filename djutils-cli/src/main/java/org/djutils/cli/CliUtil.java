@@ -1,6 +1,9 @@
 package org.djutils.cli;
 
 import java.lang.reflect.Field;
+import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -12,6 +15,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Help;
 import picocli.CommandLine.IHelpSectionRenderer;
+import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.IVersionProvider;
 import picocli.CommandLine.Model.ArgSpec;
 import picocli.CommandLine.Option;
@@ -128,12 +132,17 @@ public final class CliUtil
     @SuppressWarnings("checkstyle:visibilitymodifier")
     static Map<String, Object> overrideMap = new LinkedHashMap<>();
 
-    /**
-     * A flag to indicate that the next argument to be parsed has a Locale attached to it. The code has to ensure that only
-     * arguments that have a parser that is able to handle and RESET the flag after use, set this value.
-     */
+    /** The set locale for the last defaultValue to be parsed. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
-    static String defaultValueLocale = "en_US";
+    private static Locale defaultValueLocale = Locale.US;
+
+    /** The locale as set in the --locale option. */
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    private static Locale localeOption = null;
+
+    /** Whether we are parsing a default value or not. */
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    private static boolean parseDefaultValue = false;
 
     /**
      * Parse the command line for the program. Register Unit converters, parse the command line, catch --help, --version and
@@ -161,7 +170,6 @@ public final class CliUtil
     @SuppressWarnings("checkstyle:methodlength")
     public static void execute(final CommandLine commandLine, final String[] args)
     {
-        System.out.println("\nCOMMANDLINE ARGS: " + List.of(args));
         // Issue #13. add the --locale option
         var initLocale = new InitLocale();
         commandLine.addMixin("locale", initLocale);
@@ -172,8 +180,8 @@ public final class CliUtil
             @Override
             public String defaultValue(final ArgSpec argSpec) throws Exception
             {
+                defaultValueLocale = Locale.US; // set to default if no annotation
                 String fieldName = ((Field) argSpec.userObject()).getName();
-                System.out.println("defaultValue for " + fieldName);
                 Class<?> fieldClass = null;
                 try
                 {
@@ -181,9 +189,9 @@ public final class CliUtil
                     fieldClass = field.getDeclaringClass();
                     if (field.isAnnotationPresent(DefaultValueLocale.class))
                     {
-                        // TODO: check that the parser for the argument can handle a default value locale (!)
-                        defaultValueLocale = field.getAnnotation(DefaultValueLocale.class).value();
-                        System.out.println("The defaultValueLocale is: " + defaultValueLocale);
+                        var loc = field.getAnnotation(DefaultValueLocale.class).value();
+                        parseDefaultValue = true; // the next parse will be an annotated default value
+                        defaultValueLocale = parseLocale(loc);
                     }
                 }
                 catch (NoSuchFieldException nsfe)
@@ -258,32 +266,19 @@ public final class CliUtil
 
         // register the DJUNITS converters
         CliUnitConverters.registerAll(commandLine);
+        registerLocaleFloatConverters(commandLine);
 
         // Issue #13. set the locale, and store the old one
         Locale saveLocale = Locale.getDefault();
         RetrieveLocale retrieveLocale = new RetrieveLocale();
         CommandLine cmdLocale = new CommandLine(retrieveLocale);
         cmdLocale.parseArgs(args);
-        String[] localeParts = retrieveLocale.getLocale().contains("_") ? retrieveLocale.getLocale().split("_")
-                : retrieveLocale.getLocale().split("-");
-        if (localeParts.length == 1)
-        {
-            Locale.setDefault(new Locale(localeParts[0]));
-        }
-        else if (localeParts.length == 2)
-        {
-            Locale.setDefault(new Locale(localeParts[0], localeParts[1]));
-        }
-        else
-        {
-            Locale.setDefault(new Locale(localeParts[0], localeParts[1], localeParts[2]));
-        }
+        localeOption =
+                new HashSet<String>(Arrays.asList(args)).contains("--locale") ? parseLocale(retrieveLocale.getLocale()) : null;
 
         // parse the command line arguments and handle errors, now based on the set locale
         commandLine.getCommandSpec().parser().collectErrors(true);
-        System.out.println("BEFORE PARSEARGS RESULT");
         ParseResult parseResult = commandLine.parseArgs(args);
-        System.out.println("AFTER PARSEARGS RESULT");
         List<Exception> parseErrors = parseResult.errors();
         if (parseErrors.size() > 0)
         {
@@ -635,4 +630,107 @@ public final class CliUtil
     {
         return programClass.getName() + "%" + propertyName;
     }
+
+    /**
+     * Register the locale-dependent converters for double, Double, float, Float.
+     * @param cmd the CommandLine for which the DJUNITS converters should be registered
+     */
+    static void registerLocaleFloatConverters(final CommandLine cmd)
+    {
+        cmd.registerConverter(Double.class, new DoubleConverter());
+        cmd.registerConverter(double.class, new DoubleConverter());
+        cmd.registerConverter(Float.class, new FloatConverter());
+        cmd.registerConverter(float.class, new FloatConverter());
+    }
+
+    /**
+     * Convert a Double String on the command line to a Double, taking into account the locale.
+     */
+    public static class DoubleConverter implements ITypeConverter<Double>
+    {
+        @Override
+        public Double convert(final String value) throws Exception
+        {
+            prepareLocale();
+            NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
+            Number number;
+            double ret;
+            try
+            {
+                number = format.parse(value);
+                ret = number.doubleValue();
+            }
+            catch (Exception e)
+            {
+                System.err.println("ERROR parsing double value " + value + ": " + e.getMessage());
+                ret = Double.NaN;
+            }
+            restoreLocale();
+            return ret;
+        }
+    }
+
+    /**
+     * Convert a Double String on the command line to a Double, taking into account the locale.
+     */
+    public static class FloatConverter implements ITypeConverter<Float>
+    {
+        @Override
+        public Float convert(final String value) throws Exception
+        {
+            prepareLocale();
+            NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
+            Number number;
+            float ret;
+            try
+            {
+                number = format.parse(value);
+                ret = number.floatValue();
+            }
+            catch (Exception e)
+            {
+                System.err.println("ERROR parsing double value " + value + ": " + e.getMessage());
+                ret = Float.NaN;
+            }
+            restoreLocale();
+            return ret;
+        }
+    }
+
+    /** temporarily save the locale. */
+    private static Locale saveLocaleForDefault;
+
+    /**
+     * Prepare the setting of a Locale for a default value or a value.
+     */
+    static void prepareLocale()
+    {
+        saveLocaleForDefault = Locale.getDefault();
+        Locale.setDefault(
+                CliUtil.localeOption != null && !CliUtil.parseDefaultValue ? CliUtil.localeOption : CliUtil.defaultValueLocale);
+    }
+
+    /**
+     * Restore the setting of a Locale for a default value or a value.
+     */
+    static void restoreLocale()
+    {
+        Locale.setDefault(saveLocaleForDefault);
+        CliUtil.defaultValueLocale = Locale.US;
+        CliUtil.parseDefaultValue = false;
+    }
+
+    /**
+     * Parse a locale string like "en-US" or "en_GB" or "nl" or "nl_NL".
+     * @param localeStr the string to parse
+     * @return the Locale belonging to the string
+     */
+    private static Locale parseLocale(final String localeStr)
+    {
+        var s = localeStr.replaceAll("_", "-");
+        var sa = s.split("\\-", 3);
+        return sa.length == 3 ? new Locale(sa[0], sa[1], sa[2])
+                : sa.length == 2 ? new Locale(sa[0], sa[1]) : sa.length == 1 ? new Locale(sa[0]) : new Locale(s);
+    }
+
 }

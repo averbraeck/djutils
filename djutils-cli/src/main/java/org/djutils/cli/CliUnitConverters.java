@@ -292,12 +292,9 @@ public final class CliUnitConverters
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Duration convert(final String value) throws Exception
         {
-            Locale saveLocale = Locale.getDefault();
-            Locale.setDefault(new Locale(CliUtil.defaultValueLocale));
-            System.out.println("In parser for Djunits. The locale is: " + Locale.getDefault());
+            CliUtil.prepareLocale();
             var ret = Duration.valueOf(value);
-            Locale.setDefault(saveLocale);
-            CliUtil.defaultValueLocale = "en";
+            CliUtil.restoreLocale();
             return ret;
         }
     }
@@ -493,12 +490,9 @@ public final class CliUnitConverters
         @Generated(value = "org.djunits.generator.GenerateCliConverters", date = "2020-01-17T12:27:20.797349900Z")
         public Length convert(final String value) throws Exception
         {
-            Locale saveLocale = Locale.getDefault();
-            Locale.setDefault(new Locale(CliUtil.defaultValueLocale));
-            System.out.println("In parser for Djunits. The locale is: " + Locale.getDefault());
+            CliUtil.prepareLocale();
             var ret = Length.valueOf(value);
-            Locale.setDefault(saveLocale);
-            CliUtil.defaultValueLocale = "en";
+            CliUtil.restoreLocale();
             return ret;
         }
     }

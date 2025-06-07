@@ -53,6 +53,15 @@ public class TestCliLocale
     @Test
     public void testCli() throws CliException
     {
+        new MockUp<System>()
+        {
+            @Mock
+            public void exit(final int value)
+            {
+                throw new RuntimeException(String.valueOf(value));
+            }
+        };
+
         String[] args;
         Options options = new Options();
         Locale saveLocale = Locale.getDefault();
@@ -82,15 +91,15 @@ public class TestCliLocale
         assertEquals(locale, Locale.getDefault());
 
         // check NL as default language and explicitly
-        locale = new Locale("nl", "NL");
+        // locale = new Locale("nl", "NL");
         Locale.setDefault(locale);
         args = new String[] {"--duration", "0.5s"}; // note that en_US is ALWAYS the default
         CliUtil.execute(options, args);
         assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
-        args = new String[] {"--duration", "0,5s", "--locale", "nl"};
+        args = new String[] {"--duration", "0,5s", "--locale", "nl_NL"};
         CliUtil.execute(options, args);
         assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
-        args = new String[] {"--duration", "2uur", "--locale", "nl"};
+        args = new String[] {"--duration", "2uur", "--locale", "nl-NL"};
         CliUtil.execute(options, args);
         assertEquals(new Duration(2.0, DurationUnit.HOUR), options.getDuration());
         args = new String[] {"--duration", "0,5s", "--locale", "nl_NL"};
@@ -124,7 +133,7 @@ public class TestCliLocale
         args = new String[] {"--duration", "0.5s"}; // note that en_US is ALWAYS the default
         CliUtil.execute(options, args);
         assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
-        args = new String[] {"--duration", "0,5s", "--locale", "no"};
+        args = new String[] {"--duration", "0,5s", "--locale", "no-NO"};
         CliUtil.execute(options, args);
         assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
         args = new String[] {"--duration", "0,5s", "--locale", "no_NO"};

@@ -6,6 +6,8 @@ import org.djunits.value.vdouble.scalar.Duration;
 import org.djutils.exceptions.Throw;
 import org.junit.jupiter.api.Test;
 
+import mockit.Mock;
+import mockit.MockUp;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -83,6 +85,15 @@ public class TestCli
     @Test
     public void testCli() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
+        new MockUp<System>()
+        {
+            @Mock
+            public void exit(final int value)
+            {
+                throw new RuntimeException(String.valueOf(value));
+            }
+        };
+
         String[] args = new String[] {"-p", "1200"};
         Options options = new Options();
         assertEquals("1.0", CliUtil.getCommandVersion(options)[0]);
