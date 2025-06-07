@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import org.djutils.draw.Drawable;
 import org.djutils.draw.point.Point;
-import org.djutils.draw.point.Point2d;
 
 /**
  * Bounds is the generic tagging interface that indicates the bounds for an object, where the simplest implementation is minX,
