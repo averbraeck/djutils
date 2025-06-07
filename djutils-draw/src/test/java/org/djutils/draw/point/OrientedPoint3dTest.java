@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Iterator;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Try;
 import org.djutils.math.AngleUtil;
 import org.junit.jupiter.api.Test;
@@ -499,7 +498,7 @@ public class OrientedPoint3dTest
             {
                 new OrientedPoint3d(0.0, 0.0, 0.0, Math.PI / 4.0, Math.PI / 4.0, Math.PI / 4.0).normalize();
             }
-        }, "Should throw exception", DrawRuntimeException.class);
+        }, "Should throw exception", IllegalArgumentException.class);
 
         Try.testFail(new Try.Execution()
         {

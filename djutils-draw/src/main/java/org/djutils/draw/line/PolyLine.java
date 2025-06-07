@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.djutils.draw.Directed;
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable;
+import org.djutils.draw.InternalCalculationException;
+import org.djutils.draw.InvalidProjectionException;
 import org.djutils.draw.point.Point;
 import org.djutils.exceptions.Throw;
 
@@ -113,8 +114,7 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
 
     /**
      * Extract one LineSegment of this PolyLine, or Polygon.
-     * @param index the rank number of the segment; must be in range 0..Size() - 2 for PolyLine, or 0.. Size() - 1 for
-     *            Polygon.
+     * @param index the rank number of the segment; must be in range 0..Size() - 2 for PolyLine, or 0.. Size() - 1 for Polygon.
      * @return the LineSegment that connects point index to point index + 1
      * @throws IndexOutOfBoundsException when <code>index</code> &lt; <code>0</code>, or <code>index &ge; size() -
      *             1</code> (in case of a PolyLine, or <code>index &ge; size()</code> in case of a Polygon
@@ -164,8 +164,8 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
     /**
      * Create a new PolyLine that covers a sub-section of this PolyLine.
      * @param start length along this PolyLine where the sub-section starts, valid range [0..<code>end</code>)
-     * @param end length along this PolyLine where the sub-section ends, valid range
-     *            (<code>start</code>..<code>length</code> (length is the length of this PolyLine)
+     * @param end length along this PolyLine where the sub-section ends, valid range (<code>start</code>..<code>length</code>
+     *            (length is the length of this PolyLine)
      * @return a new <code>PolyLine</code> covering the selected sub-section
      * @throws IllegalArgumentException when <code>start &ge; end</code>, or <code>start &lt; 0</code>, or
      *             <code>end &gt; length</code>
@@ -267,7 +267,7 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      * Binary search for a point index on this PolyLine that is at, or the the nearest one before a given position.
      * @param pos the position to look for
      * @return the position lies between points[index] and points[index+1]
-     * @throws DrawRuntimeException when the point index could not be found (should never happen)
+     * @throws IllegalStateException when the point index could not be found (should never happen)
      */
     default int find(final double pos)
     {
@@ -298,7 +298,7 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
                 return mid;
             }
         }
-        throw new DrawRuntimeException("Could not find position " + pos + " on line with length: " + getLength());
+        throw new IllegalStateException("Could not find position " + pos + " on line with length: " + getLength());
     }
 
     /** Default precision of approximation of arcs in the offsetLine method. */
@@ -329,12 +329,12 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      * (<code>DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE</code>), offsetFilterRatio (<code>DEFAULT_OFFSET_FILTER_RATIO</code>),
      * minimumOffset (<code>DEFAULT_OFFSET_PRECISION</code>). <br>
      * In the 3D version the offset is parallel to the X-Y plane.
-     * @param offset the offset; positive values indicate left of the reference line, negative values indicate right of
-     *            the reference line
+     * @param offset the offset; positive values indicate left of the reference line, negative values indicate right of the
+     *            reference line
      * @return a PolyLine at the specified <code>offset</code> from the this PolyLine
-     * @throws DrawRuntimeException Only if P is PolyLine3d and the line cannot be projected into 2d
+     * @throws InvalidProjectionException Only if P is PolyLine3d and the line cannot be projected into 2d
      */
-    default L offsetLine(final double offset) throws DrawRuntimeException
+    default L offsetLine(final double offset) throws InvalidProjectionException
     {
         return offsetLine(offset, DEFAULT_CIRCLE_PRECISION, DEFAULT_OFFSET_MINIMUM_FILTER_VALUE,
                 DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE, DEFAULT_OFFSET_FILTER_RATIO, DEFAULT_OFFSET_PRECISION);
@@ -346,14 +346,14 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      * This method tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise
      * in <code>this</code> (the reference line) can cause major artifacts in the offset line. <br>
      * In the 3D version the offset is parallel to the X-Y plane.
-     * @param offset the offset; positive values indicate left of the reference line, negative values indicate right of
-     *            the reference line
-     * @param circlePrecision precision of approximation of arcs; the line segments that are used to approximate an arc
-     *            will not deviate from the exact arc by more than this value
+     * @param offset the offset; positive values indicate left of the reference line, negative values indicate right of the
+     *            reference line
+     * @param circlePrecision precision of approximation of arcs; the line segments that are used to approximate an arc will not
+     *            deviate from the exact arc by more than this value
      * @param offsetMinimumFilterValue noise in the reference line less than this value is always filtered
      * @param offsetMaximumFilterValue noise in the reference line greater than this value is never filtered
-     * @param offsetFilterRatio noise in the reference line less than <code>offset / offsetFilterRatio</code> is
-     *            filtered except when the resulting value exceeds <code>offsetMaximumFilterValue</code>
+     * @param offsetFilterRatio noise in the reference line less than <code>offset / offsetFilterRatio</code> is filtered except
+     *            when the resulting value exceeds <code>offsetMaximumFilterValue</code>
      * @param minimumOffset an offset value less than this value is treated as 0.0
      * @return a PolyLine at the specified offset from the reference line
      * @throws ArithmeticException when <code>offset</code>, or <code>circlePrecision</code>,
@@ -362,7 +362,7 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      * @throws IllegalArgumentException when <code>circlePrecision</code>, <code>offsetMinimumFilterValue</code>,
      *             <code>offsetMaximumfilterValue</code>, <code>offsetFilterRatio</code>, or <code>minimumOffset</code> is not
      *             positive, or <code>offsetMinimumFilterValue &ge; offsetMaximumFilterValue</code>
-     * @throws DrawRuntimeException Only if P is PolyLine3d and the line cannot be projected into 2d
+     * @throws InvalidProjectionException Only if P is PolyLine3d and the line cannot be projected into 2d
      */
     L offsetLine(double offset, double circlePrecision, double offsetMinimumFilterValue, double offsetMaximumFilterValue,
             double offsetFilterRatio, double minimumOffset);
@@ -377,10 +377,10 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      * (<code>DEFAULT_OFFSET_MAXIMUM_FILTER_VALUE</code>), offsetFilterRatio (<code>DEFAULT_OFFSET_FILTER_RATIO</code>),
      * minimumOffset (<code>DEFAULT_OFFSET_PRECISION</code>). <br>
      * In the 3D version the offset is parallel to the X-Y plane.
-     * @param offsetAtStart the offset at the start of this line; positive values indicate left of the reference line,
-     *            negative values indicate right of the reference line
-     * @param offsetAtEnd the offset at the end of this line; positive values indicate left of the reference line,
-     *            negative values indicate right of the reference line
+     * @param offsetAtStart the offset at the start of this line; positive values indicate left of the reference line, negative
+     *            values indicate right of the reference line
+     * @param offsetAtEnd the offset at the end of this line; positive values indicate left of the reference line, negative
+     *            values indicate right of the reference line
      * @return a PolyLine at the specified offset from the reference line
      * @throws ArithmeticException when <code>offset</code>, or <code>circlePrecision</code>,
      *             <code>offsetMinimumFilterValue</code>, <code>offsetMaximumfilterValue</code>, <code>offsetFilterRatio</code>,
@@ -388,7 +388,7 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      * @throws IllegalArgumentException when <code>circlePrecision</code>, <code>offsetMinimumFilterValue</code>,
      *             <code>offsetMaximumfilterValue</code>, <code>offsetFilterRatio</code>, or <code>minimumOffset</code> is not
      *             positive, or <code>offsetMinimumFilterValue &ge; offsetMaximumFilterValue</code>.
-     * @throws DrawRuntimeException Only if P is PolyLine3d and the line cannot be projected into 2d
+     * @throws InvalidProjectionException Only if P is PolyLine3d and the line cannot be projected into 2d
      */
     default L offsetLine(final double offsetAtStart, final double offsetAtEnd)
     {
@@ -402,16 +402,16 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      * This method tries to strike a delicate balance between generating too few and too many points to approximate arcs. Noise
      * in <code>this</code> (the reference line) can cause major artifacts in the offset line. <br>
      * In the 3D version the offset is parallel to the X-Y plane.
-     * @param offsetAtStart the offset at the start of this line; positive values indicate left of the reference line,
-     *            negative values indicate right of the reference line
-     * @param offsetAtEnd the offset at the end of this line; positive values indicate left of the reference line,
-     *            negative values indicate right of the reference line
-     * @param circlePrecision precision of approximation of arcs; the line segments that are used to approximate an arc
-     *            will not deviate from the exact arc by more than this value
+     * @param offsetAtStart the offset at the start of this line; positive values indicate left of the reference line, negative
+     *            values indicate right of the reference line
+     * @param offsetAtEnd the offset at the end of this line; positive values indicate left of the reference line, negative
+     *            values indicate right of the reference line
+     * @param circlePrecision precision of approximation of arcs; the line segments that are used to approximate an arc will not
+     *            deviate from the exact arc by more than this value
      * @param offsetMinimumFilterValue noise in the reference line less than this value is always filtered
      * @param offsetMaximumFilterValue noise in the reference line greater than this value is never filtered
-     * @param offsetFilterRatio noise in the reference line less than <code>offset / offsetFilterRatio</code> is
-     *            filtered except when the resulting value exceeds <code>offsetMaximumFilterValue</code>
+     * @param offsetFilterRatio noise in the reference line less than <code>offset / offsetFilterRatio</code> is filtered except
+     *            when the resulting value exceeds <code>offsetMaximumFilterValue</code>
      * @param minimumOffset an offset value less than this value is treated as 0.0
      * @return a PolyLine at the specified offset from the reference line
      * @throws ArithmeticException when <code>offset</code>, or <code>circlePrecision</code>,
@@ -420,7 +420,7 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      * @throws IllegalArgumentException when <code>circlePrecision</code>, <code>offsetMinimumFilterValue</code>,
      *             <code>offsetMaximumfilterValue</code>, <code>offsetFilterRatio</code>, or <code>minimumOffset</code> is not
      *             positive, or <code>offsetMinimumFilterValue &ge; offsetMaximumFilterValue</code>
-     * @throws DrawRuntimeException Only if P is PolyLine3d and the line cannot be projected into 2d
+     * @throws InvalidProjectionException Only if P is PolyLine3d and the line cannot be projected into 2d
      */
     L offsetLine(double offsetAtStart, double offsetAtEnd, double circlePrecision, double offsetMinimumFilterValue,
             double offsetMaximumFilterValue, double offsetFilterRatio, double minimumOffset);
@@ -433,7 +433,7 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      * @param offsets offsets at the relative positions (positive value is Left, negative value is Right)
      * @param offsetMinimumFilterValue noise in the reference line less than this value is filtered
      * @return the PolyLine2d of the line at multi-linearly changing offset of the reference line
-     * @throws DrawRuntimeException when this method fails to create the offset line
+     * @throws InternalCalculationException when this method fails to create the offset line
      * @throws IllegalArgumentException when <code>relativeFractions</code> is too short, or differs in length from
      *             <code>offsets</code>
      */
@@ -445,7 +445,7 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      * @param transition defines how the results changes from this <code>line</code> to the <code>endLine</code>
      * @return a transition between this PolyLine and the other PolyLine
      * @throws ArithmeticException when the transition function returns <code>NaN</code> at some point
-     * @throws DrawRuntimeException when construction of some point along the way fails
+     * @throws InternalCalculationException when construction of some point along the way fails
      */
     L transitionLine(L endLine, TransitionFunction transition);
 

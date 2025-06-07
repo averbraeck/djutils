@@ -2,7 +2,6 @@ package org.djutils.draw.point;
 
 import java.io.Serializable;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable;
 
 /**
@@ -55,9 +54,9 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
     /**
      * Return a new Point with a distance of 1 to the origin.
      * @return the normalized point
-     * @throws DrawRuntimeException when point is the origin, and no length can be established for scaling
+     * @throws IllegalArgumentException when point is the origin, and no length can be established for scaling
      */
-    P normalize() throws DrawRuntimeException;
+    P normalize() throws IllegalArgumentException;
 
     /**
      * Return the distance to another point.
@@ -78,9 +77,9 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
      * Interpolate towards another Point with a fraction. It is allowed for fraction to be less than zero or larger than 1. In
      * that case the interpolation turns into an extrapolation.
      * @param otherPoint the other point
-     * @param fraction the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is
-     *            between 0 and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0;
-     *            <code>this</code> Point is returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
+     * @param fraction the factor for interpolation towards the other point. When &lt;code&gt;fraction&lt;/code&gt; is between 0
+     *            and 1, it is an interpolation, otherwise an extrapolation. If <code>fraction</code> is 0; <code>this</code>
+     *            Point is returned; if <code>fraction</code> is 1, the other <code>point</code> is returned
      * @return the point that is <code>fraction</code> away on the line between this point and the other point
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      * @throws ArithmeticException when <code>fraction</code> is <code>NaN</code>
@@ -94,8 +93,8 @@ public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
      * Bourke</a>.
      * @param segmentPoint1 start of line segment
      * @param segmentPoint2 end of line segment
-     * @return either <code>segmentPoint1</code>, or <code>segmentPoint2</code> or a new Point2d that lies somewhere in
-     *         between those two.
+     * @return either <code>segmentPoint1</code>, or <code>segmentPoint2</code> or a new Point2d that lies somewhere in between
+     *         those two.
      * @throws NullPointerException when <code>segmentPoint2</code>, or <code>segmentPoint2</code> is <code>null</code>
      */
     P closestPointOnSegment(P segmentPoint1, P segmentPoint2);

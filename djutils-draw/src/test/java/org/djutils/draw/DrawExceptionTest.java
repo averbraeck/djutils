@@ -26,4 +26,13 @@ public class DrawExceptionTest
         ExceptionTest.testExceptionClass(InvalidProjectionException.class);
     }
 
+    /**
+     * Test all constructors for InternalCalculationException.
+     */
+    @Test
+    public final void testInternalCalculationException()
+    {
+        ExceptionTest.testExceptionClass(InternalCalculationException.class);
+    }
+
 }

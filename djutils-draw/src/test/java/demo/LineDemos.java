@@ -3,7 +3,6 @@ package demo;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Export;
 import org.djutils.draw.line.LineSegment2d;
 import org.djutils.draw.line.PolyLine2d;
@@ -32,9 +31,8 @@ public final class LineDemos
     /**
      * Demonstrate the line classes.
      * @param args the command line arguments (not used)
-     * @throws DrawRuntimeException ...
      */
-    public static void main(final String[] args) throws DrawRuntimeException
+    public static void main(final String[] args)
     {
         PolyLine2d pl1 = new PolyLine2d(new Point2d(1, 2), new Point2d(3, 4), new Point2d(20, -5));
         System.out.println(pl1);

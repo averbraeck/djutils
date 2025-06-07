@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.line.LineSegment2d;
 import org.djutils.draw.line.PolyLine2d;
@@ -34,11 +33,10 @@ public class Bounds2dTest
 
     /**
      * Test the bounding rectangle constructor.
-     * @throws DrawRuntimeException if that happens uncaught; this test has failed
      * @throws IllegalArgumentException if that happens uncaught; this test has failed
      */
     @Test
-    public void constructorTest() throws IllegalArgumentException, DrawRuntimeException
+    public void constructorTest() throws IllegalArgumentException
     {
         try
         {
@@ -338,13 +336,12 @@ public class Bounds2dTest
 
     /**
      * Test various methods of a Bounds2d.
-     * @throws DrawRuntimeException when that happens uncaught; this test has failed
      * @throws IllegalArgumentException when that happens uncaught; this test has failed
      * @throws NullPointerException when that happens uncaught; this test has failed
      */
     @Test
     @SuppressWarnings("unlikely-arg-type")
-    public void methodTest() throws NullPointerException, IllegalArgumentException, DrawRuntimeException
+    public void methodTest() throws NullPointerException, IllegalArgumentException
     {
         PolyLine2d l2d = new PolyLine2d(new Point2d(10, 10), new Point2d(30, -20), new Point2d(-40, 100));
         Bounds2d br = new Bounds2d(l2d);

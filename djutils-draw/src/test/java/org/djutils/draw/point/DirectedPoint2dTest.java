@@ -10,7 +10,6 @@ import java.awt.geom.Point2D;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Try;
 import org.djutils.math.AngleUtil;
 import org.junit.jupiter.api.Test;
@@ -306,7 +305,7 @@ public class DirectedPoint2dTest
             {
                 new DirectedPoint2d(0.0, 0.0, Math.PI / 4.0).normalize();
             }
-        }, "Should throw exception", DrawRuntimeException.class);
+        }, "Should throw exception", IllegalArgumentException.class);
 
         Try.testFail(new Try.Execution()
         {

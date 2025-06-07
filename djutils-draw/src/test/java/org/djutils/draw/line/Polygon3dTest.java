@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Export;
+import org.djutils.draw.InvalidProjectionException;
 import org.djutils.draw.point.Point3d;
 import org.junit.jupiter.api.Test;
 
@@ -296,10 +296,9 @@ public class Polygon3dTest
 
     /**
      * Test the reverse and project methods.
-     * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
     @Test
-    public final void reverseAndProjectTest() throws DrawRuntimeException
+    public final void reverseAndProjectTest()
     {
         Point3d p0 = new Point3d(1.1, 2.21, 3.1);
         Point3d p1 = new Point3d(2.1, 2.22, 3.2);
@@ -350,7 +349,7 @@ public class Polygon3dTest
             l22x.project();
             fail("Projecting a polygon3d that entirely projects to one point should have thrown an exception");
         }
-        catch (DrawRuntimeException e)
+        catch (InvalidProjectionException e)
         {
             // Ignore expected exception
         }

@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Try;
 import org.djutils.math.AngleUtil;
 import org.junit.jupiter.api.Test;
@@ -227,7 +226,7 @@ public class DirectedPoint3dTest
             {
                 new DirectedPoint3d(0.0, 0.0, 0.0, Math.PI / 4.0, Math.PI / 4.0, Math.PI / 4.0).normalize();
             }
-        }, "Should throw DrawRuntimeException", DrawRuntimeException.class);
+        }, "Should throw DrawRuntimeException", IllegalArgumentException.class);
 
         Try.testFail(new Try.Execution()
         {

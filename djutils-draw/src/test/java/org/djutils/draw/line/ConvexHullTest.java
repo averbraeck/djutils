@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.Export;
 import org.djutils.draw.point.Point2d;
@@ -43,7 +42,7 @@ public class ConvexHullTest
         implementations.put("Monotone", new ConvexHullImplementation()
         {
             @Override
-            public Polygon2d run(final List<Point2d> points) throws NullPointerException, DrawRuntimeException
+            public Polygon2d run(final List<Point2d> points)
             {
                 return ConvexHull.convexHullMonotone(points);
             }
@@ -51,7 +50,7 @@ public class ConvexHullTest
         implementations.put("Alshamrani", new ConvexHullImplementation()
         {
             @Override
-            public Polygon2d run(final List<Point2d> points) throws NullPointerException, DrawRuntimeException
+            public Polygon2d run(final List<Point2d> points)
             {
                 return ConvexHull.convexHullAlshamrani(points);
             }
@@ -59,7 +58,7 @@ public class ConvexHullTest
         implementations.put("Default", new ConvexHullImplementation()
         {
             @Override
-            public Polygon2d run(final List<Point2d> points) throws NullPointerException, DrawRuntimeException
+            public Polygon2d run(final List<Point2d> points)
             {
                 return ConvexHull.convexHull(points);
             }
@@ -134,9 +133,9 @@ public class ConvexHullTest
         try
         {
             ConvexHull.convexHull(new LinkedHashSet<Drawable2d>());
-            fail("empty collection should have thrown a DrawRuntimeException");
+            fail("empty collection should have thrown an IllegalArgumentException");
         }
-        catch (DrawRuntimeException e)
+        catch (IllegalArgumentException e)
         {
             // Ignore expected exception
         }

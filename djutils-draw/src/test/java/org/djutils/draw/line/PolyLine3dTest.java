@@ -16,8 +16,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Export;
+import org.djutils.draw.InvalidProjectionException;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point2d;
@@ -38,10 +38,9 @@ public class PolyLine3dTest
 {
     /**
      * Test the constructors of PolyLine3d.
-     * @throws DrawRuntimeException on failure
      */
     @Test
-    public final void constructorsTest() throws DrawRuntimeException
+    public final void constructorsTest()
     {
         double[] values = {-999, 0, 99, 9999}; // Keep this list short; execution time grows with 9th power of length
         Point3d[] points = new Point3d[0]; // Empty array
@@ -242,9 +241,8 @@ public class PolyLine3dTest
      * Verify that a Line3d contains the same points as an array of Point3d.
      * @param line the OTS line
      * @param points the OTSPoint array
-     * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
-    private void verifyPoints(final PolyLine3d line, final Point3d[] points) throws DrawRuntimeException
+    private void verifyPoints(final PolyLine3d line, final Point3d[] points)
     {
         assertEquals(line.size(), points.length, "Line should have same number of points as point array");
         for (int i = 0; i < points.length; i++)
@@ -293,11 +291,9 @@ public class PolyLine3dTest
 
     /**
      * Test all constructors of a Line2d.
-     * @throws DrawRuntimeException if that happens uncaught; this test has failed
-     * @throws DrawRuntimeException if that happens uncaught; this test has failed
      */
     @Test
-    public void testConstructors() throws DrawRuntimeException, DrawRuntimeException
+    public void testConstructors()
     {
         runConstructors(new Point3d[] {new Point3d(1.2, 3.4, 5.5), new Point3d(2.3, 4.5, 6.6), new Point3d(3.4, 5.6, 7.7)});
 
@@ -464,10 +460,9 @@ public class PolyLine3dTest
 
     /**
      * Test that exception is thrown when it should be.
-     * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
     @Test
-    public final void exceptionTest() throws DrawRuntimeException
+    public final void exceptionTest()
     {
         PolyLine3d line = new PolyLine3d(new Point3d[] {new Point3d(1, 2, 3), new Point3d(4, 5, 6)});
         try
@@ -493,10 +488,9 @@ public class PolyLine3dTest
 
     /**
      * Test the getLocationExtended method and friends.
-     * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
     @Test
-    public final void locationExtendedTest() throws DrawRuntimeException
+    public final void locationExtendedTest()
     {
         Point3d p0 = new Point3d(10, 20, 30);
         Point3d p1 = new Point3d(40, 50, 60);
@@ -523,10 +517,9 @@ public class PolyLine3dTest
      * @param expectedPoint expected location of the result
      * @param expectedDirY expected angle of the result from the Z axis
      * @param expectedDirZ expected angle of the result from the X axis
-     * @throws DrawRuntimeException on failure
      */
     private void checkGetLocation(final PolyLine3d line, final double fraction, final Point3d expectedPoint,
-            final double expectedDirY, final double expectedDirZ) throws DrawRuntimeException
+            final double expectedDirY, final double expectedDirZ)
     {
         double length = line.getLength();
         checkDirectedPoint3d(line.getLocationExtended(fraction * length), expectedPoint, expectedDirY, expectedDirZ);
@@ -580,10 +573,9 @@ public class PolyLine3dTest
 
     /**
      * Test the filtering constructors.
-     * @throws DrawRuntimeException should never happen
      */
     @Test
-    public final void filterTest() throws DrawRuntimeException
+    public final void filterTest()
     {
         Point3d[] tooShort = new Point3d[] {};
         try
@@ -626,10 +618,9 @@ public class PolyLine3dTest
 
     /**
      * Test the equals method.
-     * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
     @Test
-    public final void equalsTest() throws DrawRuntimeException
+    public final void equalsTest()
     {
         Point3d p0 = new Point3d(1.1, 2.2, 3.3);
         Point3d p1 = new Point3d(2.1, 2.2, 3.3);
@@ -657,10 +648,9 @@ public class PolyLine3dTest
 
     /**
      * Test the concatenate method.
-     * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
     @Test
-    public final void concatenateTest() throws DrawRuntimeException
+    public final void concatenateTest()
     {
         Point3d p0 = new Point3d(1.1, 2.2, 3.3);
         Point3d p1 = new Point3d(2.1, 2.2, 3.3);
@@ -723,7 +713,7 @@ public class PolyLine3dTest
                         {
                             PolyLine3d.concatenate(tolerance, l0, otherLine);
                         }
-                        catch (DrawRuntimeException dre)
+                        catch (IllegalArgumentException dre)
                         {
                             PolyLine3d.concatenate(tolerance, l0, otherLine);
                             fail("concatenation with error " + actualError + " and tolerance " + tolerance
@@ -733,7 +723,7 @@ public class PolyLine3dTest
                         {
                             PolyLine3d.concatenate(tolerance, l0, otherLine, thirdLine);
                         }
-                        catch (DrawRuntimeException dre)
+                        catch (IllegalArgumentException dre)
                         {
                             fail("concatenation with error " + actualError + " and tolerance " + tolerance
                                     + " should not have failed");
@@ -767,10 +757,9 @@ public class PolyLine3dTest
 
     /**
      * Test the reverse and project methods.
-     * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
     @Test
-    public final void reverseAndProjectTest() throws DrawRuntimeException
+    public final void reverseAndProjectTest()
     {
         Point3d p0 = new Point3d(1.1, 2.21, 3.1);
         Point3d p1 = new Point3d(2.1, 2.22, 3.2);
@@ -821,7 +810,7 @@ public class PolyLine3dTest
             l22x.project();
             fail("Projecting a Polyline3d that entirely projects to one point should have thrown an exception");
         }
-        catch (DrawRuntimeException dre)
+        catch (InvalidProjectionException dre)
         {
             // Ignore expected exception
         }
@@ -829,11 +818,10 @@ public class PolyLine3dTest
 
     /**
      * Test the extract and extractFraction methods.
-     * @throws DrawRuntimeException should not happen; this test has failed if it does happen
      */
     @Test
     @SuppressWarnings("checkstyle:methodlength")
-    public final void extractTest() throws DrawRuntimeException
+    public final void extractTest()
     {
         Point3d p0 = new Point3d(1, 2, 3);
         Point3d p1 = new Point3d(2, 3, 4);
@@ -1021,11 +1009,10 @@ public class PolyLine3dTest
 
     /**
      * Test other methods of PolyLine3d.
-     * @throws DrawRuntimeException should not happen (if it does, this test has failed)
      */
     @Test
     @SuppressWarnings("unlikely-arg-type")
-    public final void testOtherMethods() throws DrawRuntimeException
+    public final void testOtherMethods()
     {
         Point3d[] array =
                 new Point3d[] {new Point3d(1, 2, 3), new Point3d(3, 4, 5), new Point3d(3.2, 4.1, 5.1), new Point3d(5, 6, 7)};
@@ -1464,7 +1451,6 @@ public class PolyLine3dTest
 
     /**
      * Test the find method.
-     * @throws DrawRuntimeException if that happens uncaught; this test has failed
      * @throws SecurityException if that happens uncaught; this test has failed
      * @throws NoSuchMethodException if that happens uncaught; this test has failed
      * @throws InvocationTargetException if that happens uncaught; this test has failed
@@ -1472,7 +1458,7 @@ public class PolyLine3dTest
      * @throws IllegalAccessException if that happens uncaught; this test has failed
      */
     @Test
-    public final void testFind() throws DrawRuntimeException, NoSuchMethodException, SecurityException, IllegalAccessException,
+    public final void testFind() throws NoSuchMethodException, SecurityException, IllegalAccessException,
             IllegalArgumentException, InvocationTargetException
     {
         // Construct a line with exponentially increasing distances
@@ -1495,10 +1481,9 @@ public class PolyLine3dTest
 
     /**
      * Test the truncate method.
-     * @throws DrawRuntimeException if that happens uncaught; this test has failed
      */
     @Test
-    public final void testTruncate() throws DrawRuntimeException
+    public final void testTruncate()
     {
         Point3d from = new Point3d(10, 20, 30);
         Point3d to = new Point3d(70, 80, 90);
@@ -1594,12 +1579,10 @@ public class PolyLine3dTest
 
     /**
      * Test the hashCode and Equals methods.
-     * @throws DrawRuntimeException when that happens uncaught; this test has failed
-     * @throws NullPointerException when that happens uncaught; this test has failed
      */
     @SuppressWarnings("unlikely-arg-type")
     @Test
-    public void testToStringHashCodeAndEquals() throws NullPointerException, DrawRuntimeException
+    public void testToStringHashCodeAndEquals()
     {
         PolyLine3d line = new PolyLine3d(new Point3d[] {new Point3d(1, 2, 3), new Point3d(4, 6, 8), new Point3d(8, 9, 10)});
         assertTrue(line.toString().startsWith("PolyLine3d ["), "toString returns something descriptive");
@@ -1646,10 +1629,9 @@ public class PolyLine3dTest
 
     /**
      * Test for a problem that occurred in OTS2.
-     * @throws DrawRuntimeException when that happens, this test has failed
      */
     @Test
-    public void testProjectProblem() throws DrawRuntimeException
+    public void testProjectProblem()
     {
         PolyLine3d polyLine3d = new PolyLine3d(new Point3d(1, 1, 2), new Point3d(11, 1, 5), new Point3d(16, 6, 0),
                 new Point3d(21, 6, 0), new Point3d(21, 0, 0));
@@ -2073,10 +2055,9 @@ public class PolyLine3dTest
 
     /**
      * Problem with limited precision when getting location almost at end.
-     * @throws DrawRuntimeException when that happens this test has triggered the problem
      */
     @Test
-    public void testOTS2Problem() throws DrawRuntimeException
+    public void testOTS2Problem()
     {
         // Problem 1
         PolyLine3d line = new PolyLine3d(new Point3d(100, 0, 0), new Point3d(100.1, 0, 0));

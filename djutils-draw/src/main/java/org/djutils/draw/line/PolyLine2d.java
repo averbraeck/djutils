@@ -11,7 +11,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.DirectedPoint2d;
@@ -1192,11 +1191,11 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     {
         Throw.whenNull(relativeFractions, "relativeFraction may not be null");
         Throw.whenNull(offsets, "offsets may not be null");
-        Throw.when(relativeFractions.length < 2, DrawRuntimeException.class, "size of relativeFractions must be >= 2");
-        Throw.when(relativeFractions.length != offsets.length, DrawRuntimeException.class,
+        Throw.when(relativeFractions.length < 2, IllegalArgumentException.class, "size of relativeFractions must be >= 2");
+        Throw.when(relativeFractions.length != offsets.length, IllegalArgumentException.class,
                 "size of relativeFractions must be equal to size of offsets");
-        Throw.when(relativeFractions[0] < 0, DrawRuntimeException.class, "relativeFractions may not start before 0");
-        Throw.when(relativeFractions[relativeFractions.length - 1] > 1, DrawRuntimeException.class,
+        Throw.when(relativeFractions[0] < 0, IllegalArgumentException.class, "relativeFractions may not start before 0");
+        Throw.when(relativeFractions[relativeFractions.length - 1] > 1, IllegalArgumentException.class,
                 "relativeFractions may not end beyond 1");
         List<Double> fractionsList = DoubleStream.of(relativeFractions).boxed().collect(Collectors.toList());
         List<Double> offsetsList = DoubleStream.of(offsets).boxed().collect(Collectors.toList());
@@ -1219,7 +1218,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
         Point2d prevCoordinate = null;
         for (int i = 0; i < offsetsList.size() - 1; i++)
         {
-            Throw.when(fractionsList.get(i + 1) <= fractionsList.get(i), DrawRuntimeException.class,
+            Throw.when(fractionsList.get(i + 1) <= fractionsList.get(i), IllegalArgumentException.class,
                     "fractions must be in ascending order");
             PolyLine2d startGeometry = offsetLine[i].extractFractional(fractionsList.get(i), fractionsList.get(i + 1));
             PolyLine2d endGeometry = offsetLine[i + 1].extractFractional(fractionsList.get(i), fractionsList.get(i + 1));

@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.geom.Point2D;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.line.LineSegment3d;
 import org.djutils.draw.line.PolyLine3d;
@@ -327,7 +326,7 @@ public class Point3dTest
             {
                 new Point3d(0.0, 0.0, 0.0).normalize();
             }
-        }, "Should throw DRtE", DrawRuntimeException.class);
+        }, "Should throw DRtE", IllegalArgumentException.class);
 
         assertEquals(1, p1.size(), "size of a Point3d is 1");
         Point2d projection = p1.project();
@@ -401,10 +400,9 @@ public class Point3dTest
 
     /**
      * Test the closestPointOnSegment and the closestPointOnLine methods.
-     * @throws DrawRuntimeException if that happens uncaught; this test has failed
      */
     @Test
-    public void testClosestPointOnSegmentAndLine() throws DrawRuntimeException
+    public void testClosestPointOnSegmentAndLine()
     {
         Point3d p1 = new Point3d(-2, 3, 5);
         for (Point3d p2 : new Point3d[] {new Point3d(7, 4, -5)/* angled */, new Point3d(-3, 6, 5) /* also angled */,
@@ -672,9 +670,9 @@ public class Point3dTest
         try
         {
             p1.closestPointOnLine(6, 7, 8, 6, 7, 8);
-            fail("identical points should have thrown a DrawRuntimeException");
+            fail("identical points should have thrown a IllegalArgumentException");
         }
-        catch (DrawRuntimeException dre)
+        catch (IllegalArgumentException dre)
         {
             // Ignore expected exception
         }

@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.Locale;
 
 import org.djutils.draw.Direction3d;
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
+import org.djutils.draw.InvalidProjectionException;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.exceptions.Throw;
 
@@ -166,7 +166,7 @@ public class Point3d implements Drawable3d, Point<Point3d>
     }
 
     @Override
-    public Point2d project() throws DrawRuntimeException
+    public Point2d project() throws InvalidProjectionException
     {
         return new Point2d(this.x, this.y);
     }
@@ -221,10 +221,10 @@ public class Point3d implements Drawable3d, Point<Point3d>
     }
 
     @Override
-    public Point3d normalize() throws DrawRuntimeException
+    public Point3d normalize() throws IllegalArgumentException
     {
         double length = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-        Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0, 0.0)");
+        Throw.when(length == 0.0, IllegalArgumentException.class, "cannot normalize (0.0, 0.0, 0.0)");
         return this.scale(1.0 / length);
     }
 
@@ -266,8 +266,8 @@ public class Point3d implements Drawable3d, Point<Point3d>
     /**
      * Return the direction to another Point3d.
      * @param otherPoint the other point
-     * @return the direction to the other point in Radians (towards infinite X is 0; towards infinite Y is &pi; /
-     *         2; etc.). If the points are identical; this method returns <code>NaN</code>.
+     * @return the direction to the other point in Radians (towards infinite X is 0; towards infinite Y is &pi; / 2; etc.). If
+     *         the points are identical; this method returns <code>NaN</code>.
      */
     public Direction3d directionTo(final Point3d otherPoint)
     {
@@ -292,16 +292,14 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * @param p2X the x coordinate of the second point on the line
      * @param p2Y the y coordinate of the second point on the line
      * @param p2Z the z coordinate of the second point on the line
-     * @param lowLimitHandling controls handling of results that lie before the first point of the line. If
-     *            <code>null</code>; this method returns <code>null</code>; else if <code>true</code>; this method returns
-     *            (p1X,p1Y); else (lowLimitHandling is <code>false</code>); this method will return the closest point on the
-     *            line
+     * @param lowLimitHandling controls handling of results that lie before the first point of the line. If <code>null</code>;
+     *            this method returns <code>null</code>; else if <code>true</code>; this method returns (p1X,p1Y); else
+     *            (lowLimitHandling is <code>false</code>); this method will return the closest point on the line
      * @param highLimitHandling controls the handling of results that lie beyond the second point of the line. If
      *            <code>null</code>; this method returns <code>null</code>; else if <code>true</code>; this method returns
      *            (p2X,p2Y); else (highLimitHandling is <code>false</code>); this method will return the closest point on the
      *            line
-     * @return the closest point on the line after applying the indicated limit handling; so the result can be
-     *         <code>null</code>
+     * @return the closest point on the line after applying the indicated limit handling; so the result can be <code>null</code>
      * @throws ArithmeticException when any of the arguments is <code>NaN</code>
      */
     @SuppressWarnings("checkstyle:parameternumber")
@@ -329,16 +327,15 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * @param p2X the x coordinate of the second point on the line
      * @param p2Y the y coordinate of the second point on the line
      * @param p2Z the z coordinate of the second point on the line
-     * @param lowLimitHandling controls handling of results that lie before the first point of the line. If null; this
-     *            method returns <code>NaN</code>; else if <code>true</code>; this method returns 0.0; else (lowLimitHandling is
+     * @param lowLimitHandling controls handling of results that lie before the first point of the line. If null; this method
+     *            returns <code>NaN</code>; else if <code>true</code>; this method returns 0.0; else (lowLimitHandling is
      *            false); this results &lt; 0.0 are returned
-     * @param highLimitHandling controls the handling of results that lie beyond the second point of the line. If null;
-     *            this method returns <code>NaN</code>; else if <code>true</code>; this method returns 1.0; else
-     *            (highLimitHandling is <code>false</code>); results &gt; 1.0 are returned
-     * @return the fractional position of the closest point on the line. Results within the range 0.0 .. 1.0 are always
-     *         returned as is.. A result &lt; 0.0 is subject to lowLimitHandling. A result &gt; 1.0 is subject to
-     *         highLimitHandling
-     * @throws DrawRuntimeException when any of the arguments is <code>NaN</code>
+     * @param highLimitHandling controls the handling of results that lie beyond the second point of the line. If null; this
+     *            method returns <code>NaN</code>; else if <code>true</code>; this method returns 1.0; else (highLimitHandling
+     *            is <code>false</code>); results &gt; 1.0 are returned
+     * @return the fractional position of the closest point on the line. Results within the range 0.0 .. 1.0 are always returned
+     *         as is.. A result &lt; 0.0 is subject to lowLimitHandling. A result &gt; 1.0 is subject to highLimitHandling
+     * @throws IllegalArgumentException when any of the arguments is <code>NaN</code>
      */
     @SuppressWarnings("checkstyle:parameternumber")
     public double fractionalPositionOnLine(final double p1X, final double p1Y, final double p1Z, final double p2X,
@@ -391,8 +388,8 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * @param p2X the x coordinate of the end point of the line segment
      * @param p2Y the y coordinate of the end point of the line segment
      * @param p2Z the y coordinate of the end point of the line segment
-     * @return either <code>segmentPoint1</code>, or <code>segmentPoint2</code> or a new Point2d that lies somewhere in
-     *         between those two.
+     * @return either <code>segmentPoint1</code>, or <code>segmentPoint2</code> or a new Point2d that lies somewhere in between
+     *         those two.
      * @throws ArithmeticException when any of the parameters is <code>NaN</code>
      */
     public final Point3d closestPointOnSegment(final double p1X, final double p1Y, final double p1Z, final double p2X,
@@ -420,12 +417,12 @@ public class Point3d implements Drawable3d, Point<Point3d>
      * @param p2Y the y coordinate of another point on the line
      * @param p2Z the z coordinate of another point on the line
      * @return a point on the line that goes through the points
-     * @throws DrawRuntimeException when the points on the line are identical
+     * @throws IllegalArgumentException when the points on the line are identical
      */
     public final Point3d closestPointOnLine(final double p1X, final double p1Y, final double p1Z, final double p2X,
             final double p2Y, final double p2Z)
     {
-        Throw.when(p1X == p2X && p1Y == p2Y && p1Z == p2Z, DrawRuntimeException.class, "degenerate line not allowed");
+        Throw.when(p1X == p2X && p1Y == p2Y && p1Z == p2Z, IllegalArgumentException.class, "degenerate line not allowed");
         return closestPointOnLine(p1X, p1Y, p1Z, p2X, p2Y, p2Z, false, false);
     }
 

@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.point.Point2d;
@@ -37,8 +36,7 @@ public final class ConvexHull
 
     /**
      * Compute the convex hull of a collection of Point2d objects.
-     * @param iterator iterator that shall return all the points for which the convex hull is to be
-     *            computed
+     * @param iterator iterator that shall return all the points for which the convex hull is to be computed
      * @return the convex hull of the points
      */
     public static Polygon2d convexHull(final Iterator<Point2d> iterator)
@@ -71,7 +69,7 @@ public final class ConvexHull
     public static Polygon2d convexHull(final Collection<Drawable2d> drawableCollection)
     {
         Throw.whenNull(drawableCollection, "drawableCollection");
-        Throw.when(drawableCollection.isEmpty(), DrawRuntimeException.class, "drawableCollection may not be empty");
+        Throw.when(drawableCollection.isEmpty(), IllegalArgumentException.class, "drawableCollection may not be empty");
         return convexHull(Bounds2d.pointsOf(drawableCollection));
     }
 
@@ -90,8 +88,8 @@ public final class ConvexHull
      * @param a point a
      * @param b point b
      * @param c point c
-     * @return <code>true</code> if the turn at b is counter clockwise; <code>false</code> if there is not turn; or it
-     *         is clockwise
+     * @return <code>true</code> if the turn at b is counter clockwise; <code>false</code> if there is not turn; or it is
+     *         clockwise
      */
     private static boolean ccw(final Point2d a, final Point2d b, final Point2d c)
     {

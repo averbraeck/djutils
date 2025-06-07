@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.line.LineSegment2d;
 import org.djutils.draw.line.PolyLine2d;
@@ -243,7 +242,7 @@ public class Point2dTest
             {
                 new Point2d(0.0, 0.0).normalize();
             }
-        }, "Should throw DRtE", DrawRuntimeException.class);
+        }, "Should throw IAE", IllegalArgumentException.class);
 
         Bounds2d bounds = p1.getAbsoluteBounds();
         assertEquals(p1.x, bounds.getMinX(), 0, "Bounds min x");
@@ -336,11 +335,11 @@ public class Point2dTest
                 p1.distanceSquared(null);
             }
         }, "Should throw NPE", NullPointerException.class);
-        
+
         Point2d p = new Point2d(1, 2);
         Try.testFail(new Try.Execution()
         {
-            
+
             @Override
             public void execute() throws Throwable
             {
@@ -547,10 +546,9 @@ public class Point2dTest
 
     /**
      * Test the closestPointOnSegment and the closestPointOnLine methods.
-     * @throws DrawRuntimeException if that happens uncaught; this test has failed
      */
     @Test
-    public void testClosestPointOnSegmentAndLine() throws DrawRuntimeException
+    public void testClosestPointOnSegmentAndLine()
     {
         Point2d p1 = new Point2d(-2, 3);
         for (Point2d p2 : new Point2d[] {new Point2d(7, 4)/* angled */, new Point2d(-3, 6) /* also angled */,

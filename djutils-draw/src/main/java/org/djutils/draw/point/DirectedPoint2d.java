@@ -6,7 +6,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 import org.djutils.draw.Directed;
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Throw;
 import org.djutils.math.AngleUtil;
 
@@ -177,10 +176,10 @@ public class DirectedPoint2d extends Point2d implements Directed
     }
 
     @Override
-    public DirectedPoint2d normalize() throws DrawRuntimeException
+    public DirectedPoint2d normalize() throws IllegalArgumentException
     {
         double length = Math.sqrt(this.x * this.x + this.y * this.y);
-        Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0)");
+        Throw.when(length == 0.0, IllegalArgumentException.class, "cannot normalize (0.0, 0.0)");
         return this.scale(1.0 / length);
     }
 

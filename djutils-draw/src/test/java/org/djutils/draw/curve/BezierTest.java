@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Export;
 import org.djutils.draw.line.PolyLine2d;
 import org.djutils.draw.line.PolyLine3d;
@@ -33,11 +32,9 @@ public class BezierTest
 
     /**
      * Test the various 2d methods in the Bezier class.
-     * @throws DrawRuntimeException when this happens uncaught this test has failed
-     * @throws DrawRuntimeException when this happens uncaught; this test has failed
      */
     @Test
-    public final void bezierTest2d() throws DrawRuntimeException, DrawRuntimeException
+    public final void bezierTest2d()
     {
         Point2d from = new Point2d(10, 0);
         Point2d control1 = new Point2d(20, 0);
@@ -295,8 +292,7 @@ public class BezierTest
         }
 
         // Make a totally straight BezierCubic2d and check the curvature
-        Bezier2d bc2d =
-                new Bezier2d(new Point2d(0, 0), new Point2d(0, 0), new Point2d(0, 0), new Point2d(0, 0));
+        Bezier2d bc2d = new Bezier2d(new Point2d(0, 0), new Point2d(0, 0), new Point2d(0, 0), new Point2d(0, 0));
         assertTrue(bc2d.curvature(0.2) == Double.POSITIVE_INFINITY, "curvature of a straight curve is infinite");
     }
 
@@ -307,10 +303,9 @@ public class BezierTest
      * @param candidate candidate B&eacute;zier curve approximation
      * @param numberOfPoints number of point to compare the curves at, minus one; this method checks at 0% and at 100%
      * @param epsilon upper limit of the distance between the two curves
-     * @throws DrawRuntimeException if that happens uncaught; a test has failed
      */
     public void compareBeziers(final String description, final PolyLine2d reference, final PolyLine2d candidate,
-            final int numberOfPoints, final double epsilon) throws DrawRuntimeException
+            final int numberOfPoints, final double epsilon)
     {
         for (int step = 0; step <= numberOfPoints; step++)
         {
@@ -338,10 +333,9 @@ public class BezierTest
      * @param candidate candidate B&eacute;zier curve approximation
      * @param numberOfPoints number of point to compare the curves at, minus one; this method checks at 0% and at 100%
      * @param epsilon upper limit of the distance between the two curves
-     * @throws DrawRuntimeException if that happens uncaught; a test has failed
      */
     public void compareBeziersDeviation(final String description, final PolyLine3d reference, final PolyLine3d candidate,
-            final int numberOfPoints, final double epsilon) throws DrawRuntimeException
+            final int numberOfPoints, final double epsilon)
     {
         for (int step = 0; step <= numberOfPoints; step++)
         {
@@ -365,10 +359,9 @@ public class BezierTest
 
     /**
      * Test the various 3d methods in the Bezier class.
-     * @throws DrawRuntimeException when this happens uncaught this test has failed
      */
     @Test
-    public final void bezierTest3d() throws DrawRuntimeException
+    public final void bezierTest3d()
     {
         Point3d from = new Point3d(10, 0, 0);
         Point3d control1 = new Point3d(20, 0, 10);

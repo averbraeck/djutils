@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.bounds.Bounds2d;
 import org.djutils.draw.line.LineSegment2d;
@@ -180,10 +179,10 @@ public class Point2d implements Drawable2d, Point<Point2d>
     }
 
     @Override
-    public Point2d normalize() throws DrawRuntimeException
+    public Point2d normalize() throws IllegalArgumentException
     {
         double length = Math.sqrt(this.x * this.x + this.y * this.y);
-        Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0)");
+        Throw.when(length == 0.0, IllegalArgumentException.class, "cannot normalize (0.0, 0.0)");
         return this.scale(1.0 / length);
     }
 
@@ -233,8 +232,8 @@ public class Point2d implements Drawable2d, Point<Point2d>
      * @param line2P2Y y-coordinate of end point of line 2
      * @param lowLimitLine2 if<code>true</code>; the intersection may not lie before the start point of line 2
      * @param highLimitLine2 if<code>true</code>; the intersection may not lie beyond the end point of line 2
-     * @return the intersection of the two lines, or <code>null</code> if the lines are (almost) parallel, or the
-     *         intersection point lies outside the permitted range
+     * @return the intersection of the two lines, or <code>null</code> if the lines are (almost) parallel, or the intersection
+     *         point lies outside the permitted range
      * @throws ArithmeticException when any of the parameters is <code>NaN</code>
      */
     @SuppressWarnings("checkstyle:parameternumber")
@@ -330,11 +329,11 @@ public class Point2d implements Drawable2d, Point<Point2d>
      * @param line1P2 second point of line segment 1
      * @param line2P1 first point of line segment 2
      * @param line2P2 second point of line segment 2
-     * @return the intersection of the two line segments, or <code>null</code> if the lines are parallel (within
-     *         rounding error), or do not intersect
+     * @return the intersection of the two line segments, or <code>null</code> if the lines are parallel (within rounding
+     *         error), or do not intersect
      * @throws NullPointerException when any of the points is <code>null</code>
-     * @throws DrawRuntimeException when any of the line segments is ill-defined (begin point equals end point), or the two line
-     *             segments are parallel or overlapping
+     * @throws IllegalArgumentException when any of the line segments is ill-defined (begin point equals end point), or the two
+     *             line segments are parallel or overlapping
      */
     public static Point2d intersectionOfLineSegments(final Point2d line1P1, final Point2d line1P2, final Point2d line2P1,
             final Point2d line2P2)
@@ -357,8 +356,8 @@ public class Point2d implements Drawable2d, Point<Point2d>
      * @param line2P1Y y coordinate of start point of second line segment
      * @param line2P2X x coordinate of end point of second line segment
      * @param line2P2Y y coordinate of end point of second line segment
-     * @return the intersection of the two line segments, or <code>null</code> if the lines are parallel (within
-     *         rounding error), or do not intersect
+     * @return the intersection of the two line segments, or <code>null</code> if the lines are parallel (within rounding
+     *         error), or do not intersect
      * @throws ArithmeticException when any of the values is <code>NaN</code>
      */
     @SuppressWarnings("checkstyle:parameternumber")
@@ -395,18 +394,16 @@ public class Point2d implements Drawable2d, Point<Point2d>
      * @param p1Y the y coordinate of the first point on the line
      * @param p2X the x coordinate of the second point on the line
      * @param p2Y the y coordinate of the second point on the line
-     * @param lowLimitHandling controls handling of results that lie before the first point of the line. If
-     *            <code>null</code>; this method returns <code>null</code>; else if <code>true</code>; this method returns
-     *            (p1X,p1Y); else (lowLimitHandling is <code>false</code>); this method will return the closest point on the
-     *            line
+     * @param lowLimitHandling controls handling of results that lie before the first point of the line. If <code>null</code>;
+     *            this method returns <code>null</code>; else if <code>true</code>; this method returns (p1X,p1Y); else
+     *            (lowLimitHandling is <code>false</code>); this method will return the closest point on the line
      * @param highLimitHandling controls the handling of results that lie beyond the second point of the line. If
      *            <code>null</code>; this method returns <code>null</code>; else if <code>true</code>; this method returns
      *            (p2X,p2Y); else (highLimitHandling is <code>false</code>); this method will return the closest point on the
      *            line
-     * @return the closest point on the line after applying the indicated limit handling; so the result can be
-     *         <code>null</code>
+     * @return the closest point on the line after applying the indicated limit handling; so the result can be <code>null</code>
      * @throws ArithmeticException when any of the arguments is <code>NaN</code>
-     * @throws DrawRuntimeException when the line is ill-defined (begin point coincides with end point)
+     * @throws IllegalArgumentException when the line is ill-defined (begin point coincides with end point)
      */
     public Point2d closestPointOnLine(final double p1X, final double p1Y, final double p2X, final double p2Y,
             final Boolean lowLimitHandling, final Boolean highLimitHandling)
@@ -430,17 +427,16 @@ public class Point2d implements Drawable2d, Point<Point2d>
      * @param p1Y the y coordinate of the first point on the line
      * @param p2X the x coordinate of the second point on the line
      * @param p2Y the y coordinate of the second point on the line
-     * @param lowLimitHandling controls handling of results that lie before the first point of the line. If
-     *            <code>null</code>; this method returns <code>NaN</code>; else if <code>true</code>; this method returns 0.0;
-     *            else (lowLimitHandling is <code>false</code>); this results &lt; 0.0 are returned
+     * @param lowLimitHandling controls handling of results that lie before the first point of the line. If <code>null</code>;
+     *            this method returns <code>NaN</code>; else if <code>true</code>; this method returns 0.0; else
+     *            (lowLimitHandling is <code>false</code>); this results &lt; 0.0 are returned
      * @param highLimitHandling controls the handling of results that lie beyond the second point of the line. If
      *            <code>null</code>; this method returns <code>NaN</code>; else if <code>true</code>; this method returns 1.0;
      *            else (highLimitHandling is <code>false</code>); results &gt; 1.0 are returned
-     * @return the fractional position of the closest point on the line. Results within the range 0.0 .. 1.0 are always
-     *         returned as is.. A result &lt; 0.0 is subject to lowLimitHandling. A result &gt; 1.0 is subject to
-     *         highLimitHandling
+     * @return the fractional position of the closest point on the line. Results within the range 0.0 .. 1.0 are always returned
+     *         as is.. A result &lt; 0.0 is subject to lowLimitHandling. A result &gt; 1.0 is subject to highLimitHandling
      * @throws ArithmeticException when any of the arguments is NaN
-     * @throws DrawRuntimeException when the line is ill-defined (begin point coincides with end point)
+     * @throws IllegalArgumentException when the line is ill-defined (begin point coincides with end point)
      */
     public double fractionalPositionOnLine(final double p1X, final double p1Y, final double p2X, final double p2Y,
             final Boolean lowLimitHandling, final Boolean highLimitHandling)
@@ -488,9 +484,9 @@ public class Point2d implements Drawable2d, Point<Point2d>
      * @param p1Y the y coordinate of the start point of the line segment
      * @param p2X the x coordinate of the end point of the line segment
      * @param p2Y the y coordinate of the end point of the line segment
-     * @return either <code>segmentPoint1</code>, or <code>segmentPoint2</code> or a new Point2d that lies somewhere in
-     *         between those two.
-     * @throws DrawRuntimeException when the line is ill-defined (begin point coincides with end point)
+     * @return either <code>segmentPoint1</code>, or <code>segmentPoint2</code> or a new Point2d that lies somewhere in between
+     *         those two.
+     * @throws IllegalArgumentException when the line is ill-defined (begin point coincides with end point)
      */
     public final Point2d closestPointOnSegment(final double p1X, final double p1Y, final double p2X, final double p2Y)
     {
@@ -499,7 +495,7 @@ public class Point2d implements Drawable2d, Point<Point2d>
 
     @Override
     public Point2d closestPointOnLine(final Point2d linePoint1, final Point2d linePoint2)
-            throws NullPointerException, DrawRuntimeException
+            throws NullPointerException, IllegalArgumentException
     {
         Throw.whenNull(linePoint1, "linePoint1");
         Throw.whenNull(linePoint2, "linePoint2");
@@ -573,8 +569,8 @@ public class Point2d implements Drawable2d, Point<Point2d>
     /**
      * Return the direction to another Point2d.
      * @param otherPoint the other point
-     * @return the direction to the other point in Radians (towards infinite X is 0; towards infinite Y is &pi; / 2;
-     *         etc.). If the points are identical; this method returns <code>NaN</code>.
+     * @return the direction to the other point in Radians (towards infinite X is 0; towards infinite Y is &pi; / 2; etc.). If
+     *         the points are identical; this method returns <code>NaN</code>.
      */
     public double directionTo(final Point2d otherPoint)
     {

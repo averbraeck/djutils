@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.InvalidProjectionException;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.Point3d;
 import org.junit.jupiter.api.Test;
@@ -199,9 +199,9 @@ public class Surface3dTest
         try
         {
             surface3d.project();
-            fail("should have thrown a DrawRuntimeException");
+            fail("should have thrown a InvalidProjectionException");
         }
-        catch (DrawRuntimeException dre)
+        catch (InvalidProjectionException ipe)
         {
             // Ignore expected exception
         }

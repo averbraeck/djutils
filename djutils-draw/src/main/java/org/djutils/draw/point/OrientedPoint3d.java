@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Oriented3d;
 import org.djutils.exceptions.Throw;
 import org.djutils.math.AngleUtil;
@@ -190,10 +189,10 @@ public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
     }
 
     @Override
-    public OrientedPoint3d normalize() throws DrawRuntimeException
+    public OrientedPoint3d normalize() throws IllegalArgumentException
     {
         double length = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-        Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0, 0.0)");
+        Throw.when(length == 0.0, IllegalArgumentException.class, "cannot normalize (0.0, 0.0, 0.0)");
         return new OrientedPoint3d(this.x / length, this.y / length, this.z / length, this.dirX, this.dirY, this.dirZ);
     }
 

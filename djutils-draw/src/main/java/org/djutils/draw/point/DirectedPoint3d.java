@@ -7,7 +7,6 @@ import java.util.Objects;
 
 import org.djutils.draw.Directed3d;
 import org.djutils.draw.Direction3d;
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.exceptions.Throw;
 import org.djutils.math.AngleUtil;
 
@@ -296,10 +295,10 @@ public class DirectedPoint3d extends Point3d implements Directed3d
     }
 
     @Override
-    public DirectedPoint3d normalize() throws DrawRuntimeException
+    public DirectedPoint3d normalize() throws IllegalArgumentException
     {
         double length = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-        Throw.when(length == 0.0, DrawRuntimeException.class, "cannot normalize (0.0, 0.0, 0.0)");
+        Throw.when(length == 0.0, IllegalArgumentException.class, "cannot normalize (0.0, 0.0, 0.0)");
         return new DirectedPoint3d(this.x / length, this.y / length, this.z / length, this.dirY, this.dirZ);
     }
 
