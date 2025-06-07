@@ -33,18 +33,4 @@
 
   </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${maven.surefire.version}</version>
-        <configuration>
-          <argLine>
-            -javaagent:"${settings.localRepository}"/org/jmockit/jmockit/1.49/jmockit-1.49.jar
-          </argLine>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
 </project>
