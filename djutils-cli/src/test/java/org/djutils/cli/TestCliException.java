@@ -23,4 +23,14 @@ public class TestCliException
     {
         ExceptionTest.testExceptionClass(CliException.class);
     }
+    
+    /**
+     * Test the CliRuntimeException.
+     */
+    @Test
+    public void testCliRuntimeException()
+    {
+        ExceptionTest.testExceptionClass(CliRuntimeException.class);
+    }
+
 }

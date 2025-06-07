@@ -143,6 +143,10 @@ public final class CliUtil
     /** Whether we are parsing a default value or not. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     private static boolean parseDefaultValue = false;
+    
+    /** Whether we are in test mode and should throw an exception instead of System.exit() with -v or -h. */
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    static boolean testMode = false;
 
     /**
      * Parse the command line for the program. Register Unit converters, parse the command line, catch --help, --version and
@@ -286,6 +290,10 @@ public final class CliUtil
             {
                 System.err.println(e.getMessage());
             }
+            if (testMode)
+            {
+                throw new CliRuntimeException("parse errors");
+            }
             System.exit(-1);
         }
 
@@ -293,11 +301,19 @@ public final class CliUtil
         if (parseResult.isUsageHelpRequested())
         {
             commandLine.usage(System.out);
+            if (testMode)
+            {
+                throw new CliRuntimeException("usage help requested");
+            }
             System.exit(0);
         }
         else if (parseResult.isVersionHelpRequested())
         {
             commandLine.printVersionHelp(System.out);
+            if (testMode)
+            {
+                throw new CliRuntimeException("version help requested");
+            }
             System.exit(0);
         }
 
@@ -312,6 +328,10 @@ public final class CliUtil
             catch (Exception exception)
             {
                 System.err.println(exception.getMessage());
+                if (testMode)
+                {
+                    throw new CliRuntimeException("check error");
+                }
                 System.exit(-1);
             }
         }

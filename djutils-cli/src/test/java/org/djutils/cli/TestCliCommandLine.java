@@ -9,8 +9,6 @@ import java.io.PrintStream;
 
 import org.junit.jupiter.api.Test;
 
-import mockit.Mock;
-import mockit.MockUp;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -59,14 +57,7 @@ public class TestCliCommandLine
     @Test
     public void testCli() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
-        new MockUp<System>()
-        {
-            @Mock
-            public void exit(final int value)
-            {
-                throw new RuntimeException(String.valueOf(value));
-            }
-        };
+        CliUtil.testMode = true;
 
         // test CliUtil with CommandLine
         String[] args = new String[] {"-p", "2400"};
@@ -91,7 +82,7 @@ public class TestCliCommandLine
             CliUtil.execute(cmdErr, argsErr);
             fail("calling CliUtil.execute did not exit when it should");
         }
-        catch (RuntimeException e)
+        catch (CliRuntimeException e)
         {
             assertTrue(errContent.toString().startsWith("Port should be between 1 and 65535"));
         }

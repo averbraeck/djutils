@@ -6,8 +6,6 @@ import org.djunits.value.vdouble.scalar.Duration;
 import org.djutils.exceptions.Throw;
 import org.junit.jupiter.api.Test;
 
-import mockit.Mock;
-import mockit.MockUp;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -61,7 +59,6 @@ public class TestCli
         @Option(names = {"-t", "--timeout"}, description = "Timeout for network", defaultValue = "1min")
         private Duration timeout;
 
-
         /** @return timeout for network. */
         public Duration getTimeout()
         {
@@ -85,14 +82,7 @@ public class TestCli
     @Test
     public void testCli() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
-        new MockUp<System>()
-        {
-            @Mock
-            public void exit(final int value)
-            {
-                throw new RuntimeException(String.valueOf(value));
-            }
-        };
+        CliUtil.testMode = true;
 
         String[] args = new String[] {"-p", "1200"};
         Options options = new Options();
@@ -126,7 +116,7 @@ public class TestCli
         assertEquals("2.0", CliUtil.getCommandVersion(options)[0]);
         assertEquals("Program2", CliUtil.getCommandName(options));
         assertEquals("2nd version of program", CliUtil.getCommandDescription(options)[0]);
-        
+
         // The annotation itself should NOT have changed
         Command command = CliUtil.getCommandAnnotation(Options.class);
         assertEquals("1.0", command.version()[0]);
@@ -156,7 +146,7 @@ public class TestCli
         {
             // ok
         }
-        
+
         // change the @Command annotations to other object types
         args = new String[] {};
         options = new Options();
@@ -173,6 +163,6 @@ public class TestCli
         assertEquals("Program v60", CliUtil.getCommandDescription(options)[0]);
 
         // clean the override map
-        CliUtil.overrideMap.clear();        
+        CliUtil.overrideMap.clear();
     }
 }

@@ -8,8 +8,6 @@ import java.io.PrintStream;
 
 import org.junit.jupiter.api.Test;
 
-import mockit.Mock;
-import mockit.MockUp;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -57,14 +55,7 @@ public class TestCliHelpVersion
     @Test
     public void testCliHelp() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
-        new MockUp<System>()
-        {
-            @Mock
-            public void exit(final int value)
-            {
-                throw new RuntimeException(String.valueOf(value));
-            }
-        };
+        CliUtil.testMode = true;
 
         // System.setSecurityManager(new ExitHelper.NoExitSecurityManager());
         String[] args = new String[] {"--help"};
@@ -81,7 +72,7 @@ public class TestCliHelpVersion
             CliUtil.execute(options, args);
             fail("calling CliUtil.execute did not exit when it should");
         }
-        catch (RuntimeException e)
+        catch (CliRuntimeException e)
         {
             assertTrue(outContent.toString().contains("Program2"));
             assertTrue(outContent.toString().contains("2nd version of program"));
@@ -109,14 +100,7 @@ public class TestCliHelpVersion
     @Test
     public void testCliVersion() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
     {
-        new MockUp<System>()
-        {
-            @Mock
-            public void exit(final int value)
-            {
-                throw new RuntimeException(String.valueOf(value));
-            }
-        };
+        CliUtil.testMode = true;
 
         String[] args = new String[] {"-V"};
         Options options = new Options();
@@ -132,7 +116,7 @@ public class TestCliHelpVersion
             CliUtil.execute(options, args);
             fail("calling CliUtil.execute did not exit when it should");
         }
-        catch (RuntimeException e)
+        catch (CliRuntimeException e)
         {
             assertTrue(outContent.toString().contains("2.0"));
         }
@@ -155,14 +139,7 @@ public class TestCliHelpVersion
     @Test
     public void testCliWrongValue()
     {
-        new MockUp<System>()
-        {
-            @Mock
-            public void exit(final int value)
-            {
-                throw new RuntimeException(String.valueOf(value));
-            }
-        };
+        CliUtil.testMode = true;
 
         String[] args = new String[] {"-p", "120000"};
         Options options = new Options();
@@ -175,7 +152,7 @@ public class TestCliHelpVersion
             CliUtil.execute(options, args);
             fail("calling CliUtil.execute did not exit when it should");
         }
-        catch (RuntimeException e)
+        catch (CliRuntimeException e)
         {
             assertTrue(errContent.toString().startsWith("Port should be between 1 and 65535"));
         }
@@ -191,14 +168,7 @@ public class TestCliHelpVersion
     @Test
     public void testCliWrongOption()
     {
-        new MockUp<System>()
-        {
-            @Mock
-            public void exit(final int value)
-            {
-                throw new RuntimeException(String.valueOf(value));
-            }
-        };
+        CliUtil.testMode = true;
 
         String[] args = new String[] {"--wrongOption=50"};
         Options options = new Options();
@@ -211,7 +181,7 @@ public class TestCliHelpVersion
             CliUtil.execute(options, args);
             fail("calling CliUtil.execute did not exit when it should");
         }
-        catch (RuntimeException e)
+        catch (CliRuntimeException e)
         {
             assertTrue(errContent.toString().contains("Unknown option:"));
             assertTrue(errContent.toString().contains("--wrongOption=50"));

@@ -13,8 +13,6 @@ import org.djunits.value.vdouble.scalar.Duration;
 import org.djunits.value.vdouble.scalar.Length;
 import org.junit.jupiter.api.Test;
 
-import mockit.Mock;
-import mockit.MockUp;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -74,16 +72,8 @@ public class TestCliDefaultValueLocale
     @Test
     public void testCli() throws CliException
     {
-        new MockUp<System>()
-        {
-            @Mock
-            public void exit(final int value)
-            {
-                throw new RuntimeException(String.valueOf(value));
-            }
-        };
+        CliUtil.testMode = true;
 
-        
         String[] args;
         Options options = new Options();
         Locale saveLocale = Locale.getDefault();
@@ -181,14 +171,7 @@ public class TestCliDefaultValueLocale
     @Test
     public void testCliError() throws Exception
     {
-        new MockUp<System>()
-        {
-            @Mock
-            public void exit(final int value)
-            {
-                throw new RuntimeException(String.valueOf(value));
-            }
-        };
+        CliUtil.testMode = true;
 
         Options options = new Options();
         Locale saveLocale = Locale.getDefault();
@@ -206,7 +189,7 @@ public class TestCliDefaultValueLocale
             CliUtil.execute(options, argsErr);
             fail("calling CliUtil.execute did not exit when it should");
         }
-        catch (RuntimeException e)
+        catch (CliRuntimeException e)
         {
             String errorText = errContent.toString();
             assertTrue(errorText.startsWith("Invalid value"), "Error text should start with 'Invalid value': " + errorText);
