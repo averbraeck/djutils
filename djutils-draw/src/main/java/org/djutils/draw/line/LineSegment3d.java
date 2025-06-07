@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
+import org.djutils.draw.InvalidProjectionException;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point3d;
@@ -158,7 +158,7 @@ public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedP
     }
 
     @Override
-    public LineSegment2d project() throws DrawRuntimeException
+    public LineSegment2d project() throws InvalidProjectionException
     {
         return new LineSegment2d(this.startX, this.startY, this.endX, this.endY);
     }

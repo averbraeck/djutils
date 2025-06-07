@@ -10,7 +10,7 @@ package org.djutils.draw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class DrawRuntimeException extends RuntimeException
+public class DrawRuntimeExceptionX extends RuntimeException
 {
     /** */
     private static final long serialVersionUID = 20200828L;
@@ -18,7 +18,7 @@ public class DrawRuntimeException extends RuntimeException
     /**
      * Create an empty runtime drawing exception.
      */
-    public DrawRuntimeException()
+    public DrawRuntimeExceptionX()
     {
         super();
     }
@@ -27,7 +27,7 @@ public class DrawRuntimeException extends RuntimeException
      * Create a runtime drawing exception with a custom message.
      * @param message the custom message.
      */
-    public DrawRuntimeException(final String message)
+    public DrawRuntimeExceptionX(final String message)
     {
         super(message);
     }
@@ -36,7 +36,7 @@ public class DrawRuntimeException extends RuntimeException
      * Create a runtime drawing exception with an underlying cause.
      * @param cause the cause of this exception to be thrown
      */
-    public DrawRuntimeException(final Throwable cause)
+    public DrawRuntimeExceptionX(final Throwable cause)
     {
         super(cause);
     }
@@ -46,7 +46,7 @@ public class DrawRuntimeException extends RuntimeException
      * @param message the custom message
      * @param cause the cause of this exception to be thrown
      */
-    public DrawRuntimeException(final String message, final Throwable cause)
+    public DrawRuntimeExceptionX(final String message, final Throwable cause)
     {
         super(message, cause);
     }

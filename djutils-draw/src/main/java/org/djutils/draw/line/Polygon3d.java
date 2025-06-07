@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.djutils.draw.DrawRuntimeException;
+import org.djutils.draw.InvalidProjectionException;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
 
@@ -173,8 +173,8 @@ public class Polygon3d extends PolyLine3d
 
     /**
      * Ensure that the last point in the list is different from the first point by possibly removing the last point.
-     * @param doNotModifyList if<code>true</code>; the list of points will not be modified (if the last point is to be
-     *            removed; the entire list up to the last point is duplicated)
+     * @param doNotModifyList if<code>true</code>; the list of points will not be modified (if the last point is to be removed;
+     *            the entire list up to the last point is duplicated)
      * @param points the list of points
      * @return the fixed list
      * @throws NullPointerException when <code>points</code> is <code>null</code>
@@ -258,7 +258,7 @@ public class Polygon3d extends PolyLine3d
     }
 
     @Override
-    public Polygon2d project()
+    public Polygon2d project() throws InvalidProjectionException
     {
         double[] projectedX = new double[this.size()];
         double[] projectedY = new double[this.size()];
@@ -274,7 +274,7 @@ public class Polygon3d extends PolyLine3d
             projectedY[nextIndex] = getY(i);
             nextIndex++;
         }
-        Throw.when(nextIndex < 2, DrawRuntimeException.class,
+        Throw.when(nextIndex < 2, InvalidProjectionException.class,
                 "projection yielded too few points to construct a valid Polygon2d");
         if (nextIndex < projectedX.length)
         {

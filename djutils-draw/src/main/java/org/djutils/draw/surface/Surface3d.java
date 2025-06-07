@@ -7,9 +7,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable2d;
 import org.djutils.draw.Drawable3d;
+import org.djutils.draw.InvalidProjectionException;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.Point3d;
 import org.djutils.exceptions.Throw;
@@ -46,9 +46,9 @@ public class Surface3d implements Drawable3d
 
     /**
      * Construct a new Surface3d.
-     * @param points two dimensional array of points. The first index iterates over the individual triangles; the
-     *            second index iterates over the points of a single triangle. The range of the second index must be 3. It is
-     *            expected that all points appear multiple times in the points array, but never within the same sub-array.
+     * @param points two dimensional array of points. The first index iterates over the individual triangles; the second index
+     *            iterates over the points of a single triangle. The range of the second index must be 3. It is expected that
+     *            all points appear multiple times in the points array, but never within the same sub-array.
      * @throws NullPointerException when <code>points</code> is <code>null</code>, or contains a <code>null</code> value
      * @throws IllegalArgumentException when points is empty, or any element in <code>points</code> does not contain exactly
      *             three different points
@@ -137,10 +137,11 @@ public class Surface3d implements Drawable3d
     }
 
     @Override
-    public Drawable2d project() throws DrawRuntimeException
+    public Drawable2d project() throws InvalidProjectionException
     {
-        throw new DrawRuntimeException("Project not implemented because we do not have a class that represents a multitude "
-                + "of triangles in the 2D plane");
+        throw new InvalidProjectionException(
+                "Project not implemented because we do not have a class that represents a multitude "
+                        + "of triangles in the 2D plane");
     }
 
     @Override

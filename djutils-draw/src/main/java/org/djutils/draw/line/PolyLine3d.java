@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
-import org.djutils.draw.DrawRuntimeException;
 import org.djutils.draw.Drawable3d;
+import org.djutils.draw.InvalidProjectionException;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.point.DirectedPoint3d;
 import org.djutils.draw.point.Point2d;
@@ -268,8 +268,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
      * Construct an array of Point3d from two points plus an array of Point3d.
      * @param point1 the first point (ends up at index 0 of the result)
      * @param point2 the second point (ends up at index 1 of the result)
-     * @param otherPoints may be <code>null</code>, may be empty. If non empty, the elements in otherPoints end up
-     *            at index 2 and up in the result
+     * @param otherPoints may be <code>null</code>, may be empty. If non empty, the elements in otherPoints end up at index 2
+     *            and up in the result
      * @return the combined array
      * @throws NullPointerException when <code>point1</code> or <code>point2</code> is <code>null</code>
      */
@@ -504,8 +504,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
 
     /**
      * Concatenate several PolyLine3d instances.
-     * @param lines one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
-     *            the first of the second, etc.
+     * @param lines one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match the first of the
+     *            second, etc.
      * @return PolyLine3d
      * @throws NullPointerException when <code>lines</code> is <code>null</code>, or contains a <code>null</code> value
      * @throws IllegalArgumentException if zero lines are given, or when there is a gap between consecutive lines
@@ -548,8 +548,8 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     /**
      * Concatenate several PolyLine3d instances.
      * @param tolerance the tolerance between the end point of a line and the first point of the next line
-     * @param lines one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match
-     *            the first of the second within the provided tolerance value, etc.
+     * @param lines one or more PolyLine3d. The last point of the first &lt;strong&gt;must&lt;/strong&gt; match the first of the
+     *            second within the provided tolerance value, etc.
      * @return the concatenation of the lines
      * @throws NullPointerException when <code>lines</code> is <code>null</code>, or contains a <code>null</code> value
      * @throws IllegalArgumentException if zero lines are given, or when there is a gap larger than tolerance between
@@ -587,7 +587,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     }
 
     @Override
-    public PolyLine2d project()
+    public PolyLine2d project() throws InvalidProjectionException
     {
         for (int i = 1; i < size(); i++)
         {
@@ -595,7 +595,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
             {
                 break;
             }
-            Throw.when(i == size() - 1, DrawRuntimeException.class, "all points project onto the same point");
+            Throw.when(i == size() - 1, InvalidProjectionException.class, "all points project onto the same point");
         }
         return new PolyLine2d(false, 0.0, this.x, this.y);
     }
@@ -681,10 +681,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     /**
      * Perform the orthogonal projection operation.
      * @param point the point to project
-     * @param limitHandling if <code>Null</code>; results outside the interval [0.0, 1.0] are replaced by
-     *            <code>NaN</code>, if <code>false</code>, results outside that interval are returned as is; if
-     *            <code>true</code> results outside the interval are truncated to the interval and therefore not truly
-     *            orthogonal
+     * @param limitHandling if <code>Null</code>; results outside the interval [0.0, 1.0] are replaced by <code>NaN</code>, if
+     *            <code>false</code>, results outside that interval are returned as is; if <code>true</code> results outside the
+     *            interval are truncated to the interval and therefore not truly orthogonal
      * @return the fractional position on this <code>PolyLine3d</code> that is closest to point, or <code>NaN</code>
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
@@ -768,10 +767,9 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     /**
      * Perform the project orthogonal operation.
      * @param point the point to project
-     * @param limitHandling if <code>Null</code>; results outside the interval [0.0, 1.0] are replaced by
-     *            <code>NaN</code>, if <code>false</code>, results outside that interval are returned as is; if
-     *            <code>true</code> results outside the interval are truncated to the interval and therefore not truly
-     *            orthogonal
+     * @param limitHandling if <code>Null</code>; results outside the interval [0.0, 1.0] are replaced by <code>NaN</code>, if
+     *            <code>false</code>, results outside that interval are returned as is; if <code>true</code> results outside the
+     *            interval are truncated to the interval and therefore not truly orthogonal
      * @return the fractional position on this <code>PolyLine3d</code> that is closest to point, or <code>NaN</code>
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
