@@ -218,7 +218,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
     }
 
     /**
-     * Start curvature of this BezierCubic2d. TODO looks very wrong
+     * Start curvature of this BezierCubic2d.
      * @return start curvature of this BezierCubic2d
      */
     @Override
@@ -228,7 +228,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
     }
 
     /**
-     * End curvature of this BezierCubic2d. TODO looks very wrong
+     * End curvature of this BezierCubic2d.
      * @return end curvature of this BezierCubic2d
      */
     @Override
