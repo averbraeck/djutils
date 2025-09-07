@@ -432,24 +432,24 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
     }
 
     /**
-    * Start curvature of this Clothoid.
-    * @return start curvature of this Clothoid
-    */
+     * Start curvature of this Clothoid.
+     * @return start curvature of this Clothoid
+     */
     public double getStartCurvature()
     {
         return this.startCurvature;
     }
 
     /**
-    * End curvature of this Clothoid.
-    * @return end curvature of this Clothoid
-    */
+     * End curvature of this Clothoid.
+     * @return end curvature of this Clothoid
+     */
     public double getEndCurvature()
     {
         return this.endCurvature;
     }
 
-     /**
+    /**
      * Start radius of this Clothoid.
      * @return start radius of this Clothoid
      */
@@ -458,7 +458,7 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
         return 1.0 / this.startCurvature;
     }
 
-     /**
+    /**
      * End radius of this Clothoid.
      * @return end radius of this Clothoid
      */
@@ -573,6 +573,13 @@ public class Clothoid2d implements Curve2d, OffsetCurve2d
             return this.straight.getDirection(fraction);
         }
         return getDirectionForAlpha(this.alphaMin + fraction * (this.alphaMax - this.alphaMin));
+    }
+
+    @Override
+    public double getDirection(final double fraction, final ContinuousPiecewiseLinearFunction of)
+    {
+        double derivativeOffset = of.getDerivative(fraction) / this.length;
+        return getDirection(this.alphaMin + fraction * (this.alphaMax - this.alphaMin)) + Math.atan(derivativeOffset);
     }
 
     /**
