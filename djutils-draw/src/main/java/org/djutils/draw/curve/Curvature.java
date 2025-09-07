@@ -15,7 +15,7 @@ package org.djutils.draw.curve;
 public interface Curvature
 {
     /**
-     * Start curvature of this Curve2d..
+     * Start curvature of this Curve2d.
      * @return start curvature of this Curve2d.
      */
     double getStartCurvature();
@@ -27,7 +27,7 @@ public interface Curvature
     double getEndCurvature();
 
     /**
-     * Start radius of this Curve2d..
+     * Start radius of this Curve2d.
      * @return start radius of this Curve2d
      */
     default double getStartRadius()
@@ -36,7 +36,7 @@ public interface Curvature
     }
 
     /**
-     * End radius of this Curve2d..
+     * End radius of this Curve2d.
      * @return end radius of this Curve2d
      */
     default double getEndRadius()

@@ -15,7 +15,8 @@ import org.djutils.draw.point.Point2d;
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-interface Curve2d extends Curve<DirectedPoint2d, Double, Point2d, Flattener2d, PolyLine2d>, FlattableCurve<Point2d, Double>
+public interface Curve2d
+        extends Curve<DirectedPoint2d, Double, Point2d, Flattener2d, PolyLine2d>, FlattableCurve<Point2d, Double>
 {
 
     @Override
@@ -58,5 +59,5 @@ interface Curve2d extends Curve<DirectedPoint2d, Double, Point2d, Flattener2d, P
         }
         return p1.directionTo(p2);
     }
-    
+
 }
