@@ -759,7 +759,7 @@ public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray
     }
 
     @Override
-    public Point3d closestPointOnPolyLine(final Point3d point)
+    public DirectedPoint3d closestPointOnPolyLine(final Point3d point)
     {
         return getLocation(projectOrthogonalFractional(point, true) * this.length);
     }

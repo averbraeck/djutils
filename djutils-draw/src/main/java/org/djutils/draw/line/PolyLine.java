@@ -176,10 +176,11 @@ public interface PolyLine<L extends PolyLine<L, P, R, D, LS>, P extends Point<P>
      * Project a Point on this PolyLine. If the the projected points lies outside this PolyLine, the nearest end point of this
      * PolyLine is returned. Otherwise the returned point lies between the end points of this PolyLine. <br>
      * @param point the point to project onto this PolyLine
-     * @return either the start point, or the end point of this PolyLine or a Point that lies somewhere along this PolyLine
+     * @return either the start point, or the end point of this PolyLine or a Point that lies somewhere along this PolyLine as a
+     *         directed point
      * @throws NullPointerException when <code>point</code> is <code>null</code>
      */
-    P closestPointOnPolyLine(P point);
+    D closestPointOnPolyLine(P point);
 
     /**
      * Get the location at a position on the line, with its direction. Position should be between 0.0 and line length.

@@ -771,7 +771,7 @@ public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray
     }
 
     @Override
-    public Point2d closestPointOnPolyLine(final Point2d point)
+    public DirectedPoint2d closestPointOnPolyLine(final Point2d point)
     {
         return getLocation(projectOrthogonalFractional(point, true) * this.length);
     }
