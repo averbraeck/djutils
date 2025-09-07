@@ -6,12 +6,13 @@ import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
-import org.djutils.math.functions.MathFunction.TupleSt;
+import java.util.function.Function;
 
 import org.djutils.exceptions.Throw;
+import org.djutils.math.functions.MathFunction.TupleSt;
 
 /**
- * Container for piece-wise linear offsets, defined by the offsets at particular fractional positions.
+ * Container for piecewise linear offsets, defined by the offsets at particular fractional positions.
  * <p>
  * Copyright (c) 2023-2025 Delft University of Technology, PO Box 5, 2600 AA, Delft, the Netherlands. All rights reserved. <br>
  * BSD-style license. See <a href="https://opentrafficsim.org/docs/license.html">OpenTrafficSim License</a>.
@@ -20,7 +21,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class ContinuousPiecewiseLinearFunction implements Iterable<TupleSt>
+public class ContinuousPiecewiseLinearFunction implements Iterable<TupleSt>, Function<Double, Double>
 {
 
     /** The underlying data. */
@@ -99,6 +100,19 @@ public class ContinuousPiecewiseLinearFunction implements Iterable<TupleSt>
         }
         double w = (fractionalLength - floor.getKey()) / (ceiling.getKey() - floor.getKey());
         return (1.0 - w) * floor.getValue() + w * ceiling.getValue();
+    }
+
+    /**
+     * Returns the data at given fractional length. If only data beyond the fractional length is available, the first available
+     * value is returned. If only data before the fractional length is available, the last available value is returned.
+     * Otherwise data is linearly interpolated.
+     * @param fractionalLength fractional length, may be outside range [0, 1].
+     * @return interpolated or extended value.
+     */
+    @Override
+    public Double apply(final Double fractionalLength)
+    {
+        return get(fractionalLength);
     }
 
     /**
