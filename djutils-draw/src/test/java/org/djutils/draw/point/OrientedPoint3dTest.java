@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Iterator;
 
-import org.djutils.exceptions.Try;
 import org.djutils.math.AngleUtil;
+import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -185,7 +185,7 @@ public class OrientedPoint3dTest
         assertEquals(-0.2, p.getDirY(), 1E-6, "dirY");
         assertEquals(0.3, p.getDirZ(), 1E-6, "dirZ");
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -194,7 +194,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -203,7 +203,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -212,7 +212,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -221,7 +221,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -230,7 +230,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -239,7 +239,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -248,7 +248,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -491,7 +491,7 @@ public class OrientedPoint3dTest
         assertEquals(p2.getDirY(), pn.getDirY(), 0, "normalized dirY");
         assertEquals(p2.getDirZ(), pn.getDirZ(), 0, "normalized dirZ");
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -500,7 +500,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw exception", IllegalArgumentException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -509,7 +509,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw exception", ArithmeticException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -518,7 +518,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw exception", ArithmeticException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -527,7 +527,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw exception", ArithmeticException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -536,7 +536,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw exception", ArithmeticException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -545,7 +545,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw exception", ArithmeticException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -554,7 +554,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw exception", ArithmeticException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -563,7 +563,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw exception", ArithmeticException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -582,7 +582,7 @@ public class OrientedPoint3dTest
     {
         final OrientedPoint3d p1 = new OrientedPoint3d(1.0, 1.0, Math.PI / 4.0);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -591,7 +591,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -600,7 +600,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -609,7 +609,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -618,7 +618,7 @@ public class OrientedPoint3dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable

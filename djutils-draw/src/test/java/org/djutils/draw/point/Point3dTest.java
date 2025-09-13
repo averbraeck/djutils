@@ -13,7 +13,7 @@ import java.awt.geom.Point2D;
 import org.djutils.draw.bounds.Bounds3d;
 import org.djutils.draw.line.LineSegment3d;
 import org.djutils.draw.line.PolyLine3d;
-import org.djutils.exceptions.Try;
+import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -83,7 +83,7 @@ public class Point3dTest
         assertEquals(5.0, p.x, 0);
         assertEquals(6.0, p.y, 0);
         assertEquals(7.0, p.z, 0);
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -92,7 +92,7 @@ public class Point3dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -101,7 +101,7 @@ public class Point3dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -110,7 +110,7 @@ public class Point3dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -119,7 +119,7 @@ public class Point3dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -128,7 +128,7 @@ public class Point3dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -137,7 +137,7 @@ public class Point3dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -146,7 +146,7 @@ public class Point3dTest
             }
         }, "Should throw ArithmeticException", ArithmeticException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -319,7 +319,7 @@ public class Point3dTest
         assertEquals(1.0 / Math.sqrt(3.0), pn.y, 0.001);
         assertEquals(1.0 / Math.sqrt(3.0), pn.z, 0.001);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -350,7 +350,7 @@ public class Point3dTest
     {
         final Point3d p1 = new Point3d(1.0, 1.0, 1.0);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -359,7 +359,7 @@ public class Point3dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -368,7 +368,7 @@ public class Point3dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -378,7 +378,7 @@ public class Point3dTest
         }, "Should throw NPE", NullPointerException.class);
 
         // FIXME
-        // UnitTest.testFail(new Try.Execution()
+        // UnitTest.testFail(new UnitTest.Execution()
         // {
         // @Override
         // public void execute() throws Throwable
@@ -387,7 +387,7 @@ public class Point3dTest
         // }
         // }, "Should throw NPE", NullPointerException.class);
         //
-        // UnitTest.testFail(new Try.Execution()
+        // UnitTest.testFail(new UnitTest.Execution()
         // {
         // @Override
         // public void execute() throws Throwable
