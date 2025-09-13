@@ -8,9 +8,9 @@ import java.rmi.RemoteException;
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventType;
-import org.djutils.exceptions.Try;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
+import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
 
 /**

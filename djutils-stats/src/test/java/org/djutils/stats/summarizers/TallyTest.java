@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.djutils.exceptions.Try;
 import org.djutils.stats.ConfidenceInterval;
 import org.djutils.stats.DistNormalTable;
 import org.djutils.stats.summarizers.quantileaccumulator.FullStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.NoStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.TDigestAccumulator;
+import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
 
 /**

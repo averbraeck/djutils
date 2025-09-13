@@ -11,12 +11,12 @@ import java.util.Random;
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventType;
-import org.djutils.exceptions.Try;
 import org.djutils.metadata.MetaData;
 import org.djutils.stats.ConfidenceInterval;
 import org.djutils.stats.DistNormalTable;
 import org.djutils.stats.summarizers.quantileaccumulator.FullStorageAccumulator;
 import org.djutils.stats.summarizers.quantileaccumulator.NoStorageAccumulator;
+import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
 
 /**
