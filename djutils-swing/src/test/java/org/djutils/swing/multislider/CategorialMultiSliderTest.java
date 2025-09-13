@@ -26,7 +26,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
 
-import org.djutils.exceptions.Try;
+import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -352,7 +352,7 @@ public class CategorialMultiSliderTest
     @Test
     public void testErrors()
     {
-        UnitTest.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
+        UnitTest.testFail(new UnitTest.Assignment<CategorialMultiSlider<String>>()
         {
             @Override
             public CategorialMultiSlider<String> assign() throws Throwable
@@ -361,7 +361,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        UnitTest.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
+        UnitTest.testFail(new UnitTest.Assignment<CategorialMultiSlider<String>>()
         {
             @Override
             public CategorialMultiSlider<String> assign() throws Throwable
@@ -370,7 +370,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        UnitTest.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
+        UnitTest.testFail(new UnitTest.Assignment<CategorialMultiSlider<String>>()
         {
             @Override
             public CategorialMultiSlider<String> assign() throws Throwable
@@ -379,7 +379,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        UnitTest.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
+        UnitTest.testFail(new UnitTest.Assignment<CategorialMultiSlider<String>>()
         {
             @Override
             public CategorialMultiSlider<String> assign() throws Throwable
@@ -388,7 +388,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        UnitTest.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
+        UnitTest.testFail(new UnitTest.Assignment<CategorialMultiSlider<String>>()
         {
             @Override
             public CategorialMultiSlider<String> assign() throws Throwable
@@ -397,7 +397,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        UnitTest.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
+        UnitTest.testFail(new UnitTest.Assignment<CategorialMultiSlider<String>>()
         {
             @Override
             public CategorialMultiSlider<String> assign() throws Throwable
@@ -407,7 +407,7 @@ public class CategorialMultiSliderTest
         });
 
         final var ms = new CategorialMultiSlider<String>(CategorialMultiSliderTest.this.listAJ, "C", "E");
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -416,7 +416,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -425,7 +425,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -434,7 +434,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -444,7 +444,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -453,7 +453,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        UnitTest.testFail(new Try.Execution()
+        UnitTest.testFail(new UnitTest.Execution()
         {
             @Override
             public void execute() throws Throwable
