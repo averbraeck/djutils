@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.djunits.value.vfloat.scalar.FloatSpeed;
-import org.djutils.exceptions.Try;
+import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -35,11 +35,11 @@ public class TestTable
     public void testTable() throws IOException
     {
         // column constructor nulls
-        Try.testFail(() -> new Column<>(null, "description", String.class, null),
+        UnitTest.testFail(() -> new Column<>(null, "description", String.class, null),
                 "Column constructor should not accept a null id.", NullPointerException.class);
-        Try.testFail(() -> new Column<>("id", null, String.class, null),
+        UnitTest.testFail(() -> new Column<>("id", null, String.class, null),
                 "Column constructor should not accept a null description.", NullPointerException.class);
-        Try.testFail(() -> new Column<>("id", "description", null, null),
+        UnitTest.testFail(() -> new Column<>("id", "description", null, null),
                 "Column constructor should not accept a null value type.", NullPointerException.class);
 
         // column contents after construction
@@ -62,7 +62,7 @@ public class TestTable
 
         // table: duplicate column id's
         List<Column<?>> columnList = List.of(column1, column2, column4);
-        Try.testFail(() -> new ListTable("id", "description", columnList), "Columns with the same id should not be accepted.",
+        UnitTest.testFail(() -> new ListTable("id", "description", columnList), "Columns with the same id should not be accepted.",
                 IllegalArgumentException.class);
 
         // table
@@ -84,16 +84,16 @@ public class TestTable
         table.addRowByColumnIds(Map.of("id1", data1[2], "id2", data2[2], "id3", data3[2]));
 
         // add data, incorrectly
-        Try.testFail(() -> table.addRow(new Object[] {data2[0], data1[0], data3[0]}),
+        UnitTest.testFail(() -> table.addRow(new Object[] {data2[0], data1[0], data3[0]}),
                 "Adding data types in wrong order should fail.");
-        Try.testFail(() -> table.addRow(new Object[] {data1[0], data2[0]}), "Adding too few data types should fail.");
-        Try.testFail(() -> table.addRow(Map.of(column2, data1[1], column1, data2[1], column3, data3[1])),
+        UnitTest.testFail(() -> table.addRow(new Object[] {data1[0], data2[0]}), "Adding too few data types should fail.");
+        UnitTest.testFail(() -> table.addRow(Map.of(column2, data1[1], column1, data2[1], column3, data3[1])),
                 "Adding data types in wrong order should fail.");
-        Try.testFail(() -> table.addRow(Map.of(column1, data1[1], column2, data2[1])),
+        UnitTest.testFail(() -> table.addRow(Map.of(column1, data1[1], column2, data2[1])),
                 "Adding too few data types should fail.");
-        Try.testFail(() -> table.addRowByColumnIds(Map.of("id2", data1[2], "id1", data2[2], "id3", data3[2])),
+        UnitTest.testFail(() -> table.addRowByColumnIds(Map.of("id2", data1[2], "id1", data2[2], "id3", data3[2])),
                 "Adding data types in wrong order should fail.");
-        Try.testFail(() -> table.addRowByColumnIds(Map.of("id1", data1[2], "id2", data2[2])),
+        UnitTest.testFail(() -> table.addRowByColumnIds(Map.of("id1", data1[2], "id2", data2[2])),
                 "Adding too few data types should fail.");
 
         // test contents
@@ -129,11 +129,11 @@ public class TestTable
         assertEquals(table.getColumnNumber("id2"), 1);
         assertEquals(table.getColumnNumber("id3"), 2);
 
-        Try.testFail(() -> table.getColumn(-1), IndexOutOfBoundsException.class);
-        Try.testFail(() -> table.getColumn(3), IndexOutOfBoundsException.class);
-        Try.testFail(() -> table.getColumnNumber(new Column<>("id4", "no such column", String.class, null)),
+        UnitTest.testFail(() -> table.getColumn(-1), IndexOutOfBoundsException.class);
+        UnitTest.testFail(() -> table.getColumn(3), IndexOutOfBoundsException.class);
+        UnitTest.testFail(() -> table.getColumnNumber(new Column<>("id4", "no such column", String.class, null)),
                 IllegalArgumentException.class);
-        Try.testFail(() -> table.getColumnNumber("id4"), IllegalArgumentException.class);
+        UnitTest.testFail(() -> table.getColumnNumber("id4"), IllegalArgumentException.class);
 
         int rowNum = 0;
         for (Row row : table)

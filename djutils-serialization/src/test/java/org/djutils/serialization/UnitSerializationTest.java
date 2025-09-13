@@ -97,7 +97,7 @@ public class UnitSerializationTest extends AbstractSerializationTest
         assertNotEquals(testAccelerationUnitType, new QuantityType(code, unitClass, name, "x", siUnit));
         assertNotEquals(testAccelerationUnitType, new QuantityType(code, unitClass, name, description, "N/K"));
 
-        Try.testFail(() -> QuantityType.getUnitCode(SIUnit.of("K/mol")));
+        UnitTest.testFail(() -> QuantityType.getUnitCode(SIUnit.of("K/mol")));
 
         // restore the cache
         new QuantityType(QuantityType.ACCELERATION.getCode(), AccelerationUnit.class,
@@ -209,9 +209,9 @@ public class UnitSerializationTest extends AbstractSerializationTest
     {
         for (Endianness endianness : new Endianness[] {Endianness.BIG_ENDIAN, Endianness.LITTLE_ENDIAN})
         {
-            Try.testFail(() -> TypedObject.encode(endianness, NonsenseUnit2.SI));
+            UnitTest.testFail(() -> TypedObject.encode(endianness, NonsenseUnit2.SI));
             NonsenseScalar ns = new NonsenseScalar(1.0, NonsenseUnit2.SI);
-            Try.testFail(() -> TypedObject.encode(endianness, ns));
+            UnitTest.testFail(() -> TypedObject.encode(endianness, ns));
         }
 
     }
@@ -411,8 +411,8 @@ public class UnitSerializationTest extends AbstractSerializationTest
         FloatVector<?, ?, ?>[] fRagged =
                 new FloatVector[] {new FloatLengthVector(new float[] {0.1f, 0.2f, 0.3f}, LengthUnit.INCH, StorageType.DENSE),
                         new FloatTimeVector(new float[] {10.1f, 20.2f}, TimeUnit.BASE_MINUTE, StorageType.DENSE)};
-        Try.testFail(() -> TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, dRagged));
-        Try.testFail(() -> TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, fRagged));
+        UnitTest.testFail(() -> TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, dRagged));
+        UnitTest.testFail(() -> TypedObject.encodeUTF8(Endianness.BIG_ENDIAN, fRagged));
     }
 
 }

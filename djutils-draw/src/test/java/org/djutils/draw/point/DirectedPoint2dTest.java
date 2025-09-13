@@ -127,7 +127,7 @@ public class DirectedPoint2dTest
         assertEquals(p2DD, p.toPoint2D());
         assertEquals(3.1415926 / 4.0, p.getDirZ(), 1E-6);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -136,7 +136,7 @@ public class DirectedPoint2dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -145,7 +145,7 @@ public class DirectedPoint2dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -154,7 +154,7 @@ public class DirectedPoint2dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -163,7 +163,7 @@ public class DirectedPoint2dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -298,7 +298,7 @@ public class DirectedPoint2dTest
         assertEquals(1.0 / Math.sqrt(2.0), pn.x, 0.001);
         assertEquals(1.0 / Math.sqrt(2.0), pn.y, 0.001);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -307,7 +307,7 @@ public class DirectedPoint2dTest
             }
         }, "Should throw exception", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -316,7 +316,7 @@ public class DirectedPoint2dTest
             }
         }, "Should throw ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -325,7 +325,7 @@ public class DirectedPoint2dTest
             }
         }, "Should throw ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -334,7 +334,7 @@ public class DirectedPoint2dTest
             }
         }, "Should throw ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -343,7 +343,7 @@ public class DirectedPoint2dTest
             }
         }, "Should throw ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -362,7 +362,7 @@ public class DirectedPoint2dTest
     {
         final DirectedPoint2d p1 = new DirectedPoint2d(1.0, 1.0, Math.PI / 4.0);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -371,7 +371,7 @@ public class DirectedPoint2dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -380,7 +380,7 @@ public class DirectedPoint2dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable

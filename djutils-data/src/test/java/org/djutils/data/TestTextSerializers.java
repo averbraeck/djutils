@@ -28,7 +28,7 @@ import org.djutils.data.serialization.ShortSerializer;
 import org.djutils.data.serialization.StringSerializer;
 import org.djutils.data.serialization.TextSerializationException;
 import org.djutils.data.serialization.TextSerializer;
-import org.djutils.exceptions.Try;
+import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -207,10 +207,10 @@ public class TestTextSerializers
         assertEquals(floatLength, TextSerializer.deserialize(floatLengthSerializer,
                 TextSerializer.serialize(floatLengthSerializer, floatLength, floatLengthColumn.getUnit()), floatLengthColumn));
 
-        Try.testFail(() -> TextSerializer.deserialize(lengthSerializer, "1.0 xx", lengthColumn),
+        UnitTest.testFail(() -> TextSerializer.deserialize(lengthSerializer, "1.0 xx", lengthColumn),
                 "Deserializing an unknown unit for length should have thrown a RuntimeException", RuntimeException.class);
 
-        Try.testFail(() -> TextSerializer.resolve(NumberExtension.class),
+        UnitTest.testFail(() -> TextSerializer.resolve(NumberExtension.class),
                 "Getting serializer for unknown Number class should have thrown a TextSerializationException",
                 TextSerializationException.class);
     }
@@ -332,9 +332,9 @@ public class TestTextSerializers
     @Test
     public void testSerializerErrors() throws TextSerializationException
     {
-        Try.testFail(() -> TextSerializer.resolve(Object.class),
+        UnitTest.testFail(() -> TextSerializer.resolve(Object.class),
                 "resolving an unknown serializer should have raised an exception", TextSerializationException.class);
-        Try.testFail(() -> TextSerializer.resolve(null), "null class should have raised an exception",
+        UnitTest.testFail(() -> TextSerializer.resolve(null), "null class should have raised an exception",
                 NullPointerException.class);
 
         Exception e = new TextSerializationException();

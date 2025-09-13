@@ -87,7 +87,7 @@ public class EventBasedWeightedTallyTest
         assertEquals(variance, wt.getWeightedSampleVariance(), 1.0E-6);
         assertEquals(stDev, wt.getWeightedSampleStDev(), 1.0E-6);
 
-        Try.testFail(() -> wt.notify(new Event(VALUE_EVENT, new Object[] {-0.1, 123.456})),
+        UnitTest.testFail(() -> wt.notify(new Event(VALUE_EVENT, new Object[] {-0.1, 123.456})),
                 "negative weight should have thrown an exception", IllegalArgumentException.class);
     }
 
@@ -207,8 +207,8 @@ public class EventBasedWeightedTallyTest
         tally.addListener(listener, StatisticsEvents.INITIALIZED_EVENT);
         tally.addListener(listener, StatisticsEvents.OBSERVATION_ADDED_EVENT);
         // RemoteException is packed in a RuntimeException
-        Try.testFail(() -> tally.initialize(), RuntimeException.class);
-        Try.testFail(() -> tally.register(1.0, 10.0), RuntimeException.class);
+        UnitTest.testFail(() -> tally.initialize(), RuntimeException.class);
+        UnitTest.testFail(() -> tally.register(1.0, 10.0), RuntimeException.class);
     }
 
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */

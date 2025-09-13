@@ -289,31 +289,31 @@ public class SimpleSerializationTest
         Endianness endianness = Endianness.BIG_ENDIAN;
         final byte[] buffer = new byte[12];
         buffer[0] = 127;
-        Try.testFail(() -> TypedObject.decodeInt(endianness, buffer), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeShort(endianness, buffer), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeByte(endianness, buffer), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeLong(endianness, buffer), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeFloat(endianness, buffer), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeDouble(endianness, buffer), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeBoolean(endianness, buffer), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeCharUtf8(endianness, buffer), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeCharUtf16(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeInt(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeShort(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeByte(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeLong(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeFloat(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeDouble(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeBoolean(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeCharUtf8(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeCharUtf16(endianness, buffer), SerializationException.class);
 
         final byte[] buffer2 = new byte[1];
         buffer2[0] = 127;
-        Try.testFail(() -> TypedObject.decodeInt(endianness, buffer2), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeShort(endianness, buffer2), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeByte(endianness, buffer2), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeLong(endianness, buffer2), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeFloat(endianness, buffer2), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeDouble(endianness, buffer2), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeBoolean(endianness, buffer2), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeCharUtf8(endianness, buffer2), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeCharUtf16(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeInt(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeShort(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeByte(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeLong(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeFloat(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeDouble(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeBoolean(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeCharUtf8(endianness, buffer2), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeCharUtf16(endianness, buffer2), SerializationException.class);
 
-        Try.testFail(() -> TypedObject.decodeToObjectDataTypes(endianness, buffer), SerializationException.class);
-        Try.testFail(() -> TypedObject.decodeToPrimitiveDataTypes(endianness, buffer), SerializationException.class);
-        Try.testFail(() -> TypedMessage.decodeToObjectDataTypes(endianness, buffer), SerializationException.class);
-        Try.testFail(() -> TypedMessage.decodeToPrimitiveDataTypes(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeToObjectDataTypes(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> TypedObject.decodeToPrimitiveDataTypes(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> TypedMessage.decodeToObjectDataTypes(endianness, buffer), SerializationException.class);
+        UnitTest.testFail(() -> TypedMessage.decodeToPrimitiveDataTypes(endianness, buffer), SerializationException.class);
     }
 }

@@ -219,7 +219,7 @@ public class DirectedPoint3dTest
         assertEquals(p2.getDirY(), pn.getDirY(), 0, "normalized dirY");
         assertEquals(p2.getDirZ(), pn.getDirZ(), 0, "normalized dirZ");
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -228,7 +228,7 @@ public class DirectedPoint3dTest
             }
         }, "Should throw DrawRuntimeException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -237,7 +237,7 @@ public class DirectedPoint3dTest
             }
         }, "Should throw ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -246,7 +246,7 @@ public class DirectedPoint3dTest
             }
         }, "Should throw ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -255,7 +255,7 @@ public class DirectedPoint3dTest
             }
         }, "Should throw ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -264,7 +264,7 @@ public class DirectedPoint3dTest
             }
         }, "Should throw ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -273,7 +273,7 @@ public class DirectedPoint3dTest
             }
         }, "Should throw ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -282,7 +282,7 @@ public class DirectedPoint3dTest
             }
         }, "Should throw ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable

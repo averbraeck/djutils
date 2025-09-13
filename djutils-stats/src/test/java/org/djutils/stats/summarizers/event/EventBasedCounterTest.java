@@ -55,7 +55,7 @@ public class EventBasedCounterTest
         assertEquals(0, cel.getCountEvents());
 
         // test wrong event
-        Try.testFail(() -> counter.notify(new Event(COUNT_EVENT, "abc")), IllegalArgumentException.class);
+        UnitTest.testFail(() -> counter.notify(new Event(COUNT_EVENT, "abc")), IllegalArgumentException.class);
 
         LoggingEventListener nListener = new LoggingEventListener();
         counter.addListener(nListener, StatisticsEvents.N_EVENT);
@@ -90,8 +90,8 @@ public class EventBasedCounterTest
         counter.addListener(listener, StatisticsEvents.INITIALIZED_EVENT);
         counter.addListener(listener, StatisticsEvents.OBSERVATION_ADDED_EVENT);
         // RemoteException is packed in a RuntimeException
-        Try.testFail(() -> counter.initialize(), RuntimeException.class);
-        Try.testFail(() -> counter.register(1L), RuntimeException.class);
+        UnitTest.testFail(() -> counter.initialize(), RuntimeException.class);
+        UnitTest.testFail(() -> counter.register(1L), RuntimeException.class);
     }
 
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */

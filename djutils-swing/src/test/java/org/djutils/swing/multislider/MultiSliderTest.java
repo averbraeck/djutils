@@ -370,7 +370,7 @@ public class MultiSliderTest
         Thread.sleep(500);
         assertTrue(ms.getHeight() > oldHeight, "ms.GetHeight() = " + ms.getHeight() + "; oldHeight = " + oldHeight);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -379,7 +379,7 @@ public class MultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -388,7 +388,7 @@ public class MultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -397,7 +397,7 @@ public class MultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -457,7 +457,7 @@ public class MultiSliderTest
     @Test
     public void testErrors()
     {
-        Try.testFail(new Try.Assignment<MultiSlider>()
+        UnitTest.testFail(new Try.Assignment<MultiSlider>()
         {
             @Override
             public MultiSlider assign() throws Throwable
@@ -466,7 +466,7 @@ public class MultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Assignment<MultiSlider>()
+        UnitTest.testFail(new Try.Assignment<MultiSlider>()
         {
             @Override
             public MultiSlider assign() throws Throwable
@@ -475,7 +475,7 @@ public class MultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Assignment<MultiSlider>()
+        UnitTest.testFail(new Try.Assignment<MultiSlider>()
         {
             @Override
             public MultiSlider assign() throws Throwable
@@ -484,7 +484,7 @@ public class MultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Assignment<MultiSlider>()
+        UnitTest.testFail(new Try.Assignment<MultiSlider>()
         {
             @Override
             public MultiSlider assign() throws Throwable
@@ -494,7 +494,7 @@ public class MultiSliderTest
         });
 
         final var ms = new MultiSlider(1, 10, new int[] {2, 4});
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -503,7 +503,7 @@ public class MultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -512,7 +512,7 @@ public class MultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -521,7 +521,7 @@ public class MultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -530,7 +530,7 @@ public class MultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -539,7 +539,7 @@ public class MultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -582,7 +582,7 @@ public class MultiSliderTest
         assertEquals("7", ((JLabel) lt2.get(7)).getText());
         assertEquals("9", ((JLabel) lt2.get(9)).getText());
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -591,7 +591,7 @@ public class MultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -600,7 +600,7 @@ public class MultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -609,7 +609,7 @@ public class MultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable

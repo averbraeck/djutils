@@ -70,7 +70,7 @@ public class EventBasedTallyTest
         assertNull(tally.getConfidenceInterval(0.95, ConfidenceInterval.BOTH_SIDE_CONFIDENCE));
 
         // We first fire a wrong event
-        Try.testFail(() -> tally.notify(new Event(VALUE_EVENT, "abc")), IllegalArgumentException.class);
+        UnitTest.testFail(() -> tally.notify(new Event(VALUE_EVENT, "abc")), IllegalArgumentException.class);
 
         // Now we fire some events
         tally.notify(new Event(VALUE_EVENT, 1.1));
@@ -141,11 +141,11 @@ public class EventBasedTallyTest
         assertEquals(1.525334710, tally.getConfidenceInterval(0.40, ConfidenceInterval.RIGHT_SIDE_CONFIDENCE)[1], 1E-05);
 
         // we check the input of the confidence interval
-        Try.testFail(() -> tally.getConfidenceInterval(0.95, null), "null is not defined as side of confidence level",
+        UnitTest.testFail(() -> tally.getConfidenceInterval(0.95, null), "null is not defined as side of confidence level",
                 NullPointerException.class);
-        Try.testFail(() -> tally.getConfidenceInterval(-0.95), "should have reacted on wrong confidence level -0.95",
+        UnitTest.testFail(() -> tally.getConfidenceInterval(-0.95), "should have reacted on wrong confidence level -0.95",
                 IllegalArgumentException.class);
-        Try.testFail(() -> tally.getConfidenceInterval(1.14), "should have reacted on wrong confidence level 1.14",
+        UnitTest.testFail(() -> tally.getConfidenceInterval(1.14), "should have reacted on wrong confidence level 1.14",
                 IllegalArgumentException.class);
 
         assertTrue(Math.abs(tally.getSampleMean() - 1.5) < 10E-6);
@@ -225,11 +225,11 @@ public class EventBasedTallyTest
     {
         EventBasedTally tally = new EventBasedTally("test with the NoStorageAccumulator", new NoStorageAccumulator());
         assertTrue(Double.isNaN(tally.getSampleMean()), "mean of no data is NaN");
-        Try.testFail(() -> tally.getQuantile(0.5), "getQuantile of no data should have resulted in an IllegalArgumentException",
+        UnitTest.testFail(() -> tally.getQuantile(0.5), "getQuantile of no data should have resulted in an IllegalArgumentException",
                 IllegalArgumentException.class);
         tally.notify(new Event(VALUE_EVENT, 90.0));
         assertEquals(90.0, tally.getSampleMean(), 0, "mean of one value is that value");
-        Try.testFail(() -> tally.getQuantile(0.5),
+        UnitTest.testFail(() -> tally.getQuantile(0.5),
                 "getQuantile of one value should have resulted in an IllegalArgumentException", IllegalArgumentException.class);
 
         tally.notify(new Event(VALUE_EVENT, 110.0));
@@ -294,9 +294,9 @@ public class EventBasedTallyTest
             double got = tally.getQuantile(probability);
             assertEquals(expected, got, 0.00001, "quantile should match");
         }
-        Try.testFail(() -> tally.getQuantile(-0.01), "negative probability should have thrown an exception",
+        UnitTest.testFail(() -> tally.getQuantile(-0.01), "negative probability should have thrown an exception",
                 IllegalArgumentException.class);
-        Try.testFail(() -> tally.getQuantile(1.01), "Probability > 1 should have thrown an exception",
+        UnitTest.testFail(() -> tally.getQuantile(1.01), "Probability > 1 should have thrown an exception",
                 IllegalArgumentException.class);
 
         assertTrue(new FullStorageAccumulator().toString().startsWith("FullStorageAccumulator"),
@@ -339,8 +339,8 @@ public class EventBasedTallyTest
         tally.addListener(listener, StatisticsEvents.INITIALIZED_EVENT);
         tally.addListener(listener, StatisticsEvents.OBSERVATION_ADDED_EVENT);
         // RemoteException is packed in a RuntimeException
-        Try.testFail(() -> tally.initialize(), RuntimeException.class);
-        Try.testFail(() -> tally.register(10.0), RuntimeException.class);
+        UnitTest.testFail(() -> tally.initialize(), RuntimeException.class);
+        UnitTest.testFail(() -> tally.register(10.0), RuntimeException.class);
     }
 
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */

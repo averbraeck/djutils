@@ -167,11 +167,11 @@ public class TallyTest
         assertEquals(1.525334710, tally.getConfidenceInterval(0.40, ConfidenceInterval.RIGHT_SIDE_CONFIDENCE)[1], 1E-05);
 
         // we check the input of the confidence interval
-        Try.testFail(() -> tally.getConfidenceInterval(0.95, null), "null is not defined as side of confidence level",
+        UnitTest.testFail(() -> tally.getConfidenceInterval(0.95, null), "null is not defined as side of confidence level",
                 NullPointerException.class);
-        Try.testFail(() -> tally.getConfidenceInterval(-0.95), "should have reacted on wrong confidence level -0.95",
+        UnitTest.testFail(() -> tally.getConfidenceInterval(-0.95), "should have reacted on wrong confidence level -0.95",
                 IllegalArgumentException.class);
-        Try.testFail(() -> tally.getConfidenceInterval(1.14), "should have reacted on wrong confidence level 1.14",
+        UnitTest.testFail(() -> tally.getConfidenceInterval(1.14), "should have reacted on wrong confidence level 1.14",
                 IllegalArgumentException.class);
 
         assertTrue(Math.abs(tally.getSampleMean() - 1.5) < 10E-6);
@@ -238,11 +238,11 @@ public class TallyTest
     {
         Tally tally = new Tally("test with the NoStorageAccumulator", new NoStorageAccumulator());
         assertTrue(Double.isNaN(tally.getSampleMean()), "mean of no data is NaN");
-        Try.testFail(() -> tally.getQuantile(0.5), "getQuantile of no data should have resulted in an IllegalArgumentException",
+        UnitTest.testFail(() -> tally.getQuantile(0.5), "getQuantile of no data should have resulted in an IllegalArgumentException",
                 IllegalArgumentException.class);
         tally.register(90.0);
         assertEquals(90.0, tally.getSampleMean(), 0, "mean of one value is that value");
-        Try.testFail(() -> tally.getQuantile(0.5),
+        UnitTest.testFail(() -> tally.getQuantile(0.5),
                 "getQuantile of one value should have resulted in an IllegalArgumentException", IllegalArgumentException.class);
 
         tally.register(110.0);
@@ -305,9 +305,9 @@ public class TallyTest
             double got = tally.getQuantile(probability);
             assertEquals(expected, got, 0.00001, "quantile should match");
         }
-        Try.testFail(() -> tally.getQuantile(-0.01), "negative probability should have thrown an exception",
+        UnitTest.testFail(() -> tally.getQuantile(-0.01), "negative probability should have thrown an exception",
                 IllegalArgumentException.class);
-        Try.testFail(() -> tally.getQuantile(1.01), "Probability > 1 should have thrown an exception",
+        UnitTest.testFail(() -> tally.getQuantile(1.01), "Probability > 1 should have thrown an exception",
                 IllegalArgumentException.class);
 
         assertTrue(new FullStorageAccumulator().toString().startsWith("FullStorageAccumulator"),
@@ -397,9 +397,9 @@ public class TallyTest
         }
 
         final Tally tally1 = tally;
-        Try.testFail(() -> tally1.getQuantile(-0.01), "negative probability should have thrown an exception",
+        UnitTest.testFail(() -> tally1.getQuantile(-0.01), "negative probability should have thrown an exception",
                 IllegalArgumentException.class);
-        Try.testFail(() -> tally1.getQuantile(1.01), "Probability > 1 should have thrown an exception",
+        UnitTest.testFail(() -> tally1.getQuantile(1.01), "Probability > 1 should have thrown an exception",
                 IllegalArgumentException.class);
 
         assertTrue(new TDigestAccumulator().toString().startsWith("TDigestAccumulator"),

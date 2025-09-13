@@ -107,7 +107,7 @@ public class EventBasedTimestampWeightedTallyTest
         wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 1.9, 0.9));
         wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 2.0, 1.0));
 
-        Try.testFail(() -> wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 123.456, 0.8)),
+        UnitTest.testFail(() -> wt.notify(new TimedEvent<Double>(TIMED_VALUE_EVENT, 123.456, 0.8)),
                 "timestamp out of order should have thrown an exception", IllegalArgumentException.class);
 
         assertTrue(wt.isActive());
@@ -147,9 +147,9 @@ public class EventBasedTimestampWeightedTallyTest
         assertEquals(1.5, wt.getWeightedSampleMean(), 1.0E-6);
 
         // test some wrong events
-        Try.testFail(() -> wt.notify(new Event(TIMED_VALUE_EVENT, new Object[] {1.0, 2.0})),
+        UnitTest.testFail(() -> wt.notify(new Event(TIMED_VALUE_EVENT, new Object[] {1.0, 2.0})),
                 "non time-based event should have thrown an exception", IllegalArgumentException.class);
-        Try.testFail(() -> wt.notify(new TimedEvent<String>(TIMED_VALUE_EVENT, 123.456, "abc")),
+        UnitTest.testFail(() -> wt.notify(new TimedEvent<String>(TIMED_VALUE_EVENT, 123.456, "abc")),
                 "non time-based event with timestamp != Calendar or Number should have thrown an exception",
                 IllegalArgumentException.class);
 
@@ -397,10 +397,10 @@ public class EventBasedTimestampWeightedTallyTest
         tally.addListener(listener, StatisticsEvents.INITIALIZED_EVENT);
         tally.addListener(listener, StatisticsEvents.OBSERVATION_ADDED_EVENT);
         // RemoteException is packed in a RuntimeException
-        Try.testFail(() -> tally.initialize(), RuntimeException.class);
-        Try.testFail(() -> tally.register(1.0, 10.0), RuntimeException.class);
+        UnitTest.testFail(() -> tally.initialize(), RuntimeException.class);
+        UnitTest.testFail(() -> tally.register(1.0, 10.0), RuntimeException.class);
         Calendar calendar = new GregorianCalendar(2000, 1, 10, 20, 30);
-        Try.testFail(() -> tally.register(calendar, 10.0), RuntimeException.class);
+        UnitTest.testFail(() -> tally.register(calendar, 10.0), RuntimeException.class);
     }
 
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */

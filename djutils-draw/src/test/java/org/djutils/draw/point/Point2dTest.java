@@ -74,7 +74,7 @@ public class Point2dTest
         assertEquals(-0.2, p.y, 1E-6);
         assertEquals(p2DD, p.toPoint2D());
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -83,7 +83,7 @@ public class Point2dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -92,7 +92,7 @@ public class Point2dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -101,7 +101,7 @@ public class Point2dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -110,7 +110,7 @@ public class Point2dTest
             }
         }, "Should throw IAE", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -119,7 +119,7 @@ public class Point2dTest
             }
         }, "Should throw ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -235,7 +235,7 @@ public class Point2dTest
         assertEquals(1.0 / Math.sqrt(2.0), pn.x, 0.001);
         assertEquals(1.0 / Math.sqrt(2.0), pn.y, 0.001);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -309,7 +309,7 @@ public class Point2dTest
             // Ignore expected exception
         }
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -318,7 +318,7 @@ public class Point2dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -327,7 +327,7 @@ public class Point2dTest
             }
         }, "Should throw NPE", NullPointerException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -337,7 +337,7 @@ public class Point2dTest
         }, "Should throw NPE", NullPointerException.class);
 
         Point2d p = new Point2d(1, 2);
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
 
             @Override

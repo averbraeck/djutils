@@ -204,7 +204,7 @@ public class StringSerializationTest extends AbstractSerializationTest
         {
             for (boolean encodeUTF8 : new boolean[] {false, true})
             {
-                Try.testFail(() -> encodeUTF8 ? TypedObject.encodeUTF8(endianness, smRagged)
+                UnitTest.testFail(() -> encodeUTF8 ? TypedObject.encodeUTF8(endianness, smRagged)
                         : TypedObject.encodeUTF16(endianness, smRagged));
             }
         }

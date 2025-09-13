@@ -97,7 +97,7 @@ public class WeightedTallyTest
         assertEquals(variance, wt.getWeightedSampleVariance(), 1.0E-6);
         assertEquals(stDev, wt.getWeightedSampleStDev(), 1.0E-6);
 
-        Try.testFail(() -> wt.register(-0.1, 123.456), "negative weight should have thrown an exception",
+        UnitTest.testFail(() -> wt.register(-0.1, 123.456), "negative weight should have thrown an exception",
                 IllegalArgumentException.class);
     }
 

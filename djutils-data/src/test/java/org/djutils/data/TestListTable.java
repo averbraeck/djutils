@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.djunits.value.vdouble.scalar.Length;
-import org.djutils.exceptions.Try;
 import org.djutils.primitives.Primitive;
+import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -194,44 +194,44 @@ public class TestListTable
         List<Column<?>> columns = List.of(column1, column2, column3);
 
         // test illegal columns
-        Try.testFail(() -> new Column<>(null, "measured value [m]", double.class, ""),
+        UnitTest.testFail(() -> new Column<>(null, "measured value [m]", double.class, ""),
                 "null id should have thrown NullPointerException", NullPointerException.class);
 
-        Try.testFail(() -> new Column<>("value", null, double.class, ""),
+        UnitTest.testFail(() -> new Column<>("value", null, double.class, ""),
                 "null description should have thrown NullPointerException", NullPointerException.class);
-        Try.testFail(() -> new Column<>("value", "measured value [m]", null, ""),
+        UnitTest.testFail(() -> new Column<>("value", "measured value [m]", null, ""),
                 "null valueType should have thrown NullPointerException", NullPointerException.class);
-        Try.testFail(() -> new Column<>("", "measured value [m]", double.class, ""),
+        UnitTest.testFail(() -> new Column<>("", "measured value [m]", double.class, ""),
                 "empty id should have thrown IllegalArgumentException", IllegalArgumentException.class);
-        Try.testFail(() -> new Column<>("length", "length [m]", Length.class, null),
+        UnitTest.testFail(() -> new Column<>("length", "length [m]", Length.class, null),
                 "null unit for djunits value should have thrown IllegalArgumentException", IllegalArgumentException.class);
-        Try.testFail(() -> new Column<>("length", "length [m]", Length.class, ""),
+        UnitTest.testFail(() -> new Column<>("length", "length [m]", Length.class, ""),
                 "empty unit for djunits value should have thrown IllegalArgumentException", IllegalArgumentException.class);
-        Try.testFail(() -> new Column<>("length", "length [m]", Length.class, "xx"),
+        UnitTest.testFail(() -> new Column<>("length", "length [m]", Length.class, "xx"),
                 "wrong unit for djunits value should have thrown IllegalArgumentException", IllegalArgumentException.class);
-        Try.testFail(() -> new Column<>("length", "length [m]", Length.class, "s"),
+        UnitTest.testFail(() -> new Column<>("length", "length [m]", Length.class, "s"),
                 "wrong unit for djunits value should have thrown IllegalArgumentException", IllegalArgumentException.class);
 
         // test illegal tables
         List<Column<?>> cx = List.of(column1, column1, column3); // duplicate
-        Try.testFail(() -> new ListTable("tableId", "tableDescription", cx),
+        UnitTest.testFail(() -> new ListTable("tableId", "tableDescription", cx),
                 "duplicate column should have thrown IllegalArgumentException", IllegalArgumentException.class);
 
         List<Column<?>> cy = List.of(column1, new Column<>("time", "another timestamp", double.class, ""), column3);
-        Try.testFail(() -> new ListTable("tableId", "tableDescription", cy),
+        UnitTest.testFail(() -> new ListTable("tableId", "tableDescription", cy),
                 "duplicate column id should have thrown IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(() -> new ListTable(null, "tableDescription", columns), "null id should have thrown NullPointerException",
+        UnitTest.testFail(() -> new ListTable(null, "tableDescription", columns), "null id should have thrown NullPointerException",
                 NullPointerException.class);
-        Try.testFail(() -> new ListTable("", "tableDescription", columns),
+        UnitTest.testFail(() -> new ListTable("", "tableDescription", columns),
                 "empty id should have thrown IllegalArgumentException", IllegalArgumentException.class);
-        Try.testFail(() -> new ListTable("tableId", null, columns), "empty description should have thrown NullPointerException",
+        UnitTest.testFail(() -> new ListTable("tableId", null, columns), "empty description should have thrown NullPointerException",
                 NullPointerException.class);
-        Try.testFail(() -> new ListTable("tableId", "tableDescription", (List<Column<?>>) null),
+        UnitTest.testFail(() -> new ListTable("tableId", "tableDescription", (List<Column<?>>) null),
                 "null columns should have thrown NullPointerException", NullPointerException.class);
-        Try.testFail(() -> new ListTable("tableId", "tableDescription", (Collection<Column<?>>) null),
+        UnitTest.testFail(() -> new ListTable("tableId", "tableDescription", (Collection<Column<?>>) null),
                 "null columns should have thrown NullPointerException", NullPointerException.class);
-        Try.testFail(() -> new ListTable("tableId", "tableDescription", new ArrayList<Column<?>>()),
+        UnitTest.testFail(() -> new ListTable("tableId", "tableDescription", new ArrayList<Column<?>>()),
                 "zero columns should have thrown IllegalArgumentException", IllegalArgumentException.class);
     }
 
@@ -254,37 +254,37 @@ public class TestListTable
         data.put(column1, 2);
         data.put(column2, 4.0);
         data.put(column3a, "bla");
-        Try.testFail(() -> table.addRow(data),
+        UnitTest.testFail(() -> table.addRow(data),
                 "Adding a column that was not specified for the table should throw IllegalArgumentException",
                 IllegalArgumentException.class);
 
         // test null data
-        Try.testFail(() -> table.addRow((Object[]) null), "null data record should have raised exception",
+        UnitTest.testFail(() -> table.addRow((Object[]) null), "null data record should have raised exception",
                 NullPointerException.class);
-        Try.testFail(() -> table.addRowByColumnIds((Map<String, Object>) null), "null data record should have raised exception",
+        UnitTest.testFail(() -> table.addRowByColumnIds((Map<String, Object>) null), "null data record should have raised exception",
                 NullPointerException.class);
 
         // test too few columns data
-        Try.testFail(() -> table.addRow(new Object[] {}), "empty data record should have raised exception",
+        UnitTest.testFail(() -> table.addRow(new Object[] {}), "empty data record should have raised exception",
                 IllegalArgumentException.class);
 
-        Try.testFail(() -> table.addRowByColumnIds(new HashMap<String, Object>()),
+        UnitTest.testFail(() -> table.addRowByColumnIds(new HashMap<String, Object>()),
                 "empty data record should have raised exception", IllegalArgumentException.class);
 
         // test too many columns data
-        Try.testFail(() -> table.addRow(new Object[] {1, 2, 3, 4}), "too long data record should have raised exception",
+        UnitTest.testFail(() -> table.addRow(new Object[] {1, 2, 3, 4}), "too long data record should have raised exception",
                 IllegalArgumentException.class);
-        Try.testFail(() -> table.addRowByColumnIds(Map.of("time", 3, "value", 3.5, "remark", "none", "extra", "xx")),
+        UnitTest.testFail(() -> table.addRowByColumnIds(Map.of("time", 3, "value", 3.5, "remark", "none", "extra", "xx")),
                 "too long data record should have raised exception", IllegalArgumentException.class);
 
         // test wrong type data
-        Try.testFail(() -> table.addRow(new Object[] {1, 2, 3}), "wrong type data record should have raised exception",
+        UnitTest.testFail(() -> table.addRow(new Object[] {1, 2, 3}), "wrong type data record should have raised exception",
                 IllegalArgumentException.class);
-        Try.testFail(() -> table.addRowByColumnIds(Map.of("time", 3, "value", 2L, "remark", "none")),
+        UnitTest.testFail(() -> table.addRowByColumnIds(Map.of("time", 3, "value", 2L, "remark", "none")),
                 "wrong type data record should have raised exception", IllegalArgumentException.class);
 
         // test missing column data, where the number of columns is okay
-        Try.testFail(() -> table.addRowByColumnIds(Map.of("time", 3, "remark", "none", "wrong", 3)),
+        UnitTest.testFail(() -> table.addRowByColumnIds(Map.of("time", 3, "remark", "none", "wrong", 3)),
                 "wrong type data record should have raised exception", IllegalArgumentException.class);
     }
 

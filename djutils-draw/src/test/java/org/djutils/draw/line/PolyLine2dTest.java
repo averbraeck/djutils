@@ -287,7 +287,7 @@ public class PolyLine2dTest
     {
         runConstructors(new Point2d[] {new Point2d(1.2, 3.4), new Point2d(2.3, 4.5), new Point2d(3.4, 5.6)});
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -296,7 +296,7 @@ public class PolyLine2dTest
             }
         }, "double arrays of unequal length should have thrown a IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -305,7 +305,7 @@ public class PolyLine2dTest
             }
         }, "double arrays of unequal length should have thrown a IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -314,7 +314,7 @@ public class PolyLine2dTest
             }
         }, "null double array should have thrown a NullPointerException", NullPointerException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -323,7 +323,7 @@ public class PolyLine2dTest
             }
         }, "null double array should have thrown a NullPointerException", NullPointerException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -333,7 +333,7 @@ public class PolyLine2dTest
         }, "null list should have thrown a nullPointerException", NullPointerException.class);
 
         List<Point2d> shortList = new ArrayList<>();
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -343,7 +343,7 @@ public class PolyLine2dTest
         }, "empty list should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
         shortList.add(new Point2d(1, 2));
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -369,7 +369,7 @@ public class PolyLine2dTest
         assertEquals(p1, pl.get(0), "p1");
         assertEquals(p2, pl.get(1), "p2");
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -378,7 +378,7 @@ public class PolyLine2dTest
             }
         }, "empty array should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -387,7 +387,7 @@ public class PolyLine2dTest
             }
         }, "single point should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -396,7 +396,7 @@ public class PolyLine2dTest
             }
         }, "duplicate point should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -405,7 +405,7 @@ public class PolyLine2dTest
             }
         }, "duplicate point should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -502,7 +502,7 @@ public class PolyLine2dTest
         assertEquals(array[1], line.get(1), "mid point");
         assertEquals(array[array.length - 1], line.getLast(), "last point");
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -511,7 +511,7 @@ public class PolyLine2dTest
             }
         }, "Too short array should have thrown a IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -520,7 +520,7 @@ public class PolyLine2dTest
             }
         }, "Too short array should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -529,7 +529,7 @@ public class PolyLine2dTest
             }
         }, "All duplicate points in array should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -970,7 +970,7 @@ public class PolyLine2dTest
                 }
                 final PolyLine2d line = new PolyLine2d(transformed);
                 // System.out.println("angle " + Math.toDegrees(angle) + " line " + line);
-                Try.testFail(new Try.Execution()
+                UnitTest.testFail(new Try.Execution()
                 {
                     @Override
                     public void execute() throws Throwable
@@ -1029,7 +1029,7 @@ public class PolyLine2dTest
         }
 
         final PolyLine2d line = new PolyLine2d(new Point2d(1, 2), new Point2d(3, 4));
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -1040,7 +1040,7 @@ public class PolyLine2dTest
             }
         }, "zero circle precision should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -1051,7 +1051,7 @@ public class PolyLine2dTest
             }
         }, "NaN circle precision should have thrown an ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -1061,7 +1061,7 @@ public class PolyLine2dTest
             }
         }, "zero offsetMinimumFilterValue should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -1071,7 +1071,7 @@ public class PolyLine2dTest
             }
         }, "NaN offsetMinimumFilterValue should have thrown an ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -1083,7 +1083,7 @@ public class PolyLine2dTest
         }, "offsetMinimumFilterValue not less than offsetMaximumFilterValue should have thrown an IllegalArgumentException",
                 IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -1093,7 +1093,7 @@ public class PolyLine2dTest
             }
         }, "zero offsetMaximumfilterValue should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -1103,7 +1103,7 @@ public class PolyLine2dTest
             }
         }, "NaN offsetMaximumfilterValue should have thrown an ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -1113,7 +1113,7 @@ public class PolyLine2dTest
             }
         }, "zero offsetFilterRatio should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -1123,7 +1123,7 @@ public class PolyLine2dTest
             }
         }, "NaN offsetFilterRatio should have thrown an ArithmeticException", ArithmeticException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -1133,7 +1133,7 @@ public class PolyLine2dTest
             }
         }, "zero offsetPrecision should have thrown an IllegalArgumentException", IllegalArgumentException.class);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable

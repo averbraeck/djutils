@@ -408,7 +408,7 @@ public class LinearMultiSliderTest
     @Test
     public void testErrors()
     {
-        Try.testFail(new Try.Assignment<LinearMultiSlider<Double>>()
+        UnitTest.testFail(new Try.Assignment<LinearMultiSlider<Double>>()
         {
             @Override
             public LinearMultiSlider<Double> assign() throws Throwable
@@ -417,7 +417,7 @@ public class LinearMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Assignment<LinearMultiSlider<Double>>()
+        UnitTest.testFail(new Try.Assignment<LinearMultiSlider<Double>>()
         {
             @Override
             public LinearMultiSlider<Double> assign() throws Throwable
@@ -426,7 +426,7 @@ public class LinearMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Assignment<LinearMultiSlider<Double>>()
+        UnitTest.testFail(new Try.Assignment<LinearMultiSlider<Double>>()
         {
             @Override
             public LinearMultiSlider<Double> assign() throws Throwable
@@ -435,7 +435,7 @@ public class LinearMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Assignment<LinearMultiSlider<Double>>()
+        UnitTest.testFail(new Try.Assignment<LinearMultiSlider<Double>>()
         {
             @Override
             public LinearMultiSlider<Double> assign() throws Throwable
@@ -444,7 +444,7 @@ public class LinearMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Assignment<LinearMultiSlider<Double>>()
+        UnitTest.testFail(new Try.Assignment<LinearMultiSlider<Double>>()
         {
             @Override
             public LinearMultiSlider<Double> assign() throws Throwable
@@ -453,7 +453,7 @@ public class LinearMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Assignment<LinearMultiSlider<Double>>()
+        UnitTest.testFail(new Try.Assignment<LinearMultiSlider<Double>>()
         {
             @Override
             public LinearMultiSlider<Double> assign() throws Throwable
@@ -462,7 +462,7 @@ public class LinearMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Assignment<LinearMultiSlider<Double>>()
+        UnitTest.testFail(new Try.Assignment<LinearMultiSlider<Double>>()
         {
             @Override
             public LinearMultiSlider<Double> assign() throws Throwable
@@ -473,7 +473,7 @@ public class LinearMultiSliderTest
 
         final var ms = new DoubleSlider50(true, 10.0, 20.0, 40.0);
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -482,7 +482,7 @@ public class LinearMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -491,7 +491,7 @@ public class LinearMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -500,7 +500,7 @@ public class LinearMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable

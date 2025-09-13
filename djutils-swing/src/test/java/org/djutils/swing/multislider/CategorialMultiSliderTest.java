@@ -352,7 +352,7 @@ public class CategorialMultiSliderTest
     @Test
     public void testErrors()
     {
-        Try.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
+        UnitTest.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
         {
             @Override
             public CategorialMultiSlider<String> assign() throws Throwable
@@ -361,7 +361,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
+        UnitTest.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
         {
             @Override
             public CategorialMultiSlider<String> assign() throws Throwable
@@ -370,7 +370,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
+        UnitTest.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
         {
             @Override
             public CategorialMultiSlider<String> assign() throws Throwable
@@ -379,7 +379,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
+        UnitTest.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
         {
             @Override
             public CategorialMultiSlider<String> assign() throws Throwable
@@ -388,7 +388,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
+        UnitTest.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
         {
             @Override
             public CategorialMultiSlider<String> assign() throws Throwable
@@ -397,7 +397,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
+        UnitTest.testFail(new Try.Assignment<CategorialMultiSlider<String>>()
         {
             @Override
             public CategorialMultiSlider<String> assign() throws Throwable
@@ -407,7 +407,7 @@ public class CategorialMultiSliderTest
         });
 
         final var ms = new CategorialMultiSlider<String>(CategorialMultiSliderTest.this.listAJ, "C", "E");
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -416,7 +416,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -425,7 +425,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -434,7 +434,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -444,7 +444,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
@@ -453,7 +453,7 @@ public class CategorialMultiSliderTest
             }
         });
 
-        Try.testFail(new Try.Execution()
+        UnitTest.testFail(new Try.Execution()
         {
             @Override
             public void execute() throws Throwable
