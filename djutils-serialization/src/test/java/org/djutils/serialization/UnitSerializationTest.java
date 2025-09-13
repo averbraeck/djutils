@@ -38,8 +38,8 @@ import org.djunits.value.vfloat.vector.FloatLengthVector;
 import org.djunits.value.vfloat.vector.FloatTimeVector;
 import org.djunits.value.vfloat.vector.base.FloatVector;
 import org.djutils.decoderdumper.HexDumper;
-import org.djutils.exceptions.Try;
 import org.djutils.serialization.util.SerialDataDumper;
+import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
 
 /**

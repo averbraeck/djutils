@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.UnsupportedEncodingException;
 
 import org.djutils.decoderdumper.HexDumper;
-import org.djutils.exceptions.Try;
 import org.djutils.serialization.util.SerialDataDumper;
+import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
 
 /**
