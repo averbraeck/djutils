@@ -7,8 +7,8 @@ These are light-weight projects that do not depend on huge external libraries an
 *  DJUTILS provides a framework for [decoding and dumping data](decoder-dumper) with decoders for hexadecimal and base64 data.
 *  DJUTILS contains [immutable collections](immutable-collections), such as the ImmutableList, ImmutableSet and ImmutableMap.
 *  DJUTILS [events](event) is a framework for publish and subscribe communication, including remote event handling.
-*  DJUTILS offers several helper classes for [logging](logging) using the tinylog package.
-*  DJUTILS provides several classes for handling [exceptions](exceptions) in an easy way, such as Throw and Try.
+*  DJUTILS offers several helper classes for [logging](logging) using the slf4j and logback packages.
+*  DJUTILS provides several classes for data analysis, math, function evaluation and statistics.
 *  DJUTILS has a class to easily [resolve URLs](urlresource) from a resource location, also when the resource is in a JAR file.
 *  DJUTILS extends the [reflection classes](reflection) of Java with several new classes to easily work with Method, Field, and Class signatures.
 
@@ -22,12 +22,12 @@ Maven is one of the easiest ways to include DJUTILS in a Java project. The Maven
   <dependency>
     <groupId>org.djutils</groupId>
     <artifactId>djutils-base</artifactId>
-    <version>2.3.0</version>
+    <version>2.4.0</version>
   </dependency>
 </dependencies>
 ```
 
-Of course, the version number (2.3.0 in the above example) needs to be replaced with the version that one wants to include in the project.
+Of course, the version number (2.4.0 in the above example) needs to be replaced with the version that one wants to include in the project.
 
 Note that djutils is compliant with Java-17 from version 2.3.0 onward.
 
@@ -36,9 +36,10 @@ DJUTILS jars before version 2 are kept on a server at TU Delft at [https://djuti
 
 ## Dependencies
 
-DJUTILS is directly dependent on one package, which can have further dependencies:
+DJUTILS-BASE is directly dependent on the following packages, which can have further dependencies:
 
-* [tinylog](https://tinylog.org/v1/) for providing an easy-to-use and fast logger.
+* [slf4j](https://www.slf4j.org/) for providing an easy-to-use and fast logger facade.
+* [logback](https://logback.qos.ch/) for providing an easy-to-use and fast logger implementation.
 
 If the DJUTILS library is used as a part of a Maven project, all dependencies will be automatically resolved, and the programmer / user does not have to worry about finding the libraries.
 

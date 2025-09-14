@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The 'tinylog' package (see [https://tinylog.org](https://tinylog.org), is a very fast and small set of logger classes. Tinylog is extended with several helper classes to make logging more fine-grained and easier to control. The most important extension provided in the DJUTILS package is the so-called CategoryLogger. This is a logger that has categories that can be treated in different ways. An example of the use of a logger with a category, where we have categories `Cat.BASE` and `Cat.ADVANCED`:
+The 'logback' package combined with 'slf4j' (see [https://www.slf4j.org/](https://www.slf4j.org/) and [https://logback.qos.ch/](https://logback.qos.ch/), is a very fast and small set of logger classes. slf4j/logback is extended with several helper classes to make logging more fine-grained and easier to control. The most important extension provided in the DJUTILS package is the so-called `CategoryLogger`. This is a logger that has categories that can be treated in different ways. An example of the use of a logger with a category, where we have categories `Cat.BASE` and `Cat.ADVANCED`:
 
 ```java
 CategoryLogger.filter(Cat.BASE).debug("Parameter {} initialized correctly", param1.toString());
@@ -38,37 +38,46 @@ public final class Cat
 The `CategoryLogger` has several methods to add or remove LogCategories for which logging needs to be done. Only LogCategories that have been registered will be logged.
 
 ```java
-CategoryLogger.addLogCategory(logCategory);
-CategoryLogger.removeLogCategory(logCategory);
+CategoryLogger.addLogCategory(NAMING);
+CategoryLogger.removeLogCategory(NAMING);
 ```
 
-The log level for all category loggers can be set with the `CategoryLogger.setAllLogLevel(level)` method. The following log levels exist:
+The log level for all category loggers can be set with the `CategoryLogger.setLogLevelAll(level)` method. The following log levels exist:
 
 * TRACE: Output all log entries. The trace(...) method outputs on the TRACE level.
 * DEBUG: Output all log entries but trace log entries. The debug(...) method outputs on the DEBUG level.
 * INFO: Output all log entries but trace and debug log entries (default). The info(...) method outputs on the INFO level.
-* WARNING: Output error and warning log entries. The warn(...) method outputs on the WARNING level.
+* WARN: Output error and warning log entries. The warn(...) method outputs on the WARN level.
 * ERROR: Output only error log entries. The error(...) method outputs on the ERROR level.
 * OFF: Disable logging (no log entries will be output)
 
-The formatting of the log message for all category loggers can be set with the `CategoryLogger.setLogMessageFormat(formatString)` method. An example of a formatString is:
+The formatting of the log message for all category loggers can be set with the `CategoryLogger.setPattern(pattern)` method. An example of a pattern is:
 
 ```java
-CategoryLogger.setLogMessageFormat("{class_name}.{method}:{line} {message|indent=4}");
+CategoryLogger.setPatternAll("%date{HH:mm:ss} %-5level %-6logger{0} %class.%method:%line - %msg%n");
 ```
 
-which means that the class name, method and line number are logged, followed by the message, with an indentation of four spaces in case it runs over more than one line. The most important formatting components are:
+which means that the date, log level, log category, class name, method and line number are logged, followed by the message, and a newline at the end. The most important formatting components are:
 
-* {class} Fully-qualified class name where the logging request is issued
-* {class_name} Class name (without package) where the logging request is issued
-* {date} Date and time of the logging request, e.g. {date:yyyy-MM-dd HH:mm:ss} [SimpleDateFormat]
-* {level} Logging level of the created log entry
-* {line} Line number in the Java source code from where the logging request is issued
-* {message} Associated message of the created log entry
-* {method} Method name from where the logging request is issued
-* {package} Package where the logging request is issued
+```
+* %date{HH:mm:ss.SSS}   Timestamp (default format shown; many options like ISO8601)
+* %level / %-5level     Log level (pad to fixed width with %-5level)
+* %logger / %logger{0}  Logger name (full or last component only; {n} = # of segments)
+* %thread               Thread name
+* %msg / %message       The actual log message
+* %n                    Platform-specific newline
+* %class / %class{1}    Calling class (full or just last segment with {1})
+* %method               Calling method
+* %line                 Source line number
+* %file                 Source file name
+* %caller               Shortcut for class, method, file, and line in one
+* %marker               SLF4J marker (if present)
+* %X{key}               MDC value for given key
+* %replace(p){r,e}      Apply regex replacement to pattern part p
+* %highlight(%msg)      ANSI colored message (useful on console)
+```
 
-For a more complete list, see also [https://tinylog.org/configuration](https://tinylog.org/configuration).
+For a more complete list, see also [https://logback.qos.ch/manual/layouts.html](https://logback.qos.ch/manual/layouts.html).
 
 
 ## Logging
