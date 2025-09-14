@@ -16,7 +16,7 @@ DJUTILS - Delft Java Utilities
 
     * DJUTILS has calculation classes for arithmetic mean, geometric mean, and harmonic mean.
 
-    * DJUTILS has methods for creating easy access loggers that use tinylog as their basis.
+    * DJUTILS has methods for creating easy access loggers that use slf4j/logback as their basis.
 
     * DJUTILS has exception handling classes for testing preconditions and blocks, such as the Throw and the Try class.
 
