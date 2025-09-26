@@ -453,6 +453,24 @@ public abstract class AbstractMultiSlider<T> extends JComponent
     }
 
     /**
+     * Return the track size lowest pixel (to calculate width for horizontal slider; height for vertical slider).
+     * @return the track size lowest pixel
+     */
+    public int getTrackSizeLoPx()
+    {
+        return this.trackSizeLoPx;
+    }
+
+    /**
+     * Return the track size highest pixel (to calculate width for horizontal slider; height for vertical slider).
+     * @return the track size highest pixel
+     */
+    public int getTrackSizeHiPx()
+    {
+        return this.trackSizeHiPx;
+    }
+
+    /**
      * Calculate x pixel (horizontal) or y pixel (vertical) of thumb[i], relative to the panel of the JSlider.
      * @param i the slider number
      * @return the x pixel (horizontal) or y pixel (vertical) of thumb[i], relative to the panel of the JSlider
