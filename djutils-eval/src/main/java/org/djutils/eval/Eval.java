@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.djunits.unit.AbsoluteLinearUnit;
 import org.djunits.unit.DimensionlessUnit;
 import org.djunits.unit.TimeUnit;
 import org.djunits.unit.Unit;
@@ -197,8 +198,7 @@ public class Eval
 
     /**
      * Set or replace the RetrieveValue object of this evaluator.
-     * @param retrieveValue the new RetrieveValue object (may be null to only delete the currently active
-     *            RetrieveValue object).
+     * @param retrieveValue the new RetrieveValue object (may be null to only delete the currently active RetrieveValue object).
      * @return this (for easy method chaining)
      */
     public Eval setRetrieveValue(final RetrieveValue retrieveValue)
@@ -540,16 +540,12 @@ public class Eval
                     {
                         this.position++;
                         evalLhs(BIND_RELATIONAL);
-                        compareDoubleScalars((
-                                a, b
-                        ) -> (a <= b));
+                        compareDoubleScalars((a, b) -> (a <= b));
                     }
                     else
                     {
                         evalLhs(BIND_RELATIONAL);
-                        compareDoubleScalars((
-                                a, b
-                        ) -> (a < b));
+                        compareDoubleScalars((a, b) -> (a < b));
                     }
                     break;
 
@@ -563,16 +559,12 @@ public class Eval
                     {
                         this.position++;
                         evalLhs(BIND_RELATIONAL);
-                        compareDoubleScalars((
-                                a, b
-                        ) -> (a >= b));
+                        compareDoubleScalars((a, b) -> (a >= b));
                     }
                     else
                     {
                         evalLhs(BIND_RELATIONAL);
-                        compareDoubleScalars((
-                                a, b
-                        ) -> (a > b));
+                        compareDoubleScalars((a, b) -> (a > b));
                     }
                     break;
 
@@ -708,8 +700,8 @@ public class Eval
 
     /**
      * Skip the "then" or the "else" part of a conditional expression.
-     * @param thenPart if true; skip the then part (i.e. skip until a ':'); if false; skip the else part (i.e. until
-     *            end of expression of a binary operator)
+     * @param thenPart if true; skip the then part (i.e. skip until a ':'); if false; skip the else part (i.e. until end of
+     *            expression of a binary operator)
      */
     private void skip(final boolean thenPart)
     {
@@ -836,8 +828,7 @@ public class Eval
                 && getDimensions((DoubleScalarRel<?, ?>) base).equals(getDimensions(DimensionlessUnit.SI))
                 && getDimensions((DoubleScalarRel<?, ?>) exponent).equals(getDimensions(DimensionlessUnit.SI)))
         {
-            DoubleScalar<?, ?> result = DoubleScalarRel.instantiate(
-                    Math.pow(((DoubleScalarRel<?, ?>) base).si, ((DoubleScalarRel<?, ?>) exponent).si), DimensionlessUnit.SI);
+            var result = Dimensionless.ofSI(Math.pow(((DoubleScalarRel<?, ?>) base).si, ((DoubleScalarRel<?, ?>) exponent).si));
             // System.out.println(base + " ^ " + exponent + " = " + result);
             return result;
         }
@@ -856,8 +847,7 @@ public class Eval
         if ((y instanceof DoubleScalarRel) && (x instanceof DoubleScalarRel)
                 && getDimensions((DoubleScalarRel<?, ?>) y).equals(getDimensions((DoubleScalarRel<?, ?>) x)))
         {
-            DoubleScalar<?, ?> result = DoubleScalarRel.instantiate(
-                    Math.atan2(((DoubleScalarRel<?, ?>) y).si, ((DoubleScalarRel<?, ?>) x).si), DimensionlessUnit.SI);
+            var result = Dimensionless.ofSI(Math.atan2(((DoubleScalarRel<?, ?>) y).si, ((DoubleScalarRel<?, ?>) x).si));
             // System.out.println(base + " ^ " + exponent + " = " + result);
             return result;
         }
@@ -903,6 +893,7 @@ public class Eval
     /**
      * Add the two top-most elements on the stack and push the result back onto the stack.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void add()
     {
         Object right = pop();
@@ -916,8 +907,10 @@ public class Eval
             throwException("Right operand of addition must be a scalar (got \"" + right + "\")");
         }
         // Both operands are DoubleScalar
-        if (!((DoubleScalar<?, ?>) left).getDisplayUnit().getQuantity().getSiDimensions()
-                .equals(getDimensions((DoubleScalar<?, ?>) right)))
+        if (!((DoubleScalar<?, ?>) left).getDisplayUnit()
+            .getQuantity()
+            .getSiDimensions()
+            .equals(getDimensions((DoubleScalar<?, ?>) right)))
         {
             // System.out.println("left: " + getDimensions((DoubleScalar<?, ?>) left));
             // System.out.println("right: " + getDimensions((DoubleScalar<?, ?>) right));
@@ -927,9 +920,9 @@ public class Eval
         if ((left instanceof DoubleScalarRel) && (right instanceof DoubleScalarRel))
         {
             // Rel + Rel -> Rel
-            DoubleScalar<?, ?> sum =
-                    DoubleScalarRel.instantiateAnonymous(((DoubleScalarRel<?, ?>) left).si + ((DoubleScalarRel<?, ?>) right).si,
-                            ((DoubleScalarRel<?, ?>) left).getDisplayUnit().getStandardUnit());
+            var dsl = (DoubleScalarRel) left;
+            var dsr = (DoubleScalarRel) right;
+            var sum = dsl.plus(dsr);
             // System.out.println(left + " + " + right + " = " + sum);
             // Set display unit???
             push(sum);
@@ -940,10 +933,9 @@ public class Eval
             throwException("Cannot add an absolute value to some other value");
         }
         // Abs + Rel -> Abs
-        DoubleScalar<?,
-                ?> sum = DoubleScalarAbs.instantiateAnonymous(
-                        ((DoubleScalarAbs<?, ?, ?, ?>) left).si + ((DoubleScalarRel<?, ?>) right).si,
-                        ((DoubleScalarAbs<?, ?, ?, ?>) left).getDisplayUnit().getStandardUnit());
+        var dsl = (DoubleScalarAbs) left;
+        var dsr = (DoubleScalarRel) right;
+        var sum = dsl.instantiateAbs(dsl.si + dsr.si, (AbsoluteLinearUnit) dsl.getDisplayUnit().getStandardUnit());
         // System.out.println(left + " + " + right + " = " + sum);
         // sum.setDisplayUnit(ds.getDisplayUnit());
         push(sum);
@@ -952,6 +944,7 @@ public class Eval
     /**
      * Subtract the two top-most elements on the stack and push the result back onto the stack.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void subtract()
     {
         Object right = pop();
@@ -972,9 +965,9 @@ public class Eval
         if ((left instanceof DoubleScalarAbs) && (right instanceof DoubleScalarAbs))
         {
             // Abs - Abs -> Rel
-            DoubleScalar<?, ?> difference =
-                    DoubleScalarRel.instantiateAnonymous(((DoubleScalar<?, ?>) left).si - ((DoubleScalar<?, ?>) right).si,
-                            ((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit());
+            var dsl = (DoubleScalarAbs) left;
+            var dsr = (DoubleScalarAbs) right;
+            var difference = dsl.minus(dsr);
             // System.out.println(left + " - " + right + " = " + difference);
             push(difference);
             return;
@@ -982,9 +975,9 @@ public class Eval
         if ((left instanceof DoubleScalarAbs) && (right instanceof DoubleScalarRel))
         {
             // Abs - Rel -> Abs
-            DoubleScalar<?, ?> difference =
-                    DoubleScalarAbs.instantiateAnonymous(((DoubleScalar<?, ?>) left).si - ((DoubleScalar<?, ?>) right).si,
-                            ((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit());
+            var dsl = (DoubleScalarAbs) left;
+            var dsr = (DoubleScalarRel) right;
+            var difference = dsl.instantiateAbs(dsl.si - dsr.si, (AbsoluteLinearUnit) dsl.getDisplayUnit().getStandardUnit());
             // System.out.println(left + " - " + right + " = " + difference);
             push(difference);
             return;
@@ -995,9 +988,9 @@ public class Eval
             throwException("Cannot subtract " + right + " from " + left + " because the right operand is absolute");
         }
         // Rel - Rel -> Rel
-        DoubleScalar<?, ?> difference =
-                DoubleScalarRel.instantiateAnonymous(((DoubleScalar<?, ?>) left).si - ((DoubleScalar<?, ?>) right).si,
-                        ((DoubleScalar<?, ?>) left).getDisplayUnit().getStandardUnit());
+        var dsl = (DoubleScalarRel) left;
+        var dsr = (DoubleScalarRel) right;
+        var difference = dsl.minus(dsr);
         // System.out.println(left + " - " + right + " = " + difference);
         push(difference);
     }
