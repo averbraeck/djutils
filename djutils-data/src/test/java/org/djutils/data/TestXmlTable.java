@@ -102,7 +102,7 @@ public class TestXmlTable
         table1.addRow(new Object[] {1, Length.valueOf("1 mm"), "normal"});
         table1.addRow(new Object[] {null, Length.valueOf("10.0 km"), "normal"});
         table1.addRow(new Object[] {3, null, "abnormal"});
-        table1.addRow(new Object[] {4, Length.instantiateSI(40.0), null});
+        table1.addRow(new Object[] {4, Length.ofSI(40.0), null});
         XmlData.writeData(tempDataFile.getAbsolutePath(), table1);
 
         Table table2 = XmlData.readData(tempDataFile.getAbsolutePath());
