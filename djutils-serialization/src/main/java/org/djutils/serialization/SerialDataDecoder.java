@@ -6,6 +6,7 @@ import org.djunits.unit.Unit;
 import org.djunits.value.vdouble.scalar.base.DoubleScalar;
 import org.djunits.value.vfloat.scalar.base.FloatScalar;
 import org.djutils.decoderdumper.Decoder;
+import org.djutils.logger.CategoryLogger;
 import org.djutils.serialization.serializers.ArrayOrMatrixWithUnitSerializer;
 import org.djutils.serialization.serializers.BasicPrimitiveArrayOrMatrixSerializer;
 import org.djutils.serialization.serializers.FixedSizeObjectSerializer;
@@ -186,7 +187,7 @@ public class SerialDataDecoder implements Decoder
         }
 
         this.buffer
-                .append(String.format("Error: No field type handler for type %02x - resynchronizing", this.currentFieldType));
+            .append(String.format("Error: No field type handler for type %02x - resynchronizing", this.currentFieldType));
         return true;
     }
 
@@ -295,7 +296,7 @@ public class SerialDataDecoder implements Decoder
         }
 
         // any leftovers?
-        System.err.println("Did not process type " + this.currentFieldType);
+        CategoryLogger.always().warn("Did not process type {}", this.currentFieldType);
         return true;
     }
 
@@ -311,7 +312,7 @@ public class SerialDataDecoder implements Decoder
         }
         catch (SerializationException e)
         {
-            System.err.println("Could not determine size of element for field type " + this.currentFieldType);
+            CategoryLogger.always().error(e, "Could not determine size of element for field type {}", this.currentFieldType);
             return 1;
         }
     }
@@ -488,7 +489,7 @@ public class SerialDataDecoder implements Decoder
         if (this.displayUnit == null)
         {
             this.buffer
-                    .append(String.format("Error: Could not find unit ype %d, display unit %d", unitTypeCode, displayUnitCode));
+                .append(String.format("Error: Could not find unit ype %d, display unit %d", unitTypeCode, displayUnitCode));
             return true;
         }
         return false;
