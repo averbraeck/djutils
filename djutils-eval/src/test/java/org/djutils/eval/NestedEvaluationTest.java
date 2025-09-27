@@ -28,7 +28,7 @@ public class NestedEvaluationTest
     public void nestedEvaluation()
     {
         Eval eval = new Eval();
-        Map<String, Object> map = Map.of("param1", "{param2}", "param2", Dimensionless.instantiateSI(0.3));
+        Map<String, Object> map = Map.of("param1", "{param2}", "param2", Dimensionless.ofSI(0.3));
         eval.setRetrieveValue(new RetrieveValue()
         {
             @Override
