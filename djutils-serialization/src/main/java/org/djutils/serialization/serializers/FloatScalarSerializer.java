@@ -1,6 +1,7 @@
 package org.djutils.serialization.serializers;
 
 import org.djunits.unit.Unit;
+import org.djunits.value.vfloat.scalar.FloatSIScalar;
 import org.djunits.value.vfloat.scalar.base.FloatScalar;
 import org.djutils.serialization.Endianness;
 import org.djutils.serialization.FieldTypes;
@@ -16,8 +17,7 @@ import org.djutils.serialization.SerializationException;
  * @param <U> the unit type
  * @param <S> the scalar type
  */
-public class FloatScalarSerializer<U extends Unit<U>, S extends FloatScalar<U, S>>
-        extends ObjectWithUnitSerializer<U, S>
+public class FloatScalarSerializer<U extends Unit<U>, S extends FloatScalar<U, S>> extends ObjectWithUnitSerializer<U, S>
 {
     /** */
     public FloatScalarSerializer()
@@ -44,7 +44,7 @@ public class FloatScalarSerializer<U extends Unit<U>, S extends FloatScalar<U, S
     public S deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness) throws SerializationException
     {
         U unit = getUnit(buffer, pointer, endianness);
-        S afs = FloatScalar.instantiateAnonymous(endianness.decodeFloat(buffer, pointer.getAndIncrement(4)),
+        S afs = FloatSIScalar.instantiateAnonymous(endianness.decodeFloat(buffer, pointer.getAndIncrement(4)),
                 unit.getStandardUnit());
         afs.setDisplayUnit(unit);
         return afs;

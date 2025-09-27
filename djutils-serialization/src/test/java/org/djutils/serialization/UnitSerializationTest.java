@@ -148,7 +148,7 @@ public class UnitSerializationTest extends AbstractSerializationTest
                 for (int i = 0; i < objects.length; i++)
                 {
                     assertTrue(deepEquals0(makePrimitive(objects[i]), makePrimitive(decodedObjects[i])),
-                            "decoded object at index " + i + "(" + objects[i] + ") equals corresponding object in input");
+                            "decoded object at index " + i + " (" + objects[i] + ") equals corresponding object in input");
                 }
             }
         }

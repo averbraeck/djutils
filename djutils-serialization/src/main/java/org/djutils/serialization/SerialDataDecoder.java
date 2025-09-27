@@ -3,7 +3,9 @@ package org.djutils.serialization;
 import java.io.IOException;
 
 import org.djunits.unit.Unit;
+import org.djunits.value.vdouble.scalar.SIScalar;
 import org.djunits.value.vdouble.scalar.base.DoubleScalar;
+import org.djunits.value.vfloat.scalar.FloatSIScalar;
 import org.djunits.value.vfloat.scalar.base.FloatScalar;
 import org.djutils.decoderdumper.Decoder;
 import org.djutils.logger.CategoryLogger;
@@ -455,14 +457,14 @@ public class SerialDataDecoder implements Decoder
             if (this.currentFieldType == 31)
             {
                 float f = this.endianness.decodeFloat(this.dataElementBytes, 0);
-                FloatScalar<U, FS> afs = FloatScalar.instantiateAnonymous(f, unit.getStandardUnit());
+                FloatScalar<U, FS> afs = FloatSIScalar.instantiateAnonymous(f, unit.getStandardUnit());
                 afs.setDisplayUnit(unit);
                 this.buffer.append(afs.toDisplayString().replace(" ", "") + " ");
             }
             else
             {
                 double d = this.endianness.decodeDouble(this.dataElementBytes, 0);
-                DoubleScalar<U, DS> ads = DoubleScalar.instantiateAnonymous(d, unit.getStandardUnit());
+                DoubleScalar<U, DS> ads = SIScalar.instantiateAnonymous(d, unit.getStandardUnit());
                 ads.setDisplayUnit(unit);
                 this.buffer.append(ads.toDisplayString().replace(" ", "") + " ");
             }
@@ -511,14 +513,14 @@ public class SerialDataDecoder implements Decoder
             if (this.dataElementBytes.length == 4)
             {
                 float f = this.endianness.decodeFloat(this.dataElementBytes, 0);
-                FloatScalar<U, FS> afs = FloatScalar.instantiateAnonymous(f, this.displayUnit.getStandardUnit());
+                FloatScalar<U, FS> afs = FloatSIScalar.instantiateAnonymous(f, this.displayUnit.getStandardUnit());
                 afs.setDisplayUnit((U) this.displayUnit);
                 this.buffer.append(afs.toDisplayString().replace(" ", "") + " ");
             }
             else
             {
                 double d = this.endianness.decodeDouble(this.dataElementBytes, 0);
-                DoubleScalar<U, DS> ads = DoubleScalar.instantiateAnonymous(d, this.displayUnit.getStandardUnit());
+                DoubleScalar<U, DS> ads = SIScalar.instantiateAnonymous(d, this.displayUnit.getStandardUnit());
                 ads.setDisplayUnit((U) this.displayUnit);
                 this.buffer.append(ads.toDisplayString().replace(" ", "") + " ");
             }
