@@ -27,7 +27,7 @@ extra_javascript:
     
 nav:
   - Home: index.md
-  - DJUTILS project: 
+  - DJUTILS-BASE project: 
     - Introduction: djutils/index.md
     - Mutable Primitives: djutils/mutable-primitives.md
     - Immutable Collections: djutils/immutable-collections.md
