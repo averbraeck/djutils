@@ -22,9 +22,6 @@ import org.djutils.stats.summarizers.Counter;
  */
 public class EventBasedCounter extends Counter implements EventProducer, EventListener
 {
-    /** */
-    private static final long serialVersionUID = 20200228L;
-
     /** The embedded EventProducer. */
     private EventProducer eventProducer = null;
 

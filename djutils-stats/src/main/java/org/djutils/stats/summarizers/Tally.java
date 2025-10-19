@@ -20,9 +20,6 @@ import org.djutils.stats.summarizers.quantileaccumulator.QuantileAccumulator;
  */
 public class Tally implements TallyStatistic
 {
-    /** */
-    private static final long serialVersionUID = 20200228L;
-
     /** The sum of this tally. */
     private double sum;
 
