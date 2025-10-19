@@ -194,29 +194,9 @@ public class EventBasedWeightedTallyTest
         }
     }
 
-    /**
-     * Test the event-based weighted tally for RemoteExceptions.
-     * @throws RemoteException on network error for the event-based statistic
-     */
-    @Test
-    public void testEventBasedTallyRemote() throws RemoteException
-    {
-        String description = "tally description";
-        EventBasedWeightedTally tally = new EventBasedWeightedTally(description, new RmiErrorEventProducer());
-        RmiErrorEventListener listener = new RmiErrorEventListener();
-        tally.addListener(listener, StatisticsEvents.INITIALIZED_EVENT);
-        tally.addListener(listener, StatisticsEvents.OBSERVATION_ADDED_EVENT);
-        // RemoteException is packed in a RuntimeException
-        UnitTest.testFail(() -> tally.initialize(), RuntimeException.class);
-        UnitTest.testFail(() -> tally.register(1.0, 10.0), RuntimeException.class);
-    }
-
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
     class WeightedObservationEventListener implements EventListener
     {
-        /** */
-        private static final long serialVersionUID = 1L;
-
         /** counter for the event. */
         private int observationEvents = 0;
 
