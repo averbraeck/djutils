@@ -1,6 +1,5 @@
 package org.djutils.data;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -22,12 +21,8 @@ import org.djutils.primitives.Primitive;
  * @author <a href="https://dittlab.tudelft.nl">Wouter Schakel</a>
  * @param <T> value type
  */
-public class Column<T> implements Identifiable, Serializable
+public class Column<T> implements Identifiable
 {
-
-    /** */
-    private static final long serialVersionUID = 20230125L;
-
     /** Id. */
     private final String id;
 
