@@ -1,6 +1,5 @@
 package org.djutils.draw;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,7 @@ import org.djutils.draw.point.Point;
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  * @param <P> The point type (2d or 3d)
  */
-public interface Drawable<P extends Point<P>> extends Serializable, Iterable<P>
+public interface Drawable<P extends Point<P>> extends Iterable<P>
 {
     /**
      * Create a list of all points that make up this Drawable. This method is expensive as a new list is constructed on each
@@ -54,9 +53,9 @@ public interface Drawable<P extends Point<P>> extends Serializable, Iterable<P>
     /**
      * Produce a String describing the Drawable.
      * @param doubleFormat a format string (something like "%6.3f") which will be used to render every coordinate value)
-     * @param doNotIncludeClassName if <code>true</code>; the output of <code>toString</code> is <b>not</b> prefixed by
-     *            the class name. This is useful for concatenating the textual representation of lots of Drawables (e.g. an
-     *            array, or a List).
+     * @param doNotIncludeClassName if <code>true</code>; the output of <code>toString</code> is <b>not</b> prefixed by the
+     *            class name. This is useful for concatenating the textual representation of lots of Drawables (e.g. an array,
+     *            or a List).
      * @return textual representation of the Drawable
      */
     String toString(String doubleFormat, boolean doNotIncludeClassName);
@@ -73,9 +72,9 @@ public interface Drawable<P extends Point<P>> extends Serializable, Iterable<P>
 
     /**
      * Produce a String describing the Drawable.
-     * @param doNotIncludeClassName if <code>true</code>; the output of <code>toString</code> is <b>not</b> prefixed by
-     *            the class name. This is useful for concatenating the textual representation of lots of Drawables (e.g. an
-     *            array, or a List).
+     * @param doNotIncludeClassName if <code>true</code>; the output of <code>toString</code> is <b>not</b> prefixed by the
+     *            class name. This is useful for concatenating the textual representation of lots of Drawables (e.g. an array,
+     *            or a List).
      * @return textual representation of the Drawable
      */
     default String toString(final boolean doNotIncludeClassName)

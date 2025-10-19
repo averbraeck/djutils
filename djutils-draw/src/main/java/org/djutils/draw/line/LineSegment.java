@@ -1,7 +1,5 @@
 package org.djutils.draw.line;
 
-import java.io.Serializable;
-
 import org.djutils.draw.Directed;
 import org.djutils.draw.Drawable;
 import org.djutils.draw.point.Point;
@@ -20,7 +18,7 @@ import org.djutils.exceptions.Throw;
  * @param <P> The point type (2d or 3d)
  * @param <D> The directed type (2d or 3d)
  */
-public interface LineSegment<P extends Point<P>, D extends Directed> extends Drawable<P>, Serializable, Project<P>
+public interface LineSegment<P extends Point<P>, D extends Directed> extends Drawable<P>, Project<P>
 {
     /**
      * Get the start point of this LineSegment.

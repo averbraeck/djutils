@@ -1,6 +1,5 @@
 package org.djutils.draw.bounds;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -20,7 +19,7 @@ import org.djutils.exceptions.Throw;
  * @author <a href="https://github.com/peter-knoppers">Peter Knoppers</a>
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  */
-public class Bounds3d implements Serializable, Drawable3d, Bounds<Bounds3d, Point3d>
+public class Bounds3d implements Drawable3d, Bounds<Bounds3d, Point3d>
 {
     /** */
     private static final long serialVersionUID = 2020829L;
