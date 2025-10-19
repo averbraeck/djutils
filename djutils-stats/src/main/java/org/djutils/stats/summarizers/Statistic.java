@@ -1,7 +1,5 @@
 package org.djutils.stats.summarizers;
 
-import java.io.Serializable;
-
 /**
  * The Statistic interface defines the methods to implement for each of the statistics classes.
  * <p>
@@ -12,7 +10,7 @@ import java.io.Serializable;
  * https://simulation.tudelft.nl/dsol/3.0/license.html</a>. <br>
  * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank"> Alexander Verbraeck</a>
  */
-public interface Statistic extends Serializable
+public interface Statistic
 {
     /**
      * Initialize the statistic.

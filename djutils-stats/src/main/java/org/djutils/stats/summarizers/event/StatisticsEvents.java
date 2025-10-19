@@ -1,7 +1,5 @@
 package org.djutils.stats.summarizers.event;
 
-import java.io.Serializable;
-
 import org.djutils.event.EventType;
 import org.djutils.metadata.MetaData;
 import org.djutils.metadata.ObjectDescriptor;
@@ -56,7 +54,7 @@ public final class StatisticsEvents
      */
     public static final EventType TIMESTAMPED_OBSERVATION_ADDED_EVENT = new EventType("TIMESTAMPED_OBSERVATION_ADDED_EVENT",
             new MetaData("Time stamp and value", "Time stamp and Double value",
-                    new ObjectDescriptor[] {new ObjectDescriptor("TimeStamp", "Time stamp", Serializable.class),
+                    new ObjectDescriptor[] {new ObjectDescriptor("TimeStamp", "Time stamp", Object.class),
                             new ObjectDescriptor("Value", "Double value", Double.class)}));
 
     /* The following statistics are, e.g., used to draw graphs of the development of a statistical value. */
@@ -72,8 +70,8 @@ public final class StatisticsEvents
      * COUNT_EVENT is fired whenever there is an observation that potentially updates the count of the Counter. The event should
      * define the Statistic as the source and the current (Long) count value as the content.
      */
-    public static final EventType COUNT_EVENT = new EventType("COUNT_EVENT", new MetaData("count", "Number of registered events",
-            new ObjectDescriptor("count", "Number of registered events", Long.class)));
+    public static final EventType COUNT_EVENT = new EventType("COUNT_EVENT", new MetaData("count",
+            "Number of registered events", new ObjectDescriptor("count", "Number of registered events", Long.class)));
 
     /**
      * MIN_EVENT is fired whenever there is an observation that potentially updates the lowest observed value of the statistic.
