@@ -61,9 +61,6 @@ import org.djutils.exceptions.Throw;
  */
 public class UnitType
 {
-    /** */
-    private static final long serialVersionUID = 20170314L;
-
     /** the unit types from number to type. */
     private static Map<QuantityType, Map<Integer, UnitType>> codeDisplayTypeMap = new HashMap<>();
 
