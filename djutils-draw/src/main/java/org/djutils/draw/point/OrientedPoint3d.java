@@ -24,9 +24,6 @@ import org.djutils.math.AngleUtil;
  */
 public class OrientedPoint3d extends DirectedPoint3d implements Oriented3d
 {
-    /** */
-    private static final long serialVersionUID = 20200828L;
-
     /** The direction as rotation around the x-axis. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     public final double dirX;

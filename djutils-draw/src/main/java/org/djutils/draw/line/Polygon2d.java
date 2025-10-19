@@ -24,9 +24,6 @@ import org.djutils.exceptions.Throw;
  */
 public class Polygon2d extends PolyLine2d
 {
-    /** */
-    private static final long serialVersionUID = 20209999L;
-
     /**
      * Construct a new Polygon2d.
      * @param x the x coordinates of the points

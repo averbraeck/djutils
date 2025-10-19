@@ -21,9 +21,6 @@ import org.djutils.exceptions.Throw;
  */
 public class Bounds3d implements Drawable3d, Bounds<Bounds3d, Point3d>
 {
-    /** */
-    private static final long serialVersionUID = 2020829L;
-
     /** The lower bound for x. */
     private final double minX;
 

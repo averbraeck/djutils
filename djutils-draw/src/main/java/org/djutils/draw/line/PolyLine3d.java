@@ -28,9 +28,6 @@ import org.djutils.logger.CategoryLogger;
  */
 public class PolyLine3d implements Drawable3d, PolyLine<PolyLine3d, Point3d, Ray3d, DirectedPoint3d, LineSegment3d>
 {
-    /** */
-    private static final long serialVersionUID = 20200911L;
-
     /** X-coordinates of the points. */
     private final double[] x;
 

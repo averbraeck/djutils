@@ -24,9 +24,6 @@ import org.djutils.exceptions.Throw;
  */
 public class LineSegment3d implements Drawable3d, LineSegment<Point3d, DirectedPoint3d>
 {
-    /** */
-    private static final long serialVersionUID = 20210121L;
-
     /** The start x-coordinate. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     public final double startX;

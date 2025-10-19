@@ -22,9 +22,6 @@ import org.djutils.exceptions.Throw;
  */
 public class Bounds2d implements Drawable2d, Bounds<Bounds2d, Point2d>
 {
-    /** */
-    private static final long serialVersionUID = 20200829L;
-
     /** The lower bound for x. */
     private final double minX;
 

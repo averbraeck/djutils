@@ -24,9 +24,6 @@ import org.djutils.exceptions.Throw;
  */
 public class Point2d implements Drawable2d, Point<Point2d>
 {
-    /** */
-    private static final long serialVersionUID = 20201201L;
-
     /** The x-coordinate. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     public final double x;

@@ -31,9 +31,6 @@ import org.djutils.math.AngleUtil;
  */
 public class PolyLine2d implements Drawable2d, PolyLine<PolyLine2d, Point2d, Ray2d, DirectedPoint2d, LineSegment2d>
 {
-    /** */
-    private static final long serialVersionUID = 20200911L;
-
     /** X-coordinates of the points. */
     private final double[] x;
 

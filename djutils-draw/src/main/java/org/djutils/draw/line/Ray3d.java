@@ -24,9 +24,6 @@ import org.djutils.math.AngleUtil;
  */
 public class Ray3d extends DirectedPoint3d implements Drawable3d, Ray<Ray3d, DirectedPoint3d, Point3d>
 {
-    /** */
-    private static final long serialVersionUID = 20210119L;
-
     /**
      * Construct a new Ray3d.
      * @param x the x coordinate of the finite end point of the ray

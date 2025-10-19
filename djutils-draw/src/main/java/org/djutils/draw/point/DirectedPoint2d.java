@@ -24,9 +24,6 @@ import org.djutils.math.AngleUtil;
  */
 public class DirectedPoint2d extends Point2d implements Directed
 {
-    /** */
-    private static final long serialVersionUID = 20200828L;
-
     /** The counter-clockwise rotation around the point in radians. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     public final double dirZ;

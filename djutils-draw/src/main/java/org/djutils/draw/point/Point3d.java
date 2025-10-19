@@ -23,9 +23,6 @@ import org.djutils.exceptions.Throw;
  */
 public class Point3d implements Drawable3d, Point<Point3d>
 {
-    /** */
-    private static final long serialVersionUID = 20201201L;
-
     /** The x-coordinate. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     public final double x;

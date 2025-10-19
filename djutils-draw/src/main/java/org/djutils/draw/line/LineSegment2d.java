@@ -23,9 +23,6 @@ import org.djutils.exceptions.Throw;
  */
 public class LineSegment2d implements Drawable2d, LineSegment<Point2d, DirectedPoint2d>
 {
-    /** */
-    private static final long serialVersionUID = 20210121L;
-
     /** The start x-coordinate. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     public final double startX;
