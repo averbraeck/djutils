@@ -1,7 +1,5 @@
 package org.djutils.stats.summarizers.event;
 
-import java.rmi.RemoteException;
-
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventListenerMap;
@@ -52,7 +50,7 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
     }
 
     @Override
-    public EventListenerMap getEventListenerMap() throws RemoteException
+    public EventListenerMap getEventListenerMap()
     {
         return this.eventProducer.getEventListenerMap();
     }
@@ -63,14 +61,7 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
         super.initialize();
         if (this.eventProducer != null)
         {
-            try
-            {
-                this.eventProducer.fireEvent(StatisticsEvents.INITIALIZED_EVENT);
-            }
-            catch (RemoteException exception)
-            {
-                throw new RuntimeException(exception);
-            }
+            this.eventProducer.fireEvent(StatisticsEvents.INITIALIZED_EVENT);
         }
     }
 
@@ -93,26 +84,18 @@ public class EventBasedCounter extends Counter implements EventProducer, EventLi
     public long register(final long value)
     {
         super.register(value);
-        try
+        if (hasListeners())
         {
-            if (hasListeners())
-            {
-                this.eventProducer.fireEvent(StatisticsEvents.OBSERVATION_ADDED_EVENT, value);
-                fireEvents();
-            }
-        }
-        catch (RemoteException exception)
-        {
-            throw new RuntimeException(exception);
+            this.eventProducer.fireEvent(StatisticsEvents.OBSERVATION_ADDED_EVENT, value);
+            fireEvents();
         }
         return value;
     }
 
     /**
      * Method that can be overridden to fire own events or additional events when registering an observation.
-     * @throws RemoteException on network error
      */
-    protected void fireEvents() throws RemoteException
+    protected void fireEvents()
     {
         this.eventProducer.fireEvent(StatisticsEvents.N_EVENT, getN());
         this.eventProducer.fireEvent(StatisticsEvents.COUNT_EVENT, getCount());

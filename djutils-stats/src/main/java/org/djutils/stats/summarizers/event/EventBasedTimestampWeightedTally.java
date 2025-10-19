@@ -1,7 +1,6 @@
 package org.djutils.stats.summarizers.event;
 
 import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.util.Calendar;
 
 import org.djutils.event.Event;
@@ -57,7 +56,7 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
     }
 
     @Override
-    public EventListenerMap getEventListenerMap() throws RemoteException
+    public EventListenerMap getEventListenerMap()
     {
         return this.eventProducer.getEventListenerMap();
     }
@@ -68,14 +67,7 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
         super.initialize();
         if (this.eventProducer != null)
         {
-            try
-            {
-                this.eventProducer.fireEvent(StatisticsEvents.INITIALIZED_EVENT);
-            }
-            catch (RemoteException exception)
-            {
-                throw new RuntimeException(exception);
-            }
+            this.eventProducer.fireEvent(StatisticsEvents.INITIALIZED_EVENT);
         }
     }
 
@@ -130,18 +122,11 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
     public double register(final Calendar timestamp, final double value)
     {
         super.register(timestamp, value);
-        try
+        if (hasListeners())
         {
-            if (hasListeners())
-            {
-                this.eventProducer.fireEvent(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT,
-                        new Serializable[] {timestamp, value});
-                fireEvents(timestamp);
-            }
-        }
-        catch (RemoteException exception)
-        {
-            throw new RuntimeException(exception);
+            this.eventProducer.fireEvent(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT,
+                    new Serializable[] {timestamp, value});
+            fireEvents(timestamp);
         }
         return value;
     }
@@ -160,18 +145,11 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
     public double register(final Number timestamp, final double value)
     {
         super.register(timestamp, value);
-        try
+        if (hasListeners())
         {
-            if (hasListeners())
-            {
-                this.eventProducer.fireEvent(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT,
-                        new Serializable[] {timestamp, value});
-                fireEvents(timestamp);
-            }
-        }
-        catch (RemoteException exception)
-        {
-            throw new RuntimeException(exception);
+            this.eventProducer.fireEvent(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT,
+                    new Serializable[] {timestamp, value});
+            fireEvents(timestamp);
         }
         return value;
     }
@@ -197,9 +175,8 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
      * Method that can be overridden to fire own events or additional events when registering an observation.
      * @param <T> a type for the timestamp that is Serializable and Comparable
      * @param timestamp the timestamp to use in the TimedEvents
-     * @throws RemoteException on network error
      */
-    protected <T extends Serializable & Comparable<T>> void fireEvents(final Serializable timestamp) throws RemoteException
+    protected <T extends Serializable & Comparable<T>> void fireEvents(final Serializable timestamp)
     {
         // Note that All implementations of Number are Comparable and (by default) Serializable. So is Calendar.
         @SuppressWarnings("unchecked")
