@@ -34,10 +34,10 @@
     <maven.compiler.target>${jdk.version}</maven.compiler.target>
 
     <djutils.version>${project.version}</djutils.version>
-    <djutils-base.version>2.4.1</djutils-base.version>
-    <djutils-test.version>2.4.1</djutils-test.version>
+    <djutils-base.version>2.4.2</djutils-base.version>
+    <djutils-test.version>2.4.2</djutils-test.version>
     <picocli.version>4.7.7</picocli.version>
-    <djunits.version>5.4.1</djunits.version>
+    <djunits.version>5.4.2</djunits.version>
     <junit.version>5.13.0</junit.version>
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
     <fastcsv.version>2.2.2</fastcsv.version>
@@ -329,11 +329,12 @@
             <link>https://javadoc.io/doc/de.siegmar/fastcsv/latest/de.siegmar.fastcsv/</link>
             <link>https://www.javadoc.io/doc/com.google.code.gson/gson/latest/</link-->
           </links>
-          <additionalJOption>-J-Xmx1024m</additionalJOption>
-          <detectJavaApiLink>false</detectJavaApiLink>
+          <minmemory>256m</minmemory>
+          <maxmemory>1g</maxmemory>
+          <detectJavaApiLink>true</detectJavaApiLink>
           <detectOfflineLinks>false</detectOfflineLinks>
-          <detectLinks>false</detectLinks>
-          <show>package</show>
+          <detectLinks>true</detectLinks>
+          <release>${jdk.version}</release>
         </configuration>
         <executions>
           <execution>
