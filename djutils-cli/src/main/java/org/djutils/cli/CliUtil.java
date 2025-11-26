@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.djutils.reflection.ClassUtil;
 
@@ -17,6 +18,7 @@ import picocli.CommandLine.Help;
 import picocli.CommandLine.IHelpSectionRenderer;
 import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.IVersionProvider;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.ArgSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ParseResult;
@@ -143,7 +145,7 @@ public final class CliUtil
     /** Whether we are parsing a default value or not. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     private static boolean parseDefaultValue = false;
-    
+
     /** Whether we are in test mode and should throw an exception instead of System.exit() with -v or -h. */
     @SuppressWarnings("checkstyle:visibilitymodifier")
     static boolean testMode = false;
@@ -352,15 +354,74 @@ public final class CliUtil
     public static void changeOptionProperty(final Class<?> programClass, final String fieldName, final String propertyName,
             final Object newValue) throws CliException, NoSuchFieldException
     {
-        Field field = ClassUtil.resolveField(programClass, fieldName);
-        Option optionAnnotation = field.getAnnotation(Option.class);
-        if (optionAnnotation == null)
-        {
-            throw new CliException(
-                    String.format("@Option annotation not found for field %s in class %s", fieldName, programClass.getName()));
-        }
-        String key = makeOverrideKeyProperty(field.getDeclaringClass(), fieldName, propertyName);
+        findOptionFieldIncludingMixins(programClass, fieldName);
+        String key = makeOverrideKeyProperty(programClass, fieldName, propertyName);
         overrideMap.put(key, newValue);
+    }
+
+    /**
+     * Find a field with an <code>Option</code> annotation in the rootClass or a mixin of the rootClass.
+     * @param rootClass the root class to start searching
+     * @param fieldName the name of the field with an Option annotation to search for
+     * @return the Option field that was found; when not found or no Option annotation, an exception is thrown
+     * @throws CliException on not finding the Option field in the rootClass or a Mixin class
+     */
+    private static Field findOptionFieldIncludingMixins(final Class<?> rootClass, final String fieldName) throws CliException
+    {
+        Set<Class<?>> visited = new HashSet<>();
+        Field result = findOptionFieldIncludingMixins(rootClass, fieldName, visited);
+        if (result == null)
+        {
+            throw new CliException("No @Option field '" + fieldName + "' in " + rootClass.getName() + " or its @Mixin classes");
+        }
+        return result;
+    }
+
+    /**
+     * Recursively find a field with an <code>Option</code> annotation in 'type' or a mixin of 'type'.
+     * @param type the class to inspect
+     * @param fieldName the name of the field with an Option annotation to search for
+     * @param visited A Set of classes that were already checked to avoid duplication and looping
+     * @return the Option field that was found; when not found or no Option annotation, null is returned
+     */
+    private static Field findOptionFieldIncludingMixins(final Class<?> type, final String fieldName,
+            final Set<Class<?>> visited)
+    {
+        if (type == null || !visited.add(type))
+        {
+            return null;
+        }
+
+        // 1) Walk class hierarchy for a matching @Option field
+        for (Class<?> c = type; c != null && c != Object.class; c = c.getSuperclass())
+        {
+            try
+            {
+                Field f = c.getDeclaredField(fieldName);
+                if (f.isAnnotationPresent(Option.class))
+                {
+                    return f;
+                }
+            }
+            catch (NoSuchFieldException ignored)
+            {
+            }
+        }
+
+        // 2) Recurse into @Mixin fields
+        for (Field f : type.getDeclaredFields())
+        {
+            if (f.isAnnotationPresent(Mixin.class))
+            {
+                Field candidate = findOptionFieldIncludingMixins(f.getType(), fieldName, visited);
+                if (candidate != null)
+                {
+                    return candidate;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
