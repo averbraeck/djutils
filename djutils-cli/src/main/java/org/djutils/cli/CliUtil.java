@@ -360,11 +360,11 @@ public final class CliUtil
     }
 
     /**
-     * Find a field with an <code>Option</code> annotation in the rootClass or a mixin of the rootClass.
+     * Find a field with an &#64;Option annotation in the rootClass or a &#64;Mixin of the rootClass.
      * @param rootClass the root class to start searching
-     * @param fieldName the name of the field with an Option annotation to search for
-     * @return the Option field that was found; when not found or no Option annotation, an exception is thrown
-     * @throws CliException on not finding the Option field in the rootClass or a Mixin class
+     * @param fieldName the name of the field with an &#64;Option annotation to search for
+     * @return the &#64;Option field that was found; when not found or no &#64;Option annotation, an exception is thrown
+     * @throws CliException on not finding the &#64;Option field in the rootClass or a &#64;Mixin class
      */
     private static Field findOptionFieldIncludingMixins(final Class<?> rootClass, final String fieldName) throws CliException
     {
@@ -378,11 +378,11 @@ public final class CliUtil
     }
 
     /**
-     * Recursively find a field with an <code>Option</code> annotation in 'type' or a mixin of 'type'.
+     * Recursively find a field with an &#64;Option annotation in 'type' or a mixin of 'type'.
      * @param type the class to inspect
-     * @param fieldName the name of the field with an Option annotation to search for
+     * @param fieldName the name of the field with an &#64;Option annotation to search for
      * @param visited A Set of classes that were already checked to avoid duplication and looping
-     * @return the Option field that was found; when not found or no Option annotation, null is returned
+     * @return the &#64;Option field that was found; when not found or no &#64;Option annotation, null is returned
      */
     private static Field findOptionFieldIncludingMixins(final Class<?> type, final String fieldName,
             final Set<Class<?>> visited)
