@@ -1,8 +1,5 @@
 package org.djutils.stats.summarizers.event;
 
-import java.io.Serializable;
-import java.rmi.RemoteException;
-
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventListenerMap;
@@ -26,9 +23,6 @@ import org.djutils.stats.summarizers.WeightedTally;
  */
 public class EventBasedWeightedTally extends WeightedTally implements EventProducer, EventListener
 {
-    /** */
-    private static final long serialVersionUID = 20200228L;
-
     /** The embedded EventProducer. */
     private EventProducer eventProducer = null;
 
@@ -54,7 +48,7 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
     }
 
     @Override
-    public EventListenerMap getEventListenerMap() throws RemoteException
+    public EventListenerMap getEventListenerMap()
     {
         return this.eventProducer.getEventListenerMap();
     }
@@ -65,14 +59,7 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
         super.initialize();
         if (this.eventProducer != null)
         {
-            try
-            {
-                this.eventProducer.fireEvent(StatisticsEvents.INITIALIZED_EVENT);
-            }
-            catch (RemoteException exception)
-            {
-                throw new RuntimeException(exception);
-            }
+            this.eventProducer.fireEvent(StatisticsEvents.INITIALIZED_EVENT);
         }
     }
 
@@ -96,27 +83,18 @@ public class EventBasedWeightedTally extends WeightedTally implements EventProdu
     public double register(final double weight, final double value)
     {
         super.register(weight, value);
-        try
+        if (hasListeners())
         {
-            if (hasListeners())
-            {
-                this.eventProducer.fireEvent(StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT,
-                        new Serializable[] {weight, value});
-                fireEvents();
-            }
-        }
-        catch (RemoteException exception)
-        {
-            throw new RuntimeException(exception);
+            this.eventProducer.fireEvent(StatisticsEvents.WEIGHTED_OBSERVATION_ADDED_EVENT, new Object[] {weight, value});
+            fireEvents();
         }
         return value;
     }
 
     /**
      * Method that can be overridden to fire own events or additional events when registering an observation.
-     * @throws RemoteException on network error
      */
-    protected void fireEvents() throws RemoteException
+    protected void fireEvents()
     {
         this.eventProducer.fireEvent(StatisticsEvents.N_EVENT, getN());
         this.eventProducer.fireEvent(StatisticsEvents.MIN_EVENT, getMin());

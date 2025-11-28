@@ -24,9 +24,6 @@ import org.djutils.math.AngleUtil;
  */
 public class Ray2d extends DirectedPoint2d implements Drawable2d, Ray<Ray2d, DirectedPoint2d, Point2d>
 {
-    /** */
-    private static final long serialVersionUID = 20210119L;
-
     /**
      * Construct a new Ray2d.
      * @param x the x coordinate of the finite end point of the ray

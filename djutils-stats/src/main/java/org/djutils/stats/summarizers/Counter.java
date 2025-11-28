@@ -15,9 +15,6 @@ import org.djutils.exceptions.Throw;
  */
 public class Counter implements Statistic
 {
-    /** */
-    private static final long serialVersionUID = 20200228L;
-
     /** count represents the value of the counter. */
     private long count = 0;
 

@@ -19,9 +19,6 @@ import org.djutils.exceptions.Throw;
  */
 public class TimestampWeightedTally extends WeightedTally
 {
-    /** */
-    private static final long serialVersionUID = 20200228L;
-
     /** startTime defines the time of the first observation. Often equals to 0.0, but can also have other value. */
     private double startTime;
 

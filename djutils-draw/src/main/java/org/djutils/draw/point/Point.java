@@ -1,7 +1,5 @@
 package org.djutils.draw.point;
 
-import java.io.Serializable;
-
 import org.djutils.draw.Drawable;
 
 /**
@@ -15,7 +13,7 @@ import org.djutils.draw.Drawable;
  * @author <a href="https://github.com/wjschakel">Wouter Schakel</a>
  * @param <P> The point type
  */
-public interface Point<P extends Point<P>> extends Drawable<P>, Serializable
+public interface Point<P extends Point<P>> extends Drawable<P>
 {
     /**
      * Return the x-coordinate.

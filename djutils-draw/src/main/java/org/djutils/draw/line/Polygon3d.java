@@ -22,9 +22,6 @@ import org.djutils.exceptions.Throw;
  */
 public class Polygon3d extends PolyLine3d
 {
-    /** */
-    private static final long serialVersionUID = 20209999L;
-
     /**
      * Construct a new Polygon3d.
      * @param x the x coordinates of the points

@@ -1,7 +1,5 @@
 package org.djutils.stats.summarizers.event;
 
-import java.rmi.RemoteException;
-
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 
@@ -17,9 +15,6 @@ import org.djutils.event.EventListener;
  */
 public class LoggingEventListener implements EventListener
 {
-    /** */
-    private static final long serialVersionUID = 1L;
-
     /** Last received event. */
     private Event lastEvent;
 
@@ -33,7 +28,7 @@ public class LoggingEventListener implements EventListener
     }
 
     @Override
-    public void notify(final Event event) throws RemoteException
+    public void notify(final Event event)
     {
         this.lastEvent = event;
         this.numberOfEvents++;

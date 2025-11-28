@@ -1,6 +1,5 @@
 package org.djutils.draw.volume;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +14,8 @@ import org.djutils.draw.line.PolyLine3d;
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  * @author <a href="https://www.tudelft.nl/pknoppers">Peter Knoppers</a>
  */
-public class Volume3d implements Serializable
+public class Volume3d
 {
-    /** */
-    private static final long serialVersionUID = 1L;
-
     /**
      * Return the lines making up the wireframe of this object.
      * @return the A list of lines making up the wireframe of the object

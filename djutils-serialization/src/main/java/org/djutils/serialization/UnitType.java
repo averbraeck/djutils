@@ -1,6 +1,5 @@
 package org.djutils.serialization;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,11 +59,8 @@ import org.djutils.exceptions.Throw;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class UnitType implements Serializable
+public class UnitType
 {
-    /** */
-    private static final long serialVersionUID = 20170314L;
-
     /** the unit types from number to type. */
     private static Map<QuantityType, Map<Integer, UnitType>> codeDisplayTypeMap = new HashMap<>();
 
@@ -95,20 +91,20 @@ public class UnitType implements Serializable
     /* ================================================= ACCELERATION ================================================== */
 
     /** Acceleration.METER_PER_SECOND_2 unit type with code 0. */
-    public static final UnitType ACCELERATION_METER_PER_SECOND_2 = new UnitType(QuantityType.ACCELERATION, 0,
-            AccelerationUnit.METER_PER_SECOND_2, "METER_PER_SECOND_2", "m/s2");
+    public static final UnitType ACCELERATION_METER_PER_SECOND_2 =
+            new UnitType(QuantityType.ACCELERATION, 0, AccelerationUnit.METER_PER_SECOND_2, "METER_PER_SECOND_2", "m/s2");
 
     /** Acceleration.KM_PER_HOUR_2 unit type with code 1. */
     public static final UnitType ACCELERATION_KM_PER_HOUR_2 =
             new UnitType(QuantityType.ACCELERATION, 1, AccelerationUnit.KM_PER_HOUR_2, "KM_PER_HOUR_2", "km/h2");
 
     /** Acceleration.INCH_PER_SECOND_2 unit type with code 2. */
-    public static final UnitType ACCELERATION_INCH_PER_SECOND_2 = new UnitType(QuantityType.ACCELERATION, 2,
-            AccelerationUnit.INCH_PER_SECOND_2, "INCH_PER_SECOND_2", "in/s2");
+    public static final UnitType ACCELERATION_INCH_PER_SECOND_2 =
+            new UnitType(QuantityType.ACCELERATION, 2, AccelerationUnit.INCH_PER_SECOND_2, "INCH_PER_SECOND_2", "in/s2");
 
     /** Acceleration.FOOT_PER_SECOND_2 unit type with code 3. */
-    public static final UnitType ACCELERATION_FOOT_PER_SECOND_2 = new UnitType(QuantityType.ACCELERATION, 3,
-            AccelerationUnit.FOOT_PER_SECOND_2, "FOOT_PER_SECOND_2", "ft/s2");
+    public static final UnitType ACCELERATION_FOOT_PER_SECOND_2 =
+            new UnitType(QuantityType.ACCELERATION, 3, AccelerationUnit.FOOT_PER_SECOND_2, "FOOT_PER_SECOND_2", "ft/s2");
 
     /** Acceleration.MILE_PER_HOUR_2 unit type with code 4. */
     public static final UnitType ACCELERATION_MILE_PER_HOUR_2 =
@@ -131,8 +127,8 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.ACCELERATION, 8, AccelerationUnit.STANDARD_GRAVITY, "STANDARD_GRAVITY", "g");
 
     /** Acceleration.MILE_PER_SECOND_2 unit type with code 9. */
-    public static final UnitType ACCELERATION_MILE_PER_SECOND_2 = new UnitType(QuantityType.ACCELERATION, 9,
-            AccelerationUnit.MILE_PER_SECOND_2, "MILE_PER_SECOND_2", "mi/s2");
+    public static final UnitType ACCELERATION_MILE_PER_SECOND_2 =
+            new UnitType(QuantityType.ACCELERATION, 9, AccelerationUnit.MILE_PER_SECOND_2, "MILE_PER_SECOND_2", "mi/s2");
 
     /* ================================================== SOLIDANGLE =================================================== */
 
@@ -147,8 +143,7 @@ public class UnitType implements Serializable
     /* ===================================================== ANGLE ===================================================== */
 
     /** Angle.RADIAN unit type with code 0. */
-    public static final UnitType ANGLE_RADIAN =
-            new UnitType(QuantityType.ANGLE, 0, AngleUnit.RADIAN, "RADIAN", "rad");
+    public static final UnitType ANGLE_RADIAN = new UnitType(QuantityType.ANGLE, 0, AngleUnit.RADIAN, "RADIAN", "rad");
 
     /** Angle.ARCMINUTE unit type with code 1. */
     public static final UnitType ANGLE_ARCMINUTE =
@@ -159,23 +154,21 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.ANGLE, 2, AngleUnit.ARCSECOND, "ARCSECOND", "arcsec");
 
     /** Angle.CENTESIMAL_ARCMINUTE unit type with code 3. */
-    public static final UnitType ANGLE_CENTESIMAL_ARCMINUTE = new UnitType(QuantityType.ANGLE, 3,
-            AngleUnit.CENTESIMAL_ARCMINUTE, "CENTESIMAL_ARCMINUTE", "centesimal_arcmin");
+    public static final UnitType ANGLE_CENTESIMAL_ARCMINUTE =
+            new UnitType(QuantityType.ANGLE, 3, AngleUnit.CENTESIMAL_ARCMINUTE, "CENTESIMAL_ARCMINUTE", "centesimal_arcmin");
 
     /** Angle.CENTESIMAL_ARCSECOND unit type with code 4. */
-    public static final UnitType ANGLE_CENTESIMAL_ARCSECOND = new UnitType(QuantityType.ANGLE, 4,
-            AngleUnit.CENTESIMAL_ARCSECOND, "CENTESIMAL_ARCSECOND", "centesimal_arcsec");
+    public static final UnitType ANGLE_CENTESIMAL_ARCSECOND =
+            new UnitType(QuantityType.ANGLE, 4, AngleUnit.CENTESIMAL_ARCSECOND, "CENTESIMAL_ARCSECOND", "centesimal_arcsec");
 
     /** Angle.DEGREE unit type with code 5. */
-    public static final UnitType ANGLE_DEGREE =
-            new UnitType(QuantityType.ANGLE, 5, AngleUnit.DEGREE, "DEGREE", "deg");
+    public static final UnitType ANGLE_DEGREE = new UnitType(QuantityType.ANGLE, 5, AngleUnit.DEGREE, "DEGREE", "deg");
 
     /** Angle.GRAD unit type with code 6. */
     public static final UnitType ANGLE_GRAD = new UnitType(QuantityType.ANGLE, 6, AngleUnit.GRAD, "GRAD", "grad");
 
     /** Angle.PERCENT unit type with code 7. */
-    public static final UnitType ANGLE_PERCENT =
-            new UnitType(QuantityType.ANGLE, 7, AngleUnit.PERCENT, "PERCENT", "%");
+    public static final UnitType ANGLE_PERCENT = new UnitType(QuantityType.ANGLE, 7, AngleUnit.PERCENT, "PERCENT", "%");
 
     /* =================================================== DIRECTION =================================================== */
 
@@ -276,12 +269,10 @@ public class UnitType implements Serializable
     public static final UnitType AREA_ARE = new UnitType(QuantityType.AREA, 19, AreaUnit.ARE, "ARE", "a");
 
     /** Area.CENTIARE unit type with code 20. */
-    public static final UnitType AREA_CENTIARE =
-            new UnitType(QuantityType.AREA, 20, AreaUnit.CENTIARE, "CENTIARE", "ca");
+    public static final UnitType AREA_CENTIARE = new UnitType(QuantityType.AREA, 20, AreaUnit.CENTIARE, "CENTIARE", "ca");
 
     /** Area.HECTARE unit type with code 21. */
-    public static final UnitType AREA_HECTARE =
-            new UnitType(QuantityType.AREA, 21, AreaUnit.HECTARE, "HECTARE", "ha");
+    public static final UnitType AREA_HECTARE = new UnitType(QuantityType.AREA, 21, AreaUnit.HECTARE, "HECTARE", "ha");
 
     /* ==================================================== DENSITY ==================================================== */
 
@@ -344,24 +335,24 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.ELECTRICALCHARGE, 11, ElectricalChargeUnit.STATCOULOMB, "STATCOULOMB", "statC");
 
     /** ElectricalCharge.MILLIAMPERE_HOUR unit type with code 12. */
-    public static final UnitType ELECTRICALCHARGE_MILLIAMPERE_HOUR = new UnitType(QuantityType.ELECTRICALCHARGE, 12,
-            ElectricalChargeUnit.MILLIAMPERE_HOUR, "MILLIAMPERE_HOUR", "mAh");
+    public static final UnitType ELECTRICALCHARGE_MILLIAMPERE_HOUR =
+            new UnitType(QuantityType.ELECTRICALCHARGE, 12, ElectricalChargeUnit.MILLIAMPERE_HOUR, "MILLIAMPERE_HOUR", "mAh");
 
     /** ElectricalCharge.AMPERE_HOUR unit type with code 13. */
     public static final UnitType ELECTRICALCHARGE_AMPERE_HOUR =
             new UnitType(QuantityType.ELECTRICALCHARGE, 13, ElectricalChargeUnit.AMPERE_HOUR, "AMPERE_HOUR", "Ah");
 
     /** ElectricalCharge.KILOAMPERE_HOUR unit type with code 14. */
-    public static final UnitType ELECTRICALCHARGE_KILOAMPERE_HOUR = new UnitType(QuantityType.ELECTRICALCHARGE, 14,
-            ElectricalChargeUnit.KILOAMPERE_HOUR, "KILOAMPERE_HOUR", "kAh");
+    public static final UnitType ELECTRICALCHARGE_KILOAMPERE_HOUR =
+            new UnitType(QuantityType.ELECTRICALCHARGE, 14, ElectricalChargeUnit.KILOAMPERE_HOUR, "KILOAMPERE_HOUR", "kAh");
 
     /** ElectricalCharge.MEGAAMPERE_HOUR unit type with code 15. */
-    public static final UnitType ELECTRICALCHARGE_MEGAAMPERE_HOUR = new UnitType(QuantityType.ELECTRICALCHARGE, 15,
-            ElectricalChargeUnit.MEGAAMPERE_HOUR, "MEGAAMPERE_HOUR", "MAh");
+    public static final UnitType ELECTRICALCHARGE_MEGAAMPERE_HOUR =
+            new UnitType(QuantityType.ELECTRICALCHARGE, 15, ElectricalChargeUnit.MEGAAMPERE_HOUR, "MEGAAMPERE_HOUR", "MAh");
 
     /** ElectricalCharge.MILLIAMPERE_SECOND unit type with code 16. */
-    public static final UnitType ELECTRICALCHARGE_MILLIAMPERE_SECOND = new UnitType(QuantityType.ELECTRICALCHARGE,
-            16, ElectricalChargeUnit.MILLIAMPERE_SECOND, "MILLIAMPERE_SECOND", "mAs");
+    public static final UnitType ELECTRICALCHARGE_MILLIAMPERE_SECOND = new UnitType(QuantityType.ELECTRICALCHARGE, 16,
+            ElectricalChargeUnit.MILLIAMPERE_SECOND, "MILLIAMPERE_SECOND", "mAs");
 
     /* ============================================= ELECTRICALCURRENT ================================================= */
 
@@ -476,8 +467,7 @@ public class UnitType implements Serializable
     /* ==================================================== ENERGY ===================================================== */
 
     /** Energy.JOULE unit type with code 0. */
-    public static final UnitType ENERGY_JOULE =
-            new UnitType(QuantityType.ENERGY, 0, EnergyUnit.JOULE, "JOULE", "J");
+    public static final UnitType ENERGY_JOULE = new UnitType(QuantityType.ENERGY, 0, EnergyUnit.JOULE, "JOULE", "J");
 
     /** Energy.PICOJOULE unit type with code 1. */
     public static final UnitType ENERGY_PICOJOULE =
@@ -540,32 +530,32 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.ENERGY, 15, EnergyUnit.GIGAELECTRONVOLT, "GIGAELECTRONVOLT", "GeV");
 
     /** Energy.TERAELECTRONVOLT unit type with code 16. */
-    public static final UnitType ENERGY_TERAELECTRONVOLT = new UnitType(QuantityType.ENERGY, 16,
-            EnergyUnit.BASE.getUnitByAbbreviation("TeV"), "TERAELECTRONVOLT", "TeV");
+    public static final UnitType ENERGY_TERAELECTRONVOLT =
+            new UnitType(QuantityType.ENERGY, 16, EnergyUnit.BASE.getUnitByAbbreviation("TeV"), "TERAELECTRONVOLT", "TeV");
 
     /** Energy.PETAELECTRONVOLT unit type with code 17. */
-    public static final UnitType ENERGY_PETAELECTRONVOLT = new UnitType(QuantityType.ENERGY, 17,
-            EnergyUnit.BASE.getUnitByAbbreviation("PeV"), "PETAELECTRONVOLT", "PeV");
+    public static final UnitType ENERGY_PETAELECTRONVOLT =
+            new UnitType(QuantityType.ENERGY, 17, EnergyUnit.BASE.getUnitByAbbreviation("PeV"), "PETAELECTRONVOLT", "PeV");
 
     /** Energy.EXAELECTRONVOLT unit type with code 18. */
-    public static final UnitType ENERGY_EXAELECTRONVOLT = new UnitType(QuantityType.ENERGY, 18,
-            EnergyUnit.BASE.getUnitByAbbreviation("EeV"), "EXAELECTRONVOLT", "EeV");
+    public static final UnitType ENERGY_EXAELECTRONVOLT =
+            new UnitType(QuantityType.ENERGY, 18, EnergyUnit.BASE.getUnitByAbbreviation("EeV"), "EXAELECTRONVOLT", "EeV");
 
     /** Energy.WATT_HOUR unit type with code 19. */
     public static final UnitType ENERGY_WATT_HOUR =
             new UnitType(QuantityType.ENERGY, 19, EnergyUnit.WATT_HOUR, "WATT_HOUR", "Wh");
 
     /** Energy.FEMTOWATT_HOUR unit type with code 20. */
-    public static final UnitType ENERGY_FEMTOWATT_HOUR = new UnitType(QuantityType.ENERGY, 20,
-            EnergyUnit.BASE.getUnitByAbbreviation("fWh"), "FEMTOWATT_HOUR", "fWh");
+    public static final UnitType ENERGY_FEMTOWATT_HOUR =
+            new UnitType(QuantityType.ENERGY, 20, EnergyUnit.BASE.getUnitByAbbreviation("fWh"), "FEMTOWATT_HOUR", "fWh");
 
     /** Energy.PICOWATT_HOUR unit type with code 21. */
-    public static final UnitType ENERGY_PICOWATT_HOUR = new UnitType(QuantityType.ENERGY, 21,
-            EnergyUnit.BASE.getUnitByAbbreviation("pWh"), "PICOWATT_HOUR", "pWh");
+    public static final UnitType ENERGY_PICOWATT_HOUR =
+            new UnitType(QuantityType.ENERGY, 21, EnergyUnit.BASE.getUnitByAbbreviation("pWh"), "PICOWATT_HOUR", "pWh");
 
     /** Energy.NANOWATT_HOUR unit type with code 22. */
-    public static final UnitType ENERGY_NANOWATT_HOUR = new UnitType(QuantityType.ENERGY, 22,
-            EnergyUnit.BASE.getUnitByAbbreviation("nWh"), "NANOWATT_HOUR", "nWh");
+    public static final UnitType ENERGY_NANOWATT_HOUR =
+            new UnitType(QuantityType.ENERGY, 22, EnergyUnit.BASE.getUnitByAbbreviation("nWh"), "NANOWATT_HOUR", "nWh");
 
     /** Energy.MICROWATT_HOUR unit type with code 23. */
     public static final UnitType ENERGY_MICROWATT_HOUR =
@@ -596,8 +586,7 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.ENERGY, 29, EnergyUnit.PETAWATT_HOUR, "PETAWATT_HOUR", "PWh");
 
     /** Energy.CALORIE unit type with code 30. */
-    public static final UnitType ENERGY_CALORIE =
-            new UnitType(QuantityType.ENERGY, 30, EnergyUnit.CALORIE, "CALORIE", "cal");
+    public static final UnitType ENERGY_CALORIE = new UnitType(QuantityType.ENERGY, 30, EnergyUnit.CALORIE, "CALORIE", "cal");
 
     /** Energy.KILOCALORIE unit type with code 31. */
     public static final UnitType ENERGY_KILOCALORIE =
@@ -623,8 +612,7 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.ENERGY, 36, EnergyUnit.BTU_ISO, "BTU_ISO", "BTU(ISO)");
 
     /** Energy.BTU_IT unit type with code 37. */
-    public static final UnitType ENERGY_BTU_IT =
-            new UnitType(QuantityType.ENERGY, 37, EnergyUnit.BTU_IT, "BTU_IT", "BTU(IT)");
+    public static final UnitType ENERGY_BTU_IT = new UnitType(QuantityType.ENERGY, 37, EnergyUnit.BTU_IT, "BTU_IT", "BTU(IT)");
 
     /** Energy.STHENE_METER unit type with code 38. */
     public static final UnitType ENERGY_STHENE_METER =
@@ -643,44 +631,44 @@ public class UnitType implements Serializable
     /* ================================================== FLOWVOLUME =================================================== */
 
     /** FlowVolume.CUBIC_METER_PER_SECOND unit type with code 0. */
-    public static final UnitType FLOWVOLUME_CUBIC_METER_PER_SECOND = new UnitType(QuantityType.FLOWVOLUME, 0,
-            FlowVolumeUnit.CUBIC_METER_PER_SECOND, "CUBIC_METER_PER_SECOND", "m3/s");
+    public static final UnitType FLOWVOLUME_CUBIC_METER_PER_SECOND =
+            new UnitType(QuantityType.FLOWVOLUME, 0, FlowVolumeUnit.CUBIC_METER_PER_SECOND, "CUBIC_METER_PER_SECOND", "m3/s");
 
     /** FlowVolume.CUBIC_METER_PER_MINUTE unit type with code 1. */
-    public static final UnitType FLOWVOLUME_CUBIC_METER_PER_MINUTE = new UnitType(QuantityType.FLOWVOLUME, 1,
-            FlowVolumeUnit.CUBIC_METER_PER_MINUTE, "CUBIC_METER_PER_MINUTE", "m3/min");
+    public static final UnitType FLOWVOLUME_CUBIC_METER_PER_MINUTE =
+            new UnitType(QuantityType.FLOWVOLUME, 1, FlowVolumeUnit.CUBIC_METER_PER_MINUTE, "CUBIC_METER_PER_MINUTE", "m3/min");
 
     /** FlowVolume.CUBIC_METER_PER_HOUR unit type with code 2. */
-    public static final UnitType FLOWVOLUME_CUBIC_METER_PER_HOUR = new UnitType(QuantityType.FLOWVOLUME, 2,
-            FlowVolumeUnit.CUBIC_METER_PER_HOUR, "CUBIC_METER_PER_HOUR", "m3/h");
+    public static final UnitType FLOWVOLUME_CUBIC_METER_PER_HOUR =
+            new UnitType(QuantityType.FLOWVOLUME, 2, FlowVolumeUnit.CUBIC_METER_PER_HOUR, "CUBIC_METER_PER_HOUR", "m3/h");
 
     /** FlowVolume.CUBIC_METER_PER_DAY unit type with code 3. */
-    public static final UnitType FLOWVOLUME_CUBIC_METER_PER_DAY = new UnitType(QuantityType.FLOWVOLUME, 3,
-            FlowVolumeUnit.CUBIC_METER_PER_DAY, "CUBIC_METER_PER_DAY", "m3/day");
+    public static final UnitType FLOWVOLUME_CUBIC_METER_PER_DAY =
+            new UnitType(QuantityType.FLOWVOLUME, 3, FlowVolumeUnit.CUBIC_METER_PER_DAY, "CUBIC_METER_PER_DAY", "m3/day");
 
     /** FlowVolume.CUBIC_INCH_PER_SECOND unit type with code 4. */
-    public static final UnitType FLOWVOLUME_CUBIC_INCH_PER_SECOND = new UnitType(QuantityType.FLOWVOLUME, 4,
-            FlowVolumeUnit.CUBIC_INCH_PER_SECOND, "CUBIC_INCH_PER_SECOND", "in3/s");
+    public static final UnitType FLOWVOLUME_CUBIC_INCH_PER_SECOND =
+            new UnitType(QuantityType.FLOWVOLUME, 4, FlowVolumeUnit.CUBIC_INCH_PER_SECOND, "CUBIC_INCH_PER_SECOND", "in3/s");
 
     /** FlowVolume.CUBIC_INCH_PER_MINUTE unit type with code 5. */
-    public static final UnitType FLOWVOLUME_CUBIC_INCH_PER_MINUTE = new UnitType(QuantityType.FLOWVOLUME, 5,
-            FlowVolumeUnit.CUBIC_INCH_PER_MINUTE, "CUBIC_INCH_PER_MINUTE", "in3/min");
+    public static final UnitType FLOWVOLUME_CUBIC_INCH_PER_MINUTE =
+            new UnitType(QuantityType.FLOWVOLUME, 5, FlowVolumeUnit.CUBIC_INCH_PER_MINUTE, "CUBIC_INCH_PER_MINUTE", "in3/min");
 
     /** FlowVolume.CUBIC_FEET_PER_SECOND unit type with code 6. */
-    public static final UnitType FLOWVOLUME_CUBIC_FEET_PER_SECOND = new UnitType(QuantityType.FLOWVOLUME, 6,
-            FlowVolumeUnit.CUBIC_FEET_PER_SECOND, "CUBIC_FEET_PER_SECOND", "ft3/s");
+    public static final UnitType FLOWVOLUME_CUBIC_FEET_PER_SECOND =
+            new UnitType(QuantityType.FLOWVOLUME, 6, FlowVolumeUnit.CUBIC_FEET_PER_SECOND, "CUBIC_FEET_PER_SECOND", "ft3/s");
 
     /** FlowVolume.CUBIC_FEET_PER_MINUTE unit type with code 7. */
-    public static final UnitType FLOWVOLUME_CUBIC_FEET_PER_MINUTE = new UnitType(QuantityType.FLOWVOLUME, 7,
-            FlowVolumeUnit.CUBIC_FEET_PER_MINUTE, "CUBIC_FEET_PER_MINUTE", "ft3/min");
+    public static final UnitType FLOWVOLUME_CUBIC_FEET_PER_MINUTE =
+            new UnitType(QuantityType.FLOWVOLUME, 7, FlowVolumeUnit.CUBIC_FEET_PER_MINUTE, "CUBIC_FEET_PER_MINUTE", "ft3/min");
 
     /** FlowVolume.GALLON_PER_SECOND unit type with code 8. */
-    public static final UnitType FLOWVOLUME_GALLON_PER_SECOND = new UnitType(QuantityType.FLOWVOLUME, 8,
-            FlowVolumeUnit.GALLON_US_PER_SECOND, "GALLON_PER_SECOND", "gal/s");
+    public static final UnitType FLOWVOLUME_GALLON_PER_SECOND =
+            new UnitType(QuantityType.FLOWVOLUME, 8, FlowVolumeUnit.GALLON_US_PER_SECOND, "GALLON_PER_SECOND", "gal/s");
 
     /** FlowVolume.GALLON_PER_MINUTE unit type with code 9. */
-    public static final UnitType FLOWVOLUME_GALLON_PER_MINUTE = new UnitType(QuantityType.FLOWVOLUME, 9,
-            FlowVolumeUnit.GALLON_US_PER_MINUTE, "GALLON_PER_MINUTE", "gal/min");
+    public static final UnitType FLOWVOLUME_GALLON_PER_MINUTE =
+            new UnitType(QuantityType.FLOWVOLUME, 9, FlowVolumeUnit.GALLON_US_PER_MINUTE, "GALLON_PER_MINUTE", "gal/min");
 
     /** FlowVolume.GALLON_PER_HOUR unit type with code 10. */
     public static final UnitType FLOWVOLUME_GALLON_PER_HOUR =
@@ -709,8 +697,7 @@ public class UnitType implements Serializable
     /* ==================================================== FORCE ====================================================== */
 
     /** Force.NEWTON unit type with code 0. */
-    public static final UnitType FORCE_NEWTON =
-            new UnitType(QuantityType.FORCE, 0, ForceUnit.NEWTON, "NEWTON", "N");
+    public static final UnitType FORCE_NEWTON = new UnitType(QuantityType.FORCE, 0, ForceUnit.NEWTON, "NEWTON", "N");
 
     /** Force.KILOGRAM_FORCE unit type with code 1. */
     public static final UnitType FORCE_KILOGRAM_FORCE =
@@ -725,21 +712,18 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.FORCE, 3, ForceUnit.POUND_FORCE, "POUND_FORCE", "lbf");
 
     /** Force.TON_FORCE unit type with code 4. */
-    public static final UnitType FORCE_TON_FORCE =
-            new UnitType(QuantityType.FORCE, 4, ForceUnit.TON_FORCE, "TON_FORCE", "tnf");
+    public static final UnitType FORCE_TON_FORCE = new UnitType(QuantityType.FORCE, 4, ForceUnit.TON_FORCE, "TON_FORCE", "tnf");
 
     /** Force.DYNE unit type with code 5. */
     public static final UnitType FORCE_DYNE = new UnitType(QuantityType.FORCE, 5, ForceUnit.DYNE, "DYNE", "dyne");
 
     /** Force.STHENE unit type with code 6. */
-    public static final UnitType FORCE_STHENE =
-            new UnitType(QuantityType.FORCE, 6, ForceUnit.STHENE, "STHENE", "sth");
+    public static final UnitType FORCE_STHENE = new UnitType(QuantityType.FORCE, 6, ForceUnit.STHENE, "STHENE", "sth");
 
     /* ================================================== FREQUENCY ==================================================== */
 
     /** Frequency.HERTZ unit type with code 0. */
-    public static final UnitType FREQUENCY_HERTZ =
-            new UnitType(QuantityType.FREQUENCY, 0, FrequencyUnit.HERTZ, "HERTZ", "Hz");
+    public static final UnitType FREQUENCY_HERTZ = new UnitType(QuantityType.FREQUENCY, 0, FrequencyUnit.HERTZ, "HERTZ", "Hz");
 
     /** Frequency.KILOHERTZ unit type with code 1. */
     public static final UnitType FREQUENCY_KILOHERTZ =
@@ -762,20 +746,20 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.FREQUENCY, 5, FrequencyUnit.PER_SECOND, "PER_SECOND", "1/s");
 
     /** Frequency.PER_ATTOSECOND unit type with code 6. */
-    public static final UnitType FREQUENCY_PER_ATTOSECOND = new UnitType(QuantityType.FREQUENCY, 6,
-            FrequencyUnit.BASE.getUnitByAbbreviation("/as"), "PER_ATTOSECOND", "1/as");
+    public static final UnitType FREQUENCY_PER_ATTOSECOND =
+            new UnitType(QuantityType.FREQUENCY, 6, FrequencyUnit.BASE.getUnitByAbbreviation("/as"), "PER_ATTOSECOND", "1/as");
 
     /** Frequency.PER_FEMTOSECOND unit type with code 7. */
-    public static final UnitType FREQUENCY_PER_FEMTOSECOND = new UnitType(QuantityType.FREQUENCY, 7,
-            FrequencyUnit.BASE.getUnitByAbbreviation("/fs"), "PER_FEMTOSECOND", "1/fs");
+    public static final UnitType FREQUENCY_PER_FEMTOSECOND =
+            new UnitType(QuantityType.FREQUENCY, 7, FrequencyUnit.BASE.getUnitByAbbreviation("/fs"), "PER_FEMTOSECOND", "1/fs");
 
     /** Frequency.PER_PICOSECOND unit type with code 8. */
-    public static final UnitType FREQUENCY_PER_PICOSECOND = new UnitType(QuantityType.FREQUENCY, 8,
-            FrequencyUnit.BASE.getUnitByAbbreviation("/ps"), "PER_PICOSECOND", "1/ps");
+    public static final UnitType FREQUENCY_PER_PICOSECOND =
+            new UnitType(QuantityType.FREQUENCY, 8, FrequencyUnit.BASE.getUnitByAbbreviation("/ps"), "PER_PICOSECOND", "1/ps");
 
     /** Frequency.PER_NANOSECOND unit type with code 9. */
-    public static final UnitType FREQUENCY_PER_NANOSECOND = new UnitType(QuantityType.FREQUENCY, 9,
-            FrequencyUnit.BASE.getUnitByAbbreviation("/ns"), "PER_NANOSECOND", "1/ns");
+    public static final UnitType FREQUENCY_PER_NANOSECOND =
+            new UnitType(QuantityType.FREQUENCY, 9, FrequencyUnit.BASE.getUnitByAbbreviation("/ns"), "PER_NANOSECOND", "1/ns");
 
     /** Frequency.PER_MICROSECOND unit type with code 10. */
     public static final UnitType FREQUENCY_PER_MICROSECOND =
@@ -802,14 +786,12 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.FREQUENCY, 15, FrequencyUnit.PER_WEEK, "PER_WEEK", "1/wk");
 
     /** Frequency.RPM unit type with code 16. */
-    public static final UnitType FREQUENCY_RPM =
-            new UnitType(QuantityType.FREQUENCY, 16, FrequencyUnit.RPM, "RPM", "rpm");
+    public static final UnitType FREQUENCY_RPM = new UnitType(QuantityType.FREQUENCY, 16, FrequencyUnit.RPM, "RPM", "rpm");
 
     /* ==================================================== LENGTH ===================================================== */
 
     /** Length.METER unit type with code 0. */
-    public static final UnitType LENGTH_METER =
-            new UnitType(QuantityType.LENGTH, 0, LengthUnit.METER, "METER", "m");
+    public static final UnitType LENGTH_METER = new UnitType(QuantityType.LENGTH, 0, LengthUnit.METER, "METER", "m");
 
     /** Length.ATTOMETER unit type with code 1. */
     public static final UnitType LENGTH_ATTOMETER =
@@ -880,22 +862,19 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.LENGTH, 18, LengthUnit.ASTRONOMICAL_UNIT, "ASTRONOMICAL_UNIT", "au");
 
     /** Length.PARSEC unit type with code 19. */
-    public static final UnitType LENGTH_PARSEC =
-            new UnitType(QuantityType.LENGTH, 19, LengthUnit.PARSEC, "PARSEC", "pc");
+    public static final UnitType LENGTH_PARSEC = new UnitType(QuantityType.LENGTH, 19, LengthUnit.PARSEC, "PARSEC", "pc");
 
     /** Length.LIGHTYEAR unit type with code 20. */
     public static final UnitType LENGTH_LIGHTYEAR =
             new UnitType(QuantityType.LENGTH, 20, LengthUnit.LIGHTYEAR, "LIGHTYEAR", "ly");
 
     /** Length.ANGSTROM unit type with code 21. */
-    public static final UnitType LENGTH_ANGSTROM =
-            new UnitType(QuantityType.LENGTH, 21, LengthUnit.ANGSTROM, "ANGSTROM", "Å");
+    public static final UnitType LENGTH_ANGSTROM = new UnitType(QuantityType.LENGTH, 21, LengthUnit.ANGSTROM, "ANGSTROM", "Å");
 
     /* =================================================== POSITION ==================================================== */
 
     /** Position.METER unit type with code 0. */
-    public static final UnitType POSITION_METER =
-            new UnitType(QuantityType.POSITION, 0, PositionUnit.METER, "METER", "m");
+    public static final UnitType POSITION_METER = new UnitType(QuantityType.POSITION, 0, PositionUnit.METER, "METER", "m");
 
     /** Position.ATTOMETER unit type with code 1. */
     public static final UnitType POSITION_ATTOMETER =
@@ -946,20 +925,16 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.POSITION, 12, PositionUnit.BASE.getUnitByAbbreviation("Mm"), "MEGAMETER", "Mm");
 
     /** Position.INCH unit type with code 13. */
-    public static final UnitType POSITION_INCH =
-            new UnitType(QuantityType.POSITION, 13, PositionUnit.INCH, "INCH", "in");
+    public static final UnitType POSITION_INCH = new UnitType(QuantityType.POSITION, 13, PositionUnit.INCH, "INCH", "in");
 
     /** Position.FOOT unit type with code 14. */
-    public static final UnitType POSITION_FOOT =
-            new UnitType(QuantityType.POSITION, 14, PositionUnit.FOOT, "FOOT", "ft");
+    public static final UnitType POSITION_FOOT = new UnitType(QuantityType.POSITION, 14, PositionUnit.FOOT, "FOOT", "ft");
 
     /** Position.YARD unit type with code 15. */
-    public static final UnitType POSITION_YARD =
-            new UnitType(QuantityType.POSITION, 15, PositionUnit.YARD, "YARD", "yd");
+    public static final UnitType POSITION_YARD = new UnitType(QuantityType.POSITION, 15, PositionUnit.YARD, "YARD", "yd");
 
     /** Position.MILE unit type with code 16. */
-    public static final UnitType POSITION_MILE =
-            new UnitType(QuantityType.POSITION, 16, PositionUnit.MILE, "MILE", "mi");
+    public static final UnitType POSITION_MILE = new UnitType(QuantityType.POSITION, 16, PositionUnit.MILE, "MILE", "mi");
 
     /** Position.NAUTICAL_MILE unit type with code 17. */
     public static final UnitType POSITION_NAUTICAL_MILE =
@@ -970,8 +945,7 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.POSITION, 18, PositionUnit.ASTRONOMICAL_UNIT, "ASTRONOMICAL_UNIT", "au");
 
     /** Position.PARSEC unit type with code 19. */
-    public static final UnitType POSITION_PARSEC =
-            new UnitType(QuantityType.POSITION, 19, PositionUnit.PARSEC, "PARSEC", "pc");
+    public static final UnitType POSITION_PARSEC = new UnitType(QuantityType.POSITION, 19, PositionUnit.PARSEC, "PARSEC", "pc");
 
     /** Position.LIGHTYEAR unit type with code 20. */
     public static final UnitType POSITION_LIGHTYEAR =
@@ -1052,8 +1026,8 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.LINEARDENSITY, 16, LinearDensityUnit.PER_MILE, "PER_MILE", "1/mi");
 
     /** LinearDensity.PER_NAUTICAL_MILE unit type with code 17. */
-    public static final UnitType LINEARDENSITY_PER_NAUTICAL_MILE = new UnitType(QuantityType.LINEARDENSITY, 17,
-            LinearDensityUnit.PER_NAUTICAL_MILE, "PER_NAUTICAL_MILE", "1/NM");
+    public static final UnitType LINEARDENSITY_PER_NAUTICAL_MILE =
+            new UnitType(QuantityType.LINEARDENSITY, 17, LinearDensityUnit.PER_NAUTICAL_MILE, "PER_NAUTICAL_MILE", "1/NM");
 
     /** LinearDensity.PER_ASTRONOMICAL_UNIT unit type with code 18. */
     public static final UnitType LINEARDENSITY_PER_ASTRONOMICAL_UNIT = new UnitType(QuantityType.LINEARDENSITY, 18,
@@ -1074,8 +1048,7 @@ public class UnitType implements Serializable
     /* ===================================================== MASS ====================================================== */
 
     /** Mass.KILOGRAM unit type with code 0. */
-    public static final UnitType MASS_KILOGRAM =
-            new UnitType(QuantityType.MASS, 0, MassUnit.KILOGRAM, "KILOGRAM", "kg");
+    public static final UnitType MASS_KILOGRAM = new UnitType(QuantityType.MASS, 0, MassUnit.KILOGRAM, "KILOGRAM", "kg");
 
     /** Mass.FEMTOGRAM unit type with code 1. */
     public static final UnitType MASS_FEMTOGRAM =
@@ -1090,12 +1063,10 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.MASS, 3, MassUnit.BASE.getUnitByAbbreviation("ng"), "NANOGRAM", "ng");
 
     /** Mass.MICROGRAM unit type with code 4. */
-    public static final UnitType MASS_MICROGRAM =
-            new UnitType(QuantityType.MASS, 4, MassUnit.MICROGRAM, "MICROGRAM", "μg");
+    public static final UnitType MASS_MICROGRAM = new UnitType(QuantityType.MASS, 4, MassUnit.MICROGRAM, "MICROGRAM", "μg");
 
     /** Mass.MILLIGRAM unit type with code 5. */
-    public static final UnitType MASS_MILLIGRAM =
-            new UnitType(QuantityType.MASS, 5, MassUnit.MILLIGRAM, "MILLIGRAM", "mg");
+    public static final UnitType MASS_MILLIGRAM = new UnitType(QuantityType.MASS, 5, MassUnit.MILLIGRAM, "MILLIGRAM", "mg");
 
     /** Mass.GRAM unit type with code 6. */
     public static final UnitType MASS_GRAM = new UnitType(QuantityType.MASS, 6, MassUnit.GRAM, "GRAM", "kg");
@@ -1190,32 +1161,25 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.POWER, 3, PowerUnit.BASE.getUnitByAbbreviation("nW"), "NANOWATT", "nW");
 
     /** Power.MICROWATT unit type with code 4. */
-    public static final UnitType POWER_MICROWATT =
-            new UnitType(QuantityType.POWER, 4, PowerUnit.MICROWATT, "MICROWATT", "μW");
+    public static final UnitType POWER_MICROWATT = new UnitType(QuantityType.POWER, 4, PowerUnit.MICROWATT, "MICROWATT", "μW");
 
     /** Power.MILLIWATT unit type with code 5. */
-    public static final UnitType POWER_MILLIWATT =
-            new UnitType(QuantityType.POWER, 5, PowerUnit.MILLIWATT, "MILLIWATT", "mW");
+    public static final UnitType POWER_MILLIWATT = new UnitType(QuantityType.POWER, 5, PowerUnit.MILLIWATT, "MILLIWATT", "mW");
 
     /** Power.KILOWATT unit type with code 6. */
-    public static final UnitType POWER_KILOWATT =
-            new UnitType(QuantityType.POWER, 6, PowerUnit.KILOWATT, "KILOWATT", "kW");
+    public static final UnitType POWER_KILOWATT = new UnitType(QuantityType.POWER, 6, PowerUnit.KILOWATT, "KILOWATT", "kW");
 
     /** Power.MEGAWATT unit type with code 7. */
-    public static final UnitType POWER_MEGAWATT =
-            new UnitType(QuantityType.POWER, 7, PowerUnit.MEGAWATT, "MEGAWATT", "MW");
+    public static final UnitType POWER_MEGAWATT = new UnitType(QuantityType.POWER, 7, PowerUnit.MEGAWATT, "MEGAWATT", "MW");
 
     /** Power.GIGAWATT unit type with code 8. */
-    public static final UnitType POWER_GIGAWATT =
-            new UnitType(QuantityType.POWER, 8, PowerUnit.GIGAWATT, "GIGAWATT", "GW");
+    public static final UnitType POWER_GIGAWATT = new UnitType(QuantityType.POWER, 8, PowerUnit.GIGAWATT, "GIGAWATT", "GW");
 
     /** Power.TERAWATT unit type with code 9. */
-    public static final UnitType POWER_TERAWATT =
-            new UnitType(QuantityType.POWER, 9, PowerUnit.TERAWATT, "TERAWATT", "TW");
+    public static final UnitType POWER_TERAWATT = new UnitType(QuantityType.POWER, 9, PowerUnit.TERAWATT, "TERAWATT", "TW");
 
     /** Power.PETAWATT unit type with code 10. */
-    public static final UnitType POWER_PETAWATT =
-            new UnitType(QuantityType.POWER, 10, PowerUnit.PETAWATT, "PETAWATT", "PW");
+    public static final UnitType POWER_PETAWATT = new UnitType(QuantityType.POWER, 10, PowerUnit.PETAWATT, "PETAWATT", "PW");
 
     /** Power.ERG_PER_SECOND unit type with code 11. */
     public static final UnitType POWER_ERG_PER_SECOND =
@@ -1230,22 +1194,21 @@ public class UnitType implements Serializable
             PowerUnit.FOOT_POUND_FORCE_PER_MINUTE, "FOOT_POUND_FORCE_PER_MINUTE", "ft.lbf/min");
 
     /** Power.FOOT_POUND_FORCE_PER_HOUR unit type with code 14. */
-    public static final UnitType POWER_FOOT_POUND_FORCE_PER_HOUR = new UnitType(QuantityType.POWER, 14,
-            PowerUnit.FOOT_POUND_FORCE_PER_HOUR, "FOOT_POUND_FORCE_PER_HOUR", "ft.lbf/h");
+    public static final UnitType POWER_FOOT_POUND_FORCE_PER_HOUR =
+            new UnitType(QuantityType.POWER, 14, PowerUnit.FOOT_POUND_FORCE_PER_HOUR, "FOOT_POUND_FORCE_PER_HOUR", "ft.lbf/h");
 
     /** Power.HORSEPOWER_METRIC unit type with code 15. */
     public static final UnitType POWER_HORSEPOWER_METRIC =
             new UnitType(QuantityType.POWER, 15, PowerUnit.HORSEPOWER_METRIC, "HORSEPOWER_METRIC", "hp");
 
     /** Power.STHENE_METER_PER_SECOND unit type with code 16. */
-    public static final UnitType POWER_STHENE_METER_PER_SECOND = new UnitType(QuantityType.POWER, 16,
-            PowerUnit.STHENE_METER_PER_SECOND, "STHENE_METER_PER_SECOND", "sth/s");
+    public static final UnitType POWER_STHENE_METER_PER_SECOND =
+            new UnitType(QuantityType.POWER, 16, PowerUnit.STHENE_METER_PER_SECOND, "STHENE_METER_PER_SECOND", "sth/s");
 
     /* ==================================================== PRESSURE =================================================== */
 
     /** Pressure.PASCAL unit type with code 0. */
-    public static final UnitType PRESSURE_PASCAL =
-            new UnitType(QuantityType.PRESSURE, 0, PressureUnit.PASCAL, "PASCAL", "Pa");
+    public static final UnitType PRESSURE_PASCAL = new UnitType(QuantityType.PRESSURE, 0, PressureUnit.PASCAL, "PASCAL", "Pa");
 
     /** Pressure.HECTOPASCAL unit type with code 1. */
     public static final UnitType PRESSURE_HECTOPASCAL =
@@ -1268,12 +1231,10 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.PRESSURE, 5, PressureUnit.MILLIBAR, "MILLIBAR", "mbar");
 
     /** Pressure.BAR unit type with code 6. */
-    public static final UnitType PRESSURE_BAR =
-            new UnitType(QuantityType.PRESSURE, 6, PressureUnit.BAR, "BAR", "bar");
+    public static final UnitType PRESSURE_BAR = new UnitType(QuantityType.PRESSURE, 6, PressureUnit.BAR, "BAR", "bar");
 
     /** Pressure.BARYE unit type with code 7. */
-    public static final UnitType PRESSURE_BARYE =
-            new UnitType(QuantityType.PRESSURE, 7, PressureUnit.BARYE, "BARYE", "Ba");
+    public static final UnitType PRESSURE_BARYE = new UnitType(QuantityType.PRESSURE, 7, PressureUnit.BARYE, "BARYE", "Ba");
 
     /** Pressure.MILLIMETER_MERCURY unit type with code 8. */
     public static final UnitType PRESSURE_MILLIMETER_MERCURY =
@@ -1296,20 +1257,18 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.PRESSURE, 12, PressureUnit.KGF_PER_SQUARE_MM, "KGF_PER_SQUARE_MM", "kgf/mm2");
 
     /** Pressure.PIEZE unit type with code 13. */
-    public static final UnitType PRESSURE_PIEZE =
-            new UnitType(QuantityType.PRESSURE, 13, PressureUnit.PIEZE, "PIEZE", "pz");
+    public static final UnitType PRESSURE_PIEZE = new UnitType(QuantityType.PRESSURE, 13, PressureUnit.PIEZE, "PIEZE", "pz");
 
     /** Pressure.POUND_PER_SQUARE_INCH unit type with code 14. */
-    public static final UnitType PRESSURE_POUND_PER_SQUARE_INCH = new UnitType(QuantityType.PRESSURE, 14,
-            PressureUnit.POUND_PER_SQUARE_INCH, "POUND_PER_SQUARE_INCH", "lb/in2");
+    public static final UnitType PRESSURE_POUND_PER_SQUARE_INCH =
+            new UnitType(QuantityType.PRESSURE, 14, PressureUnit.POUND_PER_SQUARE_INCH, "POUND_PER_SQUARE_INCH", "lb/in2");
 
     /** Pressure.POUND_PER_SQUARE_FOOT unit type with code 15. */
-    public static final UnitType PRESSURE_POUND_PER_SQUARE_FOOT = new UnitType(QuantityType.PRESSURE, 15,
-            PressureUnit.POUND_PER_SQUARE_FOOT, "POUND_PER_SQUARE_FOOT", "lb/ft2");
+    public static final UnitType PRESSURE_POUND_PER_SQUARE_FOOT =
+            new UnitType(QuantityType.PRESSURE, 15, PressureUnit.POUND_PER_SQUARE_FOOT, "POUND_PER_SQUARE_FOOT", "lb/ft2");
 
     /** Pressure.TORR unit type with code 16. */
-    public static final UnitType PRESSURE_TORR =
-            new UnitType(QuantityType.PRESSURE, 16, PressureUnit.TORR, "TORR", "torr");
+    public static final UnitType PRESSURE_TORR = new UnitType(QuantityType.PRESSURE, 16, PressureUnit.TORR, "TORR", "torr");
 
     /* ==================================================== SPEED ====================================================== */
 
@@ -1397,26 +1356,25 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.ABSOLUTETEMPERATURE, 0, AbsoluteTemperatureUnit.KELVIN, "KELVIN", "K");
 
     /** AbsoluteTemperature.DEGREE_CELSIUS unit type with code 1. */
-    public static final UnitType ABSOLUTETEMPERATURE_DEGREE_CELSIUS = new UnitType(QuantityType.ABSOLUTETEMPERATURE,
-            1, AbsoluteTemperatureUnit.DEGREE_CELSIUS, "DEGREE_CELSIUS", "OC");
+    public static final UnitType ABSOLUTETEMPERATURE_DEGREE_CELSIUS =
+            new UnitType(QuantityType.ABSOLUTETEMPERATURE, 1, AbsoluteTemperatureUnit.DEGREE_CELSIUS, "DEGREE_CELSIUS", "OC");
 
     /** AbsoluteTemperature.DEGREE_FAHRENHEIT unit type with code 2. */
-    public static final UnitType ABSOLUTETEMPERATURE_DEGREE_FAHRENHEIT = new UnitType(
-            QuantityType.ABSOLUTETEMPERATURE, 2, AbsoluteTemperatureUnit.DEGREE_FAHRENHEIT, "DEGREE_FAHRENHEIT", "OF");
+    public static final UnitType ABSOLUTETEMPERATURE_DEGREE_FAHRENHEIT = new UnitType(QuantityType.ABSOLUTETEMPERATURE, 2,
+            AbsoluteTemperatureUnit.DEGREE_FAHRENHEIT, "DEGREE_FAHRENHEIT", "OF");
 
     /** AbsoluteTemperature.DEGREE_RANKINE unit type with code 3. */
-    public static final UnitType ABSOLUTETEMPERATURE_DEGREE_RANKINE = new UnitType(QuantityType.ABSOLUTETEMPERATURE,
-            3, AbsoluteTemperatureUnit.DEGREE_RANKINE, "DEGREE_RANKINE", "OR");
+    public static final UnitType ABSOLUTETEMPERATURE_DEGREE_RANKINE =
+            new UnitType(QuantityType.ABSOLUTETEMPERATURE, 3, AbsoluteTemperatureUnit.DEGREE_RANKINE, "DEGREE_RANKINE", "OR");
 
     /** AbsoluteTemperature.DEGREE_REAUMUR unit type with code 4. */
-    public static final UnitType ABSOLUTETEMPERATURE_DEGREE_REAUMUR = new UnitType(QuantityType.ABSOLUTETEMPERATURE,
-            4, AbsoluteTemperatureUnit.DEGREE_REAUMUR, "DEGREE_REAUMUR", "ORé");
+    public static final UnitType ABSOLUTETEMPERATURE_DEGREE_REAUMUR =
+            new UnitType(QuantityType.ABSOLUTETEMPERATURE, 4, AbsoluteTemperatureUnit.DEGREE_REAUMUR, "DEGREE_REAUMUR", "ORé");
 
     /* =================================================== DURATION ==================================================== */
 
     /** Duration.SECOND unit type with code 0. */
-    public static final UnitType DURATION_SECOND =
-            new UnitType(QuantityType.DURATION, 0, DurationUnit.SECOND, "SECOND", "s");
+    public static final UnitType DURATION_SECOND = new UnitType(QuantityType.DURATION, 0, DurationUnit.SECOND, "SECOND", "s");
 
     /** Duration.ATTOSECOND unit type with code 1. */
     public static final UnitType DURATION_ATTOSECOND =
@@ -1443,26 +1401,21 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.DURATION, 6, DurationUnit.MILLISECOND, "MILLISECOND", "ms");
 
     /** Duration.MINUTE unit type with code 7. */
-    public static final UnitType DURATION_MINUTE =
-            new UnitType(QuantityType.DURATION, 7, DurationUnit.MINUTE, "MINUTE", "min");
+    public static final UnitType DURATION_MINUTE = new UnitType(QuantityType.DURATION, 7, DurationUnit.MINUTE, "MINUTE", "min");
 
     /** Duration.HOUR unit type with code 8. */
-    public static final UnitType DURATION_HOUR =
-            new UnitType(QuantityType.DURATION, 8, DurationUnit.HOUR, "HOUR", "hr");
+    public static final UnitType DURATION_HOUR = new UnitType(QuantityType.DURATION, 8, DurationUnit.HOUR, "HOUR", "hr");
 
     /** Duration.DAY unit type with code 9. */
-    public static final UnitType DURATION_DAY =
-            new UnitType(QuantityType.DURATION, 9, DurationUnit.DAY, "DAY", "day");
+    public static final UnitType DURATION_DAY = new UnitType(QuantityType.DURATION, 9, DurationUnit.DAY, "DAY", "day");
 
     /** Duration.WEEK unit type with code 10. */
-    public static final UnitType DURATION_WEEK =
-            new UnitType(QuantityType.DURATION, 10, DurationUnit.WEEK, "WEEK", "wk");
+    public static final UnitType DURATION_WEEK = new UnitType(QuantityType.DURATION, 10, DurationUnit.WEEK, "WEEK", "wk");
 
     /* ===================================================== TIME ====================================================== */
 
     /** Time.BASE_SECOND unit type with code 0. */
-    public static final UnitType TIME_BASE_SECOND =
-            new UnitType(QuantityType.TIME, 0, TimeUnit.BASE_SECOND, "SECOND", "s");
+    public static final UnitType TIME_BASE_SECOND = new UnitType(QuantityType.TIME, 0, TimeUnit.BASE_SECOND, "SECOND", "s");
 
     /** Time.BASE_MICROSECOND unit type with code 1. */
     public static final UnitType TIME_BASE_MICROSECOND =
@@ -1473,20 +1426,16 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.TIME, 2, TimeUnit.BASE_MILLISECOND, "MILLISECOND", "ms");
 
     /** Time.BASE_MINUTE unit type with code 3. */
-    public static final UnitType TIME_BASE_MINUTE =
-            new UnitType(QuantityType.TIME, 3, TimeUnit.BASE_MINUTE, "MINUTE", "min");
+    public static final UnitType TIME_BASE_MINUTE = new UnitType(QuantityType.TIME, 3, TimeUnit.BASE_MINUTE, "MINUTE", "min");
 
     /** Time.BASE_HOUR unit type with code 4. */
-    public static final UnitType TIME_BASE_HOUR =
-            new UnitType(QuantityType.TIME, 4, TimeUnit.BASE_HOUR, "HOUR", "hr");
+    public static final UnitType TIME_BASE_HOUR = new UnitType(QuantityType.TIME, 4, TimeUnit.BASE_HOUR, "HOUR", "hr");
 
     /** Time.BASE_DAY unit type with code 5. */
-    public static final UnitType TIME_BASE_DAY =
-            new UnitType(QuantityType.TIME, 5, TimeUnit.BASE_DAY, "DAY", "day");
+    public static final UnitType TIME_BASE_DAY = new UnitType(QuantityType.TIME, 5, TimeUnit.BASE_DAY, "DAY", "day");
 
     /** Time.BASE_WEEK unit type with code 6. */
-    public static final UnitType TIME_BASE_WEEK =
-            new UnitType(QuantityType.TIME, 6, TimeUnit.BASE_WEEK, "WEEK", "wk");
+    public static final UnitType TIME_BASE_WEEK = new UnitType(QuantityType.TIME, 6, TimeUnit.BASE_WEEK, "WEEK", "wk");
 
     /** Time.EPOCH_SECOND unit type with code 7. */
     public static final UnitType TIME_EPOCH_SECOND =
@@ -1549,24 +1498,24 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.VOLUME, 0, VolumeUnit.CUBIC_METER, "CUBIC_METER", "m3");
 
     /** Volume.CUBIC_ATTOMETER unit type with code 1. */
-    public static final UnitType VOLUME_CUBIC_ATTOMETER = new UnitType(QuantityType.VOLUME, 1,
-            VolumeUnit.BASE.getUnitByAbbreviation("am^3"), "CUBIC_ATTOMETER", "am3");
+    public static final UnitType VOLUME_CUBIC_ATTOMETER =
+            new UnitType(QuantityType.VOLUME, 1, VolumeUnit.BASE.getUnitByAbbreviation("am^3"), "CUBIC_ATTOMETER", "am3");
 
     /** Volume.CUBIC_FEMTOMETER unit type with code 2. */
-    public static final UnitType VOLUME_CUBIC_FEMTOMETER = new UnitType(QuantityType.VOLUME, 2,
-            VolumeUnit.BASE.getUnitByAbbreviation("fm^3"), "CUBIC_FEMTOMETER", "fm3");
+    public static final UnitType VOLUME_CUBIC_FEMTOMETER =
+            new UnitType(QuantityType.VOLUME, 2, VolumeUnit.BASE.getUnitByAbbreviation("fm^3"), "CUBIC_FEMTOMETER", "fm3");
 
     /** Volume.CUBIC_PICOMETER unit type with code 3. */
-    public static final UnitType VOLUME_CUBIC_PICOMETER = new UnitType(QuantityType.VOLUME, 3,
-            VolumeUnit.BASE.getUnitByAbbreviation("pm^3"), "CUBIC_PICOMETER", "pm3");
+    public static final UnitType VOLUME_CUBIC_PICOMETER =
+            new UnitType(QuantityType.VOLUME, 3, VolumeUnit.BASE.getUnitByAbbreviation("pm^3"), "CUBIC_PICOMETER", "pm3");
 
     /** Volume.CUBIC_NANOMETER unit type with code 4. */
-    public static final UnitType VOLUME_CUBIC_NANOMETER = new UnitType(QuantityType.VOLUME, 4,
-            VolumeUnit.BASE.getUnitByAbbreviation("nm^3"), "CUBIC_NANOMETER", "nm3");
+    public static final UnitType VOLUME_CUBIC_NANOMETER =
+            new UnitType(QuantityType.VOLUME, 4, VolumeUnit.BASE.getUnitByAbbreviation("nm^3"), "CUBIC_NANOMETER", "nm3");
 
     /** Volume.CUBIC_MICROMETER unit type with code 5. */
-    public static final UnitType VOLUME_CUBIC_MICROMETER = new UnitType(QuantityType.VOLUME, 5,
-            VolumeUnit.BASE.getUnitByAbbreviation("μm^3"), "CUBIC_MICROMETER", "μm3");
+    public static final UnitType VOLUME_CUBIC_MICROMETER =
+            new UnitType(QuantityType.VOLUME, 5, VolumeUnit.BASE.getUnitByAbbreviation("μm^3"), "CUBIC_MICROMETER", "μm3");
 
     /** Volume.CUBIC_MILLIMETER unit type with code 6. */
     public static final UnitType VOLUME_CUBIC_MILLIMETER =
@@ -1581,8 +1530,8 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.VOLUME, 8, VolumeUnit.CUBIC_DECIMETER, "CUBIC_DECIMETER", "dm3");
 
     /** Volume.CUBIC_DEKAMETER unit type with code 9. */
-    public static final UnitType VOLUME_CUBIC_DEKAMETER = new UnitType(QuantityType.VOLUME, 9,
-            VolumeUnit.BASE.getUnitByAbbreviation("dam^3"), "CUBIC_DEKAMETER", "dam3");
+    public static final UnitType VOLUME_CUBIC_DEKAMETER =
+            new UnitType(QuantityType.VOLUME, 9, VolumeUnit.BASE.getUnitByAbbreviation("dam^3"), "CUBIC_DEKAMETER", "dam3");
 
     /** Volume.CUBIC_HECTOMETER unit type with code 10. */
     public static final UnitType VOLUME_CUBIC_HECTOMETER =
@@ -1593,8 +1542,8 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.VOLUME, 11, VolumeUnit.CUBIC_KILOMETER, "CUBIC_KILOMETER", "km3");
 
     /** Volume.CUBIC_MEGAMETER unit type with code 12. */
-    public static final UnitType VOLUME_CUBIC_MEGAMETER = new UnitType(QuantityType.VOLUME, 12,
-            VolumeUnit.BASE.getUnitByAbbreviation("Mm^3"), "CUBIC_MEGAMETER", "Mm3");
+    public static final UnitType VOLUME_CUBIC_MEGAMETER =
+            new UnitType(QuantityType.VOLUME, 12, VolumeUnit.BASE.getUnitByAbbreviation("Mm^3"), "CUBIC_MEGAMETER", "Mm3");
 
     /** Volume.CUBIC_INCH unit type with code 13. */
     public static final UnitType VOLUME_CUBIC_INCH =
@@ -1613,8 +1562,7 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.VOLUME, 16, VolumeUnit.CUBIC_MILE, "CUBIC_MILE", "mi3");
 
     /** Volume.LITER unit type with code 17. */
-    public static final UnitType VOLUME_LITER =
-            new UnitType(QuantityType.VOLUME, 17, VolumeUnit.LITER, "LITER", "l");
+    public static final UnitType VOLUME_LITER = new UnitType(QuantityType.VOLUME, 17, VolumeUnit.LITER, "LITER", "l");
 
     /** Volume.GALLON_IMP unit type with code 18. */
     public static final UnitType VOLUME_GALLON_IMP =
@@ -1721,20 +1669,20 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.ELECTRICALCAPACITANCE, 0, ElectricalCapacitanceUnit.FARAD, "FARAD", "F");
 
     /** ElectricalCapacitance.MILLIFARAD unit type with code 1. */
-    public static final UnitType ELECTRICALCAPACITANCE_MILLIFARAD = new UnitType(QuantityType.ELECTRICALCAPACITANCE,
-            1, ElectricalCapacitanceUnit.MILLIFARAD, "MILLIFARAD", "mF");
+    public static final UnitType ELECTRICALCAPACITANCE_MILLIFARAD =
+            new UnitType(QuantityType.ELECTRICALCAPACITANCE, 1, ElectricalCapacitanceUnit.MILLIFARAD, "MILLIFARAD", "mF");
 
     /** ElectricalCapacitance.MICROFARAD unit type with code 2. */
-    public static final UnitType ELECTRICALCAPACITANCE_MICROFARAD = new UnitType(QuantityType.ELECTRICALCAPACITANCE,
-            2, ElectricalCapacitanceUnit.MICROFARAD, "MICROFARAD", "uF");
+    public static final UnitType ELECTRICALCAPACITANCE_MICROFARAD =
+            new UnitType(QuantityType.ELECTRICALCAPACITANCE, 2, ElectricalCapacitanceUnit.MICROFARAD, "MICROFARAD", "uF");
 
     /** ElectricalCapacitance.NANOFARAD unit type with code 3. */
-    public static final UnitType ELECTRICALCAPACITANCE_NANOFARAD = new UnitType(QuantityType.ELECTRICALCAPACITANCE,
-            3, ElectricalCapacitanceUnit.NANOFARAD, "NANOFARAD", "nF");
+    public static final UnitType ELECTRICALCAPACITANCE_NANOFARAD =
+            new UnitType(QuantityType.ELECTRICALCAPACITANCE, 3, ElectricalCapacitanceUnit.NANOFARAD, "NANOFARAD", "nF");
 
     /** ElectricalCapacitance.PICOFARAD unit type with code 4. */
-    public static final UnitType ELECTRICALCAPACITANCE_PICOFARAD = new UnitType(QuantityType.ELECTRICALCAPACITANCE,
-            4, ElectricalCapacitanceUnit.PICOFARAD, "PICOFARAD", "pF");
+    public static final UnitType ELECTRICALCAPACITANCE_PICOFARAD =
+            new UnitType(QuantityType.ELECTRICALCAPACITANCE, 4, ElectricalCapacitanceUnit.PICOFARAD, "PICOFARAD", "pF");
 
     /* ============================================= ELECTRICALCONDUCTANCE ============================================= */
 
@@ -1743,16 +1691,16 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.ELECTRICALCONDUCTANCE, 0, ElectricalConductanceUnit.SIEMENS, "SIEMENS", "F");
 
     /** ElectricalConductance.MILLISIEMENS unit type with code 1. */
-    public static final UnitType ELECTRICALCONDUCTANCE_MILLISIEMENS = new UnitType(
-            QuantityType.ELECTRICALCONDUCTANCE, 1, ElectricalConductanceUnit.MILLISIEMENS, "MILLISIEMENS", "mS");
+    public static final UnitType ELECTRICALCONDUCTANCE_MILLISIEMENS =
+            new UnitType(QuantityType.ELECTRICALCONDUCTANCE, 1, ElectricalConductanceUnit.MILLISIEMENS, "MILLISIEMENS", "mS");
 
     /** ElectricalConductance.MICROSIEMENS unit type with code 2. */
-    public static final UnitType ELECTRICALCONDUCTANCE_MICROSIEMENS = new UnitType(
-            QuantityType.ELECTRICALCONDUCTANCE, 2, ElectricalConductanceUnit.MICROSIEMENS, "MICROSIEMENS", "μS");
+    public static final UnitType ELECTRICALCONDUCTANCE_MICROSIEMENS =
+            new UnitType(QuantityType.ELECTRICALCONDUCTANCE, 2, ElectricalConductanceUnit.MICROSIEMENS, "MICROSIEMENS", "μS");
 
     /** ElectricalConductance.NANOSIEMENS unit type with code 3. */
-    public static final UnitType ELECTRICALCONDUCTANCE_NANOSIEMENS = new UnitType(
-            QuantityType.ELECTRICALCONDUCTANCE, 3, ElectricalConductanceUnit.NANOSIEMENS, "NANOSIEMENS", "nS");
+    public static final UnitType ELECTRICALCONDUCTANCE_NANOSIEMENS =
+            new UnitType(QuantityType.ELECTRICALCONDUCTANCE, 3, ElectricalConductanceUnit.NANOSIEMENS, "NANOSIEMENS", "nS");
 
     /* ============================================= ELECTRICALINDUCTANCE ============================================= */
 
@@ -1761,12 +1709,12 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.ELECTRICALINDUCTANCE, 0, ElectricalInductanceUnit.HENRY, "HENRY", "H");
 
     /** ElectricalInductance.MILLIHENRY unit type with code 1. */
-    public static final UnitType ELECTRICALINDUCTANCE_MILLIHENRY = new UnitType(QuantityType.ELECTRICALINDUCTANCE,
-            1, ElectricalInductanceUnit.MILLIHENRY, "MILLIHENRY", "mH");
+    public static final UnitType ELECTRICALINDUCTANCE_MILLIHENRY =
+            new UnitType(QuantityType.ELECTRICALINDUCTANCE, 1, ElectricalInductanceUnit.MILLIHENRY, "MILLIHENRY", "mH");
 
     /** ElectricalInductance.MICROHENRY unit type with code 2. */
-    public static final UnitType ELECTRICALINDUCTANCE_MICROHENRY = new UnitType(QuantityType.ELECTRICALINDUCTANCE,
-            2, ElectricalInductanceUnit.MICROHENRY, "MICROHENRY", "μH");
+    public static final UnitType ELECTRICALINDUCTANCE_MICROHENRY =
+            new UnitType(QuantityType.ELECTRICALINDUCTANCE, 2, ElectricalInductanceUnit.MICROHENRY, "MICROHENRY", "μH");
 
     /** ElectricalInductance.NANOHENRY unit type with code 3. */
     public static final UnitType ELECTRICALINDUCTANCE_NANOHENRY =
@@ -1793,8 +1741,7 @@ public class UnitType implements Serializable
     /* ================================================== ILLUMINANCE ================================================== */
 
     /** Illuminance.LUX unit type with code 0. */
-    public static final UnitType ILLUMINANCE_LUX =
-            new UnitType(QuantityType.ILLUMINANCE, 0, IlluminanceUnit.LUX, "LUX", "lx");
+    public static final UnitType ILLUMINANCE_LUX = new UnitType(QuantityType.ILLUMINANCE, 0, IlluminanceUnit.LUX, "LUX", "lx");
 
     /** Illuminance.MILLILUX unit type with code 1. */
     public static final UnitType ILLUMINANCE_MILLILUX =
@@ -1813,8 +1760,7 @@ public class UnitType implements Serializable
             new UnitType(QuantityType.ILLUMINANCE, 4, IlluminanceUnit.PHOT, "PHOT", "ph");
 
     /** Illuminance.NOX unit type with code 5. */
-    public static final UnitType ILLUMINANCE_NOX =
-            new UnitType(QuantityType.ILLUMINANCE, 5, IlluminanceUnit.NOX, "NOX", "nx");
+    public static final UnitType ILLUMINANCE_NOX = new UnitType(QuantityType.ILLUMINANCE, 5, IlluminanceUnit.NOX, "NOX", "nx");
 
     /* ================================================= LUMINOUSFLUX ================================================== */
 
@@ -1921,63 +1867,56 @@ public class UnitType implements Serializable
     /* ============================================= ANGULARACCELERATION =============================================== */
 
     /** AngularAcceleration.RADIAN_PER_SECOND_2 unit type with code 0. */
-    public static final UnitType ANGULARACCELERATION_RADIAN_PER_SECOND_2 =
-            new UnitType(QuantityType.ANGULARACCELERATION, 0, AngularAccelerationUnit.RADIAN_PER_SECOND_SQUARED,
-                    "RADIAN_PER_SECOND_SQUARED", "rad/s2");
+    public static final UnitType ANGULARACCELERATION_RADIAN_PER_SECOND_2 = new UnitType(QuantityType.ANGULARACCELERATION, 0,
+            AngularAccelerationUnit.RADIAN_PER_SECOND_SQUARED, "RADIAN_PER_SECOND_SQUARED", "rad/s2");
 
     /** AngularAcceleration.DEGREE_PER_SECOND_2 unit type with code 1. */
-    public static final UnitType ANGULARACCELERATION_DEGREE_PER_SECOND_2 =
-            new UnitType(QuantityType.ANGULARACCELERATION, 1, AngularAccelerationUnit.DEGREE_PER_SECOND_SQUARED,
-                    "DEGREE_PER_SECOND_SQUARED", "deg/s2");
+    public static final UnitType ANGULARACCELERATION_DEGREE_PER_SECOND_2 = new UnitType(QuantityType.ANGULARACCELERATION, 1,
+            AngularAccelerationUnit.DEGREE_PER_SECOND_SQUARED, "DEGREE_PER_SECOND_SQUARED", "deg/s2");
 
     /** AngularAcceleration.ARCMINUTE_PER_SECOND_2 unit type with code 2. */
-    public static final UnitType ANGULARACCELERATION_ARCMINUTE_PER_SECOND_2 =
-            new UnitType(QuantityType.ANGULARACCELERATION, 2, AngularAccelerationUnit.ARCMINUTE_PER_SECOND_SQUARED,
-                    "ARCMINUTE_PER_SECOND_SQUARED", "arcmin/s2");
+    public static final UnitType ANGULARACCELERATION_ARCMINUTE_PER_SECOND_2 = new UnitType(QuantityType.ANGULARACCELERATION, 2,
+            AngularAccelerationUnit.ARCMINUTE_PER_SECOND_SQUARED, "ARCMINUTE_PER_SECOND_SQUARED", "arcmin/s2");
 
     /** AngularAcceleration.ARCSECOND_PER_SECOND_2 unit type with code 3. */
-    public static final UnitType ANGULARACCELERATION_ARCSECOND_PER_SECOND_2 =
-            new UnitType(QuantityType.ANGULARACCELERATION, 3, AngularAccelerationUnit.ARCSECOND_PER_SECOND_SQUARED,
-                    "ARCSECOND_PER_SECOND_SQUARED", "arcsec/s2");
+    public static final UnitType ANGULARACCELERATION_ARCSECOND_PER_SECOND_2 = new UnitType(QuantityType.ANGULARACCELERATION, 3,
+            AngularAccelerationUnit.ARCSECOND_PER_SECOND_SQUARED, "ARCSECOND_PER_SECOND_SQUARED", "arcsec/s2");
 
     /** AngularAcceleration.GRAD_PER_SECOND_2 unit type with code 4. */
-    public static final UnitType ANGULARACCELERATION_GRAD_PER_SECOND_2 =
-            new UnitType(QuantityType.ANGULARACCELERATION, 4, AngularAccelerationUnit.GRAD_PER_SECOND_SQUARED,
-                    "GRAD_PER_SECOND_SQUARED", "grad/s2");
+    public static final UnitType ANGULARACCELERATION_GRAD_PER_SECOND_2 = new UnitType(QuantityType.ANGULARACCELERATION, 4,
+            AngularAccelerationUnit.GRAD_PER_SECOND_SQUARED, "GRAD_PER_SECOND_SQUARED", "grad/s2");
 
     /** AngularAcceleration.CENTESIMAL_ARCMINUTE_PER_SECOND_SQUARED unit type with code 5. */
-    public static final UnitType ANGULARACCELERATION_CENTECIMAL_ARCMINUTE_PER_SECOND_2 = new UnitType(
-            QuantityType.ANGULARACCELERATION, 5, AngularAccelerationUnit.CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED,
-            "CENTECIMALARCMINUTE_PER_SECOND_SQUARED", "cdm/s2");
+    public static final UnitType ANGULARACCELERATION_CENTECIMAL_ARCMINUTE_PER_SECOND_2 =
+            new UnitType(QuantityType.ANGULARACCELERATION, 5, AngularAccelerationUnit.CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED,
+                    "CENTECIMALARCMINUTE_PER_SECOND_SQUARED", "cdm/s2");
 
     /** AngularAcceleration.CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED unit type with code 6. */
-    public static final UnitType ANGULARACCELERATION_CENTESIMAL_ARCSECOND_PER_SECOND_2 = new UnitType(
-            QuantityType.ANGULARACCELERATION, 6, AngularAccelerationUnit.CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED,
-            "CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED", "cds/s2");
+    public static final UnitType ANGULARACCELERATION_CENTESIMAL_ARCSECOND_PER_SECOND_2 =
+            new UnitType(QuantityType.ANGULARACCELERATION, 6, AngularAccelerationUnit.CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED,
+                    "CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED", "cds/s2");
 
     /* =============================================== ANGULARVELOCITY ================================================= */
 
     /** AngularVelocity.RADIAN_PER_SECOND unit type with code 0. */
-    public static final UnitType ANGULARVELOCITY_RADIAN_PER_SECOND = new UnitType(QuantityType.ANGULARACCELERATION,
-            0, AngularVelocityUnit.RADIAN_PER_SECOND, "RADIAN_PER_SECOND", "rad/s");
+    public static final UnitType ANGULARVELOCITY_RADIAN_PER_SECOND = new UnitType(QuantityType.ANGULARACCELERATION, 0,
+            AngularVelocityUnit.RADIAN_PER_SECOND, "RADIAN_PER_SECOND", "rad/s");
 
     /** AngularVelocity.DEGREE_PER_SECOND unit type with code 1. */
-    public static final UnitType ANGULARVELOCITY_DEGREE_PER_SECOND = new UnitType(QuantityType.ANGULARACCELERATION,
-            1, AngularVelocityUnit.DEGREE_PER_SECOND, "DEGREE_PER_SECOND", "deg/s");
+    public static final UnitType ANGULARVELOCITY_DEGREE_PER_SECOND = new UnitType(QuantityType.ANGULARACCELERATION, 1,
+            AngularVelocityUnit.DEGREE_PER_SECOND, "DEGREE_PER_SECOND", "deg/s");
 
     /** AngularVelocity.ARCMINUTE_PER_SECOND unit type with code 2. */
-    public static final UnitType ANGULARVELOCITY_ARCMINUTE_PER_SECOND =
-            new UnitType(QuantityType.ANGULARACCELERATION, 2, AngularVelocityUnit.ARCMINUTE_PER_SECOND,
-                    "ARCMINUTE_PER_SECOND", "arcmin/s");
+    public static final UnitType ANGULARVELOCITY_ARCMINUTE_PER_SECOND = new UnitType(QuantityType.ANGULARACCELERATION, 2,
+            AngularVelocityUnit.ARCMINUTE_PER_SECOND, "ARCMINUTE_PER_SECOND", "arcmin/s");
 
     /** AngularVelocity.ARCSECOND_PER_SECOND unit type with code 3. */
-    public static final UnitType ANGULARVELOCITY_ARCSECOND_PER_SECOND =
-            new UnitType(QuantityType.ANGULARACCELERATION, 3, AngularVelocityUnit.ARCSECOND_PER_SECOND,
-                    "ARCSECOND_PER_SECOND", "arcsec/s");
+    public static final UnitType ANGULARVELOCITY_ARCSECOND_PER_SECOND = new UnitType(QuantityType.ANGULARACCELERATION, 3,
+            AngularVelocityUnit.ARCSECOND_PER_SECOND, "ARCSECOND_PER_SECOND", "arcsec/s");
 
     /** AngularVelocity.GRAD_PER_SECOND unit type with code 4. */
-    public static final UnitType ANGULARVELOCITY_GRAD_PER_SECOND = new UnitType(QuantityType.ANGULARACCELERATION, 4,
-            AngularVelocityUnit.GRAD_PER_SECOND, "GRAD_PER_SECOND", "grad/s");
+    public static final UnitType ANGULARVELOCITY_GRAD_PER_SECOND =
+            new UnitType(QuantityType.ANGULARACCELERATION, 4, AngularVelocityUnit.GRAD_PER_SECOND, "GRAD_PER_SECOND", "grad/s");
 
     /** AngularVelocity.CENTESIMAL_ARCMINUTE_PER_SECOND unit type with code 5. */
     public static final UnitType ANGULARVELOCITY_CENTECIMAL_ARCMINUTE_PER_SECOND =
@@ -2005,8 +1944,8 @@ public class UnitType implements Serializable
      * @param abbreviation the unit abbreviation
      * @param <U> the unit
      */
-    public <U extends Unit<U>> UnitType(final QuantityType unitType, final int code, final U djunitsType,
-            final String name, final String abbreviation)
+    public <U extends Unit<U>> UnitType(final QuantityType unitType, final int code, final U djunitsType, final String name,
+            final String abbreviation)
     {
         Throw.whenNull(unitType, "unitType should not be null");
         Throw.whenNull(djunitsType, "djunitsType should not be null");

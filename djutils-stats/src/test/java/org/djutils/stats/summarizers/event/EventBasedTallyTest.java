@@ -225,8 +225,8 @@ public class EventBasedTallyTest
     {
         EventBasedTally tally = new EventBasedTally("test with the NoStorageAccumulator", new NoStorageAccumulator());
         assertTrue(Double.isNaN(tally.getSampleMean()), "mean of no data is NaN");
-        UnitTest.testFail(() -> tally.getQuantile(0.5), "getQuantile of no data should have resulted in an IllegalArgumentException",
-                IllegalArgumentException.class);
+        UnitTest.testFail(() -> tally.getQuantile(0.5),
+                "getQuantile of no data should have resulted in an IllegalArgumentException", IllegalArgumentException.class);
         tally.notify(new Event(VALUE_EVENT, 90.0));
         assertEquals(90.0, tally.getSampleMean(), 0, "mean of one value is that value");
         UnitTest.testFail(() -> tally.getQuantile(0.5),
@@ -326,29 +326,9 @@ public class EventBasedTallyTest
         return mu + sigma * Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(twoPi * u2);
     }
 
-    /**
-     * Test the event-based tally for RemoteExceptions.
-     * @throws RemoteException on network error for the event-based statistic
-     */
-    @Test
-    public void testEventBasedTallyRemote() throws RemoteException
-    {
-        String description = "tally description";
-        EventBasedTally tally = new EventBasedTally(description, new RmiErrorEventProducer());
-        RmiErrorEventListener listener = new RmiErrorEventListener();
-        tally.addListener(listener, StatisticsEvents.INITIALIZED_EVENT);
-        tally.addListener(listener, StatisticsEvents.OBSERVATION_ADDED_EVENT);
-        // RemoteException is packed in a RuntimeException
-        UnitTest.testFail(() -> tally.initialize(), RuntimeException.class);
-        UnitTest.testFail(() -> tally.register(10.0), RuntimeException.class);
-    }
-
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
     class ObservationEventListener implements EventListener
     {
-        /** */
-        private static final long serialVersionUID = 1L;
-
         /** counter for the event. */
         private int observationEvents = 0;
 

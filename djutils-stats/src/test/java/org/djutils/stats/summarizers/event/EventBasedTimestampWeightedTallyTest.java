@@ -384,31 +384,9 @@ public class EventBasedTimestampWeightedTallyTest
         assertEquals(11, toel.getObservationEvents());
     }
 
-    /**
-     * Test the event-based timestamp weighted tally for RemoteExceptions.
-     * @throws RemoteException on network error for the event-based statistic
-     */
-    @Test
-    public void testEventBasedTimestampTallyRemote() throws RemoteException
-    {
-        String description = "tally description";
-        EventBasedTimestampWeightedTally tally = new EventBasedTimestampWeightedTally(description, new RmiErrorEventProducer());
-        RmiErrorEventListener listener = new RmiErrorEventListener();
-        tally.addListener(listener, StatisticsEvents.INITIALIZED_EVENT);
-        tally.addListener(listener, StatisticsEvents.OBSERVATION_ADDED_EVENT);
-        // RemoteException is packed in a RuntimeException
-        UnitTest.testFail(() -> tally.initialize(), RuntimeException.class);
-        UnitTest.testFail(() -> tally.register(1.0, 10.0), RuntimeException.class);
-        Calendar calendar = new GregorianCalendar(2000, 1, 10, 20, 30);
-        UnitTest.testFail(() -> tally.register(calendar, 10.0), RuntimeException.class);
-    }
-
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
     class TimestampedObservationEventListener implements EventListener
     {
-        /** */
-        private static final long serialVersionUID = 1L;
-
         /** counter for the event. */
         private int observationEvents = 0;
 
@@ -436,9 +414,6 @@ public class EventBasedTimestampWeightedTallyTest
     /** The Calendar-based listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
     class CalendarObservationEventListener implements EventListener
     {
-        /** */
-        private static final long serialVersionUID = 1L;
-
         /** counter for the event. */
         private int observationEvents = 0;
 

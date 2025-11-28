@@ -77,8 +77,8 @@ public class TestTable
         // add data, correctly
         String[] data1 = new String[] {"string1", "string2", "string3"};
         Double[] data2 = new Double[] {1.1, 2.2, 3.3};
-        FloatSpeed[] data3 = new FloatSpeed[] {FloatSpeed.instantiateSI(0.1f), FloatSpeed.instantiateSI(0.2f),
-                FloatSpeed.instantiateSI(0.3f)};
+        FloatSpeed[] data3 = new FloatSpeed[] {FloatSpeed.ofSI(0.1f), FloatSpeed.ofSI(0.2f),
+                FloatSpeed.ofSI(0.3f)};
         table.addRow(new Object[] {data1[0], data2[0], data3[0]});
         table.addRow(Map.of(column1, data1[1], column2, data2[1], column3, data3[1]));
         table.addRowByColumnIds(Map.of("id1", data1[2], "id2", data2[2], "id3", data3[2]));

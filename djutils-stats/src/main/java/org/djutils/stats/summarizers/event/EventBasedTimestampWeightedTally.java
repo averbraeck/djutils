@@ -1,7 +1,5 @@
 package org.djutils.stats.summarizers.event;
 
-import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.util.Calendar;
 
 import org.djutils.event.Event;
@@ -29,9 +27,6 @@ import org.djutils.stats.summarizers.TimestampWeightedTally;
  */
 public class EventBasedTimestampWeightedTally extends TimestampWeightedTally implements EventProducer, EventListener
 {
-    /** */
-    private static final long serialVersionUID = 20200228L;
-
     /** The embedded EventProducer. */
     private EventProducer eventProducer = null;
 
@@ -57,7 +52,7 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
     }
 
     @Override
-    public EventListenerMap getEventListenerMap() throws RemoteException
+    public EventListenerMap getEventListenerMap()
     {
         return this.eventProducer.getEventListenerMap();
     }
@@ -68,14 +63,7 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
         super.initialize();
         if (this.eventProducer != null)
         {
-            try
-            {
-                this.eventProducer.fireEvent(StatisticsEvents.INITIALIZED_EVENT);
-            }
-            catch (RemoteException exception)
-            {
-                throw new RuntimeException(exception);
-            }
+            this.eventProducer.fireEvent(StatisticsEvents.INITIALIZED_EVENT);
         }
     }
 
@@ -130,18 +118,10 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
     public double register(final Calendar timestamp, final double value)
     {
         super.register(timestamp, value);
-        try
+        if (hasListeners())
         {
-            if (hasListeners())
-            {
-                this.eventProducer.fireEvent(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT,
-                        new Serializable[] {timestamp, value});
-                fireEvents(timestamp);
-            }
-        }
-        catch (RemoteException exception)
-        {
-            throw new RuntimeException(exception);
+            this.eventProducer.fireEvent(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT, new Object[] {timestamp, value});
+            fireEvents(timestamp);
         }
         return value;
     }
@@ -160,18 +140,10 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
     public double register(final Number timestamp, final double value)
     {
         super.register(timestamp, value);
-        try
+        if (hasListeners())
         {
-            if (hasListeners())
-            {
-                this.eventProducer.fireEvent(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT,
-                        new Serializable[] {timestamp, value});
-                fireEvents(timestamp);
-            }
-        }
-        catch (RemoteException exception)
-        {
-            throw new RuntimeException(exception);
+            this.eventProducer.fireEvent(StatisticsEvents.TIMESTAMPED_OBSERVATION_ADDED_EVENT, new Object[] {timestamp, value});
+            fireEvents(timestamp);
         }
         return value;
     }
@@ -190,18 +162,19 @@ public class EventBasedTimestampWeightedTally extends TimestampWeightedTally imp
     @Override
     public double register(final double timestamp, final double value)
     {
+        // cast to avoid that compiler unboxes Double to double and causes stack overflow
         return register((Number) Double.valueOf(timestamp), value);
     }
 
     /**
-     * Method that can be overridden to fire own events or additional events when registering an observation.
-     * @param <T> a type for the timestamp that is Serializable and Comparable
+     * Method that can be overridden to fire own events or additional events when registering an observation. This method takes
+     * an Object because Number itself is NOT comparable.
+     * @param <T> a type for the timestamp that is Comparable
      * @param timestamp the timestamp to use in the TimedEvents
-     * @throws RemoteException on network error
      */
-    protected <T extends Serializable & Comparable<T>> void fireEvents(final Serializable timestamp) throws RemoteException
+    protected <T extends Comparable<T>> void fireEvents(final Object timestamp)
     {
-        // Note that All implementations of Number are Comparable and (by default) Serializable. So is Calendar.
+        // Note that All implementations of Number are Comparable. So is Calendar.
         @SuppressWarnings("unchecked")
         T castedTimestamp = (T) timestamp;
         fireTimedEvent(StatisticsEvents.TIMED_N_EVENT, getN(), castedTimestamp);

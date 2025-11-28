@@ -17,9 +17,6 @@ import org.djutils.exceptions.Throw;
  */
 public class WeightedTally implements TallyStatistic
 {
-    /** */
-    private static final long serialVersionUID = 20200228L;
-
     /** The sum of the weights of this WeightedTally. */
     private double sumOfWeights;
 

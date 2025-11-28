@@ -26,9 +26,6 @@ import org.djutils.exceptions.Throw;
  */
 public class Surface3d implements Drawable3d
 {
-    /** */
-    private static final long serialVersionUID = 20210706L;
-
     /** X-coordinates of all points used to define the triangulated surface. */
     private final double[] x;
 

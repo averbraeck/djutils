@@ -1,6 +1,5 @@
 package org.djutils.serialization;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -60,11 +59,8 @@ import org.djunits.unit.VolumeUnit;
  * </p>
  * @author <a href="https://www.tudelft.nl/averbraeck">Alexander Verbraeck</a>
  */
-public class QuantityType implements Serializable
+public class QuantityType
 {
-    /** */
-    private static final long serialVersionUID = 20170304L;
-
     /** the unit types from number to type. */
     private static Map<Byte, QuantityType> byteTypeMap = new HashMap<>();
 
@@ -84,8 +80,7 @@ public class QuantityType implements Serializable
             new QuantityType(2, SolidAngleUnit.class, "SolidAngle", "Solid angle (steradian)", "[sr]");
 
     /** Angle unit type with code 3. */
-    public static final QuantityType ANGLE =
-            new QuantityType(3, AngleUnit.class, "Angle", "Angle (relative)", "[rad]");
+    public static final QuantityType ANGLE = new QuantityType(3, AngleUnit.class, "Angle", "Angle (relative)", "[rad]");
 
     /** Direction unit type with code 4. */
     public static final QuantityType DIRECTION =
@@ -127,16 +122,14 @@ public class QuantityType implements Serializable
             new QuantityType(13, FlowVolumeUnit.class, "FlowVolume", "Volume flow rate", "[m^3/s]");
 
     /** Force unit type with code 14. */
-    public static final QuantityType FORCE =
-            new QuantityType(14, ForceUnit.class, "Force", "Force (Newton)", "[kg.m/s^2]");
+    public static final QuantityType FORCE = new QuantityType(14, ForceUnit.class, "Force", "Force (Newton)", "[kg.m/s^2]");
 
     /** Frequency unit type with code 15. */
     public static final QuantityType FREQUENCY =
             new QuantityType(15, FrequencyUnit.class, "Frequency", "Frequency (Hz)", "[1/s]");
 
     /** Length unit type with code 16. */
-    public static final QuantityType LENGTH =
-            new QuantityType(16, LengthUnit.class, "Length", "Length (relative)", "[m]");
+    public static final QuantityType LENGTH = new QuantityType(16, LengthUnit.class, "Length", "Length (relative)", "[m]");
 
     /** Position unit type with code 17. */
     public static final QuantityType POSITION =
@@ -150,8 +143,7 @@ public class QuantityType implements Serializable
     public static final QuantityType MASS = new QuantityType(19, MassUnit.class, "Mass", "Mass", "[kg]");
 
     /** Power unit type with code 20. */
-    public static final QuantityType POWER =
-            new QuantityType(20, PowerUnit.class, "Power", "Power (Watt)", "[kg.m^2/s^3]");
+    public static final QuantityType POWER = new QuantityType(20, PowerUnit.class, "Power", "Power (Watt)", "[kg.m^2/s^3]");
 
     /** Pressure unit type with code 21. */
     public static final QuantityType PRESSURE =
@@ -169,8 +161,7 @@ public class QuantityType implements Serializable
             new QuantityType(24, AbsoluteTemperatureUnit.class, "AbsoluteTemperature", "Temperature (absolute)", "[K]");
 
     /** Duration unit type with code 25. */
-    public static final QuantityType DURATION =
-            new QuantityType(25, DurationUnit.class, "Duration", "Time (relative)", "[s]");
+    public static final QuantityType DURATION = new QuantityType(25, DurationUnit.class, "Duration", "Time (relative)", "[s]");
 
     /** Time unit type with code 26. */
     public static final QuantityType TIME = new QuantityType(26, TimeUnit.class, "Time", "Time (absolute)", "[s]");
@@ -187,12 +178,12 @@ public class QuantityType implements Serializable
             new QuantityType(28, AbsorbedDoseUnit.class, "Absorbed dose", "Absorbed Dose (Gray)", "[m^2/s^2]");
 
     /** AmountOfSubstance unit type with code 30. */
-    public static final QuantityType AMOUNTOFSUBSTANCE = new QuantityType(30, AmountOfSubstanceUnit.class,
-            "Amount of substance", "Amount of substance (mole)", "[mol]");
+    public static final QuantityType AMOUNTOFSUBSTANCE =
+            new QuantityType(30, AmountOfSubstanceUnit.class, "Amount of substance", "Amount of substance (mole)", "[mol]");
 
     /** CatalyticActivity unit type with code 31. */
-    public static final QuantityType CATALYTICACTIVITY = new QuantityType(31, CatalyticActivityUnit.class,
-            "Catalytic activity", "Catalytic activity (katal)", "[mol/s]");
+    public static final QuantityType CATALYTICACTIVITY =
+            new QuantityType(31, CatalyticActivityUnit.class, "Catalytic activity", "Catalytic activity (katal)", "[mol/s]");
 
     /** ElectricalCapacitance unit type with code 32. */
     public static final QuantityType ELECTRICALCAPACITANCE = new QuantityType(32, ElectricalCapacitanceUnit.class,
@@ -219,8 +210,8 @@ public class QuantityType implements Serializable
             new QuantityType(37, LuminousFluxUnit.class, "Luminous flux", "Luminous flux (lumen)", "[sr.cd]");
 
     /** LuminousIntensity unit type with code 38. */
-    public static final QuantityType LUMINOUSINTENSITY = new QuantityType(38, LuminousIntensityUnit.class,
-            "Luminous intensity", "Luminous intensity (candela)", "[cd]");
+    public static final QuantityType LUMINOUSINTENSITY =
+            new QuantityType(38, LuminousIntensityUnit.class, "Luminous intensity", "Luminous intensity (candela)", "[cd]");
 
     /** MagneticFluxDensity unit type with code 39. */
     public static final QuantityType MAGNETICFLUXDENSITY = new QuantityType(39, MagneticFluxDensityUnit.class,
@@ -235,16 +226,15 @@ public class QuantityType implements Serializable
             new QuantityType(41, RadioActivityUnit.class, "Radioactivity", "Radioactivity (Becquerel)", "[1/s]");
 
     /** AngularAcceleration unit type with code 42. */
-    public static final QuantityType ANGULARACCELERATION = new QuantityType(42, AngularAccelerationUnit.class,
-            "AngularAcceleration", "AngularAcceleration", "[rad/s^2]");
+    public static final QuantityType ANGULARACCELERATION =
+            new QuantityType(42, AngularAccelerationUnit.class, "AngularAcceleration", "AngularAcceleration", "[rad/s^2]");
 
     /** AngularVelocity unit type with code 43. */
     public static final QuantityType ANGULARVELOCITY =
             new QuantityType(43, AngularVelocityUnit.class, "AngularVelocity", "AngularVelocity", "[rad/s]");
 
     /** AngularAcceleration unit type with code 44. */
-    public static final QuantityType MOMENTUM =
-            new QuantityType(44, MomentumUnit.class, "Momentum", "Momentum", "[rad/s^2]");
+    public static final QuantityType MOMENTUM = new QuantityType(44, MomentumUnit.class, "Momentum", "Momentum", "[rad/s^2]");
 
     /** The code of the unit as a byte. */
     private final byte code;

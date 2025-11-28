@@ -89,7 +89,7 @@ public class LinearMultiSliderDemo extends JFrame
             @Override
             protected Length mapIndexToValue(final int index)
             {
-                return Length.instantiateSI(index / 2.0);
+                return Length.ofSI(index / 2.0);
             }
 
             /** {@inheritDoc} */

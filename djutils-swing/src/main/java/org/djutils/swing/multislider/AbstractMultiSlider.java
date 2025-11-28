@@ -30,6 +30,7 @@ import javax.swing.plaf.SliderUI;
 import javax.swing.plaf.basic.BasicSliderUI;
 
 import org.djutils.exceptions.Throw;
+import org.djutils.logger.CategoryLogger;
 
 /**
  * The {@code AbstractMultiSlider} forms the base of implementing a slider with multiple thumbs. The AbstractMultiSlider is
@@ -450,6 +451,24 @@ public abstract class AbstractMultiSlider<T> extends JComponent
             calculateTrackSize();
         }
         return this.trackSizeHiPx - this.trackSizeLoPx;
+    }
+
+    /**
+     * Return the track size lowest pixel (to calculate width for horizontal slider; height for vertical slider).
+     * @return the track size lowest pixel
+     */
+    public int getTrackSizeLoPx()
+    {
+        return this.trackSizeLoPx;
+    }
+
+    /**
+     * Return the track size highest pixel (to calculate width for horizontal slider; height for vertical slider).
+     * @return the track size highest pixel
+     */
+    public int getTrackSizeHiPx()
+    {
+        return this.trackSizeHiPx;
     }
 
     /**
@@ -1447,8 +1466,7 @@ public abstract class AbstractMultiSlider<T> extends JComponent
                 }
                 catch (Exception exception)
                 {
-                    exception.printStackTrace();
-                    System.out.println("error dispatching mouseEvent " + meSlider);
+                    CategoryLogger.always().error(exception, "error dispatching mouseEvent {}", meSlider);
                 }
                 setBusySlider(index);
                 return index;

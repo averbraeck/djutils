@@ -3,8 +3,6 @@ package org.djutils.stats.summarizers.event;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.rmi.RemoteException;
-
 import org.djutils.event.Event;
 import org.djutils.event.EventListener;
 import org.djutils.event.EventType;
@@ -29,10 +27,9 @@ public class EventBasedCounterTest
 
     /**
      * Test the counter.
-     * @throws RemoteException on network error for the event-based statistic
      */
     @Test
-    public void testEventBasedCounter() throws RemoteException
+    public void testEventBasedCounter()
     {
         String description = "counter description";
         EventBasedCounter counter = new EventBasedCounter(description);
@@ -77,29 +74,9 @@ public class EventBasedCounterTest
         assertEquals(value, countListener.getLastEvent().getContent());
     }
 
-    /**
-     * Test the counter for RemoteExceptions.
-     * @throws RemoteException on network error for the event-based statistic
-     */
-    @Test
-    public void testEventBasedCounterRemote() throws RemoteException
-    {
-        String description = "counter description";
-        EventBasedCounter counter = new EventBasedCounter(description, new RmiErrorEventProducer());
-        RmiErrorEventListener listener = new RmiErrorEventListener();
-        counter.addListener(listener, StatisticsEvents.INITIALIZED_EVENT);
-        counter.addListener(listener, StatisticsEvents.OBSERVATION_ADDED_EVENT);
-        // RemoteException is packed in a RuntimeException
-        UnitTest.testFail(() -> counter.initialize(), RuntimeException.class);
-        UnitTest.testFail(() -> counter.register(1L), RuntimeException.class);
-    }
-
     /** The listener that counts the OBSERVATION_ADDED_EVENT events and checks correctness. */
     class CounterEventListener implements EventListener
     {
-        /** */
-        private static final long serialVersionUID = 1L;
-
         /** counter for the event. */
         private int countEvents = 0;
 
