@@ -177,7 +177,6 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
             double wEnd = dEnd / (dStart + dEnd);
             control1 = new Transform2d().translate(start).rotation(start.dirZ).scale(distance * wStart, distance * wStart)
                     .transform(UNIT_VECTOR2D);
-            // - (minus) as the angle is where the line leaves, i.e. from shape point to end
             control2 = new Transform2d().translate(end).rotation(end.dirZ + Math.PI).scale(distance * wEnd, distance * wEnd)
                     .transform(UNIT_VECTOR2D);
         }
@@ -505,7 +504,7 @@ public class BezierCubic2d extends Bezier2d implements Curve2d, OffsetCurve2d, C
 
         this.segments = new TreeMap<>();
 
-        // Gather all points to split segments, and their types (Root, Inflection, or Kink in offsets)
+        // Gather all points to split segments, and their types (Root, Inflection, or Knot in offsets)
         NavigableMap<Double, Boundary> splits0 = new TreeMap<>(); // splits0 & splits because splits0 must be effectively final
         if (!straight)
         {
