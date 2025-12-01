@@ -263,6 +263,10 @@ public class Point2d implements Drawable2d, Point<Point2d>
         {
             return null; // intersection outside line 2
         }
+        if (uA == 0.0)
+        {
+            return new Point2d(line1P1X, line1P1Y);
+        }
         if (uA == 1.0) // maximize precision
         {
             return new Point2d(line1P2X, line1P2Y);
