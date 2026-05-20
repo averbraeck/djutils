@@ -82,9 +82,10 @@ nav:
     - 'Matrix types (#18 - #24)': djutils-serialization/matrix-types.md
     - Coding of units: djutils-serialization/coding-units.md
     - Display types for units: djutils-serialization/display-types.md
-    - 'Scalar unit types(#25 - #26)': djutils-serialization/scalar-units.md 
+    - 'Quantity unit types(#25 - #26)': djutils-serialization/quantity-units.md 
     - 'Vector unit types(#27 - #28)': djutils-serialization/vector-units.md 
     - 'Matrix unit types(#29 - #32)': djutils-serialization/matrix-units.md 
+    - 'Absolute unit types(#37 - #42)': djutils-serialization/absolute-units.md 
     - SERIALIZATION doc: https://djutils.org/docs/latest/djutils-serialization/index.html
     - SERIALIZATION API: https://djutils.org/docs/latest/djutils-serialization/apidocs/index.html
   - DJUTILS-STATS project:
