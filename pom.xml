@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.djutils</groupId>
   <artifactId>djutils-parent</artifactId>
-  <version>2.4.2</version>
+  <version>2.5.0-beta</version>
   <packaging>pom</packaging>
   <name>Delft Java Utilities</name>
   <description>Delft Java Utilities</description>
@@ -37,7 +37,7 @@
     <djutils-base.version>2.4.2</djutils-base.version>
     <djutils-test.version>2.4.2</djutils-test.version>
     <picocli.version>4.7.7</picocli.version>
-    <djunits.version>5.4.2</djunits.version>
+    <djunits.version>6.0.1</djunits.version>
     <junit.version>5.13.0</junit.version>
     <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
     <fastcsv.version>2.2.2</fastcsv.version>
