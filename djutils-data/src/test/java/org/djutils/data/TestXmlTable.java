@@ -14,9 +14,9 @@ import java.util.Locale;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.djunits.value.vdouble.scalar.Duration;
-import org.djunits.value.vdouble.scalar.Length;
-import org.djunits.value.vdouble.scalar.Speed;
+import org.djunits.quantity.Duration;
+import org.djunits.quantity.Length;
+import org.djunits.quantity.Speed;
 import org.djutils.data.serialization.TextSerializationException;
 import org.djutils.data.xml.XmlData;
 import org.junit.jupiter.api.Test;
@@ -102,7 +102,7 @@ public class TestXmlTable
         table1.addRow(new Object[] {1, Length.valueOf("1 mm"), "normal"});
         table1.addRow(new Object[] {null, Length.valueOf("10.0 km"), "normal"});
         table1.addRow(new Object[] {3, null, "abnormal"});
-        table1.addRow(new Object[] {4, Length.ofSI(40.0), null});
+        table1.addRow(new Object[] {4, Length.ofSi(40.0), null});
         XmlData.writeData(tempDataFile.getAbsolutePath(), table1);
 
         Table table2 = XmlData.readData(tempDataFile.getAbsolutePath());

@@ -10,7 +10,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.djunits.value.vfloat.scalar.FloatSpeed;
+import org.djunits.quantity.Speed;
 import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
 
@@ -53,7 +53,7 @@ public class TestTable
         Column<Double> column2 = new Column<>("id2", "description2", Double.class, "m/s");
         assertEquals(column2.getUnit(), "m/s");
 
-        Column<FloatSpeed> column3 = new Column<>("id3", "description3", FloatSpeed.class, "m/s");
+        Column<Speed> column3 = new Column<>("id3", "description3", Speed.class, "m/s");
 
         Column<Double> column4 = new Column<>("id1", "test for no equal column ids", Double.class, "m/s");
         column4.toString();
@@ -62,8 +62,8 @@ public class TestTable
 
         // table: duplicate column id's
         List<Column<?>> columnList = List.of(column1, column2, column4);
-        UnitTest.testFail(() -> new ListTable("id", "description", columnList), "Columns with the same id should not be accepted.",
-                IllegalArgumentException.class);
+        UnitTest.testFail(() -> new ListTable("id", "description", columnList),
+                "Columns with the same id should not be accepted.", IllegalArgumentException.class);
 
         // table
         Collection<Column<?>> columns = new LinkedHashSet<>();
@@ -77,8 +77,7 @@ public class TestTable
         // add data, correctly
         String[] data1 = new String[] {"string1", "string2", "string3"};
         Double[] data2 = new Double[] {1.1, 2.2, 3.3};
-        FloatSpeed[] data3 = new FloatSpeed[] {FloatSpeed.ofSI(0.1f), FloatSpeed.ofSI(0.2f),
-                FloatSpeed.ofSI(0.3f)};
+        Speed[] data3 = new Speed[] {Speed.ofSi(0.1f), Speed.ofSi(0.2f), Speed.ofSi(0.3f)};
         table.addRow(new Object[] {data1[0], data2[0], data3[0]});
         table.addRow(Map.of(column1, data1[1], column2, data2[1], column3, data3[1]));
         table.addRowByColumnIds(Map.of("id1", data1[2], "id2", data2[2], "id3", data3[2]));
@@ -113,7 +112,7 @@ public class TestTable
      */
     @SuppressWarnings("unlikely-arg-type")
     private void testTableInstance(final Table table, final Column<String> column1, final Column<Double> column2,
-            final Column<FloatSpeed> column3, final String[] data1, final Double[] data2, final FloatSpeed[] data3)
+            final Column<Speed> column3, final String[] data1, final Double[] data2, final Speed[] data3)
     {
         assertEquals(table.getId(), "id");
         assertEquals(table.getDescription(), "description");

@@ -8,10 +8,9 @@ import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.djunits.unit.AbsoluteTemperatureUnit;
-import org.djunits.unit.TimeUnit;
-import org.djunits.value.vdouble.scalar.AbsoluteTemperature;
-import org.djunits.value.vdouble.scalar.Time;
+import org.djunits.quantity.Duration;
+import org.djunits.quantity.Temperature;
+import org.djunits.quantity.Time;
 import org.djutils.data.csv.CsvData;
 import org.djutils.data.csv.TsvData;
 import org.djutils.data.json.JsonData;
@@ -165,8 +164,7 @@ public final class DataDemo
     public static void example2() throws IOException, TextSerializationException
     {
         Column<Time> timeStamp = new Column<>("timeStamp", "time rounded to nearest second", Time.class, "s");
-        Column<AbsoluteTemperature> temperature =
-                new Column<>("temperature", "engine temperature in Celcius", AbsoluteTemperature.class, "K");
+        Column<Temperature> temperature = new Column<>("temperature", "engine temperature in Celcius", Temperature.class, "K");
         Column<String> remark = new Column<>("remark", "remark", String.class, "");
         List<Column<?>> columns = new ArrayList<>();
         columns.add(timeStamp);
@@ -176,14 +174,14 @@ public final class DataDemo
 
         System.out.println(table);
 
-        Object[] record = new Object[] {new Time(600, TimeUnit.BASE_SECOND),
-                new AbsoluteTemperature(18.0, AbsoluteTemperatureUnit.DEGREE_CELSIUS), "starting engine"};
+        Object[] record = new Object[] {new Time(600, Duration.Unit.s, Time.Reference.UNIX),
+                new Temperature(18.0, Temperature.Unit.degC), "starting engine"};
         table.addRow(record);
 
         Map<String, Object> map = new HashMap<>();
         map.put("remark", "leaving parking lot");
-        map.put("temperature", new AbsoluteTemperature(28.5, AbsoluteTemperatureUnit.DEGREE_CELSIUS));
-        map.put("timeStamp", new Time(660, TimeUnit.BASE_SECOND));
+        map.put("temperature", new Temperature(28.5, Temperature.Unit.degC));
+        map.put("timeStamp", new Time(660, Duration.Unit.s, Time.Reference.UNIX));
         table.addRowByColumnIds(map);
 
         for (Row dataRecord : table)

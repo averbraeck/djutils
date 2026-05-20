@@ -6,24 +6,18 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Locale;
 
-import org.djunits.unit.DirectionUnit;
-import org.djunits.unit.DurationUnit;
-import org.djunits.unit.LengthUnit;
-import org.djunits.unit.TimeUnit;
-import org.djunits.value.vdouble.scalar.Length;
-import org.djunits.value.vdouble.scalar.Time;
-import org.djunits.value.vfloat.scalar.FloatDirection;
-import org.djunits.value.vfloat.scalar.FloatDuration;
-import org.djunits.value.vfloat.scalar.FloatLength;
+import org.djunits.quantity.Duration;
+import org.djunits.quantity.Length;
+import org.djunits.quantity.Time;
+import org.djutils.data.serialization.AbsQuantitySerializer;
 import org.djutils.data.serialization.BooleanSerializer;
 import org.djutils.data.serialization.ByteSerializer;
 import org.djutils.data.serialization.CharacterSerializer;
-import org.djutils.data.serialization.DoubleScalarSerializer;
 import org.djutils.data.serialization.DoubleSerializer;
-import org.djutils.data.serialization.FloatScalarSerializer;
 import org.djutils.data.serialization.FloatSerializer;
 import org.djutils.data.serialization.IntegerSerializer;
 import org.djutils.data.serialization.LongSerializer;
+import org.djutils.data.serialization.QuantitySerializer;
 import org.djutils.data.serialization.ShortSerializer;
 import org.djutils.data.serialization.StringSerializer;
 import org.djutils.data.serialization.TextSerializationException;
@@ -201,9 +195,9 @@ public class TestTextSerializers
         assertEquals(length, TextSerializer.deserialize(lengthSerializer,
                 TextSerializer.serialize(lengthSerializer, length, lengthColumn.getUnit()), lengthColumn));
 
-        TextSerializer<?> floatLengthSerializer = TextSerializer.resolve(FloatLength.class);
-        Column<?> floatLengthColumn = new Column<>("c", "d", FloatLength.class, "m");
-        FloatLength floatLength = FloatLength.of(10.0f, "m");
+        TextSerializer<?> floatLengthSerializer = TextSerializer.resolve(Length.class);
+        Column<?> floatLengthColumn = new Column<>("c", "d", Length.class, "m");
+        Length floatLength = Length.of(10.0f, "m");
         assertEquals(floatLength, TextSerializer.deserialize(floatLengthSerializer,
                 TextSerializer.serialize(floatLengthSerializer, floatLength, floatLengthColumn.getUnit()), floatLengthColumn));
 
@@ -216,7 +210,7 @@ public class TestTextSerializers
     }
 
     /** test class that extends Number. */
-    private class NumberExtension extends Number
+    private final class NumberExtension extends Number
     {
         /** */
         private static final long serialVersionUID = 1L;
@@ -300,8 +294,8 @@ public class TestTextSerializers
         assertNull(TextSerializer.deserialize(lengthSerializer, "", lengthColumn));
         assertNull(TextSerializer.deserialize(lengthSerializer, null, lengthColumn));
 
-        TextSerializer<?> floatLengthSerializer = TextSerializer.resolve(FloatLength.class);
-        Column<?> floatLengthColumn = new Column<>("c", "d", FloatLength.class, "m");
+        TextSerializer<?> floatLengthSerializer = TextSerializer.resolve(Length.class);
+        Column<?> floatLengthColumn = new Column<>("c", "d", Length.class, "m");
         assertNull(TextSerializer.deserialize(floatLengthSerializer,
                 TextSerializer.serialize(floatLengthSerializer, null, floatLengthColumn.getUnit()), floatLengthColumn));
         assertNull(TextSerializer.deserialize(floatLengthSerializer, "", lengthColumn));
@@ -361,36 +355,21 @@ public class TestTextSerializers
      * @throws TextSerializationException when serializer could not be found
      */
     @Test
-    public void testScalarSerializers() throws TextSerializationException
+    public void testQuantitySerializers() throws TextSerializationException
     {
         Locale.setDefault(Locale.US);
 
-        Length length = new Length(20.0, LengthUnit.KILOMETER);
-        DoubleScalarSerializer<LengthUnit, Length> lengthSerializer = new DoubleScalarSerializer<>();
+        Length length = new Length(20.0, Length.Unit.km);
+        QuantitySerializer<Length, Length.Unit> lengthSerializer = new QuantitySerializer<>();
         assertEquals(length, lengthSerializer.deserialize(Length.class, lengthSerializer.serialize(length, "m"), "m"));
 
         // repeat to test caching
-        length = new Length(123.456, LengthUnit.MILE);
+        length = new Length(123.456, Length.Unit.mi);
         assertEquals(length, lengthSerializer.deserialize(Length.class, lengthSerializer.serialize(length, "m"), "m"));
 
-        Time time = new Time(10.0, TimeUnit.BASE_DAY);
-        DoubleScalarSerializer<TimeUnit, Time> timeSerializer = new DoubleScalarSerializer<>();
+        Time time = new Time(10.0, Duration.Unit.day, Time.Reference.UNIX);
+        AbsQuantitySerializer<Time, Duration, Time.Reference> timeSerializer = new AbsQuantitySerializer<>();
         assertEquals(time, timeSerializer.deserialize(Time.class, timeSerializer.serialize(time, "s"), "s"));
-
-        FloatDuration duration = new FloatDuration(12.5f, DurationUnit.WEEK);
-        FloatScalarSerializer<DurationUnit, FloatDuration> floatDurationSerializer = new FloatScalarSerializer<>();
-        assertEquals(duration, floatDurationSerializer.deserialize(FloatDuration.class,
-                floatDurationSerializer.serialize(duration, "s"), "s"));
-
-        // repeat to test caching
-        duration = new FloatDuration(876.32f, DurationUnit.MINUTE);
-        assertEquals(duration, floatDurationSerializer.deserialize(FloatDuration.class,
-                floatDurationSerializer.serialize(duration, "s"), "s"));
-
-        FloatDirection direction = new FloatDirection(80.5, DirectionUnit.EAST_DEGREE);
-        FloatScalarSerializer<DirectionUnit, FloatDirection> floatDirectionSerializer = new FloatScalarSerializer<>();
-        assertEquals(direction, floatDirectionSerializer.deserialize(FloatDirection.class,
-                floatDirectionSerializer.serialize(direction, "rad"), "rad"));
     }
 
     /**
@@ -404,25 +383,25 @@ public class TestTextSerializers
 
         TextSerializer<?> lengthSerializer = TextSerializer.resolve(Length.class);
         Column<Length> lengthColumn = new Column<>("c", "d", Length.class, "km");
-        Length length = new Length(30.0, LengthUnit.METER);
+        Length length = new Length(30.0, Length.Unit.m);
         assertEquals(length, TextSerializer.deserialize(lengthSerializer,
                 TextSerializer.serialize(lengthSerializer, length, lengthColumn.getUnit()), lengthColumn));
-        length = new Length(20.0, LengthUnit.KILOMETER);
+        length = new Length(20.0, Length.Unit.km);
         assertEquals(length, TextSerializer.deserialize(lengthSerializer,
                 TextSerializer.serialize(lengthSerializer, length, lengthColumn.getUnit()), lengthColumn));
-        length = new Length(Math.PI, LengthUnit.MILE);
+        length = new Length(Math.PI, Length.Unit.mi);
         assertEquals(length, TextSerializer.deserialize(lengthSerializer,
                 TextSerializer.serialize(lengthSerializer, length, lengthColumn.getUnit()), lengthColumn));
 
-        TextSerializer<?> floatLengthSerializer = TextSerializer.resolve(FloatLength.class);
-        Column<?> floatLengthColumn = new Column<>("c", "d", FloatLength.class, "mm");
-        FloatLength floatLength = new FloatLength(30.0f, LengthUnit.METER);
+        TextSerializer<?> floatLengthSerializer = TextSerializer.resolve(Length.class);
+        Column<?> floatLengthColumn = new Column<>("c", "d", Length.class, "mm");
+        Length floatLength = new Length(30.0f, Length.Unit.m);
         assertEquals(floatLength, TextSerializer.deserialize(floatLengthSerializer,
                 TextSerializer.serialize(floatLengthSerializer, floatLength, floatLengthColumn.getUnit()), floatLengthColumn));
-        floatLength = new FloatLength(20.0f, LengthUnit.KILOMETER);
+        floatLength = new Length(20.0f, Length.Unit.km);
         assertEquals(floatLength, TextSerializer.deserialize(floatLengthSerializer,
                 TextSerializer.serialize(floatLengthSerializer, floatLength, floatLengthColumn.getUnit()), floatLengthColumn));
-        floatLength = new FloatLength(Math.PI, LengthUnit.MILE);
+        floatLength = new Length(Math.PI, Length.Unit.mi);
         assertEquals(floatLength, TextSerializer.deserialize(floatLengthSerializer,
                 TextSerializer.serialize(floatLengthSerializer, floatLength, floatLengthColumn.getUnit()), floatLengthColumn));
 

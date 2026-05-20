@@ -14,7 +14,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.djunits.value.vdouble.scalar.Length;
+import org.djunits.quantity.Length;
 import org.djutils.primitives.Primitive;
 import org.djutils.test.UnitTest;
 import org.junit.jupiter.api.Test;
@@ -221,12 +221,12 @@ public class TestListTable
         UnitTest.testFail(() -> new ListTable("tableId", "tableDescription", cy),
                 "duplicate column id should have thrown IllegalArgumentException", IllegalArgumentException.class);
 
-        UnitTest.testFail(() -> new ListTable(null, "tableDescription", columns), "null id should have thrown NullPointerException",
-                NullPointerException.class);
+        UnitTest.testFail(() -> new ListTable(null, "tableDescription", columns),
+                "null id should have thrown NullPointerException", NullPointerException.class);
         UnitTest.testFail(() -> new ListTable("", "tableDescription", columns),
                 "empty id should have thrown IllegalArgumentException", IllegalArgumentException.class);
-        UnitTest.testFail(() -> new ListTable("tableId", null, columns), "empty description should have thrown NullPointerException",
-                NullPointerException.class);
+        UnitTest.testFail(() -> new ListTable("tableId", null, columns),
+                "empty description should have thrown NullPointerException", NullPointerException.class);
         UnitTest.testFail(() -> new ListTable("tableId", "tableDescription", (List<Column<?>>) null),
                 "null columns should have thrown NullPointerException", NullPointerException.class);
         UnitTest.testFail(() -> new ListTable("tableId", "tableDescription", (Collection<Column<?>>) null),
@@ -261,8 +261,8 @@ public class TestListTable
         // test null data
         UnitTest.testFail(() -> table.addRow((Object[]) null), "null data record should have raised exception",
                 NullPointerException.class);
-        UnitTest.testFail(() -> table.addRowByColumnIds((Map<String, Object>) null), "null data record should have raised exception",
-                NullPointerException.class);
+        UnitTest.testFail(() -> table.addRowByColumnIds((Map<String, Object>) null),
+                "null data record should have raised exception", NullPointerException.class);
 
         // test too few columns data
         UnitTest.testFail(() -> table.addRow(new Object[] {}), "empty data record should have raised exception",

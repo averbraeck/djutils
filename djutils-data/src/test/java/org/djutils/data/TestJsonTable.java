@@ -12,9 +12,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.djunits.value.vdouble.scalar.Duration;
-import org.djunits.value.vdouble.scalar.Length;
-import org.djunits.value.vdouble.scalar.Speed;
+import org.djunits.quantity.Duration;
+import org.djunits.quantity.Length;
+import org.djunits.quantity.Speed;
 import org.djutils.data.json.JsonData;
 import org.djutils.data.serialization.TextSerializationException;
 import org.junit.jupiter.api.Test;
@@ -97,7 +97,7 @@ public class TestJsonTable
         table1.addRow(new Object[] {1, Length.valueOf("1 mm"), "normal"});
         table1.addRow(new Object[] {null, Length.valueOf("10.0 km"), "normal"});
         table1.addRow(new Object[] {3, null, "abnormal"});
-        table1.addRow(new Object[] {4, Length.ofSI(40.0), null});
+        table1.addRow(new Object[] {4, Length.ofSi(40.0), null});
         JsonData.writeData(tempDataFile.getAbsolutePath(), table1);
 
         Table table2 = JsonData.readData(tempDataFile.getAbsolutePath());

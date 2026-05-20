@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import org.djunits.value.vdouble.scalar.Duration;
-import org.djunits.value.vdouble.scalar.Length;
-import org.djunits.value.vdouble.scalar.Speed;
+import org.djunits.quantity.Duration;
+import org.djunits.quantity.Length;
+import org.djunits.quantity.Speed;
 import org.djutils.data.csv.TsvData;
 import org.djutils.data.serialization.TextSerializationException;
 import org.djutils.io.CompressedFileWriter;
@@ -148,7 +148,7 @@ public class TestTsvTable
         table1.addRow(new Object[] {1, Length.valueOf("1 mm"), "normal"});
         table1.addRow(new Object[] {null, Length.valueOf("10.0 km"), "normal"});
         table1.addRow(new Object[] {3, null, "abnormal"});
-        table1.addRow(new Object[] {4, Length.ofSI(40.0), null});
+        table1.addRow(new Object[] {4, Length.ofSi(40.0), null});
         TsvData.writeData(tempDataFile.getAbsolutePath(), tempMetaDataFile.getAbsolutePath(), table1);
 
         Table table2 = TsvData.readData(tempDataFile.getAbsolutePath(), tempMetaDataFile.getAbsolutePath());
