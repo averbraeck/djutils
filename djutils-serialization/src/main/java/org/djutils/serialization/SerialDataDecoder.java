@@ -63,10 +63,10 @@ public class SerialDataDecoder implements Decoder
     private int currentChar;
 
     /** Djunits display unit. */
-    private Unit<?> displayUnit;
+    private Unit<?, ?> displayUnit;
 
     /** Array of units for array of column vectors. */
-    private Unit<?>[] columnUnits = null;
+    private Unit<?, ?>[] columnUnits = null;
 
     /** String builder for current output line. */
     private StringBuilder buffer = new StringBuilder();
@@ -422,7 +422,7 @@ public class SerialDataDecoder implements Decoder
     private boolean fillDjunitsVectorArrayColumnUnits()
     {
         boolean result = false;
-        this.columnUnits = new Unit<?>[this.columnCount];
+        this.columnUnits = new Unit<?, ?>[this.columnCount];
         for (int i = 0; i < this.columnCount; i++)
         {
             byte unitTypeCode = this.dataElementBytes[2 * i];
