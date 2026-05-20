@@ -65,7 +65,7 @@ public class UnitType
     private static Map<QuantityType, Map<Integer, UnitType>> codeDisplayTypeMap = new HashMap<>();
 
     /** the unit types from class to type. */
-    private static Map<Unit<?>, UnitType> djunitsDisplayTypeMap = new HashMap<>();
+    private static Map<Unit<?, ?>, UnitType> djunitsDisplayTypeMap = new HashMap<>();
 
     /** the code of the unit as a byte. */
     private final int code;
@@ -74,7 +74,7 @@ public class UnitType
     private final QuantityType unitType;
 
     /** the djunits data type. */
-    private final Unit<?> djunitsType;
+    private final Unit<?, ?> djunitsType;
 
     /** the unit name. */
     private final String name;
@@ -2000,7 +2000,7 @@ public class UnitType
      * @param code the code to search for.
      * @return the unit type, or null if not found.
      */
-    public static Unit<?> getUnit(final byte unitTypeCode, final int code)
+    public static Unit<?, ?> getUnit(final byte unitTypeCode, final int code)
     {
         QuantityType unitType = QuantityType.getUnitType(unitTypeCode);
         Map<Integer, UnitType> codeMap = codeDisplayTypeMap.get(unitType);
@@ -2013,7 +2013,7 @@ public class UnitType
      * @param code the code to search for.
      * @return the unit type, or null if not found.
      */
-    public static Unit<?> getUnit(final QuantityType unitType, final int code)
+    public static Unit<?, ?> getUnit(final QuantityType unitType, final int code)
     {
         Map<Integer, UnitType> codeMap = codeDisplayTypeMap.get(unitType);
         return codeMap == null ? null : codeMap.get(code) == null ? null : codeMap.get(code).djunitsType;
@@ -2083,7 +2083,7 @@ public class UnitType
     /**
      * @return djunitsType
      */
-    public final Unit<?> getDjunitsType()
+    public final Unit<?, ?> getDjunitsType()
     {
         return this.djunitsType;
     }
