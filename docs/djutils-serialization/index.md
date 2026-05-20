@@ -15,7 +15,7 @@ Some properties:
 
 * DJUTILS-SERIALIZATION stores one byte before each serialized field that indicates its type (compact and self-documenting encoded data).
 * DJUTILS-SERIALIZATION can use little-endian and big-endian encoding for multi-byte values (portability among different CPU types).
-* DJUTILS-SERIALIZATION handles Scalars, Vectors and Matrices from [DJUNITS](https://djunits.org), including the scalar type and display type (e.g. `Length` in kilometers, `Duration` in minutes, an `AreaVector` in acres).
+* DJUTILS-SERIALIZATION handles Quantities, Vectors, Matrices and QuantityTables from [DJUNITS](https://djunits.org), including the scalar type and display type (e.g. `Length` in kilometers, `Duration` in minutes, an `Vector<Area>` in acres).
 * DJUTILS-SERIALIZATION is the basis for the (de)serialization of types in the [SIM0MQ](https://sim0mq.org/) project.
 
 

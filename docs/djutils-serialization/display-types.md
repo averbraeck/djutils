@@ -12,9 +12,9 @@ All units are internally stored and transmitted using the SI unit (for relative 
 <li><a href="#4-direction">4. Direction</a></li>
 <li><a href="#5-area">5. Area</a></li>
 <li><a href="#6-density">6. Density</a></li>
-<li><a href="#7-electricalcharge">7. ElectricalCharge</a></li>
-<li><a href="#8-electricalcurrent">8. ElectricalCurrent</a></li>
-<li><a href="#9-electricalpotential">9. ElectricalPotential</a></li>
+<li><a href="#7-electriccharge">7. ElectricCharge</a></li>
+<li><a href="#8-electriccurrent">8. ElectricCurrent</a></li>
+<li><a href="#9-electricpotential">9. ElectricPotential</a></li>
 <li><a href="#10-electricalresistance">10. ElectricalResistance</a></li>
 <li><a href="#11-energy">11. Energy</a></li>
 <li><a href="#12-flowmass">12. FlowMass</a></li>
@@ -29,8 +29,8 @@ All units are internally stored and transmitted using the SI unit (for relative 
 <li><a href="#21-pressure">21. Pressure</a></li>
 <li><a href="#22-speed">22. Speed</a></li>
 </ul></td><td><ul>
-<li><a href="#23-temperature">23. Temperature</a></li>
-<li><a href="#24-absolutetemperature">24. AbsoluteTemperature</a></li>
+<li><a href="#23-temperaturedifference">23. TemperatureDifference</a></li>
+<li><a href="#24-temperature">24. Temperature</a></li>
 <li><a href="#25-duration">25. Duration</a></li>
 <li><a href="#26-time">26. Time</a></li>
 <li><a href="#27-torque">27. Torque</a></li>
@@ -51,6 +51,9 @@ All units are internally stored and transmitted using the SI unit (for relative 
 <li><a href="#42-angularacceleration">42. AngularAcceleration</a></li>
 <li><a href="#43-angularvelocity">43. AngularVelocity</a></li>
 <li><a href="#44-momentum">44. Momentum</a></li>
+<li><a href="#45-linearobjectdensity">45. LinearObjectDensity</a></li>
+<li><a href="#46-arealobjectdensity">46. ArealObjectDensity</a></li>
+<li><a href="#47-volumetricobjectdensity">47. VolumetricObjectDensity</a></li>
     
 </ul></td></tr></table>
 
@@ -101,10 +104,10 @@ The Dimensionless unit does not have any display codes, except the default one, 
 
 | Code | Name of display unit | Unit |
 | ------- | --------------------------- | ------ |
-| 0 | NORTH_RADIAN (BASE) | rad(N) |
-| 1 | NORTH_DEGREE | deg(N) |
-| 2 | EAST_RADIAN | rad(E) |
-| 3 | EAST_DEGREE | deg(E) |
+| 0 | RADIAN (BASE) | rad (NORTH if received as relative) |
+| 1 | DEGREE | deg (NORTH if received as relative) |
+| 2 | RADIAN | rad (EAST if received as relative) |
+| 3 | DEGREE | deg (EAST if received as relative) |
  
 
 ## 5. Area <a id="5-area"></a>
@@ -143,7 +146,7 @@ The Dimensionless unit does not have any display codes, except the default one, 
 | 1 | GRAM_PER_CENTIMETER_3 | g/cm<sup>3</sup> |
 
 
-## 7. ElectricalCharge <a id="7-electricalcharge"></a>
+## 7. ElectricCharge <a id="7-electriccharge"></a>
 
 | Code | Name of display unit | Unit |
 | ------- | --------------------------- | ------ |
@@ -166,7 +169,7 @@ The Dimensionless unit does not have any display codes, except the default one, 
 | 16 | MILLIAMPERE_SECOND | mAs |
 
 
-## 8. ElectricalCurrent <a id="8-electricalcurrent"></a>
+## 8. ElectricCurrent <a id="8-electriccurrent"></a>
 
 | Code | Name of display unit | Unit |
 | ------- | --------------------------- | ------ |
@@ -179,7 +182,7 @@ The Dimensionless unit does not have any display codes, except the default one, 
 | 6 | ABAMPERE | abA |
 | 7 | STATAMPERE | statA |
 
-## 9. ElectricalPotential <a id="9-electricalpotential"></a>
+## 9. ElectricPotential <a id="9-electricpotential"></a>
 
 | Code | Name of display unit | Unit |
 | ------- | --------------------------- | ------ |
@@ -380,28 +383,7 @@ The Dimensionless unit does not have any display codes, except the default one, 
 
 | Code | Name of display unit | Unit |
 | ------- | --------------------------- | ------ |
-| 0 | PER_METER (SI) | 1/m |
-| 1 | PER_ATTOMETER | 1/am |
-| 2 | PER_FEMTOMETER | 1/fm |
-| 3 | PER_PICOMETER | 1/pm |
-| 4 | PER_NANOMETER | 1/nm |
-| 5 | PER_MICROMETER | 1/&mu;m |
-| 6 | PER_MILLIMETER | 1/mm |
-| 7 | PER_CENTIMETER | 1/cm |
-| 8 | PER_DECIMETER | 1/dm |
-| 9 | PER_DEKAMETER | 1/dam |
-| 10 | PER_HECTOMETER | 1/hm |
-| 11 | PER_KILOMETER | 1/km |
-| 12 | PER_MEGAMETER | 1/Mm |
-| 13 | PER_INCH | 1/in |
-| 14 | PER_FOOT | 1/ft |
-| 15 | PER_YARD | 1/yd |
-| 16 | PER_MILE | 1/mi |
-| 17 | PER_NAUTICAL_MILE | 1/NM |
-| 18 | PER_ASTRONOMICAL_UNIT | 1/au |
-| 19 | PER_PARSEC | 1/pc |
-| 20 | PER_LIGHT_YEAR | 1/ly |
-| 21 | PER_ANGSTROM | 1/&angst; |
+| 0 | KG_PER_METER (SI) | kg/m |
 
 
 ## 19. Mass <a id="19-mass"></a>
@@ -501,7 +483,7 @@ The Dimensionless unit does not have any display codes, except the default one, 
 | 13 | KNOT | kt |
 
 
-## 23. Temperature <a id="23-temperature"></a>
+## 23. TemperatureDifference <a id="23-temperaturedifference"></a>
 
 | Code | Name of display unit | Unit |
 | ------- | --------------------------- | ------ |
@@ -513,7 +495,7 @@ The Dimensionless unit does not have any display codes, except the default one, 
 
 
 
-## 24. AbsoluteTemperature <a id="24-absolutetemperature"></a>
+## 24. Temperature <a id="24-temperature"></a>
 
 | Code | Name of display unit | Unit |
 | ------- | --------------------------- | ------ |
@@ -752,8 +734,8 @@ The Dimensionless unit does not have any display codes, except the default one, 
 | 2 | ARCMINUTE_PER_SECOND_2 | arcmin/s<sup>2</sup> |
 | 3 | ARCSECOND_PER_SECOND_2 | arcsec/s<sup>2</sup> |
 | 4 | GRAD_PER_SECOND_2 | grad/s<sup>2</sup> |
-| 5 |CENTECIMALARCMINUTE_PER_SECOND_2 | cdm/s<sup>2</sup> |
-| 6 |CENTECIMALARCSECOND_PER_SECOND_2 | cds/s<sup>2</sup> |
+| 5 | CENTECIMALARCMINUTE_PER_SECOND_2 | cdm/s<sup>2</sup> |
+| 6 | CENTECIMALARCSECOND_PER_SECOND_2 | cds/s<sup>2</sup> |
 
 ## 43. AngularVelocity <a href="#43-angularvelocity"></a>
 
@@ -764,14 +746,48 @@ The Dimensionless unit does not have any display codes, except the default one, 
 | 2 | ARCMINUTE_PER_SECOND | arcmin/s |
 | 3 | ARCSECOND_PER_SECOND | arcsec/s |
 | 4 | GRAD_PER_SECOND | grad/s |
-| 5 |CENTECIMALARCMINUTE_PER_SECOND | cdm/s |
-| 6 |CENTECIMALARCSECOND_PER_SECOND | cds/s |
+| 5 | CENTECIMALARCMINUTE_PER_SECOND | cdm/s |
+| 6 | CENTECIMALARCSECOND_PER_SECOND | cds/s |
 
 ## 44. Momentum <a href="#44-momentum"></a>
 
 | Code | Name of display unit | Unit |
 | ------- | --------------------------- | ------ |
 | 0 | SI | kgm/s |
+
+## 45. LinearObjectDensity <a href="#45-linearobjectdensity"></a>
+
+| Code | Name of display unit | Unit |
+| ------- | --------------------------- | ------ |
+| 0 | PER_METER (SI) | 1/m |
+| 1 | PER_ATTOMETER | 1/am |
+| 2 | PER_FEMTOMETER | 1/fm |
+| 3 | PER_PICOMETER | 1/pm |
+| 4 | PER_NANOMETER | 1/nm |
+| 5 | PER_MICROMETER | 1/&mu;m |
+| 6 | PER_MILLIMETER | 1/mm |
+| 7 | PER_CENTIMETER | 1/cm |
+| 8 | PER_DECIMETER | 1/dm |
+| 9 | PER_DEKAMETER | 1/dam |
+| 10 | PER_HECTOMETER | 1/hm |
+| 11 | PER_KILOMETER | 1/km |
+| 12 | PER_MEGAMETER | 1/Mm |
+| 13 | PER_INCH | 1/in |
+| 14 | PER_FOOT | 1/ft |
+| 15 | PER_YARD | 1/yd |
+| 16 | PER_MILE | 1/mi |
+
+## 46. ArealObjectDensity <a href="#46-arealobjectdensity"></a>
+
+| Code | Name of display unit | Unit |
+| ------- | --------------------------- | ------ |
+| 0 | PER_SQUARE_METER | /m2 |
+
+## 47. VolumetricObjectDensity <a href="#47-volumetricobjectdensity"></a>
+
+| Code | Name of display unit | Unit |
+| ------- | --------------------------- | ------ |
+| 0 | PER_CUBIC_METER | /m3 |
 
 
 

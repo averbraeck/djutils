@@ -11,9 +11,9 @@ Units are coded with one byte indicating the unit type, and one byte indicating 
 | 4 | Direction | Angle (absolute) | rad  | [Display types](../display-types#4-direction)  | 
 | 5 | Area | Area | m<sup>2</sup>  | [Display types](../display-types#5-area)  | 
 | 6 | Density | Density based on mass and length | kg/m<sup>3</sup>  | [Display types](../display-types#6-density)  | 
-| 7 | ElectricalCharge | Electrical charge (Coulomb) | s.A  | [Display types](../display-types#7-electricalcharge)  | 
-| 8 | ElectricalCurrent | Electrical current (Ampere) | A  | [Display types](../display-types#8-electricalcurrent)  | 
-| 9 | ElectricalPotential | Electrical potential (Volt) | kg.m<sup>2</sup>/s<sup>3</sup>.A  | [Display types](../display-types#9-electricalpotential)  | 
+| 7 | ElectricCharge | Electric charge (Coulomb) | s.A  | [Display types](../display-types#7-electriccharge)  | 
+| 8 | ElectricCurrent | Electric current (Ampere) | A  | [Display types](../display-types#8-electriccurrent)  | 
+| 9 | ElectricPotential | Electric potential (Volt) | kg.m<sup>2</sup>/s<sup>3</sup>.A  | [Display types](../display-types#9-electricpotential)  | 
 | 10 | ElectricalResistance | Electrical resistance (Ohm) | kg.m<sup>2</sup>/s<sup>3</sup>.A<sup>2</sup>  | [Display types](../display-types#10-electricalresistance)  | 
 | 11 | Energy | Energy (Joule) | kg.m<sup>2</sup>/s<sup>2</sup>  | [Display types](../display-types#11-energy)  | 
 | 12 | FlowMass | Mass flow rate | kg/s  | [Display types](../display-types#12-flowmass)  | 
@@ -22,13 +22,13 @@ Units are coded with one byte indicating the unit type, and one byte indicating 
 | 15 | Frequency | Frequency (Hz) | 1/s  | [Display types](../display-types#15-frequency)  | 
 | 16 | Length | Length (relative) | m  | [Display types](../display-types#16-length)  | 
 | 17 | Position | Length (absolute) | m  | [Display types](../display-types#17-position)  | 
-| 18 | LinearDensity | Linear density | 1/m  | [Display types](../display-types#18-lineardensity)  | 
+| 18 | LinearDensity | Linear density | kg/m  | [Display types](../display-types#18-lineardensity)  | 
 | 19 | Mass | Mass | kg  | [Display types](../display-types#19-mass)  | 
 | 20 | Power | Power (Watt) | kg.m<sup>2</sup>/s<sup>3</sup>  | [Display types](../display-types#20-power)  | 
 | 21 | Pressure | Pressure (Pascal) | kg/m.s<sup>2</sup>  | [Display types](../display-types#21-pressure)  | 
 | 22 | Speed | Speed | m/s  | [Display types](../display-types#22-speed)  | 
-| 23 | Temperature | Temperature (relative) | K  | [Display types](../display-types#23-temperature)  | 
-| 24 | AbsoluteTemperature | Temperature (absolute) | K  | [Display types](../display-types#24-absolutetemperature)  | 
+| 23 | TemperatureDifference | Temperature difference (relative) | K  | [Display types](../display-types#23-temperaturedifference)  | 
+| 24 | Temperature | Temperature (absolute) | K  | [Display types](../display-types#24-temperature)  | 
 | 25 | Duration | Time (relative) | s  | [Display types](../display-types#25-duration)  | 
 | 26 | Time | Time (absolute) | s  | [Display types](../display-types#26-time)  | 
 | 27 | Torque | Torque (Newton-meter) | kg.m<sup>2</sup>/s<sup>2</sup>  | [Display types](../display-types#27-torque)  | 
@@ -49,5 +49,8 @@ Units are coded with one byte indicating the unit type, and one byte indicating 
 | 42 | Angular acceleration | Change in angular velocity per second | rad/s<sup>2</sup> | [Display types](../display-types#42-angularacceleration) |
 | 43 | Angular velocity | Change in angular velocity per second | rad/s | [Display types](../display-types#43-angularvelocity) |
 | 44 | Momentum | Linear momentum, translational momentum | kg.m/s | [Display types](../display-types#44-momentum) |
+| 45 | LinearObjectDensity | Number of objects per length | /m | [Display types](../display-types#45-linearobjectdensity) |
+| 46 | ArealObjectDensity | Number of objects per area | /m<sup>2</sup> | [Display types](../display-types#46-arealobjectdensity) |
+| 47 | VolumetricObjectDensity | Number of objects per volume | /m<sup>3</sup> | [Display types](../display-types#47-volumetricobjectdensity) |
 
 Some of the unit types have a relative and an absolute variant. Relative scalars can be added to or subtracted from relative and absolute scalars; absolute scalars cannot be added, but can be subtracted, resulting in a relative scalar. As an example, one cannot add two times (3-1-2017, 5 o'clock + 3-1-2017, 3 o'clock = ??), but these values can be subtracted (3-1-2017, 5 o'clock – 3-1-2017, 3 o'clock = 2 hours). Absolute plus relative yields e.g., 3-1-2017, 17:00 + 2 hours = 3-1-2017, 19:00. Relative values can of course be added/subtracted: 2 hours + 30 minutes = 2.5 hours. See [https://djunits.org](https://djunits.org) for more information.

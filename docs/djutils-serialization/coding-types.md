@@ -58,6 +58,12 @@ The following types have been implemented in the v1-version of the standard:
 | 34 | STRING_UTF16_ARRAY | String array where each string is encoded as a UTF-16 byte array. |
 | 35 | STRING_UTF8_MATRIX | String matrix where each string is encoded as a UTF-8 byte array. |
 | 36 | STRING_UTF16_MATRIX | String matrix where each string is encoded as a UTF-16 byte array. |
+| 37 | FLOAT_32_UNIT_ABS | Float stored internally as a float in the corresponding SI unit, with unit type, display unit, and absolute reference point attached. The total size of the object is variable due to the reference point storage. |
+| 38 | DOUBLE_64_UNIT_ABS | Double stored internally as a double in the corresponding SI unit, with unit type, display unit, and absolute reference point attached. The total size of the object is variable due to the reference point storage. |
+| 39 | FLOAT_32_UNIT_ABS_ARRAY | Dense float array, preceded by a 32-bit number indicating the number of floats, with unit type, display unit, and absolute reference point attached to the entire float array. The total size of the object is variable due to the reference point storage. |
+| 40 | DOUBLE_64_UNIT_ABS_ARRAY | Dense double array, preceded by a 32-bit number indicating the number of doubles, order, with unit type, display unit, and absolute reference point attached to the entire double array. The total size of the object is variable due to the reference point storage. |
+| 41 | FLOAT_32_UNIT_ABS_MATRIX | Dense float matrix, preceded by a 32-bit row count int and a 32-bit column count int, with unit type, display unit, and absolute reference point attached to the entire float matrix. The total size of the object is variable due to the reference point storage. |
+| 42 | DOUBLE_64_UNIT_ABS_MATRIX | Dense double matrix, preceded by a 32-bit row count int and a 32-bit column count int, with unit type, display unit, and absolute reference point attached to the entire double matrix. The total size of the object is variable due to the reference point storage. |
 
 <br>
 
