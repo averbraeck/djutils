@@ -33,7 +33,7 @@ public class DoubleVectorSerializer<U extends Unit<U>, S extends DoubleScalar<U,
         extends ArrayOrMatrixWithUnitSerializer<U, V>
 {
     /** The cache to make the lookup of the constructor for a Vevtor belonging to a unit faster. */
-    private static final Map<Unit<?>, Constructor<? extends DoubleVector<?, ?, ?>>> CACHE = new HashMap<>();
+    private static final Map<Unit<?, ?>, Constructor<? extends DoubleVector<?, ?, ?>>> CACHE = new HashMap<>();
 
     /** */
     public DoubleVectorSerializer()
@@ -69,7 +69,7 @@ public class DoubleVectorSerializer<U extends Unit<U>, S extends DoubleScalar<U,
     public V deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness) throws SerializationException
     {
         int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianness);
+        Unit<? extends Unit<?, ?>> unit = getUnit(buffer, pointer, endianness);
         double[] array = new double[size];
         for (int i = 0; i < size; i++)
         {
@@ -99,7 +99,7 @@ public class DoubleVectorSerializer<U extends Unit<U>, S extends DoubleScalar<U,
      */
     @SuppressWarnings("unchecked")
     public static <U extends Unit<U>, S extends DoubleScalar<U, S>,
-            V extends DoubleVector<U, S, V>> V instantiateAnonymous(final DoubleVectorData data, final Unit<?> unit)
+            V extends DoubleVector<U, S, V>> V instantiateAnonymous(final DoubleVectorData data, final Unit<?, ?> unit)
     {
         try
         {

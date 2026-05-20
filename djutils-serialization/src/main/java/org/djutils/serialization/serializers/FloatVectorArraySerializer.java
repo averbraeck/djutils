@@ -82,7 +82,7 @@ public class FloatVectorArraySerializer<U extends Unit<U>, S extends FloatScalar
         int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
         @SuppressWarnings("unchecked")
         V[] result = (V[]) new FloatVector[width];
-        Unit<? extends Unit<?>>[] units = new Unit<?>[width];
+        Unit<? extends Unit<?, ?>>[] units = new Unit<?, ?>[width];
         for (int col = 0; col < width; col++)
         {
             units[col] = getUnit(buffer, pointer, endianness);

@@ -33,7 +33,7 @@ public class FloatVectorSerializer<U extends Unit<U>, S extends FloatScalar<U, S
         extends ArrayOrMatrixWithUnitSerializer<U, V>
 {
     /** The cache to make the lookup of the constructor for a Vevtor belonging to a unit faster. */
-    private static final Map<Unit<?>, Constructor<? extends FloatVector<?, ?, ?>>> CACHE = new HashMap<>();
+    private static final Map<Unit<?, ?>, Constructor<? extends FloatVector<?, ?, ?>>> CACHE = new HashMap<>();
 
     /** */
     public FloatVectorSerializer()
@@ -68,7 +68,7 @@ public class FloatVectorSerializer<U extends Unit<U>, S extends FloatScalar<U, S
     public V deSerialize(final byte[] buffer, final Pointer pointer, final Endianness endianness) throws SerializationException
     {
         int size = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-        Unit<?> unit = getUnit(buffer, pointer, endianness);
+        Unit<?, ?> unit = getUnit(buffer, pointer, endianness);
         float[] array = new float[size];
         for (int i = 0; i < size; i++)
         {
@@ -98,7 +98,7 @@ public class FloatVectorSerializer<U extends Unit<U>, S extends FloatScalar<U, S
      */
     @SuppressWarnings("unchecked")
     public static <U extends Unit<U>, S extends FloatScalar<U, S>,
-            V extends FloatVector<U, S, V>> V instantiateAnonymous(final FloatVectorData data, final Unit<?> unit)
+            V extends FloatVector<U, S, V>> V instantiateAnonymous(final FloatVectorData data, final Unit<?, ?> unit)
     {
         try
         {

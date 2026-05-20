@@ -36,7 +36,7 @@ public class FloatMatrixSerializer<U extends Unit<U>, S extends FloatScalar<U, S
         M extends FloatMatrix<U, S, V, M>> extends ArrayOrMatrixWithUnitSerializer<U, M>
 {
     /** The cache to make the lookup of the constructor for a Vevtor belonging to a unit faster. */
-    private static final Map<Unit<?>, Constructor<? extends FloatMatrix<?, ?, ?, ?>>> CACHE = new HashMap<>();
+    private static final Map<Unit<?, ?>, Constructor<? extends FloatMatrix<?, ?, ?, ?>>> CACHE = new HashMap<>();
 
     /** */
     public FloatMatrixSerializer()
@@ -77,7 +77,7 @@ public class FloatMatrixSerializer<U extends Unit<U>, S extends FloatScalar<U, S
     {
         int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
         int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-        Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianness);
+        Unit<? extends Unit<?, ?>> unit = getUnit(buffer, pointer, endianness);
         float[][] array = new float[height][width];
         for (int i = 0; i < height; i++)
         {
@@ -111,7 +111,7 @@ public class FloatMatrixSerializer<U extends Unit<U>, S extends FloatScalar<U, S
      */
     @SuppressWarnings("unchecked")
     public static <U extends Unit<U>, S extends FloatScalar<U, S>, V extends FloatVector<U, S, V>,
-            M extends FloatMatrix<U, S, V, M>> M instantiateAnonymous(final FloatMatrixData data, final Unit<?> unit)
+            M extends FloatMatrix<U, S, V, M>> M instantiateAnonymous(final FloatMatrixData data, final Unit<?, ?> unit)
     {
         try
         {

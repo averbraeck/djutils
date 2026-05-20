@@ -36,7 +36,7 @@ public class DoubleMatrixSerializer<U extends Unit<U>, S extends DoubleScalar<U,
         M extends DoubleMatrix<U, S, V, M>> extends ArrayOrMatrixWithUnitSerializer<U, M>
 {
     /** The cache to make the lookup of the constructor for a Vevtor belonging to a unit faster. */
-    private static final Map<Unit<?>, Constructor<? extends DoubleMatrix<?, ?, ?, ?>>> CACHE = new HashMap<>();
+    private static final Map<Unit<?, ?>, Constructor<? extends DoubleMatrix<?, ?, ?, ?>>> CACHE = new HashMap<>();
 
     /** */
     public DoubleMatrixSerializer()
@@ -79,7 +79,7 @@ public class DoubleMatrixSerializer<U extends Unit<U>, S extends DoubleScalar<U,
         {
             int height = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
             int width = endianness.decodeInt(buffer, pointer.getAndIncrement(4));
-            Unit<? extends Unit<?>> unit = getUnit(buffer, pointer, endianness);
+            Unit<? extends Unit<?, ?>> unit = getUnit(buffer, pointer, endianness);
             double[][] array = new double[height][width];
             for (int i = 0; i < height; i++)
             {
@@ -111,7 +111,7 @@ public class DoubleMatrixSerializer<U extends Unit<U>, S extends DoubleScalar<U,
      */
     @SuppressWarnings("unchecked")
     public static <U extends Unit<U>, S extends DoubleScalar<U, S>, V extends DoubleVector<U, S, V>,
-            M extends DoubleMatrix<U, S, V, M>> M instantiateAnonymous(final DoubleMatrixData data, final Unit<?> unit)
+            M extends DoubleMatrix<U, S, V, M>> M instantiateAnonymous(final DoubleMatrixData data, final Unit<?, ?> unit)
     {
         try
         {
