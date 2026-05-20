@@ -16,8 +16,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.djunits.unit.LengthUnit;
-import org.djunits.value.vdouble.scalar.Length;
+import org.djunits.quantity.Length;
 
 /**
  * LinearMultiSliderDemo demonstrates a multislider with linear values, extending {@code Number}.
@@ -81,22 +80,22 @@ public class LinearMultiSliderDemo extends JFrame
 
         sliderPanel.add(new JLabel("Length slider"));
         sliderPanel.add(new JLabel("     "));
-        var s2 = new LinearMultiSlider<Length>(Length.ZERO, new Length(50.0, LengthUnit.METER), 101,
-                new Length(10.0, LengthUnit.METER), new Length(40.0, LengthUnit.METER))
+        var s2 = new LinearMultiSlider<Length>(Length.ZERO, new Length(50.0, Length.Unit.m), 101,
+                new Length(10.0, Length.Unit.m), new Length(40.0, Length.Unit.m))
         {
             private static final long serialVersionUID = 1L;
 
             @Override
             protected Length mapIndexToValue(final int index)
             {
-                return Length.ofSI(index / 2.0);
+                return Length.ofSi(index / 2.0);
             }
 
             /** {@inheritDoc} */
             @Override
             protected String format(final Length value)
             {
-                return String.format("%d%s", (int) value.getInUnit(), value.getDisplayUnit().getDefaultDisplayAbbreviation());
+                return String.format("%d%s", (int) value.getInUnit(), value.getDisplayUnit().getDisplayAbbreviation());
             }
         };
         s2.setPreferredSize(new Dimension(480, 10));
