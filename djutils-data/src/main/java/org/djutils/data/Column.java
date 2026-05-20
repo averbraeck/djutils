@@ -4,8 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
+import org.djunits.quantity.def.Quantity;
 import org.djunits.value.Value;
-import org.djunits.value.base.Scalar;
 import org.djutils.base.Identifiable;
 import org.djutils.exceptions.Throw;
 import org.djutils.primitives.Primitive;
@@ -54,7 +54,7 @@ public class Column<T> implements Identifiable
         this.valueType = valueType.isPrimitive() ? (Class<T>) Primitive.getWrapper(valueType) : valueType;
         Throw.when(Value.class.isAssignableFrom(valueType) && (unit == null || unit.length() == 0),
                 IllegalArgumentException.class, "For a DJUNITS value, unit cannot be null or the empty string");
-        if (Scalar.class.isAssignableFrom(valueType))
+        if (Quantity.class.isAssignableFrom(valueType))
         {
             try
             {
