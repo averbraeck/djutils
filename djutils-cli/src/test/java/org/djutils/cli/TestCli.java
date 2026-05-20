@@ -2,7 +2,7 @@ package org.djutils.cli;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.djunits.value.vdouble.scalar.Duration;
+import org.djunits.quantity.Duration;
 import org.djutils.exceptions.Throw;
 import org.junit.jupiter.api.Test;
 

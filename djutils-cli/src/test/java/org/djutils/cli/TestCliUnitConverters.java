@@ -4,674 +4,700 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Locale;
 
-import org.djunits.unit.AbsoluteTemperatureUnit;
-import org.djunits.unit.AbsorbedDoseUnit;
-import org.djunits.unit.AccelerationUnit;
-import org.djunits.unit.AmountOfSubstanceUnit;
-import org.djunits.unit.AngleUnit;
-import org.djunits.unit.AngularAccelerationUnit;
-import org.djunits.unit.AngularVelocityUnit;
-import org.djunits.unit.AreaUnit;
-import org.djunits.unit.CatalyticActivityUnit;
-import org.djunits.unit.DensityUnit;
-import org.djunits.unit.DimensionlessUnit;
-import org.djunits.unit.DirectionUnit;
-import org.djunits.unit.DurationUnit;
-import org.djunits.unit.ElectricalCapacitanceUnit;
-import org.djunits.unit.ElectricalChargeUnit;
-import org.djunits.unit.ElectricalConductanceUnit;
-import org.djunits.unit.ElectricalCurrentUnit;
-import org.djunits.unit.ElectricalInductanceUnit;
-import org.djunits.unit.ElectricalPotentialUnit;
-import org.djunits.unit.ElectricalResistanceUnit;
-import org.djunits.unit.EnergyUnit;
-import org.djunits.unit.EquivalentDoseUnit;
-import org.djunits.unit.FlowMassUnit;
-import org.djunits.unit.FlowVolumeUnit;
-import org.djunits.unit.ForceUnit;
-import org.djunits.unit.FrequencyUnit;
-import org.djunits.unit.IlluminanceUnit;
-import org.djunits.unit.LengthUnit;
-import org.djunits.unit.LinearDensityUnit;
-import org.djunits.unit.LuminousFluxUnit;
-import org.djunits.unit.LuminousIntensityUnit;
-import org.djunits.unit.MagneticFluxDensityUnit;
-import org.djunits.unit.MagneticFluxUnit;
-import org.djunits.unit.MassUnit;
-import org.djunits.unit.MomentumUnit;
-import org.djunits.unit.PositionUnit;
-import org.djunits.unit.PowerUnit;
-import org.djunits.unit.PressureUnit;
-import org.djunits.unit.RadioActivityUnit;
-import org.djunits.unit.SolidAngleUnit;
-import org.djunits.unit.SpeedUnit;
-import org.djunits.unit.TemperatureUnit;
-import org.djunits.unit.TimeUnit;
-import org.djunits.unit.TorqueUnit;
-import org.djunits.unit.VolumeUnit;
-import org.djunits.value.vdouble.scalar.AbsoluteTemperature;
-import org.djunits.value.vdouble.scalar.AbsorbedDose;
-import org.djunits.value.vdouble.scalar.Acceleration;
-import org.djunits.value.vdouble.scalar.AmountOfSubstance;
-import org.djunits.value.vdouble.scalar.Angle;
-import org.djunits.value.vdouble.scalar.AngularAcceleration;
-import org.djunits.value.vdouble.scalar.AngularVelocity;
-import org.djunits.value.vdouble.scalar.Area;
-import org.djunits.value.vdouble.scalar.CatalyticActivity;
-import org.djunits.value.vdouble.scalar.Density;
-import org.djunits.value.vdouble.scalar.Dimensionless;
-import org.djunits.value.vdouble.scalar.Direction;
-import org.djunits.value.vdouble.scalar.Duration;
-import org.djunits.value.vdouble.scalar.ElectricalCapacitance;
-import org.djunits.value.vdouble.scalar.ElectricalCharge;
-import org.djunits.value.vdouble.scalar.ElectricalConductance;
-import org.djunits.value.vdouble.scalar.ElectricalCurrent;
-import org.djunits.value.vdouble.scalar.ElectricalInductance;
-import org.djunits.value.vdouble.scalar.ElectricalPotential;
-import org.djunits.value.vdouble.scalar.ElectricalResistance;
-import org.djunits.value.vdouble.scalar.Energy;
-import org.djunits.value.vdouble.scalar.EquivalentDose;
-import org.djunits.value.vdouble.scalar.FlowMass;
-import org.djunits.value.vdouble.scalar.FlowVolume;
-import org.djunits.value.vdouble.scalar.Force;
-import org.djunits.value.vdouble.scalar.Frequency;
-import org.djunits.value.vdouble.scalar.Illuminance;
-import org.djunits.value.vdouble.scalar.Length;
-import org.djunits.value.vdouble.scalar.LinearDensity;
-import org.djunits.value.vdouble.scalar.LuminousFlux;
-import org.djunits.value.vdouble.scalar.LuminousIntensity;
-import org.djunits.value.vdouble.scalar.MagneticFlux;
-import org.djunits.value.vdouble.scalar.MagneticFluxDensity;
-import org.djunits.value.vdouble.scalar.Mass;
-import org.djunits.value.vdouble.scalar.Momentum;
-import org.djunits.value.vdouble.scalar.Position;
-import org.djunits.value.vdouble.scalar.Power;
-import org.djunits.value.vdouble.scalar.Pressure;
-import org.djunits.value.vdouble.scalar.RadioActivity;
-import org.djunits.value.vdouble.scalar.SolidAngle;
-import org.djunits.value.vdouble.scalar.Speed;
-import org.djunits.value.vdouble.scalar.Temperature;
-import org.djunits.value.vdouble.scalar.Time;
-import org.djunits.value.vdouble.scalar.Torque;
-import org.djunits.value.vdouble.scalar.Volume;
+import org.djunits.quantity.AbsorbedDose;
+import org.djunits.quantity.Acceleration;
+import org.djunits.quantity.AmountOfSubstance;
+import org.djunits.quantity.Angle;
+import org.djunits.quantity.AngularAcceleration;
+import org.djunits.quantity.AngularVelocity;
+import org.djunits.quantity.Area;
+import org.djunits.quantity.ArealObjectDensity;
+import org.djunits.quantity.CatalyticActivity;
+import org.djunits.quantity.Density;
+import org.djunits.quantity.Dimensionless;
+import org.djunits.quantity.Duration;
+import org.djunits.quantity.ElectricCharge;
+import org.djunits.quantity.ElectricCurrent;
+import org.djunits.quantity.ElectricPotential;
+import org.djunits.quantity.ElectricalCapacitance;
+import org.djunits.quantity.ElectricalConductance;
+import org.djunits.quantity.ElectricalInductance;
+import org.djunits.quantity.ElectricalResistance;
+import org.djunits.quantity.Energy;
+import org.djunits.quantity.EquivalentDose;
+import org.djunits.quantity.FlowMass;
+import org.djunits.quantity.FlowVolume;
+import org.djunits.quantity.Force;
+import org.djunits.quantity.Frequency;
+import org.djunits.quantity.Illuminance;
+import org.djunits.quantity.Length;
+import org.djunits.quantity.LinearDensity;
+import org.djunits.quantity.LinearObjectDensity;
+import org.djunits.quantity.LuminousFlux;
+import org.djunits.quantity.LuminousIntensity;
+import org.djunits.quantity.MagneticFlux;
+import org.djunits.quantity.MagneticFluxDensity;
+import org.djunits.quantity.Mass;
+import org.djunits.quantity.Momentum;
+import org.djunits.quantity.Power;
+import org.djunits.quantity.Pressure;
+import org.djunits.quantity.RadioActivity;
+import org.djunits.quantity.SolidAngle;
+import org.djunits.quantity.Speed;
+import org.djunits.quantity.Temperature;
+import org.djunits.quantity.Torque;
+import org.djunits.quantity.Volume;
+import org.djunits.quantity.VolumetricObjectDensity;
 import org.junit.jupiter.api.Test;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 /**
- * Program to test the DJUNITS unit converters for CLI. <br>
- * <br>
- * Copyright (c) 2018-2025 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
- * for project information <a href="https://www.simulation.tudelft.nl/" target="_blank">www.simulation.tudelft.nl</a>. The
- * source code and binary code of this software is proprietary information of Delft University of Technology.
- * @author <a href="https://www.tudelft.nl/averbraeck" target="_blank">Alexander Verbraeck</a>
+ * JUnit test for the generated DJUNITS CLI converters.
+ * <p>
+ * This test is generated at 2026-05-05T15:42:40.310257200Z by org.djunits.generator.GenerateCliConvertersTest and validates
+ * that each {@code @Option} field parses its default and an explicit override by comparing SI values with a small tolerance.
+ * </p>
  */
 @SuppressWarnings("checkstyle:visibilitymodifier")
 public class TestCliUnitConverters
 {
-    /** */
+    /** Numerical tolerance used for SI value comparisons. */
+    private static final double EPS = 1.0E-12;
+
+    /**
+     * Picocli options holder for all quantities under test.
+     */
     @Command(description = "Test program for CLI", name = "Program", mixinStandardHelpOptions = true, version = "1.0")
     public static class Options
     {
-        /** */
-        @Option(names = {"--absolutetemperature"}, description = "AbsoluteTemperature", defaultValue = "200.0K")
-        protected AbsoluteTemperature absolutetemperature;
-
-        /** */
-        @Option(names = {"--absorbeddose"}, description = "AbsorbedDose", defaultValue = "200Gy")
+        /** Option for AbsorbedDose with a default value string. */
+        @Option(names = {"--absorbeddose"}, description = "AbsorbedDose", defaultValue = "2.0erg/g")
         protected AbsorbedDose absorbeddose;
 
-        /** */
-        @Option(names = {"--acceleration"}, description = "Acceleration", defaultValue = "2.0m/s^2")
+        /** Option for Acceleration with a default value string. */
+        @Option(names = {"--acceleration"}, description = "Acceleration", defaultValue = "2.0ft/s2")
         protected Acceleration acceleration;
 
-        /** */
-        @Option(names = {"--amountofsubstance"}, description = "AmountOfSubstance", defaultValue = "200.0mol")
+        /** Option for AmountOfSubstance with a default value string. */
+        @Option(names = {"--amountofsubstance"}, description = "AmountOfSubstance", defaultValue = "2.0amol")
         protected AmountOfSubstance amountofsubstance;
 
-        /** */
-        @Option(names = {"--angle"}, description = "Angle", defaultValue = "2.0rad")
+        /** Option for Angle with a default value string. */
+        @Option(names = {"--angle"}, description = "Angle", defaultValue = "2.0%")
         protected Angle angle;
 
-        /** */
-        @Option(names = {"--angularacceleration"}, description = "AngularAcceleration", defaultValue = "2.0rad/s2")
+        /** Option for AngularAcceleration with a default value string. */
+        @Option(names = {"--angularacceleration"}, description = "AngularAcceleration", defaultValue = "2.0arcmin/s2")
         protected AngularAcceleration angularacceleration;
 
-        /** */
-        @Option(names = {"--angularvelocity"}, description = "AngularVelocity", defaultValue = "2.0rad/s")
+        /** Option for AngularVelocity with a default value string. */
+        @Option(names = {"--angularvelocity"}, description = "AngularVelocity", defaultValue = "2.0arcmin/s")
         protected AngularVelocity angularvelocity;
 
-        /** */
-        @Option(names = {"--area"}, description = "Area", defaultValue = "2.0m^2")
+        /** Option for Area with a default value string. */
+        @Option(names = {"--area"}, description = "Area", defaultValue = "2.0a")
         protected Area area;
 
-        /** */
-        @Option(names = {"--catalyticactivity"}, description = "CatalyticActivity", defaultValue = "2.0kat")
+        /** Option for ArealObjectDensity with a default value string. */
+        @Option(names = {"--arealobjectdensity"}, description = "ArealObjectDensity", defaultValue = "2.0/m2")
+        protected ArealObjectDensity arealobjectdensity;
+
+        /** Option for CatalyticActivity with a default value string. */
+        @Option(names = {"--catalyticactivity"}, description = "CatalyticActivity", defaultValue = "2.0akat")
         protected CatalyticActivity catalyticactivity;
 
-        /** */
-        @Option(names = {"--density"}, description = "Density", defaultValue = "2.0kg/m^3")
+        /** Option for Density with a default value string. */
+        @Option(names = {"--density"}, description = "Density", defaultValue = "2.0g/cm3")
         protected Density density;
 
-        /** */
-        @Option(names = {"--dimensionless"}, description = "Dimensionless", defaultValue = "2.0")
+        /** Option for Dimensionless with a default value string. */
+        @Option(names = {"--dimensionless"}, description = "Dimensionless", defaultValue = "2.0 ")
         protected Dimensionless dimensionless;
 
-        /** */
-        @Option(names = {"--direction"}, description = "Direction", defaultValue = "2.0rad(E)")
-        protected Direction direction;
-
-        /** */
-        @Option(names = {"--duration"}, description = "Duration", defaultValue = "2.0s")
+        /** Option for Duration with a default value string. */
+        @Option(names = {"--duration"}, description = "Duration", defaultValue = "2.0as")
         protected Duration duration;
 
-        /** */
-        @Option(names = {"--electricalcapacitance"}, description = "ElectricalCapacitance", defaultValue = "2.0F")
+        /** Option for ElectricalCapacitance with a default value string. */
+        @Option(names = {"--electricalcapacitance"}, description = "ElectricalCapacitance", defaultValue = "2.0aF")
         protected ElectricalCapacitance electricalcapacitance;
 
-        /** */
-        @Option(names = {"--electricalcharge"}, description = "ElectricalCharge", defaultValue = "2.0C")
-        protected ElectricalCharge electricalcharge;
-
-        /** */
-        @Option(names = {"--electricalconductance"}, description = "ElectricalConductance", defaultValue = "2.0S")
+        /** Option for ElectricalConductance with a default value string. */
+        @Option(names = {"--electricalconductance"}, description = "ElectricalConductance", defaultValue = "2.0aS")
         protected ElectricalConductance electricalconductance;
 
-        /** */
-        @Option(names = {"--electricalcurrent"}, description = "ElectricalCurrent", defaultValue = "2.0A")
-        protected ElectricalCurrent electricalcurrent;
-
-        /** */
-        @Option(names = {"--electricalinductance"}, description = "ElectricalInductance", defaultValue = "2.0H")
+        /** Option for ElectricalInductance with a default value string. */
+        @Option(names = {"--electricalinductance"}, description = "ElectricalInductance", defaultValue = "2.0aH")
         protected ElectricalInductance electricalinductance;
 
-        /** */
-        @Option(names = {"--electricalpotential"}, description = "ElectricalPotential", defaultValue = "2.0V")
-        protected ElectricalPotential electricalpotential;
-
-        /** */
-        @Option(names = {"--electricalresistance"}, description = "ElectricalResistance", defaultValue = "2.0ohm")
+        /** Option for ElectricalResistance with a default value string. */
+        @Option(names = {"--electricalresistance"}, description = "ElectricalResistance", defaultValue = "2.0abohm")
         protected ElectricalResistance electricalresistance;
 
-        /** */
-        @Option(names = {"--energy"}, description = "Energy", defaultValue = "2.0J")
+        /** Option for ElectricCharge with a default value string. */
+        @Option(names = {"--electriccharge"}, description = "ElectricCharge", defaultValue = "2.0abC")
+        protected ElectricCharge electriccharge;
+
+        /** Option for ElectricCurrent with a default value string. */
+        @Option(names = {"--electriccurrent"}, description = "ElectricCurrent", defaultValue = "2.0A")
+        protected ElectricCurrent electriccurrent;
+
+        /** Option for ElectricPotential with a default value string. */
+        @Option(names = {"--electricpotential"}, description = "ElectricPotential", defaultValue = "2.0abV")
+        protected ElectricPotential electricpotential;
+
+        /** Option for Energy with a default value string. */
+        @Option(names = {"--energy"}, description = "Energy", defaultValue = "2.0aJ")
         protected Energy energy;
 
-        /** */
-        @Option(names = {"--equivalentdose"}, description = "EquivalentDose", defaultValue = "2.0Sv")
+        /** Option for EquivalentDose with a default value string. */
+        @Option(names = {"--equivalentdose"}, description = "EquivalentDose", defaultValue = "2.0aSv")
         protected EquivalentDose equivalentdose;
 
-        /** */
+        /** Option for FlowMass with a default value string. */
         @Option(names = {"--flowmass"}, description = "FlowMass", defaultValue = "2.0kg/s")
         protected FlowMass flowmass;
 
-        /** */
-        @Option(names = {"--flowvolume"}, description = "FlowVolume", defaultValue = "2.0m^3/s")
+        /** Option for FlowVolume with a default value string. */
+        @Option(names = {"--flowvolume"}, description = "FlowVolume", defaultValue = "2.0ft3/min")
         protected FlowVolume flowvolume;
 
-        /** */
-        @Option(names = {"--force"}, description = "Force", defaultValue = "2.0N")
+        /** Option for Force with a default value string. */
+        @Option(names = {"--force"}, description = "Force", defaultValue = "2.0aN")
         protected Force force;
 
-        /** */
-        @Option(names = {"--frequency"}, description = "Frequency", defaultValue = "2.0/s")
+        /** Option for Frequency with a default value string. */
+        @Option(names = {"--frequency"}, description = "Frequency", defaultValue = "2.0aHz")
         protected Frequency frequency;
 
-        /** */
-        @Option(names = {"--illuminance"}, description = "Illuminance", defaultValue = "2.0lx")
+        /** Option for Illuminance with a default value string. */
+        @Option(names = {"--illuminance"}, description = "Illuminance", defaultValue = "2.0alx")
         protected Illuminance illuminance;
 
-        /** */
-        @Option(names = {"--length"}, description = "Length", defaultValue = "2.0m")
+        /** Option for Length with a default value string. */
+        @Option(names = {"--length"}, description = "Length", defaultValue = "2.0A")
         protected Length length;
 
-        /** */
-        @Option(names = {"--lineardensity"}, description = "LinearDensity", defaultValue = "2.0/m")
+        /** Option for LinearDensity with a default value string. */
+        @Option(names = {"--lineardensity"}, description = "LinearDensity", defaultValue = "2.0kg/m")
         protected LinearDensity lineardensity;
 
-        /** */
+        /** Option for LinearObjectDensity with a default value string. */
+        @Option(names = {"--linearobjectdensity"}, description = "LinearObjectDensity", defaultValue = "2.0/am")
+        protected LinearObjectDensity linearobjectdensity;
+
+        /** Option for LuminousFlux with a default value string. */
         @Option(names = {"--luminousflux"}, description = "LuminousFlux", defaultValue = "2.0lm")
         protected LuminousFlux luminousflux;
 
-        /** */
-        @Option(names = {"--luminousintensity"}, description = "LuminousIntensity", defaultValue = "2.0cd")
+        /** Option for LuminousIntensity with a default value string. */
+        @Option(names = {"--luminousintensity"}, description = "LuminousIntensity", defaultValue = "2.0acd")
         protected LuminousIntensity luminousintensity;
 
-        /** */
-        @Option(names = {"--magneticflux"}, description = "MagneticFlux", defaultValue = "2.0Wb")
+        /** Option for MagneticFlux with a default value string. */
+        @Option(names = {"--magneticflux"}, description = "MagneticFlux", defaultValue = "2.0aWb")
         protected MagneticFlux magneticflux;
 
-        /** */
-        @Option(names = {"--magneticfluxdensity"}, description = "MagneticFluxDensity", defaultValue = "2.0T")
+        /** Option for MagneticFluxDensity with a default value string. */
+        @Option(names = {"--magneticfluxdensity"}, description = "MagneticFluxDensity", defaultValue = "2.0aT")
         protected MagneticFluxDensity magneticfluxdensity;
 
-        /** */
-        @Option(names = {"--mass"}, description = "Mass", defaultValue = "2.0kg")
+        /** Option for Mass with a default value string. */
+        @Option(names = {"--mass"}, description = "Mass", defaultValue = "2.0ag")
         protected Mass mass;
 
-        /** */
+        /** Option for Momentum with a default value string. */
         @Option(names = {"--momentum"}, description = "Momentum", defaultValue = "2.0kgm/s")
         protected Momentum momentum;
 
-        /** */
-        @Option(names = {"--position"}, description = "Position", defaultValue = "2.0AU")
-        protected Position position;
-
-        /** */
-        @Option(names = {"--power"}, description = "Power", defaultValue = "2.0W")
+        /** Option for Power with a default value string. */
+        @Option(names = {"--power"}, description = "Power", defaultValue = "2.0aW")
         protected Power power;
 
-        /** */
-        @Option(names = {"--pressure"}, description = "Pressure", defaultValue = "2.0Pa")
+        /** Option for Pressure with a default value string. */
+        @Option(names = {"--pressure"}, description = "Pressure", defaultValue = "2.0aPa")
         protected Pressure pressure;
 
-        /** */
-        @Option(names = {"--radioactivity"}, description = "RadioActivity", defaultValue = "2.0Bq")
+        /** Option for RadioActivity with a default value string. */
+        @Option(names = {"--radioactivity"}, description = "RadioActivity", defaultValue = "2.0aBq")
         protected RadioActivity radioactivity;
 
-        /** */
-        @Option(names = {"--solidangle"}, description = "SolidAngle", defaultValue = "2.0sr")
+        /** Option for SolidAngle with a default value string. */
+        @Option(names = {"--solidangle"}, description = "SolidAngle", defaultValue = "2.0sq.deg")
         protected SolidAngle solidangle;
 
-        /** */
-        @Option(names = {"--speed"}, description = "Speed", defaultValue = "2.0m/s")
+        /** Option for Speed with a default value string. */
+        @Option(names = {"--speed"}, description = "Speed", defaultValue = "2.0ft/h")
         protected Speed speed;
 
-        /** */
-        @Option(names = {"--temperature"}, description = "Temperature", defaultValue = "2.0K")
+        /** Option for Temperature with a default value string. */
+        @Option(names = {"--temperature"}, description = "Temperature", defaultValue = "2.0aK")
         protected Temperature temperature;
 
-        /** */
-        @Option(names = {"--time"}, description = "Time", defaultValue = "2.0h")
-        protected Time time;
-
-        /** */
-        @Option(names = {"--torque"}, description = "Torque", defaultValue = "2.0N.m")
+        /** Option for Torque with a default value string. */
+        @Option(names = {"--torque"}, description = "Torque", defaultValue = "2.0lbf.ft")
         protected Torque torque;
 
-        /** */
-        @Option(names = {"--volume"}, description = "Volume", defaultValue = "2.0m^3")
+        /** Option for Volume with a default value string. */
+        @Option(names = {"--volume"}, description = "Volume", defaultValue = "2.0cm3")
         protected Volume volume;
+
+        /** Option for VolumetricObjectDensity with a default value string. */
+        @Option(names = {"--volumetricobjectdensity"}, description = "VolumetricObjectDensity", defaultValue = "2.0/m3")
+        protected VolumetricObjectDensity volumetricobjectdensity;
     }
 
     /**
-     * Test the CliUtil methods.
-     * @throws CliException on error
-     * @throws IllegalAccessException on error
-     * @throws IllegalArgumentException on error
-     * @throws NoSuchFieldException on error
+     * Tests CLI parsing for all quantities: default values and explicit overrides.
+     * @throws Exception if CLI execution or parsing fails for any quantity.
      */
-    @SuppressWarnings("checkstyle:methodlength")
     @Test
-    public void testCli() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException, CliException
+    public void testCli() throws Exception
     {
         Locale.setDefault(Locale.US);
         String[] args;
         Options options;
-
+        // AbsorbedDose default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new AbsoluteTemperature(200.0, AbsoluteTemperatureUnit.KELVIN), options.absolutetemperature);
-        args = new String[] {"--absolutetemperature", "100.0C"};
+        assertEquals(AbsorbedDose.valueOf("2.0erg/g").si(), options.absorbeddose.si(), EPS);
+        // AbsorbedDose override
+        args = new String[] {"--absorbeddose", "1.0Gy"};
         CliUtil.execute(options, args);
-        assertEquals(new AbsoluteTemperature(100.0, AbsoluteTemperatureUnit.DEGREE_CELSIUS), options.absolutetemperature);
+        assertEquals(AbsorbedDose.valueOf("1.0Gy").si(), options.absorbeddose.si(), EPS);
 
+        // Acceleration default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new AbsorbedDose(200.0, AbsorbedDoseUnit.GRAY), options.absorbeddose);
-        args = new String[] {"--absorbeddose", "100.0 erg/g"};
+        assertEquals(Acceleration.valueOf("2.0ft/s2").si(), options.acceleration.si(), EPS);
+        // Acceleration override
+        args = new String[] {"--acceleration", "1.0g"};
         CliUtil.execute(options, args);
-        assertEquals(new AbsorbedDose(100.0, AbsorbedDoseUnit.ERG_PER_GRAM), options.absorbeddose);
+        assertEquals(Acceleration.valueOf("1.0g").si(), options.acceleration.si(), EPS);
 
+        // AmountOfSubstance default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Acceleration(2.0, AccelerationUnit.METER_PER_SECOND_2), options.acceleration);
-        args = new String[] {"--acceleration", "1.0km/h^2"};
+        assertEquals(AmountOfSubstance.valueOf("2.0amol").si(), options.amountofsubstance.si(), EPS);
+        // AmountOfSubstance override
+        args = new String[] {"--amountofsubstance", "1.0cmol"};
         CliUtil.execute(options, args);
-        assertEquals(new Acceleration(1.0, AccelerationUnit.KM_PER_HOUR_2), options.acceleration);
+        assertEquals(AmountOfSubstance.valueOf("1.0cmol").si(), options.amountofsubstance.si(), EPS);
 
+        // Angle default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new AmountOfSubstance(200.0, AmountOfSubstanceUnit.MOLE), options.amountofsubstance);
-        args = new String[] {"--amountofsubstance", "10mmol"};
+        assertEquals(Angle.valueOf("2.0%").si(), options.angle.si(), EPS);
+        // Angle override
+        args = new String[] {"--angle", "1.0arcmin"};
         CliUtil.execute(options, args);
-        assertEquals(new AmountOfSubstance(10.0, AmountOfSubstanceUnit.MILLIMOLE), options.amountofsubstance);
+        assertEquals(Angle.valueOf("1.0arcmin").si(), options.angle.si(), EPS);
 
+        // AngularAcceleration default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Angle(2.0, AngleUnit.RADIAN), options.angle);
-        args = new String[] {"--angle", "10.0deg"};
+        assertEquals(AngularAcceleration.valueOf("2.0arcmin/s2").si(), options.angularacceleration.si(), EPS);
+        // AngularAcceleration override
+        args = new String[] {"--angularacceleration", "1.0arcsec/s2"};
         CliUtil.execute(options, args);
-        assertEquals(new Angle(10.0, AngleUnit.DEGREE), options.angle);
+        assertEquals(AngularAcceleration.valueOf("1.0arcsec/s2").si(), options.angularacceleration.si(), EPS);
 
+        // AngularVelocity default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new AngularAcceleration(2.0, AngularAccelerationUnit.RADIAN_PER_SECOND_SQUARED),
-                options.angularacceleration);
-        args = new String[] {"--angularacceleration", "10.0c\"/sec2"};
+        assertEquals(AngularVelocity.valueOf("2.0arcmin/s").si(), options.angularvelocity.si(), EPS);
+        // AngularVelocity override
+        args = new String[] {"--angularvelocity", "1.0arcsec/s"};
         CliUtil.execute(options, args);
-        assertEquals(new AngularAcceleration(10.0, AngularAccelerationUnit.CENTESIMAL_ARCSECOND_PER_SECOND_SQUARED),
-                options.angularacceleration);
+        assertEquals(AngularVelocity.valueOf("1.0arcsec/s").si(), options.angularvelocity.si(), EPS);
 
+        // Area default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new AngularVelocity(2.0, AngularVelocityUnit.RADIAN_PER_SECOND), options.angularvelocity);
-        args = new String[] {"--angularvelocity", "10.0c\"/sec"};
-        CliUtil.execute(options, args);
-        assertEquals(new AngularVelocity(10.0, AngularVelocityUnit.CENTESIMAL_ARCSECOND_PER_SECOND), options.angularvelocity);
-
-        args = new String[] {};
-        options = new Options();
-        CliUtil.execute(options, args);
-        assertEquals(new Area(2.0, AreaUnit.SQUARE_METER), options.area);
+        assertEquals(Area.valueOf("2.0a").si(), options.area.si(), EPS);
+        // Area override
         args = new String[] {"--area", "1.0ac"};
         CliUtil.execute(options, args);
-        assertEquals(new Area(1.0, AreaUnit.ACRE), options.area);
+        assertEquals(Area.valueOf("1.0ac").si(), options.area.si(), EPS);
 
+        // ArealObjectDensity default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new CatalyticActivity(2.0, CatalyticActivityUnit.KATAL), options.catalyticactivity);
-        args = new String[] {"--catalyticactivity", "1.0mkat"};
+        assertEquals(ArealObjectDensity.valueOf("2.0/m2").si(), options.arealobjectdensity.si(), EPS);
+        // ArealObjectDensity override
+        args = new String[] {"--arealobjectdensity", "1.0/m2"};
         CliUtil.execute(options, args);
-        assertEquals(new CatalyticActivity(1.0, CatalyticActivityUnit.MILLIKATAL), options.catalyticactivity);
+        assertEquals(ArealObjectDensity.valueOf("1.0/m2").si(), options.arealobjectdensity.si(), EPS);
 
+        // CatalyticActivity default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Density(2.0, DensityUnit.KG_PER_METER_3), options.density);
-        args = new String[] {"--density", "1.0g/cm^3"};
+        assertEquals(CatalyticActivity.valueOf("2.0akat").si(), options.catalyticactivity.si(), EPS);
+        // CatalyticActivity override
+        args = new String[] {"--catalyticactivity", "1.0ckat"};
         CliUtil.execute(options, args);
-        assertEquals(new Density(1.0, DensityUnit.GRAM_PER_CENTIMETER_3), options.density);
+        assertEquals(CatalyticActivity.valueOf("1.0ckat").si(), options.catalyticactivity.si(), EPS);
 
+        // Density default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Dimensionless(2.0, DimensionlessUnit.SI), options.dimensionless);
-        args = new String[] {"--dimensionless", "1.0"};
+        assertEquals(Density.valueOf("2.0g/cm3").si(), options.density.si(), EPS);
+        // Density override
+        args = new String[] {"--density", "1.0kg/m3"};
         CliUtil.execute(options, args);
-        assertEquals(new Dimensionless(1.0, DimensionlessUnit.SI), options.dimensionless);
+        assertEquals(Density.valueOf("1.0kg/m3").si(), options.density.si(), EPS);
 
+        // Dimensionless default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Direction(2.0, DirectionUnit.EAST_RADIAN), options.direction);
-        args = new String[] {"--direction", "1.0deg(N)"};
+        assertEquals(Dimensionless.valueOf("2.0 ").si(), options.dimensionless.si(), EPS);
+        // Dimensionless override
+        args = new String[] {"--dimensionless", "1.0 "};
         CliUtil.execute(options, args);
-        assertEquals(new Direction(1.0, DirectionUnit.NORTH_DEGREE), options.direction);
+        assertEquals(Dimensionless.valueOf("1.0 ").si(), options.dimensionless.si(), EPS);
 
+        // Duration default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Duration(2.0, DurationUnit.SECOND), options.duration);
-        args = new String[] {"--duration", "1.0day"};
+        assertEquals(Duration.valueOf("2.0as").si(), options.duration.si(), EPS);
+        // Duration override
+        args = new String[] {"--duration", "1.0cs"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(1.0, DurationUnit.DAY), options.duration);
+        assertEquals(Duration.valueOf("1.0cs").si(), options.duration.si(), EPS);
 
+        // ElectricalCapacitance default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalCapacitance(2.0, ElectricalCapacitanceUnit.FARAD), options.electricalcapacitance);
-        args = new String[] {"--electricalcapacitance", "1.0uF"};
+        assertEquals(ElectricalCapacitance.valueOf("2.0aF").si(), options.electricalcapacitance.si(), EPS);
+        // ElectricalCapacitance override
+        args = new String[] {"--electricalcapacitance", "1.0cF"};
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalCapacitance(1.0, ElectricalCapacitanceUnit.MICROFARAD), options.electricalcapacitance);
+        assertEquals(ElectricalCapacitance.valueOf("1.0cF").si(), options.electricalcapacitance.si(), EPS);
 
+        // ElectricalConductance default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalCharge(2.0, ElectricalChargeUnit.COULOMB), options.electricalcharge);
-        args = new String[] {"--electricalcharge", "1.0mAh"};
+        assertEquals(ElectricalConductance.valueOf("2.0aS").si(), options.electricalconductance.si(), EPS);
+        // ElectricalConductance override
+        args = new String[] {"--electricalconductance", "1.0cS"};
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalCharge(1.0, ElectricalChargeUnit.MILLIAMPERE_HOUR), options.electricalcharge);
+        assertEquals(ElectricalConductance.valueOf("1.0cS").si(), options.electricalconductance.si(), EPS);
 
+        // ElectricalInductance default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalConductance(2.0, ElectricalConductanceUnit.SIEMENS), options.electricalconductance);
-        args = new String[] {"--electricalconductance", "1.0mS"};
+        assertEquals(ElectricalInductance.valueOf("2.0aH").si(), options.electricalinductance.si(), EPS);
+        // ElectricalInductance override
+        args = new String[] {"--electricalinductance", "1.0cH"};
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalConductance(1.0, ElectricalConductanceUnit.MILLISIEMENS), options.electricalconductance);
+        assertEquals(ElectricalInductance.valueOf("1.0cH").si(), options.electricalinductance.si(), EPS);
 
+        // ElectricalResistance default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalCurrent(2.0, ElectricalCurrentUnit.AMPERE), options.electricalcurrent);
-        args = new String[] {"--electricalcurrent", "1.0statA"};
+        assertEquals(ElectricalResistance.valueOf("2.0abohm").si(), options.electricalresistance.si(), EPS);
+        // ElectricalResistance override
+        args = new String[] {"--electricalresistance", "1.0aohm"};
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalCurrent(1.0, ElectricalCurrentUnit.STATAMPERE), options.electricalcurrent);
+        assertEquals(ElectricalResistance.valueOf("1.0aohm").si(), options.electricalresistance.si(), EPS);
 
+        // ElectricCharge default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalInductance(2.0, ElectricalInductanceUnit.HENRY), options.electricalinductance);
-        args = new String[] {"--electricalinductance", "1.0mH"};
+        assertEquals(ElectricCharge.valueOf("2.0abC").si(), options.electriccharge.si(), EPS);
+        // ElectricCharge override
+        args = new String[] {"--electriccharge", "1.0aC"};
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalInductance(1.0, ElectricalInductanceUnit.MILLIHENRY), options.electricalinductance);
+        assertEquals(ElectricCharge.valueOf("1.0aC").si(), options.electriccharge.si(), EPS);
 
+        // ElectricCurrent default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalPotential(2.0, ElectricalPotentialUnit.VOLT), options.electricalpotential);
-        args = new String[] {"--electricalpotential", "1.0abV"};
+        assertEquals(ElectricCurrent.valueOf("2.0A").si(), options.electriccurrent.si(), EPS);
+        // ElectricCurrent override
+        args = new String[] {"--electriccurrent", "1.0aA"};
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalPotential(1.0, ElectricalPotentialUnit.ABVOLT), options.electricalpotential);
+        assertEquals(ElectricCurrent.valueOf("1.0aA").si(), options.electriccurrent.si(), EPS);
 
+        // ElectricPotential default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalResistance(2.0, ElectricalResistanceUnit.OHM), options.electricalresistance);
-        args = new String[] {"--electricalresistance", "1.0stohm"};
+        assertEquals(ElectricPotential.valueOf("2.0abV").si(), options.electricpotential.si(), EPS);
+        // ElectricPotential override
+        args = new String[] {"--electricpotential", "1.0aV"};
         CliUtil.execute(options, args);
-        assertEquals(new ElectricalResistance(1.0, ElectricalResistanceUnit.STATOHM), options.electricalresistance);
+        assertEquals(ElectricPotential.valueOf("1.0aV").si(), options.electricpotential.si(), EPS);
 
+        // Energy default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Energy(2.0, EnergyUnit.JOULE), options.energy);
-        args = new String[] {"--energy", "1.0kWh"};
+        assertEquals(Energy.valueOf("2.0aJ").si(), options.energy.si(), EPS);
+        // Energy override
+        args = new String[] {"--energy", "1.0BTU(ISO)"};
         CliUtil.execute(options, args);
-        assertEquals(new Energy(1.0, EnergyUnit.KILOWATT_HOUR), options.energy);
+        assertEquals(Energy.valueOf("1.0BTU(ISO)").si(), options.energy.si(), EPS);
 
+        // EquivalentDose default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new EquivalentDose(2.0, EquivalentDoseUnit.SIEVERT), options.equivalentdose);
-        args = new String[] {"--equivalentdose", "1.0rem"};
+        assertEquals(EquivalentDose.valueOf("2.0aSv").si(), options.equivalentdose.si(), EPS);
+        // EquivalentDose override
+        args = new String[] {"--equivalentdose", "1.0cSv"};
         CliUtil.execute(options, args);
-        assertEquals(new EquivalentDose(1.0, EquivalentDoseUnit.REM), options.equivalentdose);
+        assertEquals(EquivalentDose.valueOf("1.0cSv").si(), options.equivalentdose.si(), EPS);
 
+        // FlowMass default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new FlowMass(2.0, FlowMassUnit.KILOGRAM_PER_SECOND), options.flowmass);
+        assertEquals(FlowMass.valueOf("2.0kg/s").si(), options.flowmass.si(), EPS);
+        // FlowMass override
         args = new String[] {"--flowmass", "1.0lb/s"};
         CliUtil.execute(options, args);
-        assertEquals(new FlowMass(1.0, FlowMassUnit.POUND_PER_SECOND), options.flowmass);
+        assertEquals(FlowMass.valueOf("1.0lb/s").si(), options.flowmass.si(), EPS);
 
+        // FlowVolume default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new FlowVolume(2.0, FlowVolumeUnit.CUBIC_METER_PER_SECOND), options.flowvolume);
-        args = new String[] {"--flowvolume", "1.0gal(US)/day"};
+        assertEquals(FlowVolume.valueOf("2.0ft3/min").si(), options.flowvolume.si(), EPS);
+        // FlowVolume override
+        args = new String[] {"--flowvolume", "1.0ft3/s"};
         CliUtil.execute(options, args);
-        assertEquals(new FlowVolume(1.0, FlowVolumeUnit.GALLON_US_PER_DAY), options.flowvolume);
+        assertEquals(FlowVolume.valueOf("1.0ft3/s").si(), options.flowvolume.si(), EPS);
 
+        // Force default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Force(2.0, ForceUnit.NEWTON), options.force);
-        args = new String[] {"--force", "1.0kgf"};
+        assertEquals(Force.valueOf("2.0aN").si(), options.force.si(), EPS);
+        // Force override
+        args = new String[] {"--force", "1.0cN"};
         CliUtil.execute(options, args);
-        assertEquals(new Force(1.0, ForceUnit.KILOGRAM_FORCE), options.force);
+        assertEquals(Force.valueOf("1.0cN").si(), options.force.si(), EPS);
 
+        // Frequency default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Frequency(2.0, FrequencyUnit.PER_SECOND), options.frequency);
-        args = new String[] {"--frequency", "1.0kHz"};
+        assertEquals(Frequency.valueOf("2.0aHz").si(), options.frequency.si(), EPS);
+        // Frequency override
+        args = new String[] {"--frequency", "1.0cHz"};
         CliUtil.execute(options, args);
-        assertEquals(new Frequency(1.0, FrequencyUnit.KILOHERTZ), options.frequency);
+        assertEquals(Frequency.valueOf("1.0cHz").si(), options.frequency.si(), EPS);
 
+        // Illuminance default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Illuminance(2.0, IlluminanceUnit.LUX), options.illuminance);
-        args = new String[] {"--illuminance", "1.0nx"};
+        assertEquals(Illuminance.valueOf("2.0alx").si(), options.illuminance.si(), EPS);
+        // Illuminance override
+        args = new String[] {"--illuminance", "1.0clx"};
         CliUtil.execute(options, args);
-        assertEquals(new Illuminance(1.0, IlluminanceUnit.NOX), options.illuminance);
+        assertEquals(Illuminance.valueOf("1.0clx").si(), options.illuminance.si(), EPS);
 
+        // Length default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Length(2.0, LengthUnit.METER), options.length);
-        args = new String[] {"--length", "1.0in"};
+        assertEquals(Length.valueOf("2.0A").si(), options.length.si(), EPS);
+        // Length override
+        args = new String[] {"--length", "1.0am"};
         CliUtil.execute(options, args);
-        assertEquals(new Length(1.0, LengthUnit.INCH), options.length);
+        assertEquals(Length.valueOf("1.0am").si(), options.length.si(), EPS);
 
+        // LinearDensity default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new LinearDensity(2.0, LinearDensityUnit.PER_METER), options.lineardensity);
-        args = new String[] {"--lineardensity", "1.0/yd"};
+        assertEquals(LinearDensity.valueOf("2.0kg/m").si(), options.lineardensity.si(), EPS);
+        // LinearDensity override
+        args = new String[] {"--lineardensity", "1.0kg/m"};
         CliUtil.execute(options, args);
-        assertEquals(new LinearDensity(1.0, LinearDensityUnit.PER_YARD), options.lineardensity);
+        assertEquals(LinearDensity.valueOf("1.0kg/m").si(), options.lineardensity.si(), EPS);
 
+        // LinearObjectDensity default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new LuminousFlux(2.0, LuminousFluxUnit.LUMEN), options.luminousflux);
-        args = new String[] {"--luminousflux", "1.0srcd"};
+        assertEquals(LinearObjectDensity.valueOf("2.0/am").si(), options.linearobjectdensity.si(), EPS);
+        // LinearObjectDensity override
+        args = new String[] {"--linearobjectdensity", "1.0/cm"};
         CliUtil.execute(options, args);
-        assertEquals(new LuminousFlux(1.0, LuminousFluxUnit.LUMEN), options.luminousflux);
+        assertEquals(LinearObjectDensity.valueOf("1.0/cm").si(), options.linearobjectdensity.si(), EPS);
 
+        // LuminousFlux default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new LuminousIntensity(2.0, LuminousIntensityUnit.CANDELA), options.luminousintensity);
-        args = new String[] {"--luminousintensity", "1.0cd"};
+        assertEquals(LuminousFlux.valueOf("2.0lm").si(), options.luminousflux.si(), EPS);
+        // LuminousFlux override
+        args = new String[] {"--luminousflux", "1.0lm"};
         CliUtil.execute(options, args);
-        assertEquals(new LuminousIntensity(1.0, LuminousIntensityUnit.SI), options.luminousintensity);
+        assertEquals(LuminousFlux.valueOf("1.0lm").si(), options.luminousflux.si(), EPS);
 
+        // LuminousIntensity default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new MagneticFlux(2.0, MagneticFluxUnit.WEBER), options.magneticflux);
-        args = new String[] {"--magneticflux", "1.0Mx"};
+        assertEquals(LuminousIntensity.valueOf("2.0acd").si(), options.luminousintensity.si(), EPS);
+        // LuminousIntensity override
+        args = new String[] {"--luminousintensity", "1.0ccd"};
         CliUtil.execute(options, args);
-        assertEquals(new MagneticFlux(1.0, MagneticFluxUnit.MAXWELL), options.magneticflux);
+        assertEquals(LuminousIntensity.valueOf("1.0ccd").si(), options.luminousintensity.si(), EPS);
 
+        // MagneticFlux default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new MagneticFluxDensity(2.0, MagneticFluxDensityUnit.TESLA), options.magneticfluxdensity);
-        args = new String[] {"--magneticfluxdensity", "1.0G"};
+        assertEquals(MagneticFlux.valueOf("2.0aWb").si(), options.magneticflux.si(), EPS);
+        // MagneticFlux override
+        args = new String[] {"--magneticflux", "1.0cWb"};
         CliUtil.execute(options, args);
-        assertEquals(new MagneticFluxDensity(1.0, MagneticFluxDensityUnit.GAUSS), options.magneticfluxdensity);
+        assertEquals(MagneticFlux.valueOf("1.0cWb").si(), options.magneticflux.si(), EPS);
 
+        // MagneticFluxDensity default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Mass(2.0, MassUnit.KILOGRAM), options.mass);
-        args = new String[] {"--mass", "1.0GeV"};
+        assertEquals(MagneticFluxDensity.valueOf("2.0aT").si(), options.magneticfluxdensity.si(), EPS);
+        // MagneticFluxDensity override
+        args = new String[] {"--magneticfluxdensity", "1.0cT"};
         CliUtil.execute(options, args);
-        assertEquals(new Mass(1.0, MassUnit.GIGAELECTRONVOLT), options.mass);
+        assertEquals(MagneticFluxDensity.valueOf("1.0cT").si(), options.magneticfluxdensity.si(), EPS);
 
+        // Mass default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Momentum(2.0, MomentumUnit.SI), options.momentum);
-        args = new String[] {"--momentum", "1.0kgm/sec"};
+        assertEquals(Mass.valueOf("2.0ag").si(), options.mass.si(), EPS);
+        // Mass override
+        args = new String[] {"--mass", "1.0cg"};
         CliUtil.execute(options, args);
-        assertEquals(new Momentum(1.0, MomentumUnit.KILOGRAM_METER_PER_SECOND), options.momentum);
+        assertEquals(Mass.valueOf("1.0cg").si(), options.mass.si(), EPS);
 
+        // Momentum default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Position(2.0, PositionUnit.ASTRONOMICAL_UNIT), options.position);
-        args = new String[] {"--position", "1.0dm"};
+        assertEquals(Momentum.valueOf("2.0kgm/s").si(), options.momentum.si(), EPS);
+        // Momentum override
+        args = new String[] {"--momentum", "1.0kgm/s"};
         CliUtil.execute(options, args);
-        assertEquals(new Position(1.0, PositionUnit.DECIMETER), options.position);
+        assertEquals(Momentum.valueOf("1.0kgm/s").si(), options.momentum.si(), EPS);
 
+        // Power default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Power(2.0, PowerUnit.WATT), options.power);
-        args = new String[] {"--power", "1.0ft.lbf/h"};
+        assertEquals(Power.valueOf("2.0aW").si(), options.power.si(), EPS);
+        // Power override
+        args = new String[] {"--power", "1.0cW"};
         CliUtil.execute(options, args);
-        assertEquals(new Power(1.0, PowerUnit.FOOT_POUND_FORCE_PER_HOUR), options.power);
+        assertEquals(Power.valueOf("1.0cW").si(), options.power.si(), EPS);
 
+        // Pressure default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Pressure(2.0, PressureUnit.PASCAL), options.pressure);
-        args = new String[] {"--pressure", "1.0mmHg"};
+        assertEquals(Pressure.valueOf("2.0aPa").si(), options.pressure.si(), EPS);
+        // Pressure override
+        args = new String[] {"--pressure", "1.0at"};
         CliUtil.execute(options, args);
-        assertEquals(new Pressure(1.0, PressureUnit.MILLIMETER_MERCURY), options.pressure);
+        assertEquals(Pressure.valueOf("1.0at").si(), options.pressure.si(), EPS);
 
+        // RadioActivity default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new RadioActivity(2.0, RadioActivityUnit.BECQUEREL), options.radioactivity);
-        args = new String[] {"--radioactivity", "1.0Ci"};
+        assertEquals(RadioActivity.valueOf("2.0aBq").si(), options.radioactivity.si(), EPS);
+        // RadioActivity override
+        args = new String[] {"--radioactivity", "1.0Bq"};
         CliUtil.execute(options, args);
-        assertEquals(new RadioActivity(1.0, RadioActivityUnit.CURIE), options.radioactivity);
+        assertEquals(RadioActivity.valueOf("1.0Bq").si(), options.radioactivity.si(), EPS);
 
+        // SolidAngle default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new SolidAngle(2.0, SolidAngleUnit.STERADIAN), options.solidangle);
-        args = new String[] {"--solidangle", "1.0sq.deg"};
+        assertEquals(SolidAngle.valueOf("2.0sq.deg").si(), options.solidangle.si(), EPS);
+        // SolidAngle override
+        args = new String[] {"--solidangle", "1.0sr"};
         CliUtil.execute(options, args);
-        assertEquals(new SolidAngle(1.0, SolidAngleUnit.SQUARE_DEGREE), options.solidangle);
+        assertEquals(SolidAngle.valueOf("1.0sr").si(), options.solidangle.si(), EPS);
 
+        // Speed default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Speed(2.0, SpeedUnit.METER_PER_SECOND), options.speed);
-        args = new String[] {"--speed", "1.0mi/h"};
+        assertEquals(Speed.valueOf("2.0ft/h").si(), options.speed.si(), EPS);
+        // Speed override
+        args = new String[] {"--speed", "1.0ft/min"};
         CliUtil.execute(options, args);
-        assertEquals(new Speed(1.0, SpeedUnit.MILE_PER_HOUR), options.speed);
+        assertEquals(Speed.valueOf("1.0ft/min").si(), options.speed.si(), EPS);
 
+        // Temperature default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Temperature(2.0, TemperatureUnit.KELVIN), options.temperature);
-        args = new String[] {"--temperature", "1.0degC"};
+        assertEquals(Temperature.valueOf("2.0aK").si(), options.temperature.si(), EPS);
+        // Temperature override
+        args = new String[] {"--temperature", "1.0cK"};
         CliUtil.execute(options, args);
-        assertEquals(new Temperature(1.0, TemperatureUnit.DEGREE_CELSIUS), options.temperature);
+        assertEquals(Temperature.valueOf("1.0cK").si(), options.temperature.si(), EPS);
 
+        // Torque default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Time(2.0, TimeUnit.BASE_HOUR), options.time);
-        args = new String[] {"--time", "1.0day"};
+        assertEquals(Torque.valueOf("2.0lbf.ft").si(), options.torque.si(), EPS);
+        // Torque override
+        args = new String[] {"--torque", "1.0lbf.in"};
         CliUtil.execute(options, args);
-        assertEquals(new Time(1.0, TimeUnit.EPOCH_DAY), options.time);
+        assertEquals(Torque.valueOf("1.0lbf.in").si(), options.torque.si(), EPS);
 
+        // Volume default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Torque(2.0, TorqueUnit.NEWTON_METER), options.torque);
-        args = new String[] {"--torque", "1.0lbf.ft"};
+        assertEquals(Volume.valueOf("2.0cm3").si(), options.volume.si(), EPS);
+        // Volume override
+        args = new String[] {"--volume", "1.0dam3"};
         CliUtil.execute(options, args);
-        assertEquals(new Torque(1.0, TorqueUnit.POUND_FOOT), options.torque);
+        assertEquals(Volume.valueOf("1.0dam3").si(), options.volume.si(), EPS);
 
+        // VolumetricObjectDensity default
         args = new String[] {};
         options = new Options();
         CliUtil.execute(options, args);
-        assertEquals(new Volume(2.0, VolumeUnit.CUBIC_METER), options.volume);
-        args = new String[] {"--volume", "1.0L"};
+        assertEquals(VolumetricObjectDensity.valueOf("2.0/m3").si(), options.volumetricobjectdensity.si(), EPS);
+        // VolumetricObjectDensity override
+        args = new String[] {"--volumetricobjectdensity", "1.0/m3"};
         CliUtil.execute(options, args);
-        assertEquals(new Volume(1.0, VolumeUnit.LITER), options.volume);
+        assertEquals(VolumetricObjectDensity.valueOf("1.0/m3").si(), options.volumetricobjectdensity.si(), EPS);
 
     }
-
 }

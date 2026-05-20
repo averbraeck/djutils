@@ -8,9 +8,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Locale;
 
-import org.djunits.unit.DurationUnit;
-import org.djunits.value.vdouble.scalar.Duration;
-import org.djunits.value.vdouble.scalar.Length;
+import org.djunits.quantity.Duration;
+import org.djunits.quantity.Length;
 import org.junit.jupiter.api.Test;
 
 import picocli.CommandLine.Command;
@@ -85,22 +84,22 @@ public class TestCliDefaultValueLocale
         // System.out.println("\n\n====================== LOCALE = " + locale);
         args = new String[] {};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.2, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.2, Duration.Unit.s), options.getDuration());
         args = new String[] {"--duration", "0.5s"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
         args = new String[] {"--duration", "0.5s", "--locale", "en"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
         args = new String[] {"--duration", "2h", "--locale", "en"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(2.0, DurationUnit.HOUR), options.getDuration());
+        assertEquals(new Duration(2.0, Duration.Unit.h), options.getDuration());
         args = new String[] {"--duration", "0.5s", "--locale", "en_US"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
         args = new String[] {"--duration", "0.5s", "--locale", "en-US"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
         assertEquals(locale, Locale.getDefault());
 
         // check NL as default language and explicitly
@@ -109,19 +108,19 @@ public class TestCliDefaultValueLocale
         // System.out.println("\n\n====================== LOCALE = " + locale);
         args = new String[] {"--duration", "0.5s"}; // note that en_US is ALWAYS the default
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
         args = new String[] {"--duration", "0,5s", "--locale", "nl"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
-        args = new String[] {"--duration", "2uur", "--locale", "nl"};
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
+        args = new String[] {"--duration", "2u", "--locale", "nl"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(2.0, DurationUnit.HOUR), options.getDuration());
+        assertEquals(new Duration(2.0, Duration.Unit.h), options.getDuration());
         args = new String[] {"--duration", "0,5s", "--locale", "nl_NL"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
         args = new String[] {"--duration", "0,5s", "--locale", "nl-NL"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
         assertEquals(locale, Locale.getDefault());
 
         // check DE as locale
@@ -130,35 +129,34 @@ public class TestCliDefaultValueLocale
         // System.out.println("\n\n====================== LOCALE = " + locale);
         args = new String[] {"--duration", "0.5s"}; // note that en_US is ALWAYS the default
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
         args = new String[] {"--duration", "0,5s", "--locale", "de"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
         args = new String[] {"--duration", "0,5s", "--locale", "de_DE"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
         args = new String[] {"--duration", "0,5s", "--locale", "de-DE"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
         assertEquals(locale, Locale.getDefault());
 
-        // check NO as locale (a locale with a variant)
         locale = Locale.US;
         Locale.setDefault(locale);
         // System.out.println("\n\n====================== LOCALE = " + locale);
         args = new String[] {"--duration", "0.5s"}; // note that en_US is ALWAYS the default
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
         args = new String[] {"--duration", "0,5s", "--locale", "no-NO"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
         args = new String[] {"--duration", "0,5s", "--locale", "no_NO"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(0.5, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(0.5, Duration.Unit.s), options.getDuration());
         // Issue #50. This locale is not constant between Java versions and even Java releases of the same version
         args = new String[] {"--duration", "10s", "--locale", "no_NO_NY"};
         CliUtil.execute(options, args);
-        assertEquals(new Duration(10.0, DurationUnit.SECOND), options.getDuration());
+        assertEquals(new Duration(10.0, Duration.Unit.s), options.getDuration());
         assertEquals(locale, Locale.getDefault());
 
         Locale.setDefault(saveLocale);
